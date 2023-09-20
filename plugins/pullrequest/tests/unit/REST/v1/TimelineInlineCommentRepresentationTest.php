@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\REST\v1;
 
 use Codendi_HTMLPurifier;
-use Tuleap\PullRequest\Comment\Comment;
+use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ContentInterpretorStub;
@@ -58,7 +58,7 @@ final class TimelineInlineCommentRepresentationTest extends TestCase
             213,
             "left",
             "placid-blue",
-            Comment::FORMAT_TEXT
+            TimelineComment::FORMAT_TEXT
         );
         self::assertSame($this->interpreter->getInterpretedContentWithReferencesCount(), 0);
     }
@@ -79,7 +79,7 @@ final class TimelineInlineCommentRepresentationTest extends TestCase
             213,
             "right",
             "placid-blue",
-            Comment::FORMAT_MARKDOWN
+            TimelineComment::FORMAT_MARKDOWN
         );
         self::assertSame($this->interpreter->getInterpretedContentWithReferencesCount(), 1);
     }

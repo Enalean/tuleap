@@ -29,8 +29,8 @@ use Psr\Log\NullLogger;
 use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Authorization\UserCannotMergePullRequestException;
-use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\PullRequestCloser;
 use Tuleap\PullRequest\PullRequestReopener;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -377,7 +377,7 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
             $destination_repository_id,
             $destination_reference,
             $destination_reference_sha1,
-            Comment::FORMAT_TEXT,
+            TimelineComment::FORMAT_TEXT,
             $status
         );
     }

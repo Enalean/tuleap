@@ -25,9 +25,9 @@ namespace Tuleap\PullRequest;
 use GitRepository;
 use PFUser;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeAbandoned;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeMerged;
+use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\StateStatus\PullRequestAbandonedEvent;
 use Tuleap\PullRequest\StateStatus\PullRequestMergedEvent;
 use Tuleap\PullRequest\Timeline\TimelineEventCreator;
@@ -186,7 +186,7 @@ final class PullRequestCloserTest extends \Tuleap\Test\PHPUnit\TestCase
             87,
             'refs/heads/master',
             'fbe4dade4f744aa203ec35bf09f71475ecc3f9d6',
-            Comment::FORMAT_TEXT,
+            TimelineComment::FORMAT_TEXT,
             $status
         );
     }

@@ -27,56 +27,15 @@ namespace Tuleap\PullRequest\InlineComment\Notification;
  */
 final class PullRequestNewInlineCommentContentPresenter
 {
-    /**
-     * @var string
-     */
-    public $change_user_display_name;
-    /**
-     * @var string
-     */
-    public $change_user_profile_url;
-    /**
-     * @var int
-     */
-    public $pull_request_id;
-    /**
-     * @var string
-     */
-    public $pull_request_title;
-    /**
-     * @var string
-     */
-    public $pull_request_url;
-    /**
-     * @var string
-     */
-    public $inline_comment;
-    /**
-     * @var string
-     */
-    public $file_path;
-    /**
-     * @var string
-     */
-    public $code_context;
-
     public function __construct(
-        string $change_user_display_name,
-        string $change_user_profile_url,
-        int $pull_request_id,
-        string $pull_request_title,
-        string $pull_request_url,
-        string $inline_comment,
-        string $file_path,
-        string $code_context,
+        public readonly string $change_user_display_name,
+        public readonly string $change_user_profile_url,
+        public readonly int $pull_request_id,
+        public readonly string $pull_request_title,
+        public readonly string $pull_request_url,
+        public readonly string $purified_and_formatted_inline_comment,
+        public readonly string $file_path,
+        public readonly string $code_context,
     ) {
-        $this->change_user_display_name = $change_user_display_name;
-        $this->change_user_profile_url  = $change_user_profile_url;
-        $this->pull_request_id          = $pull_request_id;
-        $this->pull_request_title       = $pull_request_title;
-        $this->pull_request_url         = $pull_request_url;
-        $this->inline_comment           = $inline_comment;
-        $this->file_path                = $file_path;
-        $this->code_context             = $code_context;
     }
 }

@@ -24,9 +24,9 @@ namespace Tuleap\PullRequest\REST\v1\Info;
 
 use Luracast\Restler\RestException;
 use PFUser;
-use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Factory as PullRequestFactory;
 use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\REST\v1\Permissions\PullRequestIsMergeableChecker;
 use Tuleap\PullRequest\REST\v1\PullRequestPATCHRepresentation;
 
@@ -66,7 +66,7 @@ final class PullRequestInfoUpdater
         if ($body->description !== null) {
             $format = $body->description_format;
             if ($format === null) {
-                $format = Comment::FORMAT_MARKDOWN;
+                $format = TimelineComment::FORMAT_MARKDOWN;
             }
             $this->pull_request_factory->updateDescription(
                 $user,

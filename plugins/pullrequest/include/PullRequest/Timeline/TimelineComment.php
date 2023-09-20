@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,20 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\PullRequest\Comment\Notification;
+namespace Tuleap\PullRequest\PullRequest\Timeline;
 
-/**
- * @psalm-immutable
- */
-final class PullRequestNewCommentContentPresenter
+interface TimelineComment
 {
-    public function __construct(
-        public readonly string $change_user_display_name,
-        public readonly string $change_user_profile_url,
-        public readonly int $pull_request_id,
-        public readonly string $pull_request_title,
-        public readonly string $pull_request_url,
-        public readonly string $purified_and_formatted_comment,
-    ) {
-    }
+    public final const FORMAT_TEXT     = 'text';
+    public final const FORMAT_MARKDOWN = "commonmark";
+
+    public function getContent(): string;
+
+    public function getFormat(): string;
 }

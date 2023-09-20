@@ -20,9 +20,10 @@
 
 namespace Tuleap\PullRequest\InlineComment;
 
+use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\Timeline\TimelineEvent;
 
-final class InlineComment implements TimelineEvent
+final class InlineComment implements TimelineEvent, TimelineComment
 {
     public function __construct(
         private int $id,

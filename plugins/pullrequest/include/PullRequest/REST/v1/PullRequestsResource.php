@@ -97,6 +97,7 @@ use Tuleap\PullRequest\MergeSetting\MergeSettingDAO;
 use Tuleap\PullRequest\MergeSetting\MergeSettingRetriever;
 use Tuleap\PullRequest\Notification\PullRequestNotificationSupport;
 use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\PullRequestCloser;
 use Tuleap\PullRequest\PullRequestCreator;
 use Tuleap\PullRequest\PullRequestCreatorChecker;
@@ -628,7 +629,7 @@ class PullRequestsResource extends AuthenticatedResource
         $mime_type = 'text/plain';
         $charset   = 'utf-8';
         if ($object_type_src === Pack::OBJ_BLOB || $object_type_dest === Pack::OBJ_BLOB) {
-            list($mime_type, $charset) = MimeDetector::getMimeInfo($path, $object_dest, $object_src);
+            [$mime_type, $charset] = MimeDetector::getMimeInfo($path, $object_dest, $object_src);
         }
 
         $event = new PullRequestDiffRepresentationBuild($object_dest, $object_src);
@@ -808,7 +809,7 @@ class PullRequestsResource extends AuthenticatedResource
                 $repository_dest,
                 $branch_dest,
                 $user,
-                Comment::FORMAT_MARKDOWN,
+                TimelineComment::FORMAT_MARKDOWN,
             );
         } catch (UnknownBranchNameException $exception) {
             throw new RestException(400, $exception->getMessage());
@@ -1129,7 +1130,7 @@ class PullRequestsResource extends AuthenticatedResource
         $current_time        = time();
         $format              = $comment_data->format;
         if (! $format) {
-            $format = Comment::FORMAT_MARKDOWN;
+            $format = TimelineComment::FORMAT_MARKDOWN;
         }
 
         $comment = new Comment(0, $id, (int) $user->getId(), $current_time, $comment_data->content, (int) $comment_data->parent_id, '', $format);

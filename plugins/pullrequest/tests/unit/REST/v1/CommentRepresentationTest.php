@@ -24,6 +24,7 @@ namespace Tuleap\PullRequest\REST\v1;
 
 use Codendi_HTMLPurifier;
 use Tuleap\PullRequest\Comment\Comment;
+use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ContentInterpretorStub;
@@ -44,7 +45,7 @@ final class CommentRepresentationTest extends TestCase
 
     public function testItBuildsRepresentationForText(): void
     {
-        $comment = new Comment(1, 2, (int) $this->user->id, 123456789, "My **comment**", 1, "inca-silver", Comment::FORMAT_TEXT);
+        $comment = new Comment(1, 2, (int) $this->user->id, 123456789, "My **comment**", 1, "inca-silver", TimelineComment::FORMAT_TEXT);
         CommentRepresentation::build(
             $this->purifier,
             $this->interpreter,
@@ -59,7 +60,7 @@ final class CommentRepresentationTest extends TestCase
 
     public function testItBuildsRepresentationForMarkdown(): void
     {
-        $comment = new Comment(1, 2, (int) $this->user->id, 123456789, "My **comment**", 1, "inca-silver", Comment::FORMAT_MARKDOWN);
+        $comment = new Comment(1, 2, (int) $this->user->id, 123456789, "My **comment**", 1, "inca-silver", TimelineComment::FORMAT_MARKDOWN);
         CommentRepresentation::build(
             $this->purifier,
             $this->interpreter,

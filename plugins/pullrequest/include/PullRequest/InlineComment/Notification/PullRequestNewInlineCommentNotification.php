@@ -26,6 +26,7 @@ use PFUser;
 use TemplateRendererFactory;
 use Tuleap\PullRequest\InlineComment\InlineComment;
 use Tuleap\PullRequest\Notification\FilterUserFromCollection;
+use Tuleap\PullRequest\Notification\FormatNotificationContent;
 use Tuleap\PullRequest\Notification\NotificationEnhancedContent;
 use Tuleap\PullRequest\Notification\NotificationTemplatedContent;
 use Tuleap\PullRequest\Notification\NotificationToProcess;
@@ -99,6 +100,7 @@ final class PullRequestNewInlineCommentNotification implements NotificationToPro
         array $owners,
         InlineComment $inline_comment,
         InlineCommentCodeContextExtractor $code_context_extractor,
+        FormatNotificationContent $format_notification_content,
     ): self {
         $code_context = $code_context_extractor->getCodeContext($inline_comment, $pull_request);
 
@@ -120,9 +122,9 @@ final class PullRequestNewInlineCommentNotification implements NotificationToPro
                     $pull_request->getId(),
                     $pull_request->getTitle(),
                     $html_url_builder->getAbsolutePullRequestOverviewUrl($pull_request),
-                    $inline_comment->getContent(),
+                    $format_notification_content->getFormattedAndPurifiedNotificationContent($pull_request, $inline_comment),
                     $inline_comment->getFilePath(),
-                    $code_context
+                    $code_context,
                 )
             )
         );

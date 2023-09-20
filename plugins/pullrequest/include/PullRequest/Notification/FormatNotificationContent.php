@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,22 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\PullRequest\Notification;
 
-namespace Tuleap\PullRequest\Comment\Notification;
+use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 
-/**
- * @psalm-immutable
- */
-final class PullRequestNewCommentContentPresenter
+interface FormatNotificationContent
 {
-    public function __construct(
-        public readonly string $change_user_display_name,
-        public readonly string $change_user_profile_url,
-        public readonly int $pull_request_id,
-        public readonly string $pull_request_title,
-        public readonly string $pull_request_url,
-        public readonly string $purified_and_formatted_comment,
-    ) {
-    }
+    public function getFormattedAndPurifiedNotificationContent(PullRequest $pull_request, TimelineComment $comment): string;
 }
