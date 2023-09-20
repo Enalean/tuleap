@@ -68,9 +68,16 @@
                                         method="POST"
                                         action="{{ promoted_post_url }}"
                                         class="tlp-switch tlp-switch-mini"
-                                        title="{{# is_promoted }}{{# dgettext }}
-                                            tuleap-tracker | Remove %s from +New dropdown | {{ label }}{{/ dgettext }}{{/ is_promoted }}{{^ is_promoted }}{{# dgettext }}
-                                            tuleap-tracker | Promote %s in the +New dropdown across the project | {{ label }}{{/ dgettext }}{{/ is_promoted }}"
+                                        {{# is_project_allowed_to_promote_trackers_in_sidebar }}
+                                            title="{{# is_promoted }}{{# dgettext }}
+                                                tuleap-tracker | Remove %s from sidebar and +New dropdown | {{ label }}{{/ dgettext }}{{/ is_promoted }}{{^ is_promoted }}{{# dgettext }}
+                                                tuleap-tracker | Promote %s in the sidebar and +New dropdown across the project | {{ label }}{{/ dgettext }}{{/ is_promoted }}"
+                                        {{/ is_project_allowed_to_promote_trackers_in_sidebar }}
+                                        {{^ is_project_allowed_to_promote_trackers_in_sidebar }}
+                                            title="{{# is_promoted }}{{# dgettext }}
+                                                tuleap-tracker | Remove %s from +New dropdown | {{ label }}{{/ dgettext }}{{/ is_promoted }}{{^ is_promoted }}{{# dgettext }}
+                                                tuleap-tracker | Promote %s in the +New dropdown across the project | {{ label }}{{/ dgettext }}{{/ is_promoted }}"
+                                        {{/ is_project_allowed_to_promote_trackers_in_sidebar }}
                                     >
                                         {{# csrf_token }}
                                             {{> csrf_token_input }}

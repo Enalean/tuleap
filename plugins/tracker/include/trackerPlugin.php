@@ -247,6 +247,7 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
 use Tuleap\Tracker\Semantic\Status\StatusFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Service\CheckPromotedTrackerConfiguration;
 use Tuleap\Tracker\Service\PromotedTrackerConfiguration;
 use Tuleap\Tracker\Service\ServiceActivator;
 use Tuleap\Tracker\User\NotificationOnOwnActionPreference;
@@ -2208,7 +2209,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             TrackerFactory::instance(),
             new TrackerInNewDropdownDao(),
             new CSRFSynchronizerTokenProvider(),
-            new ProjectHistoryDao()
+            new ProjectHistoryDao(),
+            new CheckPromotedTrackerConfiguration(),
         );
     }
 
@@ -2227,7 +2229,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             new TrackerInNewDropdownDao(),
             new CSRFSynchronizerTokenProvider(),
             new FieldDao(),
-            new TriggersDao()
+            new TriggersDao(),
+            new CheckPromotedTrackerConfiguration(),
         );
     }
 

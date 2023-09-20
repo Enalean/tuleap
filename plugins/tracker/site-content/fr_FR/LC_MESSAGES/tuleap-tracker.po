@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Poedit 3.0.1\n"
 
 msgid "\"Attachment\" type field cannot be modified during artifact copy."
 msgstr ""
@@ -2433,7 +2433,12 @@ msgstr ""
 "php?group_id=%s\">créer ou modifier</a> des groupes d'utilisateurs."
 
 msgid "Promote %s in the +New dropdown across the project"
-msgstr "Promouvoir %s dans le menu déroulant \"+ Nouveau\" dans tout le projet"
+msgstr "Promouvoir %s dans le menu déroulant +Nouveau dans tout le projet"
+
+msgid "Promote %s in the sidebar and +New dropdown across the project"
+msgstr ""
+"Promouvoir %s dans la barre latérale et le menu déroulant +Nouveau dans tout "
+"le projet"
 
 msgid "Provided computation method does not exist"
 msgstr "La méthode de calcul fournie n'existe pas"
@@ -2508,7 +2513,10 @@ msgid "Remove"
 msgstr "Enlever"
 
 msgid "Remove %s from +New dropdown"
-msgstr "Enlève %s du menu déroulant +Nouveau"
+msgstr "Enlever %s du menu déroulant +Nouveau"
+
+msgid "Remove %s from sidebar and +New dropdown"
+msgstr "Enlever %s de la barre latérale et du menu déroulant +Nouveau"
 
 msgid "Remove from tooltip"
 msgstr "Enlever de l'infobulle"
@@ -4007,18 +4015,34 @@ msgstr "L'outil de suivi %s a été supprimé"
 
 #, php-format
 msgid ""
-"Tracker %s will now appear in the +New dropdown on every pages of the project"
+"Tracker %s will now appear in the +New dropdown on every page of the project"
 msgstr ""
 "L'outil de suivi %s apparaîtra dans le menu déroulant +Nouveau sur toutes "
 "les pages du projet"
 
 #, php-format
 msgid ""
-"Tracker %s won't appear anymore in the +New dropdown on every pages of the "
+"Tracker %s will now appear in the sidebar or the +New dropdown on every page "
+"of the project"
+msgstr ""
+"L'outil de suivi %s apparaîtra dans la barre latérale et le menu déroulant "
+"+Nouveau sur toutes les pages du projet"
+
+#, php-format
+msgid ""
+"Tracker %s won't appear anymore in the +New dropdown on every page of the "
 "project"
 msgstr ""
 "L'outil de suivi %s n'apparaîtra plus dans le menu déroulant +Nouveau sur "
 "toutes les pages du projet"
+
+#, php-format
+msgid ""
+"Tracker %s won't appear anymore in the sidebar or the +New dropdown on every "
+"page of the project"
+msgstr ""
+"L'outil de suivi %s n'apparaîtra plus dans la barre latérale et le menu "
+"déroulant +Nouveau sur toutes les pages du projet"
 
 msgid "Tracker (read only)"
 msgstr "Tracker (lecture seule)"
