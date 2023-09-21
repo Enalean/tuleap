@@ -27,6 +27,7 @@ use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\InlineComment\InlineCommentRetriever;
 use Tuleap\PullRequest\Notification\EventSubjectToNotification;
 use Tuleap\PullRequest\Notification\FilterUserFromCollection;
+use Tuleap\PullRequest\Notification\FormatNotificationContent;
 use Tuleap\PullRequest\Notification\NotificationToProcessBuilder;
 use Tuleap\PullRequest\Notification\OwnerRetriever;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
@@ -38,57 +39,17 @@ use UserManager;
  */
 final class PullRequestNewInlineCommentNotificationToProcessBuilder implements NotificationToProcessBuilder
 {
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-    /**
-     * @var Factory
-     */
-    private $pull_request_factory;
-    /**
-     * @var InlineCommentRetriever
-     */
-    private $inline_comment_retriever;
-    /**
-     * @var OwnerRetriever
-     */
-    private $owner_retriever;
-    /**
-     * @var InlineCommentCodeContextExtractor
-     */
-    private $code_context_extractor;
-    /**
-     * @var FilterUserFromCollection
-     */
-    private $filter_user_from_collection;
-    /**
-     * @var UserHelper
-     */
-    private $user_helper;
-    /**
-     * @var HTMLURLBuilder
-     */
-    private $html_url_builder;
-
     public function __construct(
-        UserManager $user_manager,
-        Factory $pull_request_factory,
-        InlineCommentRetriever $inline_comment_retriever,
-        OwnerRetriever $owner_retriever,
-        InlineCommentCodeContextExtractor $code_context_extractor,
-        FilterUserFromCollection $filter_user_from_collection,
-        UserHelper $user_helper,
-        HTMLURLBuilder $html_url_builder,
+        private readonly UserManager $user_manager,
+        private readonly Factory $pull_request_factory,
+        private readonly InlineCommentRetriever $inline_comment_retriever,
+        private readonly OwnerRetriever $owner_retriever,
+        private readonly InlineCommentCodeContextExtractor $code_context_extractor,
+        private readonly FilterUserFromCollection $filter_user_from_collection,
+        private readonly UserHelper $user_helper,
+        private readonly HTMLURLBuilder $html_url_builder,
+        private readonly FormatNotificationContent $format_notification_content,
     ) {
-        $this->user_manager                = $user_manager;
-        $this->pull_request_factory        = $pull_request_factory;
-        $this->inline_comment_retriever    = $inline_comment_retriever;
-        $this->owner_retriever             = $owner_retriever;
-        $this->code_context_extractor      = $code_context_extractor;
-        $this->filter_user_from_collection = $filter_user_from_collection;
-        $this->user_helper                 = $user_helper;
-        $this->html_url_builder            = $html_url_builder;
     }
 
     public function getNotificationsToProcess(EventSubjectToNotification $event): array
@@ -122,7 +83,8 @@ final class PullRequestNewInlineCommentNotificationToProcessBuilder implements N
                     $change_user,
                     $pull_request_owners,
                     $comment,
-                    $this->code_context_extractor
+                    $this->code_context_extractor,
+                    $this->format_notification_content
                 ),
             ];
         } catch (InlineCommentCodeContextException $exception) {

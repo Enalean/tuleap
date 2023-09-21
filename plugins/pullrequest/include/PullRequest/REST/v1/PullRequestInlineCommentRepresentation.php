@@ -21,7 +21,7 @@
 namespace Tuleap\PullRequest\REST\v1;
 
 use Tuleap\Markdown\ContentInterpretor;
-use Tuleap\PullRequest\Comment\Comment;
+use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use Tuleap\REST\JsonCast;
 use Codendi_HTMLPurifier;
@@ -99,7 +99,7 @@ final class PullRequestInlineCommentRepresentation
 
     private function getPurifiedContentFromHTML(string $format, int $project_id, string $content): string
     {
-        if ($format === Comment::FORMAT_MARKDOWN) {
+        if ($format === TimelineComment::FORMAT_MARKDOWN) {
             return $this->common_mark_interpreter->getInterpretedContentWithReferences(
                 $content,
                 $project_id

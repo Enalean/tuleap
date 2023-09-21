@@ -27,6 +27,7 @@ use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
 use Tuleap\PullRequest\Factory as PullRequestFactory;
 use Tuleap\PullRequest\Notification\EventSubjectToNotification;
 use Tuleap\PullRequest\Notification\FilterUserFromCollection;
+use Tuleap\PullRequest\Notification\FormatNotificationContent;
 use Tuleap\PullRequest\Notification\NotificationToProcessBuilder;
 use Tuleap\PullRequest\Notification\OwnerRetriever;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
@@ -38,51 +39,16 @@ use UserManager;
  */
 final class PullRequestNewCommentNotificationToProcessBuilder implements NotificationToProcessBuilder
 {
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-    /**
-     * @var PullRequestFactory
-     */
-    private $pull_request_factory;
-    /**
-     * @var CommentFactory
-     */
-    private $comment_factory;
-    /**
-     * @var OwnerRetriever
-     */
-    private $owner_retriever;
-    /**
-     * @var FilterUserFromCollection
-     */
-    private $filter_user_from_collection;
-    /**
-     * @var UserHelper
-     */
-    private $user_helper;
-    /**
-     * @var HTMLURLBuilder
-     */
-    private $html_url_builder;
-
     public function __construct(
-        UserManager $user_manager,
-        PullRequestFactory $pull_request_factory,
-        CommentFactory $comment_factory,
-        OwnerRetriever $owner_retriever,
-        FilterUserFromCollection $filter_user_from_collection,
-        UserHelper $user_helper,
-        HTMLURLBuilder $html_url_builder,
+        private readonly UserManager $user_manager,
+        private readonly PullRequestFactory $pull_request_factory,
+        private readonly CommentFactory $comment_factory,
+        private readonly OwnerRetriever $owner_retriever,
+        private readonly FilterUserFromCollection $filter_user_from_collection,
+        private readonly UserHelper $user_helper,
+        private readonly HTMLURLBuilder $html_url_builder,
+        private readonly FormatNotificationContent $format_notification_content,
     ) {
-        $this->user_manager                = $user_manager;
-        $this->pull_request_factory        = $pull_request_factory;
-        $this->comment_factory             = $comment_factory;
-        $this->owner_retriever             = $owner_retriever;
-        $this->filter_user_from_collection = $filter_user_from_collection;
-        $this->user_helper                 = $user_helper;
-        $this->html_url_builder            = $html_url_builder;
     }
 
     public function getNotificationsToProcess(EventSubjectToNotification $event): array
@@ -111,10 +77,11 @@ final class PullRequestNewCommentNotificationToProcessBuilder implements Notific
                 $this->user_helper,
                 $this->html_url_builder,
                 $this->filter_user_from_collection,
+                $this->format_notification_content,
                 $pull_request,
                 $change_user,
                 $pull_request_owners,
-                $comment->getContent()
+                $comment
             ),
         ];
     }

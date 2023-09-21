@@ -24,11 +24,14 @@ namespace Tuleap\PullRequest\InlineComment\Notification;
 
 use PFUser;
 use Tuleap\ForgeConfigSandbox;
-use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\InlineComment\InlineComment;
 use Tuleap\PullRequest\Notification\FilterUserFromCollection;
+use Tuleap\PullRequest\Notification\FormatNotificationContent;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
+use Tuleap\PullRequest\Tests\Builders\InlineCommentTestBuilder;
+use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
+use Tuleap\PullRequest\Tests\Stub\FormatNotificationContentStub;
 use Tuleap\TemporaryTestDirectory;
 use UserHelper;
 
@@ -37,51 +40,24 @@ final class PullRequestNewInlineCommentNotificationTest extends \Tuleap\Test\PHP
     use ForgeConfigSandbox;
     use TemporaryTestDirectory;
 
-    public function testNewInlinceCommentNotificationCanBeBuilt(): void
+    private PFUser $user_103;
+    private PullRequest $pull_request;
+
+    protected function setUp(): void
     {
-        $change_user            = $this->buildUser(102);
-        $user_103               = $this->buildUser(103);
-        $owners                 = [$change_user, $user_103];
-        $pull_request           = $this->createMock(PullRequest::class);
-        $user_helper            = $this->createMock(UserHelper::class);
-        $html_url_builder       = $this->createMock(HTMLURLBuilder::class);
-        $code_context_extractor = $this->createMock(InlineCommentCodeContextExtractor::class);
+        $this->user_103     = $this->buildUser(103);
+        $this->pull_request = PullRequestTestBuilder::aPullRequestInReview()->withId(14)->withTitle("PR title")->build();
+    }
 
-        \ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
-
-        $user_helper->method('getDisplayNameFromUser')->with($change_user)->willReturn('User A');
-        $user_helper->method('getAbsoluteUserURL')->with($change_user)->willReturn('https://example.com/users/usera');
-        $html_url_builder->method('getAbsolutePullRequestOverviewUrl')->with($pull_request)->willReturn('https://example.com/pr-link');
-        $pull_request->method('getId')->willReturn(14);
-        $pull_request->method('getTitle')->willReturn('PR title');
-        $code_context_extractor->method('getCodeContext')->willReturn('-Removed code');
-
-        $notification = PullRequestNewInlineCommentNotification::fromOwnersAndInlineComment(
-            $user_helper,
-            $html_url_builder,
-            new FilterUserFromCollection(),
-            $pull_request,
-            $change_user,
-            $owners,
-            new InlineComment(
-                32,
-                $pull_request->getId(),
-                (int) $change_user->getId(),
-                10,
-                'path/to/file',
-                2,
-                'Foo comment',
-                false,
-                0,
-                "right",
-                "",
-                Comment::FORMAT_TEXT
-            ),
-            $code_context_extractor
+    public function testNewInlineCommentNotificationCanBeBuilt(): void
+    {
+        $notification = $this->buildNotification(
+            InlineCommentTestBuilder::aTextComment("Foo comment")->withFilePath('path/to/file')->build(),
+            FormatNotificationContentStub::withDefault(),
         );
 
-        self::assertEqualsCanonicalizing([$user_103], $notification->getRecipients());
-        self::assertSame($pull_request, $notification->getPullRequest());
+        self::assertEqualsCanonicalizing([$this->user_103], $notification->getRecipients());
+        self::assertSame($this->pull_request, $notification->getPullRequest());
         self::assertEquals(
             <<<EOF
             User A commented on #14: PR title in path/to/file:
@@ -106,8 +82,69 @@ final class PullRequestNewInlineCommentNotificationTest extends \Tuleap\Test\PHP
         );
     }
 
+    public function testNewInlineCommentInMarkdownNotificationCanBeBuilt(): void
+    {
+        $notification = $this->buildNotification(
+            InlineCommentTestBuilder::aMarkdownComment("**Foo comment**")->withFilePath('path/to/file')->build(),
+            FormatNotificationContentStub::withFormattedContent("<em>Foo comment</em>"),
+        );
+
+        self::assertEqualsCanonicalizing([$this->user_103], $notification->getRecipients());
+        self::assertSame($this->pull_request, $notification->getPullRequest());
+        self::assertEquals(
+            <<<EOF
+            User A commented on #14: PR title in path/to/file:
+
+            -Removed code
+
+            **Foo comment**
+            EOF,
+            $notification->asPlaintext()
+        );
+        self::assertEquals(
+            <<<EOF
+            <p>
+            <a href="https://example.com/users/usera">User A</a> commented on <a href="https://example.com/pr-link">#14</a>: PR title in path/to/file:</p>
+            <pre style="color:#555"><code>-Removed code</code></pre>
+            <p>
+                <em>Foo comment</em>
+            </p>
+
+            EOF,
+            $notification->asEnhancedContent()->toString()
+        );
+    }
+
     private function buildUser(int $user_id): PFUser
     {
         return new PFUser(['user_id' => $user_id, 'language_id' => 'en']);
+    }
+
+    private function buildNotification(InlineComment $inline_comment, FormatNotificationContent $format_notification_content): PullRequestNewInlineCommentNotification
+    {
+        $change_user            = $this->buildUser(102);
+        $owners                 = [$change_user, $this->user_103];
+        $user_helper            = $this->createMock(UserHelper::class);
+        $html_url_builder       = $this->createMock(HTMLURLBuilder::class);
+        $code_context_extractor = $this->createMock(InlineCommentCodeContextExtractor::class);
+
+        \ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
+
+        $user_helper->method('getDisplayNameFromUser')->with($change_user)->willReturn('User A');
+        $user_helper->method('getAbsoluteUserURL')->with($change_user)->willReturn('https://example.com/users/usera');
+        $html_url_builder->method('getAbsolutePullRequestOverviewUrl')->with($this->pull_request)->willReturn('https://example.com/pr-link');
+        $code_context_extractor->method('getCodeContext')->willReturn('-Removed code');
+
+        return PullRequestNewInlineCommentNotification::fromOwnersAndInlineComment(
+            $user_helper,
+            $html_url_builder,
+            new FilterUserFromCollection(),
+            $this->pull_request,
+            $change_user,
+            $owners,
+            $inline_comment,
+            $code_context_extractor,
+            $format_notification_content,
+        );
     }
 }

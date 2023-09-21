@@ -20,16 +20,14 @@
 
 namespace Tuleap\PullRequest\Comment;
 
+use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\Timeline\TimelineEvent;
 
 /**
  * @psalm-immutable
  */
-final class Comment implements TimelineEvent
+final class Comment implements TimelineEvent, TimelineComment
 {
-    public const FORMAT_TEXT     = 'text';
-    public const FORMAT_MARKDOWN = "commonmark";
-
     public function __construct(private int $id, private int $pull_request_id, private int $user_id, private int $post_date, private string $content, private int $parent_id, private string $color, private string $format)
     {
     }

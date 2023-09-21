@@ -24,11 +24,11 @@ namespace Tuleap\PullRequest\InlineComment;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use ReferenceManager;
-use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Comment\ParentCommentSearcher;
 use Tuleap\PullRequest\Comment\ThreadCommentDao;
 use Tuleap\PullRequest\InlineComment\Notification\PullRequestNewInlineCommentEvent;
 use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorAssigner;
 use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorRetriever;
 use Tuleap\PullRequest\REST\v1\PullRequestInlineCommentPOSTRepresentation;
@@ -61,7 +61,7 @@ final class InlineCommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             10,
             "2",
             1,
-            Comment::FORMAT_TEXT
+            TimelineComment::FORMAT_TEXT
         );
 
         $inserted_id = 47;
@@ -122,7 +122,7 @@ final class InlineCommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $representation->content,
             $representation->position,
             (int) $representation->parent_id,
-            Comment::FORMAT_MARKDOWN
+            TimelineComment::FORMAT_MARKDOWN
         )->willReturn($inserted_id);
         $dao->expects(self::once())->method('setThreadColor');
         $reference_manager->expects(self::once())->method('extractCrossRef');

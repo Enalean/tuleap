@@ -33,6 +33,7 @@ use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Language\LocaleSwitcher;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
+use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
@@ -238,6 +239,7 @@ final class PullRequestNotificationSupport
                         $html_url_builder       = self::buildHTMLURLBuilder($git_repository_factory);
                         $user_manager           = \UserManager::instance();
                         $reference_manager      = \ReferenceManager::instance();
+                        $html_purifier          = \Codendi_HTMLPurifier::instance();
                         return new EventSubjectToNotificationListener(
                             self::buildPullRequestNotificationSendMail($git_repository_factory, $html_url_builder),
                             new PullRequestNewCommentNotificationToProcessBuilder(
@@ -272,7 +274,14 @@ final class PullRequestNotificationSupport
                                 ),
                                 new FilterUserFromCollection(),
                                 \UserHelper::instance(),
-                                $html_url_builder
+                                $html_url_builder,
+                                new NotificationContentFormatter(
+                                    CommonMarkInterpreter::build(
+                                        $html_purifier,
+                                    ),
+                                    $git_repository_factory,
+                                    $html_purifier,
+                                ),
                             )
                         );
                     },
@@ -283,6 +292,7 @@ final class PullRequestNotificationSupport
                         $html_url_builder       = self::buildHTMLURLBuilder($git_repository_factory);
                         $user_manager           = \UserManager::instance();
                         $reference_manager      = \ReferenceManager::instance();
+                        $html_purifier          = \Codendi_HTMLPurifier::instance();
                         return new EventSubjectToNotificationListener(
                             self::buildPullRequestNotificationSendMail($git_repository_factory, $html_url_builder),
                             new PullRequestNewInlineCommentNotificationToProcessBuilder(
@@ -317,7 +327,14 @@ final class PullRequestNotificationSupport
                                 ),
                                 new FilterUserFromCollection(),
                                 \UserHelper::instance(),
-                                $html_url_builder
+                                $html_url_builder,
+                                new NotificationContentFormatter(
+                                    CommonMarkInterpreter::build(
+                                        $html_purifier,
+                                    ),
+                                    $git_repository_factory,
+                                    $html_purifier,
+                                ),
                             )
                         );
                     },

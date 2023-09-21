@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Tests\Builders;
 
-use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 
 final class PullRequestTestBuilder
 {
@@ -39,7 +39,7 @@ final class PullRequestTestBuilder
     private string $sha1_dest          = "aba2416a22a0c5d985207fbed10de5d1c8c91397";
     private int $repo_dest_id          = 5;
     private int $merge_status          = PullRequest::FASTFORWARD_MERGE;
-    private string $description_format = Comment::FORMAT_TEXT;
+    private string $description_format = TimelineComment::FORMAT_TEXT;
 
 
     private function __construct(
@@ -60,6 +60,18 @@ final class PullRequestTestBuilder
     public static function aMergedPullRequest(): self
     {
         return new self(PullRequest::STATUS_MERGED);
+    }
+
+    public function withId(int $id): self
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    public function withTitle(string $title): self
+    {
+        $this->title = $title;
+        return $this;
     }
 
     public function build(): PullRequest

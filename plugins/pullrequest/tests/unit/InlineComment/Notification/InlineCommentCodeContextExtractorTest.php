@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\InlineComment\Notification;
 
 use GitRepositoryFactory;
-use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\FileUniDiff;
 use Tuleap\PullRequest\FileUniDiffBuilder;
 use Tuleap\PullRequest\InlineComment\InlineComment;
 use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\UniDiffLine;
 
 final class InlineCommentCodeContextExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -164,7 +164,7 @@ final class InlineCommentCodeContextExtractorTest extends \Tuleap\Test\PHPUnit\T
             0,
             'right',
             "",
-            Comment::FORMAT_TEXT
+            TimelineComment::FORMAT_TEXT
         );
     }
 
@@ -182,7 +182,7 @@ final class InlineCommentCodeContextExtractorTest extends \Tuleap\Test\PHPUnit\T
             78,
             'master',
             'f65cc8e2740a819af60c9f624ae378676291888d',
-            Comment::FORMAT_TEXT
+            TimelineComment::FORMAT_TEXT
         );
     }
 }

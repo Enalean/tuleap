@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\InlineComment;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tuleap\PullRequest\Comment\Comment;
+use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 
 final class InlineCommentRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -51,7 +51,7 @@ final class InlineCommentRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             'parent_id' => 0,
             'position' => 'right',
             "color" => '',
-            "format" => Comment::FORMAT_TEXT,
+            "format" => TimelineComment::FORMAT_TEXT,
         ]);
 
         self::assertNotNull($this->retriever->getInlineCommentByID(12));

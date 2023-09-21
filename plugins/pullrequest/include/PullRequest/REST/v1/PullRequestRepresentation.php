@@ -21,9 +21,9 @@
 namespace Tuleap\PullRequest\REST\v1;
 
 use Tuleap\Markdown\ContentInterpretor;
-use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\GitReference\GitPullRequestReference;
 use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\REST\JsonCast;
 use GitRepository;
 use Codendi_HTMLPurifier;
@@ -238,7 +238,7 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
         int $project_id,
         string $description,
     ): string {
-        if ($description_format === Comment::FORMAT_MARKDOWN) {
+        if ($description_format === TimelineComment::FORMAT_MARKDOWN) {
             return $common_mark_interpreter->getInterpretedContentWithReferences(
                 $description,
                 $project_id

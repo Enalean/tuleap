@@ -29,7 +29,9 @@ use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\Notification\FilterUserFromCollection;
 use Tuleap\PullRequest\Notification\OwnerRetriever;
 use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
+use Tuleap\PullRequest\Tests\Stub\FormatNotificationContentStub;
 use UserHelper;
 use UserManager;
 
@@ -77,7 +79,8 @@ final class PullRequestNewCommentNotificationToProcessBuilderTest extends \Tulea
             $this->owner_retriever,
             new FilterUserFromCollection(),
             $this->user_helper,
-            $this->html_url_builder
+            $this->html_url_builder,
+            FormatNotificationContentStub::withDefault(),
         );
     }
 
@@ -159,7 +162,7 @@ final class PullRequestNewCommentNotificationToProcessBuilderTest extends \Tulea
             'My comment',
             0,
             "inca-silver",
-            Comment::FORMAT_TEXT
+            TimelineComment::FORMAT_TEXT
         );
     }
 }

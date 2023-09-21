@@ -24,7 +24,9 @@ namespace Tuleap\PullRequest\Comment\Notification;
 
 use PFUser;
 use TemplateRendererFactory;
+use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Notification\FilterUserFromCollection;
+use Tuleap\PullRequest\Notification\FormatNotificationContent;
 use Tuleap\PullRequest\Notification\NotificationEnhancedContent;
 use Tuleap\PullRequest\Notification\NotificationTemplatedContent;
 use Tuleap\PullRequest\Notification\NotificationToProcess;
@@ -84,10 +86,11 @@ final class PullRequestNewCommentNotification implements NotificationToProcess
         UserHelper $user_helper,
         HTMLURLBuilder $html_url_builder,
         FilterUserFromCollection $filter_user_from_collection,
+        FormatNotificationContent $format_notification_content,
         PullRequest $pull_request,
         PFUser $change_user,
         array $owners,
-        string $comment,
+        Comment $comment,
     ): self {
         $change_user_display_name   = $user_helper->getDisplayNameFromUser($change_user) ?? '';
         $owners_without_change_user = $filter_user_from_collection->filter($change_user, ...$owners);
@@ -96,7 +99,7 @@ final class PullRequestNewCommentNotification implements NotificationToProcess
             $pull_request,
             $change_user_display_name,
             $owners_without_change_user,
-            $comment,
+            $comment->getContent(),
             new NotificationTemplatedContent(
                 TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../../templates/comment'),
                 'pull-request-new-comment-mail-content',
@@ -106,7 +109,7 @@ final class PullRequestNewCommentNotification implements NotificationToProcess
                     $pull_request->getId(),
                     $pull_request->getTitle(),
                     $html_url_builder->getAbsolutePullRequestOverviewUrl($pull_request),
-                    $comment
+                    $format_notification_content->getFormattedAndPurifiedNotificationContent($pull_request, $comment),
                 )
             )
         );

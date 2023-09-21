@@ -24,6 +24,7 @@ namespace Tuleap\PullRequest\REST\v1\Comment;
 
 use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Comment\Factory;
+use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -59,7 +60,7 @@ final class ParentIdValidatorForCommentTest extends TestCase
             "My content",
             1234,
             "graffiti-yellow",
-            Comment::FORMAT_TEXT
+            TimelineComment::FORMAT_TEXT
         );
         $this->comment_factory->method('getCommentByID')->willReturn($comment);
 
@@ -79,7 +80,7 @@ final class ParentIdValidatorForCommentTest extends TestCase
             "My content",
             0,
             "graffiti-yellow",
-            Comment::FORMAT_TEXT
+            TimelineComment::FORMAT_TEXT
         );
         $this->comment_factory->method('getCommentByID')->willReturn($comment);
 
@@ -101,7 +102,7 @@ final class ParentIdValidatorForCommentTest extends TestCase
             "My content",
             0,
             "graffiti-yellow",
-            Comment::FORMAT_TEXT
+            TimelineComment::FORMAT_TEXT
         );
         $this->comment_factory->method('getCommentByID')->willReturn($comment);
 

@@ -21,9 +21,9 @@
 namespace Tuleap\PullRequest\InlineComment;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\InlineComment\Notification\PullRequestNewInlineCommentEvent;
 use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorAssigner;
 use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorRetriever;
 use Tuleap\PullRequest\REST\v1\PullRequestInlineCommentPOSTRepresentation;
@@ -53,7 +53,7 @@ class InlineCommentCreator
 
         $format = $comment_data->format;
         if (! $format) {
-            $format = Comment::FORMAT_MARKDOWN;
+            $format = TimelineComment::FORMAT_MARKDOWN;
         }
 
         $inserted = $this->dao->insert(
