@@ -268,7 +268,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     if not_matching_tags_len > 0 && wrong_version_tags_len == 0 {
         let full_err_str = format!(
-            "the following submited tag(s) '{:?}' do not respect either of the imposed patern: X.Y or @tuleap/<package_name>_A.B.C",
+            "the following submitted tag(s) '{:?}' do not respect either of the imposed pattern: X.Y or @tuleap/<package_name>_A.B.C",
                 not_matching_tags
         );
 
@@ -286,8 +286,8 @@ fn main() -> Result<(), Box<dyn Error>> {
         };
     } else if not_matching_tags_len > 0 && wrong_version_tags_len > 0 {
         let full_err_str = format!(
-            r#"There is two errors:
-            1) the following submited tag(s) {:?} do not respect either of the imposed patern: X.Y or @tuleap/<package_name>_A.B.C
+            r#"There are two errors:
+            1) the following submitted tag(s) {:?} do not respect either of the imposed pattern: X.Y or @tuleap/<package_name>_A.B.C
             2) the following tags {:?} already exist with a superior or equal version (version must be incremental)
             "#,
             not_matching_tags, wrong_version_tags
