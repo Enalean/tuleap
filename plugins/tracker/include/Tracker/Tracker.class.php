@@ -22,8 +22,8 @@
 use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkWithIcon;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsSection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
@@ -1245,39 +1245,35 @@ class Tracker implements Tracker_Dispatchable_Interface
         $links_collection = new BreadCrumbLinkCollection([]);
         if ($this->userCanSubmitArtifact($user)) {
             $links_collection->add(
-                new BreadCrumbLinkWithIcon(
+                new BreadCrumbLink(
                     sprintf(dgettext('tuleap-tracker', 'New %s'), $this->getItemName()),
                     $this->getSubmitUrl(),
-                    'fa-plus'
                 )
             );
         }
         if (! $user->isAnonymous()) {
             $links_collection->add(
-                new BreadCrumbLinkWithIcon(
+                new BreadCrumbLink(
                     dgettext('tuleap-tracker', 'My notifications'),
                     TRACKER_BASE_URL . '/notifications/my/' . urlencode($this->id) . '/',
-                    'fa-bell'
                 )
             );
         }
 
         if ($this->getArtifactByMailStatus()->canCreateArtifact($this)) {
             $links_collection->add(
-                new BreadCrumbLinkWithIcon(
+                new BreadCrumbLink(
                     dgettext('tuleap-tracker', 'Create by email...'),
                     '#create-by-mail-modal-info',
-                    'fa-envelope'
                 )
             );
         }
 
         $admin_sections = [];
         if ($this->userIsAdmin($user)) {
-            $admin_breadcrumb = new BreadCrumbLinkWithIcon(
+            $admin_breadcrumb = new BreadCrumbLink(
                 dgettext('tuleap-tracker', 'Administration'),
                 $this->getAdministrationUrl(),
-                'fa-cog'
             );
             $admin_breadcrumb->setDataAttribute("test", "link-to-current-tracker-administration");
 

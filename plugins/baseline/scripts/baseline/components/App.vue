@@ -34,7 +34,6 @@
                 </div>
                 <div class="breadcrumb-item" v-bind:class="{ 'breadcrumb-switchable': is_admin }">
                     <router-link v-bind:to="{ name: 'IndexPage' }" class="breadcrumb-link">
-                        <i class="fa fa-tlp-baseline breadcrumb-link-icon"></i>
                         <translate>Baselines</translate>
                     </router-link>
                     <div class="breadcrumb-switch-menu-container" v-if="is_admin">

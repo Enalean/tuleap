@@ -36,7 +36,6 @@
                     v-bind:href="repository_list_url()"
                     v-bind:title="$gettext('Repository list')"
                 >
-                    <i class="breadcrumb-link-icon fa fa-fw fa-tlp-versioning-git"></i>
                     <translate>Git repositories</translate>
                 </a>
                 <div class="breadcrumb-switch-menu-container">

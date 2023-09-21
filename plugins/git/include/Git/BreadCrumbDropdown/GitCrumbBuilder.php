@@ -24,8 +24,8 @@ use GitPermissionsManager;
 use PFUser;
 use Project;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkWithIcon;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
 
@@ -52,10 +52,9 @@ class GitCrumbBuilder
     public function build(PFUser $user, Project $project)
     {
         $git_breadcrumb = new BreadCrumb(
-            new BreadCrumbLinkWithIcon(
+            new BreadCrumbLink(
                 dgettext('tuleap-git', 'Git repositories'),
                 $this->plugin_path . '/' . urlencode($project->getUnixNameLowerCase()) . '/',
-                'fa fa-fw fa-tlp-versioning-git'
             )
         );
 
@@ -87,10 +86,9 @@ class GitCrumbBuilder
                 ]
             );
         $links->add(
-            new BreadCrumbLinkWithIcon(
+            new BreadCrumbLink(
                 $GLOBALS['Language']->getText('global', 'Administration'),
                 $admin_url,
-                'fa-cog'
             )
         );
     }
@@ -104,10 +102,9 @@ class GitCrumbBuilder
             ]
         );
         $links->add(
-            new BreadCrumbLinkWithIcon(
+            new BreadCrumbLink(
                 dgettext('tuleap-git', 'Fork repositories'),
                 $fork_repositories_url,
-                'fa-code-fork'
             )
         );
     }

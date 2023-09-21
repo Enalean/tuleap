@@ -18,65 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Layout\BreadCrumbDropdown;
 
-class BreadCrumbLink
+final class BreadCrumbLink
 {
-    /** @var string */
-    private $label;
-
-    /** @var string */
-    private $url;
-
-    /** @var string */
-    private $icon_name;
-
     /**
      * @var array<string, string>
      */
-    private $data_attributes = [];
-    private string $project_icon;
+    private array $data_attributes = [];
+    private string $project_icon   = '';
 
     public function __construct(
-        $label,
-        $url,
+        private readonly string $label,
+        private readonly string $url,
     ) {
-        $this->label        = $label;
-        $this->url          = $url;
-        $this->icon_name    = '';
-        $this->project_icon = '';
     }
 
-    /**
-     * @return string
-     */
-    public function getLabel()
+    public function getLabel(): string
     {
         return $this->label;
     }
 
-    /**
-     * @return string
-     */
-    public function getUrl()
+    public function getUrl(): string
     {
         return $this->url;
-    }
-
-    /**
-     * @return string
-     */
-    public function getIconName()
-    {
-        return $this->icon_name;
-    }
-
-    /**
-     * @param string $icon_name
-     */
-    public function setIconName($icon_name)
-    {
-        $this->icon_name = $icon_name;
     }
 
     public function setDataAttribute(string $name, string $value): void

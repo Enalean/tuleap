@@ -27,7 +27,6 @@ use Tuleap\Kanban\SplitKanbanConfigurationChecker;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkWithIcon;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
 
@@ -50,10 +49,9 @@ class AgileDashboardCrumbBuilder
         }
 
         $agile_breadcrumb = new BreadCrumb(
-            new BreadCrumbLinkWithIcon(
+            new BreadCrumbLink(
                 $label,
                 AgileDashboardServiceHomepageUrlBuilder::buildSelf()->getUrl($project),
-                'fa-table'
             )
         );
 

@@ -27,7 +27,6 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkWithIcon;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsSection;
 
@@ -54,10 +53,9 @@ class ProgramManagementBreadCrumbsBuilder
 
     private function addADropdownWithLinkToGlobalAdministration(Project $project, BreadCrumb $breadcrumb): void
     {
-        $global_admin_link = new BreadCrumbLinkWithIcon(
+        $global_admin_link = new BreadCrumbLink(
             dgettext('tuleap-program_management', 'Administration'),
             '/program_management/admin/' . $project->getUnixNameLowerCase(),
-            'fa-cog'
         );
 
         $link_collection = new BreadCrumbLinkCollection();

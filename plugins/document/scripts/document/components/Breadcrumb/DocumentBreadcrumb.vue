@@ -40,7 +40,6 @@
                     v-bind:title="`${$gettext('Project documentation')}`"
                     data-test="breadcrumb-project-documentation"
                 >
-                    <i class="breadcrumb-link-icon fa-regular fa-folder-open"></i>
                     {{ $gettext("Documents") }}
                 </router-link>
                 <div class="breadcrumb-switch-menu-container">

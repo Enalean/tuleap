@@ -7,7 +7,7 @@ exports[`GitBreadcrumbs displays breadcrumbs 1`] = `
     <div class="breadcrumb-item breadcrumb-project"><a href="/guinea-pig/url" class="breadcrumb-link">
         🐹 Guinea Pig
       </a></div>
-    <div class="breadcrumb-switchable breadcrumb-item"><a href="/repositories/url" title="Repository list" class="breadcrumb-link"><i class="breadcrumb-link-icon fa fa-fw fa-tlp-versioning-git"></i>
+    <div class="breadcrumb-switchable breadcrumb-item"><a href="/repositories/url" title="Repository list" class="breadcrumb-link">
         <translate-stub tag="span">Git repositories</translate-stub>
       </a>
       <div class="breadcrumb-switch-menu-container">
