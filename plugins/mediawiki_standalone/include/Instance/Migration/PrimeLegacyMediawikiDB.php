@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\MediawikiStandalone\Instance\Migration;
 
 use ParagonIE\EasyDB\EasyDB;
+use Psr\Log\LoggerInterface;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
@@ -37,7 +38,7 @@ final class PrimeLegacyMediawikiDB extends DataAccessObject implements LegacyMed
     /**
      * @psalm-return Ok<null>|Err<Fault>
      */
-    public function prepareDBForMigration(\Project $project, string $db_name, string $db_prefix): Ok|Err
+    public function prepareDBForMigration(LoggerInterface $logger, \Project $project, string $db_name, string $db_prefix): Ok|Err
     {
         $project_id = (int) $project->getID();
 
@@ -47,20 +48,26 @@ final class PrimeLegacyMediawikiDB extends DataAccessObject implements LegacyMed
             /**
              * @psalm-return Ok<null>|Err<Fault>
              */
-            function (string $current_db_name) use ($db_name, $db_prefix, $project_id): Ok|Err {
+            function (string $current_db_name) use ($db_name, $db_prefix, $project_id, $logger): Ok|Err {
+                $logger->info('Check db name');
                 if ($current_db_name === $db_name) {
                     return Result::ok(null);
                 }
 
+                $logger->info('Move to another DB');
                 return $this->moveToAnotherDB($current_db_name, $db_name, $db_prefix, $project_id);
             }
         )->andThen(
             /** @psalm-return Ok<null> */
-            function () use ($db_prefix, $db_name): Ok {
+            function () use ($db_prefix, $db_name, $logger): Ok {
+                $logger->info('Create user mapping table');
                 $mapping_table_name = $db_prefix . self::MAPPING_TABLE_BASE_NAME;
                 $this->createUserMappingTable($db_name, $mapping_table_name);
+
+                $logger->info('Fill user mapping table');
                 $this->fillUserMappingTable($db_name, $db_prefix, $mapping_table_name);
 
+                $logger->info('DB prepared for migration');
                 return Result::ok(null);
             }
         );

@@ -33,6 +33,7 @@ use Psr\Log\NullLogger;
 use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\MediawikiStandalone\Instance\Migration\LegacyMediawikiCreateMissingUsersStub;
 use Tuleap\MediawikiStandalone\Instance\Migration\LegacyMediawikiDBPrimerStub;
 use Tuleap\MediawikiStandalone\Instance\Migration\LegacyMediawikiLanguageRetrieverStub;
 use Tuleap\MediawikiStandalone\Instance\Migration\SwitchMediawikiServiceStub;
@@ -97,6 +98,7 @@ final class InstanceManagementTest extends TestCase
             LegacyMediawikiLanguageRetrieverStub::withoutLanguage(),
             new ProvideInitializationLanguageCodeStub(),
             LegacyPermissionsMigratorStub::buildSelf(),
+            new LegacyMediawikiCreateMissingUsersStub(),
         );
 
         parent::setUp();

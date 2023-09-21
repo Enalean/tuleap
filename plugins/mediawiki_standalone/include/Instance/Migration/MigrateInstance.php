@@ -62,6 +62,7 @@ final class MigrateInstance
         private readonly LegacyMediawikiDBPrimer $legacy_mediawiki_db_primer,
         private readonly LegacyMediawikiLanguageRetriever $legacy_mediawiki_language_retriever,
         private readonly LegacyPermissionsMigrator $legacy_permissions_migrator,
+        private readonly LegacyMediawikiCreateMissingUsers $legacy_create_missing_users,
     ) {
     }
 
@@ -79,6 +80,7 @@ final class MigrateInstance
         LegacyMediawikiLanguageRetriever $legacy_mediawiki_language_retriever,
         InitializationLanguageCodeProvider $default_language_code_provider,
         LegacyPermissionsMigrator $legacy_permissions_migrator,
+        LegacyMediawikiCreateMissingUsers $legacy_create_missing_users,
     ): Option {
         if ($event->getEventName() !== self::TOPIC) {
             return Option::nothing(self::class);
@@ -99,6 +101,7 @@ final class MigrateInstance
                 $legacy_mediawiki_db_primer,
                 $legacy_mediawiki_language_retriever,
                 $legacy_permissions_migrator,
+                $legacy_create_missing_users,
             )
         );
     }
@@ -118,6 +121,9 @@ final class MigrateInstance
             );
         }
 
+        $logger->info("Create missing users in Legacy MediaWiki base prior migration");
+        $this->legacy_create_missing_users->create($logger, $this->project, $this->getDBPrefix());
+
         $logger->info("Switching to MediaWiki Standalone service");
         $this->switch_mediawiki_service->switchToStandalone($this->project);
 
@@ -125,8 +131,9 @@ final class MigrateInstance
 
         return $this->moveDataDirectory()->andThen(
             /** @psalm-return Ok<null>|Err<Fault> */
-            function (): Ok|Err {
+            function () use ($logger): Ok|Err {
                 return $this->legacy_mediawiki_db_primer->prepareDBForMigration(
+                    $logger,
                     $this->project,
                     $this->getDBName(),
                     $this->getDBPrefix()

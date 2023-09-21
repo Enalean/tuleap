@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Instance\Migration;
 
+use Psr\Log\NullLogger;
 use Tuleap\DB\DBFactory;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -41,7 +42,7 @@ final class PrimeLegacyMediawikiDBTest extends TestCase
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
         $db->run('INSERT INTO user(user_name) VALUES (?)', self::TEST_USER_NAME);
         $db->run(
-            sprintf('CREATE TABLE %s (user_name varchar(255) binary NOT NULL)', $db->escapeIdentifier(self::MW_USER_TABLE))
+            sprintf('CREATE TABLE %s (user_id int unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT, user_name varchar(255) binary NOT NULL)', $db->escapeIdentifier(self::MW_USER_TABLE))
         );
         $db->run(
             sprintf('INSERT INTO %s (user_name) VALUES (?)', $db->escapeIdentifier(self::MW_USER_TABLE)),
@@ -55,7 +56,7 @@ final class PrimeLegacyMediawikiDBTest extends TestCase
         $db->run('DELETE FROM plugin_mediawiki_database');
         $db->run('DELETE FROM user WHERE user_name = ?', self::TEST_USER_NAME);
         $db->run(sprintf('DROP TABLE %s', $db->escapeIdentifier(self::MW_USER_TABLE)));
-        $db->run(sprintf('DROP TABLE %s', $db->escapeIdentifier(self::MAPPING_TABLE)));
+        $db->run(sprintf('DROP TABLE IF EXISTS %s', $db->escapeIdentifier(self::MAPPING_TABLE)));
         try {
             $db->run(sprintf('DROP DATABASE %s', $db->escapeIdentifier(self::ADDITIONAL_TEST_DB)));
         } catch (\RuntimeException $exception) {
@@ -83,6 +84,7 @@ final class PrimeLegacyMediawikiDBTest extends TestCase
         );
 
         $prepare_result = $legacy_mw_db_migration_primer->prepareDBForMigration(
+            new NullLogger(),
             ProjectTestBuilder::aProject()->withId($project_id)->build(),
             $db_name,
             self::DB_PREFIX
@@ -120,6 +122,7 @@ final class PrimeLegacyMediawikiDBTest extends TestCase
         );
 
         $prepare_result = $legacy_mw_db_migration_primer->prepareDBForMigration(
+            new NullLogger(),
             ProjectTestBuilder::aProject()->withId($project_id)->build(),
             $db_name,
             self::DB_PREFIX
