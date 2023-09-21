@@ -43,7 +43,7 @@ class ProjectSidebarToolsBuilder
     /**
      * @return \Generator<int, SidebarServicePresenter>
      */
-    public function getSidebarTools(PFUser $user, $toptab, Project $project): \Generator
+    public function getSidebarTools(PFUser $user, $toptab, ?string $active_promoted_item_id, Project $project): \Generator
     {
         $allowed_services = $this->getAllowedServicesForUser($user, $project);
 
@@ -54,9 +54,9 @@ class ProjectSidebarToolsBuilder
 
             $href = $this->getLink($service, $project);
             if ($service instanceof ProjectDefinedService) {
-                yield SidebarServicePresenter::fromProjectDefinedService($service, $href, $user);
+                yield SidebarServicePresenter::fromProjectDefinedService($service, $href, $active_promoted_item_id, $user);
             } else {
-                yield SidebarServicePresenter::fromService($service, $href, $this->isEnabled($toptab, $service), $user);
+                yield SidebarServicePresenter::fromService($service, $href, $this->isEnabled($toptab, $service), $active_promoted_item_id, $user);
             }
         }
     }

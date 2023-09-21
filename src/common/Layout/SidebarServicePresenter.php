@@ -46,7 +46,7 @@ final class SidebarServicePresenter
     ) {
     }
 
-    public static function fromProjectDefinedService(ProjectDefinedService $service, string $href, \PFUser $user): self
+    public static function fromProjectDefinedService(ProjectDefinedService $service, string $href, ?string $active_promoted_item_id, \PFUser $user): self
     {
         $description          = $service->getInternationalizedDescription();
         $is_opened_in_new_tab = $service->isOpenedInNewTab();
@@ -62,11 +62,11 @@ final class SidebarServicePresenter
             $is_opened_in_new_tab,
             false,
             '',
-            $service->getPromotedItemPresenters($user),
+            $service->getPromotedItemPresenters($user, $active_promoted_item_id),
         );
     }
 
-    public static function fromService(Service $service, string $href, bool $is_enabled, \PFUser $user): self
+    public static function fromService(Service $service, string $href, bool $is_enabled, ?string $active_promoted_item_id, \PFUser $user): self
     {
         return new self(
             $href,
@@ -76,7 +76,7 @@ final class SidebarServicePresenter
             $service->isOpenedInNewTab(),
             $is_enabled,
             $service->getShortName(),
-            $service->getPromotedItemPresenters($user),
+            $service->getPromotedItemPresenters($user, $active_promoted_item_id),
         );
     }
 }

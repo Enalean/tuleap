@@ -165,6 +165,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      *  'tracker_id'      int (IN)
      */
     public final const TRACKER_EVENT_FETCH_ADMIN_BUTTONS = 'tracker_event_fetch_admin_buttons';
+    private const PROMOTED_ITEM_PREFIX                   = 'tracker-';
 
     public $id;
     public $group_id;
@@ -1213,6 +1214,8 @@ class Tracker implements Tracker_Dispatchable_Interface
                 );
             }
 
+            $params['active-promoted-item-id'] = $this->getPromotedTrackerId();
+
             $title = ($title ? $title . ' - ' : '') . $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML);
             $layout->displayHeader($project, $title, $breadcrumbs, $toolbar, $params);
 
@@ -1231,6 +1234,11 @@ class Tracker implements Tracker_Dispatchable_Interface
                 );
             }
         }
+    }
+
+    public function getPromotedTrackerId(): string
+    {
+        return self::PROMOTED_ITEM_PREFIX . $this->getId();
     }
 
     private function getCrumb(): BreadCrumb

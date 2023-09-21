@@ -105,7 +105,7 @@ class ServiceTracker extends Service
         ];
     }
 
-    public function getPromotedItemPresenters(PFUser $user): array
+    public function getPromotedItemPresenters(PFUser $user, ?string $active_promoted_item_id): array
     {
         $retriever = new SidebarPromotedTrackerRetriever(
             new TrackerInNewDropdownRetriever(
@@ -114,6 +114,6 @@ class ServiceTracker extends Service
             ),
         );
 
-        return $retriever->getPromotedItemPresenters($user, $this->project);
+        return $retriever->getPromotedItemPresenters($user, $this->project, $active_promoted_item_id);
     }
 }

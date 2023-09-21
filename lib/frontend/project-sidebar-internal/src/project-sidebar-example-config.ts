@@ -99,7 +99,7 @@ export const example_config: Configuration = {
             description: "Description service A",
             icon: "fa-fw fa-solid fa-folder-open",
             open_in_new_tab: false,
-            is_active: true,
+            is_active: false,
             shortcut_id: "",
         },
         {
@@ -108,18 +108,20 @@ export const example_config: Configuration = {
             description: "Fake Git",
             icon: "fa-fw fa-solid fa-tlp-versioning-git",
             open_in_new_tab: false,
-            is_active: false,
+            is_active: true,
             shortcut_id: "plugin_git",
             promoted_items: [
                 {
                     href: "/service/fake_git/fake_repo1",
                     label: "Repository 1",
                     description: "Awesome repository",
+                    is_active: false,
                 },
                 {
                     href: "/service/fake_git/fake_repo2",
                     label: "Repository 2",
                     description: "Another awesome repository",
+                    is_active: true,
                 },
             ],
         },

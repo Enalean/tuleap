@@ -144,11 +144,13 @@ describe("ToolPresenter", () => {
                     href: "/service/fake_git/fake_repo1",
                     label: "Repository 1",
                     description: "Awesome repository",
+                    is_active: false,
                 },
                 {
                     href: "/service/fake_git/fake_repo2",
                     label: "Repository 2",
                     description: "Another awesome repository",
+                    is_active: false,
                 },
             ],
         };
@@ -163,5 +165,71 @@ describe("ToolPresenter", () => {
         ).toBe(true);
 
         expect(wrapper.findAllComponents(PromotedItemPresenter)).toHaveLength(2);
+    });
+
+    it("should displays tool as active if it is active and its promoted items are not active", () => {
+        const tool_data: Tool = {
+            href: "/foo",
+            label: "Label",
+            description: "Description",
+            icon: "fa-fw fa-solid fa-tlp-somethingelse",
+            open_in_new_tab: true,
+            is_active: true,
+            shortcut_id: "",
+            promoted_items: [
+                {
+                    href: "/service/fake_git/fake_repo1",
+                    label: "Repository 1",
+                    description: "Awesome repository",
+                    is_active: false,
+                },
+                {
+                    href: "/service/fake_git/fake_repo2",
+                    label: "Repository 2",
+                    description: "Another awesome repository",
+                    is_active: false,
+                },
+            ],
+        };
+        const wrapper = shallowMount(ToolComponent, {
+            props: tool_data,
+        });
+
+        const anchor_element = wrapper.find("a").element;
+
+        expect(anchor_element.classList.contains("active")).toBe(true);
+    });
+
+    it("should displays tool as not active if it is active and one of its promoted item is active", () => {
+        const tool_data: Tool = {
+            href: "/foo",
+            label: "Label",
+            description: "Description",
+            icon: "fa-fw fa-solid fa-tlp-somethingelse",
+            open_in_new_tab: true,
+            is_active: true,
+            shortcut_id: "",
+            promoted_items: [
+                {
+                    href: "/service/fake_git/fake_repo1",
+                    label: "Repository 1",
+                    description: "Awesome repository",
+                    is_active: false,
+                },
+                {
+                    href: "/service/fake_git/fake_repo2",
+                    label: "Repository 2",
+                    description: "Another awesome repository",
+                    is_active: true,
+                },
+            ],
+        };
+        const wrapper = shallowMount(ToolComponent, {
+            props: tool_data,
+        });
+
+        const anchor_element = wrapper.find("a").element;
+
+        expect(anchor_element.classList.contains("active")).toBe(false);
     });
 });
