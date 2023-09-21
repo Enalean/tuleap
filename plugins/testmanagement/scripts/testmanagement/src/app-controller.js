@@ -73,6 +73,9 @@ function TestManagementCtrl(
         SharedPropertiesService.setArtifactLinksTypes(
             JSON.parse(testmanagement_init_data.artifactLinksTypes),
         );
+        SharedPropertiesService.setIsOrderedByTestDefinitionRank(
+            testmanagement_init_data.orderByDefinitionRank === "1",
+        );
 
         moveBreadCrumbs(
             project_public_name,

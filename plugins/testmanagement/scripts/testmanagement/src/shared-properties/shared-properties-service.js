@@ -18,6 +18,7 @@ function SharedPropertiesService() {
         user_timezone: "",
         user_locale: "",
         artifact_links_types: [],
+        is_ordered_by_test_def_rank: false,
     };
 
     return {
@@ -61,6 +62,8 @@ function SharedPropertiesService() {
         getFileUploadMaxSize,
         setArtifactLinksTypes,
         getArtifactLinksTypes,
+        setIsOrderedByTestDefinitionRank,
+        isOrderedByTestDefinitionRank,
     };
 
     function getPlatformLogoUrl() {
@@ -221,5 +224,13 @@ function SharedPropertiesService() {
 
     function getArtifactLinksTypes() {
         return property.artifact_links_types;
+    }
+
+    function setIsOrderedByTestDefinitionRank(is_ordered_by_test_def_rank) {
+        this.is_ordered_by_test_def_rank = is_ordered_by_test_def_rank;
+    }
+
+    function isOrderedByTestDefinitionRank() {
+        return this.is_ordered_by_test_def_rank;
     }
 }

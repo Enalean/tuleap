@@ -66,6 +66,7 @@ function ExecutionListCtrl(
         hideDetailsForRemovedTestExecution,
         shouldShowEmptyState,
         isStatusHidden,
+        isOrderByDefinitionRankEnabled,
         scrollToCurrentTest,
         isScrollToTestButtonDisabled,
     });
@@ -261,6 +262,10 @@ function ExecutionListCtrl(
 
     function isStatusHidden(status) {
         return $scope.status[status] === false;
+    }
+
+    function isOrderByDefinitionRankEnabled() {
+        return SharedPropertiesService.isOrderedByTestDefinitionRank();
     }
 
     function shouldShowEmptyState() {

@@ -33,7 +33,6 @@ use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\StepDefinitionRepres
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinitionChangesetValue;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
-use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
 /**
  * @psalm-immutable
@@ -65,6 +64,8 @@ final class DefinitionTextOrHTMLRepresentation extends MinimalDefinitionRepresen
      */
     public $all_requirements;
 
+    public readonly int $rank;
+
     /**
      * @param ArtifactRepresentation[] $all_requirements
      * @throws StepDefinitionFormatNotFoundException
@@ -75,6 +76,7 @@ final class DefinitionTextOrHTMLRepresentation extends MinimalDefinitionRepresen
         Artifact $artifact,
         ArtifactRepresentation $artifact_representation,
         Tracker_FormElementFactory $form_element_factory,
+        \Tracker_Artifact_PriorityManager $artifact_priority_manager,
         PFUser $user,
         string $description_format,
         array $all_requirements,
@@ -95,6 +97,8 @@ final class DefinitionTextOrHTMLRepresentation extends MinimalDefinitionRepresen
 
         $this->all_requirements = $all_requirements;
         $this->requirement      = empty($all_requirements) ? null : $all_requirements[0];
+
+        $this->rank = self::getDefinitionRank($artifact_priority_manager, $artifact);
 
         $this->steps = [];
         $value       = DefinitionRepresentationBuilder::getFieldValue(
@@ -137,8 +141,8 @@ final class DefinitionTextOrHTMLRepresentation extends MinimalDefinitionRepresen
         );
     }
 
-    private static function getMinimalTrackerRepresentation(Artifact $artifact): MinimalTrackerRepresentation
+    private static function getDefinitionRank(\Tracker_Artifact_PriorityManager $artifact_priority_manager, Artifact $artifact): int
     {
-        return MinimalTrackerRepresentation::build($artifact->getTracker());
+        return (int) $artifact_priority_manager->getGlobalRank($artifact->getId());
     }
 }

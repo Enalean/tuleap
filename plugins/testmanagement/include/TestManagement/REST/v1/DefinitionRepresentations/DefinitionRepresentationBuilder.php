@@ -67,6 +67,7 @@ class DefinitionRepresentationBuilder
         \Codendi_HTMLPurifier $purifier,
         ContentInterpretor $interpreter,
         private readonly ArtifactRepresentationBuilder $artifact_representation_builder,
+        private readonly \Tracker_Artifact_PriorityManager $artifact_priority_manager,
     ) {
         $this->tracker_form_element_factory = $tracker_form_element_factory;
         $this->conformance_validator        = $conformance_validator;
@@ -118,6 +119,7 @@ class DefinitionRepresentationBuilder
                 $definition_artifact,
                 $definition_artifact_representation,
                 $this->tracker_form_element_factory,
+                $this->artifact_priority_manager,
                 $user,
                 Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
                 $all_requirements,
@@ -134,6 +136,7 @@ class DefinitionRepresentationBuilder
                     $definition_artifact,
                     $definition_artifact_representation,
                     $this->tracker_form_element_factory,
+                    $this->artifact_priority_manager,
                     $user,
                     $description_text_field->getFormat(),
                     $all_requirements,
@@ -146,6 +149,7 @@ class DefinitionRepresentationBuilder
                     $definition_artifact,
                     $definition_artifact_representation,
                     $this->tracker_form_element_factory,
+                    $this->artifact_priority_manager,
                     $user,
                     $all_requirements,
                     $changeset,
