@@ -20,7 +20,7 @@
 import type { DropdownManager } from "../dropdown/DropdownManager";
 import type { ListPickerItem, ListPickerSelectionStateSingle, SelectionManager } from "../type";
 import type { ItemsMapManager } from "../items/ItemsMapManager";
-import { html, render } from "lit/html.js";
+import { html, render } from "lit-html";
 
 const markItemSelected = (item: ListPickerItem): void => {
     item.is_selected = true;

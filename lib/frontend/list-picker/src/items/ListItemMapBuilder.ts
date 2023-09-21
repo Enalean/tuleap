@@ -18,8 +18,8 @@
  */
 
 import type { ListPickerItem, ListPickerItemMap, ListPickerOptions } from "../type";
-import type { TemplateResult, HTMLTemplateResult } from "lit/html.js";
-import { html, render } from "lit/html.js";
+import type { TemplateResult, HTMLTemplateResult } from "lit-html";
+import { html, render } from "lit-html";
 import { getOptionsLabel } from "../helpers/option-label-helper";
 import {
     hasOptionPredefinedTemplate,

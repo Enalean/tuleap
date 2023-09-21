@@ -24,7 +24,7 @@ import {
     TEXT_FORMAT_TEXT,
 } from "@tuleap/plugin-tracker-constants";
 import type { GettextProvider } from "@tuleap/gettext";
-import { render } from "lit/html.js";
+import { render } from "lit-html";
 import { stripLitExpressionComments } from "../../../test-helper";
 import { initGettextSync } from "@tuleap/gettext";
 
@@ -61,18 +61,18 @@ describe(`FormatSelect`, () => {
         render(template, mount_point);
 
         expect(stripLitExpressionComments(mount_point.innerHTML)).toMatchInlineSnapshot(`
-            "
-                    <select class="small" data-test="format-select" id="whimper" name="depletive">
-                        
-                <option value="commonmark" selected="">Markdown</option>
+"
+        <select class="small" data-test="format-select" id="whimper" name="depletive">
+            
+    <option value="commonmark" selected="">Markdown</option>
 
-                <option value="html">HTML</option>
+    <option value="html">HTML</option>
 
-                <option value="text">Text</option>
+    <option value="text">Text</option>
 
-                    </select>
-                "
-        `);
+        </select>
+    "
+`);
     });
 
     it(`with is_disabled is true, it will disable the selectbox`, () => {

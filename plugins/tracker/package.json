@@ -39,7 +39,7 @@
     "@tuleap/cypress-configurator": "workspace:*",
     "@tuleap/cypress-utilities-support": "workspace:*",
     "@types/bootstrap": "^4.5.1",
-    "@types/dompurify": "^2.4.0",
+    "@types/dompurify": "^3.0.2",
     "@types/jquery": "^3.5.5",
     "@types/sprintf-js": "^1.1.2",
     "jquery": "^3.6.0"

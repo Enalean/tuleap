@@ -11,7 +11,7 @@
     "@tuleap/vue2-gettext-init": "workspace:*",
     "@vueuse/core": "^8.7.3",
     "current-week-number": "^1.0.7",
-    "lit": "^2.2.3",
+    "lit-html": "^2.8.0",
     "vue": "2.7.8",
     "vue-dompurify-html": "^4.0.0",
     "vuex": "^3.6.2"

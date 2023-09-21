@@ -14,11 +14,11 @@
     "@tuleap/plugin-tracker-rte-creator": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
     "dompurify": "^3.0.5",
-    "lit": "2.8.0"
+    "lit-html": "^2.8.0"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
-    "@types/dompurify": "^2.4.0",
+    "@types/dompurify": "^3.0.2",
     "@types/jquery": "^3.5.5"
   },
   "scripts": {

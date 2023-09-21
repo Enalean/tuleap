@@ -19,8 +19,8 @@
  */
 
 import type { GettextProvider } from "@tuleap/gettext";
-import { html, unsafeStatic } from "lit/static-html.js";
-import type { TemplateResult } from "lit/html.js";
+import type { TemplateResult } from "lit-html";
+import { html, unsafeStatic } from "lit-html/static.js";
 
 export function getCommonMarkSyntaxPopoverHelperContent(
     gettext_provider: GettextProvider,

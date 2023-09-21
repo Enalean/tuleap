@@ -29,11 +29,22 @@ export default vite.defineLibConfig({
             name: "PluginTrackerRichTextEditor",
         },
         rollupOptions: {
-            external: ["ckeditor4", "jquery"],
+            external: [
+                "ckeditor4",
+                "jquery",
+                "lit-html",
+                "lit-html/static.js",
+                "lit-html/directives/unsafe-html.js",
+                "lit-html/directives/until.js",
+            ],
             output: {
                 globals: {
                     ckeditor4: "ckeditor4",
                     jquery: "jquery",
+                    "lit-html": "lit-html",
+                    "lit-html/static.js": "lit-html/static.js",
+                    "lit-html/directives/unsafe-html.js": "lit-html/directives/unsafe-html.js",
+                    "lit-html/directives/until.js": "lit-html/directives/until.js",
                 },
             },
         },

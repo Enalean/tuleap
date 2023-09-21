@@ -27,7 +27,7 @@ const esModules = [
     "d3-shape",
     "d3-force",
     "d3",
-    "lit",
+    "lit-html",
     "internmap",
     "hybrids",
 ].join("|");

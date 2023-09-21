@@ -23,7 +23,7 @@ import { appendSimpleOptionsToSourceSelectBox } from "../../test-helpers/select-
 import { ItemsMapManager } from "../../items/ItemsMapManager";
 import { createItemBadgeTemplate } from "./list-picker-element-badge-creator";
 import { ListItemMapBuilder } from "../../items/ListItemMapBuilder";
-import { render } from "lit/html.js";
+import { render } from "lit-html";
 
 describe("list-picker-element-badge-creator", () => {
     let source_select_box: HTMLSelectElement,

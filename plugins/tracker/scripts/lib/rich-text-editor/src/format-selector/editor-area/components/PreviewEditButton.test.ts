@@ -19,7 +19,7 @@
 
 import { createPreviewEditButton } from "./PreviewEditButton";
 import type { GettextProvider } from "@tuleap/gettext";
-import { render } from "lit/html.js";
+import { render } from "lit-html";
 import { stripLitExpressionComments } from "../../../test-helper";
 import { initGettextSync } from "@tuleap/gettext";
 

@@ -20,7 +20,7 @@
 import type { GetText } from "@tuleap/gettext";
 import { getPOFileFromLocale, initGettext } from "@tuleap/gettext";
 import { getJSON, uri } from "@tuleap/fetch-result";
-import { html, render } from "lit/html.js";
+import { html, render } from "lit-html";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const containers = document.querySelectorAll(".artifact-type");

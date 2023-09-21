@@ -29,7 +29,7 @@
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:*",
-    "@types/dompurify": "^2.3.4"
+    "@types/dompurify": "^3.0.2"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

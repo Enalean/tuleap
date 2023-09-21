@@ -18,8 +18,8 @@
  */
 
 import type { GettextProvider } from "@tuleap/gettext";
-import { html, render } from "lit/html.js";
-import type { TemplateResult } from "lit";
+import { html, render } from "lit-html";
+import type { TemplateResult } from "lit-html";
 
 export function initFeedbacks(): void {
     clearFeedback();

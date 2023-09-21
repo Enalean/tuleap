@@ -18,9 +18,9 @@
  */
 
 import type { GettextProvider } from "@tuleap/gettext";
-import type { TemplateResult } from "lit/html.js";
-import { html } from "lit/html.js";
-import { until } from "lit/directives/until.js";
+import type { TemplateResult } from "lit-html";
+import { html } from "lit-html";
+import { until } from "lit-html/directives/until.js";
 
 export interface PreviewButtonPresenter {
     readonly is_in_edit_mode: boolean;

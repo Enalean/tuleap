@@ -20,11 +20,11 @@
 
 import type { ListPickerItem } from "../../type";
 import { convertBadColorHexToRGB, isColorBad } from "../color-helper";
-import type { TemplateResult } from "lit/html.js";
-import { html } from "lit/html.js";
+import type { TemplateResult } from "lit-html";
+import { html } from "lit-html";
 import { ListItemMapBuilder } from "../../items/ListItemMapBuilder";
-import { classMap } from "lit/directives/class-map.js";
-import { styleMap } from "lit/directives/style-map.js";
+import { classMap } from "lit-html/directives/class-map.js";
+import { styleMap } from "lit-html/directives/style-map.js";
 
 export function createItemBadgeTemplate(
     event_listener: (event: Event) => void,

@@ -18,8 +18,8 @@
  */
 
 import type { GettextProvider } from "@tuleap/gettext";
-import type { TemplateResult } from "lit/html.js";
-import { html } from "lit/html.js";
+import type { TemplateResult } from "lit-html";
+import { html } from "lit-html";
 import { getCommonMarkSyntaxPopoverHelperContent } from "../commonmark-syntax-helper";
 import "../FlamingParrotPopoverButtonElement";
 

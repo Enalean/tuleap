@@ -19,7 +19,7 @@
 
 import { TEXT_FORMAT_HTML } from "@tuleap/plugin-tracker-constants";
 import { createFormatHiddenInput } from "./FormatHiddenInput";
-import { render } from "lit/html.js";
+import { render } from "lit-html";
 import { stripLitExpressionComments } from "../../../test-helper";
 
 describe(`FormatHiddenInput`, () => {

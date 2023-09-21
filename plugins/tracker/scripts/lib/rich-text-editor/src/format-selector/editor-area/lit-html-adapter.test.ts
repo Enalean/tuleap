@@ -18,7 +18,7 @@
  */
 
 import type { GettextProvider } from "@tuleap/gettext";
-import { html } from "lit/html.js";
+import { html } from "lit-html";
 import { renderHTMLOrTextEditor, renderMarkdownEditor } from "./lit-html-adapter";
 import { stripLitExpressionComments } from "../../test-helper";
 import { initGettextSync } from "@tuleap/gettext";

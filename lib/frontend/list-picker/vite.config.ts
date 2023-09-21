@@ -30,16 +30,16 @@ export default vite.defineLibConfig({
         },
         rollupOptions: {
             external: [
-                "lit/html.js",
-                "lit/directives/style-map.js",
-                "lit/directives/class-map.js",
+                "lit-html",
+                "lit-html/directives/style-map.js",
+                "lit-html/directives/class-map.js",
                 "@tuleap/gettext",
             ],
             output: {
                 globals: {
-                    "lit/html.js": "lit/html.js",
-                    "lit/directives/style-map.js": "lit/directives/style-map.js",
-                    "lit/directives/class-map.js": "lit/directives/class-map.js",
+                    "lit-html": "lit-html",
+                    "lit-html/directives/style-map.js": "lit-html/directives/style-map.js",
+                    "lit-html/directives/class-map.js": "lit-html/directives/class-map.js",
                     "@tuleap/gettext": "@tuleap/gettext",
                 },
             },
