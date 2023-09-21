@@ -36,7 +36,7 @@ final class ProjectSidebarDataRepresentation
     public static function fromConfigRepresentationAndUser(ProjectSidebarConfigRepresentation $config_representation, \PFUser $user): self
     {
         return new self(
-            $user->getPreference('sidebar_state') === 'sidebar-collapsed',
+            $config_representation->is_collapsible && $user->getPreference('sidebar_state') === 'sidebar-collapsed',
             json_encode($config_representation, JSON_THROW_ON_ERROR)
         );
     }

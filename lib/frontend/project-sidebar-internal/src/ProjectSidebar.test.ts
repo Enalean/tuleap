@@ -24,6 +24,7 @@ import { describe, it, expect } from "vitest";
 import ProjectSidebar from "./ProjectSidebar.vue";
 import { shallowMount } from "@vue/test-utils";
 import { example_config } from "./project-sidebar-example-config";
+import SidebarCollapseButton from "./SidebarCollapseButton.vue";
 
 describe("ProjectSidebar", () => {
     it("displays sidebar", () => {
@@ -39,4 +40,76 @@ describe("ProjectSidebar", () => {
 
         expect(wrapper.element.childNodes).toHaveLength(0);
     });
+
+    it.each([
+        [false, false],
+        [true, true],
+    ])(
+        `Given configuration does not contain information about is_collapsible,
+        And collapsed attribute is %s
+        Then sidebar can be collapsed and is currently collapsed = %s`,
+        (collapsed, expected) => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { is_collapsible, ...config_without_is_collapsible } = example_config;
+
+            const wrapper = shallowMount(ProjectSidebar, {
+                props: { config: JSON.stringify(config_without_is_collapsible), collapsed },
+            });
+
+            expect(wrapper.element.classList.contains("sidebar-collapsed")).toBe(expected);
+            expect(wrapper.findComponent(SidebarCollapseButton).props("is_sidebar_collapsed")).toBe(
+                expected,
+            );
+            expect(
+                wrapper.findComponent(SidebarCollapseButton).props("can_sidebar_be_collapsed"),
+            ).toBe(true);
+        },
+    );
+
+    it.each([
+        [false, false],
+        [true, true],
+    ])(
+        `Given configuration have is_collapsible = true,
+        And collapsed attribute is %s
+        Then sidebar can be collapsed and is currently collapsed = %s`,
+        (collapsed, expected) => {
+            const wrapper = shallowMount(ProjectSidebar, {
+                props: {
+                    config: JSON.stringify({ ...example_config, is_collapsible: true }),
+                    collapsed,
+                },
+            });
+
+            expect(wrapper.element.classList.contains("sidebar-collapsed")).toBe(expected);
+            expect(wrapper.findComponent(SidebarCollapseButton).props("is_sidebar_collapsed")).toBe(
+                expected,
+            );
+            expect(
+                wrapper.findComponent(SidebarCollapseButton).props("can_sidebar_be_collapsed"),
+            ).toBe(true);
+        },
+    );
+
+    it.each([[false], [true]])(
+        `Given configuration have is_collapsible = false,
+        And collapsed attribute is %s
+        Then sidebar cannot be collapsed and is currently not collapsed`,
+        (collapsed) => {
+            const wrapper = shallowMount(ProjectSidebar, {
+                props: {
+                    config: JSON.stringify({ ...example_config, is_collapsible: false }),
+                    collapsed,
+                },
+            });
+
+            expect(wrapper.element.classList.contains("sidebar-collapsed")).toBe(false);
+            expect(wrapper.findComponent(SidebarCollapseButton).props("is_sidebar_collapsed")).toBe(
+                false,
+            );
+            expect(
+                wrapper.findComponent(SidebarCollapseButton).props("can_sidebar_be_collapsed"),
+            ).toBe(false);
+        },
+    );
 });

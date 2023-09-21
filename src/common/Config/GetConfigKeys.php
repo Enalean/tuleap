@@ -38,6 +38,7 @@ use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\HomePage\NewsCollectionBuilder;
 use Tuleap\Layout\HomePage\StatisticsCollectionBuilder;
+use Tuleap\Layout\ProjectSidebar\ProjectSidebarConfigRepresentation;
 use Tuleap\Log\LogToGraylog2;
 use Tuleap\Mail\Transport\MailTransportBuilder;
 use Tuleap\Project\Admin\Export\ProjectExportController;
@@ -86,6 +87,7 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider
         OutboundHTTPRequestProxy::class,
         FilteredOutboundHTTPResponseAlerter::class,
         RequestInstrumentation::class,
+        ProjectSidebarConfigRepresentation::class,
     ];
 
     /**
