@@ -103,6 +103,7 @@ export const defineJestConfiguration = (): JestConfiguration => {
             },
         },
         snapshotSerializers: ["jest-serializer-vue"],
+        prettierPath: null, // jest does not support prettier v3
         testMatch: ["**/?(*.)+(test).{js,ts}"],
         testPathIgnorePatterns: ["/node_modules/", "<rootDir>/scripts/lib/"],
         collectCoverageFrom: [

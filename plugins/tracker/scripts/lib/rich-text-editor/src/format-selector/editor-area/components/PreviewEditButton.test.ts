@@ -85,7 +85,12 @@ describe(`PreviewEditButton`, () => {
         render(template, mount_point);
         return presenter.promise_of_preview.catch(identity).then(() => {
             const button = getButton();
-            expect(stripLitExpressionComments(button.outerHTML)).toMatchSnapshot();
+            expect(stripLitExpressionComments(button.outerHTML)).toMatchInlineSnapshot(`
+                <button type="button" class="btn btn-small rte-button">
+                  <i aria-hidden="true" class="fas fa-fw fa-eye"></i>
+                  Preview
+                </button>
+            `);
         });
     });
 
@@ -98,6 +103,11 @@ describe(`PreviewEditButton`, () => {
         const template = createPreviewEditButton(presenter, gettext_provider);
         render(template, mount_point);
         const button = getButton();
-        expect(stripLitExpressionComments(button.outerHTML)).toMatchSnapshot();
+        expect(stripLitExpressionComments(button.outerHTML)).toMatchInlineSnapshot(`
+            <button type="button" class="btn btn-small rte-button" disabled="">
+              <i class="fas fa-fw fa-spin fa-circle-notch" aria-hidden="true"></i>
+              Preview
+            </button>
+        `);
     });
 });
