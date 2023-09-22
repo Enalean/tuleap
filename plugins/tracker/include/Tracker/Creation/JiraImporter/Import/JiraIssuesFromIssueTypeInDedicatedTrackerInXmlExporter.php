@@ -249,7 +249,7 @@ class JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporter
                     $logger,
                 ),
             ),
-            new SemanticsXMLExporter(),
+            new SemanticsXMLExporter(EventManager::instance()),
             new AlwaysThereFieldsExporter(),
             new StoryPointFieldExporter(
                 $logger,

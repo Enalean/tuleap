@@ -247,7 +247,7 @@ class JiraIssuesFromProjectInMonoTrackerInXmlExporter
                     $logger,
                 ),
             ),
-            new SemanticsXMLExporter(),
+            new SemanticsXMLExporter(EventManager::instance()),
             new AlwaysThereFieldsExporter(),
             new XmlReportAllIssuesExporter(
                 $default_criteria_exporter,

@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import;
 
 use DOMDocument;
 use org\bovigo\vfs\vfsStream;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\NullLogger;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\JiraImport\Project\CreateProjectFromJiraCommand;
@@ -271,7 +272,15 @@ final class JiraIssuesFromProjectInMonoTrackerInXmlExporterTest extends TestCase
                     $logger,
                 ),
             ),
-            new SemanticsXMLExporter(),
+            new SemanticsXMLExporter(
+                new class implements EventDispatcherInterface
+                {
+                    public function dispatch(object $event)
+                    {
+                        return;
+                    }
+                }
+            ),
             new AlwaysThereFieldsExporter(),
             new XmlReportAllIssuesExporter(
                 $default_criteria_exporter,
