@@ -1337,7 +1337,8 @@ class ProjectResource extends AuthenticatedResource
                         ProjectManager::instance(),
                         new URISanitizer(new Valid_HTTPURI(), new Valid_LocalURI())
                     ),
-                    $currently_active_service
+                    $currently_active_service,
+                    null,
                 );
 
                 $reference_representation_builder = new ReferenceRepresentationBuilder(\ReferenceManager::instance(), $event_manager);

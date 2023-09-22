@@ -24,6 +24,7 @@ export interface PromotedItem {
     readonly href: string;
     readonly label: string;
     readonly description: string;
+    readonly is_active: boolean;
 }
 
 export interface Tool {

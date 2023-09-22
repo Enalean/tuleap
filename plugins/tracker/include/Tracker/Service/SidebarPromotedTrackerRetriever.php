@@ -50,7 +50,7 @@ final class SidebarPromotedTrackerRetriever
     /**
      * @return list<SidebarPromotedItemPresenter>
      */
-    public function getPromotedItemPresenters(\PFUser $user, \Project $project): array
+    public function getPromotedItemPresenters(\PFUser $user, \Project $project, ?string $active_promoted_item_id): array
     {
         if (! $this->isProjectAllowedToPromoteTrackersInSidebar($project)) {
             return [];
@@ -62,6 +62,7 @@ final class SidebarPromotedTrackerRetriever
                     $tracker->getUri(),
                     $tracker->getName(),
                     $tracker->getDescription(),
+                    $tracker->getPromotedTrackerId() === $active_promoted_item_id,
                 ),
                 $this->retriever->getTrackers($user, $project),
             ),

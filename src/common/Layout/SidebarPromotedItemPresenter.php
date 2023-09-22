@@ -29,6 +29,7 @@ final class SidebarPromotedItemPresenter
         public readonly string $href,
         public readonly string $label,
         public readonly string $description,
+        public readonly bool $is_active,
     ) {
     }
 }

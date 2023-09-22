@@ -25,6 +25,9 @@
         v-bind:href="sanitized_href"
         v-bind:aria-label="label"
         class="project-sidebar-nav-promoted-item"
+        v-bind:class="{
+            active: is_active,
+        }"
         v-bind:title="description"
         data-test="project-sidebar-tool-promoted-item"
     >
@@ -42,6 +45,7 @@ const props = defineProps<{
     href: string;
     label: string;
     description: string;
+    is_active: boolean;
 }>();
 const sanitized_href = computed(() => sanitizeURL(props.href));
 </script>

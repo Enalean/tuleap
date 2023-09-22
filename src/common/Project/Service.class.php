@@ -322,7 +322,7 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     /**
      * @return list<SidebarPromotedItemPresenter>
      */
-    public function getPromotedItemPresenters(PFUser $user): array
+    public function getPromotedItemPresenters(PFUser $user, ?string $active_promoted_item_id): array
     {
         return [];
     }

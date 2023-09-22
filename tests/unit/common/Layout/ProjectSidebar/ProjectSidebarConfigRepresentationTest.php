@@ -87,7 +87,8 @@ final class ProjectSidebarConfigRepresentationTest extends TestCase
             },
             $this->createStub(GlyphFinder::class),
             $project_sidebar_tools_builder,
-            ''
+            '',
+            null,
         );
 
         self::assertNotNull($representation);

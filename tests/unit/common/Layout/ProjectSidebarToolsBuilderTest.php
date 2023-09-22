@@ -67,7 +67,7 @@ final class ProjectSidebarToolsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $uri_sanitizer
         );
 
-        $sidebar = $builder->getSidebarTools($this->user, 10, $this->project);
+        $sidebar = $builder->getSidebarTools($this->user, 10, 'whatever', $this->project);
         return iterator_to_array($sidebar);
     }
 

@@ -42,7 +42,7 @@ final class SidebarPromotedTrackerRetrieverTest extends TestCase
             RetrievePromotedTrackersStub::withTrackers(TrackerTestBuilder::aTracker()->build())
         );
 
-        self::assertEmpty($retriever->getPromotedItemPresenters($user, $project));
+        self::assertEmpty($retriever->getPromotedItemPresenters($user, $project, 'whatever'));
     }
 
     public function testEmptyWhenFeatureFlagIs0(): void
@@ -56,7 +56,7 @@ final class SidebarPromotedTrackerRetrieverTest extends TestCase
             RetrievePromotedTrackersStub::withTrackers(TrackerTestBuilder::aTracker()->build())
         );
 
-        self::assertEmpty($retriever->getPromotedItemPresenters($user, $project));
+        self::assertEmpty($retriever->getPromotedItemPresenters($user, $project, 'whatever'));
     }
 
     public function testEmptyWhenFeatureFlagIsNotForCurrentProject(): void
@@ -70,7 +70,7 @@ final class SidebarPromotedTrackerRetrieverTest extends TestCase
             RetrievePromotedTrackersStub::withTrackers(TrackerTestBuilder::aTracker()->build())
         );
 
-        self::assertEmpty($retriever->getPromotedItemPresenters($user, $project));
+        self::assertEmpty($retriever->getPromotedItemPresenters($user, $project, 'whatever'));
     }
 
     public function testPromotedTrackersWhenProjectIsPartOfFeatureFlag(): void
@@ -89,7 +89,7 @@ final class SidebarPromotedTrackerRetrieverTest extends TestCase
 
         self::assertCount(
             2,
-            $retriever->getPromotedItemPresenters($user, $project),
+            $retriever->getPromotedItemPresenters($user, $project, 'whatever'),
         );
     }
 
@@ -109,8 +109,32 @@ final class SidebarPromotedTrackerRetrieverTest extends TestCase
 
         self::assertCount(
             2,
-            $retriever->getPromotedItemPresenters($user, $project),
+            $retriever->getPromotedItemPresenters($user, $project, 'whatever'),
         );
+    }
+
+    public function testPromotedTrackerIsMarkedAsActiveIfWeDetectThatItIsTheCurrentOne(): void
+    {
+        \ForgeConfig::setFeatureFlag(SidebarPromotedTrackerRetriever::FEATURE_FLAG, '1');
+
+        $user    = UserTestBuilder::buildWithDefaults();
+        $project = ProjectTestBuilder::aProject()->withId(101)->build();
+
+        $bugs      = TrackerTestBuilder::aTracker()->withId(1001)->withName('Bugs')->build();
+        $requests  = TrackerTestBuilder::aTracker()->withId(1002)->withName('Requests')->build();
+        $retriever = new SidebarPromotedTrackerRetriever(
+            RetrievePromotedTrackersStub::withTrackers(
+                $bugs,
+                $requests,
+            )
+        );
+
+        $promoted_item_presenters = $retriever->getPromotedItemPresenters($user, $project, $requests->getPromotedTrackerId());
+        self::assertCount(2, $promoted_item_presenters);
+        self::assertSame($bugs->getName(), $promoted_item_presenters[0]->label);
+        self::assertFalse($promoted_item_presenters[0]->is_active);
+        self::assertSame($requests->getName(), $promoted_item_presenters[1]->label);
+        self::assertTrue($promoted_item_presenters[1]->is_active);
     }
 
     public function testEmptyPromotedTrackers(): void
@@ -125,7 +149,7 @@ final class SidebarPromotedTrackerRetrieverTest extends TestCase
         );
 
         self::assertEmpty(
-            $retriever->getPromotedItemPresenters($user, $project),
+            $retriever->getPromotedItemPresenters($user, $project, 'whatever'),
         );
     }
 }

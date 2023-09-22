@@ -376,7 +376,8 @@ abstract class BaseLayout extends Response
                 ),
                 new GlyphFinder($event_manager),
                 new ProjectSidebarToolsBuilder($event_manager, ProjectManager::instance(), $this->uri_sanitizer),
-                $params['toptab']
+                $params['toptab'],
+                $params['active-promoted-item-id'] ?? '',
             ),
             $current_user->user,
         );

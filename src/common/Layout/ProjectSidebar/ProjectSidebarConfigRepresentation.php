@@ -79,6 +79,7 @@ final class ProjectSidebarConfigRepresentation
         GlyphFinder $glyph_finder,
         ProjectSidebarToolsBuilder $project_sidebar_tools_builder,
         mixed $currently_active_service,
+        ?string $active_promoted_item_id,
     ): self {
         return new self(
             ProjectSidebarInternationalization::build(),
@@ -100,7 +101,7 @@ final class ProjectSidebarConfigRepresentation
                 $customized_logo_detector,
                 $glyph_finder,
             ),
-            [...$project_sidebar_tools_builder->getSidebarTools($current_user->user, $currently_active_service, $project)],
+            [...$project_sidebar_tools_builder->getSidebarTools($current_user->user, $currently_active_service, $active_promoted_item_id, $project)],
             \ForgeConfig::getFeatureFlag(self::FEATURE_FLAG) === '1',
         );
     }

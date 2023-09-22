@@ -26,7 +26,7 @@
         v-bind:aria-label="label"
         class="project-sidebar-nav-item"
         v-bind:class="{
-            active: is_active,
+            active: is_tool_active,
             'project-sidebar-nav-item-with-promoted-items': has_promoted_items,
         }"
         v-bind:title="description"
@@ -78,4 +78,7 @@ const props = defineProps<{
 const sanitized_href = computed(() => sanitizeURL(props.href));
 const shortcut = computed(() => `sidebar-${props.shortcut_id}`);
 const has_promoted_items = computed(() => props.promoted_items && props.promoted_items.length > 0);
+const is_tool_active = computed(
+    () => props.is_active && !props.promoted_items?.some((item) => item.is_active),
+);
 </script>
