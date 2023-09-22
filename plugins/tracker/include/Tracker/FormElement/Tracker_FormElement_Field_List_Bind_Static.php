@@ -757,7 +757,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         $value_dao = $this->getValueDao();
         //remove the \r submitted by the user
         $new_value = trim(str_replace("\r", '', $new_value));
-        if (! $new_value) {
+        if ($new_value === '') {
             return;
         }
         $id = $value_dao->create($this->field->getId(), $new_value, '', 'end', 0);
