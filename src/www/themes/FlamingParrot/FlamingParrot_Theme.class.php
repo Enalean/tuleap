@@ -230,7 +230,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $this->addBodyClassDependingThemeVariant($current_user->user, $body_class);
         $this->addBodyClassDependingUserPreference($current_user->user, $body_class);
 
-        if ($current_user->user->getPreference('sidebar_state')) {
+        if (\ForgeConfig::getFeatureFlag(\Tuleap\Layout\ProjectSidebar\ProjectSidebarConfigRepresentation::FEATURE_FLAG) === '1' && $current_user->user->getPreference('sidebar_state')) {
             $sidebar_state = $current_user->user->getPreference('sidebar_state');
         }
 
