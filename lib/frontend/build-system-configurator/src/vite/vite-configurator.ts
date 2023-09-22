@@ -97,6 +97,10 @@ export function defineAppConfig(
     });
 }
 
+const IGNORED_CONSOLE_LOG_MESSAGES = [
+    "Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.\n",
+];
+
 const TEST_OUTPUT_DIRECTORY = "./js-test-results/";
 
 function defineBaseConfig(config: UserConfig): UserConfigExport {
@@ -153,8 +157,11 @@ function defineBaseConfig(config: UserConfig): UserConfigExport {
                 "**/js-test-results/**",
             ],
             setupFiles: [path.resolve(__dirname, "../../src/vitest/setup-snapshot-serializer.ts")],
-            onConsoleLog: (log: string, type: "stdout" | "stderr"): void => {
+            onConsoleLog: (log: string, type: "stdout" | "stderr"): false | void => {
                 if (type === "stderr") {
+                    if (IGNORED_CONSOLE_LOG_MESSAGES.includes(log)) {
+                        return false;
+                    }
                     throw new Error(`Console warnings and errors are not allowed, got ${log}`);
                 }
             },

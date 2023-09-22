@@ -18,7 +18,7 @@
  */
 
 import type { GettextProvider } from "@tuleap/gettext";
-import type { TemplateResult } from "lit/html.js";
+import type { TemplateResult } from "lit-html";
 import type { EditorAreaStateInterface } from "./EditorAreaStateInterface";
 import "./FlamingParrotPopoverButtonElement";
 import {

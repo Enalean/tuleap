@@ -24,8 +24,8 @@ import {
 } from "../test-helpers/select-box-options-generator";
 import { ListItemMapBuilder } from "./ListItemMapBuilder";
 import type { ListPickerOptions } from "../type";
-import type { TemplateResult } from "lit/html.js";
-import { html } from "lit/html.js";
+import type { TemplateResult } from "lit-html";
+import { html } from "lit-html";
 
 describe("ListItemBuilder", () => {
     let select: HTMLSelectElement, builder: ListItemMapBuilder, doc: Document;

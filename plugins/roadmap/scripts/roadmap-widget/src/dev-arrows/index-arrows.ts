@@ -24,8 +24,8 @@ import {
     getUpRightArrow,
 } from "../helpers/svg-arrow-path";
 import { gap } from "../helpers/path";
-import type { SVGTemplateResult } from "lit/html.js";
-import { html, svg, render } from "lit/html.js";
+import type { SVGTemplateResult } from "lit-html";
+import { html, svg, render } from "lit-html";
 
 function getExampleSvg(
     width: number,

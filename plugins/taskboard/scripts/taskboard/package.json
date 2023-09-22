@@ -27,7 +27,7 @@
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:*",
     "@tuleap/vuex-store-wrapper-jest": "workspace:*",
-    "@types/dompurify": "^2.4.0",
+    "@types/dompurify": "^3.0.2",
     "@types/fscreen": "^1.0.1",
     "@types/jquery": "^3.5.5",
     "@types/mustache": "^4.1.2",

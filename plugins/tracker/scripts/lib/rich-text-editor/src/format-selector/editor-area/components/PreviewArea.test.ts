@@ -19,7 +19,7 @@
 
 import { createPreviewArea } from "./PreviewArea";
 import type { GettextProvider } from "@tuleap/gettext";
-import { render } from "lit/html.js";
+import { render } from "lit-html";
 import { stripLitExpressionComments } from "../../../test-helper";
 import { initGettextSync } from "@tuleap/gettext";
 
@@ -82,18 +82,18 @@ describe(`PreviewArea`, () => {
         render(template, mount_point);
         return promise.catch(identity).then(() => {
             expect(stripLitExpressionComments(mount_point.innerHTML)).toMatchInlineSnapshot(`
-                "
-                        <div>
-                            
-                    <div class="alert alert-error">
-                        There was an error in the Markdown preview:
-                        <br>
-                        Network Error
-                    </div>
+"
+        <div>
+            
+    <div class="alert alert-error">
+        There was an error in the Markdown preview:
+        <br>
+        Network Error
+    </div>
 
-                        </div>
-                    "
-            `);
+        </div>
+    "
+`);
         });
     });
 });

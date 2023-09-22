@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TemplateResult } from "lit/html.js";
-import { html, render } from "lit/html.js";
+import type { TemplateResult } from "lit-html";
+import { html, render } from "lit-html";
 import type { GettextProvider } from "@tuleap/gettext";
 
 export interface HTMLOrTextEditorArea {

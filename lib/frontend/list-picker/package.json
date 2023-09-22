@@ -22,7 +22,7 @@
     "@tuleap/gettext": "workspace:*",
     "@tuleap/tlp": "workspace:*",
     "@tuleap/tlp-swatch-colors": "workspace:*",
-    "lit": "^2.2.3"
+    "lit-html": "^2.8.0"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",

@@ -18,8 +18,8 @@
  */
 
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
-import type { TemplateResult } from "lit/html.js";
-import { html } from "lit/html.js";
+import type { TemplateResult } from "lit-html";
+import { html } from "lit-html";
 
 export interface FormatHiddenInputPresenter {
     readonly name: string;

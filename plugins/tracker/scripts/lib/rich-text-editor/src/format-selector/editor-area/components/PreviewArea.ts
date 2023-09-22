@@ -19,10 +19,10 @@
 
 import type { GettextProvider } from "@tuleap/gettext";
 import DOMPurify from "dompurify";
-import type { TemplateResult } from "lit/html.js";
-import { html } from "lit/html.js";
-import { unsafeHTML } from "lit/directives/unsafe-html.js";
-import { until } from "lit/directives/until.js";
+import type { TemplateResult } from "lit-html";
+import { html } from "lit-html";
+import { unsafeHTML } from "lit-html/directives/unsafe-html.js";
+import { until } from "lit-html/directives/until.js";
 
 const buildErrorMessage = (error: Error, gettext_provider: GettextProvider): TemplateResult => html`
     <div class="alert alert-error">

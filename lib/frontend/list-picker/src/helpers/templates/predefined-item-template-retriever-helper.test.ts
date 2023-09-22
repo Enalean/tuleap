@@ -19,10 +19,10 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { html, render } from "lit/html.js";
+import { html, render } from "lit-html";
 import { convertBadColorHexToRGB } from "../color-helper";
 import { retrievePredefinedTemplate } from "./predefined-item-template-retriever-helper";
-import { styleMap } from "lit/directives/style-map.js";
+import { styleMap } from "lit-html/directives/style-map.js";
 
 describe("predefined-item-template-retriever", () => {
     it("should return the avatar template if data-avatar-url is set", () => {

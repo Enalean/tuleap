@@ -21,7 +21,7 @@ import type { ListPickerItem, ListPickerSelectionStateMultiple, SelectionManager
 import type { DropdownManager } from "../dropdown/DropdownManager";
 import type { ItemsMapManager } from "../items/ItemsMapManager";
 import type { GettextProvider } from "@tuleap/gettext";
-import { render } from "lit/html.js";
+import { render } from "lit-html";
 import { createItemBadgeTemplate } from "../helpers/templates/list-picker-element-badge-creator";
 
 export class MultipleSelectionManager implements SelectionManager {
