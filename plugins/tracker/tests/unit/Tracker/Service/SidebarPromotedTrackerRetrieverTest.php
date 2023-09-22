@@ -22,89 +22,39 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Service;
 
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrievePromotedTrackersStub;
+use Tuleap\Tracker\Test\Stub\Tracker\Service\PromotedTrackerConfigurationCheckerStub;
 
 final class SidebarPromotedTrackerRetrieverTest extends TestCase
 {
-    use ForgeConfigSandbox;
-
-    public function testEmptyWhenNoFeatureFlag(): void
+    public function testEmptyWhenProjectIsNotAllowedToPromoteTrackersInSidebar(): void
     {
         $user    = UserTestBuilder::buildWithDefaults();
         $project = ProjectTestBuilder::aProject()->build();
 
         $retriever = new SidebarPromotedTrackerRetriever(
-            RetrievePromotedTrackersStub::withTrackers(TrackerTestBuilder::aTracker()->build())
+            RetrievePromotedTrackersStub::withTrackers(TrackerTestBuilder::aTracker()->build()),
+            PromotedTrackerConfigurationCheckerStub::withoutAllowedProject(),
         );
 
         self::assertEmpty($retriever->getPromotedItemPresenters($user, $project, 'whatever'));
     }
 
-    public function testEmptyWhenFeatureFlagIs0(): void
+    public function testPromotedTrackersWhenProjectIsAllowed(): void
     {
-        \ForgeConfig::setFeatureFlag(SidebarPromotedTrackerRetriever::FEATURE_FLAG, '0');
-
         $user    = UserTestBuilder::buildWithDefaults();
         $project = ProjectTestBuilder::aProject()->build();
 
         $retriever = new SidebarPromotedTrackerRetriever(
-            RetrievePromotedTrackersStub::withTrackers(TrackerTestBuilder::aTracker()->build())
-        );
-
-        self::assertEmpty($retriever->getPromotedItemPresenters($user, $project, 'whatever'));
-    }
-
-    public function testEmptyWhenFeatureFlagIsNotForCurrentProject(): void
-    {
-        \ForgeConfig::setFeatureFlag(SidebarPromotedTrackerRetriever::FEATURE_FLAG, '121');
-
-        $user    = UserTestBuilder::buildWithDefaults();
-        $project = ProjectTestBuilder::aProject()->withId(101)->build();
-
-        $retriever = new SidebarPromotedTrackerRetriever(
-            RetrievePromotedTrackersStub::withTrackers(TrackerTestBuilder::aTracker()->build())
-        );
-
-        self::assertEmpty($retriever->getPromotedItemPresenters($user, $project, 'whatever'));
-    }
-
-    public function testPromotedTrackersWhenProjectIsPartOfFeatureFlag(): void
-    {
-        \ForgeConfig::setFeatureFlag(SidebarPromotedTrackerRetriever::FEATURE_FLAG, '101');
-
-        $user    = UserTestBuilder::buildWithDefaults();
-        $project = ProjectTestBuilder::aProject()->withId(101)->build();
-
-        $retriever = new SidebarPromotedTrackerRetriever(
             RetrievePromotedTrackersStub::withTrackers(
                 TrackerTestBuilder::aTracker()->withName('Bugs')->build(),
                 TrackerTestBuilder::aTracker()->withName('Requests')->build(),
-            )
-        );
-
-        self::assertCount(
-            2,
-            $retriever->getPromotedItemPresenters($user, $project, 'whatever'),
-        );
-    }
-
-    public function testPromotedTrackersWhenFeatureFlagIsForEveryProjects(): void
-    {
-        \ForgeConfig::setFeatureFlag(SidebarPromotedTrackerRetriever::FEATURE_FLAG, '1');
-
-        $user    = UserTestBuilder::buildWithDefaults();
-        $project = ProjectTestBuilder::aProject()->withId(101)->build();
-
-        $retriever = new SidebarPromotedTrackerRetriever(
-            RetrievePromotedTrackersStub::withTrackers(
-                TrackerTestBuilder::aTracker()->withName('Bugs')->build(),
-                TrackerTestBuilder::aTracker()->withName('Requests')->build(),
-            )
+            ),
+            PromotedTrackerConfigurationCheckerStub::withAllowedProject(),
         );
 
         self::assertCount(
@@ -115,10 +65,8 @@ final class SidebarPromotedTrackerRetrieverTest extends TestCase
 
     public function testPromotedTrackerIsMarkedAsActiveIfWeDetectThatItIsTheCurrentOne(): void
     {
-        \ForgeConfig::setFeatureFlag(SidebarPromotedTrackerRetriever::FEATURE_FLAG, '1');
-
         $user    = UserTestBuilder::buildWithDefaults();
-        $project = ProjectTestBuilder::aProject()->withId(101)->build();
+        $project = ProjectTestBuilder::aProject()->build();
 
         $bugs      = TrackerTestBuilder::aTracker()->withId(1001)->withName('Bugs')->build();
         $requests  = TrackerTestBuilder::aTracker()->withId(1002)->withName('Requests')->build();
@@ -126,7 +74,8 @@ final class SidebarPromotedTrackerRetrieverTest extends TestCase
             RetrievePromotedTrackersStub::withTrackers(
                 $bugs,
                 $requests,
-            )
+            ),
+            PromotedTrackerConfigurationCheckerStub::withAllowedProject(),
         );
 
         $promoted_item_presenters = $retriever->getPromotedItemPresenters($user, $project, $requests->getPromotedTrackerId());
@@ -139,13 +88,12 @@ final class SidebarPromotedTrackerRetrieverTest extends TestCase
 
     public function testEmptyPromotedTrackers(): void
     {
-        \ForgeConfig::setFeatureFlag(SidebarPromotedTrackerRetriever::FEATURE_FLAG, '1');
-
         $user    = UserTestBuilder::buildWithDefaults();
-        $project = ProjectTestBuilder::aProject()->withId(101)->build();
+        $project = ProjectTestBuilder::aProject()->build();
 
         $retriever = new SidebarPromotedTrackerRetriever(
-            RetrievePromotedTrackersStub::withoutTrackers()
+            RetrievePromotedTrackersStub::withoutTrackers(),
+            PromotedTrackerConfigurationCheckerStub::withAllowedProject(),
         );
 
         self::assertEmpty(
