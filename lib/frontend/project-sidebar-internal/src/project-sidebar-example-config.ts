@@ -122,6 +122,20 @@ export const example_config: Configuration = {
                     label: "Repository 2",
                     description: "Another awesome repository",
                     is_active: true,
+                    quick_link_add: {
+                        href: "/service/fake_git/fake_repo2/add",
+                        label: "Add",
+                    },
+                },
+                {
+                    href: "/service/fake_git/fake_repo3",
+                    label: "Repository 3",
+                    description: "Yet another awesome repository",
+                    is_active: false,
+                    quick_link_add: {
+                        href: "/service/fake_git/fake_repo3/add",
+                        label: "Add",
+                    },
                 },
             ],
         },

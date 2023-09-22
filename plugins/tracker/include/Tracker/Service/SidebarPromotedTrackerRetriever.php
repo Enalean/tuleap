@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Service;
 
 use Tracker;
+use Tuleap\Layout\PromotedItemQuickLinkPresenter;
 use Tuleap\Layout\SidebarPromotedItemPresenter;
 use Tuleap\Tracker\RetrievePromotedTrackers;
 
@@ -50,6 +51,10 @@ final class SidebarPromotedTrackerRetriever
                     $tracker->getName(),
                     $tracker->getDescription(),
                     $tracker->getPromotedTrackerId() === $active_promoted_item_id,
+                    new PromotedItemQuickLinkPresenter(
+                        $tracker->getSubmitUrl(),
+                        $tracker->getSubmitLabel(),
+                    ),
                 ),
                 $this->retriever->getTrackers($user, $project),
             ),

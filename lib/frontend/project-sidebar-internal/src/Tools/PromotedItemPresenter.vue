@@ -21,23 +21,35 @@
   -->
 
 <template>
-    <a
-        v-bind:href="sanitized_href"
-        v-bind:aria-label="label"
+    <div
         class="project-sidebar-nav-promoted-item"
         v-bind:class="{
             active: is_active,
         }"
-        v-bind:title="description"
-        data-test="project-sidebar-tool-promoted-item"
     >
-        <span class="project-sidebar-nav-promoted-item-label">{{ label }}</span>
-    </a>
+        <a
+            v-bind:href="sanitized_href"
+            v-bind:aria-label="label"
+            v-bind:title="description"
+            class="project-sidebar-nav-promoted-item-link project-sidebar-nav-promoted-item-label"
+        >
+            {{ label }}
+        </a>
+        <a
+            v-if="quick_link_add"
+            v-bind:href="sanitized_quick_link_add_href"
+            v-bind:aria-label="quick_link_add.label"
+            class="project-sidebar-nav-promoted-item-quick-link"
+        >
+            <i role="img" class="fa-solid fa-plus"></i>
+        </a>
+    </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue";
 import { sanitizeURL } from "../url-sanitizer";
+import type { QuickLink } from "../configuration";
 
 // We cannot directly import the Tool interface from the external file so we duplicate the content for now
 // See https://github.com/vuejs/vue-next/issues/4294
@@ -46,6 +58,10 @@ const props = defineProps<{
     label: string;
     description: string;
     is_active: boolean;
+    quick_link_add?: QuickLink | null;
 }>();
 const sanitized_href = computed(() => sanitizeURL(props.href));
+const sanitized_quick_link_add_href = computed(() =>
+    props.quick_link_add ? sanitizeURL(props.quick_link_add.href) : "",
+);
 </script>

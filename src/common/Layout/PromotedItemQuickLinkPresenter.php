@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,21 +16,17 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\Layout;
 
-final class SidebarPromotedItemPresenter
+final class PromotedItemQuickLinkPresenter
 {
     public function __construct(
         public readonly string $href,
         public readonly string $label,
-        public readonly string $description,
-        public readonly bool $is_active,
-        public readonly ?PromotedItemQuickLinkPresenter $quick_link_add,
     ) {
     }
 }

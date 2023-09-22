@@ -20,11 +20,17 @@
  * SOFTWARE.
  */
 
+export interface QuickLink {
+    readonly href: string;
+    readonly label: string;
+}
+
 export interface PromotedItem {
     readonly href: string;
     readonly label: string;
     readonly description: string;
     readonly is_active: boolean;
+    readonly quick_link_add?: QuickLink | null;
 }
 
 export interface Tool {
