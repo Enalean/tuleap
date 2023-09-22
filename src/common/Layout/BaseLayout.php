@@ -332,12 +332,7 @@ abstract class BaseLayout extends Response
      */
     private function getLink(array $breadcrumb)
     {
-        $link = new BreadCrumbLink($breadcrumb['title'], $breadcrumb['url']);
-        if (isset($breadcrumb['icon_name'])) {
-            $link->setIconName($breadcrumb['icon_name']);
-        }
-
-        return $link;
+        return new BreadCrumbLink($breadcrumb['title'], $breadcrumb['url']);
     }
 
     /**

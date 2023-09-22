@@ -25,7 +25,6 @@ use PFUser;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkWithIcon;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
 
@@ -80,10 +79,9 @@ class RepositoryCrumbBuilder
             new SubItemsUnlabelledSection(
                 new BreadCrumbLinkCollection(
                     [
-                        new BreadCrumbLinkWithIcon(
+                        new BreadCrumbLink(
                             $GLOBALS['Language']->getText('global', 'Settings'),
                             $this->getRepositoryAdminUrl($repository),
-                            'fa-cog'
                         ),
                     ]
                 )

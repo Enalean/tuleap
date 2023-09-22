@@ -30,7 +30,6 @@ use Tuleap\AgileDashboard\Milestone\Request\SiblingMilestoneRequest;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkWithIcon;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsSection;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
@@ -65,7 +64,7 @@ class MilestoneCrumbBuilder
         $this->milestone_factory->addMilestoneAncestors($user, $milestone);
         $milestone_breadcrumb = new BreadCrumb(
             new BreadCrumbLink(
-                $milestone->getArtifactTitle(),
+                (string) $milestone->getArtifactTitle(),
                 $this->getOverviewUrl($milestone)
             )
         );
@@ -114,16 +113,14 @@ class MilestoneCrumbBuilder
         $links = [];
         $panes = $this->pane_factory->getListOfPaneInfo($milestone, $user);
         foreach ($panes as $pane) {
-            $links[] = new BreadCrumbLinkWithIcon(
+            $links[] = new BreadCrumbLink(
                 $pane->getTitle(),
                 $pane->getUri(),
-                $pane->getIconName()
             );
         }
-        $links[] = new BreadCrumbLinkWithIcon(
+        $links[] = new BreadCrumbLink(
             dgettext('tuleap-tracker', 'Artifact'),
             $this->getArtifactUrl($milestone),
-            'fa-tlp-tracker'
         );
         $sub_items->addSection(
             new SubItemsUnlabelledSection(
@@ -165,7 +162,7 @@ class MilestoneCrumbBuilder
             $paginated_milestones = $this->milestone_factory->getPaginatedSiblingMilestones($request);
             foreach ($paginated_milestones->getMilestones() as $sibling) {
                 $links[] = new BreadCrumbLink(
-                    $sibling->getArtifactTitle(),
+                    (string) $sibling->getArtifactTitle(),
                     $this->getOverviewUrl($sibling)
                 );
                 if (count($links) === 10) {

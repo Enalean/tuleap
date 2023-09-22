@@ -312,7 +312,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         $service_tracker_breadcrumb = [
             'title'     => dgettext('tuleap-tracker', 'Trackers'),
             'url'       => TRACKER_BASE_URL . '/?group_id=' . $project->getID(),
-            'icon_name' => 'fa-tlp-tracker',
         ];
 
         if ($this->getCurrentUser()->isAdmin($project->getID())) {
