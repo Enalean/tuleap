@@ -31,7 +31,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
-use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
+use Tuleap\Tracker\PromotedTrackerDao;
 use Tuleap\Tracker\Test\Stub\Tracker\Service\PromotedTrackerConfigurationCheckerStub;
 
 class PromoteTrackersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -43,7 +43,7 @@ class PromoteTrackersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $tracker_factory;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerInNewDropdownDao
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PromotedTrackerDao
      */
     private $in_new_dropdown_dao;
     /**
@@ -76,7 +76,7 @@ class PromoteTrackersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $project_manager           = Mockery::mock(ProjectManager::class);
         $this->perms_checker       = Mockery::mock(GlobalAdminPermissionsChecker::class);
         $this->tracker_factory     = Mockery::mock(TrackerFactory::class);
-        $this->in_new_dropdown_dao = Mockery::mock(TrackerInNewDropdownDao::class);
+        $this->in_new_dropdown_dao = Mockery::mock(PromotedTrackerDao::class);
         $this->token_provider      = Mockery::mock(CSRFSynchronizerTokenProvider::class);
         $this->history_dao         = Mockery::mock(\ProjectHistoryDao::class);
 

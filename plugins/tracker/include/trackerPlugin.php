@@ -201,8 +201,6 @@ use Tuleap\Tracker\Import\Spotter;
 use Tuleap\Tracker\Legacy\Inheritor;
 use Tuleap\Tracker\Migration\KeepReverseCrossReferenceDAO;
 use Tuleap\Tracker\Migration\LegacyTrackerMigrationDao;
-use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
-use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownRetriever;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUserInvolvedInNotificationPresenterBuilder;
@@ -231,6 +229,8 @@ use Tuleap\Tracker\Permission\Fields\ByGroup\ByGroupController;
 use Tuleap\Tracker\Permission\Fields\PermissionsOnFieldsUpdateController;
 use Tuleap\Tracker\PermissionsPerGroup\ProjectAdminPermissionPerGroupPresenterBuilder;
 use Tuleap\Tracker\ProjectDeletionEvent;
+use Tuleap\Tracker\PromotedTrackerDao;
+use Tuleap\Tracker\PromotedTrackersRetriever;
 use Tuleap\Tracker\Reference\CrossReferenceValidator;
 use Tuleap\Tracker\Reference\ReferenceCreator;
 use Tuleap\Tracker\Report\TrackerReportConfig;
@@ -2207,7 +2207,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                 )
             ),
             TrackerFactory::instance(),
-            new TrackerInNewDropdownDao(),
+            new PromotedTrackerDao(),
             new CSRFSynchronizerTokenProvider(),
             new ProjectHistoryDao(),
             new CheckPromotedTrackerConfiguration(),
@@ -2226,7 +2226,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             ),
             TrackerFactory::instance(),
             TemplateRendererFactory::build(),
-            new TrackerInNewDropdownDao(),
+            new PromotedTrackerDao(),
             new CSRFSynchronizerTokenProvider(),
             new FieldDao(),
             new TriggersDao(),
@@ -2575,8 +2575,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
     public function collectNewDropdownLinksForProject(NewDropdownProjectLinksCollector $collector): void
     {
         (new \Tuleap\Tracker\NewDropdown\TrackerLinksInNewDropdownCollector(
-            new TrackerInNewDropdownRetriever(
-                new TrackerInNewDropdownDao(),
+            new PromotedTrackersRetriever(
+                new PromotedTrackerDao(),
                 TrackerFactory::instance()
             ),
             new TrackerNewDropdownLinkPresenterBuilder(),

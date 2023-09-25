@@ -37,7 +37,7 @@ use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
-use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
+use Tuleap\Tracker\PromotedTrackerDao;
 use Tuleap\Tracker\Service\PromotedTrackerConfigurationChecker;
 use Tuleap\Tracker\Workflow\Trigger\TriggersDao;
 
@@ -60,7 +60,7 @@ class TrackersDisplayController implements DispatchableWithRequest, Dispatchable
      */
     private $tracker_factory;
     /**
-     * @var TrackerInNewDropdownDao
+     * @var PromotedTrackerDao
      */
     private $in_new_dropdown_dao;
     /**
@@ -83,7 +83,7 @@ class TrackersDisplayController implements DispatchableWithRequest, Dispatchable
         GlobalAdminPermissionsChecker $permissions_checker,
         TrackerFactory $tracker_factory,
         TemplateRendererFactory $renderer_factory,
-        TrackerInNewDropdownDao $in_new_dropdown_dao,
+        PromotedTrackerDao $in_new_dropdown_dao,
         CSRFSynchronizerTokenProvider $token_provider,
         FieldDao $field_dao,
         private TriggersDao $triggers_dao,

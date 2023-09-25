@@ -43186,7 +43186,7 @@
       <code>createTooltip</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/NewDropdown/TrackerInNewDropdownRetriever.php">
+  <file src="plugins/tracker/include/Tracker/PromotedTrackersRetriever.php">
     <DeprecatedMethod>
       <code>userCanSubmitArtifact</code>
     </DeprecatedMethod>

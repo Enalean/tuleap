@@ -28,13 +28,13 @@ use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\Creation\TrackerCreationSettings;
 use Tuleap\Tracker\Creation\TrackerCreationSettingsBuilder;
 use Tuleap\Tracker\DateReminder\DateReminderDao;
-use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
 use Tuleap\Tracker\Notifications\ConfigNotificationAssignedToDao;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderDao;
 use Tuleap\Tracker\Notifications\GlobalNotificationDuplicationDao;
 use Tuleap\Tracker\Notifications\Settings\NotificationSettingsDuplicator;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDuplicationDao;
 use Tuleap\Tracker\Notifications\UsersToNotifyDuplicationDao;
+use Tuleap\Tracker\PromotedTrackerDao;
 use Tuleap\Tracker\RetrieveTrackersByGroupIdAndUserCanView;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDuplicator;
@@ -468,7 +468,7 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByGroupIdAndUse
         }
         $this->duplicateWebhooks($source_tracker, $tracker);
 
-        $builder = new TrackerCreationSettingsBuilder(new TrackerInNewDropdownDao(), new TrackerPrivateCommentUGroupEnabledDao());
+        $builder = new TrackerCreationSettingsBuilder(new PromotedTrackerDao(), new TrackerPrivateCommentUGroupEnabledDao());
         $this->postCreateActions($tracker, $builder->build($source_tracker));
 
         return [

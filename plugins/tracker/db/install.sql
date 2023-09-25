@@ -935,8 +935,8 @@ CREATE TABLE IF NOT EXISTS plugin_tracker_pending_jira_import (
     INDEX idx_created_on(created_on)
 ) ENGINE=InnoDB;
 
-DROP TABLE IF EXISTS plugin_tracker_in_new_dropdown;
-CREATE TABLE IF NOT EXISTS plugin_tracker_in_new_dropdown(
+DROP TABLE IF EXISTS plugin_tracker_promoted;
+CREATE TABLE IF NOT EXISTS plugin_tracker_promoted(
     tracker_id int(11) NOT NULL PRIMARY KEY
 ) ENGINE=InnoDB;
 

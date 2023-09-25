@@ -20,18 +20,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\NewDropdown;
+namespace Tuleap\Tracker;
 
 use Tuleap\DB\DataAccessObject;
 
-class TrackerInNewDropdownDao extends DataAccessObject
+class PromotedTrackerDao extends DataAccessObject
 {
     public function searchByProjectId(int $project_id): array
     {
         return $this->getDB()->run(
             "SELECT tracker.*
                 FROM tracker
-                    INNER JOIN plugin_tracker_in_new_dropdown AS dropdown ON tracker.id = dropdown.tracker_id
+                    INNER JOIN plugin_tracker_promoted AS dropdown ON tracker.id = dropdown.tracker_id
                 WHERE tracker.group_id = ?
                     AND tracker.deletion_date IS NULL
                 ORDER BY tracker.name",
@@ -41,18 +41,18 @@ class TrackerInNewDropdownDao extends DataAccessObject
 
     public function isContaining(int $tracker_id): bool
     {
-        $statement = 'SELECT TRUE FROM plugin_tracker_in_new_dropdown WHERE tracker_id = ?';
+        $statement = 'SELECT TRUE FROM plugin_tracker_promoted WHERE tracker_id = ?';
 
         return $this->getDB()->cell($statement, $tracker_id) !== false;
     }
 
     public function insert(int $tracker_id): void
     {
-        $this->getDB()->insertIgnore('plugin_tracker_in_new_dropdown', ['tracker_id' => $tracker_id]);
+        $this->getDB()->insertIgnore('plugin_tracker_promoted', ['tracker_id' => $tracker_id]);
     }
 
     public function delete(int $tracker_id): void
     {
-        $this->getDB()->delete('plugin_tracker_in_new_dropdown', ['tracker_id' => $tracker_id]);
+        $this->getDB()->delete('plugin_tracker_promoted', ['tracker_id' => $tracker_id]);
     }
 }

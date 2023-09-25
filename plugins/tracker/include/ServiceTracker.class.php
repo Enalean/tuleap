@@ -19,8 +19,8 @@
 
 declare(strict_types=1);
 
-use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
-use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownRetriever;
+use Tuleap\Tracker\PromotedTrackerDao;
+use Tuleap\Tracker\PromotedTrackersRetriever;
 use Tuleap\Tracker\Service\CheckPromotedTrackerConfiguration;
 use Tuleap\Tracker\Service\SidebarPromotedTrackerRetriever;
 
@@ -109,8 +109,8 @@ class ServiceTracker extends Service
     public function getPromotedItemPresenters(PFUser $user, ?string $active_promoted_item_id): array
     {
         $retriever = new SidebarPromotedTrackerRetriever(
-            new TrackerInNewDropdownRetriever(
-                new TrackerInNewDropdownDao(),
+            new PromotedTrackersRetriever(
+                new PromotedTrackerDao(),
                 TrackerFactory::instance(),
             ),
             new CheckPromotedTrackerConfiguration(),

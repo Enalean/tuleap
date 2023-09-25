@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Creation;
 
 use Tracker_Reference;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
-use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
+use Tuleap\Tracker\PromotedTrackerDao;
 
 class PostCreationProcessor
 {
@@ -33,7 +33,7 @@ class PostCreationProcessor
      */
     private $reference_manager;
     /**
-     * @var TrackerInNewDropdownDao
+     * @var PromotedTrackerDao
      */
     private $in_new_dropdown_dao;
     /**
@@ -43,7 +43,7 @@ class PostCreationProcessor
 
     public function __construct(
         \ReferenceManager $reference_manager,
-        TrackerInNewDropdownDao $in_new_dropdown_dao,
+        PromotedTrackerDao $in_new_dropdown_dao,
         TrackerPrivateCommentUGroupEnabledDao $private_comment_dao,
     ) {
         $this->reference_manager   = $reference_manager;
@@ -55,7 +55,7 @@ class PostCreationProcessor
     {
         return new self(
             \ReferenceManager::instance(),
-            new TrackerInNewDropdownDao(),
+            new PromotedTrackerDao(),
             new TrackerPrivateCommentUGroupEnabledDao()
         );
     }

@@ -32,7 +32,7 @@ use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
-use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
+use Tuleap\Tracker\PromotedTrackerDao;
 use Tuleap\Tracker\Service\PromotedTrackerConfigurationChecker;
 
 class PromoteTrackersController implements DispatchableWithRequest, DispatchableWithProject
@@ -45,7 +45,7 @@ class PromoteTrackersController implements DispatchableWithRequest, Dispatchable
         private readonly ProjectManager $project_manager,
         private readonly GlobalAdminPermissionsChecker $permissions_checker,
         private readonly TrackerFactory $tracker_factory,
-        private readonly TrackerInNewDropdownDao $in_new_dropdown_dao,
+        private readonly PromotedTrackerDao $in_new_dropdown_dao,
         private readonly CSRFSynchronizerTokenProvider $token_provider,
         private readonly ProjectHistoryDao $history_dao,
         private readonly PromotedTrackerConfigurationChecker $configuration_checker,

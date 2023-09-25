@@ -20,26 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\NewDropdown;
+namespace Tuleap\Tracker;
 
 use Tracker;
-use Tuleap\Tracker\RetrievePromotedTrackers;
 
-class TrackerInNewDropdownRetriever implements RetrievePromotedTrackers
+final class PromotedTrackersRetriever implements RetrievePromotedTrackers
 {
-    /**
-     * @var TrackerInNewDropdownDao
-     */
-    private $dao;
-    /**
-     * @var \TrackerFactory
-     */
-    private $tracker_factory;
-
-    public function __construct(TrackerInNewDropdownDao $dao, \TrackerFactory $tracker_factory)
-    {
-        $this->dao             = $dao;
-        $this->tracker_factory = $tracker_factory;
+    public function __construct(
+        private readonly PromotedTrackerDao $dao,
+        private readonly \TrackerFactory $tracker_factory,
+    ) {
     }
 
     /**
