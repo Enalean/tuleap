@@ -279,6 +279,11 @@ class Tracker implements Tracker_Dispatchable_Interface
         return $this->getSubmitUrlWithParameters([]);
     }
 
+    public function getSubmitLabel(): string
+    {
+        return sprintf(dgettext('tuleap-tracker', 'New %s'), $this->getItemName());
+    }
+
     /**
      * @param array<string, string|array> $parameters
      */
@@ -1254,7 +1259,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         if ($this->userCanSubmitArtifact($user)) {
             $links_collection->add(
                 new BreadCrumbLink(
-                    sprintf(dgettext('tuleap-tracker', 'New %s'), $this->getItemName()),
+                    $this->getSubmitLabel(),
                     $this->getSubmitUrl(),
                 )
             );
