@@ -131,8 +131,8 @@ devDependencies:
     specifier: ^14.14.31
     version: 14.14.31
   '@types/prismjs':
-    specifier: ^1.26.0
-    version: 1.26.0
+    specifier: ^1.26.1
+    version: 1.26.1
   '@types/sprintf-js':
     specifier: ^1.1.2
     version: 1.1.2
@@ -223,8 +223,8 @@ packages:
     resolution: {integrity: sha512-vFHy/ezP5qI0rFgJ7aQnjDXwAMrG0KqqIH7tQG5PPv3BWBayOPIQNBjVc/P6hhdZfMx51REc6tfDNXHUio893g==}
     dev: true
 
-  /@types/prismjs@1.26.0:
-    resolution: {integrity: sha512-ZTaqn/qSqUuAq1YwvOFQfVW1AR/oQJlLSZVustdjwI+GZ8kr0MSHBj0tsXPW1EqHubx50gtBEjbPGsdZwQwCjQ==}
+  /@types/prismjs@1.26.1:
+    resolution: {integrity: sha512-Q7jDsRbzcNHIQje15CS/piKhu6lMLb9jwjxSfEIi4KcFKXW23GoJMkwQiJ8VObyfx+VmUaDcJxXaWN+cTCjVog==}
     dev: true
 
   /@types/sizzle@2.3.2:
