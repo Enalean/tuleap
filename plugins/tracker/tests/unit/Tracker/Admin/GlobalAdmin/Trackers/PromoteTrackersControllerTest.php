@@ -32,6 +32,7 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
+use Tuleap\Tracker\Test\Stub\Tracker\Service\PromotedTrackerConfigurationCheckerStub;
 
 class PromoteTrackersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -86,6 +87,7 @@ class PromoteTrackersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->in_new_dropdown_dao,
             $this->token_provider,
             $this->history_dao,
+            PromotedTrackerConfigurationCheckerStub::withAllowedProject(),
         );
 
         $this->user = Mockery::mock(PFUser::class);

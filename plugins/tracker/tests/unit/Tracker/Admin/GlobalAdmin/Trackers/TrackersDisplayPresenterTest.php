@@ -40,6 +40,7 @@ final class TrackersDisplayPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
             Mockery::mock(Project::class)->shouldReceive(['getID' => 123, 'getUnixNameLowerCase' => 'acme-project'])->getMock(),
             [$story, $bug],
             Mockery::mock(CSRFSynchronizerToken::class),
+            true,
         );
 
         self::assertEquals(

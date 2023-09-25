@@ -33,6 +33,7 @@ use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
+use Tuleap\Tracker\Service\PromotedTrackerConfigurationChecker;
 
 class PromoteTrackersController implements DispatchableWithRequest, DispatchableWithProject
 {
@@ -40,45 +41,15 @@ class PromoteTrackersController implements DispatchableWithRequest, Dispatchable
 
     private const PROJECT_HISTORY_ENTRY = 'tracker_promotion';
 
-    /**
-     * @var ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var TrackerFactory
-     */
-    private $tracker_factory;
-    /**
-     * @var TrackerInNewDropdownDao
-     */
-    private $in_new_dropdown_dao;
-    /**
-     * @var CSRFSynchronizerTokenProvider
-     */
-    private $token_provider;
-    /**
-     * @var ProjectHistoryDao
-     */
-    private $history_dao;
-    /**
-     * @var GlobalAdminPermissionsChecker
-     */
-    private $permissions_checker;
-
     public function __construct(
-        ProjectManager $project_manager,
-        GlobalAdminPermissionsChecker $permissions_checker,
-        TrackerFactory $tracker_factory,
-        TrackerInNewDropdownDao $in_new_dropdown_dao,
-        CSRFSynchronizerTokenProvider $token_provider,
-        ProjectHistoryDao $history_dao,
+        private readonly ProjectManager $project_manager,
+        private readonly GlobalAdminPermissionsChecker $permissions_checker,
+        private readonly TrackerFactory $tracker_factory,
+        private readonly TrackerInNewDropdownDao $in_new_dropdown_dao,
+        private readonly CSRFSynchronizerTokenProvider $token_provider,
+        private readonly ProjectHistoryDao $history_dao,
+        private readonly PromotedTrackerConfigurationChecker $configuration_checker,
     ) {
-        $this->project_manager     = $project_manager;
-        $this->tracker_factory     = $tracker_factory;
-        $this->in_new_dropdown_dao = $in_new_dropdown_dao;
-        $this->token_provider      = $token_provider;
-        $this->history_dao         = $history_dao;
-        $this->permissions_checker = $permissions_checker;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -106,10 +77,15 @@ class PromoteTrackersController implements DispatchableWithRequest, Dispatchable
             $layout->addFeedback(
                 \Feedback::INFO,
                 sprintf(
-                    dgettext(
-                        'tuleap-tracker',
-                        'Tracker %s will now appear in the +New dropdown on every pages of the project'
-                    ),
+                    $this->configuration_checker->isProjectAllowedToPromoteTrackersInSidebar($project)
+                        ? dgettext(
+                            'tuleap-tracker',
+                            'Tracker %s will now appear in the sidebar or the +New dropdown on every page of the project'
+                        )
+                        : dgettext(
+                            'tuleap-tracker',
+                            'Tracker %s will now appear in the +New dropdown on every page of the project'
+                        ),
                     $tracker->getName(),
                 ),
             );
@@ -124,10 +100,15 @@ class PromoteTrackersController implements DispatchableWithRequest, Dispatchable
             $layout->addFeedback(
                 \Feedback::INFO,
                 sprintf(
-                    dgettext(
-                        'tuleap-tracker',
-                        'Tracker %s won\'t appear anymore in the +New dropdown on every pages of the project'
-                    ),
+                    $this->configuration_checker->isProjectAllowedToPromoteTrackersInSidebar($project)
+                        ? dgettext(
+                            'tuleap-tracker',
+                            'Tracker %s won\'t appear anymore in the sidebar or the +New dropdown on every page of the project'
+                        )
+                        : dgettext(
+                            'tuleap-tracker',
+                            'Tracker %s won\'t appear anymore in the +New dropdown on every page of the project'
+                        ),
                     $tracker->getName(),
                 ),
             );

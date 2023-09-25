@@ -38,6 +38,7 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
+use Tuleap\Tracker\Service\PromotedTrackerConfigurationChecker;
 use Tuleap\Tracker\Workflow\Trigger\TriggersDao;
 
 class TrackersDisplayController implements DispatchableWithRequest, DispatchableWithBurningParrot, DispatchableWithProject
@@ -86,6 +87,7 @@ class TrackersDisplayController implements DispatchableWithRequest, Dispatchable
         CSRFSynchronizerTokenProvider $token_provider,
         FieldDao $field_dao,
         private TriggersDao $triggers_dao,
+        private PromotedTrackerConfigurationChecker $configuration_checker,
     ) {
         $this->project_manager     = $project_manager;
         $this->tracker_manager     = $tracker_manager;
@@ -154,7 +156,12 @@ class TrackersDisplayController implements DispatchableWithRequest, Dispatchable
         $renderer = $this->renderer_factory->getRenderer(TRACKER_TEMPLATE_DIR);
         $renderer->renderToPage(
             'global-admin/trackers',
-            new TrackersDisplayPresenter($project, $trackers, $this->token_provider->getCSRF($project)),
+            new TrackersDisplayPresenter(
+                $project,
+                $trackers,
+                $this->token_provider->getCSRF($project),
+                $this->configuration_checker->isProjectAllowedToPromoteTrackersInSidebar($project),
+            ),
         );
 
         $this->tracker_manager->displayFooter($project);
