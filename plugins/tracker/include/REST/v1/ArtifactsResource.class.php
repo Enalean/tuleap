@@ -59,7 +59,6 @@ use Tuleap\REST\QueryParameterParser;
 use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Action\AreListFieldsCompatibleVerifier;
 use Tuleap\Tracker\Action\AreTherePermissionsToMigrateVerifier;
-use Tuleap\Tracker\Action\BeforeMoveArtifact;
 use Tuleap\Tracker\Action\CanPermissionsBeFullyMovedVerifier;
 use Tuleap\Tracker\Action\CanStaticFieldValuesBeFullyMovedVerifier;
 use Tuleap\Tracker\Action\CanUserFieldValuesBeFullyMovedVerifier;
@@ -72,14 +71,7 @@ use Tuleap\Tracker\Action\FieldIsExternalVerifier;
 use Tuleap\Tracker\Action\IsArtifactLinkFieldVerifier;
 use Tuleap\Tracker\Action\IsPermissionsOnArtifactFieldVerifier;
 use Tuleap\Tracker\Action\IsUserGroupListFieldVerifier;
-use Tuleap\Tracker\Action\MegaMoverArtifact;
 use Tuleap\Tracker\Action\MegaMoverArtifactByDuckTyping;
-use Tuleap\Tracker\Action\Move\FeedbackFieldCollector;
-use Tuleap\Tracker\Action\Move\NoFeedbackFieldCollector;
-use Tuleap\Tracker\Action\MoveContributorSemanticChecker;
-use Tuleap\Tracker\Action\MoveDescriptionSemanticChecker;
-use Tuleap\Tracker\Action\MoveStatusSemanticChecker;
-use Tuleap\Tracker\Action\MoveTitleSemanticChecker;
 use Tuleap\Tracker\Action\OpenListFieldsCompatibilityVerifier;
 use Tuleap\Tracker\Action\OpenListFieldVerifier;
 use Tuleap\Tracker\Action\StaticListFieldVerifier;
@@ -158,10 +150,8 @@ use Tuleap\Tracker\REST\v1\Move\PostMoveArtifactRESTAddFeedback;
 use Tuleap\Tracker\REST\v1\Move\RestArtifactMover;
 use Tuleap\Tracker\REST\WorkflowRestBuilder;
 use Tuleap\Tracker\Tracker\XML\Updater\BindValueForDuckTypingUpdater;
-use Tuleap\Tracker\Tracker\XML\Updater\BindValueForSemanticUpdater;
 use Tuleap\Tracker\Tracker\XML\Updater\FieldChangeArtifactLinksUpdater;
 use Tuleap\Tracker\Tracker\XML\Updater\MoveChangesetXMLDuckTypingUpdater;
-use Tuleap\Tracker\Tracker\XML\Updater\MoveChangesetXMLSemanticUpdater;
 use Tuleap\Tracker\Tracker\XML\Updater\OpenListUserGroupsByDuckTypingUpdater;
 use Tuleap\Tracker\Tracker\XML\Updater\PermissionsByDuckTypingUpdater;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
@@ -1233,15 +1223,12 @@ class ArtifactsResource extends AuthenticatedResource
             new ExternalFieldsHaveSameTypeVerifier(),
         );
 
-        $mega_mover_artifact = $this->getMegaMoverArtifact($user);
-        $move_patch_action   = new MovePatchAction(
+        $move_patch_action = new MovePatchAction(
             $this->tracker_factory,
-            new DryRunMover($mega_mover_artifact, new FeedbackFieldCollector(), $collector),
+            new DryRunMover($collector),
             new RestArtifactMover(
-                $mega_mover_artifact,
                 $this->post_move_action,
                 $this->getMoveDuckTypingAction($user),
-                new NoFeedbackFieldCollector(),
                 $collector,
                 new DuckTypedMoveArtifactLinksMappingBuilder(
                     $this->formelement_factory,
@@ -1260,64 +1247,6 @@ class ArtifactsResource extends AuthenticatedResource
 
         $artifact = $this->getArtifactById($user, $id);
         return $move_patch_action->patchMove($patch, $user, $artifact, \BackendLogger::getDefaultLogger());
-    }
-
-    private function getMegaMoverArtifact(PFUser $user): MegaMoverArtifact
-    {
-        $builder                = new Tracker_XML_Exporter_ArtifactXMLExporterBuilder();
-        $children_collector     = new Tracker_XML_Exporter_NullChildrenCollector();
-        $file_path_xml_exporter = new Tracker_XML_Exporter_LocalAbsoluteFilePathXMLExporter();
-
-        $user_xml_exporter = new UserXMLExporter(
-            $this->user_manager,
-            new UserXMLExportedCollection(new XML_RNGValidator(), new XML_SimpleXMLCDATAFactory())
-        );
-
-        $xml_import_builder = new Tracker_Artifact_XMLImportBuilder();
-        $user_finder        = new XMLImportHelper($this->user_manager);
-
-        $title_semantic_checker       = new MoveTitleSemanticChecker();
-        $description_semantic_checker = new MoveDescriptionSemanticChecker($this->formelement_factory);
-        $status_semantic_checker      = new MoveStatusSemanticChecker($this->formelement_factory);
-        $contributor_semantic_checker = new MoveContributorSemanticChecker($this->formelement_factory);
-
-        $field_value_matcher = new FieldValueMatcher($user_finder);
-        return new MegaMoverArtifact(
-            new ArtifactsDeletionManager(
-                new ArtifactsDeletionDAO(),
-                ArtifactDeletorBuilder::buildForcedSynchronousDeletor(),
-                new ArtifactDeletionLimitRetriever($this->artifacts_deletion_config, $this->user_deletion_retriever),
-            ),
-            $builder->build($children_collector, $file_path_xml_exporter, $user, $user_xml_exporter, true),
-            new MoveChangesetXMLSemanticUpdater(
-                new MoveChangesetXMLUpdater(),
-                $title_semantic_checker,
-                $description_semantic_checker,
-                $status_semantic_checker,
-                $contributor_semantic_checker,
-                $this->event_manager,
-                new BindValueForSemanticUpdater($field_value_matcher),
-                $field_value_matcher
-            ),
-            $xml_import_builder->build(
-                $user_finder,
-                new NullLogger()
-            ),
-            new Tracker_Artifact_PriorityManager(
-                new Tracker_Artifact_PriorityDao(),
-                new Tracker_Artifact_PriorityHistoryDao(),
-                $this->user_manager,
-                $this->artifact_factory
-            ),
-            new BeforeMoveArtifact(
-                $this->event_manager,
-                $title_semantic_checker,
-                $description_semantic_checker,
-                $status_semantic_checker,
-                $contributor_semantic_checker
-            ),
-            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-        );
     }
 
     private function getTrackerById(PFUser $user, $tracker_id)

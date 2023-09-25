@@ -632,11 +632,6 @@ msgstr "Configuration de la suppression d'artéfacts"
 msgid "Artifacts fields"
 msgstr "Liste des champs des artéfacts"
 
-msgid "Artifacts with artifact links can not be moved."
-msgstr ""
-"Les artéfacts avec des liens vers d'autres artéfacts ne peuvent pas être "
-"déplacés."
-
 msgid ""
 "As a tracker administrator, you can choose the e-mail notifications level in "
 "this tracker."
@@ -2079,9 +2074,6 @@ msgstr ""
 
 msgid "No reports available"
 msgstr "Aucun rapport disponible"
-
-msgid "No semantic defined in this tracker."
-msgstr "Aucune sémantique n'est définie pour cet outil de suivi."
 
 msgid "No trackers have been set up, or you are not allowed to view them."
 msgstr ""

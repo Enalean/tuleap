@@ -21,7 +21,6 @@
 namespace Tuleap\Tracker\REST\v1;
 
 use Tuleap\Tracker\Action\DuckTypedMoveFieldCollection;
-use Tuleap\Tracker\Action\Move\FeedbackFieldCollectorInterface;
 use Tuleap\Tracker\REST\MinimalFieldRepresentation;
 
 /**
@@ -49,26 +48,6 @@ class ArtifactPatchDryRunFieldsResponseRepresentation
         $this->fields_not_migrated       = $fields_not_migrated;
         $this->fields_migrated           = $fields_migrated;
         $this->fields_partially_migrated = $fields_partially_migrated;
-    }
-
-    public static function fromFeedbackCollector(FeedbackFieldCollectorInterface $feedback_field_collector): self
-    {
-        $fields_not_migrated = [];
-        foreach ($feedback_field_collector->getFieldsNotMigrated() as $field) {
-            $fields_not_migrated[] = new MinimalFieldRepresentation($field);
-        }
-
-        $fields_migrated = [];
-        foreach ($feedback_field_collector->getFieldsFullyMigrated() as $field) {
-            $fields_migrated[] = new MinimalFieldRepresentation($field);
-        }
-
-        $fields_partially_migrated = [];
-        foreach ($feedback_field_collector->getFieldsPartiallyMigrated() as $field) {
-            $fields_partially_migrated[] = new MinimalFieldRepresentation($field);
-        }
-
-        return new self($fields_not_migrated, $fields_migrated, $fields_partially_migrated);
     }
 
     public static function fromDuckTypedFieldCollector(DuckTypedMoveFieldCollection $feedback_field_collector): self

@@ -30,7 +30,6 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 final class BeforeMoveCheckerTest extends TestCase
 {
@@ -113,26 +112,6 @@ final class BeforeMoveCheckerTest extends TestCase
         $this->before_move_checker->check($source_tracker, $target_tracker, $this->user, $artifact, $event);
     }
 
-    public function testIThrowsWhenArtifactLinksAreUsedInSemanticMoveMode(): void
-    {
-        \ForgeConfig::set('feature_flag_rollback_to_semantic_move_artifact', "1");
-
-        $source_tracker = $this->getTrackerUserIsAdmin();
-        $source_tracker->method("getId")->willReturn(1);
-        $artifact = $this->createStub(Artifact::class);
-        $artifact->method('getTracker')->willReturn($source_tracker);
-        $event          = new MoveArtifactActionAllowedByPluginRetriever($artifact, $this->user);
-        $target_tracker = $this->getTrackerUserIsAdmin();
-        $target_tracker->method('isDeleted')->willReturn(false);
-        $target_tracker->method("getId")->willReturn(2);
-        $artifact->expects(self::once())->method('getLinkedAndReverseArtifacts')
-            ->willReturn([ArtifactTestBuilder::anArtifact(123)->build()]);
-
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(400);
-        $this->before_move_checker->check($source_tracker, $target_tracker, $this->user, $artifact, $event);
-    }
-
     public function testIThrowsWhenMoveIsITheSameTracker(): void
     {
         $source_tracker = $this->getTrackerUserIsAdmin();
@@ -162,8 +141,6 @@ final class BeforeMoveCheckerTest extends TestCase
         $target_tracker->method('isDeleted')->willReturn(false);
         $target_tracker->method("getId")->willReturn(2);
         $this->event_manager->method('processEvent');
-        $artifact->expects(self::once())->method('getLinkedAndReverseArtifacts')
-            ->willReturn([ArtifactTestBuilder::anArtifact(123)->build()]);
 
         $event->setCanNotBeMoveDueToExternalPlugin('You shall not pass');
         $this->expectException(RestException::class);

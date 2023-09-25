@@ -26,8 +26,6 @@ use Psr\Log\LoggerInterface;
 use Tracker;
 use Tuleap\Tracker\Action\BuildArtifactLinksMappingForDuckTypedMove;
 use Tuleap\Tracker\Action\CollectDryRunTypingField;
-use Tuleap\Tracker\Action\Move\FeedbackFieldCollectorInterface;
-use Tuleap\Tracker\Action\MoveArtifact;
 use Tuleap\Tracker\Action\MoveArtifactByDuckTyping;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionLimitReachedException;
@@ -36,15 +34,12 @@ use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
 use Tuleap\Tracker\Exception\MoveArtifactNoValuesToProcessException;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 use Tuleap\Tracker\Exception\MoveArtifactTargetProjectNotActiveException;
-use Tuleap\Tracker\REST\v1\MoveArtifactSemanticFeatureFlag;
 
 final class RestArtifactMover implements MoveRestArtifact
 {
     public function __construct(
-        private readonly MoveArtifact $move_action,
         private readonly AddPostMoveArtifactFeedback $post_move_action,
         private readonly MoveArtifactByDuckTyping $duck_typing_move,
-        private readonly FeedbackFieldCollectorInterface $feedback_collector,
         private readonly CollectDryRunTypingField $collector,
         private readonly BuildArtifactLinksMappingForDuckTypedMove $collect_artifact_links_for_duck_typed_move,
     ) {
@@ -60,25 +55,7 @@ final class RestArtifactMover implements MoveRestArtifact
      */
     public function move(Tracker $source_tracker, Tracker $target_tracker, Artifact $artifact, \PFUser $user, bool $should_populate_feedback_on_success, LoggerInterface $logger): int
     {
-        if (MoveArtifactSemanticFeatureFlag::isEnabled()) {
-            return $this->perfomMoveBasedOnSemantic($artifact, $target_tracker, $user, $should_populate_feedback_on_success, $source_tracker, $logger);
-        }
         return $this->performMoveBasedOnDuckTyping($source_tracker, $target_tracker, $artifact, $user, $should_populate_feedback_on_success, $logger);
-    }
-
-    /**
-     * @throws ArtifactsDeletionLimitReachedException
-     * @throws DeletionOfArtifactsIsNotAllowedException
-     * @throws MoveArtifactNotDoneException
-     * @throws MoveArtifactSemanticsException
-     * @throws MoveArtifactTargetProjectNotActiveException
-     */
-    private function perfomMoveBasedOnSemantic(Artifact $artifact, Tracker $target_tracker, \PFUser $user, bool $should_populate_feedback_on_success, Tracker $source_tracker, LoggerInterface $logger): int
-    {
-        $remaining_deletions = $this->move_action->move($artifact, $target_tracker, $user, $this->feedback_collector, $logger);
-        $this->populateFeedBackIfNeeded($should_populate_feedback_on_success, $source_tracker, $target_tracker, $artifact, $user);
-
-        return $remaining_deletions;
     }
 
     /**

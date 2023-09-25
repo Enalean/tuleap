@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\REST\v1\Move;
 use PFUser;
 use Psr\Log\NullLogger;
 use Tracker;
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Action\DuckTypedMoveFieldCollection;
@@ -35,14 +34,10 @@ use Tuleap\Tracker\REST\MinimalFieldRepresentation;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use Tuleap\Tracker\Test\Stub\CheckMoveArtifactStub;
 use Tuleap\Tracker\Test\Stub\CollectDryRunTypingFieldStub;
-use Tuleap\Tracker\Test\Stub\FeedbackFieldCollectorInterfaceStub;
 
 final class DryRunMoverTest extends TestCase
 {
-    use ForgeConfigSandbox;
-
     private Tracker $source_tracker;
     private Tracker $target_tracker;
     private Artifact $artifact;
@@ -54,35 +49,6 @@ final class DryRunMoverTest extends TestCase
         $this->target_tracker = TrackerTestBuilder::aTracker()->withName("Target tracker")->build();
         $this->artifact       = ArtifactTestBuilder::anArtifact(12)->build();
         $this->user           = UserTestBuilder::anActiveUser()->build();
-    }
-
-    public function testItDoesNotPerformTheDuckTypedBasedDryRunWhenFeatureFlagIsDisabled(): void
-    {
-        \ForgeConfig::set('feature_flag_rollback_to_semantic_move_artifact', "1");
-
-        $migrated_fields           = [TrackerFormElementStringFieldBuilder::aStringField(102)->withName("title")->build()];
-        $not_migrated_fields       = [TrackerFormElementStringFieldBuilder::aStringField(103)->withName("summary")->build()];
-        $partially_migrated_fields = [];
-
-        $dry_run = new DryRunMover(
-            CheckMoveArtifactStub::withPossibleArtifactMove(),
-            FeedbackFieldCollectorInterfaceStub::withFields(
-                $not_migrated_fields,
-                $migrated_fields,
-                $partially_migrated_fields
-            ),
-            CollectDryRunTypingFieldStub::withNoExpectedCalls(),
-        );
-
-        $fields_collection = $dry_run->move($this->source_tracker, $this->target_tracker, $this->artifact, $this->user, new NullLogger());
-
-        self::assertCount(1, $fields_collection->dry_run->fields->fields_migrated);
-        self::assertEquals(new MinimalFieldRepresentation($migrated_fields[0]), $fields_collection->dry_run->fields->fields_migrated[0]);
-
-        self::assertCount(1, $fields_collection->dry_run->fields->fields_not_migrated);
-        self::assertEquals(new MinimalFieldRepresentation($not_migrated_fields[0]), $fields_collection->dry_run->fields->fields_not_migrated[0]);
-
-        self::assertCount(0, $fields_collection->dry_run->fields->fields_partially_migrated);
     }
 
     public function testItPerformsTheDuckTypedBasedDryRunWhenFeatureFlagIsDisabled(): void
@@ -100,8 +66,6 @@ final class DryRunMoverTest extends TestCase
         ];
 
         $dry_run = new DryRunMover(
-            CheckMoveArtifactStub::withPossibleArtifactMove(),
-            FeedbackFieldCollectorInterfaceStub::withNoExpectedCalls(),
             CollectDryRunTypingFieldStub::withCollectionOfField(
                 DuckTypedMoveFieldCollection::fromFields(
                     $migrated_fields,

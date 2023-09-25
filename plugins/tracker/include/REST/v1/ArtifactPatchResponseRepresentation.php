@@ -20,8 +20,6 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
-use Tuleap\Tracker\Action\Move\FeedbackFieldCollectorInterface;
-
 /**
  * @psalm-immutable
  */
@@ -40,13 +38,6 @@ class ArtifactPatchResponseRepresentation
     public static function withoutDryRun(): self
     {
         return new self(null);
-    }
-
-    public static function fromFeedbackFieldCollector(FeedbackFieldCollectorInterface $feedback_field_collector): self
-    {
-        $dry_run_representation = ArtifactPatchDryRunResponseRepresentation::fromFeedbackCollector($feedback_field_collector);
-
-        return new self($dry_run_representation);
     }
 
     public static function fromDuckTypedCollection(\Tuleap\Tracker\Action\DuckTypedMoveFieldCollection $field_collection): self

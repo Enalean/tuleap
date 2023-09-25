@@ -123,60 +123,6 @@ final class ArtifactMoveButtonPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
         $this->assertEquals($built_presenter, $expected_presenter);
     }
 
-    public function testItCollectsErrorWhenNoSemanticAreDefined(): void
-    {
-        \ForgeConfig::set('feature_flag_rollback_to_semantic_move_artifact', "1");
-
-        $this->tracker->shouldReceive('userIsAdmin')->andReturn(true);
-        $this->event_manager->shouldReceive('processEvent');
-        $this->tracker->shouldReceive('hasSemanticsTitle')->andReturn(false);
-        $this->tracker->shouldReceive('hasSemanticsDescription')->andReturn(false);
-        $this->tracker->shouldReceive('hasSemanticsStatus')->andReturn(false);
-        $this->tracker->shouldReceive('getContributorField')->andReturn(null);
-
-        $this->artifact->shouldReceive('getLinkedAndReverseArtifacts')->andReturns([]);
-
-        $deletion_limit_retriever = RetrieveActionDeletionLimitStub::retrieveRandomLimit();
-        $move_button_builder      = new ArtifactMoveButtonPresenterBuilder(
-            $deletion_limit_retriever,
-            $this->event_manager
-        );
-
-        $expected_presenter = new ArtifactMoveButtonPresenter(
-            dgettext('plugin-tracker', "Move this artifact"),
-            ["No semantic defined in this tracker."]
-        );
-
-        $built_presenter = $move_button_builder->getMoveArtifactButton($this->user, $this->artifact);
-
-        $this->assertEquals($built_presenter, $expected_presenter);
-    }
-
-    public function testItCollectErrorsWhenArtifactHasArtifactLinks(): void
-    {
-        \ForgeConfig::set('feature_flag_rollback_to_semantic_move_artifact', "1");
-
-        $this->tracker->shouldReceive('userIsAdmin')->andReturn(true);
-        $this->event_manager->shouldReceive('processEvent');
-        $this->tracker->shouldReceive('hasSemanticsTitle')->andReturn(true);
-        $this->artifact->shouldReceive('getLinkedAndReverseArtifacts')->andReturns([\Mockery::mock(Artifact::class)]);
-
-        $deletion_limit_retriever = RetrieveActionDeletionLimitStub::retrieveRandomLimit();
-        $move_button_builder      = new ArtifactMoveButtonPresenterBuilder(
-            $deletion_limit_retriever,
-            $this->event_manager
-        );
-
-        $expected_presenter = new ArtifactMoveButtonPresenter(
-            dgettext('plugin-tracker', "Move this artifact"),
-            ["Artifacts with artifact links can not be moved."]
-        );
-
-        $built_presenter = $move_button_builder->getMoveArtifactButton($this->user, $this->artifact);
-
-        $this->assertEquals($built_presenter, $expected_presenter);
-    }
-
     public function testItReturnAButtonWhenUserCanPerformTheMove(): void
     {
         $this->tracker->shouldReceive('userIsAdmin')->andReturn(true);

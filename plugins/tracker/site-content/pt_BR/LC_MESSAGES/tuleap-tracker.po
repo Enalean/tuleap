@@ -540,9 +540,6 @@ msgstr ""
 msgid "Artifacts fields"
 msgstr ""
 
-msgid "Artifacts with artifact links can not be moved."
-msgstr ""
-
 msgid ""
 "As a tracker administrator, you can choose the e-mail notifications level in "
 "this tracker."
@@ -1855,9 +1852,6 @@ msgid ""
 msgstr ""
 
 msgid "No reports available"
-msgstr ""
-
-msgid "No semantic defined in this tracker."
 msgstr ""
 
 msgid "No trackers have been set up, or you are not allowed to view them."
