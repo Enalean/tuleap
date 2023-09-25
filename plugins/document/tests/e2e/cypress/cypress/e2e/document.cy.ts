@@ -200,10 +200,7 @@ describe("Document new UI", () => {
                     cy.get("[data-test=message-request-access-private-document]").type(message);
                     cy.get("[data-test=private-document-access-button]").click();
 
-                    cy.assertUserMessagesReceivedByWithSpecificContent(
-                        "ProjectAdministrator@example.com",
-                        message,
-                    );
+                    cy.assertEmailWithContentReceived("ProjectAdministrator@example.com", message);
                 });
             });
 

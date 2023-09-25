@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ArtifactCreationPayload } from "./commands";
+import type { ArtifactCreationPayload } from "./trackers";
 export { WEB_UI_SESSION } from "./commands";
 
 export type ReloadCallback = () => void;
@@ -36,8 +36,11 @@ declare global {
             projectAdministratorSession(): void;
 
             projectMemberSession(): void;
+
             siteAdministratorSession(): void;
+
             anonymousSession(): void;
+
             regularUserSession(): void;
 
             restrictedMemberSession(): void;
@@ -103,14 +106,14 @@ declare global {
                 dropdown_item_label: string,
             ): Chainable<JQuery<HTMLElement>>;
 
-            assertUserMessagesReceivedByWithSpecificContent(
+            assertEmailWithContentReceived(
                 email_address: string,
-                specific_content_of_mail: string,
+                specific_content_of_email: string,
             ): void;
 
             assertNotEmailWithContentReceived(
                 email_address: string,
-                specific_content_of_mail: string,
+                specific_content_of_email: string,
             ): void;
         }
     }

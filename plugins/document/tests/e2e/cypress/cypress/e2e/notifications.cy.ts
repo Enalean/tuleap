@@ -122,12 +122,12 @@ describe("Document notifications", () => {
 
         updateWikiPage("My wiki content");
         cy.log("assertion 1");
-        cy.assertUserMessagesReceivedByWithSpecificContent(
+        cy.assertEmailWithContentReceived(
             "ProjectAdministrator@example.com",
             "New version of Wiki page wiki page was created by ProjectAdministrator",
         );
         cy.log("assertion 2");
-        cy.assertUserMessagesReceivedByWithSpecificContent(
+        cy.assertEmailWithContentReceived(
             "ProjectAdministrator@example.com",
             "https://tuleap/wiki/index.php?pagename=Wiki%20page&action=diff",
         );
@@ -149,7 +149,7 @@ describe("Document notifications", () => {
         deleteDocumentDisplayedInQuickLook();
         cy.wait("@deleteFolders", { timeout: 3000 });
 
-        cy.assertUserMessagesReceivedByWithSpecificContent(
+        cy.assertEmailWithContentReceived(
             "ProjectAdministrator@example.com",
             `Folder has been removed by ProjectAdministrator.`,
         );

@@ -19,4 +19,6 @@
 
 import "./api-helper";
 import "./commands";
+import "./email";
+import "./trackers";
 export { WEB_UI_SESSION } from "./commands";
