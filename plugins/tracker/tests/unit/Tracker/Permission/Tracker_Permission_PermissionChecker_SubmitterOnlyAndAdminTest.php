@@ -91,7 +91,8 @@ final class Tracker_Permission_PermissionChecker_SubmitterOnlyAndAdminTest exten
         $project_access_checker   = \Mockery::spy(ProjectAccessChecker::class);
         $this->permission_checker = new Tracker_Permission_PermissionChecker(
             $user_manager,
-            $project_access_checker
+            $project_access_checker,
+            $this->createMock(\Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker::class),
         );
 
         $tracker = \Mockery::spy(\Tracker::class);

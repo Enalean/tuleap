@@ -71,7 +71,8 @@ final class Tracker_Permission_PermissionChecker_SubmitterOnlyTest extends \Tule
         $this->project_access_checker = \Mockery::mock(ProjectAccessChecker::class);
         $this->permission_checker     = new Tracker_Permission_PermissionChecker(
             $this->user_manager,
-            $this->project_access_checker
+            $this->project_access_checker,
+            $this->createMock(\Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker::class),
         );
 
         $this->tracker = \Mockery::spy(\Tracker::class);

@@ -570,12 +570,6 @@ function site_project_header($params)
         exit_error($GLOBALS['Language']->getText('include_html', 'invalid_g'), $GLOBALS['Language']->getText('include_html', 'g_not_exist'));
     }
 
-    //group is private
-    if (! $project->isPublic() && isset($params['user_has_special_access']) && ! $params['user_has_special_access']) {
-     //if its a private group, you must be a member of that group
-        session_require(['group' => $group_id]);
-    }
-
     //for dead projects must be member of admin project
     if (! $project->isActive()) {
         HTTPRequest::instance()->checkUserIsSuperUser();

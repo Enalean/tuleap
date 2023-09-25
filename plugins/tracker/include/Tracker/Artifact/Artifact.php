@@ -102,6 +102,7 @@ use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactsDeletion\UserDeletionRetriever;
+use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactActionButtonPresenterBuilder;
@@ -169,6 +170,8 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\ValidValuesAccordingToTransitionsRetriever;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
+use User_ForgeUserGroupPermissionsDao;
+use User_ForgeUserGroupPermissionsManager;
 use UserManager;
 use Workflow;
 use Workflow_Transition_ConditionFactory;
@@ -317,7 +320,10 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
             new ProjectAccessChecker(
                 new RestrictedUserCanAccessProjectVerifier(),
                 EventManager::instance()
-            )
+            ),
+            new GlobalAdminPermissionsChecker(
+                new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao())
+            ),
         );
 
         if ($user === null) {

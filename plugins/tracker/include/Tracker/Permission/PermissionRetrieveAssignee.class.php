@@ -20,14 +20,8 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_Permission_PermissionRetrieveAssignee
 {
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-
-    public function __construct(UserManager $user_manager)
+    public function __construct(private readonly \Tuleap\User\RetrieveUserById $user_manager)
     {
-        $this->user_manager = $user_manager;
     }
 
     private function getAssigneeIds(Artifact $artifact)

@@ -1828,7 +1828,8 @@ class Tracker implements Tracker_Dispatchable_Interface
             new ProjectAccessChecker(
                 new RestrictedUserCanAccessProjectVerifier(),
                 EventManager::instance()
-            )
+            ),
+            $this->getGlobalAdminPermissionsChecker(),
         );
 
         return $permission_checker->userCanViewTracker($user, $this);

@@ -47,8 +47,11 @@ class ServiceTracker extends Service
         );
         $user_has_special_access          = $global_admin_permissions_checker
             ->doesUserHaveTrackerGlobalAdminRightsOnProject($this->getProject(), UserManager::instance()->getCurrentUser());
+        if (! $this->project->isPublic() && ! $user_has_special_access) {
+            //if it's a private group, you must be a member of that group
+            session_require(['group' => $this->project->getID()]);
+        }
 
-        $params                 = $params + ['user_has_special_access' => $user_has_special_access];
         $params['service_name'] = self::NAME;
         $params['project_id']   = $this->getGroupId();
 
