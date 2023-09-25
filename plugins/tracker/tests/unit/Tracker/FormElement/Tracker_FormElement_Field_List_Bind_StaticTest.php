@@ -34,7 +34,7 @@ use Tracker_FormElement_Field_Selectbox;
 use UserXMLExporter;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_FormElement_Field_List_Bind_StaticTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_FormElement_Field_List_Bind_StaticTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -151,27 +151,48 @@ class Tracker_FormElement_Field_List_Bind_StaticTest extends \Tuleap\Test\PHPUni
 
     public function testItAddsANewValue(): void
     {
-        $value_dao = Mockery::mock(BindStaticValueDao::class);
-        $value_dao->shouldReceive('propagateCreation');
+        $value_dao = $this->createMock(BindStaticValueDao::class);
+        $value_dao->method('propagateCreation');
         $bind_static = $this->getListFieldWIthBindValues([]);
 
         $bind_static->shouldReceive('getValueDao')->andReturn($value_dao);
 
-        $value_dao->shouldReceive(
+        $value_dao->expects(self::once())->method(
             'create'
-        )->withArgs(
-            [
-                101,
-                'intermodulation',
-                Mockery::any(),
-                Mockery::any(),
-                Mockery::any(),
-            ]
-        )->once()->andReturn(321);
+        )->with(
+            101,
+            'intermodulation',
+            self::anything(),
+            self::anything(),
+            self::anything(),
+        )->willReturn(321);
 
         $new_id = $bind_static->addValue(' intermodulation	');
 
-        $this->assertEquals($new_id, 321);
+        self::assertEquals(321, $new_id);
+    }
+
+    public function testItAddsZeroAsANewValue(): void
+    {
+        $value_dao = $this->createMock(BindStaticValueDao::class);
+        $value_dao->method('propagateCreation');
+        $bind_static = $this->getListFieldWIthBindValues([]);
+
+        $bind_static->shouldReceive('getValueDao')->andReturn($value_dao);
+
+        $value_dao->expects(self::once())->method(
+            'create'
+        )->with(
+            101,
+            '0',
+            self::anything(),
+            self::anything(),
+            self::anything(),
+        )->willReturn(321);
+
+        $new_id = $bind_static->addValue('0');
+
+        self::assertEquals(321, $new_id);
     }
 
     public function testItDoesntCrashWhenInvalidValueShouldBePrinted(): void
