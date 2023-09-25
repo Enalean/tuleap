@@ -56,7 +56,7 @@
                 </a>
             </li>
             <li>
-                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-dependencies">
+                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-dependencies" data-test="field-dependencies">
                 {{# dgettext }}tuleap-tracker | Field dependencies{{/ dgettext }}
                 </a>
             </li>
@@ -132,4 +132,4 @@
 </ul>
 </div>
 
-<div class="tracker-administration-content">
+<div class="tracker-administration-content" data-test="tracker-administration-content">

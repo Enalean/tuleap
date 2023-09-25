@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+  ~
+  ~ This file is a part of Tuleap.
+  ~
+  ~ Tuleap is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Tuleap is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<users>
+  <user>
+    <id>101</id>
+    <username>ProjectAdministrator</username>
+    <realname><![CDATA[ProjectAdministrator]]></realname>
+    <email><![CDATA[ProjectAdministrator@example.com]]></email>
+    <ldapid></ldapid>
+  </user>
+  <user>
+    <id>102</id>
+    <username>ProjectMember</username>
+    <realname>ProjectMember</realname>
+    <email>ProjectMember@example.com</email>
+    <ldapid></ldapid>
+  </user>
+  <user>
+    <id>110</id>
+    <username>Coordinator1</username>
+    <realname>Coordinator1</realname>
+    <email>Coordinator1@example.com</email>
+    <ldapid></ldapid>
+  </user>
+  <user>
+    <id>120</id>
+    <username>Coordinator2</username>
+    <realname>Coordinator2</realname>
+    <email>Coordinator2@example.com</email>
+    <ldapid></ldapid>
+  </user>
+</users>

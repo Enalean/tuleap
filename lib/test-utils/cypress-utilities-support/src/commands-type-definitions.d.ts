@@ -104,7 +104,12 @@ declare global {
             ): Chainable<JQuery<HTMLElement>>;
 
             assertUserMessagesReceivedByWithSpecificContent(
-                email: string,
+                email_address: string,
+                specific_content_of_mail: string,
+            ): void;
+
+            assertNotEmailWithContentReceived(
+                email_address: string,
                 specific_content_of_mail: string,
             ): void;
         }
