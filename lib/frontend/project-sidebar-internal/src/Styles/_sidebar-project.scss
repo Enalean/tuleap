@@ -305,8 +305,8 @@
     box-sizing: border-box;
     align-items: center;
     justify-content: center;
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     margin: 0 0 0 var(--tlp-medium-spacing);
     transition:
         opacity ease-in-out 150ms,
@@ -360,7 +360,7 @@
     font-size: 0.875rem;
     font-weight: 400;
     letter-spacing: 0.2px;
-    line-height: 1rem;
+    line-height: 40px;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
