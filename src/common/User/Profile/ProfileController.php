@@ -25,6 +25,7 @@ use HTTPRequest;
 use PFUser;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
@@ -70,10 +71,9 @@ class ProfileController implements DispatchableWithRequest, DispatchableWithBurn
         }
 
         $layout->header(
-            [
-                'title' => UserHelper::instance()->getDisplayNameFromUser($user),
-                'body_class' => ['body-user-profile'],
-            ],
+            HeaderConfigurationBuilder::get(UserHelper::instance()->getDisplayNameFromUser($user))
+                ->withBodyClass(['body-user-profile'])
+                ->build()
         );
         $this->renderToPage($user, $current_user);
         $layout->footer([]);

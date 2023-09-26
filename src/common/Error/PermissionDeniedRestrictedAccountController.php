@@ -44,7 +44,7 @@ class PermissionDeniedRestrictedAccountController
             throw new \Exception("Could not load BurningParrot theme");
         }
 
-        $layout->header(["title" => _("Permission denied")]);
+        $layout->header(\Tuleap\Layout\HeaderConfiguration::fromTitle(_("Permission denied")));
 
         $renderer = TemplateRendererFactory::build()->getRenderer(
             ForgeConfig::get('codendi_dir') . '/src/templates/error/'

@@ -31,11 +31,17 @@ final class HeaderConfiguration
 {
     /**
      * @param string[] $body_class
+     * @psalm-internal \Tuleap\Layout
      */
     public function __construct(
-        public string $title,
-        public ?InProjectWithoutSidebar $in_project_without_sidebar,
-        public array $body_class,
+        public readonly string $title,
+        public readonly ?InProjectWithoutSidebar $in_project_without_sidebar,
+        public readonly array $body_class,
     ) {
+    }
+
+    public static function fromTitle(string $title): self
+    {
+        return HeaderConfigurationBuilder::get($title)->build();
     }
 }

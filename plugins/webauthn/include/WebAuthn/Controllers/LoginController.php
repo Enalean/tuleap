@@ -27,6 +27,7 @@ use HTTPRequest;
 use TemplateRenderer;
 use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\NeverThrow\Result;
@@ -61,10 +62,11 @@ final class LoginController implements DispatchableWithRequestNoAuthz, Dispatcha
 
         $layout->addJavascriptAsset(new JavascriptViteAsset($this->assets, 'src/login.ts'));
 
-        $layout->header([
-            'title' => dgettext('tuleap-webauthn', 'Passwordless connection'),
-            'body_class' => ['login'],
-        ]);
+        $layout->header(
+            HeaderConfigurationBuilder::get(dgettext('tuleap-webauthn', 'Passwordless connection'))
+                ->withBodyClass(['login'])
+                ->build()
+        );
         $this->renderer->renderToPage('login', [
             'csrf_token' => CSRFSynchronizerTokenPresenter::fromToken(new \CSRFSynchronizerToken(self::URL)),
         ]);

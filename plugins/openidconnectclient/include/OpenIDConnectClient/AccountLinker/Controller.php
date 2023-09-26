@@ -28,6 +28,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRendererFactory;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Layout\FooterConfiguration;
+use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\OpenIDConnectClient\Login\ConnectorPresenterBuilder;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
@@ -115,10 +116,9 @@ class Controller
         $renderer                 = TemplateRendererFactory::build()->getRenderer(OPENIDCONNECTCLIENT_TEMPLATE_DIR);
 
         $GLOBALS['HTML']->header(
-            [
-                'title'      => dgettext('tuleap-openidconnectclient', 'Link an account'),
-                'body_class' => ['openid-connect-link'],
-            ]
+            HeaderConfigurationBuilder::get(dgettext('tuleap-openidconnectclient', 'Link an account'))
+                ->withBodyClass(['openid-connect-link'])
+                ->build()
         );
         $renderer->renderToPage('linker', $presenter);
         $GLOBALS['HTML']->footer(FooterConfiguration::withoutContent());

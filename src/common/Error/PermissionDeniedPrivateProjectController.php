@@ -59,7 +59,7 @@ class PermissionDeniedPrivateProjectController
             throw new \Exception("Could not load BurningParrot theme");
         }
 
-        $layout->header(["title" => _("Project access error")]);
+        $layout->header(\Tuleap\Layout\HeaderConfiguration::fromTitle(_("Project access error")));
 
         $renderer = TemplateRendererFactory::build()->getRenderer(
             ForgeConfig::get('codendi_dir') . '/src/templates/error/'

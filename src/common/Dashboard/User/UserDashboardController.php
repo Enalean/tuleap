@@ -37,6 +37,7 @@ use Tuleap\Dashboard\Widget\OwnerInfo;
 use Tuleap\Dashboard\Widget\WidgetMinimizor;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\FooterConfiguration;
+use Tuleap\Layout\HeaderConfigurationBuilder;
 
 class UserDashboardController
 {
@@ -142,10 +143,11 @@ class UserDashboardController
 
         $title    = $this->getPageTitle($user_dashboards_presenter, $current_user);
         $purifier = Codendi_HTMLPurifier::instance();
-        $layout->header([
-            'title' => $purifier->purify($title),
-            'body_class' => ['body-user-dashboard', 'reduce-help-button'],
-        ]);
+        $layout->header(
+            HeaderConfigurationBuilder::get($purifier->purify($title))
+            ->withBodyClass(['body-user-dashboard', 'reduce-help-button'])
+            ->build()
+        );
         $renderer = TemplateRendererFactory::build()->getRenderer(
             ForgeConfig::get('tuleap_dir') . '/src/templates/dashboard'
         );

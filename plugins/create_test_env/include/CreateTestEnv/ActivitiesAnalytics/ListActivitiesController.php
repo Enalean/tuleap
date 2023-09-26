@@ -81,7 +81,7 @@ class ListActivitiesController implements DispatchableWithRequest, DispatchableW
             );
         }
 
-        $layout->header(['title' => 'Create Test Environment Daily Activities']);
+        $layout->header(\Tuleap\Layout\HeaderConfiguration::fromTitle('Create Test Environment Daily Activities'));
         $this->renderer->renderToPage('daily-usage', $users);
         $layout->footer([]);
     }

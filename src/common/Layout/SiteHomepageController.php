@@ -86,20 +86,19 @@ class SiteHomepageController implements DispatchableWithRequest, DispatchableWit
         $login_url = '';
         $event_manager->processEvent(\Event::GET_LOGIN_URL, ['return_to' => '', 'login_url' => &$login_url]);
 
-        $header_params = [
-            'title' => $GLOBALS['Language']->getText('homepage', 'title'),
-        ];
-
-        $header_params['body_class'] = ['homepage'];
-        $news_collection_builder     = new NewsCollectionBuilder(new NewsDao(), $this->project_manager, $this->user_manager, \Codendi_HTMLPurifier::instance());
-        $news_collection             = $news_collection_builder->build();
+        $news_collection_builder = new NewsCollectionBuilder(new NewsDao(), $this->project_manager, $this->user_manager, \Codendi_HTMLPurifier::instance());
+        $news_collection         = $news_collection_builder->build();
 
         $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons(
             new IncludeCoreAssets(),
             'homepage-style'
         ));
 
-        $layout->header($header_params);
+        $layout->header(
+            HeaderConfigurationBuilder::get($GLOBALS['Language']->getText('homepage', 'title'))
+                ->withBodyClass(['homepage'])
+                ->build()
+        );
         $this->displayStandardHomepage(
             $registration_guard->isRegistrationPossible(),
             $login_url,

@@ -22,7 +22,7 @@
 require_once __DIR__ . '/../include/pre.php';
 
 
-$HTML->header(['title' => _('Deleted Account')]);
+$HTML->header(\Tuleap\Layout\HeaderConfiguration::fromTitle(_('Deleted Account')));
 ?>
 
 <P><B><?php echo _('Deleted Account'); ?></B>

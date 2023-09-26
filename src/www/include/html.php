@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\HeaderConfiguration;
+
 function html_feedback_top($feedback)
 {
     echo $GLOBALS['HTML']->feedback($GLOBALS['feedback']);
@@ -520,15 +522,11 @@ function html_build_multiple_select_box_from_array($array, $name, $checked_array
         @param params array() must contain $user_id
         @result text - echos HTML to the screen directly
 */
-function site_header($params)
+function site_header(HeaderConfiguration|array $params): void
 {
     global $HTML;
-    /*
-                Check to see if active user
-                Check to see if logged in
-    */
 
-    if (isset($params['project'])) {
+    if (is_array($params) && isset($params['project'])) {
         if ($params['project']->isTemplate()) {
             $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('include_layout', 'template_warning'));
         }

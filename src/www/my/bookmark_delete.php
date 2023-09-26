@@ -8,7 +8,7 @@ require_once __DIR__ . '/../include/bookmarks.php';
 $request = HTTPRequest::instance();
 
 
-$HTML->header(["title" => $Language->getText('bookmark_delete', 'title')]);
+$HTML->header(\Tuleap\Layout\HeaderConfiguration::fromTitle($Language->getText('bookmark_delete', 'title')));
 
 print "<H3>" . $Language->getText('bookmark_delete', 'title') . "</H3>\n";
 $vId = new Valid_UInt('bookmark_id');

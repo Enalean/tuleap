@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Layout\FooterConfiguration;
+use Tuleap\Layout\HeaderConfigurationBuilder;
 
 header("Expires: Wed, 11 Nov 1998 11:11:11 GMT");
 header("Cache-Control: no-cache, no-store, must-revalidate");
@@ -116,7 +117,11 @@ $presenter         = $presenter_builder->build(
 if ($pvMode) {
     $GLOBALS['HTML']->pv_header(['title' => $presenter->account_login_page_title()]);
 } else {
-    $GLOBALS['HTML']->header(['title' => $presenter->account_login_page_title(), 'body_class' => ['login-page']]);
+    $GLOBALS['HTML']->header(
+        HeaderConfigurationBuilder::get($presenter->account_login_page_title())
+            ->withBodyClass(['login-page'])
+            ->build()
+    );
 }
 
 $login_controller->index($presenter);
