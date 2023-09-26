@@ -138,8 +138,8 @@ devDependencies:
     specifier: 4.6.0
     version: 4.6.0
   mini-css-extract-plugin:
-    specifier: ^2.6.1
-    version: 2.6.1(webpack@5.88.2)
+    specifier: ^2.7.6
+    version: 2.7.6(webpack@5.88.2)
   minimist:
     specifier: ^1.2.8
     version: 1.2.8
@@ -2429,7 +2429,7 @@ packages:
     resolution: {integrity: sha512-sdPRb9K6iL5XZOmBubg8yiFp5yS/JdUDQsq5e6h95km91MCYMuvp7mh1fjPEYUhvHepKpZOjnEaMBR4PxjWDzg==}
     dependencies:
       '@types/estree': 1.0.1
-      '@types/json-schema': 7.0.12
+      '@types/json-schema': 7.0.13
     dev: true
 
   /@types/estree@1.0.1:
@@ -2494,6 +2494,10 @@ packages:
 
   /@types/json-schema@7.0.12:
     resolution: {integrity: sha512-Hr5Jfhc9eYOQNPYO5WLDq/n4jqijdHNlDXjuAQkkt+mWdQR+XJToOHrsD4cPaMXpn6KO7y2+wM8AZEs8VpBLVA==}
+    dev: true
+
+  /@types/json-schema@7.0.13:
+    resolution: {integrity: sha512-RbSSoHliUbnXj3ny0CNFOoxrIDV6SUGyStHsvDqosw6CkdPV8TtWGlfecuK4ToyMEAql6pzNxgCFKanovUzlgQ==}
     dev: true
 
   /@types/json5@0.0.29:
@@ -2730,7 +2734,7 @@ packages:
     peerDependencies:
       eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
     dependencies:
-      '@types/json-schema': 7.0.12
+      '@types/json-schema': 7.0.13
       '@typescript-eslint/scope-manager': 5.17.0
       '@typescript-eslint/types': 5.17.0
       '@typescript-eslint/typescript-estree': 5.17.0(typescript@5.2.2)
@@ -3370,7 +3374,7 @@ packages:
       ajv:
         optional: true
     dependencies:
-      ajv: 8.11.0
+      ajv: 8.12.0
     dev: true
 
   /ajv-keywords@3.5.2(ajv@6.12.6):
@@ -3381,12 +3385,12 @@ packages:
       ajv: 6.12.6
     dev: true
 
-  /ajv-keywords@5.1.0(ajv@8.11.0):
+  /ajv-keywords@5.1.0(ajv@8.12.0):
     resolution: {integrity: sha512-YCS/JNFAUyr5vAuhk1DWm1CBxRHW9LbJ2ozWeemrIqpbsqKjHVxYPyi5GC0rjZIT5JxJ3virVTS8wk4i/Z+krw==}
     peerDependencies:
       ajv: ^8.8.2
     dependencies:
-      ajv: 8.11.0
+      ajv: 8.12.0
       fast-deep-equal: 3.1.3
     dev: true
 
@@ -3396,15 +3400,6 @@ packages:
       fast-deep-equal: 3.1.3
       fast-json-stable-stringify: 2.1.0
       json-schema-traverse: 0.4.1
-      uri-js: 4.4.1
-    dev: true
-
-  /ajv@8.11.0:
-    resolution: {integrity: sha512-wGgprdCvMalC0BztXvitD2hC04YffAvtsUn93JbGXYLAtCUO4xd17mCCZQxUOItiBwZvJScWo8NIvQMQ71rdpg==}
-    dependencies:
-      fast-deep-equal: 3.1.3
-      json-schema-traverse: 1.0.0
-      require-from-string: 2.0.2
       uri-js: 4.4.1
     dev: true
 
@@ -7846,13 +7841,13 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /mini-css-extract-plugin@2.6.1(webpack@5.88.2):
-    resolution: {integrity: sha512-wd+SD57/K6DiV7jIR34P+s3uckTRuQvx0tKPcvjFlrEylk6P4mQ2KSWk1hblj1Kxaqok7LogKOieygXqBczNlg==}
+  /mini-css-extract-plugin@2.7.6(webpack@5.88.2):
+    resolution: {integrity: sha512-Qk7HcgaPkGG6eD77mLvZS1nmxlao3j+9PkrT9Uc7HAE1id3F41+DdBRYRYkbyfNRGzm8/YWtzhw7nVPmwhqTQw==}
     engines: {node: '>= 12.13.0'}
     peerDependencies:
       webpack: ^5.0.0
     dependencies:
-      schema-utils: 4.0.0
+      schema-utils: 4.2.0
       webpack: 5.88.2(webpack-cli@5.1.4)
     dev: true
 
@@ -8613,11 +8608,6 @@ packages:
       once: 1.4.0
     dev: true
 
-  /punycode@2.1.1:
-    resolution: {integrity: sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==}
-    engines: {node: '>=6'}
-    dev: true
-
   /punycode@2.3.0:
     resolution: {integrity: sha512-rRV+zQD8tVFys26lAGR9WUuS4iUAngJScM+ZRSKtvl5tKeZ2t5bvdNFdNHBW9FWR4guGHlgmsZ1G7BSm2wTbuA==}
     engines: {node: '>=6'}
@@ -8986,7 +8976,7 @@ packages:
     resolution: {integrity: sha512-Y5PQxS4ITlC+EahLuXaY86TXfR7Dc5lw294alXOq86JAHCihAIZfqv8nNCWvaEJvaC51uN9hbLGeV0cFBdH+Fw==}
     engines: {node: '>= 10.13.0'}
     dependencies:
-      '@types/json-schema': 7.0.12
+      '@types/json-schema': 7.0.13
       ajv: 6.12.6
       ajv-keywords: 3.5.2(ajv@6.12.6)
     dev: true
@@ -8995,7 +8985,7 @@ packages:
     resolution: {integrity: sha512-pN/yOAvcC+5rQ5nERGuwrjLlYvLTbCibnZ1I7B1LaiAz9BRBlE9GMgE/eqV30P7aJQUf7Ddimy/RsbYO/GrVGg==}
     engines: {node: '>= 10.13.0'}
     dependencies:
-      '@types/json-schema': 7.0.12
+      '@types/json-schema': 7.0.13
       ajv: 6.12.6
       ajv-keywords: 3.5.2(ajv@6.12.6)
     dev: true
@@ -9004,10 +8994,20 @@ packages:
     resolution: {integrity: sha512-1edyXKgh6XnJsJSQ8mKWXnN/BVaIbFMLpouRUrXgVq7WYne5kw3MW7UPhO44uRXQSIpTSXoJbmrR2X0w9kUTyg==}
     engines: {node: '>= 12.13.0'}
     dependencies:
-      '@types/json-schema': 7.0.12
-      ajv: 8.11.0
+      '@types/json-schema': 7.0.13
+      ajv: 8.12.0
       ajv-formats: 2.1.1
-      ajv-keywords: 5.1.0(ajv@8.11.0)
+      ajv-keywords: 5.1.0(ajv@8.12.0)
+    dev: true
+
+  /schema-utils@4.2.0:
+    resolution: {integrity: sha512-L0jRsrPpjdckP3oPug3/VxNKt2trR8TcabrM6FOAAlvC/9Phcmm+cuAgTlxBqdBR1WJx7Naj9WHw+aOmheSVbw==}
+    engines: {node: '>= 12.13.0'}
+    dependencies:
+      '@types/json-schema': 7.0.13
+      ajv: 8.12.0
+      ajv-formats: 2.1.1
+      ajv-keywords: 5.1.0(ajv@8.12.0)
     dev: true
 
   /semver@5.7.2:
@@ -10065,7 +10065,7 @@ packages:
   /uri-js@4.4.1:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}
     dependencies:
-      punycode: 2.1.1
+      punycode: 2.3.0
     dev: true
 
   /url-parse@1.5.10:
