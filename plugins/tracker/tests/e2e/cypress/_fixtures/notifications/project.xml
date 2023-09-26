@@ -112,6 +112,35 @@
       </permissions>
       <artifacts/>
     </tracker>
+    <tracker id="T27" parent_id="0">
+      <name><![CDATA[notifications-subscription]]></name>
+      <item_name><![CDATA[notif_subscription]]></item_name>
+      <description><![CDATA[]]></description>
+      <color><![CDATA[inca-silver]]></color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="string" ID="F703" rank="0" id="703" tracker_id="27" parent_id="0">
+          <name><![CDATA[ my_label ]]></name>
+          <label><![CDATA[ my label ]]></label>
+          <properties size="30"/>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="tooltip"/>
+        <semantic type="plugin_cardwall_card_fields"/>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports/>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F703" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F703" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F703" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+      </permissions>
+    </tracker>
     <triggers/>
   </trackers>
 </project>
