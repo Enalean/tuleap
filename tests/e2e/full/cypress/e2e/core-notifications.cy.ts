@@ -69,10 +69,7 @@ context("Platform notifications", function () {
         cy.get("[data-test=pending-projects-button]").click();
         cy.get("[data-test=validate-project-button]").click();
 
-        cy.assertUserMessagesReceivedByWithSpecificContent(
-            "ProjectMember@example.com",
-            "Project approved",
-        );
+        cy.assertEmailWithContentReceived("ProjectMember@example.com", "Project approved");
     });
 
     it("Notifications for membership management", function () {
@@ -82,7 +79,7 @@ context("Platform notifications", function () {
         cy.visit(`/projects/${project_member}`);
         cy.addProjectMember("ProjectMember");
 
-        cy.assertUserMessagesReceivedByWithSpecificContent(
+        cy.assertEmailWithContentReceived(
             "ProjectMember@example.com",
             "You are now a member of project ",
         );
@@ -97,7 +94,7 @@ context("Platform notifications", function () {
                     expect(txt).to.contains("Quit this project?");
                 });
 
-                cy.assertUserMessagesReceivedByWithSpecificContent(
+                cy.assertEmailWithContentReceived(
                     "ProjectAdministrator@example.com",
                     "user ProjectMember has chosen to",
                 );
@@ -130,7 +127,7 @@ context("Platform notifications", function () {
 
         cy.get("[data-test=register-user-button]").click();
 
-        cy.assertUserMessagesReceivedByWithSpecificContent(
+        cy.assertEmailWithContentReceived(
             "codendi-admin@tuleap",
             "A new user has just registered on Tuleap",
         );
@@ -141,7 +138,7 @@ context("Platform notifications", function () {
         cy.get("[data-test=pending-users-link]").click();
         cy.get("[data-test=activate-user]").click();
 
-        cy.assertUserMessagesReceivedByWithSpecificContent(
+        cy.assertEmailWithContentReceived(
             "user@example.com",
             "You are now a registered user on Tuleap",
         );

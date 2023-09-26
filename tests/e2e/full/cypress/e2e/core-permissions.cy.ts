@@ -62,10 +62,7 @@ describe("Core", function () {
         cy.get("[data-test=message-ask-to-join-project]").clear().type(message);
         cy.get("[data-test=ask-to-join-project-button]").click();
 
-        cy.assertUserMessagesReceivedByWithSpecificContent(
-            "ProjectAdministrator@example.com",
-            message,
-        );
+        cy.assertEmailWithContentReceived("ProjectAdministrator@example.com", message);
 
         cy.siteAdministratorSession();
         cy.updatePlatformVisibilityForAnonymous();
@@ -86,10 +83,7 @@ describe("Core", function () {
         cy.get("[data-test=message-ask-to-join-project]").clear().type(message);
         cy.get("[data-test=ask-to-join-project-button]").click();
 
-        cy.assertUserMessagesReceivedByWithSpecificContent(
-            "ProjectAdministrator@example.com",
-            message,
-        );
+        cy.assertEmailWithContentReceived("ProjectAdministrator@example.com", message);
     });
 });
 

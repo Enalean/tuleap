@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project unix-name="conditionnal-notifications" full-name="conditionnal notifications" description="" access="public">
+<project unix-name="conditional-notifications" full-name="conditional notifications" description="" access="public">
   <long-description/>
   <services>
     <service shortname="summary" enabled="1"/>
@@ -94,19 +94,6 @@
         <list_rules/>
       </rules>
       <reports>
-        <report id="REPORT_831" is_default="0">
-          <name><![CDATA[Default]]></name>
-          <description><![CDATA[The system default artifact report]]></description>
-          <criterias/>
-          <renderers>
-            <renderer ID="R1304" type="table" rank="0" chunksz="15">
-              <name><![CDATA[Results]]></name>
-              <columns>
-                <field REF="F8346"/>
-              </columns>
-            </renderer>
-          </renderers>
-        </report>
       </reports>
       <permissions>
         <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>

@@ -17,13 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as quotedPrintable from "quoted-printable";
 import type { ConditionPredicate, ReloadCallback } from "./commands-type-definitions";
-import type {
-    StructureFields,
-    ListNewChangesetValue,
-    StaticBoundListField,
-} from "@tuleap/plugin-tracker-rest-api-types";
 
 export const WEB_UI_SESSION = "WebUI";
 
@@ -224,80 +218,6 @@ Cypress.Commands.add("removeProjectMember", (user_name: string): void => {
         });
 });
 
-interface Tracker {
-    id: number;
-    item_name: string;
-}
-
-Cypress.Commands.add(
-    "getTrackerIdFromREST",
-    (project_id: number, tracker_name: string): Cypress.Chainable<number> => {
-        return cy.getFromTuleapAPI(`/api/projects/${project_id}/trackers`).then((response) => {
-            return response.body.find((tracker: Tracker) => tracker.item_name === tracker_name).id;
-        });
-    },
-);
-
-export interface ArtifactCreationPayload {
-    tracker_id: number;
-    artifact_title: string;
-    artifact_status?: string;
-    title_field_name: string;
-}
-
-const statusFieldGuard = (field: StructureFields): field is StaticBoundListField =>
-    field.type === "sb" && field.bindings.type === "static";
-
-function getStatusPayload(
-    status_label: string | undefined,
-    fields: readonly StructureFields[],
-): ListNewChangesetValue[] {
-    if (status_label === undefined) {
-        return [];
-    }
-    const status = fields.find((field) => field.name === "status");
-    if (!status || !statusFieldGuard(status)) {
-        throw Error("No status field in tracker structure");
-    }
-    const status_id = status.field_id;
-    const status_bind_value = status.values.find((value) => value.label === status_label);
-    if (status_bind_value === undefined) {
-        throw Error(`Could not find status value with given label: ${status_label}`);
-    }
-    return [
-        {
-            bind_value_ids: [status_bind_value.id],
-            field_id: status_id,
-        },
-    ];
-}
-
-Cypress.Commands.add(
-    "createArtifact",
-    (payload: ArtifactCreationPayload): Cypress.Chainable<number> =>
-        cy.getFromTuleapAPI(`/api/trackers/${payload.tracker_id}`).then((response) => {
-            const result = response.body;
-
-            const title_id = result.fields.find(
-                (field: StructureFields) => field.name === payload.title_field_name,
-            ).field_id;
-            const artifact_payload = {
-                tracker: { id: payload.tracker_id },
-                values: [
-                    {
-                        field_id: title_id,
-                        value: payload.artifact_title,
-                    },
-                    ...getStatusPayload(payload.artifact_status, result.fields),
-                ],
-            };
-
-            return cy
-                .postFromTuleapApi("/api/artifacts/", artifact_payload)
-                .then((response) => response.body.id);
-        }),
-);
-
 Cypress.Commands.add("createFRSPackage", (project_id: number, package_name: string): void => {
     const payload = {
         project_id: project_id,
@@ -306,86 +226,6 @@ Cypress.Commands.add("createFRSPackage", (project_id: number, package_name: stri
 
     cy.postFromTuleapApi("https://tuleap/api/frs_packages/", payload);
 });
-
-Cypress.Commands.add(
-    "assertUserMessagesReceivedByWithSpecificContent",
-    (email_address: string, specific_content_of_mail: string): void => {
-        const reloadCallback = (): void => {
-            cy.log("Check user email");
-        };
-        const conditionCallback: ConditionPredicate = (number_of_attempts, max_attempts) => {
-            cy.log(
-                `Check that user ${email_address} have receive email ${specific_content_of_mail} (attempt ${number_of_attempts}/${max_attempts})`,
-            );
-            return getEmailsReceivedBy(email_address).then((response) => {
-                if (response.body.items.length === 0) {
-                    return false;
-                }
-                return quotedPrintable
-                    .decode(response.body.items[0].Content.Body)
-                    .includes(specific_content_of_mail);
-            });
-        };
-        cy.reloadUntilCondition(
-            reloadCallback,
-            conditionCallback,
-            "Timed out while checking if messages have been received",
-        );
-    },
-);
-
-Cypress.Commands.add(
-    "assertNotEmailWithContentReceived",
-    (email_address: string, specific_content_of_mail: string): void => {
-        const reloadCallback = (): void => {
-            cy.log("Check user email");
-        };
-        const conditionCallback: ConditionPredicate = (number_of_attempts, max_attempts) => {
-            cy.log(
-                `Check that user ${email_address} have not receive email  ${specific_content_of_mail}  (attempt ${number_of_attempts}/${max_attempts})`,
-            );
-            return getEmailsReceivedBy(email_address).then((response) => {
-                if (!response.body.items) {
-                    return false;
-                }
-                const n = response.body.items.length;
-                for (let i = 0; i < n; i++) {
-                    expect(
-                        quotedPrintable.decode(response.body.items[i].Content.Body),
-                    ).not.contains(specific_content_of_mail);
-                }
-                return true;
-            });
-        };
-        cy.reloadUntilCondition(
-            reloadCallback,
-            conditionCallback,
-            "Timed out while checking if user did not receive specific message",
-        );
-    },
-);
-
-interface Item {
-    Content: {
-        Body: string;
-    };
-}
-
-interface MailResponse {
-    items: Array<Item>;
-}
-
-function getEmailsReceivedBy(
-    email_address: string,
-): Cypress.Chainable<Cypress.Response<MailResponse>> {
-    return cy.request({
-        method: "GET",
-        url: "http://mailhog:8025/api/v2/search?kind=to&query=" + encodeURIComponent(email_address),
-        headers: {
-            accept: "application/json",
-        },
-    });
-}
 
 const MAX_ATTEMPTS = 10;
 

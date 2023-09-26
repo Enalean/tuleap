@@ -1,21 +1,27 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
 dependencies:
+  quoted-printable:
+    specifier: ^1.0.1
+    version: 1.0.1
+
+devDependencies:
   '@tuleap/plugin-tracker-rest-api-types':
     specifier: workspace:*
     version: link:../../../plugins/tracker/scripts/lib/rest-api-types
   '@types/quoted-printable':
     specifier: ^1.0.0
     version: 1.0.0
-  quoted-printable:
-    specifier: ^1.0.1
-    version: 1.0.1
 
 packages:
 
   /@types/quoted-printable@1.0.0:
     resolution: {integrity: sha512-hgFjmHmgT5M8SvDVe+tMhiUb3xViwqkEAM/sTpWCpO0B2Z7RGAgwiQaxPcLVk4KLiZmqj7BMXZvaQQdX6uPM6A==}
-    dev: false
+    dev: true
 
   /quoted-printable@1.0.1:
     resolution: {integrity: sha512-cihC68OcGiQOjGiXuo5Jk6XHANTHl1K4JLk/xlEJRTIXfy19Sg6XzB95XonYgr+1rB88bCpr7WZE7D7AlZow4g==}
