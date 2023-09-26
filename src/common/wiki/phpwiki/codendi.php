@@ -96,16 +96,7 @@ function codendi_main()
     $validators['%weak'] = true;
     $request->setValidators($validators);
 
-    /* $html_params = array(//'stylesheet' => '/wiki/themes/Codendi/phpwiki-codendi.css',
-                         'group' => 1,
-                         'toptab' => 'wiki',
-                         'title' => 'yeah');
-
-    site_project_header($html_params);*/
-
     $request->handleAction();
-
-//site_project_footer($html_params);
 
     if (DEBUG and DEBUG & _DEBUG_INFO) {
         phpinfo(INFO_VARIABLES | INFO_MODULES);

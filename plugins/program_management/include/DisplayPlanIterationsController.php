@@ -179,7 +179,7 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
         $layout->header(
             [
                 'title'                          => $title,
-                'group'                          => $project->getID(),
+                'project'                        => $project,
                 'toptab'                         => 'plugin_program_management',
                 'body_class'                     => ['has-sidebar-with-pinned-header'],
                 'main_classes'                   => [],

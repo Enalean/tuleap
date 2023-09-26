@@ -51,7 +51,7 @@ class GitViewHeader
         $layout->header(
             [
                 'title'      => dgettext('tuleap-git', 'Git'),
-                'group'      => $project->getID(),
+                'project'    => $project,
                 'toptab'     => dgettext('tuleap-git', 'Git'),
                 'body_class' => array_merge(['git-administration'], $this->getAdditionalBodyClasses($request)),
             ]

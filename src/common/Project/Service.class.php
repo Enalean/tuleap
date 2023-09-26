@@ -195,7 +195,6 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
             $GLOBALS['HTML']->addToolbarItem('<a href="' . $t['url'] . '" ' . $class . ' ' . $data_test . '>' . $item_title . '</a>');
         }
         $params['title']  = $title;
-        $params['group']  = $this->project->group_id;
         $params['toptab'] = $this->getId();
 
         if (! isset($params['body_class'])) {
@@ -209,7 +208,7 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 
         $this->displayDuplicateInheritanceWarning();
 
-        site_project_header($params);
+        site_project_header($this->project, $params);
     }
 
     /**
@@ -225,7 +224,7 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public function displayFooter(): void
     {
         $params = [
-            'group' => $this->project->group_id,
+            'project' => $this->project,
         ];
         if ($pv = (int) HTTPRequest::instance()->get('pv')) {
             $params['pv'] = (int) $pv;

@@ -41,9 +41,9 @@ class SkinTuleap123 extends SkinTemplate
             ($tc->project = $project =
                 group_get_object_by_name($GLOBALS['fusionforgeproject']))
         ) {
-                $tc->params['group']  = $GLOBALS['group_id'] =
-                    $project->getID();
-                $tc->params['toptab'] = 'plugin_mediawiki';
+            $GLOBALS['group_id']       = $project->getID();
+                $tc->params['project'] = $project;
+                $tc->params['toptab']  = 'plugin_mediawiki';
                 //$page_name = substr($_SERVER['REQUEST_URI'], (strpos($_SERVER['REQUEST_URI'], 'index.php/') + strlen('index.php/')), strlen($_SERVER['REQUEST_URI']));
                 $page_name           = preg_replace(self::MEDIAWIKI_URL, '', $_SERVER['REQUEST_URI']);
                 $tc->params['title'] = 'Mediawiki-' . $page_name;

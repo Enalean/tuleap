@@ -117,7 +117,6 @@ class WikiViews extends Views
         $this->gid = (int) $id;
 
       // Parameters for HTML rendering
-        $this->html_params['group']  = $this->gid;
         $this->html_params['toptab'] = 'wiki';
 
       // Wikize project name
@@ -155,7 +154,8 @@ class WikiViews extends Views
             ],
         ]);
 
-        parent::header();
+        $project = ProjectManager::instance()->getProject($this->gid);
+        site_project_header($project, $this->html_params);
         $this->displayMenu();
     }
 

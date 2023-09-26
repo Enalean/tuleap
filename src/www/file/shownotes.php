@@ -44,7 +44,7 @@ if (
 }
 
 $group_id = $release->getGroupID();
-file_utils_header(['title' => $Language->getText('file_shownotes', 'release_notes'), 'group' => $group_id]);
+file_utils_header(['title' => $Language->getText('file_shownotes', 'release_notes')]);
 
 $hp = Codendi_HTMLPurifier::instance();
 

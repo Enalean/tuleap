@@ -98,7 +98,7 @@
     /* protected */ public function _footer($params)
     {
         if (isset($params['pv']) && $params['pv'] > 0) {
-            $GLOBALS['HTML']->pv_footer([]);
+            $GLOBALS['HTML']->pv_footer();
         } else {
             $GLOBALS['HTML']->footer([]);
         }

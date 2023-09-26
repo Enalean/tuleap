@@ -116,8 +116,8 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
     public function header(HeaderConfiguration|array $params): void
     {
-        if (is_array($params) && ! empty($params['group'])) {
-            $project = ProjectManager::instance()->getProject($params['group']);
+        if (is_array($params) && ! empty($params['project'])) {
+            $project = $params['project'];
             EventManager::instance()->processEvent(new BeforeStartProjectHeader($project, $this, $this->getUser()));
         }
 
@@ -154,9 +154,8 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $current_variant,
         ));
 
-        if (! empty($params['group'])) {
-            $project = ProjectManager::instance()->getProject($params['group']);
-            $this->injectProjectBackground($project, $params);
+        if (! empty($params['project'])) {
+            $this->injectProjectBackground($params['project'], $params);
         }
 
         $this->displayJavascriptElements($params);
@@ -220,11 +219,10 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
     private function body($params)
     {
-        $current_user    = UserManager::instance()->getCurrentUserWithLoggedInInformation();
-        $project_manager = ProjectManager::instance();
+        $current_user = UserManager::instance()->getCurrentUserWithLoggedInInformation();
 
         $body_class    = isset($params['body_class']) ? $params['body_class'] : [];
-        $has_sidebar   = isset($params['group']) ? 'has-sidebar' : '';
+        $has_sidebar   = isset($params['project']) ? 'has-sidebar' : '';
         $sidebar_state = 'sidebar-expanded';
 
         $this->addBodyClassDependingThemeVariant($current_user->user, $body_class);
@@ -236,9 +234,9 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
         $banner  = null;
         $project = null;
-        if (! empty($params['group'])) {
-            $project = $project_manager->getProject($params['group']);
-            $banner  = $this->getProjectBannerWithScript($project, $current_user->user, 'project/project-banner.js');
+        if (! empty($params['project'])) {
+            $project = $params['project'];
+            $banner  = $this->getProjectBannerWithScript($params['project'], $current_user->user, 'project/project-banner.js');
 
             if ($banner && $banner->isVisible()) {
                 $body_class[] = 'has-visible-project-banner';
@@ -430,8 +428,8 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $project_context = null;
         $project         = null;
 
-        if (! empty($params['group'])) {
-            $project = ProjectManager::instance()->getProject($params['group']);
+        if (! empty($params['project'])) {
+            $project = $params['project'];
 
             $crumb_link = new BreadCrumbLink($project->getPublicName(), $project->getUrl());
                 $crumb_link->setProjectIcon(
@@ -511,7 +509,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             return $params->without_content === false;
         }
 
-        if (empty($params['group'])) {
+        if (empty($params['project'])) {
             return true;
         }
 

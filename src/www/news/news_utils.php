@@ -47,12 +47,11 @@ function news_header($params)
 
     \Tuleap\Project\ServiceInstrumentation::increment('news');
 
-    $params['toptab'] = 'news';
-    $params['group']  = $group_id;
+    $params['toptab']  = 'news';
+    $params['project'] = ProjectManager::instance()->getProjectById((int) $group_id);
 
     if (isset($params['project_id'])) {
-        $params['group'] = $params['project_id'];
-        $group_id        = $params['project_id'];
+        $group_id = $params['project_id'];
     }
 
     $GLOBALS['HTML']->addBreadcrumbs([
@@ -66,7 +65,7 @@ function news_header($params)
         Show horizontal links
     */
     if ($group_id && ($group_id != ForgeConfig::get('sys_news_group'))) {
-        site_project_header($params);
+        site_project_header(ProjectManager::instance()->getProjectById((int) $group_id), $params);
     } else {
         $HTML->header($params);
         echo '

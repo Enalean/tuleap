@@ -46,9 +46,10 @@ function forum_header($params)
     $hp = Codendi_HTMLPurifier::instance();
     $uh = new UserHelper();
 
-    $params['group']  = $group_id;
-    $params['toptab'] = 'forum';
-    $params['help']   = 'collaboration.html#web-forums';
+    $project           = ProjectManager::instance()->getProjectById((int) $group_id);
+    $params['project'] = $project;
+    $params['toptab']  = 'forum';
+    $params['help']    = 'collaboration.html#web-forums';
 
     /*
 
@@ -69,7 +70,6 @@ function forum_header($params)
          //backwards shim for all "generic news" that used to be submitted
          //as of may, "generic news" is not permitted - only project-specific news
             if (db_result($result, 0, 'group_id') != ForgeConfig::get('sys_news_group')) {
-                $params['group']  = db_result($result, 0, 'group_id');
                 $params['toptab'] = 'news';
                 $group_id         = db_result($result, 0, 'group_id');
                 $GLOBALS['HTML']->addBreadcrumbs([
@@ -78,7 +78,7 @@ function forum_header($params)
                         'url' => '/news/?group_id=' . urlencode($group_id),
                     ],
                 ]);
-                site_project_header($params);
+                site_project_header(ProjectManager::instance()->getProjectById((int) $group_id), $params);
             } else {
                 $HTML->header($params);
                 echo '
@@ -116,7 +116,6 @@ function forum_header($params)
         }
     } else {
         //this is just a regular forum, not a news item
-        $project = ProjectManager::instance()->getProject($group_id);
         if (! $project->isError()) {
             $service_forum = $project->getService(Service::FORUM);
             if ($service_forum !== null) {
@@ -139,7 +138,7 @@ function forum_header($params)
                 $GLOBALS['HTML']->addBreadcrumbs($breadcrumb_collection);
             }
         }
-        site_project_header($params);
+        site_project_header($project, $params);
     }
 
     /*

@@ -181,13 +181,14 @@ class ProjectDashboardController
         $title = $this->purifier->purify($this->getPageTitle($project_dashboards_presenter, $project));
 
         site_project_header(
+            $project,
             [
                 'title'                          => $title,
-                'group'                          => $project->getID(),
+                'project'                        => $project,
                 'toptab'                         => 'summary',
                 'body_class'                     => ['reduce-help-button'],
                 'without-project-in-breadcrumbs' => true,
-            ]
+            ],
         );
         $renderer = TemplateRendererFactory::build()->getRenderer(
             ForgeConfig::get('tuleap_dir') . '/src/templates/dashboard'

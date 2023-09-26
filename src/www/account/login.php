@@ -122,7 +122,7 @@ if ($pvMode) {
 $login_controller->index($presenter);
 
 if ($pvMode) {
-    $GLOBALS['HTML']->pv_footer([]);
+    $GLOBALS['HTML']->pv_footer();
 } else {
     $GLOBALS['HTML']->footer(FooterConfiguration::withoutContent());
 }

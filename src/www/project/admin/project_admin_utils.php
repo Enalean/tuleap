@@ -32,7 +32,6 @@ function project_admin_header($params, $current_pane_shortname)
     global $group_id;
 
     $params['toptab'] = 'admin';
-    $params['group']  = $group_id;
     $title            = $params['title'];
 
     $navigation_displayer = new HeaderNavigationDisplayer();

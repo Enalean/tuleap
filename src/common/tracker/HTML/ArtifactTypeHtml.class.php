@@ -57,11 +57,11 @@ class ArtifactTypeHtml extends ArtifactType // phpcs:ignore PSR1.Classes.ClassDe
         $GLOBALS['HTML']->includeCalendarScripts();
 
         //required by new site_project_header
-        $params['group']   = $group_id;
         $params['toptab']  = 'tracker';
         $params['tabtext'] = $this->getName();
 
-        site_project_header($params);
+        assert($this->Group instanceof Project);
+        site_project_header($this->Group, $params);
         if (! isset($params['pv']) || $params['pv'] == 0) {
             echo '<div id="tracker_toolbar_generic">' . $Language->getText('tracker_import_admin', 'tracker') . ' <a href="/tracker/?group_id=' . (int) $group_id . '&atid=' . (int) $this->getID() . '"><span id="tracker_toolbar_tracker_name">' . $hp->purify(SimpleSanitizer::unsanitize($this->getName()), CODENDI_PURIFIER_CONVERT_HTML) . '</span></a> | ';
 
@@ -108,11 +108,11 @@ class ArtifactTypeHtml extends ArtifactType // phpcs:ignore PSR1.Classes.ClassDe
         $GLOBALS['HTML']->includeCalendarScripts();
 
         //required by new site_project_header
-        $params['group']   = $group_id;
         $params['toptab']  = 'tracker';
         $params['tabtext'] = $this->getName();
 
-        site_project_header($params);
+        assert($this->Group instanceof Project);
+        site_project_header($this->Group, $params);
 
         echo '<strong><a href="/tracker/admin/?group_id=' . (int) $group_id . '">' . $Language->getText('tracker_index', 'admin_all_trackers') . '</a>';
         echo ' | <a href="/tracker/admin/?group_id=' . (int) $group_id . '&atid=' . (int) $this->getID() . '">' . $Language->getText('tracker_include_type', 'admin') . '</a>';
@@ -145,11 +145,11 @@ class ArtifactTypeHtml extends ArtifactType // phpcs:ignore PSR1.Classes.ClassDe
         $group_id = $this->Group->getID();
 
         //required by new site_project_header
-        $params['group']   = $group_id;
         $params['toptab']  = 'tracker';
         $params['tabtext'] = $this->getName();
 
-        site_project_header($params);
+        assert($this->Group instanceof Project);
+        site_project_header($this->Group, $params);
 
         echo '<strong><a href="/tracker/admin/?group_id=' . (int) $group_id . '">' . $Language->getText('tracker_index', 'admin_all_trackers') . '</a>';
         echo '</strong><hr>';

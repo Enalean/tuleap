@@ -46,11 +46,11 @@ class HeaderNavigationDisplayer
         $params = [
             'title'        => $title . ' - ' . $project->getPublicName(),
             'toptab'       => 'admin',
-            'group'        => $project->getID(),
+            'project'      => $project,
             'body_class'   => ['project-administration'],
         ];
 
-        site_project_header($params);
+        site_project_header($project, $params);
 
         $template_path = ForgeConfig::get('tuleap_dir') . '/src/templates/project';
 

@@ -148,7 +148,7 @@ class ReleaseNotesController implements DispatchableWithRequest, DispatchableWit
         $layout->header(
             [
                 'title'        => $translated_title,
-                'group'        => $project->getID(),
+                'project'      => $project,
                 'toptab'       => Service::FILE,
                 'main_classes' => [],
             ]

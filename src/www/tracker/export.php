@@ -126,13 +126,12 @@ if ($result && $rows > 0) {
         }
     }
 } else {
-    $params['group']    = $group_id;
     $params['toptab']   = 'tracker';
     $params['pagename'] = 'trackers';
     $params['title']    = $Language->getText('tracker_index', 'trackers_for');
     $params['help']     = 'tracker-v3.html';
     $params['pv']       = $request->exist('pv') ? $request->get('pv') : '';
-    site_project_header($params);
+    site_project_header(ProjectManager::instance()->getProjectById((int) $group_id), $params);
 
     echo '<h3>' . $Language->getText('project_export_artifact_export', 'art_export') . '</h3>';
     if ($result) {
