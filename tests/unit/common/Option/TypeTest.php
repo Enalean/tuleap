@@ -28,6 +28,35 @@ namespace Tuleap\Option;
  */
 final class TypeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    public function testAndThenCanMapValueToADifferentTypeThanTheInitialOption(): void
+    {
+        $option = Option::fromValue(10);
+
+        $test = new class {
+            /** @var Option<string> */
+            public Option $expectation;
+        };
+
+        $test->expectation = $option->andThen(static fn(int $value) => Option::fromValue('observe'));
+        self::assertTrue($test->expectation->isValue());
+        self::assertSame('observe', $test->expectation->unwrapOr(null));
+    }
+
+    public function testAndThenCanMapNothingToADifferentTypeThanTheInitialOption(): void
+    {
+        $option = Option::nothing(\Psl\Type\string());
+
+        $test = new class {
+            /** @var Option<CustomValueType> */
+            public Option $expectation;
+        };
+
+        $test->expectation = $option->andThen(static fn(string $value) => Option::fromValue(
+            new CustomValueType(55, $value)
+        ));
+        self::assertTrue($test->expectation->isNothing());
+    }
+
     public function testMapOrCanMapToADifferentTypeThanTheInitialOption(): void
     {
         $option = Option::fromValue('33');

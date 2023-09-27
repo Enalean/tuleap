@@ -24,58 +24,122 @@ namespace Tuleap\Option;
 
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
-use function Psl\Type\string;
 
 final class OptionTest extends TestCase
 {
+    public function testCanUnwrapValue(): void
+    {
+        self::assertSame('value', Option::fromValue('value')->unwrapOr('nothing'));
+        self::assertSame('nothing', Option::nothing(\Psl\Type\string())->unwrapOr('nothing'));
+    }
+
     public function testCanApplyWhenValueIsProvided(): void
     {
         $value         = new \stdClass();
         $applied_value = null;
 
         $optional = Option::fromValue($value);
-        $optional->apply(function (mixed $received_value) use (&$applied_value): void {
+        $optional->apply(static function (mixed $received_value) use (&$applied_value): void {
             $applied_value = $received_value;
         });
 
         self::assertSame($applied_value, $value);
         self::assertTrue($optional->isValue());
         self::assertFalse($optional->isNothing());
-        $result = $optional->okOr(Result::err('Not expected'));
-        self::assertTrue(Result::isOk($result));
-        self::assertSame($value, $result->value);
     }
 
     public function testDoNoApplyOnNothing(): void
     {
-        $optional = Option::nothing(\stdClass::class);
-
         $has_called_apply_function = false;
 
-        $optional->apply(function () use (&$has_called_apply_function): void {
+        $optional = Option::nothing(\stdClass::class);
+        $optional->apply(static function () use (&$has_called_apply_function): void {
             $has_called_apply_function = true;
         });
 
         self::assertFalse($has_called_apply_function);
         self::assertFalse($optional->isValue());
         self::assertTrue($optional->isNothing());
+    }
+
+    public function testValueMapOrToDifferentValue(): void
+    {
+        $callback_argument = null;
+
+        $value        = 'initial';
+        $mapped_value = Option::fromValue($value)->mapOr(
+            static function (mixed $received_value) use (&$callback_argument): string {
+                $callback_argument = $received_value;
+                return 'callback';
+            },
+            'default'
+        );
+
+        self::assertSame($value, $callback_argument);
+        self::assertSame('callback', $mapped_value);
+    }
+
+    public function testNothingMapOrToDefault(): void
+    {
+        $has_called_map_function = false;
+
+        $mapped_value = Option::nothing(\stdClass::class)->mapOr(
+            static function () use (&$has_called_map_function): string {
+                $has_called_map_function = true;
+                return 'unexpected';
+            },
+            'default'
+        );
+
+        self::assertFalse($has_called_map_function);
+        self::assertSame('default', $mapped_value);
+    }
+
+    public function testValueMapsToOk(): void
+    {
+        $value  = new \stdClass();
+        $result = Option::fromValue($value)->okOr(Result::err('Not expected'));
+        self::assertTrue(Result::isOk($result));
+        self::assertSame($value, $result->value);
+    }
+
+    public function testNothingMapsToErr(): void
+    {
         $expected_error = Result::err('Expected error');
-        $result         = $optional->okOr($expected_error);
+        $result         = Option::nothing(\stdClass::class)->okOr($expected_error);
         self::assertSame($expected_error, $result);
     }
 
-    public function testCanMapOptionalValueWithADefault(): void
+    public function testValueAndThenReturnsDifferentOption(): void
     {
-        $fn = fn(): string => 'callback';
+        $value             = new \stdClass();
+        $callback_argument = null;
 
-        self::assertEquals('callback', Option::fromValue('expected')->mapOr($fn, 'default'));
-        self::assertEquals('default', Option::nothing(\stdClass::class)->mapOr($fn, 'default'));
+        $option     = Option::fromValue($value);
+        $new_option = $option->andThen(static function (mixed $received_value) use (&$callback_argument): Option {
+            $callback_argument = $received_value;
+            return Option::fromValue('callback');
+        });
+
+        self::assertSame($callback_argument, $value);
+        self::assertNotSame($option, $new_option);
+        self::assertTrue($new_option->isValue());
+        self::assertSame('callback', $new_option->unwrapOr('default'));
     }
 
-    public function testCanUnwrapValue(): void
+    public function testNothingAndThenReturnsNothing(): void
     {
-        self::assertEquals('value', Option::fromValue('value')->unwrapOr('nothing'));
-        self::assertEquals('nothing', Option::nothing(string())->unwrapOr('nothing'));
+        $has_called_map_function = false;
+
+        $option     = Option::nothing(\stdClass::class);
+        $new_option = $option->andThen(static function () use (&$has_called_map_function): Option {
+            $has_called_map_function = true;
+            return Option::fromValue(21);
+        });
+
+        self::assertFalse($has_called_map_function);
+        self::assertNotSame($option, $new_option);
+        self::assertTrue($new_option->isNothing());
     }
 
     public function testMatchValue(): void
