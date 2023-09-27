@@ -104,6 +104,9 @@ use Tuleap\Tracker\Admin\GlobalAdmin\Trackers\CSRFSynchronizerTokenProvider;
 use Tuleap\Tracker\Admin\GlobalAdmin\Trackers\MarkTrackerAsDeletedController;
 use Tuleap\Tracker\Admin\GlobalAdmin\Trackers\PromoteTrackersController;
 use Tuleap\Tracker\Admin\GlobalAdmin\Trackers\TrackersDisplayController;
+use Tuleap\Tracker\Admin\MoveArtifacts\MoveActionAllowedDAO;
+use Tuleap\Tracker\Admin\MoveArtifacts\MoveArtifactsAdminController;
+use Tuleap\Tracker\Admin\MoveArtifacts\MoveArtifactsAdminUpdateController;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArchiveAndDeleteArtifactTaskBuilder;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletor;
@@ -2004,6 +2007,23 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         );
     }
 
+    public function routeGetMoveArtifactsAdmin(): MoveArtifactsAdminController
+    {
+        return new MoveArtifactsAdminController(
+            $this->getTrackerFactory(),
+            new TrackerManager(),
+            new MoveActionAllowedDAO(),
+        );
+    }
+
+    public function routePostMoveArtifactsAdmin(): MoveArtifactsAdminUpdateController
+    {
+        return new MoveArtifactsAdminUpdateController(
+            $this->getTrackerFactory(),
+            new MoveActionAllowedDAO(),
+        );
+    }
+
     public function routePostInvertCommentsOrder(): InvertCommentsController
     {
         return new InvertCommentsController();
@@ -2149,6 +2169,9 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             $r->post('/webhooks/edit', $this->getRouteHandler('routePostWebhooksEdit'));
 
             $r->get('/workflow/{tracker_id:\d+}/transitions', $this->getRouteHandler('routeGetWorkflowTransitions'));
+
+            $r->get('/move-artifacts/{tracker_id:\d+}', $this->getRouteHandler('routeGetMoveArtifactsAdmin'));
+            $r->post('/move-artifacts/{tracker_id:\d+}', $this->getRouteHandler('routePostMoveArtifactsAdmin'));
 
             $r->get('/attachments/{id:\d+}-{filename}', $this->getRouteHandler('routeAttachments'));
             $r->get('/attachments/{preview:preview}/{id:\d+}-{filename}', $this->getRouteHandler('routeAttachments'));

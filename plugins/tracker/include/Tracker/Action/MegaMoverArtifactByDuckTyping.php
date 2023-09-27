@@ -57,24 +57,22 @@ final class MegaMoverArtifactByDuckTyping implements MoveArtifactByDuckTyping
         DuckTypedMoveFieldCollection $field_collection,
         Tracker_XML_Importer_ArtifactImportedMapping $artifacts_links_collection,
         LoggerInterface $logger,
-    ): int {
+    ): void {
         if (! $destination_tracker->getProject()->isActive()) {
             $logger->debug(sprintf("Destination project #%d is not active", $destination_tracker->getProject()->getGroupId()));
             throw new MoveArtifactTargetProjectNotActiveException();
         }
 
-        return $this->transaction_executor->execute(function () use ($artifact, $source_tracker, $destination_tracker, $user, $field_collection, $artifacts_links_collection, $logger) {
+        $this->transaction_executor->execute(function () use ($artifact, $source_tracker, $destination_tracker, $user, $field_collection, $artifacts_links_collection, $logger) {
             $xml_artifacts = $this->getUpdatedXML($artifact, $source_tracker, $user, $field_collection);
 
             $global_rank = $this->artifact_priority_manager->getGlobalRank($artifact->getId());
-            $limit       = $this->artifacts_deletion_manager->deleteArtifactBeforeMoveOperation($artifact, $user, $destination_tracker);
+            $this->artifacts_deletion_manager->deleteArtifactBeforeMoveOperation($artifact, $user, $destination_tracker);
 
             if (! $this->processMove($xml_artifacts->artifact, $destination_tracker, (int) $global_rank, $user, $field_collection->mapping_fields, $artifacts_links_collection, $logger)) {
                 $logger->debug("Move has failed");
                 throw new MoveArtifactNotDoneException();
             }
-
-            return $limit;
         });
     }
 

@@ -18,19 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Artifact\ActionButtons;
 
 use PFUser;
+use Tracker;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\Tracker\Admin\MoveArtifacts\MoveActionAllowedChecker;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionLimitReachedException;
-use Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedException;
-use Tuleap\Tracker\Artifact\ArtifactsDeletion\RetrieveActionDeletionLimit;
 
 class ArtifactMoveButtonPresenterBuilder
 {
     public function __construct(
-        private readonly RetrieveActionDeletionLimit $deletion_limit_retriever,
         private readonly \EventManager $event_manager,
+        private readonly MoveActionAllowedChecker $move_action_allowed_checker,
     ) {
     }
 
@@ -42,9 +44,9 @@ class ArtifactMoveButtonPresenterBuilder
 
         $errors = [];
 
-        $limit_error = $this->collectErrorRelatedToDeletionLimit($user);
-        if ($limit_error) {
-            $errors[] = $limit_error;
+        $forbidden_move_error = $this->collectErrorRelatedToForbiddenMove($artifact->getTracker());
+        if ($forbidden_move_error) {
+            $errors[] = $forbidden_move_error;
         }
 
         $event = new MoveArtifactActionAllowedByPluginRetriever($artifact, $user);
@@ -61,20 +63,18 @@ class ArtifactMoveButtonPresenterBuilder
         );
     }
 
-    public function getMoveArtifactModal(Artifact $artifact)
+    public function getMoveArtifactModal(Artifact $artifact): ArtifactMoveModalPresenter
     {
         return new ArtifactMoveModalPresenter($artifact);
     }
 
-    private function collectErrorRelatedToDeletionLimit(PFUser $user): ?string
+    private function collectErrorRelatedToForbiddenMove(Tracker $tracker): ?string
     {
-        try {
-            $this->deletion_limit_retriever->getNumberOfArtifactsAllowedToDelete($user);
-        } catch (DeletionOfArtifactsIsNotAllowedException | ArtifactsDeletionLimitReachedException $exception) {
-            return $exception->getMessage();
-        }
-
-        return null;
+        return $this->move_action_allowed_checker->checkMoveActionIsAllowedInTracker($tracker)
+            ->match(
+                fn () => null,
+                fn (Fault $move_action_forbidden_fault) => (string) $move_action_forbidden_fault,
+            );
     }
 
     private function collectErrorsThrownByExternalPlugins(MoveArtifactActionAllowedByPluginRetriever $event): ?string

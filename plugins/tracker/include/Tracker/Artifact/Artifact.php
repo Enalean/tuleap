@@ -98,11 +98,10 @@ use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\UGroupLiteralizer;
 use Tuleap\Search\ItemToIndexQueueEventBased;
-use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
-use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
-use Tuleap\Tracker\Admin\ArtifactsDeletion\UserDeletionRetriever;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
+use Tuleap\Tracker\Admin\MoveArtifacts\MoveActionAllowedChecker;
+use Tuleap\Tracker\Admin\MoveArtifacts\MoveActionAllowedDAO;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactActionButtonPresenterBuilder;
@@ -110,8 +109,6 @@ use Tuleap\Tracker\Artifact\ActionButtons\ArtifactCopyButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactIncomingEmailButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactMoveButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactNotificationActionButtonPresenterBuilder;
-use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletionLimitRetriever;
-use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
@@ -587,11 +584,8 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
             ),
             new ArtifactCopyButtonPresenterBuilder(),
             new ArtifactMoveButtonPresenterBuilder(
-                new ArtifactDeletionLimitRetriever(
-                    new ArtifactsDeletionConfig(new ArtifactsDeletionConfigDAO()),
-                    new UserDeletionRetriever(new ArtifactsDeletionDAO())
-                ),
-                $event_manager
+                $event_manager,
+                new MoveActionAllowedChecker(new MoveActionAllowedDAO()),
             ),
             new AdditionalArtifactActionButtonsPresenterBuilder()
         );

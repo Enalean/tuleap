@@ -1,0 +1,33 @@
+<div class="tlp-framed">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">{{# dgettext }} tuleap-tracker | Move artifacts {{/ dgettext }}</h1>
+            </div>
+            <section class="tlp-pane-section">
+                <form method="POST" action="/plugins/tracker/move-artifacts/{{ tracker_id }}">
+                    {{# csrf_token }}
+                        {{> csrf_token_input }}
+                    {{/ csrf_token }}
+
+                    <div class="tlp-form-element">
+                        <label class="tlp-label" for="toggle-enable-move-artifacts">
+                            {{# dgettext }} tuleap-tracker | Enable move of artifacts in this tracker {{/ dgettext }}
+                        </label>
+
+                        <div class="tlp-switch">
+                            <input type="checkbox"
+                                   id="toggle-enable-move-artifacts"
+                                   name="enable-move-artifacts"
+                                   class="tlp-switch-checkbox"
+                                    {{# is_enabled }} checked="checked" {{/ is_enabled }}
+                                   onchange="this.form.submit()"
+                            />
+                            <label for="toggle-enable-move-artifacts" class="tlp-switch-button" aria-hidden></label>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </section>
+</div>

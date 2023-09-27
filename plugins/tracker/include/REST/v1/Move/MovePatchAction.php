@@ -26,12 +26,8 @@ use Luracast\Restler\RestException;
 use Project_AccessException;
 use Project_AccessProjectNotFoundException;
 use Psr\Log\LoggerInterface;
-use Tuleap\Tracker\Admin\ArtifactsDeletion\ConfigurationArtifactsDeletion;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionLimitReachedException;
-use Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedException;
-use Tuleap\Tracker\Artifact\ArtifactsDeletion\RetrieveActionDeletionLimit;
 use Tuleap\Tracker\Artifact\RetrieveTracker;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
 use Tuleap\Tracker\Exception\MoveArtifactNoValuesToProcessException;
@@ -46,10 +42,7 @@ final class MovePatchAction
         private readonly RetrieveTracker $retrieve_tracker,
         private readonly MoveDryRun $dry_run_move,
         private readonly MoveRestArtifact $move_rest_artifact,
-        private readonly RetrieveActionDeletionLimit $artifact_deletion_limit_retriever,
         private readonly CheckBeforeMove $before_move_checker,
-        private readonly HeaderForMoveSender $header_for_move_sender,
-        private readonly ConfigurationArtifactsDeletion $artifacts_deletion_config,
     ) {
     }
 
@@ -60,11 +53,7 @@ final class MovePatchAction
      */
     public function patchMove(ArtifactPatchRepresentation $patch, \PFUser $user, Artifact $artifact, LoggerInterface $logger): ArtifactPatchResponseRepresentation
     {
-        $limit = $this->artifacts_deletion_config->getArtifactsDeletionLimit();
-
         try {
-            $remaining_deletions = $this->artifact_deletion_limit_retriever->getNumberOfArtifactsAllowedToDelete($user);
-
             $source_tracker = $artifact->getTracker();
             $target_tracker = $this->retrieve_tracker->getTrackerById($patch->move->tracker_id);
 
@@ -81,17 +70,11 @@ final class MovePatchAction
             }
 
             $logger->debug(sprintf("Move of artifact #%d in tracker #%d (#%s)", $artifact->getId(), $target_tracker->getId(), $target_tracker->getName()));
-            $remaining_deletions = $this->move_rest_artifact
+            $this->move_rest_artifact
                 ->move($source_tracker, $target_tracker, $artifact, $user, $patch->move->should_populate_feedback_on_success, $logger);
 
             $logger->debug("Move is ok");
             return ArtifactPatchResponseRepresentation::withoutDryRun();
-        } catch (DeletionOfArtifactsIsNotAllowedException $exception) {
-            $limit = $remaining_deletions = 0;
-            throw new RestException(403, $exception->getMessage());
-        } catch (ArtifactsDeletionLimitReachedException $limit_reached_exception) {
-            $remaining_deletions = 0;
-            throw new RestException(429, $limit_reached_exception->getMessage());
         } catch (MoveArtifactNotDoneException $exception) {
             throw new RestException(500, $exception->getMessage());
         } catch (
@@ -100,8 +83,6 @@ final class MovePatchAction
             MoveArtifactNoValuesToProcessException $exception
         ) {
             throw new RestException(400, $exception->getMessage());
-        } finally {
-            $this->header_for_move_sender->sendHeader($limit, $remaining_deletions ?? 0);
         }
     }
 }

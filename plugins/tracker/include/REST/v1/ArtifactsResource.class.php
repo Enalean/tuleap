@@ -81,6 +81,8 @@ use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactsDeletion\UserDeletionRetriever;
+use Tuleap\Tracker\Admin\MoveArtifacts\MoveActionAllowedChecker;
+use Tuleap\Tracker\Admin\MoveArtifacts\MoveActionAllowedDAO;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletionLimitRetriever;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
@@ -145,7 +147,6 @@ use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\Move\BeforeMoveChecker;
 use Tuleap\Tracker\REST\v1\Move\DryRunMover;
-use Tuleap\Tracker\REST\v1\Move\HeaderForMoveSender;
 use Tuleap\Tracker\REST\v1\Move\MovePatchAction;
 use Tuleap\Tracker\REST\v1\Move\PostMoveArtifactRESTAddFeedback;
 use Tuleap\Tracker\REST\v1\Move\RestArtifactMover;
@@ -1189,7 +1190,6 @@ class ArtifactsResource extends AuthenticatedResource
      *
      * @throws RestException 400
      * @throws RestException 403
-     * @throws RestException 426
      * @throws RestException 404 Artifact Not found
      * @throws RestException 500
      */
@@ -1242,10 +1242,11 @@ class ArtifactsResource extends AuthenticatedResource
                     )
                 ),
             ),
-            new ArtifactDeletionLimitRetriever($this->artifacts_deletion_config, $this->user_deletion_retriever),
-            new BeforeMoveChecker($this->event_manager, ProjectStatusVerificator::build()),
-            new HeaderForMoveSender(),
-            $this->artifacts_deletion_config,
+            new BeforeMoveChecker(
+                $this->event_manager,
+                ProjectStatusVerificator::build(),
+                new MoveActionAllowedChecker(new MoveActionAllowedDAO()),
+            ),
         );
 
         $artifact = $this->getArtifactById($user, $id);

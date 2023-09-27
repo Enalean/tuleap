@@ -57,8 +57,6 @@ class ArtifactsDeletionManager
     }
 
     /**
-     * @return int The remaining number of artifacts allowed to delete
-     *
      * @throws ArtifactsDeletionLimitReachedException
      * @throws DeletionOfArtifactsIsNotAllowedException
      */
@@ -66,16 +64,12 @@ class ArtifactsDeletionManager
         Artifact $artifact,
         PFUser $user,
         Tracker $destination_tracker,
-    ): int {
-        $remaining_deletions = $this->deletion_limit_retriever->getNumberOfArtifactsAllowedToDelete($user) - 1;
-
+    ): void {
         $this->artifact_deletor->deleteWithoutTransaction(
             $artifact,
             $user,
             DeletionContext::moveContext((int) $artifact->getTracker()->getGroupId(), (int) $destination_tracker->getGroupId())
         );
         $this->dao->recordDeletionForUser($user->getId(), time());
-
-        return $remaining_deletions;
     }
 }
