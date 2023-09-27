@@ -40,6 +40,7 @@ use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValue;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangeForwardLinksCommand;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\Artifact\RetrieveViewableArtifact;
@@ -103,13 +104,25 @@ final class ArtifactUpdateHandler implements HandleUpdateArtifact
         foreach ($removed_reverse_links->links as $reverse_link) {
             $result = $this->getArtifactById($submitter, $reverse_link->getSourceArtifactId())->andThen(
                 fn(Artifact $source_artifact) => $this->getArtifactLinkField($source_artifact)->map(
-                    function (Tracker_FormElement_Field_ArtifactLink $artifact_link_field) use ($current_artifact, $reverse_link, $submitter, $source_artifact) {
-                        $source_artifact_link_to_be_removed = CollectionOfForwardLinks::fromReverseLink($current_artifact, $reverse_link);
+                    function (Tracker_FormElement_Field_ArtifactLink $artifact_link_field) use (
+                        $current_artifact,
+                        $reverse_link,
+                        $submitter,
+                        $source_artifact
+                    ) {
+                        $source_artifact_link_to_be_removed = CollectionOfForwardLinks::fromReverseLink(
+                            $current_artifact,
+                            $reverse_link
+                        );
 
                         $new_changeset_value = Option::fromValue(
-                            NewArtifactLinkChangesetValue::fromRemovedValues(
-                                $artifact_link_field->getId(),
-                                $source_artifact_link_to_be_removed
+                            NewArtifactLinkChangesetValue::fromOnlyForwardLinks(
+                                ChangeForwardLinksCommand::fromParts(
+                                    $artifact_link_field->getId(),
+                                    new CollectionOfForwardLinks([]),
+                                    new CollectionOfForwardLinks([]),
+                                    $source_artifact_link_to_be_removed
+                                )
                             )
                         );
 
@@ -137,18 +150,67 @@ final class ArtifactUpdateHandler implements HandleUpdateArtifact
         CollectionOfReverseLinks $added_reverse_link,
         CollectionOfReverseLinks $updated_reverse_link_type,
     ): Ok|Err {
-        $result               = Result::ok(null);
-        $reverse_links_update = array_merge($added_reverse_link->links, $updated_reverse_link_type->links);
-        foreach ($reverse_links_update as $reverse_link) {
+        $result = Result::ok(null);
+        foreach ($added_reverse_link->links as $reverse_link) {
+            if (Result::isErr($result)) {
+                break;
+            }
             $result = $this->getArtifactById($submitter, $reverse_link->getSourceArtifactId())->andThen(
                 fn(Artifact $source_artifact) => $this->getArtifactLinkField($source_artifact)->map(
-                    function (Tracker_FormElement_Field_ArtifactLink $artifact_link_field) use ($current_artifact, $reverse_link, $submitter, $source_artifact) {
-                        $source_artifact_link_to_be_added = CollectionOfForwardLinks::fromReverseLink($current_artifact, $reverse_link);
+                    function (\Tracker_FormElement_Field_ArtifactLink $artifact_link_field) use (
+                        $current_artifact,
+                        $reverse_link,
+                        $submitter,
+                        $source_artifact
+                    ) {
+                        $source_artifact_link_to_be_added = CollectionOfForwardLinks::fromReverseLink(
+                            $current_artifact,
+                            $reverse_link
+                        );
 
                         $new_changeset_value = Option::fromValue(
-                            NewArtifactLinkChangesetValue::fromAddedAndUpdatedTypeValues(
-                                $artifact_link_field->getId(),
-                                $source_artifact_link_to_be_added
+                            NewArtifactLinkChangesetValue::fromOnlyForwardLinks(
+                                ChangeForwardLinksCommand::fromParts(
+                                    $artifact_link_field->getId(),
+                                    $source_artifact_link_to_be_added,
+                                    new CollectionOfForwardLinks([]),
+                                    new CollectionOfForwardLinks([])
+                                )
+                            )
+                        );
+                        $container           = new ChangesetValuesContainer([], $new_changeset_value);
+                        try {
+                            $this->updateArtifact($source_artifact, $submitter, $container);
+                        } catch (\Tracker_NoChangeException) {
+                            //Ignore, it should not stop the update
+                        }
+                        return null;
+                    }
+                )
+            );
+        }
+        foreach ($updated_reverse_link_type->links as $reverse_link) {
+            if (Result::isErr($result)) {
+                break;
+            }
+            $result = $this->getArtifactById($submitter, $reverse_link->getSourceArtifactId())->andThen(
+                fn(Artifact $source_artifact) => $this->getArtifactLinkField($source_artifact)->map(
+                    function (Tracker_FormElement_Field_ArtifactLink $artifact_link_field) use (
+                        $current_artifact,
+                        $reverse_link,
+                        $submitter,
+                        $source_artifact
+                    ) {
+                        $links_to_change = CollectionOfForwardLinks::fromReverseLink($current_artifact, $reverse_link);
+
+                        $new_changeset_value = Option::fromValue(
+                            NewArtifactLinkChangesetValue::fromOnlyForwardLinks(
+                                ChangeForwardLinksCommand::fromParts(
+                                    $artifact_link_field->getId(),
+                                    new CollectionOfForwardLinks([]),
+                                    $links_to_change,
+                                    new CollectionOfForwardLinks([])
+                                ),
                             )
                         );
                         $container           = new ChangesetValuesContainer([], $new_changeset_value);
@@ -161,9 +223,6 @@ final class ArtifactUpdateHandler implements HandleUpdateArtifact
                     },
                 )
             );
-            if (Result::isErr($result)) {
-                break;
-            }
         }
         return $result;
     }

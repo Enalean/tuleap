@@ -28,6 +28,7 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewParentLink;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangeForwardLinksCommand;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\RetrieveForwardLinks;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
@@ -49,10 +50,13 @@ final class NewArtifactLinkChangesetValueBuilder
         $valid_payload = ValidArtifactLinkPayloadBuilder::buildPayloadAndCheckValidity($payload);
 
         if ($valid_payload->isAllLinksPayload()) {
+            $existing_links = $this->forward_links_retriever->retrieve($submitter, $link_field, $artifact);
             return NewArtifactLinkChangesetValue::fromParts(
-                $link_field->getId(),
-                $this->forward_links_retriever->retrieve($submitter, $link_field, $artifact),
-                Option::fromValue($this->buildForward($payload)),
+                ChangeForwardLinksCommand::fromSubmittedAndExistingLinks(
+                    $link_field->getId(),
+                    Option::fromValue($this->buildForward($payload)),
+                    $existing_links
+                ),
                 Option::nothing(NewParentLink::class),
                 $this->buildReverse($payload)
             );
@@ -60,14 +64,16 @@ final class NewArtifactLinkChangesetValueBuilder
 
         if ($valid_payload->hasNotDefinedLinksOrParent()) {
             throw new \Tracker_FormElement_InvalidFieldValueException(
-                'Value should be \'links\' and an array of {"id": integer, ["type": string]} and/or \'parent\' with {"id": integer}'
+                'Value should be "links" and an array of {"id": integer, ["type": string]} and/or "parent" with {"id": integer}'
             );
         }
-
+        $existing_links = $this->forward_links_retriever->retrieve($submitter, $link_field, $artifact);
         return NewArtifactLinkChangesetValue::fromParts(
-            $link_field->getId(),
-            $this->forward_links_retriever->retrieve($submitter, $link_field, $artifact),
-            $this->buildFromLinksKey($payload),
+            ChangeForwardLinksCommand::fromSubmittedAndExistingLinks(
+                $link_field->getId(),
+                $this->buildFromLinksKey($payload),
+                $existing_links
+            ),
             $this->buildParent($payload),
             new CollectionOfReverseLinks([])
         );

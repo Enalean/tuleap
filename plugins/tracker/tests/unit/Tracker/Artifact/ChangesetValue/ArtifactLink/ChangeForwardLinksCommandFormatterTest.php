@@ -26,45 +26,43 @@ use Tuleap\Option\Option;
 use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
 use Tuleap\Tracker\Test\Stub\NewParentLinkStub;
 
-final class NewArtifactLinkChangesetValueFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ChangeForwardLinksCommandFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIELD_ID = 993;
-    private CollectionOfForwardLinks $already_linked;
-    /** @var Option<CollectionOfForwardLinks> */
-    private Option $submitted_links;
-    /** @var Option<NewParentLink> */
+    private CollectionOfForwardLinks $links_to_add;
+    private CollectionOfForwardLinks $links_to_change;
+    private CollectionOfForwardLinks $links_to_remove;
+    /** @var Option<NewParentLink> $parent */
     private Option $parent;
 
     protected function setUp(): void
     {
-        $this->already_linked  = new CollectionOfForwardLinks([]);
-        $this->submitted_links = Option::fromValue(new CollectionOfForwardLinks([]));
+        $this->links_to_add    = new CollectionOfForwardLinks([]);
+        $this->links_to_change = new CollectionOfForwardLinks([]);
+        $this->links_to_remove = new CollectionOfForwardLinks([]);
         $this->parent          = Option::nothing(NewParentLink::class);
     }
 
     private function format(): array
     {
-        $value = NewArtifactLinkChangesetValue::fromParts(
-            self::FIELD_ID,
-            $this->already_linked,
-            $this->submitted_links,
-            $this->parent,
-            new CollectionOfReverseLinks([])
+        $command = ChangeForwardLinksCommand::fromParts(
+            993,
+            $this->links_to_add,
+            $this->links_to_change,
+            $this->links_to_remove,
         );
-        return NewArtifactLinkChangesetValueFormatter::formatForWebUI($value);
+        return ChangeForwardLinksCommandFormatter::formatForWebUI($command, $this->parent);
     }
 
     public function testItFormatsNewValuesWithoutType(): void
     {
-        $first_artifact_id     = 48;
-        $second_artifact_id    = 53;
-        $this->submitted_links = Option::fromValue(
-            new CollectionOfForwardLinks([
-                ForwardLinkStub::withNoType($first_artifact_id),
-                ForwardLinkStub::withNoType($second_artifact_id),
-            ])
-        );
-        $fields_data           = $this->format();
+        $first_artifact_id  = 48;
+        $second_artifact_id = 53;
+        $this->links_to_add = new CollectionOfForwardLinks([
+            ForwardLinkStub::withNoType($first_artifact_id),
+            ForwardLinkStub::withNoType($second_artifact_id),
+        ]);
+
+        $fields_data = $this->format();
         self::assertArrayHasKey('new_values', $fields_data);
         self::assertSame('48,53', $fields_data['new_values']);
         self::assertCount(2, $fields_data['types']);
@@ -76,15 +74,14 @@ final class NewArtifactLinkChangesetValueFormatterTest extends \Tuleap\Test\PHPU
 
     public function testItFormatsNewValuesWithType(): void
     {
-        $first_artifact_id     = 48;
-        $second_artifact_id    = 53;
-        $this->submitted_links = Option::fromValue(
-            new CollectionOfForwardLinks([
-                ForwardLinkStub::withType($first_artifact_id, 'custom_type'),
-                ForwardLinkStub::withType($second_artifact_id, '_covered_by'),
-            ])
-        );
-        $fields_data           = $this->format();
+        $first_artifact_id  = 48;
+        $second_artifact_id = 53;
+        $this->links_to_add = new CollectionOfForwardLinks([
+            ForwardLinkStub::withType($first_artifact_id, 'custom_type'),
+            ForwardLinkStub::withType($second_artifact_id, '_covered_by'),
+        ]);
+
+        $fields_data = $this->format();
         self::assertArrayHasKey('new_values', $fields_data);
         self::assertSame('48,53', $fields_data['new_values']);
         self::assertArrayHasKey('types', $fields_data);
@@ -95,13 +92,24 @@ final class NewArtifactLinkChangesetValueFormatterTest extends \Tuleap\Test\PHPU
         self::assertSame('_covered_by', $fields_data['types'][$second_artifact_id]);
     }
 
-    public function testItFormatsWhenNoNewValues(): void
+    public function testItFormatsWhenTypesHaveChanged(): void
     {
+        $first_artifact_id     = 58;
+        $second_artifact_id    = 64;
+        $this->links_to_change = new CollectionOfForwardLinks([
+            ForwardLinkStub::withType($first_artifact_id, 'custom_type'),
+            ForwardLinkStub::withNoType($second_artifact_id),
+        ]);
+
         $fields_data = $this->format();
         self::assertArrayHasKey('new_values', $fields_data);
         self::assertSame('', $fields_data['new_values']);
         self::assertArrayHasKey('types', $fields_data);
-        self::assertEmpty($fields_data['types']);
+        self::assertCount(2, $fields_data['types']);
+        self::assertArrayHasKey($first_artifact_id, $fields_data['types']);
+        self::assertSame('custom_type', $fields_data['types'][$first_artifact_id]);
+        self::assertArrayHasKey($second_artifact_id, $fields_data['types']);
+        self::assertSame(\Tracker_FormElement_Field_ArtifactLink::NO_TYPE, $fields_data['types'][$second_artifact_id]);
     }
 
     public function testItFormatsParent(): void
@@ -121,13 +129,13 @@ final class NewArtifactLinkChangesetValueFormatterTest extends \Tuleap\Test\PHPU
 
     public function testItFormatsRemovedValues(): void
     {
-        $first_artifact_id    = 18;
-        $second_artifact_id   = 62;
-        $this->already_linked = new CollectionOfForwardLinks([
+        $first_artifact_id     = 18;
+        $second_artifact_id    = 62;
+        $this->links_to_remove = new CollectionOfForwardLinks([
             ForwardLinkStub::withType($first_artifact_id, '_is_child'),
             ForwardLinkStub::withNoType($second_artifact_id),
         ]);
-        $fields_data          = $this->format();
+        $fields_data           = $this->format();
         self::assertArrayHasKey('removed_values', $fields_data);
         self::assertArrayHasKey($first_artifact_id, $fields_data['removed_values']);
         self::assertCount(1, $fields_data['removed_values'][$first_artifact_id]);
@@ -146,11 +154,9 @@ final class NewArtifactLinkChangesetValueFormatterTest extends \Tuleap\Test\PHPU
 
     public function testItFormatsWhenNoChange(): void
     {
-        $this->submitted_links = Option::nothing(CollectionOfForwardLinks::class);
-
         $fields_data = $this->format();
         self::assertArrayHasKey('new_values', $fields_data);
-        self::assertEmpty($fields_data['new_values']);
+        self::assertSame('', $fields_data['new_values']);
         self::assertArrayHasKey('removed_values', $fields_data);
         self::assertEmpty($fields_data['removed_values']);
         self::assertArrayNotHasKey('types', $fields_data);

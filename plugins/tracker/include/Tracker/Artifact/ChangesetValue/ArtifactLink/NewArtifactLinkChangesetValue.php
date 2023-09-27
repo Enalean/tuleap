@@ -31,106 +31,36 @@ use Tuleap\Option\Option;
 final class NewArtifactLinkChangesetValue
 {
     /**
-     * @param Option<CollectionOfForwardLinks> $submitted_values
-     * @param Option<NewParentLink>            $parent
+     * @param Option<NewParentLink> $new_parent_link
      */
     private function __construct(
-        private readonly int $field_id,
-        private readonly CollectionOfForwardLinks $added_values,
-        private readonly CollectionOfForwardLinks $removed_values,
-        private readonly Option $submitted_values,
-        private readonly Option $parent,
+        private readonly ChangeForwardLinksCommand $forward_links_command,
+        private readonly Option $new_parent_link,
         private readonly CollectionOfReverseLinks $submitted_reverse_links,
     ) {
     }
 
-    /**
-     * @param Option<CollectionOfForwardLinks> $submitted_values
-     * @param Option<NewParentLink>            $parent
-     */
     public static function fromParts(
-        int $field_id,
-        CollectionOfForwardLinks $existing_links,
-        Option $submitted_values,
-        Option $parent,
+        ChangeForwardLinksCommand $forward_links_command,
+        Option $new_parent_link,
         CollectionOfReverseLinks $submitted_reverse_links,
     ): self {
-        return $submitted_values->mapOr(
-            static fn(CollectionOfForwardLinks $submitted_links) => new self(
-                $field_id,
-                $existing_links->differenceById($submitted_links),
-                $submitted_links->differenceById($existing_links),
-                $submitted_values,
-                $parent,
-                $submitted_reverse_links
-            ),
-            // No added or removed values when $submitted_values is Nothing
-            new self(
-                $field_id,
-                new CollectionOfForwardLinks([]),
-                new CollectionOfForwardLinks([]),
-                $submitted_values,
-                $parent,
-                $submitted_reverse_links
-            )
-        );
+        return new self($forward_links_command, $new_parent_link, $submitted_reverse_links);
     }
 
-    public static function fromAddedAndUpdatedTypeValues(
-        int $field_id,
-        CollectionOfForwardLinks $submitted_values,
-    ): self {
-        return new self(
-            $field_id,
-            $submitted_values,
-            new CollectionOfForwardLinks([]),
-            Option::fromValue($submitted_values),
-            Option::nothing(NewParentLink::class),
-            new CollectionOfReverseLinks([])
-        );
-    }
-
-    public static function fromRemovedValues(int $field_id, CollectionOfForwardLinks $values_to_remove): self
+    public static function fromOnlyForwardLinks(ChangeForwardLinksCommand $forward_links_command): self
     {
-        return new self(
-            $field_id,
-            new CollectionOfForwardLinks([]),
-            $values_to_remove,
-            Option::fromValue(new CollectionOfForwardLinks([])),
-            Option::nothing(NewParentLink::class),
-            new CollectionOfReverseLinks([])
-        );
+        return new self($forward_links_command, Option::nothing(NewParentLink::class), new CollectionOfReverseLinks([]));
     }
 
-    public function getFieldId(): int
+    public function getChangeForwardLinksCommand(): ChangeForwardLinksCommand
     {
-        return $this->field_id;
+        return $this->forward_links_command;
     }
 
-    public function getAddedValues(): CollectionOfForwardLinks
+    public function getNewParentLink(): Option
     {
-        return $this->added_values;
-    }
-
-    public function getRemovedValues(): CollectionOfForwardLinks
-    {
-        return $this->removed_values;
-    }
-
-    /**
-     * @return Option<NewParentLink>
-     */
-    public function getParent(): Option
-    {
-        return $this->parent;
-    }
-
-    /**
-     * @return Option<CollectionOfForwardLinks>
-     */
-    public function getSubmittedValues(): Option
-    {
-        return $this->submitted_values;
+        return $this->new_parent_link;
     }
 
     public function getSubmittedReverseLinks(): CollectionOfReverseLinks

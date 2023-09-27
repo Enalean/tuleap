@@ -18,10 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 
 use Tracker_FormElement_Field_ArtifactLink;
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
@@ -34,8 +35,6 @@ use Tuleap\Tracker\Test\Stub\RetrieveForwardLinksStub;
 
 final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use ForgeConfigSandbox;
-
     private const REMOVED_ARTIFACT_ID          = 103;
     private const ADDED_ARTIFACT_ID            = 106;
     private const SECOND_UNCHANGED_ARTIFACT_ID = 102;
@@ -75,10 +74,14 @@ final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUni
 
         $update_value = $this->build($payload);
 
-        self::assertSame(self::FIELD_ID, $update_value->getFieldId());
-        self::assertSame(self::PARENT_ARTIFACT_ID, $update_value->getParent()->unwrapOr(null)?->getParentArtifactId());
-        self::assertSame([self::ADDED_ARTIFACT_ID], $update_value->getAddedValues()->getTargetArtifactIds());
-        self::assertSame([self::REMOVED_ARTIFACT_ID], $update_value->getRemovedValues()->getTargetArtifactIds());
+        $command = $update_value->getChangeForwardLinksCommand();
+        self::assertSame(self::FIELD_ID, $command->getFieldId());
+        self::assertSame(
+            self::PARENT_ARTIFACT_ID,
+            $update_value->getNewParentLink()->unwrapOr(null)?->getParentArtifactId()
+        );
+        self::assertSame([self::ADDED_ARTIFACT_ID], $command->getLinksToAdd()->getTargetArtifactIds());
+        self::assertSame([self::REMOVED_ARTIFACT_ID], $command->getLinksToRemove()->getTargetArtifactIds());
     }
 
     public function testItBuildsFromARESTPayloadWithOnlyParentKey(): void
@@ -89,11 +92,15 @@ final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUni
 
         $update_value = $this->build($payload);
 
-        self::assertSame(self::FIELD_ID, $update_value->getFieldId());
-        self::assertSame(self::PARENT_ARTIFACT_ID, $update_value->getParent()->unwrapOr(null)->getParentArtifactId());
-        self::assertEmpty($update_value->getAddedValues()->getArtifactLinks());
-        self::assertEmpty($update_value->getRemovedValues()->getArtifactLinks());
-        self::assertTrue($update_value->getSubmittedValues()->isNothing());
+        $command = $update_value->getChangeForwardLinksCommand();
+        self::assertSame(self::FIELD_ID, $command->getFieldId());
+        self::assertSame(
+            self::PARENT_ARTIFACT_ID,
+            $update_value->getNewParentLink()->unwrapOr(null)?->getParentArtifactId()
+        );
+        self::assertEmpty($command->getLinksToAdd()->getTargetArtifactIds());
+        self::assertEmpty($command->getLinksToRemove()->getTargetArtifactIds());
+        self::assertEmpty($command->getLinksToChange()->getTargetArtifactIds());
     }
 
     public function testItBuildsFromARESTPayloadWithOnlyLinksKey(): void
@@ -107,19 +114,16 @@ final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUni
 
         $update_value = $this->build($payload);
 
-        self::assertSame(self::FIELD_ID, $update_value->getFieldId());
-        self::assertTrue($update_value->getParent()->isNothing());
-        self::assertSame([self::ADDED_ARTIFACT_ID], $update_value->getAddedValues()->getTargetArtifactIds());
-        self::assertSame([self::REMOVED_ARTIFACT_ID], $update_value->getRemovedValues()->getTargetArtifactIds());
-        $submitted_values = $update_value->getSubmittedValues()->unwrapOr(new CollectionOfForwardLinks([]))->getArtifactLinks();
-        self::assertCount(3, $submitted_values);
-        [$first_link, $second_link, $third_link] = $submitted_values;
+        $command = $update_value->getChangeForwardLinksCommand();
+        self::assertSame(self::FIELD_ID, $command->getFieldId());
+        self::assertTrue($update_value->getNewParentLink()->isNothing());
+        self::assertSame([self::ADDED_ARTIFACT_ID], $command->getLinksToAdd()->getTargetArtifactIds());
+        self::assertSame([self::REMOVED_ARTIFACT_ID], $command->getLinksToRemove()->getTargetArtifactIds());
+        $links_to_change = $command->getLinksToChange()->getArtifactLinks();
+        self::assertCount(1, $links_to_change);
+        [$first_link] = $links_to_change;
         self::assertSame(self::FIRST_UNCHANGED_ARTIFACT_ID, $first_link->getTargetArtifactId());
         self::assertSame(Tracker_FormElement_Field_ArtifactLink::NO_TYPE, $first_link->getType());
-        self::assertSame(self::SECOND_UNCHANGED_ARTIFACT_ID, $second_link->getTargetArtifactId());
-        self::assertSame('_is_child', $second_link->getType());
-        self::assertSame(self::ADDED_ARTIFACT_ID, $third_link->getTargetArtifactId());
-        self::assertSame('_depends_on', $third_link->getType());
     }
 
     public function testItBuildsFromARESTPayloadWithReverseLinks(): void
@@ -130,6 +134,8 @@ final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUni
 
         $update_value = $this->build($payload);
 
-        $this->assertSame(48, $update_value->getSubmittedReverseLinks()->links[0]->getSourceArtifactId());
+        $reverse_links = $update_value->getSubmittedReverseLinks()->links;
+        self::assertCount(1, $reverse_links);
+        $this->assertSame(48, $reverse_links[0]->getSourceArtifactId());
     }
 }
