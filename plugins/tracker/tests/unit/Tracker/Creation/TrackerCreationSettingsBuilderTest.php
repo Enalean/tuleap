@@ -25,14 +25,14 @@ namespace Tuleap\Tracker\Creation;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
-use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
+use Tuleap\Tracker\PromotedTrackerDao;
 
 final class TrackerCreationSettingsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TrackerInNewDropdownDao
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PromotedTrackerDao
      */
     private $in_new_dropdown_dao;
     /**
@@ -50,7 +50,7 @@ final class TrackerCreationSettingsBuilderTest extends \Tuleap\Test\PHPUnit\Test
 
     protected function setUp(): void
     {
-        $this->in_new_dropdown_dao = \Mockery::mock(TrackerInNewDropdownDao::class);
+        $this->in_new_dropdown_dao = \Mockery::mock(PromotedTrackerDao::class);
         $this->private_comment_dao = \Mockery::mock(TrackerPrivateCommentUGroupEnabledDao::class);
         $this->tracker             = \Mockery::mock(Tracker::class, ['getId' => 10]);
 

@@ -27,8 +27,9 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Layout\NewDropdown\DataAttributePresenter;
 use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
 use Tuleap\Layout\NewDropdown\NewDropdownProjectLinksCollector;
+use Tuleap\Tracker\Test\Stub\RetrievePromotedTrackersStub;
 
-class TrackerLinksInNewDropdownCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TrackerLinksInNewDropdownCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -49,10 +50,7 @@ class TrackerLinksInNewDropdownCollectorTest extends \Tuleap\Test\PHPUnit\TestCa
             ])
             ->getMock();
 
-        $retriever = Mockery::mock(TrackerInNewDropdownRetriever::class);
-        $retriever
-            ->shouldReceive('getTrackers')
-            ->andReturn([$bug_tracker, $story_tracker]);
+        $retriever = RetrievePromotedTrackersStub::withTrackers($bug_tracker, $story_tracker);
 
         $links_collector = Mockery::spy(NewDropdownProjectLinksCollector::class);
         $links_collector
@@ -80,10 +78,7 @@ class TrackerLinksInNewDropdownCollectorTest extends \Tuleap\Test\PHPUnit\TestCa
             ])
             ->getMock();
 
-        $retriever = Mockery::mock(TrackerInNewDropdownRetriever::class);
-        $retriever
-            ->shouldReceive('getTrackers')
-            ->andReturn([$bug_tracker, $story_tracker]);
+        $retriever = RetrievePromotedTrackersStub::withTrackers($bug_tracker, $story_tracker);
 
         $links_collector = Mockery::spy(NewDropdownProjectLinksCollector::class);
         $links_collector

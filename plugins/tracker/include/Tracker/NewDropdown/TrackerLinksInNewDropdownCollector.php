@@ -25,24 +25,14 @@ namespace Tuleap\Tracker\NewDropdown;
 
 use Tuleap\Layout\NewDropdown\NewDropdownLinkPresenter;
 use Tuleap\Layout\NewDropdown\NewDropdownProjectLinksCollector;
+use Tuleap\Tracker\RetrievePromotedTrackers;
 
-class TrackerLinksInNewDropdownCollector
+final class TrackerLinksInNewDropdownCollector
 {
-    /**
-     * @var TrackerInNewDropdownRetriever
-     */
-    private $retriever;
-    /**
-     * @var TrackerNewDropdownLinkPresenterBuilder
-     */
-    private $link_presenter_builder;
-
     public function __construct(
-        TrackerInNewDropdownRetriever $retriever,
-        TrackerNewDropdownLinkPresenterBuilder $link_presenter_builder,
+        private readonly RetrievePromotedTrackers $retriever,
+        private readonly TrackerNewDropdownLinkPresenterBuilder $link_presenter_builder,
     ) {
-        $this->retriever              = $retriever;
-        $this->link_presenter_builder = $link_presenter_builder;
     }
 
     public function collect(NewDropdownProjectLinksCollector $collector): void

@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation;
 
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
-use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
+use Tuleap\Tracker\PromotedTrackerDao;
 
 class TrackerCreationSettingsBuilder
 {
     /**
-     * @var TrackerInNewDropdownDao
+     * @var PromotedTrackerDao
      */
     private $in_new_dropdown_dao;
     /**
@@ -37,7 +37,7 @@ class TrackerCreationSettingsBuilder
     private $private_comment_dao;
 
     public function __construct(
-        TrackerInNewDropdownDao $in_new_dropdown_dao,
+        PromotedTrackerDao $in_new_dropdown_dao,
         TrackerPrivateCommentUGroupEnabledDao $private_comment_dao,
     ) {
         $this->in_new_dropdown_dao = $in_new_dropdown_dao;

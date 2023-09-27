@@ -25,13 +25,15 @@ namespace Tuleap\Tracker\NewDropdown;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use TrackerFactory;
+use Tuleap\Tracker\PromotedTrackerDao;
+use Tuleap\Tracker\PromotedTrackersRetriever;
 
 class TrackerInNewDropdownRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerInNewDropdownDao
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PromotedTrackerDao
      */
     private $dao;
     /**
@@ -39,16 +41,16 @@ class TrackerInNewDropdownRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $tracker_factory;
     /**
-     * @var TrackerInNewDropdownRetriever
+     * @var PromotedTrackersRetriever
      */
     private $retriever;
 
     protected function setUp(): void
     {
-        $this->dao             = Mockery::mock(TrackerInNewDropdownDao::class);
+        $this->dao             = Mockery::mock(PromotedTrackerDao::class);
         $this->tracker_factory = Mockery::mock(TrackerFactory::class);
 
-        $this->retriever = new TrackerInNewDropdownRetriever($this->dao, $this->tracker_factory);
+        $this->retriever = new PromotedTrackersRetriever($this->dao, $this->tracker_factory);
     }
 
     public function testItReturnsTrackersUserCanSubmit(): void

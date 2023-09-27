@@ -111,6 +111,7 @@ DROP TABLE IF EXISTS plugin_tracker_workflow_postactions_hidden_fieldsets;
 DROP TABLE IF EXISTS plugin_tracker_workflow_postactions_hidden_fieldsets_value;
 DROP TABLE IF EXISTS plugin_tracker_pending_jira_import;
 DROP TABLE IF EXISTS plugin_tracker_in_new_dropdown;
+DROP TABLE IF EXISTS plugin_tracker_promoted;
 DROP TABLE IF EXISTS tracker_field_list_bind_ugroups_value;
 DROP TABLE IF EXISTS tracker_fileinfo_temporary;
 DROP TABLE IF EXISTS tracker_reminder_notified_roles;

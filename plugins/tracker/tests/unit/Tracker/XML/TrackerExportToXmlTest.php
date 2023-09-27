@@ -34,7 +34,7 @@ use Tracker_HierarchyFactory;
 use Tracker_RulesManager;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
-use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
+use Tuleap\Tracker\PromotedTrackerDao;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\Webhook\WebhookXMLExporter;
 use UserManager;
@@ -128,7 +128,7 @@ final class TrackerExportToXmlTest extends \Tuleap\Test\PHPUnit\TestCase
         $webhook_xml_exporter->shouldReceive('exportTrackerWebhooksInXML')->once();
         $this->tracker->shouldReceive('getWebhookXMLExporter')->andReturn($webhook_xml_exporter);
 
-        $this->dropdown_dao = Mockery::mock(TrackerInNewDropdownDao::class);
+        $this->dropdown_dao = Mockery::mock(PromotedTrackerDao::class);
         $this->dropdown_dao->shouldReceive('isContaining')->andReturnTrue()->once()->byDefault();
         $this->tracker->shouldReceive('getDropDownDao')->andReturn($this->dropdown_dao);
 

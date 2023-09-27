@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\Creation;
 use Mockery;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
-use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
+use Tuleap\Tracker\PromotedTrackerDao;
 
 final class PostCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -43,7 +43,7 @@ final class PostCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     private $processor;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerInNewDropdownDao
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PromotedTrackerDao
      */
     private $in_new_dropdown_dao;
 
@@ -59,7 +59,7 @@ final class PostCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->reference_manager   = Mockery::mock(\ReferenceManager::class);
-        $this->in_new_dropdown_dao = Mockery::mock(TrackerInNewDropdownDao::class);
+        $this->in_new_dropdown_dao = Mockery::mock(PromotedTrackerDao::class);
         $this->private_comment_dao = Mockery::mock(TrackerPrivateCommentUGroupEnabledDao::class);
         $this->private_comment_dao
             ->shouldReceive('disabledPrivateCommentOnTracker')

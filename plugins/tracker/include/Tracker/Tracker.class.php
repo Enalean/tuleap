@@ -74,7 +74,6 @@ use Tuleap\Tracker\FormElement\View\Admin\DisplayAdminFormElementsWarningsEvent;
 use Tuleap\Tracker\Hierarchy\HierarchyController;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\Masschange\TrackerMasschangeGetExternalActionsEvent;
-use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUserInvolvedInNotificationPresenterBuilder;
@@ -94,6 +93,7 @@ use Tuleap\Tracker\Notifications\UserNotificationOnlyStatusChangeDAO;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
+use Tuleap\Tracker\PromotedTrackerDao;
 use Tuleap\Tracker\Semantic\Tooltip\SemanticTooltip;
 use Tuleap\Tracker\Tooltip\TooltipStatsPresenter;
 use Tuleap\Tracker\Tooltip\TrackerStats;
@@ -3407,9 +3407,9 @@ class Tracker implements Tracker_Dispatchable_Interface
     /**
      * for testing purpose
      */
-    protected function getDropDownDao(): TrackerInNewDropdownDao
+    protected function getDropDownDao(): PromotedTrackerDao
     {
-        return new TrackerInNewDropdownDao();
+        return new PromotedTrackerDao();
     }
 
     /**
