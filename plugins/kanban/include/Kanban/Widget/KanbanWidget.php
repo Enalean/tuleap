@@ -288,10 +288,14 @@ abstract class KanbanWidget extends Widget
     ): int {
         $this->loadContent($id);
 
-        $old_kanban = $this->kanban_factory->getKanban(
-            $this->getCurrentUser(),
-            (int) $this->kanban_id
-        );
+        try {
+            $old_kanban = $this->kanban_factory->getKanban(
+                $this->getCurrentUser(),
+                (int) $this->kanban_id
+            );
+        } catch (KanbanCannotAccessException | KanbanNotFoundException) {
+            return 0;
+        }
 
         $new_tracker = $this->tracker_factory->getTrackerByShortnameAndProjectId(
             $this->getKanbanTrackerShortname($old_kanban),
