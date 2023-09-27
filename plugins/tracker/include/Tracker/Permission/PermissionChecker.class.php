@@ -18,27 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\CheckProjectAccess;
+use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\User\RetrieveUserById;
 
 class Tracker_Permission_PermissionChecker
 {
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-
-    /**
-     * @var ProjectAccessChecker
-     */
-    private $project_access_checker;
-
     public function __construct(
-        UserManager $user_manager,
-        ProjectAccessChecker $project_access_checker,
+        private readonly RetrieveUserById $user_manager,
+        private readonly CheckProjectAccess $project_access_checker,
+        private readonly GlobalAdminPermissionsChecker $global_admin_permissions_checker,
     ) {
-        $this->user_manager           = $user_manager;
-        $this->project_access_checker = $project_access_checker;
     }
 
     /**
@@ -94,6 +85,10 @@ class Tracker_Permission_PermissionChecker
     public function userCanViewTracker(PFUser $user, Tracker $tracker)
     {
         $project = $tracker->getProject();
+        if ($this->global_admin_permissions_checker->doesUserHaveTrackerGlobalAdminRightsOnProject($project, $user)) {
+            return true;
+        }
+
         try {
             $this->project_access_checker->checkUserCanAccessProject($user, $project);
         } catch (Project_AccessException $e) {
