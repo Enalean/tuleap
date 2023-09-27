@@ -126,6 +126,15 @@ in the configuration files:
         # In both repositories
         $ git push -u origin HEAD
 
+6. On ``origin/master`` for English documentation, edit the deployment guide to remove the mention "Under
+   development" for the just published release ``X.Y`` and create a new chapter for the
+   upcoming release ``X.Z`` that is now "Under development". Commit and push:
+
+        $ git checkout origin/master
+        $ EDITOR ...
+        $ git commit -S -a -m 'Start development of X.Z'
+        $ git push origin HEAD:master
+
 ### Update the manifest
 
 What goes into a Tuleap Enterprise milestone is defined by a manifest
@@ -171,7 +180,7 @@ To release a new version, you need to:
     library has been incremented (see [SemVer](https://semver.org/) to
     determine how to increment it) and the changelog updated.
 
-2.  If the version needs to be increment or the changelog updated,
+2.  If the version needs to be incremented or the changelog updated,
     submit the changes to review
 
 3.  Checkout to the Tuleap version where your package version has been

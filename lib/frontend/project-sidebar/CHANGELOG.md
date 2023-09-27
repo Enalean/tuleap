@@ -1,6 +1,6 @@
 # Changelog
 
-## In development
+## 2.3.0
 
 * Tools can have promoted items, they will be displayed as a sub list when the sidebar is expanded.
 * Collapse of the sidebar is deprecated. A boolean `is_collapsible` is now part of the configuration to control the behavior.
