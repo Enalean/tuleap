@@ -148,7 +148,7 @@ final class InstanceManagement
                 $this->logger->info(sprintf('Mediawiki %s success', $event::class));
                 return;
             }
-            $this->logger->error(sprintf('Mediawiki %s error: %s (code: %d)', $event::class, $response->getReasonPhrase(), $response->getStatusCode()));
+            $this->logger->error(sprintf("Mediawiki %s error: %s (code: %d): %s", $event::class, $response->getReasonPhrase(), $response->getStatusCode(), $response->getBody()->getContents()));
         } catch (ClientExceptionInterface | ConfigurationErrorException $e) {
             $this->logger->error(sprintf('Cannot connect to mediawiki REST API: %s (%s)', $e->getMessage(), $e::class), ['exception' => $e]);
         }
