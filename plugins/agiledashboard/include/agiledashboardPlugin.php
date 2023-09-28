@@ -63,8 +63,6 @@ use Tuleap\AgileDashboard\Planning\PlanningDao;
 use Tuleap\AgileDashboard\Planning\PlanningTrackerBacklogChecker;
 use Tuleap\AgileDashboard\Planning\XML\ProvideCurrentUserForXMLImport;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
-use Tuleap\AgileDashboard\Semantic\MoveChangesetXMLUpdater;
-use Tuleap\AgileDashboard\Semantic\MoveSemanticInitialEffortChecker;
 use Tuleap\AgileDashboard\Semantic\XML\SemanticsExporter;
 use Tuleap\AgileDashboard\Tracker\TrackerHierarchyUpdateChecker;
 use Tuleap\AgileDashboard\Tracker\TrackersCannotBeLinkedWithHierarchyException;
@@ -107,7 +105,6 @@ use Tuleap\Statistics\CSV\StatisticsServiceUsage;
 use Tuleap\Tracker\Action\AfterArtifactCopiedEvent;
 use Tuleap\Tracker\Action\CollectMovableExternalFieldEvent;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
-use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\Event\ArtifactDeleted;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
@@ -119,10 +116,7 @@ use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
 use Tuleap\Tracker\Config\GeneralSettingsEvent;
 use Tuleap\Tracker\CreateTrackerFromXMLEvent;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraImporterExternalPluginsEvent;
-use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticCheckers;
-use Tuleap\Tracker\Events\MoveArtifactParseFieldChangeNodes;
 use Tuleap\Tracker\FormElement\Event\MessageFetcherAdditionalWarnings;
-use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\Hierarchy\TrackerHierarchyUpdateEvent;
 use Tuleap\Tracker\Masschange\TrackerMasschangeGetExternalActionsEvent;
 use Tuleap\Tracker\Masschange\TrackerMasschangeProcessExternalActionsEvent;
@@ -222,9 +216,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $this->addHook(MessageFetcherAdditionalWarnings::NAME);
             $this->addHook(PermissionPerGroupPaneCollector::NAME);
             $this->addHook(ArtifactDeleted::NAME);
-            $this->addHook(MoveArtifactGetExternalSemanticCheckers::NAME);
-            $this->addHook(MoveArtifactParseFieldChangeNodes::NAME);
-            $this->addHook(MoveArtifactActionAllowedByPluginRetriever::NAME);
             $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
             $this->addHook(SwitchToLinksCollection::NAME);
             $this->addHook(StatisticsCollectionCollector::NAME);
@@ -1228,64 +1219,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
 
         $artifact_explicit_backlog_dao = new ArtifactsInExplicitBacklogDao();
         $artifact_explicit_backlog_dao->removeArtifactFromExplicitBacklog($artifact->getId());
-    }
-
-    public function moveArtifactGetExternalSemanticCheckers(MoveArtifactGetExternalSemanticCheckers $event)
-    {
-        $checker = new MoveSemanticInitialEffortChecker(
-            $this->getSemanticInitialEffortFactory(),
-            $this->getFormElementFactory()
-        );
-
-        $event->addExternalSemanticsChecker($checker);
-    }
-
-    public function moveArtifactParseFieldChangeNodes(MoveArtifactParseFieldChangeNodes $event)
-    {
-        if (
-            ! $this->getMoveSemanticInitialEffortChecker()->areSemanticsAligned(
-                $event->getSourceTracker(),
-                $event->getTargetTracker()
-            )
-        ) {
-            return;
-        }
-
-        $updater = new MoveChangesetXMLUpdater(
-            $this->getSemanticInitialEffortFactory(),
-            $this->getFormElementFactory(),
-            new FieldValueMatcher(new XMLImportHelper(UserManager::instance()))
-        );
-
-        if (
-            $updater->parseFieldChangeNodesAtGivenIndex(
-                $event->getSourceTracker(),
-                $event->getTargetTracker(),
-                $event->getChangesetXml(),
-                $event->getIndex(),
-                $event->getFeedbackFieldCollector()
-            )
-        ) {
-            $event->setModifiedByPlugin();
-        }
-    }
-
-    /**
-     * @return MoveSemanticInitialEffortChecker
-     */
-    private function getMoveSemanticInitialEffortChecker()
-    {
-        return new MoveSemanticInitialEffortChecker(
-            $this->getSemanticInitialEffortFactory(),
-            $this->getFormElementFactory()
-        );
-    }
-
-    public function moveArtifactActionAllowedByPluginRetriever(MoveArtifactActionAllowedByPluginRetriever $event)
-    {
-        if ($this->getSemanticInitialEffortFactory()->getByTracker($event->getTracker())->getFieldId() !== 0) {
-            $event->hasExternalSemanticDefined();
-        }
     }
 
     public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)

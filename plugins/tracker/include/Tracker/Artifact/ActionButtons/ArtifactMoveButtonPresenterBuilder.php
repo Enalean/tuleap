@@ -21,12 +21,10 @@
 namespace Tuleap\Tracker\Artifact\ActionButtons;
 
 use PFUser;
-use Tracker;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionLimitReachedException;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedException;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\RetrieveActionDeletionLimit;
-use Tuleap\Tracker\REST\v1\MoveArtifactSemanticFeatureFlag;
 
 class ArtifactMoveButtonPresenterBuilder
 {
@@ -52,23 +50,9 @@ class ArtifactMoveButtonPresenterBuilder
         $event = new MoveArtifactActionAllowedByPluginRetriever($artifact, $user);
         $this->event_manager->processEvent($event);
 
-        if (MoveArtifactSemanticFeatureFlag::isEnabled()) {
-            $semantic_error = $this->collectErrorRelatedToSemantics($artifact->getTracker(), $event);
-            if ($semantic_error) {
-                $errors[] = $semantic_error;
-            }
-        }
-
         $external_errors = $this->collectErrorsThrownByExternalPlugins($event);
         if ($external_errors) {
             $errors[] = $external_errors;
-        }
-
-        if (MoveArtifactSemanticFeatureFlag::isEnabled()) {
-            $links_error = $this->collectErrorsRelatedToArtifactLinks($artifact, $user);
-            if ($links_error) {
-                $errors[] = $links_error;
-            }
         }
 
         return new ArtifactMoveButtonPresenter(
@@ -88,32 +72,6 @@ class ArtifactMoveButtonPresenterBuilder
             $this->deletion_limit_retriever->getNumberOfArtifactsAllowedToDelete($user);
         } catch (DeletionOfArtifactsIsNotAllowedException | ArtifactsDeletionLimitReachedException $exception) {
             return $exception->getMessage();
-        }
-
-        return null;
-    }
-
-    private function collectErrorRelatedToSemantics(
-        Tracker $tracker,
-        MoveArtifactActionAllowedByPluginRetriever $event,
-    ): ?string {
-        if (
-            $tracker->hasSemanticsTitle() ||
-            $tracker->hasSemanticsDescription() ||
-            $tracker->hasSemanticsStatus() ||
-            $tracker->getContributorField() !== null ||
-            $event->hasExternalSemanticDefined()
-        ) {
-            return null;
-        }
-
-        return dgettext("tuleap-tracker", "No semantic defined in this tracker.");
-    }
-
-    private function collectErrorsRelatedToArtifactLinks(Artifact $artifact, PFUser $user): ?string
-    {
-        if ($artifact->getLinkedAndReverseArtifacts($user)) {
-            return dgettext("tuleap-tracker", "Artifacts with artifact links can not be moved.");
         }
 
         return null;
