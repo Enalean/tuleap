@@ -32,6 +32,7 @@ use Tracker_NoChangeException;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentContentNotValidException;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\RetrieveReverseLinks;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\Artifact\Link\HandleUpdateArtifact;
@@ -63,18 +64,33 @@ final class PUTHandler
                 function () use ($artifact, $submitter, $comment, $values) {
                     $changeset_values = $this->fields_data_builder->getFieldsDataOnUpdate($values, $artifact, $submitter);
 
-                    $reverse_link_collection = $changeset_values->getArtifactLinkValue()?->getSubmittedReverseLinks();
-
-                    $stored_reverse_links = $this->reverse_links_retriever->retrieveReverseLinks($artifact, $submitter);
-                    if ($reverse_link_collection !== null && $changeset_values->getArtifactLinkValue()?->getParent() === null && ! $this->isLinkKeyUsed($values)) {
-                            $this->artifact_update_handler->updateTypeAndAddReverseLinks($artifact, $submitter, $reverse_link_collection->differenceById($stored_reverse_links), $stored_reverse_links->differenceByType($reverse_link_collection))
-                                                          ->map(
-                                                              fn() => $this->artifact_update_handler->removeReverseLinks($artifact, $submitter, $stored_reverse_links->differenceById($reverse_link_collection))
-                                                          )
-                                                          ->mapErr(
-                                                              [FaultMapper::class, 'mapToRestException']
-                                                          );
-                    }
+                    $changeset_values->getArtifactLinkValue()->apply(
+                        function (NewArtifactLinkChangesetValue $artifact_link_value) use (
+                            $submitter,
+                            $artifact,
+                            $values
+                        ): void {
+                            if (
+                                $artifact_link_value->getParent()->isNothing()
+                                && ! $this->isLinkKeyUsed($values)
+                            ) {
+                                $stored_reverse_links    = $this->reverse_links_retriever->retrieveReverseLinks($artifact, $submitter);
+                                $reverse_link_collection = $artifact_link_value->getSubmittedReverseLinks();
+                                $this->artifact_update_handler->updateTypeAndAddReverseLinks(
+                                    $artifact,
+                                    $submitter,
+                                    $reverse_link_collection->differenceById($stored_reverse_links),
+                                    $stored_reverse_links->differenceByType($reverse_link_collection)
+                                )->map(
+                                    fn() => $this->artifact_update_handler->removeReverseLinks(
+                                        $artifact,
+                                        $submitter,
+                                        $stored_reverse_links->differenceById($reverse_link_collection)
+                                    )
+                                )->mapErr(FaultMapper::mapToRestException(...));
+                            }
+                        }
+                    );
 
                     try {
                         $this->artifact_update_handler->updateForwardLinks($artifact, $submitter, $changeset_values, $comment);

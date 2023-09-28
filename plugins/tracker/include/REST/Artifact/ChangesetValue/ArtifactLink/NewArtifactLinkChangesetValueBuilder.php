@@ -22,17 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewParentLink;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\RetrieveForwardLinks;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 final class NewArtifactLinkChangesetValueBuilder
 {
-    public function __construct(private RetrieveForwardLinks $forward_links_retriever)
+    public function __construct(private readonly RetrieveForwardLinks $forward_links_retriever)
     {
     }
 
@@ -51,8 +52,8 @@ final class NewArtifactLinkChangesetValueBuilder
             return NewArtifactLinkChangesetValue::fromParts(
                 $link_field->getId(),
                 $this->forward_links_retriever->retrieve($submitter, $link_field, $artifact),
-                $this->buildForward($payload),
-                null,
+                Option::fromValue($this->buildForward($payload)),
+                Option::nothing(NewParentLink::class),
                 $this->buildReverse($payload)
             );
         }
@@ -74,28 +75,34 @@ final class NewArtifactLinkChangesetValueBuilder
 
     /**
      * @throws \Tracker_FormElement_InvalidFieldValueException
+     * @return Option<NewParentLink>
      */
-    private function buildParent(ArtifactValuesRepresentation $payload): ?NewParentLink
+    private function buildParent(ArtifactValuesRepresentation $payload): Option
     {
         if ($payload->parent === null) {
-            return null;
+            return Option::nothing(NewParentLink::class);
         }
-        return RESTNewParentLinkProxy::fromRESTPayload($payload->parent);
+        /** @psalm-var NewParentLink $new_parent_link */
+        $new_parent_link = RESTNewParentLinkProxy::fromRESTPayload($payload->parent);
+        return Option::fromValue($new_parent_link);
     }
 
     /**
      * @throws \Tracker_FormElement_InvalidFieldValueException
+     * @return Option<CollectionOfForwardLinks>
      */
-    private function buildFromLinksKey(ArtifactValuesRepresentation $payload): ?CollectionOfForwardLinks
+    private function buildFromLinksKey(ArtifactValuesRepresentation $payload): Option
     {
         if ($payload->links === null) {
-            return null;
+            return Option::nothing(CollectionOfForwardLinks::class);
         }
 
-        return new CollectionOfForwardLinks(
-            array_map(
-                static fn(array $payload_link) => RESTForwardLinkProxy::fromPayload($payload_link),
-                $payload->links
+        return Option::fromValue(
+            new CollectionOfForwardLinks(
+                array_map(
+                    static fn(array $payload_link) => RESTForwardLinkProxy::fromPayload($payload_link),
+                    $payload->links
+                )
             )
         );
     }

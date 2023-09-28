@@ -22,9 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
@@ -35,8 +37,10 @@ use Tuleap\Tracker\REST\Artifact\ChangesetValue\BuildFieldsData;
  */
 final class BuildFieldsDataStub implements BuildFieldsData
 {
-    private function __construct(private array $fields_data, private NewArtifactLinkInitialChangesetValue $artifact_link_value)
-    {
+    private function __construct(
+        private array $fields_data,
+        private NewArtifactLinkInitialChangesetValue $artifact_link_value,
+    ) {
     }
 
     public static function buildWithDefaultsForInitialChangeset(): self
@@ -64,8 +68,11 @@ final class BuildFieldsDataStub implements BuildFieldsData
         return new InitialChangesetValuesContainer($this->fields_data, $this->artifact_link_value);
     }
 
-    public function getFieldsDataOnUpdate(array $values, Artifact $artifact, \PFUser $submitter,): ChangesetValuesContainer
-    {
-        return new ChangesetValuesContainer([], null);
+    public function getFieldsDataOnUpdate(
+        array $values,
+        Artifact $artifact,
+        \PFUser $submitter,
+    ): ChangesetValuesContainer {
+        return new ChangesetValuesContainer([], Option::nothing(NewArtifactLinkChangesetValue::class));
     }
 }

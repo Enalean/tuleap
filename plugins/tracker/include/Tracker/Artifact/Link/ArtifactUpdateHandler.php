@@ -30,6 +30,7 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactDoesNotExistFault;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
@@ -105,9 +106,11 @@ final class ArtifactUpdateHandler implements HandleUpdateArtifact
                     function (Tracker_FormElement_Field_ArtifactLink $artifact_link_field) use ($current_artifact, $reverse_link, $submitter, $source_artifact) {
                         $source_artifact_link_to_be_removed = CollectionOfForwardLinks::fromReverseLink($current_artifact, $reverse_link);
 
-                        $new_changeset_value = NewArtifactLinkChangesetValue::fromRemovedValues(
-                            $artifact_link_field->getId(),
-                            $source_artifact_link_to_be_removed
+                        $new_changeset_value = Option::fromValue(
+                            NewArtifactLinkChangesetValue::fromRemovedValues(
+                                $artifact_link_field->getId(),
+                                $source_artifact_link_to_be_removed
+                            )
                         );
 
                         $container = new ChangesetValuesContainer([], $new_changeset_value);
@@ -142,9 +145,11 @@ final class ArtifactUpdateHandler implements HandleUpdateArtifact
                     function (Tracker_FormElement_Field_ArtifactLink $artifact_link_field) use ($current_artifact, $reverse_link, $submitter, $source_artifact) {
                         $source_artifact_link_to_be_added = CollectionOfForwardLinks::fromReverseLink($current_artifact, $reverse_link);
 
-                        $new_changeset_value = NewArtifactLinkChangesetValue::fromAddedAndUpdatedTypeValues(
-                            $artifact_link_field->getId(),
-                            $source_artifact_link_to_be_added
+                        $new_changeset_value = Option::fromValue(
+                            NewArtifactLinkChangesetValue::fromAddedAndUpdatedTypeValues(
+                                $artifact_link_field->getId(),
+                                $source_artifact_link_to_be_added
+                            )
                         );
                         $container           = new ChangesetValuesContainer([], $new_changeset_value);
                         try {

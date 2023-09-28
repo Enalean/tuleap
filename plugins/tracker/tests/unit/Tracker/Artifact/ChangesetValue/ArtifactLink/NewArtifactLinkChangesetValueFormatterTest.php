@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink;
 
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
 use Tuleap\Tracker\Test\Stub\NewParentLinkStub;
 
@@ -29,14 +30,16 @@ final class NewArtifactLinkChangesetValueFormatterTest extends \Tuleap\Test\PHPU
 {
     private const FIELD_ID = 993;
     private CollectionOfForwardLinks $already_linked;
-    private CollectionOfForwardLinks $submitted_links;
-    private ?NewParentLink $parent;
+    /** @var Option<CollectionOfForwardLinks> */
+    private Option $submitted_links;
+    /** @var Option<NewParentLink> */
+    private Option $parent;
 
     protected function setUp(): void
     {
         $this->already_linked  = new CollectionOfForwardLinks([]);
-        $this->submitted_links = new CollectionOfForwardLinks([]);
-        $this->parent          = null;
+        $this->submitted_links = Option::fromValue(new CollectionOfForwardLinks([]));
+        $this->parent          = Option::nothing(NewParentLink::class);
     }
 
     private function format(): array
@@ -55,10 +58,12 @@ final class NewArtifactLinkChangesetValueFormatterTest extends \Tuleap\Test\PHPU
     {
         $first_artifact_id     = 48;
         $second_artifact_id    = 53;
-        $this->submitted_links = new CollectionOfForwardLinks([
-            ForwardLinkStub::withNoType($first_artifact_id),
-            ForwardLinkStub::withNoType($second_artifact_id),
-        ]);
+        $this->submitted_links = Option::fromValue(
+            new CollectionOfForwardLinks([
+                ForwardLinkStub::withNoType($first_artifact_id),
+                ForwardLinkStub::withNoType($second_artifact_id),
+            ])
+        );
         $fields_data           = $this->format();
         self::assertArrayHasKey('new_values', $fields_data);
         self::assertSame('48,53', $fields_data['new_values']);
@@ -73,10 +78,12 @@ final class NewArtifactLinkChangesetValueFormatterTest extends \Tuleap\Test\PHPU
     {
         $first_artifact_id     = 48;
         $second_artifact_id    = 53;
-        $this->submitted_links = new CollectionOfForwardLinks([
-            ForwardLinkStub::withType($first_artifact_id, 'custom_type'),
-            ForwardLinkStub::withType($second_artifact_id, '_covered_by'),
-        ]);
+        $this->submitted_links = Option::fromValue(
+            new CollectionOfForwardLinks([
+                ForwardLinkStub::withType($first_artifact_id, 'custom_type'),
+                ForwardLinkStub::withType($second_artifact_id, '_covered_by'),
+            ])
+        );
         $fields_data           = $this->format();
         self::assertArrayHasKey('new_values', $fields_data);
         self::assertSame('48,53', $fields_data['new_values']);
@@ -99,14 +106,14 @@ final class NewArtifactLinkChangesetValueFormatterTest extends \Tuleap\Test\PHPU
 
     public function testItFormatsParent(): void
     {
-        $this->parent = NewParentLinkStub::withId(55);
+        $this->parent = Option::fromValue(NewParentLinkStub::withId(55));
         $fields_data  = $this->format();
         self::assertArrayHasKey('parent', $fields_data);
         self::assertCount(1, $fields_data['parent']);
         self::assertContains(55, $fields_data['parent']);
     }
 
-    public function testItOmitsParentWhenItIsNull(): void
+    public function testItOmitsParentWhenItIsNothing(): void
     {
         $fields_data = $this->format();
         self::assertArrayNotHasKey('parent', $fields_data);
@@ -135,5 +142,17 @@ final class NewArtifactLinkChangesetValueFormatterTest extends \Tuleap\Test\PHPU
         $fields_data = $this->format();
         self::assertArrayHasKey('removed_values', $fields_data);
         self::assertEmpty($fields_data['removed_values']);
+    }
+
+    public function testItFormatsWhenNoChange(): void
+    {
+        $this->submitted_links = Option::nothing(CollectionOfForwardLinks::class);
+
+        $fields_data = $this->format();
+        self::assertArrayHasKey('new_values', $fields_data);
+        self::assertEmpty($fields_data['new_values']);
+        self::assertArrayHasKey('removed_values', $fields_data);
+        self::assertEmpty($fields_data['removed_values']);
+        self::assertArrayNotHasKey('types', $fields_data);
     }
 }

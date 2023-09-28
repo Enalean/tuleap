@@ -22,53 +22,70 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink;
 
+use Tuleap\Option\Option;
+
 /**
  * I hold a new changeset value for the Artifact Link field.
  * @psalm-immutable
  */
 final class NewArtifactLinkChangesetValue
 {
+    /**
+     * @param Option<CollectionOfForwardLinks> $submitted_values
+     * @param Option<NewParentLink>            $parent
+     */
     private function __construct(
-        private int $field_id,
-        private CollectionOfForwardLinks $added_values,
-        private CollectionOfForwardLinks $removed_values,
-        private ?CollectionOfForwardLinks $submitted_values,
-        private ?NewParentLink $parent,
-        private CollectionOfReverseLinks $submitted_reverse_links,
+        private readonly int $field_id,
+        private readonly CollectionOfForwardLinks $added_values,
+        private readonly CollectionOfForwardLinks $removed_values,
+        private readonly Option $submitted_values,
+        private readonly Option $parent,
+        private readonly CollectionOfReverseLinks $submitted_reverse_links,
     ) {
     }
 
+    /**
+     * @param Option<CollectionOfForwardLinks> $submitted_values
+     * @param Option<NewParentLink>            $parent
+     */
     public static function fromParts(
         int $field_id,
         CollectionOfForwardLinks $existing_links,
-        ?CollectionOfForwardLinks $submitted_values,
-        ?NewParentLink $parent,
+        Option $submitted_values,
+        Option $parent,
         CollectionOfReverseLinks $submitted_reverse_links,
     ): self {
-        $added_values   = $submitted_values
-            ? $existing_links->differenceById($submitted_values)
-            : new CollectionOfForwardLinks([]);
-        $removed_values = $submitted_values
-            ? $submitted_values->differenceById($existing_links)
-            : new CollectionOfForwardLinks([]);
-        return new self(
-            $field_id,
-            $added_values,
-            $removed_values,
-            $submitted_values,
-            $parent,
-            $submitted_reverse_links
+        return $submitted_values->mapOr(
+            static fn(CollectionOfForwardLinks $submitted_links) => new self(
+                $field_id,
+                $existing_links->differenceById($submitted_links),
+                $submitted_links->differenceById($existing_links),
+                $submitted_values,
+                $parent,
+                $submitted_reverse_links
+            ),
+            // No added or removed values when $submitted_values is Nothing
+            new self(
+                $field_id,
+                new CollectionOfForwardLinks([]),
+                new CollectionOfForwardLinks([]),
+                $submitted_values,
+                $parent,
+                $submitted_reverse_links
+            )
         );
     }
 
-    public static function fromAddedAndUpdatedTypeValues(int $field_id, CollectionOfForwardLinks $submitted_values): self
-    {
+    public static function fromAddedAndUpdatedTypeValues(
+        int $field_id,
+        CollectionOfForwardLinks $submitted_values,
+    ): self {
         return new self(
             $field_id,
             $submitted_values,
             new CollectionOfForwardLinks([]),
-            $submitted_values,
-            null,
+            Option::fromValue($submitted_values),
+            Option::nothing(NewParentLink::class),
             new CollectionOfReverseLinks([])
         );
     }
@@ -79,8 +96,8 @@ final class NewArtifactLinkChangesetValue
             $field_id,
             new CollectionOfForwardLinks([]),
             $values_to_remove,
-            new CollectionOfForwardLinks([]),
-            null,
+            Option::fromValue(new CollectionOfForwardLinks([])),
+            Option::nothing(NewParentLink::class),
             new CollectionOfReverseLinks([])
         );
     }
@@ -100,12 +117,18 @@ final class NewArtifactLinkChangesetValue
         return $this->removed_values;
     }
 
-    public function getParent(): ?NewParentLink
+    /**
+     * @return Option<NewParentLink>
+     */
+    public function getParent(): Option
     {
         return $this->parent;
     }
 
-    public function getSubmittedValues(): ?CollectionOfForwardLinks
+    /**
+     * @return Option<CollectionOfForwardLinks>
+     */
+    public function getSubmittedValues(): Option
     {
         return $this->submitted_values;
     }

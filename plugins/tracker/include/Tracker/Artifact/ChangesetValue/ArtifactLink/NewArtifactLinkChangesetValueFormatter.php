@@ -26,20 +26,18 @@ final class NewArtifactLinkChangesetValueFormatter
 {
     public static function formatForWebUI(NewArtifactLinkChangesetValue $update_value): array
     {
-        $field_data       = [
+        $field_data = [
             'new_values'     => implode(',', $update_value->getAddedValues()->getTargetArtifactIds()),
             'removed_values' => self::formatRemovedValues($update_value->getRemovedValues()),
         ];
-        $submitted_values = $update_value->getSubmittedValues();
-        if ($submitted_values !== null) {
-            $field_data['types'] = $submitted_values->getArtifactTypesByIds();
-        }
-
-        $parent_link = $update_value->getParent();
-        if ($parent_link !== null) {
-            $field_data['parent'] = [$parent_link->getParentArtifactId()];
-        }
-
+        $update_value->getSubmittedValues()->apply(
+            static function (CollectionOfForwardLinks $submitted_links) use (&$field_data) {
+                $field_data['types'] = $submitted_links->getArtifactTypesByIds();
+            }
+        );
+        $update_value->getParent()->apply(static function (NewParentLink $new_parent_link) use (&$field_data) {
+            $field_data['parent'] = [$new_parent_link->getParentArtifactId()];
+        });
         return $field_data;
     }
 

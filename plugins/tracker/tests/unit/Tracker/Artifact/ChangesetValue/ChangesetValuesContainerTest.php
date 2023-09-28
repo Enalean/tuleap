@@ -22,10 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\ChangesetValue;
 
+use Tuleap\Option\Option;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValue;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
+use Tuleap\Tracker\Test\Stub\NewParentLinkStub;
 use Tuleap\Tracker\Test\Stub\ReverseLinkStub;
 
 final class ChangesetValuesContainerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -33,42 +35,58 @@ final class ChangesetValuesContainerTest extends \Tuleap\Test\PHPUnit\TestCase
     private const FIELD_ID               = 170;
     private const FIELD_VALUE            = 'whatever';
     private const ARTIFACT_LINK_FIELD_ID = 219;
+    /** @var Option<NewArtifactLinkChangesetValue> $artifact_links */
+    private Option $artifact_links;
+    private array $fields_data;
+
+    protected function setUp(): void
+    {
+        $this->fields_data    = [self::FIELD_ID => self::FIELD_VALUE];
+        $this->artifact_links = Option::nothing(NewArtifactLinkChangesetValue::class);
+    }
+
+    private function build(): ChangesetValuesContainer
+    {
+        return new ChangesetValuesContainer($this->fields_data, $this->artifact_links);
+    }
 
     public function testItBuildsWithNoArtifactLinkValue(): void
     {
-        $fields_data      = [self::FIELD_ID => self::FIELD_VALUE];
-        $changeset_values = new ChangesetValuesContainer($fields_data, null);
+        $changeset_values = $this->build();
 
-        self::assertNull($changeset_values->getArtifactLinkValue());
-        self::assertSame($fields_data, $changeset_values->getFieldsData());
+        self::assertSame($this->artifact_links, $changeset_values->getArtifactLinkValue());
+        self::assertSame($this->fields_data, $changeset_values->getFieldsData());
     }
 
     public function testItBuildsWithArtifactLinkValue(): void
     {
-        $fields_data         = [self::FIELD_ID => self::FIELD_VALUE];
-        $submitted_links     = new CollectionOfForwardLinks([
-            ForwardLinkStub::withType(99, 'custom_type'),
-            ForwardLinkStub::withNoType(42),
-        ]);
-        $already_linked      = new CollectionOfForwardLinks([
+        $submitted_links      = Option::fromValue(
+            new CollectionOfForwardLinks([
+                ForwardLinkStub::withType(99, 'custom_type'),
+                ForwardLinkStub::withNoType(42),
+            ])
+        );
+        $already_linked       = new CollectionOfForwardLinks([
             ForwardLinkStub::withType(53, '_is_child'),
             ForwardLinkStub::withNoType(34),
         ]);
-        $artifact_link_value = NewArtifactLinkChangesetValue::fromParts(
-            self::ARTIFACT_LINK_FIELD_ID,
-            $already_linked,
-            $submitted_links,
-            null,
-            new CollectionOfReverseLinks([
-                ReverseLinkStub::withNoType(195),
-                ReverseLinkStub::withNoType(196),
-            ])
+        $this->artifact_links = Option::fromValue(
+            NewArtifactLinkChangesetValue::fromParts(
+                self::ARTIFACT_LINK_FIELD_ID,
+                $already_linked,
+                $submitted_links,
+                Option::fromValue(NewParentLinkStub::withId(63)),
+                new CollectionOfReverseLinks([
+                    ReverseLinkStub::withNoType(195),
+                    ReverseLinkStub::withNoType(196),
+                ])
+            )
         );
-        $changeset_values    = new ChangesetValuesContainer($fields_data, $artifact_link_value);
+        $changeset_values     = $this->build();
 
-        self::assertSame($artifact_link_value, $changeset_values->getArtifactLinkValue());
+        self::assertSame($this->artifact_links, $changeset_values->getArtifactLinkValue());
         $new_fields_data = $changeset_values->getFieldsData();
-        self::assertNotSame($fields_data, $new_fields_data);
+        self::assertNotSame($this->fields_data, $new_fields_data);
         self::assertArrayHasKey(self::FIELD_ID, $new_fields_data);
         self::assertSame(self::FIELD_VALUE, $new_fields_data[self::FIELD_ID]);
         self::assertArrayHasKey(self::ARTIFACT_LINK_FIELD_ID, $new_fields_data);
@@ -76,10 +94,11 @@ final class ChangesetValuesContainerTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'new_values'     => '99,42',
                 'removed_values' => [53 => [53], 34 => [34]],
-                'types'           => [
+                'types'          => [
                     99 => 'custom_type',
                     42 => \Tracker_FormElement_Field_ArtifactLink::NO_TYPE,
                 ],
+                'parent'         => [63],
             ],
             $new_fields_data[self::ARTIFACT_LINK_FIELD_ID]
         );

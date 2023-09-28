@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\ChangesetValue;
 
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueFormatter;
 
@@ -29,26 +30,35 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangeset
  * I hold the new values for all modified fields, for a new changeset of an artifact.
  * Artifact Links field has special treatment so that we can handle the "reverse" artifact links separately.
  * We don't want them in $fields_data.
- * @psalm-immutable
  */
 final class ChangesetValuesContainer
 {
-    public function __construct(private array $fields_data, private ?NewArtifactLinkChangesetValue $artifact_links)
+    /**
+     * @param Option<NewArtifactLinkChangesetValue> $artifact_links
+     */
+    public function __construct(private array $fields_data, private readonly Option $artifact_links)
     {
-        if ($artifact_links !== null) {
+        $this->artifact_links->apply(function (NewArtifactLinkChangesetValue $changeset_value) {
             // We must still add forward artifact links to $fields_data so that it can be saved and processed like normal
-            $this->fields_data[$artifact_links->getFieldId()] = NewArtifactLinkChangesetValueFormatter::formatForWebUI(
-                $artifact_links
+            $this->fields_data[$changeset_value->getFieldId()] = NewArtifactLinkChangesetValueFormatter::formatForWebUI(
+                $changeset_value
             );
-        }
+        });
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getFieldsData(): array
     {
         return $this->fields_data;
     }
 
-    public function getArtifactLinkValue(): ?NewArtifactLinkChangesetValue
+    /**
+     * @psalm-mutation-free
+     * @return Option<NewArtifactLinkChangesetValue>
+     */
+    public function getArtifactLinkValue(): Option
     {
         return $this->artifact_links;
     }

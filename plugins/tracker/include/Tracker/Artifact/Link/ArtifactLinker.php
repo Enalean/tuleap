@@ -26,6 +26,7 @@ use Feedback;
 use PFUser;
 use Tracker_Exception;
 use Tracker_NoChangeException;
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\Changeset\CreateNewChangeset;
@@ -75,9 +76,11 @@ class ArtifactLinker
         $artifact_link_field = $artlink_fields[0];
 
         $existing_links      = $this->forward_links_retriever->retrieve($current_user, $artifact_link_field, $current_artifact);
-        $new_changeset_value = NewArtifactLinkChangesetValue::fromAddedAndUpdatedTypeValues(
-            $artifact_link_field->getId(),
-            $existing_links->differenceByIdAndType($forward_links),
+        $new_changeset_value = Option::fromValue(
+            NewArtifactLinkChangesetValue::fromAddedAndUpdatedTypeValues(
+                $artifact_link_field->getId(),
+                $existing_links->differenceByIdAndType($forward_links),
+            )
         );
         $container           = new ChangesetValuesContainer([], $new_changeset_value);
 
