@@ -76,7 +76,7 @@ final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUni
         $update_value = $this->build($payload);
 
         self::assertSame(self::FIELD_ID, $update_value->getFieldId());
-        self::assertSame(self::PARENT_ARTIFACT_ID, $update_value->getParent()->getParentArtifactId());
+        self::assertSame(self::PARENT_ARTIFACT_ID, $update_value->getParent()->unwrapOr(null)?->getParentArtifactId());
         self::assertSame([self::ADDED_ARTIFACT_ID], $update_value->getAddedValues()->getTargetArtifactIds());
         self::assertSame([self::REMOVED_ARTIFACT_ID], $update_value->getRemovedValues()->getTargetArtifactIds());
     }
@@ -90,10 +90,10 @@ final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUni
         $update_value = $this->build($payload);
 
         self::assertSame(self::FIELD_ID, $update_value->getFieldId());
-        self::assertSame(self::PARENT_ARTIFACT_ID, $update_value->getParent()->getParentArtifactId());
+        self::assertSame(self::PARENT_ARTIFACT_ID, $update_value->getParent()->unwrapOr(null)->getParentArtifactId());
         self::assertEmpty($update_value->getAddedValues()->getArtifactLinks());
         self::assertEmpty($update_value->getRemovedValues()->getArtifactLinks());
-        self::assertNull($update_value->getSubmittedValues());
+        self::assertTrue($update_value->getSubmittedValues()->isNothing());
     }
 
     public function testItBuildsFromARESTPayloadWithOnlyLinksKey(): void
@@ -108,11 +108,10 @@ final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUni
         $update_value = $this->build($payload);
 
         self::assertSame(self::FIELD_ID, $update_value->getFieldId());
-        self::assertNull($update_value->getParent());
+        self::assertTrue($update_value->getParent()->isNothing());
         self::assertSame([self::ADDED_ARTIFACT_ID], $update_value->getAddedValues()->getTargetArtifactIds());
         self::assertSame([self::REMOVED_ARTIFACT_ID], $update_value->getRemovedValues()->getTargetArtifactIds());
-        self::assertNotNull($update_value->getSubmittedValues());
-        $submitted_values = $update_value->getSubmittedValues()->getArtifactLinks();
+        $submitted_values = $update_value->getSubmittedValues()->unwrapOr(new CollectionOfForwardLinks([]))->getArtifactLinks();
         self::assertCount(3, $submitted_values);
         [$first_link, $second_link, $third_link] = $submitted_values;
         self::assertSame(self::FIRST_UNCHANGED_ARTIFACT_ID, $first_link->getTargetArtifactId());
@@ -123,7 +122,7 @@ final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUni
         self::assertSame('_depends_on', $third_link->getType());
     }
 
-    public function testItBuildsWhenFeatureFlagIsSet(): void
+    public function testItBuildsFromARESTPayloadWithReverseLinks(): void
     {
         $payload = ArtifactValuesRepresentationBuilder::aRepresentation(self::FIELD_ID)
             ->withAllLinks(LinkWithDirectionRepresentationBuilder::aReverseLink(48)->build())

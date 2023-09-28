@@ -20,7 +20,9 @@
 
 namespace Tuleap\Tracker\REST\Artifact\ChangesetValue;
 
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
@@ -68,18 +70,20 @@ final class FieldsDataBuilder implements BuildFieldsData
         \PFUser $submitter,
     ): ChangesetValuesContainer {
         $new_values     = [];
-        $artifact_link  = null;
+        $artifact_link  = Option::nothing(NewArtifactLinkChangesetValue::class);
         $indexed_fields = $this->getIndexedFields($artifact->getTracker());
         foreach ($values as $value) {
             $array_representation = $value->toArray();
 
             $field = $this->getField($indexed_fields, $array_representation);
             if ($field instanceof \Tracker_FormElement_Field_ArtifactLink) {
-                $artifact_link = $this->artifact_link_builder->buildFromPayload(
-                    $artifact,
-                    $field,
-                    $submitter,
-                    $value
+                $artifact_link = Option::fromValue(
+                    $this->artifact_link_builder->buildFromPayload(
+                        $artifact,
+                        $field,
+                        $submitter,
+                        $value
+                    )
                 );
                 continue;
             }

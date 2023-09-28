@@ -167,7 +167,7 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             self::STRING_FIELD_ID => self::STRING_VALUE,
             self::TEXT_FIELD_ID   => ['format' => self::TEXT_FORMAT, 'content' => self::TEXT_VALUE],
         ], $changeset_values->getFieldsData());
-        self::assertNull($changeset_values->getArtifactLinkValue());
+        self::assertTrue($changeset_values->getArtifactLinkValue()->isNothing());
     }
 
     public function testItBuildsArtifactLinkChangesetValueSeparatelyFromRESTUpdatePayload(): void
@@ -187,9 +187,7 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             )->build();
 
         $changeset_values = $this->getFieldsDataOnUpdate([$link_representation]);
-        $artifact_link    = $changeset_values->getArtifactLinkValue();
-        self::assertNotNull($artifact_link);
-        $new_links = $artifact_link->getAddedValues()->getTargetArtifactIds();
+        $new_links        = $changeset_values->getArtifactLinkValue()->unwrapOr(null)?->getAddedValues()->getTargetArtifactIds();
         self::assertCount(2, $new_links);
         self::assertContains($first_linked_artifact_id, $new_links);
         self::assertContains($second_linked_artifact_id, $new_links);

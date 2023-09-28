@@ -70,7 +70,7 @@ final class ArtifactLinkerTest extends TestCase
             $this->changeset_creator,
             $this->links_retriever,
         );
-        return $artifact_linker->linkArtifact($artifact, $linked_artifacts, $this->user, '');
+        return $artifact_linker->linkArtifact($artifact, $linked_artifacts, $this->user);
     }
 
     public function testItReturnsFalseAndDisplayAnErrorWhenNoArtifactLinkFieldsAreUsed(): void

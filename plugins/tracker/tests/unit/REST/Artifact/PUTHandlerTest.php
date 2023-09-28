@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\REST\Artifact;
 
 use Luracast\Restler\RestException;
 use Tracker_NoChangeException;
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
@@ -40,15 +39,14 @@ use Tuleap\Tracker\REST\v1\LinkWithDirectionRepresentation;
 use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Stub\CheckArtifactRestUpdateConditionsStub;
+use Tuleap\Tracker\Test\Stub\HandleUpdateArtifactStub;
 use Tuleap\Tracker\Test\Stub\RetrieveForwardLinksStub;
 use Tuleap\Tracker\Test\Stub\RetrieveReverseLinksStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
-use Tuleap\Tracker\Test\Stub\HandleUpdateArtifactStub;
 
 final class PUTHandlerTest extends TestCase
 {
     use GlobalResponseMock;
-    use ForgeConfigSandbox;
 
     private HandleUpdateArtifactStub $artifact_updater;
     private RetrieveUsedFieldsStub $field_retriever;
