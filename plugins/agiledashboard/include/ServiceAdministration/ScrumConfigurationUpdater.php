@@ -74,6 +74,10 @@ class ScrumConfigurationUpdater
             }
         }
 
+        if ($this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($this->request->getProject())) {
+            return;
+        }
+
         if ($scrum_is_activated) {
             $planning_administration_delegation = new PlanningAdministrationDelegation($this->request->getProject());
             $this->event_dispatcher->dispatch($planning_administration_delegation);
