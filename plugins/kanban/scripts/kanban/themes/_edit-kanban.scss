@@ -29,10 +29,14 @@
     margin: 0 3px 0 0;
 }
 
-.edit-kanban-label-form,
+.edit-kanban-promoted-switch,
 .edit-kanban-column-configuration,
 .edit-kanban-tracker-reports {
     margin: 0 0 var(--tlp-x-large-spacing);
+}
+
+.edit-kanban-label-form {
+    margin: 0 0 var(--tlp-medium-spacing);
 }
 
 .edit-kanban-column-list,
