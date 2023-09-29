@@ -39,8 +39,8 @@ dependencies:
     specifier: workspace:*
     version: link:../../../../../lib/frontend/tooltip
   dompurify:
-    specifier: ^2.4.7
-    version: 2.4.7
+    specifier: ^3.0.5
+    version: 3.0.5
   hybrids:
     specifier: ^8.2.2
     version: 8.2.2
@@ -74,8 +74,8 @@ packages:
     resolution: {integrity: sha512-IDaobHimLQhjwsQ/NMwRVfa/yL7L/wriQPMhw1ZJall0KX6E1oxk29XMDeilW5qTIg5aoiqf5Udy8U/51aNoQQ==}
     dev: true
 
-  /dompurify@2.4.7:
-    resolution: {integrity: sha512-kxxKlPEDa6Nc5WJi+qRgPbOAbgTpSULL+vI3NUXsZMlkJxTqYI9wg5ZTay2sFrdZRWHPWNi+EdAhcJf81WtoMQ==}
+  /dompurify@3.0.5:
+    resolution: {integrity: sha512-F9e6wPGtY+8KNMRAVfxeCOHU0/NPWMSENNq4pQctuXRqqdEPW7q3CrLbR5Nse044WwacyjHGOMlvNsBe1y6z9A==}
     dev: false
 
   /hybrids@8.2.2:

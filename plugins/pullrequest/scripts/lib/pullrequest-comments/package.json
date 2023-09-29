@@ -21,7 +21,7 @@
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-relative-date": "workspace:*",
     "@tuleap/tooltip": "workspace:*",
-    "dompurify": "^2.4.7",
+    "dompurify": "^3.0.5",
     "hybrids": "^8.2.2",
     "moment": "^2.29.4",
     "neverthrow": "6.0.0"
