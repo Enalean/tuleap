@@ -683,7 +683,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         }
     }
 
-    public function pv_footer($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function pv_footer(): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         echo $this->displayFooterJavascriptElements();
         echo "\n</body></html>";

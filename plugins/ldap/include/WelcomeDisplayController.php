@@ -164,7 +164,7 @@ class WelcomeDisplayController implements DispatchableWithRequest
 
         print '</fieldset>';
 
-        ($pv === 2) ? $layout->pv_footer([]) : $layout->footer([]);
+        ($pv === 2) ? $layout->pv_footer() : $layout->footer([]);
     }
 
     private function getTimezonePopup(BaseLayout $layout, ?string $timezone): string

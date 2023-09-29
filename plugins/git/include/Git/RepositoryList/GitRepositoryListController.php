@@ -116,11 +116,11 @@ class GitRepositoryListController implements Request\DispatchableWithRequest, Re
         $params = [
             'title'                          => $title . ' - ' . $project->getPublicName(),
             'toptab'                         => 'plugin_git',
-            'group'                          => $project->getID(),
+            'project'                        => $project,
             'body_class'                     => [],
             'without-project-in-breadcrumbs' => true,
         ];
 
-        site_project_header($params);
+        site_project_header($project, $params);
     }
 }

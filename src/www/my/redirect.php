@@ -93,5 +93,5 @@ setTimeout("return_to_url()",1000);
 </section>
 
 <?php
-($pv == 2) ? $HTML->pv_footer([]) : site_footer([]);
+($pv == 2) ? $HTML->pv_footer() : site_footer([]);
 ?>

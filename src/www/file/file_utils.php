@@ -33,10 +33,9 @@ use Tuleap\FRS\UploadedLinkUpdateTablePresenter;
 
 function file_utils_header($params)
 {
-    global $group_id,$Language;
+    global $group_id;
 
     $params['toptab'] = 'file';
-    $params['group']  = $group_id;
 
     if (! array_key_exists('pv', $params) || ! $params['pv']) {
         $project_manager = ProjectManager::instance();

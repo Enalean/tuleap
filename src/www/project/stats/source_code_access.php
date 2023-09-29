@@ -80,7 +80,6 @@ $pm = ProjectManager::instance();
 project_admin_header(
     [
         'title' => $Language->getText('project_admin_index', 'p_admin', $pm->getProject($group_id)->getPublicName()),
-        'group' => $group_id,
         'help' => 'project-admin.html#access-logs',
     ],
     \Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME
@@ -101,7 +100,7 @@ print '
 <OPTION VALUE="members" ' . (($who == "members") ? "SELECTED" : "") . '>' . $Language->getText('project_admin_editugroup', 'proj_members') . '</OPTION>
 <OPTION VALUE="allusers" ' . (($who == "allusers") ? "SELECTED" : "") . '>' . $Language->getText('project_stats_source_code_access', 'all_users') . '</OPTION>
 </SELECT></td>
-<td> 
+<td>
 <SELECT NAME="span">
 <OPTION VALUE="4" ' . (($span == 4) ? "SELECTED" : "") . '>4</OPTION>
 <OPTION VALUE="7" ' . (($span == 7 || ! isset($span) ) ? "SELECTED" : "") . '>7</OPTION>
@@ -118,7 +117,7 @@ print '
 </SELECT>
 </td>
 <td>
- 
+
 <INPUT type="submit" value="' . $Language->getText('global', 'btn_browse') . '">
 <INPUT type="hidden" name="group_id" value="' . $group_id . '">
 </td></tr></table></FORM>';

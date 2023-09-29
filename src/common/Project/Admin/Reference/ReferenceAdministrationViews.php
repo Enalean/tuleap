@@ -55,7 +55,6 @@ class ReferenceAdministrationViews extends Views
         project_admin_header(
             [
                 'title' => _('Editing reference patterns'),
-                'group' => $GLOBALS['group_id'],
                 'help'  => 'project-admin.html#reference-pattern-configuration',
             ],
             NavigationPresenterBuilder::OTHERS_ENTRY_SHORTNAME

@@ -215,7 +215,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         $layout->header(
             [
                 'title'                          => dgettext('tuleap-program_management', 'Program'),
-                'group'                          => $project->getID(),
+                'project'                        => $project,
                 'toptab'                         => 'plugin_program_management',
                 'body_class'                     => ['has-sidebar-with-pinned-header'],
                 'main_classes'                   => [],

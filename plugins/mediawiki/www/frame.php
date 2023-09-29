@@ -24,11 +24,10 @@ if (! $group->usesPlugin($pluginname)) {
 
 $params             =  [];
 $params['toptab']   = $pluginname;
-$params['group']    = $group_id;
 $params['title']    = _('wiki');
 $params['pagename'] = $pluginname;
 
-site_project_header($params);
+site_project_header($group, $params);
 
 if (file_exists('/var/lib/gforge/plugins/mediawiki/wikidata/' . $group->getUnixName() . '/LocalSettings.php')) {
     echo '<iframe src="' . util_make_url('/plugins/mediawiki/wiki/' . $group->getUnixName() . '/index.php') . '" frameborder="0" width=100% height=700></iframe>';

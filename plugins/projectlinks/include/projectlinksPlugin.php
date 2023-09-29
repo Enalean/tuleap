@@ -132,7 +132,6 @@ class ProjectLinksPlugin extends Plugin implements DispatchableWithRequest
         project_admin_header(
             [
                 'title' => $Language->getText('project_admin_servicebar', 'edit_s_bar'),
-                'group' => $group_id,
                 'help' => 'project-links.html',
             ],
             'project_links'

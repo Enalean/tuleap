@@ -134,7 +134,7 @@ foreach ($this->data['xhtmlnamespaces'] as $tag => $ns) {
                  $project = group_get_object_by_name($GLOBALS['fusionforgeproject']);
                 if ($project) {
                     $GLOBALS['group_id'] = $project->getID();
-                    $params['group']     = $GLOBALS['group_id'];
+                    $params['project']   = $project;
                     $params['toptab']    = 'mediawiki';
                     $GLOBALS['HTML']->bodyHeader($params);
                 }

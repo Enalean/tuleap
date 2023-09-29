@@ -387,7 +387,7 @@ class BrowserPlugin extends Sabre\DAV\Browser\Plugin
 
         echo "</table>";
 
-        echo $GLOBALS['HTML']->pv_footer([]);
+        echo $GLOBALS['HTML']->pv_footer();
 
         return ob_get_clean();
     }

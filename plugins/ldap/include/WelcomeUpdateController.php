@@ -117,7 +117,7 @@ class WelcomeUpdateController implements DispatchableWithRequest
         echo '<p>',$text,'</p>';
 
         if ((int) $request->get('pv') === 2) {
-            $layout->pv_footer([]);
+            $layout->pv_footer();
         } else {
             $layout->footer([]);
         }

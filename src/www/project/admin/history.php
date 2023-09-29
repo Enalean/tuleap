@@ -18,7 +18,7 @@ if ($request->exist('export')) {
 }
 
 project_admin_header(
-    ['title' => $Language->getText('project_admin_history', 'proj_history'), 'group' => $group_id],
+    ['title' => $Language->getText('project_admin_history', 'proj_history')],
     \Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME
 );
 

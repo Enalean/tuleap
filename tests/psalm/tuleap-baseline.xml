@@ -79539,10 +79539,10 @@
     <DeprecatedFunction>
       <code>db_fetch_array($db_res)</code>
       <code>db_numrows($db_res)</code>
-      <code><![CDATA[db_query("SELECT * 
-        FROM service 
+      <code><![CDATA[db_query("SELECT *
+        FROM service
         WHERE group_id   = " . (int) $request->get('group_id') . "
-          AND service_id = " . (int) $request->get('id') . " 
+          AND service_id = " . (int) $request->get('id') . "
           AND is_used    = 1")]]></code>
     </DeprecatedFunction>
   </file>

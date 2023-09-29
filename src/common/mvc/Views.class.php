@@ -26,7 +26,7 @@
  * This is a part of lite Model/View/Controler design pattern.
  *
  */
-class Views
+abstract class Views
 {
   /* protected array */  public $html_params;
   /* protected string */ public $view;
@@ -43,10 +43,7 @@ class Views
         return $this->_controler;
     }
 
-    public function header()
-    {
-        site_project_header($this->html_params);
-    }
+    abstract public function header();
 
     public function footer()
     {

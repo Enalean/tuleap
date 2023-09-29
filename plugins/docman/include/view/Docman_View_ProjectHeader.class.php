@@ -76,9 +76,11 @@
 
     /* protected */ public function _getAdditionalHtmlParams($params)
     {
+        $project = ProjectManager::instance()->getProjectById((int) $params['group_id']);
+
         return [
-            'group'  => $params['group_id'],
-            'toptab' => 'docman',
+            'project' => $project,
+            'toptab'  => 'docman',
         ];
     }
 

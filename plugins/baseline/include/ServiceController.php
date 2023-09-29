@@ -123,7 +123,7 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
         $layout->header(
             [
                 'title'                          => dgettext('tuleap-baseline', "Baselines"),
-                'group'                          => $project->getID(),
+                'project'                        => $project,
                 'toptab'                         => \baselinePlugin::SERVICE_SHORTNAME,
                 'without-project-in-breadcrumbs' => true,
             ]

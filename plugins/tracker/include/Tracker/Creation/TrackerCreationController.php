@@ -109,7 +109,7 @@ class TrackerCreationController implements DispatchableWithRequest, Dispatchable
         $layout->header(
             [
                 'title'  => dgettext('tuleap-tracker', 'New tracker'),
-                'group'  => $project->getID(),
+                'project'  => $project,
                 'toptab' => trackerPlugin::SERVICE_SHORTNAME,
             ]
         );

@@ -528,10 +528,8 @@ function site_header($params)
                 Check to see if logged in
     */
 
-    if (isset($params['group'])) {
-        $pm      = ProjectManager::instance();
-        $project = $pm->getProject($params['group']);
-        if ($project->isTemplate()) {
+    if (isset($params['project'])) {
+        if ($params['project']->isTemplate()) {
             $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('include_layout', 'template_warning'));
         }
     }
@@ -552,18 +550,12 @@ function site_footer($params)
     @param params array() must contain $toptab and $group
     @result text - echos HTML to the screen directly
 */
-function site_project_header($params)
+function site_project_header(Project $project, $params)
 {
     /*
         Check to see if active
         Check to see if private (if private check if user_ismember)
     */
-
-    $group_id = $params['group'];
-
-    //get the project object
-    $pm      = ProjectManager::instance();
-    $project = $pm->getProject($group_id);
 
     //group doesn't exist
     if ($project->isError()) {
@@ -574,6 +566,8 @@ function site_project_header($params)
     if (! $project->isActive()) {
         HTTPRequest::instance()->checkUserIsSuperUser();
     }
+
+    $params['project'] = $project;
 
     if (isset($params['pv'], $GLOBALS['HTML']) && $GLOBALS['HTML'] instanceof Layout && $params['pv'] != 0) {
         // Printer version: no right column, no tabs...
@@ -596,7 +590,7 @@ function site_project_footer($params)
     }
     if (isset($params['pv']) && $GLOBALS['HTML'] instanceof Layout && $params['pv'] != 0) {
         // Printer version
-        $GLOBALS['HTML']->pv_footer($params);
+        $GLOBALS['HTML']->pv_footer();
     } else {
         echo html_feedback_bottom($GLOBALS['feedback']);
         $GLOBALS['HTML']->footer($params);

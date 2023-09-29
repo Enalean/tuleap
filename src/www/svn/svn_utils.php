@@ -37,7 +37,6 @@ function svn_header(Project $project, $params)
     $group_id = $project->getID();
 
     $params['toptab'] = 'svn';
-    $params['group']  = $group_id;
 
     $additional_params = [];
     if (isset($params['body_class'])) {
@@ -97,7 +96,6 @@ function svn_header_admin($params)
     global $group_id,$Language;
 
     //required params for site_project_header();
-    $params['group']  = $group_id;
     $params['toptab'] = 'svn';
 
     $project = ProjectManager::instance()->getProject($group_id);

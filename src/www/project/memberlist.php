@@ -36,7 +36,10 @@ if ($request->valid($vGroupId)) {
     }
 }
 
-site_project_header(['title' => $Language->getText('project_memberlist', 'proj_member_list'), 'group' => $group_id, 'toptab' => 'memberlist']);
+site_project_header(
+    ProjectManager::instance()->getProjectById((int) $group_id),
+    ['title' => $Language->getText('project_memberlist', 'proj_member_list'), 'toptab' => 'memberlist'],
+);
 
 print $Language->getText('project_memberlist', 'contact_to_become_member');
 

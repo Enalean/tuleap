@@ -984,14 +984,13 @@ if ($func == 'gotoid') {
         $pv = $request->get('pv');
 
         //required params for site_project_header();
-        $params['group']    = $group_id;
         $params['toptab']   = 'tracker';
         $params['pagename'] = 'trackers';
         $params['title']    = $Language->getText('tracker_index', 'trackers_for', $group->getPublicName());
         $params['help']     = 'tracker-v3.html';
         $params['pv']       = $pv ? $pv : '';
 
-        echo site_project_header($params);
+        echo site_project_header($group, $params);
         echo '<strong>';
         // Admin link and create link are only displayed if the user is a project administrator
     if (user_ismember($group_id, 'A')) {

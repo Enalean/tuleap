@@ -22,7 +22,6 @@ use Event;
 use EventManager;
 use HTTPRequest;
 use Project;
-use ProjectManager;
 use TemplateRendererFactory;
 use ThemeVariant;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
@@ -85,9 +84,6 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 class BurningParrotTheme extends BaseLayout
 {
-    /** @var ProjectManager */
-    private $project_manager;
-
     /** @var \MustacheRenderer */
     private $renderer;
 
@@ -118,7 +114,6 @@ class BurningParrotTheme extends BaseLayout
     public function __construct($root, private CurrentUserWithLoggedInInformation $current_user)
     {
         parent::__construct($root);
-        $this->project_manager  = ProjectManager::instance();
         $this->event_manager    = EventManager::instance();
         $this->request          = HTTPRequest::instance();
         $this->renderer         = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
@@ -164,8 +159,8 @@ class BurningParrotTheme extends BaseLayout
     public function header(HeaderConfiguration|array $params): void
     {
         $project = null;
-        if (is_array($params) && ! empty($params['group'])) {
-            $project = $this->project_manager->getProject($params['group']);
+        if (is_array($params) && ! empty($params['project'])) {
+            $project = $params['project'];
             $this->event_manager->dispatch(new BeforeStartProjectHeader($project, $this, $this->current_user->user));
         }
 
@@ -423,7 +418,7 @@ class BurningParrotTheme extends BaseLayout
             return $params->without_content === false;
         }
 
-        if (empty($params['group']) && ! $this->show_sidebar) {
+        if (empty($params['project']) && ! $this->show_sidebar) {
             return true;
         }
 
@@ -447,7 +442,7 @@ class BurningParrotTheme extends BaseLayout
             return $params['sidebar'];
         }
 
-        if (! empty($params['group'])) {
+        if (! empty($params['project'])) {
             $this->show_sidebar = true;
         }
 
