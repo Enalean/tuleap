@@ -32,7 +32,7 @@ function exit_wiki_empty()
     $go    = $pm->getProject($group_id);
     $uname = $go->getUnixName();
 
-    $HTML->header(['title' => $GLOBALS['Language']->getText('wiki_views_wikiviews', 'title_error')]);
+    $HTML->header(\Tuleap\Layout\HeaderConfiguration::fromTitle($GLOBALS['Language']->getText('wiki_views_wikiviews', 'title_error')));
 
     print $GLOBALS['Language']->getText('wiki_views_wikiviews', 'not_activate', [$uname]);
 

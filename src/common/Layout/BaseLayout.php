@@ -249,7 +249,7 @@ abstract class BaseLayout extends Response
         $has_feedback = $GLOBALS['feedback'] || count($this->_feedback->logs);
         if (($is_anon && (headers_sent() || $has_feedback)) || (! $is_anon && headers_sent())) {
             $html_purifier = Codendi_HTMLPurifier::instance();
-            $this->header(['title' => 'Redirection']);
+            $this->header(\Tuleap\Layout\HeaderConfiguration::fromTitle('Redirection'));
             echo '<p>' . $GLOBALS['Language']->getText('global', 'return_to', [$url]) . '</p>';
             echo '<script type="text/javascript" nonce="' . $html_purifier->purify($this->getCSPNonce()) . '">';
             if ($has_feedback) {

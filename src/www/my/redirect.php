@@ -36,7 +36,7 @@ if ($request->valid($vPv) && $request->get('pv') == 2) {
     $HTML->pv_header([]);
 } else {
     $pv = 0;
-    site_header(['title' => _('Redirecting...')]);
+    site_header(\Tuleap\Layout\HeaderConfiguration::fromTitle(_('Redirecting...')));
 }
 
 $vReturnTo = new Valid_String('return_to');

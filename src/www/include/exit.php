@@ -10,7 +10,7 @@ function exit_error($title, $text = '')
     global $HTML,$Language;
     $GLOBALS['feedback'] .= $title;
 
-    site_header(['title' => $Language->getText('include_exit', 'exit_error')]);
+    site_header(\Tuleap\Layout\HeaderConfiguration::fromTitle($Language->getText('include_exit', 'exit_error')));
     echo '<p data-test="feedback">' . Codendi_HTMLPurifier::instance()->purify($text) . '</p>';
     $HTML->footer([]);
     exit;

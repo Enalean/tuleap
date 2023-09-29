@@ -23,7 +23,7 @@ require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../forum/forum_utils.php';
 
 $request = HTTPRequest::instance();
-$HTML->header(["title" => $Language->getText('my_monitored_forum', 'title')]);
+$HTML->header(\Tuleap\Layout\HeaderConfiguration::fromTitle($Language->getText('my_monitored_forum', 'title')));
 print "<H3>" . $Language->getText('my_monitored_forum', 'title') . "</H3>\n";
 if (user_isloggedin()) {
     /*

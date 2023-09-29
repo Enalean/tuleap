@@ -20,7 +20,7 @@
 
 use Tuleap\Layout\FooterConfiguration;
 
-class Search_SearchController
+class Search_SearchController // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const DEFAULT_SEARCH = Search_SearchProject::NAME;
 
@@ -66,7 +66,11 @@ class Search_SearchController
     {
         $empty_result = new Search_SearchResults();
 
-        $GLOBALS['HTML']->header(['title' => $GLOBALS['Language']->getText('search_index', 'search'), 'body_class' => ['search-page']]);
+        $GLOBALS['HTML']->header(
+            \Tuleap\Layout\HeaderConfigurationBuilder::get($GLOBALS['Language']->getText('search_index', 'search'))
+                ->withBodyClass(['search-page'])
+                ->build()
+        );
         $this->renderer->renderToPage('site-search', $this->getSearchPresenter($query, $empty_result->getResultsHtml()));
         $GLOBALS['HTML']->footer(FooterConfiguration::withoutContent());
     }
@@ -113,7 +117,11 @@ class Search_SearchController
 
     private function renderResults(Search_SearchQuery $query, $results)
     {
-        $GLOBALS['HTML']->header(['title' => $GLOBALS['Language']->getText('search_index', 'search'), 'body_class' => ['search-page']]);
+        $GLOBALS['HTML']->header(
+            \Tuleap\Layout\HeaderConfigurationBuilder::get($GLOBALS['Language']->getText('search_index', 'search'))
+                ->withBodyClass(['search-page'])
+                ->build()
+        );
         $this->renderer->renderToPage('site-search', $this->getSearchPresenter($query, $results));
         $GLOBALS['HTML']->footer(FooterConfiguration::withoutContent());
     }

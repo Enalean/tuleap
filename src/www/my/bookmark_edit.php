@@ -49,7 +49,7 @@ if (
 
 $purifier = Codendi_HTMLPurifier::instance();
 
-$HTML->header(["title" => $Language->getText('bookmark_edit', 'title')]);
+$HTML->header(\Tuleap\Layout\HeaderConfiguration::fromTitle($Language->getText('bookmark_edit', 'title')));
 
 print "<H3>" . $Language->getText('bookmark_edit', 'title') . "</H3>\n";
 

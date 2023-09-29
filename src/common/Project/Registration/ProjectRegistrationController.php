@@ -70,7 +70,7 @@ final class ProjectRegistrationController implements DispatchableWithRequest, Di
 
         $layout->addJavascriptAsset($this->assets);
 
-        $layout->header(["title" => _("Project Registration")]);
+        $layout->header(\Tuleap\Layout\HeaderConfiguration::fromTitle(_("Project Registration")));
 
         $this->template_renderer_factory
             ->getRenderer(__DIR__ . '/../../../templates/project/registration/')

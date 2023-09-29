@@ -28,6 +28,7 @@ use HTTPRequest;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\FooterConfiguration;
+use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\OpenIDConnectClient\Login\ConnectorPresenterBuilder;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\ForbiddenException;
@@ -58,10 +59,12 @@ class LoginController implements DispatchableWithRequestNoAuthz
         $return_to = $request->get('return_to');
         $presenter = $this->connector_presenter_builder->getLoginSpecificPageConnectorPresenter($return_to);
 
-        $layout->header([
-            'title' => sprintf(_('%1$s login'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)),
-            'body_class' => ['login-page'],
-        ]);
+        $title = sprintf(_('%1$s login'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME));
+        $layout->header(
+            HeaderConfigurationBuilder::get($title)
+                ->withBodyClass(['login-page'])
+                ->build()
+        );
         $renderer = TemplateRendererFactory::build()->getRenderer(OPENIDCONNECTCLIENT_TEMPLATE_DIR);
         $renderer->renderToPage('login-page', $presenter);
         $layout->footer(FooterConfiguration::withoutContent());

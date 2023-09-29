@@ -25,7 +25,7 @@ if ($request->isPost() && $request->valid($vUrl) && $request->valid($vTitle)) {
 
     my_check_bookmark_URL($bookmark_url, '/my/bookmark_add.php');
 
-    $HTML->header(["title" => $Language->getText('bookmark_add', 'title')]);
+    $HTML->header(\Tuleap\Layout\HeaderConfiguration::fromTitle($Language->getText('bookmark_add', 'title')));
     print "<H3>" . $Language->getText('bookmark_add', 'title') . "</H3>";
     print $Language->getText('bookmark_add', 'message', [$purifier->purify($bookmark_url), $purifier->purify($bookmark_title)]) . "<p>\n";
 
@@ -34,7 +34,7 @@ if ($request->isPost() && $request->valid($vUrl) && $request->valid($vTitle)) {
     print '<A HREF="/my/bookmark_edit.php?bookmark_id=' . $bookmark_id . '">' . $Language->getText('bookmark_add', 'edit') . "</A>";
     print '<p><A HREF="/my/">[' . $Language->getText('global', 'back_home') . "]</A>";
 } else {
-    $HTML->header(["title" => $Language->getText('bookmark_add', 'title')]);
+    $HTML->header(\Tuleap\Layout\HeaderConfiguration::fromTitle($Language->getText('bookmark_add', 'title')));
     print "<H3>" . $Language->getText('bookmark_add', 'title') . "</H3>";
 
     $bookmark_url = 'http://';

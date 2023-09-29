@@ -36,7 +36,7 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied
     private function buildPermissionDeniedInterface(Project $project)
     {
         $purifier = Codendi_HTMLPurifier::instance();
-        site_header(['title' => $GLOBALS['Language']->getText('include_exit', 'exit_error')]);
+        site_header(\Tuleap\Layout\HeaderConfiguration::fromTitle($GLOBALS['Language']->getText('include_exit', 'exit_error')));
         echo "<b>" . $purifier->purify(dgettext('tuleap-docman', 'You do not have the permission to access the document')) . "</b>";
         echo '<br>';
         echo "<br>" . $purifier->purify(dgettext('tuleap-docman', 'Permission denied set on documents. You can not view this documents unless administrator grant you access.'));

@@ -69,7 +69,7 @@ class WeeklySummaryController implements DispatchableWithRequest, DispatchableWi
             $weeks['weeks'][]  = $this->getNbActionsPerUser($week, $first_day_of_week, $last_day_of_week);
         }
 
-        $layout->header(['title' => 'Create Test Environment - Weekly Summary']);
+        $layout->header(\Tuleap\Layout\HeaderConfiguration::fromTitle('Create Test Environment - Weekly Summary'));
         $this->renderer->renderToPage('weekly', $weeks);
         $layout->footer([]);
     }
