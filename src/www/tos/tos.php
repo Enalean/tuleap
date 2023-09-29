@@ -4,7 +4,11 @@
 // http://sourceforge.net
 require_once __DIR__ . '/../include/pre.php';  // Initial db and session library, opens session
 
-$HTML->header(['title' => "Terms of Service Agreement", "main_classes" => ["tlp-framed", "tlp-centered"]]);
+$HTML->header(
+    \Tuleap\Layout\HeaderConfigurationBuilder::get("Terms of Service Agreement")
+        ->withMainClass(["tlp-framed", "tlp-centered"])
+        ->build()
+);
 
 include($Language->getContent('project/tos'));
 

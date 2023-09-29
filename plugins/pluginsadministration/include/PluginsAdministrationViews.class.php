@@ -59,7 +59,11 @@ class PluginsAdministrationViews extends Views
     public function header()
     {
         $title = dgettext('tuleap-pluginsadministration', 'Plugins');
-        $GLOBALS['HTML']->header(['title' => $title, 'main_classes' => ['tlp-framed']]);
+        $GLOBALS['HTML']->header(
+            \Tuleap\Layout\HeaderConfigurationBuilder::get($title)
+                ->withMainClass(['tlp-framed'])
+                ->build()
+        );
     }
 
     public function footer()

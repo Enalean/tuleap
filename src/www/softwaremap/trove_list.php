@@ -210,7 +210,11 @@ if ($special_cat) {
 
 $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/softwaremap');
 
-$GLOBALS['HTML']->header(['title' => $Language->getOverridableText('softwaremap_trove_list', 'map'), 'main_classes' => ['tlp-framed']]);
+$GLOBALS['HTML']->header(
+    \Tuleap\Layout\HeaderConfigurationBuilder::get($Language->getOverridableText('softwaremap_trove_list', 'map'))
+        ->withMainClass(['tlp-framed'])
+        ->build()
+);
 
 $renderer->renderToPage(
     'software_map',

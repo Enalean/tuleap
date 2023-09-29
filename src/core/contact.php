@@ -19,9 +19,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$HTML->header([
-    'title' => $Language->getText('contact', 'title'),
-    'main_classes' => ['tlp-framed'],
-]);
+$HTML->header(
+    \Tuleap\Layout\HeaderConfigurationBuilder::get($Language->getText('contact', 'title'))
+        ->withMainClass(['tlp-framed'])
+        ->build()
+);
 $HTML->displayContactPage();
 $HTML->footer([]);
