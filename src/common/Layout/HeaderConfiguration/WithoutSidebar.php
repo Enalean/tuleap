@@ -27,7 +27,7 @@ use Tuleap\Layout\HeaderConfiguration\InProjectWithoutSidebar\BackToLinkPresente
 /**
  * @psalm-immutable
  */
-final class InProjectWithoutSidebar
+final class WithoutSidebar
 {
     public function __construct(public BackToLinkPresenter $back_to_link)
     {
