@@ -28,31 +28,113 @@ use Tuleap\Tracker\Test\Stub\ReverseLinkStub;
 final class CollectionOfReverseLinksTest extends TestCase
 {
     private const ARTIFACT_ID_1 = 15;
+    private const FIRST_TYPE    = '_is_child';
     private const ARTIFACT_ID_2 = 20;
+    private const SECOND_TYPE   = 'wololo';
     private const ARTIFACT_ID_3 = 100;
+    /** @var ReverseLinkStub[] */
+    private array $links;
 
-    private const ARTIFACT_NEW_TYPE = "_wololo";
+    protected function setUp(): void
+    {
+        $this->links = [
+            ReverseLinkStub::withType(self::ARTIFACT_ID_1, self::FIRST_TYPE),
+            ReverseLinkStub::withType(self::ARTIFACT_ID_2, self::SECOND_TYPE),
+            ReverseLinkStub::withNoType(self::ARTIFACT_ID_3),
+        ];
+    }
 
     public function testItReturnsTheDiffByArtifactIdOfTwoCollections(): void
     {
-        $links       = new CollectionOfReverseLinks([ReverseLinkStub::withNoType(self::ARTIFACT_ID_1), ReverseLinkStub::withNoType(self::ARTIFACT_ID_2)]);
-        $other_links = new CollectionOfReverseLinks([ReverseLinkStub::withNoType(self::ARTIFACT_ID_3), ReverseLinkStub::withNoType(self::ARTIFACT_ID_2)]);
+        $current_links   = new CollectionOfReverseLinks($this->links);
+        $submitted_links = new CollectionOfReverseLinks([
+            ReverseLinkStub::withType(self::ARTIFACT_ID_1, self::FIRST_TYPE),
+            ReverseLinkStub::withType(self::ARTIFACT_ID_2, '_is_child'),
+            ReverseLinkStub::withNoType(969),
+        ]);
 
-        $expected_result = new CollectionOfReverseLinks([ReverseLinkStub::withNoType(self::ARTIFACT_ID_3)]);
-        $result          = $other_links->differenceById($links);
-
-        self::assertEquals($expected_result, $result);
+        $added_links = $current_links->differenceById($submitted_links)->links;
+        self::assertCount(1, $added_links);
+        self::assertSame(969, $added_links[0]->getSourceArtifactId());
+        $removed_links = $submitted_links->differenceById($current_links)->links;
+        self::assertCount(1, $removed_links);
+        self::assertSame(self::ARTIFACT_ID_3, $removed_links[0]->getSourceArtifactId());
     }
 
-    public function testItReturnsTheDiffByTypeOfTwoCollections(): void
+    public function testItReturnsAnEmptyDiffWhenThereIsNoChange(): void
     {
-        $links       = new CollectionOfReverseLinks([ReverseLinkStub::withType(self::ARTIFACT_ID_1, self::ARTIFACT_NEW_TYPE), ReverseLinkStub::withNoType(self::ARTIFACT_ID_2)]);
-        $other_links = new CollectionOfReverseLinks([ReverseLinkStub::withNoType(self::ARTIFACT_ID_1), ReverseLinkStub::withNoType(self::ARTIFACT_ID_2)]);
+        $current_links   = new CollectionOfReverseLinks($this->links);
+        $submitted_links = new CollectionOfReverseLinks($this->links);
 
-        $expected_result = new CollectionOfReverseLinks([ReverseLinkStub::withType(self::ARTIFACT_ID_1, self::ARTIFACT_NEW_TYPE)]);
+        $added_links   = $current_links->differenceById($submitted_links);
+        $removed_links = $submitted_links->differenceById($current_links);
 
-        $result = $other_links->differenceByType($links);
+        self::assertEmpty($added_links->links);
+        self::assertEmpty($removed_links->links);
+    }
 
-        self::assertEquals($expected_result, $result);
+    /**
+     * @return \Generator<string, array{0:ReverseLinkStub, 1:ReverseLinkStub}>
+     */
+    public static function provideChangeOfType(): \Generator
+    {
+        yield 'Remove type' => [ReverseLinkStub::withType(93, '_is_child'), ReverseLinkStub::withNoType(93)];
+        yield 'Change type' => [ReverseLinkStub::withType(366, '_is_child'), ReverseLinkStub::withType(366, 'custom')];
+        yield 'Add type' => [ReverseLinkStub::withNoType(643), ReverseLinkStub::withType(643, '_is_child')];
+    }
+
+    /**
+     * @dataProvider provideChangeOfType
+     */
+    public function testItReturnsACollectionOfLinksThatHaveChangedType(
+        ReverseLinkStub $existing,
+        ReverseLinkStub $submitted,
+    ): void {
+        $existing_links  = new CollectionOfReverseLinks([$existing]);
+        $submitted_links = new CollectionOfReverseLinks([$submitted]);
+
+        $changed_links = $existing_links->getLinksThatHaveChangedType($submitted_links)->links;
+        self::assertCount(1, $changed_links);
+        self::assertEqualsCanonicalizing([$submitted], $changed_links);
+    }
+
+    public function testItReturnsSeveralChangesOfLinkTypes(): void
+    {
+        $existing_links  = new CollectionOfReverseLinks($this->links);
+        $submitted_links = new CollectionOfReverseLinks([
+            ReverseLinkStub::withType(self::ARTIFACT_ID_1, 'custom'),
+            ReverseLinkStub::withNoType(self::ARTIFACT_ID_2),
+            ReverseLinkStub::withType(self::ARTIFACT_ID_3, '_is_child'),
+        ]);
+
+        $changed_links = $existing_links->getLinksThatHaveChangedType($submitted_links)->links;
+        self::assertCount(3, $changed_links);
+        self::assertEqualsCanonicalizing([
+            ReverseLinkStub::withType(self::ARTIFACT_ID_1, 'custom'),
+            ReverseLinkStub::withNoType(self::ARTIFACT_ID_2),
+            ReverseLinkStub::withType(self::ARTIFACT_ID_3, '_is_child'),
+        ], $changed_links);
+    }
+
+    public function testItIgnoresAddedLinksFromTheOtherCollection(): void
+    {
+        $existing_links  = new CollectionOfReverseLinks([ReverseLinkStub::withNoType(105)]);
+        $submitted_links = new CollectionOfReverseLinks([
+            ReverseLinkStub::withType(105, 'custom'),
+            ReverseLinkStub::withNoType(430),
+            ReverseLinkStub::withType(830, '_is_child'),
+        ]);
+
+        $changed_links = $existing_links->getLinksThatHaveChangedType($submitted_links)->links;
+        self::assertCount(1, $changed_links);
+    }
+
+    public function testItReturnsAnEmptyCollectionWhenThereIsNoChange(): void
+    {
+        $existing_links  = new CollectionOfReverseLinks($this->links);
+        $submitted_links = new CollectionOfReverseLinks($this->links);
+
+        $changed_links = $existing_links->getLinksThatHaveChangedType($submitted_links)->links;
+        self::assertEmpty($changed_links);
     }
 }

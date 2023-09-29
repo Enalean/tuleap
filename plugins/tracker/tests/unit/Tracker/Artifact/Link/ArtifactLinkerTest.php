@@ -51,9 +51,7 @@ final class ArtifactLinkerTest extends TestCase
         $this->user = UserTestBuilder::aUser()->build();
 
         $artifact_link_field        = ArtifactLinkFieldBuilder::anArtifactLinkField(15)->build();
-        $this->form_element_factory = RetrieveUsedArtifactLinkFieldsStub::buildWithArtifactLinkFields(
-            [$artifact_link_field]
-        );
+        $this->form_element_factory = RetrieveUsedArtifactLinkFieldsStub::withAField($artifact_link_field);
         $this->changeset_creator    = CreateNewChangesetStub::withNullReturnChangeset();
         $this->links_retriever      = RetrieveForwardLinksStub::withLinks(
             new CollectionOfForwardLinks([ForwardLinkStub::withNoType(10)])
@@ -75,7 +73,7 @@ final class ArtifactLinkerTest extends TestCase
 
     public function testItReturnsFalseAndDisplayAnErrorWhenNoArtifactLinkFieldsAreUsed(): void
     {
-        $this->form_element_factory = RetrieveUsedArtifactLinkFieldsStub::buildWithArtifactLinkFields([]);
+        $this->form_element_factory = RetrieveUsedArtifactLinkFieldsStub::withNoField();
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('error');
         self::assertFalse($this->linkArtifact());

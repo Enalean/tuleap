@@ -32,6 +32,8 @@ use Tracker_NoChangeException;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentContentNotValidException;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangeReverseLinksCommand;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\RetrieveReverseLinks;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
@@ -68,27 +70,28 @@ final class PUTHandler
                         function (NewArtifactLinkChangesetValue $artifact_link_value) use (
                             $submitter,
                             $artifact,
-                            $values
                         ): void {
-                            if (
-                                $artifact_link_value->getNewParentLink()->isNothing()
-                                && ! $this->isLinkKeyUsed($values)
-                            ) {
-                                $stored_reverse_links    = $this->reverse_links_retriever->retrieveReverseLinks($artifact, $submitter);
-                                $reverse_link_collection = $artifact_link_value->getSubmittedReverseLinks();
+                            $artifact_link_value->getSubmittedReverseLinks()->apply(function (CollectionOfReverseLinks $submitted_reverse_links) use (
+                                $submitter,
+                                $artifact
+                            ): void {
+                                $stored_reverse_links = $this->reverse_links_retriever->retrieveReverseLinks($artifact, $submitter);
+                                $command              = ChangeReverseLinksCommand::fromSubmittedAndExistingLinks(
+                                    $artifact,
+                                    $submitted_reverse_links,
+                                    $stored_reverse_links
+                                );
                                 $this->artifact_update_handler->updateTypeAndAddReverseLinks(
                                     $artifact,
                                     $submitter,
-                                    $reverse_link_collection->differenceById($stored_reverse_links),
-                                    $stored_reverse_links->differenceByType($reverse_link_collection)
-                                )->map(
-                                    fn() => $this->artifact_update_handler->removeReverseLinks(
-                                        $artifact,
-                                        $submitter,
-                                        $stored_reverse_links->differenceById($reverse_link_collection)
-                                    )
-                                )->mapErr(FaultMapper::mapToRestException(...));
-                            }
+                                    $command->getLinksToAdd(),
+                                    $command->getLinksToChange()
+                                )->map(fn() => $this->artifact_update_handler->removeReverseLinks(
+                                    $artifact,
+                                    $submitter,
+                                    $command->getLinksToRemove()
+                                ))->mapErr(FaultMapper::mapToRestException(...));
+                            });
                         }
                     );
 
@@ -113,15 +116,5 @@ final class PUTHandler
         } catch (Tracker_Artifact_Attachment_FileNotFoundException $exception) {
             throw new RestException(404, $exception->getMessage());
         }
-    }
-
-    private function isLinkKeyUsed(array $values): bool
-    {
-        foreach ($values as $value) {
-            if (is_array($value->links)) {
-                return true;
-            }
-        }
-        return false;
     }
 }

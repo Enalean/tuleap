@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -134,7 +135,7 @@ final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUni
 
         $update_value = $this->build($payload);
 
-        $reverse_links = $update_value->getSubmittedReverseLinks()->links;
+        $reverse_links = $update_value->getSubmittedReverseLinks()->unwrapOr(new CollectionOfReverseLinks([]))->links;
         self::assertCount(1, $reverse_links);
         $this->assertSame(48, $reverse_links[0]->getSourceArtifactId());
     }
