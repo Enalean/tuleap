@@ -71,7 +71,7 @@ final class FirstKanbanCreator
             return;
         }
 
-        $kanban_id = $this->kanban_manager->createKanban($tracker->getName(), $tracker->getId());
+        $kanban_id = $this->kanban_manager->createKanban($tracker->getName(), false, $tracker->getId());
         if (! $kanban_id) {
             $this->warn(dgettext('tuleap-kanban', 'We tried to create a first kanban for you but an internal error prevented it.'));
             return;

@@ -22,9 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Kanban\Service;
 
+use Tuleap\Kanban\KanbanDao;
+use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
+use Tuleap\Layout\SidebarPromotedItemPresenter;
 use Tuleap\Project\Service\ServiceForCreation;
 
 final class KanbanService extends \Service implements ServiceForCreation
@@ -100,5 +103,39 @@ final class KanbanService extends \Service implements ServiceForCreation
     public function getUrl(?string $url = null): string
     {
         return KanbanServiceHomepageUrlBuilder::getUrl($this->project);
+    }
+
+    /**
+     * @return list<SidebarPromotedItemPresenter>
+     */
+    public function getPromotedItemPresenters(\PFUser $user, ?string $active_promoted_item_id): array
+    {
+        $kanban_factory = new KanbanFactory(
+            \TrackerFactory::instance(),
+            new KanbanDao(),
+        );
+
+        $kanban_presenters = [];
+
+        $list_of_kanban = $kanban_factory->getListOfKanbansForProject(
+            $user,
+            (int) $this->project->getID(),
+        );
+
+        foreach ($list_of_kanban as $kanban_for_project) {
+            if (! $kanban_for_project->is_promoted) {
+                continue;
+            }
+
+            $kanban_presenters[] = new SidebarPromotedItemPresenter(
+                '/kanban/' . urlencode((string) $kanban_for_project->getId()),
+                $kanban_for_project->getName(),
+                $kanban_for_project->tracker->getDescription(),
+                $kanban_for_project->getPromotedKanbanId() === $active_promoted_item_id,
+                null,
+            );
+        }
+
+        return $kanban_presenters;
     }
 }

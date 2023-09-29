@@ -72,6 +72,11 @@
               <data type="string"/>
             </attribute>
           </optional>
+          <optional>
+            <attribute name="is_promoted">
+              <data type="boolean"/>
+            </attribute>
+          </optional>
           <zeroOrMore>
             <element name="kanban">
               <attribute name="ID">

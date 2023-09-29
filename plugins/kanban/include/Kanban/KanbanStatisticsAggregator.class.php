@@ -30,6 +30,7 @@ final class KanbanStatisticsAggregator
     private const EXPAND_COLLAPSE_COLUMN = 'ad_kanban_expand_collapse_column';
     private const WIP_MODIFICATION       = 'ad_kanban_wip_modification';
     private const KANBAN_RENAMING        = 'ad_kanban_renaming';
+    private const KANBAN_PROMOTED        = 'ad_kanban_change_promotion';
     private const KANBAN_ADD_IN_PLACE    = 'ad_kanban_add_in_place';
 
     public function __construct(private readonly EventManager $event_manager)
@@ -63,6 +64,11 @@ final class KanbanStatisticsAggregator
     public function addKanbanRenamingHit(int $project_id): void
     {
         $this->addHit($project_id, self::KANBAN_RENAMING);
+    }
+
+    public function addKanbanPromotedHit(int $project_id): void
+    {
+        $this->addHit($project_id, self::KANBAN_PROMOTED);
     }
 
     public function addKanbanAddInPlaceHit(int $project_id): void

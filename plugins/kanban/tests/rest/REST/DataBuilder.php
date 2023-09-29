@@ -62,6 +62,7 @@ class DataBuilder extends REST_TestDataBuilder
 
         $kanban_id = $this->kanban_manager->createKanban(
             self::KANBAN_CUMULATIVE_FLOW_NAME,
+            false,
             $tracker_kanban_cumulative_flow->getId()
         );
 

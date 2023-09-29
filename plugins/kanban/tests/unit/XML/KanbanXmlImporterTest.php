@@ -126,7 +126,7 @@ final class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
               <agiledashboard>
                 <plannings />
                 <kanban_list title="Kanban">
-                    <kanban tracker_id="T22" name="My personal kanban">
+                    <kanban tracker_id="T22" name="My personal kanban" is_promoted="1">
                       <column wip="1" REF="V383"/>
                       <column wip="2" REF="V384"/>
                       <column wip="3" REF="V385"/>
@@ -138,7 +138,7 @@ final class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $field_mapping = $this->createMock(\TrackerXmlFieldsMapping::class);
         $field_mapping->method('getNewOpenValueId')->willReturn(123);
 
-        $this->kanban_manager->expects(self::once())->method('createKanban')->with('My personal kanban', 50)->willReturn(9);
+        $this->kanban_manager->expects(self::once())->method('createKanban')->with('My personal kanban', 50, true)->willReturn(9);
         $this->kanban_column_manager->expects(self::exactly(3))->method('updateWipLimit');
 
         $this->kanban_factory->method('getKanbanForXmlImport')->willReturn($this->createMock(\Tuleap\Kanban\Kanban::class));
@@ -183,7 +183,7 @@ final class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $field_mapping = $this->createMock(\TrackerXmlFieldsMapping::class);
         $field_mapping->method('getNewOpenValueId')->willReturn(123);
 
-        $this->kanban_manager->expects(self::once())->method('createKanban')->with('My personal kanban', 50)->willReturn(9);
+        $this->kanban_manager->expects(self::once())->method('createKanban')->with('My personal kanban', false, 50)->willReturn(9);
         $this->kanban_column_manager->expects(self::exactly(3))->method('updateWipLimit');
 
         $this->kanban_factory->method('getKanbanForXmlImport')->willReturn($this->createMock(\Tuleap\Kanban\Kanban::class));
@@ -222,7 +222,7 @@ final class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $field_mapping->method('getNewOpenValueId')->willReturn(123);
         $this->kanban_factory->method('getKanbanForXmlImport')->willReturn($this->createMock(\Tuleap\Kanban\Kanban::class));
 
-        $this->kanban_manager->expects(self::once())->method('createKanban')->with('My personal kanban', 50)->willReturn(9);
+        $this->kanban_manager->expects(self::once())->method('createKanban')->with('My personal kanban', false, 50)->willReturn(9);
 
         $this->kanban_xml_importer->import(
             $xml,
@@ -305,7 +305,7 @@ final class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->kanban_factory
             ->method('getKanbanForXmlImport')
-            ->willReturn(new \Tuleap\Kanban\Kanban(11221, TrackerTestBuilder::aTracker()->build(), ''));
+            ->willReturn(new \Tuleap\Kanban\Kanban(11221, TrackerTestBuilder::aTracker()->build(), false, ''));
         $this->dashboard_kanban_column_factory->expects(self::exactly(3))
             ->method('getColumnForAKanban')
             ->willReturn($this->createMock(\Tuleap\Kanban\KanbanColumn::class));

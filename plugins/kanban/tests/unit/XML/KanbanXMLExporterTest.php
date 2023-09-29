@@ -54,8 +54,8 @@ final class KanbanXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $project = ProjectTestBuilder::aProject()->build();
 
-        $kanban1 = new Kanban(10, TrackerTestBuilder::aTracker()->withId(1)->build(), 'Alice task');
-        $kanban2 = new Kanban(20, TrackerTestBuilder::aTracker()->withId(2)->build(), 'Bob task');
+        $kanban1 = new Kanban(10, TrackerTestBuilder::aTracker()->withId(1)->build(), true, 'Alice task');
+        $kanban2 = new Kanban(20, TrackerTestBuilder::aTracker()->withId(2)->build(), false, 'Bob task');
 
         $kanban_factory = $this->createMock(KanbanFactory::class);
         $kanban_factory->method('getKanbanTrackerIds')->willReturn([1, 2]);
@@ -87,6 +87,7 @@ final class KanbanXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals('T1', (string) $kanban1_attributes->tracker_id);
         self::assertEquals('Alice task', (string) $kanban1_attributes->name);
         self::assertEquals('K10', (string) $kanban1_attributes->ID);
+        self::assertEquals('true', (bool) $kanban1_attributes->is_promoted);
 
         $kanban2 = $xml_element->agiledashboard->kanban_list->kanban[1];
         self::assertNotNull($kanban2);
@@ -95,13 +96,14 @@ final class KanbanXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals('T2', (string) $kanban2_attributes->tracker_id);
         self::assertEquals('Bob task', (string) $kanban2_attributes->name);
         self::assertEquals('K20', (string) $kanban2_attributes->ID);
+        self::assertEquals('false', (bool) $kanban2_attributes->is_promoted);
     }
 
     public function testItUsesAlreadyCreatedAgiledashboardNode(): void
     {
         $project = ProjectTestBuilder::aProject()->build();
 
-        $kanban = new Kanban(10, TrackerTestBuilder::aTracker()->withId(1)->build(), 'Alice task');
+        $kanban = new Kanban(10, TrackerTestBuilder::aTracker()->withId(1)->build(), false, 'Alice task');
 
         $kanban_factory = $this->createMock(KanbanFactory::class);
         $kanban_factory->method('getKanbanTrackerIds')->willReturn([1]);

@@ -27,9 +27,12 @@ use Tracker;
 
 class Kanban
 {
+    private const PROMOTED_ITEM_PREFIX = 'kanban-';
+
     public function __construct(
         private readonly int $id,
         public readonly Tracker $tracker,
+        public readonly bool $is_promoted,
         private readonly string $name,
     ) {
     }
@@ -47,5 +50,10 @@ class Kanban
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function getPromotedKanbanId(): string
+    {
+        return self::PROMOTED_ITEM_PREFIX . $this->getId();
     }
 }
