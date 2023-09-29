@@ -140,6 +140,48 @@ describe("Tracker notifications", () => {
             `My third conditional notification`,
         );
     });
+
+    describe("Notification subscription", () => {
+        before(function () {
+            cy.projectMemberSession();
+
+            cy.getProjectId(PROJECT_NAME).then((project_id) => {
+                cy.getTrackerIdFromREST(project_id, "notif_subscription").then((tracker_id) => {
+                    cy.createArtifact({
+                        tracker_id,
+                        title_field_name: "my_label",
+                        artifact_title: "My artifact notifications",
+                    }).as("notifications_artifact_id");
+                });
+            });
+        });
+        it("Unsubscribe from artifact notifications", function () {
+            cy.projectMemberSession();
+            cy.visit(`/plugins/tracker/?aid=${this.notifications_artifact_id}`);
+            cy.get("[data-test=tracker-artifact-actions]").click();
+            cy.get("[data-test=notifications-button]").click();
+            cy.get("[data-test=feedback]").contains(
+                "You will no-longer receive notifications for this artifact",
+            );
+
+            cy.get("[data-test=artifact_followup_comment]").type("A response");
+            cy.get("[data-test=artifact-submit]").click();
+
+            cy.assertNotEmailWithContentReceived("ProjectMember@example.com", `A response`);
+
+            cy.visit(`/plugins/tracker/?aid=${this.notifications_artifact_id}`);
+            cy.get("[data-test=tracker-artifact-actions]").click();
+            cy.get("[data-test=notifications-button]").click();
+            cy.get("[data-test=feedback]").contains(
+                "You are now receiving notifications for this artifact",
+            );
+
+            cy.get("[data-test=artifact_followup_comment]").type("An other response");
+            cy.get("[data-test=artifact-submit]").click();
+
+            cy.assertEmailWithContentReceived("ProjectMember@example.com", `An other response`);
+        });
+    });
 });
 
 export function disableSpecificErrorThrownDueToConflictBetweenCypressAndPrototype(): void {
