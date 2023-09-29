@@ -71,7 +71,7 @@ final class PUTHandler
                             $values
                         ): void {
                             if (
-                                $artifact_link_value->getParent()->isNothing()
+                                $artifact_link_value->getNewParentLink()->isNothing()
                                 && ! $this->isLinkKeyUsed($values)
                             ) {
                                 $stored_reverse_links    = $this->reverse_links_retriever->retrieveReverseLinks($artifact, $submitter);
@@ -94,14 +94,14 @@ final class PUTHandler
 
                     try {
                         $this->artifact_update_handler->updateForwardLinks($artifact, $submitter, $changeset_values, $comment);
-                    } catch (Tracker_NoChangeException $exception) {
+                    } catch (Tracker_NoChangeException) {
                         //Do nothing
                     }
                 }
             );
         } catch (Tracker_FormElement_InvalidFieldException | Tracker_FormElement_InvalidFieldValueException | CommentContentNotValidException | FieldValidationException $exception) {
             throw new RestException(400, $exception->getMessage());
-        } catch (Tracker_NoChangeException $exception) {
+        } catch (Tracker_NoChangeException) {
             //Do nothing
         } catch (Tracker_Exception $exception) {
             if ($GLOBALS['Response']->feedbackHasErrors()) {

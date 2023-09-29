@@ -34,13 +34,14 @@ use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValue;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangeForwardLinksCommand;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\RetrieveForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValuesContainer;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveUsedArtifactLinkFields;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 /**
- * I'm responsible for link an artifact to another using artifact link field
+ * I'm responsible for adding and changing the artifact links of an artifact. I cannot remove links.
  */
 class ArtifactLinker
 {
@@ -51,9 +52,6 @@ class ArtifactLinker
     ) {
     }
 
-    /**
-     * User want to link an artifact to the current one
-     */
     public function linkArtifact(
         Artifact $current_artifact,
         CollectionOfForwardLinks $forward_links,
@@ -75,11 +73,19 @@ class ArtifactLinker
         $comment             = '';
         $artifact_link_field = $artlink_fields[0];
 
-        $existing_links      = $this->forward_links_retriever->retrieve($current_user, $artifact_link_field, $current_artifact);
+        $existing_links      = $this->forward_links_retriever->retrieve(
+            $current_user,
+            $artifact_link_field,
+            $current_artifact
+        );
         $new_changeset_value = Option::fromValue(
-            NewArtifactLinkChangesetValue::fromAddedAndUpdatedTypeValues(
-                $artifact_link_field->getId(),
-                $existing_links->differenceByIdAndType($forward_links),
+            NewArtifactLinkChangesetValue::fromOnlyForwardLinks(
+                ChangeForwardLinksCommand::fromParts(
+                    $artifact_link_field->getId(),
+                    $existing_links->differenceById($forward_links),
+                    $existing_links->getLinksThatHaveChangedType($forward_links),
+                    new CollectionOfForwardLinks([])
+                )
             )
         );
         $container           = new ChangesetValuesContainer([], $new_changeset_value);

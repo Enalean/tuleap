@@ -29,85 +29,43 @@ use Tuleap\Tracker\Test\Stub\ReverseLinkStub;
 
 final class NewArtifactLinkChangesetValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIELD_ID = 989;
-    /** @var Option<CollectionOfForwardLinks> */
-    private Option $submitted_links;
-    private CollectionOfReverseLinks $submitted_reverse_links;
-    /** @var Option<NewParentLink> */
-    private Option $parent;
+    private ChangeForwardLinksCommand $forward_links_command;
 
     protected function setUp(): void
     {
-        $this->submitted_links = Option::fromValue(
+        $this->forward_links_command = ChangeForwardLinksCommand::fromParts(
+            989,
             new CollectionOfForwardLinks([
                 ForwardLinkStub::withNoType(5),
                 ForwardLinkStub::withType(99, 'custom_type'),
-            ])
-        );
-
-        $this->submitted_reverse_links = new CollectionOfReverseLinks([ReverseLinkStub::withNoType(200)]);
-        $this->parent                  = Option::nothing(NewParentLink::class);
-    }
-
-    private function build(): NewArtifactLinkChangesetValue
-    {
-        $existing_links = new CollectionOfForwardLinks([
-            ForwardLinkStub::withType(191, '_is_child'),
-            ForwardLinkStub::withNoType(274),
-        ]);
-
-        return NewArtifactLinkChangesetValue::fromParts(
-            self::FIELD_ID,
-            $existing_links,
-            $this->submitted_links,
-            $this->parent,
-            $this->submitted_reverse_links
+            ]),
+            new CollectionOfForwardLinks([]),
+            new CollectionOfForwardLinks([])
         );
     }
 
-    public function testItBuildsADiffBetweenExistingLinksAndSubmittedLinks(): void
+    public function testItBuildsFromParts(): void
     {
-        $value = $this->build();
+        $new_parent_link         = Option::fromValue(NewParentLinkStub::withId(510));
+        $submitted_reverse_links = new CollectionOfReverseLinks([ReverseLinkStub::withNoType(200)]);
 
-        self::assertSame(self::FIELD_ID, $value->getFieldId());
-        self::assertTrue($value->getSubmittedValues()->isValue());
-        self::assertSame($this->submitted_links, $value->getSubmittedValues());
-        self::assertSame($this->submitted_reverse_links, $value->getSubmittedReverseLinks());
-        self::assertCount(2, $value->getAddedValues()->getTargetArtifactIds());
-        self::assertCount(2, $value->getRemovedValues()->getTargetArtifactIds());
+        $value = NewArtifactLinkChangesetValue::fromParts(
+            $this->forward_links_command,
+            $new_parent_link,
+            $submitted_reverse_links
+        );
+
+        self::assertSame($this->forward_links_command, $value->getChangeForwardLinksCommand());
+        self::assertSame($new_parent_link, $value->getNewParentLink());
+        self::assertSame($submitted_reverse_links, $value->getSubmittedReverseLinks());
     }
 
-    public function testAddedAndRemovedValuesAreEmptyWhenSubmittedValuesAreNull(): void
+    public function testItBuildsWithOnlyForwardLinks(): void
     {
-        $this->submitted_links = Option::nothing(CollectionOfForwardLinks::class);
-        $value                 = $this->build();
+        $value = NewArtifactLinkChangesetValue::fromOnlyForwardLinks($this->forward_links_command);
 
-        self::assertEmpty($value->getAddedValues()->getArtifactLinks());
-        self::assertEmpty($value->getRemovedValues()->getArtifactLinks());
-        self::assertTrue($value->getSubmittedValues()->isNothing());
-    }
-
-    public function testItBuildsWithAParent(): void
-    {
-        $this->parent = Option::fromValue(NewParentLinkStub::withId(3));
-        $value        = $this->build();
-
-        self::assertSame(3, $value->getParent()->unwrapOr(null)?->getParentArtifactId());
-    }
-
-    public function testItBuildsFromOnlyAddedValues(): void
-    {
-        $added_values = new CollectionOfForwardLinks([
-            ForwardLinkStub::withType(42, 'custom_type'),
-            ForwardLinkStub::withNoType(572),
-        ]);
-        $value        = NewArtifactLinkChangesetValue::fromAddedAndUpdatedTypeValues(self::FIELD_ID, $added_values);
-
-        self::assertSame(self::FIELD_ID, $value->getFieldId());
-        self::assertSame($added_values, $value->getAddedValues());
-        self::assertEmpty($value->getRemovedValues()->getArtifactLinks());
-        self::assertSame($added_values, $value->getSubmittedValues()->unwrapOr(new CollectionOfForwardLinks([])));
-        self::assertTrue($value->getParent()->isNothing());
+        self::assertSame($this->forward_links_command, $value->getChangeForwardLinksCommand());
+        self::assertTrue($value->getNewParentLink()->isNothing());
         self::assertEmpty($value->getSubmittedReverseLinks()->links);
     }
 }

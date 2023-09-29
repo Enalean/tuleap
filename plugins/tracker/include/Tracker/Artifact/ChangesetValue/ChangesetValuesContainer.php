@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Artifact\ChangesetValue;
 
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValue;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueFormatter;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangeForwardLinksCommandFormatter;
 
 /**
  * I hold the new values for all modified fields, for a new changeset of an artifact.
@@ -38,10 +38,12 @@ final class ChangesetValuesContainer
      */
     public function __construct(private array $fields_data, private readonly Option $artifact_links)
     {
-        $this->artifact_links->apply(function (NewArtifactLinkChangesetValue $changeset_value) {
-            // We must still add forward artifact links to $fields_data so that it can be saved and processed like normal
-            $this->fields_data[$changeset_value->getFieldId()] = NewArtifactLinkChangesetValueFormatter::formatForWebUI(
-                $changeset_value
+        $artifact_links->apply(function (NewArtifactLinkChangesetValue $changeset_value) {
+            $command = $changeset_value->getChangeForwardLinksCommand();
+            // We must still add forward artifact links to $fields_data so that it can be saved and processed downstream
+            $this->fields_data[$command->getFieldId()] = ChangeForwardLinksCommandFormatter::formatForWebUI(
+                $command,
+                $changeset_value->getNewParentLink()
             );
         });
     }

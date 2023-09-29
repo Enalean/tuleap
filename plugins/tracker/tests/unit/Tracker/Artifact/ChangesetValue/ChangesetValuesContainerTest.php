@@ -26,9 +26,9 @@ use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValue;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangeForwardLinksCommand;
 use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
 use Tuleap\Tracker\Test\Stub\NewParentLinkStub;
-use Tuleap\Tracker\Test\Stub\ReverseLinkStub;
 
 final class ChangesetValuesContainerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -53,7 +53,6 @@ final class ChangesetValuesContainerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItBuildsWithNoArtifactLinkValue(): void
     {
         $changeset_values = $this->build();
-
         self::assertSame($this->artifact_links, $changeset_values->getArtifactLinkValue());
         self::assertSame($this->fields_data, $changeset_values->getFieldsData());
     }
@@ -66,20 +65,19 @@ final class ChangesetValuesContainerTest extends \Tuleap\Test\PHPUnit\TestCase
                 ForwardLinkStub::withNoType(42),
             ])
         );
-        $already_linked       = new CollectionOfForwardLinks([
+        $existing_links       = new CollectionOfForwardLinks([
             ForwardLinkStub::withType(53, '_is_child'),
             ForwardLinkStub::withNoType(34),
         ]);
         $this->artifact_links = Option::fromValue(
             NewArtifactLinkChangesetValue::fromParts(
-                self::ARTIFACT_LINK_FIELD_ID,
-                $already_linked,
-                $submitted_links,
+                ChangeForwardLinksCommand::fromSubmittedAndExistingLinks(
+                    self::ARTIFACT_LINK_FIELD_ID,
+                    $submitted_links,
+                    $existing_links
+                ),
                 Option::fromValue(NewParentLinkStub::withId(63)),
-                new CollectionOfReverseLinks([
-                    ReverseLinkStub::withNoType(195),
-                    ReverseLinkStub::withNoType(196),
-                ])
+                new CollectionOfReverseLinks([])
             )
         );
         $changeset_values     = $this->build();
