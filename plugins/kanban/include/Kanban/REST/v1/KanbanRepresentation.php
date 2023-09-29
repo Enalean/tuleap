@@ -103,6 +103,7 @@ final class KanbanRepresentation
         KanbanTrackerRepresentation $tracker,
         string $uri,
         string $label,
+        public readonly bool $is_promoted,
         array $columns,
         array $resources,
         KanbanBacklogInfoRepresentation $backlog,
@@ -145,6 +146,7 @@ final class KanbanRepresentation
             KanbanTrackerRepresentation::fromKanban(TrackerFactory::instance(), $kanban),
             $kanban_uri,
             $kanban->getName(),
+            $kanban->is_promoted,
             self::getColumns($kanban, $column_factory, $kanban_actions_checker, $user_can_add_in_place, $user),
             [
                 'backlog' => [

@@ -91,7 +91,7 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->field_list,
         );
 
-        $kanban = new Kanban(123, $this->tracker, 'My kanban');
+        $kanban = new Kanban(123, $this->tracker, false, 'My kanban');
         $user   = UserTestBuilder::buildWithDefaults();
 
         $this->semantic_title->method('getFieldId')->willReturn(201);
@@ -126,7 +126,7 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->field_list,
         );
 
-        $kanban = new Kanban(123, $this->tracker, 'My kanban');
+        $kanban = new Kanban(123, $this->tracker, false, 'My kanban');
         $user   = UserTestBuilder::buildWithDefaults();
 
         $this->semantic_title->method('getFieldId')->willReturn(null);
@@ -161,7 +161,7 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->field_list,
         );
 
-        $kanban = new Kanban(123, $this->tracker, 'My kanban');
+        $kanban = new Kanban(123, $this->tracker, false, 'My kanban');
         $user   = UserTestBuilder::buildWithDefaults();
 
         $this->semantic_title->method('getFieldId')->willReturn(201);
@@ -196,7 +196,7 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->field_list,
         );
 
-        $kanban = new Kanban(123, $this->tracker, 'My kanban');
+        $kanban = new Kanban(123, $this->tracker, false, 'My kanban');
         $user   = UserTestBuilder::buildWithDefaults();
 
         $this->semantic_title->method('getFieldId')->willReturn(201);
@@ -231,7 +231,7 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->field_list,
         );
 
-        $kanban = new Kanban(123, $this->tracker, 'My kanban');
+        $kanban = new Kanban(123, $this->tracker, false, 'My kanban');
         $user   = UserTestBuilder::buildWithDefaults();
 
         $this->semantic_title->method('getFieldId')->willReturn(201);
@@ -261,7 +261,7 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->field_list,
         );
 
-        $kanban = new Kanban(123, $this->tracker, 'My kanban');
+        $kanban = new Kanban(123, $this->tracker, false, 'My kanban');
         $user   = UserTestBuilder::anActiveUser()
             ->withMemberOf($this->tracker->getProject())
             ->withAdministratorOf($this->tracker->getProject())
@@ -288,7 +288,7 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->field_list,
         );
 
-        $kanban = new Kanban(123, $this->tracker, 'My kanban');
+        $kanban = new Kanban(123, $this->tracker, false, 'My kanban');
         $user   = UserTestBuilder::anActiveUser()
             ->withMemberOf($this->tracker->getProject())
             ->build();

@@ -124,6 +124,7 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $kanban = new \Tuleap\Kanban\Kanban(
             self::FIRST_KANBAN_ID,
             TrackerTestBuilder::aTracker()->withId(self::FIRST_TRACKER_ID)->build(),
+            false,
             self::FIRST_KANBAN_NAME,
         );
 
@@ -148,11 +149,13 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $kanban_1 = new \Tuleap\Kanban\Kanban(
             self::FIRST_KANBAN_ID,
             TrackerTestBuilder::aTracker()->withId(self::FIRST_TRACKER_ID)->build(),
+            false,
             self::FIRST_KANBAN_NAME,
         );
         $kanban_2 = new \Tuleap\Kanban\Kanban(
             self::SECOND_KANBAN_ID,
             TrackerTestBuilder::aTracker()->withId(self::SECOND_TRACKER_ID)->build(),
+            false,
             self::SECOND_KANBAN_NAME,
         );
 

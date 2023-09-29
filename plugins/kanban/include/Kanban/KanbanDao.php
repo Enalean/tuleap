@@ -42,7 +42,7 @@ class KanbanDao extends DataAccessObject
 
             foreach ($this->getDB()->run($sql, ...$tracker_ids->values()) as $row) {
                 $old_kanban_id = $row['id'];
-                $new_kanban_id = $this->create($row['name'], $tracker_mapping[$row['tracker_id']]);
+                $new_kanban_id = $this->create($row['name'], (bool) $row['is_promoted'], $tracker_mapping[$row['tracker_id']]);
                 $this->duplicateColumns($old_kanban_id, $new_kanban_id, $field_mapping);
                 $this->duplicateReports($old_kanban_id, $new_kanban_id, $report_mapping);
             }
@@ -107,24 +107,34 @@ class KanbanDao extends DataAccessObject
         );
     }
 
-    public function create(string $kanban_name, int $tracker_kanban): int
+    public function create(string $kanban_name, bool $is_promoted, int $tracker_kanban): int
     {
         return (int) $this->getDB()->insertReturnId(
             'plugin_agiledashboard_kanban_configuration',
             [
-                'tracker_id' => $tracker_kanban,
-                'name'       => $kanban_name,
+                'tracker_id'  => $tracker_kanban,
+                'name'        => $kanban_name,
+                'is_promoted' => $is_promoted,
             ],
         );
     }
 
-    public function save(int $kanban_id, string $kanban_name): void
+    public function updateLabel(int $kanban_id, string $kanban_name): void
     {
         $sql = 'UPDATE plugin_agiledashboard_kanban_configuration
                 SET name = ?
                 WHERE id = ?';
 
         $this->getDB()->run($sql, $kanban_name, $kanban_id);
+    }
+
+    public function updatePromotion(int $kanban_id, bool $is_promoted): void
+    {
+        $sql = 'UPDATE plugin_agiledashboard_kanban_configuration
+                SET is_promoted = ?
+                WHERE id = ?';
+
+        $this->getDB()->run($sql, $is_promoted, $kanban_id);
     }
 
     public function delete(int $kanban_id): void
@@ -156,7 +166,7 @@ class KanbanDao extends DataAccessObject
     }
 
     /**
-     * @return array{id: int, tracker_id: int, name: string, group_id: int}|null
+     * @return array{id: int, tracker_id: int, is_promoted: int, name: string, group_id: int}|null
      */
     public function getKanbanByTrackerId(int $tracker_kanban): ?array
     {
@@ -170,7 +180,7 @@ class KanbanDao extends DataAccessObject
     }
 
     /**
-     * @return array{id: int, tracker_id: int, name: string, group_id: int}|null
+     * @return array{id: int, tracker_id: int, is_promoted: int, name: string, group_id: int}|null
      */
     public function getKanbanById(int $kanban_id): ?array
     {
@@ -184,7 +194,7 @@ class KanbanDao extends DataAccessObject
     }
 
     /**
-     * @return list<array{id: int, tracker_id: int, name: string, group_id: int}>
+     * @return list<array{id: int, tracker_id: int, is_promoted: int, name: string, group_id: int}>
      */
     public function getKanbansForProject(int $project_id): array
     {

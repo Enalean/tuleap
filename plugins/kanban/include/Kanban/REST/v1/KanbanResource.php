@@ -374,6 +374,7 @@ final class KanbanResource extends AuthenticatedResource
      *
      * @param int                                                       $id               Id of the kanban
      * @param string                                                    $label            The new label {@from body}
+     * @param bool                                                      $is_promoted      Is the kanban promoted? {@from body} {@required false}
      * @param \Tuleap\Kanban\REST\v1\KanbanCollapseColumnRepresentation $collapse_column  The column to collapse (save in user prefs) {@from body}
      * @param bool                                                      $collapse_archive True to collapse the archive (save in user prefs) {@from body}
      * @param bool                                                      $collapse_backlog True to collapse the backlog (save in user prefs) {@from body}
@@ -384,6 +385,7 @@ final class KanbanResource extends AuthenticatedResource
     public function patchId(
         $id,
         $label = null,
+        $is_promoted = null,
         ?KanbanCollapseColumnRepresentation $collapse_column = null,
         $collapse_archive = null,
         $collapse_backlog = null,
@@ -397,7 +399,7 @@ final class KanbanResource extends AuthenticatedResource
 
         if ($label) {
             $this->checkUserCanUpdateKanban($user, $kanban);
-            $this->kanban_dao->save($id, $label);
+            $this->kanban_dao->updateLabel($id, $label);
             $this->statistics_aggregator->addKanbanRenamingHit(
                 $this->getProjectIdForKanban($kanban)
             );
@@ -409,6 +411,14 @@ final class KanbanResource extends AuthenticatedResource
                 $this->permissions_serializer
             );
             $kanban_sender->sendMessageStructure($kanban, 'kanban:edit', $user, \HTTPRequest::instance(), $label);
+        }
+
+        if ($is_promoted !== null) {
+            $this->checkUserCanUpdateKanban($user, $kanban);
+            $this->kanban_dao->updatePromotion($id, $is_promoted);
+            $this->statistics_aggregator->addKanbanPromotedHit(
+                $this->getProjectIdForKanban($kanban)
+            );
         }
 
         if ($collapse_column) {

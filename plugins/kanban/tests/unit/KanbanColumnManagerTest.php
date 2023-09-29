@@ -74,7 +74,7 @@ final class KanbanColumnManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->column_dao             = $this->createMock(\Tuleap\Kanban\KanbanColumnDao::class);
         $this->kanban_actions_checker = $this->createMock(\Tuleap\Kanban\KanbanActionsChecker::class);
 
-        $this->kanban                = new Kanban($this->kanban_id, TrackerTestBuilder::aTracker()->build(), "My Kanban");
+        $this->kanban                = new Kanban($this->kanban_id, TrackerTestBuilder::aTracker()->build(), false, "My Kanban");
         $this->kanban_column_manager = new KanbanColumnManager(
             $this->column_dao,
             $this->createMock(

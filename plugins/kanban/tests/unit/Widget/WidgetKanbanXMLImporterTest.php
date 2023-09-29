@@ -40,6 +40,7 @@ final class WidgetKanbanXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $kanban = new \Tuleap\Kanban\Kanban(
             20001,
             TrackerTestBuilder::aTracker()->build(),
+            false,
             'Kanban name'
         );
 

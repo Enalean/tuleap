@@ -79,6 +79,7 @@ final class KanbanTest extends TestBase
     {
         $this->assertThatLabelIsUpdated("Willy's really weary");
         $this->assertThatLabelIsUpdated("My first kanban"); // go back to original value
+        $this->assertThatPromotionIsUpdated();
         $this->assertThatBacklogIsToggled();
         $this->assertThatArchiveIsToggled();
         $this->assertThatColumnIsToggled();
@@ -156,6 +157,21 @@ final class KanbanTest extends TestBase
         $kanban   = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals($new_label, $kanban['label']);
+    }
+
+    private function assertThatPromotionIsUpdated(): void
+    {
+        $patch_response = $this->getResponse($this->request_factory->createRequest('PATCH', 'kanban/' . REST_TestDataBuilder::KANBAN_ID)->withBody($this->stream_factory->createStream(json_encode(
+            [
+                'is_promoted' => true,
+            ]
+        ))));
+        self::assertEquals(200, $patch_response->getStatusCode());
+
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'kanban/' . REST_TestDataBuilder::KANBAN_ID));
+        $kanban   = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+
+        self::assertTrue($kanban['is_promoted']);
     }
 
     public function testPATCHKanbanWithReadOnlyAdmin()

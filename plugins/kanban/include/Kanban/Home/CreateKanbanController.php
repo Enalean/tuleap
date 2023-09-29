@@ -87,7 +87,9 @@ final class CreateKanbanController extends DispatchablePSR15Compatible
             ));
         }
 
-        if ($this->kanban_manager->createKanban($kanban_name, $tracker_id)) {
+        $is_promoted = false;
+
+        if ($this->kanban_manager->createKanban($kanban_name, $is_promoted, $tracker_id)) {
             $feedback = new NewFeedback(
                 Feedback::SUCCESS,
                 sprintf(dgettext('tuleap-kanban', 'Kanban %1$s successfully created.'), $kanban_name)

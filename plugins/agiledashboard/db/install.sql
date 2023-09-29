@@ -51,6 +51,7 @@ DROP TABLE IF EXISTS plugin_agiledashboard_kanban_configuration;
 CREATE TABLE IF NOT EXISTS plugin_agiledashboard_kanban_configuration (
     id INT(11) AUTO_INCREMENT PRIMARY KEY,
     tracker_id INT(11) NOT NULL,
+    is_promoted BOOL DEFAULT FALSE,
     name VARCHAR(255) NOT NULL
 );
 

@@ -41,9 +41,9 @@ class KanbanManager
         return $this->dao->getKanbanByTrackerId($tracker->getId()) !== null;
     }
 
-    public function createKanban(string $kanban_name, int $tracker_id): int
+    public function createKanban(string $kanban_name, bool $is_promoted, int $tracker_id): int
     {
-        return $this->dao->create($kanban_name, $tracker_id);
+        return $this->dao->create($kanban_name, $is_promoted, $tracker_id);
     }
 
     public function duplicateKanbans(array $tracker_mapping, array $field_mapping, array $report_mapping): void

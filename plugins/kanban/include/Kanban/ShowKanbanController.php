@@ -96,7 +96,8 @@ final class ShowKanbanController implements DispatchableWithRequest, Dispatchabl
 
             $service         = $this->getService($project);
             $header_options  = [
-                'body_class' => ['reduce-help-button', 'kanban-body'],
+                'body_class'              => ['reduce-help-button', 'kanban-body'],
+                'active-promoted-item-id' => $kanban->getPromotedKanbanId(),
             ];
             $current_section = $this->current_context_section_for_kanban_provider->getSectionByKanbanId(
                 (int) $request->get('id'),

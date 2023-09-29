@@ -74,6 +74,7 @@ class KanbanXMLExporter
             }
             $kanban_node->addAttribute('tracker_id', $this->getFormattedTrackerId($tracker_id));
             $kanban_node->addAttribute('name', $kanban->getName());
+            $kanban_node->addAttribute('is_promoted', $kanban->is_promoted ? '1' : '0');
             $kanban_node->addAttribute('ID', $this->getFormattedKanbanId($kanban->getId()));
         }
 

@@ -66,7 +66,8 @@ final class KanbanXmlImporter
 
             $kanban_id = $this->kanban_manager->createKanban(
                 (string) $attrs["name"],
-                $tracker_mapping[(string) $attrs["tracker_id"]]
+                (bool) $attrs["is_promoted"],
+                $tracker_mapping[(string) $attrs["tracker_id"]],
             );
 
             $kanban = $this->dashboard_kanban_factory->getKanbanForXmlImport(

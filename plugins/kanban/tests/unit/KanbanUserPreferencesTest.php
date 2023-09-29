@@ -43,7 +43,7 @@ final class KanbanUserPreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user = $this->createMock(\PFUser::class);
 
         $this->user_preferences = new KanbanUserPreferences();
-        $this->kanban           = new Kanban(1, TrackerTestBuilder::aTracker()->build(), 'My first kanban');
+        $this->kanban           = new Kanban(1, TrackerTestBuilder::aTracker()->build(), false, 'My first kanban');
     }
 
     public function testDefaultBehavior(): void

@@ -114,7 +114,7 @@ class KanbanFactory
     }
 
     /**
-     * @param array{id: int, tracker_id: int, name: string, ...} $kanban_data
+     * @param array{id: int, tracker_id: int, is_promoted: int, name: string, ...} $kanban_data
      */
     private function instantiateFromRow(array $kanban_data): Kanban
     {
@@ -126,6 +126,7 @@ class KanbanFactory
         return new Kanban(
             $kanban_data['id'],
             $tracker,
+            (bool) $kanban_data['is_promoted'],
             $kanban_data['name']
         );
     }
