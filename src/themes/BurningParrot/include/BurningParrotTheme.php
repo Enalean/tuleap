@@ -159,8 +159,12 @@ class BurningParrotTheme extends BaseLayout
     public function header(HeaderConfiguration|array $params): void
     {
         $project = null;
-        if (is_array($params) && ! empty($params['project'])) {
+        if ($params instanceof HeaderConfiguration && $params->in_project) {
+            $project = $params->in_project->project;
+        } elseif (is_array($params) && ! empty($params['project'])) {
             $project = $params['project'];
+        }
+        if ($project) {
             $this->event_manager->dispatch(new BeforeStartProjectHeader($project, $this, $this->current_user->user));
         }
 
@@ -174,6 +178,7 @@ class BurningParrotTheme extends BaseLayout
                 'title'        => $params->title,
                 'body_class'   => $params->body_class,
                 'main_classes' => $params->main_class,
+                ...($params->in_project ? ['toptab' => $params->in_project->current_service_shortname] : []),
             ];
         }
 
@@ -204,7 +209,7 @@ class BurningParrotTheme extends BaseLayout
         $url_redirect                 = new URLRedirect(EventManager::instance());
         $header_presenter_builder     = new HeaderPresenterBuilder();
         $main_classes                 = isset($params['main_classes']) ? $params['main_classes'] : [];
-        $sidebar                      = $this->getSidebarFromParams($params);
+        $sidebar                      = $this->getSidebarFromParams($project, $params);
         $body_classes                 = $this->getArrayOfClassnamesForBodyTag($params, $sidebar, $project);
         $breadcrumb_presenter_builder = new BreadCrumbPresenterBuilder();
 
@@ -436,14 +441,14 @@ class BurningParrotTheme extends BaseLayout
         return __DIR__ . '/../templates/';
     }
 
-    private function getSidebarFromParams(array $params)
+    private function getSidebarFromParams(?Project $project, array $params)
     {
         if (isset($params['sidebar'])) {
             $this->show_sidebar = true;
             return $params['sidebar'];
         }
 
-        if (! empty($params['project'])) {
+        if ($project) {
             $this->show_sidebar = true;
         }
 

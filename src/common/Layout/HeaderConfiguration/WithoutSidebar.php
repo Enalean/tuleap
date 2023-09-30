@@ -29,7 +29,10 @@ use Tuleap\Layout\HeaderConfiguration\InProjectWithoutSidebar\BackToLinkPresente
  */
 final class WithoutSidebar
 {
-    public function __construct(public BackToLinkPresenter $back_to_link)
+    /**
+     * @psalm-internal \Tuleap\Layout
+     */
+    public function __construct(public readonly BackToLinkPresenter $back_to_link)
     {
     }
 }

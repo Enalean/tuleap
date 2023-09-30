@@ -39,6 +39,7 @@ use Tuleap\FRS\REST\v1\ReleasePermissionsForGroupsBuilder;
 use Tuleap\FRS\REST\v1\ReleaseRepresentation;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Markdown\ContentInterpretor;
@@ -146,12 +147,9 @@ class ReleaseNotesController implements DispatchableWithRequest, DispatchableWit
         $project          = $release->getProject();
         $this->buildLegacyToolbar($project, $user, $layout);
         $layout->header(
-            [
-                'title'        => $translated_title,
-                'project'      => $project,
-                'toptab'       => Service::FILE,
-                'main_classes' => [],
-            ]
+            HeaderConfigurationBuilder::get($translated_title)
+                ->inProject($project, Service::FILE)
+                ->build()
         );
         $this->renderer->renderToPage($presenter->getTemplateName(), $presenter);
         $layout->footer([]);

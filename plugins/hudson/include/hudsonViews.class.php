@@ -41,7 +41,12 @@ class hudsonViews extends Views
         $GLOBALS['HTML']->addToolbarItem('<a data-help-window href="' .
                                          $purifier->purify('/doc/' . urlencode($locale) . '/user-guide/ci.html')
                                          . '">' . $purifier->purify($GLOBALS['Language']->getText('global', 'help')) . '</a>');
-        $GLOBALS['HTML']->header(['title' => $this->_getTitle(), 'project' => $request->getProject(), 'toptab' => 'hudson', [], 'body_class' => ['continuous-integration-body']]);
+        $GLOBALS['HTML']->header(
+            \Tuleap\Layout\HeaderConfigurationBuilder::get($this->_getTitle())
+                ->inProject($request->getProject(), 'hudson')
+                ->withBodyClass(['continuous-integration-body'])
+                ->build()
+        );
         echo '<h2 class="almost-tlp-title project-header-title">' . $this->_getTitle() . '</h2>';
     }
 

@@ -28,6 +28,7 @@ use Project;
 use trackerPlugin;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -107,11 +108,9 @@ class TrackerCreationController implements DispatchableWithRequest, Dispatchable
         $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'tracker-creation-style'));
 
         $layout->header(
-            [
-                'title'  => dgettext('tuleap-tracker', 'New tracker'),
-                'project'  => $project,
-                'toptab' => trackerPlugin::SERVICE_SHORTNAME,
-            ]
+            HeaderConfigurationBuilder::get(dgettext('tuleap-tracker', 'New tracker'))
+                ->inProject($project, trackerPlugin::SERVICE_SHORTNAME)
+                ->build(),
         );
 
         $templates_dir = __DIR__ . '/../../../templates/tracker-creation';

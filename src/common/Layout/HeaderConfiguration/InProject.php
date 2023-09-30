@@ -22,9 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\Layout\HeaderConfiguration;
 
+use Project;
+
 final class InProject
 {
-    public function __construct(public readonly WithoutSidebar $without_sidebar)
-    {
+    /**
+     * @psalm-internal \Tuleap\Layout
+     */
+    public function __construct(
+        public readonly Project $project,
+        public readonly string $current_service_shortname,
+        public readonly ?WithoutSidebar $without_sidebar,
+    ) {
     }
 }
