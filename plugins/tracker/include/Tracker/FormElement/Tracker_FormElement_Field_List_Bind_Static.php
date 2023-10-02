@@ -269,7 +269,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         return $values;
     }
 
-    protected function getIdsToSearch($criteria_value)
+    protected function getIdsToSearch($criteria_value): array
     {
         return array_values($criteria_value);
     }
