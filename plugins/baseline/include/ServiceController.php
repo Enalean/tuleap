@@ -32,6 +32,7 @@ use Tuleap\Baseline\Domain\Authorizations;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\FooterConfiguration;
+use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
@@ -121,12 +122,9 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
         $this->includeJavascriptFiles($layout);
 
         $layout->header(
-            [
-                'title'                          => dgettext('tuleap-baseline', "Baselines"),
-                'project'                        => $project,
-                'toptab'                         => \baselinePlugin::SERVICE_SHORTNAME,
-                'without-project-in-breadcrumbs' => true,
-            ]
+            HeaderConfigurationBuilder::get(dgettext('tuleap-baseline', "Baselines"))
+                ->inProjectNotInBreadcrumbs($project, \baselinePlugin::SERVICE_SHORTNAME)
+                ->build()
         );
         $this->template_renderer->renderToPage(
             'project-service-index',
