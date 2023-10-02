@@ -394,7 +394,7 @@ export interface SearchDate {
 export type AdditionalFieldNumber = `field_${number}`;
 
 export interface AdvancedSearchParams {
-    readonly global_search: string;
+    global_search: string;
     readonly id: string;
     readonly type: AllowedSearchType;
     readonly filename: string;

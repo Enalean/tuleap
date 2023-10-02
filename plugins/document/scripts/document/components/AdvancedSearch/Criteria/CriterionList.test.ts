@@ -17,11 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+const emitMock = jest.fn();
+
 import { shallowMount } from "@vue/test-utils";
 import CriterionList from "./CriterionList.vue";
 import type { ConfigurationState } from "../../../store/configuration";
 import type { SearchCriterionList } from "../../../type";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+
+jest.mock("../../../helpers/emitter", () => {
+    return {
+        emit: emitMock,
+    };
+});
 
 describe("CriterionList", () => {
     const criterion: SearchCriterionList = {
@@ -78,6 +86,9 @@ describe("CriterionList", () => {
         });
 
         wrapper.find("[data-test=option-folder]").setSelected();
-        expect(wrapper.emitted().input).toStrictEqual([["folder"]]);
+        expect(emitMock).toHaveBeenCalledWith("update-criteria", {
+            criteria: "type",
+            value: "folder",
+        });
     });
 });

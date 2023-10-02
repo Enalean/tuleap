@@ -27,13 +27,14 @@
             >
                 <i class="fa-solid fa-spin fa-circle-notch"></i>
             </div>
-            <h2 class="tlp-modal-subtitle">{{ $gettext("Permissions") }}</h2>
+            <h2 class="tlp-modal-subtitle">
+                {{ $gettext("Permissions") }}
+            </h2>
         </div>
         <permissions-for-groups-selector
             v-if="project_ugroups !== null"
             v-bind:project_ugroups="project_ugroups"
-            v-model="permissions_for_groups"
-            v-bind:value="permissions_for_groups"
+            v-bind:value="value"
             data-test="document-creation-permissions-section-selector"
         />
     </div>
@@ -54,16 +55,6 @@ export default {
         value: {
             type: Object,
             required: true,
-        },
-    },
-    computed: {
-        permissions_for_groups: {
-            get() {
-                return this.value;
-            },
-            set(value) {
-                this.$emit("input", value);
-            },
         },
     },
 };

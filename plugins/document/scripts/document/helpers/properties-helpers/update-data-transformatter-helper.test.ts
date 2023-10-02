@@ -408,12 +408,12 @@ describe("formatCustomPropertiesForFolderUpdate", () => {
             ],
         };
 
-        formatCustomPropertiesForFolderUpdate(
+        const updated_item = formatCustomPropertiesForFolderUpdate(
             item_to_update,
             properties_to_update,
             recursion_option,
         );
 
-        expect(item_to_update).toStrictEqual(expected_item_to_update);
+        expect(updated_item).toEqual(expected_item_to_update);
     });
 });

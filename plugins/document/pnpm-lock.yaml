@@ -62,9 +62,6 @@ dependencies:
   '@tuleap/vue3-gettext-init':
     specifier: workspace:*
     version: link:../../lib/frontend/vue3-gettext-init
-  '@vue/compat':
-    specifier: ^3.2.31
-    version: 3.2.47(vue@3.2.47)
   '@vueuse/core':
     specifier: ^8.7.3
     version: 8.9.4(vue@3.2.47)
@@ -367,17 +364,6 @@ packages:
     dependencies:
       '@types/yargs-parser': 21.0.0
     dev: true
-
-  /@vue/compat@3.2.47(vue@3.2.47):
-    resolution: {integrity: sha512-spULbnhceN3fIGYRRgq75RPRqsakfUV0tyZ4zTweOB48bWtwHUn677exg8/58uLOBc1F5B5lXTD5qf7epqpTuw==}
-    peerDependencies:
-      vue: 3.2.47
-    dependencies:
-      '@babel/parser': 7.18.9
-      estree-walker: 2.0.2
-      source-map: 0.6.1
-      vue: 3.2.47
-    dev: false
 
   /@vue/compiler-core@3.2.47:
     resolution: {integrity: sha512-p4D7FDnQb7+YJmO2iPEv0SQNeNzcbHdGByJDsT4lynf63AFkOTFN07HsiRSvjGo0QrxR/o3d0hUyNCUnBU2Tig==}

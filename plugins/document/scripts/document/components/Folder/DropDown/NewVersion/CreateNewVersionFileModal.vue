@@ -34,10 +34,7 @@
                 v-on:approval-table-action-change="setApprovalUpdateAction"
                 v-bind:is-open-after-dnd="false"
             >
-                <file-properties
-                    v-model="uploaded_item.file_properties"
-                    v-bind:item="uploaded_item"
-                />
+                <file-properties v-bind:item="uploaded_item" />
             </item-update-properties>
             <file-version-history v-bind:item="item" />
         </div>
@@ -109,11 +106,13 @@ export default {
 
         this.show();
         emitter.on("update-version-title", this.updateTitleValue);
+        emitter.on("update-file-properties", this.updateFilesProperties);
         emitter.on("update-changelog-property", this.updateChangelogValue);
         emitter.on("update-lock", this.updateLock);
     },
     beforeUnmount() {
         emitter.off("update-version-title", this.updateTitleValue);
+        emitter.off("update-file-properties", this.updateFilesProperties);
         emitter.off("update-changelog-property", this.updateChangelogValue);
         emitter.off("update-lock", this.updateLock);
     },
@@ -187,6 +186,9 @@ export default {
         },
         updateLock(is_locked) {
             this.version.is_file_locked = is_locked;
+        },
+        updateFilesProperties(file_properties) {
+            this.uploaded_item.file_properties = file_properties;
         },
     },
 };

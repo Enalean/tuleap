@@ -41,7 +41,13 @@
     </div>
 </template>
 <script>
+import emitter from "../../../helpers/emitter";
+import { CAN_READ, CAN_WRITE, CAN_MANAGE } from "../../../constants";
+
 function getSelectedUGroupsIDs(selected_ugroups) {
+    if (!selected_ugroups) {
+        return [];
+    }
     return selected_ugroups.map((ugroup) => ugroup.id);
 }
 
@@ -63,6 +69,14 @@ export default {
             type: Array,
             required: true,
         },
+        identifier: {
+            type: String,
+            required: true,
+            validator(value) {
+                // The value must match one of these strings
+                return [CAN_READ, CAN_WRITE, CAN_MANAGE].includes(value);
+            },
+        },
     },
     data() {
         return {
@@ -81,10 +95,10 @@ export default {
     },
     methods: {
         updateSelectedUGroups() {
-            this.$emit(
-                "input",
-                this.selected_ugroup_ids.map((ugroup_id) => ({ id: ugroup_id })),
-            );
+            emitter.emit("update-permissions", {
+                label: this.identifier,
+                value: this.selected_ugroup_ids.map((ugroup_id) => ({ id: ugroup_id })),
+            });
         },
     },
 };

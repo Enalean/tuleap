@@ -21,7 +21,10 @@ import { shallowMount } from "@vue/test-utils";
 
 import PermissionsSelector from "./PermissionsSelector.vue";
 import { nextTick } from "vue";
+import emitter from "../../../helpers/emitter";
+import { CAN_WRITE } from "../../../constants";
 
+jest.mock("../../../helpers/emitter");
 describe("PermissionsSelector", () => {
     let factory;
 
@@ -45,6 +48,7 @@ describe("PermissionsSelector", () => {
             label: permission_label,
             project_ugroups: [ugroup_1, selected_ugroup_1, selected_ugroup_2, ugroup_2],
             selected_ugroups: [selected_ugroup_1, selected_ugroup_2],
+            identifier: CAN_WRITE,
         });
 
         expect(wrapper.text()).toContain(permission_label);
@@ -61,12 +65,15 @@ describe("PermissionsSelector", () => {
             label: "Permission label",
             project_ugroups: [ugroup_1, ugroup_2],
             selected_ugroups: [],
+            identifier: CAN_WRITE,
         });
 
         wrapper.get("select").setValue(ugroup_1.id);
-        const emitted_input = wrapper.emitted("input");
-        expect(emitted_input).toHaveLength(1);
-        expect(emitted_input[0]).toStrictEqual([[{ id: ugroup_1.id }]]);
+
+        expect(emitter.emit).toHaveBeenCalledWith("update-permissions", {
+            label: CAN_WRITE,
+            value: [{ id: "177" }],
+        });
     });
 
     it("Refresh selected user groups on fresh information", async () => {
@@ -77,6 +84,7 @@ describe("PermissionsSelector", () => {
             label: "Permission label",
             project_ugroups: [ugroup_1, ugroup_2],
             selected_ugroups: [],
+            identifier: CAN_WRITE,
         });
 
         wrapper.setProps({

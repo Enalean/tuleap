@@ -43,24 +43,22 @@
                 v-bind:parent="parent"
             >
                 <link-properties
-                    v-model="item.link_properties"
                     v-bind:item="item"
                     name="properties"
-                    v-bind:value="item.link_properties"
+                    v-bind:value="item.link_properties.link_url"
                 />
                 <wiki-properties
-                    v-model="item.wiki_properties"
+                    v-bind:value="item.wiki_properties.page_name"
                     v-bind:item="item"
                     name="properties"
-                    v-bind:value="item.wiki_properties"
                 />
                 <embedded-properties
-                    v-model="item.embedded_properties"
+                    v-bind:value="item.embedded_properties.content"
                     v-bind:item="item"
                     name="properties"
                 />
                 <file-properties
-                    v-model="item.file_properties"
+                    v-bind:value="item.file_properties"
                     v-bind:item="item"
                     name="properties"
                     v-if="!is_from_alternative"
@@ -73,7 +71,6 @@
             />
             <creation-modal-permissions-section
                 v-if="item.permissions_for_groups"
-                v-model="item.permissions_for_groups"
                 v-bind:value="item.permissions_for_groups"
                 v-bind:project_ugroups="project_ugroups"
             />
@@ -92,7 +89,7 @@
 <script>
 import { mapState } from "vuex";
 import { createModal } from "@tuleap/tlp-modal";
-import { TYPE_FILE } from "../../../../constants";
+import { CAN_READ, CAN_WRITE, CAN_MANAGE, TYPE_FILE } from "../../../../constants";
 import DocumentGlobalPropertyForCreate from "./PropertiesForCreate/DocumentGlobalPropertyForCreate.vue";
 import LinkProperties from "../PropertiesForCreateOrUpdate/LinkProperties.vue";
 import WikiProperties from "../PropertiesForCreateOrUpdate/WikiProperties.vue";
@@ -173,6 +170,11 @@ export default {
         emitter.on("update-description-property", this.updateDescriptionValue);
         emitter.on("update-custom-property", this.updateCustomProperty);
         emitter.on("update-obsolescence-date-property", this.updateObsolescenceDate);
+        emitter.on("update-link-properties", this.updateLinkProperties);
+        emitter.on("update-wiki-properties", this.updateWikiProperties);
+        emitter.on("update-embedded-properties", this.updateEmbeddedContent);
+        emitter.on("update-file-properties", this.updateFilesProperties);
+        emitter.on("update-permissions", this.updateUGroup);
     },
     beforeUnmount() {
         emitter.off("createItem", this.show);
@@ -188,6 +190,11 @@ export default {
         emitter.off("update-description-property", this.updateDescriptionValue);
         emitter.off("update-custom-property", this.updateCustomProperty);
         emitter.off("update-obsolescence-date-property", this.updateObsolescenceDate);
+        emitter.off("update-link-properties", this.updateLinkProperties);
+        emitter.off("update-wiki-properties", this.updateWikiProperties);
+        emitter.off("update-file-properties", this.updateFilesProperties);
+        emitter.off("update-permissions", this.updateUGroup);
+        emitter.off("update-embedded-properties", this.updateEmbeddedContent);
     },
     methods: {
         getDefaultItem() {
@@ -351,6 +358,44 @@ export default {
         },
         updateObsolescenceDate(obsolescence_date) {
             this.item.obsolescence_date = obsolescence_date;
+        },
+        updateFilesProperties(file_properties) {
+            this.item.file_properties = file_properties;
+        },
+        updateLinkProperties(url) {
+            if (!this.item.link_properties) {
+                return;
+            }
+            this.item.link_properties.link_url = url;
+        },
+        updateWikiProperties(page_name) {
+            if (!this.item.wiki_properties) {
+                return;
+            }
+            this.item.wiki_properties.page_name = page_name;
+        },
+        updateEmbeddedContent(content) {
+            if (!this.item.embedded_properties) {
+                return;
+            }
+            this.item.embedded_properties.content = content;
+        },
+        updateUGroup(event) {
+            if (!this.item.permissions_for_groups) {
+                return;
+            }
+            switch (event.label) {
+                case CAN_READ:
+                    this.item.permissions_for_groups.can_read = event.value;
+                    break;
+                case CAN_WRITE:
+                    this.item.permissions_for_groups.can_write = event.value;
+                    break;
+                case CAN_MANAGE:
+                    this.item.permissions_for_groups.can_manage = event.value;
+                    break;
+                default:
+            }
         },
     },
 };

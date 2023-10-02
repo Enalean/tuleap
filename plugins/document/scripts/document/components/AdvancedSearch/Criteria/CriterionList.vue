@@ -21,8 +21,10 @@
 <template>
     <div class="tlp-form-element document-search-criterion">
         <label class="tlp-label" v-bind:for="id">{{ criterion.label }}</label>
-        <select class="tlp-select" v-bind:id="id" v-on:change="$emit('input', $event.target.value)">
-            <option v-bind:selected="isSelected('')" value="">{{ $gettext("Any") }}</option>
+        <select class="tlp-select" v-bind:id="id" v-on:change="updateCriteria">
+            <option v-bind:selected="isSelected('')" value="">
+                {{ $gettext("Any") }}
+            </option>
             <option
                 v-for="option in criterion.options"
                 v-bind:key="id + '_' + option.value"
@@ -39,12 +41,22 @@
 <script setup lang="ts">
 import type { SearchCriterionList, SearchListOption } from "../../../type";
 import { computed } from "vue";
+import emitter from "../../../helpers/emitter";
 
 const props = defineProps<{ criterion: SearchCriterionList; value: string }>();
 
 const id = computed((): string => {
     return "document-criterion-list-" + props.criterion.name;
 });
+
+function updateCriteria($event: Event): void {
+    if ($event.target instanceof HTMLSelectElement) {
+        emitter.emit("update-criteria", {
+            criteria: props.criterion.name,
+            value: $event.target.value,
+        });
+    }
+}
 
 function isSelected(option: SearchListOption): boolean {
     return option.value === props.value;

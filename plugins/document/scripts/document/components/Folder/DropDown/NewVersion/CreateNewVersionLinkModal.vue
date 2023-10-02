@@ -36,7 +36,7 @@
             >
                 <link-properties
                     v-if="link_model"
-                    v-model="link_model"
+                    v-bind:value="item.link_properties.link_url"
                     v-bind:item="item"
                     key="link-props"
                 />
@@ -102,11 +102,13 @@ export default {
         emitter.on("update-version-title", this.updateTitleValue);
         emitter.on("update-changelog-property", this.updateChangelogValue);
         emitter.on("update-lock", this.updateLock);
+        emitter.on("update-link-properties", this.updateLinkProperties);
     },
     beforeUnmount() {
         emitter.off("update-version-title", this.updateTitleValue);
         emitter.off("update-changelog-property", this.updateChangelogValue);
         emitter.off("update-lock", this.updateLock);
+        emitter.off("update-link-properties", this.updateLinkProperties);
     },
     methods: {
         setApprovalUpdateAction(value) {
@@ -164,6 +166,12 @@ export default {
         },
         updateLock(is_locked) {
             this.version.is_file_locked = is_locked;
+        },
+        updateLinkProperties(url) {
+            if (!this.item) {
+                return;
+            }
+            this.link_model.link_url = url;
         },
     },
 };

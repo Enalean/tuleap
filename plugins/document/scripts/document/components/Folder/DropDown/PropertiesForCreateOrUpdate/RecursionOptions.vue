@@ -37,7 +37,7 @@
             id="recursion-option"
             name="recursion"
             v-bind:value="value"
-            v-on:input="$emit('input', $event.target.value)"
+            v-on:input="updateRecursionOption"
         >
             <option value="none"></option>
             <option value="folders">
@@ -51,4 +51,14 @@
 </template>
 <script setup lang="ts">
 defineProps<{ value: string }>();
+
+const emit = defineEmits<{
+    (e: "update-recursion-option", value: string): void;
+}>();
+
+function updateRecursionOption(event: Event): void {
+    if (event.target instanceof HTMLSelectElement) {
+        emit("update-recursion-option", event.target.value);
+    }
+}
 </script>

@@ -26,7 +26,7 @@
             class="tlp-input"
             v-bind:id="id"
             v-bind:value="value"
-            v-on:input="$emit('input', $event.target.value)"
+            v-on:input="updateCriteria"
             v-bind:data-test="id"
         />
     </div>
@@ -35,8 +35,18 @@
 <script setup lang="ts">
 import type { SearchCriterionText } from "../../../type";
 import { computed } from "vue";
+import emitter from "../../../helpers/emitter";
 
 const props = defineProps<{ criterion: SearchCriterionText; value: string }>();
+
+function updateCriteria($event: Event): void {
+    if ($event.target instanceof HTMLInputElement) {
+        emitter.emit("update-criteria", {
+            criteria: props.criterion.name,
+            value: $event.target.value,
+        });
+    }
+}
 
 const id = computed((): string => {
     return "document-criterion-number-" + props.criterion.name;

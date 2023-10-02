@@ -276,7 +276,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
 
             wrapper
                 .find("[data-test=document-custom-property-recursion-option]")
-                .trigger("input", "all_items");
+                .trigger("update-recursion-option", "all_items");
 
             expect(emitMock).toHaveBeenCalledWith("properties-recursion-list", {
                 detail: {
@@ -320,7 +320,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
 
         wrapper
             .find("[data-test=document-custom-property-recursion-option]")
-            .trigger("input", "all_items");
+            .trigger("update-recursion-option", "all_items");
 
         expect(emitMock).toHaveBeenCalledWith("properties-recursion-list", {
             detail: {
@@ -363,7 +363,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
 
         wrapper
             .find("[data-test=document-custom-property-recursion-option]")
-            .trigger("input", "all_items");
+            .trigger("update-recursion-option", "all_items");
 
         expect(emitMock).toHaveBeenCalledWith("properties-recursion-list", {
             detail: {
@@ -406,7 +406,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
 
         wrapper
             .find("[data-test=document-custom-property-recursion-option]")
-            .trigger("input", "all_items");
+            .trigger("update-recursion-option", "all_items");
 
         wrapper.find("[data-test=document-status-property-recursion-input]").setChecked(false);
 

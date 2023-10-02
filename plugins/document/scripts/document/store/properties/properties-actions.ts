@@ -187,14 +187,14 @@ export const updateFolderProperties = async (
     context: ActionContext<PropertiesState, RootState>,
     payload: updateFolderPropertiesPayload,
 ): Promise<void> => {
-    formatCustomPropertiesForFolderUpdate(
+    const updated_item = formatCustomPropertiesForFolderUpdate(
         payload.item_to_update,
         payload.properties_to_update,
         payload.recursion_option,
     );
     const update_payload: updatePropertiesPayload = {
         item: payload.item,
-        item_to_update: payload.item_to_update,
+        item_to_update: updated_item,
         current_folder: payload.current_folder,
     };
     await updateProperties(context, update_payload);

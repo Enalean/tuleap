@@ -48,7 +48,7 @@ export default [
         resolve: {
             extensions: [".ts", ".js", ".vue"],
             alias: {
-                vue: path.resolve(__dirname, "node_modules", "@vue", "compat"),
+                vue: path.resolve(__dirname, "node_modules", "vue"),
             },
         },
         module: {
@@ -62,9 +62,6 @@ export default [
                         compilerOptions: {
                             isCustomElement: tag => {
                                 return 'tlp-relative-date' === tag;
-                            },
-                            compatConfig: {
-                                MODE: 3,
                             },
                         },
                     },

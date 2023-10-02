@@ -33,7 +33,7 @@
             class="tlp-input"
             id="document-global-search"
             v-bind:value="value"
-            v-on:input="$emit('input', $event.target.value)"
+            v-on:input="updateCriteria"
             data-test="global-search"
         />
     </div>
@@ -43,10 +43,17 @@
 import SearchInformationPopover from "./SearchInformationPopover.vue";
 import { useGettext } from "vue3-gettext";
 import { computed } from "vue";
+import emitter from "../../../helpers/emitter";
 
 const { $gettext } = useGettext();
 
 defineProps<{ value: string }>();
+
+function updateCriteria($event: Event): void {
+    if ($event.target instanceof HTMLInputElement) {
+        emitter.emit("update-global-criteria", $event.target.value);
+    }
+}
 
 const popover_description = computed((): string => {
     return $gettext(

@@ -22,17 +22,17 @@
     <div>
         <new-item-modal />
         <new-folder-modal />
-        <create-new-item-version-modal
+        <component
             v-bind:is="shown_new_version_modal"
             v-bind:item="updated_item"
             data-test="document-new-version-modal"
         />
-        <update-properties-modal
+        <component
             v-bind:is="shown_update_properties_modal"
             v-bind:item="updated_properties"
             data-test="document-update-properties-modal"
         />
-        <confirm-deletion-modal
+        <modal-confirm-deletion
             v-if="item_to_delete"
             v-bind:item="item_to_delete"
             data-test="document-delete-item-modal"
@@ -43,13 +43,13 @@
             data-test="document-permissions-item-modal"
             v-if="item_to_update_permissions"
         />
-        <download-folder-size-threshold-exceeded-modal
+        <modal-max-archive-size-threshold-exceeded
             v-if="current_folder_size !== null"
             v-bind:size="current_folder_size"
             v-on:download-as-zip-modal-closed="hideDownloadFolderModals()"
             data-test="document-folder-size-threshold-exceeded"
         />
-        <download-folder-size-warning-modal
+        <modal-archive-size-warning
             v-if="folder_above_warning_threshold_props"
             v-bind:size="folder_above_warning_threshold_props.folder_size"
             v-bind:folder-href="folder_above_warning_threshold_props.folder_href"
@@ -74,12 +74,17 @@ import type {
     UpdatePropertiesEvent,
 } from "../../helpers/emitter";
 import emitter from "../../helpers/emitter";
-// eslint-disable-next-line import/no-duplicates
 import { computed, defineAsyncComponent, onMounted, onUnmounted, ref, shallowRef } from "vue";
 import type { Item } from "../../type";
 import { isFolder } from "../../helpers/type-check-helper";
 import { TYPE_EMBEDDED, TYPE_EMPTY, TYPE_FILE, TYPE_LINK, TYPE_WIKI } from "../../constants";
 import OngoingUploadModal from "./OngoingUploadModal.vue";
+import ModalConfirmDeletion from "../Folder/DropDown/Delete/ModalConfirmDeletion.vue";
+import PermissionsUpdateModal from "../Folder/Permissions/PermissionsUpdateModal.vue";
+import NewItemModal from "../Folder/DropDown/NewDocument/NewItemModal.vue";
+import NewFolderModal from "../Folder/DropDown/NewDocument/NewFolderModal.vue";
+import ModalMaxArchiveSizeThresholdExceeded from "../Folder/DropDown/DownloadFolderAsZip/ModalMaxArchiveSizeThresholdExceeded.vue";
+import ModalArchiveSizeWarning from "../Folder/DropDown/DownloadFolderAsZip/ModalArchiveSizeWarning.vue";
 
 const item_to_delete = ref<Item | null>(null);
 
@@ -238,47 +243,5 @@ onUnmounted(() => {
     );
     emitter.off("show-archive-size-warning-modal", showArchiveSizeWarningModal);
     emitter.off("item-is-being-uploaded", itemIsBeingUploaded);
-});
-</script>
-
-<script lang="ts">
-// eslint-disable-next-line import/no-duplicates
-import { defineComponent } from "vue";
-
-export default defineComponent({
-    components: {
-        "confirm-deletion-modal": () =>
-            import(
-                /* webpackChunkName: "document-confirm-item-deletion-modal" */
-                "../Folder/DropDown/Delete/ModalConfirmDeletion.vue"
-            ),
-        "permissions-update-modal": () =>
-            import(
-                /* webpackChunkName: "document-permissions-update-modal" */ "../Folder/Permissions/PermissionsUpdateModal.vue"
-            ),
-        "download-folder-size-threshold-exceeded-modal": () =>
-            import(
-                /* webpackChunkName: "document-download-folder-size-exceeded-modal" */
-                "../Folder/DropDown/DownloadFolderAsZip/ModalMaxArchiveSizeThresholdExceeded.vue"
-            ),
-        "download-folder-size-warning-modal": () =>
-            import(
-                /* webpackChunkName: "document-download-folder-size-warning-modal" */
-                "../Folder/DropDown/DownloadFolderAsZip/ModalArchiveSizeWarning.vue"
-            ),
-        "file-changelog-modal": () =>
-            import(
-                /* webpackChunkName: "file-changelog-modal" */
-                "../Folder/DropDown/NewVersion/FileVersionChangelogModal.vue"
-            ),
-        "new-item-modal": () =>
-            import(
-                /* webpackChunkName: "new-item-modal" */ "../Folder/DropDown/NewDocument/NewItemModal.vue"
-            ),
-        "new-folder-modal": () =>
-            import(
-                /* webpackChunkName: "new-folder-modal" */ "../Folder/DropDown/NewDocument/NewFolderModal.vue"
-            ),
-    },
 });
 </script>

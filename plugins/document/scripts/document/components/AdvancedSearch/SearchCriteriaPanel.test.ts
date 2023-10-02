@@ -21,11 +21,11 @@ import { shallowMount } from "@vue/test-utils";
 import SearchCriteriaPanel from "./SearchCriteriaPanel.vue";
 import SearchCriteriaBreadcrumb from "./SearchCriteriaBreadcrumb.vue";
 import type { ConfigurationState } from "../../store/configuration";
-import CriterionGlobalText from "./Criteria/CriterionGlobalText.vue";
 import type { AdvancedSearchParams, SearchDate } from "../../type";
 import { buildAdvancedSearchParams } from "../../helpers/build-advanced-search-params";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import { nextTick } from "vue";
+import emitter from "../../helpers/emitter";
 
 describe("SearchCriteriaPanel", () => {
     it("should allow user to search for new terms", async () => {
@@ -76,13 +76,51 @@ describe("SearchCriteriaPanel", () => {
 
         await nextTick();
 
-        wrapper.findComponent(CriterionGlobalText).setValue("Lorem ipsum");
-        wrapper.findComponent("criterion-number-stub").setValue("123");
-        wrapper.findComponent("criterion-list-stub").setValue("folder");
-        wrapper.findComponent("criterion-text-stub").setValue("bob.jpg");
-        wrapper.findComponent("criterion-owner-stub").setValue("jdoe");
+        emitter.emit("update-criteria", {
+            criteria: "id",
+            value: "123",
+        });
+        emitter.emit("update-criteria", {
+            criteria: "type",
+            value: "folder",
+        });
+        emitter.emit("update-criteria", {
+            criteria: "filename",
+            value: "bob.jpg",
+        });
+        emitter.emit("update-criteria", {
+            criteria: "title",
+            value: "bob",
+        });
+        emitter.emit("update-criteria", {
+            criteria: "description",
+            value: "description",
+        });
+        emitter.emit("update-criteria", {
+            criteria: "owner",
+            value: "jdoe",
+        });
         const create_date: SearchDate = { date: "2022-01-01", operator: ">" };
-        wrapper.findComponent("criterion-date-stub").setValue(create_date);
+        emitter.emit("update-criteria-date", {
+            criteria: "create_date",
+            value: create_date,
+        });
+        const update_date: SearchDate = { date: "2022-02-01", operator: ">" };
+        emitter.emit("update-criteria-date", {
+            criteria: "update_date",
+            value: update_date,
+        });
+        const obsolescence_date: SearchDate = { date: "2022-07-01", operator: ">" };
+        emitter.emit("update-criteria-date", {
+            criteria: "obsolescence_date",
+            value: obsolescence_date,
+        });
+        emitter.emit("update-criteria", {
+            criteria: "status",
+            value: "open",
+        });
+        emitter.emit("update-global-criteria", "Lorem ipsum");
+
         wrapper.find("[data-test=submit]").trigger("click");
 
         const expected_params: AdvancedSearchParams = {
@@ -90,13 +128,13 @@ describe("SearchCriteriaPanel", () => {
             id: "123",
             type: "folder",
             filename: "bob.jpg",
-            title: "",
-            description: "",
+            title: "bob",
+            description: "description",
             owner: "jdoe",
             create_date,
-            update_date: null,
-            obsolescence_date: null,
-            status: "",
+            update_date: update_date,
+            obsolescence_date: obsolescence_date,
+            status: "open",
             sort: { name: "update_date", order: "desc" },
         };
         expect(wrapper.emitted()["advanced-search"]).toStrictEqual([[expected_params]]);

@@ -29,7 +29,7 @@
             class="tlp-input"
             v-bind:id="id"
             v-bind:value="value"
-            v-on:input="$emit('input', $event.target.value)"
+            v-on:input="updateCriteria"
             v-bind:data-test="id"
         />
     </div>
@@ -40,10 +40,20 @@ import type { SearchCriterionText } from "../../../type";
 import { computed } from "vue";
 import SearchInformationPopover from "./SearchInformationPopover.vue";
 import { useGettext } from "vue3-gettext";
+import emitter from "../../../helpers/emitter";
 
 const { interpolate, $gettext } = useGettext();
 
 const props = defineProps<{ criterion: SearchCriterionText; value: string }>();
+
+function updateCriteria($event: Event): void {
+    if ($event.target instanceof HTMLInputElement) {
+        emitter.emit("update-criteria", {
+            criteria: props.criterion.name,
+            value: $event.target.value,
+        });
+    }
+}
 
 const popover_description = computed((): string => {
     return interpolate($gettext("Search in the '%{label}' property of the document."), {

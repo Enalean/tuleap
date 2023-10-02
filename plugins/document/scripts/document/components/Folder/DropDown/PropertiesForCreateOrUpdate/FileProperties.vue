@@ -85,7 +85,7 @@ export default {
 
             this.$refs.input.setCustomValidity(this.error_message);
 
-            this.$emit("input", { file });
+            emitter.emit("update-file-properties", { file });
         },
     },
 };

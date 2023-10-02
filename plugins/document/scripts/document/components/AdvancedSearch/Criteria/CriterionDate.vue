@@ -37,7 +37,6 @@
                 v-bind:id="id"
                 v-bind:required="false"
                 v-bind:value="date"
-                v-model="date"
                 v-on:input="onChangeDate"
                 v-bind:data-test="id"
             />
@@ -49,10 +48,9 @@
 import type { AllowedSearchDateOperator, SearchCriterionDate, SearchDate } from "../../../type";
 import DateFlatPicker from "../../Folder/DropDown/PropertiesForCreateOrUpdate/DateFlatPicker.vue";
 import { computed, ref, watch } from "vue";
+import emitter from "../../../helpers/emitter";
 
 const props = defineProps<{ criterion: SearchCriterionDate; value: SearchDate | null }>();
-
-const emit = defineEmits<{ (e: "input", value: SearchDate): void }>();
 
 const date = ref("");
 const operator = ref<AllowedSearchDateOperator>(">");
@@ -81,6 +79,9 @@ function onChangeDate(new_date: string): void {
 function onChange(operator: AllowedSearchDateOperator, date: string): void {
     const new_value: SearchDate = { operator, date };
 
-    emit("input", new_value);
+    emitter.emit("update-criteria-date", {
+        criteria: props.criterion.name,
+        value: new_value,
+    });
 }
 </script>

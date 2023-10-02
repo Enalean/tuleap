@@ -97,12 +97,15 @@ export function formatCustomPropertiesForFolderUpdate(
     item_to_update: Folder,
     properties_to_update: Array<string>,
     recursion_option: string,
-): void {
-    item_to_update.properties.forEach((item_properties) => {
+): Folder {
+    const updated_item = structuredClone(item_to_update);
+    updated_item.properties.forEach((item_properties) => {
         if (properties_to_update.find((short_name) => short_name === item_properties.short_name)) {
             item_properties.recursion = recursion_option;
         } else {
             item_properties.recursion = "none";
         }
     });
+
+    return updated_item;
 }

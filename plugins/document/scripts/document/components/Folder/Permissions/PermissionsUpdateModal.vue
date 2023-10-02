@@ -66,6 +66,7 @@ import PermissionsForGroupsSelector from "./PermissionsForGroupsSelector.vue";
 import { handleErrors } from "../../../store/actions-helpers/handle-errors";
 import PermissionsUpdateFolderSubItems from "./PermissionsUpdateFolderSubItems.vue";
 import emitter from "../../../helpers/emitter";
+import { CAN_MANAGE, CAN_READ, CAN_WRITE } from "../../../constants";
 
 export default {
     name: "PermissionsUpdateModal",
@@ -117,11 +118,13 @@ export default {
     mounted() {
         this.modal = createModal(this.$el);
         emitter.on("show-update-permissions-modal", this.show);
+        emitter.on("update-permissions", this.updateUGroup);
         this.modal.addEventListener("tlp-modal-hidden", this.reset);
         this.show();
     },
     beforeUnmount() {
         emitter.off("show-update-permissions-modal", this.show);
+        emitter.off("update-permissions", this.updateUGroup);
         this.modal.removeEventListener("tlp-modal-hidden", this.reset);
     },
     methods: {
@@ -162,6 +165,21 @@ export default {
             this.is_submitting_new_permissions = false;
             if (this.has_modal_error === false) {
                 this.modal.hide();
+            }
+        },
+
+        updateUGroup(event) {
+            switch (event.label) {
+                case CAN_READ:
+                    this.updated_permissions.can_read = event.value;
+                    break;
+                case CAN_WRITE:
+                    this.updated_permissions.can_write = event.value;
+                    break;
+                case CAN_MANAGE:
+                    this.updated_permissions.can_manage = event.value;
+                    break;
+                default:
             }
         },
     },

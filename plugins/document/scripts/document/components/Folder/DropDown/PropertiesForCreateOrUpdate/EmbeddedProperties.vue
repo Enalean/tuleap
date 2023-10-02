@@ -28,7 +28,7 @@
                 name="embedded-content"
                 ref="embedded_editor"
                 v-bind:placeholder="placeholder"
-                v-bind:value="value.content"
+                v-bind:value="value?.content ?? ''"
             ></textarea>
         </div>
     </div>
@@ -36,11 +36,12 @@
 
 <script>
 import { isEmbedded } from "../../../../helpers/type-check-helper";
+import emitter from "../../../../helpers/emitter";
 
 export default {
     name: "EmbeddedProperties",
     props: {
-        value: Object,
+        value: String,
         item: Object,
     },
     data() {
@@ -99,8 +100,9 @@ export default {
     },
     methods: {
         onChange() {
-            const new_content = this.editor.getData();
-            this.$emit("input", { content: new_content });
+            if (this.editor.getData()) {
+                emitter.emit("update-embedded-properties", this.editor.getData());
+            }
         },
         onInstanceReady() {
             this.editor.on("change", this.onChange);
