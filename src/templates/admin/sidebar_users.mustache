@@ -17,7 +17,7 @@
 
     <nav class="admin-sidebar-section-nav">
         <a href="/admin/userlist.php" class="admin-sidebar-section-nav-item">{{ users_nav_all_users }}</a>
-        <a href="/admin/register" class="admin-sidebar-section-nav-item">{{ users_nav_new_user }}</a>
+        <a href="/admin/register" class="admin-sidebar-section-nav-item" data-test="new-user-link">{{ users_nav_new_user }}</a>
         <a href="/admin/password_policy/" class="admin-sidebar-section-nav-item">{{# gettext }}Password policy{{/ gettext }}</a>
         <a href="/admin/user-settings/" class="admin-sidebar-section-nav-item" data-test="user-settings-link">{{# gettext }}User settings{{/ gettext }}</a>
         {{# users_need_approval}}

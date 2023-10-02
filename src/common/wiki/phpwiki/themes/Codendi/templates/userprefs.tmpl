@@ -8,7 +8,7 @@ foreach (explode(',','errmsg,isForm') as $var) {
 }
 
 $plugin = $request->getArg('pagename');
-if ($request->isActionPage($request->getArg('pagename')) 
+if ($request->isActionPage($request->getArg('pagename'))
     and $isForm and $plugin == _("PreferencesInfo")) {
     $isForm = false;
 }
@@ -56,7 +56,7 @@ if (!function_exists('selectedOption')) {
 $SelectThemes = ''; $SelectLanguages = '';
 $SelectThemesDesc = ''; $SelectLanguagesDesc = '';
 if ( $isForm ) {
-    $SelectOptions = HTML(); 
+    $SelectOptions = HTML();
     if (!empty($available_themes) and is_array($available_themes)) {
 	if (!$pref->get('theme') or $pref->get('theme') == THEME)
 	    $SelectOptions->pushContent(selectedOption("",_("<system theme>")));
@@ -72,7 +72,7 @@ if ( $isForm ) {
 				     $SelectOptions);
 	$SelectThemesDesc = _("Personal theme:");
     }
-    
+
     $SelectOptions = HTML();
     if (!empty($available_languages) and is_array($available_languages)) {
 	if (!$pref->get('lang') or $pref->get('lang') == DEFAULT_LANGUAGE)
@@ -107,8 +107,8 @@ if ($errmsg) $msg = HTML(HTML::h4(array('class' => 'errors'), $errmsg),HTML::hr(
 <?= $errmsg ?>
 
 <?php if ($isForm) { ?>
-<form action="<?=$request->getPostURL()?>" method="post">
-<?php } else { 
+<form action="<?=$request->getPostURL()?>" method="post" data-test="wiki-form-notification">
+<?php } else {
   $fill = "&nbsp;";
   // See also plugin _AuthInfo
   $authmethod = ENABLE_USER_NEW ? @$user->_authmethod : @$user->auth_how;
@@ -130,11 +130,11 @@ if ($errmsg) $msg = HTML(HTML::h4(array('class' => 'errors'), $errmsg),HTML::hr(
 
 <?php if (ENABLE_USER_NEW) { ?>
   <tr><td colspan="3"><h2><?=_("E-mail")?></h2></td></tr>
-  
+
    <tr><td colspan="2">
     <?=_("Get an email notification at changes of the following pages:")?><br />
     <?php if ($isForm) { ?>
-      <textarea name="pref[notifyPages]" cols="50" rows="4"><?=$pref->get('notifyPages')?></textarea></td>
+      <textarea name="pref[notifyPages]" cols="50" rows="4" data-test="wiki-notification-pages"><?=$pref->get('notifyPages')?></textarea></td>
     <td><p class="hint"><?=_("Enter pages seperated by space or comma. Wildcards (fileglobbing) allowed.")?></p></td>
     <?php } else { ?>
      <td><?=$pref->get('notifyPages')?></td><td></td>
@@ -163,7 +163,7 @@ if ($errmsg) $msg = HTML(HTML::h4(array('class' => 'errors'), $errmsg),HTML::hr(
     <td><p class="hint">
       <?=_("Note that many browsers will automatically adjust the width of the editing area so that it fills the browser window.  In this case, the width preference will be ignored.")?></p>
     </td></tr>
-  
+
 </table>
 
 <?php if ($isForm) { ?>

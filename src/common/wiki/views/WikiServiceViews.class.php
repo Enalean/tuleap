@@ -230,7 +230,7 @@ class WikiServiceViews extends WikiViews
                 $title    = $title . '<img src="' . util_get_image_theme("ic/lock.png") . '" border="0" alt="Lock" />';
             }
 
-            $href = '<a href="' . $link . '">' . $title . '</a>';
+            $href = '<a href="' . $link . '" data-test="phpwiki-page-' . urlencode($pagename) . '">' . $title . '</a>';
         }
         return $href;
     }
@@ -276,7 +276,7 @@ class WikiServiceViews extends WikiViews
       <li><a href="' . $this->wikiLink . '&view=browsePages" data-test="wiki-browse-pages">' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'menupages') . '</a>&nbsp;|&nbsp;</li>';
         if (UserManager::instance()->getCurrentUserWithLoggedInInformation()->is_logged_in) {
             print '<li><a data-help-window href="' . $this->wikiLink . '&pagename=' . $attatch_page . '&pv=1">' . $attatch_menu . '</a>&nbsp;|&nbsp;</li>';
-            print '<li><a href="' . $this->wikiLink . '&pagename=' . $preferences_page . '">' . $preferences_menu . '</a>&nbsp;|&nbsp;</li>';
+            print '<li><a href="' . $this->wikiLink . '&pagename=' . $preferences_page . '" data-test="wiki-preferences">' . $preferences_menu . '</a>&nbsp;|&nbsp;</li>';
         }
         if (user_ismember($this->gid, 'W2') || user_ismember($this->gid, 'A')) {
             print '<li><a href="' . $this->wikiAdminLink . '" data-test="wiki-admin">' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'menuadmin') . '</a>&nbsp;|&nbsp;</li>';
