@@ -64,12 +64,14 @@ function KanbanService(
         moveInArchive,
         moveInColumn,
         updateKanbanLabel,
+        updatePromotion,
         deleteKanban,
         addColumn,
         reorderColumns,
         removeColumn,
         editColumn,
         updateKanbanName,
+        updateKanbanPromotion,
         removeKanban,
         updateSelectableReports,
     };
@@ -236,6 +238,15 @@ function KanbanService(
         );
     }
 
+    function updatePromotion(kanban_id, is_promoted) {
+        return $q.when(
+            patch(encodeURI(`/api/v1/kanban/${kanban_id}`), {
+                headers,
+                body: JSON.stringify({ is_promoted }),
+            }),
+        );
+    }
+
     function deleteKanban(kanban_id) {
         return $q.when(del(encodeURI(`/api/v1/kanban/${kanban_id}`), { headers }));
     }
@@ -337,6 +348,10 @@ function KanbanService(
 
     function updateKanbanName(label) {
         SharedPropertiesService.getKanban().label = label;
+    }
+
+    function updateKanbanPromotion(is_promoted) {
+        SharedPropertiesService.getKanban().is_promoted = is_promoted;
     }
 
     function removeKanban() {

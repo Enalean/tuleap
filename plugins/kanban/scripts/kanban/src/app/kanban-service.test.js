@@ -302,6 +302,23 @@ describe("KanbanService", () => {
         });
     });
 
+    describe(`updatePromotion`, () => {
+        it.each([true, false])(
+            `will call PATCH on the kanban to change its promotion`,
+            async (is_promoted) => {
+                const tlpPatch = jest.spyOn(tlp_fetch, "patch");
+                mockFetchSuccess(tlpPatch);
+
+                const promise = KanbanService.updatePromotion(8, is_promoted);
+                await expect(wrapPromise(promise)).resolves.toBeTruthy();
+                expect(tlpPatch).toHaveBeenCalledWith("/api/v1/kanban/8", {
+                    headers: expected_headers,
+                    body: JSON.stringify({ is_promoted }),
+                });
+            },
+        );
+    });
+
     describe(`deleteKanban`, () => {
         it(`will call DELETE on the kanban`, async () => {
             const tlpDelete = jest.spyOn(tlp_fetch, "del");
@@ -408,7 +425,7 @@ describe("KanbanService", () => {
 
             const promise = KanbanService.addColumn(8, "Review");
             const new_column = await wrapPromise(promise);
-            expect(new_column).toEqual(column_representation);
+            expect(new_column).toStrictEqual(column_representation);
             expect(tlpPost).toHaveBeenCalledWith("/api/v1/kanban/8/columns", {
                 headers: expected_headers,
                 body: JSON.stringify({ label: "Review" }),

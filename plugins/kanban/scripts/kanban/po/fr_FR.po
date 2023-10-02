@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2\n"
+"X-Generator: Poedit 3.0.1\n"
 
 msgid ""
 "A card has been updated by another user. As your kanban is filtered you "
@@ -49,6 +49,13 @@ msgstr "Annuler"
 
 msgid "Card summary"
 msgstr "Titre de la carte"
+
+msgid ""
+"Changing this settings requires to reload the page in order to see the "
+"change."
+msgstr ""
+"Changer cette configuration nécessite de recharger la page afin de voir les "
+"effets."
 
 msgid "Column name"
 msgstr "Nom de la colonne"
@@ -107,6 +114,9 @@ msgstr "Dans le Kanban depuis :"
 msgid "In column since:"
 msgstr "Dans la colonne depuis :"
 
+msgid "Is promoted"
+msgstr "Est promu"
+
 msgid "Kanban label:"
 msgstr "Label du Kanban :"
 
@@ -160,6 +170,9 @@ msgstr "Oups !"
 
 msgid "Please reload your page."
 msgstr "Veuillez recharger votre page."
+
+msgid "Promoted kanban will be displayed in the project sidebar."
+msgstr "Les kanban promus seront affichés dans la barre latérale du projet."
 
 msgid "Remove"
 msgstr "Supprimer"

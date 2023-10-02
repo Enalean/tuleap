@@ -36,6 +36,23 @@
             </div>
         </form>
 
+        <div class="tlp-form-element edit-kanban-promoted-switch">
+            <label class="tlp-label" for="is_promoted">{{ "Is promoted" | translate }}</label>
+            <div class="tlp-switch">
+                <input type="checkbox"
+                       id="is_promoted"
+                       ng-model="edit_modal.kanban.is_promoted"
+                       ng-change="edit_modal.savePromotion()"
+                       class="tlp-switch-checkbox"
+                >
+                <label for="is_promoted" class="tlp-switch-button" aria-hidden></label>
+            </div>
+            <p class="tlp-text-info">
+                {{ "Promoted kanban will be displayed in the project sidebar." | translate }}
+                {{ "Changing this settings requires to reload the page in order to see the change." | translate }}
+            </p>
+        </div>
+
         <h2 class="tlp-modal-subtitle edit-modal-section-header"><i class="fa fa-fw fa-columns"></i> <span translate>Columns configuration</span></h2>
         <div class="edit-kanban-column-configuration">
             <p class="tlp-alert-warning edit-modal-text"

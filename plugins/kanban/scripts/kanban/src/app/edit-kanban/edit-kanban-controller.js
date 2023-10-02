@@ -106,6 +106,7 @@ function EditKanbanCtrl(
         deleteKanban,
         cancelDeleteKanban,
         saveModifications,
+        savePromotion,
         addColumn,
         cancelAddColumn,
         removeColumn,
@@ -208,6 +209,21 @@ function EditKanbanCtrl(
                 self.saving = false;
                 self.saved = true;
                 updateKanbanName(self.kanban.label);
+            },
+            function (response) {
+                modal_instance.tlp_modal.hide();
+                RestErrorService.reload(response);
+            },
+        );
+    }
+
+    function savePromotion() {
+        self.saving = true;
+        KanbanService.updatePromotion(self.kanban.id, self.kanban.is_promoted).then(
+            function () {
+                self.saving = false;
+                self.saved = true;
+                KanbanService.updateKanbanPromotion(self.kanban.is_promoted);
             },
             function (response) {
                 modal_instance.tlp_modal.hide();
