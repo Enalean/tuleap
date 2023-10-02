@@ -293,7 +293,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements //phpcs:ignore PSR
         }
 
         $ids_to_search = $this->getIdsToSearch($criteria_value);
-        if ($ids_to_search === '') {
+        if (count($ids_to_search) <= 0) {
             return Option::nothing(ParametrizedFromWhere::class);
         }
 
@@ -315,7 +315,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements //phpcs:ignore PSR
         );
     }
 
-    protected function getIdsToSearch($criteria_value)
+    protected function getIdsToSearch($criteria_value): array
     {
         return array_intersect(
             array_values($criteria_value),
