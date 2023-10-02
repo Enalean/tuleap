@@ -22,13 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Artifact\ChangesetValue;
 
+use Tuleap\Option\Option;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
+use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 
 final class FieldsDataFromValuesByFieldBuilder implements BuildFieldDataFromValuesByField
 {
-    public function __construct(private \Tracker_FormElementFactory $formelement_factory, private NewArtifactLinkInitialChangesetValueBuilder $artifact_link_initial_builder,)
-    {
+    public function __construct(
+        private readonly RetrieveUsedFields $fields_retriever,
+        private readonly NewArtifactLinkInitialChangesetValueBuilder $artifact_link_initial_builder,
+    ) {
     }
 
     /**
@@ -38,11 +43,13 @@ final class FieldsDataFromValuesByFieldBuilder implements BuildFieldDataFromValu
     public function getFieldsDataOnCreate(array $values, \Tracker $tracker): InitialChangesetValuesContainer
     {
         $new_values    = [];
-        $artifact_link = null;
+        $artifact_link = Option::nothing(NewArtifactLinkInitialChangesetValue::class);
         foreach ($values as $field_name => $value) {
             $field = $this->getFieldByName($tracker, $field_name);
             if ($field instanceof \Tracker_FormElement_Field_ArtifactLink) {
-                $artifact_link = $this->artifact_link_initial_builder->buildFromPayload($field, $value);
+                $artifact_link = Option::fromValue(
+                    $this->artifact_link_initial_builder->buildFromPayload($field, $value)
+                );
                 continue;
             }
 
@@ -57,7 +64,7 @@ final class FieldsDataFromValuesByFieldBuilder implements BuildFieldDataFromValu
      */
     private function getFieldByName(\Tracker $tracker, string $field_name): \Tracker_FormElement_Field
     {
-        $field = $this->formelement_factory->getUsedFieldByName($tracker->getId(), $field_name);
+        $field = $this->fields_retriever->getUsedFieldByName($tracker->getId(), $field_name);
         if (! $field) {
             throw new \Tracker_FormElement_InvalidFieldException("Field $field_name does not exist in the tracker");
         }

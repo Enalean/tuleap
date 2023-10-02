@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Builders;
 
 use Tracker_FormElement_Field_List_Bind;
-use Tracker_FormElement_Field_MultiSelectbox;
-use Tracker_FormElement_Field_Selectbox;
 
 final class TrackerFormElementListFieldBuilder
 {
@@ -67,30 +65,42 @@ final class TrackerFormElementListFieldBuilder
         return $this;
     }
 
-    public function build(): Tracker_FormElement_Field_Selectbox
+    public function build(): \Tracker_FormElement_Field_Selectbox|\Tracker_FormElement_Field_MultiSelectbox
     {
-        $selectbox = $this->is_multiple
-            ? $this->buildSelectBox(Tracker_FormElement_Field_MultiSelectbox::class)
-            : $this->buildSelectBox(Tracker_FormElement_Field_Selectbox::class);
-
+        $selectbox = $this->buildSelectBox();
         $selectbox->setBind($this->bind);
-
         return $selectbox;
     }
 
-    private function buildSelectBox(string $selectbox_class): Tracker_FormElement_Field_Selectbox
+    private function buildSelectBox(): \Tracker_FormElement_Field_Selectbox|\Tracker_FormElement_Field_MultiSelectbox
     {
-        return new $selectbox_class(
+        if ($this->is_multiple) {
+            return new \Tracker_FormElement_Field_MultiSelectbox(
+                $this->id,
+                10,
+                15,
+                $this->name,
+                $this->label,
+                '',
+                true,
+                'P',
+                $this->is_required,
+                '',
+                10,
+                null
+            );
+        }
+        return new \Tracker_FormElement_Field_Selectbox(
             $this->id,
             10,
             15,
             $this->name,
             $this->label,
-            "",
+            '',
             true,
-            "",
+            'P',
             $this->is_required,
-            false,
+            '',
             10,
             null
         );

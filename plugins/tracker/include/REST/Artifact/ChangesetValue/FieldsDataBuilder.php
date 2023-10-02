@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\REST\Artifact\ChangesetValue;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValue;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
@@ -32,9 +33,9 @@ use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInit
 final class FieldsDataBuilder implements BuildFieldsData
 {
     public function __construct(
-        private RetrieveUsedFields $fields_retriever,
-        private NewArtifactLinkChangesetValueBuilder $artifact_link_builder,
-        private NewArtifactLinkInitialChangesetValueBuilder $artifact_link_initial_builder,
+        private readonly RetrieveUsedFields $fields_retriever,
+        private readonly NewArtifactLinkChangesetValueBuilder $artifact_link_builder,
+        private readonly NewArtifactLinkInitialChangesetValueBuilder $artifact_link_initial_builder,
     ) {
     }
 
@@ -45,14 +46,16 @@ final class FieldsDataBuilder implements BuildFieldsData
     public function getFieldsDataOnCreate(array $values, \Tracker $tracker): InitialChangesetValuesContainer
     {
         $new_values     = [];
-        $artifact_link  = null;
+        $artifact_link  = Option::nothing(NewArtifactLinkInitialChangesetValue::class);
         $indexed_fields = $this->getIndexedFields($tracker);
         foreach ($values as $value) {
             $array_representation = $value->toArray();
 
             $field = $this->getField($indexed_fields, $array_representation);
             if ($field instanceof \Tracker_FormElement_Field_ArtifactLink) {
-                $artifact_link = $this->artifact_link_initial_builder->buildFromPayload($field, $value);
+                $artifact_link = Option::fromValue(
+                    $this->artifact_link_initial_builder->buildFromPayload($field, $value)
+                );
                 continue;
             }
             $new_values[$field->getId()] = $field->getFieldDataFromRESTValue($array_representation);

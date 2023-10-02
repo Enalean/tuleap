@@ -25,6 +25,7 @@ use Tracker;
 use Tracker_ArtifactFactory;
 use Tuleap\Tracker\Artifact\ChangesetValue\AddDefaultValuesToFieldsData;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\Link\HandleUpdateArtifact;
 use Tuleap\Tracker\Artifact\RetrieveTracker;
@@ -138,12 +139,21 @@ class ArtifactCreator
 
     private function addReverseLinks(PFUser $submitter, InitialChangesetValuesContainer $changeset_values, Artifact $artifact, array $values): void
     {
-        $reverse_link_collection = $changeset_values->getArtifactLinkValue()?->getReverseLinks();
-        if ($reverse_link_collection !== null && $changeset_values->getArtifactLinkValue()?->getParent() === null && ! $this->isLinkKeyUsed($values)) {
-            $this->artifact_update_handler->updateTypeAndAddReverseLinks($artifact, $submitter, $reverse_link_collection, new CollectionOfReverseLinks([]))
-                ->mapErr(
-                    [FaultMapper::class, 'mapToRestException']
-                );
-        }
+        $changeset_values->getArtifactLinkValue()->apply(
+            function (NewArtifactLinkInitialChangesetValue $artifact_link_value) use (
+                $values,
+                $submitter,
+                $artifact
+            ) {
+                if ($artifact_link_value->getParent()->isNothing() && ! $this->isLinkKeyUsed($values)) {
+                    $this->artifact_update_handler->updateTypeAndAddReverseLinks(
+                        $artifact,
+                        $submitter,
+                        $artifact_link_value->getReverseLinks(),
+                        new CollectionOfReverseLinks([])
+                    )->mapErr(FaultMapper::mapToRestException(...));
+                }
+            }
+        );
     }
 }

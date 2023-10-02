@@ -23,125 +23,84 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\Artifact\ChangesetValue;
 
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
+use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementFloatFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementTextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 
 final class FieldsDataFromValuesByFieldBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TRACKER_ID      = 101;
-    private const INT_FIELD_ID    = 395;
-    private const INT_VALUE       = 54;
-    private const FLOAT_FIELD_ID  = 425;
-    private const FLOAT_VALUE     = 14.03;
-    private const STRING_FIELD_ID = 40;
-    private const STRING_VALUE    = 'untrampled';
-    private const TEXT_FIELD_ID   = 283;
-    private const TEXT_VALUE      = 'fluttery Azerbaijanese';
-    private const TEXT_FORMAT     = 'text';
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub & \Tracker_FormElementFactory
-     */
-    private $form_element_factory;
+    private const TRACKER_ID        = 101;
+    private const INT_FIELD_ID      = 395;
+    private const INT_VALUE         = 54;
+    private const FLOAT_FIELD_ID    = 425;
+    private const FLOAT_VALUE       = 14.03;
+    private const STRING_FIELD_ID   = 40;
+    private const STRING_VALUE      = 'untrampled';
+    private const TEXT_FIELD_ID     = 283;
+    private const TEXT_VALUE        = 'fluttery Azerbaijanese';
+    private const TEXT_FORMAT       = 'text';
+    private const INT_FIELD_NAME    = 'integer';
+    private const FLOAT_FIELD_NAME  = 'floatibulle';
+    private const STRING_FIELD_NAME = 'string';
+    private const TEXT_FIELD_NAME   = 'text';
+    private RetrieveUsedFields $fields_retriever;
+    private \Tracker_FormElement_Field_Integer $int_field;
+    private \Tracker_FormElement_Field_Float $float_field;
+    private \Tracker_FormElement_Field_String $string_field;
+    private \Tracker_FormElement_Field_Text $text_field;
 
     protected function setUp(): void
     {
-        $this->form_element_factory = $this->createStub(\Tracker_FormElementFactory::class);
+        $this->int_field    = TrackerFormElementIntFieldBuilder::anIntField(self::INT_FIELD_ID)
+            ->withName(self::INT_FIELD_NAME)
+            ->build();
+        $this->float_field  = TrackerFormElementFloatFieldBuilder::aFloatField(self::FLOAT_FIELD_ID)
+            ->withName(self::FLOAT_FIELD_NAME)
+            ->build();
+        $this->string_field = TrackerFormElementStringFieldBuilder::aStringField(self::STRING_FIELD_ID)
+            ->withName(self::STRING_FIELD_NAME)
+            ->build();
+        $this->text_field   = TrackerFormElementTextFieldBuilder::aTextField(self::TEXT_FIELD_ID)
+            ->withName(self::TEXT_FIELD_NAME)
+            ->build();
+
+        $this->fields_retriever = RetrieveUsedFieldsStub::withNoFields();
     }
 
-    public function returnFields(int $tracker_id, string $field_shortname)
-    {
-        $int_field = new \Tracker_FormElement_Field_Integer(
-            self::INT_FIELD_ID,
-            self::TRACKER_ID,
-            null,
-            'field_int',
-            'Field Integer',
-            '',
-            1,
-            'P',
-            true,
-            '',
-            1
-        );
-
-        $float_field = new \Tracker_FormElement_Field_Float(
-            self::FLOAT_FIELD_ID,
-            self::TRACKER_ID,
-            null,
-            'field_float',
-            'Field Float',
-            '',
-            1,
-            'P',
-            true,
-            '',
-            1
-        );
-
-        $string_field = new \Tracker_FormElement_Field_String(
-            self::STRING_FIELD_ID,
-            self::TRACKER_ID,
-            null,
-            'field_string',
-            'Field String',
-            '',
-            1,
-            'P',
-            true,
-            '',
-            1
-        );
-
-        $text_field = new \Tracker_FormElement_Field_Text(
-            self::TEXT_FIELD_ID,
-            self::TRACKER_ID,
-            null,
-            'field_text',
-            'Field Text',
-            '',
-            1,
-            'P',
-            true,
-            '',
-            1
-        );
-
-        if ($field_shortname === 'integer') {
-            return $int_field;
-        }
-        if ($field_shortname === 'floatibulle') {
-            return $float_field;
-        }
-        if ($field_shortname === 'string') {
-            return $string_field;
-        }
-        if ($field_shortname === 'text') {
-            return $text_field;
-        }
-        return null;
-    }
-
+    /**
+     * @throws \Tracker_FormElement_InvalidFieldException
+     * @throws \Tracker_FormElement_InvalidFieldValueException
+     */
     private function buildFromValuesByField(array $payload): InitialChangesetValuesContainer
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(self::TRACKER_ID)->build();
 
-        $builder = new FieldsDataFromValuesByFieldBuilder($this->form_element_factory, new NewArtifactLinkInitialChangesetValueBuilder());
+        $builder = new FieldsDataFromValuesByFieldBuilder(
+            $this->fields_retriever,
+            new NewArtifactLinkInitialChangesetValueBuilder()
+        );
         return $builder->getFieldsDataOnCreate($payload, $tracker);
     }
 
     public function testItGeneratesFieldDataFromRestValuesByField(): void
     {
         $payload = [
-            'integer'     => [
+            self::INT_FIELD_NAME    => [
                 'value' => self::INT_VALUE,
             ],
-            'floatibulle' => [
+            self::FLOAT_FIELD_NAME  => [
                 'value' => self::FLOAT_VALUE,
             ],
-            'string'      => [
+            self::STRING_FIELD_NAME => [
                 'value' => self::STRING_VALUE,
             ],
-            'text'        => [
+            self::TEXT_FIELD_NAME   => [
                 'value' => [
                     'format'  => self::TEXT_FORMAT,
                     'content' => self::TEXT_VALUE,
@@ -149,16 +108,20 @@ final class FieldsDataFromValuesByFieldBuilderTest extends \Tuleap\Test\PHPUnit\
             ],
         ];
 
-        $this->form_element_factory->method('getUsedFieldByName')
-            ->willReturnCallback([$this, 'returnFields']);
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
+            $this->int_field,
+            $this->float_field,
+            $this->string_field,
+            $this->text_field,
+        );
 
         $fields_data = $this->buildFromValuesByField($payload);
         $this->assertSame([
-            self::INT_FIELD_ID => self::INT_VALUE,
-            self::FLOAT_FIELD_ID => self::FLOAT_VALUE,
+            self::INT_FIELD_ID    => self::INT_VALUE,
+            self::FLOAT_FIELD_ID  => self::FLOAT_VALUE,
             self::STRING_FIELD_ID => self::STRING_VALUE,
-            self::TEXT_FIELD_ID => [
-                'format' => self::TEXT_FORMAT,
+            self::TEXT_FIELD_ID   => [
+                'format'  => self::TEXT_FORMAT,
                 'content' => self::TEXT_VALUE,
             ],
         ], $fields_data->getFieldsData());
@@ -167,17 +130,20 @@ final class FieldsDataFromValuesByFieldBuilderTest extends \Tuleap\Test\PHPUnit\
     public function testItThrowsAnExceptionIfFieldIsNotUsedInTracker(): void
     {
         $payload = [
-            'integerV2'   => 42,
-            'floatibulle' => self::FLOAT_VALUE,
-            'string'      => self::STRING_VALUE,
-            'text'        => [
+            'integerV2'             => 42,
+            self::FLOAT_FIELD_NAME  => self::FLOAT_VALUE,
+            self::STRING_FIELD_NAME => self::STRING_VALUE,
+            self::TEXT_FIELD_NAME   => [
                 'format'  => self::TEXT_FORMAT,
                 'content' => self::TEXT_VALUE,
             ],
         ];
 
-        $this->form_element_factory->method('getUsedFieldByName')
-            ->willReturnCallback([$this, 'returnFields']);
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
+            $this->float_field,
+            $this->string_field,
+            $this->text_field,
+        );
 
         $this->expectException(\Tracker_FormElement_InvalidFieldException::class);
         $this->buildFromValuesByField($payload);
@@ -185,27 +151,16 @@ final class FieldsDataFromValuesByFieldBuilderTest extends \Tuleap\Test\PHPUnit\
 
     public function testItThrowsAnExceptionIfFieldIsNotAlphaNumeric(): void
     {
-        $msb_field = new \Tracker_FormElement_Field_MultiSelectbox(
-            484,
-            self::TRACKER_ID,
-            null,
-            'field_msb',
-            'Field MSB',
-            '',
-            1,
-            'P',
-            true,
-            '',
-            1
-        );
+        $msb_field = TrackerFormElementListFieldBuilder::aListField(484)
+            ->withName('msb')
+            ->withMultipleField()
+            ->build();
 
         $payload = [
             'msb' => ['whatever'],
         ];
 
-        $this->form_element_factory->method('getUsedFieldByName')
-            ->with(self::TRACKER_ID, 'msb')
-            ->willReturn($msb_field);
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields($msb_field);
 
         $this->expectException(\Tracker_FormElement_RESTValueByField_NotImplementedException::class);
         $this->buildFromValuesByField($payload);

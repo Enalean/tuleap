@@ -22,55 +22,66 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\ChangesetValue;
 
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewParentLink;
 use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
-use Tuleap\Tracker\Test\Stub\ReverseLinkStub;
 
 final class InitialChangesetValuesContainerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIELD_ID               = 745;
     private const FIELD_VALUE            = 'whatever';
     private const ARTIFACT_LINK_FIELD_ID = 992;
+    /** @var Option<NewArtifactLinkInitialChangesetValue> $artifact_links */
+    private Option $artifact_links;
+    private array $fields_data;
+
+    protected function setUp(): void
+    {
+        $this->fields_data    = [self::FIELD_ID => self::FIELD_VALUE];
+        $this->artifact_links = Option::nothing(NewArtifactLinkInitialChangesetValue::class);
+    }
+
+    private function build(): InitialChangesetValuesContainer
+    {
+        return new InitialChangesetValuesContainer($this->fields_data, $this->artifact_links);
+    }
 
     public function testItBuildsWithNoArtifactLinkValue(): void
     {
-        $fields_data      = [self::FIELD_ID => self::FIELD_VALUE];
-        $changeset_values = new InitialChangesetValuesContainer($fields_data, null);
-
-        self::assertNull($changeset_values->getArtifactLinkValue());
-        self::assertSame($fields_data, $changeset_values->getFieldsData());
+        $changeset_values = $this->build();
+        self::assertSame($this->artifact_links, $changeset_values->getArtifactLinkValue());
+        self::assertSame($this->fields_data, $changeset_values->getFieldsData());
     }
 
     public function testItBuildsWithArtifactLinkValue(): void
     {
-        $fields_data         = [self::FIELD_ID => self::FIELD_VALUE];
-        $new_links           = new CollectionOfForwardLinks([
+        $submitted_links      = new CollectionOfForwardLinks([
             ForwardLinkStub::withType(41, 'custom_type'),
             ForwardLinkStub::withNoType(91),
         ]);
-        $reverse_links       = new CollectionOfReverseLinks([
-            ReverseLinkStub::withType(56, 'custom_type'),
-        ]);
-        $artifact_link_value = NewArtifactLinkInitialChangesetValue::fromParts(
-            self::ARTIFACT_LINK_FIELD_ID,
-            $new_links,
-            null,
-            $reverse_links
+        $this->artifact_links = Option::fromValue(
+            NewArtifactLinkInitialChangesetValue::fromParts(
+                self::ARTIFACT_LINK_FIELD_ID,
+                $submitted_links,
+                Option::nothing(NewParentLink::class),
+                new CollectionOfReverseLinks([]),
+            )
         );
-        $changeset_values    = new InitialChangesetValuesContainer($fields_data, $artifact_link_value);
+        $changeset_values     = $this->build();
 
-        self::assertSame($artifact_link_value, $changeset_values->getArtifactLinkValue());
+        self::assertSame($this->artifact_links, $changeset_values->getArtifactLinkValue());
         $new_fields_data = $changeset_values->getFieldsData();
-        self::assertNotSame($fields_data, $new_fields_data);
+        self::assertNotSame($this->fields_data, $new_fields_data);
         self::assertArrayHasKey(self::FIELD_ID, $new_fields_data);
         self::assertSame(self::FIELD_VALUE, $new_fields_data[self::FIELD_ID]);
         self::assertArrayHasKey(self::ARTIFACT_LINK_FIELD_ID, $new_fields_data);
         self::assertSame(
             [
                 'new_values' => '41,91',
-                'types' => [
+                'types'      => [
                     41 => 'custom_type',
                     91 => \Tracker_FormElement_Field_ArtifactLink::NO_TYPE,
                 ],

@@ -67,9 +67,9 @@ final class TrackerFormElementStringFieldBuilder
             $this->label,
             "",
             true,
-            "",
+            'P',
             $this->is_required,
-            false,
+            '',
             10,
             null
         );

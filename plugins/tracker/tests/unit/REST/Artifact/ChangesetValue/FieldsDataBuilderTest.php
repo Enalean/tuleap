@@ -30,6 +30,10 @@ use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactValuesRepresentationBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementFloatFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementTextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveForwardLinksStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
@@ -55,61 +59,10 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->int_field = new \Tracker_FormElement_Field_Integer(
-            self::INT_FIELD_ID,
-            self::TRACKER_ID,
-            null,
-            'field_int',
-            'Field Integer',
-            '',
-            1,
-            'P',
-            true,
-            '',
-            1
-        );
-
-        $this->float_field = new \Tracker_FormElement_Field_Float(
-            self::FLOAT_FIELD_ID,
-            self::TRACKER_ID,
-            null,
-            'field_float',
-            'Field Float',
-            '',
-            1,
-            'P',
-            true,
-            '',
-            1
-        );
-
-        $this->string_field = new \Tracker_FormElement_Field_String(
-            self::STRING_FIELD_ID,
-            self::TRACKER_ID,
-            null,
-            'field_string',
-            'Field String',
-            '',
-            1,
-            'P',
-            true,
-            '',
-            1
-        );
-
-        $this->text_field = new \Tracker_FormElement_Field_Text(
-            self::TEXT_FIELD_ID,
-            self::TRACKER_ID,
-            null,
-            'field_text',
-            'Field Text',
-            '',
-            1,
-            'P',
-            true,
-            '',
-            1
-        );
+        $this->int_field    = TrackerFormElementIntFieldBuilder::anIntField(self::INT_FIELD_ID)->build();
+        $this->float_field  = TrackerFormElementFloatFieldBuilder::aFloatField(self::FLOAT_FIELD_ID)->build();
+        $this->string_field = TrackerFormElementStringFieldBuilder::aStringField(self::STRING_FIELD_ID)->build();
+        $this->text_field   = TrackerFormElementTextFieldBuilder::aTextField(self::TEXT_FIELD_ID)->build();
 
         $this->fields_retriever = RetrieveUsedFieldsStub::withNoFields();
     }
@@ -242,9 +195,7 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $builder = new FieldsDataBuilder(
             $this->fields_retriever,
-            new NewArtifactLinkChangesetValueBuilder(
-                RetrieveForwardLinksStub::withLinks(new CollectionOfForwardLinks([])),
-            ),
+            new NewArtifactLinkChangesetValueBuilder(RetrieveForwardLinksStub::withoutLinks()),
             new NewArtifactLinkInitialChangesetValueBuilder()
         );
         return $builder->getFieldsDataOnCreate($payload, $tracker);
@@ -284,7 +235,7 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             self::STRING_FIELD_ID => self::STRING_VALUE,
             self::TEXT_FIELD_ID   => ['format' => self::TEXT_FORMAT, 'content' => self::TEXT_VALUE],
         ], $changeset_values->getFieldsData());
-        self::assertNull($changeset_values->getArtifactLinkValue());
+        self::assertTrue($changeset_values->getArtifactLinkValue()->isNothing());
     }
 
     public function testItBuildsArtifactLinkChangesetValueSeparatelyFromRESTCreatePayload(): void
@@ -305,8 +256,7 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $changeset_values = $this->getFieldsDataOnCreate([$link_representation]);
         $artifact_link    = $changeset_values->getArtifactLinkValue();
-        self::assertNotNull($artifact_link);
-        $new_links = $artifact_link->getNewLinks()->getTargetArtifactIds();
+        $new_links        = $artifact_link->unwrapOr(null)?->getNewLinks()->getTargetArtifactIds();
         self::assertCount(2, $new_links);
         self::assertContains($first_linked_artifact_id, $new_links);
         self::assertContains($second_linked_artifact_id, $new_links);

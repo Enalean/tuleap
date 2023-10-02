@@ -22,9 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewParentLink;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\BuildFieldDataFromValuesByField;
 
@@ -33,8 +35,13 @@ use Tuleap\Tracker\REST\Artifact\ChangesetValue\BuildFieldDataFromValuesByField;
  */
 final class BuildFieldDataFromValuesByFieldStub implements BuildFieldDataFromValuesByField
 {
-    private function __construct(private array $fields_data, private NewArtifactLinkInitialChangesetValue $artifact_link_value)
-    {
+    /**
+     * @param Option<NewArtifactLinkInitialChangesetValue> $artifact_link_value
+     */
+    private function __construct(
+        private readonly array $fields_data,
+        private readonly Option $artifact_link_value,
+    ) {
     }
 
     public static function buildWithDefaults(): self
@@ -47,11 +54,13 @@ final class BuildFieldDataFromValuesByFieldStub implements BuildFieldDataFromVal
         $reverse_links       = new CollectionOfReverseLinks([
             ReverseLinkStub::withType(56, 'custom_type'),
         ]);
-        $artifact_link_value = NewArtifactLinkInitialChangesetValue::fromParts(
-            122,
-            $new_links,
-            null,
-            $reverse_links
+        $artifact_link_value = Option::fromValue(
+            NewArtifactLinkInitialChangesetValue::fromParts(
+                122,
+                $new_links,
+                Option::nothing(NewParentLink::class),
+                $reverse_links
+            )
         );
 
         return new self($fields_data, $artifact_link_value);
