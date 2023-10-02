@@ -37,6 +37,11 @@ final class RetrieveReverseLinksStub implements RetrieveReverseLinks
         return new self($links);
     }
 
+    public static function withoutLinks(): self
+    {
+        return new self(new CollectionOfReverseLinks([]));
+    }
+
     public function retrieveReverseLinks(
         Artifact $artifact,
         \PFUser $user,

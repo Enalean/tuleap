@@ -108,7 +108,7 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksDao;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksRetriever;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksToNewChangesetsConverter;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
-use Tuleap\Tracker\Artifact\Link\ArtifactUpdateHandler;
+use Tuleap\Tracker\Artifact\Link\ArtifactReverseLinksUpdater;
 use Tuleap\Tracker\Exception\SemanticTitleNotDefinedException;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
@@ -802,21 +802,21 @@ class ArtifactsResource extends AuthenticatedResource
             $artifact_factory
         );
 
-        $artifact_from_rest_updater = new ArtifactUpdateHandler(
-            $changeset_creator,
-            $this->formelement_factory,
-            $artifact_factory,
-        );
-
-        $this->sendAllowHeadersForArtifact();
-
         $put_handler = new PUTHandler(
             $fields_data_builder,
-            $reverse_link_retriever,
-            $artifact_from_rest_updater,
+            new ArtifactReverseLinksUpdater(
+                $reverse_link_retriever,
+                new ReverseLinksToNewChangesetsConverter(
+                    $this->formelement_factory,
+                    $artifact_factory
+                ),
+                $changeset_creator
+            ),
             $transaction_executor,
             $update_conditions_checker,
         );
+
+        $this->sendAllowHeadersForArtifact();
         $put_handler->handle($values, $artifact, $user, $comment);
 
         $this->sendLastModifiedHeader($artifact);
