@@ -26,6 +26,7 @@ use HTTPRequest;
 use Project;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
+use Tuleap\Layout\HeaderConfigurationBuilder;
 
 class GitViewHeader
 {
@@ -49,12 +50,10 @@ class GitViewHeader
         $layout->addBreadcrumbs($breadcrumbs);
 
         $layout->header(
-            [
-                'title'      => dgettext('tuleap-git', 'Git'),
-                'project'    => $project,
-                'toptab'     => dgettext('tuleap-git', 'Git'),
-                'body_class' => array_merge(['git-administration'], $this->getAdditionalBodyClasses($request)),
-            ]
+            HeaderConfigurationBuilder::get(dgettext('tuleap-git', 'Git'))
+                ->inProject($project, \GitPlugin::SERVICE_SHORTNAME)
+                ->withBodyClass(array_merge(['git-administration'], $this->getAdditionalBodyClasses($request)))
+                ->build(),
         );
     }
 

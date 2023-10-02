@@ -68,9 +68,27 @@ final class HeaderConfigurationBuilder
         return $this;
     }
 
-    public function inProjectWithoutSidebar(BackToLinkPresenter $back_to_link): self
-    {
+    public function inProject(
+        \Project $project,
+        string $current_service_shortname,
+    ): self {
         $this->in_project = new InProject(
+            $project,
+            $current_service_shortname,
+            null,
+        );
+
+        return $this;
+    }
+
+    public function inProjectWithoutSidebar(
+        \Project $project,
+        string $current_service_shortname,
+        BackToLinkPresenter $back_to_link,
+    ): self {
+        $this->in_project = new InProject(
+            $project,
+            $current_service_shortname,
             new WithoutSidebar($back_to_link)
         );
 

@@ -61,7 +61,7 @@ final class OpenInOnlyOfficeController implements \Tuleap\Request\DispatchableWi
 
         $this->only_office_document_provider->getDocument($user, (int) $variables['id'])
             ->match(
-                function (OnlyOfficeDocument $document) use ($layout): void {
+                function (OnlyOfficeDocument $document) use ($layout, $request): void {
                     $link_provider = new DocumentLinkProvider($this->base_url, $document->project);
 
                     $icon_and_name_of_project = EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat(
@@ -79,6 +79,8 @@ final class OpenInOnlyOfficeController implements \Tuleap\Request\DispatchableWi
                     $layout->header(
                         HeaderConfigurationBuilder::get($page_title)
                             ->inProjectWithoutSidebar(
+                                $document->project,
+                                \DocmanPlugin::SERVICE_SHORTNAME,
                                 new BackToLinkPresenter(
                                     sprintf(
                                         dgettext('tuleap-onlyoffice', 'Back to %s documents'),

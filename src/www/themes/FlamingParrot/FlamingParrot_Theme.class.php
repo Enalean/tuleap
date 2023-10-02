@@ -116,8 +116,13 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
     public function header(HeaderConfiguration|array $params): void
     {
-        if (is_array($params) && ! empty($params['project'])) {
+        $project = null;
+        if ($params instanceof HeaderConfiguration && $params->in_project) {
+            $project = $params->in_project->project;
+        } elseif (is_array($params) && ! empty($params['project'])) {
             $project = $params['project'];
+        }
+        if ($project) {
             EventManager::instance()->processEvent(new BeforeStartProjectHeader($project, $this, $this->getUser()));
         }
 
@@ -133,7 +138,13 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
         if ($params instanceof HeaderConfiguration) {
             $params = [
-                'title' => $params->title,
+                'title'        => $params->title,
+                'body_class'   => $params->body_class,
+                'main_classes' => $params->main_class,
+                ...($params->in_project ? [
+                    'project' => $project,
+                    'toptab' => $params->in_project->current_service_shortname,
+                ] : []),
             ];
         }
         $title = ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME);
