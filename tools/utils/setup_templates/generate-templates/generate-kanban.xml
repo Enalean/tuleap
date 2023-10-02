@@ -39,7 +39,7 @@ You will find a kanban named "Activities".
     <agiledashboard>
         <plannings />
         <kanban_list title="Kanban">
-            <kanban tracker_id="T425" name="Activities" ID="K01">
+            <kanban tracker_id="T425" name="Activities" ID="K01" is_promoted="1">
                 <column wip="1" REF="V13416"/>
             </kanban>
         </kanban_list>

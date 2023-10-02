@@ -1555,7 +1555,7 @@
     </admin>
     <plannings/>
     <kanban_list title="Program Kanban">
-      <kanban tracker_id="T1144" name="Program Features" ID="K85"/>
+      <kanban tracker_id="T1144" name="Program Features" ID="K85" is_promoted="1"/>
     </kanban_list>
   </agiledashboard>
   <dashboards>

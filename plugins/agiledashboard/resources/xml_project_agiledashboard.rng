@@ -72,11 +72,6 @@
               <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
             </attribute>
           </optional>
-          <optional>
-            <attribute name="is_promoted">
-              <data type="boolean" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
-            </attribute>
-          </optional>
           <zeroOrMore>
             <element name="kanban">
               <attribute name="ID">
@@ -88,6 +83,11 @@
               <attribute name="name">
                 <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
               </attribute>
+              <optional>
+                <attribute name="is_promoted">
+                  <data type="boolean" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+                </attribute>
+              </optional>
               <zeroOrMore>
                 <element name="column">
                   <attribute name="REF">

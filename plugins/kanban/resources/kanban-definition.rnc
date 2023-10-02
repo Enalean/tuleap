@@ -1,9 +1,9 @@
 kanban_list = attribute title { xsd:string }?,
-    attribute is_promoted { xsd:boolean }?,
     element kanban {
          attribute ID { xsd:ID },
          attribute tracker_id { xsd:string },
          attribute name { xsd:string },
+         attribute is_promoted { xsd:boolean }?,
 
          element column {
             attribute REF { xsd:IDREF },

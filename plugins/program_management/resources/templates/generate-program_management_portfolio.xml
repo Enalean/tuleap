@@ -11,7 +11,8 @@
     <service shortname="plugin_svn" enabled="0"/>
     <service shortname="hudson" enabled="0"/>
     <service shortname="plugin_tracker" enabled="1"/>
-    <service shortname="plugin_agiledashboard" enabled="1"/>
+    <service shortname="plugin_agiledashboard" enabled="0"/>
+    <service shortname="plugin_kanban" enabled="1"/>
     <service shortname="plugin_baseline" enabled="0"/>
     <service shortname="plugin_testmanagement" enabled="0"/>
   </services>
@@ -509,7 +510,7 @@ In addition, you can add on this dashboard the **Portfolio Canvas**. It defines 
   <agiledashboard>
     <plannings/>
     <kanban_list title="Kanban">
-      <kanban tracker_id="T1089" name="Portfolio kanban" ID="K70"/>
+      <kanban tracker_id="T1089" name="Portfolio kanban" ID="K70" is_promoted="1"/>
     </kanban_list>
   </agiledashboard>
   <svn/>

@@ -12,6 +12,7 @@
     <service shortname="hudson" enabled="0"/>
     <service shortname="plugin_tracker" enabled="1"/>
     <service shortname="plugin_agiledashboard" enabled="1"/>
+    <service shortname="plugin_kanban" enabled="0"/>
     <service shortname="plugin_testmanagement" enabled="1"/>
     <service shortname="plugin_baseline" enabled="0"/>
   </services>
