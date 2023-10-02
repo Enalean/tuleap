@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,30 +20,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Layout;
+namespace Tuleap\Layout\HeaderConfiguration;
 
-use Tuleap\Layout\HeaderConfiguration\InProject;
-
-/**
- * @psalm-immutable
- */
-final class HeaderConfiguration
+final class InProject
 {
-    /**
-     * @param string[] $body_class
-     * @param string[] $main_class
-     * @psalm-internal \Tuleap\Layout
-     */
-    public function __construct(
-        public readonly string $title,
-        public readonly ?InProject $in_project,
-        public readonly array $body_class,
-        public readonly array $main_class,
-    ) {
-    }
-
-    public static function fromTitle(string $title): self
+    public function __construct(public readonly WithoutSidebar $without_sidebar)
     {
-        return HeaderConfigurationBuilder::get($title)->build();
     }
 }

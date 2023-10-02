@@ -25,7 +25,7 @@ use Tuleap\Dashboard\User\UserDashboardDao;
 use Tuleap\Dashboard\User\UserDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
-use Tuleap\Layout\HeaderConfiguration\InProjectWithoutSidebar;
+use Tuleap\Layout\HeaderConfiguration\WithoutSidebar;
 use Tuleap\Layout\NewDropdown\NewDropdownPresenter;
 use Tuleap\User\Account\RegistrationGuardEvent;
 use Tuleap\User\CurrentUserWithLoggedInInformation;
@@ -44,7 +44,7 @@ class PresenterBuilder
         bool $should_logo_be_displayed,
         bool $is_legacy_logo_customized,
         bool $is_svg_logo_customized,
-        ?InProjectWithoutSidebar $in_project_without_sidebar,
+        ?WithoutSidebar $in_project_without_sidebar,
         ?\Tuleap\Platform\Banner\BannerDisplay $platform_banner,
     ) {
         $event_manager = EventManager::instance();

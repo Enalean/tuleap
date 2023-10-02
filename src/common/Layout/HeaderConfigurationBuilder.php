@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Layout;
 
-use Tuleap\Layout\HeaderConfiguration\InProjectWithoutSidebar;
+use Tuleap\Layout\HeaderConfiguration\InProject;
+use Tuleap\Layout\HeaderConfiguration\InProjectWithoutSidebar\BackToLinkPresenter;
+use Tuleap\Layout\HeaderConfiguration\WithoutSidebar;
 
 final class HeaderConfigurationBuilder
 {
@@ -35,7 +37,7 @@ final class HeaderConfigurationBuilder
      */
     private array $main_class = [];
 
-    private ?InProjectWithoutSidebar $in_project_without_sidebar = null;
+    private ?InProject $in_project = null;
 
     private function __construct(private string $title)
     {
@@ -66,9 +68,11 @@ final class HeaderConfigurationBuilder
         return $this;
     }
 
-    public function inProjectWithoutSidebar(InProjectWithoutSidebar\BackToLinkPresenter $back_to_link): self
+    public function inProjectWithoutSidebar(BackToLinkPresenter $back_to_link): self
     {
-        $this->in_project_without_sidebar = new InProjectWithoutSidebar($back_to_link);
+        $this->in_project = new InProject(
+            new WithoutSidebar($back_to_link)
+        );
 
         return $this;
     }
@@ -77,7 +81,7 @@ final class HeaderConfigurationBuilder
     {
         return new HeaderConfiguration(
             $this->title,
-            $this->in_project_without_sidebar,
+            $this->in_project,
             $this->body_class,
             $this->main_class,
         );
