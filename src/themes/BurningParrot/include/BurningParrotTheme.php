@@ -178,7 +178,10 @@ class BurningParrotTheme extends BaseLayout
                 'title'        => $params->title,
                 'body_class'   => $params->body_class,
                 'main_classes' => $params->main_class,
-                ...($params->in_project ? ['toptab' => $params->in_project->current_service_shortname] : []),
+                ...($params->in_project ? [
+                    'toptab' => $params->in_project->current_service_shortname,
+                    'without-project-in-breadcrumbs' => ! $params->in_project->in_breadcrumbs,
+                ] : []),
             ];
         }
 

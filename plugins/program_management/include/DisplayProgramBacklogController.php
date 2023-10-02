@@ -26,6 +26,7 @@ use HTTPRequest;
 use PFUser;
 use Project;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\ProgramBacklogPresenter;
@@ -132,14 +133,10 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
     private function includeHeaderAndNavigationBar(BaseLayout $layout, Project $project): void
     {
         $layout->header(
-            [
-                'title'                          => dgettext('tuleap-program_management', "Program"),
-                'project'                        => $project,
-                'toptab'                         => 'plugin_program_management',
-                'body_class'                     => ['has-sidebar-with-pinned-header'],
-                'main_classes'                   => [],
-                'without-project-in-breadcrumbs' => true,
-            ]
+            HeaderConfigurationBuilder::get(dgettext('tuleap-program_management', "Program"))
+                ->inProjectNotInBreadcrumbs($project, ProgramService::SERVICE_SHORTNAME)
+                ->withBodyClass(['has-sidebar-with-pinned-header'])
+                ->build()
         );
     }
 

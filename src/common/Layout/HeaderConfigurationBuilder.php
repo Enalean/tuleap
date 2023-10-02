@@ -76,6 +76,7 @@ final class HeaderConfigurationBuilder
             $project,
             $current_service_shortname,
             null,
+            true,
         );
 
         return $this;
@@ -89,7 +90,22 @@ final class HeaderConfigurationBuilder
         $this->in_project = new InProject(
             $project,
             $current_service_shortname,
-            new WithoutSidebar($back_to_link)
+            new WithoutSidebar($back_to_link),
+            true,
+        );
+
+        return $this;
+    }
+
+    public function inProjectNotInBreadcrumbs(
+        \Project $project,
+        string $current_service_shortname,
+    ): self {
+        $this->in_project = new InProject(
+            $project,
+            $current_service_shortname,
+            null,
+            false,
         );
 
         return $this;

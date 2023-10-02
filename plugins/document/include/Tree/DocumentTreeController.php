@@ -38,6 +38,7 @@ use Tuleap\Document\Tree\Search\ListOfSearchColumnDefinitionPresenterBuilder;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\FooterConfiguration;
+use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -152,13 +153,10 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
     private function includeHeaderAndNavigationBar(BaseLayout $layout, Project $project)
     {
         $layout->header(
-            [
-                'title'                          => dgettext('tuleap-document', "Document manager"),
-                'project'                        => $project,
-                'toptab'                         => 'docman',
-                'main_classes'                   => ['document-main'],
-                'without-project-in-breadcrumbs' => true,
-            ]
+            HeaderConfigurationBuilder::get(dgettext('tuleap-document', "Document manager"))
+                ->inProjectNotInBreadcrumbs($project, \DocmanPlugin::SERVICE_SHORTNAME)
+                ->withMainClass(['document-main'])
+                ->build()
         );
     }
 

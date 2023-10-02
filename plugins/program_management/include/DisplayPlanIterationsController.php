@@ -26,6 +26,7 @@ namespace Tuleap\ProgramManagement;
 use HTTPRequest;
 use Project;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\TitleValueRetriever;
@@ -177,14 +178,10 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
             $project_title
         );
         $layout->header(
-            [
-                'title'                          => $title,
-                'project'                        => $project,
-                'toptab'                         => 'plugin_program_management',
-                'body_class'                     => ['has-sidebar-with-pinned-header'],
-                'main_classes'                   => [],
-                'without-project-in-breadcrumbs' => true,
-            ]
+            HeaderConfigurationBuilder::get($title)
+                ->inProjectNotInBreadcrumbs($project, ProgramService::SERVICE_SHORTNAME)
+                ->withBodyClass(['has-sidebar-with-pinned-header'])
+                ->build()
         );
     }
 
