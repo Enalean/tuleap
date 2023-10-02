@@ -28,6 +28,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssViteAsset;
+use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\IncludeViteAssets;
 
 class AuthorizationFormRenderer
@@ -75,10 +76,9 @@ class AuthorizationFormRenderer
 
         ob_start();
         $layout->header(
-            [
-                'title'        => dgettext('tuleap-oauth2_server', 'Authorize application'),
-                'main_classes' => ['tlp-framed'],
-            ]
+            HeaderConfigurationBuilder::get(dgettext('tuleap-oauth2_server', 'Authorize application'))
+                ->withMainClass(['tlp-framed'])
+                ->build()
         );
         $this->renderer->renderToPage('authorization-form', $presenter);
         $layout->footer([]);

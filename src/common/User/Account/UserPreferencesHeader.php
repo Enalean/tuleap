@@ -25,6 +25,7 @@ namespace Tuleap\User\Account;
 
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\IncludeAssets;
 
 final class UserPreferencesHeader
@@ -39,13 +40,14 @@ final class UserPreferencesHeader
         );
 
         $layout->header(
-            [
-                'title' => $title,
-                'main_classes' => array_merge(
-                    [ 'tlp-framed', 'user-preferences-frame' ],
-                    $additional_classes
-                ),
-            ]
+            HeaderConfigurationBuilder::get($title)
+                ->withMainClass(
+                    array_merge(
+                        ['tlp-framed', 'user-preferences-frame'],
+                        $additional_classes
+                    )
+                )
+                ->build()
         );
     }
 }

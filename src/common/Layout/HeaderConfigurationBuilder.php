@@ -29,7 +29,12 @@ final class HeaderConfigurationBuilder
     /**
      * @var string[]
      */
-    private array $body_class                                    = [];
+    private array $body_class = [];
+    /**
+     * @var string[]
+     */
+    private array $main_class = [];
+
     private ?InProjectWithoutSidebar $in_project_without_sidebar = null;
 
     private function __construct(private string $title)
@@ -51,6 +56,16 @@ final class HeaderConfigurationBuilder
         return $this;
     }
 
+    /**
+     * @param string[] $main_class
+     */
+    public function withMainClass(array $main_class): self
+    {
+        $this->main_class = $main_class;
+
+        return $this;
+    }
+
     public function inProjectWithoutSidebar(InProjectWithoutSidebar\BackToLinkPresenter $back_to_link): self
     {
         $this->in_project_without_sidebar = new InProjectWithoutSidebar($back_to_link);
@@ -60,6 +75,11 @@ final class HeaderConfigurationBuilder
 
     public function build(): HeaderConfiguration
     {
-        return new HeaderConfiguration($this->title, $this->in_project_without_sidebar, $this->body_class);
+        return new HeaderConfiguration(
+            $this->title,
+            $this->in_project_without_sidebar,
+            $this->body_class,
+            $this->main_class,
+        );
     }
 }
