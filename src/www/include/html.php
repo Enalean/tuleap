@@ -548,7 +548,7 @@ function site_footer($params)
     @param params array() must contain $toptab and $group
     @result text - echos HTML to the screen directly
 */
-function site_project_header(Project $project, $params)
+function site_project_header(Project $project, HeaderConfiguration|array $params)
 {
     /*
         Check to see if active
@@ -565,9 +565,13 @@ function site_project_header(Project $project, $params)
         HTTPRequest::instance()->checkUserIsSuperUser();
     }
 
-    $params['project'] = $project;
+    if (is_array($params)) {
+        $params['project'] = $project;
+    } elseif ($params->in_project === null) {
+        throw new Exception("site_project_header is supposed to be called in a project context");
+    }
 
-    if (isset($params['pv'], $GLOBALS['HTML']) && $GLOBALS['HTML'] instanceof Layout && $params['pv'] != 0) {
+    if (is_array($params) && isset($params['pv'], $GLOBALS['HTML']) && $GLOBALS['HTML'] instanceof Layout && $params['pv'] != 0) {
         // Printer version: no right column, no tabs...
         $GLOBALS['HTML']->pv_header($params);
     } else {

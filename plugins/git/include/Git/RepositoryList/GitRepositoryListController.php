@@ -27,6 +27,7 @@ use Project;
 use TemplateRendererFactory;
 use Tuleap\Event\Events\ProjectProviderEvent;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Request;
 
@@ -111,15 +112,11 @@ class GitRepositoryListController implements Request\DispatchableWithRequest, Re
         site_project_footer([]);
     }
 
-    private function displayHeader($title, Project $project)
+    private function displayHeader(string $title, Project $project): void
     {
-        $params = [
-            'title'                          => $title . ' - ' . $project->getPublicName(),
-            'toptab'                         => 'plugin_git',
-            'project'                        => $project,
-            'body_class'                     => [],
-            'without-project-in-breadcrumbs' => true,
-        ];
+        $params = HeaderConfigurationBuilder::get($title . ' - ' . $project->getPublicName())
+            ->inProjectNotInBreadcrumbs($project, GitPlugin::SERVICE_SHORTNAME)
+            ->build();
 
         site_project_header($project, $params);
     }
