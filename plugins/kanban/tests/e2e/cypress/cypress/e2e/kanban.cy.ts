@@ -99,7 +99,22 @@ describe("Kanban service", () => {
                 },
             );
         });
+
+        it("changes promotion of kanban", () => {
+            cy.projectAdministratorSession();
+
+            cy.visitProjectService(`kanban-${now}`, "Kanban");
+            cy.get("[data-test=project-sidebar]").shadow().contains("Activities").click();
+            cy.get("[data-test=kanban-header-edit-button]").click();
+            cy.get("[data-test=is-promoted]").click();
+            cy.visitProjectService(`kanban-${now}`, "Kanban");
+            cy.get("[data-test=project-sidebar]")
+                .shadow()
+                .contains("Activities")
+                .should("not.exist");
+        });
     });
+
     context("As Project member", function () {
         before(function () {
             cy.getProjectId(`kanban-${now}`).as("project_id");
