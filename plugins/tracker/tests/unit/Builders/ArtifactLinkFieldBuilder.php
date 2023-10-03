@@ -50,6 +50,12 @@ final class ArtifactLinkFieldBuilder
         return $this;
     }
 
+    public function withName(string $name): self
+    {
+        $this->shortname = $name;
+        return $this;
+    }
+
     public function thatIsRequired(): self
     {
         $this->is_required = true;

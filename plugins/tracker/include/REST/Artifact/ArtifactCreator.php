@@ -20,33 +20,37 @@
 
 namespace Tuleap\Tracker\REST\Artifact;
 
+use Luracast\Restler\RestException;
 use PFUser;
 use Tracker;
-use Tracker_ArtifactFactory;
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\CreateNewChangeset;
+use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\ChangesetValue\AddDefaultValuesToFieldsData;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\AddReverseLinksCommand;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksToNewChangesetsConverter;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
-use Tuleap\Tracker\Artifact\Link\HandleUpdateArtifact;
 use Tuleap\Tracker\Artifact\RetrieveTracker;
 use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
-use Tuleap\Tracker\REST\Artifact\ChangesetValue\BuildFieldDataFromValuesByField;
-use Tuleap\Tracker\REST\Artifact\ChangesetValue\BuildFieldsData;
+use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
+use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataFromValuesByFieldBuilder;
 use Tuleap\Tracker\REST\FaultMapper;
-use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 class ArtifactCreator
 {
     public function __construct(
-        private BuildFieldsData $fields_data_builder,
-        private Tracker_ArtifactFactory $artifact_factory,
-        private RetrieveTracker $tracker_factory,
-        private BuildFieldDataFromValuesByField $values_by_field_builder,
-        private AddDefaultValuesToFieldsData $default_values_adder,
-        private HandleUpdateArtifact $artifact_update_handler,
-        private VerifySubmissionPermissions $submission_permission_verifier,
+        private readonly FieldsDataBuilder $fields_data_builder,
+        private readonly \Tracker_ArtifactFactory $artifact_factory,
+        private readonly RetrieveTracker $tracker_factory,
+        private readonly FieldsDataFromValuesByFieldBuilder $values_by_field_builder,
+        private readonly AddDefaultValuesToFieldsData $default_values_adder,
+        private readonly VerifySubmissionPermissions $submission_permission_verifier,
+        private readonly ReverseLinksToNewChangesetsConverter $changesets_converter,
+        private readonly CreateNewChangeset $changeset_creator,
     ) {
     }
 
@@ -55,8 +59,12 @@ class ArtifactCreator
      * @param ArtifactValuesRepresentation[] $values
      * @throws \Luracast\Restler\RestException
      */
-    public function create(PFUser $submitter, TrackerReference $tracker_reference, array $values, bool $should_visit_be_recorded): ArtifactReference
-    {
+    public function create(
+        PFUser $submitter,
+        TrackerReference $tracker_reference,
+        array $values,
+        bool $should_visit_be_recorded,
+    ): ArtifactReference {
         $tracker          = $this->getTracker($tracker_reference);
         $changeset_values = $this->fields_data_builder->getFieldsDataOnCreate($values, $tracker);
 
@@ -86,7 +94,11 @@ class ArtifactCreator
     {
         $tracker          = $this->getTracker($tracker_reference);
         $changeset_values = $this->values_by_field_builder->getFieldsDataOnCreate($values, $tracker);
-        $fields_data      = $this->default_values_adder->getUsedFieldsWithDefaultValue($tracker, $changeset_values->getFieldsData(), $user);
+        $fields_data      = $this->default_values_adder->getUsedFieldsWithDefaultValue(
+            $tracker,
+            $changeset_values->getFieldsData(),
+            $user
+        );
         $this->checkUserCanSubmit($user, $tracker);
 
         return $this->returnReferenceOrError(
@@ -107,23 +119,37 @@ class ArtifactCreator
         return $tracker;
     }
 
-    private function returnReferenceOrError($artifact, $format, PFUser $submitter, InitialChangesetValuesContainer $changeset_values, array $values)
-    {
+    /**
+     * @param ''|'by_field' $format
+     * @throws \Luracast\Restler\RestException
+     */
+    private function returnReferenceOrError(
+        Artifact|false $artifact,
+        string $format,
+        PFUser $submitter,
+        InitialChangesetValuesContainer $changeset_values,
+        array $values,
+    ): ArtifactReference {
         if ($artifact) {
             $this->addReverseLinks($submitter, $changeset_values, $artifact, $values);
             return ArtifactReference::build($artifact, $format);
-        } else {
-            if ($GLOBALS['Response']->feedbackHasErrors()) {
-                throw new \Luracast\Restler\RestException(400, $GLOBALS['Response']->getRawFeedback());
-            }
-            throw new \Luracast\Restler\RestException(500, 'Unable to create artifact');
         }
+        if ($GLOBALS['Response']->feedbackHasErrors()) {
+            throw new \Luracast\Restler\RestException(400, $GLOBALS['Response']->getRawFeedback());
+        }
+        throw new \Luracast\Restler\RestException(500, 'Unable to create artifact');
     }
 
     public function checkUserCanSubmit(PFUser $user, Tracker $tracker): void
     {
         if (! $this->submission_permission_verifier->canUserSubmitArtifact($user, $tracker)) {
-            throw new \Luracast\Restler\RestException(403, dgettext('tuleap-tracker', 'You can\'t submit an artifact because you do not have the right to submit all required fields'));
+            throw new \Luracast\Restler\RestException(
+                403,
+                dgettext(
+                    'tuleap-tracker',
+                    'You can\'t submit an artifact because you do not have the right to submit all required fields'
+                )
+            );
         }
     }
 
@@ -137,23 +163,51 @@ class ArtifactCreator
         return false;
     }
 
-    private function addReverseLinks(PFUser $submitter, InitialChangesetValuesContainer $changeset_values, Artifact $artifact, array $values): void
-    {
+    /**
+     * @throws RestException
+     * @throws \Tracker_Exception
+     * @throws \Tuleap\Tracker\Artifact\Exception\FieldValidationException
+     */
+    private function addReverseLinks(
+        PFUser $submitter,
+        InitialChangesetValuesContainer $changeset_values,
+        Artifact $artifact,
+        array $values,
+    ): void {
         $changeset_values->getArtifactLinkValue()->apply(
             function (NewArtifactLinkInitialChangesetValue $artifact_link_value) use (
                 $values,
                 $submitter,
                 $artifact
-            ) {
+            ): void {
                 if ($artifact_link_value->getParent()->isNothing() && ! $this->isLinkKeyUsed($values)) {
-                    $this->artifact_update_handler->updateTypeAndAddReverseLinks(
-                        $artifact,
+                    $submission_date = new \DateTimeImmutable();
+                    $this->changesets_converter->convertAddReverseLinks(
+                        AddReverseLinksCommand::fromParts($artifact, $artifact_link_value->getReverseLinks()),
                         $submitter,
-                        $artifact_link_value->getReverseLinks(),
-                        new CollectionOfReverseLinks([])
-                    )->mapErr(FaultMapper::mapToRestException(...));
+                        $submission_date
+                    )->match(
+                        $this->saveChangesets(...),
+                        FaultMapper::mapToRestException(...)
+                    );
                 }
             }
         );
+    }
+
+    /**
+     * @param list<NewChangeset> $new_changesets
+     * @throws \Tracker_Exception
+     * @throws \Tuleap\Tracker\Artifact\Exception\FieldValidationException
+     */
+    private function saveChangesets(array $new_changesets): void
+    {
+        foreach ($new_changesets as $changeset) {
+            try {
+                $this->changeset_creator->create($changeset, PostCreationContext::withNoConfig(true));
+            } catch (\Tracker_NoChangeException) {
+                //Ignore, it should not stop the update
+            }
+        }
     }
 }

@@ -28,7 +28,7 @@ use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 
-final class FieldsDataFromValuesByFieldBuilder implements BuildFieldDataFromValuesByField
+final class FieldsDataFromValuesByFieldBuilder
 {
     public function __construct(
         private readonly RetrieveUsedFields $fields_retriever,

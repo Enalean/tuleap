@@ -84,9 +84,9 @@ use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactForwardLinksRetriever;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksByChangesetCache;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLinkDao;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksToNewChangesetsConverter;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
-use Tuleap\Tracker\Artifact\Link\ArtifactUpdateHandler;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
@@ -483,8 +483,9 @@ class ExecutionsResource
                 $this->tracker_factory,
                 new FieldsDataFromValuesByFieldBuilder($this->formelement_factory, $artifact_link_initial_builder),
                 $this->formelement_factory,
-                new ArtifactUpdateHandler($changeset_creator, $this->formelement_factory, $this->artifact_factory),
-                SubmissionPermissionVerifier::instance()
+                SubmissionPermissionVerifier::instance(),
+                new ReverseLinksToNewChangesetsConverter($this->formelement_factory, $this->artifact_factory),
+                $changeset_creator
             );
 
             $values = $this->getValuesByFieldsName(
