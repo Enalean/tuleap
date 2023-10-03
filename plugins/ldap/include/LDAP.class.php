@@ -490,7 +490,7 @@ class LDAP
         }
 
         $filter = $this->ldapParams['grp_cn'] . '=' . $name;
-        return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE);
+        return $this->search($this->ldapParams['grp_dn'], $filter, self::SCOPE_SUBTREE);
     }
 
     /**
