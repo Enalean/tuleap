@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
@@ -30,8 +31,7 @@ use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 final class NewArtifactLinkInitialChangesetValueBuilder
 {
-    private const PARENT_KEY = 'parent';
-    private const LINKS_KEY  = 'links';
+    private const LINKS_KEY = 'links';
 
     /**
      * @throws \Tracker_FormElement_InvalidFieldValueException
@@ -61,13 +61,16 @@ final class NewArtifactLinkInitialChangesetValueBuilder
 
     /**
      * @throws \Tracker_FormElement_InvalidFieldValueException
+     * @return Option<NewParentLink>
      */
-    private function buildParent(ArtifactValuesRepresentation $payload): ?NewParentLink
+    private function buildParent(ArtifactValuesRepresentation $payload): Option
     {
         if ($payload->parent === null) {
-            return null;
+            return Option::nothing(NewParentLink::class);
         }
-        return RESTNewParentLinkProxy::fromRESTPayload($payload->toArray()[self::PARENT_KEY]);
+        /** @psalm-var NewParentLink $new_parent_link */
+        $new_parent_link = RESTNewParentLinkProxy::fromRESTPayload($payload->parent);
+        return Option::fromValue($new_parent_link);
     }
 
     /**

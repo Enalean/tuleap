@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink;
 
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
 use Tuleap\Tracker\Test\Stub\NewParentLinkStub;
 
@@ -29,14 +30,15 @@ final class NewArtifactLinkInitialChangesetValueFormatterTest extends \Tuleap\Te
 {
     private const FIELD_ID = 675;
     private CollectionOfForwardLinks $new_links;
-    private ?NewParentLink $parent;
+    /** @var Option<NewParentLink> */
+    private Option $parent;
     private CollectionOfReverseLinks $reverse_links;
 
     protected function setUp(): void
     {
         $this->new_links     = new CollectionOfForwardLinks([]);
         $this->reverse_links = new CollectionOfReverseLinks([]);
-        $this->parent        = null;
+        $this->parent        = Option::nothing(NewParentLink::class);
     }
 
     private function format(): array
@@ -98,14 +100,14 @@ final class NewArtifactLinkInitialChangesetValueFormatterTest extends \Tuleap\Te
 
     public function testItFormatsParent(): void
     {
-        $this->parent = NewParentLinkStub::withId(71);
+        $this->parent = Option::fromValue(NewParentLinkStub::withId(71));
         $fields_data  = $this->format();
         self::assertArrayHasKey('parent', $fields_data);
         self::assertCount(1, $fields_data['parent']);
         self::assertContains(71, $fields_data['parent']);
     }
 
-    public function testItOmitsParentWhenItIsNull(): void
+    public function testItOmitsParentWhenItIsNothing(): void
     {
         $fields_data = $this->format();
         self::assertArrayNotHasKey('parent', $fields_data);

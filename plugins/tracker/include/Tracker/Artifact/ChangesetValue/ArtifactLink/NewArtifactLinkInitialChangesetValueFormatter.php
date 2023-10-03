@@ -24,17 +24,22 @@ namespace Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink;
 
 final class NewArtifactLinkInitialChangesetValueFormatter
 {
+    /**
+     * @psalm-return array{
+     *     new_values: string,
+     *     types: array<int, string>,
+     *     parent?: array{0: int}
+     * }
+     */
     public static function formatForWebUI(NewArtifactLinkInitialChangesetValue $value): array
     {
         $field_data = [
             'new_values' => implode(',', $value->getNewLinks()->getTargetArtifactIds()),
             'types'      => $value->getNewLinks()->getArtifactTypesByIds(),
         ];
-
-        $parent = $value->getParent();
-        if ($parent !== null) {
-            $field_data['parent'] = [$parent->getParentArtifactId()];
-        }
+        $value->getParent()->apply(static function (NewParentLink $parent_link) use (&$field_data) {
+            $field_data['parent'] = [$parent_link->getParentArtifactId()];
+        });
         return $field_data;
     }
 }

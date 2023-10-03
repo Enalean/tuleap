@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink;
 
+use Tuleap\Option\Option;
+
 /**
  * I hold the initial changeset value for the Artifact Link field.
  * Since it is the first changeset, there are no existing values to consider, so no diff.
@@ -30,18 +32,24 @@ namespace Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink;
  */
 final class NewArtifactLinkInitialChangesetValue
 {
+    /**
+     * @param Option<NewParentLink> $parent
+     */
     private function __construct(
-        private int $field_id,
-        private CollectionOfForwardLinks $new_links,
-        private ?NewParentLink $parent,
-        private CollectionOfReverseLinks $reverse_links,
+        private readonly int $field_id,
+        private readonly CollectionOfForwardLinks $new_links,
+        private readonly Option $parent,
+        private readonly CollectionOfReverseLinks $reverse_links,
     ) {
     }
 
+    /**
+     * @param Option<NewParentLink> $parent
+     */
     public static function fromParts(
         int $field_id,
         CollectionOfForwardLinks $new_links,
-        ?NewParentLink $parent,
+        Option $parent,
         CollectionOfReverseLinks $reverse_links,
     ): self {
         return new self($field_id, $new_links, $parent, $reverse_links);
@@ -52,7 +60,10 @@ final class NewArtifactLinkInitialChangesetValue
         return $this->field_id;
     }
 
-    public function getParent(): ?NewParentLink
+    /**
+     * @return Option<NewParentLink>
+     */
+    public function getParent(): Option
     {
         return $this->parent;
     }

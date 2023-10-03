@@ -38,6 +38,9 @@ final class NewArtifactLinkInitialChangesetValueBuilderTest extends \Tuleap\Test
     private const SECOND_ADDED_ARTIFACT_ID = 460;
     private const PARENT_ARTIFACT_ID       = 165;
 
+    /**
+     * @throws \Tracker_FormElement_InvalidFieldValueException
+     */
     private function build(ArtifactValuesRepresentation $payload): NewArtifactLinkInitialChangesetValue
     {
         $builder = new NewArtifactLinkInitialChangesetValueBuilder();
@@ -60,7 +63,7 @@ final class NewArtifactLinkInitialChangesetValueBuilderTest extends \Tuleap\Test
 
         self::assertSame(self::FIELD_ID, $value->getFieldId());
         self::assertNotNull($value->getParent());
-        self::assertSame(self::PARENT_ARTIFACT_ID, $value->getParent()->getParentArtifactId());
+        self::assertSame(self::PARENT_ARTIFACT_ID, $value->getParent()->unwrapOr(null)?->getParentArtifactId());
 
         $new_links = $value->getNewLinks();
         self::assertCount(2, $new_links->getArtifactLinks());
@@ -80,7 +83,7 @@ final class NewArtifactLinkInitialChangesetValueBuilderTest extends \Tuleap\Test
 
         self::assertSame(self::FIELD_ID, $value->getFieldId());
         self::assertNotNull($value->getParent());
-        self::assertSame(self::PARENT_ARTIFACT_ID, $value->getParent()->getParentArtifactId());
+        self::assertSame(self::PARENT_ARTIFACT_ID, $value->getParent()->unwrapOr(null)?->getParentArtifactId());
         self::assertEmpty($value->getNewLinks()->getArtifactLinks());
     }
 
@@ -95,7 +98,7 @@ final class NewArtifactLinkInitialChangesetValueBuilderTest extends \Tuleap\Test
         $value = $this->build($payload);
 
         self::assertSame(self::FIELD_ID, $value->getFieldId());
-        self::assertNull($value->getParent());
+        self::assertTrue($value->getParent()->isNothing());
 
         $new_links = $value->getNewLinks();
         self::assertCount(2, $new_links->getArtifactLinks());
@@ -124,7 +127,7 @@ final class NewArtifactLinkInitialChangesetValueBuilderTest extends \Tuleap\Test
         $value = $this->build($payload);
 
         self::assertSame(self::FIELD_ID, $value->getFieldId());
-        self::assertNull($value->getParent());
+        self::assertTrue($value->getParent()->isNothing());
 
         $new_links = $value->getNewLinks();
         self::assertCount(1, $new_links->getArtifactLinks());

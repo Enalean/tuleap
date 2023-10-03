@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\ChangesetValue;
 
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueFormatter;
 
@@ -29,24 +30,35 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialCh
  * I hold all the submitted values for the initial (first) changeset of an artifact.
  * Artifact links field has special treatment so that we can handle the "reverse" artifact links separately.
  * We don't want them in $fields_data.
- * @psalm-immutable
  */
 final class InitialChangesetValuesContainer
 {
-    public function __construct(private array $fields_data, private ?NewArtifactLinkInitialChangesetValue $artifact_links)
+    /**
+     * @param Option<NewArtifactLinkInitialChangesetValue> $artifact_links
+     */
+    public function __construct(private array $fields_data, private readonly Option $artifact_links)
     {
-        if ($this->artifact_links !== null) {
-            // We must still add forward artifact links to $fields_data so that it can be saved and processed like normal
-            $this->fields_data[$this->artifact_links->getFieldId()] = NewArtifactLinkInitialChangesetValueFormatter::formatForWebUI($this->artifact_links);
-        }
+        $artifact_links->apply(function (NewArtifactLinkInitialChangesetValue $changeset_value) {
+            // We must still add forward artifact links to $fields_data so that it can be saved and processed downstream
+            $this->fields_data[$changeset_value->getFieldId()] = NewArtifactLinkInitialChangesetValueFormatter::formatForWebUI(
+                $changeset_value
+            );
+        });
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getFieldsData(): array
     {
         return $this->fields_data;
     }
 
-    public function getArtifactLinkValue(): ?NewArtifactLinkInitialChangesetValue
+    /**
+     * @psalm-mutation-free
+     * @return Option<NewArtifactLinkInitialChangesetValue>
+     */
+    public function getArtifactLinkValue(): Option
     {
         return $this->artifact_links;
     }

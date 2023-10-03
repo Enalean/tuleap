@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink;
 
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
 use Tuleap\Tracker\Test\Stub\NewParentLinkStub;
 use Tuleap\Tracker\Test\Stub\ReverseLinkStub;
@@ -43,7 +44,7 @@ final class NewArtifactLinkInitialChangesetValueTest extends \Tuleap\Test\PHPUni
         $reverse_collection = new CollectionOfReverseLinks([
             ReverseLinkStub::withNoType(self::THIRD_ADDED_ARTIFACT_ID),
         ]);
-        $parent             = NewParentLinkStub::withId(self::PARENT_ARTIFACT_ID);
+        $parent             = Option::fromValue(NewParentLinkStub::withId(self::PARENT_ARTIFACT_ID));
         $value              = NewArtifactLinkInitialChangesetValue::fromParts(self::FIELD_ID, $collection, $parent, $reverse_collection);
 
         self::assertSame(self::FIELD_ID, $value->getFieldId());

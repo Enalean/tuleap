@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,17 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders;
 
-use Tracker_FormElement_Field_Float;
-
-final class TrackerFormElementFloatFieldBuilder
+final class TrackerFormElementIntFieldBuilder
 {
-    private string $name = "float";
+    private string $name = 'initial_effort';
 
     private function __construct(private readonly int $id)
     {
     }
 
-    public static function aFloatField(int $id): self
+    public static function anIntField(int $id): self
     {
         return new self($id);
     }
@@ -43,15 +41,15 @@ final class TrackerFormElementFloatFieldBuilder
         return $this;
     }
 
-    public function build(): Tracker_FormElement_Field_Float
+    public function build(): \Tracker_FormElement_Field_Integer
     {
-        return new Tracker_FormElement_Field_Float(
+        return new \Tracker_FormElement_Field_Integer(
             $this->id,
             10,
             15,
             $this->name,
-            "",
-            "",
+            '',
+            '',
             true,
             'P',
             false,

@@ -53,9 +53,9 @@ final class TrackerFormElementTextFieldBuilder
             "",
             "",
             true,
-            "",
+            'P',
             false,
-            false,
+            '',
             10,
             null
         );
