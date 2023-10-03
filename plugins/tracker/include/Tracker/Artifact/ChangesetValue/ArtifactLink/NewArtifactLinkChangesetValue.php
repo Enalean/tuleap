@@ -31,26 +31,35 @@ use Tuleap\Option\Option;
 final class NewArtifactLinkChangesetValue
 {
     /**
-     * @param Option<NewParentLink> $new_parent_link
+     * @param Option<NewParentLink>            $new_parent_link
+     * @param Option<CollectionOfReverseLinks> $submitted_reverse_links
      */
     private function __construct(
         private readonly ChangeForwardLinksCommand $forward_links_command,
         private readonly Option $new_parent_link,
-        private readonly CollectionOfReverseLinks $submitted_reverse_links,
+        private readonly Option $submitted_reverse_links,
     ) {
     }
 
+    /**
+     * @param Option<NewParentLink>            $new_parent_link
+     * @param Option<CollectionOfReverseLinks> $submitted_reverse_links
+     */
     public static function fromParts(
         ChangeForwardLinksCommand $forward_links_command,
         Option $new_parent_link,
-        CollectionOfReverseLinks $submitted_reverse_links,
+        Option $submitted_reverse_links,
     ): self {
         return new self($forward_links_command, $new_parent_link, $submitted_reverse_links);
     }
 
     public static function fromOnlyForwardLinks(ChangeForwardLinksCommand $forward_links_command): self
     {
-        return new self($forward_links_command, Option::nothing(NewParentLink::class), new CollectionOfReverseLinks([]));
+        return new self(
+            $forward_links_command,
+            Option::nothing(NewParentLink::class),
+            Option::nothing(CollectionOfReverseLinks::class)
+        );
     }
 
     public function getChangeForwardLinksCommand(): ChangeForwardLinksCommand
@@ -58,12 +67,18 @@ final class NewArtifactLinkChangesetValue
         return $this->forward_links_command;
     }
 
+    /**
+     * @return Option<NewParentLink>
+     */
     public function getNewParentLink(): Option
     {
         return $this->new_parent_link;
     }
 
-    public function getSubmittedReverseLinks(): CollectionOfReverseLinks
+    /**
+     * @return Option<CollectionOfReverseLinks>
+     */
+    public function getSubmittedReverseLinks(): Option
     {
         return $this->submitted_reverse_links;
     }

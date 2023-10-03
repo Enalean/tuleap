@@ -75,7 +75,7 @@ final class NewArtifactLinkChangesetValueBuilder
                 $existing_links
             ),
             $this->buildParent($payload),
-            new CollectionOfReverseLinks([])
+            Option::nothing(CollectionOfReverseLinks::class)
         );
     }
 
@@ -115,14 +115,14 @@ final class NewArtifactLinkChangesetValueBuilder
 
     /**
      * @throws \Tracker_FormElement_InvalidFieldValueException
+     * @return Option<CollectionOfReverseLinks>
      */
-    private function buildReverse(ArtifactValuesRepresentation $payload): CollectionOfReverseLinks
+    private function buildReverse(ArtifactValuesRepresentation $payload): Option
     {
         if ($payload->all_links === null) {
-            return new CollectionOfReverseLinks([]);
+            return Option::nothing(CollectionOfReverseLinks::class);
         }
-
-        return AllLinkPayloadParser::buildReverseLinks($payload->all_links);
+        return Option::fromValue(AllLinkPayloadParser::buildReverseLinks($payload->all_links));
     }
 
     /**

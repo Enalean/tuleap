@@ -47,7 +47,7 @@ final class NewArtifactLinkChangesetValueTest extends \Tuleap\Test\PHPUnit\TestC
     public function testItBuildsFromParts(): void
     {
         $new_parent_link         = Option::fromValue(NewParentLinkStub::withId(510));
-        $submitted_reverse_links = new CollectionOfReverseLinks([ReverseLinkStub::withNoType(200)]);
+        $submitted_reverse_links = Option::fromValue(new CollectionOfReverseLinks([ReverseLinkStub::withNoType(200)]));
 
         $value = NewArtifactLinkChangesetValue::fromParts(
             $this->forward_links_command,
@@ -66,6 +66,6 @@ final class NewArtifactLinkChangesetValueTest extends \Tuleap\Test\PHPUnit\TestC
 
         self::assertSame($this->forward_links_command, $value->getChangeForwardLinksCommand());
         self::assertTrue($value->getNewParentLink()->isNothing());
-        self::assertEmpty($value->getSubmittedReverseLinks()->links);
+        self::assertTrue($value->getSubmittedReverseLinks()->isNothing());
     }
 }

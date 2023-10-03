@@ -77,7 +77,7 @@ final class ChangesetValuesContainerTest extends \Tuleap\Test\PHPUnit\TestCase
                     $existing_links
                 ),
                 Option::fromValue(NewParentLinkStub::withId(63)),
-                new CollectionOfReverseLinks([])
+                Option::nothing(CollectionOfReverseLinks::class)
             )
         );
         $changeset_values     = $this->build();

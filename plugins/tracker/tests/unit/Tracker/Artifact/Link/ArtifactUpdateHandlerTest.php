@@ -56,10 +56,9 @@ final class ArtifactUpdateHandlerTest extends TestCase
 
     protected function setUp(): void
     {
-        $artifact_link_field = ArtifactLinkFieldBuilder::anArtifactLinkField(15)->build();
-
-        $this->form_element_factory = RetrieveUsedArtifactLinkFieldsStub::buildWithArtifactLinkFields(
-            [$artifact_link_field]
+        $this->form_element_factory = RetrieveUsedArtifactLinkFieldsStub::withSuccessiveFields(
+            ArtifactLinkFieldBuilder::anArtifactLinkField(15)->build(),
+            ArtifactLinkFieldBuilder::anArtifactLinkField(987)->build()
         );
         $this->changeset_creator    = CreateNewChangesetStub::withNullReturnChangeset();
         $this->artifact_retriever   = RetrieveViewableArtifactStub::withNoArtifact();
@@ -94,7 +93,7 @@ final class ArtifactUpdateHandlerTest extends TestCase
 
     public function testItReturnsAFaultWhenTheSourceArtifactDoesNotHaveALinkField(): void
     {
-        $this->form_element_factory = RetrieveUsedArtifactLinkFieldsStub::buildWithArtifactLinkFields([]);
+        $this->form_element_factory = RetrieveUsedArtifactLinkFieldsStub::withNoField();
 
         $result = $this->unlinkReverseArtifact();
 

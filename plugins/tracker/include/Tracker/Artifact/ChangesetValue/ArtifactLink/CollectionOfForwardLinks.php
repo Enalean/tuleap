@@ -39,9 +39,9 @@ final class CollectionOfForwardLinks
     {
     }
 
-    public static function fromReverseLink(Artifact $source, ReverseLink $reverse_link): self
+    public static function fromReverseLink(Artifact $target, ReverseLink $reverse_link): self
     {
-        return new self([ForwardLinkProxy::buildFromData($source->getId(), $reverse_link->getType())]);
+        return new self([ForwardLinkProxy::buildFromData($target->getId(), $reverse_link->getType())]);
     }
 
     /**

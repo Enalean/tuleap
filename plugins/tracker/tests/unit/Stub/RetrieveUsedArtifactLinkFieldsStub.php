@@ -22,32 +22,48 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
-use Tracker;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveUsedArtifactLinkFields;
 
 final class RetrieveUsedArtifactLinkFieldsStub implements RetrieveUsedArtifactLinkFields
 {
     /**
-     * @param Tracker_FormElement_Field_ArtifactLink[] $tracker_form_element_field_artifact_link
+     * @param list<\Tracker_FormElement_Field_ArtifactLink> $return_values
      */
-    private function __construct(private array $tracker_form_element_field_artifact_link)
+    private function __construct(private bool $return_empty, private array $return_values)
     {
     }
 
     /**
-     * @return Tracker_FormElement_Field_ArtifactLink[]
+     * @return array{0?: \Tracker_FormElement_Field_ArtifactLink}
      */
-    public function getUsedArtifactLinkFields(Tracker $tracker): array
+    public function getUsedArtifactLinkFields(\Tracker $tracker): array
     {
-        return $this->tracker_form_element_field_artifact_link;
+        if ($this->return_empty) {
+            return [];
+        }
+        if (count($this->return_values) > 0) {
+            return [array_shift($this->return_values)];
+        }
+        throw new \LogicException('No artifact link field configured');
+    }
+
+    public static function withNoField(): self
+    {
+        return new self(true, []);
+    }
+
+    public static function withAField(\Tracker_FormElement_Field_ArtifactLink $field): self
+    {
+        return new self(false, [$field]);
     }
 
     /**
-     * @param Tracker_FormElement_Field_ArtifactLink[] $tracker_form_element_field_artifact_link
+     * @no-named-arguments
      */
-    public static function buildWithArtifactLinkFields(array $tracker_form_element_field_artifact_link): self
-    {
-        return new self($tracker_form_element_field_artifact_link);
+    public static function withSuccessiveFields(
+        \Tracker_FormElement_Field_ArtifactLink $first_field,
+        \Tracker_FormElement_Field_ArtifactLink ...$other_fields,
+    ): self {
+        return new self(false, [$first_field, ...$other_fields]);
     }
 }

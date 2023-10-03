@@ -75,11 +75,11 @@ final class CollectionOfForwardLinksTest extends \Tuleap\Test\PHPUnit\TestCase
         ], $collection->getArtifactTypesByIds());
     }
 
-    public function testItBuildsWithASingleLinkFromAReverseLinkAndASourceArtifact(): void
+    public function testItBuildsWithASingleLinkFromAReverseLinkAndATargetArtifact(): void
     {
-        $source       = ArtifactTestBuilder::anArtifact(378)->build();
+        $target       = ArtifactTestBuilder::anArtifact(378)->build();
         $reverse_link = ReverseLinkStub::withType(662, '_is_child');
-        $collection   = CollectionOfForwardLinks::fromReverseLink($source, $reverse_link);
+        $collection   = CollectionOfForwardLinks::fromReverseLink($target, $reverse_link);
         self::assertEqualsCanonicalizing([
             378 => '_is_child',
         ], $collection->getArtifactTypesByIds());
