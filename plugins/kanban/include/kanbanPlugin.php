@@ -99,6 +99,7 @@ use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\Tracker\RealtimeMercure\RealTimeMercureArtifactMessageSender;
 use Tuleap\Tracker\Report\Event\TrackerReportDeleted;
 use Tuleap\Tracker\Report\Event\TrackerReportSetToPrivate;
+use Tuleap\Tracker\Service\TrackerCanBePromotedInSidebar;
 use Tuleap\Tracker\TrackerCrumbInContext;
 use Tuleap\Tracker\TrackerEventTrackersDuplicated;
 use Tuleap\Tracker\XML\Exporter\TrackerEventExportFullXML;
@@ -809,5 +810,19 @@ final class KanbanPlugin extends Plugin implements PluginWithConfigKeys, PluginW
             $event->getXmlElement(),
             $event->getProject(),
         );
+    }
+
+    #[ListeningToEventClass]
+    public function trackerCanBePromotedInSidebar(TrackerCanBePromotedInSidebar $event): void
+    {
+        $kanban_factory = new KanbanFactory(
+            \TrackerFactory::instance(),
+            new KanbanDao(),
+        );
+
+        $kanban = $kanban_factory->getKanbanByTrackerId($event->tracker->getId());
+        if ($kanban && $kanban->is_promoted) {
+            $event->forbidPromotionInSidebar();
+        }
     }
 }

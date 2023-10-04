@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Service;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrievePromotedTrackersStub;
 use Tuleap\Tracker\Test\Stub\Tracker\Service\PromotedTrackerConfigurationCheckerStub;
@@ -39,6 +40,7 @@ final class SidebarPromotedTrackerRetrieverTest extends TestCase
         $retriever = new SidebarPromotedTrackerRetriever(
             RetrievePromotedTrackersStub::withTrackers(TrackerTestBuilder::aTracker()->build()),
             PromotedTrackerConfigurationCheckerStub::withoutAllowedProject(),
+            EventDispatcherStub::withIdentityCallback(),
         );
 
         self::assertEmpty($retriever->getPromotedItemPresenters($user, $project, 'whatever'));
@@ -55,6 +57,7 @@ final class SidebarPromotedTrackerRetrieverTest extends TestCase
                 TrackerTestBuilder::aTracker()->withName('Requests')->build(),
             ),
             PromotedTrackerConfigurationCheckerStub::withAllowedProject(),
+            EventDispatcherStub::withIdentityCallback(),
         );
 
         self::assertCount(
@@ -76,6 +79,7 @@ final class SidebarPromotedTrackerRetrieverTest extends TestCase
                 $requests,
             ),
             PromotedTrackerConfigurationCheckerStub::withAllowedProject(),
+            EventDispatcherStub::withIdentityCallback(),
         );
 
         $promoted_item_presenters = $retriever->getPromotedItemPresenters($user, $project, $requests->getPromotedTrackerId());
@@ -86,6 +90,33 @@ final class SidebarPromotedTrackerRetrieverTest extends TestCase
         self::assertTrue($promoted_item_presenters[1]->is_active);
     }
 
+    public function testPromotedTrackerIsNotInSidebarIfAPluginPreventIt(): void
+    {
+        $user    = UserTestBuilder::buildWithDefaults();
+        $project = ProjectTestBuilder::aProject()->build();
+
+        $bugs      = TrackerTestBuilder::aTracker()->withId(1001)->withName('Bugs')->build();
+        $requests  = TrackerTestBuilder::aTracker()->withId(1002)->withName('Requests')->build();
+        $retriever = new SidebarPromotedTrackerRetriever(
+            RetrievePromotedTrackersStub::withTrackers(
+                $bugs,
+                $requests,
+            ),
+            PromotedTrackerConfigurationCheckerStub::withAllowedProject(),
+            EventDispatcherStub::withCallback(static function (object $event) use ($requests): object {
+                if ($event instanceof TrackerCanBePromotedInSidebar && $event->tracker === $requests) {
+                    $event->forbidPromotionInSidebar();
+                }
+                return $event;
+            }),
+        );
+
+        $promoted_item_presenters = $retriever->getPromotedItemPresenters($user, $project, $requests->getPromotedTrackerId());
+        self::assertCount(1, $promoted_item_presenters);
+        self::assertSame($bugs->getName(), $promoted_item_presenters[0]->label);
+        self::assertFalse($promoted_item_presenters[0]->is_active);
+    }
+
     public function testEmptyPromotedTrackers(): void
     {
         $user    = UserTestBuilder::buildWithDefaults();
@@ -94,6 +125,7 @@ final class SidebarPromotedTrackerRetrieverTest extends TestCase
         $retriever = new SidebarPromotedTrackerRetriever(
             RetrievePromotedTrackersStub::withoutTrackers(),
             PromotedTrackerConfigurationCheckerStub::withAllowedProject(),
+            EventDispatcherStub::withIdentityCallback(),
         );
 
         self::assertEmpty(
