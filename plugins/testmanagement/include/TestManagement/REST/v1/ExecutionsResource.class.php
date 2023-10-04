@@ -415,79 +415,80 @@ class ExecutionsResource
             $tracker->getProject()
         );
 
-        try {
-            $user                 = $this->getCurrentUser();
-            $usage_dao            = new ArtifactLinksUsageDao();
-            $fields_retriever     = new FieldsToBeSavedInSpecificOrderRetriever($this->formelement_factory);
-            $event_dispatcher     = EventManager::instance();
-            $transaction_executor = new DBTransactionExecutorWithConnection(
-                DBFactory::getMainTuleapDBConnection()
-            );
+        $user                 = $this->getCurrentUser();
+        $usage_dao            = new ArtifactLinksUsageDao();
+        $fields_retriever     = new FieldsToBeSavedInSpecificOrderRetriever($this->formelement_factory);
+        $event_dispatcher     = EventManager::instance();
+        $transaction_executor = new DBTransactionExecutorWithConnection(
+            DBFactory::getMainTuleapDBConnection()
+        );
 
-            $artifact_link_initial_builder = new NewArtifactLinkInitialChangesetValueBuilder();
-            $changeset_creator             = new NewChangesetCreator(
-                new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
-                    $this->formelement_factory,
-                    new ArtifactLinkValidator(
-                        $this->artifact_factory,
-                        new TypePresenterFactory(new TypeDao(), $usage_dao),
-                        $usage_dao,
-                        $event_dispatcher,
-                    ),
-                    new WorkflowUpdateChecker(
-                        new FrozenFieldDetector(
-                            new TransitionRetriever(
-                                new StateFactory(\TransitionFactory::instance(), new SimpleWorkflowDao()),
-                                new TransitionExtractor()
-                            ),
-                            FrozenFieldsRetriever::instance(),
-                        )
+        $artifact_link_initial_builder = new NewArtifactLinkInitialChangesetValueBuilder();
+        $changeset_creator             = new NewChangesetCreator(
+            new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
+                $this->formelement_factory,
+                new ArtifactLinkValidator(
+                    $this->artifact_factory,
+                    new TypePresenterFactory(new TypeDao(), $usage_dao),
+                    $usage_dao,
+                    $event_dispatcher,
+                ),
+                new WorkflowUpdateChecker(
+                    new FrozenFieldDetector(
+                        new TransitionRetriever(
+                            new StateFactory(\TransitionFactory::instance(), new SimpleWorkflowDao()),
+                            new TransitionExtractor()
+                        ),
+                        FrozenFieldsRetriever::instance(),
+                    )
+                )
+            ),
+            $fields_retriever,
+            $event_dispatcher,
+            new \Tracker_Artifact_Changeset_ChangesetDataInitializator($this->formelement_factory),
+            $transaction_executor,
+            ArtifactChangesetSaver::build(),
+            new ParentLinkAction($this->artifact_factory),
+            new AfterNewChangesetHandler($this->artifact_factory, $fields_retriever),
+            ActionsRunner::build(\BackendLogger::getDefaultLogger()),
+            new ChangesetValueSaver(),
+            \WorkflowFactory::instance(),
+            new CommentCreator(
+                new \Tracker_Artifact_Changeset_CommentDao(),
+                \ReferenceManager::instance(),
+                new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
+                new ChangesetCommentIndexer(
+                    new ItemToIndexQueueEventBased($event_dispatcher),
+                    $event_dispatcher,
+                    new \Tracker_Artifact_Changeset_CommentDao(),
+                ),
+                new TextValueValidator(),
+            )
+        );
+
+        $creator = new ArtifactCreator(
+            new FieldsDataBuilder(
+                $this->formelement_factory,
+                new NewArtifactLinkChangesetValueBuilder(
+                    new ArtifactForwardLinksRetriever(
+                        new ArtifactLinksByChangesetCache(),
+                        new ChangesetValueArtifactLinkDao(),
+                        $this->artifact_factory
                     )
                 ),
-                $fields_retriever,
-                $event_dispatcher,
-                new \Tracker_Artifact_Changeset_ChangesetDataInitializator($this->formelement_factory),
-                $transaction_executor,
-                ArtifactChangesetSaver::build(),
-                new ParentLinkAction($this->artifact_factory),
-                new AfterNewChangesetHandler($this->artifact_factory, $fields_retriever),
-                ActionsRunner::build(\BackendLogger::getDefaultLogger()),
-                new ChangesetValueSaver(),
-                \WorkflowFactory::instance(),
-                new CommentCreator(
-                    new \Tracker_Artifact_Changeset_CommentDao(),
-                    \ReferenceManager::instance(),
-                    new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
-                    new ChangesetCommentIndexer(
-                        new ItemToIndexQueueEventBased($event_dispatcher),
-                        $event_dispatcher,
-                        new \Tracker_Artifact_Changeset_CommentDao(),
-                    ),
-                    new TextValueValidator(),
-                )
-            );
+                new NewArtifactLinkInitialChangesetValueBuilder()
+            ),
+            $this->artifact_factory,
+            $this->tracker_factory,
+            new FieldsDataFromValuesByFieldBuilder($this->formelement_factory, $artifact_link_initial_builder),
+            $this->formelement_factory,
+            SubmissionPermissionVerifier::instance(),
+            $transaction_executor,
+            new ReverseLinksToNewChangesetsConverter($this->formelement_factory, $this->artifact_factory),
+            $changeset_creator
+        );
 
-            $creator = new ArtifactCreator(
-                new FieldsDataBuilder(
-                    $this->formelement_factory,
-                    new NewArtifactLinkChangesetValueBuilder(
-                        new ArtifactForwardLinksRetriever(
-                            new ArtifactLinksByChangesetCache(),
-                            new ChangesetValueArtifactLinkDao(),
-                            $this->artifact_factory
-                        )
-                    ),
-                    new NewArtifactLinkInitialChangesetValueBuilder()
-                ),
-                $this->artifact_factory,
-                $this->tracker_factory,
-                new FieldsDataFromValuesByFieldBuilder($this->formelement_factory, $artifact_link_initial_builder),
-                $this->formelement_factory,
-                SubmissionPermissionVerifier::instance(),
-                new ReverseLinksToNewChangesetsConverter($this->formelement_factory, $this->artifact_factory),
-                $changeset_creator
-            );
-
+        try {
             $values = $this->getValuesByFieldsName(
                 $user,
                 $tracker_reference->id,

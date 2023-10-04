@@ -243,6 +243,7 @@ final class KanbanItemsResource extends AuthenticatedResource
             new FieldsDataFromValuesByFieldBuilder($this->form_element_factory, $artifact_link_initial_builder),
             $this->form_element_factory,
             SubmissionPermissionVerifier::instance(),
+            $transaction_executor,
             new ReverseLinksToNewChangesetsConverter($this->form_element_factory, $this->artifact_factory),
             $changeset_creator
         );

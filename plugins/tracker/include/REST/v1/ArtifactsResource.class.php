@@ -1027,6 +1027,7 @@ class ArtifactsResource extends AuthenticatedResource
                 new FieldsDataFromValuesByFieldBuilder($this->formelement_factory, $artifact_link_initial_builder),
                 $this->formelement_factory,
                 SubmissionPermissionVerifier::instance(),
+                $transaction_executor,
                 new ReverseLinksToNewChangesetsConverter($this->formelement_factory, $this->artifact_factory),
                 $changeset_creator
             );
