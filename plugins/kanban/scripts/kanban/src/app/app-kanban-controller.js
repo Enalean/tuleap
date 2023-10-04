@@ -30,6 +30,7 @@ KanbanCtrl.$inject = [
     "$q",
     "$scope",
     "$timeout",
+    "$window",
     "gettextCatalog",
     "SharedPropertiesService",
     "KanbanService",
@@ -51,6 +52,7 @@ function KanbanCtrl(
     $q,
     $scope,
     $timeout,
+    $window,
     gettextCatalog,
     SharedPropertiesService,
     KanbanService,
@@ -165,6 +167,17 @@ function KanbanCtrl(
                 .element(`[data-shortcut-create-option][data-tracker-id=${kanban.tracker_id}]`)
                 .on("click", openAddArtifactModal);
         }
+
+        const url = new URL($window.location);
+        const should_display_kanban_modal = url.searchParams.get(
+            "should-display-artifact-creation-modal",
+        );
+
+        if (should_display_kanban_modal) {
+            openAddArtifactModal();
+        }
+        url.searchParams.delete("should-display-artifact-creation-modal");
+        $window.history.replaceState({}, "", url);
     }
 
     function initViewMode() {
@@ -407,7 +420,9 @@ function KanbanCtrl(
     }
 
     function openAddArtifactModal($event) {
-        $event.preventDefault();
+        if ($event) {
+            $event.preventDefault();
+        }
         const callback = (artifact_id) => {
             KanbanItemRestService.getItem(artifact_id).then((artifact) => {
                 if (!artifact) {
