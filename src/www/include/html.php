@@ -571,7 +571,9 @@ function site_project_header(Project $project, HeaderConfiguration|array $params
         throw new Exception("site_project_header is supposed to be called in a project context");
     }
 
-    if (is_array($params) && isset($params['pv'], $GLOBALS['HTML']) && $GLOBALS['HTML'] instanceof Layout && $params['pv'] != 0) {
+    $is_asking_for_printer_version = is_array($params) && isset($params['pv']) && $params['pv']
+        || $params instanceof HeaderConfiguration && $params->printer_version;
+    if ($is_asking_for_printer_version && isset($GLOBALS['HTML']) && $GLOBALS['HTML'] instanceof Layout) {
         // Printer version: no right column, no tabs...
         $GLOBALS['HTML']->pv_header($params);
     } else {

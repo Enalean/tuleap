@@ -38,6 +38,7 @@ final class HeaderConfigurationBuilder
     private array $main_class = [];
 
     private ?InProject $in_project = null;
+    private int $printer_version   = 0;
 
     private function __construct(private string $title)
     {
@@ -111,6 +112,13 @@ final class HeaderConfigurationBuilder
         return $this;
     }
 
+    public function withPrinterVersion(int $level): self
+    {
+        $this->printer_version = $level;
+
+        return $this;
+    }
+
     public function build(): HeaderConfiguration
     {
         return new HeaderConfiguration(
@@ -118,6 +126,7 @@ final class HeaderConfigurationBuilder
             $this->in_project,
             $this->body_class,
             $this->main_class,
+            $this->printer_version,
         );
     }
 }

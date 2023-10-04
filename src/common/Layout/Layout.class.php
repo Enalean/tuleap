@@ -315,30 +315,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         }
     }
 
-    /**
-     * This is a generic header method shared by header() and pv_header()
-     */
-    private function generic_header($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        if (! $this->is_rendered_through_service && isset($GLOBALS['group_id']) && $GLOBALS['group_id']) {
-            if (isset($params['toptab'])) {
-                $this->warning_for_services_which_configuration_is_not_inherited($GLOBALS['group_id'], $params['toptab']);
-            }
-        }
-        $hp    = Codendi_HTMLPurifier::instance();
-        $title = ($params['title'] ? $params['title'] . ' - ' : '') . ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME);
-        echo '<!DOCTYPE html>' . "\n";
-        echo '<html lang="' . $GLOBALS['Language']->getText('conf', 'language_code') . '">
-                <head>
-                    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-                    <title>' . $hp->purify($title) . '</title>
-                    <link rel="SHORTCUT ICON" href="' . $this->imgroot . 'favicon.ico' . '">';
-        echo $this->displayJavascriptElements($params);
-        echo $this->displayStylesheetElements($params);
-        echo $this->displaySyndicationElements();
-        echo '</head>';
-    }
-
     private function shouldIncludeFatCombined(array $params)
     {
         return ! isset($params[self::INCLUDE_FAT_COMBINED]) || $params[self::INCLUDE_FAT_COMBINED] == true;
@@ -662,12 +638,31 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         }
     }
 
-    public function pv_header($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function pv_header(\Tuleap\Layout\HeaderConfiguration|array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $this->generic_header($params);
+        if ($params instanceof \Tuleap\Layout\HeaderConfiguration) {
+            $params = $params->flatten();
+        }
+        if (! $this->is_rendered_through_service && isset($GLOBALS['group_id']) && $GLOBALS['group_id']) {
+            if (isset($params['toptab'])) {
+                $this->warning_for_services_which_configuration_is_not_inherited($GLOBALS['group_id'], $params['toptab']);
+            }
+        }
+        $hp        = Codendi_HTMLPurifier::instance();
+        $pagetitle = ($params['title'] ? $params['title'] . ' - ' : '') . ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME);
+        echo '<!DOCTYPE html>' . "\n";
+        echo '<html lang="' . $GLOBALS['Language']->getText('conf', 'language_code') . '">
+                <head>
+                    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+                    <title>' . $hp->purify($pagetitle) . '</title>
+                    <link rel="SHORTCUT ICON" href="' . $this->imgroot . 'favicon.ico' . '">';
+        $this->displayJavascriptElements($params);
+        $this->displayStylesheetElements($params);
+        $this->displaySyndicationElements();
+        echo '</head>';
+
         $current_user = UserManager::instance()->getCurrentUser();
         $user_locale  = $current_user->getLocale();
-        $hp           = Codendi_HTMLPurifier::instance();
         echo '
 <body class="bg_help" data-user-locale="' . $hp->purify($user_locale) . '">
 ';

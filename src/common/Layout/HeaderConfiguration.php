@@ -39,11 +39,32 @@ final class HeaderConfiguration
         public readonly ?InProject $in_project,
         public readonly array $body_class,
         public readonly array $main_class,
+        public readonly int $printer_version,
     ) {
     }
 
     public static function fromTitle(string $title): self
     {
         return HeaderConfigurationBuilder::get($title)->build();
+    }
+
+    /**
+     * @psalm-internal \Tuleap\Layout
+     * @psalm-internal \Layout
+     * @psalm-internal \FlamingParrot_Theme
+     */
+    public function flatten(): array
+    {
+        return [
+            'title'        => $this->title,
+            'body_class'   => $this->body_class,
+            'main_classes' => $this->main_class,
+            'pv'           => $this->printer_version,
+            ...($this->in_project ? [
+                'project' => $this->in_project->project,
+                'toptab' => $this->in_project->current_service_shortname,
+                'without-project-in-breadcrumbs' => ! $this->in_project->in_breadcrumbs,
+            ] : []),
+        ];
     }
 }
