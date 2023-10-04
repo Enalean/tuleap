@@ -44,7 +44,7 @@ class ServiceMediawiki extends Service
         return TemplateRendererFactory::build()->getRenderer(dirname(MEDIAWIKI_BASE_DIR) . '/templates');
     }
 
-    public function displayHeader(string $title, $breadcrumbs = [], array $toolbar = [], array $params = []): void
+    public function displayHeader(string $title, $breadcrumbs = [], array $toolbar = [], \Tuleap\Layout\HeaderConfiguration|array $params = []): void
     {
         $breadcrumb_builder = new \Tuleap\Mediawiki\MediawikiBreadcrumbBuilder(
             new User_ForgeUserGroupPermissionsManager(

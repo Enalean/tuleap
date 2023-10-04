@@ -181,7 +181,7 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         return '';
     }
 
-    public function displayHeader(string $title, $breadcrumbs, array $toolbar, array $params = []): void
+    public function displayHeader(string $title, $breadcrumbs, array $toolbar, \Tuleap\Layout\HeaderConfiguration|array $params = []): void
     {
         \Tuleap\Project\ServiceInstrumentation::increment(strtolower($this->getShortName()));
 
@@ -196,13 +196,13 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         }
 
         $pv = (int) HTTPRequest::instance()->get('pv');
-        if (empty($params)) {
+        if (is_array($params) && empty($params)) {
             $params = \Tuleap\Layout\HeaderConfigurationBuilder::get($title)
                 ->inProject($this->project, (string) $this->getId())
                 ->withBodyClass(['service-' . $this->getShortName()])
                 ->withPrinterVersion($pv)
                 ->build();
-        } else {
+        } elseif (is_array($params)) {
             $params['title']  = $title;
             $params['toptab'] = $this->getId();
 
