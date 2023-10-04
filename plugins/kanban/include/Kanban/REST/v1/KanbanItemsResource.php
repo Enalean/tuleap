@@ -56,8 +56,8 @@ use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactForwardLinksRetriever;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksByChangesetCache;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLinkDao;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksToNewChangesetsConverter;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
-use Tuleap\Tracker\Artifact\Link\ArtifactUpdateHandler;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
@@ -242,8 +242,9 @@ final class KanbanItemsResource extends AuthenticatedResource
             $this->tracker_factory,
             new FieldsDataFromValuesByFieldBuilder($this->form_element_factory, $artifact_link_initial_builder),
             $this->form_element_factory,
-            new ArtifactUpdateHandler($changeset_creator, $this->form_element_factory, $this->artifact_factory),
-            SubmissionPermissionVerifier::instance()
+            SubmissionPermissionVerifier::instance(),
+            new ReverseLinksToNewChangesetsConverter($this->form_element_factory, $this->artifact_factory),
+            $changeset_creator
         );
 
         $tracker_reference = TrackerReference::build($tracker);

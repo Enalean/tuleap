@@ -106,6 +106,7 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksByChangeset
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLinkDao;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksDao;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksRetriever;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksToNewChangesetsConverter;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\Link\ArtifactUpdateHandler;
 use Tuleap\Tracker\Exception\SemanticTitleNotDefinedException;
@@ -1025,8 +1026,9 @@ class ArtifactsResource extends AuthenticatedResource
                 $this->tracker_factory,
                 new FieldsDataFromValuesByFieldBuilder($this->formelement_factory, $artifact_link_initial_builder),
                 $this->formelement_factory,
-                new ArtifactUpdateHandler($changeset_creator, $this->formelement_factory, $this->artifact_factory),
-                SubmissionPermissionVerifier::instance()
+                SubmissionPermissionVerifier::instance(),
+                new ReverseLinksToNewChangesetsConverter($this->formelement_factory, $this->artifact_factory),
+                $changeset_creator
             );
 
             if (! empty($values)) {

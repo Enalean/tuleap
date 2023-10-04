@@ -50,5 +50,6 @@ final class NewArtifactLinkInitialChangesetValueTest extends \Tuleap\Test\PHPUni
         self::assertSame(self::FIELD_ID, $value->getFieldId());
         self::assertSame($collection, $value->getNewLinks());
         self::assertSame($parent, $value->getParent());
+        self::assertSame($reverse_collection, $value->getReverseLinks());
     }
 }

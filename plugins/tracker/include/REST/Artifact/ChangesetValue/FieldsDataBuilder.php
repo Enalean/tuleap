@@ -30,7 +30,7 @@ use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 
-final class FieldsDataBuilder implements BuildFieldsData
+final class FieldsDataBuilder
 {
     public function __construct(
         private readonly RetrieveUsedFields $fields_retriever,

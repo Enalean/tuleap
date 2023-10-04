@@ -91,10 +91,9 @@ final class ArtifactValuesRepresentationBuilder
     }
 
     /**
-     * @param LinkWithDirectionRepresentation[] ...$other_links
      * @no-named-arguments
      */
-    public function withAllLinks(LinkWithDirectionRepresentation $first_link, array ...$other_links): self
+    public function withAllLinks(LinkWithDirectionRepresentation $first_link, LinkWithDirectionRepresentation ...$other_links): self
     {
         $this->all_links = [$first_link, ...$other_links];
         return $this;
