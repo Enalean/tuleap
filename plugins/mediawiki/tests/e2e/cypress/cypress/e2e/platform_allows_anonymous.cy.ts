@@ -19,7 +19,6 @@
 
 describe("Plateform allows anonymous", function () {
     it("project administrator can define permission access level of mediawiki", function () {
-        cy.siteAdministratorSession();
         cy.updatePlatformVisibilityForAnonymous();
         cy.projectAdministratorSession();
 

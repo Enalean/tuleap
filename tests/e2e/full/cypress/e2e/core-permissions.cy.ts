@@ -49,7 +49,6 @@ describe("Core", function () {
         cy.projectAdministratorSession();
         cy.createNewPrivateProject(restricted_project_notification);
 
-        cy.siteAdministratorSession();
         cy.updatePlatformVisibilityAndAllowRestricted();
 
         cy.restrictedRegularUserSession();
@@ -64,7 +63,6 @@ describe("Core", function () {
 
         cy.assertEmailWithContentReceived("ProjectAdministrator@example.com", message);
 
-        cy.siteAdministratorSession();
         cy.updatePlatformVisibilityForAnonymous();
     });
 
