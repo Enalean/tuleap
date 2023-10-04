@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tracker id="T425" parent_id="0" instantiate_for_new_projects="1" is_displayed_in_new_dropdown="1">
+<tracker id="T425" parent_id="0" instantiate_for_new_projects="1">
   <name><![CDATA[Activities]]></name>
   <item_name>activity</item_name>
   <description><![CDATA[Track daily tasks, meeting actions and follow-ups, etc.]]></description>
