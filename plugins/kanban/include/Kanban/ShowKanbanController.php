@@ -34,6 +34,7 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\ServiceInstrumentation;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -95,17 +96,20 @@ final class ShowKanbanController implements DispatchableWithRequest, Dispatchabl
             $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/');
 
             $service         = $this->getService($project);
-            $header_options  = [
-                'body_class'              => ['reduce-help-button', 'kanban-body'],
-                'active-promoted-item-id' => $kanban->getPromotedKanbanId(),
-            ];
             $current_section = $this->current_context_section_for_kanban_provider->getSectionByKanbanId(
-                (int) $request->get('id'),
+                $kanban_id,
                 $request->getCurrentUser()
             );
-            if ($current_section) {
-                $header_options['new_dropdown_current_context_section'] = $current_section;
-            }
+
+            $header_options = HeaderConfigurationBuilder::get($kanban->getName())
+                ->inProjectWithActivePromotedItem(
+                    $project,
+                    KanbanService::SERVICE_SHORTNAME,
+                    $kanban->getPromotedKanbanId()
+                )
+                ->withBodyClass(['reduce-help-button', 'kanban-body'])
+                ->withNewDropdownLinkSection($current_section)
+                ->build();
 
             $kanban_assets = new IncludeAssets(
                 __DIR__ . '/../../scripts/kanban/frontend-assets',

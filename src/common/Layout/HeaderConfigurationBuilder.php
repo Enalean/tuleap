@@ -25,6 +25,7 @@ namespace Tuleap\Layout;
 use Tuleap\Layout\HeaderConfiguration\InProject;
 use Tuleap\Layout\HeaderConfiguration\InProjectWithoutSidebar\BackToLinkPresenter;
 use Tuleap\Layout\HeaderConfiguration\WithoutSidebar;
+use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
 
 final class HeaderConfigurationBuilder
 {
@@ -37,8 +38,9 @@ final class HeaderConfigurationBuilder
      */
     private array $main_class = [];
 
-    private ?InProject $in_project = null;
-    private int $printer_version   = 0;
+    private ?InProject $in_project                                                = null;
+    private int $printer_version                                                  = 0;
+    private ?NewDropdownLinkSectionPresenter $new_dropdown_link_section_presenter = null;
 
     private function __construct(private string $title)
     {
@@ -77,6 +79,23 @@ final class HeaderConfigurationBuilder
             $project,
             $current_service_shortname,
             null,
+            null,
+            true,
+        );
+
+        return $this;
+    }
+
+    public function inProjectWithActivePromotedItem(
+        \Project $project,
+        string $current_service_shortname,
+        string $active_promoted_item_id,
+    ): self {
+        $this->in_project = new InProject(
+            $project,
+            $current_service_shortname,
+            $active_promoted_item_id,
+            null,
             true,
         );
 
@@ -91,6 +110,7 @@ final class HeaderConfigurationBuilder
         $this->in_project = new InProject(
             $project,
             $current_service_shortname,
+            null,
             new WithoutSidebar($back_to_link),
             true,
         );
@@ -106,6 +126,7 @@ final class HeaderConfigurationBuilder
             $project,
             $current_service_shortname,
             null,
+            null,
             false,
         );
 
@@ -119,6 +140,13 @@ final class HeaderConfigurationBuilder
         return $this;
     }
 
+    public function withNewDropdownLinkSection(?NewDropdownLinkSectionPresenter $new_dropdown_link_section_presenter): self
+    {
+        $this->new_dropdown_link_section_presenter = $new_dropdown_link_section_presenter;
+
+        return $this;
+    }
+
     public function build(): HeaderConfiguration
     {
         return new HeaderConfiguration(
@@ -127,6 +155,7 @@ final class HeaderConfigurationBuilder
             $this->body_class,
             $this->main_class,
             $this->printer_version,
+            $this->new_dropdown_link_section_presenter,
         );
     }
 }

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Layout;
 
 use Tuleap\Layout\HeaderConfiguration\InProject;
+use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
 
 /**
  * @psalm-immutable
@@ -40,6 +41,7 @@ final class HeaderConfiguration
         public readonly array $body_class,
         public readonly array $main_class,
         public readonly int $printer_version,
+        public readonly ?NewDropdownLinkSectionPresenter $new_dropdown_link_section_presenter,
     ) {
     }
 
@@ -56,14 +58,16 @@ final class HeaderConfiguration
     public function flatten(): array
     {
         return [
-            'title'        => $this->title,
-            'body_class'   => $this->body_class,
-            'main_classes' => $this->main_class,
-            'pv'           => $this->printer_version,
+            'title'                                => $this->title,
+            'body_class'                           => $this->body_class,
+            'main_classes'                         => $this->main_class,
+            'pv'                                   => $this->printer_version,
+            'new_dropdown_current_context_section' => $this->new_dropdown_link_section_presenter,
             ...($this->in_project ? [
-                'project' => $this->in_project->project,
-                'toptab' => $this->in_project->current_service_shortname,
+                'project'                        => $this->in_project->project,
+                'toptab'                         => $this->in_project->current_service_shortname,
                 'without-project-in-breadcrumbs' => ! $this->in_project->in_breadcrumbs,
+                'active-promoted-item-id'        => $this->in_project->active_promoted_item_id,
             ] : []),
         ];
     }
