@@ -76,6 +76,12 @@ reason = "No impact in our situation. No fix available upstream."
 id = "GHSA-p2fh-2h23-6grg" # CVE-2023-2972
 reason = "No impact in our situation, unplugin-vue2-script-setup will be removed when the Vue 2 migration is completed."
 
+# @vue/vue2-jest & vue-loader v15 via the transitive dep @vue/component-compiler-utils
+## postcss
+[[IgnoredVulns]]
+id = "GHSA-7fh5-64p2-3v2j" # CVE-2023-44270
+reason = "@vue/component-compiler-utils will be removed when the Vue 2 migration is completed."
+
 ### TO BE FIXED
 
 # Nothing right now
