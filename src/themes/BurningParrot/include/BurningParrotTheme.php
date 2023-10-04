@@ -174,15 +174,7 @@ class BurningParrotTheme extends BaseLayout
 
         if ($params instanceof HeaderConfiguration) {
             $in_project_without_sidebar = $params->in_project?->without_sidebar;
-            $params                     = [
-                'title'        => $params->title,
-                'body_class'   => $params->body_class,
-                'main_classes' => $params->main_class,
-                ...($params->in_project ? [
-                    'toptab' => $params->in_project->current_service_shortname,
-                    'without-project-in-breadcrumbs' => ! $params->in_project->in_breadcrumbs,
-                ] : []),
-            ];
+            $params                     = $params->flatten();
         }
 
         if ($project) {

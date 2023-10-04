@@ -137,15 +137,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $this->header_has_been_written = true;
 
         if ($params instanceof HeaderConfiguration) {
-            $params = [
-                'title'        => $params->title,
-                'body_class'   => $params->body_class,
-                'main_classes' => $params->main_class,
-                ...($params->in_project ? [
-                    'project' => $project,
-                    'toptab' => $params->in_project->current_service_shortname,
-                ] : []),
-            ];
+            $params = $params->flatten();
         }
         $title = ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME);
         if (! empty($params['title'])) {

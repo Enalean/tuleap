@@ -194,16 +194,25 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
             $data_test  = isset($t['data-test']) ? 'data-test="' . $t['data-test'] . '"' : '';
             $GLOBALS['HTML']->addToolbarItem('<a href="' . $t['url'] . '" ' . $class . ' ' . $data_test . '>' . $item_title . '</a>');
         }
-        $params['title']  = $title;
-        $params['toptab'] = $this->getId();
 
-        if (! isset($params['body_class'])) {
-            $params['body_class'] = [];
-        }
-        $params['body_class'][] = 'service-' . $this->getShortName();
+        $pv = (int) HTTPRequest::instance()->get('pv');
+        if (empty($params)) {
+            $params = \Tuleap\Layout\HeaderConfigurationBuilder::get($title)
+                ->inProject($this->project, (string) $this->getId())
+                ->withBodyClass(['service-' . $this->getShortName()])
+                ->withPrinterVersion($pv)
+                ->build();
+        } else {
+            $params['title']  = $title;
+            $params['toptab'] = $this->getId();
 
-        if ($pv = (int) HTTPRequest::instance()->get('pv')) {
-            $params['pv'] = (int) $pv;
+            if (! isset($params['body_class'])) {
+                $params['body_class'] = [];
+            }
+            $params['body_class'][] = 'service-' . $this->getShortName();
+            if ($pv) {
+                $params['pv'] = $pv;
+            }
         }
 
         $this->displayDuplicateInheritanceWarning();
