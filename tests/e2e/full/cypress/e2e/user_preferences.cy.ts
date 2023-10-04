@@ -27,6 +27,8 @@ describe("User preferences", () => {
         username = "test_prefs_" + now;
         password = "pwd_" + now;
 
+        cy.updatePlatformAndMakeUserInAdminApprovalMode();
+
         cy.anonymousSession();
         cy.visit("/account/register.php");
         cy.get("[data-test=user-login]").type(username);

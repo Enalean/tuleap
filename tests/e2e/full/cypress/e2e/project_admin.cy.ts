@@ -198,11 +198,10 @@ context("Project member", function () {
 context("Restricted users", function () {
     it("should not be able to create new project", function () {
         cy.log("Enable restricted users");
-        cy.siteAdministratorSession();
         cy.updatePlatformVisibilityAndAllowRestricted();
 
-        cy.log("Check restricted user CANNOT create a project");
         cy.restrictedRegularUserSession();
+        cy.log("Check restricted user CANNOT create a project");
         cy.visit("/my/");
         cy.get("[data-test=new-button]").should("not.exist");
 

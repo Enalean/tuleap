@@ -57,11 +57,7 @@ context("PHPWiki notifications", function () {
         cy.get("[data-test=projects-must-be-approved]").uncheck();
         cy.get("[data-test=save-settings]").click();
 
-        cy.visit("/admin/");
-        cy.get("[data-test=user-settings-link]").click();
-
-        cy.get("[data-test=user-must-be-approved]").uncheck();
-        cy.get("[data-test=save-settings]").click();
+        cy.updatePlatformAndMakeUserInAutoApprovalMode();
 
         cy.log("Create project");
         cy.projectAdministratorSession();

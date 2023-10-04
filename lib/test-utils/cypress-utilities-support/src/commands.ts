@@ -116,32 +116,6 @@ function visitServiceInCurrentProject(
         });
 }
 
-Cypress.Commands.add("updatePlatformVisibilityAndAllowRestricted", (): void => {
-    cy.visit("/admin/");
-    cy.get("[data-test=global_access_right]").click({ force: true });
-
-    cy.get("[data-test=access_mode-restricted]").check();
-
-    cy.get("[data-test=update_forge_access_button]").click({ force: true });
-
-    cy.get("[data-test=global-admin-search-user]").type("RestrictedMember{enter}");
-    cy.get("[data-test=user-status]").select("Restricted");
-    cy.get("[data-test=save-user]").click();
-
-    cy.get("[data-test=global-admin-search-user]").type("RestrictedRegularUser{enter}");
-    cy.get("[data-test=user-status]").select("Restricted");
-    cy.get("[data-test=save-user]").click();
-});
-
-Cypress.Commands.add("updatePlatformVisibilityForAnonymous", (): void => {
-    cy.visit("/admin/");
-    cy.get("[data-test=global_access_right]").click({ force: true });
-
-    cy.get("[data-test=access_mode-anonymous]").check();
-
-    cy.get("[data-test=update_forge_access_button]").click({ force: true });
-});
-
 Cypress.Commands.add("getProjectId", (project_shortname: string): Cypress.Chainable<number> => {
     return cy
         .getFromTuleapAPI(

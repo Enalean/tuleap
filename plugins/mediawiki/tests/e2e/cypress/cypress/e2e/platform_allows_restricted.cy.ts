@@ -19,7 +19,6 @@
 
 describe("Platform allows restricted", function () {
     it("project administrator can define permission access level of mediawiki", function () {
-        cy.siteAdministratorSession();
         cy.updatePlatformVisibilityAndAllowRestricted();
         cy.projectAdministratorSession();
 

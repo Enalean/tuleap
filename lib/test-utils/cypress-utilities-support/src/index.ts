@@ -21,4 +21,5 @@ import "./api-helper";
 import "./commands";
 import "./email";
 import "./trackers";
+import "./site-admin-actions";
 export { WEB_UI_SESSION } from "./commands";

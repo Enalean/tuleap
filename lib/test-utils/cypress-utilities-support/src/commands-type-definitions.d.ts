@@ -49,6 +49,10 @@ declare global {
 
             switchProjectVisibility(visibility: string): void;
 
+            updatePlatformAndMakeUserInAutoApprovalMode(): void;
+
+            updatePlatformAndMakeUserInAdminApprovalMode(): void;
+
             updatePlatformVisibilityAndAllowRestricted(): void;
 
             updatePlatformVisibilityForAnonymous(): void;

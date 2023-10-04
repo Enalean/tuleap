@@ -52,7 +52,6 @@ enable_plugins() {
         webauthn
 
     sed -i -e 's#/var/lib/codendi#/var/lib/tuleap#g' /etc/tuleap/plugins/docman/etc/docman.inc
-    sudo -u codendiadm /usr/bin/tuleap config-set sys_user_approval 1
 }
 
 load_project() {
