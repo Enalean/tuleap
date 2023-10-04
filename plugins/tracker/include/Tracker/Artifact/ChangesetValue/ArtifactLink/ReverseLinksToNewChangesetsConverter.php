@@ -70,6 +70,60 @@ final class ReverseLinksToNewChangesetsConverter
     }
 
     /**
+     * @return Ok<list<NewChangeset>> | Err<Fault>
+     */
+    public function convertChangeReverseLinks(
+        ChangeReverseLinksCommand $command,
+        \PFUser $submitter,
+        \DateTimeImmutable $submission_date,
+    ): Ok|Err {
+        $new_changesets = [];
+        foreach ($command->getLinksToAdd()->links as $link_to_add) {
+            $result = $this->convertLink(
+                $link_to_add,
+                $this->convertLinkToAdd(...),
+                $command->getTargetArtifact(),
+                $submitter,
+                $submission_date
+            );
+            if (Result::isOk($result)) {
+                $new_changesets[] = $result->value;
+            } else {
+                return $result;
+            }
+        }
+        foreach ($command->getLinksToChange()->links as $link_to_change) {
+            $result = $this->convertLink(
+                $link_to_change,
+                $this->convertLinkToChange(...),
+                $command->getTargetArtifact(),
+                $submitter,
+                $submission_date
+            );
+            if (Result::isOk($result)) {
+                $new_changesets[] = $result->value;
+            } else {
+                return $result;
+            }
+        }
+        foreach ($command->getLinksToRemove()->links as $link_to_remove) {
+            $result = $this->convertLink(
+                $link_to_remove,
+                $this->convertLinkToRemove(...),
+                $command->getTargetArtifact(),
+                $submitter,
+                $submission_date
+            );
+            if (Result::isOk($result)) {
+                $new_changesets[] = $result->value;
+            } else {
+                return $result;
+            }
+        }
+        return Result::ok($new_changesets);
+    }
+
+    /**
      * @param callable(Artifact, ReverseLink, \Tracker_FormElement_Field_ArtifactLink): ChangeForwardLinksCommand $convertToForwardLinksCommand
      * @return Ok<NewChangeset> | Err<Fault>
      */
@@ -111,6 +165,32 @@ final class ReverseLinksToNewChangesetsConverter
             CollectionOfForwardLinks::fromReverseLink($target_artifact, $link),
             new CollectionOfForwardLinks([]),
             new CollectionOfForwardLinks([])
+        );
+    }
+
+    private function convertLinkToChange(
+        Artifact $target_artifact,
+        ReverseLink $link,
+        \Tracker_FormElement_Field_ArtifactLink $source_link_field,
+    ): ChangeForwardLinksCommand {
+        return ChangeForwardLinksCommand::fromParts(
+            $source_link_field->getId(),
+            new CollectionOfForwardLinks([]),
+            CollectionOfForwardLinks::fromReverseLink($target_artifact, $link),
+            new CollectionOfForwardLinks([])
+        );
+    }
+
+    private function convertLinkToRemove(
+        Artifact $target_artifact,
+        ReverseLink $link,
+        \Tracker_FormElement_Field_ArtifactLink $source_link_field,
+    ): ChangeForwardLinksCommand {
+        return ChangeForwardLinksCommand::fromParts(
+            $source_link_field->getId(),
+            new CollectionOfForwardLinks([]),
+            new CollectionOfForwardLinks([]),
+            CollectionOfForwardLinks::fromReverseLink($target_artifact, $link),
         );
     }
 

@@ -32,12 +32,10 @@ use Tracker_NoChangeException;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentContentNotValidException;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangeReverseLinksCommand;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValue;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\RetrieveReverseLinks;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
+use Tuleap\Tracker\Artifact\Changeset\Comment\NewComment;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
-use Tuleap\Tracker\Artifact\Link\HandleUpdateArtifact;
+use Tuleap\Tracker\Artifact\Link\ArtifactReverseLinksUpdater;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 use Tuleap\Tracker\REST\FaultMapper;
@@ -46,11 +44,10 @@ use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 final class PUTHandler
 {
     public function __construct(
-        private FieldsDataBuilder $fields_data_builder,
-        private RetrieveReverseLinks $reverse_links_retriever,
-        private HandleUpdateArtifact $artifact_update_handler,
-        private DBTransactionExecutor $transaction_executor,
-        private CheckArtifactRestUpdateConditions $check_artifact_rest_update_conditions,
+        private readonly FieldsDataBuilder $fields_data_builder,
+        private readonly ArtifactReverseLinksUpdater $links_updater,
+        private readonly DBTransactionExecutor $transaction_executor,
+        private readonly CheckArtifactRestUpdateConditions $check_artifact_rest_update_conditions,
     ) {
     }
 
@@ -58,50 +55,29 @@ final class PUTHandler
      * @param ArtifactValuesRepresentation[] $values
      * @throws RestException
      */
-    public function handle(array $values, Artifact $artifact, \PFUser $submitter, ?NewChangesetCommentRepresentation $comment): void
-    {
+    public function handle(
+        array $values,
+        Artifact $artifact,
+        \PFUser $submitter,
+        ?NewChangesetCommentRepresentation $comment,
+    ): void {
         try {
-            $this->check_artifact_rest_update_conditions->checkIfArtifactUpdateCanBePerformedThroughREST($submitter, $artifact);
-            $this->transaction_executor->execute(
-                function () use ($artifact, $submitter, $comment, $values) {
-                    $changeset_values = $this->fields_data_builder->getFieldsDataOnUpdate($values, $artifact, $submitter);
-
-                    $changeset_values->getArtifactLinkValue()->apply(
-                        function (NewArtifactLinkChangesetValue $artifact_link_value) use (
-                            $submitter,
-                            $artifact,
-                        ): void {
-                            $artifact_link_value->getSubmittedReverseLinks()->apply(function (CollectionOfReverseLinks $submitted_reverse_links) use (
-                                $submitter,
-                                $artifact
-                            ): void {
-                                $stored_reverse_links = $this->reverse_links_retriever->retrieveReverseLinks($artifact, $submitter);
-                                $command              = ChangeReverseLinksCommand::fromSubmittedAndExistingLinks(
-                                    $artifact,
-                                    $submitted_reverse_links,
-                                    $stored_reverse_links
-                                );
-                                $this->artifact_update_handler->updateTypeAndAddReverseLinks(
-                                    $artifact,
-                                    $submitter,
-                                    $command->getLinksToAdd(),
-                                    $command->getLinksToChange()
-                                )->map(fn() => $this->artifact_update_handler->removeReverseLinks(
-                                    $artifact,
-                                    $submitter,
-                                    $command->getLinksToRemove()
-                                ))->mapErr(FaultMapper::mapToRestException(...));
-                            });
-                        }
-                    );
-
-                    try {
-                        $this->artifact_update_handler->updateForwardLinks($artifact, $submitter, $changeset_values, $comment);
-                    } catch (Tracker_NoChangeException) {
-                        //Do nothing
-                    }
-                }
+            $this->check_artifact_rest_update_conditions->checkIfArtifactUpdateCanBePerformedThroughREST(
+                $submitter,
+                $artifact
             );
+            $this->transaction_executor->execute(function () use ($artifact, $submitter, $comment, $values) {
+                $changeset_values = $this->fields_data_builder->getFieldsDataOnUpdate($values, $artifact, $submitter);
+
+                $submission_date = new \DateTimeImmutable();
+                $this->links_updater->updateArtifactAndItsLinks(
+                    $artifact,
+                    $changeset_values,
+                    $submitter,
+                    $submission_date,
+                    $this->buildNewComment($comment, $submitter, $submission_date)
+                )->mapErr(FaultMapper::mapToRestException(...));
+            });
         } catch (Tracker_FormElement_InvalidFieldException | Tracker_FormElement_InvalidFieldValueException | CommentContentNotValidException | FieldValidationException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_NoChangeException) {
@@ -116,5 +92,22 @@ final class PUTHandler
         } catch (Tracker_Artifact_Attachment_FileNotFoundException $exception) {
             throw new RestException(404, $exception->getMessage());
         }
+    }
+
+    private function buildNewComment(
+        ?NewChangesetCommentRepresentation $comment,
+        \PFUser $submitter,
+        \DateTimeImmutable $submission_date,
+    ): NewComment {
+        if (! $comment) {
+            return NewComment::buildEmpty($submitter, $submission_date->getTimestamp());
+        }
+        return NewComment::fromParts(
+            $comment->body,
+            CommentFormatIdentifier::fromFormatString($comment->format),
+            $submitter,
+            $submission_date->getTimestamp(),
+            []
+        );
     }
 }
