@@ -44,7 +44,7 @@ class ArtifactTypeHtml extends ArtifactType // phpcs:ignore PSR1.Classes.ClassDe
      *
      *  @return void
      */
-    public function header($params)
+    public function header(array $params)
     {
         global $Language;
         $group_id = $this->Group->getID();
