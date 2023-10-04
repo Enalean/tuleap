@@ -36,7 +36,7 @@ class ServiceTracker extends Service
     /**
      * Display header for service tracker
      */
-    public function displayHeader(string $title, $breadcrumbs, array $toolbar, array $params = []): void
+    public function displayHeader(string $title, $breadcrumbs, array $toolbar, \Tuleap\Layout\HeaderConfiguration|array $params = []): void
     {
         $GLOBALS['HTML']->includeCalendarScripts();
 
@@ -51,9 +51,6 @@ class ServiceTracker extends Service
             //if it's a private group, you must be a member of that group
             session_require(['group' => $this->project->getID()]);
         }
-
-        $params['service_name'] = self::NAME;
-        $params['project_id']   = $this->getGroupId();
 
         parent::displayHeader($title, $breadcrumbs, $toolbar, $params);
     }

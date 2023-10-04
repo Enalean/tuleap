@@ -20,13 +20,24 @@
 
 namespace Tuleap\Docman;
 
+use Tuleap\Layout\HeaderConfiguration;
+use Tuleap\Layout\HeaderConfigurationBuilder;
+
 class ServiceDocman extends \Service
 {
-    public function displayHeader(string $title, $breadcrumbs, array $toolbar, array $params = []): void
+    public function displayHeader(string $title, $breadcrumbs, array $toolbar, HeaderConfiguration|array $params = []): void
     {
         $GLOBALS['HTML']->includeCalendarScripts();
 
-        parent::displayHeader($title, $breadcrumbs, $toolbar, ['body_class' => ['docman-body']]);
+        parent::displayHeader(
+            $title,
+            $breadcrumbs,
+            $toolbar,
+            HeaderConfigurationBuilder::get($title)
+                ->inProject($this->project, \DocmanPlugin::SERVICE_SHORTNAME)
+                ->withBodyClass(['docman-body'])
+                ->build()
+        );
     }
 
     public function getIconName(): string
