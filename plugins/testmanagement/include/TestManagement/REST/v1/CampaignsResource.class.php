@@ -379,6 +379,7 @@ class CampaignsResource
             new FieldsDataFromValuesByFieldBuilder($this->formelement_factory, $artifact_link_initial_builder),
             $this->formelement_factory,
             SubmissionPermissionVerifier::instance(),
+            $transaction_executor,
             new ReverseLinksToNewChangesetsConverter($this->formelement_factory, $this->artifact_factory),
             $changeset_creator
         );
@@ -410,9 +411,6 @@ class CampaignsResource
             $artifact_creator,
             $this->execution_creator
         );
-
-        $usage_dao        = new ArtifactLinksUsageDao();
-        $fields_retriever = new FieldsToBeSavedInSpecificOrderRetriever($this->formelement_factory);
 
         $this->artifact_updater = new ArtifactUpdater(
             $fields_data_builder,
@@ -458,7 +456,6 @@ class CampaignsResource
         $mercure_artifact_message_sender = new RealTimeMercureArtifactMessageSender(
             $mercure_client
         );
-        $mercure_client                  = ClientBuilder::build(ClientBuilder::DEFAULTPATH);
         $this->realtime_message_sender   = new RealTimeMessageSender(
             $node_js_client,
             $permissions_serializer,

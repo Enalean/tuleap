@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\REST\Artifact;
 use Luracast\Restler\RestException;
 use PFUser;
 use Tracker;
+use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\CreateNewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
@@ -49,6 +50,7 @@ class ArtifactCreator
         private readonly FieldsDataFromValuesByFieldBuilder $values_by_field_builder,
         private readonly AddDefaultValuesToFieldsData $default_values_adder,
         private readonly VerifySubmissionPermissions $submission_permission_verifier,
+        private readonly DBTransactionExecutor $transaction_executor,
         private readonly ReverseLinksToNewChangesetsConverter $changesets_converter,
         private readonly CreateNewChangeset $changeset_creator,
     ) {
@@ -75,13 +77,13 @@ class ArtifactCreator
         );
         $this->checkUserCanSubmit($submitter, $tracker);
 
-        return $this->returnReferenceOrError(
+        return $this->transaction_executor->execute(fn(): ArtifactReference => $this->returnReferenceOrError(
             $this->artifact_factory->createArtifact($tracker, $fields_data, $submitter, '', $should_visit_be_recorded),
             '',
             $submitter,
             $changeset_values,
             $values
-        );
+        ));
     }
 
     /**
@@ -101,13 +103,13 @@ class ArtifactCreator
         );
         $this->checkUserCanSubmit($user, $tracker);
 
-        return $this->returnReferenceOrError(
+        return $this->transaction_executor->execute(fn(): ArtifactReference => $this->returnReferenceOrError(
             $this->artifact_factory->createArtifact($tracker, $fields_data, $user, '', true),
             'by_field',
             $user,
             $changeset_values,
             $values
-        );
+        ));
     }
 
     private function getTracker(TrackerReference $tracker_reference): Tracker

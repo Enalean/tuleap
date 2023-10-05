@@ -27,6 +27,7 @@ use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
 use Tuleap\Tracker\Artifact\ChangesetValue\AddDefaultValuesToFieldsData;
@@ -104,6 +105,7 @@ final class ArtifactCreatorTest extends TestCase
             new FieldsDataFromValuesByFieldBuilder($this->all_fields_retriever, $artifact_link_initial_builder),
             $default_values_adder,
             VerifySubmissionPermissionStub::withSubmitPermission(),
+            new DBTransactionExecutorPassthrough(),
             new ReverseLinksToNewChangesetsConverter($this->link_field_retriever, $this->artifact_retriever),
             $this->changeset_creator
         );
