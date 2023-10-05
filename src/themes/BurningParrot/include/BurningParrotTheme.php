@@ -177,7 +177,7 @@ class BurningParrotTheme extends BaseLayout
             $params                     = $params->flatten();
         }
 
-        if ($project) {
+        if ($project && $in_project_without_sidebar === null) {
             $project_context = ProjectContextPresenter::build(
                 $project,
                 $this->project_flags_builder->buildProjectFlags($project),
@@ -204,8 +204,8 @@ class BurningParrotTheme extends BaseLayout
         $url_redirect                 = new URLRedirect(EventManager::instance());
         $header_presenter_builder     = new HeaderPresenterBuilder();
         $main_classes                 = isset($params['main_classes']) ? $params['main_classes'] : [];
-        $sidebar                      = $this->getSidebarFromParams($project, $params);
-        $body_classes                 = $this->getArrayOfClassnamesForBodyTag($params, $sidebar, $project);
+        $sidebar                      = $this->getSidebarFromParams($project, $in_project_without_sidebar, $params);
+        $body_classes                 = $this->getArrayOfClassnamesForBodyTag($params, $sidebar, $project, $in_project_without_sidebar);
         $breadcrumb_presenter_builder = new BreadCrumbPresenterBuilder();
 
         $breadcrumbs = $breadcrumb_presenter_builder->build($this->breadcrumbs);
@@ -329,6 +329,7 @@ class BurningParrotTheme extends BaseLayout
         $params,
         $sidebar,
         ?Project $project,
+        ?HeaderConfiguration\WithoutSidebar $in_project_without_sidebar,
     ): array {
         $body_classes = [];
 
@@ -355,7 +356,7 @@ class BurningParrotTheme extends BaseLayout
                 $body_classes[] = 'has-visible-platform-banner';
         }
 
-        if (! $sidebar && $project === null) {
+        if (! $sidebar && ($project === null || $in_project_without_sidebar !== null)) {
             return $body_classes;
         }
 
@@ -436,15 +437,18 @@ class BurningParrotTheme extends BaseLayout
         return __DIR__ . '/../templates/';
     }
 
-    private function getSidebarFromParams(?Project $project, array $params)
-    {
+    private function getSidebarFromParams(
+        ?Project $project,
+        ?HeaderConfiguration\WithoutSidebar $in_project_without_sidebar,
+        array $params,
+    ) {
         if (isset($params['sidebar'])) {
             $this->show_sidebar = true;
             return $params['sidebar'];
         }
 
         if ($project) {
-            $this->show_sidebar = true;
+            $this->show_sidebar = $in_project_without_sidebar === null;
         }
 
         return false;
