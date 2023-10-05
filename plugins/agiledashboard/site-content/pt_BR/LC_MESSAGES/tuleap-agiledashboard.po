@@ -123,6 +123,9 @@ msgstr ""
 msgid "Backlog administration"
 msgstr ""
 
+msgid "Backlog is already setup"
+msgstr ""
+
 msgid "Backlog service"
 msgstr ""
 
@@ -607,6 +610,15 @@ msgid "Unable to find milestone"
 msgstr ""
 
 msgid "Unable to import the configuration!"
+msgstr ""
+
+msgid ""
+"Unable to initiate a default backlog when Scrum mono milestone is enabled."
+msgstr ""
+
+msgid ""
+"Unable to initiate a default backlog when backlog administration is "
+"delegated to another service."
 msgstr ""
 
 msgid "Unable to save the initial effort"

@@ -32,12 +32,16 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneEnabler;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Stub\SplitKanbanConfigurationCheckerStub;
 use Tuleap\Event\Dispatchable;
+use Tuleap\GlobalResponseMock;
 use Tuleap\Kanban\SplitKanbanConfigurationChecker;
+use Tuleap\Layout\Feedback\NewFeedback;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 
 final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    use GlobalResponseMock;
+
     private const PROJECT_ID = 165;
 
     private \Codendi_Request & Stub $request;
@@ -245,7 +249,8 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mono_milestone_checker->method('isMonoMilestoneEnabled')->willReturn(false);
 
         $this->response->expects(self::once())->method('scrumActivated');
-        $this->first_scrum_creator->expects(self::once())->method('createFirstScrum');
+        $this->first_scrum_creator->expects(self::once())->method('createFirstScrum')->willReturn(NewFeedback::success('yay!'));
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('success', 'yay!');
         $this->update(SplitKanbanConfigurationCheckerStub::withoutAllowedProject());
     }
 

@@ -25,7 +25,6 @@ namespace Tuleap\AgileDashboard\Planning;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\AgileDashboard\ExplicitBacklog\VerifyProjectUsesExplicitBacklog;
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2Presenter;
-use Tuleap\AgileDashboard\ServiceAdministration\CreateBacklogURI;
 use Tuleap\Kanban\SplitKanbanConfigurationChecker;
 use Tuleap\Option\Option;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
@@ -75,7 +74,8 @@ final class VirtualTopMilestonePresenterBuilder
             $planning_presenter,
             $is_project_admin,
             $backlog_title,
-            CreateBacklogURI::withRedirectionToProjectBacklog($project, $csrf_token)
+            '/projects/' . urlencode($project->getUnixNameMixedCase()) . '/backlog/create',
+            $csrf_token,
         );
     }
 }

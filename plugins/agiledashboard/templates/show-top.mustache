@@ -11,10 +11,15 @@
             </h1>
             <p class="empty-state-text">{{# dgettext }}tuleap-agiledashboard | There is no Backlog created yet.{{/ dgettext }}</p>
             {{# is_admin }}
-                <a href="{{ create_backlog_uri }}" class="empty-state-action tlp-button-primary">
-                    <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
-                    {{# dgettext }}tuleap-agiledashboard | Create a Backlog{{/ dgettext }}
-                </a>
+                <form action="{{ create_backlog_uri }}" method="POST">
+                    {{# csrf_token }}
+                        {{> csrf_token_input }}
+                    {{/ csrf_token }}
+                    <button type="submit" class="empty-state-action tlp-button-primary">
+                        <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
+                        {{# dgettext }}tuleap-agiledashboard | Create a Backlog{{/ dgettext }}
+                    </button>
+                </form>
             {{/ is_admin }}
         </section>
     {{/ planning_presenter }}

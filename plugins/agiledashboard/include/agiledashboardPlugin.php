@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
 use Tuleap\AgileDashboard\AgileDashboardLegacyController;
 use Tuleap\AgileDashboard\Artifact\AdditionalArtifactActionBuilder;
@@ -28,6 +29,8 @@ use Tuleap\AgileDashboard\Artifact\RedirectParameterInjector;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
+use Tuleap\AgileDashboard\CreateBacklogController;
+use Tuleap\AgileDashboard\CSRFSynchronizerTokenProvider;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ConfigurationUpdater;
 use Tuleap\AgileDashboard\ExplicitBacklog\CopiedArtifact\AddCopiedArtifactsToTopBacklog;
@@ -79,11 +82,15 @@ use Tuleap\Config\ConfigClassProvider;
 use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Response\RedirectWithFeedbackFactory;
+use Tuleap\Http\Server\ServiceInstrumentationMiddleware;
 use Tuleap\Kanban\CheckSplitKanbanConfiguration;
 use Tuleap\Kanban\Legacy\ServiceForKanbanEvent;
 use Tuleap\Kanban\Service\KanbanService;
 use Tuleap\Layout\AfterStartProjectContainer;
 use Tuleap\Layout\BeforeStartProjectHeader;
+use Tuleap\Layout\Feedback\FeedbackSerializer;
 use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeViteAssets;
@@ -91,9 +98,13 @@ use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
+use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
+use Tuleap\Project\Admin\Routing\RejectNonProjectAdministratorMiddleware;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Event\ProjectXMLImportPreChecksEvent;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
+use Tuleap\Project\Routing\CheckProjectCSRFMiddleware;
+use Tuleap\Project\Routing\ProjectByNameRetrieverMiddleware;
 use Tuleap\Project\Service\AddMissingService;
 use Tuleap\Project\Service\PluginWithService;
 use Tuleap\Project\Service\ServiceClassnamesCollector;
@@ -101,6 +112,8 @@ use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Project\XML\Import\ImportNotValidException;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\QuickLink\SwitchToQuickLink;
+use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Request\ProjectRetriever;
 use Tuleap\Statistics\CSV\StatisticsServiceUsage;
 use Tuleap\Tracker\Action\AfterArtifactCopiedEvent;
 use Tuleap\Tracker\Action\CollectMovableExternalFieldEvent;
@@ -1223,9 +1236,40 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
 
     public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)
     {
+        $event->getRouteCollector()->addGroup('/projects', function (FastRoute\RouteCollector $r) {
+            $r->post('/{project_name:[A-z0-9-]+}/backlog/create', $this->getRouteHandler('routeCreateBacklog'));
+        });
         $event->getRouteCollector()->addGroup('/plugins/agiledashboard', function (FastRoute\RouteCollector $r) {
             $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routeLegacyController'));
         });
+    }
+
+    public function routeCreateBacklog(): DispatchableWithRequest
+    {
+        $planning_factory = PlanningFactory::build();
+
+        return new CreateBacklogController(
+            new RedirectWithFeedbackFactory(
+                HTTPFactoryBuilder::responseFactory(),
+                new FeedbackSerializer(new FeedbackDao()),
+            ),
+            $this,
+            new AgileDashboard_FirstScrumCreator(
+                $planning_factory,
+                TrackerFactory::instance(),
+                ProjectXMLImporter::build(
+                    new XMLImportHelper(UserManager::instance()),
+                    \ProjectCreator::buildSelfByPassValidation()
+                )
+            ),
+            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory),
+            EventManager::instance(),
+            new SapiEmitter(),
+            new ProjectByNameRetrieverMiddleware(ProjectRetriever::buildSelf()),
+            new RejectNonProjectAdministratorMiddleware(UserManager::instance(), new ProjectAdministratorChecker()),
+            new CheckProjectCSRFMiddleware(new CSRFSynchronizerTokenProvider()),
+            new ServiceInstrumentationMiddleware($this->getServiceShortname()),
+        );
     }
 
     public function routeLegacyController(?ProvideCurrentUser $current_user_provider = null): AgileDashboardLegacyController

@@ -154,6 +154,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
                 $header_options_inserter
             ),
             $split_kanban_configuration_checker,
+            new \Tuleap\AgileDashboard\CSRFSynchronizerTokenProvider(),
         );
 
         $ugroup_manager = new UGroupManager();

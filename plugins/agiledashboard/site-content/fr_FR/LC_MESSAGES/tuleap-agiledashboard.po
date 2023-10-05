@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Poedit 3.0.1\n"
 
 msgid ""
 "\"AddToTopBacklog\" post action cannot be used because the project does not "
@@ -149,6 +149,9 @@ msgstr "Backlog"
 
 msgid "Backlog administration"
 msgstr "Administration du backlog"
+
+msgid "Backlog is already setup"
+msgstr "Backlog est déjà configuré"
 
 msgid "Backlog service"
 msgstr "Service Backlog"
@@ -703,6 +706,19 @@ msgstr "Impossible de trouver le jalon"
 
 msgid "Unable to import the configuration!"
 msgstr "Impossible d'importer la configuration!"
+
+msgid ""
+"Unable to initiate a default backlog when Scrum mono milestone is enabled."
+msgstr ""
+"Impossible d'initialiser un backlog par défaut quand Scrum à jalon unique "
+"est activé."
+
+msgid ""
+"Unable to initiate a default backlog when backlog administration is "
+"delegated to another service."
+msgstr ""
+"Impossible d'initialiser un backlog par défaut quand l'administration du "
+"backlog est déléguée à un autre service."
 
 msgid "Unable to save the initial effort"
 msgstr "Impossible de sauvegarder la sémantique effort estimé"

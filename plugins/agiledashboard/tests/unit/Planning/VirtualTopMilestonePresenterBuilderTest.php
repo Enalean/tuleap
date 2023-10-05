@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning;
 
-use Tuleap\AgileDashboard\ServiceAdministration\CreateBacklogURI;
 use Tuleap\AgileDashboard\Stub\VerifyProjectUsesExplicitBacklogStub;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Event\Dispatchable;
@@ -121,12 +120,8 @@ final class VirtualTopMilestonePresenterBuilderTest extends TestCase
         $presenter = $this->buildPresenter();
         self::assertNull($presenter->planning_presenter);
         self::assertTrue($presenter->is_admin);
-        self::assertStringContainsString(
-            sprintf(
-                '/plugins/agiledashboard/?group_id=%s&action=updateConfiguration&activate-scrum=1&%s',
-                self::PROJECT_ID,
-                CreateBacklogURI::REDIRECT_TO_PROJECT_BACKLOG
-            ),
+        self::assertSame(
+            '/projects/TestProject/backlog/create',
             $presenter->create_backlog_uri
         );
     }

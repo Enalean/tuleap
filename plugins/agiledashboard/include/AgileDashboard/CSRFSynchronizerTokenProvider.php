@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,19 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AgileDashboard\Planning;
+namespace Tuleap\AgileDashboard;
 
-use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2Presenter;
+use Tuleap\Project\Routing\ProjectCSRFSynchronizerTokenProvider;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
-final class VirtualTopMilestonePresenter
+final class CSRFSynchronizerTokenProvider implements ProjectCSRFSynchronizerTokenProvider
 {
-    public function __construct(
-        public readonly ?PlanningV2Presenter $planning_presenter,
-        public readonly bool $is_admin,
-        public readonly string $backlog_title,
-        public readonly string $create_backlog_uri,
-        public readonly CSRFSynchronizerTokenInterface $csrf_token,
-    ) {
+    public function getCSRF(\Project $project): CSRFSynchronizerTokenInterface
+    {
+        return new \CSRFSynchronizerToken(AgileDashboardServiceHomepageUrlBuilder::buildSelf()->getUrl($project));
     }
 }
