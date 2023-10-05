@@ -94,15 +94,6 @@ Cypress.Commands.add(
     },
 );
 
-Cypress.Commands.add("visitProjectAdministration", (project_unixname: string) => {
-    cy.visit("/projects/" + project_unixname);
-    cy.get('[data-test="project-administration-link"]', { includeShadowDom: true }).click();
-});
-
-Cypress.Commands.add("visitProjectAdministrationInCurrentProject", () => {
-    cy.get('[data-test="project-administration-link"]', { includeShadowDom: true }).click();
-});
-
 function visitServiceInCurrentProject(
     service_label: string,
     before_visit_callback: (href: string) => void,
@@ -124,16 +115,6 @@ Cypress.Commands.add("getProjectId", (project_shortname: string): Cypress.Chaina
             )}`,
         )
         .then((response) => response.body[0].id);
-});
-
-Cypress.Commands.add("switchProjectVisibility", (visibility: string): void => {
-    cy.get("[data-test=admin-nav-details]").click();
-    cy.get("[data-test=project_visibility]").select(visibility);
-    cy.get("[data-test=project-details-short-description-input]").type("My short description");
-    cy.get("[data-test=project-details-submit-button]").click();
-    cy.get("[data-test=term_of_service]").click({ force: true });
-
-    cy.get("[data-test=project-details-submit-button]").click();
 });
 
 Cypress.Commands.add(
@@ -169,27 +150,6 @@ Cypress.Commands.add("createNewPrivateProject", (project_name: string): void => 
     };
 
     cy.postFromTuleapApi("https://tuleap/api/projects/", payload);
-});
-
-Cypress.Commands.add("addProjectMember", (user_name: string): void => {
-    cy.visitProjectAdministrationInCurrentProject();
-    cy.get("[data-test=project-admin-members-add-user-select] + .select2-container").click();
-
-    cy.get(".select2-search__field").type(`${user_name}{enter}`);
-
-    cy.get(".select2-result-user").click();
-    cy.get('[data-test="project-admin-submit-add-member"]').click();
-});
-
-Cypress.Commands.add("removeProjectMember", (user_name: string): void => {
-    cy.visitProjectAdministrationInCurrentProject();
-    cy.get("[data-test=project-admin-members-list]")
-        .contains(user_name)
-        .should("have.attr", "data-user-id")
-        .then((user_id) => {
-            cy.get(`[data-test=remove-user-${user_id}]`).click();
-            cy.get("[data-test=remove-from-member]").click();
-        });
 });
 
 Cypress.Commands.add("createFRSPackage", (project_id: number, package_name: string): void => {

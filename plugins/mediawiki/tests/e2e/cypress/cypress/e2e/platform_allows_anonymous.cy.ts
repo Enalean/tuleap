@@ -35,17 +35,13 @@ describe("Plateform allows anonymous", function () {
     });
 
     it("given project is switched from public to private, anonymous are redirected to login page", function () {
-        cy.projectAdministratorSession();
-        cy.visitProjectAdministration("platform-allows-anonymous");
-        cy.switchProjectVisibility("private");
+        cy.switchProjectVisibility("platform-allows-anonymous", "private");
 
         cy.anonymousSession();
         cy.visit("/plugins/mediawiki/wiki/platform-allows-anonymous/");
 
         cy.get("[data-test=login-page-title]").contains("Login");
 
-        cy.projectAdministratorSession();
-        cy.visitProjectAdministration("platform-allows-anonymous");
-        cy.switchProjectVisibility("public");
+        cy.switchProjectVisibility("platform-allows-anonymous", "public");
     });
 });

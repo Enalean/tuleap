@@ -46,10 +46,8 @@ describe("Platform allows restricted", function () {
     });
 
     it("given project is switched from public to private, permissions are respected", function () {
+        cy.switchProjectVisibility("platform-allows-restricted", "private");
         cy.projectAdministratorSession();
-
-        cy.visitProjectAdministration("platform-allows-restricted");
-        cy.switchProjectVisibility("private");
         cy.visit("/plugins/mediawiki/wiki/platform-allows-restricted/");
         cy.get("[data-test=mediawiki-administration-link]").click({ force: true });
 
@@ -57,7 +55,6 @@ describe("Platform allows restricted", function () {
             .should("be.selected")
             .contains("Project members");
 
-        cy.visitProjectAdministration("platform-allows-restricted");
-        cy.switchProjectVisibility("public");
+        cy.switchProjectVisibility("platform-allows-restricted", "public");
     });
 });

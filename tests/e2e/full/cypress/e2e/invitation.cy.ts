@@ -28,9 +28,9 @@ describe("Invitations", () => {
 
             cy.projectAdministratorSession();
             cy.createNewPublicProject(project_name, "issues");
-            cy.visit(`/projects/${project_name}`);
-            cy.addProjectMember("projectMember");
-            cy.visitProjectAdministrationInCurrentProject();
+            cy.addProjectMember(project_name, "projectMember");
+            cy.projectAdministratorSession();
+            cy.visitProjectAdministration(project_name);
 
             cy.get("[data-test=admin-nav-groups]").click();
 

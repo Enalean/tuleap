@@ -47,7 +47,7 @@ declare global {
 
             restrictedRegularUserSession(): void;
 
-            switchProjectVisibility(visibility: string): void;
+            switchProjectVisibility(project_unix_name: string, visibility: string): void;
 
             updatePlatformAndMakeUserInAutoApprovalMode(): void;
 
@@ -89,9 +89,9 @@ declare global {
 
             createNewPrivateProject(project_name: string): void;
 
-            addProjectMember(user_name: string): void;
+            addProjectMember(project_unix_name: string, user_name: string): void;
 
-            removeProjectMember(user_name: string): void;
+            removeProjectMember(project_unix_name: string, user_name: string): void;
 
             getTrackerIdFromREST(project_id: number, tracker_name: string): Chainable<number>;
 

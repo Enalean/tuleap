@@ -134,8 +134,7 @@ describe("Document new UI", () => {
             now = Date.now();
             cy.projectAdministratorSession();
             cy.createNewPublicProject(`document-project-${now}`, "issues");
-            cy.visit(`/projects/document-project-${now}`);
-            cy.addProjectMember("projectMember");
+            cy.addProjectMember(`document-project-${now}`, "projectMember");
         });
 
         context("docman permissions", function () {
