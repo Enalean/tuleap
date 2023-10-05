@@ -23,6 +23,7 @@ namespace Tuleap\AgileDashboard\Planning;
 use Tuleap\AgileDashboard\BaseController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
+use Tuleap\AgileDashboard\CSRFSynchronizerTokenProvider;
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
 use Tuleap\Kanban\SplitKanbanConfigurationChecker;
@@ -54,6 +55,7 @@ final class VirtualTopMilestoneController extends BaseController
         private readonly VirtualTopMilestoneCrumbBuilder $top_milestone_crumb_builder,
         private readonly HeaderOptionsProvider $header_options_provider,
         private readonly SplitKanbanConfigurationChecker $flag_checker,
+        private readonly CSRFSynchronizerTokenProvider $token_provider,
     ) {
         parent::__construct('agiledashboard', $request);
         $this->project = $project_manager->getProject($request->get('group_id'));
@@ -76,7 +78,7 @@ final class VirtualTopMilestoneController extends BaseController
             $this->milestone,
             $this->project,
             $this->getCurrentUser(),
-            new \CSRFSynchronizerToken('/plugins/agiledashboard/?action=admin')
+            $this->token_provider->getCSRF($this->project),
         );
         return $this->renderToString('show-top', $presenter);
     }

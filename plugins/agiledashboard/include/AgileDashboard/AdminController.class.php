@@ -52,7 +52,6 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDisabler;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneEnabler;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\AgileDashboard\ServiceAdministration\ConfigurationResponse;
-use Tuleap\AgileDashboard\ServiceAdministration\CreateBacklogURI;
 use Tuleap\AgileDashboard\ServiceAdministration\RedirectURI;
 use Tuleap\AgileDashboard\ServiceAdministration\ScrumConfigurationUpdater;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
@@ -296,7 +295,6 @@ class AdminController extends BaseController
             $this->config_manager,
             $response,
             new AgileDashboard_FirstScrumCreator(
-                $project,
                 $this->planning_factory,
                 $this->tracker_factory,
                 ProjectXMLImporter::build(
@@ -328,9 +326,6 @@ class AdminController extends BaseController
 
         $updater->updateConfiguration();
 
-        if ($this->request->exist(CreateBacklogURI::REDIRECT_TO_PROJECT_BACKLOG)) {
-            $this->layout->redirect((string) RedirectURI::buildProjectBacklog($project));
-        }
         $this->layout->addFeedback(
             \Feedback::INFO,
             dgettext('tuleap-agiledashboard', 'Scrum configuration successfully updated.')

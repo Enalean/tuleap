@@ -45,6 +45,26 @@ final class NewFeedback
         $this->message = $message;
     }
 
+    public static function info(string $message): self
+    {
+        return new self(\Feedback::INFO, $message);
+    }
+
+    public static function warn(string $message): self
+    {
+        return new self(\Feedback::WARN, $message);
+    }
+
+    public static function error(string $message): self
+    {
+        return new self(\Feedback::ERROR, $message);
+    }
+
+    public static function success(string $message): self
+    {
+        return new self(\Feedback::SUCCESS, $message);
+    }
+
     public function getLevel(): string
     {
         return $this->level;

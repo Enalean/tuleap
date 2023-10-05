@@ -22,6 +22,7 @@ namespace Tuleap\AgileDashboard\Planning;
 
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
+use Tuleap\AgileDashboard\CSRFSynchronizerTokenProvider;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
 use Tuleap\Kanban\SplitKanbanConfigurationChecker;
@@ -43,6 +44,7 @@ class MilestoneControllerFactory
         private readonly AllBreadCrumbsForMilestoneBuilder $bread_crumbs_for_milestone_builder,
         private readonly HeaderOptionsProvider $header_options_provider,
         private readonly SplitKanbanConfigurationChecker $flag_checker,
+        private readonly CSRFSynchronizerTokenProvider $token_provider,
     ) {
     }
 
@@ -70,6 +72,7 @@ class MilestoneControllerFactory
             $this->top_milestone_crumb_builder,
             $this->header_options_provider,
             $this->flag_checker,
+            $this->token_provider,
         );
     }
 }

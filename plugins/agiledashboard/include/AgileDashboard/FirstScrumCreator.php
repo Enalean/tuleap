@@ -18,14 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\Feedback\NewFeedback;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\XML\Importer\TrackerExtraConfiguration;
 
 class AgileDashboard_FirstScrumCreator
 {
-    /** @var Project */
-    private $project;
-
     /** @var PlanningFactory */
     private $planning_factory;
 
@@ -44,28 +42,30 @@ class AgileDashboard_FirstScrumCreator
     ];
 
     public function __construct(
-        Project $project,
         PlanningFactory $planning_factory,
         TrackerFactory $tracker_factory,
         ProjectXMLImporter $xml_importer,
     ) {
-        $this->project          = $project;
         $this->xml_importer     = $xml_importer;
         $this->planning_factory = $planning_factory;
         $this->tracker_factory  = $tracker_factory;
         $this->template_path    = __DIR__ . '/../../resources/templates/scrum_dashboard_template.xml';
     }
 
-    public function createFirstScrum()
+    public function createFirstScrum(Project $project): NewFeedback
     {
-        if ($this->areThereConfiguredPlannings()) {
-            return;
+        if ($this->areThereConfiguredPlannings($project)) {
+            return NewFeedback::info(dgettext('tuleap-agiledashboard', 'Backlog is already setup'));
         }
 
-        $already_existing_tracker = $this->getAlreadyExistingTracker();
+        $already_existing_tracker = $this->getAlreadyExistingTracker($project);
         if ($already_existing_tracker) {
-            $GLOBALS['Response']->addFeedback(Feedback::WARN, sprintf(dgettext('tuleap-agiledashboard', 'We tried to create an initial scrum configuration for you but an existing tracker (%1$s) prevented it.'), $already_existing_tracker));
-            return;
+            return NewFeedback::warn(
+                sprintf(
+                    dgettext('tuleap-agiledashboard', 'We tried to create an initial scrum configuration for you but an existing tracker (%1$s) prevented it.'),
+                    $already_existing_tracker,
+                )
+            );
         }
 
         $config              = new ImportConfig();
@@ -73,34 +73,37 @@ class AgileDashboard_FirstScrumCreator
         $config->addExtraConfiguration($extra_configuration);
 
         try {
-            $this->xml_importer->import($config, $this->project->getId(), $this->template_path)
+            return $this->xml_importer->import($config, $project->getId(), $this->template_path)
                 ->match(
-                    function (): void {
-                        $GLOBALS['Response']->addFeedback(
-                            Feedback::INFO,
-                            dgettext('tuleap-agiledashboard', 'We created an initial scrum configuration for you. Enjoy!')
+                    function (): NewFeedback {
+                        return NewFeedback::success(
+                            dgettext('tuleap-agiledashboard', 'We created an initial scrum configuration for you. Enjoy!'),
                         );
                     },
-                    function (\Tuleap\NeverThrow\Fault $fault): void {
-                        $GLOBALS['Response']->addFeedback(Feedback::ERROR, (string) $fault);
+                    function (\Tuleap\NeverThrow\Fault $fault): NewFeedback {
+                        return NewFeedback::error((string) $fault);
                     }
                 );
-        } catch (Exception $e) {
-            $GLOBALS['Response']->addFeedback(Feedback::WARN, dgettext('tuleap-agiledashboard', 'We tried to create an initial scrum configuration for you but an internal error prevented it.'));
+        } catch (Exception) {
+            return NewFeedback::warn(
+                dgettext('tuleap-agiledashboard', 'We tried to create an initial scrum configuration for you but an internal error prevented it.')
+            );
         }
     }
 
-    private function areThereConfiguredPlannings()
+    private function areThereConfiguredPlannings(Project $project): bool
     {
-        return count($this->planning_factory->getPlanningTrackerIdsByGroupId($this->project->getId())) > 0;
+        return count($this->planning_factory->getPlanningTrackerIdsByGroupId((int) $project->getId())) > 0;
     }
 
-    private function getAlreadyExistingTracker()
+    private function getAlreadyExistingTracker(Project $project): ?string
     {
         foreach ($this->reserved_names as $itemname) {
-            if ($this->tracker_factory->isShortNameExists($itemname, $this->project->getId())) {
+            if ($this->tracker_factory->isShortNameExists($itemname, (int) $project->getId())) {
                 return $itemname;
             }
         }
+
+        return null;
     }
 }

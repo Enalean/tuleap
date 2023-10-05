@@ -48,7 +48,9 @@ class ScrumConfigurationUpdater
 
     public function updateConfiguration(): void
     {
-        $block_scrum_access = new \Tuleap\AgileDashboard\BlockScrumAccess($this->request->getProject());
+        $project = $this->request->getProject();
+
+        $block_scrum_access = new \Tuleap\AgileDashboard\BlockScrumAccess($project);
         $this->event_dispatcher->dispatch($block_scrum_access);
         if (! $block_scrum_access->isScrumAccessEnabled()) {
             return;
@@ -74,19 +76,20 @@ class ScrumConfigurationUpdater
             }
         }
 
-        if ($this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($this->request->getProject())) {
+        if ($this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project)) {
             return;
         }
 
         if ($scrum_is_activated) {
-            $planning_administration_delegation = new PlanningAdministrationDelegation($this->request->getProject());
+            $planning_administration_delegation = new PlanningAdministrationDelegation($project);
             $this->event_dispatcher->dispatch($planning_administration_delegation);
 
             if (
                 $this->request->get('activate-scrum-v2') == false && $is_scrum_mono_milestone_enabled === false &&
                 ! $planning_administration_delegation->isPlanningAdministrationDelegated()
             ) {
-                $this->first_scrum_creator->createFirstScrum();
+                $feedback = $this->first_scrum_creator->createFirstScrum($project);
+                $GLOBALS['Response']->addFeedback($feedback->getLevel(), $feedback->getMessage());
             }
         }
     }
