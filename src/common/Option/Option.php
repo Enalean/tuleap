@@ -35,8 +35,8 @@ final class Option
      * @psalm-param Value $value
      */
     private function __construct(
-        private mixed $value,
-        private bool $has_value,
+        private readonly mixed $value,
+        private readonly bool $has_value,
     ) {
     }
 
@@ -76,7 +76,7 @@ final class Option
 
     /**
      * @psalm-param callable(Value): void $value_fn
-     * @psalm-param callable(): void $nothing_fn
+     * @psalm-param callable(): void      $nothing_fn
      */
     public function match(callable $value_fn, callable $nothing_fn): void
     {
@@ -90,8 +90,20 @@ final class Option
 
     /**
      * @template T
+     * @psalm-param callable(Value): self<T> $fn
+     * @psalm-return self<T>
+     */
+    public function andThen(callable $fn): self
+    {
+        /** @psalm-var self<T> $nothing */
+        $nothing = new self(null, false);
+        return $this->mapOr($fn(...), $nothing);
+    }
+
+    /**
+     * @template T
      * @psalm-param callable(Value): T $fn
-     * @psalm-param T $default
+     * @psalm-param T                  $default
      * @psalm-return T
      */
     public function mapOr(callable $fn, mixed $default): mixed

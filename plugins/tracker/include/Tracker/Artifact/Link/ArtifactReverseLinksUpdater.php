@@ -26,6 +26,7 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\NewComment;
 use Tuleap\Tracker\Artifact\Changeset\CreateNewChangeset;
@@ -61,34 +62,31 @@ final class ArtifactReverseLinksUpdater
         \DateTimeImmutable $submission_date,
         NewComment $new_comment,
     ): Ok|Err {
-        $result = $changeset_values->getArtifactLinkValue()->mapOr(
-            fn(NewArtifactLinkChangesetValue $changeset_value): Ok|Err => $changeset_value
-                ->getSubmittedReverseLinks()
-                ->mapOr(
-                    function (CollectionOfReverseLinks $submitted_reverse_links) use (
-                        $submission_date,
+        $result = $changeset_values->getArtifactLinkValue()
+            ->andThen(fn(NewArtifactLinkChangesetValue $changeset_value): Option => $changeset_value->getSubmittedReverseLinks())
+            ->mapOr(
+                function (CollectionOfReverseLinks $submitted_reverse_links) use (
+                    $submission_date,
+                    $submitter,
+                    $artifact
+                ): Ok|Err {
+                    $stored_reverse_links  = $this->reverse_links_retriever->retrieveReverseLinks(
+                        $artifact,
+                        $submitter
+                    );
+                    $reverse_links_command = ChangeReverseLinksCommand::fromSubmittedAndExistingLinks(
+                        $artifact,
+                        $submitted_reverse_links,
+                        $stored_reverse_links
+                    );
+                    return $this->changesets_converter->convertChangeReverseLinks(
+                        $reverse_links_command,
                         $submitter,
-                        $artifact
-                    ): Ok|Err {
-                        $stored_reverse_links  = $this->reverse_links_retriever->retrieveReverseLinks(
-                            $artifact,
-                            $submitter
-                        );
-                        $reverse_links_command = ChangeReverseLinksCommand::fromSubmittedAndExistingLinks(
-                            $artifact,
-                            $submitted_reverse_links,
-                            $stored_reverse_links
-                        );
-                        return $this->changesets_converter->convertChangeReverseLinks(
-                            $reverse_links_command,
-                            $submitter,
-                            $submission_date
-                        );
-                    },
-                    Result::ok([])
-                ),
-            Result::ok([])
-        );
+                        $submission_date
+                    );
+                },
+                Result::ok([])
+            );
 
         return $result->map(fn(array $new_changesets) => [
             ...$new_changesets,

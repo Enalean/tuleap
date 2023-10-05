@@ -49,12 +49,27 @@ $option->match(
 );
 ```
 
+If your optional value is needed to build another optional value, you can chain the two with `::andThen()`:
+```php
+$option = getSuperUser($current_user);
+$other_option = $option->andThen(fn(\PFUser $user): Option => getUserPreference($user));
+// $other_option will hold a `UserPreference` or Nothing, depending on the return of the function `getUserPreference`
+```
+
+If you need to convert the optional value to a `Result (Ok|Err)`, you can do so with `::okOr()`:
+```php
+$option = getSuperUser($current_user);
+$result = $option->okOr(\Tuleap\NeverThrow\Result::err(\Tuleap\NeverThrow\Fault::fromMessage('Current user is not a super user')));
+// If $option has a value, it will be wrapped in a `\Tuleap\NeverThrow\Ok`.
+// If it's Nothing, it will return the `\Tuleap\NeverThrow\Err` passed as parameter.
+```
+
 At the end of a processing pipeline, you might want to retrieve the unwrapped value with `::mapOr()`:
 ```php
 $option = getSuperUser($current_user);
 $option->mapOr(
-    fn (\PFUser $user): Ok => \Tuleap\NeverThrow\Result::ok($user),
-    \Tuleap\NeverThrow\Result::err(\Tuleap\NeverThrow\Fault::fromMessage('Current user is not a super user')),
+    fn (\PFUser $user): UserPresenter => new SuperUserPresenter($user),
+    new NotSuperUserPresenter()
 );
 ```
 
