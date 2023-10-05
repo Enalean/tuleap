@@ -32,6 +32,7 @@ final class InProject
     public function __construct(
         public readonly Project $project,
         public readonly string $current_service_shortname,
+        public readonly ?string $active_promoted_item_id,
         public readonly ?WithoutSidebar $without_sidebar,
         public readonly bool $in_breadcrumbs,
     ) {
