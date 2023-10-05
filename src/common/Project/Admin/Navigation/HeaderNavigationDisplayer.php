@@ -28,6 +28,7 @@ use EventManager;
 use ForgeConfig;
 use HTTPRequest;
 use Project;
+use Tuleap\Layout\HeaderConfigurationBuilder;
 
 class HeaderNavigationDisplayer
 {
@@ -43,12 +44,10 @@ class HeaderNavigationDisplayer
 
     private function displayNavigation($title, Project $project, $template_name, $current_pane_shortname)
     {
-        $params = [
-            'title'        => $title . ' - ' . $project->getPublicName(),
-            'toptab'       => 'admin',
-            'project'      => $project,
-            'body_class'   => ['project-administration'],
-        ];
+        $params = HeaderConfigurationBuilder::get($title . ' - ' . $project->getPublicName())
+            ->inProject($project, \Service::ADMIN)
+            ->withBodyClass(['project-administration'])
+            ->build();
 
         site_project_header($project, $params);
 

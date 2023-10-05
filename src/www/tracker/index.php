@@ -990,7 +990,7 @@ if ($func == 'gotoid') {
         $params['help']     = 'tracker-v3.html';
         $params['pv']       = $pv ? $pv : '';
 
-        echo site_project_header($group, $params);
+        site_project_header($group, $params);
         echo '<strong>';
         // Admin link and create link are only displayed if the user is a project administrator
     if (user_ismember($group_id, 'A')) {

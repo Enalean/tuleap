@@ -41,6 +41,7 @@ use Tuleap\Dashboard\Widget\OwnerInfo;
 use Tuleap\Dashboard\Widget\WidgetMinimizor;
 use Tuleap\Event\Events\ProjectProviderEvent;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\TroveCat\TroveCatLinkDao;
@@ -182,13 +183,10 @@ class ProjectDashboardController
 
         site_project_header(
             $project,
-            [
-                'title'                          => $title,
-                'project'                        => $project,
-                'toptab'                         => 'summary',
-                'body_class'                     => ['reduce-help-button'],
-                'without-project-in-breadcrumbs' => true,
-            ],
+            HeaderConfigurationBuilder::get($title)
+                ->inProjectNotInBreadcrumbs($project, \Service::SUMMARY)
+                ->withBodyClass(['reduce-help-button'])
+                ->build()
         );
         $renderer = TemplateRendererFactory::build()->getRenderer(
             ForgeConfig::get('tuleap_dir') . '/src/templates/dashboard'

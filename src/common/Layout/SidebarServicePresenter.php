@@ -46,7 +46,7 @@ final class SidebarServicePresenter
     ) {
     }
 
-    public static function fromProjectDefinedService(ProjectDefinedService $service, string $href, ?string $active_promoted_item_id, \PFUser $user): self
+    public static function fromProjectDefinedService(ProjectDefinedService $service, string $href, bool $is_enabled, ?string $active_promoted_item_id, \PFUser $user): self
     {
         $description          = $service->getInternationalizedDescription();
         $is_opened_in_new_tab = $service->isOpenedInNewTab();
@@ -60,7 +60,7 @@ final class SidebarServicePresenter
             $description,
             $service->getIcon(),
             $is_opened_in_new_tab,
-            false,
+            $is_enabled && $service->isIFrame(),
             '',
             $service->getPromotedItemPresenters($user, $active_promoted_item_id),
         );
