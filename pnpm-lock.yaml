@@ -90,8 +90,8 @@ devDependencies:
     specifier: ^1.0.2
     version: 1.0.2
   eslint-plugin-no-only-tests:
-    specifier: ^2.6.0
-    version: 2.6.0
+    specifier: ^3.1.0
+    version: 3.1.0
   eslint-plugin-no-unsanitized:
     specifier: ^4.0.2
     version: 4.0.2(eslint@8.12.0)
@@ -5388,9 +5388,9 @@ packages:
       requireindex: 1.1.0
     dev: true
 
-  /eslint-plugin-no-only-tests@2.6.0:
-    resolution: {integrity: sha512-T9SmE/g6UV1uZo1oHAqOvL86XWl7Pl2EpRpnLI8g/bkJu+h7XBCB+1LnubRZ2CUQXj805vh4/CYZdnqtVaEo2Q==}
-    engines: {node: '>=4.0.0'}
+  /eslint-plugin-no-only-tests@3.1.0:
+    resolution: {integrity: sha512-Lf4YW/bL6Un1R6A76pRZyE1dl1vr31G/ev8UzIc/geCgFWyrKil8hVjYqWVKGB/UIGmb6Slzs9T0wNezdSVegw==}
+    engines: {node: '>=5.0.0'}
     dev: true
 
   /eslint-plugin-no-unsanitized@4.0.2(eslint@8.12.0):
