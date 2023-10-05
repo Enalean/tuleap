@@ -27,6 +27,7 @@ use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
+use Tuleap\Layout\PromotedItemQuickLinkPresenter;
 use Tuleap\Layout\SidebarPromotedItemPresenter;
 use Tuleap\Project\Service\ServiceForCreation;
 
@@ -132,7 +133,10 @@ final class KanbanService extends \Service implements ServiceForCreation
                 $kanban_for_project->getName(),
                 $kanban_for_project->tracker->getDescription(),
                 $kanban_for_project->getPromotedKanbanId() === $active_promoted_item_id,
-                null,
+                new PromotedItemQuickLinkPresenter(
+                    '/kanban/' . urlencode((string) $kanban_for_project->getId()) . '?should-display-artifact-creation-modal=true',
+                    $kanban_for_project->getName()
+                ),
             );
         }
 
