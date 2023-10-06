@@ -45,6 +45,7 @@ function KanbanColumnController(
     self.cancelDrag = cancelDrag;
     self.dragularOptions = dragularOptions;
     self.isColumnLoadedAndEmpty = isColumnLoadedAndEmpty;
+    self.slugifyLabel = slugifyLabel;
 
     function dragularOptions() {
         return {
@@ -158,5 +159,10 @@ function KanbanColumnController(
     function cancelDrag() {
         self.appending_item = false;
         self.drake.cancel();
+    }
+
+    // For testing purpose
+    function slugifyLabel(label) {
+        return label.replace(/\s/g, "_").toLowerCase();
     }
 }

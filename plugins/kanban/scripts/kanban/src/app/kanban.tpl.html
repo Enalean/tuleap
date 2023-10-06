@@ -154,11 +154,11 @@
         <div class="kanban-column-header"
              data-test="kanban-column-header"
         >
-            <span class="kanban-column-header-toggle"
+            <span class="kanban-column-header-toggle" data-test="kanban-column-header-toggle-{{kanban.slugifyLabel(column.label)}}"
                   title="{{ 'Toggle this column' | translate }}"
                   ng-click="kanban.toggleColumn(column); $event.stopPropagation();"
             >
-                <i ng-class="column.is_open ? 'fa fa-minus-square' : 'fa fa-plus-square'"></i>
+                <i ng-class="column.is_open ? 'fa fa-minus-square' : 'fa fa-plus-square'" data-test="kanban-column-header-toggle-icon-{{kanban.slugifyLabel(column.label)}}"></i>
             </span>
             <span class="kanban-column-header-wip-warning"
                   ng-if="column.is_open && kanban.isColumnWipReached(column)"
@@ -187,10 +187,12 @@
                     ng-if="column.loading_items || column.fully_loaded"
                     class="kanban-column-label-count"
                     ng-class="{ loading: column.loading_items }"
+                    data-test="kanban-column-label-count-{{kanban.slugifyLabel(column.label)}}"
             >{{ column.content.length }}</span>
             <span
                     ng-if="! column.loading_items && ! column.fully_loaded"
                     class="kanban-column-label-count"
+                    data-test="kanban-column-label-count-at-init-{{kanban.slugifyLabel(column.label)}}"
             >{{ column.nb_items_at_kanban_init }}</span>
         </div>
     </div>

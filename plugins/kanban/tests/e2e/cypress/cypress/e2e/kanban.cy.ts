@@ -121,12 +121,12 @@ describe("Kanban service", () => {
     context("As Project member", function () {
         before(function () {
             cy.getProjectId(`kanban-${now}`).as("project_id");
+            cy.intercept("POST", "/api/v1/kanban_items").as("createCard");
         });
 
         it(`I can use the kanban`, function () {
             cy.projectMemberSession();
             cy.visitProjectService(`kanban-${now}`, "Kanban");
-            cy.intercept("POST", "/api/v1/kanban_items").as("createCard");
 
             cy.get('[data-test="go-to-kanban"]').click();
 
@@ -225,6 +225,98 @@ describe("Kanban service", () => {
             cy.get("[data-test=kanban-warning-modal]").should("not.exist");
             cy.get("[data-test=kanban-column-review]").within(() => {
                 cy.get("[data-test=kanban-item]").its("length").should("be.gte", 1);
+            });
+        });
+
+        it("can collapse column", function () {
+            cy.projectAdministratorSession();
+            const project_name = `collapse-${now}`;
+            cy.createNewPublicProject(project_name, "kanban").then((project_id) => {
+                const TITLE_FIELD_NAME = "title";
+                cy.getTrackerIdFromREST(project_id, "activity").then((tracker_id) => {
+                    cy.createArtifact({
+                        tracker_id: tracker_id,
+                        artifact_title: "first title",
+                        artifact_status: "To be done",
+                        title_field_name: TITLE_FIELD_NAME,
+                    });
+                    cy.createArtifact({
+                        tracker_id: tracker_id,
+                        artifact_title: "second title",
+                        artifact_status: "To be done",
+                        title_field_name: TITLE_FIELD_NAME,
+                    });
+                });
+            });
+            cy.addProjectMember(project_name, "ProjectMember");
+
+            cy.projectMemberSession();
+            cy.visitProjectService(`kanban-${now}`, "Kanban");
+
+            cy.get('[data-test="go-to-kanban"]').click();
+
+            cy.get('[data-test="kanban-column-header-toggle-in_progress"]').within(() => {
+                cy.log("The `in progress` column is opened");
+                cy.get('[data-test="kanban-column-header-toggle-icon-in_progress"]').should(
+                    "have.class",
+                    "fa-minus-square",
+                );
+                cy.root().click();
+                cy.log("The `in progress` column is now closed");
+                cy.get('[data-test="kanban-column-header-toggle-icon-in_progress"]').should(
+                    "have.class",
+                    "fa-plus-square",
+                );
+            });
+
+            cy.reload();
+            cy.log("The `in progress` column is still closed");
+            cy.get('[data-test="kanban-column-header-toggle-icon-in_progress"]').should(
+                "have.class",
+                "fa-plus-square",
+            );
+
+            cy.log("I can drop card in collapsed column");
+
+            cy.get('[data-test="kanban-column-label-count-at-init-in_progress"]').should(
+                "have.text",
+                "2",
+            );
+            const drag_to_collapsed_column_label = `drag_to_collapsed_column${now}`;
+
+            cy.get("[data-test=kanban-column-backlog]").within(() => {
+                cy.get("[data-test=add-in-place]").invoke("css", "pointer-events", "all");
+
+                cy.get("[data-test=add-in-place-button]").click();
+                cy.get("[data-test=add-in-place-label-input]")
+                    .clear()
+                    .type(drag_to_collapsed_column_label);
+                cy.get("[data-test=add-in-place-submit]").first().click();
+            });
+
+            cy.dragAndDrop(
+                `[data-test=kanban-item-content-${drag_to_collapsed_column_label}]`,
+                `[data-test=kanban-items-in_progress]`,
+                "center",
+            );
+            cy.get('[data-test="kanban-column-label-count-at-init-in_progress"]').should(
+                "have.text",
+                "3",
+            );
+
+            cy.get("[data-test=kanban-column-in_progress]").within(() => {
+                cy.log("The `in progress` column is closed");
+                cy.get('[data-test="kanban-column-header-toggle-icon-in_progress"]').should(
+                    "have.class",
+                    "fa-plus-square",
+                );
+                cy.root().click();
+                cy.log("The `in progress` column is opened");
+                cy.get('[data-test="kanban-column-header-toggle-icon-in_progress"]').should(
+                    "have.class",
+                    "fa-minus-square",
+                );
+                cy.get("[data-test=kanban-item]").its("length").should("be.gte", 3);
             });
         });
     });
