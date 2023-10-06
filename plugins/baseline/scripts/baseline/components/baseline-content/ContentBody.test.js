@@ -22,7 +22,6 @@ import localVue from "../../support/local-vue.ts";
 import { createStoreMock } from "../../support/store-wrapper.test-helper.js";
 import store_options from "../../store/store_options";
 import ContentBody from "./ContentBody.vue";
-import { createList } from "../../support/factories";
 import ArtifactsList from "./ArtifactsList.vue";
 
 describe("ContentBody", () => {
@@ -60,10 +59,30 @@ describe("ContentBody", () => {
     describe("when some first depth artifacts", () => {
         beforeEach(
             () =>
-                ($store.state.current_baseline.first_depth_artifacts = createList(
-                    "baseline_artifact",
-                    2,
-                )),
+                ($store.state.current_baseline.first_depth_artifacts = [
+                    {
+                        id: 101,
+                        title: "Sprint-1",
+                        status: "Planned",
+                        tracker_id: 1,
+                        initial_effort: null,
+                        tracker_name: "Sprint",
+                        description:
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                        linked_artifact_ids: [],
+                    },
+                    {
+                        id: 102,
+                        title: "Sprint-2",
+                        status: "Planned",
+                        tracker_id: 1,
+                        initial_effort: null,
+                        tracker_name: "Sprint",
+                        description:
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                        linked_artifact_ids: [],
+                    },
+                ]),
         );
 
         describe("when all artifacts hidden", () => {
@@ -76,7 +95,30 @@ describe("ContentBody", () => {
         });
 
         describe("when some artifacts are visible", () => {
-            const filtered_artifacts = createList("baseline_artifact", 2);
+            const filtered_artifacts = [
+                {
+                    id: 101,
+                    title: "Sprint-1",
+                    status: "Planned",
+                    tracker_id: 1,
+                    initial_effort: null,
+                    tracker_name: "Sprint",
+                    description:
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                    linked_artifact_ids: [],
+                },
+                {
+                    id: 102,
+                    title: "Sprint-2",
+                    status: "Planned",
+                    tracker_id: 1,
+                    initial_effort: null,
+                    tracker_name: "Sprint",
+                    description:
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                    linked_artifact_ids: [],
+                },
+            ];
 
             beforeEach(
                 () =>

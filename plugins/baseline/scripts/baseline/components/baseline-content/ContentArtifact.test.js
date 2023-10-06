@@ -22,7 +22,6 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.ts";
 import { createStoreMock } from "../../support/store-wrapper.test-helper.js";
 import store_options from "../../store/store_options";
-import { create, createList } from "../../support/factories";
 import DepthLimitReachedMessage from "../common/DepthLimitReachedMessage.vue";
 import ContentArtifact from "./ContentArtifact.vue";
 import ArtifactsList from "./ArtifactsList.vue";
@@ -34,14 +33,24 @@ describe("Artifact", () => {
 
     let isLimitReachedOnArtifact;
 
-    const artifact_where_not_limit_reached = create("baseline_artifact");
-    const artifact_where_limit_reached = create("baseline_artifact");
+    const artifact_where_not_limit_reached = {
+        id: 1,
+        description: "",
+        status: "Planned",
+        tracker_id: 1,
+    };
+    const artifact_where_limit_reached = {
+        id: 2,
+        description: "",
+        status: "Planned",
+        tracker_id: 1,
+    };
 
     let $store;
     let wrapper;
 
     beforeEach(() => {
-        const linked_artifact = create("baseline_artifact", { title: "Story" });
+        const linked_artifact = { id: 3, title: "Story" };
 
         isLimitReachedOnArtifact = jest.fn().mockImplementation((value) => {
             return value === artifact_where_limit_reached;
@@ -60,10 +69,14 @@ describe("Artifact", () => {
 
         wrapper = shallowMount(ContentArtifact, {
             propsData: {
-                artifact: create("baseline_artifact", {
+                artifact: {
+                    id: 1,
+                    description: "",
+                    status: "Planned",
+                    tracker_id: 1,
                     title: "Epic",
                     linked_artifact_ids: [linked_artifact.id],
-                }),
+                },
             },
             localVue,
             mocks: {
@@ -75,9 +88,11 @@ describe("Artifact", () => {
     describe("when artifact has description", () => {
         beforeEach(() => {
             wrapper.setProps({
-                artifact: create("baseline_artifact", {
+                artifact: {
+                    status: "Planned",
                     description: "my description",
-                }),
+                    tracker_id: 9,
+                },
             });
         });
 
@@ -89,7 +104,7 @@ describe("Artifact", () => {
     describe("when artifact has no description", () => {
         beforeEach(async () => {
             wrapper.setProps({
-                artifact: create("baseline_artifact", { description: null }),
+                artifact: { description: null, status: "Planned", tracker_id: 9 },
             });
             await wrapper.vm.$nextTick();
         });
@@ -104,7 +119,7 @@ describe("Artifact", () => {
     describe("when artifact has status", () => {
         beforeEach(() => {
             wrapper.setProps({
-                artifact: create("baseline_artifact", { status: "my status" }),
+                artifact: { description: "lorem", status: "my status", tracker_id: 9 },
             });
         });
 
@@ -116,7 +131,7 @@ describe("Artifact", () => {
     describe("when artifact has no status", () => {
         beforeEach(async () => {
             wrapper.setProps({
-                artifact: create("baseline_artifact", { status: null }),
+                artifact: { status: null, description: "" },
             });
             await wrapper.vm.$nextTick();
         });
@@ -144,7 +159,41 @@ describe("Artifact", () => {
         beforeEach(() => wrapper.setProps({ artifact: artifact_where_not_limit_reached }));
 
         describe("when some linked artifacts are filtered", () => {
-            const filtered_linked_artifacts = createList("baseline_artifact", 3);
+            const filtered_linked_artifacts = [
+                {
+                    id: 101,
+                    title: "Sprint-1",
+                    status: "Planned",
+                    tracker_id: 1,
+                    initial_effort: null,
+                    tracker_name: "Sprint",
+                    description:
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                    linked_artifact_ids: [],
+                },
+                {
+                    id: 102,
+                    title: "Sprint-2",
+                    status: "Planned",
+                    tracker_id: 1,
+                    initial_effort: null,
+                    tracker_name: "Sprint",
+                    description:
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                    linked_artifact_ids: [],
+                },
+                {
+                    id: 103,
+                    title: "Sprint-3",
+                    status: "Planned",
+                    tracker_id: 1,
+                    initial_effort: null,
+                    tracker_name: "Sprint",
+                    description:
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                    linked_artifact_ids: [],
+                },
+            ];
 
             beforeEach(
                 () =>

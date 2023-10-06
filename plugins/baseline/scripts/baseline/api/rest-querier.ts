@@ -23,39 +23,38 @@
 
 import { get, post, del, recursiveGet } from "@tuleap/tlp-fetch";
 import DateUtils from "../support/date-utils";
-
-export {
-    getOpenMilestones,
-    createBaseline,
-    getBaseline,
-    getComparison,
-    deleteBaseline,
-    deleteComparison,
-    getTracker,
-    getBaselines,
-    getUser,
-    getArtifact,
-    getBaselineArtifacts,
-    getBaselineArtifactsByIds,
-    getComparisons,
-    createComparison,
-};
+import type {
+    Artifact,
+    Baseline,
+    BaselineArtifact,
+    Comparison,
+    Milestone,
+    Tracker,
+    User,
+} from "../type";
 
 const JSON_HEADERS = {
     "content-type": "application/json",
 };
 
-function getOpenMilestones(project_id) {
-    return recursiveGet(`/api/projects/${encodeURIComponent(project_id)}/milestones`, {
-        params: {
-            query: JSON.stringify({ status: "open" }),
-            limit: 10,
-            offset: 0,
+function getOpenMilestones(project_id: number): Promise<Milestone[]> {
+    return recursiveGet<Milestone[], Milestone>(
+        `/api/projects/${encodeURIComponent(project_id)}/milestones`,
+        {
+            params: {
+                query: JSON.stringify({ status: "open" }),
+                limit: 10,
+                offset: 0,
+            },
         },
-    });
+    );
 }
 
-async function createBaseline(name, milestone, snapshot_date) {
+async function createBaseline(
+    name: string,
+    milestone: Milestone,
+    snapshot_date: string | null,
+): Promise<Baseline> {
     let formatted_date = null;
     if (snapshot_date) {
         formatted_date = DateUtils.formatToISO(snapshot_date);
@@ -74,59 +73,65 @@ async function createBaseline(name, milestone, snapshot_date) {
     return response.json();
 }
 
-async function getBaseline(id) {
+async function getBaseline(id: number): Promise<Baseline> {
     const response = await get(`/api/baselines/${id}`);
     return response.json();
 }
 
-async function getComparison(id) {
+async function getComparison(id: number): Promise<Comparison> {
     const response = await get(`/api/baselines_comparisons/${id}`);
     return response.json();
 }
 
-async function deleteBaseline(id) {
+async function deleteBaseline(id: number): Promise<void> {
     await del(`/api/baselines/${id}`);
 }
 
-async function deleteComparison(id) {
+async function deleteComparison(id: number): Promise<void> {
     await del(`/api/baselines_comparisons/${id}`);
 }
 
-async function getTracker(id) {
+async function getTracker(id: number): Promise<Tracker> {
     const response = await get(`/api/trackers/${id}`);
     return response.json();
 }
 
-function getBaselines(project_id) {
-    return recursiveGet(`/api/projects/${encodeURIComponent(project_id)}/baselines`, {
-        params: {
-            limit: 50,
-            offset: 0,
+function getBaselines(project_id: number): Promise<Baseline[]> {
+    return recursiveGet<{ baselines: Baseline[] }, Baseline>(
+        `/api/projects/${encodeURIComponent(project_id)}/baselines`,
+        {
+            params: {
+                limit: 50,
+                offset: 0,
+            },
+            getCollectionCallback: (collection) => {
+                return collection.baselines;
+            },
         },
-        getCollectionCallback: (collection) => {
-            return collection.baselines;
-        },
-    });
+    );
 }
 
-async function getUser(user_id) {
+async function getUser(user_id: number): Promise<User> {
     const response = await get(`/api/users/${user_id}`);
     return response.json();
 }
 
-async function getArtifact(artifact_id) {
+async function getArtifact(artifact_id: number): Promise<Artifact> {
     const response = await get(`/api/artifacts/${artifact_id}`);
     return response.json();
 }
 
-async function getBaselineArtifacts(baseline_id) {
+async function getBaselineArtifacts(baseline_id: number): Promise<BaselineArtifact> {
     const response = await get(`/api/baselines/${baseline_id}/artifacts`);
-    let json_response = await response.json();
+    const json_response = await response.json();
     return json_response.artifacts;
 }
 
-async function getBaselineArtifactsByIds(baseline_id, artifact_ids) {
-    let artifacts = [];
+async function getBaselineArtifactsByIds(
+    baseline_id: number,
+    artifact_ids: number[],
+): Promise<number[]> {
+    let artifacts: number[] = [];
     const limit = 100;
     for (let i = 0; i < artifact_ids.length; i += limit) {
         const query = JSON.stringify({
@@ -136,26 +141,34 @@ async function getBaselineArtifactsByIds(baseline_id, artifact_ids) {
             `/api/baselines/${baseline_id}/artifacts?query=${encodeURIComponent(query)}`,
         );
 
-        let json_response = await response.json();
+        const json_response = await response.json();
         artifacts = artifacts.concat(json_response.artifacts);
     }
 
     return artifacts;
 }
 
-function getComparisons(project_id) {
-    return recursiveGet(`/api/projects/${encodeURIComponent(project_id)}/baselines_comparisons`, {
-        params: {
-            limit: 50,
-            offset: 0,
+function getComparisons(project_id: number): Promise<Comparison[]> {
+    return recursiveGet<{ comparisons: Comparison[] }, Comparison>(
+        `/api/projects/${encodeURIComponent(project_id)}/baselines_comparisons`,
+        {
+            params: {
+                limit: 50,
+                offset: 0,
+            },
+            getCollectionCallback: (collection) => {
+                return collection.comparisons;
+            },
         },
-        getCollectionCallback: (collection) => {
-            return collection.comparisons;
-        },
-    });
+    );
 }
 
-async function createComparison(name, comment, base_baseline_id, compared_to_baseline_id) {
+async function createComparison(
+    name: string,
+    comment: string,
+    base_baseline_id: number,
+    compared_to_baseline_id: number,
+): Promise<Comparison> {
     const body = JSON.stringify({
         name,
         comment,
@@ -170,3 +183,20 @@ async function createComparison(name, comment, base_baseline_id, compared_to_bas
 
     return response.json();
 }
+
+export {
+    getOpenMilestones,
+    createBaseline,
+    getBaseline,
+    getComparison,
+    deleteBaseline,
+    deleteComparison,
+    getTracker,
+    getBaselines,
+    getUser,
+    getArtifact,
+    getBaselineArtifacts,
+    getBaselineArtifactsByIds,
+    getComparisons,
+    createComparison,
+};

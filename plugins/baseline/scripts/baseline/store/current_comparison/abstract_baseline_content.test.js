@@ -19,7 +19,6 @@
  */
 
 import store from "./abstract_baseline_content";
-import { create, createList } from "../../support/factories";
 import * as rest_querier from "../../api/rest-querier";
 
 describe("Compared baseline store:", () => {
@@ -44,7 +43,30 @@ describe("Compared baseline store:", () => {
         });
 
         describe("#loadAllArtifacts", () => {
-            const artifacts = createList("baseline_artifact", 2);
+            const artifacts = [
+                {
+                    id: 1,
+                    title: "Sprint-1",
+                    status: "Planned",
+                    tracker_id: 1,
+                    initial_effort: null,
+                    tracker_name: "Sprint",
+                    description:
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                    linked_artifact_ids: [],
+                },
+                {
+                    id: 2,
+                    title: "Sprint-2",
+                    status: "Planned",
+                    tracker_id: 1,
+                    initial_effort: null,
+                    tracker_name: "Sprint",
+                    description:
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                    linked_artifact_ids: [],
+                },
+            ];
             beforeEach(() => {
                 getBaselineArtifacts.mockImplementation((id) => {
                     if (id === 1) {
@@ -66,13 +88,65 @@ describe("Compared baseline store:", () => {
         describe("#addArtifacts", () => {
             describe("when some linked artifacts", () => {
                 const artifacts = [
-                    create("baseline_artifact", { linked_artifact_ids: [1] }),
-                    create("baseline_artifact", { linked_artifact_ids: [2, 3] }),
+                    {
+                        id: 3,
+                        title: "Sprint-3",
+                        status: "Planned",
+                        tracker_id: 1,
+                        initial_effort: null,
+                        tracker_name: "Sprint",
+                        description:
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                        linked_artifact_ids: [1],
+                    },
+                    {
+                        id: 4,
+                        title: "Sprint-4",
+                        status: "Planned",
+                        tracker_id: 1,
+                        initial_effort: null,
+                        tracker_name: "Sprint",
+                        description:
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                        linked_artifact_ids: [2, 3],
+                    },
                 ];
 
-                const linked_artifacts = createList("baseline_artifact", 3, {
-                    linked_artifact_ids: [13],
-                });
+                const linked_artifacts = [
+                    {
+                        id: 5,
+                        title: "Sprint-5",
+                        status: "Planned",
+                        tracker_id: 1,
+                        initial_effort: null,
+                        tracker_name: "Sprint",
+                        description:
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                        linked_artifact_ids: [13],
+                    },
+                    {
+                        id: 6,
+                        title: "Sprint-6",
+                        status: "Planned",
+                        tracker_id: 1,
+                        initial_effort: null,
+                        tracker_name: "Sprint",
+                        description:
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                        linked_artifact_ids: [13],
+                    },
+                    {
+                        id: 7,
+                        title: "Sprint-7",
+                        status: "Planned",
+                        tracker_id: 1,
+                        initial_effort: null,
+                        tracker_name: "Sprint",
+                        description:
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                        linked_artifact_ids: [13],
+                    },
+                ];
 
                 beforeEach(() => {
                     getBaselineArtifactsByIds.mockImplementation((baseline_id, artifacts_id) => {
@@ -106,20 +180,46 @@ describe("Compared baseline store:", () => {
             });
 
             describe("when some linked artifacts, then it filter already searched artifact", () => {
-                const artifacts = [create("baseline_artifact", { linked_artifact_ids: [9] })];
+                const artifacts = [
+                    {
+                        id: 8,
+                        title: "Sprint-8",
+                        status: "Planned",
+                        tracker_id: 1,
+                        initial_effort: null,
+                        tracker_name: "Sprint",
+                        description:
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                        linked_artifact_ids: [9],
+                    },
+                ];
 
                 const linked_artifact = [
-                    create("baseline_artifact", {
+                    {
                         id: 9,
+                        title: "Sprint-9",
+                        status: "Planned",
+                        tracker_id: 1,
+                        initial_effort: null,
+                        tracker_name: "Sprint",
+                        description:
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
                         linked_artifact_ids: [8],
-                    }),
+                    },
                 ];
 
                 const filtered_linked_artifact = [
-                    create("baseline_artifact", {
+                    {
                         id: 9,
+                        title: "Sprint-9",
+                        status: "Planned",
+                        tracker_id: 1,
+                        initial_effort: null,
+                        tracker_name: "Sprint",
+                        description:
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
                         linked_artifact_ids: [],
-                    }),
+                    },
                 ];
 
                 beforeEach(() => {
@@ -156,8 +256,28 @@ describe("Compared baseline store:", () => {
             describe("when no linked artifacts", () => {
                 beforeEach(() => {
                     const artifacts = [
-                        create("baseline_artifact", { linked_artifact_ids: [] }),
-                        create("baseline_artifact", { linked_artifact_ids: [] }),
+                        {
+                            id: 10,
+                            title: "Sprint-10",
+                            status: "Planned",
+                            tracker_id: 1,
+                            initial_effort: null,
+                            tracker_name: "Sprint",
+                            description:
+                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                            linked_artifact_ids: [],
+                        },
+                        {
+                            id: 11,
+                            title: "Sprint-11",
+                            status: "Planned",
+                            tracker_id: 1,
+                            initial_effort: null,
+                            tracker_name: "Sprint",
+                            description:
+                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                            linked_artifact_ids: [],
+                        },
                     ];
                     return store.actions.addArtifacts(context, [artifacts, []]);
                 });
@@ -173,8 +293,28 @@ describe("Compared baseline store:", () => {
             beforeEach(() => store.mutations.reset(state, { baseline_id: 1 }));
 
             describe("#addArtifacts", () => {
-                const artifact1 = create("baseline_artifact", { id: 1 });
-                const artifact2 = create("baseline_artifact", { id: 2 });
+                const artifact1 = {
+                    id: 1,
+                    title: "Sprint-1",
+                    status: "Planned",
+                    tracker_id: 1,
+                    initial_effort: null,
+                    tracker_name: "Sprint",
+                    description:
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                    linked_artifact_ids: [1],
+                };
+                const artifact2 = {
+                    id: 2,
+                    title: "Sprint-2",
+                    status: "Planned",
+                    tracker_id: 1,
+                    initial_effort: null,
+                    tracker_name: "Sprint",
+                    description:
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                    linked_artifact_ids: [2, 3],
+                };
 
                 beforeEach(() => store.mutations.addArtifacts(state, [artifact1, artifact2]));
 
@@ -188,8 +328,28 @@ describe("Compared baseline store:", () => {
 
     describe("getters", () => {
         describe("#findArtifactsByIds", () => {
-            const artifact1 = create("baseline_artifact");
-            const artifact2 = create("baseline_artifact");
+            const artifact1 = {
+                id: 1,
+                title: "Sprint-1",
+                status: "Planned",
+                tracker_id: 1,
+                initial_effort: null,
+                tracker_name: "Sprint",
+                description:
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                linked_artifact_ids: [1],
+            };
+            const artifact2 = {
+                id: 2,
+                title: "Sprint-2",
+                status: "Planned",
+                tracker_id: 1,
+                initial_effort: null,
+                tracker_name: "Sprint",
+                description:
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                linked_artifact_ids: [2, 3],
+            };
             beforeEach(
                 () =>
                     (state.artifacts_by_id = {
@@ -214,10 +374,30 @@ describe("Compared baseline store:", () => {
             describe("when some artifacts on depth limit", () => {
                 beforeEach(
                     () =>
-                        (state.artifacts_where_depth_limit_reached = createList(
-                            "baseline_artifact",
-                            2,
-                        )),
+                        (state.artifacts_where_depth_limit_reached = [
+                            {
+                                id: 101,
+                                title: "Sprint-1",
+                                status: "Planned",
+                                tracker_id: 1,
+                                initial_effort: null,
+                                tracker_name: "Sprint",
+                                description:
+                                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                                linked_artifact_ids: [],
+                            },
+                            {
+                                id: 102,
+                                title: "Sprint-2",
+                                status: "Planned",
+                                tracker_id: 1,
+                                initial_effort: null,
+                                tracker_name: "Sprint",
+                                description:
+                                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                                linked_artifact_ids: [],
+                            },
+                        ]),
                 );
                 it("returns true", () => {
                     expect(store.getters.is_depth_limit_reached(state)).toBeTruthy();
@@ -225,7 +405,17 @@ describe("Compared baseline store:", () => {
             });
         });
         describe("#isLimitReachedOnArtifact", () => {
-            const artifact = create("baseline_artifact");
+            const artifact = {
+                id: 1,
+                title: "Sprint-1",
+                status: "Planned",
+                tracker_id: 1,
+                initial_effort: null,
+                tracker_name: "Sprint",
+                description:
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                linked_artifact_ids: [1],
+            };
             const getters = {};
 
             describe("when depth limit not reached", () => {
@@ -251,10 +441,30 @@ describe("Compared baseline store:", () => {
                 describe("not reached on given artifact", () => {
                     beforeEach(
                         () =>
-                            (state.artifacts_where_depth_limit_reached = createList(
-                                "baseline_artifact",
-                                2,
-                            )),
+                            (state.artifacts_where_depth_limit_reached = [
+                                {
+                                    id: 101,
+                                    title: "Sprint-1",
+                                    status: "Planned",
+                                    tracker_id: 1,
+                                    initial_effort: null,
+                                    tracker_name: "Sprint",
+                                    description:
+                                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                                    linked_artifact_ids: [],
+                                },
+                                {
+                                    id: 102,
+                                    title: "Sprint-2",
+                                    status: "Planned",
+                                    tracker_id: 1,
+                                    initial_effort: null,
+                                    tracker_name: "Sprint",
+                                    description:
+                                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                                    linked_artifact_ids: [],
+                                },
+                            ]),
                     );
                     it("returns false", () => {
                         expect(
@@ -268,9 +478,39 @@ describe("Compared baseline store:", () => {
             beforeEach(
                 () =>
                     (state.artifacts_by_id = {
-                        1: create("baseline_artifact", { tracker_id: 1, tracker_name: "Epic" }),
-                        2: create("baseline_artifact", { tracker_id: 2, tracker_name: "Story" }),
-                        3: create("baseline_artifact", { tracker_id: 1, tracker_name: "Epic" }),
+                        1: {
+                            id: 1,
+                            title: "Epic-1",
+                            status: "Planned",
+                            tracker_id: 1,
+                            initial_effort: null,
+                            tracker_name: "Epic",
+                            description:
+                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                            linked_artifact_ids: [],
+                        },
+                        2: {
+                            id: 2,
+                            title: "Story-2",
+                            status: "Planned",
+                            tracker_id: 2,
+                            initial_effort: null,
+                            tracker_name: "Story",
+                            description:
+                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                            linked_artifact_ids: [],
+                        },
+                        3: {
+                            id: 3,
+                            title: "Epic-3",
+                            status: "Planned",
+                            tracker_id: 1,
+                            initial_effort: null,
+                            tracker_name: "Epic",
+                            description:
+                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                            linked_artifact_ids: [],
+                        },
                     }),
             );
 

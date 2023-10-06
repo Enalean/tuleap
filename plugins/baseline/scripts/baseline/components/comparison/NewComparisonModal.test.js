@@ -20,7 +20,6 @@
 
 import { createLocalVue, shallowMount } from "@vue/test-utils";
 import NewComparisonModal from "./NewComparisonModal.vue";
-import { create } from "../../support/factories";
 import GettextPlugin from "vue-gettext";
 
 describe("NewComparisonModal", () => {
@@ -32,9 +31,9 @@ describe("NewComparisonModal", () => {
     beforeEach(() => {
         $router = { push: jest.fn() };
 
-        const baseline = create("baseline", { id: 1, artifact_id: 10 });
-        const baseline_on_other_artifact = create("baseline", { id: 2, artifact_id: 11 });
-        baseline_on_same_artifact = create("baseline", { id: 3, artifact_id: 10 });
+        const baseline = { id: 1, artifact_id: 10 };
+        const baseline_on_other_artifact = { id: 2, artifact_id: 11 };
+        baseline_on_same_artifact = { id: 3, artifact_id: 10 };
 
         const localVue = createLocalVue();
         localVue.use(GettextPlugin, {

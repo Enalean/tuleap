@@ -23,7 +23,6 @@ import localVue from "../../support/local-vue.ts";
 import BaselinesList from "./BaselinesList.vue";
 import BaselineSkeleton from "./BaselineSkeleton.vue";
 import BaselineListItem from "./BaselineListItem.vue";
-import { createList } from "../../support/factories";
 import { createStoreMock } from "../../support/store-wrapper.test-helper";
 import store_options from "../../store/store_options";
 
@@ -74,7 +73,41 @@ describe("BaselinesList", () => {
 
         describe("with many baselines", () => {
             beforeEach(() => {
-                $store.state.baselines.baselines = createList("baseline", 3);
+                $store.state.baselines.baselines = [
+                    {
+                        id: 101,
+                        title: "Sprint-1",
+                        status: "Planned",
+                        tracker_id: 1,
+                        initial_effort: null,
+                        tracker_name: "Sprint",
+                        description:
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                        linked_artifact_ids: [],
+                    },
+                    {
+                        id: 102,
+                        title: "Sprint-2",
+                        status: "Planned",
+                        tracker_id: 1,
+                        initial_effort: null,
+                        tracker_name: "Sprint",
+                        description:
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                        linked_artifact_ids: [],
+                    },
+                    {
+                        id: 103,
+                        title: "Sprint-3",
+                        status: "Planned",
+                        tracker_id: 1,
+                        initial_effort: null,
+                        tracker_name: "Sprint",
+                        description:
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                        linked_artifact_ids: [],
+                    },
+                ];
                 $store.getters["baselines/are_baselines_available"] = true;
             });
 

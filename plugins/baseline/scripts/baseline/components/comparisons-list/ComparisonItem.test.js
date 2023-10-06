@@ -20,7 +20,6 @@
 
 import { createLocalVue, shallowMount } from "@vue/test-utils";
 import ComparisonItem from "./ComparisonItem.vue";
-import { create } from "../../support/factories";
 import { createStoreMock } from "../../support/store-wrapper.test-helper";
 import store_options from "../../store/store_options";
 import ArtifactLink from "../common/ArtifactLink.vue";
@@ -33,7 +32,12 @@ describe("Comparison", () => {
 
     let wrapper;
 
-    const base_baseline_artifact = create("artifact");
+    const base_baseline_artifact = {
+        id: 1,
+        tracker: {
+            id: 9,
+        },
+    };
 
     beforeEach(() => {
         $store = createStoreMock(store_options);
@@ -55,10 +59,16 @@ describe("Comparison", () => {
     beforeEach(() => {
         $store.getters.findBaselineById.mockImplementation((id) => {
             if (id === 11) {
-                return create("baseline", { artifact_id: 22 });
+                return { artifact_id: 22 };
             }
             if (id === 12) {
-                return create("baseline");
+                return {
+                    id: 1001,
+                    name: "Baseline label",
+                    artifact_id: 9,
+                    snapshot_date: "2019-03-22T10:01:48+00:00",
+                    author_id: 3,
+                };
             }
             throw new Error("Not expected ID: " + id);
         });
@@ -68,15 +78,15 @@ describe("Comparison", () => {
             }
             throw new Error("Not expected ID: " + id);
         });
-        $store.getters.findTrackerById.mockReturnValue(create("tracker"));
+        $store.getters.findTrackerById.mockReturnValue({ id: 9 });
 
         wrapper = shallowMount(ComparisonItem, {
             propsData: {
-                comparison: create("comparison", "saved", {
+                comparison: {
                     id: 1,
                     base_baseline_id: 11,
                     compared_to_baseline_id: 12,
-                }),
+                },
             },
             localVue,
             mocks: { $store, $router },

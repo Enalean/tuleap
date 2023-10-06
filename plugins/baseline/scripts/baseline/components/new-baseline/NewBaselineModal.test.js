@@ -21,11 +21,10 @@
 import Vue from "vue";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.ts";
-import * as rest_querier from "../../api/rest-querier.js";
+import * as rest_querier from "../../api/rest-querier";
 import NewBaselineModal from "./NewBaselineModal.vue";
 import MilestonesSelect from "./MilestonesSelect.vue";
 import MilestonesSelectSkeleton from "./MilestonesSelectSkeleton.vue";
-import { create } from "../../support/factories";
 import store_options from "../../store/store_options";
 import { createStoreMock } from "../../support/store-wrapper.test-helper";
 
@@ -37,8 +36,14 @@ describe("NewBaselineModal", () => {
     let $store;
     let wrapper;
 
-    const a_milestone = create("milestone");
-    const a_baseline = create("baseline");
+    const a_milestone = { id: 1 };
+    const a_baseline = {
+        id: 1001,
+        name: "Baseline label",
+        artifact_id: 9,
+        snapshot_date: "2019-03-22T10:01:48+00:00",
+        author_id: 3,
+    };
 
     let getOpenMilestonesResolve;
     let getOpenMilestonesReject;

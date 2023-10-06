@@ -19,7 +19,6 @@
  */
 
 import store from "./comparisons";
-import { create, createList } from "../support/factories";
 import * as rest_querier from "../api/rest-querier";
 
 describe("Comparisons store:", () => {
@@ -35,16 +34,16 @@ describe("Comparisons store:", () => {
         });
 
         describe("#load", () => {
-            const comparison1 = create("comparison", {
+            const comparison1 = {
                 base_baseline_id: 1,
                 compared_to_baseline_id: 2,
                 author_id: 4,
-            });
-            const comparison2 = create("comparison", {
+            };
+            const comparison2 = {
                 base_baseline_id: 1,
                 compared_to_baseline_id: 3,
                 author_id: 5,
-            });
+            };
 
             beforeEach(() => {
                 jest.spyOn(rest_querier, "getComparisons").mockReturnValue(
@@ -75,8 +74,8 @@ describe("Comparisons store:", () => {
         beforeEach(() => (state = { ...store.state }));
 
         describe("#delete", () => {
-            const comparison_to_delete = create("comparison", { id: 1 });
-            const another_comparison = create("comparison", { id: 2 });
+            const comparison_to_delete = { id: 1 };
+            const another_comparison = { id: 2 };
 
             beforeEach(() => {
                 state.comparisons = [comparison_to_delete, another_comparison];
@@ -111,7 +110,19 @@ describe("Comparisons store:", () => {
                     });
                 });
                 describe("when some comparisons", () => {
-                    beforeEach(() => (state.comparisons = createList("comparison", 2)));
+                    beforeEach(
+                        () =>
+                            (state.comparisons = [
+                                {
+                                    base_baseline_id: 1,
+                                    compared_to_baseline_id: 2,
+                                },
+                                {
+                                    base_baseline_id: 1,
+                                    compared_to_baseline_id: 2,
+                                },
+                            ]),
+                    );
                     it("returns false", () => {
                         expect(store.getters.are_some_available(state)).toBeTruthy();
                     });

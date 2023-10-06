@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { create } from "../../../support/factories";
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "../../../support/store-wrapper.test-helper";
 import localVue from "../../../support/local-vue";
@@ -42,15 +41,16 @@ describe("ArtifactComparison", () => {
                 "comparison/compared_to/isLimitReachedOnArtifact": () => false,
             },
         });
-        linked_artifact = create("baseline_artifact", { id: 2 });
+        linked_artifact = { id: 2 };
 
         wrapper = shallowMount(ArtifactComparison, {
             localVue,
             propsData: {
-                base: create("baseline_artifact", {
+                base: {
+                    id: 1,
                     linked_artifact_ids: [2],
-                }),
-                compared_to: create("baseline_artifact"),
+                },
+                compared_to: { id: 2 },
             },
             mocks: { $store },
         });
@@ -67,8 +67,14 @@ describe("ArtifactComparison", () => {
     describe("when artifacts does not have linked artifact", () => {
         beforeEach(async () => {
             wrapper.setProps({
-                base: create("baseline_artifact", "without_linked_artifacts"),
-                compared_to: create("baseline_artifact", "without_linked_artifacts"),
+                base: {
+                    linked_artifact_ids: [],
+                    linked_artifacts: [],
+                },
+                compared_to: {
+                    linked_artifact_ids: [],
+                    linked_artifacts: [],
+                },
             });
 
             await wrapper.vm.$nextTick();
@@ -87,8 +93,8 @@ describe("ArtifactComparison", () => {
         beforeEach(async () => {
             $store.getters["comparison/base/isLimitReachedOnArtifact"] = () => true;
             wrapper.setProps({
-                reference: create("baseline_artifact"),
-                compared_to: create("baseline_artifact"),
+                reference: { id: 1 },
+                compared_to: { id: 2 },
             });
 
             await wrapper.vm.$nextTick();

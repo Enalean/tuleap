@@ -21,7 +21,6 @@
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.ts";
 import Vuex from "vuex";
-import { createList } from "../../support/factories";
 import ContentArtifact from "./ContentArtifact.vue";
 import ArtifactsList from "./ArtifactsList.vue";
 
@@ -43,7 +42,41 @@ describe("ArtifactsList", () => {
         });
         wrapper = shallowMount(ArtifactsList, {
             propsData: {
-                artifacts: createList("baseline_artifact", 3),
+                artifacts: [
+                    {
+                        id: 101,
+                        title: "Sprint-1",
+                        status: "Planned",
+                        tracker_id: 1,
+                        initial_effort: null,
+                        tracker_name: "Sprint",
+                        description:
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                        linked_artifact_ids: [],
+                    },
+                    {
+                        id: 102,
+                        title: "Sprint-2",
+                        status: "Planned",
+                        tracker_id: 1,
+                        initial_effort: null,
+                        tracker_name: "Sprint",
+                        description:
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                        linked_artifact_ids: [],
+                    },
+                    {
+                        id: 103,
+                        title: "Sprint-3",
+                        status: "Planned",
+                        tracker_id: 1,
+                        initial_effort: null,
+                        tracker_name: "Sprint",
+                        description:
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                        linked_artifact_ids: [],
+                    },
+                ],
             },
             localVue,
             store,

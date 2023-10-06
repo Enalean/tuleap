@@ -23,7 +23,6 @@ import localVue from "../../support/local-vue.ts";
 import ComparisonsList from "./ComparisonsList.vue";
 import ComparisonSkeleton from "./ComparisonSkeleton.vue";
 import ComparisonItem from "./ComparisonItem.vue";
-import { createList } from "../../support/factories";
 import { createStoreMock } from "../../support/store-wrapper.test-helper";
 import store_options from "../../store/store_options";
 
@@ -70,7 +69,20 @@ describe("ComparisonsList", () => {
 
         describe("with many comparisons", () => {
             beforeEach(() => {
-                $store.state.comparisons.comparisons = createList("comparison", 3);
+                $store.state.comparisons.comparisons = [
+                    {
+                        base_baseline_id: 1,
+                        compared_to_baseline_id: 2,
+                    },
+                    {
+                        base_baseline_id: 1,
+                        compared_to_baseline_id: 2,
+                    },
+                    {
+                        base_baseline_id: 1,
+                        compared_to_baseline_id: 2,
+                    },
+                ];
                 $store.getters["comparisons/are_some_available"] = true;
             });
 

@@ -22,7 +22,6 @@ import Vue from "vue";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.ts";
 import MilestoneList from "./MilestonesSelect.vue";
-import { create } from "../../support/factories";
 
 describe("MilestonesSelect", () => {
     const milestone_selector = '[data-test-type="milestone"]';
@@ -40,9 +39,9 @@ describe("MilestonesSelect", () => {
     });
 
     describe("when many milestones", () => {
-        const milestone_1 = create("milestone", { id: 1, label: "first milestone" });
-        const milestone_2 = create("milestone", { id: 2, label: "second milestone" });
-        const milestone_3 = create("milestone", { id: 3, label: "a milestone" });
+        const milestone_1 = { id: 1, label: "first milestone" };
+        const milestone_2 = { id: 2, label: "second milestone" };
+        const milestone_3 = { id: 3, label: "a milestone" };
 
         beforeEach(async () => {
             wrapper.setProps({

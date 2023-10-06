@@ -19,8 +19,7 @@
  */
 
 import store from "./semantics";
-import { create } from "../support/factories";
-import * as rest_querier from "../api/rest-querier.js";
+import * as rest_querier from "../api/rest-querier";
 
 describe("Semantics store:", () => {
     let state;
@@ -81,7 +80,7 @@ describe("Semantics store:", () => {
                 });
 
                 describe("when getTracker() is resolved", () => {
-                    const tracker = create("tracker");
+                    const tracker = { id: 9 };
                     beforeEach(() => {
                         resolveGetTracker(tracker);
                         return action_promise;
@@ -132,24 +131,21 @@ describe("Semantics store:", () => {
 
         describe("#update", () => {
             describe("when tracker has semantics defined", () => {
-                const description_field = create("field", {
+                const description_field = {
                     field_id: 22,
                     label: "Description",
-                });
+                };
 
                 beforeEach(() => {
-                    store.mutations.update(
-                        state,
-                        create("tracker", {
-                            id: 1,
-                            fields: [description_field],
-                            semantics: {
-                                description: {
-                                    field_id: 22,
-                                },
+                    store.mutations.update(state, {
+                        id: 1,
+                        fields: [description_field],
+                        semantics: {
+                            description: {
+                                field_id: 22,
                             },
-                        }),
-                    );
+                        },
+                    });
                 });
 
                 it("updates state with semantic field", () => {
@@ -163,7 +159,7 @@ describe("Semantics store:", () => {
 
             describe("when tracker has no semantic", () => {
                 beforeEach(() => {
-                    store.mutations.update(state, create("tracker", "without_semantic", { id: 1 }));
+                    store.mutations.update(state, { id: 1 });
                 });
 
                 it("updates state with no semantic field", () => {

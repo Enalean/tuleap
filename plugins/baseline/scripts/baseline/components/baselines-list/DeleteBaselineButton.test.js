@@ -22,11 +22,10 @@ import { mount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.ts";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import DeleteBaselineButton from "./DeleteBaselineButton.vue";
-import { create } from "../../support/factories";
 import ActionButton from "../common/ActionButton.vue";
 
 describe("DeleteBaselineButton", () => {
-    const baseline = create("baseline", { id: 1 });
+    const baseline = { id: 1 };
     let store;
 
     function createWrapper(comparisons) {

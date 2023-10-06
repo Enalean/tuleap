@@ -23,7 +23,6 @@ import localVue from "../support/local-vue.ts";
 import App from "./App.vue";
 import { createStoreMock } from "../support/store-wrapper.test-helper";
 import store_options from "../store/store_options";
-import { create } from "../support/factories.js";
 import NotificationAlert from "./NotificationAlert.vue";
 
 describe("App", () => {
@@ -60,7 +59,13 @@ describe("App", () => {
     });
 
     describe("With notification", () => {
-        beforeEach(() => ($store.state.dialog_interface.notification = create("notification")));
+        beforeEach(
+            () =>
+                ($store.state.dialog_interface.notification = {
+                    text: "This is a failure notification",
+                    class: "danger",
+                }),
+        );
         it("Show notification", () => {
             expect(wrapper.findComponent(NotificationAlert).exists()).toBeTruthy();
         });

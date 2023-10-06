@@ -25,7 +25,6 @@ import SaveComparisonModal from "./SaveComparisonModal.vue";
 import store_options from "../../store/store_options";
 import { createStoreMock } from "../../support/store-wrapper.test-helper";
 import GettextPlugin from "vue-gettext";
-import { create } from "../../support/factories";
 
 describe("SaveComparisonModal", () => {
     const error_message_selector = '[data-test-type="error-message"]';
@@ -89,7 +88,13 @@ describe("SaveComparisonModal", () => {
 
         describe("when createComparison() is successful", () => {
             beforeEach(async () => {
-                createComparisonResolve(create("comparison", "saved", { id: 10 }));
+                createComparisonResolve({
+                    id: 10,
+                    name: null,
+                    comment: null,
+                    author_id: 1,
+                    creation_date: "2019-03-22T10:01:48+00:00",
+                });
                 await Vue.nextTick();
             });
 
