@@ -29,7 +29,7 @@ use Tuleap\Document\LinkProvider\DocumentLinkProvider;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\FooterConfiguration;
-use Tuleap\Layout\HeaderConfiguration\InProjectWithoutSidebar\BackToLinkPresenter;
+use Tuleap\Layout\HeaderConfiguration\InProjectWithoutProjectContext\BackToLinkPresenter;
 use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\NeverThrow\Fault;
@@ -78,7 +78,7 @@ final class OpenInOnlyOfficeController implements \Tuleap\Request\DispatchableWi
 
                     $layout->header(
                         HeaderConfigurationBuilder::get($page_title)
-                            ->inProjectWithoutSidebar(
+                            ->inProjectWithoutProjectContext(
                                 $document->project,
                                 \DocmanPlugin::SERVICE_SHORTNAME,
                                 new BackToLinkPresenter(

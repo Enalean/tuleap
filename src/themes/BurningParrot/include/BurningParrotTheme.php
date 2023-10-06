@@ -168,16 +168,17 @@ class BurningParrotTheme extends BaseLayout
             $this->event_manager->dispatch(new BeforeStartProjectHeader($project, $this, $this->current_user->user));
         }
 
-        $this->header_has_been_written = true;
-        $project_context               = null;
-        $in_project_without_sidebar    = null;
+        $this->header_has_been_written      = true;
+        $project_context                    = null;
+        $in_project_without_project_context = null;
 
         if ($params instanceof HeaderConfiguration) {
-            $in_project_without_sidebar = $params->in_project?->without_sidebar;
-            $params                     = $params->flatten();
+            $in_project_without_project_context = $params->in_project?->without_project_context;
+
+            $params = $params->flatten();
         }
 
-        if ($project && $in_project_without_sidebar === null) {
+        if ($project && $in_project_without_project_context === null) {
             $project_context = ProjectContextPresenter::build(
                 $project,
                 $this->project_flags_builder->buildProjectFlags($project),
@@ -204,8 +205,8 @@ class BurningParrotTheme extends BaseLayout
         $url_redirect                 = new URLRedirect(EventManager::instance());
         $header_presenter_builder     = new HeaderPresenterBuilder();
         $main_classes                 = isset($params['main_classes']) ? $params['main_classes'] : [];
-        $sidebar                      = $this->getSidebarFromParams($project, $in_project_without_sidebar, $params);
-        $body_classes                 = $this->getArrayOfClassnamesForBodyTag($params, $sidebar, $project, $in_project_without_sidebar);
+        $sidebar                      = $this->getSidebarFromParams($project, $in_project_without_project_context, $params);
+        $body_classes                 = $this->getArrayOfClassnamesForBodyTag($params, $sidebar, $project, $in_project_without_project_context);
         $breadcrumb_presenter_builder = new BreadCrumbPresenterBuilder();
 
         $breadcrumbs = $breadcrumb_presenter_builder->build($this->breadcrumbs);
@@ -291,7 +292,7 @@ class BurningParrotTheme extends BaseLayout
             $this->theme_variant_color,
             $this->theme_variation,
             $this->javascript_assets,
-            $in_project_without_sidebar,
+            $in_project_without_project_context,
             $invite_buddies_presenter,
         );
 
@@ -329,7 +330,7 @@ class BurningParrotTheme extends BaseLayout
         $params,
         $sidebar,
         ?Project $project,
-        ?HeaderConfiguration\WithoutSidebar $in_project_without_sidebar,
+        ?HeaderConfiguration\WithoutProjectContext $in_project_without_project_context,
     ): array {
         $body_classes = [];
 
@@ -356,7 +357,7 @@ class BurningParrotTheme extends BaseLayout
                 $body_classes[] = 'has-visible-platform-banner';
         }
 
-        if (! $sidebar && ($project === null || $in_project_without_sidebar !== null)) {
+        if (! $sidebar && ($project === null || $in_project_without_project_context !== null)) {
             return $body_classes;
         }
 
@@ -439,7 +440,7 @@ class BurningParrotTheme extends BaseLayout
 
     private function getSidebarFromParams(
         ?Project $project,
-        ?HeaderConfiguration\WithoutSidebar $in_project_without_sidebar,
+        ?HeaderConfiguration\WithoutProjectContext $in_project_without_project_context,
         array $params,
     ) {
         if (isset($params['sidebar'])) {
@@ -448,7 +449,7 @@ class BurningParrotTheme extends BaseLayout
         }
 
         if ($project) {
-            $this->show_sidebar = $in_project_without_sidebar === null;
+            $this->show_sidebar = $in_project_without_project_context === null;
         }
 
         return false;

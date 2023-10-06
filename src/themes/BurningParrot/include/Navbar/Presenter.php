@@ -20,7 +20,7 @@
 
 namespace Tuleap\Theme\BurningParrot\Navbar;
 
-use Tuleap\Layout\HeaderConfiguration\WithoutSidebar;
+use Tuleap\Layout\HeaderConfiguration\WithoutProjectContext;
 use Tuleap\Layout\NewDropdown\NewDropdownPresenter;
 
 class Presenter
@@ -65,7 +65,7 @@ class Presenter
         bool $is_legacy_logo_customized,
         bool $is_svg_logo_customized,
         bool $can_buddies_be_invited,
-        public ?WithoutSidebar $in_project_without_sidebar,
+        public ?WithoutProjectContext $in_project_without_sidebar,
     ) {
         $this->user_nav_presenter        = $user_nav_presenter;
         $this->new_dropdown              = $new_dropdown;
