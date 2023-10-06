@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\HeaderConfiguration;
+
 /**
  * Display the page header and footer for the current service.
  */
@@ -31,9 +33,8 @@ interface Tracker_IDisplayTrackerLayout
      * @param array   $breadcrumbs The breadcrumbs for this page
      * @param mixed   $toolbar    The toolbar
      *
-     * @return void
      */
-    public function displayHeader($project, $title, $breadcrumbs, $toolbar, array $params);
+    public function displayHeader($project, $title, $breadcrumbs, $toolbar, HeaderConfiguration|array $params): void;
 
     /**
      * Display footer for the current service.

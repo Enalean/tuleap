@@ -1198,7 +1198,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $breadcrumbs,
         array $toolbar,
         array $params = [],
-    ) {
+    ): void {
         if ($project = ProjectManager::instance()->getProject($this->group_id)) {
             $hp = Codendi_HTMLPurifier::instance();
 

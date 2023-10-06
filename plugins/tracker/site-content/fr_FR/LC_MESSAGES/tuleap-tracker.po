@@ -613,9 +613,6 @@ msgstr "L'artéfact avec le titre \"%1$s\" n'a pas pu être créé."
 msgid "Artifacts"
 msgstr "Artéfacts"
 
-msgid "Artifacts Data Import"
-msgstr "Importation des artéfacts"
-
 msgid ""
 "Artifacts cannot be considered <strong>done</strong> because there is no "
 "value selected for this semantic."
@@ -1624,17 +1621,11 @@ msgstr ""
 "Si vous connaissez l'id de l'artéfact, entrez-le manuellement dans le champs "
 "texte ci-dessous. Le champ attends une liste d'ids séparés par des virgules."
 
-msgid "Import"
-msgstr "Importer"
-
 msgid "Import / Export"
 msgstr "Import / Export"
 
 msgid "Import Artifacts"
 msgstr "Importer des artéfacts"
-
-msgid "Import Format"
-msgstr "Format d'importation"
 
 msgid "Import failed."
 msgstr "Import non réalisé."
@@ -2761,9 +2752,6 @@ msgstr "Nom court"
 
 msgid "Show"
 msgstr "Afficher"
-
-msgid "Show Format"
-msgstr "Voir le format"
 
 msgid "Show diff"
 msgstr "Afficher le diff"

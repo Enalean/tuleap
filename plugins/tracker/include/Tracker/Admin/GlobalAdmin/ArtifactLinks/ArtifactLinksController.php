@@ -121,8 +121,6 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
 
     private function displayGlobalAdministration(Project $project, BaseLayout $response): void
     {
-        $toolbar     = [];
-        $params      = [];
         $breadcrumbs = [];
 
         $response->addJavascriptAsset(
@@ -131,12 +129,15 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
                 'global-admin-artifact-links.js'
             )
         );
+        $title = dgettext('tuleap-tracker', 'Trackers');
         $this->tracker_manager->displayHeader(
             $project,
-            dgettext('tuleap-tracker', 'Trackers'),
+            $title,
             $breadcrumbs,
-            $toolbar,
-            $params
+            [],
+            \Tuleap\Layout\HeaderConfigurationBuilder::get($title)
+                ->inProject($project, \trackerPlugin::SERVICE_SHORTNAME)
+                ->build()
         );
 
         $formatted_types = $this->buildFormattedTypes($project);

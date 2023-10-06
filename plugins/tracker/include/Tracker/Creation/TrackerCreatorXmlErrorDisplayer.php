@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Creation;
 
 use Project;
 use TemplateRendererFactory;
+use Tuleap\Layout\HeaderConfigurationBuilder;
 
 class TrackerCreatorXmlErrorDisplayer
 {
@@ -61,10 +62,16 @@ class TrackerCreatorXmlErrorDisplayer
                 'url'   => TRACKER_BASE_URL . '/?group_id=' . urlencode($project->group_id) . '&amp;func=create',
             ],
         ];
-        $toolbar     = [];
-        $params      = [];
-
-        $this->tracker_manager->displayHeader($project, 'Trackers', $breadcrumbs, $toolbar, $params);
+        $title       = 'Trackers';
+        $this->tracker_manager->displayHeader(
+            $project,
+            $title,
+            $breadcrumbs,
+            [],
+            HeaderConfigurationBuilder::get($title)
+                ->inProject($project, \trackerPlugin::SERVICE_SHORTNAME)
+                ->build()
+        );
         $renderer = $this->template_renderer_factory->getRenderer(
             __DIR__ . '/../../../templates/tracker-creation'
         );
