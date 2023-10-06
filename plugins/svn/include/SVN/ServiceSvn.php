@@ -31,6 +31,7 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
+use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\SVN\AccessControl\AccessControlPresenter;
 use Tuleap\SVN\Admin\BaseGlobalAdminPresenter;
 use Tuleap\SVN\Admin\GlobalAdministratorsController;
@@ -158,10 +159,11 @@ class ServiceSvn extends Service
 
     private function displaySVNHeader(HTTPRequest $request, string $title, string $body_class, BreadCrumbCollection $breadcrumbs): void
     {
-        $params = [
-            'body_class' => [$body_class],
-        ];
         $title  = $title . ' - ' . dgettext('tuleap-svn', 'SVN');
+        $params = HeaderConfigurationBuilder::get($title)
+            ->inProject($this->project, SvnPlugin::SERVICE_SHORTNAME)
+            ->withBodyClass([$body_class])
+            ->build();
 
         $repository_list_breadcrumb = new BreadCrumb(
             new BreadCrumbLink(
