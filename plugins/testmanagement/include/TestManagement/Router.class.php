@@ -30,6 +30,7 @@ use TrackerFactory;
 use TrackerXmlImport;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Request\NotFoundException;
 use Tuleap\TestManagement\Administration\AdminController;
@@ -309,11 +310,18 @@ class Router
         $toolbar     = [];
         $breadcrumbs = $controller->getBreadcrumbs();
 
+        $params_builder = HeaderConfigurationBuilder::get($title)
+            ->withBodyClass(array_merge(['testmanagement'], $extra_classes));
+
+        $params = $without_project_in_breadcrumb
+            ? $params_builder->inProjectNotInBreadcrumbs($project, \testmanagementPlugin::SERVICE_SHORTNAME)->build()
+            : $params_builder->inProject($project, \testmanagementPlugin::SERVICE_SHORTNAME)->build();
+
         $service->displayHeader(
             $title,
             $breadcrumbs->getCrumbs($project),
             $toolbar,
-            ['body_class' => array_merge(['testmanagement'], $extra_classes), 'without-project-in-breadcrumbs' => $without_project_in_breadcrumb]
+            $params
         );
     }
 
