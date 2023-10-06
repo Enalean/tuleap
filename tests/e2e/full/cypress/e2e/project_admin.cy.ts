@@ -61,7 +61,7 @@ context("Suspended users", function () {
         cy.get("[data-test=project-admin-ugroups-members-list]").should("not.contain", "Suspended");
 
         cy.log("Check user can be removed from members");
-        cy.removeProjectMember("Suspended");
+        cy.removeProjectMember(project_name, "Suspended");
     });
 });
 

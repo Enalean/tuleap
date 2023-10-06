@@ -52,7 +52,7 @@ describe("Document PhpWiki integration", () => {
         cy.get("[data-test=start-working]").click({
             timeout: 20000,
         });
-        cy.addProjectMember("projectMember");
+        cy.addProjectMember(project_unixname, "projectMember");
     });
 
     it("Creates wiki service pages", () => {

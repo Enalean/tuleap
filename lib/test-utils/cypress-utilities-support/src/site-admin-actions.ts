@@ -33,6 +33,8 @@ Cypress.Commands.add("updatePlatformVisibilityAndAllowRestricted", (): void => {
     cy.get("[data-test=global-admin-search-user]").type("RestrictedRegularUser{enter}");
     cy.get("[data-test=user-status]").select("Restricted");
     cy.get("[data-test=save-user]").click();
+
+    cy.anonymousSession();
 });
 
 Cypress.Commands.add("updatePlatformVisibilityForAnonymous", (): void => {
@@ -43,6 +45,8 @@ Cypress.Commands.add("updatePlatformVisibilityForAnonymous", (): void => {
     cy.get("[data-test=access_mode-anonymous]").check();
 
     cy.get("[data-test=update_forge_access_button]").click({ force: true });
+
+    cy.anonymousSession();
 });
 
 Cypress.Commands.add("updatePlatformAndMakeUserInAutoApprovalMode", (): void => {
@@ -52,6 +56,8 @@ Cypress.Commands.add("updatePlatformAndMakeUserInAutoApprovalMode", (): void => 
 
     cy.get("[data-test=user-must-be-approved]").uncheck();
     cy.get("[data-test=save-settings]").click();
+
+    cy.anonymousSession();
 });
 
 Cypress.Commands.add("updatePlatformAndMakeUserInAdminApprovalMode", (): void => {
@@ -61,4 +67,6 @@ Cypress.Commands.add("updatePlatformAndMakeUserInAdminApprovalMode", (): void =>
 
     cy.get("[data-test=user-must-be-approved]").check();
     cy.get("[data-test=save-settings]").click();
+
+    cy.anonymousSession();
 });

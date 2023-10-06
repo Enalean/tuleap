@@ -22,4 +22,5 @@ import "./commands";
 import "./email";
 import "./trackers";
 import "./site-admin-actions";
+import "./project-admin-actions";
 export { WEB_UI_SESSION } from "./commands";

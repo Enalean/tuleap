@@ -37,8 +37,8 @@ describe(`Link field of Artifact Modal`, function () {
         cy.getProjectId(project_name)
             .as("project_id")
             .then((project_id) => {
-                cy.visit(`/projects/${project_name}`);
-                cy.addProjectMember("projectMember");
+                cy.addProjectMember(project_name, "projectMember");
+                cy.projectAdministratorSession();
                 cy.getTrackerIdFromREST(project_id, "story").then((tracker_id) => {
                     cy.createArtifact({
                         tracker_id,

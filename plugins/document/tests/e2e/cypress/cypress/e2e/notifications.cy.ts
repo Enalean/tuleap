@@ -193,8 +193,8 @@ describe("Document notifications", () => {
         addUserToNotifiedPeople("ARegularUser");
         cy.get("[data-test=notified-users]").should("contain", "ARegularUser");
 
-        cy.visitProjectAdministration(public_doc_mail);
-        cy.switchProjectVisibility("private");
+        cy.switchProjectVisibility(public_doc_mail, "private");
+        cy.projectAdministratorSession();
 
         cy.visitProjectService(public_doc_mail, "Documents");
         openQuickLook(`Folder`);
@@ -205,9 +205,8 @@ describe("Document notifications", () => {
     });
 
     it("Removing users from private projects will remove them from notification monitoring", () => {
+        cy.addProjectMember(private_doc_mail, "ProjectMember");
         cy.projectAdministratorSession();
-        cy.visitProjectService(private_doc_mail, "Documents");
-        cy.addProjectMember("ProjectMember");
 
         createFolderInProject(private_doc_mail);
 
@@ -219,7 +218,8 @@ describe("Document notifications", () => {
 
         addUserToNotifiedPeople("ProjectMember");
         cy.get("[data-test=notified-users]").should("contain", "ProjectMember");
-        cy.removeProjectMember("ProjectMember");
+        cy.removeProjectMember(private_doc_mail, "ProjectMember");
+        cy.projectAdministratorSession();
 
         cy.visitProjectService(private_doc_mail, "Documents");
         openQuickLook(`Folder`);

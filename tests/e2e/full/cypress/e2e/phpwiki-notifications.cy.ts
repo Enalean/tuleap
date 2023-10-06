@@ -80,8 +80,8 @@ context("PHPWiki notifications", function () {
         cy.get("[data-test=create-wiki]").click();
 
         cy.log("Create users and add them to the project");
-        cy.siteAdministratorSession();
         [user1, user2, user3, user4, user5].forEach((user) => {
+            cy.siteAdministratorSession();
             cy.visit("/admin/");
             cy.get("[data-test=new-user-link]").click();
             cy.get("[data-test=user-login]").type(user);
@@ -89,10 +89,10 @@ context("PHPWiki notifications", function () {
             cy.get("[data-test=user-pw]").type(PASSWORD);
             cy.get("[data-test=user-name]").type(user);
             cy.get("[data-test=register-user-button]").click();
-            cy.visit(`/projects/${project}`);
-            cy.addProjectMember(user);
+            cy.addProjectMember(project, user);
         });
 
+        cy.siteAdministratorSession();
         cy.log("Users subscribe to phpwiki change");
         [user1, user2, user3, user4, user5].forEach((user) => {
             loginAs(user);
