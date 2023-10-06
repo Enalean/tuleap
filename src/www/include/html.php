@@ -543,12 +543,7 @@ function site_footer($params)
 }
 
 
-/*!     @function site_project_header
-    @abstract everything required to handle security and state checks for a project web page
-    @param params array() must contain $toptab and $group
-    @result text - echos HTML to the screen directly
-*/
-function site_project_header(Project $project, HeaderConfiguration|array $params)
+function site_project_header(Project $project, HeaderConfiguration|array $params): void
 {
     /*
         Check to see if active

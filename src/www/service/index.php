@@ -39,7 +39,7 @@ if ($project && $request->exist('id')) {
                 $label = $Language->getOverridableText($matches[1], $matches[2]);
             }
             $title = $label . ' - ' . $project->getPublicName();
-            site_project_header($project, ['title' => $title, 'toptab' => $service['service_id']]);
+            site_project_header($project, \Tuleap\Layout\HeaderConfigurationBuilder::get($title)->inProject($project, $service['service_id'])->build());
             $GLOBALS['HTML']->iframe($service['link'], ['class' => 'iframe_service', 'width' => '100%', 'height' => '650px']);
             site_project_footer([]);
         } else {

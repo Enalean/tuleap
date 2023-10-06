@@ -54,7 +54,7 @@ class ProjectSidebarToolsBuilder
 
             $href = $this->getLink($service, $project);
             if ($service instanceof ProjectDefinedService) {
-                yield SidebarServicePresenter::fromProjectDefinedService($service, $href, $active_promoted_item_id, $user);
+                yield SidebarServicePresenter::fromProjectDefinedService($service, $href, $this->isEnabled($toptab, $service), $active_promoted_item_id, $user);
             } else {
                 yield SidebarServicePresenter::fromService($service, $href, $this->isEnabled($toptab, $service), $active_promoted_item_id, $user);
             }

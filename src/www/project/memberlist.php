@@ -36,9 +36,12 @@ if ($request->valid($vGroupId)) {
     }
 }
 
+$project = ProjectManager::instance()->getProjectById((int) $group_id);
 site_project_header(
-    ProjectManager::instance()->getProjectById((int) $group_id),
-    ['title' => $Language->getText('project_memberlist', 'proj_member_list'), 'toptab' => 'memberlist'],
+    $project,
+    \Tuleap\Layout\HeaderConfigurationBuilder::get($Language->getText('project_memberlist', 'proj_member_list'))
+        ->inProject($project, Service::SUMMARY)
+        ->build()
 );
 
 print $Language->getText('project_memberlist', 'contact_to_become_member');
