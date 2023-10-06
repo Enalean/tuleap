@@ -28,7 +28,7 @@ use Tuleap\InviteBuddy\InviteBuddiesPresenter;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithDensityVariants;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\HeaderConfiguration\WithoutSidebar;
+use Tuleap\Layout\HeaderConfiguration\WithoutProjectContext;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Layout\Logo\IDetectIfLogoIsCustomized;
@@ -105,7 +105,7 @@ class HeaderPresenterBuilder
         ThemeVariantColor $theme_color,
         ThemeVariation $theme_variation,
         array $javascript_assets,
-        ?WithoutSidebar $in_project_without_sidebar,
+        ?WithoutProjectContext $in_project_without_sidebar,
         InviteBuddiesPresenter $invite_buddies_presenter,
     ) {
         $this->navbar_presenter_builder = $navbar_presenter_builder;

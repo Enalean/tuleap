@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Layout\HeaderConfiguration;
 
-use Tuleap\Layout\HeaderConfiguration\InProjectWithoutSidebar\BackToLinkPresenter;
+use Tuleap\Layout\HeaderConfiguration\InProjectWithoutProjectContext\BackToLinkPresenter;
 
 /**
  * @psalm-immutable
  */
-final class WithoutSidebar
+final class WithoutProjectContext
 {
     /**
      * @psalm-internal \Tuleap\Layout

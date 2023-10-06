@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Layout\HeaderConfiguration\InProjectWithoutSidebar;
+namespace Tuleap\Layout\HeaderConfiguration\InProjectWithoutProjectContext;
 
 /**
  * @psalm-immutable

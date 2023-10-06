@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Layout;
 
 use Tuleap\Layout\HeaderConfiguration\InProject;
-use Tuleap\Layout\HeaderConfiguration\InProjectWithoutSidebar\BackToLinkPresenter;
-use Tuleap\Layout\HeaderConfiguration\WithoutSidebar;
+use Tuleap\Layout\HeaderConfiguration\InProjectWithoutProjectContext\BackToLinkPresenter;
+use Tuleap\Layout\HeaderConfiguration\WithoutProjectContext;
 use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
 
 final class HeaderConfigurationBuilder
@@ -102,7 +102,7 @@ final class HeaderConfigurationBuilder
         return $this;
     }
 
-    public function inProjectWithoutSidebar(
+    public function inProjectWithoutProjectContext(
         \Project $project,
         string $current_service_shortname,
         BackToLinkPresenter $back_to_link,
@@ -111,7 +111,7 @@ final class HeaderConfigurationBuilder
             $project,
             $current_service_shortname,
             null,
-            new WithoutSidebar($back_to_link),
+            new WithoutProjectContext($back_to_link),
             true,
         );
 

@@ -33,7 +33,7 @@ final class InProject
         public readonly Project $project,
         public readonly string $current_service_shortname,
         public readonly ?string $active_promoted_item_id,
-        public readonly ?WithoutSidebar $without_sidebar,
+        public readonly ?WithoutProjectContext $without_project_context,
         public readonly bool $in_breadcrumbs,
     ) {
     }
