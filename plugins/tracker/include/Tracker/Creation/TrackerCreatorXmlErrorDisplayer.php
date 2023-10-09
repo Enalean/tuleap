@@ -67,7 +67,6 @@ class TrackerCreatorXmlErrorDisplayer
             $project,
             $title,
             $breadcrumbs,
-            [],
             HeaderConfigurationBuilder::get($title)
                 ->inProject($project, \trackerPlugin::SERVICE_SHORTNAME)
                 ->build()

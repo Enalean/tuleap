@@ -177,7 +177,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         $assets = new \Tuleap\Layout\IncludeCoreAssets();
         $GLOBALS['HTML']->addCssAsset(new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($assets, 'syntax-highlight'));
 
-        $this->tracker->displayHeader($this->layout, $title, $breadcrumbs, [], $params);
+        $this->tracker->displayHeader($this->layout, $title, $breadcrumbs, $params);
 
 
         $status = new Tracker_ArtifactByEmailStatus(

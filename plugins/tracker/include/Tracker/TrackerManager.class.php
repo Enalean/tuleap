@@ -291,7 +291,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         return $this->getTrackerFactory()->restoreDeletedTracker($tracker_id);
     }
 
-    public function displayHeader($project, $title, $breadcrumbs, $toolbar, HeaderConfiguration|array $params): void
+    public function displayHeader(Project $project, string $title, array $breadcrumbs, HeaderConfiguration|array $params): void
     {
         $breadcrumbs = array_merge(
             [
@@ -300,8 +300,9 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
             $breadcrumbs
         );
 
-        if ($service = $project->getService('plugin_tracker')) {
-            $service->displayHeader($title, $breadcrumbs, $toolbar, $params);
+        $service = $project->getService(trackerPlugin::SERVICE_SHORTNAME);
+        if ($service) {
+            $service->displayHeader($title, $breadcrumbs, [], $params);
         }
     }
 
@@ -330,7 +331,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         return UserManager::instance()->getCurrentUser();
     }
 
-    public function displayFooter($project)
+    public function displayFooter(Project $project): void
     {
         if ($service = $project->getService('plugin_tracker')) {
             $service->displayFooter();
@@ -413,7 +414,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
             $project,
             $title,
             $breadcrumbs,
-            [],
             \Tuleap\Layout\HeaderConfigurationBuilder::get($title)
                 ->inProject($project, trackerPlugin::SERVICE_SHORTNAME)
                 ->build()
@@ -569,7 +569,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
             $project,
             $title,
             $breadcrumbs,
-            [],
             \Tuleap\Layout\HeaderConfigurationBuilder::get($title)
                 ->inProject($project, trackerPlugin::SERVICE_SHORTNAME)
                 ->build()

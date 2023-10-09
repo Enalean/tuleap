@@ -152,7 +152,6 @@ class TrackersDisplayController implements DispatchableWithRequest, Dispatchable
             $project,
             $title,
             [],
-            [],
             HeaderConfigurationBuilder::get($title)
                 ->inProject($project, \trackerPlugin::SERVICE_SHORTNAME)
                 ->build()

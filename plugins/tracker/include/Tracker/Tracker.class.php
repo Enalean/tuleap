@@ -1138,7 +1138,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         if ($report) {
             $report->process($layout, $request, $current_user);
         } elseif (! $link_artifact_id) {
-            $this->displayHeader($layout, $this->name, [], []);
+            $this->displayHeader($layout, $this->name, []);
             echo dgettext('tuleap-tracker', 'No reports available');
 
             if ($this->userIsAdmin($current_user)) {
@@ -1196,7 +1196,6 @@ class Tracker implements Tracker_Dispatchable_Interface
         Tracker_IDisplayTrackerLayout $layout,
         $title,
         $breadcrumbs,
-        array $toolbar,
         array $params = [],
     ): void {
         if ($project = ProjectManager::instance()->getProject($this->group_id)) {
@@ -1222,7 +1221,7 @@ class Tracker implements Tracker_Dispatchable_Interface
             $params['active-promoted-item-id'] = $this->getPromotedTrackerId();
 
             $title = ($title ? $title . ' - ' : '') . $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML);
-            $layout->displayHeader($project, $title, $breadcrumbs, $toolbar, $params);
+            $layout->displayHeader($project, $title, $breadcrumbs, $params);
 
             if ($this->getArtifactByMailStatus()->canCreateArtifact($this)) {
                 $assets      = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../frontend-assets', '/assets/trackers');
@@ -1374,7 +1373,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         }
 
         $params['body_class'][] = 'tracker-administration';
-        $this->displayHeader($layout, $title, $breadcrumbs, [], $params);
+        $this->displayHeader($layout, $title, $breadcrumbs, $params);
     }
 
     public function displayAdminItemHeader(Tracker_IDisplayTrackerLayout $layout, $item, string $title, array $params = [])
@@ -1555,7 +1554,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 'url'   => '#', //TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=display-masschange-form',
             ],
         ];
-        $this->displayHeader($layout, $this->name, $breadcrumbs, [], ["body_class" => ["widgetable"]]);
+        $this->displayHeader($layout, $this->name, $breadcrumbs, ["body_class" => ["widgetable"]]);
 
         $event = new TrackerMasschangeGetExternalActionsEvent($this, $user);
         EventManager::instance()->processEvent($event);
