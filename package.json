@@ -76,7 +76,7 @@
     "unplugin-vue2-script-setup": "^0.9.2",
     "vite": "^4.4.2",
     "vite-plugin-dts": "^3.5.3",
-    "vite-plugin-externals": "^0.5.1",
+    "vite-plugin-externals": "^0.6.2",
     "vitest": "^0.34.4",
     "vue-eslint-parser": "^9.0.3",
     "vue-loader": "^15.10.2",
