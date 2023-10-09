@@ -1,4 +1,4 @@
-<tracker id="T478" parent_id="0" instantiate_for_new_projects="1" is_displayed_in_new_dropdown="1">
+<tracker id="T478" parent_id="0" instantiate_for_new_projects="1">
   <name><![CDATA[Bugs]]></name>
   <item_name>bug</item_name>
   <description><![CDATA[Incident, anomalies]]></description>

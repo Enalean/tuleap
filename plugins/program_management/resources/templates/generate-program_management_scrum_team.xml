@@ -1214,7 +1214,7 @@
         <permission scope="field" REF="F26142" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
       </permissions>
     </tracker>
-    <tracker id="T36345" parent_id="0" instantiate_for_new_projects="1" is_displayed_in_new_dropdown="1">
+    <tracker id="T36345" parent_id="0" instantiate_for_new_projects="1">
       <name><![CDATA[User Stories]]></name>
       <item_name><![CDATA[story]]></item_name>
       <description><![CDATA[User Stories]]></description>

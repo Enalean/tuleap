@@ -84,6 +84,7 @@ final class IssuesTemplate
     ): void {
         $tracker = (new XMLTracker('T_issue', 'issue'))
             ->withName('Issues')
+            ->withPromoted()
             ->withColor(TrackerColor::fromName('lake-placid-blue'))
             ->withDescription('requests, bugs, tasks, activities');
 

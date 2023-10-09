@@ -407,7 +407,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $this->addHook(NewDropdownProjectLinksCollector::NAME);
 
         $this->addHook(CrossReferenceByNatureOrganizer::NAME);
-        $this->addHook(DefineIssueTemplateEvent::NAME);
         $this->addHook(IssuesTemplateDashboardDefinition::NAME);
 
         $this->addHook(NotificationsOnOwnActionsCollection::NAME);
@@ -2590,6 +2589,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $tracker_organizer->organizeArtifactReferences($by_nature_organizer);
     }
 
+    #[ListeningToEventClass]
     public function defineIssueTemplateEvent(DefineIssueTemplateEvent $event): void
     {
         \Tuleap\Tracker\Template\IssuesTemplate::defineTemplate($event->getProject(), EventManager::instance());

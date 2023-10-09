@@ -94,6 +94,29 @@ class XMLTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         assertCount(1, $xml->tracker);
         assertEquals('some_xml_id', (string) $xml->tracker[0]['id']);
         assertEquals('0', (string) $xml->tracker[0]['parent_id']);
+        self::assertEmpty((string) $xml->tracker[0]['is_displayed_in_new_dropdown']);
+        assertEquals('Bugs', (string) $xml->tracker[0]->name);
+        assertEquals('bug', (string) $xml->tracker[0]->item_name);
+        assertEquals('Collect issues', (string) $xml->tracker[0]->description);
+        assertEquals('inca-silver', (string) $xml->tracker[0]->color);
+        assertFalse(isset($xml->tracker[0]->submit_instructions));
+        assertFalse(isset($xml->tracker[0]->browse_instructions));
+    }
+
+    public function testPromoted(): void
+    {
+        $tracker = (new XMLTracker('some_xml_id', 'bug'))
+            ->withName('Bugs')
+            ->withPromoted()
+            ->withDescription('Collect issues');
+        $xml     = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>');
+
+        $tracker->export($xml);
+
+        assertCount(1, $xml->tracker);
+        assertEquals('some_xml_id', (string) $xml->tracker[0]['id']);
+        assertEquals('0', (string) $xml->tracker[0]['parent_id']);
+        assertEquals('1', (string) $xml->tracker[0]['is_displayed_in_new_dropdown']);
         assertEquals('Bugs', (string) $xml->tracker[0]->name);
         assertEquals('bug', (string) $xml->tracker[0]->item_name);
         assertEquals('Collect issues', (string) $xml->tracker[0]->description);
