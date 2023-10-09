@@ -309,7 +309,7 @@ final class TrackerCreationPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $this->project_manager->shouldReceive('getProject')->with('101')->andReturn($project);
 
         $this->current_user->shouldReceive('getProjects')->andReturn(['101']);
-        $this->tracker_factory->shouldReceive('getTrackersByGroupIdUserCanView')
+        $this->tracker_factory->shouldReceive('getTrackersByProjectIdUserCanView')
             ->with('101', $this->current_user)
             ->andReturn([
                 $tracker_user_not_admin,

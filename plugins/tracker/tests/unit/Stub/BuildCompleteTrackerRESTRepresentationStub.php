@@ -32,42 +32,34 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class BuildCompleteTrackerRESTRepresentationStub implements BuildCompleteTrackerRESTRepresentation
 {
-    private function __construct(private CompleteTrackerRepresentation $representation)
+    private function __construct()
     {
+    }
+
+    public static function build(): self
+    {
+        return new self();
     }
 
     public function getTrackerRepresentationInTrackerContext(PFUser $user, Tracker $tracker): CompleteTrackerRepresentation
     {
-        return $this->representation;
+        return $this->buildRepresentation($tracker);
     }
 
     public function getTrackerRepresentationInArtifactContext(PFUser $user, Artifact $artifact): CompleteTrackerRepresentation
     {
-        return $this->representation;
-    }
-
-    public static function fromTracker(Tracker $tracker): self
-    {
-        return new self(
-            CompleteTrackerRepresentation::build(
-                $tracker,
-                [],
-                [],
-                []
-            )
+        return $this->buildRepresentation(
+            TrackerTestBuilder::aTracker()->withProject(ProjectTestBuilder::aProject()->build())->build()
         );
     }
 
-    public static function defaultRepresentation(): self
+    private function buildRepresentation(Tracker $tracker): CompleteTrackerRepresentation
     {
-        $tracker = TrackerTestBuilder::aTracker()->withProject(ProjectTestBuilder::aProject()->build())->build();
-        return new self(
-            CompleteTrackerRepresentation::build(
-                $tracker,
-                [],
-                [],
-                []
-            )
+        return CompleteTrackerRepresentation::build(
+            $tracker,
+            [],
+            [],
+            []
         );
     }
 }

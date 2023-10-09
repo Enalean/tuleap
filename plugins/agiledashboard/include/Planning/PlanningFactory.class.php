@@ -589,7 +589,7 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
             }
             return $trackers;
         } else {
-            return array_values($this->tracker_factory->getTrackersByGroupIdUserCanView($group_id, $user));
+            return array_values($this->tracker_factory->getTrackersByProjectIdUserCanView($group_id, $user));
         }
     }
 

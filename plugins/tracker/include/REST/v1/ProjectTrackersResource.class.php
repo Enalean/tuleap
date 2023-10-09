@@ -185,12 +185,11 @@ class ProjectTrackersResource extends AuthenticatedResource
             new WorkflowRestBuilder()
         );
 
-        $cannot_create_reasons  = new ArtifactCannotBeCreatedReasonsGetter(
+        $cannot_create_reasons = new ArtifactCannotBeCreatedReasonsGetter(
             SubmissionPermissionVerifier::instance(),
             $form_element_factory,
             Tracker_Semantic_TitleFactory::instance()
         );
-        $representation_builder = new TrackerRepresentationBuilder(TrackerFactory::instance(), $builder, $cannot_create_reasons);
 
         $semantics_to_check = CollectionOfCreationSemanticToCheck::fromREST($with_creation_semantic_check)->match(
             fn(CollectionOfCreationSemanticToCheck $valid_semantic_to_check) => $valid_semantic_to_check,
@@ -198,20 +197,31 @@ class ProjectTrackersResource extends AuthenticatedResource
         );
 
         if (empty($json_query) || isset($json_query["is_tracker_admin"])) {
-            $all_trackers = $representation_builder->buildTrackerRepresentations(
-                $user,
+            $representation_builder     = new TrackerRepresentationBuilder($builder, $cannot_create_reasons);
+            $project_trackers_retriever = new ProjectTrackersRetriever(
+                TrackerFactory::instance(),
+                TrackerFactory::instance()
+            );
+
+            $project_trackers = $project_trackers_retriever->getFilteredProjectTrackers(
                 $project,
+                $user,
+                $filter_on_tracker_administration_permission
+            );
+
+            $tracker_representations = $representation_builder->buildTrackerRepresentations(
+                $user,
+                $project_trackers,
                 $representation,
                 $limit,
                 $offset,
-                $filter_on_tracker_administration_permission,
                 $semantics_to_check
             );
 
             $this->sendAllowHeaders();
-            $this->sendPaginationHeaders($limit, $offset, count($all_trackers));
+            $this->sendPaginationHeaders($limit, $offset, count($project_trackers));
 
-            return $all_trackers;
+            return $tracker_representations;
         }
 
         return $this->getTrackersWithCriteria($project, $representation, $limit, $offset, $json_query);

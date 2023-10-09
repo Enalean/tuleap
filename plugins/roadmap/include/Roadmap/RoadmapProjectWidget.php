@@ -137,7 +137,7 @@ final class RoadmapProjectWidget extends \Widget
                 $this->default_timescale,
                 $this->lvl1_iteration_tracker_id,
                 $this->lvl2_iteration_tracker_id,
-                $this->tracker_factory->getTrackersByGroupIdUserCanView(
+                $this->tracker_factory->getTrackersByProjectIdUserCanView(
                     $this->owner_id,
                     $this->getCurrentUser()
                 )
@@ -157,7 +157,7 @@ final class RoadmapProjectWidget extends \Widget
                 self::DEFAULT_TIMESCALE_MONTH,
                 null,
                 null,
-                $this->tracker_factory->getTrackersByGroupIdUserCanView(
+                $this->tracker_factory->getTrackersByProjectIdUserCanView(
                     $this->owner_id,
                     $this->getCurrentUser()
                 )

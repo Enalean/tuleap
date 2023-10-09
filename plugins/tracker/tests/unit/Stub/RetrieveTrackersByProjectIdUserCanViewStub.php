@@ -20,15 +20,31 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker;
+namespace Tuleap\Tracker\Test\Stub;
 
 use PFUser;
 use Tracker;
+use Tuleap\Tracker\RetrieveTrackersByProjectIdUserCanView;
 
-interface RetrieveTrackersByGroupIdAndUserCanView
+final class RetrieveTrackersByProjectIdUserCanViewStub implements RetrieveTrackersByProjectIdUserCanView
 {
     /**
-     * @return Tracker[]
+     * @param Tracker[] $trackers
      */
-    public function getTrackersByGroupIdUserCanView(int|string $project_id, PFUser $user): array;
+    private function __construct(private readonly array $trackers)
+    {
+    }
+
+    /**
+     * @no-named-arguments
+     */
+    public static function withTrackers(Tracker $first_tracker, Tracker ...$other_trackers): self
+    {
+        return new self([$first_tracker, ...$other_trackers]);
+    }
+
+    public function getTrackersByProjectIdUserCanView(int|string $project_id, PFUser $user): array
+    {
+        return $this->trackers;
+    }
 }

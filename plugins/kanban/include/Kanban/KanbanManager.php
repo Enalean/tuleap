@@ -57,7 +57,7 @@ class KanbanManager
     public function getTrackersWithKanbanUsage(int $project_id, PFUser $user): array
     {
         $trackers     = [];
-        $all_trackers = $this->tracker_factory->getTrackersByGroupIdUserCanView($project_id, $user);
+        $all_trackers = $this->tracker_factory->getTrackersByProjectIdUserCanView($project_id, $user);
 
         foreach ($all_trackers as $tracker) {
             $tracker_representation         = [];

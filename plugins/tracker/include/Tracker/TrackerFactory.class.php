@@ -35,7 +35,8 @@ use Tuleap\Tracker\Notifications\Settings\NotificationSettingsDuplicator;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDuplicationDao;
 use Tuleap\Tracker\Notifications\UsersToNotifyDuplicationDao;
 use Tuleap\Tracker\PromotedTrackerDao;
-use Tuleap\Tracker\RetrieveTrackersByGroupIdAndUserCanView;
+use Tuleap\Tracker\RetrieveTrackersByProjectIdUserCanAdministrate;
+use Tuleap\Tracker\RetrieveTrackersByProjectIdUserCanView;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDuplicator;
 use Tuleap\Tracker\TrackerColor;
@@ -49,7 +50,7 @@ use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsRetriever;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 use Tuleap\Tracker\Workflow\WorkflowRulesManagerLoopSafeGuard;
 
-class TrackerFactory implements RetrieveTracker, RetrieveTrackersByGroupIdAndUserCanView
+class TrackerFactory implements RetrieveTracker, RetrieveTrackersByProjectIdUserCanView, RetrieveTrackersByProjectIdUserCanAdministrate
 {
     /**
      * Get the trackers required by agile dashboard
@@ -196,7 +197,7 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByGroupIdAndUse
     /**
      * @return Tracker[]
      */
-    public function getTrackersByGroupIdUserCanView(int|string $project_id, PFUser $user): array
+    public function getTrackersByProjectIdUserCanView(int|string $project_id, PFUser $user): array
     {
         $trackers = [];
         foreach ($this->getDao()->searchByGroupId($project_id) as $row) {
@@ -212,7 +213,7 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByGroupIdAndUse
     /**
      * @return Tracker[]
      */
-    public function getTrackersByProjectIdUserCanAdministration($project_id, PFUser $user)
+    public function getTrackersByProjectIdUserCanAdministrate(int|string $project_id, PFUser $user): array
     {
         $trackers = [];
         foreach ($this->getDao()->searchByGroupId($project_id) as $row) {

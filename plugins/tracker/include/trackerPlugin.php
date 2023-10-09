@@ -1580,7 +1580,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $project = $params['project'];
         $user    = $params['user'];
 
-        $trackers = $this->getTrackerFactory()->getTrackersByGroupIdUserCanView($project->getID(), $user);
+        $trackers = $this->getTrackerFactory()->getTrackersByProjectIdUserCanView($project->getID(), $user);
         foreach ($trackers as $tracker) {
             if ($tracker->hasFieldBindedToUserGroupsViewableByUser($user)) {
                 $params['can_access'] = true;
@@ -2407,7 +2407,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
 
         $project_with_tracker_administration = [];
         foreach ($matching_projects_rows as $project_row) {
-            $trackers = $this->getTrackerFactory()->getTrackersByProjectIdUserCanAdministration(
+            $trackers = $this->getTrackerFactory()->getTrackersByProjectIdUserCanAdministrate(
                 $project_row['group_id'],
                 $user
             );
