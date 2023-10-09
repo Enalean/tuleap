@@ -134,7 +134,6 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
             $project,
             $title,
             $breadcrumbs,
-            [],
             \Tuleap\Layout\HeaderConfigurationBuilder::get($title)
                 ->inProject($project, \trackerPlugin::SERVICE_SHORTNAME)
                 ->build()

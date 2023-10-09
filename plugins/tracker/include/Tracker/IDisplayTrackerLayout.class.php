@@ -25,21 +25,7 @@ use Tuleap\Layout\HeaderConfiguration;
  */
 interface Tracker_IDisplayTrackerLayout
 {
-    /**
-     * Display header for the current service
-     *
-     * @param Project $project    The project
-     * @param string  $title      The title for this page
-     * @param array   $breadcrumbs The breadcrumbs for this page
-     * @param mixed   $toolbar    The toolbar
-     *
-     */
-    public function displayHeader($project, $title, $breadcrumbs, $toolbar, HeaderConfiguration|array $params): void;
+    public function displayHeader(Project $project, string $title, array $breadcrumbs, HeaderConfiguration|array $params): void;
 
-    /**
-     * Display footer for the current service.
-     *
-     * @param Project $project The project
-     */
-    public function displayFooter($project);
+    public function displayFooter(Project $project): void;
 }

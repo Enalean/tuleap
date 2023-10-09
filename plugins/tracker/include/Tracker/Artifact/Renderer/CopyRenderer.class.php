@@ -72,7 +72,6 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer
             $this->layout,
             $title,
             $breadcrumbs,
-            [],
             ['body_class' => ['widgetable', 'tracker-artifact-view-body']]
         );
     }

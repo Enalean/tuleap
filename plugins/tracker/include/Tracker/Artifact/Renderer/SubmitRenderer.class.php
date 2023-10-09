@@ -57,7 +57,6 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
             $this->layout,
             $this->tracker->name,
             $breadcrumbs,
-            [],
             ['body_class' => ['widgetable']]
         );
         ListFieldsIncluder::includeListFieldsAssets();
