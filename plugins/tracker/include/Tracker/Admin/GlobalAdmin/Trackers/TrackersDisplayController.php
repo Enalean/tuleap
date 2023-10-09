@@ -29,6 +29,7 @@ use TemplateRendererFactory;
 use TrackerFactory;
 use TrackerManager;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -146,12 +147,15 @@ class TrackersDisplayController implements DispatchableWithRequest, Dispatchable
                 'global-admin-trackers.js'
             )
         );
+        $title = dgettext('tuleap-tracker', 'Trackers');
         $this->tracker_manager->displayHeader(
             $project,
-            dgettext('tuleap-tracker', 'Trackers'),
+            $title,
             [],
             [],
-            []
+            HeaderConfigurationBuilder::get($title)
+                ->inProject($project, \trackerPlugin::SERVICE_SHORTNAME)
+                ->build()
         );
         $renderer = $this->renderer_factory->getRenderer(TRACKER_TEMPLATE_DIR);
         $renderer->renderToPage(

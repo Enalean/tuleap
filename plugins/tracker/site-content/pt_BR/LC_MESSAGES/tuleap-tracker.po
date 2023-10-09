@@ -523,9 +523,6 @@ msgstr ""
 msgid "Artifacts"
 msgstr ""
 
-msgid "Artifacts Data Import"
-msgstr ""
-
 msgid ""
 "Artifacts cannot be considered <strong>done</strong> because there is no "
 "value selected for this semantic."
@@ -1445,16 +1442,10 @@ msgid ""
 "field below. Use a comma to separate each ids if you have more than one."
 msgstr ""
 
-msgid "Import"
-msgstr ""
-
 msgid "Import / Export"
 msgstr ""
 
 msgid "Import Artifacts"
-msgstr ""
-
-msgid "Import Format"
 msgstr ""
 
 msgid "Import failed."
@@ -2471,9 +2462,6 @@ msgid "Shortname"
 msgstr ""
 
 msgid "Show"
-msgstr ""
-
-msgid "Show Format"
 msgstr ""
 
 msgid "Show diff"

@@ -23,6 +23,7 @@ use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Event\Events\ProjectProviderEvent;
+use Tuleap\Layout\HeaderConfiguration;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
 use Tuleap\Project\MappingRegistry;
@@ -199,9 +200,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                                     $this->redirectToTrackerHomepage($group_id);
                                 }
                                 break;
-                            case 'csvimportoverview':
-                                $this->displayCSVImportOverview($project, $group_id, $user);
-                                break;
                             case 'restore-tracker':
                                 if ($global_admin_permissions_checker->doesUserHaveTrackerGlobalAdminRightsOnProject($project, $user)) {
                                     $tracker_id = $request->get('tracker_id');
@@ -293,7 +291,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         return $this->getTrackerFactory()->restoreDeletedTracker($tracker_id);
     }
 
-    public function displayHeader($project, $title, $breadcrumbs, $toolbar, array $params)
+    public function displayHeader($project, $title, $breadcrumbs, $toolbar, HeaderConfiguration|array $params): void
     {
         $breadcrumbs = array_merge(
             [
@@ -410,9 +408,16 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                 'url'   => TRACKER_BASE_URL . '/?group_id=' . $project->group_id . '&amp;func=create',
             ],
         ];
-        $toolbar     = [];
-        $params      = [];
-        $this->displayHeader($project, 'Trackers', $breadcrumbs, $toolbar, $params);
+        $title       = 'Trackers';
+        $this->displayHeader(
+            $project,
+            $title,
+            $breadcrumbs,
+            [],
+            \Tuleap\Layout\HeaderConfigurationBuilder::get($title)
+                ->inProject($project, trackerPlugin::SERVICE_SHORTNAME)
+                ->build()
+        );
 
         $hp = Codendi_HTMLPurifier::instance();
 
@@ -549,10 +554,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         $html        = '';
         $trackers    = $this->getTrackerFactory()->getTrackersByGroupId($project->getID());
 
-        $toolbar = [];
-
-        $params = [];
-
         $permissions_checker = new \Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker(
             new User_ForgeUserGroupPermissionsManager(
                 new User_ForgeUserGroupPermissionsDao()
@@ -563,7 +564,16 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
             $this->informUserOfOngoingMigrations($project);
         }
 
-        $this->displayHeader($project, dgettext('tuleap-tracker', 'Trackers'), $breadcrumbs, $toolbar, $params);
+        $title = dgettext('tuleap-tracker', 'Trackers');
+        $this->displayHeader(
+            $project,
+            $title,
+            $breadcrumbs,
+            [],
+            \Tuleap\Layout\HeaderConfigurationBuilder::get($title)
+                ->inProject($project, trackerPlugin::SERVICE_SHORTNAME)
+                ->build()
+        );
         $html .= '<h1 class="trackers-homepage-title">' . dgettext('tuleap-tracker', 'Trackers');
 
         if ($is_tracker_admin) {
@@ -698,45 +708,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
     private function getPendingJiraCreationDao(): PendingJiraImportDao
     {
         return new PendingJiraImportDao();
-    }
-
-    protected function displayCSVImportOverview($project, $group_id, $user)
-    {
-        $hp          = Codendi_HTMLPurifier::instance();
-        $breadcrumbs = [];
-        $toolbar     = [];
-        $params      = [];
-        $this->displayHeader($project, dgettext('tuleap-tracker', 'Trackers'), $breadcrumbs, $toolbar, $params);
-
-        $html = '';
-
-        $tf       = TrackerFactory::instance();
-        $trackers = $tf->getTrackersByGroupId($group_id);
-
-        // Show all the fields currently available in the system
-        echo '<table width="100%" border="0" cellspacing="1" cellpadding="2">';
-        echo ' <tr class="boxtable">';
-        echo '  <td class="boxtitle">&nbsp;</td>';
-        echo '  <td class="boxtitle">';
-        echo '   <div align="center"><b>' . dgettext('tuleap-tracker', 'Artifacts Data Import') . '</b></div>';
-        echo '  </td>';
-        echo '  <td class="boxtitle">';
-        echo '   <div align="center"><b>' . dgettext('tuleap-tracker', 'Import Format') . '</b></div>';
-        echo '  </td>';
-        echo ' </tr>';
-
-        $cpt = 0;
-        foreach ($trackers as $tracker) {
-            if ($tracker->userIsAdmin($user)) {
-                echo '<tr class="' . util_get_alt_row_color($cpt) . '">';
-                echo ' <td><b>' . dgettext('tuleap-tracker', 'Tracker') . ': ' . $hp->purify($tracker->getName(), CODENDI_PURIFIER_CONVERT_HTML) . '</b></td>';
-                echo ' <td align="center"><a href="' . TRACKER_BASE_URL . '/?tracker=' . (int) ($tracker->getID()) . '&func=admin-csvimport">' . dgettext('tuleap-tracker', 'Import') . '</a></td>';
-                echo ' <td align="center"><a href="' . TRACKER_BASE_URL . '/?tracker=' . (int) ($tracker->getID()) . '&func=csvimport-showformat">' . dgettext('tuleap-tracker', 'Show Format') . '</a></td>';
-                echo '</tr>';
-            }
-        }
-        echo '</table>';
-        $this->displayFooter($project);
     }
 
     public function fetchTrackerSwitcher(PFUser $user, $separator, ?Project $include_project = null, ?Tracker $current_tracker = null)
