@@ -74,16 +74,6 @@
         echo '); </script>';
     }
 
-    /* protected */ public function _getAdditionalHtmlParams($params)
-    {
-        $project = ProjectManager::instance()->getProjectById((int) $params['group_id']);
-
-        return [
-            'project' => $project,
-            'toptab'  => 'docman',
-        ];
-    }
-
     /* protected */ public function _getJSDocmanParameters($params)
     {
         return [];

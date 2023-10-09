@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\HeaderConfigurationBuilder;
+
 /* abstract */ class Docman_View_Header extends Docman_View_View
 {
     public function _header($params)
@@ -29,35 +31,45 @@
         }
 
         if (isset($params['title'])) {
-            $htmlParams['title'] = $params['title'];
+            $title = $params['title'];
         } else {
-            $htmlParams['title'] = $this->_getTitle($params);
+            $title = $this->_getTitle($params);
         }
 
-        $htmlParams = array_merge($htmlParams, $this->_getAdditionalHtmlParams($params));
-        if (isset($params['docman'])) {
-            $htmlParams['service_name'] = $params['docman']->plugin->getServiceShortname();
+        $service = null;
+        $project = $this->getProjectFromParams($params);
+
+        if ($project) {
+            $service = $project->getService(DocmanPlugin::SERVICE_SHORTNAME);
+            \assert($service instanceof Tuleap\Docman\ServiceDocman);
         }
 
-        if (isset($params['pv']) && $params['pv'] > 0) {
-            $htmlParams['pv'] = $params['pv'];
-            $GLOBALS['HTML']->pv_header($htmlParams);
-        } else {
-            $project = $this->getProjectFromParams($params);
-            if ($project) {
-                $service = $project->getService($htmlParams['service_name']);
-                \assert($service instanceof Tuleap\Docman\ServiceDocman);
-                if ($service) {
-                    $service->displayHeader($htmlParams['title'], $this->getBreadcrumbs($params, $project, $service), $this->getToolbar($params));
-                } else {
-                    $GLOBALS['Response']->addFeedback(Feedback::ERROR, 'Service unavailable in project');
-                    $GLOBALS['Response']->redirect('/');
-                }
-            } else {
-                $GLOBALS['HTML']->includeCalendarScripts();
-                $htmlParams['body_class'] = ['docman-body'];
-                site_header($htmlParams);
+        if ($project) {
+            if (! $service) {
+                $GLOBALS['Response']->addFeedback(Feedback::ERROR, 'Service unavailable in project');
+                $GLOBALS['Response']->redirect('/');
+                return;
             }
+
+            if (isset($params['pv']) && $params['pv'] > 0) {
+                $params = \Tuleap\Layout\HeaderConfigurationBuilder::get($title)
+                    ->inProject($project, (string) $service->getId())
+                    ->withBodyClass(['service-' . DocmanPlugin::SERVICE_SHORTNAME])
+                    ->withPrinterVersion($params['pv'])
+                    ->build();
+                $GLOBALS['HTML']->pv_header($params);
+                return;
+            }
+
+            $service->displayHeader($title, $this->getBreadcrumbs($params, $project, $service), $this->getToolbar($params));
+        } else {
+            $GLOBALS['HTML']->includeCalendarScripts();
+
+            $params = HeaderConfigurationBuilder::get($title)
+                ->withBodyClass(['docman-body'])
+                ->build();
+
+            site_header($params);
         }
     }
 
@@ -102,11 +114,6 @@
         } else {
             $GLOBALS['HTML']->footer([]);
         }
-    }
-
-    /* protected */ public function _getAdditionalHtmlParams($params)
-    {
-        return [];
     }
 
     /* protected */ public function _feedback($params)
