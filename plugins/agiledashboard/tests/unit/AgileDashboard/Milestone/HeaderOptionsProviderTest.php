@@ -100,50 +100,6 @@ class HeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn($this->backlog);
     }
 
-    public function testGetHeaderOptionsForPV2(): void
-    {
-        $this->header_options_for_planning_provider->shouldReceive('addPlanningOptions')->once();
-        $this->backlog->shouldReceive(['getDescendantTrackers' => []]);
-        $this->parent_retriever->shouldReceive(['getCreatableParentTrackers' => []]);
-
-        self::assertEquals(
-            [
-                'include_fat_combined' => false,
-                'body_class'           => ['agiledashboard-body'],
-            ],
-            $this->provider->getHeaderOptions($this->user, $this->milestone, 'planning-v2'),
-        );
-    }
-
-    public function testGetHeaderOptionsForTopPV2(): void
-    {
-        $this->header_options_for_planning_provider->shouldReceive('addPlanningOptions')->once();
-        $this->backlog->shouldReceive(['getDescendantTrackers' => []]);
-        $this->parent_retriever->shouldReceive(['getCreatableParentTrackers' => []]);
-
-        self::assertEquals(
-            [
-                'include_fat_combined' => false,
-                'body_class'           => ['agiledashboard-body'],
-            ],
-            $this->provider->getHeaderOptions($this->user, $this->milestone, 'topplanning-v2'),
-        );
-    }
-
-    public function testGetHeaderOptionsForOverview(): void
-    {
-        $this->backlog->shouldReceive(['getDescendantTrackers' => []]);
-        $this->parent_retriever->shouldReceive(['getCreatableParentTrackers' => []]);
-
-        self::assertEquals(
-            [
-                'include_fat_combined' => true,
-                'body_class'           => ['agiledashboard-body'],
-            ],
-            $this->provider->getHeaderOptions($this->user, $this->milestone, 'details'),
-        );
-    }
-
     public function testCurrentContextSectionForMilestone(): void
     {
         $epic = Mockery::mock(Tracker::class)
@@ -214,12 +170,12 @@ class HeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->backlog->shouldReceive(['getDescendantTrackers' => [$story, $requirement, $task]]);
         $this->parent_retriever->shouldReceive(['getCreatableParentTrackers' => [$epic, $top_requirement]]);
 
-        $header_options = $this->provider->getHeaderOptions($this->user, $this->milestone, 'details');
-        self::assertEquals('Milestone title', $header_options['new_dropdown_current_context_section']->label);
-        self::assertCount(3, $header_options['new_dropdown_current_context_section']->links);
-        self::assertEquals('New story', $header_options['new_dropdown_current_context_section']->links[0]->label);
-        self::assertEquals('New task', $header_options['new_dropdown_current_context_section']->links[1]->label);
-        self::assertEquals('New epic', $header_options['new_dropdown_current_context_section']->links[2]->label);
+        $section = $this->provider->getCurrentContextSection($this->user, $this->milestone, 'details');
+        self::assertEquals('Milestone title', $section->unwrapOr(null)->label);
+        self::assertCount(3, $section->unwrapOr(null)->links);
+        self::assertEquals('New story', $section->unwrapOr(null)->links[0]->label);
+        self::assertEquals('New task', $section->unwrapOr(null)->links[1]->label);
+        self::assertEquals('New epic', $section->unwrapOr(null)->links[2]->label);
     }
 
     public function testCurrentContextSectionForTopBacklog(): void
@@ -311,11 +267,11 @@ class HeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
             )->getMock();
         $this->parent_retriever->shouldReceive(['getCreatableParentTrackers' => [$epic, $top_requirement]]);
 
-        $header_options = $this->provider->getHeaderOptions($this->user, $top_milestone, 'details');
-        self::assertEquals('Top backlog', $header_options['new_dropdown_current_context_section']->label);
-        self::assertCount(3, $header_options['new_dropdown_current_context_section']->links);
-        self::assertEquals('New story', $header_options['new_dropdown_current_context_section']->links[0]->label);
-        self::assertEquals('New task', $header_options['new_dropdown_current_context_section']->links[1]->label);
-        self::assertEquals('New epic', $header_options['new_dropdown_current_context_section']->links[2]->label);
+        $section = $this->provider->getCurrentContextSection($this->user, $top_milestone, 'details');
+        self::assertEquals('Top backlog', $section->unwrapOr(null)->label);
+        self::assertCount(3, $section->unwrapOr(null)->links);
+        self::assertEquals('New story', $section->unwrapOr(null)->links[0]->label);
+        self::assertEquals('New task', $section->unwrapOr(null)->links[1]->label);
+        self::assertEquals('New epic', $section->unwrapOr(null)->links[2]->label);
     }
 }

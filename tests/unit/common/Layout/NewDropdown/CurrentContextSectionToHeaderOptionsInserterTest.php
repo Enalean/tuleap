@@ -24,6 +24,7 @@ namespace Tuleap\Layout\NewDropdown;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Option\Option;
 
 class CurrentContextSectionToHeaderOptionsInserterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -33,12 +34,10 @@ class CurrentContextSectionToHeaderOptionsInserterTest extends \Tuleap\Test\PHPU
     {
         $link = Mockery::mock(NewDropdownLinkPresenter::class);
 
-        $header_options = [];
+        $section = (new CurrentContextSectionToHeaderOptionsInserter())
+            ->addLinkToCurrentContextSection('Section label', $link, Option::nothing(NewDropdownLinkSectionPresenter::class))
+            ->unwrapOr(null);
 
-        (new CurrentContextSectionToHeaderOptionsInserter())
-            ->addLinkToCurrentContextSection('Section label', $link, $header_options);
-
-        $section = $header_options['new_dropdown_current_context_section'];
         self::assertEquals('Section label', $section->label);
         self::assertEquals($link, $section->links[0]);
     }
@@ -48,17 +47,17 @@ class CurrentContextSectionToHeaderOptionsInserterTest extends \Tuleap\Test\PHPU
         $link          = Mockery::mock(NewDropdownLinkPresenter::class);
         $existing_link = Mockery::mock(NewDropdownLinkPresenter::class);
 
-        $header_options = [
-            'new_dropdown_current_context_section' => new NewDropdownLinkSectionPresenter(
+        $existing = Option::fromValue(
+            new NewDropdownLinkSectionPresenter(
                 'Existing section',
                 [$existing_link]
             ),
-        ];
+        );
 
-        (new CurrentContextSectionToHeaderOptionsInserter())
-            ->addLinkToCurrentContextSection('Section label', $link, $header_options);
+        $section = (new CurrentContextSectionToHeaderOptionsInserter())
+            ->addLinkToCurrentContextSection('Section label', $link, $existing)
+            ->unwrapOr(null);
 
-        $section = $header_options['new_dropdown_current_context_section'];
         self::assertEquals('Existing section', $section->label);
         self::assertEquals($existing_link, $section->links[0]);
         self::assertEquals($link, $section->links[1]);

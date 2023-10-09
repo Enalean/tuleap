@@ -29,10 +29,11 @@ use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
 use Tuleap\Layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\Layout\NewDropdown\NewDropdownLinkPresenter;
 use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
+use Tuleap\Option\Option;
 use Tuleap\TestManagement\Config;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 
-class TestPlanHeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TestPlanHeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&HeaderOptionsProvider
@@ -78,58 +79,24 @@ class TestPlanHeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->milestone->method('getArtifactTitle')->willReturn('Milestone title');
     }
 
-    public function testItAddsTheFluidMainToExistingMainClasses(): void
-    {
-        $this->header_options_provider
-            ->method('getHeaderOptions')
-            ->willReturn([
-                'main_classes' => ['toto'],
-            ]);
-
-        $this->testmanagement_config
-            ->method('getCampaignTrackerId')
-            ->willReturn(false);
-
-        $header_options = $this->provider->getHeaderOptions($this->user, $this->milestone);
-
-        self::assertEquals(['toto', 'fluid-main'], $header_options['main_classes']);
-    }
-
-    public function testItAddsTheFluidMainToMainClasses(): void
-    {
-        $this->header_options_provider
-            ->method('getHeaderOptions')
-            ->willReturn([]);
-
-        $this->testmanagement_config
-            ->method('getCampaignTrackerId')
-            ->willReturn(false);
-
-        $header_options = $this->provider->getHeaderOptions($this->user, $this->milestone);
-
-        self::assertEquals(['fluid-main'], $header_options['main_classes']);
-    }
-
     public function testItDoesNotAddLinkToCampaignInCurrentContextSectionIfThereIsNoCampaignTrackerIdInConfig(): void
     {
         $this->header_options_provider
-            ->method('getHeaderOptions')
-            ->willReturn([]);
+            ->method('getCurrentContextSection')
+            ->willReturn(Option::nothing(NewDropdownLinkSectionPresenter::class));
 
         $this->testmanagement_config
             ->method('getCampaignTrackerId')
             ->willReturn(false);
 
-        $header_options = $this->provider->getHeaderOptions($this->user, $this->milestone);
-
-        self::assertFalse(isset($header_options['new_dropdown_current_context_section']));
+        self::assertTrue($this->provider->getCurrentContextSection($this->user, $this->milestone)->isNothing());
     }
 
     public function testItDoesNotAddLinkToCampaignInCurrentContextSectionIfTheCampaignTrackerCannotBeInstantiated(): void
     {
         $this->header_options_provider
-            ->method('getHeaderOptions')
-            ->willReturn([]);
+            ->method('getCurrentContextSection')
+            ->willReturn(Option::nothing(NewDropdownLinkSectionPresenter::class));
 
         $this->testmanagement_config
             ->method('getCampaignTrackerId')
@@ -139,16 +106,14 @@ class TestPlanHeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getTrackerById')
             ->willReturn(null);
 
-        $header_options = $this->provider->getHeaderOptions($this->user, $this->milestone);
-
-        self::assertFalse(isset($header_options['new_dropdown_current_context_section']));
+        self::assertTrue($this->provider->getCurrentContextSection($this->user, $this->milestone)->isNothing());
     }
 
     public function testItDoesNotAddLinkToCampaignInCurrentContextSectionIfUserCannotCreateArtifactInTheCampaignTracker(): void
     {
         $this->header_options_provider
-            ->method('getHeaderOptions')
-            ->willReturn([]);
+            ->method('getCurrentContextSection')
+            ->willReturn(Option::nothing(NewDropdownLinkSectionPresenter::class));
 
         $this->testmanagement_config
             ->method('getCampaignTrackerId')
@@ -161,16 +126,14 @@ class TestPlanHeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getTrackerById')
             ->willReturn($tracker);
 
-        $header_options = $this->provider->getHeaderOptions($this->user, $this->milestone);
-
-        self::assertFalse(isset($header_options['new_dropdown_current_context_section']));
+        self::assertTrue($this->provider->getCurrentContextSection($this->user, $this->milestone)->isNothing());
     }
 
     public function testItAddsLinkToCampaignInCurrentContextSection(): NewDropdownLinkSectionPresenter
     {
         $this->header_options_provider
-            ->method('getHeaderOptions')
-            ->willReturn([]);
+            ->method('getCurrentContextSection')
+            ->willReturn(Option::nothing(NewDropdownLinkSectionPresenter::class));
 
         $this->testmanagement_config
             ->method('getCampaignTrackerId')
@@ -186,9 +149,8 @@ class TestPlanHeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getTrackerById')
             ->willReturn($tracker);
 
-        $header_options = $this->provider->getHeaderOptions($this->user, $this->milestone);
+        $section = $this->provider->getCurrentContextSection($this->user, $this->milestone)->unwrapOr(null);
 
-        $section = $header_options['new_dropdown_current_context_section'];
         self::assertEquals('Milestone title', $section->label);
         self::assertCount(1, $section->links);
         self::assertEquals('New campaign', $section->links[0]->label);
@@ -208,15 +170,15 @@ class TestPlanHeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItAddsLinkToCampaignInExistingCurrentContextSection(): void
     {
         $this->header_options_provider
-            ->method('getHeaderOptions')
-            ->willReturn([
-                'new_dropdown_current_context_section' => new NewDropdownLinkSectionPresenter(
+            ->method('getCurrentContextSection')
+            ->willReturn(Option::fromValue(
+                new NewDropdownLinkSectionPresenter(
                     'Milestone title',
                     [
                         new NewDropdownLinkPresenter('url', 'New story', 'icon', []),
                     ]
                 ),
-            ]);
+            ));
 
         $this->testmanagement_config
             ->method('getCampaignTrackerId')
@@ -232,9 +194,8 @@ class TestPlanHeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getTrackerById')
             ->willReturn($tracker);
 
-        $header_options = $this->provider->getHeaderOptions($this->user, $this->milestone);
+        $section = $this->provider->getCurrentContextSection($this->user, $this->milestone)->unwrapOr(null);
 
-        $section = $header_options['new_dropdown_current_context_section'];
         self::assertEquals('Milestone title', $section->label);
         self::assertCount(2, $section->links);
         self::assertEquals('New story', $section->links[0]->label);

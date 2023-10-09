@@ -46,4 +46,17 @@ abstract class AgileDashboard_Pane
      * @return string eg: '<table>...</table>'
      */
     abstract public function getMinimalContent();
+
+    /**
+     * @return list<string>
+     */
+    public function getBodyClass(): array
+    {
+        return [];
+    }
+
+    public function shouldIncludeFatCombined(): bool
+    {
+        return false;
+    }
 }

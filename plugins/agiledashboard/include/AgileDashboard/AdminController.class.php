@@ -70,6 +70,7 @@ use Tuleap\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
+use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 use UserManager;
@@ -171,7 +172,11 @@ class AdminController extends BaseController
         return $breadcrumbs;
     }
 
-    public function adminScrum(): string
+    /**
+     * @param \Closure(string $title, BreadCrumbCollection $breadcrumbs, \Tuleap\Layout\HeaderConfiguration $header_configuration): void $displayHeader
+     * @param \Closure(): void $displayFooter
+     */
+    public function adminScrum(\Closure $displayHeader, \Closure $displayFooter): void
     {
         $this->redirectToKanbanPaneIfScrumAccessIsBlocked();
         $this->layout->addJavascriptAsset(
@@ -184,7 +189,21 @@ class AdminController extends BaseController
             )
         );
 
-        return $this->renderToString(
+        $is_project_allowed_to_use_split_kanban = $this->split_kanban_configuration_checker
+            ->isProjectAllowedToUseSplitKanban($this->project);
+
+        $title = $is_project_allowed_to_use_split_kanban
+            ? dgettext('tuleap-agiledashboard', 'Scrum Administration of Backlog')
+            : dgettext('tuleap-agiledashboard', 'Scrum Administration of Agile Dashboard');
+
+        $displayHeader(
+            $title,
+            $this->getBreadcrumbs(),
+            HeaderConfigurationBuilder::get($title)
+                ->inProject($this->project, \AgileDashboardPlugin::PLUGIN_SHORTNAME)
+                ->build()
+        );
+        echo $this->renderToString(
             'admin-scrum',
             $this->scrum_presenter_builder->getAdminScrumPresenter(
                 $this->getCurrentUser(),
@@ -192,28 +211,58 @@ class AdminController extends BaseController
                 $this->additional_scrum_sections
             )
         );
+        $displayFooter();
     }
 
-    public function adminKanban(): string
+    /**
+     * @param \Closure(string $title, BreadCrumbCollection $breadcrumbs, \Tuleap\Layout\HeaderConfiguration $header_configuration): void $displayHeader
+     * @param \Closure(): void $displayFooter
+     */
+    public function adminKanban(\Closure $displayHeader, \Closure $displayFooter): void
     {
-        return $this->renderToString(
+        $title = dgettext('tuleap-agiledashboard', 'Kanban Administration of Agile Dashboard');
+
+        $displayHeader(
+            $title,
+            $this->getBreadcrumbs(),
+            HeaderConfigurationBuilder::get($title)
+                ->inProject($this->project, \AgileDashboardPlugin::PLUGIN_SHORTNAME)
+                ->withBodyClass(['agiledashboard-body'])
+                ->build()
+        );
+        echo $this->renderToString(
             'admin-kanban',
             $this->getAdminKanbanPresenter(
                 $this->getCurrentUser(),
                 (int) $this->group_id
             )
         );
+        $displayFooter();
     }
 
-    public function adminCharts(): string
+    /**
+     * @param \Closure(string $title, BreadCrumbCollection $breadcrumbs, \Tuleap\Layout\HeaderConfiguration $header_configuration): void $displayHeader
+     * @param \Closure(): void $displayFooter
+     */
+    public function adminCharts(\Closure $displayHeader, \Closure $displayFooter): void
     {
         $this->redirectToKanbanPaneIfScrumAccessIsBlocked();
-        return $this->renderToString(
+        $title = dgettext("tuleap-agiledashboard", "Charts configuration");
+        $displayHeader(
+            $title,
+            $this->getBreadcrumbs(),
+            HeaderConfigurationBuilder::get($title)
+                ->inProject($this->project, \AgileDashboardPlugin::PLUGIN_SHORTNAME)
+                ->withBodyClass(['agiledashboard-body'])
+                ->build()
+        );
+        echo $this->renderToString(
             "admin-charts",
             $this->getAdminChartsPresenter(
                 $this->project
             )
         );
+        $displayFooter();
     }
 
     private function getAdminKanbanPresenter(PFUser $user, int $project_id): AdminKanbanPresenter

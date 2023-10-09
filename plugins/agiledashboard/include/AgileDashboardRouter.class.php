@@ -47,6 +47,7 @@ use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Kanban\Service\KanbanService;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
@@ -298,7 +299,7 @@ class AgileDashboardRouter
                 $this->executeAction($planning_controller, 'create');
                 break;
             case 'edit':
-                $this->renderAction($planning_controller, 'edit', $request, [], ['body_class' => ['agiledashboard-body']]);
+                $this->renderAction($planning_controller, 'edit', $request);
                 break;
             case 'update':
                 $this->executeAction($planning_controller, 'update');
@@ -315,9 +316,9 @@ class AgileDashboardRouter
                             throw new \Tuleap\Request\NotFoundException();
                         }
 
-                        $this->renderAction($this->buildController($request), 'adminKanban', $request, [], ['body_class' => ['agiledashboard-body']]);
+                        $this->renderAction($this->buildController($request), 'adminKanban', $request);
                     } elseif ($pane === self::PANE_CHARTS) {
-                        $this->renderAction($this->buildController($request), 'adminCharts', $request, [], ['body_class' => ['agiledashboard-body']]);
+                        $this->renderAction($this->buildController($request), 'adminCharts', $request);
                     } else {
                         $this->renderAction($this->buildController($request), 'adminScrum', $request);
                     }
@@ -379,46 +380,8 @@ class AgileDashboardRouter
 
                     $layout->redirect(AgileDashboardServiceHomepageUrlBuilder::getTopBacklogUrl($project));
                 }
-                $header_options = [
-                    'body_class' => ['agiledashboard_homepage'],
-                ];
-                $this->renderAction($planning_controller, 'index', $request, [], $header_options);
+                $this->renderAction($planning_controller, 'index', $request);
         }
-    }
-
-    /**
-     * Returns the page title according to the current controller action name.
-     *
-     * TODO:
-     *   - Use a layout template, and move title retrieval to the appropriate presenters.
-     *
-     * @param string $action_name The controller action name (e.g. index, show...).
-     *
-     * @return string
-     */
-    private function getHeaderTitle(Codendi_Request $request, $action_name)
-    {
-        $is_project_allowed_to_use_split_kanban = $this->split_kanban_configuration_checker
-            ->isProjectAllowedToUseSplitKanban($request->getProject());
-
-        $header_title = [
-            'index'               => dgettext('tuleap-agiledashboard', 'Agile Dashboard'),
-            'exportToFile'        => $is_project_allowed_to_use_split_kanban
-                ? dgettext('tuleap-agiledashboard', 'Backlog')
-                : dgettext('tuleap-agiledashboard', 'Agile Dashboard'),
-            'adminScrum'          => $is_project_allowed_to_use_split_kanban
-                ? dgettext('tuleap-agiledashboard', 'Scrum Administration of Backlog')
-                : dgettext('tuleap-agiledashboard', 'Scrum Administration of Agile Dashboard'),
-            'adminKanban'         => dgettext('tuleap-agiledashboard', 'Kanban Administration of Agile Dashboard'),
-            'adminCharts'         => dgettext("tuleap-agiledashboard", "Charts configuration"),
-            'new_'                => dgettext('tuleap-agiledashboard', 'New Planning'),
-            'importForm'          => dgettext('tuleap-agiledashboard', 'New Planning'),
-            'edit'                => dgettext('tuleap-agiledashboard', 'Edit'),
-            'show'                => dgettext('tuleap-agiledashboard', 'View Planning'),
-            'showTop'             => dgettext('tuleap-agiledashboard', 'View Planning'),
-        ];
-
-        return $header_title[$action_name];
     }
 
     /**
@@ -437,20 +400,12 @@ class AgileDashboardRouter
         return $this->service;
     }
 
-    /**
-     * Renders the top banner + navigation for all Agile Dashboard pages.
-     *
-     * @param BaseController  $controller The controller instance
-     * @param Codendi_Request $request    The request
-     * @param string          $title      The page title
-     * @param array           $header_options
-     */
     private function displayHeader(
-        BaseController $controller,
         Codendi_Request $request,
-        $title,
-        array $header_options = [],
-    ) {
+        string $title,
+        BreadCrumbCollection $breadcrumbs,
+        \Tuleap\Layout\HeaderConfiguration $header_configuration,
+    ): void {
         $service = $this->getService($request);
         if (! $service) {
             exit_error(
@@ -465,19 +420,15 @@ class AgileDashboardRouter
             );
         }
 
-        $service->displayHeader($title, $controller->getBreadcrumbs(), [], $header_options);
+        $service->displayHeader($title, $breadcrumbs, [], $header_configuration);
     }
 
-    private function userIsAdmin(Codendi_Request $request)
+    private function userIsAdmin(Codendi_Request $request): bool
     {
         return $request->getProject()->userIsAdmin($request->getCurrentUser());
     }
 
-    /**
-     * Renders the bottom footer for all Agile Dashboard pages.
-     *
-     */
-    private function displayFooter(Codendi_Request $request)
+    private function displayFooter(Codendi_Request $request): void
     {
         $this->getService($request)->displayFooter();
     }
@@ -546,27 +497,24 @@ class AgileDashboardRouter
         );
     }
 
-    /**
-     * Renders the given controller action, with page header/footer.
-     *
-     * @param MVC2_Controller $controller  The controller instance.
-     * @param string          $action_name The controller action name (e.g. index, show...).
-     * @param Codendi_Request $request     The request
-     * @param array           $args        Arguments to pass to the controller action method.
-     */
     protected function renderAction(
-        MVC2_Controller $controller,
-        $action_name,
+        BaseController $controller,
+        string $action_name,
         Codendi_Request $request,
-        array $args = [],
-        array $header_options = [],
-    ) {
-        $content        = $this->executeAction($controller, $action_name, $args);
-        $header_options = array_merge_recursive($header_options, $controller->getHeaderOptions($request->getCurrentUser()));
-
-        $this->displayHeader($controller, $request, $this->getHeaderTitle($request, $action_name), $header_options);
-        echo $content;
-        $this->displayFooter($request);
+    ): void {
+        $this->executeAction(
+            $controller,
+            $action_name,
+            [
+                function (string $title, BreadCrumbCollection $breadcrumbs, \Tuleap\Layout\HeaderConfiguration $header_configuration) use ($request): void {
+                    $this->displayHeader($request, $title, $breadcrumbs, $header_configuration);
+                },
+                function () use ($request): void {
+                    $this->displayFooter($request);
+                },
+            ]
+        );
+        return;
     }
 
     /**
@@ -601,9 +549,8 @@ class AgileDashboardRouter
                 $this->executeAction($controller, 'show');
                 /* no break */
             default:
-                $controller       = $this->milestone_controller_factory->getMilestoneController($request);
-                $action_arguments = [];
-                $this->renderAction($controller, 'show', $request, $action_arguments, ['body_class' => ['agiledashboard_planning']]);
+                $controller = $this->milestone_controller_factory->getMilestoneController($request);
+                $this->renderAction($controller, 'show', $request);
         }
     }
 
@@ -628,25 +575,15 @@ class AgileDashboardRouter
             );
         }
 
-        $controller                    = $this->milestone_controller_factory->getVirtualTopMilestoneController($request);
-        $header_options                = array_merge(
-            ['body_class' => ['agiledashboard_planning']],
-            $controller->getHeaderOptions($user)
-        );
-        $breadcrumbs                   = $controller->getBreadcrumbs();
-        $is_split_feature_flag_enabled = (new CheckSplitKanbanConfiguration(EventManager::instance()))->isProjectAllowedToUseSplitKanban($service->getProject());
+        $controller = $this->milestone_controller_factory->getVirtualTopMilestoneController($request);
 
-        $top_planning_rendered = $this->executeAction($controller, 'showTop', []);
-        $service->displayHeader(
-            sprintf(
-                $is_split_feature_flag_enabled ? dgettext('tuleap-agiledashboard', '%s backlog') : dgettext('tuleap-agiledashboard', '%s top backlog'),
-                $service->getProject()->getPublicName()
-            ),
-            $breadcrumbs,
-            [],
-            $header_options
+        $controller->showTop(
+            function (string $title, BreadCrumbCollection $breadcrumbs, \Tuleap\Layout\HeaderConfiguration $header_configuration) use ($request): void {
+                $this->displayHeader($request, $title, $breadcrumbs, $header_configuration);
+            },
+            function () use ($request): void {
+                $this->displayFooter($request);
+            }
         );
-        echo $top_planning_rendered;
-        $this->displayFooter($request);
     }
 }

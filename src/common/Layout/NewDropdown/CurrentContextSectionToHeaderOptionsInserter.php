@@ -22,45 +22,46 @@ declare(strict_types=1);
 
 namespace Tuleap\Layout\NewDropdown;
 
+use Tuleap\Option\Option;
+
 final class CurrentContextSectionToHeaderOptionsInserter
 {
+    /**
+     * @param Option<NewDropdownLinkSectionPresenter> $current_context_section
+     * @return Option<NewDropdownLinkSectionPresenter>
+     */
     public function addLinkToCurrentContextSection(
         string $section_label,
         NewDropdownLinkPresenter $link,
-        array &$header_options,
-    ): void {
-        if (isset($header_options['new_dropdown_current_context_section'])) {
-            $this->addLinkToExistingCurrentContextSection($link, $header_options);
-        } else {
-            $this->createNewCurrentContextSection($section_label, [$link], $header_options);
-        }
+        Option $current_context_section,
+    ): Option {
+        return $current_context_section->mapOr(
+            function (NewDropdownLinkSectionPresenter $current_context_section) use ($link): Option {
+                return $this->createNewCurrentContextSection(
+                    $current_context_section->label,
+                    array_merge(
+                        $current_context_section->links,
+                        [$link]
+                    )
+                );
+            },
+            $this->createNewCurrentContextSection($section_label, [$link]),
+        );
     }
 
     /**
      * @param NewDropdownLinkPresenter[] $links
+     * @return Option<NewDropdownLinkSectionPresenter>
      */
     private function createNewCurrentContextSection(
         string $section_label,
         array $links,
-        array &$header_options,
-    ): void {
-        $header_options['new_dropdown_current_context_section'] = new NewDropdownLinkSectionPresenter(
-            $section_label,
-            $links,
-        );
-    }
-
-    private function addLinkToExistingCurrentContextSection(
-        NewDropdownLinkPresenter $link,
-        array &$header_options,
-    ): void {
-        $this->createNewCurrentContextSection(
-            $header_options['new_dropdown_current_context_section']->label,
-            array_merge(
-                $header_options['new_dropdown_current_context_section']->links,
-                [$link],
-            ),
-            $header_options
+    ): Option {
+        return Option::fromValue(
+            new NewDropdownLinkSectionPresenter(
+                $section_label,
+                $links,
+            )
         );
     }
 }

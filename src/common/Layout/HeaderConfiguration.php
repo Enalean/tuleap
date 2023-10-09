@@ -42,6 +42,7 @@ final class HeaderConfiguration
         public readonly array $main_class,
         public readonly int $printer_version,
         public readonly ?NewDropdownLinkSectionPresenter $new_dropdown_link_section_presenter,
+        public readonly bool $include_fat_combined,
     ) {
     }
 
@@ -63,6 +64,7 @@ final class HeaderConfiguration
             'main_classes'                         => $this->main_class,
             'pv'                                   => $this->printer_version,
             'new_dropdown_current_context_section' => $this->new_dropdown_link_section_presenter,
+            ...($this->include_fat_combined ? ['include_fat_combined' => true] : []),
             ...($this->in_project ? [
                 'project'                        => $this->in_project->project,
                 'toptab'                         => $this->in_project->current_service_shortname,

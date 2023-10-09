@@ -48,6 +48,7 @@ use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Kanban\KanbanItemDao;
 use Tuleap\Kanban\Service\KanbanService;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
+use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
@@ -176,12 +177,11 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $this->update_request_validator           = $update_request_validator;
     }
 
-    public function index()
-    {
-        return $this->showHome();
-    }
-
-    private function showHome(): string
+    /**
+     * @param \Closure(string $title, BreadCrumbCollection $breadcrumbs, \Tuleap\Layout\HeaderConfiguration $header_configuration): void $displayHeader
+     * @param \Closure(): void $displayFooter
+     */
+    public function index(\Closure $displayHeader, \Closure $displayFooter): void
     {
         $user          = $this->request->getCurrentUser();
         $configuration = ScrumConfiguration::fromProjectId($this->planning_factory, $this->group_id, $user);
@@ -190,7 +190,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $scrum_is_configured = $configuration->isNotEmpty();
 
         if (! $scrum_is_configured && ! $kanban_is_activated) {
-            return $this->showEmptyHome();
+            $this->showEmptyHome($displayHeader, $displayFooter);
         }
 
         $this->redirectToTopBacklogPlanningInMonoMilestoneWhenKanbanIsDisabled();
@@ -225,7 +225,19 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             $service?->getUrl(),
             $is_split_feature_flag_enabled
         );
-        return $this->renderToString('home', $presenter);
+
+        $title = dgettext('tuleap-agiledashboard', 'Agile Dashboard');
+
+        $displayHeader(
+            $title,
+            $this->getBreadcrumbs(),
+            HeaderConfigurationBuilder::get($title)
+                ->inProject($this->project, \AgileDashboardPlugin::PLUGIN_SHORTNAME)
+                ->withBodyClass(['agiledashboard_homepage'])
+                ->build()
+        );
+        echo $this->renderToString('home', $presenter);
+        $displayFooter();
     }
 
     private function redirectToTopBacklogPlanningInMonoMilestoneWhenKanbanIsDisabled()
@@ -272,9 +284,10 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     }
 
     /**
-     * Home page for when there is nothing set-up.
+     * @param \Closure(string $title, BreadCrumbCollection $breadcrumbs, \Tuleap\Layout\HeaderConfiguration $header_configuration): void $displayHeader
+     * @param \Closure(): void $displayFooter
      */
-    private function showEmptyHome()
+    private function showEmptyHome(\Closure $displayHeader, \Closure $displayFooter): void
     {
         $project                 = $this->getProjectFromRequest();
         $service                 = $project->getService(KanbanService::SERVICE_SHORTNAME);
@@ -287,7 +300,19 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             $this->isPlanningManagementDelegated(),
             $is_using_kanban_service,
         );
-        return $this->renderToString('empty-home', $presenter);
+
+        $title = dgettext('tuleap-agiledashboard', 'Agile Dashboard');
+
+        $displayHeader(
+            $title,
+            $this->getBreadcrumbs(),
+            HeaderConfigurationBuilder::get($title)
+                ->inProject($this->project, \AgileDashboardPlugin::PLUGIN_SHORTNAME)
+                ->withBodyClass(['agiledashboard_homepage'])
+                ->build()
+        );
+        echo $this->renderToString('empty-home', $presenter);
+        $displayFooter();
     }
 
     private function isUsingKanbanService(Project $project, ?Service $service): bool
@@ -473,15 +498,33 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         }
     }
 
-    public function new_()
+    /**
+     * @param \Closure(string $title, BreadCrumbCollection $breadcrumbs, \Tuleap\Layout\HeaderConfiguration $header_configuration): void $displayHeader
+     * @param \Closure(): void $displayFooter
+     */
+    public function new_(\Closure $displayHeader, \Closure $displayFooter): void
     {
         $planning  = $this->planning_factory->buildNewPlanning($this->group_id);
         $presenter = $this->getFormPresenter($this->request->getCurrentUser(), $planning);
 
-        return $this->renderToString('new', $presenter);
+        $title = dgettext('tuleap-agiledashboard', 'New Planning');
+
+        $displayHeader(
+            $title,
+            $this->getBreadcrumbs(),
+            HeaderConfigurationBuilder::get($title)
+                ->inProject($this->project, \AgileDashboardPlugin::PLUGIN_SHORTNAME)
+                ->build()
+        );
+        echo $this->renderToString('new', $presenter);
+        $displayFooter();
     }
 
-    public function importForm()
+    /**
+     * @param \Closure(string $title, BreadCrumbCollection $breadcrumbs, \Tuleap\Layout\HeaderConfiguration $header_configuration): void $displayHeader
+     * @param \Closure(): void $displayFooter
+     */
+    public function importForm(\Closure $displayHeader, \Closure $displayFooter): void
     {
         $this->redirectNonAdmin();
         $project = $this->getProjectFromRequest();
@@ -514,7 +557,17 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             )
         );
 
-        return $this->renderToString('import', $presenter);
+        $title = dgettext('tuleap-agiledashboard', 'New Planning');
+
+        $displayHeader(
+            $title,
+            $this->getBreadcrumbs(),
+            HeaderConfigurationBuilder::get($title)
+                ->inProject($this->project, \AgileDashboardPlugin::PLUGIN_SHORTNAME)
+                ->build()
+        );
+        echo $this->renderToString('import', $presenter);
+        $displayFooter();
     }
 
     private function importConfiguration()
@@ -611,7 +664,11 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         }
     }
 
-    public function edit(): string
+    /**
+     * @param \Closure(string $title, BreadCrumbCollection $breadcrumbs, \Tuleap\Layout\HeaderConfiguration $header_configuration): void $displayHeader
+     * @param \Closure(): void $displayFooter
+     */
+    public function edit(\Closure $displayHeader, \Closure $displayFooter): void
     {
         $this->checkUserIsAdmin();
 
@@ -629,7 +686,18 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $GLOBALS['HTML']->addStylesheet($include_assets->getFileURL('planning-admin-colorpicker.css'));
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('planning-admin.js'));
 
-        return $this->renderToString('admin-scrum/edit-planning', $presenter);
+        $title = dgettext('tuleap-agiledashboard', 'Edit');
+
+        $displayHeader(
+            $title,
+            $this->getBreadcrumbs(),
+            HeaderConfigurationBuilder::get($title)
+                ->inProject($this->project, \AgileDashboardPlugin::PLUGIN_SHORTNAME)
+                ->withBodyClass(['agiledashboard-body'])
+                ->build()
+        );
+        echo $this->renderToString('admin-scrum/edit-planning', $presenter);
+        $displayFooter();
     }
 
     private function getFormPresenter(PFUser $user, Planning $planning)
