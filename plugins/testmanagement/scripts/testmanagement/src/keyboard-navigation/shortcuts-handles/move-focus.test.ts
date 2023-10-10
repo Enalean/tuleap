@@ -72,7 +72,7 @@ describe("move-focus", () => {
 
             expect(() => {
                 getTargetTest(doc, NEXT);
-            }).toThrowError();
+            }).toThrow();
         });
 
         it("returns the first test link in document", () => {

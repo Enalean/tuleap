@@ -25,7 +25,7 @@ describe("error-handler-helper", () => {
     describe("handleErrorForHistoryVersion", () => {
         it("throws an exception when the exception is not a FetchWrapperError", async () => {
             const exception = new Error("some error");
-            await expect(handleErrorForHistoryVersion(exception)).rejects.toThrowError();
+            await expect(handleErrorForHistoryVersion(exception)).rejects.toThrow();
         });
 
         it("returns the error message", async () => {

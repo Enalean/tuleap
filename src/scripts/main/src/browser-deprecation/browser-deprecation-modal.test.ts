@@ -79,7 +79,7 @@ describe("browser-deprecation-modal", () => {
         const mount_point = document.implementation.createHTMLDocument();
         expect(() =>
             displayBrowserDeprecationModalIfNeeded(mount_point, jest.fn(), jest.fn(), localStorage),
-        ).toThrowError();
+        ).toThrow();
     });
 
     function createDocumentWithModal(): Document {

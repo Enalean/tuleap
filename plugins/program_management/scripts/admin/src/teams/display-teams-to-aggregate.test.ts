@@ -33,9 +33,7 @@ describe("DisplayTeamsToAggregate", () => {
         it("Given document without list, Then error is thrown", () => {
             const doc = createDocument();
 
-            expect(() => displayTeamsToAggregate(gettext, doc)).toThrowError(
-                "No list to pick teams",
-            );
+            expect(() => displayTeamsToAggregate(gettext, doc)).toThrow("No list to pick teams");
         });
 
         it("Given document with list, Then list picker is created", () => {

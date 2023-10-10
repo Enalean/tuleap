@@ -79,7 +79,7 @@ describe(`TimeboxLabel`, () => {
 
         const label = TimeboxLabel.fromId(RetrieveElementStub.withElements(input), "some_id");
         const callback = jest.fn();
-        expect(callback).not.toBeCalled();
+        expect(callback).not.toHaveBeenCalled();
         label.addInputListener(callback);
         label.addInputListener(callback);
         label.removeInputListeners();

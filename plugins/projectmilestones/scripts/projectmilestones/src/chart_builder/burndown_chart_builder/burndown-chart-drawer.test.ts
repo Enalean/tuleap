@@ -104,7 +104,7 @@ describe("BurndownChartDrawer -", () => {
             createBurndownChart(chart_svg_element, getChartProps(), getBurndownData(), 101);
 
             expect(chart_svg_element).toMatchSnapshot();
-            expect(chart_badge_generator.addBadgeCaption).toBeCalled();
+            expect(chart_badge_generator.addBadgeCaption).toHaveBeenCalled();
         });
 
         it("When there isn't points with date in burndownData, Then there is an empty graph", () => {
@@ -116,7 +116,7 @@ describe("BurndownChartDrawer -", () => {
                 101,
             );
 
-            expect(chart_badge_generator.addBadgeCaption).not.toBeCalled();
+            expect(chart_badge_generator.addBadgeCaption).not.toHaveBeenCalled();
             expect(chart_svg_element.childElementCount).toBe(1);
         });
 
@@ -129,7 +129,7 @@ describe("BurndownChartDrawer -", () => {
                 101,
             );
 
-            expect(chart_badge_generator.addBadgeCaption).not.toBeCalled();
+            expect(chart_badge_generator.addBadgeCaption).not.toHaveBeenCalled();
             expect(chart_svg_element.childElementCount).toBe(1);
         });
 

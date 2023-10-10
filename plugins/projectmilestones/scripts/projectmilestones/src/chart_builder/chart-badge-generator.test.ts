@@ -36,7 +36,7 @@ describe("ChartBadgeGenerator -", () => {
 
         addBadgeCaption(10, 10, 1, chart_svg, 103);
 
-        expect(chart_badge_services.getContainerProperties).toBeCalled();
+        expect(chart_badge_services.getContainerProperties).toHaveBeenCalled();
         expect(chart_div).toMatchSnapshot();
     });
 

@@ -100,7 +100,7 @@ describe("action", () => {
                 { id: 10 },
                 { id: 10 },
             ]);
-            expect(getAsyncGitlabRepositoryList).toBeCalledTimes(2);
+            expect(getAsyncGitlabRepositoryList).toHaveBeenCalledTimes(2);
         });
 
         it("When en error retrieved from api, Then an error is thrown", async () => {

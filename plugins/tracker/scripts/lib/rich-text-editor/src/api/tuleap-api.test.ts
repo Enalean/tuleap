@@ -57,7 +57,7 @@ describe(`tuleap-api`, () => {
             } as Response);
             jest.spyOn(fetch_wrapper, "post").mockRejectedValue(error);
 
-            await expect(() => postMarkdown(markdown_string, project_id)).rejects.toThrowError(
+            await expect(() => postMarkdown(markdown_string, project_id)).rejects.toThrow(
                 "Internal Server Error",
             );
         });

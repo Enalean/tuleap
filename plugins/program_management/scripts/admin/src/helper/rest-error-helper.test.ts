@@ -24,7 +24,7 @@ const createDocument = (): Document => document.implementation.createHTMLDocumen
 describe("RestErrorHelper", () => {
     describe("resetRestErrorAlert", () => {
         it("Error is thrown When alert element does not exist", () => {
-            expect(() => resetRestErrorAlert(createDocument(), "bad-id")).toThrowError(
+            expect(() => resetRestErrorAlert(createDocument(), "bad-id")).toThrow(
                 "Rest Error Alert with id bad-id does not exist",
             );
         });
@@ -42,7 +42,7 @@ describe("RestErrorHelper", () => {
     });
     describe("setRestErrorMessage", () => {
         it("Error is thrown When alert element does not exist", () => {
-            expect(() => setRestErrorMessage(createDocument(), "bad-id", "error")).toThrowError(
+            expect(() => setRestErrorMessage(createDocument(), "bad-id", "error")).toThrow(
                 "Rest Error Alert with id bad-id does not exist",
             );
         });

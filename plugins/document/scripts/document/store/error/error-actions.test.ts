@@ -112,7 +112,7 @@ describe(`Error module actions`, () => {
         it(`when a message is not from FetchWrapperError,
             it will throw an error`, async () => {
             const error = new Error();
-            await expect(actions.handleErrorsForModal(context, error)).rejects.toThrowError();
+            await expect(actions.handleErrorsForModal(context, error)).rejects.toThrow();
 
             expect(context.commit).not.toHaveBeenCalledWith("setModalError", "Oh snap");
         });

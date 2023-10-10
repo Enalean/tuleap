@@ -83,6 +83,6 @@ describe("FieldTrackerColor", () => {
         const wrapper = await getWrapper();
         wrapper.destroy();
 
-        expect(mocked_jquery.select2).toBeCalledWith("destroy");
+        expect(mocked_jquery.select2).toHaveBeenCalledWith("destroy");
     });
 });

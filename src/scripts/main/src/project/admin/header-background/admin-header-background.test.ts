@@ -72,7 +72,7 @@ describe("admin-header-background", () => {
     it("throws an error if the form cannot be found", () => {
         expect(() =>
             setupFormSubmission(document.implementation.createHTMLDocument(), window.location),
-        ).toThrowError();
+        ).toThrow();
     });
 
     it("throws an error if the error message cannot be found", () => {
@@ -81,7 +81,7 @@ describe("admin-header-background", () => {
         form.setAttribute("id", "form-header-background");
         mount_point.body.appendChild(form);
 
-        expect(() => setupFormSubmission(mount_point, window.location)).toThrowError();
+        expect(() => setupFormSubmission(mount_point, window.location)).toThrow();
     });
 
     it("throws an error the success message cannot be found", () => {
@@ -93,7 +93,7 @@ describe("admin-header-background", () => {
         form.appendChild(error_element);
         mount_point.body.appendChild(form);
 
-        expect(() => setupFormSubmission(mount_point, window.location)).toThrowError();
+        expect(() => setupFormSubmission(mount_point, window.location)).toThrow();
     });
 
     it("throws an error if the submit button cannot be found", () => {
@@ -108,7 +108,7 @@ describe("admin-header-background", () => {
         form.appendChild(success_element);
         mount_point.body.appendChild(form);
 
-        expect(() => setupFormSubmission(mount_point, window.location)).toThrowError();
+        expect(() => setupFormSubmission(mount_point, window.location)).toThrow();
     });
 
     it("throws an error if the submit button icon cannot be found", () => {
@@ -126,7 +126,7 @@ describe("admin-header-background", () => {
         form.appendChild(submit_button);
         mount_point.body.appendChild(form);
 
-        expect(() => setupFormSubmission(mount_point, window.location)).toThrowError();
+        expect(() => setupFormSubmission(mount_point, window.location)).toThrow();
     });
 
     function createDocumentExpectedFormStructure(new_background_identifier: string): {

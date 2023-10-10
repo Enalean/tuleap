@@ -91,7 +91,7 @@ describe("Feature Reordering", () => {
             const feature: Feature = { id: 115 } as Feature;
             const sibling: Feature = { id: 666 } as Feature;
             const backlog = [feature] as Feature[];
-            expect(() => getFeaturePlanningChange(feature, sibling, backlog)).toThrowError(
+            expect(() => getFeaturePlanningChange(feature, sibling, backlog)).toThrow(
                 "Cannot find feature with id #666",
             );
         });
@@ -359,7 +359,7 @@ describe("Feature Reordering", () => {
             const features = [feature] as Feature[];
             expect(() =>
                 getFeaturePlanningChangeInProgramIncrement(feature, sibling, features, 4),
-            ).toThrowError("Cannot find feature with id #666");
+            ).toThrow("Cannot find feature with id #666");
         });
 
         it("When there are no features in program increment, Then FeatureReorder is null", () => {
@@ -453,7 +453,7 @@ describe("Feature Reordering", () => {
                     4,
                     18,
                 ),
-            ).toThrowError("Cannot find feature with id #666");
+            ).toThrow("Cannot find feature with id #666");
         });
 
         it("When there are no features in program increment, Then FeatureReorder is null", () => {

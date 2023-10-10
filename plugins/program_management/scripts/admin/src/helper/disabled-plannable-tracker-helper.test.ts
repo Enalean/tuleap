@@ -27,7 +27,7 @@ describe("disabledPlannableTrackerHelper", () => {
             const selector = document.createElement("select");
             const doc = createDocument();
 
-            expect(() => disabledPlannableTrackers(doc, selector)).toThrowError(
+            expect(() => disabledPlannableTrackers(doc, selector)).toThrow(
                 "Plannable trackers element does not exist",
             );
         });

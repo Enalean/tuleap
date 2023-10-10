@@ -65,7 +65,7 @@ describe("getVersionHistory", () => {
                 download_href: "https://example.test/Coco",
             } as FileHistory,
         ]);
-        await expect(getVersionHistory(item)).rejects.toThrowError(
+        await expect(getVersionHistory(item)).rejects.toThrow(
             "Item type's history not implemented",
         );
     });
