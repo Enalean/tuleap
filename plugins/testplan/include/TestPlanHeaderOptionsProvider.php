@@ -25,86 +25,53 @@ namespace Tuleap\TestPlan;
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
 use Tuleap\Layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\Layout\NewDropdown\DataAttributePresenter;
+use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
+use Tuleap\Option\Option;
 use Tuleap\TestManagement\Config;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 
 class TestPlanHeaderOptionsProvider
 {
-    /**
-     * @var HeaderOptionsProvider
-     */
-    private $header_options_provider;
-    /**
-     * @var Config
-     */
-    private $testmanagement_config;
-    /**
-     * @var \TrackerFactory
-     */
-    private $tracker_factory;
-    /**
-     * @var TrackerNewDropdownLinkPresenterBuilder
-     */
-    private $presenter_builder;
-    /**
-     * @var CurrentContextSectionToHeaderOptionsInserter
-     */
-    private $header_options_inserter;
+    private const IDENTIFIER = 'testplan';
 
     public function __construct(
-        HeaderOptionsProvider $header_options_provider,
-        Config $testmanagement_config,
-        \TrackerFactory $tracker_factory,
-        TrackerNewDropdownLinkPresenterBuilder $presenter_builder,
-        CurrentContextSectionToHeaderOptionsInserter $header_options_inserter,
+        private readonly HeaderOptionsProvider $header_options_provider,
+        private readonly Config $testmanagement_config,
+        private readonly \TrackerFactory $tracker_factory,
+        private readonly TrackerNewDropdownLinkPresenterBuilder $presenter_builder,
+        private readonly CurrentContextSectionToHeaderOptionsInserter $header_options_inserter,
     ) {
-        $this->header_options_provider = $header_options_provider;
-        $this->testmanagement_config   = $testmanagement_config;
-        $this->tracker_factory         = $tracker_factory;
-        $this->presenter_builder       = $presenter_builder;
-        $this->header_options_inserter = $header_options_inserter;
     }
 
-    public function getHeaderOptions(\PFUser $user, \Planning_Milestone $milestone): array
-    {
-        $header_options = $this->header_options_provider->getHeaderOptions($user, $milestone, 'testplan');
-        if (! isset($header_options['main_classes'])) {
-            $header_options['main_classes'] = [];
-        }
-        if (! in_array('fluid-main', $header_options['main_classes'], true)) {
-            $header_options['main_classes'][] = 'fluid-main';
-        }
-
-        $this->addCampaignInCurrentContextSection($user, $milestone, $header_options);
-
-        return $header_options;
-    }
-
-    private function addCampaignInCurrentContextSection(
+    /**
+     * @return Option<NewDropdownLinkSectionPresenter>
+     */
+    public function getCurrentContextSection(
         \PFUser $user,
         \Planning_Milestone $milestone,
-        array &$header_options,
-    ): void {
+    ): Option {
+        $current_context_section = $this->header_options_provider->getCurrentContextSection($user, $milestone, self::IDENTIFIER);
+
         $campaign_tracker_id = $this->testmanagement_config->getCampaignTrackerId($milestone->getProject());
         if (! $campaign_tracker_id) {
-            return;
+            return $current_context_section;
         }
         $campaign_tracker = $this->tracker_factory->getTrackerById($campaign_tracker_id);
         if (! $campaign_tracker) {
-            return;
+            return $current_context_section;
         }
 
         if (! $campaign_tracker->userCanSubmitArtifact($user)) {
-            return;
+            return $current_context_section;
         }
 
-        $this->header_options_inserter->addLinkToCurrentContextSection(
+        return $this->header_options_inserter->addLinkToCurrentContextSection(
             (string) $milestone->getArtifactTitle(),
             $this->presenter_builder->buildWithAdditionalDataAttributes(
                 $campaign_tracker,
                 [new DataAttributePresenter('test-plan-create-new-campaign', '1')]
             ),
-            $header_options
+            $current_context_section,
         );
     }
 }

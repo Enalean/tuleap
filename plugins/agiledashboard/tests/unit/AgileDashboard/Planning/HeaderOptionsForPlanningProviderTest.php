@@ -28,15 +28,15 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Planning;
 use Planning_ArtifactMilestone;
-use Planning_Milestone;
 use Planning_VirtualTopMilestone;
 use Tracker;
 use Tuleap\Layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\Layout\NewDropdown\NewDropdownLinkPresenter;
 use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
+use Tuleap\Option\Option;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 
-class HeaderOptionsForPlanningProviderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class HeaderOptionsForPlanningProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -60,36 +60,6 @@ class HeaderOptionsForPlanningProviderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItGeneratesBodyClass(): void
-    {
-        $this->submilestone_finder->shouldReceive('findFirstSubmilestoneTracker')->andReturnNull();
-
-        $options = [];
-
-        $this->provider->addPlanningOptions(
-            Mockery::mock(PFUser::class),
-            Mockery::mock(Planning_Milestone::class),
-            $options
-        );
-
-        self::assertEquals(['body_class' => ['has-sidebar-with-pinned-header']], $options);
-    }
-
-    public function testItAddsClassToTheExistingOnes(): void
-    {
-        $this->submilestone_finder->shouldReceive('findFirstSubmilestoneTracker')->andReturnNull();
-
-        $options = ['body_class' => ['blah']];
-
-        $this->provider->addPlanningOptions(
-            Mockery::mock(PFUser::class),
-            Mockery::mock(Planning_Milestone::class),
-            $options
-        );
-
-        self::assertEquals(['body_class' => ['blah', 'has-sidebar-with-pinned-header']], $options);
-    }
-
     public function testItAddsSubmilestoneTrackerForMilestoneInNewDropdownCurrentSection(): void
     {
         $user           = Mockery::mock(PFUser::class);
@@ -107,11 +77,9 @@ class HeaderOptionsForPlanningProviderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('findFirstSubmilestoneTracker')
             ->andReturn($sprint_tracker);
 
-        $options = [];
-        $this->provider->addPlanningOptions($user, $this->aMilestone(), $options);
-
-        $new_dropdown_current_context_section = $options['new_dropdown_current_context_section'];
-        assert($new_dropdown_current_context_section instanceof NewDropdownLinkSectionPresenter);
+        $new_dropdown_current_context_section = $this->provider
+            ->getCurrentContextSection($user, $this->aMilestone(), Option::nothing(NewDropdownLinkSectionPresenter::class))
+            ->unwrapOr(null);
 
         self::assertEquals('Milestone title', $new_dropdown_current_context_section->label);
         self::assertCount(1, $new_dropdown_current_context_section->links);
@@ -135,18 +103,17 @@ class HeaderOptionsForPlanningProviderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('findFirstSubmilestoneTracker')
             ->andReturn($sprint_tracker);
 
-        $options = [
-            'new_dropdown_current_context_section' => new NewDropdownLinkSectionPresenter(
+        $existing_section                     = Option::fromValue(
+            new NewDropdownLinkSectionPresenter(
                 "Current section",
                 [
                     new NewDropdownLinkPresenter("url", "Already existing link", "icon", []),
                 ],
             ),
-        ];
-        $this->provider->addPlanningOptions($user, $this->aMilestone(), $options);
-
-        $new_dropdown_current_context_section = $options['new_dropdown_current_context_section'];
-        assert($new_dropdown_current_context_section instanceof NewDropdownLinkSectionPresenter);
+        );
+        $new_dropdown_current_context_section = $this->provider
+            ->getCurrentContextSection($user, $this->aMilestone(), $existing_section)
+            ->unwrapOr(null);
 
         self::assertEquals('Current section', $new_dropdown_current_context_section->label);
         self::assertCount(2, $new_dropdown_current_context_section->links);
@@ -171,10 +138,11 @@ class HeaderOptionsForPlanningProviderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('findFirstSubmilestoneTracker')
             ->andReturn($sprint_tracker);
 
-        $options = [];
-        $this->provider->addPlanningOptions($user, $this->aMilestone(), $options);
-
-        self::assertFalse(isset($options['new_dropdown_current_context_section']));
+        self::assertTrue(
+            $this->provider
+                ->getCurrentContextSection($user, $this->aMilestone(), Option::nothing(NewDropdownLinkSectionPresenter::class))
+                ->isNothing()
+        );
     }
 
     public function testItAddsSubmilestoneTrackerForTopBacklogInNewDropdownCurrentSection(): void
@@ -191,11 +159,12 @@ class HeaderOptionsForPlanningProviderTest extends \Tuleap\Test\PHPUnit\TestCase
             )
             ->getMock();
 
-        $options = [];
-        $this->provider->addPlanningOptions($user, $this->theTopBacklogMilestone($sprint_tracker), $options);
-
-        $new_dropdown_current_context_section = $options['new_dropdown_current_context_section'];
-        assert($new_dropdown_current_context_section instanceof NewDropdownLinkSectionPresenter);
+        $new_dropdown_current_context_section = $this->provider
+            ->getCurrentContextSection(
+                $user,
+                $this->theTopBacklogMilestone($sprint_tracker),
+                Option::nothing(NewDropdownLinkSectionPresenter::class)
+            )->unwrapOr(null);
 
         self::assertEquals('Top backlog', $new_dropdown_current_context_section->label);
         self::assertCount(1, $new_dropdown_current_context_section->links);

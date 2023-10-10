@@ -28,8 +28,11 @@ use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssViteAsset;
+use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
+use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
+use Tuleap\Option\Option;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\NotFoundException;
@@ -38,6 +41,7 @@ use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
 class TaskboardController implements DispatchableWithRequestNoAuthz, DispatchableWithBurningParrot
 {
+    private const IDENTIFIER = 'taskboard';
     /**
      * @var MilestoneExtractor
      */
@@ -115,28 +119,32 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
 
         $layout->addCssAsset(CssViteAsset::fromFileName($this->taskboard_assets, 'themes/taskboard.scss'));
 
+        $title = $milestone->getArtifactTitle() . ' - ' . dgettext('tuleap-taskboard', "Taskboard");
         $service->displayHeader(
-            $milestone->getArtifactTitle() . ' - ' . dgettext('tuleap-taskboard', "Taskboard"),
+            $title,
             $this->bread_crumbs_builder->getBreadcrumbs($user, $project, $milestone),
             [],
-            $this->getHeaderOptions($user, $milestone)
+            HeaderConfigurationBuilder::get($title)
+                ->inProject($project, \AgileDashboardPlugin::PLUGIN_SHORTNAME)
+                ->withBodyClass(['reduce-help-button'])
+                ->withMainClass(['fluid-main'])
+                ->withNewDropdownLinkSection($this->getCurrentContextSection($user, $milestone)->unwrapOr(null))
+                ->build(),
         );
         $this->renderer->renderToPage('taskboard', $this->presenter_builder->getPresenter($milestone, $user));
         $service->displayFooter();
     }
 
-    private function getHeaderOptions(\PFUser $user, \Planning_Milestone $milestone): array
+    /**
+     * @return Option<NewDropdownLinkSectionPresenter>
+     */
+    public function getCurrentContextSection(\PFUser $user, \Planning_Milestone $milestone): Option
     {
-        $header_options = $this->header_options_provider->getHeaderOptions($user, $milestone, 'taskboard');
-        if (! isset($header_options['main_classes'])) {
-            $header_options['main_classes'] = [];
-        }
-        if (! in_array('fluid-main', $header_options['main_classes'], true)) {
-            $header_options['main_classes'][] = 'fluid-main';
-        }
-
-        $header_options['body_class'][] = 'reduce-help-button';
-
-        return $header_options;
+        return $this->header_options_provider
+            ->getCurrentContextSection(
+                $user,
+                $milestone,
+                self::IDENTIFIER,
+            );
     }
 }

@@ -27,6 +27,8 @@ use PFUser;
 use Planning_Milestone;
 use Planning_VirtualTopMilestone;
 use Tuleap\Layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
+use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
+use Tuleap\Option\Option;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 
 class HeaderOptionsForPlanningProvider
@@ -54,51 +56,54 @@ class HeaderOptionsForPlanningProvider
         $this->header_options_inserter = $header_options_inserter;
     }
 
-    public function addPlanningOptions(PFUser $user, Planning_Milestone $milestone, array &$header_options): void
+    /**
+     * @param Option<NewDropdownLinkSectionPresenter> $current_context_section
+     * @return Option<NewDropdownLinkSectionPresenter>
+     */
+    public function getCurrentContextSection(PFUser $user, Planning_Milestone $milestone, Option $current_context_section): Option
     {
-        if (! isset($header_options['body_class'])) {
-            $header_options['body_class'] = [];
-        }
-
-        $header_options['body_class'][] = 'has-sidebar-with-pinned-header';
-
         if ($milestone instanceof \Planning_NoMilestone) {
-            return;
+            return $current_context_section;
         }
 
-        if ($milestone instanceof Planning_VirtualTopMilestone) {
-            $this->addPlanningOptionsForTopBacklog($milestone, $user, $header_options);
-        } else {
-            $this->addPlanningOptionsForRegularMilestone($milestone, $user, $header_options);
-        }
+        return $milestone instanceof Planning_VirtualTopMilestone
+            ? $this->addPlanningOptionsForTopBacklog($milestone, $current_context_section)
+            : $this->addPlanningOptionsForRegularMilestone($milestone, $user, $current_context_section);
     }
 
+    /**
+     * @param Option<NewDropdownLinkSectionPresenter> $current_context_section
+     * @return Option<NewDropdownLinkSectionPresenter>
+     */
     private function addPlanningOptionsForRegularMilestone(
         Planning_Milestone $milestone,
         PFUser $user,
-        array &$header_options,
-    ): void {
+        Option $current_context_section,
+    ): Option {
         $tracker = $this->submilestone_finder->findFirstSubmilestoneTracker($milestone);
         if (! $tracker || ! $tracker->userCanSubmitArtifact($user)) {
-            return;
+            return $current_context_section;
         }
 
-        $this->header_options_inserter->addLinkToCurrentContextSection(
+        return $this->header_options_inserter->addLinkToCurrentContextSection(
             (string) $milestone->getArtifactTitle(),
             $this->presenter_builder->build($tracker),
-            $header_options,
+            $current_context_section,
         );
     }
 
+    /**
+     * @param Option<NewDropdownLinkSectionPresenter> $current_context_section
+     * @return Option<NewDropdownLinkSectionPresenter>
+     */
     private function addPlanningOptionsForTopBacklog(
         Planning_VirtualTopMilestone $top_milestone,
-        PFUser $user,
-        array &$header_options,
-    ): void {
-        $this->header_options_inserter->addLinkToCurrentContextSection(
+        Option $current_context_section,
+    ): Option {
+        return $this->header_options_inserter->addLinkToCurrentContextSection(
             dgettext('tuleap-agiledashboard', 'Top backlog'),
             $this->presenter_builder->build($top_milestone->getPlanning()->getPlanningTracker()),
-            $header_options,
+            $current_context_section,
         );
     }
 }

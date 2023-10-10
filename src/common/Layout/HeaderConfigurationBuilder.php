@@ -41,6 +41,7 @@ final class HeaderConfigurationBuilder
     private ?InProject $in_project                                                = null;
     private int $printer_version                                                  = 0;
     private ?NewDropdownLinkSectionPresenter $new_dropdown_link_section_presenter = null;
+    private bool $include_fat_combined                                            = false;
 
     private function __construct(private string $title)
     {
@@ -133,6 +134,13 @@ final class HeaderConfigurationBuilder
         return $this;
     }
 
+    public function withFatCombined(bool $include_fat_combined): self
+    {
+        $this->include_fat_combined = $include_fat_combined;
+
+        return $this;
+    }
+
     public function withPrinterVersion(int $level): self
     {
         $this->printer_version = $level;
@@ -156,6 +164,7 @@ final class HeaderConfigurationBuilder
             $this->main_class,
             $this->printer_version,
             $this->new_dropdown_link_section_presenter,
+            $this->include_fat_combined,
         );
     }
 }

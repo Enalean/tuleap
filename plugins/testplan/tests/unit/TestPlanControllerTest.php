@@ -28,6 +28,8 @@ use TemplateRenderer;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
+use Tuleap\Option\Option;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
@@ -88,7 +90,7 @@ final class TestPlanControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->request->method('getCurrentUser')->willReturn($this->user);
 
         $header_options_provider = $this->createMock(TestPlanHeaderOptionsProvider::class);
-        $header_options_provider->method('getHeaderOptions')->willReturn([]);
+        $header_options_provider->method('getCurrentContextSection')->willReturn(Option::nothing(NewDropdownLinkSectionPresenter::class));
 
         $this->bread_crumbs_builder = $this->createMock(AllBreadCrumbsForMilestoneBuilder::class);
         $this->agiledashboard_asset = $this->createMock(IncludeAssets::class);

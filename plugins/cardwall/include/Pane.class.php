@@ -116,6 +116,14 @@ class Cardwall_Pane extends AgileDashboard_Pane
         return $this->getPaneContent('agiledashboard-minimalpane');
     }
 
+    /**
+     * @return list<string>
+     */
+    public function getBodyClass(): array
+    {
+        return ['agiledashboard-body'];
+    }
+
     private function getPaneContent($template)
     {
         $columns  = $this->config->getDashboardColumns();

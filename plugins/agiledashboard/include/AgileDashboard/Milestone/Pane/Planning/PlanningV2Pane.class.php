@@ -65,6 +65,16 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane extends AgileDashboa
         return '';
     }
 
+    public function getBodyClass(): array
+    {
+        return ['has-sidebar-with-pinned-header'];
+    }
+
+    public function shouldIncludeFatCombined(): bool
+    {
+        return true;
+    }
+
     /**
      * @see templates/pane-planning-v2.mustache
      */

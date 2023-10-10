@@ -70,7 +70,6 @@ class MilestoneControllerFactory
             $this->top_milestone_presenter_builder,
             $this->service_crumb_builder,
             $this->top_milestone_crumb_builder,
-            $this->header_options_provider,
             $this->flag_checker,
             $this->token_provider,
         );

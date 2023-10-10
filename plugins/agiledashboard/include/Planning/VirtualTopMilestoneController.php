@@ -24,10 +24,9 @@ use Tuleap\AgileDashboard\BaseController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\CSRFSynchronizerTokenProvider;
-use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
-use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
 use Tuleap\Kanban\SplitKanbanConfigurationChecker;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
+use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Option\Option;
 
 /**
@@ -53,7 +52,6 @@ final class VirtualTopMilestoneController extends BaseController
         private readonly VirtualTopMilestonePresenterBuilder $presenter_builder,
         private readonly AgileDashboardCrumbBuilder $agile_dashboard_crumb_builder,
         private readonly VirtualTopMilestoneCrumbBuilder $top_milestone_crumb_builder,
-        private readonly HeaderOptionsProvider $header_options_provider,
         private readonly SplitKanbanConfigurationChecker $flag_checker,
         private readonly CSRFSynchronizerTokenProvider $token_provider,
     ) {
@@ -68,7 +66,11 @@ final class VirtualTopMilestoneController extends BaseController
         }
     }
 
-    public function showTop(): string
+    /**
+     * @param \Closure(string $title, BreadCrumbCollection $breadcrumbs, \Tuleap\Layout\HeaderConfiguration $header_configuration): void $displayHeader
+     * @param \Closure(): void $displayFooter
+     */
+    public function showTop(\Closure $displayHeader, \Closure $displayFooter): void
     {
         if ($this->milestone->isNothing() && ! $this->flag_checker->isProjectAllowedToUseSplitKanban($this->project)) {
             $query_parts = ['group_id' => $this->request->get('group_id')];
@@ -80,19 +82,23 @@ final class VirtualTopMilestoneController extends BaseController
             $this->getCurrentUser(),
             $this->token_provider->getCSRF($this->project),
         );
-        return $this->renderToString('show-top', $presenter);
-    }
 
-    public function getHeaderOptions(\PFUser $user): array
-    {
-        return $this->milestone->mapOr(
-            fn($milestone) => $this->header_options_provider->getHeaderOptions(
-                $user,
-                $milestone,
-                PlanningV2PaneInfo::IDENTIFIER
-            ),
-            []
+        $title = sprintf(
+            $this->flag_checker->isProjectAllowedToUseSplitKanban($this->project)
+                ? dgettext('tuleap-agiledashboard', '%s backlog')
+                : dgettext('tuleap-agiledashboard', '%s top backlog'),
+            $this->project->getPublicName()
         );
+
+        $displayHeader(
+            $title,
+            $this->getBreadcrumbs(),
+            HeaderConfigurationBuilder::get($title)
+                ->inProject($this->project, \AgileDashboardPlugin::PLUGIN_SHORTNAME)
+                ->build()
+        );
+        echo $this->renderToString('show-top', $presenter);
+        $displayFooter();
     }
 
     public function getBreadcrumbs(): BreadCrumbCollection

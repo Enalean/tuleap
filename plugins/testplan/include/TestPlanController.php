@@ -28,6 +28,7 @@ use TemplateRenderer;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
@@ -123,11 +124,17 @@ final class TestPlanController implements DispatchableWithRequestNoAuthz, Dispat
 
         $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->testplan_assets, 'testplan-style'));
 
+        $title = dgettext('tuleap-testmanagement', "Tests") . ' - ' . $milestone->getArtifactTitle();
         $service->displayHeader(
-            dgettext('tuleap-testmanagement', "Tests") . ' - ' . $milestone->getArtifactTitle(),
+            $title,
             $this->bread_crumbs_builder->getBreadcrumbs($user, $project, $milestone),
             [],
-            $this->header_options_provider->getHeaderOptions($user, $milestone)
+            HeaderConfigurationBuilder::get($title)
+                ->inProject($project, AgileDashboardPlugin::PLUGIN_SHORTNAME)
+                ->withBodyClass(['agiledashboard-body'])
+                ->withMainClass(['fluid-main'])
+                ->withNewDropdownLinkSection($this->header_options_provider->getCurrentContextSection($user, $milestone)->unwrapOr(null))
+                ->build()
         );
 
         $expand_backlog_item_id       = (int) ($variables['backlog_item_id'] ?? 0);

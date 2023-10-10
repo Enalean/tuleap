@@ -25,6 +25,7 @@ use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
+use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
 /**
@@ -78,7 +79,11 @@ class Planning_MilestoneController extends BaseController
         $this->header_options_provider            = $header_options_provider;
     }
 
-    public function show()
+    /**
+     * @param \Closure(string $title, BreadCrumbCollection $breadcrumbs, \Tuleap\Layout\HeaderConfiguration $header_configuration): void $displayHeader
+     * @param \Closure(): void $displayFooter
+     */
+    public function show(\Closure $displayHeader, \Closure $displayFooter): void
     {
         $this->generateBareMilestone();
         if (! $this->milestone->getArtifact()) {
@@ -91,10 +96,28 @@ class Planning_MilestoneController extends BaseController
         $presenter_data = $this->pane_factory->getPanePresenterData($this->milestone);
         $template_name  = $this->getTemplateName($presenter_data);
 
-        return $this->renderToString(
+        $title = dgettext('tuleap-agiledashboard', 'View Planning');
+
+        $active_pane = $presenter_data->getActivePane();
+        $displayHeader(
+            $title,
+            $this->getBreadcrumbs(),
+            HeaderConfigurationBuilder::get($title)
+                ->inProject($this->project, \AgileDashboardPlugin::PLUGIN_SHORTNAME)
+                ->withBodyClass($active_pane->getBodyClass())
+                ->withFatCombined($active_pane->shouldIncludeFatCombined())
+                ->withNewDropdownLinkSection(
+                    $this->header_options_provider
+                        ->getCurrentContextSection($this->request->getCurrentUser(), $this->milestone, $active_pane->getIdentifier())
+                        ->unwrapOr(null),
+                )
+                ->build()
+        );
+        echo $this->renderToString(
             $template_name,
             $this->getMilestonePresenter($presenter_data)
         );
+        $displayFooter();
     }
 
     private function redirectToCorrectPane()
@@ -109,14 +132,6 @@ class Planning_MilestoneController extends BaseController
     private function getActivePaneIdentifier()
     {
         return $this->pane_factory->getActivePane($this->milestone, $this->request->getCurrentUser())->getIdentifier();
-    }
-
-    public function getHeaderOptions(PFUser $user): array
-    {
-        $this->generateBareMilestone();
-        $identifier = $this->getActivePaneIdentifier();
-
-        return $this->header_options_provider->getHeaderOptions($user, $this->milestone, $identifier);
     }
 
     private function getMilestonePresenter(PanePresenterData $presenter_data)
