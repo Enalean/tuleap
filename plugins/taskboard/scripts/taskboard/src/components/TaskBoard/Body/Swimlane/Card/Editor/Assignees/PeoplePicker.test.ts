@@ -61,7 +61,7 @@ describe("PeoplePicker", () => {
     it("Display a select2 element", async () => {
         const wrapper = await getWrapper();
 
-        expect(mocked_jquery.select2).toBeCalledWith("open");
+        expect(mocked_jquery.select2).toHaveBeenCalledWith("open");
 
         expect(wrapper.element).toMatchSnapshot();
     });
@@ -69,7 +69,7 @@ describe("PeoplePicker", () => {
     it("Display a select2 element with an empty option if it is not multiple", async () => {
         const wrapper = await getWrapper(false);
 
-        expect(mocked_jquery.select2).toBeCalledWith("open");
+        expect(mocked_jquery.select2).toHaveBeenCalledWith("open");
 
         const options = wrapper.findAll("option");
         expect(options).toHaveLength(1);
@@ -80,13 +80,13 @@ describe("PeoplePicker", () => {
         const wrapper = await getWrapper();
         wrapper.destroy();
 
-        expect(mocked_jquery.select2).toBeCalledWith("destroy");
+        expect(mocked_jquery.select2).toHaveBeenCalledWith("destroy");
     });
 
     it("Listens to changes", async () => {
         await getWrapper();
 
-        expect(mocked_jquery.on).toBeCalledWith("change", expect.any(Function));
+        expect(mocked_jquery.on).toHaveBeenCalledWith("change", expect.any(Function));
     });
 
     describe("onchange", () => {

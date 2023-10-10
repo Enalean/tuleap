@@ -105,6 +105,6 @@ describe("Add to top backlog", () => {
                 feature: { id: 415 } as Feature,
                 order: null,
             }),
-        ).rejects.toThrowError("Cannot reorder element #415 because order is null");
+        ).rejects.toThrow("Cannot reorder element #415 because order is null");
     });
 });

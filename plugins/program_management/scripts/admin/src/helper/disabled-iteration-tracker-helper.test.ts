@@ -28,7 +28,7 @@ describe("disabledIterationTrackerHelper", () => {
 
             expect(() =>
                 disabledIterationTrackersFromProgramIncrementAndPlannableTrackers(doc, "", []),
-            ).toThrowError("Iteration tracker element does not exist");
+            ).toThrow("Iteration tracker element does not exist");
         });
 
         it("When a value is selected, Then it's disabled in iteration tracker options", () => {

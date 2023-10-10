@@ -41,7 +41,7 @@ describe("Mutations", () => {
                 id: 14,
             } as ProgramIncrement;
 
-            expect(() => mutations.addProgramIncrement(state, program_increment)).toThrowError(
+            expect(() => mutations.addProgramIncrement(state, program_increment)).toThrow(
                 "Program increment with id #14 already exists",
             );
         });
@@ -189,7 +189,7 @@ describe("Mutations", () => {
                 ongoing_move_elements_id: [536],
             } as State;
 
-            expect(() => mutations.startMoveElementInAProgramIncrement(state, 536)).toThrowError(
+            expect(() => mutations.startMoveElementInAProgramIncrement(state, 536)).toThrow(
                 "Program element #536 is already moving",
             );
         });
@@ -230,7 +230,7 @@ describe("Mutations", () => {
                 user_stories: [],
             };
 
-            expect(() => mutations.linkUserStoriesToFeature(state, link)).toThrowError(
+            expect(() => mutations.linkUserStoriesToFeature(state, link)).toThrow(
                 "Program increment with id #14 does not exist",
             );
         });
@@ -267,7 +267,7 @@ describe("Mutations", () => {
                 user_stories: [],
             };
 
-            expect(() => mutations.linkUserStoriesToBePlannedElement(state, link)).toThrowError(
+            expect(() => mutations.linkUserStoriesToBePlannedElement(state, link)).toThrow(
                 "To be planned element with id #101 does not exist",
             );
         });
@@ -376,7 +376,7 @@ describe("Mutations", () => {
                     order: null,
                     feature: { id: 102 } as Feature,
                 }),
-            ).toThrowError("No order exists in feature position");
+            ).toThrow("No order exists in feature position");
         });
     });
 
@@ -689,7 +689,7 @@ describe("Mutations", () => {
                     feature: { id: 66 } as Feature,
                     order: null,
                 }),
-            ).toThrowError("No order exists in feature position");
+            ).toThrow("No order exists in feature position");
         });
 
         it("When sibling does not exist, Then nothing happens", () => {

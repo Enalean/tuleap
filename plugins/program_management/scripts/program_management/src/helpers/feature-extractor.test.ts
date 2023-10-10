@@ -35,7 +35,7 @@ describe("FeatureExtractor", () => {
 
             expect(() =>
                 featureExtractor.extractFeatureIndexFromProgramIncrement(feature_id_with_increment),
-            ).toThrowError("No feature with id #125 in program increment #4");
+            ).toThrow("No feature with id #125 in program increment #4");
         });
 
         it("When feature exists, Then its index is returned", () => {

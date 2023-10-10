@@ -27,7 +27,7 @@ describe("ButtonHelper", () => {
     describe("setButtonToDisabledWithSpinner", () => {
         it("Error is thrown When icon element does not exist", () => {
             const button = document.createElement("button");
-            expect(() => setButtonToDisabledWithSpinner(button)).toThrowError(
+            expect(() => setButtonToDisabledWithSpinner(button)).toThrow(
                 "Icon on button does not exist",
             );
         });
@@ -46,9 +46,7 @@ describe("ButtonHelper", () => {
     describe("resetButtonToAddTeam", () => {
         it("Error is thrown When icon element does not exist", () => {
             const button = document.createElement("button");
-            expect(() => resetButtonToAddTeam(button)).toThrowError(
-                "Icon on button does not exist",
-            );
+            expect(() => resetButtonToAddTeam(button)).toThrow("Icon on button does not exist");
         });
         it("When icon is a spinner Then icon class is changed to have plus", () => {
             const button = document.createElement("button");
@@ -64,7 +62,7 @@ describe("ButtonHelper", () => {
     describe("resetButtonToSaveConfiguration", () => {
         it("Error is thrown When icon element does not exist", () => {
             const button = document.createElement("button");
-            expect(() => resetButtonToSaveConfiguration(button)).toThrowError(
+            expect(() => resetButtonToSaveConfiguration(button)).toThrow(
                 "Icon on button does not exist",
             );
         });

@@ -55,7 +55,7 @@ describe("Getters", () => {
                 program_increments: [] as ProgramIncrement[],
             } as State;
 
-            expect(() => getters.getFeaturesInProgramIncrement(state)(14)).toThrowError(
+            expect(() => getters.getFeaturesInProgramIncrement(state)(14)).toThrow(
                 "No program increment with id #14",
             );
         });
@@ -80,7 +80,7 @@ describe("Getters", () => {
                 to_be_planned_elements: [] as Feature[],
             } as State;
 
-            expect(() => getters.getToBePlannedElementFromId(state)(14)).toThrowError(
+            expect(() => getters.getToBePlannedElementFromId(state)(14)).toThrow(
                 "No to be planned element with id #14",
             );
         });
@@ -122,7 +122,7 @@ describe("Getters", () => {
                     program_increment_id: 1,
                     feature_id: 14,
                 }),
-            ).toThrowError("Could not find feature with id #14 in program increment #1");
+            ).toThrow("Could not find feature with id #14 in program increment #1");
         });
         it("When feature exists, Then it's returned", () => {
             const state = {
@@ -187,7 +187,7 @@ describe("Getters", () => {
                     sibling: next_sibling,
                     program_increment_id: 15,
                 }),
-            ).toThrowError("Could not find feature with id #14 in program increment #15");
+            ).toThrow("Could not find feature with id #14 in program increment #15");
         });
 
         it("When sibling exists, Then Feature is returned", () => {

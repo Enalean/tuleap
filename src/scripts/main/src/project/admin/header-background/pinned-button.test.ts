@@ -22,9 +22,7 @@ import { setupPinnedButton } from "./pinned-button";
 describe("pinned-button", () => {
     describe("setupPinnedButton", () => {
         it("throws an error if submit section is not in the dom", () => {
-            expect(() =>
-                setupPinnedButton(document.implementation.createHTMLDocument()),
-            ).toThrowError();
+            expect(() => setupPinnedButton(document.implementation.createHTMLDocument())).toThrow();
         });
 
         it("throws an error if submit button is not in the dom", () => {
@@ -33,7 +31,7 @@ describe("pinned-button", () => {
             section.id = "project-admin-background-submit-section";
             doc.body.appendChild(section);
 
-            expect(() => setupPinnedButton(doc)).toThrowError();
+            expect(() => setupPinnedButton(doc)).toThrow();
         });
 
         it("Observes the position of the submit button and does not mark the section as pinned if no background is selected", () => {

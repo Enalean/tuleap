@@ -101,9 +101,7 @@ describe("mutations", () => {
         });
 
         it("throws an error when the tracker has not been found", () => {
-            expect(() => mutations.setSelectedTrackerTemplate(state, "15")).toThrowError(
-                "not found",
-            );
+            expect(() => mutations.setSelectedTrackerTemplate(state, "15")).toThrow("not found");
         });
     });
 

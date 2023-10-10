@@ -48,7 +48,7 @@ describe("initListPickersMilestoneSection", () => {
         const doc = createDocument();
         doc.body.appendChild(pi_selector);
 
-        expect(() => initListPickersMilestoneSection(doc, gettext)).toThrowError(
+        expect(() => initListPickersMilestoneSection(doc, gettext)).toThrow(
             "admin-configuration-plannable-trackers element does not exist",
         );
     });
@@ -64,7 +64,7 @@ describe("initListPickersMilestoneSection", () => {
         doc.body.appendChild(pi_selector);
         doc.body.appendChild(plannable_trackers_selector);
 
-        expect(() => initListPickersMilestoneSection(doc, gettext)).toThrowError(
+        expect(() => initListPickersMilestoneSection(doc, gettext)).toThrow(
             "admin-configuration-permission-prioritize element does not exist",
         );
     });
@@ -85,7 +85,7 @@ describe("initListPickersMilestoneSection", () => {
         doc.body.appendChild(pi_selector);
         doc.body.appendChild(plannable_trackers_selector);
         doc.body.appendChild(permissions_selector);
-        expect(() => initListPickersMilestoneSection(doc, gettext)).toThrowError(
+        expect(() => initListPickersMilestoneSection(doc, gettext)).toThrow(
             "admin-configuration-iteration-tracker element does not exist",
         );
     });
