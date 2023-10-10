@@ -22,7 +22,8 @@ const now = Date.now();
 describe("Kanban service", () => {
     before(function () {
         cy.projectAdministratorSession();
-        cy.createNewPublicProject(`kanban-${now}`, "kanban").then((project_id) => {
+        const project_name = `kanban-${now}`;
+        cy.createNewPublicProject(project_name, "kanban").then((project_id) => {
             const TITLE_FIELD_NAME = "title";
             cy.getTrackerIdFromREST(project_id, "activity").then((tracker_id) => {
                 cy.createArtifact({
@@ -56,6 +57,7 @@ describe("Kanban service", () => {
                     title_field_name: TITLE_FIELD_NAME,
                 });
             });
+            cy.addProjectMember(project_name, "projectMember");
         });
     });
     context("As Project Admin", function () {
@@ -89,6 +91,7 @@ describe("Kanban service", () => {
                     expect(third_column).to.contain("In progress");
                 },
             );
+            cy.get("[data-test=kanban-warning-modal]").should("not.exist");
             // The order of the columns should not change after reload
             cy.reload();
             cy.get("[data-test=kanban-column-header]").spread(
@@ -216,6 +219,7 @@ describe("Kanban service", () => {
             // eslint-disable-next-line cypress/require-data-selectors
             cy.get("body").type("{esc}");
 
+            cy.get("[data-test=kanban-warning-modal]").should("not.exist");
             cy.get("[data-test=kanban-column-review]").within(() => {
                 cy.get("[data-test=kanban-item]").its("length").should("be.gte", 1);
             });
