@@ -164,7 +164,7 @@ class TrackerCreationPresenterBuilder
         }
 
         foreach ($projects_ids as $id) {
-            $trackers_user_can_view = $this->tracker_factory->getTrackersByGroupIdUserCanView($id, $user);
+            $trackers_user_can_view = $this->tracker_factory->getTrackersByProjectIdUserCanView($id, $user);
             $trackers_base_info     = [];
 
             foreach ($trackers_user_can_view as $tracker) {

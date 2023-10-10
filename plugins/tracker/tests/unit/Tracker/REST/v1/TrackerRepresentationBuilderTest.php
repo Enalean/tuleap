@@ -34,57 +34,47 @@ use Tuleap\Tracker\Semantic\ArtifactCannotBeCreatedReasonsGetter;
 use Tuleap\Tracker\Semantic\CollectionOfCreationSemanticToCheck;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\BuildCompleteTrackerRESTRepresentationStub;
-use Tuleap\Tracker\Test\Stub\RetrieveTrackersByGroupIdAndUserCanViewStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 use Tuleap\Tracker\Test\Stub\Semantic\GetTitleSemanticStub;
 use Tuleap\Tracker\Test\Stub\VerifySubmissionPermissionStub;
 
 final class TrackerRepresentationBuilderTest extends TestCase
 {
-    private const PROJECT_ID = 205;
+    private const PROJECT_ID        = 205;
+    private const FIRST_TRACKER_ID  = 1;
+    private const SECOND_TRACKER_ID = 2;
 
-    private RetrieveTrackersByGroupIdAndUserCanViewStub $tracker_retriever;
-    private \Project $project;
     private CollectionOfCreationSemanticToCheck $semantics_to_check;
+    /**
+     * @var Tracker[]
+     */
+    private array $project_trackers;
+
+    private int $offset = 0;
+    private int $limit  = 50;
 
     protected function setUp(): void
     {
-        $this->project =   ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->withPublicName("Sibérie")->build();
-        $tracker       = TrackerTestBuilder::aTracker()->withProject(
-            $this->project
-        )->build();
+        $project                =   ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->withPublicName("Sibérie")->build();
+        $this->project_trackers = [
+            TrackerTestBuilder::aTracker()->withProject($project)->withId(self::FIRST_TRACKER_ID)->build(),
+            TrackerTestBuilder::aTracker()->withProject($project)->withId(self::SECOND_TRACKER_ID)->build(),
+        ];
 
-        $this->tracker_retriever  = RetrieveTrackersByGroupIdAndUserCanViewStub::withTrackers($tracker);
         $this->semantics_to_check =  CollectionOfCreationSemanticToCheck::fromREST([])->value;
-    }
-
-    /**
-     * @return TrackerRepresentation[]
-     */
-    private function buildTrackerRepresentations(string $tracker_representation, bool $filter_on_tracker_administration_permission = false): array
-    {
-        $user = UserTestBuilder::aUser()->build();
-
-        $representation_build = new TrackerRepresentationBuilder(
-            $this->tracker_retriever,
-            BuildCompleteTrackerRESTRepresentationStub::defaultRepresentation(),
-            new ArtifactCannotBeCreatedReasonsGetter(VerifySubmissionPermissionStub::withSubmitPermission(), RetrieveUsedFieldsStub::withNoFields(), GetTitleSemanticStub::withoutTextField())
-        );
-
-        return $representation_build->buildTrackerRepresentations($user, $this->project, $tracker_representation, 50, 0, $filter_on_tracker_administration_permission, $this->semantics_to_check);
     }
 
     public function testItThrowsExceptionWhenThereAreSemanticsToCheckAndTheFullTrackerRepresentationIsSelected(): void
     {
         $this->semantics_to_check =  CollectionOfCreationSemanticToCheck::fromREST(["title"])->value;
-        self::expectException(RestException::class);
+        $this->expectException(RestException::class);
         $this->buildTrackerRepresentations(CompleteTrackerRepresentation::FULL_REPRESENTATION);
     }
 
     public function testItReturnsTheMinimalRepresentation(): void
     {
         $representation = $this->buildTrackerRepresentations(MinimalTrackerRepresentation::MINIMAL_REPRESENTATION);
-        self::assertSame(1, count($representation));
+        self::assertCount(2, $representation);
         self::assertInstanceOf(MinimalTrackerRepresentation::class, $representation[0]);
     }
 
@@ -92,23 +82,55 @@ final class TrackerRepresentationBuilderTest extends TestCase
     {
         $representation = $this->buildTrackerRepresentations(CompleteTrackerRepresentation::FULL_REPRESENTATION);
 
-        self::assertSame(1, count($representation));
+        self::assertCount(2, $representation);
         self::assertInstanceOf(CompleteTrackerRepresentation::class, $representation[0]);
     }
 
-    public function testItReturnsTheCompleteRepresentationOfTheUserTrackerAdmin(): void
+    /**
+     * @dataProvider getPaginatedRepresentations
+     */
+    public function testItReturnsAPaginatedCollectionOfTheProjectTrackers(int $offset, int $expected_tracker_id): void
     {
-        $tracker_admin = $this->createMock(Tracker::class);
-        $tracker_admin->method('userIsAdmin')->willReturn(true);
+        $this->limit  = 1;
+        $this->offset = $offset;
 
-        $tracker = $this->createMock(Tracker::class);
-        $tracker->method('userIsAdmin')->willReturn(false);
+        $tracker_representations = $this->buildTrackerRepresentations(CompleteTrackerRepresentation::FULL_REPRESENTATION);
 
-        $this->tracker_retriever = RetrieveTrackersByGroupIdAndUserCanViewStub::withTrackers($tracker_admin, $tracker);
+        self::assertCount($this->limit, $tracker_representations);
+        self::assertSame($expected_tracker_id, $tracker_representations[0]->id);
+    }
 
-        $representation = $this->buildTrackerRepresentations(CompleteTrackerRepresentation::FULL_REPRESENTATION, true);
+    private function getPaginatedRepresentations(): array
+    {
+        return [
+            [0, self::FIRST_TRACKER_ID],
+            [1, self::SECOND_TRACKER_ID],
+        ];
+    }
 
-        self::assertSame(1, count($representation));
-        self::assertInstanceOf(CompleteTrackerRepresentation::class, $representation[0]);
+    /**
+     * @return TrackerRepresentation[]
+     */
+    private function buildTrackerRepresentations(string $tracker_representation): array
+    {
+        $user = UserTestBuilder::aUser()->build();
+
+        $representation_build = new TrackerRepresentationBuilder(
+            BuildCompleteTrackerRESTRepresentationStub::build(),
+            new ArtifactCannotBeCreatedReasonsGetter(
+                VerifySubmissionPermissionStub::withSubmitPermission(),
+                RetrieveUsedFieldsStub::withNoFields(),
+                GetTitleSemanticStub::withoutTextField()
+            )
+        );
+
+        return $representation_build->buildTrackerRepresentations(
+            $user,
+            $this->project_trackers,
+            $tracker_representation,
+            $this->limit,
+            $this->offset,
+            $this->semantics_to_check
+        );
     }
 }
