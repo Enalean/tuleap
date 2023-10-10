@@ -99,6 +99,10 @@ final class XMLTracker
      * @readonly
      */
     private ?XMLWorkflow $workflow = null;
+    /**
+     * @readonly
+     */
+    private bool $is_promoted = false;
 
     /**
      * @param string|IDGenerator $id
@@ -125,6 +129,17 @@ final class XMLTracker
     {
         $new       = clone $this;
         $new->name = $name;
+        return $new;
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function withPromoted(): self
+    {
+        $new              = clone $this;
+        $new->is_promoted = true;
+
         return $new;
     }
 
@@ -274,6 +289,9 @@ final class XMLTracker
 
         $tracker_xml->addAttribute('id', $this->id);
         $tracker_xml->addAttribute('parent_id', $this->parent_id);
+        if ($this->is_promoted) {
+            $tracker_xml->addAttribute('is_displayed_in_new_dropdown', '1');
+        }
 
         $cdata_section_factory = new \XML_SimpleXMLCDATAFactory();
         $cdata_section_factory->insert($tracker_xml, 'name', $this->name);

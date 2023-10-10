@@ -24,10 +24,8 @@ namespace Tuleap\Project\Registration\Template;
 
 use Tuleap\Event\Dispatchable;
 
-class DefineIssueTemplateEvent implements Dispatchable
+final class DefineIssueTemplateEvent implements Dispatchable
 {
-    public const NAME = 'defineIssueTemplateEvent';
-
     public function __construct(private \SimpleXMLElement $project)
     {
     }
