@@ -40,7 +40,8 @@ final class NonUniqueUidDAO extends \Tuleap\DB\DataAccessObject
                     WHERE user.status IN ('A', 'R')
                     GROUP BY ldap_uid
                     HAVING COUNT(ldap_uid) > 1
-                )";
+                )
+                AND user.status IN ('A', 'R')";
 
         return $this->getDB()->safeQuery(
             $sql,
