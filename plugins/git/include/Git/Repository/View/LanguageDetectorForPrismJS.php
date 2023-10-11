@@ -30,6 +30,7 @@ class LanguageDetectorForPrismJS
         '.eslintignore'   => 'ignore',
         '.prettierignore' => 'ignore',
         'Cargo.lock'      => 'toml',
+        'Makefile'        => 'makefile',
     ];
 
     private const EXTENSIONS = [
