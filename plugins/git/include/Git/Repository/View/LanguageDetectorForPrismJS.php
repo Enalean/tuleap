@@ -30,6 +30,7 @@ class LanguageDetectorForPrismJS
         '.eslintignore'   => 'ignore',
         '.prettierignore' => 'ignore',
         'Cargo.lock'      => 'toml',
+        'Makefile'        => 'makefile',
     ];
 
     private const EXTENSIONS = [
@@ -53,6 +54,8 @@ class LanguageDetectorForPrismJS
         'rs'             => 'rust',
         'ipynb'          => 'json',
         'rst'            => 'rest',
+        'cc'             => 'cpp',
+        'hh'             => 'cpp',
     ];
 
     public function getLanguage(string $filename): string
