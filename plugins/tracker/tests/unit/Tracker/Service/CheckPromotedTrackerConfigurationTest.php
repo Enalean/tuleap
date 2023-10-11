@@ -30,13 +30,13 @@ final class CheckPromotedTrackerConfigurationTest extends TestCase
 {
     use ForgeConfigSandbox;
 
-    public function testFalseWhenFeatureFlagIsNotSetAtAll(): void
+    public function testTrueWhenFeatureFlagIsNotSetAtAll(): void
     {
         $project = ProjectTestBuilder::aProject()->build();
 
         $checker = new CheckPromotedTrackerConfiguration();
 
-        self::assertFalse($checker->isProjectAllowedToPromoteTrackersInSidebar($project));
+        self::assertTrue($checker->isProjectAllowedToPromoteTrackersInSidebar($project));
     }
 
     public function testFalseWhenFeatureFlagIsSetTo0(): void

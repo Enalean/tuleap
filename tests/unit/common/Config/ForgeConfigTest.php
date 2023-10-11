@@ -432,9 +432,10 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return [
             'Nothing' => ['', []],
-            '0 means nothing' => ['0', []],
+            '0 means 0, not nothing' => ['0', [0]],
             'One value' => ['123', [123]],
             'Multiple values' => ['123,456,789', [123, 456, 789]],
+            '0 among multiple values is ignored' => ['123,0,789', [123, 789]],
             'Multiple values with spaces' => ['123 , 456 , 789', [123, 456, 789]],
             'Non int are silently ignored' => ['123,whatever,456', [123, 456]],
             'Extra commas are ignored' => [',123,,456,,', [123, 456]],

@@ -32,11 +32,11 @@ final class PromotedTrackerConfiguration
     #[FeatureFlagConfigKey(<<<'EOF'
     Should we display promoted trackers in project sidebar?
     Comma separated list of project ids like 123,234.
-    0 => No projects have the feature (default)
-    1 => Every projects have the feature
+    0 => No projects have the feature
+    1 => Every projects have the feature (default)
     123,234 => Only projects with id 123 or 234 have the feature
     EOF
     )]
-    #[ConfigKeyString('0')]
+    #[ConfigKeyString('1')]
     public const FEATURE_FLAG = 'display_promoted_trackers_in_sidebar';
 }
