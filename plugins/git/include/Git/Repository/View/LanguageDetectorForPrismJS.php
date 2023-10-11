@@ -56,6 +56,11 @@ class LanguageDetectorForPrismJS
         'rst'            => 'rest',
         'cc'             => 'cpp',
         'hh'             => 'cpp',
+        'f'              => 'fortran',
+        'for'            => 'fortran',
+        'f90'            => 'fortran',
+        'f95'            => 'fortran',
+        'f03'            => 'fortran',
     ];
 
     public function getLanguage(string $filename): string
