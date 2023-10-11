@@ -200,17 +200,22 @@ class ForgeConfig
      */
     private static function getArrayOfInt(string $name): array
     {
-        if (self::exists($name)) {
-            return array_values(
-                array_filter(
-                    array_map(
-                        static fn(string $value): int => (int) $value,
-                        explode(',', self::$conf_stack[0][$name]),
-                    ),
-                ),
-            );
+        if (! self::exists($name)) {
+            return [];
         }
-        return [];
+
+        if (self::$conf_stack[0][$name] === '0') {
+            return [0];
+        }
+
+        return array_values(
+            array_filter(
+                array_map(
+                    static fn(string $value): int => (int) $value,
+                    explode(',', self::$conf_stack[0][$name]),
+                ),
+            ),
+        );
     }
 
     public static function getStringAsBool(string $name): bool
