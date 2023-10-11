@@ -51,6 +51,8 @@ class LanguageDetectorForPrismJS
         'tfstate'        => 'json',
         'tfstate.backup' => 'json',
         'rs'             => 'rust',
+        'ipynb'          => 'json',
+        'rst'            => 'rest',
     ];
 
     public function getLanguage(string $filename): string
