@@ -53,6 +53,8 @@ class LanguageDetectorForPrismJS
         'rs'             => 'rust',
         'ipynb'          => 'json',
         'rst'            => 'rest',
+        'cc'             => 'cpp',
+        'hh'             => 'cpp',
     ];
 
     public function getLanguage(string $filename): string
