@@ -20,15 +20,15 @@
 
 namespace Tuleap\User\History;
 
-class HistoryCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
-{
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Builders\UserTestBuilder;
 
+final class HistoryCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
+{
     public function testItClearsUserHistory(): void
     {
-        $user          = \Mockery::spy(\PFUser::class);
-        $event_manager = \Mockery::mock(\EventManager::class);
-        $event_manager->shouldReceive('processEvent')->with(\Event::USER_HISTORY_CLEAR, ['user' => $user])->atLeast()->once();
+        $user          = UserTestBuilder::aUser()->build();
+        $event_manager = $this->createMock(\EventManager::class);
+        $event_manager->expects(self::once())->method('processEvent')->with(\Event::USER_HISTORY_CLEAR, ['user' => $user]);
 
         $history_cleaner = new HistoryCleaner($event_manager);
         $history_cleaner->clearHistory($user);

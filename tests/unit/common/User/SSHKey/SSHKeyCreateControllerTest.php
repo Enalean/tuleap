@@ -25,8 +25,7 @@ use Cose\Algorithm\Manager;
 use Cose\Algorithm\Signature\ECDSA\ES256;
 use Cose\Algorithm\Signature\EdDSA\Ed25519;
 use Cose\Algorithm\Signature\RSA\RS256;
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Config\ConfigurationVariables;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\ServerHostname;
@@ -47,26 +46,15 @@ use Webauthn\PublicKeyCredentialRpEntity;
 
 final class SSHKeyCreateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \CSRFSynchronizerToken|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $csrf_token;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\UserManager
-     */
-    private $user_manager;
+    private \CSRFSynchronizerToken&MockObject $csrf_token;
+    private \UserManager&MockObject $user_manager;
     private WebAuthnCredentialSourceDaoStub $source_dao;
-    /**
-     * @var SSHKeyCreateController
-     */
-    private $controller;
+    private SSHKeyCreateController $controller;
 
     protected function setUp(): void
     {
-        $this->csrf_token              = M::mock(\CSRFSynchronizerToken::class);
-        $this->user_manager            = M::mock(\UserManager::class);
+        $this->csrf_token              = $this->createMock(\CSRFSynchronizerToken::class);
+        $this->user_manager            = $this->createMock(\UserManager::class);
         $this->source_dao              = WebAuthnCredentialSourceDaoStub::withoutCredentialSources();
         $attestation_statement_manager = new AttestationStatementSupportManager();
         $attestation_statement_manager->add(new NoneAttestationStatementSupport());
@@ -98,7 +86,7 @@ final class SSHKeyCreateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItForbidsAnonymousUsers()
+    public function testItForbidsAnonymousUsers(): void
     {
         $this->expectException(ForbiddenException::class);
         $this->controller->process(
@@ -111,9 +99,9 @@ final class SSHKeyCreateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItUpdatesUserSSHKey(): void
     {
         $user = UserTestBuilder::aUser()->withId(110)->build();
-        $this->csrf_token->shouldReceive('check')->with('/account/keys-tokens')->once();
+        $this->csrf_token->expects(self::once())->method('check')->with('/account/keys-tokens');
 
-        $this->user_manager->shouldReceive('addSSHKeys')->with($user, 'ssh-rsa blabla')->once();
+        $this->user_manager->expects(self::once())->method('addSSHKeys')->with($user, 'ssh-rsa blabla');
 
         $this->expectExceptionObject(new LayoutInspectorRedirection('/account/keys-tokens'));
         $this->controller->process(

@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\User\Profile;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Http\Message\ResponseInterface;
 use TemplateRenderer;
 use TemplateRendererFactory;
@@ -34,12 +32,10 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ProfileAsJSONForTooltipControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItDoesNotLeakUserInfoIfCurrentUserIsAnonymous(): void
     {
         $response_factory = HTTPFactoryBuilder::responseFactory();
-        $emitter          = Mockery::mock(EmitterInterface::class);
+        $emitter          = $this->createMock(EmitterInterface::class);
         $controller       = new ProfileAsJSONForTooltipController(
             new JSONResponseBuilder(
                 $response_factory,
@@ -47,22 +43,21 @@ final class ProfileAsJSONForTooltipControllerTest extends \Tuleap\Test\PHPUnit\T
             ),
             $emitter,
             $response_factory,
-            Mockery::mock(TemplateRendererFactory::class),
+            $this->createMock(TemplateRendererFactory::class),
         );
 
-        $user = Mockery::mock(\PFUser::class);
+        $user         = UserTestBuilder::anActiveUser()->build();
+        $current_user = UserTestBuilder::anAnonymousUser()->build();
 
-        $current_user = Mockery::mock(\PFUser::class);
-        $current_user->shouldReceive(['isAnonymous' => true]);
-
-        $emitter->shouldReceive('emit')
+        $emitter->expects(self::atLeast(1))
+            ->method('emit')
             ->with(
-                Mockery::on(
+                self::callback(
                     static function (ResponseInterface $response): bool {
                         return $response->getStatusCode() === 403;
                     }
                 )
-            )->atLeast()->once();
+            );
 
         $controller->process($current_user, $user);
     }
@@ -70,8 +65,8 @@ final class ProfileAsJSONForTooltipControllerTest extends \Tuleap\Test\PHPUnit\T
     public function testItSendTooltipInformationAsJson(): void
     {
         $response_factory          = HTTPFactoryBuilder::responseFactory();
-        $emitter                   = Mockery::mock(EmitterInterface::class);
-        $template_renderer_factory = Mockery::mock(TemplateRendererFactory::class);
+        $emitter                   = $this->createMock(EmitterInterface::class);
+        $template_renderer_factory = $this->createMock(TemplateRendererFactory::class);
         $controller                = new ProfileAsJSONForTooltipController(
             new JSONResponseBuilder(
                 $response_factory,
@@ -90,31 +85,35 @@ final class ProfileAsJSONForTooltipControllerTest extends \Tuleap\Test\PHPUnit\T
             ->withRealName('Jacklyn Vis')
             ->build();
 
-        $current_user = Mockery::mock(\PFUser::class);
-        $current_user->shouldReceive(['isAnonymous' => false]);
+        $current_user = UserTestBuilder::anActiveUser()->build();
 
-        $renderer = Mockery::mock(TemplateRenderer::class);
+        $renderer = $this->createMock(TemplateRenderer::class);
         $template_renderer_factory
-            ->shouldReceive('getRenderer')
-            ->andReturn($renderer);
-        $renderer
-            ->shouldReceive('renderToString')
-            ->with('tooltip-title', Mockery::type(UserTooltipTitlePresenter::class))
-            ->andReturn('title');
-        $renderer
-            ->shouldReceive('renderToString')
-            ->with('tooltip-body', Mockery::type(UserTooltipBodyPresenter::class))
-            ->andReturn('body');
+            ->method('getRenderer')
+            ->willReturn($renderer);
 
-        $emitter->shouldReceive('emit')
+        $renderer
+            ->method('renderToString')
+            ->willReturnCallback(function (string $template_name, mixed $presenter): string {
+                if ($template_name === 'tooltip-title' && $presenter instanceof UserTooltipTitlePresenter) {
+                    return 'title';
+                } elseif ($template_name === 'tooltip-body' && $presenter instanceof UserTooltipBodyPresenter) {
+                    return 'body';
+                } else {
+                    throw new \LogicException('must not be here');
+                }
+            });
+
+        $emitter->expects(self::atLeast(1))
+            ->method('emit')
             ->with(
-                Mockery::on(
+                self::callback(
                     static function (ResponseInterface $response): bool {
                         return $response->getStatusCode() === 200
                             && $response->getBody()->getContents() === '{"title_as_html":"title","body_as_html":"body","accent_color":""}';
                     }
                 )
-            )->atLeast()->once();
+            );
 
         $controller->process($current_user, $user);
     }

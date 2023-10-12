@@ -22,13 +22,13 @@ declare(strict_types=1);
 
 namespace User\XML\Import;
 
+use PHPUnit\Framework\MockObject\MockObject;
+
 final class ReadyToBeImportedUsersCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     private ReadyToBeImportedUsersCollection $collection;
     /**
-     * @var \Mockery\LegacyMockInterface&\Mockery\MockInterface&ReadyToBeImportedUser
+     * @var MockObject&ReadyToBeImportedUser
      */
     private $user;
     private int $id;
@@ -39,7 +39,7 @@ final class ReadyToBeImportedUsersCollectionTest extends \Tuleap\Test\PHPUnit\Te
     {
         parent::setUp();
 
-        $this->user = \Mockery::spy(\User\XML\Import\ReadyToBeImportedUser::class);
+        $this->user = $this->createMock(\User\XML\Import\ReadyToBeImportedUser::class);
 
         $this->id       = 107;
         $this->username = 'jdoe';
@@ -51,7 +51,7 @@ final class ReadyToBeImportedUsersCollectionTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItRetrievesUserByUserName(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             $this->user,
             $this->collection->getUserByUserName($this->username),
         );
@@ -66,7 +66,7 @@ final class ReadyToBeImportedUsersCollectionTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItRetrievesUserById(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             $this->collection->getUserById($this->id),
             $this->user
         );
@@ -81,7 +81,7 @@ final class ReadyToBeImportedUsersCollectionTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItRetrievesUserByLdapId(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             $this->user,
             $this->collection->getUserByLdapId($this->ldap_id),
         );
@@ -96,7 +96,7 @@ final class ReadyToBeImportedUsersCollectionTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItDoesNotIndexByLdapIdWhenNoLdapId(): void
     {
-        $user = \Mockery::spy(\User\XML\Import\ReadyToBeImportedUser::class);
+        $user = $this->createMock(\User\XML\Import\ReadyToBeImportedUser::class);
 
         $id       = 108;
         $username = 'cstevens';

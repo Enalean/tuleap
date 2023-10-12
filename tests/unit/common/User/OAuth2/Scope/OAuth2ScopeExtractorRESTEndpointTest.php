@@ -23,27 +23,19 @@ declare(strict_types=1);
 namespace Tuleap\User\OAuth2\Scope;
 
 use Luracast\Restler\Data\ApiMethodInfo;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
 
 final class OAuth2ScopeExtractorRESTEndpointTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AuthenticationScopeBuilder
-     */
-    private $scope_builder;
-    /**
-     * @var OAuth2ScopeExtractorRESTEndpoint
-     */
-    private $extractor;
+    private MockObject&AuthenticationScopeBuilder $scope_builder;
+    private OAuth2ScopeExtractorRESTEndpoint $extractor;
 
     protected function setUp(): void
     {
-        $this->scope_builder = \Mockery::mock(AuthenticationScopeBuilder::class);
+        $this->scope_builder = $this->createMock(AuthenticationScopeBuilder::class);
 
         $this->extractor = new OAuth2ScopeExtractorRESTEndpoint($this->scope_builder);
     }
@@ -54,16 +46,16 @@ final class OAuth2ScopeExtractorRESTEndpointTest extends \Tuleap\Test\PHPUnit\Te
         $scope_identifier_key                      = 'validscopeidentifierkey';
         $api_method_info->metadata['oauth2-scope'] = $scope_identifier_key;
 
-        $expected_scope = \Mockery::mock(AuthenticationScope::class);
-        $this->scope_builder->shouldReceive('buildAuthenticationScopeFromScopeIdentifier')
-            ->withArgs(static function (AuthenticationScopeIdentifier $identifier) use ($scope_identifier_key): bool {
+        $expected_scope = $this->createMock(AuthenticationScope::class);
+        $this->scope_builder->expects(self::atLeast(1))
+            ->method('buildAuthenticationScopeFromScopeIdentifier')
+            ->with(self::callback(function (AuthenticationScopeIdentifier $identifier) use ($scope_identifier_key): bool {
                 return $identifier->toString() === $scope_identifier_key;
-            })
-            ->atLeast()->once()
-            ->andReturn($expected_scope);
+            }))
+            ->willReturn($expected_scope);
 
         $scope = $this->extractor->extractRequiredScope($api_method_info);
-        $this->assertSame($expected_scope, $scope);
+        self::assertSame($expected_scope, $scope);
     }
 
     public function testDoesNotExtractScopeWhenNoneHaveBeenDefinedOnTheEndpoint(): void
@@ -86,7 +78,7 @@ final class OAuth2ScopeExtractorRESTEndpointTest extends \Tuleap\Test\PHPUnit\Te
         $api_method_info                           = new ApiMethodInfo();
         $api_method_info->metadata['oauth2-scope'] = 'doesnotexist';
 
-        $this->scope_builder->shouldReceive('buildAuthenticationScopeFromScopeIdentifier')->andReturn(null);
+        $this->scope_builder->method('buildAuthenticationScopeFromScopeIdentifier')->willReturn(null);
 
         $this->expectException(OAuth2ScopeRESTEndpointInvalidException::class);
         $this->extractor->extractRequiredScope($api_method_info);

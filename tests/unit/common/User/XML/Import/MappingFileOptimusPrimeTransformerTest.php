@@ -24,20 +24,16 @@ namespace User\XML\Import;
 
 use org\bovigo\vfs\vfsStream;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 
 final class MappingFileOptimusPrimeTransformerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    protected MappingFileOptimusPrimeTransformer $transformer;
+    protected UsersToBeImportedCollection $collection;
 
-    /** @var MappingFileOptimusPrimeTransformer */
-    protected $transformer;
-
-    /** @var UsersToBeImportedCollection */
-    protected $collection;
-
-    protected $filename;
+    protected string $filename;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\UserManager
+     * @var \UserManager&MockObject
      */
     private $user_manager;
 
@@ -46,15 +42,17 @@ final class MappingFileOptimusPrimeTransformerTest extends \Tuleap\Test\PHPUnit\
         parent::setUp();
         $this->filename = vfsStream::setup()->url() . '/users.csv';
 
-        $this->user_manager = \Mockery::spy(\UserManager::class);
+        $this->user_manager = $this->createMock(\UserManager::class);
 
         $cstevens         = $this->buildUser('cstevens');
         $to_be_activated  = $this->buildUser('to.be.activated');
         $already_existing = $this->buildUser('already.existing');
 
-        $this->user_manager->shouldReceive('getUserByUserName')->with('cstevens')->andReturns($cstevens);
-        $this->user_manager->shouldReceive('getUserByUserName')->with('to.be.activated')->andReturns($to_be_activated);
-        $this->user_manager->shouldReceive('getUserByUserName')->with('already.existing')->andReturns($already_existing);
+        $this->user_manager->method('getUserByUserName')->willReturnMap([
+            ['cstevens', $cstevens],
+            ['to.be.activated', $to_be_activated],
+            ['already.existing', $already_existing],
+        ]);
 
         $this->transformer = new MappingFileOptimusPrimeTransformer($this->user_manager);
         $this->collection  = new UsersToBeImportedCollection();
@@ -165,8 +163,8 @@ EOS;
         $new_collection = $this->transformer->transform($this->collection, $this->filename);
 
         $user = $new_collection->getUserByUserName('to.be.mapped');
-        $this->assertInstanceOf(\User\XML\Import\WillBeMappedUser::class, $user);
-        $this->assertEquals($cstevens, $user->getMappedUser());
+        self::assertInstanceOf(\User\XML\Import\WillBeMappedUser::class, $user);
+        self::assertEquals($cstevens, $user->getMappedUser());
     }
 
     public function testItTransformsAnEmailDoesnotMatchToAWillBeMappedUser(): void
@@ -178,8 +176,8 @@ EOS;
         $new_collection = $this->transformer->transform($this->collection, $this->filename);
         $user           = $new_collection->getUserByUserName('email.does.not.match');
 
-        $this->assertInstanceOf(\User\XML\Import\WillBeMappedUser::class, $user);
-        $this->assertEquals($cstevens, $user->getMappedUser());
+        self::assertInstanceOf(\User\XML\Import\WillBeMappedUser::class, $user);
+        self::assertEquals($cstevens, $user->getMappedUser());
     }
 
     public function testItTransformsAToBeCreatedToAWillBeMappedUser(): void
@@ -191,8 +189,8 @@ EOS;
         $new_collection = $this->transformer->transform($this->collection, $this->filename);
         $user           = $new_collection->getUserByUserName('to.be.created');
 
-        $this->assertInstanceOf(\User\XML\Import\WillBeMappedUser::class, $user);
-        $this->assertEquals($cstevens, $user->getMappedUser());
+        self::assertInstanceOf(\User\XML\Import\WillBeMappedUser::class, $user);
+        self::assertEquals($cstevens, $user->getMappedUser());
     }
 
     public function testItTransformsAToBeActivatedToAWillBeMappedUser(): void
@@ -204,8 +202,8 @@ EOS;
         $new_collection = $this->transformer->transform($this->collection, $this->filename);
         $user           = $new_collection->getUserByUserName('to.be.activated');
 
-        $this->assertInstanceOf(\User\XML\Import\WillBeMappedUser::class, $user);
-        $this->assertEquals($cstevens, $user->getMappedUser());
+        self::assertInstanceOf(\User\XML\Import\WillBeMappedUser::class, $user);
+        self::assertEquals($cstevens, $user->getMappedUser());
     }
 
     public function testItTransformsAnAlreadyExistingToAWillBeMappedUser(): void
@@ -217,8 +215,8 @@ EOS;
         $new_collection = $this->transformer->transform($this->collection, $this->filename);
         $user           = $new_collection->getUserByUserName('already.existing');
 
-        $this->assertInstanceOf(\User\XML\Import\WillBeMappedUser::class, $user);
-        $this->assertEquals($cstevens, $user->getMappedUser());
+        self::assertInstanceOf(\User\XML\Import\WillBeMappedUser::class, $user);
+        self::assertEquals($cstevens, $user->getMappedUser());
     }
 
     public function testItTransformsAToBeCreatedToAWillBeCreatedUserInActiveStatus(): void
@@ -229,11 +227,11 @@ EOS;
         $new_collection = $this->transformer->transform($this->collection, $this->filename);
         $user           = $new_collection->getUserByUserName('to.be.created');
 
-        $this->assertInstanceOf(\User\XML\Import\WillBeCreatedUser::class, $user);
-        $this->assertEquals('to.be.created', $user->getUserName());
-        $this->assertEquals('To Be Created', $user->getRealName());
-        $this->assertEquals('to.be.created@example.com', $user->getEmail());
-        $this->assertEquals(PFUser::STATUS_ACTIVE, $user->getStatus());
+        self::assertInstanceOf(\User\XML\Import\WillBeCreatedUser::class, $user);
+        self::assertEquals('to.be.created', $user->getUserName());
+        self::assertEquals('To Be Created', $user->getRealName());
+        self::assertEquals('to.be.created@example.com', $user->getEmail());
+        self::assertEquals(PFUser::STATUS_ACTIVE, $user->getStatus());
     }
 
     public function testItTransformsAToBeCreatedToAWillBeCreatedUserInARestrictedStatus(): void
@@ -244,7 +242,7 @@ EOS;
         $new_collection = $this->transformer->transform($this->collection, $this->filename);
         $user           = $new_collection->getUserByUserName('to.be.created');
 
-        $this->assertEquals(PFUser::STATUS_RESTRICTED, $user->getStatus());
+        self::assertEquals(PFUser::STATUS_RESTRICTED, $user->getStatus());
     }
 
     public function testItTransformsAToBeCreatedToAWillBeCreatedUserInASuspendedStatus(): void
@@ -255,7 +253,7 @@ EOS;
         $new_collection = $this->transformer->transform($this->collection, $this->filename);
         $user           = $new_collection->getUserByUserName('to.be.created');
 
-        $this->assertEquals(PFUser::STATUS_SUSPENDED, $user->getStatus());
+        self::assertEquals(PFUser::STATUS_SUSPENDED, $user->getStatus());
     }
 
     public function testItTransformsAToBeCreatedToAWillBeCreatedUserInDefaultStatusSuspended(): void
@@ -266,7 +264,7 @@ EOS;
         $new_collection = $this->transformer->transform($this->collection, $this->filename);
         $user           = $new_collection->getUserByUserName('to.be.created');
 
-        $this->assertEquals(PFUser::STATUS_SUSPENDED, $user->getStatus());
+        self::assertEquals(PFUser::STATUS_SUSPENDED, $user->getStatus());
     }
 
     public function testItThrowsAnExceptionWhenGivenStatusIsInvalid(): void
@@ -288,9 +286,9 @@ EOS;
         $new_collection = $this->transformer->transform($this->collection, $this->filename);
         $user           = $new_collection->getUserByUserName('to.be.activated');
 
-        $this->assertInstanceOf(\User\XML\Import\WillBeActivatedUser::class, $user);
-        $this->assertEquals($to_be_activated, $user->getUser());
-        $this->assertEquals('to.be.activated', $user->getUserName());
+        self::assertInstanceOf(\User\XML\Import\WillBeActivatedUser::class, $user);
+        self::assertEquals($to_be_activated, $user->getUser());
+        self::assertEquals('to.be.activated', $user->getUserName());
     }
 
     public function testItTransformsAnAlreadyExistingToAWillBeActivatedUser(): void
@@ -302,9 +300,9 @@ EOS;
         $new_collection = $this->transformer->transform($this->collection, $this->filename);
         $user           = $new_collection->getUserByUserName('already.existing');
 
-        $this->assertInstanceOf(\User\XML\Import\WillBeActivatedUser::class, $user);
-        $this->assertEquals($already_existing, $user->getUser());
-        $this->assertEquals('already.existing', $user->getUserName());
+        self::assertInstanceOf(\User\XML\Import\WillBeActivatedUser::class, $user);
+        self::assertEquals($already_existing, $user->getUser());
+        self::assertEquals('already.existing', $user->getUserName());
     }
 
     public function testItThrowsAnExceptionWhenAUserInCollectionIsNotTransformedOrKept(): void
@@ -337,7 +335,7 @@ EOS;
 
         $new_collection = $this->transformer->transform($this->collection, $this->filename);
 
-        $this->assertEquals(
+        self::assertEquals(
             $this->collection->getUser('already.existing'),
             $new_collection->getUserByUserName('already.existing')
         );
@@ -489,7 +487,7 @@ EOS;
 
         $user = $collection_for_import->getUserById(104);
 
-        $this->assertInstanceOf(\User\XML\Import\WillBeActivatedUser::class, $user);
+        self::assertInstanceOf(\User\XML\Import\WillBeActivatedUser::class, $user);
     }
 
     public function testItCreatesMissingUsers(): void
@@ -500,7 +498,7 @@ EOS;
 
         $user = $collection_for_import->getUserById(104);
 
-        $this->assertInstanceOf(\User\XML\Import\WillBeCreatedUser::class, $user);
+        self::assertInstanceOf(\User\XML\Import\WillBeCreatedUser::class, $user);
     }
 
     public function testItDoesNothingForUsersThatAreAlreadyActive(): void
@@ -511,7 +509,7 @@ EOS;
 
         $user = $collection_for_import->getUserById(104);
 
-        $this->assertInstanceOf(\User\XML\Import\AlreadyExistingUser::class, $user);
+        self::assertInstanceOf(\User\XML\Import\AlreadyExistingUser::class, $user);
     }
 
     public function testItDoesNothingForAlreadyExistingUsers(): void
@@ -522,7 +520,7 @@ EOS;
 
         $user = $collection_for_import->getUserById(104);
 
-        $this->assertInstanceOf(\User\XML\Import\AlreadyExistingUser::class, $user);
+        self::assertInstanceOf(\User\XML\Import\AlreadyExistingUser::class, $user);
     }
 
     public function testItManageSeveralUsersWithoutOveralpingResponsabilities(): void
@@ -532,7 +530,7 @@ EOS;
 
         $collection_for_import = $this->transformer->transformWithoutMap($this->collection, 'create:A');
 
-        $this->assertInstanceOf(\User\XML\Import\WillBeActivatedUser::class, $collection_for_import->getUserById(104));
-        $this->assertInstanceOf(\User\XML\Import\WillBeCreatedUser::class, $collection_for_import->getUserById(105));
+        self::assertInstanceOf(\User\XML\Import\WillBeActivatedUser::class, $collection_for_import->getUserById(104));
+        self::assertInstanceOf(\User\XML\Import\WillBeCreatedUser::class, $collection_for_import->getUserById(105));
     }
 }

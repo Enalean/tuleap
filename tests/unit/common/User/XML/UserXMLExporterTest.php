@@ -28,8 +28,6 @@ use UserXMLExporter;
 
 final class UserXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     private $collection;
     private $user_xml_exporter;
     private $user_manager;
@@ -39,8 +37,8 @@ final class UserXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->user_manager      = \Mockery::spy(\UserManager::class);
-        $this->collection        = \Mockery::spy(\UserXMLExportedCollection::class);
+        $this->user_manager      = $this->createMock(\UserManager::class);
+        $this->collection        = $this->createMock(\UserXMLExportedCollection::class);
         $this->user_xml_exporter = new UserXMLExporter($this->user_manager, $this->collection);
         $this->base_xml          = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -52,56 +50,64 @@ final class UserXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user = new PFUser(['user_id' => 101, 'user_name' => 'user_01', 'ldap_id' => 'ldap_01', 'language_id' => 'en']);
 
+        $this->collection->method('add');
+
         $this->user_xml_exporter->exportUser($user, $this->base_xml, 'user');
 
-        $this->assertEquals((string) $this->base_xml->user['format'], 'ldap');
-        $this->assertEquals((string) $this->base_xml->user, 'ldap_01');
+        self::assertEquals('ldap', (string) $this->base_xml->user['format']);
+        self::assertEquals('ldap_01', (string) $this->base_xml->user);
     }
 
     public function testItExportsUserInXMLWithTheDefinedChildName(): void
     {
         $user = new PFUser(['user_id' => 101, 'user_name' => 'user_01', 'ldap_id' => 'ldap_01', 'language_id' => 'en']);
 
+        $this->collection->method('add');
+
         $this->user_xml_exporter->exportUser($user, $this->base_xml, 'mychildname');
 
-        $this->assertEquals((string) $this->base_xml->mychildname['format'], 'ldap');
-        $this->assertEquals((string) $this->base_xml->mychildname, 'ldap_01');
+        self::assertEquals('ldap', (string) $this->base_xml->mychildname['format']);
+        self::assertEquals('ldap_01', (string) $this->base_xml->mychildname);
     }
 
     public function testItExportsUserInXMLWithUserNameIfNoLdapId(): void
     {
         $user = new PFUser(['user_id' => 101, 'user_name' => 'user_01', 'language_id' => 'en']);
 
+        $this->collection->method('add');
+
         $this->user_xml_exporter->exportUser($user, $this->base_xml, 'user');
 
-        $this->assertEquals((string) $this->base_xml->user['format'], 'username');
-        $this->assertEquals((string) $this->base_xml->user, 'user_01');
+        self::assertEquals('username', (string) $this->base_xml->user['format']);
+        self::assertEquals('user_01', (string) $this->base_xml->user);
     }
 
     public function testItExportsUserInXMLByItsId(): void
     {
         $user = new PFUser(['user_id' => 101, 'user_name' => 'user_01', 'ldap_id' => 'ldap_01', 'language_id' => 'en']);
-        $this->user_manager->shouldReceive('getUserById')->with(101)->andReturns($user);
+
+        $this->collection->method('add');
+        $this->user_manager->method('getUserById')->with(101)->willReturn($user);
 
         $this->user_xml_exporter->exportUserByUserId(101, $this->base_xml, 'user');
 
-        $this->assertEquals((string) $this->base_xml->user['format'], 'ldap');
-        $this->assertEquals((string) $this->base_xml->user, 'ldap_01');
+        self::assertEquals('ldap', (string) $this->base_xml->user['format']);
+        self::assertEquals('ldap_01', (string) $this->base_xml->user);
     }
 
     public function testItExportsEmailInXML(): void
     {
         $this->user_xml_exporter->exportUserByMail('email@example.com', $this->base_xml, 'user');
 
-        $this->assertEquals('email', (string) $this->base_xml->user['format']);
-        $this->assertEquals('email@example.com', (string) $this->base_xml->user);
+        self::assertEquals('email', (string) $this->base_xml->user['format']);
+        self::assertEquals('email@example.com', (string) $this->base_xml->user);
     }
 
     public function testItCollectsUser(): void
     {
         $user = new PFUser(['user_id' => 101, 'user_name' => 'user_01', 'language_id' => 'en']);
 
-        $this->collection->shouldReceive('add')->with($user)->once();
+        $this->collection->expects(self::once())->method('add')->with($user);
 
         $this->user_xml_exporter->exportUser($user, $this->base_xml, 'user');
     }
@@ -109,16 +115,16 @@ final class UserXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItCollectsUserById(): void
     {
         $user = new PFUser(['user_id' => 101, 'user_name' => 'user_01', 'ldap_id' => 'ldap_01', 'language_id' => 'en']);
-        $this->user_manager->shouldReceive('getUserById')->with(101)->andReturns($user);
+        $this->user_manager->method('getUserById')->with(101)->willReturn($user);
 
-        $this->collection->shouldReceive('add')->with($user)->once();
+        $this->collection->expects(self::once())->method('add')->with($user);
 
         $this->user_xml_exporter->exportUserByUserId(101, $this->base_xml, 'user');
     }
 
     public function testItDoesNotCollectUserByMail(): void
     {
-        $this->collection->shouldReceive('add')->never();
+        $this->collection->expects(self::never())->method('add');
 
         $this->user_xml_exporter->exportUserByMail('email@example.com', $this->base_xml, 'user');
     }

@@ -23,15 +23,12 @@ declare(strict_types=1);
 namespace User\XML\Import;
 
 use org\bovigo\vfs\vfsStream;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class UsersToBeImportedCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /** @var UsersToBeImportedCollection */
-    private $collection;
-
-    private $output_filename;
+    private UsersToBeImportedCollection $collection;
+    private string $output_filename;
 
     protected function setUp(): void
     {
@@ -41,21 +38,21 @@ final class UsersToBeImportedCollectionTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->collection = new UsersToBeImportedCollection();
     }
 
-    private function getCSVHeader()
+    private function getCSVHeader(): array
     {
         list($header,) = $this->parseCSVFile();
 
         return $header;
     }
 
-    private function getCSVFirstData()
+    private function getCSVFirstData(): false|array
     {
         list(,$first_data) = $this->parseCSVFile();
 
         return $first_data;
     }
 
-    private function parseCSVFile()
+    private function parseCSVFile(): array
     {
         $csv        = fopen($this->output_filename, 'r');
         $header     = fgetcsv($csv);
@@ -70,29 +67,27 @@ final class UsersToBeImportedCollectionTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->collection->toCSV($this->output_filename);
 
         $header = $this->getCSVHeader();
-        $this->assertEquals(['name', 'action', 'comments'], $header);
+        self::assertEquals(['name', 'action', 'comments'], $header);
     }
 
     public function testItDoesNotDumpAlreadyExistingUser(): void
     {
-        $this->collection->add(new AlreadyExistingUser(\Mockery::spy(\PFUser::class), 104, 'ldap1234'));
+        $this->collection->add(new AlreadyExistingUser(UserTestBuilder::aUser()->build(), 104, 'ldap1234'));
         $this->collection->toCSV($this->output_filename);
 
         $data = $this->getCSVFirstData();
-        $this->assertFalse($data);
+        self::assertFalse($data);
     }
 
     public function testItDumpsToBeActivatedUser(): void
     {
-        $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('getUserName')->andReturns('jdoe');
-        $user->shouldReceive('getStatus')->andReturns('S');
+        $user = UserTestBuilder::aUser()->withStatus('S')->withUserName('jdoe')->build();
 
         $this->collection->add(new ToBeActivatedUser($user, 104, 'ldap1234'));
         $this->collection->toCSV($this->output_filename);
 
         $data = $this->getCSVFirstData();
-        $this->assertEquals(['jdoe', 'noop', 'Status of existing user jdoe is [S]'], $data);
+        self::assertEquals(['jdoe', 'noop', 'Status of existing user jdoe is [S]'], $data);
     }
 
     public function testItDumpsToBeCreatedUser(): void
@@ -101,21 +96,18 @@ final class UsersToBeImportedCollectionTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->collection->toCSV($this->output_filename);
 
         $data = $this->getCSVFirstData();
-        $this->assertEquals(['jdoe', 'create:S', 'John Doe (jdoe) <jdoe@example.com> must be created'], $data);
+        self::assertEquals(['jdoe', 'create:S', 'John Doe (jdoe) <jdoe@example.com> must be created'], $data);
     }
 
     public function testItDumpsEmailDoesNotMatchUser(): void
     {
-        $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('getUserName')->andReturns('jdoe');
-        $user->shouldReceive('getEmail')->andReturns('john.doe@example.com');
-        $user->shouldReceive('getStatus')->andReturns('S');
+        $user = UserTestBuilder::aUser()->withStatus('S')->withUserName('jdoe')->withEmail('john.doe@example.com')->build();
 
         $this->collection->add(new EmailDoesNotMatchUser($user, 'jdoe@example.com', 104, 'ldap1234'));
         $this->collection->toCSV($this->output_filename);
 
         $data = $this->getCSVFirstData();
-        $this->assertEquals(
+        self::assertEquals(
             [
                 'jdoe',
                 'map:',
@@ -127,23 +119,14 @@ final class UsersToBeImportedCollectionTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItDumpsToBeMappedUser(): void
     {
-        $user1 = \Mockery::spy(\PFUser::class);
-        $user1->shouldReceive('getUserName')->andReturns('john');
-        $user1->shouldReceive('getRealName')->andReturns('John Doe');
-        $user1->shouldReceive('getEmail')->andReturns('john.doe@example.com');
-        $user1->shouldReceive('getStatus')->andReturns('A');
-
-        $user2 = \Mockery::spy(\PFUser::class);
-        $user2->shouldReceive('getUserName')->andReturns('admin_john');
-        $user2->shouldReceive('getRealName')->andReturns('John Doe (admin)');
-        $user2->shouldReceive('getEmail')->andReturns('john.doe@example.com');
-        $user2->shouldReceive('getStatus')->andReturns('A');
+        $user1 = UserTestBuilder::anActiveUser()->withUserName('john')->withRealName('John Doe')->withEmail('john.doe@example.com')->build();
+        $user2 = UserTestBuilder::anActiveUser()->withUserName('admin_john')->withRealName('John Doe (admin)')->withEmail('john.doe@example.com')->build();
 
         $this->collection->add(new ToBeMappedUser('jdoe', 'John Doe', [$user1, $user2], 104, 'ldap1234'));
         $this->collection->toCSV($this->output_filename);
 
         $data = $this->getCSVFirstData();
-        $this->assertEquals(
+        self::assertEquals(
             [
                 'jdoe',
                 'map:',

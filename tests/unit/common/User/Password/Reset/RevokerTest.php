@@ -24,13 +24,11 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class RevokerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testRemovesUserLostPasswordTokens(): void
     {
         $user = UserTestBuilder::aUser()->withId(101)->build();
-        $dao  = \Mockery::mock(LostPasswordDAO::class);
-        $dao->shouldReceive('deleteTokensByUserId')->with(101)->once();
+        $dao  = $this->createMock(LostPasswordDAO::class);
+        $dao->expects(self::once())->method('deleteTokensByUserId')->with(101);
 
         $token_revoker = new Revoker($dao);
         $token_revoker->revokeTokens($user);
