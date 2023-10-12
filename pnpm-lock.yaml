@@ -78,8 +78,8 @@ devDependencies:
     specifier: ^9.0.0
     version: 9.0.0(eslint@8.12.0)
   eslint-plugin-cypress:
-    specifier: ^2.12.1
-    version: 2.12.1(eslint@8.12.0)
+    specifier: ^2.15.1
+    version: 2.15.1(eslint@8.12.0)
   eslint-plugin-import:
     specifier: ^2.25.4
     version: 2.25.4(@typescript-eslint/parser@6.7.0)(eslint@8.12.0)
@@ -5310,13 +5310,13 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-plugin-cypress@2.12.1(eslint@8.12.0):
-    resolution: {integrity: sha512-c2W/uPADl5kospNDihgiLc7n87t5XhUbFDoTl6CfVkmG+kDAb5Ux10V9PoLPu9N+r7znpc+iQlcmAqT1A/89HA==}
+  /eslint-plugin-cypress@2.15.1(eslint@8.12.0):
+    resolution: {integrity: sha512-eLHLWP5Q+I4j2AWepYq0PgFEei9/s5LvjuSqWrxurkg1YZ8ltxdvMNmdSf0drnsNo57CTgYY/NIHHLRSWejR7w==}
     peerDependencies:
       eslint: '>= 3.2.1'
     dependencies:
       eslint: 8.12.0
-      globals: 11.12.0
+      globals: 13.23.0
     dev: true
 
   /eslint-plugin-import@2.25.4(@typescript-eslint/parser@6.7.0)(eslint@8.12.0):
@@ -6105,6 +6105,13 @@ packages:
 
   /globals@13.13.0:
     resolution: {integrity: sha512-EQ7Q18AJlPwp3vUDL4mKA0KXrXyNIQyWon6T6XQiBQF0XHvRsiCSrWmmeATpUzdJN2HhWZU6Pdl0a9zdep5p6A==}
+    engines: {node: '>=8'}
+    dependencies:
+      type-fest: 0.20.2
+    dev: true
+
+  /globals@13.23.0:
+    resolution: {integrity: sha512-XAmF0RjlrjY23MA51q3HltdlGxUpXPvg0GioKiD9X6HD28iMjo2dKC8Vqwm7lne4GNr78+RHTfliktR6ZH09wA==}
     engines: {node: '>=8'}
     dependencies:
       type-fest: 0.20.2
