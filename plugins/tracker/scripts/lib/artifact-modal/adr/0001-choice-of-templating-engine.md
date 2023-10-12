@@ -30,7 +30,7 @@ should we choose to replace AngularJS Directives ?
 * Given the size of the artifact modal (see previous points), npm dependencies number/size become less relevant to the
   choice.
 * The artifact modal will be included in other Vue.js v2 apps, as well as AngularJS apps.
-* The templating engine must support TypeScript. We have been using TypeScript for two years at the time of writing and
+* The templating engine must support TypeScript. We have been using TypeScript for two years at the time of writing, and
   we intend to keep using it.
 * The templating engine must support our target browser compatibility. At the time of writing, we support latest Edge,
   Firefox and Chrome, with best-effort support for Firefox 68 and Chrome 70.
@@ -80,7 +80,7 @@ middle of the component tree.
 ### Vue.js v3 framework
 
 [Vue.js v3][3] is the new major version of Vue.js. We have made extensive use of Vue.js v2 for all new apps since 2017.
-AngularJS does not bind to Vue components. There is [a compatibility layer][20] but it seems it targets Vue.js v2, not
+AngularJS does not bind to Vue components. There is [a compatibility layer][20], but it seems it targets Vue.js v2, not
 v3.
 
 * Good, because we have a lot of experience with Vue.js v2, and it looks like this experience is partly transferable for
@@ -137,7 +137,7 @@ need it, [a plugin][14] offers this functionality.
 
 * Good, because it builds upon the web components specifications. Its outputs are spec-compliant Custom Elements.
 * Good, because it offers easy composition. Templates are built with tagged template literals that can be composed,
-  elements are composed from plain objects and pure functions. Custom elements also provide easy composition: to use a
+  elements are composed of plain objects and pure functions. Custom elements also provide easy composition: to use a
   component, write its tag in an HTML template with the correct attributes.
 * Good, because [it is a library, not a Framework][9]. If we change our mind or bump into a limitation, we can replace
   each component individually, we will not end up in the same situation where we have to overhaul **everything**.
