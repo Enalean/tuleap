@@ -86,7 +86,7 @@ function StaticOpenListFieldController($element) {
 
     function isStaticValueSelected(field_value) {
         return self.value_model.value.bind_value_objects.some(
-            (value_object) => value_object.id === field_value.id.toString(),
+            (value_object) => value_object.id.toString() === field_value.id.toString(),
         );
     }
 
