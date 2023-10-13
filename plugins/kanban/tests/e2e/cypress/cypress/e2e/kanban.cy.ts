@@ -126,6 +126,7 @@ describe("Kanban service", () => {
         it(`I can use the kanban`, function () {
             cy.projectMemberSession();
             cy.visitProjectService(`kanban-${now}`, "Kanban");
+            cy.intercept("POST", "/api/v1/kanban_items").as("createCard");
 
             cy.get('[data-test="go-to-kanban"]').click();
 
@@ -199,6 +200,7 @@ describe("Kanban service", () => {
                 cy.get("[data-test=add-in-place-button]").click();
                 cy.get("[data-test=add-in-place-label-input]").clear().type(drag_label);
                 cy.get("[data-test=add-in-place-submit]").first().click();
+                cy.wait("@createCard", { timeout: 1000 });
             });
 
             cy.get("[data-test=kanban-column-review]").within(() => {
@@ -207,6 +209,7 @@ describe("Kanban service", () => {
                 cy.get("[data-test=add-in-place-button]").click();
                 cy.get("[data-test=add-in-place-label-input]").clear().type(drop_label);
                 cy.get("[data-test=add-in-place-submit]").first().click();
+                cy.wait("@createCard", { timeout: 1000 });
             });
 
             cy.dragAndDrop(
