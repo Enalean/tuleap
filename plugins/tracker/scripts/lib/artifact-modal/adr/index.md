@@ -6,6 +6,7 @@ This log lists the architectural decisions for `@tuleap/artifact-modal`.
 
 * [ADR-0001](0001-choice-of-templating-engine.md) - Choice of templating engine
 * [ADR-0002](0002-hexagonal-architecture.md) - Hexagonal Architecture
+* [ADR-0003](0003-ban-es2015-classes.md) - Soft ban on ES2015 classes
 
 <!-- adrlogstop -->
 
