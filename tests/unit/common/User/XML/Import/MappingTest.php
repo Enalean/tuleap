@@ -23,24 +23,19 @@ declare(strict_types=1);
 namespace User\XML\Import;
 
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\NullLogger;
 
 final class MappingTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    private Mapping $mapping;
+    private PFUser $my_user;
+    private PFUser $none_user;
 
-    /** @var Mapping */
-    private $mapping;
-
-    /** @var PFUser */
-    private $my_user;
-
-    /** @var PFUser */
-    private $none_user;
-
-    /** @var \UserManager&\Mockery\LegacyMockInterface&\Mockery\MockInterface */
+    /** @var \UserManager&MockObject */
     private $user_manager;
     /**
-     * @var ReadyToBeImportedUsersCollection&\Mockery\LegacyMockInterface&\Mockery\MockInterface
+     * @var ReadyToBeImportedUsersCollection&MockObject
      */
     private $collection;
 
@@ -50,24 +45,27 @@ final class MappingTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->my_user      = new \PFUser(['user_id' => 101, 'language_id' => 'en']);
         $this->none_user    = new \PFUser(['user_id' => 100, 'language_id' => 'en']);
-        $this->collection   = \Mockery::spy(ReadyToBeImportedUsersCollection::class);
-        $this->user_manager = \Mockery::spy(\UserManager::class);
+        $this->collection   = $this->createMock(ReadyToBeImportedUsersCollection::class);
+        $this->user_manager = $this->createMock(\UserManager::class);
 
-        $this->user_manager->shouldReceive('getUserAnonymous')->andReturns(new \PFUser(['user_id' => 0, 'language_id' => 'en']));
-        $this->user_manager->shouldReceive('getUserByUserName')->with('None')->andReturns($this->none_user);
+        $this->user_manager->method('getUserAnonymous')->willReturn(new \PFUser(['user_id' => 0, 'language_id' => 'en']));
+        $this->user_manager->method('getUserByUserName')->willReturnMap([
+            ['None', $this->none_user],
+            ['jdoe', $this->my_user],
+        ]);
 
-        $this->mapping = new Mapping($this->user_manager, $this->collection, \Mockery::spy(\Psr\Log\LoggerInterface::class));
+        $this->mapping = new Mapping($this->user_manager, $this->collection, new NullLogger());
     }
 
     public function testItReturnsAUserReferencedById(): void
     {
-        $this->collection->shouldReceive('getUserById')->with(107)->andReturns(new WillBeMappedUser('jdoe', $this->my_user));
+        $this->collection->method('getUserById')->with(107)->willReturn(new WillBeMappedUser('jdoe', $this->my_user));
 
         $xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?>
             <submitted_by format="id">107</submitted_by>
         ');
 
-        $this->assertEquals(
+        self::assertEquals(
             $this->my_user,
             $this->mapping->getUser($xml),
         );
@@ -75,13 +73,13 @@ final class MappingTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsAUserReferencedByLdapId(): void
     {
-        $this->collection->shouldReceive('getUserByLdapId')->with('107')->andReturns(new WillBeMappedUser('jdoe', $this->my_user));
+        $this->collection->method('getUserByLdapId')->with('107')->willReturn(new WillBeMappedUser('jdoe', $this->my_user));
 
         $xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?>
             <submitted_by format="ldap">107</submitted_by>
         ');
 
-        $this->assertEquals(
+        self::assertEquals(
             $this->my_user,
             $this->mapping->getUser($xml),
         );
@@ -89,13 +87,13 @@ final class MappingTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsAUserReferencedByUsername(): void
     {
-        $this->collection->shouldReceive('getUserByUserName')->with('jdoe')->andReturns(new WillBeMappedUser('jdoe', $this->my_user));
+        $this->collection->method('getUserByUserName')->with('jdoe')->willReturn(new WillBeMappedUser('jdoe', $this->my_user));
 
         $xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?>
             <submitted_by format="username">jdoe</submitted_by>
         ');
 
-        $this->assertEquals(
+        self::assertEquals(
             $this->my_user,
             $this->mapping->getUser($xml),
         );
@@ -107,20 +105,22 @@ final class MappingTest extends \Tuleap\Test\PHPUnit\TestCase
             <submitted_by format="email">jdoe@example.com</submitted_by>
         ');
 
+        $this->user_manager->method('getUserByEmail')->with('jdoe@example.com')->willReturn(null);
+
         $user = $this->mapping->getUser($xml);
 
-        $this->assertTrue($user->isAnonymous());
+        self::assertTrue($user->isAnonymous());
     }
 
     public function testItReturnsAMatchingUserReferencedByEmail(): void
     {
-        $this->user_manager->shouldReceive('getUserByEmail')->with('existing@example.com')->andReturns($this->my_user);
+        $this->user_manager->method('getUserByEmail')->with('existing@example.com')->willReturn($this->my_user);
 
         $xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?>
             <submitted_by format="email">existing@example.com</submitted_by>
         ');
 
-        $this->assertEquals(
+        self::assertEquals(
             $this->my_user,
             $this->mapping->getUser($xml),
         );
@@ -128,14 +128,13 @@ final class MappingTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsACreatedUser(): void
     {
-        $this->collection->shouldReceive('getUserById')->with(107)->andReturns(new WillBeCreatedUser('jdoe', 'John Doe', 'jdoe@example.com', 'S', 'ed107'));
-        $this->user_manager->shouldReceive('getUserByUserName')->with('jdoe')->andReturns($this->my_user);
+        $this->collection->method('getUserById')->with(107)->willReturn(new WillBeCreatedUser('jdoe', 'John Doe', 'jdoe@example.com', 'S', 'ed107'));
 
         $xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?>
             <submitted_by format="id">107</submitted_by>
         ');
 
-        $this->assertEquals(
+        self::assertEquals(
             $this->my_user,
             $this->mapping->getUser($xml),
         );
@@ -143,13 +142,13 @@ final class MappingTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsAnAlreadyExistingUser(): void
     {
-        $this->collection->shouldReceive('getUserById')->with(107)->andReturns(new AlreadyExistingUser($this->my_user, 107, 'ldap1234'));
+        $this->collection->method('getUserById')->with(107)->willReturn(new AlreadyExistingUser($this->my_user, 107, 'ldap1234'));
 
         $xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?>
             <submitted_by format="id">107</submitted_by>
         ');
 
-        $this->assertEquals(
+        self::assertEquals(
             $this->my_user,
             $this->mapping->getUser($xml),
         );
@@ -157,13 +156,13 @@ final class MappingTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsAnActivatedUser(): void
     {
-        $this->collection->shouldReceive('getUserById')->with(107)->andReturns(new WillBeActivatedUser($this->my_user));
+        $this->collection->method('getUserById')->with(107)->willReturn(new WillBeActivatedUser($this->my_user));
 
         $xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?>
             <submitted_by format="id">107</submitted_by>
         ');
 
-        $this->assertEquals(
+        self::assertEquals(
             $this->my_user,
             $this->mapping->getUser($xml),
         );
@@ -171,13 +170,13 @@ final class MappingTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNoneUser(): void
     {
-        $this->collection->shouldReceive('getUserByUserName')->with('None')->andThrows(new UserNotFoundException());
+        $this->collection->method('getUserByUserName')->with('None')->willThrowException(new UserNotFoundException());
 
         $xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?>
             <submitted_by format="username">None</submitted_by>
         ');
 
-        $this->assertEquals(
+        self::assertEquals(
             $this->none_user,
             $this->mapping->getUser($xml),
         );

@@ -24,50 +24,52 @@ use ForgeAccess;
 use ForgeConfig;
 use PFUser;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-class UserStatusBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UserStatusBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
     use \Tuleap\ForgeConfigSandbox;
 
-    /**
-     * @var UserStatusChecker
-     */
-    private $user_status_checker;
-
-    /**
-     * @var array
-     */
-    private $status_with_restricted;
-
-    /**
-     * @var array
-     */
-    private $status;
-
-    /**
-     * @var \PFUser
-     */
-    private $user;
-
-    /**
-     * @var UserStatusBuilder
-     */
-    private $user_status_builder;
+    private UserStatusChecker $user_status_checker;
+    private array $status_with_restricted;
+    private array $active_status_with_restricted;
+    private array $status;
+    private UserStatusBuilder $user_status_builder;
 
     protected function setUp(): void
     {
         parent::setUp();
-        ForgeConfig::store();
 
-        $this->user                = \Mockery::spy(\PFUser::class);
         $this->user_status_checker = new UserStatusChecker();
         $this->user_status_builder = new UserStatusBuilder($this->user_status_checker);
 
         $this->status = [
             [
                 'key'        => PFUser::STATUS_ACTIVE,
+                'status'     => null,
+                'is_current' => true,
+            ],
+            [
+                'key'        => PFUser::STATUS_SUSPENDED,
+                'status'     => null,
+                'is_current' => false,
+            ],
+            [
+                'key'        => PFUser::STATUS_DELETED,
+                'status'     => null,
+                'is_current' => false,
+            ],
+        ];
+
+        $this->active_status_with_restricted = [
+            [
+                'key'        => PFUser::STATUS_ACTIVE,
+                'status'     => null,
+                'is_current' => true,
+            ],
+            [
+                'key'        => PFUser::STATUS_RESTRICTED,
                 'status'     => null,
                 'is_current' => false,
             ],
@@ -92,7 +94,7 @@ class UserStatusBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'key'        => PFUser::STATUS_RESTRICTED,
                 'status'     => null,
-                'is_current' => false,
+                'is_current' => true,
             ],
             [
                 'key'        => PFUser::STATUS_SUSPENDED,
@@ -110,24 +112,24 @@ class UserStatusBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRetrievesRestrictedStatusWhenPlatformAllowsRestricted(): void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
-        $this->user->shouldReceive('isRestricted')->andReturns(false);
+        $user = UserTestBuilder::anActiveUser()->build();
 
-        $this->assertEquals($this->user_status_builder->getStatus($this->user), $this->status_with_restricted);
+        self::assertEquals($this->active_status_with_restricted, $this->user_status_builder->getStatus($user));
     }
 
     public function testItRetrievesRestrictedStatusWhenAUserHasRestrictedStatus(): void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
-        $this->user->shouldReceive('isRestricted')->andReturns(true);
+        $user = UserTestBuilder::aRestrictedUser()->build();
 
-        $this->assertEquals($this->user_status_builder->getStatus($this->user), $this->status_with_restricted);
+        self::assertEquals($this->user_status_builder->getStatus($user), $this->status_with_restricted);
     }
 
     public function testItShouldNeverReturnsRestrictedWhenNoUserIsRestrictedAndPlatformDoesNotAllowRestricted(): void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
-        $this->user->shouldReceive('isRestricted')->andReturns(false);
+        $user = UserTestBuilder::anActiveUser()->build();
 
-        $this->assertEquals($this->user_status_builder->getStatus($this->user), $this->status);
+        self::assertEquals($this->user_status_builder->getStatus($user), $this->status);
     }
 }

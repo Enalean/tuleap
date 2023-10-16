@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\User\OAuth2\ResourceServer;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Tuleap\Authentication\Scope\AuthenticationScope;
@@ -43,8 +43,6 @@ use User_LoginManager;
 
 final class OAuth2ResourceServerMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|SplitTokenIdentifierTranslator
      */
@@ -69,10 +67,10 @@ final class OAuth2ResourceServerMiddlewareTest extends \Tuleap\Test\PHPUnit\Test
 
     protected function setUp(): void
     {
-        $this->access_token_unserializer = \Mockery::mock(SplitTokenIdentifierTranslator::class);
+        $this->access_token_unserializer = $this->createMock(SplitTokenIdentifierTranslator::class);
         $this->access_token_verifier     = $this->createStub(OAuth2AccessTokenVerifier::class);
-        $this->required_scope            = \Mockery::mock(AuthenticationScope::class);
-        $this->login_manager             = \Mockery::mock(User_LoginManager::class);
+        $this->required_scope            = $this->createMock(AuthenticationScope::class);
+        $this->login_manager             = $this->createMock(User_LoginManager::class);
 
         $this->middleware = new OAuth2ResourceServerMiddleware(
             HTTPFactoryBuilder::responseFactory(),
@@ -87,24 +85,24 @@ final class OAuth2ResourceServerMiddlewareTest extends \Tuleap\Test\PHPUnit\Test
     public function testAccessToTheResourceWhenTheTokenIsValid(): void
     {
         $token = $this->createStub(SplitToken::class);
-        $this->access_token_unserializer->shouldReceive('getSplitToken')->andReturn(
+        $this->access_token_unserializer->method('getSplitToken')->willReturn(
             $token
         );
         $granted_authorization = new GrantedAuthorization(UserTestBuilder::aUser()->build(), [$this->required_scope]);
         $this->access_token_verifier->method('getGrantedAuthorization')->willReturn($granted_authorization);
-        $this->login_manager->shouldReceive('validateAndSetCurrentUser');
-        $handler           = \Mockery::mock(RequestHandlerInterface::class);
+        $this->login_manager->method('validateAndSetCurrentUser');
+        $handler           = $this->createMock(RequestHandlerInterface::class);
         $expected_response = HTTPFactoryBuilder::responseFactory()->createResponse();
-        $handler->shouldReceive('handle')->andReturn($expected_response);
+        $handler->method('handle')->willReturn($expected_response);
 
         $request = $this->buildServerRequest('Bearer FooToken');
-        $request->shouldReceive('withAttribute')
-            ->once()
-            ->with(OAuth2ResourceServerMiddleware::class, \Mockery::type(GrantedAuthorization::class))
-            ->andReturnSelf();
+        $request->expects(self::once())
+            ->method('withAttribute')
+            ->with(OAuth2ResourceServerMiddleware::class, self::isInstanceOf(GrantedAuthorization::class))
+            ->willReturn($request);
         $response = $this->middleware->process($request, $handler);
 
-        $this->assertSame($expected_response, $response);
+        self::assertSame($expected_response, $response);
     }
 
     /**
@@ -112,16 +110,16 @@ final class OAuth2ResourceServerMiddlewareTest extends \Tuleap\Test\PHPUnit\Test
      */
     public function testAccessIsNotAllowedWhenTheAuthorizationHeaderIsNotCorrect(string $bad_authorization_header_for_bearer_token): void
     {
-        $handler = \Mockery::mock(RequestHandlerInterface::class);
-        $handler->shouldNotReceive('handle');
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $handler->expects(self::never())->method('handle');
 
         $response = $this->middleware->process(
             $this->buildServerRequest($bad_authorization_header_for_bearer_token),
             $handler
         );
 
-        $this->assertEquals(401, $response->getStatusCode());
-        $this->assertEquals('Bearer realm="Tuleap OAuth2 Protected Resource"', $response->getHeaderLine('WWW-Authenticate'));
+        self::assertEquals(401, $response->getStatusCode());
+        self::assertEquals('Bearer realm="Tuleap OAuth2 Protected Resource"', $response->getHeaderLine('WWW-Authenticate'));
     }
 
     public static function dataProviderBadAuthorizationHeader(): array
@@ -134,11 +132,11 @@ final class OAuth2ResourceServerMiddlewareTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testAccessIsNotAllowedWhenTheTokenCannotBeVerified(): void
     {
-        $handler = \Mockery::mock(RequestHandlerInterface::class);
-        $handler->shouldNotReceive('handle');
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $handler->expects(self::never())->method('handle');
 
-        $this->access_token_unserializer->shouldReceive('getSplitToken')->andReturn(
-            \Mockery::mock(SplitToken::class)
+        $this->access_token_unserializer->method('getSplitToken')->willReturn(
+            $this->createMock(SplitToken::class)
         );
         $this->access_token_verifier->method('getGrantedAuthorization')->willThrowException(
             new class extends \RuntimeException implements OAuth2Exception {
@@ -150,8 +148,8 @@ final class OAuth2ResourceServerMiddlewareTest extends \Tuleap\Test\PHPUnit\Test
             $handler
         );
 
-        $this->assertEquals(401, $response->getStatusCode());
-        $this->assertEquals(
+        self::assertEquals(401, $response->getStatusCode());
+        self::assertEquals(
             'Bearer realm="Tuleap OAuth2 Protected Resource" error="invalid_token"',
             $response->getHeaderLine('WWW-Authenticate')
         );
@@ -159,10 +157,10 @@ final class OAuth2ResourceServerMiddlewareTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testAccessIsNotAllowedWhenTheTokenCannotBeParsed(): void
     {
-        $handler = \Mockery::mock(RequestHandlerInterface::class);
-        $handler->shouldNotReceive('handle');
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $handler->expects(self::never())->method('handle');
 
-        $this->access_token_unserializer->shouldReceive('getSplitToken')->andThrow(
+        $this->access_token_unserializer->method('getSplitToken')->willThrowException(
             new class extends SplitTokenException
             {
             }
@@ -173,8 +171,8 @@ final class OAuth2ResourceServerMiddlewareTest extends \Tuleap\Test\PHPUnit\Test
             $handler
         );
 
-        $this->assertEquals(401, $response->getStatusCode());
-        $this->assertEquals(
+        self::assertEquals(401, $response->getStatusCode());
+        self::assertEquals(
             'Bearer realm="Tuleap OAuth2 Protected Resource" error="invalid_token" error_description="Access token is malformed"',
             $response->getHeaderLine('WWW-Authenticate')
         );
@@ -182,17 +180,17 @@ final class OAuth2ResourceServerMiddlewareTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testAccessIsNotAllowedWhenTheUserCannotBeValidated(): void
     {
-        $handler = \Mockery::mock(RequestHandlerInterface::class);
-        $handler->shouldNotReceive('handle');
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $handler->expects(self::never())->method('handle');
 
         $access_token = $this->createStub(SplitToken::class);
-        $this->access_token_unserializer->shouldReceive('getSplitToken')->andReturn(
+        $this->access_token_unserializer->method('getSplitToken')->willReturn(
             $access_token
         );
         $this->access_token_verifier->method('getGrantedAuthorization')->willReturn(
             new GrantedAuthorization(UserTestBuilder::aUser()->build(), [$this->required_scope])
         );
-        $this->login_manager->shouldReceive('validateAndSetCurrentUser')->andThrow(
+        $this->login_manager->method('validateAndSetCurrentUser')->willThrowException(
             new class extends User_LoginException {
             }
         );
@@ -202,8 +200,8 @@ final class OAuth2ResourceServerMiddlewareTest extends \Tuleap\Test\PHPUnit\Test
             $handler
         );
 
-        $this->assertEquals(401, $response->getStatusCode());
-        $this->assertEquals(
+        self::assertEquals(401, $response->getStatusCode());
+        self::assertEquals(
             'Bearer realm="Tuleap OAuth2 Protected Resource" error="invalid_token" error_description="Cannot authenticate user"',
             $response->getHeaderLine('WWW-Authenticate')
         );
@@ -211,12 +209,12 @@ final class OAuth2ResourceServerMiddlewareTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testAccessIsNotAllowedWhenTheGivenAccessTokenHasExpired(): void
     {
-        $handler = \Mockery::mock(RequestHandlerInterface::class);
-        $handler->shouldNotReceive('handle');
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $handler->expects(self::never())->method('handle');
 
-        $split_token = \Mockery::mock(SplitToken::class);
-        $split_token->shouldReceive('getID')->andReturn(1);
-        $this->access_token_unserializer->shouldReceive('getSplitToken')->andReturn(
+        $split_token = $this->createMock(SplitToken::class);
+        $split_token->method('getID')->willReturn(1);
+        $this->access_token_unserializer->method('getSplitToken')->willReturn(
             $split_token
         );
 
@@ -229,8 +227,8 @@ final class OAuth2ResourceServerMiddlewareTest extends \Tuleap\Test\PHPUnit\Test
             $handler
         );
 
-        $this->assertEquals(401, $response->getStatusCode());
-        $this->assertEquals(
+        self::assertEquals(401, $response->getStatusCode());
+        self::assertEquals(
             'Bearer realm="Tuleap OAuth2 Protected Resource" error="invalid_token" error_description="Access token has expired"',
             $response->getHeaderLine('WWW-Authenticate')
         );
@@ -238,11 +236,11 @@ final class OAuth2ResourceServerMiddlewareTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testAccessIsNotAllowedWhenTheGivenAccessTokenDoesNotHaveTheRequiredScope(): void
     {
-        $handler = \Mockery::mock(RequestHandlerInterface::class);
-        $handler->shouldNotReceive('handle');
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $handler->expects(self::never())->method('handle');
 
-        $this->access_token_unserializer->shouldReceive('getSplitToken')->andReturn(
-            \Mockery::mock(SplitToken::class)
+        $this->access_token_unserializer->method('getSplitToken')->willReturn(
+            $this->createMock(SplitToken::class)
         );
         $scope_identifier = OAuth2ScopeIdentifier::fromIdentifierKey('foo');
         $scope_definition = new /** @psalm-immutable */class implements AuthenticationScopeDefinition
@@ -257,8 +255,8 @@ final class OAuth2ResourceServerMiddlewareTest extends \Tuleap\Test\PHPUnit\Test
                 return 'Foo Description';
             }
         };
-        $this->required_scope->shouldReceive('getIdentifier')->andReturn($scope_identifier);
-        $this->required_scope->shouldReceive('getDefinition')->andReturn($scope_definition);
+        $this->required_scope->method('getIdentifier')->willReturn($scope_identifier);
+        $this->required_scope->method('getDefinition')->willReturn($scope_definition);
         $this->access_token_verifier->method('getGrantedAuthorization')->willThrowException(
             new OAuth2AccessTokenDoesNotHaveRequiredScopeException($this->required_scope)
         );
@@ -268,20 +266,20 @@ final class OAuth2ResourceServerMiddlewareTest extends \Tuleap\Test\PHPUnit\Test
             $handler
         );
 
-        $this->assertEquals(403, $response->getStatusCode());
-        $this->assertEquals(
+        self::assertEquals(403, $response->getStatusCode());
+        self::assertEquals(
             'Bearer realm="Tuleap OAuth2 Protected Resource" error="insufficient_scope" scope="foo"',
             $response->getHeaderLine('WWW-Authenticate')
         );
     }
 
     /**
-     * @return \Mockery\LegacyMockInterface|\Mockery\MockInterface|ServerRequestInterface
+     * @return MockObject&ServerRequestInterface
      */
     private function buildServerRequest(string $authorization_header_line)
     {
-        $server_request = \Mockery::mock(ServerRequestInterface::class);
-        $server_request->shouldReceive('getHeaderLine')->with('Authorization')->andReturn($authorization_header_line);
+        $server_request = $this->createMock(ServerRequestInterface::class);
+        $server_request->method('getHeaderLine')->with('Authorization')->willReturn($authorization_header_line);
 
         return $server_request;
     }
