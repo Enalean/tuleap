@@ -26,20 +26,22 @@ import {
     getBaselineArtifactsByIds,
     createBaseline,
 } from "./rest-querier";
-import { create, createList } from "../support/factories";
+import type { Baseline, Comparison, Milestone } from "../type";
 
 describe("Rest queries:", () => {
-    let result;
-
     describe("getOpenMilestones()", () => {
-        let recursive_get_mock;
+        let recursive_get_mock: jest.SpyInstance;
 
-        const simplified_milestone = createList("milestone", 1);
+        const simplified_milestone: Milestone = {
+            id: 1,
+            label: "Milestone label",
+            description: "",
+        };
 
         beforeEach(async () => {
             recursive_get_mock = jest.spyOn(tlp_fetch, "recursiveGet");
             recursive_get_mock.mockResolvedValue(simplified_milestone);
-            result = await getOpenMilestones(1);
+            await getOpenMilestones(1);
         });
 
         it("calls projects API to get opened milestones", () => {
@@ -57,13 +59,19 @@ describe("Rest queries:", () => {
     });
 
     describe("getBaselines()", () => {
-        let recursive_get_mock;
-        const baseline = create("baseline");
+        let recursive_get_mock: jest.SpyInstance;
+        const baseline: Baseline = {
+            id: 1001,
+            name: "Baseline label",
+            artifact_id: 9,
+            snapshot_date: "2019-03-22T10:01:48+00:00",
+            author_id: 3,
+        };
 
         beforeEach(async () => {
             recursive_get_mock = jest.spyOn(tlp_fetch, "recursiveGet");
             recursive_get_mock.mockResolvedValue({ baselines: [baseline] });
-            result = await getBaselines(1);
+            await getBaselines(1);
         });
 
         it("calls projects API to get baselines", () => {
@@ -80,13 +88,16 @@ describe("Rest queries:", () => {
     });
 
     describe("getComparisons()", () => {
-        let recursive_get_mock;
-        const comparison = create("comparison");
+        let recursive_get_mock: jest.SpyInstance;
+        const comparison: Comparison = {
+            base_baseline_id: 1,
+            compared_to_baseline_id: 2,
+        } as Comparison;
 
         beforeEach(async () => {
             recursive_get_mock = jest.spyOn(tlp_fetch, "recursiveGet");
             recursive_get_mock.mockResolvedValue({ comparisons: [comparison] });
-            result = await getComparisons(1);
+            await getComparisons(1);
         });
 
         it("calls projects API to get comparisons", () => {
@@ -103,9 +114,16 @@ describe("Rest queries:", () => {
     });
 
     describe("createBaseline()", () => {
-        let post;
+        let post: jest.SpyInstance;
+        let result: Baseline;
 
-        const baseline = create("baseline");
+        const baseline = {
+            id: 1001,
+            name: "Baseline label",
+            artifact_id: 9,
+            snapshot_date: "2019-03-22T10:01:48+00:00",
+            author_id: 3,
+        };
         const headers = {
             "content-type": "application/json",
         };
@@ -119,11 +137,14 @@ describe("Rest queries:", () => {
             post = jest.spyOn(tlp_fetch, "post");
             mockFetchSuccess(post, { return_json: baseline });
 
-            result = await createBaseline("My first baseline", {
-                id: 3,
-                label: "milestone Label",
-                snapshot_date: null,
-            });
+            result = await createBaseline(
+                "My first baseline",
+                {
+                    id: 3,
+                    label: "milestone Label",
+                } as Milestone,
+                null,
+            );
         });
 
         it("calls baselines API to create baseline", () =>
@@ -133,13 +154,13 @@ describe("Rest queries:", () => {
     });
 
     describe("getBaselineArtifactsByIds()", () => {
-        let get;
+        let get: jest.SpyInstance;
 
         beforeEach(async () => {
             get = jest.spyOn(tlp_fetch, "get");
             mockFetchSuccess(get, { return_json: {} });
 
-            result = await getBaselineArtifactsByIds(1, [1, 2, 3, 4]);
+            await getBaselineArtifactsByIds(1, [1, 2, 3, 4]);
         });
 
         it("calls baselines API to get baseline artifacts by ids", () =>

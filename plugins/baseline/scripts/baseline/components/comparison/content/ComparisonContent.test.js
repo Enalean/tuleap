@@ -21,7 +21,6 @@
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../support/local-vue.ts";
 import ComparisonContent from "./ComparisonContent.vue";
-import { createList } from "../../../support/factories";
 import { createStoreMock } from "../../../support/store-wrapper.test-helper";
 import store_options from "../../../store/store_options";
 import ArtifactsListComparison from "./ArtifactsListComparison.vue";
@@ -58,8 +57,54 @@ describe("ComparisonContent", () => {
 
     describe("when some artifacts available", () => {
         beforeEach(() => {
-            $store.getters["comparison/filterArtifacts"] = () => createList("baseline_artifact", 2);
-            $store.state.comparison.base.first_depth_artifacts = createList("baseline_artifact", 2);
+            $store.getters["comparison/filterArtifacts"] = () => [
+                {
+                    id: 101,
+                    title: "Sprint-1",
+                    status: "Planned",
+                    tracker_id: 1,
+                    initial_effort: null,
+                    tracker_name: "Sprint",
+                    description:
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                    linked_artifact_ids: [],
+                },
+                {
+                    id: 102,
+                    title: "Sprint-2",
+                    status: "Planned",
+                    tracker_id: 1,
+                    initial_effort: null,
+                    tracker_name: "Sprint",
+                    description:
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                    linked_artifact_ids: [],
+                },
+            ];
+            $store.state.comparison.base.first_depth_artifacts = [
+                {
+                    id: 101,
+                    title: "Sprint-1",
+                    status: "Planned",
+                    tracker_id: 1,
+                    initial_effort: null,
+                    tracker_name: "Sprint",
+                    description:
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                    linked_artifact_ids: [],
+                },
+                {
+                    id: 102,
+                    title: "Sprint-2",
+                    status: "Planned",
+                    tracker_id: 1,
+                    initial_effort: null,
+                    tracker_name: "Sprint",
+                    description:
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                    linked_artifact_ids: [],
+                },
+            ];
             $store.state.comparison.compared_to.first_depth_artifacts = [];
         });
         it("shows artifacts list comparison", () => {

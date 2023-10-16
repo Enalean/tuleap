@@ -19,7 +19,6 @@
  */
 
 import store from "./global";
-import { create } from "../support/factories";
 import * as rest_querier from "../api/rest-querier";
 
 describe("Global store:", () => {
@@ -42,10 +41,10 @@ describe("Global store:", () => {
             beforeEach(() => {
                 context.getters.findBaselineById.mockImplementation((id) => {
                     if (id === 1) {
-                        return create("baseline", { artifact_id: 10 });
+                        return { artifact_id: 10 };
                     }
                     if (id === 2) {
-                        return create("baseline", { artifact_id: 20 });
+                        return { artifact_id: 20 };
                     }
                     throw new Error("Not expected ID: " + id);
                 });
@@ -80,7 +79,7 @@ describe("Global store:", () => {
         });
 
         describe("#loadBaseline", () => {
-            const user = create("user");
+            const user = { id: 1 };
 
             beforeEach(() => {
                 jest.spyOn(rest_querier, "getBaseline").mockReturnValue(Promise.resolve(user));
@@ -114,7 +113,7 @@ describe("Global store:", () => {
         });
 
         describe("#loadUser", () => {
-            const user = create("user");
+            const user = { id: 1 };
 
             beforeEach(() => {
                 jest.spyOn(rest_querier, "getUser").mockReturnValue(Promise.resolve(user));
@@ -131,10 +130,10 @@ describe("Global store:", () => {
             beforeEach(() => {
                 context.getters.findArtifactById.mockImplementation((id) => {
                     if (id === 1) {
-                        return create("artifact", { tracker: { id: 10 } });
+                        return { id: 1, tracker: { id: 10 } };
                     }
                     if (id === 2) {
-                        return create("artifact", { tracker: { id: 20 } });
+                        return { id: 2, tracker: { id: 20 } };
                     }
                     throw new Error("Not expected ID: " + id);
                 });
@@ -169,7 +168,7 @@ describe("Global store:", () => {
         });
 
         describe("#loadArtifact", () => {
-            const artifact = create("artifact");
+            const artifact = { id: 1 };
 
             beforeEach(() => {
                 jest.spyOn(rest_querier, "getArtifact").mockReturnValue(Promise.resolve(artifact));
@@ -203,7 +202,7 @@ describe("Global store:", () => {
         });
 
         describe("#loadTracker", () => {
-            const tracker = create("tracker");
+            const tracker = { id: 9 };
 
             beforeEach(() => {
                 jest.spyOn(rest_querier, "getTracker").mockReturnValue(Promise.resolve(tracker));
@@ -221,7 +220,7 @@ describe("Global store:", () => {
         const state = { ...store.state };
 
         describe("#addUser", () => {
-            const user = create("user", { id: 1 });
+            const user = { id: 1 };
             beforeEach(() => store.mutations.addUser(state, user));
 
             it("add given user with corresponding id", () => {
@@ -230,7 +229,7 @@ describe("Global store:", () => {
         });
 
         describe("#addArtifact", () => {
-            const artifact = create("artifact", { id: 1 });
+            const artifact = { id: 1 };
             beforeEach(() => store.mutations.addArtifact(state, artifact));
 
             it("add given artifact with corresponding id", () => {
@@ -239,7 +238,7 @@ describe("Global store:", () => {
         });
 
         describe("#addTracker", () => {
-            const tracker = create("tracker", { id: 1 });
+            const tracker = { id: 1 };
             beforeEach(() => store.mutations.addTracker(state, tracker));
 
             it("add given tracker with corresponding id", () => {
@@ -252,7 +251,7 @@ describe("Global store:", () => {
         let state = { ...store.state };
 
         describe("#findUserById", () => {
-            const user = create("user");
+            const user = { id: 1 };
             beforeEach(
                 () =>
                     (state.users_by_id = {
@@ -266,7 +265,7 @@ describe("Global store:", () => {
         });
 
         describe("#findArtifactById", () => {
-            const artifact = create("artifact");
+            const artifact = { id: 1 };
             beforeEach(
                 () =>
                     (state.artifacts_by_id = {
@@ -280,7 +279,7 @@ describe("Global store:", () => {
         });
 
         describe("#findTrackerById", () => {
-            const tracker = create("tracker");
+            const tracker = { id: 1 };
             beforeEach(
                 () =>
                     (state.trackers_by_id = {

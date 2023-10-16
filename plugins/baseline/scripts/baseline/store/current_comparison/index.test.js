@@ -19,7 +19,6 @@
  */
 
 import store from "./index";
-import { create, createList } from "../../support/factories";
 import * as comparison from "../../support/comparison";
 
 describe("Current comparison store:", () => {
@@ -88,13 +87,66 @@ describe("Current comparison store:", () => {
         });
 
         describe("#compareArtifacts", () => {
-            const base_artifact = create("baseline_artifact", { linked_artifact_ids: [1] });
-            const compared_to_artifact = create("baseline_artifact", {
+            const base_artifact = {
+                id: 101,
+                title: "Sprint-1",
+                status: "Planned",
+                tracker_id: 1,
+                initial_effort: null,
+                tracker_name: "Sprint",
+                description:
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                linked_artifact_ids: [1],
+            };
+            const compared_to_artifact = {
+                id: 102,
+                title: "Sprint-2",
+                status: "Planned",
+                tracker_id: 1,
+                initial_effort: null,
+                tracker_name: "Sprint",
+                description:
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
                 linked_artifact_ids: [1, 2],
-            });
+            };
 
-            const linked_base_artifacts = createList("baseline_artifact", 1);
-            const linked_compared_to_artifacts = createList("baseline_artifact", 2);
+            const linked_base_artifacts = [
+                {
+                    id: 1,
+                    title: "Sprint-1",
+                    status: "Planned",
+                    tracker_id: 1,
+                    initial_effort: null,
+                    tracker_name: "Sprint",
+                    description:
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                    linked_artifact_ids: [],
+                },
+            ];
+            const linked_compared_to_artifacts = [
+                {
+                    id: 2,
+                    title: "Sprint-2",
+                    status: "Planned",
+                    tracker_id: 1,
+                    initial_effort: null,
+                    tracker_name: "Sprint",
+                    description:
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                    linked_artifact_ids: [],
+                },
+                {
+                    id: 3,
+                    title: "Sprint-3",
+                    status: "Planned",
+                    tracker_id: 1,
+                    initial_effort: null,
+                    tracker_name: "Sprint",
+                    description:
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                    linked_artifact_ids: [],
+                },
+            ];
 
             const artifacts_comparison = {
                 identical_or_modified: [
@@ -152,11 +204,81 @@ describe("Current comparison store:", () => {
 
             describe("#incrementStatistics", () => {
                 beforeEach(() => {
-                    const artifacts_comparison = create("artifacts_comparison", "empty", {
-                        added: createList("baseline_artifact", 1),
-                        removed: createList("baseline_artifact", 2),
-                        modified: createList("baseline_artifact", 3),
-                    });
+                    const artifacts_comparison = {
+                        identical_or_modified: [],
+                        added: [
+                            {
+                                id: 101,
+                                title: "Sprint-1",
+                                status: "Planned",
+                                tracker_id: 1,
+                                initial_effort: null,
+                                tracker_name: "Sprint",
+                                description:
+                                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                                linked_artifact_ids: [],
+                            },
+                        ],
+                        removed: [
+                            {
+                                id: 102,
+                                title: "Sprint-2",
+                                status: "Planned",
+                                tracker_id: 1,
+                                initial_effort: null,
+                                tracker_name: "Sprint",
+                                description:
+                                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                                linked_artifact_ids: [],
+                            },
+                            {
+                                id: 103,
+                                title: "Sprint-3",
+                                status: "Planned",
+                                tracker_id: 1,
+                                initial_effort: null,
+                                tracker_name: "Sprint",
+                                description:
+                                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                                linked_artifact_ids: [],
+                            },
+                        ],
+                        modified: [
+                            {
+                                id: 104,
+                                title: "Sprint-4",
+                                status: "Planned",
+                                tracker_id: 1,
+                                initial_effort: null,
+                                tracker_name: "Sprint",
+                                description:
+                                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                                linked_artifact_ids: [],
+                            },
+                            {
+                                id: 105,
+                                title: "Sprint-5",
+                                status: "Planned",
+                                tracker_id: 1,
+                                initial_effort: null,
+                                tracker_name: "Sprint",
+                                description:
+                                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                                linked_artifact_ids: [],
+                            },
+                            {
+                                id: 106,
+                                title: "Sprint-6",
+                                status: "Planned",
+                                tracker_id: 1,
+                                initial_effort: null,
+                                tracker_name: "Sprint",
+                                description:
+                                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                                linked_artifact_ids: [],
+                            },
+                        ],
+                    };
                     store.mutations.incrementStatistics(state, artifacts_comparison);
                 });
 
@@ -169,16 +291,37 @@ describe("Current comparison store:", () => {
                 describe("when comparison contains identical artifacts", () => {
                     describe("with same initial effort", () => {
                         beforeEach(() => {
-                            const artifacts_comparison = create("artifacts_comparison", "empty", {
+                            const artifacts_comparison = {
                                 identical_or_modified: [
                                     {
-                                        base: create("baseline_artifact", { initial_effort: 3 }),
-                                        compared_to: create("baseline_artifact", {
+                                        base: {
+                                            id: 1,
+                                            title: "Sprint-1",
+                                            status: "Planned",
+                                            tracker_id: 1,
                                             initial_effort: 3,
-                                        }),
+                                            tracker_name: "Sprint",
+                                            description:
+                                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                                            linked_artifact_ids: [],
+                                        },
+                                        compared_to: {
+                                            id: 1,
+                                            title: "Sprint-1",
+                                            status: "Planned",
+                                            tracker_id: 1,
+                                            initial_effort: 3,
+                                            tracker_name: "Sprint",
+                                            description:
+                                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                                            linked_artifact_ids: [],
+                                        },
                                     },
                                 ],
-                            });
+                                added: [],
+                                removed: [],
+                                modified: [],
+                            };
                             store.mutations.incrementStatistics(state, artifacts_comparison);
                         });
                         it("does not modify initial effort statistics", () => {
@@ -188,16 +331,37 @@ describe("Current comparison store:", () => {
 
                     describe("with not same initial effort", () => {
                         beforeEach(() => {
-                            const artifacts_comparison = create("artifacts_comparison", "empty", {
+                            const artifacts_comparison = {
                                 identical_or_modified: [
                                     {
-                                        base: create("baseline_artifact", { initial_effort: 3 }),
-                                        compared_to: create("baseline_artifact", {
+                                        base: {
+                                            id: 1,
+                                            title: "Sprint-1",
+                                            status: "Planned",
+                                            tracker_id: 1,
+                                            initial_effort: 3,
+                                            tracker_name: "Sprint",
+                                            description:
+                                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                                            linked_artifact_ids: [],
+                                        },
+                                        compared_to: {
+                                            id: 1,
+                                            title: "Sprint-1",
+                                            status: "Planned",
+                                            tracker_id: 1,
                                             initial_effort: 5,
-                                        }),
+                                            tracker_name: "Sprint",
+                                            description:
+                                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                                            linked_artifact_ids: [],
+                                        },
                                     },
                                 ],
-                            });
+                                added: [],
+                                removed: [],
+                                modified: [],
+                            };
                             store.mutations.incrementStatistics(state, artifacts_comparison);
                         });
                         it("updates initial effort statistics", () => {

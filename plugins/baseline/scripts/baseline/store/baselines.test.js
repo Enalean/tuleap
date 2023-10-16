@@ -19,7 +19,6 @@
  */
 
 import store from "./baselines";
-import { create, createList } from "../support/factories";
 import * as rest_querier from "../api/rest-querier";
 
 describe("Baselines store:", () => {
@@ -35,8 +34,20 @@ describe("Baselines store:", () => {
         });
 
         describe("#load", () => {
-            const baseline1 = create("baseline", { artifact_id: 1, author_id: 4 });
-            const baseline2 = create("baseline", { artifact_id: 2, author_id: 5 });
+            const baseline1 = {
+                id: 1,
+                name: "Baseline label",
+                artifact_id: 1,
+                snapshot_date: "2019-03-22T10:01:48+00:00",
+                author_id: 4,
+            };
+            const baseline2 = {
+                id: 2,
+                name: "Baseline label",
+                artifact_id: 2,
+                snapshot_date: "2019-03-22T10:01:48+00:00",
+                author_id: 5,
+            };
 
             beforeEach(() => {
                 jest.spyOn(rest_querier, "getBaselines").mockReturnValue(
@@ -73,8 +84,20 @@ describe("Baselines store:", () => {
         beforeEach(() => (state = { ...store.state }));
 
         describe("#delete", () => {
-            const baseline_to_delete = create("baseline", { id: 1 });
-            const another_baseline = create("baseline", { id: 2 });
+            const baseline_to_delete = {
+                id: 1,
+                name: "Baseline label",
+                artifact_id: 9,
+                snapshot_date: "2019-03-22T10:01:48+00:00",
+                author_id: 4,
+            };
+            const another_baseline = {
+                id: 2,
+                name: "Baseline label",
+                artifact_id: 9,
+                snapshot_date: "2019-03-22T10:01:48+00:00",
+                author_id: 5,
+            };
 
             beforeEach(() => {
                 state.baselines = [baseline_to_delete, another_baseline];
@@ -109,7 +132,25 @@ describe("Baselines store:", () => {
                     });
                 });
                 describe("when some baselines", () => {
-                    beforeEach(() => (state.baselines = createList("baseline", 2)));
+                    beforeEach(
+                        () =>
+                            (state.baselines = [
+                                {
+                                    id: 1,
+                                    name: "Baseline label",
+                                    artifact_id: 9,
+                                    snapshot_date: "2019-03-22T10:01:48+00:00",
+                                    author_id: 3,
+                                },
+                                {
+                                    id: 2,
+                                    name: "Baseline label",
+                                    artifact_id: 9,
+                                    snapshot_date: "2019-03-22T10:01:48+00:00",
+                                    author_id: 3,
+                                },
+                            ]),
+                    );
                     it("returns false", () => {
                         expect(store.getters.are_baselines_available(state)).toBeTruthy();
                     });

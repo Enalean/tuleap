@@ -18,7 +18,6 @@
  */
 
 import store from "./current_baseline";
-import { create, createList } from "../support/factories";
 
 describe("Current baseline store:", () => {
     describe("actions", () => {
@@ -65,14 +64,26 @@ describe("Current baseline store:", () => {
                 beforeEach(() => (state.hidden_tracker_ids = []));
 
                 it("returns all given artifacts", () => {
-                    const artifacts = createList("baseline_artifact");
+                    const artifacts = [
+                        {
+                            id: 101,
+                            title: "Sprint-1",
+                            status: "Planned",
+                            tracker_id: 1,
+                            initial_effort: null,
+                            tracker_name: "Sprint",
+                            description:
+                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                            linked_artifact_ids: [],
+                        },
+                    ];
                     expect(store.getters.filterArtifacts(state)(artifacts)).toEqual(artifacts);
                 });
             });
 
             describe("when some trackers hidden", () => {
-                let artifact_on_hidden_tracker = create("baseline_artifact", { tracker_id: 1 });
-                let artifact_on_other_tracker = create("baseline_artifact", { tracker_id: 3 });
+                let artifact_on_hidden_tracker = { tracker_id: 1 };
+                let artifact_on_other_tracker = { tracker_id: 3 };
 
                 beforeEach(() => (state.hidden_tracker_ids = [1, 2]));
 

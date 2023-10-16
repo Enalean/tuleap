@@ -39,6 +39,15 @@ export interface Artifact {
     readonly description: string;
     readonly status: string;
 }
+export interface BaselineArtifact {
+    readonly id: number;
+    readonly title: string | null;
+    readonly tracker_name: string;
+    readonly description: string | null;
+    readonly status: string | null;
+    readonly tracker_id: number;
+    readonly linked_artifact_ids: number[];
+}
 
 export interface Tracker {
     readonly item_name: string;
@@ -50,4 +59,21 @@ export interface Baseline {
     readonly name: string;
     readonly author_id: number;
     readonly snapshot_date: string;
+    readonly artifact_id: number;
+}
+
+export interface Milestone {
+    readonly id: number;
+    readonly description: string;
+    readonly label: string;
+}
+
+export interface Comparison {
+    readonly id: number;
+    readonly name: string | null;
+    readonly comment: string | null;
+    readonly base_baseline_id: number;
+    readonly compared_to_baseline_id: number;
+    readonly author_id: number;
+    readonly creation_date: string;
 }

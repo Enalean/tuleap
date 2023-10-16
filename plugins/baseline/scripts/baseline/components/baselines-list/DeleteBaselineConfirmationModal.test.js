@@ -23,7 +23,6 @@ import localVue from "../../support/local-vue.ts";
 import { createStoreMock } from "../../support/store-wrapper.test-helper.js";
 import store_options from "../../store/store_options";
 import DeleteBaselineConfirmationModal from "./DeleteBaselineConfirmationModal.vue";
-import { create } from "../../support/factories";
 import * as rest_querier from "../../api/rest-querier";
 
 describe("DeleteBaselineConfirmationModal", () => {
@@ -31,7 +30,7 @@ describe("DeleteBaselineConfirmationModal", () => {
     let deleteBaselineResolve;
     let deleteBaselineReject;
 
-    const baseline = create("baseline", { id: 1 });
+    const baseline = { id: 1, name: "Baseline" };
 
     let $store;
     let wrapper;

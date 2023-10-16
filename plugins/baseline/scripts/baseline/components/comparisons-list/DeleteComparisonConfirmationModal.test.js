@@ -22,7 +22,6 @@ import localVue from "../../support/local-vue.ts";
 import { createStoreMock } from "../../support/store-wrapper.test-helper.js";
 import store_options from "../../store/store_options";
 import DeleteComparisonConfirmationModal from "./DeleteComparisonConfirmationModal.vue";
-import { create } from "../../support/factories";
 import * as rest_querier from "../../api/rest-querier";
 
 describe("DeleteComparisonConfirmationModal", () => {
@@ -30,7 +29,7 @@ describe("DeleteComparisonConfirmationModal", () => {
     let deleteComparisonResolve;
     let deleteComparisonReject;
 
-    const comparison = create("comparison", "saved", { id: 1 });
+    const comparison = { id: 1 };
 
     let $store;
     let wrapper;
@@ -48,8 +47,20 @@ describe("DeleteComparisonConfirmationModal", () => {
         wrapper = shallowMount(DeleteComparisonConfirmationModal, {
             propsData: {
                 comparison,
-                base_baseline: create("baseline"),
-                compared_to_baseline: create("baseline"),
+                base_baseline: {
+                    id: 1001,
+                    name: "Baseline label",
+                    artifact_id: 9,
+                    snapshot_date: "2019-03-22T10:01:48+00:00",
+                    author_id: 3,
+                },
+                compared_to_baseline: {
+                    id: 1001,
+                    name: "Baseline label",
+                    artifact_id: 9,
+                    snapshot_date: "2019-03-22T10:01:48+00:00",
+                    author_id: 3,
+                },
             },
             localVue,
             mocks: {

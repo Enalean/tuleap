@@ -24,7 +24,6 @@ import localVue from "../support/local-vue.ts";
 import IndexPage from "./IndexPage.vue";
 import { createStoreMock } from "../support/store-wrapper.test-helper";
 import store_options from "../store/store_options";
-import { createList } from "../support/factories";
 
 describe("IndexPage", () => {
     let $store;
@@ -58,7 +57,22 @@ describe("IndexPage", () => {
 
     describe("when some baselines are available", () => {
         beforeEach(() => {
-            $store.state.baselines.baselines = createList("baseline", 2);
+            $store.state.baselines.baselines = [
+                {
+                    id: 1,
+                    name: "Baseline label 1",
+                    artifact_id: 9,
+                    snapshot_date: "2019-03-22T10:01:48+00:00",
+                    author_id: 3,
+                },
+                {
+                    id: 2,
+                    name: "Baseline label 2",
+                    artifact_id: 9,
+                    snapshot_date: "2019-03-22T10:01:48+00:00",
+                    author_id: 3,
+                },
+            ];
             $store.state.baselines.are_baselines_loading = false;
         });
 
