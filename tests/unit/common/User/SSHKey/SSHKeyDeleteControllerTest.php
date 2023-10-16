@@ -21,8 +21,7 @@
 
 namespace Tuleap\User\SSHKey;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
@@ -31,29 +30,18 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class SSHKeyDeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \CSRFSynchronizerToken|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $csrf_token;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\UserManager
-     */
-    private $user_manager;
-    /**
-     * @var SSHKeyDeleteController
-     */
-    private $controller;
+    private \CSRFSynchronizerToken&MockObject $csrf_token;
+    private \UserManager&MockObject $user_manager;
+    private SSHKeyDeleteController $controller;
 
     protected function setUp(): void
     {
-        $this->csrf_token   = M::mock(\CSRFSynchronizerToken::class);
-        $this->user_manager = M::mock(\UserManager::class);
+        $this->csrf_token   = $this->createMock(\CSRFSynchronizerToken::class);
+        $this->user_manager = $this->createMock(\UserManager::class);
         $this->controller   = new SSHKeyDeleteController($this->csrf_token, $this->user_manager);
     }
 
-    public function testItForbidsAnonymousUsers()
+    public function testItForbidsAnonymousUsers(): void
     {
         $this->expectException(ForbiddenException::class);
         $this->controller->process(
@@ -66,9 +54,9 @@ final class SSHKeyDeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItUpdatesUserSSHKey(): void
     {
         $user = UserTestBuilder::aUser()->withId(110)->build();
-        $this->csrf_token->shouldReceive('check')->with('/account/keys-tokens')->once();
+        $this->csrf_token->expects(self::once())->method('check')->with('/account/keys-tokens');
 
-        $this->user_manager->shouldReceive('deleteSSHKeys')->with($user, ['1', '3'])->once();
+        $this->user_manager->expects(self::once())->method('deleteSSHKeys')->with($user, ['1', '3']);
 
 
         $this->expectExceptionObject(new LayoutInspectorRedirection('/account/keys-tokens'));

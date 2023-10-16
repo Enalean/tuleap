@@ -22,31 +22,26 @@ declare(strict_types=1);
 
 namespace User\XML\Import;
 
-use Logger;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Tuleap\GlobalLanguageMock;
 use UserManager;
 
 final class WillBeCreatedUserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
-    /** @var ToBeCreatedUser */
-    private $user;
-
-    /** @var UserManager */
-    private $user_manager;
-
-    /** @var Logger */
-    private $logger;
+    private ReadyToBeImportedUser $user;
+    private UserManager&MockObject $user_manager;
+    private LoggerInterface $logger;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->user_manager = \Mockery::spy(UserManager::class);
-        $this->logger       = \Mockery::spy(\Psr\Log\LoggerInterface::class);
+        $this->user_manager = $this->createMock(UserManager::class);
+        $this->logger       = new NullLogger();
 
         $this->user = new WillBeCreatedUser(
             'cstevens',
@@ -59,14 +54,14 @@ final class WillBeCreatedUserTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCreatesANewUserInDatabase(): void
     {
-        $this->user_manager->shouldReceive('createAccount')->once()->andReturns(new \PFUser(['language_id' => 'en']));
+        $this->user_manager->expects(self::once())->method('createAccount')->willReturn(new \PFUser(['language_id' => 'en']));
 
         $this->user->process($this->user_manager, $this->logger);
     }
 
     public function testItThrowsAnExceptionIfUserCannotBeCreated(): void
     {
-        $this->user_manager->shouldReceive('createAccount')->andReturnNull();
+        $this->user_manager->method('createAccount')->willReturn(null);
 
         $this->expectException(\User\XML\Import\UserCannotBeCreatedException::class);
 

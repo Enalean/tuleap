@@ -22,31 +22,32 @@ declare(strict_types=1);
 
 namespace User\XML\Import;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Project\XML\Import\ArchiveInterface;
 
 final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var UsersToBeImportedCollectionBuilder */
-    private $builder;
-    private $user_manager;
-    private $active_user_in_ldap;
-    private $suspended_user_in_ldap;
-    private $active_user_in_db;
-    private $suspended_user_in_db;
-    private $john_doe;
-    private $cat_steven;
+    private UsersToBeImportedCollectionBuilder $builder;
+    private \UserManager&MockObject $user_manager;
+    private PFUser $active_user_in_ldap;
+    private PFUser $suspended_user_in_ldap;
+    private PFUser $active_user_in_db;
+    private PFUser $suspended_user_in_db;
+    private PFUser $john_doe;
+    private PFUser $cat_steven;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user_manager = \Mockery::spy(\UserManager::class);
+
+        $xml_rng_validator = $this->createMock(\XML_RNGValidator::class);
+        $xml_rng_validator->method('validate');
+
+        $this->user_manager = $this->createMock(\UserManager::class);
         $this->builder      = new UsersToBeImportedCollectionBuilder(
             $this->user_manager,
-            \Mockery::spy(\XML_RNGValidator::class)
+            $xml_rng_validator,
         );
 
         $this->active_user_in_ldap = $this->createUser(
@@ -57,7 +58,6 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
             'jd3456',
             PFUser::STATUS_ACTIVE
         );
-        $this->user_manager->shouldReceive('getUserByIdentifier')->with('ldapId:jd3456')->andReturns($this->active_user_in_ldap);
 
         $this->suspended_user_in_ldap = $this->createUser(
             1002,
@@ -67,7 +67,6 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
             'sus1234',
             PFUser::STATUS_SUSPENDED
         );
-        $this->user_manager->shouldReceive('getUserByIdentifier')->with('ldapId:sus1234')->andReturns($this->suspended_user_in_ldap);
 
         $this->active_user_in_db = $this->createUser(
             1002,
@@ -77,7 +76,6 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
             '',
             PFUser::STATUS_ACTIVE
         );
-        $this->user_manager->shouldReceive('getUserByIdentifier')->with('cstevens')->andReturns($this->active_user_in_db);
 
         $this->suspended_user_in_db = $this->createUser(
             1002,
@@ -87,13 +85,6 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
             '',
             PFUser::STATUS_SUSPENDED
         );
-        $this->user_manager->shouldReceive('getUserByIdentifier')->with('kperry')->andReturns($this->suspended_user_in_db);
-
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('mmanson@example.com')->andReturns([]);
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('jdoe@example.com')->andReturns([
-            $this->active_user_in_ldap,
-            $this->suspended_user_in_ldap,
-        ]);
 
         $this->john_doe = $this->createUser(
             1001,
@@ -103,9 +94,6 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
             'jd3456',
             PFUser::STATUS_ACTIVE
         );
-        $this->user_manager->shouldReceive('getUserByIdentifier')->with('ldapId:jd3456')->andReturns($this->john_doe);
-        $this->user_manager->shouldReceive('getUserByIdentifier')->with('jdoe')->andReturns($this->john_doe);
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('jdoe@example.com')->andReturns([$this->john_doe]);
 
         $this->cat_steven = $this->createUser(
             1002,
@@ -115,8 +103,34 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
             '',
             PFUser::STATUS_ACTIVE
         );
-        $this->user_manager->shouldReceive('getUserByIdentifier')->with('cstevens')->andReturns($this->cat_steven);
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('cstevens@example.com')->andReturns([$this->john_doe]);
+
+        $this->user_manager->method('getUserByIdentifier')->willReturnMap([
+            ['ldapId:jd3456', $this->active_user_in_ldap],
+            ['ldapId:sus1234', $this->suspended_user_in_ldap],
+            ['cstevens', $this->active_user_in_db],
+            ['kperry', $this->suspended_user_in_db],
+            ['ldapId:jd3456', $this->john_doe],
+            ['jdoe', $this->john_doe],
+            ['cstevens', $this->cat_steven],
+        ]);
+
+        $this->user_manager->method('getAllUsersByEmail')->willReturnCallback(
+            function (string $email): array {
+                if ($email === 'mmanson@example.com') {
+                    return [];
+                } elseif ($email === 'jdoe@example.com') {
+                    return [
+                        $this->active_user_in_ldap,
+                        $this->suspended_user_in_ldap,
+                    ];
+                } elseif ($email === 'cstevens@example.com') {
+                    return [$this->cat_steven];
+                }
+
+                var_dump($email);
+                throw new \LogicException('must not be here');
+            }
+        );
     }
 
     private function createUser(int $id, string $username, string $realname, string $email, string $ldapid, string $status): PFUser
@@ -173,7 +187,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
 
         $collection = $this->builder->build($xml);
 
-        $this->assertInstanceOf(\User\XML\Import\UsersToBeImportedCollection::class, $collection);
+        self::assertInstanceOf(\User\XML\Import\UsersToBeImportedCollection::class, $collection);
     }
 
     public function testItReturnsACollectionWithAliveUserInLDAP(): void
@@ -195,7 +209,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
             'jdoe' => new AlreadyExistingUser($this->active_user_in_ldap, 107, 'jd3456'),
         ];
 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $collection->toArray(),
         );
@@ -220,7 +234,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
             'doe' => new ToBeActivatedUser($this->suspended_user_in_ldap, 107, 'sus1234'),
         ];
 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $collection->toArray(),
         );
@@ -245,7 +259,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
             'cstevens' => new AlreadyExistingUser($this->active_user_in_db, 108, ''),
         ];
 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $collection->toArray(),
         );
@@ -270,7 +284,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
             'kperry' => new ToBeActivatedUser($this->suspended_user_in_db, 109, ''),
         ];
 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $collection->toArray(),
         );
@@ -295,7 +309,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
             'cstevens' => new AlreadyExistingUser($this->active_user_in_db, 108, 'no_matching_ldap_id'),
         ];
 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $collection->toArray(),
         );
@@ -320,7 +334,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
             'cstevens' => new EmailDoesNotMatchUser($this->active_user_in_db, 'bogossdu38@example.com', 108, ''),
         ];
 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $collection->toArray(),
         );
@@ -345,7 +359,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
             'jdoe' => new AlreadyExistingUser($this->active_user_in_ldap, 107, 'jd3456'),
         ];
 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $collection->toArray(),
         );
@@ -376,7 +390,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
             ),
         ];
 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $collection->toArray(),
         );
@@ -410,7 +424,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
             ),
         ];
 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $collection->toArray(),
         );
@@ -435,7 +449,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
             'jdoe' => new AlreadyExistingUser($this->john_doe, 109, 'jd3456'),
         ];
 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $collection->toArray(),
         );
@@ -461,7 +475,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
             'cstevens' => new AlreadyExistingUser($this->cat_steven, 110, 'cs3456'),
         ];
 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $collection->toArray(),
         );
@@ -493,7 +507,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
             ),
         ];
 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $collection->toArray(),
         );

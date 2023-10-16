@@ -19,32 +19,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Rule_UserNameIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Rule_UserNameIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
     public function testOk(): void
     {
-        $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('getUserByUserName')->andReturns(null);
+        $um = $this->createMock(\UserManager::class);
+        $um->method('getUserByUserName')->willReturn(null);
 
-        $pm = \Mockery::spy(\ProjectManager::class);
-        $pm->shouldReceive('getProjectByUnixName')->andReturns(null);
+        $pm = $this->createMock(\ProjectManager::class);
+        $pm->method('getProjectByUnixName')->willReturn(null);
 
-        $sm = \Mockery::spy(\SystemEventManager::class);
-        $sm->shouldReceive('isUserNameAvailable')->andReturns(true);
+        $sm = $this->createMock(\SystemEventManager::class);
+        $sm->method('isUserNameAvailable')->willReturn(true);
 
-        $r = \Mockery::mock(\Rule_UserName::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $r->shouldReceive('_getUserManager')->andReturns($um);
-        $r->shouldReceive('_getProjectManager')->andReturns($pm);
-        $r->shouldReceive('_getSystemEventManager')->andReturns($sm);
+        $r = $this->createPartialMock(
+            \Rule_UserName::class,
+            [
+                '_getUserManager',
+                '_getProjectManager',
+                '_getSystemEventManager',
+            ]
+        );
+        $r->method('_getUserManager')->willReturn($um);
+        $r->method('_getProjectManager')->willReturn($pm);
+        $r->method('_getSystemEventManager')->willReturn($sm);
 
         self::assertTrue($r->isValid("user"));
         self::assertTrue($r->isValid("user_name"));
@@ -53,62 +58,80 @@ class Rule_UserNameIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUserAlreadyExist(): void
     {
-        $u  = \Mockery::spy(\PFUser::class);
-        $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('getUserByUsername')->with('user')->andReturns($u);
+        $u  = \Tuleap\Test\Builders\UserTestBuilder::aUser()->build();
+        $um = $this->createMock(\UserManager::class);
+        $um->method('getUserByUsername')->with('user')->willReturn($u);
 
-        $pm = \Mockery::spy(\ProjectManager::class);
-        $pm->shouldReceive('getProjectByUnixName')->andReturns(null);
+        $pm = $this->createMock(\ProjectManager::class);
+        $pm->method('getProjectByUnixName')->willReturn(null);
 
-        $backend = \Mockery::spy(\Backend::class);
+        $sm = $this->createMock(\SystemEventManager::class);
+        $sm->method('isUserNameAvailable')->willReturn(true);
 
-        $sm = \Mockery::spy(\SystemEventManager::class);
-        $sm->shouldReceive('isUserNameAvailable')->andReturns(true);
-
-        $r = \Mockery::mock(\Rule_UserName::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $r->shouldReceive('_getUserManager')->andReturns($um);
-        $r->shouldReceive('_getProjectManager')->andReturns($pm);
-        $r->shouldReceive('_getBackend')->andReturns($backend);
-        $r->shouldReceive('_getSystemEventManager')->andReturns($sm);
+        $r = $this->createPartialMock(
+            \Rule_UserName::class,
+            [
+                '_getUserManager',
+                '_getProjectManager',
+                '_getSystemEventManager',
+            ]
+        );
+        $r->method('_getUserManager')->willReturn($um);
+        $r->method('_getProjectManager')->willReturn($pm);
+        $r->method('_getSystemEventManager')->willReturn($sm);
 
         self::assertFalse($r->isValid("user"));
     }
 
     public function testProjectAlreadyExist(): void
     {
-        $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('getUserByUserName')->andReturns(null);
+        $um = $this->createMock(\UserManager::class);
+        $um->method('getUserByUserName')->willReturn(null);
 
-        $p  = \Mockery::spy(\Project::class);
-        $pm = \Mockery::spy(\ProjectManager::class);
-        $pm->shouldReceive('getProjectByUnixName')->with('user')->andReturns($p);
+        $p  = $this->createMock(\Project::class);
+        $pm = $this->createMock(\ProjectManager::class);
+        $pm->method('getProjectByUnixName')->with('user')->willReturn($p);
 
-        $sm = \Mockery::spy(\SystemEventManager::class);
-        $sm->shouldReceive('isUserNameAvailable')->andReturns(true);
+        $sm = $this->createMock(\SystemEventManager::class);
+        $sm->method('isUserNameAvailable')->willReturn(true);
 
-        $r = \Mockery::mock(\Rule_UserName::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $r->shouldReceive('_getUserManager')->andReturns($um);
-        $r->shouldReceive('_getProjectManager')->andReturns($pm);
-        $r->shouldReceive('_getSystemEventManager')->andReturns($sm);
+        $r = $this->createPartialMock(
+            \Rule_UserName::class,
+            [
+                '_getUserManager',
+                '_getProjectManager',
+                '_getSystemEventManager',
+            ]
+        );
+        $r->method('_getUserManager')->willReturn($um);
+        $r->method('_getProjectManager')->willReturn($pm);
+        $r->method('_getSystemEventManager')->willReturn($sm);
 
         self::assertFalse($r->isValid("user"));
     }
 
     public function testSpaceInName(): void
     {
-        $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('getUserByUserName')->andReturns(null);
+        $um = $this->createMock(\UserManager::class);
+        $um->method('getUserByUserName')->willReturn(null);
 
-        $pm = \Mockery::spy(\ProjectManager::class);
-        $pm->shouldReceive('getProjectByUnixName')->andReturns(null);
+        $pm = $this->createMock(\ProjectManager::class);
+        $pm->method('getProjectByUnixName')->willReturn(null);
 
-        $sm = \Mockery::spy(\SystemEventManager::class);
-        $sm->shouldReceive('isUserNameAvailable')->andReturns(true);
+        $sm = $this->createMock(\SystemEventManager::class);
+        $sm->method('isUserNameAvailable')->willReturn(true);
 
-        $r = \Mockery::mock(\Rule_UserName::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $r->shouldReceive('_getUserManager')->andReturns($um);
-        $r->shouldReceive('_getProjectManager')->andReturns($pm);
-        $r->shouldReceive('_getSystemEventManager')->andReturns($sm);
+        $r = $this->createPartialMock(
+            \Rule_UserName::class,
+            [
+                '_getUserManager',
+                '_getProjectManager',
+                '_getSystemEventManager',
+            ]
+        );
+        $r->method('_getUserManager')->willReturn($um);
+        $r->method('_getProjectManager')->willReturn($pm);
+        $r->method('_getSystemEventManager')->willReturn($sm);
 
         self::assertFalse($r->isValid("user name"));
     }

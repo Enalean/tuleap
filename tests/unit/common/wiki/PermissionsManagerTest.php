@@ -18,23 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\PHPWiki\WikiPage;
 use Tuleap\Project\UGroupLiteralizer;
 
-class Wiki_PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+final class Wiki_PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /** @var Wiki_PermissionsManager */
-    private $wiki_permissions_manager;
-
-    /** @var PermissionsManager */
-    private $permission_manager;
-
-    /** @var ProjectManager */
-    private $project_manager;
-
-    /** @var WikiPage */
-    private $wiki_page;
+    private Wiki_PermissionsManager $wiki_permissions_manager;
+    private PermissionsManager&\PHPUnit\Framework\MockObject\MockObject $permission_manager;
+    private ProjectManager&\PHPUnit\Framework\MockObject\MockObject $project_manager;
+    private WikiPage&\PHPUnit\Framework\MockObject\MockObject $wiki_page;
     /**
      * @var \Mockery\MockInterface&Project
      */
@@ -44,40 +37,46 @@ class Wiki_PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->project = \Mockery::spy(\Project::class)->shouldReceive('getUnixName')->andReturns('perceval')->getMock();
-        $this->project->shouldReceive('getId')->andReturns(200);
+        $this->project = $this->createMock(\Project::class);
+        $this->project->method('getUnixName')->willReturn('perceval');
+        $this->project->method('getId')->willReturn(200);
 
-        $this->wiki_page = \Mockery::spy(\Tuleap\PHPWiki\WikiPage::class)->shouldReceive('getId')->andReturns(101)->getMock();
-        $this->wiki_page->shouldReceive('getGid')->andReturns(200);
+        $this->wiki_page = $this->createMock(\Tuleap\PHPWiki\WikiPage::class);
+        $this->wiki_page->method('getId')->willReturn(101);
+        $this->wiki_page->method('getGid')->willReturn(200);
 
-        $literalizer              = new UGroupLiteralizer();
-        $this->permission_manager = \Mockery::spy(\PermissionsManager::class);
-        $this->project_manager    = \Mockery::spy(\ProjectManager::class)->shouldReceive('getProject')->with(200)->andReturns($this->project)->getMock();
+        $this->permission_manager = $this->createMock(\PermissionsManager::class);
+        $this->project_manager    = $this->createMock(\ProjectManager::class);
+        $this->project_manager->method('getProject')->with(200)->willReturn($this->project);
 
         $this->wiki_permissions_manager = new Wiki_PermissionsManager(
             $this->permission_manager,
             $this->project_manager,
-            $literalizer
+            new UGroupLiteralizer(),
         );
     }
 
     public function testItReturnsPageRights(): void
     {
-        $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(101, 'WIKIPAGE_READ')->andReturns([
-            '3', '4', '14', '107',
-        ]);
+        $this->permission_manager->method('getAuthorizedUgroupIds')->willReturnCallback(
+            function (int $object_id, string $permission_type): array {
+                if ($object_id === 101 && $permission_type === 'WIKIPAGE_READ') {
+                    return ['3', '4', '14', '107'];
+                } elseif ($object_id === 200 && $permission_type === 'WIKI_READ') {
+                    return ['2'];
+                } else {
+                    throw new LogicException('must not be here');
+                }
+            }
+        );
 
-        $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(200, 'WIKI_READ')->andReturns([
-            '2',
-        ]);
-
-        $this->project->shouldReceive('isPublic')->andReturns(true);
+        $this->project->method('isPublic')->willReturn(true);
 
         $expected = [
             '@perceval_project_members', '@perceval_project_admin', '@perceval_wiki_admin', '@ug_107',
         ];
 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $this->wiki_permissions_manager->getFromattedUgroupsThatCanReadWikiPage($this->wiki_page)
         );
@@ -85,21 +84,25 @@ class Wiki_PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsServiceRightsIfPageRightsAreWeeker(): void
     {
-        $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(101, 'WIKIPAGE_READ')->andReturns([
-            '3',
-        ]);
+        $this->permission_manager->method('getAuthorizedUgroupIds')->willReturnCallback(
+            function (int $object_id, string $permission_type): array {
+                if ($object_id === 101 && $permission_type === 'WIKIPAGE_READ') {
+                    return ['3'];
+                } elseif ($object_id === 200 && $permission_type === 'WIKI_READ') {
+                    return ['4', '14', '107'];
+                } else {
+                    throw new LogicException('must not be here');
+                }
+            }
+        );
 
-        $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(200, 'WIKI_READ')->andReturns([
-            '4', '14', '107',
-        ]);
-
-        $this->project->shouldReceive('isPublic')->andReturns(true);
+        $this->project->method('isPublic')->willReturn(true);
 
         $expected = [
             '@perceval_project_admin', '@perceval_wiki_admin', '@ug_107',
         ];
 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $this->wiki_permissions_manager->getFromattedUgroupsThatCanReadWikiPage($this->wiki_page)
         );
@@ -107,21 +110,25 @@ class Wiki_PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsMixedServiceAndPageRights(): void
     {
-        $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(101, 'WIKIPAGE_READ')->andReturns([
-            '107', '108', '4',
-        ]);
+        $this->permission_manager->method('getAuthorizedUgroupIds')->willReturnCallback(
+            function (int $object_id, string $permission_type): array {
+                if ($object_id === 101 && $permission_type === 'WIKIPAGE_READ') {
+                    return ['107', '108', '4'];
+                } elseif ($object_id === 200 && $permission_type === 'WIKI_READ') {
+                    return ['14', '106'];
+                } else {
+                    throw new LogicException('must not be here');
+                }
+            }
+        );
 
-        $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(200, 'WIKI_READ')->andReturns([
-            '14', '106',
-        ]);
-
-        $this->project->shouldReceive('isPublic')->andReturns(true);
+        $this->project->method('isPublic')->willReturn(true);
 
         $expected = [
             '@perceval_wiki_admin', '@ug_106', '@perceval_project_admin',
         ];
 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $this->wiki_permissions_manager->getFromattedUgroupsThatCanReadWikiPage($this->wiki_page)
         );
@@ -129,21 +136,25 @@ class Wiki_PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotReturnNonMemberUgroupsIfProjectIsPrivate(): void
     {
-        $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(101, 'WIKIPAGE_READ')->andReturns([
-            '2',
-        ]);
+        $this->permission_manager->method('getAuthorizedUgroupIds')->willReturnCallback(
+            function (int $object_id, string $permission_type): array {
+                if ($object_id === 101 && $permission_type === 'WIKIPAGE_READ') {
+                    return ['2'];
+                } elseif ($object_id === 200 && $permission_type === 'WIKI_READ') {
+                    return ['2'];
+                } else {
+                    throw new LogicException('must not be here');
+                }
+            }
+        );
 
-        $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(200, 'WIKI_READ')->andReturns([
-            '2',
-        ]);
-
-        $this->project->shouldReceive('isPublic')->andReturns(false);
+        $this->project->method('isPublic')->willReturn(false);
 
         $expected = [
             '@perceval_project_admin', '@perceval_wiki_admin',
         ];
 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $this->wiki_permissions_manager->getFromattedUgroupsThatCanReadWikiPage($this->wiki_page)
         );
@@ -151,21 +162,25 @@ class Wiki_PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItAlwaysReturnsWikiAndProjectAdminGroups(): void
     {
-        $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(101, 'WIKIPAGE_READ')->andReturns([
-            '107',
-        ]);
+        $this->permission_manager->method('getAuthorizedUgroupIds')->willReturnCallback(
+            function (int $object_id, string $permission_type): array {
+                if ($object_id === 101 && $permission_type === 'WIKIPAGE_READ') {
+                    return ['107'];
+                } elseif ($object_id === 200 && $permission_type === 'WIKI_READ') {
+                    return ['3'];
+                } else {
+                    throw new LogicException('must not be here');
+                }
+            }
+        );
 
-        $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(200, 'WIKI_READ')->andReturns([
-            '3',
-        ]);
-
-        $this->project->shouldReceive('isPublic')->andReturns(true);
+        $this->project->method('isPublic')->willReturn(true);
 
         $expected = [
             '@ug_107', '@perceval_project_admin', '@perceval_wiki_admin',
         ];
 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $this->wiki_permissions_manager->getFromattedUgroupsThatCanReadWikiPage($this->wiki_page)
         );

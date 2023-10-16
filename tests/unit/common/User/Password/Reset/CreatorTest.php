@@ -22,19 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Password\Reset;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class CreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|SplitTokenVerificationStringHasher
+     * @var SplitTokenVerificationStringHasher&MockObject
      */
     private $hasher;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|LostPasswordDAO
+     * @var LostPasswordDAO&MockObject
      */
     private $dao;
     /**
@@ -44,31 +43,30 @@ final class CreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->hasher = \Mockery::mock(SplitTokenVerificationStringHasher::class);
-        $this->dao    = \Mockery::spy(\Tuleap\User\Password\Reset\LostPasswordDAO::class);
+        $this->hasher = $this->createMock(SplitTokenVerificationStringHasher::class);
+        $this->dao    = $this->createMock(\Tuleap\User\Password\Reset\LostPasswordDAO::class);
 
         $this->token_creator = new Creator($this->dao, $this->hasher);
     }
 
     public function testItCreatesToken(): void
     {
-        $this->hasher->shouldReceive('computeHash')->andReturns('random_hashed');
+        $this->hasher->method('computeHash')->willReturn('random_hashed');
 
-        $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('getId')->andReturns(101);
+        $user = UserTestBuilder::aUser()->withId(101)->build();
 
-        $this->dao->shouldReceive('create')->with(101, 'random_hashed', \Mockery::any())->andReturns(22);
+        $this->dao->method('create')->with(101, 'random_hashed', self::anything())->willReturn(22);
 
         $token = $this->token_creator->create($user);
-        $this->assertEquals(22, $token->getID());
+        self::assertEquals(22, $token->getID());
     }
 
     public function testHandlesTokenCreationRejection(): void
     {
         $user = UserTestBuilder::aUser()->withId(102)->build();
 
-        $this->hasher->shouldReceive('computeHash')->andReturns('random_hashed');
-        $this->dao->shouldReceive('create')->andThrow(RecentlyCreatedCodeException::class);
+        $this->hasher->method('computeHash')->willReturn('random_hashed');
+        $this->dao->method('create')->willThrowException(new RecentlyCreatedCodeException());
 
         $this->expectException(RecentlyCreatedCodeException::class);
 
