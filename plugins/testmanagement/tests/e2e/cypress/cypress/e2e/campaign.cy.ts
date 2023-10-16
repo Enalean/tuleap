@@ -173,9 +173,11 @@ describe("TTM campaign", () => {
 
             cy.log("Edits the test");
             cy.get("[data-test=current-test-edit]").click();
+            cy.intercept("PUT", "/api/v1/testmanagement_executions/*").as("updateTest");
             getStringFieldWithLabel("Summary").type("{selectall}My first test edited");
             cy.get("[data-test=artifact-modal-save-button]").click();
             cy.get("[data-test=current-test]").should("have.class", "notrun");
+            cy.wait("@updateTest", { timeout: 5000 });
             cy.get("[data-test=current-test-header-title]").contains("My first test edited");
             cy.get("[data-test=current-test-comment]").should("be.visible");
         });
