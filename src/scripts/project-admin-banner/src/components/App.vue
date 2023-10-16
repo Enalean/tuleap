@@ -20,15 +20,11 @@
 
 <template>
     <div>
-        <div
-            v-if="shouldDisplayErrorBanner"
-            class="tlp-alert-danger"
-            v-translate="{ error_message }"
-        >
-            An error occurred: %{ error_message }
+        <div v-if="shouldDisplayErrorBanner" class="tlp-alert-danger">
+            {{ translatedErrorMessage }}
         </div>
-        <div v-else-if="has_banner_been_modified" class="tlp-alert-success" v-translate>
-            The banner has been successfully modified
+        <div v-else-if="has_banner_been_modified" class="tlp-alert-success">
+            {{ $gettext("The banner has been successfully modified") }}
         </div>
         <div>
             <banner-presenter
@@ -65,7 +61,7 @@ export default class App extends Vue {
     @Prop({ required: true })
     readonly location!: Location;
 
-    error_message: string | null = null;
+    private error_message: string | null = null;
     has_banner_been_modified = false;
     banner_presenter_is_loading = false;
 
@@ -111,6 +107,12 @@ export default class App extends Vue {
 
     get shouldDisplayErrorBanner(): boolean {
         return this.error_message !== null;
+    }
+
+    get translatedErrorMessage(): string {
+        return this.$gettextInterpolate(this.$gettext("An error occurred: %{ error_message }"), {
+            error_message: this.error_message,
+        });
     }
 
     private refreshOnSuccessChange(): void {

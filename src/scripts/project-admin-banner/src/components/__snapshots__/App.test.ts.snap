@@ -4,10 +4,6 @@ exports[`App Should display an error if banner deletion fails 1`] = `
 <div>
   <div
     class="tlp-alert-danger"
-    data-current-language="en_US"
-    data-msgid="
-        An error occurred: %{ error_message }
-    "
   >
     
         An error occurred: an error message
@@ -26,10 +22,6 @@ exports[`App Should display an error if banner update fails 1`] = `
 <div>
   <div
     class="tlp-alert-danger"
-    data-current-language="en_US"
-    data-msgid="
-        An error occurred: %{ error_message }
-    "
   >
     
         An error occurred: Ooops something went wrong
@@ -72,10 +64,6 @@ exports[`App displays success message when the banner has been successfully modi
 <div>
   <div
     class="tlp-alert-success"
-    data-current-language="en_US"
-    data-msgid="
-        The banner has been successfully modified
-    "
   >
     
         The banner has been successfully modified

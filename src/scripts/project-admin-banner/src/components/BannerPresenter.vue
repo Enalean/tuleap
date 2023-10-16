@@ -20,14 +20,15 @@
 <template>
     <div>
         <div class="tlp-form-element" v-bind:class="{ 'tlp-form-element-disabled': loading }">
-            <label class="tlp-label tlp-checkbox">
-                <input type="checkbox" v-model="banner_is_activated" />
-                <translate>Activate the banner on this project</translate>
-            </label>
+            <label class="tlp-label tlp-checkbox"
+                ><input type="checkbox" v-model="banner_is_activated" />{{
+                    $gettext("Activate the banner on this project")
+                }}</label
+            >
         </div>
         <div v-show="banner_is_activated">
             <div class="tlp-form-element" v-bind:class="{ 'tlp-form-element-disabled': loading }">
-                <label class="tlp-label" for="description" v-translate>Message</label>
+                <label class="tlp-label" for="description">{{ $gettext("Message") }}</label>
                 <textarea
                     ref="embedded_editor"
                     class="tlp-textarea"
@@ -36,7 +37,9 @@
                     v-model="current_message"
                     v-bind:placeholder="$gettext('Choose a banner message')"
                 ></textarea>
-                <p class="tlp-text-muted" v-translate>Your message will be condensed to one line</p>
+                <p class="tlp-text-muted">
+                    {{ $gettext("Your message will be condensed to one line") }}
+                </p>
             </div>
         </div>
         <div class="tlp-pane-section-submit">
@@ -52,9 +55,8 @@
                     v-if="loading"
                     class="tlp-button-icon fa fa-fw fa-spin fa-circle fa-circle-o-notch"
                 ></i>
-                <i v-if="!loading" class="tlp-button-icon fa fa-save"></i>
-                &nbsp;
-                <span v-translate>Save the configuration</span>
+                <i v-if="!loading" class="tlp-button-icon fa fa-save"></i
+                >{{ $gettext("Save the configuration") }}
             </button>
         </div>
     </div>

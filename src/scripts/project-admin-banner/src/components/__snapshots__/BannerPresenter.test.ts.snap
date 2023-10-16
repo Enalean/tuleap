@@ -11,12 +11,7 @@ exports[`BannerPresenter disables the whole form when on loading state 1`] = `
       <input
         type="checkbox"
       />
-       
-      <translate-stub
-        tag="span"
-      >
-        Activate the banner on this project
-      </translate-stub>
+      Activate the banner on this project
     </label>
   </div>
    
@@ -26,8 +21,6 @@ exports[`BannerPresenter disables the whole form when on loading state 1`] = `
     >
       <label
         class="tlp-label"
-        data-current-language="en_US"
-        data-msgid="Message"
         for="description"
       >
         Message
@@ -43,10 +36,10 @@ exports[`BannerPresenter disables the whole form when on loading state 1`] = `
        
       <p
         class="tlp-text-muted"
-        data-current-language="en_US"
-        data-msgid="Your message will be condensed to one line"
       >
-        Your message will be condensed to one line
+        
+                Your message will be condensed to one line
+            
       </p>
     </div>
   </div>
@@ -65,15 +58,8 @@ exports[`BannerPresenter disables the whole form when on loading state 1`] = `
       />
        
       <!---->
-      
-             
-            
-      <span
-        data-current-language="en_US"
-        data-msgid="Save the configuration"
-      >
-        Save the configuration
-      </span>
+      Save the configuration
+        
     </button>
   </div>
 </div>
@@ -90,12 +76,7 @@ exports[`BannerPresenter displays a default message and an unchecked switch if b
       <input
         type="checkbox"
       />
-       
-      <translate-stub
-        tag="span"
-      >
-        Activate the banner on this project
-      </translate-stub>
+      Activate the banner on this project
     </label>
   </div>
    
@@ -107,8 +88,6 @@ exports[`BannerPresenter displays a default message and an unchecked switch if b
     >
       <label
         class="tlp-label"
-        data-current-language="en_US"
-        data-msgid="Message"
         for="description"
       >
         Message
@@ -124,10 +103,10 @@ exports[`BannerPresenter displays a default message and an unchecked switch if b
        
       <p
         class="tlp-text-muted"
-        data-current-language="en_US"
-        data-msgid="Your message will be condensed to one line"
       >
-        Your message will be condensed to one line
+        
+                Your message will be condensed to one line
+            
       </p>
     </div>
   </div>
@@ -145,15 +124,8 @@ exports[`BannerPresenter displays a default message and an unchecked switch if b
       <i
         class="tlp-button-icon fa fa-save"
       />
-      
-             
-            
-      <span
-        data-current-language="en_US"
-        data-msgid="Save the configuration"
-      >
-        Save the configuration
-      </span>
+      Save the configuration
+        
     </button>
   </div>
 </div>
@@ -170,12 +142,7 @@ exports[`BannerPresenter displays the banner and a checked switch if banner is s
       <input
         type="checkbox"
       />
-       
-      <translate-stub
-        tag="span"
-      >
-        Activate the banner on this project
-      </translate-stub>
+      Activate the banner on this project
     </label>
   </div>
    
@@ -185,8 +152,6 @@ exports[`BannerPresenter displays the banner and a checked switch if banner is s
     >
       <label
         class="tlp-label"
-        data-current-language="en_US"
-        data-msgid="Message"
         for="description"
       >
         Message
@@ -202,10 +167,10 @@ exports[`BannerPresenter displays the banner and a checked switch if banner is s
        
       <p
         class="tlp-text-muted"
-        data-current-language="en_US"
-        data-msgid="Your message will be condensed to one line"
       >
-        Your message will be condensed to one line
+        
+                Your message will be condensed to one line
+            
       </p>
     </div>
   </div>
@@ -223,15 +188,8 @@ exports[`BannerPresenter displays the banner and a checked switch if banner is s
       <i
         class="tlp-button-icon fa fa-save"
       />
-      
-             
-            
-      <span
-        data-current-language="en_US"
-        data-msgid="Save the configuration"
-      >
-        Save the configuration
-      </span>
+      Save the configuration
+        
     </button>
   </div>
 </div>
