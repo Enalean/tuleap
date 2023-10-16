@@ -209,7 +209,12 @@ class ServiceFile extends Service //phpcs:ignore PSR1.Classes.ClassDeclaration.M
             $frs_breadcrumb->setSubItems($sub_items);
         }
 
-        $this->displayHeader($title, $breadcrumbs, []);
+        $pv     = (int) HTTPRequest::instance()->get('pv');
+        $params = \Tuleap\Layout\HeaderConfigurationBuilder::get($title)
+            ->inProject($project, "file")
+            ->withPrinterVersion($pv)
+            ->build();
+        $this->displayHeader($title, $breadcrumbs, [], $params);
     }
 
     private function getFrsPermissionManager()

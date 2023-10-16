@@ -35,8 +35,6 @@ function file_utils_header($params)
 {
     global $group_id;
 
-    $params['toptab'] = 'file';
-
     if (! array_key_exists('pv', $params) || ! $params['pv']) {
         $project_manager = ProjectManager::instance();
         $project         = $project_manager->getProject($group_id);
