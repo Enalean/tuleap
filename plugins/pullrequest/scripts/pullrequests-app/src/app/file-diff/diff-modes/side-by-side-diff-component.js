@@ -134,6 +134,7 @@ function controller($element, $scope, SharedPropertiesService) {
             ),
             getStore(),
             comment_widgets_map,
+            SharedPropertiesService.isCommentEditionEnabled(),
         );
 
         const file_lines_state = SideBySideLineState(

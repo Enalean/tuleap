@@ -196,4 +196,8 @@ describe("PullRequestCommentController", () => {
     it("getProjectId() should return the current project id", () => {
         expect(getController(SaveNewReplyToCommentStub.withDefault()).getProjectId()).toBe(105);
     });
+
+    it("getCurrentUserId() should return the current user id", () => {
+        expect(getController(SaveNewReplyToCommentStub.withDefault()).getCurrentUserId()).toBe(104);
+    });
 });

@@ -45,6 +45,7 @@
                 v-bind:key="`${index}${thread.id}`"
                 v-bind:comment="thread"
                 v-bind:controller="comments_controller"
+                v-bind:is_comment_edition_enabled="is_comment_edition_enabled"
             />
         </div>
         <overview-new-comment-form v-if="!is_loading_threads" />
@@ -68,6 +69,7 @@ import {
     DISPLAY_TULEAP_API_ERROR,
     DISPLAY_NEWLY_CREATED_GLOBAL_COMMENT,
     PROJECT_ID,
+    IS_COMMENT_EDITION_ENABLED,
 } from "../../constants";
 import { fetchPullRequestTimelineItems } from "../../api/tuleap-rest-querier";
 import { CommentPresenterBuilder } from "./CommentPresenterBuilder";
@@ -114,6 +116,7 @@ const user_locale: string = strictInject(USER_LOCALE_KEY);
 const relative_date_display: RelativeDatesDisplayPreference = strictInject(
     USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
 );
+const is_comment_edition_enabled: boolean = strictInject(IS_COMMENT_EDITION_ENABLED);
 
 const is_loading_threads = ref(true);
 const threads = reactive<{ list: PullRequestCommentPresenter[] }>({ list: [] });

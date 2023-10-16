@@ -51,6 +51,7 @@ export const FileDiffWidgetStub = {
     ): InlineCommentWidget => ({
         ...base_element,
         localName: "tuleap-pullrequest-comment",
+        is_comment_edition_enabled: true,
         getBoundingClientRect: stubBounding(height),
         comment: PullRequestCommentPresenterStub.buildInlineComment(),
         controller: {
@@ -62,6 +63,7 @@ export const FileDiffWidgetStub = {
             getRelativeDateHelper: jest.fn(),
             shouldFocusWritingZoneOnceRendered: () => true,
             getProjectId: () => 105,
+            getCurrentUserId: () => 102,
         },
         post_rendering_callback: noop,
         ...data,

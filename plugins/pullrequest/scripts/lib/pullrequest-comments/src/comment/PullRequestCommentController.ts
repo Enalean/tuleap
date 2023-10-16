@@ -40,6 +40,7 @@ export type ControlPullRequestComment =
         saveReply: (host: PullRequestCommentComponentType) => void;
         getRelativeDateHelper: () => HelpRelativeDatesDisplay;
         getProjectId: () => number;
+        getCurrentUserId: () => number;
     };
 
 export const PullRequestCommentController = (
@@ -109,9 +110,12 @@ export const PullRequestCommentController = (
             current_user.preferred_relative_date_display,
             current_user.user_locale,
         ),
+
     shouldFocusWritingZoneOnceRendered: () => true,
 
     getProjectId: () => current_pull_request.project_id,
+
+    getCurrentUserId: (): number => current_user.user_id,
 });
 
 function getExistingCommentReplyPresenter(

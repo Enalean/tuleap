@@ -35,6 +35,7 @@ import {
     CURRENT_USER_AVATAR_URL,
     CURRENT_USER_ID,
     DISPLAY_TULEAP_API_ERROR,
+    IS_COMMENT_EDITION_ENABLED,
     OVERVIEW_APP_BASE_URL_KEY,
     PROJECT_ID,
     PULL_REQUEST_ID_KEY,
@@ -60,6 +61,8 @@ async function setWrapperProps(wrapper: VueWrapper): Promise<void> {
 
     await wrapper.vm.$nextTick();
 }
+
+const is_comment_edition_enabled = true;
 
 describe("OverviewThreads", () => {
     let display_error_callback: SpyInstance;
@@ -89,6 +92,8 @@ describe("OverviewThreads", () => {
                     return PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN;
                 case PROJECT_ID:
                     return 105;
+                case IS_COMMENT_EDITION_ENABLED:
+                    return is_comment_edition_enabled;
                 default:
                     throw new Error("Tried to strictInject a value while it was not mocked");
             }

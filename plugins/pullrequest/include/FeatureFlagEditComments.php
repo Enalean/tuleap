@@ -1,4 +1,5 @@
-/*
+<?php
+/**
  * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,20 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { vi } from "vitest";
-import type { ControlPullRequestComment } from "../../src/comment/PullRequestCommentController";
-import { RelativeDateHelperStub } from "./RelativeDateHelperStub";
+declare(strict_types=1);
 
-export const PullRequestCommentControllerStub = (
-    current_user_id = 102,
-): ControlPullRequestComment => ({
-    hideReplyForm: vi.fn(),
-    showReplyForm: vi.fn(),
-    displayReplies: vi.fn(),
-    handleWritingZoneContentChange: vi.fn(),
-    saveReply: vi.fn(),
-    getRelativeDateHelper: () => RelativeDateHelperStub,
-    shouldFocusWritingZoneOnceRendered: () => true,
-    getProjectId: () => 105,
-    getCurrentUserId: () => current_user_id,
-});
+namespace Tuleap\PullRequest;
+
+use Tuleap\Config\ConfigKeyHidden;
+use Tuleap\Config\ConfigKeyString;
+use Tuleap\Config\FeatureFlagConfigKey;
+
+final class FeatureFlagEditComments
+{
+    #[FeatureFlagConfigKey("Feature flag to allow users to edit pull-requests commonmark comments")]
+    #[ConfigKeyString("0")]
+    #[ConfigKeyHidden]
+    public const FEATURE_FLAG_KEY = 'allow_pull_requests_comments_edition';
+
+    public static function isCommentEditionEnabled(): bool
+    {
+        return \ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_KEY) === "1";
+    }
+}
