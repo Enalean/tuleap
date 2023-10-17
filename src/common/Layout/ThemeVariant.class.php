@@ -36,7 +36,11 @@ class ThemeVariant //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     #[ConfigKeyValueValidator(ConfigDefaultThemeVariantValidator::class)]
     public final const CONFIG_DEFAULT = 'sys_default_theme_variant';
 
-    #[ConfigKey("Comma-separated list of allowed theme variants (users will be able to choose their preference among this list). Default is all available colors: 'orange,blue,grey,green,purple,red'.")]
+    #[ConfigKey(<<<'EOF'
+    Comma-separated list of allowed theme variants (users will be able to choose their preference among this list).
+    Default is all available colors: 'orange,blue,grey,green,purple,red'.
+    EOF
+    )]
     #[ConfigKeyString('orange,blue,grey,green,purple,red')]
     #[ConfigKeyValueValidator(ConfigAvailableThemeVariantValidator::class)]
     public final const CONFIG_ALLOWED = 'sys_available_theme_variants';

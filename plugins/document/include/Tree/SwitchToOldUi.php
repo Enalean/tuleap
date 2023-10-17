@@ -26,7 +26,11 @@ use Tuleap\Config\FeatureFlagConfigKey;
 
 final class SwitchToOldUi
 {
-    #[FeatureFlagConfigKey("Feature flag to allow users to use the old docman interface. Comma separated list of project ids. Please warn us if you activate this flag.")]
+    #[FeatureFlagConfigKey(<<<'EOF'
+    Feature flag to allow using the old docman interface. Comma-separated list of project ids.
+    ⚠️  Please warn us if you activate this flag.
+    EOF
+    )]
     public const FEATURE_FLAG = 'allow_temporary_access_to_old_ui_that_will_be_removed_soon';
 
     public static function isAllowed(\PFUser $user, \Project $project): bool
