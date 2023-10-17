@@ -54,7 +54,7 @@ import { getProjectPrivacyIcon } from "@tuleap/project-privacy-helper";
 import { createPopover } from "@tuleap/tlp-popovers";
 
 const config = strictInject(SIDEBAR_CONFIGURATION);
-const project_privacy_icon = computed(() => getProjectPrivacyIcon(config.value.project.privacy));
+const project_privacy_icon = computed(() => getProjectPrivacyIcon(config.project.privacy));
 
 const badge = ref<InstanceType<typeof HTMLElement>>();
 const popover_content = ref<InstanceType<typeof HTMLElement>>();

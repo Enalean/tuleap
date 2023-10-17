@@ -24,7 +24,6 @@ import { describe, it, expect, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import LinkedProjects from "./LinkedProjects.vue";
 import { example_config } from "../project-sidebar-example-config";
-import { ref } from "vue";
 import * as tlp_popovers from "@tuleap/tlp-popovers";
 import type { Popover } from "@tuleap/tlp-popovers";
 import * as strict_inject from "@tuleap/vue-strict-inject";
@@ -37,7 +36,7 @@ describe("LinkedProjects", () => {
             .spyOn(tlp_popovers, "createPopover")
             .mockReturnValue({} as Popover);
 
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(example_config));
+        vi.spyOn(strict_inject, "strictInject").mockReturnValue(example_config);
 
         const wrapper = shallowMount(LinkedProjects, {
             propsData: {
@@ -52,7 +51,7 @@ describe("LinkedProjects", () => {
     it("display nothing if there is no linked projects", () => {
         const config = example_config;
         config.project.linked_projects = null;
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(config));
+        vi.spyOn(strict_inject, "strictInject").mockReturnValue(config);
         const wrapper = shallowMount(LinkedProjects, {
             propsData: {
                 is_sidebar_collapsed: false,
@@ -85,7 +84,7 @@ describe("LinkedProjects", () => {
                     },
                 },
             };
-            vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(config));
+            vi.spyOn(strict_inject, "strictInject").mockReturnValue(config);
 
             const wrapper = shallowMount(LinkedProjects, {
                 propsData: {
@@ -128,7 +127,7 @@ describe("LinkedProjects", () => {
                     },
                 },
             };
-            vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(config));
+            vi.spyOn(strict_inject, "strictInject").mockReturnValue(config);
 
             const wrapper = shallowMount(LinkedProjects, {
                 propsData: {

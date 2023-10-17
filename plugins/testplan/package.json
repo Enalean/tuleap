@@ -17,7 +17,7 @@
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/vue3-gettext-init": "workspace:*",
     "docx": "^7.3.0",
-    "vue": "^3.2.37",
+    "vue": "^3.3.4",
     "vue3-gettext": "^2.4.0",
     "vuex": "^4.0.2",
     "vuex-composition-helpers": "^2.0.1",

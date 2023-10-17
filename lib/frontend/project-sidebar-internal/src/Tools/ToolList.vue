@@ -52,7 +52,7 @@ function setupShortcutsInteraction(): void {
             return;
         }
 
-        const shortcuts = getAvailableShortcutsFromToolsConfiguration(config.value.tools);
+        const shortcuts = getAvailableShortcutsFromToolsConfiguration(config.tools);
 
         if (shortcuts === null) {
             return;

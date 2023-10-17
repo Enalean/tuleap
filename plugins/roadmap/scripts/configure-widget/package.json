@@ -10,7 +10,7 @@
     "@tuleap/list-picker": "workspace:*",
     "@tuleap/vue3-gettext-init": "workspace:*",
     "neverthrow": "^6.0.0",
-    "vue": "^3.2.47",
+    "vue": "^3.3.4",
     "vue3-gettext": "^2.4.0"
   },
   "devDependencies": {

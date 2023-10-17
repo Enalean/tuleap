@@ -6,6 +6,7 @@
   a new configuration variable is added: `project.linked_projects.nb_max_projects_before_popover`.
   When the number of linked projects exceed this limit, then they are no more displayed in the sidebar,
   only in the popover on hover. Default is `5`.
+* Bump vue: 3.2.37 -> 3.3.4
 
 ## 2.3.0
 

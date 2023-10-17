@@ -100,9 +100,7 @@ import { SIDEBAR_CONFIGURATION } from "./injection-symbols";
 import { buildVueDompurifyHTMLDirective } from "vue-dompurify-html";
 
 const config = strictInject(SIDEBAR_CONFIGURATION);
-const homepage_link = computed(() =>
-    sanitizeURL(config.value.instance_information.logo.logo_link_href),
-);
+const homepage_link = computed(() => sanitizeURL(config.instance_information.logo.logo_link_href));
 const vDompurifyHtml = buildVueDompurifyHTMLDirective({
     default: {
         USE_PROFILES: {
@@ -124,9 +122,9 @@ const updateLegacyLogoURLCssVar = (addresses: { normal: string; small: string } 
 onMounted(() => {
     watch(
         (): { normal: string; small: string } | null =>
-            config.value.instance_information.logo.legacy_png_href,
+            config.instance_information.logo.legacy_png_href,
         updateLegacyLogoURLCssVar,
     );
-    updateLegacyLogoURLCssVar(config.value.instance_information.logo.legacy_png_href);
+    updateLegacyLogoURLCssVar(config.instance_information.logo.legacy_png_href);
 });
 </script>

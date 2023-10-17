@@ -147,9 +147,9 @@ const popover_content = ref<InstanceType<typeof HTMLElement>>();
 const popover_anchor = ref<InstanceType<typeof HTMLElement>>();
 
 const is_nb_max_exceeded = ref<boolean>(
-    config.value.project.linked_projects !== null &&
-        config.value.project.linked_projects.projects.length >
-            (config.value.project.linked_projects.nb_max_projects_before_popover ?? 5),
+    config.project.linked_projects !== null &&
+        config.project.linked_projects.projects.length >
+            (config.project.linked_projects.nb_max_projects_before_popover ?? 5),
 );
 const can_display_linked_projects_in_sidebar = ref<boolean>(!is_nb_max_exceeded.value);
 

@@ -19,7 +19,7 @@
     "@tuleap/vue3-gettext-init": "workspace:*",
     "docx": "^7.3.0",
     "sprintf-js": "^1.1.2",
-    "vue": "^3.2.37",
+    "vue": "^3.3.4",
     "vue3-gettext": "^2.4.0",
     "xlsx": "git+https://git.sheetjs.com/sheetjs/sheetjs.git#333e4e40f9c5603bd22a811f54c61c20bc9e17ab"
   },
