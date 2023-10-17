@@ -28,9 +28,14 @@ if (! $request->valid($vGroupId)) {
 
     $hp = Codendi_HTMLPurifier::instance();
 
-    svn_header($request->getProject(), ['title' => $Language->getText('svn_browse_revision', 'browsing'),
-        'help' => 'svn.html#the-subversion-browsing-interface',
-    ]);
+    $project = $request->getProject();
+    svn_header(
+        $project,
+        \Tuleap\Layout\HeaderConfigurationBuilder::get($Language->getText('svn_browse_revision', 'browsing'))
+            ->inProject($project, Service::SVN)
+            ->build(),
+        null
+    );
 
     $vOffset = new Valid_UInt('offset');
     $vOffset->required();
@@ -195,9 +200,7 @@ if (! $request->valid($vGroupId)) {
     /*
      Display commits based on the form post - by user or status or both
     */
-    $pm      = ProjectManager::instance();
-    $project = $pm->getProject($group_id);
-    $root    = $project->getUnixName(false);
+    $root = $project->getUnixName(false);
 
     list($result, $totalrows) = svn_get_revisions($project, $offset, $chunksz, $_rev_id, $_commiter, $_srch, $order_by, $pv);
     $statement                = $Language->getText('svn_browse_revision', 'view_commit');

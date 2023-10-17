@@ -104,10 +104,7 @@ if (! $project->isSVNTracked()) {
 }
 
 // Display the form
-svn_header_admin([
-    'title' => '',
-    'help' => 'svn.html#subversion-email-notification',
-]);
+svn_header_admin('');
 
 // Mail header
 echo '

@@ -23,7 +23,7 @@
 
 require_once __DIR__ . '/svn_data.php';
 
-function svn_header(Project $project, $params)
+function svn_header(Project $project, \Tuleap\Layout\HeaderConfiguration $params, string|null $path)
 {
     global $Language;
 
@@ -35,15 +35,6 @@ function svn_header(Project $project, $params)
     }
 
     $group_id = $project->getID();
-
-    $params['toptab'] = 'svn';
-
-    $additional_params = [];
-    if (isset($params['body_class'])) {
-        $additional_params = [
-            'body_class' => $params['body_class'],
-        ];
-    }
 
     $toolbar   = [];
     $toolbar[] = ['title' => $Language->getText('svn_utils', 'svn_info'),
@@ -60,16 +51,16 @@ function svn_header(Project $project, $params)
         $toolbar[] = ['title' => $Language->getText('svn_utils', 'svn_admin'),
             'url'   => '/svn/admin/?group_id=' . $group_id,
         ];
-        if (isset($params['path']) && ! empty($params['path'])) {
+        if ($path) {
             // TODO: Validate the path
             $toolbar[] = ['title' => $Language->getText('svn_utils', 'notif'),
-                'url'   => '/svn/admin/?group_id=' . $group_id . '&func=notification&path=' . $params['path'],
+                'url'   => '/svn/admin/?group_id=' . $group_id . '&func=notification&path=' . $path,
             ];
         }
     }
 
     $service->displayHeader(
-        $params['title'],
+        $params->title,
         [
             [
                 'title' => $GLOBALS['Language']->getText('project_admin_editservice', 'service_svn_lbl_key'),
@@ -77,7 +68,7 @@ function svn_header(Project $project, $params)
             ],
         ],
         $toolbar,
-        $additional_params
+        $params
     );
 
     echo svn_deprecation_notice($project);
@@ -91,12 +82,9 @@ function svn_deprecation_notice(\Project $project): string
     return "<p><div class='alert alert-danger'> " . sprintf(_('Subversion Core is deprecated, it will be removed on march 2022. Please <a href="/project/%d/admin/services">install and activate `SVN` plugin.</a>'), urlencode((string) $project->getID())) .  "</div></p>";
 }
 
-function svn_header_admin($params)
+function svn_header_admin(string $title): void
 {
     global $group_id,$Language;
-
-    //required params for site_project_header();
-    $params['toptab'] = 'svn';
 
     $project = ProjectManager::instance()->getProject($group_id);
     $service = $project->getService('svn');
@@ -115,7 +103,7 @@ function svn_header_admin($params)
         'url'   => '/svn/admin/?func=notification&group_id=' . $group_id,
     ];
 
-    $service->displayHeader($params['title'], [['title' => $params['title'], 'url' => '/svn/?group_id=' . $group_id]], $toolbar);
+    $service->displayHeader($title, [['title' => $title, 'url' => '/svn/?group_id=' . $group_id]], $toolbar);
 
     echo svn_deprecation_notice($project);
 }

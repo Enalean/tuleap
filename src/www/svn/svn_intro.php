@@ -34,12 +34,18 @@ $hp = Codendi_HTMLPurifier::instance();
 
 require_once __DIR__ . '/svn_utils.php';
 
-svn_header($request->getProject(), ['title' => $Language->getText('svn_intro', 'info')]);
+$project = $request->getProject();
+svn_header(
+    $project,
+    \Tuleap\Layout\HeaderConfigurationBuilder::get($Language->getText('svn_intro', 'info'))
+        ->inProject($project, Service::SVN)
+        ->build(),
+    null,
+);
 
 // Table for summary info
 print '<TABLE width="100%"><TR valign="top"><TD width="65%">' . "\n";
 
-$project      = $request->getProject();
 $svn_preamble = $project->getSVNpreamble();
 
 // Show CVS access information

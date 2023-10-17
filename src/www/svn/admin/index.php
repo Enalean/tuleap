@@ -74,10 +74,7 @@ if ($request->valid($vFunc)) {
         exit_no_group();
     }
 
-    svn_header_admin([
-        'title' => $Language->getText('svn_admin_index', 'admin'),
-        'help' => 'svn.html#subversion-administration-interface',
-    ]);
+    svn_header_admin($Language->getText('svn_admin_index', 'admin'));
 
     $purifier = Codendi_HTMLPurifier::instance();
 
