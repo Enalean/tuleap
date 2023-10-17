@@ -44,7 +44,11 @@
                 {{ config.project.linked_projects.label }}
             </span>
         </span>
-        <ul class="project-sidebar-linked-projects-list" data-test="nav-bar-linked-projects">
+        <ul
+            class="project-sidebar-linked-projects-list"
+            data-test="nav-bar-linked-projects"
+            v-if="can_display_linked_projects_in_sidebar"
+        >
             <li
                 v-for="project in config.project.linked_projects.projects"
                 v-bind:key="project.href"
@@ -78,6 +82,10 @@
         id="project-sidebar-linked-projects-popover"
         ref="popover_content"
         class="tlp-popover project-sidebar-linked-projects-popover"
+        v-bind:class="{
+            'project-sidebar-linked-projects-popover-nb-max-exceeded': is_nb_max_exceeded,
+        }"
+        data-test="popover"
     >
         <div class="tlp-popover-arrow project-sidebar-linked-projects-popover-arrow"></div>
         <div class="tlp-popover-header">
@@ -135,6 +143,13 @@ const config = strictInject(SIDEBAR_CONFIGURATION);
 
 const popover_content = ref<InstanceType<typeof HTMLElement>>();
 const popover_anchor = ref<InstanceType<typeof HTMLElement>>();
+
+const is_nb_max_exceeded = ref<boolean>(
+    config.value.project.linked_projects !== null &&
+        config.value.project.linked_projects.projects.length >
+            (config.value.project.linked_projects.nb_max_projects_before_popover ?? 5),
+);
+const can_display_linked_projects_in_sidebar = ref<boolean>(!is_nb_max_exceeded.value);
 
 onMounted(() => {
     if (popover_anchor.value !== undefined && popover_content.value !== undefined) {

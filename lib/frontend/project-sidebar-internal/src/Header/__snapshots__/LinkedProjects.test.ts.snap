@@ -1,5 +1,409 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`LinkedProjects > Given the config does not specify the nb max project to display in sidebar, it defaults to 5.
+     When nb projects = 5,
+     Then projects in sidebar are displayed = true
+     And popover is displayed = false 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <div
+    class="project-sidebar-linked-projects"
+    id="project-sidebar-linked-projects"
+  >
+    <span
+      class="project-sidebar-linked-projects-title"
+    >
+      <span
+        class="project-sidebar-linked-projects-icon"
+      >
+        <i
+          aria-hidden="true"
+          class="fa-solid fa-fw fa-turn-up fa-flip-horizontal project-sidebar-linked-projects-icon-parent"
+        />
+      </span>
+      <span
+        class="project-sidebar-linked-projects-label"
+      />
+    </span>
+    <ul
+      class="project-sidebar-linked-projects-list"
+      data-test="nav-bar-linked-projects"
+    >
+      
+      <li
+        class="project-sidebar-linked-projects-item"
+      >
+        <a
+          class="project-sidebar-linked-projects-item-link"
+        >
+          <span
+            aria-hidden="true"
+            class="project-sidebar-linked-projects-item-icon"
+          />
+          <span
+            class="project-sidebar-linked-projects-item-name"
+          >
+            acme
+          </span>
+        </a>
+      </li>
+      <li
+        class="project-sidebar-linked-projects-item"
+      >
+        <a
+          class="project-sidebar-linked-projects-item-link"
+        >
+          <span
+            aria-hidden="true"
+            class="project-sidebar-linked-projects-item-icon"
+          />
+          <span
+            class="project-sidebar-linked-projects-item-name"
+          >
+            acme
+          </span>
+        </a>
+      </li>
+      <li
+        class="project-sidebar-linked-projects-item"
+      >
+        <a
+          class="project-sidebar-linked-projects-item-link"
+        >
+          <span
+            aria-hidden="true"
+            class="project-sidebar-linked-projects-item-icon"
+          />
+          <span
+            class="project-sidebar-linked-projects-item-name"
+          >
+            acme
+          </span>
+        </a>
+      </li>
+      <li
+        class="project-sidebar-linked-projects-item"
+      >
+        <a
+          class="project-sidebar-linked-projects-item-link"
+        >
+          <span
+            aria-hidden="true"
+            class="project-sidebar-linked-projects-item-icon"
+          />
+          <span
+            class="project-sidebar-linked-projects-item-name"
+          >
+            acme
+          </span>
+        </a>
+      </li>
+      <li
+        class="project-sidebar-linked-projects-item"
+      >
+        <a
+          class="project-sidebar-linked-projects-item-link"
+        >
+          <span
+            aria-hidden="true"
+            class="project-sidebar-linked-projects-item-icon"
+          />
+          <span
+            class="project-sidebar-linked-projects-item-name"
+          >
+            acme
+          </span>
+        </a>
+      </li>
+      
+    </ul>
+  </div>
+  <div
+    class="tlp-popover project-sidebar-linked-projects-popover"
+    data-test="popover"
+    id="project-sidebar-linked-projects-popover"
+  >
+    <div
+      class="tlp-popover-arrow project-sidebar-linked-projects-popover-arrow"
+    />
+    <div
+      class="tlp-popover-header"
+    >
+      <i
+        aria-hidden="true"
+        class="fa-solid fa-fw fa-turn-up fa-flip-horizontal project-sidebar-linked-projects-icon-parent"
+      />
+      <h1
+        class="tlp-popover-title"
+      />
+    </div>
+    <div
+      class="tlp-popover-body project-sidebar-linked-projects-popover-content"
+    >
+      <ul
+        class="project-sidebar-linked-projects-list-popover"
+      >
+        
+        <li
+          class="project-sidebar-linked-projects-item"
+        >
+          <div
+            class="project-sidebar-linked-projects-item-link"
+          >
+            <span
+              aria-hidden="true"
+              class="project-sidebar-linked-projects-item-icon"
+            />
+            <span
+              class="project-sidebar-linked-projects-item-name"
+            >
+              acme
+            </span>
+          </div>
+        </li>
+        <li
+          class="project-sidebar-linked-projects-item"
+        >
+          <div
+            class="project-sidebar-linked-projects-item-link"
+          >
+            <span
+              aria-hidden="true"
+              class="project-sidebar-linked-projects-item-icon"
+            />
+            <span
+              class="project-sidebar-linked-projects-item-name"
+            >
+              acme
+            </span>
+          </div>
+        </li>
+        <li
+          class="project-sidebar-linked-projects-item"
+        >
+          <div
+            class="project-sidebar-linked-projects-item-link"
+          >
+            <span
+              aria-hidden="true"
+              class="project-sidebar-linked-projects-item-icon"
+            />
+            <span
+              class="project-sidebar-linked-projects-item-name"
+            >
+              acme
+            </span>
+          </div>
+        </li>
+        <li
+          class="project-sidebar-linked-projects-item"
+        >
+          <div
+            class="project-sidebar-linked-projects-item-link"
+          >
+            <span
+              aria-hidden="true"
+              class="project-sidebar-linked-projects-item-icon"
+            />
+            <span
+              class="project-sidebar-linked-projects-item-name"
+            >
+              acme
+            </span>
+          </div>
+        </li>
+        <li
+          class="project-sidebar-linked-projects-item"
+        >
+          <div
+            class="project-sidebar-linked-projects-item-link"
+          >
+            <span
+              aria-hidden="true"
+              class="project-sidebar-linked-projects-item-icon"
+            />
+            <span
+              class="project-sidebar-linked-projects-item-name"
+            >
+              acme
+            </span>
+          </div>
+        </li>
+        
+      </ul>
+    </div>
+  </div>
+  
+</div>
+`;
+
+exports[`LinkedProjects > Given the config does not specify the nb max project to display in sidebar, it defaults to 5.
+     When nb projects = 6,
+     Then projects in sidebar are displayed = false
+     And popover is displayed = true 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <div
+    class="project-sidebar-linked-projects"
+    id="project-sidebar-linked-projects"
+  >
+    <span
+      class="project-sidebar-linked-projects-title"
+    >
+      <span
+        class="project-sidebar-linked-projects-icon"
+      >
+        <i
+          aria-hidden="true"
+          class="fa-solid fa-fw fa-turn-up fa-flip-horizontal project-sidebar-linked-projects-icon-parent"
+        />
+      </span>
+      <span
+        class="project-sidebar-linked-projects-label"
+      />
+    </span>
+    <!--v-if-->
+  </div>
+  <div
+    class="tlp-popover project-sidebar-linked-projects-popover project-sidebar-linked-projects-popover-nb-max-exceeded"
+    data-test="popover"
+    id="project-sidebar-linked-projects-popover"
+  >
+    <div
+      class="tlp-popover-arrow project-sidebar-linked-projects-popover-arrow"
+    />
+    <div
+      class="tlp-popover-header"
+    >
+      <i
+        aria-hidden="true"
+        class="fa-solid fa-fw fa-turn-up fa-flip-horizontal project-sidebar-linked-projects-icon-parent"
+      />
+      <h1
+        class="tlp-popover-title"
+      />
+    </div>
+    <div
+      class="tlp-popover-body project-sidebar-linked-projects-popover-content"
+    >
+      <ul
+        class="project-sidebar-linked-projects-list-popover"
+      >
+        
+        <li
+          class="project-sidebar-linked-projects-item"
+        >
+          <div
+            class="project-sidebar-linked-projects-item-link"
+          >
+            <span
+              aria-hidden="true"
+              class="project-sidebar-linked-projects-item-icon"
+            />
+            <span
+              class="project-sidebar-linked-projects-item-name"
+            >
+              acme
+            </span>
+          </div>
+        </li>
+        <li
+          class="project-sidebar-linked-projects-item"
+        >
+          <div
+            class="project-sidebar-linked-projects-item-link"
+          >
+            <span
+              aria-hidden="true"
+              class="project-sidebar-linked-projects-item-icon"
+            />
+            <span
+              class="project-sidebar-linked-projects-item-name"
+            >
+              acme
+            </span>
+          </div>
+        </li>
+        <li
+          class="project-sidebar-linked-projects-item"
+        >
+          <div
+            class="project-sidebar-linked-projects-item-link"
+          >
+            <span
+              aria-hidden="true"
+              class="project-sidebar-linked-projects-item-icon"
+            />
+            <span
+              class="project-sidebar-linked-projects-item-name"
+            >
+              acme
+            </span>
+          </div>
+        </li>
+        <li
+          class="project-sidebar-linked-projects-item"
+        >
+          <div
+            class="project-sidebar-linked-projects-item-link"
+          >
+            <span
+              aria-hidden="true"
+              class="project-sidebar-linked-projects-item-icon"
+            />
+            <span
+              class="project-sidebar-linked-projects-item-name"
+            >
+              acme
+            </span>
+          </div>
+        </li>
+        <li
+          class="project-sidebar-linked-projects-item"
+        >
+          <div
+            class="project-sidebar-linked-projects-item-link"
+          >
+            <span
+              aria-hidden="true"
+              class="project-sidebar-linked-projects-item-icon"
+            />
+            <span
+              class="project-sidebar-linked-projects-item-name"
+            >
+              acme
+            </span>
+          </div>
+        </li>
+        <li
+          class="project-sidebar-linked-projects-item"
+        >
+          <div
+            class="project-sidebar-linked-projects-item-link"
+          >
+            <span
+              aria-hidden="true"
+              class="project-sidebar-linked-projects-item-icon"
+            />
+            <span
+              class="project-sidebar-linked-projects-item-name"
+            >
+              acme
+            </span>
+          </div>
+        </li>
+        
+      </ul>
+    </div>
+  </div>
+  
+</div>
+`;
+
 exports[`LinkedProjects > displays the linked projects with a popover 1`] = `
 <div
   data-v-app=""
@@ -74,6 +478,7 @@ exports[`LinkedProjects > displays the linked projects with a popover 1`] = `
   </div>
   <div
     class="tlp-popover project-sidebar-linked-projects-popover"
+    data-test="popover"
     id="project-sidebar-linked-projects-popover"
   >
     <div

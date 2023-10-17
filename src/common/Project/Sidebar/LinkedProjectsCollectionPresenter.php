@@ -27,11 +27,17 @@ namespace Tuleap\Project\Sidebar;
  */
 final class LinkedProjectsCollectionPresenter
 {
+    public const NB_MAX_PROJECTS_BEFORE_POPOVER = 5;
+
     /**
      * @param LinkedProjectPresenter[] $projects
      */
-    private function __construct(public string $label, public bool $is_in_children_projects_context, public array $projects)
-    {
+    private function __construct(
+        public string $label,
+        public bool $is_in_children_projects_context,
+        public int $nb_max_projects_before_popover,
+        public array $projects,
+    ) {
     }
 
     public static function fromEvent(CollectLinkedProjects $event): ?self
@@ -53,6 +59,7 @@ final class LinkedProjectsCollectionPresenter
                     $nb_linked_projects
                 ),
                 true,
+                self::NB_MAX_PROJECTS_BEFORE_POPOVER,
                 $presenters
             );
         }
@@ -73,6 +80,7 @@ final class LinkedProjectsCollectionPresenter
                     $nb_linked_projects
                 ),
                 false,
+                self::NB_MAX_PROJECTS_BEFORE_POPOVER,
                 $presenters
             );
         }
