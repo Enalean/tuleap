@@ -5,8 +5,8 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "devDependencies": {
-    "@babel/core": "^7.22.15",
-    "@babel/preset-env": "^7.22.15",
+    "@babel/core": "^7.23.2",
+    "@babel/preset-env": "^7.23.2",
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/cypress-configurator": "workspace:*",
     "@tuleap/vue2-gettext-init": "workspace:*",
