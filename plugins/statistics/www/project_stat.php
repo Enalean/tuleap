@@ -112,7 +112,10 @@ if ($project && ! $project->isError()) {
     $startDate = date('Y-m-d', mktime(0, 0, 0, date('m') - $statDuration, date('d'), date('y')));
 
     $params['title'] = _('Project Admin') . ': ' . $project->getPublicName();
-    project_admin_header($params, \Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME);
+    project_admin_header(
+        _('Project Admin') . ': ' . $project->getPublicName(),
+        \Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME,
+    );
 
     echo '<h2>' . dgettext('tuleap-statistics', 'Disk usage') . '</h2>';
     $usedProportion        = $disk_usage_manager->returnTotalProjectSize($groupId);

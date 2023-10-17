@@ -27,12 +27,9 @@
 use Tuleap\Project\Admin\GetProjectHistoryEntryValue;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 
-function project_admin_header($params, $current_pane_shortname)
+function project_admin_header(string $title, string $current_pane_shortname): void
 {
     global $group_id;
-
-    $params['toptab'] = 'admin';
-    $title            = $params['title'];
 
     $navigation_displayer = new HeaderNavigationDisplayer();
     $project              = ProjectManager::instance()->getProject($group_id);

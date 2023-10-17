@@ -36,10 +36,7 @@ if ($group_id && $mode == "admin") {
 
 
     project_admin_header(
-        [
-            'title' => $pg_title,
-            'help' => 'tracker.html#tracker-artifact-import',
-        ],
+        $pg_title,
         \Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME
     );
 
@@ -55,12 +52,12 @@ if ($group_id && $mode == "admin") {
     // Show all the fields currently available in the system
         echo '<p><TABLE WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="2">';
         echo '
-  <tr class="boxtable"> 
+  <tr class="boxtable">
     <td class="boxtitle">&nbsp;</td>
-    <td class="boxtitle"> 
+    <td class="boxtitle">
       <div align="center"><b>' . $Language->getText('tracker_import_admin', 'art_data_import') . '</b></div>
     </td>
-    <td class="boxtitle"> 
+    <td class="boxtitle">
       <div align="center"><b>' . $Language->getText('tracker_import_admin', 'import_format') . '</b></div>
     </td>
  </tr>';
@@ -71,12 +68,12 @@ if ($group_id && $mode == "admin") {
         if ($at_arr && count($at_arr) >= 1) {
             for ($j = 0; $j < count($at_arr); $j++) {
                 echo '
-		  <tr class="' . util_get_alt_row_color($j) . '"> 
+		  <tr class="' . util_get_alt_row_color($j) . '">
 		    <td><b>' . $Language->getText('tracker_import_admin', 'tracker') . ': ' . $hp->purify(SimpleSanitizer::unsanitize($at_arr[$j]->getName()), CODENDI_PURIFIER_CONVERT_HTML) . '</b></td>
 		    <td align="center">
                       <a href="/tracker/index.php?group_id=' . (int) $group_id . '&atid=' . (int) ($at_arr[$j]->getID()) . '&user_id=' . (int) UserManager::instance()->getCurrentUser()->getId() . '&func=import">' . $Language->getText('tracker_import_admin', 'import') . '</a>
 		    </td>
-		    <td align="center"> 
+		    <td align="center">
 		      <a href="/tracker/index.php?group_id=' . (int) $group_id . '&atid=' . (int) ($at_arr[$j]->getID()) . '&user_id=' . (int) UserManager::instance()->getCurrentUser()->getId() . '&mode=showformat&func=import">' . $Language->getText('tracker_import_admin', 'show_format') . '</a>
 		    </td>
 		  </tr>';

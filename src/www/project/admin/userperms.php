@@ -163,10 +163,7 @@ $row            = db_fetch_array($res);
 $num_total_rows = $row['nb'];
 
 project_admin_header(
-    [
-        'title' => $Language->getText('project_admin_utils', 'user_perms'),
-        'help' => 'project-admin.html#user-permissions',
-    ],
+    $Language->getText('project_admin_utils', 'user_perms'),
     \Tuleap\Project\Admin\Navigation\NavigationPermissionsDropdownPresenterBuilder::PERMISSIONS_ENTRY_SHORTNAME
 );
 
