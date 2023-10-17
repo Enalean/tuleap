@@ -39,7 +39,11 @@ describe("LinkedProjects", () => {
 
         vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(example_config));
 
-        const wrapper = shallowMount(LinkedProjects);
+        const wrapper = shallowMount(LinkedProjects, {
+            propsData: {
+                is_sidebar_collapsed: false,
+            },
+        });
 
         expect(wrapper.element).toMatchSnapshot();
         expect(create_popover_spy).toHaveBeenCalled();
@@ -49,7 +53,11 @@ describe("LinkedProjects", () => {
         const config = example_config;
         config.project.linked_projects = null;
         vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(config));
-        const wrapper = shallowMount(LinkedProjects);
+        const wrapper = shallowMount(LinkedProjects, {
+            propsData: {
+                is_sidebar_collapsed: false,
+            },
+        });
 
         expect(wrapper.element.textContent).toBe("");
     });
@@ -79,7 +87,11 @@ describe("LinkedProjects", () => {
             };
             vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(config));
 
-            const wrapper = shallowMount(LinkedProjects);
+            const wrapper = shallowMount(LinkedProjects, {
+                propsData: {
+                    is_sidebar_collapsed: false,
+                },
+            });
 
             expect(wrapper.find("[data-test=nav-bar-linked-projects]").exists()).toBe(
                 expected_in_sidebar,
@@ -118,7 +130,11 @@ describe("LinkedProjects", () => {
             };
             vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(config));
 
-            const wrapper = shallowMount(LinkedProjects);
+            const wrapper = shallowMount(LinkedProjects, {
+                propsData: {
+                    is_sidebar_collapsed: false,
+                },
+            });
 
             expect(wrapper.find("[data-test=nav-bar-linked-projects]").exists()).toBe(
                 expected_in_sidebar,

@@ -80,19 +80,7 @@ exports[`LinkedProjects > displays the linked projects with a popover 1`] = `
     <div
       class="tlp-popover-arrow project-sidebar-linked-projects-popover-arrow"
     />
-    <div
-      class="tlp-popover-header"
-    >
-      <i
-        aria-hidden="true"
-        class="fa-solid fa-fw fa-tlp-project-boxes"
-      />
-      <h1
-        class="tlp-popover-title"
-      >
-        2 aggregated projects
-      </h1>
-    </div>
+    <!--v-if-->
     <div
       class="tlp-popover-body project-sidebar-linked-projects-popover-content"
     >

@@ -410,9 +410,8 @@
 }
 
 .project-sidebar-linked-projects-popover-content > .project-sidebar-linked-projects-list-popover {
-    margin: 0 0 0 14px;
-    padding: 0 0 0 var(--tlp-small-spacing);
-    border-left: 1px solid var(--tlp-neutral-normal-color-transparent-80);
+    margin: 0;
+    padding: 0;
     list-style: none;
 }
 
@@ -524,6 +523,11 @@
 }
 
 .project-sidebar-linked-projects-popover-content {
+    $magic-number-to-include-popover-body-in-viewport: 70px;
+
+    max-height: calc(100vh - $magic-number-to-include-popover-body-in-viewport);
+    overflow-x: hidden;
+    overflow-y: auto;
     background: var(--tlp-dark-color);
 }
 

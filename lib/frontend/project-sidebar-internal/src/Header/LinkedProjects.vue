@@ -88,7 +88,7 @@
         data-test="popover"
     >
         <div class="tlp-popover-arrow project-sidebar-linked-projects-popover-arrow"></div>
-        <div class="tlp-popover-header">
+        <div class="tlp-popover-header" v-if="is_sidebar_collapsed">
             <i
                 v-if="config.project.linked_projects.is_in_children_projects_context"
                 class="fa-solid fa-fw fa-tlp-project-boxes"
@@ -138,6 +138,8 @@ import { SIDEBAR_CONFIGURATION } from "../injection-symbols";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { createPopover } from "@tuleap/tlp-popovers";
 import { sanitizeURL } from "../url-sanitizer";
+
+defineProps<{ is_sidebar_collapsed: boolean }>();
 
 const config = strictInject(SIDEBAR_CONFIGURATION);
 

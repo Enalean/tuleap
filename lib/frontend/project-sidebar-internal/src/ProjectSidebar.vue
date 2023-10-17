@@ -28,7 +28,7 @@
     >
         <sidebar-logo />
         <div class="sidebar-content-vertical-scroll">
-            <sidebar-header />
+            <sidebar-header v-bind:is_sidebar_collapsed="is_sidebar_collapsed" />
             <tool-list />
             <sidebar-collapse-button
                 v-model:is_sidebar_collapsed="is_sidebar_collapsed"
