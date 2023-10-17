@@ -4932,7 +4932,7 @@ msgid ""
 "suspension, please email <a href=\"mailto:%s\">the site administrators</a>."
 msgstr ""
 "Votre compte utilisateur a été suspendu. Si vous avez des questions à ce "
-"sujet, veuillez envoyez un e-mail aux <a href=\"mailto:%s\">administrateurs "
+"sujet, veuillez envoyer un e-mail aux <a href=\"mailto:%s\">administrateurs "
 "du site</a>."
 
 msgid "Your avatar"
