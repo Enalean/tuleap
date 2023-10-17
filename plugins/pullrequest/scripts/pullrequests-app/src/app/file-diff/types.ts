@@ -69,6 +69,7 @@ export interface InlineCommentWidget extends WidgetElement {
     comment: PullRequestCommentPresenter;
     controller: ControlPullRequestComment;
     post_rendering_callback: () => void;
+    is_comment_edition_enabled: boolean;
 }
 
 export interface NewInlineCommentFormWidget extends WidgetElement {

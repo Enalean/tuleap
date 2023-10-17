@@ -18,12 +18,17 @@
  */
 
 import { describe, beforeEach, expect, it } from "vitest";
-import { PullRequestCommentPresenterStub } from "../../tests/stubs/PullRequestCommentPresenterStub";
-import type { HostElement } from "./PullRequestComment";
-import { getCommentFooter } from "./PullRequestCommentFooterTemplate";
 import { selectOrThrow } from "@tuleap/dom";
+import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
+import { FORMAT_TEXT } from "@tuleap/plugin-pullrequest-constants";
+import { PullRequestCommentPresenterStub } from "../../tests/stubs/PullRequestCommentPresenterStub";
 import { PullRequestCommentControllerStub } from "../../tests/stubs/PullRequestCommentControllerStub";
 import { GettextProviderStub } from "../../tests/stubs/GettextProviderStub";
+import type { HostElement } from "./PullRequestComment";
+import { getCommentFooter } from "./PullRequestCommentFooterTemplate";
+import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
+
+const is_comment_edition_enabled = true;
 
 describe("PullRequestCommentFooterTemplate", () => {
     let target: ShadowRoot;
@@ -107,5 +112,46 @@ describe("PullRequestCommentFooterTemplate", () => {
         selectOrThrow(target, "[data-test=button-reply-to-comment]").click();
 
         expect(controller.showReplyForm).toHaveBeenCalledTimes(1);
+    });
+
+    describe("Edit button", () => {
+        const current_user_id = 102;
+        const getHost = (comment: PullRequestCommentPresenter): HostElement =>
+            ({
+                comment,
+                controller: PullRequestCommentControllerStub(current_user_id),
+                replies: [],
+                is_comment_edition_enabled,
+            }) as unknown as HostElement;
+
+        it("When the current user is the author of the comment, then the footer should contain an [Edit] button", () => {
+            const host = getHost(PullRequestCommentPresenterStub.buildGlobalComment());
+            const render = getCommentFooter(host, GettextProviderStub);
+            render(host, target);
+
+            expect(target.querySelector("[data-test=button-edit-comment]")).not.toBeNull();
+        });
+
+        it("When the current user is not the author of the comment, then the footer should NOT contain an [Edit] button", () => {
+            const host = getHost(
+                PullRequestCommentPresenterStub.buildGlobalCommentWithData({
+                    user: { id: 200 } as User,
+                }),
+            );
+            const render = getCommentFooter(host, GettextProviderStub);
+            render(host, target);
+
+            expect(target.querySelector("[data-test=button-edit-comment]")).toBeNull();
+        });
+
+        it("When the comment is in text format, then the footer should NOT contain an [Edit] button", () => {
+            const host = getHost(
+                PullRequestCommentPresenterStub.buildGlobalCommentWithData({ format: FORMAT_TEXT }),
+            );
+            const render = getCommentFooter(host, GettextProviderStub);
+            render(host, target);
+
+            expect(target.querySelector("[data-test=button-edit-comment]")).toBeNull();
+        });
     });
 });

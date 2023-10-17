@@ -23,6 +23,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../git/include/gitPlugin.php';
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Tuleap\Config\ConfigClassProvider;
+use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\Git\DefaultSettings\Pane\DefaultSettingsPanesCollection;
 use Tuleap\Git\Events\AfterRepositoryCreated;
 use Tuleap\Git\Events\AfterRepositoryForked;
@@ -61,6 +63,7 @@ use Tuleap\PullRequest\Dao as PullRequestDao;
 use Tuleap\PullRequest\DefaultSettings\DefaultSettingsController;
 use Tuleap\PullRequest\DefaultSettings\PullRequestPane as DefaultSettingsPullRequestPane;
 use Tuleap\PullRequest\Factory;
+use Tuleap\PullRequest\FeatureFlagEditComments;
 use Tuleap\PullRequest\FileUniDiffBuilder;
 use Tuleap\PullRequest\GitExec;
 use Tuleap\PullRequest\GitReference\GitPullRequestReference;
@@ -103,7 +106,7 @@ use Tuleap\Reference\Nature;
 use Tuleap\Reference\NatureCollection;
 use Tuleap\Request\CollectRoutesEvent;
 
-class pullrequestPlugin extends Plugin // phpcs:ignore
+class pullrequestPlugin extends Plugin implements PluginWithConfigKeys // phpcs:ignore
 {
     public const PR_REFERENCE_KEYWORD          = 'pr';
     public const PULLREQUEST_REFERENCE_KEYWORD = 'pullrequest';
@@ -765,5 +768,10 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         );
 
         $pull_request_organizer->organizePullRequestReferences($organizer);
+    }
+
+    public function getConfigKeys(ConfigClassProvider $event): void
+    {
+        $event->addConfigClass(FeatureFlagEditComments::class);
     }
 }

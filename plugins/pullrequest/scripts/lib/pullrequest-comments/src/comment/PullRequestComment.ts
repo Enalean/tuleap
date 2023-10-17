@@ -56,6 +56,7 @@ export type PullRequestCommentComponentType = {
     readonly controller: ControlPullRequestComment;
     readonly writing_zone_controller: ControlWritingZone;
     readonly writing_zone: HTMLElement & InternalWritingZone;
+    readonly is_comment_edition_enabled: boolean;
     relative_date_helper: HelpRelativeDatesDisplay;
     replies: PullRequestCommentRepliesCollectionPresenter;
     reply_comment_presenter: ReplyCommentFormPresenter | null;
@@ -139,6 +140,7 @@ export const post_reply_save_callback_descriptor = {
 
 export const PullRequestCommentComponent = define<PullRequestCommentComponentType>({
     tag: PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME,
+    is_comment_edition_enabled: false,
     comment: undefined,
     post_rendering_callback: undefined,
     relative_date_helper: undefined,

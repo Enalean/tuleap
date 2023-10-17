@@ -82,6 +82,7 @@ function controller($element, $scope, SharedPropertiesService) {
             ),
             getStore(),
             comment_widgets_map,
+            SharedPropertiesService.isCommentEditionEnabled(),
         ),
     });
 
