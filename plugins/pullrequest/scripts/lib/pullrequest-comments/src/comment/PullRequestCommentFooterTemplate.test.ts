@@ -42,14 +42,6 @@ describe("PullRequestCommentFooterTemplate", () => {
     it.each([
         ["an inline comment", PullRequestCommentPresenterStub.buildInlineCommentOutdated(), []],
         ["a global comment", PullRequestCommentPresenterStub.buildGlobalComment(), []],
-        [
-            "the latest reply of a comment",
-            PullRequestCommentPresenterStub.buildInlineCommentWithData({ id: 11 }),
-            [
-                PullRequestCommentPresenterStub.buildInlineCommentWithData({ id: 10 }),
-                PullRequestCommentPresenterStub.buildInlineCommentWithData({ id: 11 }),
-            ],
-        ],
     ])(`Given %s, Then it should display a footer`, (expectation, comment, replies) => {
         const host = {
             comment,
@@ -76,7 +68,7 @@ describe("PullRequestCommentFooterTemplate", () => {
             [],
         ],
         [
-            "that the current comment is not the latest reply",
+            "that the current comment has reply",
             PullRequestCommentPresenterStub.buildInlineCommentWithData({ id: 10 }),
             [
                 PullRequestCommentPresenterStub.buildInlineCommentWithData({ id: 10 }),

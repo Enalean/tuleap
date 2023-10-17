@@ -19,9 +19,17 @@
 
 import type { PullRequestPresenter } from "../../src/comment/PullRequestPresenter";
 
+const base_presenter: PullRequestPresenter = {
+    pull_request_id: 444,
+    project_id: 105,
+};
+
 export const CurrentPullRequestPresenterStub = {
     withDefault: (): PullRequestPresenter => ({
-        pull_request_id: 444,
-        project_id: 105,
+        ...base_presenter,
+    }),
+    withProjectId: (project_id: number): PullRequestPresenter => ({
+        ...base_presenter,
+        project_id,
     }),
 };

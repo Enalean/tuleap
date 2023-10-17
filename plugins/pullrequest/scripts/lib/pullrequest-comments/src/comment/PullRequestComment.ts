@@ -23,10 +23,6 @@ import type { ControlPullRequestComment } from "./PullRequestCommentController";
 import { getCommentBody } from "./PullRequestCommentBodyTemplate";
 import { getCommentFooter } from "./PullRequestCommentFooterTemplate";
 import { getReplyFormTemplate } from "./PullRequestCommentReplyFormTemplate";
-import {
-    getCommentReplyTemplate,
-    REPLY_ELEMENT_ROOT_CLASSNAME,
-} from "./PullRequestCommentReplyTemplate";
 import { getCommentAvatarTemplate } from "../templates/CommentAvatarTemplate";
 import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 import { PullRequestCommentRepliesCollectionPresenter } from "./PullRequestCommentRepliesCollectionPresenter";
@@ -52,7 +48,6 @@ export type PullRequestCommentComponentType = {
     readonly after_render_once: unknown;
     readonly element_height: number;
     readonly post_rendering_callback: (() => void) | undefined;
-    readonly post_reply_save_callback: () => void;
     readonly controller: ControlPullRequestComment;
     readonly writing_zone_controller: ControlWritingZone;
     readonly writing_zone: HTMLElement & InternalWritingZone;
@@ -124,18 +119,15 @@ export const element_height_descriptor = {
     },
 };
 
-export const post_reply_save_callback_descriptor = {
-    get: (host: PullRequestCommentComponentType) => (): void => {
-        const last_reply_element = host
-            .content()
-            .querySelector(`.${REPLY_ELEMENT_ROOT_CLASSNAME}:last-child`);
+const isLastReply = (
+    host: PullRequestCommentComponentType,
+    comment: PullRequestCommentPresenter,
+): boolean => {
+    if (host.replies.length === 0) {
+        return true;
+    }
 
-        if (!(last_reply_element instanceof HTMLElement)) {
-            return;
-        }
-
-        loadTooltips(last_reply_element, false);
-    },
+    return host.replies[host.replies.length - 1].id === comment.id;
 };
 
 export const PullRequestCommentComponent = define<PullRequestCommentComponentType>({
@@ -156,7 +148,6 @@ export const PullRequestCommentComponent = define<PullRequestCommentComponentTyp
             return controller;
         },
     },
-    post_reply_save_callback: post_reply_save_callback_descriptor,
     replies: {
         set: setReplies,
     },
@@ -187,8 +178,17 @@ export const PullRequestCommentComponent = define<PullRequestCommentComponentTyp
             </div>
 
             <div class="pull-request-comment-follow-ups">
-                ${host.replies.map((reply: PullRequestCommentPresenter) =>
-                    getCommentReplyTemplate(host, reply, gettext_provider),
+                ${host.replies.map(
+                    (reply: PullRequestCommentPresenter) => html`
+                        <tuleap-pullrequest-comment-reply
+                            comment="${reply}"
+                            is_comment_edition_enabled="${host.is_comment_edition_enabled}"
+                            controller="${host.controller.buildReplyController()}"
+                            onshow-reply-form="${(): void => host.controller.showReplyForm(host)}"
+                            onhide-reply-form="${(): void => host.controller.hideReplyForm(host)}"
+                            is_last_reply="${isLastReply(host, reply)}"
+                        />
+                    `,
                 )}
                 ${getReplyFormTemplate(host, gettext_provider)}
             </div>

@@ -120,7 +120,6 @@ describe("PullRequestCommentController", () => {
         expect(host.replies).toStrictEqual([
             PullRequestCommentPresenter.fromCommentReply(comment, new_comment_reply_payload),
         ]);
-        expect(host.post_reply_save_callback).toHaveBeenCalledTimes(1);
     });
 
     it(`Given a root comment with no answer yet
@@ -146,7 +145,6 @@ describe("PullRequestCommentController", () => {
 
         expect(host.reply_comment_presenter).toBeNull();
         expect(host.comment.color).toBe("flamingo-pink");
-        expect(host.post_reply_save_callback).toHaveBeenCalledTimes(1);
     });
 
     it(`should display the replies associated to the comment`, () => {
