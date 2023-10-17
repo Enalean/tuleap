@@ -507,7 +507,9 @@
 }
 
 .tlp-popover.tlp-popover-shown.project-sidebar-linked-projects-popover {
-    display: none;
+    &:not(.project-sidebar-linked-projects-popover-nb-max-exceeded) {
+        display: none;
+    }
 }
 
 .project-sidebar-linked-projects-popover {

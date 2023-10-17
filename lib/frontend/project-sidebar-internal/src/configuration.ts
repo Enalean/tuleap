@@ -94,6 +94,7 @@ export interface Configuration {
         flags: { label: string; description: string }[];
         linked_projects: {
             label: string;
+            nb_max_projects_before_popover?: number;
             is_in_children_projects_context: boolean;
             projects: {
                 icon: string;

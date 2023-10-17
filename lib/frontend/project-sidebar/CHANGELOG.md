@@ -1,5 +1,12 @@
 # Changelog
 
+## In development
+
+* In order to not clutter the sidebar when the number of linked projects is too big,
+  a new configuration variable is added: `project.linked_projects.nb_max_projects_before_popover`.
+  When the number of linked projects exceed this limit, then they are no more displayed in the sidebar,
+  only in the popover on hover. Default is `5`.
+
 ## 2.3.0
 
 * Tools can have promoted items, they will be displayed as a sub list when the sidebar is expanded.
