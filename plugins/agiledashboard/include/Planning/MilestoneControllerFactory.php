@@ -25,6 +25,7 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\CSRFSynchronizerTokenProvider;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\Kanban\SplitKanbanConfigurationChecker;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
@@ -45,6 +46,7 @@ class MilestoneControllerFactory
         private readonly HeaderOptionsProvider $header_options_provider,
         private readonly SplitKanbanConfigurationChecker $flag_checker,
         private readonly CSRFSynchronizerTokenProvider $token_provider,
+        private readonly ScrumForMonoMilestoneChecker $mono_milestone_checker,
     ) {
     }
 
@@ -57,7 +59,8 @@ class MilestoneControllerFactory
             $this->pane_factory,
             $this->visit_recorder,
             $this->bread_crumbs_for_milestone_builder,
-            $this->header_options_provider
+            $this->header_options_provider,
+            $this->mono_milestone_checker
         );
     }
 
@@ -72,6 +75,7 @@ class MilestoneControllerFactory
             $this->top_milestone_crumb_builder,
             $this->flag_checker,
             $this->token_provider,
+            $this->mono_milestone_checker
         );
     }
 }

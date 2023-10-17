@@ -155,6 +155,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
             ),
             $split_kanban_configuration_checker,
             new \Tuleap\AgileDashboard\CSRFSynchronizerTokenProvider(),
+            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory),
         );
 
         $ugroup_manager = new UGroupManager();
@@ -203,7 +204,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
                 $this->getConfigurationManager(),
                 $mono_milestone_checker,
                 $event_manager,
-                $this->getPlanningFactory(),
+                $planning_factory,
                 $project_explicit_backlog_dao,
                 new AddToTopBacklogPostActionDao(),
                 $split_kanban_configuration_checker,
@@ -238,16 +239,6 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
             ),
             $split_kanban_configuration_checker,
         );
-    }
-
-    /**
-     * Builds a new PlanningFactory instance.
-     *
-     * @return PlanningFactory
-     */
-    private function getPlanningFactory()
-    {
-        return PlanningFactory::build();
     }
 
     /**
@@ -299,24 +290,5 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
             $this->getTrackerFactory(),
             new KanbanDao()
         );
-    }
-
-    private function getArtifactFactory()
-    {
-        return Tracker_ArtifactFactory::instance();
-    }
-
-    private function getStatusCounter()
-    {
-        return new AgileDashboard_Milestone_MilestoneStatusCounter(
-            new AgileDashboard_BacklogItemDao(),
-            new Tracker_ArtifactDao(),
-            $this->getArtifactFactory()
-        );
-    }
-
-    private function getMonoMileStoneChecker()
-    {
-        return new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $this->getPlanningFactory());
     }
 }
