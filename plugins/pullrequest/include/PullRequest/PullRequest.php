@@ -139,4 +139,24 @@ class PullRequest implements Labelable
     {
         return $this->description_format;
     }
+
+    public static function fromRow(array $row): self
+    {
+        return new self(
+            $row['id'],
+            $row['title'],
+            $row['description'],
+            $row['repository_id'],
+            $row['user_id'],
+            $row['creation_date'],
+            $row['branch_src'],
+            $row['sha1_src'],
+            $row['repo_dest_id'],
+            $row['branch_dest'],
+            $row['sha1_dest'],
+            $row["description_format"],
+            $row['status'],
+            $row['merge_status'],
+        );
+    }
 }

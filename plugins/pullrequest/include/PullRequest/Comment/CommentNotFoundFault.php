@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,22 +15,22 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\PullRequest\REST;
+declare(strict_types=1);
 
-use Tuleap\PullRequest\REST\v1\PullRequestRepresentation;
-use Tuleap\PullRequest\REST\v1\PullRequestCommentsResource;
+namespace Tuleap\PullRequest\Comment;
+
+use Tuleap\NeverThrow\Fault;
 
 /**
- * Inject resource into restler
+ * @psalm-immutable
  */
-class ResourcesInjector
+final class CommentNotFoundFault extends Fault
 {
-    public function populate(\Luracast\Restler\Restler $restler)
+    public static function withCommentId(int $comment_id_not_found): Fault
     {
-        $restler->addAPIClass('\\Tuleap\\PullRequest\\REST\\v1\\PullRequestsResource', PullRequestRepresentation::ROUTE);
-        $restler->addAPIClass(PullRequestCommentsResource::class, PullRequestCommentsResource::ROUTE);
+        return new self(sprintf(dgettext('tuleap-pullrequest', 'Comment #%d not found'), $comment_id_not_found));
     }
 }

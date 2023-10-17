@@ -24,9 +24,26 @@ use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\PullRequest\Criterion\ISearchOnStatus;
 
-class Dao extends DataAccessObject
+class Dao extends DataAccessObject implements SearchPullRequest
 {
-    public function searchByPullRequestId($pull_request_id)
+    /**
+     * @psalm-return array{
+     *     id:int,
+     *     title:string,
+     *     description:string,
+     *     repository_id:int,
+     *     user_id:int,
+     *     creation_date: int,
+     *     branch_src: string,
+     *     sha1_src: string,
+     *     repo_dest_id: int,
+     *     sha1_dest: int,
+     *     status: string,
+     *     merge_status: int,
+     *     description_format: string
+     * } | null
+     */
+    public function searchByPullRequestId(int $pull_request_id): ?array
     {
         $sql = 'SELECT *
                 FROM plugin_pullrequest_review
