@@ -81,7 +81,45 @@ describe("LinkedProjects", () => {
 
             const wrapper = shallowMount(LinkedProjects);
 
-            expect(wrapper.element).toMatchSnapshot();
+            expect(wrapper.find("[data-test=nav-bar-linked-projects]").exists()).toBe(
+                expected_in_sidebar,
+            );
+            expect(
+                wrapper
+                    .find("[data-test=popover]")
+                    .classes("project-sidebar-linked-projects-popover-nb-max-exceeded"),
+            ).toBe(expected_popover);
+        },
+    );
+
+    it.each([
+        [3, true, false],
+        [4, false, true],
+    ])(
+        `Given the config specifies the nb max project to display in sidebar is 3.
+     When nb projects = %s,
+     Then projects in sidebar are displayed = %s
+     And popover is displayed = %s`,
+        (nb, expected_in_sidebar, expected_popover) => {
+            vi.spyOn(tlp_popovers, "createPopover").mockReturnValue({} as Popover);
+
+            const projects = Array(nb).fill({ name: "acme" });
+
+            const config = {
+                ...example_config,
+                project: {
+                    ...example_config.project,
+                    linked_projects: {
+                        ...example_config.project.linked_projects,
+                        nb_max_projects_before_popover: 3,
+                        projects,
+                    },
+                },
+            };
+            vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(config));
+
+            const wrapper = shallowMount(LinkedProjects);
+
             expect(wrapper.find("[data-test=nav-bar-linked-projects]").exists()).toBe(
                 expected_in_sidebar,
             );
