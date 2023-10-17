@@ -43,6 +43,8 @@ final class CommentRepresentation
     /** @var string */
     public $content;
 
+    public string $raw_content;
+
     /** @var string */
     public $type;
 
@@ -64,6 +66,7 @@ final class CommentRepresentation
         $this->user                   = $user_representation;
         $this->post_date              = JsonCast::toDate($post_date);
         $this->content                = $this->getPurifiedContent($project_id, $content);
+        $this->raw_content            = $content;
         $this->type                   = 'comment';
         $this->parent_id              = $parent_id;
         $this->color                  = $color;

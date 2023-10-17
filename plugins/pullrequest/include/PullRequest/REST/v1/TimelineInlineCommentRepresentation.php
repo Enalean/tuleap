@@ -55,6 +55,8 @@ final class TimelineInlineCommentRepresentation
      */
     public $content;
 
+    public string $raw_content;
+
     /**
      * @var bool {@type bool}
      */
@@ -106,6 +108,7 @@ final class TimelineInlineCommentRepresentation
         $this->user                   = $user;
         $this->post_date              = JsonCast::toDate($post_date);
         $this->content                = $this->getPurifiedContent($project_id, $content);
+        $this->raw_content            = $content;
         $this->is_outdated            = $is_outdated;
         $this->type                   = self::TYPE;
         $this->parent_id              = $parent_id;

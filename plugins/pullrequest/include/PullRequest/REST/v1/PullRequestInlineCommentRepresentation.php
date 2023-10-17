@@ -48,6 +48,8 @@ final class PullRequestInlineCommentRepresentation
      */
     public $content;
 
+    public string $raw_content;
+
     /**
      * @var string {@type string}
      */
@@ -78,6 +80,7 @@ final class PullRequestInlineCommentRepresentation
         $this->user                   = $user;
         $this->post_date              = JsonCast::toDate($post_date);
         $this->content                = $this->getPurifiedContent($content, $project_id);
+        $this->raw_content            = $content;
         $this->position               = $position;
         $this->parent_id              = $parent_id;
         $this->id                     = $id;
