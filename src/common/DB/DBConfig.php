@@ -26,10 +26,12 @@ namespace Tuleap\DB;
 use Tuleap\Config\ConfigCannotBeModified;
 use Tuleap\Config\ConfigKey;
 use Tuleap\Config\ConfigKeyCategory;
+use Tuleap\Config\ConfigKeyHidden;
 use Tuleap\Config\ConfigKeyInt;
 use Tuleap\Config\ConfigKeyLegacyBool;
 use Tuleap\Config\ConfigKeyString;
 use Tuleap\Config\ConfigKeyHelp;
+use Tuleap\Config\FeatureFlagConfigKey;
 
 #[ConfigKeyCategory('Database')]
 final class DBConfig
@@ -83,6 +85,11 @@ final class DBConfig
     #[ConfigCannotBeModified]
     #[ConfigKeyInt(20)]
     public const CONF_NB_MAX_JOIN = 'sys_server_join';
+
+    #[FeatureFlagConfigKey('Temporarily allow again MySQL 5.7 support')]
+    #[ConfigKeyHidden]
+    #[ConfigKeyInt(0)]
+    public const FEATURE_FLAG = 'temporarily_allow_mysql57';
 
     public const DEFAULT_MYSQL_PORT             = 3306;
     public const DEFAULT_MYSQL_TULEAP_DB_NAME   = 'tuleap';
