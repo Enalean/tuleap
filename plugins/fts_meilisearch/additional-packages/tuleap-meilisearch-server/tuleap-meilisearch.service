@@ -18,7 +18,7 @@ PrivateDevices=yes
 NoNewPrivileges=yes
 ProtectSystem=full
 ProtectHome=yes
-RestrictAddressFamilies=AF_INET AF_INET6
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
 
 [Install]
 WantedBy=tuleap.service
