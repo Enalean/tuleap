@@ -53,10 +53,7 @@ class ReferenceAdministrationViews extends Views
     public function header()
     {
         project_admin_header(
-            [
-                'title' => _('Editing reference patterns'),
-                'help'  => 'project-admin.html#reference-pattern-configuration',
-            ],
+            _('Editing reference patterns'),
             NavigationPresenterBuilder::OTHERS_ENTRY_SHORTNAME
         );
     }

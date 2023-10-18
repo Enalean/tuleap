@@ -141,9 +141,7 @@ if ($request->isPost() && $request->valid($vFunc)) {
 */
 
 project_admin_header(
-    [
-        'title' => $Language->getText('project_admin_ugroup', 'permission_request'),
-    ],
+    $Language->getText('project_admin_ugroup', 'permission_request'),
     \Tuleap\Project\Admin\Navigation\NavigationPermissionsDropdownPresenterBuilder::PERMISSIONS_ENTRY_SHORTNAME
 );
 

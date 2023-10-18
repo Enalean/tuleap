@@ -78,10 +78,7 @@ if (isset($_REQUEST['SUBMIT'])) {
 
 $pm = ProjectManager::instance();
 project_admin_header(
-    [
-        'title' => $Language->getText('project_admin_index', 'p_admin', $pm->getProject($group_id)->getPublicName()),
-        'help' => 'project-admin.html#access-logs',
-    ],
+    $Language->getText('project_admin_index', 'p_admin', $pm->getProject($group_id)->getPublicName()),
     \Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME
 );
 
