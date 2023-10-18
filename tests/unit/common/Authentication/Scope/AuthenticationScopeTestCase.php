@@ -37,22 +37,22 @@ abstract class AuthenticationScopeTestCase extends \Tuleap\Test\PHPUnit\TestCase
 
         $scope = $this->getAuthenticationScopeClassname()::fromIdentifier($identifier);
 
-        $this->assertEquals($identifier, $scope->getIdentifier());
+        self::assertEquals($identifier, $scope->getIdentifier());
         $definition = $scope->getDefinition();
-        $this->assertNotEmpty($definition->getName());
-        $this->assertNotEmpty($definition->getDescription());
+        self::assertNotEmpty($definition->getName());
+        self::assertNotEmpty($definition->getDescription());
     }
 
     final public function testDoesNotBuildFromUnknownIdentifier(): void
     {
-        $this->assertNull(
+        self::assertNull(
             $this->getAuthenticationScopeClassname()::fromIdentifier(AccessKeyScopeIdentifier::fromIdentifierKey('foo:bar'))
         );
     }
 
     final public function testScopeCoversItself(): void
     {
-        $this->assertTrue(
+        self::assertTrue(
             $this->getAuthenticationScopeClassname()::fromItself()->covers($this->getAuthenticationScopeClassname()::fromItself())
         );
     }

@@ -22,18 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\User\AccessKey\Scope;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
 
 final class AccessKeyScopeBuilderCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testNoBuildersAreCollectedByDefault(): void
     {
-        $this->assertEmpty((new AccessKeyScopeBuilderCollector())->getAuthenticationKeyScopeBuilders());
+        self::assertEmpty((new AccessKeyScopeBuilderCollector())->getAuthenticationKeyScopeBuilders());
     }
 
     public function testBuildersAddedToTheCollectorCanBeRetrieved(): void
@@ -46,7 +43,7 @@ final class AccessKeyScopeBuilderCollectorTest extends \Tuleap\Test\PHPUnit\Test
         $collector->addAccessKeyScopeBuilder($builder_1);
         $collector->addAccessKeyScopeBuilder($builder_2);
 
-        $this->assertSame([$builder_1, $builder_2], $collector->getAuthenticationKeyScopeBuilders());
+        self::assertSame([$builder_1, $builder_2], $collector->getAuthenticationKeyScopeBuilders());
     }
 
     private function buildAccessKeyScopeBuilder(): AuthenticationScopeBuilder

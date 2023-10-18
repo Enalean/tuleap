@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\User\Account;
 
 use CSRFSynchronizerToken;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ThemeVariant;
 use Tuleap\date\SelectedDateDisplayPreferenceValidator;
 use Tuleap\Layout\ThemeVariantColor;
@@ -36,18 +34,16 @@ use Tuleap\Test\Builders\LayoutInspectorRedirection;
 
 final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var CSRFSynchronizerToken|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var CSRFSynchronizerToken&\PHPUnit\Framework\MockObject\MockObject
      */
     private $csrf_token;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\UserManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&\UserManager
      */
     private $user_manager;
     /**
-     * @var \BaseLanguage|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var \BaseLanguage&\PHPUnit\Framework\MockObject\MockObject
      */
     private $language;
     /**
@@ -55,24 +51,22 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
      */
     private $controller;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ThemeVariant
+     * @var \PHPUnit\Framework\MockObject\MockObject&ThemeVariant
      */
     private $theme_variant;
 
     public function setUp(): void
     {
-        $this->csrf_token    = Mockery::mock(CSRFSynchronizerToken::class);
-        $this->user_manager  = Mockery::mock(\UserManager::class);
-        $this->language      = Mockery::mock(\BaseLanguage::class);
-        $this->theme_variant = Mockery::mock(ThemeVariant::class);
+        $this->csrf_token    = $this->createMock(CSRFSynchronizerToken::class);
+        $this->user_manager  = $this->createMock(\UserManager::class);
+        $this->language      = $this->createMock(\BaseLanguage::class);
+        $this->theme_variant = $this->createMock(ThemeVariant::class);
 
-        $this->theme_variant->shouldReceive('getAllowedVariants')->andReturn(
-            ['orange', 'green']
-        );
-
-        $this->language->shouldReceive('isLanguageSupported')->with('fr_FR')->andReturnTrue();
-        $this->language->shouldReceive('isLanguageSupported')->with('en_US')->andReturnTrue();
-        $this->language->shouldReceive('isLanguageSupported')->with('pt_BR')->andReturnFalse();
+        $this->language->method('isLanguageSupported')->willReturnMap([
+            ['fr_FR', true],
+            ['en_US', true],
+            ['pt_BR', false],
+        ]);
 
         $this->controller = new UpdateAppearancePreferences(
             $this->csrf_token,
@@ -96,17 +90,21 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItDoesNothingIfLanguageIsNotSubmitted(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
-        $user->shouldReceive('setLanguageID')->never();
-        $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturnFalse();
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isAnonymous')->willReturn(false);
+        $user->method('getLanguageID')->willReturn('fr_FR');
+        $user->expects(self::never())->method('setLanguageID');
 
-        $this->csrf_token->shouldReceive('check')->once();
+        $user->method('getPreference')->willReturnMap([
+            ['display_density', false],
+            ['accessibility_mode', false],
+            ['username_display', false],
+            ['relative_dates_display', false],
+        ]);
 
-        $this->user_manager->shouldReceive('updateDB')->never();
+        $this->csrf_token->expects(self::once())->method('check');
+
+        $this->user_manager->expects(self::never())->method('updateDB');
 
         $request = HTTPRequestBuilder::get()->withUser($user)->build();
 
@@ -123,7 +121,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             $redirect_url = $ex->redirect_url;
         }
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 [
                     'level'   => \Feedback::INFO,
@@ -137,17 +135,20 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItDoesNothingIfLanguageIsNotSupported(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
-        $user->shouldReceive('setLanguageID')->never();
-        $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturnFalse();
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isAnonymous')->willReturn(false);
+        $user->method('getLanguageID')->willReturn('fr_FR');
+        $user->expects(self::never())->method('setLanguageID');
+        $user->method('getPreference')->willReturnMap([
+            ['display_density', false],
+            ['accessibility_mode', false],
+            ['username_display', false],
+            ['relative_dates_display', false],
+        ]);
 
-        $this->csrf_token->shouldReceive('check')->once();
+        $this->csrf_token->expects(self::once())->method('check');
 
-        $this->user_manager->shouldReceive('updateDB')->never();
+        $this->user_manager->expects(self::never())->method('updateDB');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -167,7 +168,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             $redirect_url = $ex->redirect_url;
         }
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 [
                     'level'   => \Feedback::ERROR,
@@ -185,17 +186,20 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItDoesNothingIfUserKeepsItsLanguage(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
-        $user->shouldReceive('setLanguageID')->never();
-        $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturnFalse();
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isAnonymous')->willReturn(false);
+        $user->method('getLanguageID')->willReturn('fr_FR');
+        $user->expects(self::never())->method('setLanguageID');
+        $user->method('getPreference')->willReturnMap([
+            ['display_density', false],
+            ['accessibility_mode', false],
+            ['username_display', false],
+            ['relative_dates_display', false],
+        ]);
 
-        $this->csrf_token->shouldReceive('check')->once();
+        $this->csrf_token->expects(self::once())->method('check');
 
-        $this->user_manager->shouldReceive('updateDB')->never();
+        $this->user_manager->expects(self::never())->method('updateDB');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -215,7 +219,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             $redirect_url = $ex->redirect_url;
         }
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 [
                     'level'   => \Feedback::INFO,
@@ -229,17 +233,20 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItDoesNothingIfColorIsNotSubmitted(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
-        $user->shouldReceive('setLanguageID')->never();
-        $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturnFalse();
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isAnonymous')->willReturn(false);
+        $user->method('getLanguageID')->willReturn('fr_FR');
+        $user->expects(self::never())->method('setLanguageID');
+        $user->method('getPreference')->willReturnMap([
+            ['display_density', false],
+            ['accessibility_mode', false],
+            ['username_display', false],
+            ['relative_dates_display', false],
+        ]);
 
-        $this->csrf_token->shouldReceive('check')->once();
+        $this->csrf_token->expects(self::once())->method('check');
 
-        $this->user_manager->shouldReceive('updateDB')->never();
+        $this->user_manager->expects(self::never())->method('updateDB');
 
         $request = HTTPRequestBuilder::get()->withUser($user)->build();
 
@@ -256,7 +263,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             $redirect_url = $ex->redirect_url;
         }
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 [
                     'level'   => \Feedback::INFO,
@@ -270,21 +277,24 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItDoesNothingIfColorIsNotSupported(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
-        $user->shouldReceive('setLanguageID')->never();
-        $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturnFalse();
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isAnonymous')->willReturn(false);
+        $user->method('getLanguageID')->willReturn('fr_FR');
+        $user->expects(self::never())->method('setLanguageID');
+        $user->method('getPreference')->willReturnMap([
+            ['display_density', false],
+            ['accessibility_mode', false],
+            ['username_display', false],
+            ['relative_dates_display', false],
+        ]);
 
-        $this->csrf_token->shouldReceive('check')->once();
+        $this->csrf_token->expects(self::once())->method('check');
 
-        $this->theme_variant->shouldReceive('getVariantColorForUser')->once()->andReturn(ThemeVariantColor::Orange);
-        $this->theme_variant->shouldReceive('getAllowedVariantColors')->once()->andReturn([ThemeVariantColor::Orange]);
+        $this->theme_variant->expects(self::once())->method('getVariantColorForUser')->willReturn(ThemeVariantColor::Orange);
+        $this->theme_variant->expects(self::once())->method('getAllowedVariantColors')->willReturn([ThemeVariantColor::Orange]);
 
-        $this->user_manager->shouldReceive('updateDB')->never();
-        $user->shouldReceive('setPreference')->never();
+        $this->user_manager->expects(self::never())->method('updateDB');
+        $user->expects(self::never())->method('setPreference');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -304,7 +314,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             $redirect_url = $ex->redirect_url;
         }
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 [
                     'level'   => \Feedback::ERROR,
@@ -322,20 +332,23 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItDoesNothingIfUserKeepsItsColor(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
-        $user->shouldReceive('setLanguageID')->never();
-        $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturnFalse();
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isAnonymous')->willReturn(false);
+        $user->method('getLanguageID')->willReturn('fr_FR');
+        $user->expects(self::never())->method('setLanguageID');
+        $user->method('getPreference')->willReturnMap([
+            ['display_density', false],
+            ['accessibility_mode', false],
+            ['username_display', false],
+            ['relative_dates_display', false],
+        ]);
 
-        $this->csrf_token->shouldReceive('check')->once();
+        $this->csrf_token->expects(self::once())->method('check');
 
-        $this->theme_variant->shouldReceive('getVariantColorForUser')->once()->andReturn(ThemeVariantColor::Orange);
+        $this->theme_variant->expects(self::once())->method('getVariantColorForUser')->willReturn(ThemeVariantColor::Orange);
 
-        $this->user_manager->shouldReceive('updateDB')->never();
-        $user->shouldReceive('setPreference')->never();
+        $this->user_manager->expects(self::never())->method('updateDB');
+        $user->expects(self::never())->method('setPreference');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -355,7 +368,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             $redirect_url = $ex->redirect_url;
         }
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 [
                     'level'   => \Feedback::INFO,
@@ -369,17 +382,20 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItDoesNothingIfUserStillDoesNotWantCondensed(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
-        $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturnFalse();
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isAnonymous')->willReturn(false);
+        $user->method('getLanguageID')->willReturn('fr_FR');
+        $user->method('getPreference')->willReturnMap([
+            ['display_density', false],
+            ['accessibility_mode', false],
+            ['username_display', false],
+            ['relative_dates_display', false],
+        ]);
 
-        $this->csrf_token->shouldReceive('check')->once();
+        $this->csrf_token->expects(self::once())->method('check');
 
-        $this->user_manager->shouldReceive('updateDB')->never();
-        $user->shouldReceive('setPreference')->never();
+        $this->user_manager->expects(self::never())->method('updateDB');
+        $user->expects(self::never())->method('setPreference');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -399,7 +415,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             $redirect_url = $ex->redirect_url;
         }
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 [
                     'level'   => \Feedback::INFO,
@@ -413,17 +429,20 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItDoesNothingIfUserStillWantsCondensed(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
-        $user->shouldReceive('getPreference')->with('display_density')->andReturn('condensed');
-        $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturnFalse();
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isAnonymous')->willReturn(false);
+        $user->method('getLanguageID')->willReturn('fr_FR');
+        $user->method('getPreference')->willReturnMap([
+            ['display_density', 'condensed'],
+            ['accessibility_mode', false],
+            ['username_display', false],
+            ['relative_dates_display', false],
+        ]);
 
-        $this->csrf_token->shouldReceive('check')->once();
+        $this->csrf_token->expects(self::once())->method('check');
 
-        $this->user_manager->shouldReceive('updateDB')->never();
-        $user->shouldReceive('setPreference')->never();
+        $this->user_manager->expects(self::never())->method('updateDB');
+        $user->expects(self::never())->method('setPreference');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -443,7 +462,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             $redirect_url = $ex->redirect_url;
         }
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 [
                     'level'   => \Feedback::INFO,
@@ -457,17 +476,20 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItRemovesTheCondensedMode(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
-        $user->shouldReceive('getPreference')->with('display_density')->andReturn('condensed');
-        $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturnFalse();
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isAnonymous')->willReturn(false);
+        $user->method('getLanguageID')->willReturn('fr_FR');
+        $user->method('getPreference')->willReturnMap([
+            ['display_density', 'condensed'],
+            ['accessibility_mode', false],
+            ['username_display', false],
+            ['relative_dates_display', false],
+        ]);
 
-        $this->csrf_token->shouldReceive('check')->once();
+        $this->csrf_token->expects(self::once())->method('check');
 
-        $this->user_manager->shouldReceive('updateDB')->never();
-        $user->shouldReceive('delPreference')->with('display_density')->once()->andReturnTrue();
+        $this->user_manager->expects(self::never())->method('updateDB');
+        $user->expects(self::once())->method('delPreference')->with('display_density');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -487,7 +509,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             $redirect_url = $ex->redirect_url;
         }
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 [
                     'level'   => \Feedback::INFO,
@@ -501,17 +523,20 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItDoesNothingIfUserKeepsTheSameUsernameDisplay(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
-        $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('username_display')->andReturn('2');
-        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturnFalse();
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isAnonymous')->willReturn(false);
+        $user->method('getLanguageID')->willReturn('fr_FR');
+        $user->method('getPreference')->willReturnMap([
+            ['display_density', false],
+            ['accessibility_mode', false],
+            ['username_display', '2'],
+            ['relative_dates_display', false],
+        ]);
 
-        $this->csrf_token->shouldReceive('check')->once();
+        $this->csrf_token->expects(self::once())->method('check');
 
-        $this->user_manager->shouldReceive('updateDB')->never();
-        $user->shouldReceive('setPreference')->never();
+        $this->user_manager->expects(self::never())->method('updateDB');
+        $user->expects(self::never())->method('setPreference');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -531,7 +556,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             $redirect_url = $ex->redirect_url;
         }
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 [
                     'level'   => \Feedback::INFO,
@@ -545,17 +570,20 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testRejectsInvalidUsernameDisplay(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
-        $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('username_display')->andReturn('2');
-        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturnFalse();
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isAnonymous')->willReturn(false);
+        $user->method('getLanguageID')->willReturn('fr_FR');
+        $user->method('getPreference')->willReturnMap([
+            ['display_density', false],
+            ['accessibility_mode', false],
+            ['username_display', '2'],
+            ['relative_dates_display', false],
+        ]);
 
-        $this->csrf_token->shouldReceive('check')->once();
+        $this->csrf_token->expects(self::once())->method('check');
 
-        $this->user_manager->shouldReceive('updateDB')->never();
-        $user->shouldReceive('setPreference')->never();
+        $this->user_manager->expects(self::never())->method('updateDB');
+        $user->expects(self::never())->method('setPreference');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -575,7 +603,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             $redirect_url = $ex->redirect_url;
         }
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 [
                     'level'   => \Feedback::ERROR,
@@ -593,17 +621,20 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testRejectsInvalidRelativeDatesDisplay(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
-        $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturnFalse();
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isAnonymous')->willReturn(false);
+        $user->method('getLanguageID')->willReturn('fr_FR');
+        $user->method('getPreference')->willReturnMap([
+            ['display_density', false],
+            ['accessibility_mode', false],
+            ['username_display', false],
+            ['relative_dates_display', false],
+        ]);
 
-        $this->csrf_token->shouldReceive('check')->once();
+        $this->csrf_token->expects(self::once())->method('check');
 
-        $this->user_manager->shouldReceive('updateDB')->never();
-        $user->shouldReceive('setPreference')->never();
+        $this->user_manager->expects(self::never())->method('updateDB');
+        $user->expects(self::never())->method('setPreference');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -623,7 +654,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             $redirect_url = $ex->redirect_url;
         }
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 [
                     'level'   => \Feedback::ERROR,
@@ -641,17 +672,20 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItDoesNothingIfUserKeepsTheSameRelativeDatesDisplay(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
-        $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturn('absolute_first-relative_shown');
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isAnonymous')->willReturn(false);
+        $user->method('getLanguageID')->willReturn('fr_FR');
+        $user->method('getPreference')->willReturnMap([
+            ['display_density', false],
+            ['accessibility_mode', false],
+            ['username_display', false],
+            ['relative_dates_display', 'absolute_first-relative_shown'],
+        ]);
 
-        $this->csrf_token->shouldReceive('check')->once();
+        $this->csrf_token->expects(self::once())->method('check');
 
-        $this->user_manager->shouldReceive('updateDB')->never();
-        $user->shouldReceive('setPreference')->never();
+        $this->user_manager->expects(self::never())->method('updateDB');
+        $user->expects(self::never())->method('setPreference');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -671,7 +705,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             $redirect_url = $ex->redirect_url;
         }
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 [
                     'level'   => \Feedback::INFO,
@@ -685,17 +719,20 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItDoesNothingIfUserStillDoesNotWantAccessibility(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
-        $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturnFalse();
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isAnonymous')->willReturn(false);
+        $user->method('getLanguageID')->willReturn('fr_FR');
+        $user->method('getPreference')->willReturnMap([
+            ['display_density', false],
+            ['accessibility_mode', false],
+            ['username_display', false],
+            ['relative_dates_display', false],
+        ]);
 
-        $this->csrf_token->shouldReceive('check')->once();
+        $this->csrf_token->expects(self::once())->method('check');
 
-        $this->user_manager->shouldReceive('updateDB')->never();
-        $user->shouldReceive('setPreference')->never();
+        $this->user_manager->expects(self::never())->method('updateDB');
+        $user->expects(self::never())->method('setPreference');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -715,7 +752,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             $redirect_url = $ex->redirect_url;
         }
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 [
                     'level'   => \Feedback::INFO,
@@ -729,17 +766,20 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItDoesNothingIfUserStillWantsAccessibility(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
-        $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturn('1');
-        $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturnFalse();
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isAnonymous')->willReturn(false);
+        $user->method('getLanguageID')->willReturn('fr_FR');
+        $user->method('getPreference')->willReturnMap([
+            ['display_density', false],
+            ['accessibility_mode', '1'],
+            ['username_display', false],
+            ['relative_dates_display', false],
+        ]);
 
-        $this->csrf_token->shouldReceive('check')->once();
+        $this->csrf_token->expects(self::once())->method('check');
 
-        $this->user_manager->shouldReceive('updateDB')->never();
-        $user->shouldReceive('setPreference')->never();
+        $this->user_manager->expects(self::never())->method('updateDB');
+        $user->expects(self::never())->method('setPreference');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -759,7 +799,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             $redirect_url = $ex->redirect_url;
         }
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 [
                     'level'   => \Feedback::INFO,
@@ -768,22 +808,25 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ],
             $layout_inspector->getFeedback()
         );
-        $this->assertEquals('/account/appearance', $redirect_url);
+        self::assertEquals('/account/appearance', $redirect_url);
     }
 
     public function testItRemovesTheAccessibilityMode(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
-        $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturn('1');
-        $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturnFalse();
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isAnonymous')->willReturn(false);
+        $user->method('getLanguageID')->willReturn('fr_FR');
+        $user->method('getPreference')->willReturnMap([
+            ['display_density', false],
+            ['accessibility_mode', '1'],
+            ['username_display', false],
+            ['relative_dates_display', false],
+        ]);
 
-        $this->csrf_token->shouldReceive('check')->once();
+        $this->csrf_token->expects(self::once())->method('check');
 
-        $this->user_manager->shouldReceive('updateDB')->never();
-        $user->shouldReceive('setPreference')->with('accessibility_mode', '0')->once()->andReturnTrue();
+        $this->user_manager->expects(self::never())->method('updateDB');
+        $user->expects(self::once())->method('setPreference')->with('accessibility_mode', '0');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -803,7 +846,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             $redirect_url = $ex->redirect_url;
         }
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 [
                     'level'   => \Feedback::INFO,
@@ -817,45 +860,32 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItUpdatesTheUser(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
-        $user->shouldReceive('setLanguageID')->with('en_US')->once();
-        $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturnFalse();
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isAnonymous')->willReturn(false);
+        $user->method('getLanguageID')->willReturn('fr_FR');
+        $user->expects(self::once())->method('setLanguageID')->with('en_US');
+        $user->method('getPreference')->willReturnMap([
+            ['display_density', false],
+            ['accessibility_mode', false],
+            ['username_display', false],
+            ['relative_dates_display', false],
+        ]);
 
-        $this->csrf_token->shouldReceive('check')->once();
+        $this->csrf_token->expects(self::once())->method('check');
 
-        $this->user_manager->shouldReceive('updateDB')->once()->andReturnTrue();
+        $this->user_manager->expects(self::once())->method('updateDB')->willReturn(true);
 
-        $this->theme_variant->shouldReceive('getVariantColorForUser')->once()->andReturn(ThemeVariantColor::Orange);
-        $this->theme_variant->shouldReceive('getAllowedVariantColors')->once()->andReturn([ThemeVariantColor::Orange, ThemeVariantColor::Green]);
+        $this->theme_variant->expects(self::once())->method('getVariantColorForUser')->willReturn(ThemeVariantColor::Orange);
+        $this->theme_variant->expects(self::once())->method('getAllowedVariantColors')->willReturn([ThemeVariantColor::Orange, ThemeVariantColor::Green]);
         $user
-            ->shouldReceive('setPreference')
-            ->with('theme_variant', 'green')
-            ->once()
-            ->andReturnTrue();
-        $user
-            ->shouldReceive('setPreference')
-            ->with('display_density', 'condensed')
-            ->once()
-            ->andReturnTrue();
-        $user
-            ->shouldReceive('setPreference')
-            ->with('accessibility_mode', '1')
-            ->once()
-            ->andReturnTrue();
-        $user
-            ->shouldReceive('setPreference')
-            ->with('username_display', '2')
-            ->once()
-            ->andReturnTrue();
-        $user
-            ->shouldReceive('setPreference')
-            ->with('relative_dates_display', 'absolute_first-relative_shown')
-            ->once()
-            ->andReturnTrue();
+            ->method('setPreference')
+            ->willReturnMap([
+                ['relative_dates_display', 'absolute_first-relative_shown', true],
+                ['username_display', '2', true],
+                ['accessibility_mode', '1', true],
+                ['display_density', 'condensed', true],
+                ['theme_variant', 'green', true],
+            ]);
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -880,7 +910,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             $redirect_url = $ex->redirect_url;
         }
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 [
                     'level'   => \Feedback::INFO,

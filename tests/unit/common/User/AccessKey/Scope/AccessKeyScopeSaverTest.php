@@ -22,15 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\User\AccessKey\Scope;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 
 final class AccessKeyScopeSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AccessKeyScopeDAO
+     * @var \PHPUnit\Framework\MockObject\MockObject&AccessKeyScopeDAO
      */
     private $dao;
     /**
@@ -40,7 +37,7 @@ final class AccessKeyScopeSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->dao = \Mockery::mock(AccessKeyScopeDAO::class);
+        $this->dao = $this->createMock(AccessKeyScopeDAO::class);
 
         $this->saver = new AccessKeyScopeSaver($this->dao);
     }
@@ -49,12 +46,12 @@ final class AccessKeyScopeSaverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $identifier = AccessKeyScopeIdentifier::fromIdentifierKey('foo:bar');
 
-        $scope_a = \Mockery::mock(AuthenticationScope::class);
-        $scope_a->shouldReceive('getIdentifier')->andReturn($identifier);
-        $scope_b = \Mockery::mock(AuthenticationScope::class);
-        $scope_b->shouldReceive('getIdentifier')->andReturn($identifier);
+        $scope_a = $this->createMock(AuthenticationScope::class);
+        $scope_a->method('getIdentifier')->willReturn($identifier);
+        $scope_b = $this->createMock(AuthenticationScope::class);
+        $scope_b->method('getIdentifier')->willReturn($identifier);
 
-        $this->dao->shouldReceive('saveScopeKeysByAccessKeyID')->with(11, 'foo:bar')->once();
+        $this->dao->expects(self::once())->method('saveScopeKeysByAccessKeyID')->with(11, 'foo:bar');
 
         $this->saver->saveKeyScopes(11, $scope_a, $scope_b);
     }

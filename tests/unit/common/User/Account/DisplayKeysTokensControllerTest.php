@@ -22,8 +22,7 @@
 namespace Tuleap\User\Account;
 
 use CSRFSynchronizerToken;
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\GlobalLanguageMock;
@@ -36,16 +35,12 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class DisplayKeysTokensControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;
     use GlobalLanguageMock;
 
+    private DisplayKeysTokensController $controller;
     /**
-     * @var DisplayKeysTokensController
-     */
-    private $controller;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|AccessKeyPresenterBuilder
+     * @var MockObject&AccessKeyPresenterBuilder
      */
     private $access_keys_presenter_builder;
     /**
@@ -61,12 +56,12 @@ final class DisplayKeysTokensControllerTest extends \Tuleap\Test\PHPUnit\TestCas
                 return $event;
             }
         };
-        $csrf_token                          = M::mock(CSRFSynchronizerToken::class);
-        $this->access_keys_presenter_builder = M::mock(AccessKeyPresenterBuilder::class);
+        $csrf_token                          = $this->createMock(CSRFSynchronizerToken::class);
+        $this->access_keys_presenter_builder = $this->createMock(AccessKeyPresenterBuilder::class);
         $this->svn_token_handler             = $this->createStub(\SVN_TokenHandler::class);
         $svn_tokens_presenter_builder        = new SVNTokensPresenterBuilder(
             $this->svn_token_handler,
-            M::mock(KeyFactory::class)
+            $this->createMock(KeyFactory::class)
         );
 
         $this->controller = new DisplayKeysTokensController(
@@ -99,7 +94,7 @@ final class DisplayKeysTokensControllerTest extends \Tuleap\Test\PHPUnit\TestCas
     public function testItRendersThePageWithPersonalAccessKey(): void
     {
         $this->svn_token_handler->method('getSVNTokensForUser')->willReturn([]);
-        $this->access_keys_presenter_builder->shouldReceive('getForUser')->andReturn(new AccessKeyPresenter([], [], null, ''));
+        $this->access_keys_presenter_builder->method('getForUser')->willReturn(new AccessKeyPresenter([], [], null, ''));
 
         ob_start();
         $this->controller->process(
@@ -108,13 +103,13 @@ final class DisplayKeysTokensControllerTest extends \Tuleap\Test\PHPUnit\TestCas
             []
         );
         $output = ob_get_clean();
-        $this->assertStringContainsString('Personal access keys', $output);
+        self::assertStringContainsString('Personal access keys', $output);
     }
 
     public function testItRendersThePageWithSSHKeys(): void
     {
         $this->svn_token_handler->method('getSVNTokensForUser')->willReturn([]);
-        $this->access_keys_presenter_builder->shouldReceive('getForUser')->andReturn(new AccessKeyPresenter([], [], null, ''));
+        $this->access_keys_presenter_builder->method('getForUser')->willReturn(new AccessKeyPresenter([], [], null, ''));
         $user = UserTestBuilder::aUser()->withId(110)->build();
         $user->setAuthorizedKeys('ssh-rsa AAAAB3Nc/YihtrgL4fvVJHN8boDfZrZXBYZ8xW1Rstzx/j9MEaWyeQy+2FjJwn6nBRlVqrvHZNP5vEoPdejGABJnnyJroCZ71v2/g5QWjwQjaL4YMUZ3sx6eloxF3 someone@example.com');
 
@@ -126,14 +121,14 @@ final class DisplayKeysTokensControllerTest extends \Tuleap\Test\PHPUnit\TestCas
         );
         $output = ob_get_clean();
 
-        $this->assertStringContainsString('SSH keys', $output);
-        $this->assertStringContainsString('ssh-rsa AAAAB3Nc/YihtrgL4fvVJHN8boDfZrZXBYZ8xW1Rst…71v2/g5QWjwQjaL4YMUZ3sx6eloxF3 someone@example.com', $output);
+        self::assertStringContainsString('SSH keys', $output);
+        self::assertStringContainsString('ssh-rsa AAAAB3Nc/YihtrgL4fvVJHN8boDfZrZXBYZ8xW1Rst…71v2/g5QWjwQjaL4YMUZ3sx6eloxF3 someone@example.com', $output);
     }
 
     public function testDoesNotSVNTokenSectionNothingIfNoSVNTokenExists(): void
     {
         $this->svn_token_handler->method('getSVNTokensForUser')->willReturn([]);
-        $this->access_keys_presenter_builder->shouldReceive('getForUser')->andReturn(new AccessKeyPresenter([], [], null, ''));
+        $this->access_keys_presenter_builder->method('getForUser')->willReturn(new AccessKeyPresenter([], [], null, ''));
 
         ob_start();
         $this->controller->process(
@@ -151,7 +146,7 @@ final class DisplayKeysTokensControllerTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->svn_token_handler->method('getSVNTokensForUser')->willReturn([
             new \SVN_Token(UserTestBuilder::aUser()->build(), 101, '', 1, 1, '', ''),
         ]);
-        $this->access_keys_presenter_builder->shouldReceive('getForUser')->andReturn(new AccessKeyPresenter([], [], null, ''));
+        $this->access_keys_presenter_builder->method('getForUser')->willReturn(new AccessKeyPresenter([], [], null, ''));
 
         ob_start();
         $this->controller->process(
@@ -160,6 +155,6 @@ final class DisplayKeysTokensControllerTest extends \Tuleap\Test\PHPUnit\TestCas
             []
         );
         $output = ob_get_clean();
-        $this->assertStringContainsString('SVN token', $output);
+        self::assertStringContainsString('SVN token', $output);
     }
 }

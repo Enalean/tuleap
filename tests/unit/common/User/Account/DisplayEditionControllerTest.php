@@ -23,24 +23,19 @@ declare(strict_types=1);
 namespace Tuleap\User\Account;
 
 use CSRFSynchronizerToken;
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\TemplateRendererFactoryBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-class DisplayEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DisplayEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;
 
-    /**
-     * @var DisplayEditionController
-     */
-    private $controller;
+    private DisplayEditionController $controller;
 
     public function setUp(): void
     {
@@ -54,7 +49,7 @@ class DisplayEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->controller = new DisplayEditionController(
             $event_manager,
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
-            M::mock(CSRFSynchronizerToken::class)
+            $this->createMock(CSRFSynchronizerToken::class)
         );
     }
 
@@ -71,8 +66,7 @@ class DisplayEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRendersThePageWithEdition(): void
     {
-        $user = M::spy(\PFUser::class);
-        $user->shouldReceive(['isAnonymous' => false]);
+        $user = UserTestBuilder::anActiveUser()->build();
 
         ob_start();
         $this->controller->process(
@@ -81,6 +75,6 @@ class DisplayEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             []
         );
         $output = ob_get_clean();
-        $this->assertStringContainsString('Edition & CSV', $output);
+        self::assertStringContainsString('Edition & CSV', $output);
     }
 }

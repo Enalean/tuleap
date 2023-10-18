@@ -22,14 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\User\AccessKey\Scope;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeTestCase;
 
 final class RESTAccessKeyScopeTest extends AuthenticationScopeTestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function getAuthenticationScopeClassname(): string
     {
         return RESTAccessKeyScope::class;
@@ -37,9 +34,9 @@ final class RESTAccessKeyScopeTest extends AuthenticationScopeTestCase
 
     public function testDoesNotCoversAllTheScopes(): void
     {
-        $scope = \Mockery::mock(AuthenticationScope::class);
-        $scope->shouldReceive('getIdentifier')->andReturn(AccessKeyScopeIdentifier::fromIdentifierKey('foo:bar'));
+        $scope = $this->createMock(AuthenticationScope::class);
+        $scope->method('getIdentifier')->willReturn(AccessKeyScopeIdentifier::fromIdentifierKey('foo:bar'));
 
-        $this->assertFalse(RESTAccessKeyScope::fromItself()->covers($scope));
+        self::assertFalse(RESTAccessKeyScope::fromItself()->covers($scope));
     }
 }

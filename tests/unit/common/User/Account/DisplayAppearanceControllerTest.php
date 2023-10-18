@@ -23,8 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\User\Account;
 
 use CSRFSynchronizerToken;
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Request\ForbiddenException;
@@ -32,27 +31,18 @@ use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\TemplateRendererFactoryBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\User\Account\Appearance\AppearancePresenterBuilder;
 use Tuleap\User\Account\Appearance\AppearancePresenter;
 
-class DisplayAppearanceControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DisplayAppearanceControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;
     use GlobalLanguageMock;
 
-    /**
-     * @var DisplayAppearanceController
-     */
-    private $controller;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|AppearancePresenterBuilder
-     */
-    private $appearance_builder;
-    /**
-     * @var CSRFSynchronizerToken|M\LegacyMockInterface|M\MockInterface
-     */
-    private $csrf_token;
+    private DisplayAppearanceController $controller;
+    private MockObject&AppearancePresenterBuilder $appearance_builder;
+    private CSRFSynchronizerToken&MockObject $csrf_token;
 
     public function setUp(): void
     {
@@ -65,8 +55,8 @@ class DisplayAppearanceControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $GLOBALS['Language']->method('gettext')->with('system', 'datefmt_short')->willReturn('d/m/Y');
 
-        $this->appearance_builder = M::mock(AppearancePresenterBuilder::class);
-        $this->csrf_token         = M::mock(CSRFSynchronizerToken::class);
+        $this->appearance_builder = $this->createMock(AppearancePresenterBuilder::class);
+        $this->csrf_token         = $this->createMock(CSRFSynchronizerToken::class);
 
         $this->controller = new DisplayAppearanceController(
             $event_manager,
@@ -89,16 +79,15 @@ class DisplayAppearanceControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRendersThePageWithAppearance(): void
     {
-        $user = M::mock(\PFUser::class);
-        $user->shouldReceive(['useLabFeatures' => true, 'isAnonymous' => false]);
+        $user = UserTestBuilder::anActiveUser()->build();
 
         $this->appearance_builder
-            ->shouldReceive('getAppareancePresenterForUser')
-            ->once()
-            ->andReturn(
+            ->expects(self::once())
+            ->method('getAppareancePresenterForUser')
+            ->willReturn(
                 new AppearancePresenter(
                     $this->csrf_token,
-                    M::mock(AccountTabPresenterCollection::class),
+                    $this->createMock(AccountTabPresenterCollection::class),
                     [],
                     [],
                     true,
@@ -118,6 +107,6 @@ class DisplayAppearanceControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             []
         );
         $output = ob_get_clean();
-        $this->assertStringContainsString('Appearance & language', $output);
+        self::assertStringContainsString('Appearance & language', $output);
     }
 }

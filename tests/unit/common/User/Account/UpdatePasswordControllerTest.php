@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\User\Account;
 
 use Feedback;
-use Mockery as M;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Password\PasswordSanityChecker;
@@ -41,10 +40,8 @@ use User_UserStatusManager;
 
 final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     /**
-     * @var \CSRFSynchronizerToken|M\LegacyMockInterface|M\MockInterface
+     * @var \CSRFSynchronizerToken&\PHPUnit\Framework\MockObject\MockObject
      */
     private $csrf_token;
     /**
@@ -56,19 +53,19 @@ final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $user;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|PasswordVerifier
+     * @var \PHPUnit\Framework\MockObject\MockObject&PasswordVerifier
      */
     private $password_verifier;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|User_UserStatusManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&User_UserStatusManager
      */
     private $user_status_manager;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|PasswordChanger
+     * @var \PHPUnit\Framework\MockObject\MockObject&PasswordChanger
      */
     private $password_changer;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|PasswordSanityChecker
+     * @var \PHPUnit\Framework\MockObject\MockObject&PasswordSanityChecker
      */
     private $password_sanity_checker;
     /**
@@ -104,17 +101,12 @@ final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         };
 
-        $this->csrf_token = M::mock(\CSRFSynchronizerToken::class);
-        $this->csrf_token->shouldReceive('check')->byDefault();
+        $this->csrf_token          = $this->createMock(\CSRFSynchronizerToken::class);
+        $this->password_verifier   = $this->createMock(PasswordVerifier::class);
+        $this->user_status_manager = $this->createMock(User_UserStatusManager::class);
 
-        $this->password_verifier = M::mock(PasswordVerifier::class);
-        $this->password_verifier->shouldReceive('verifyPassword')->byDefault();
-
-        $this->user_status_manager = M::mock(User_UserStatusManager::class);
-        $this->user_status_manager->shouldReceive('checkStatus')->byDefault();
-
-        $this->password_changer        = M::mock(PasswordChanger::class);
-        $this->password_sanity_checker = M::mock(PasswordSanityChecker::class);
+        $this->password_changer        = $this->createMock(PasswordChanger::class);
+        $this->password_sanity_checker = $this->createMock(PasswordSanityChecker::class);
 
         $this->layout_inspector = new LayoutInspector();
 
@@ -134,7 +126,7 @@ final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsExceptionWhenUserIsAnonymous(): void
     {
         $this->expectException(ForbiddenException::class);
-        $this->password_changer->shouldNotReceive('changePassword');
+        $this->password_changer->expects(self::never())->method('changePassword');
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withAnonymousUser()->build(),
@@ -145,7 +137,7 @@ final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItChecksCSRFToken(): void
     {
-        $this->csrf_token->shouldReceive('check')->with('/account/security')->once();
+        $this->csrf_token->expects(self::once())->method('check')->with('/account/security');
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
@@ -157,9 +149,12 @@ final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCannotUpdatePasswordWhenUserStatusIsNotValid(): void
     {
-        $this->user_status_manager->shouldReceive('checkStatus')->andThrow(new User_StatusInvalidException());
+        $this->password_verifier->method('verifyPassword');
+        $this->csrf_token->method('check');
 
-        $this->password_changer->shouldNotReceive('changePassword');
+        $this->user_status_manager->method('checkStatus')->willThrowException(new User_StatusInvalidException());
+
+        $this->password_changer->expects(self::never())->method('changePassword');
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
@@ -171,16 +166,19 @@ final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCannotUpdateIfOldPasswordIsNotVerified(): void
     {
-        $this->password_verifier->shouldReceive('verifyPassword')->with(
+        $this->user_status_manager->method('checkStatus');
+        $this->csrf_token->method('check');
+
+        $this->password_verifier->expects(self::once())->method('verifyPassword')->with(
             $this->user,
-            \Mockery::on(
+            self::callback(
                 static function (ConcealedString $password): bool {
                     return $password->isIdenticalTo(new ConcealedString('the_old_password'));
                 }
             )
-        )->once()->andReturnFalse();
+        )->willReturn(false);
 
-        $this->password_changer->shouldNotReceive('changePassword');
+        $this->password_changer->expects(self::never())->method('changePassword');
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
@@ -192,9 +190,12 @@ final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCannotUpdateWhenNewPasswordDoesntMatch(): void
     {
-        $this->password_verifier->shouldReceive('verifyPassword')->with($this->user, new ConcealedString('the_old_password'))->andReturnTrue();
+        $this->user_status_manager->method('checkStatus');
+        $this->csrf_token->method('check');
 
-        $this->password_changer->shouldNotReceive('changePassword');
+        $this->password_verifier->method('verifyPassword')->with($this->user, new ConcealedString('the_old_password'))->willReturn(true);
+
+        $this->password_changer->expects(self::never())->method('changePassword');
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
@@ -211,9 +212,12 @@ final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCannotUpdateWhenNewPasswordIsIdenticalToOldPassword(): void
     {
-        $this->password_verifier->shouldReceive('verifyPassword')->with($this->user, 'the_old_password')->andReturnTrue();
+        $this->user_status_manager->method('checkStatus');
+        $this->csrf_token->method('check');
 
-        $this->password_changer->shouldNotReceive('changePassword');
+        $this->password_verifier->method('verifyPassword')->with($this->user, 'the_old_password')->willReturn(true);
+
+        $this->password_changer->expects(self::never())->method('changePassword');
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
@@ -230,12 +234,15 @@ final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCannotUpdateIfPasswordStrategyIsNotMet(): void
     {
-        $this->password_verifier->shouldReceive('verifyPassword')->andReturnTrue();
+        $this->user_status_manager->method('checkStatus');
+        $this->csrf_token->method('check');
 
-        $this->password_sanity_checker->shouldReceive('check')->andReturnFalse();
-        $this->password_sanity_checker->shouldReceive('getErrors')->andReturn(['some error about been pwned']);
+        $this->password_verifier->method('verifyPassword')->willReturn(true);
 
-        $this->password_changer->shouldNotReceive('changePassword');
+        $this->password_sanity_checker->method('check')->willReturn(false);
+        $this->password_sanity_checker->method('getErrors')->willReturn(['some error about been pwned']);
+
+        $this->password_changer->expects(self::never())->method('changePassword');
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
@@ -250,17 +257,20 @@ final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $feedback = $this->layout_inspector->getFeedback();
-        $this->assertCount(1, $feedback);
-        $this->assertEquals(Feedback::ERROR, $feedback[0]['level']);
-        $this->assertEquals('some error about been pwned', $feedback[0]['message']);
+        self::assertCount(1, $feedback);
+        self::assertEquals(Feedback::ERROR, $feedback[0]['level']);
+        self::assertEquals('some error about been pwned', $feedback[0]['message']);
     }
 
     public function testItReportsAnErrorIfPasswordChangeFails(): void
     {
-        $this->password_verifier->shouldReceive('verifyPassword')->andReturnTrue();
-        $this->password_sanity_checker->shouldReceive('check')->andReturnTrue();
+        $this->user_status_manager->method('checkStatus');
+        $this->csrf_token->method('check');
 
-        $this->password_changer->shouldReceive('changePassword')->andThrow(new \Exception());
+        $this->password_verifier->method('verifyPassword')->willReturn(true);
+        $this->password_sanity_checker->method('check')->willReturn(true);
+
+        $this->password_changer->method('changePassword')->willThrowException(new \Exception());
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
@@ -275,17 +285,20 @@ final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $feedback = $this->layout_inspector->getFeedback();
-        $this->assertCount(1, $feedback);
-        $this->assertEquals(Feedback::ERROR, $feedback[0]['level']);
-        $this->assertStringContainsStringIgnoringCase('could not update password', $feedback[0]['message']);
+        self::assertCount(1, $feedback);
+        self::assertEquals(Feedback::ERROR, $feedback[0]['level']);
+        self::assertStringContainsStringIgnoringCase('could not update password', $feedback[0]['message']);
     }
 
     public function testItFailsWhenPluginDisablePasswordChange(): void
     {
+        $this->user_status_manager->method('checkStatus');
+        $this->csrf_token->method('check');
+
         $this->event_manager->disablePasswordChange();
 
-        $this->password_verifier->shouldNotReceive('verifyPassword');
-        $this->password_changer->shouldNotReceive('changePassword');
+        $this->password_verifier->expects(self::never())->method('verifyPassword');
+        $this->password_changer->expects(self::never())->method('changePassword');
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
@@ -302,14 +315,17 @@ final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItChangesPasswordWithSuccess(): void
     {
-        $this->password_verifier->shouldReceive('verifyPassword')->andReturnTrue();
-        $this->password_sanity_checker->shouldReceive('check')->with(\Mockery::on(
+        $this->user_status_manager->method('checkStatus');
+        $this->csrf_token->method('check');
+
+        $this->password_verifier->method('verifyPassword')->willReturn(true);
+        $this->password_sanity_checker->expects(self::once())->method('check')->with(self::callback(
             static function (ConcealedString $str): bool {
                 return $str->isIdenticalTo(new ConcealedString('the_new_password'));
             }
-        ))->once()->andReturnTrue();
+        ))->willReturn(true);
 
-        $this->password_changer->shouldReceive('changePassword')->once();
+        $this->password_changer->expects(self::once())->method('changePassword');
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
@@ -324,8 +340,8 @@ final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $feedback = $this->layout_inspector->getFeedback();
-        $this->assertCount(1, $feedback);
-        $this->assertEquals(Feedback::INFO, $feedback[0]['level']);
-        $this->assertStringContainsStringIgnoringCase('success', $feedback[0]['message']);
+        self::assertCount(1, $feedback);
+        self::assertEquals(Feedback::INFO, $feedback[0]['level']);
+        self::assertStringContainsStringIgnoringCase('success', $feedback[0]['message']);
     }
 }

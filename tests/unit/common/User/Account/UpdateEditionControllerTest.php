@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\User\Account;
 
 use CSRFSynchronizerToken;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
@@ -33,20 +31,15 @@ use Tuleap\Test\Builders\LayoutInspectorRedirection;
 
 final class UpdateEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var CSRFSynchronizerToken|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var CSRFSynchronizerToken&\PHPUnit\Framework\MockObject\MockObject
      */
     private $csrf_token;
-    /**
-     * @var UpdateEditionController
-     */
-    private $controller;
+    private UpdateEditionController $controller;
 
     public function setUp(): void
     {
-        $this->csrf_token = Mockery::mock(CSRFSynchronizerToken::class);
+        $this->csrf_token = $this->createMock(CSRFSynchronizerToken::class);
 
         $this->controller = new UpdateEditionController($this->csrf_token);
     }
@@ -64,29 +57,21 @@ final class UpdateEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItUpdatesAllPreferences(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive(['isAnonymous' => false]);
-        $user->shouldReceive('getPreference')->with('user_edition_default_format')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('user_csv_separator')->andReturnFalse();
-        $user->shouldReceive('getPreference')->with('user_csv_dateformat')->andReturnFalse();
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isAnonymous')->willReturn(false);
+        $user->method('getPreference')->willReturnMap([
+            ['user_edition_default_format', false],
+            ['user_csv_separator', false],
+            ['user_csv_dateformat', false],
+        ]);
 
-        $this->csrf_token->shouldReceive('check')->once();
+        $this->csrf_token->expects(self::once())->method('check');
 
-        $user
-            ->shouldReceive('setPreference')
-            ->with('user_edition_default_format', 'html')
-            ->once()
-            ->andReturnTrue();
-        $user
-            ->shouldReceive('setPreference')
-            ->with('user_csv_separator', 'comma')
-            ->once()
-            ->andReturnTrue();
-        $user
-            ->shouldReceive('setPreference')
-            ->with('user_csv_dateformat', 'day_month_year')
-            ->once()
-            ->andReturnTrue();
+        $user->method('setPreference')->willReturnMap([
+            ['user_edition_default_format', 'html', true],
+            ['user_csv_separator', 'comma', true],
+            ['user_csv_dateformat', 'day_month_year', true],
+        ]);
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -108,7 +93,7 @@ final class UpdateEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $redirect_url = $ex->redirect_url;
         }
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 [
                     'level'   => \Feedback::INFO,
@@ -122,18 +107,20 @@ final class UpdateEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRejectsIfItDoesNotKnowTheDefaultFormat(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive(['isAnonymous' => false]);
-        $user->shouldReceive('getPreference')->with('user_edition_default_format')->andReturn('text');
-        $user->shouldReceive('getPreference')->with('user_csv_separator')->andReturn('comma');
-        $user->shouldReceive('getPreference')->with('user_csv_dateformat')->andReturn('day_month_year');
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isAnonymous')->willReturn(false);
+        $user->method('getPreference')->willReturnMap([
+            ['user_edition_default_format', 'text'],
+            ['user_csv_separator', 'comma'],
+            ['user_csv_dateformat', 'day_month_year'],
+        ]);
 
-        $this->csrf_token->shouldReceive('check')->once();
+        $this->csrf_token->expects(self::once())->method('check');
 
         $user
-            ->shouldReceive('setPreference')
-            ->with('user_edition_default_format', 'html')
-            ->never();
+            ->expects(self::never())
+            ->method('setPreference')
+            ->with('user_edition_default_format', 'html');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -155,7 +142,7 @@ final class UpdateEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $redirect_url = $ex->redirect_url;
         }
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 [
                     'level'   => \Feedback::ERROR,
@@ -169,18 +156,20 @@ final class UpdateEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRejectsIfItDoesNotKnowTheCSVSeparator(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive(['isAnonymous' => false]);
-        $user->shouldReceive('getPreference')->with('user_edition_default_format')->andReturn('text');
-        $user->shouldReceive('getPreference')->with('user_csv_separator')->andReturn('comma');
-        $user->shouldReceive('getPreference')->with('user_csv_dateformat')->andReturn('day_month_year');
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isAnonymous')->willReturn(false);
+        $user->method('getPreference')->willReturnMap([
+            ['user_edition_default_format', 'text'],
+            ['user_csv_separator', 'comma'],
+            ['user_csv_dateformat', 'day_month_year'],
+        ]);
 
-        $this->csrf_token->shouldReceive('check')->once();
+        $this->csrf_token->expects(self::once())->method('check');
 
         $user
-            ->shouldReceive('setPreference')
-            ->with('user_edition_default_format', 'html')
-            ->never();
+            ->expects(self::never())
+            ->method('setPreference')
+            ->with('user_edition_default_format', 'html');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -202,7 +191,7 @@ final class UpdateEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $redirect_url = $ex->redirect_url;
         }
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 [
                     'level'   => \Feedback::ERROR,
@@ -216,18 +205,20 @@ final class UpdateEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRejectsIfItDoesNotKnowTheCSVDateFormat(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive(['isAnonymous' => false]);
-        $user->shouldReceive('getPreference')->with('user_edition_default_format')->andReturn('text');
-        $user->shouldReceive('getPreference')->with('user_csv_separator')->andReturn('comma');
-        $user->shouldReceive('getPreference')->with('user_csv_dateformat')->andReturn('day_month_year');
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isAnonymous')->willReturn(false);
+        $user->method('getPreference')->willReturnMap([
+            ['user_edition_default_format', 'text'],
+            ['user_csv_separator', 'comma'],
+            ['user_csv_dateformat', 'day_month_year'],
+        ]);
 
-        $this->csrf_token->shouldReceive('check')->once();
+        $this->csrf_token->expects(self::once())->method('check');
 
         $user
-            ->shouldReceive('setPreference')
-            ->with('user_edition_default_format', 'html')
-            ->never();
+            ->expects(self::never())
+            ->method('setPreference')
+            ->with('user_edition_default_format', 'html');
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -249,7 +240,7 @@ final class UpdateEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $redirect_url = $ex->redirect_url;
         }
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 [
                     'level'   => \Feedback::ERROR,
