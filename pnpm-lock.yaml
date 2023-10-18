@@ -225,8 +225,8 @@ devDependencies:
     specifier: ^0.34.4
     version: 0.34.4(jsdom@22.1.0)(sass@1.68.0)
   vue-eslint-parser:
-    specifier: ^9.0.3
-    version: 9.0.3(eslint@8.12.0)
+    specifier: ^9.3.2
+    version: 9.3.2(eslint@8.12.0)
   vue-loader:
     specifier: ^15.10.2
     version: 15.10.2(@vue/compiler-sfc@3.2.26)(css-loader@6.8.1)(prettier@3.0.3)(vue-template-compiler@2.7.8)(webpack@5.88.2)
@@ -5505,15 +5505,6 @@ packages:
       eslint-visitor-keys: 3.3.0
     dev: true
 
-  /espree@9.3.2:
-    resolution: {integrity: sha512-D211tC7ZwouTIuY5x9XnS0E9sWNChB7IYKX/Xp5eQj3nFXhqmiUDB9q27y76oFl8jTg3pXcQx/bpxMfs3CIZbA==}
-    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
-    dependencies:
-      acorn: 8.10.0
-      acorn-jsx: 5.3.2(acorn@8.10.0)
-      eslint-visitor-keys: 3.3.0
-    dev: true
-
   /espree@9.6.1:
     resolution: {integrity: sha512-oruZaFkjorTpF32kDSI5/75ViwGeZginGGy2NoOSg3Q9bnwlnmDm4HLnkl0RE3n+njDXR037aY1+x58Z/zFdwQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
@@ -10250,24 +10241,6 @@ packages:
       - sugarss
       - supports-color
       - terser
-    dev: true
-
-  /vue-eslint-parser@9.0.3(eslint@8.12.0):
-    resolution: {integrity: sha512-yL+ZDb+9T0ELG4VIFo/2anAOz8SvBdlqEnQnvJ3M7Scq56DvtjY0VY88bByRZB0D4J0u8olBcfrXTVONXsh4og==}
-    engines: {node: ^14.17.0 || >=16.0.0}
-    peerDependencies:
-      eslint: '>=6.0.0'
-    dependencies:
-      debug: 4.3.4(supports-color@8.1.1)
-      eslint: 8.12.0
-      eslint-scope: 7.1.1
-      eslint-visitor-keys: 3.3.0
-      espree: 9.3.2
-      esquery: 1.4.0
-      lodash: 4.17.21
-      semver: 7.5.4
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /vue-eslint-parser@9.3.2(eslint@8.12.0):
