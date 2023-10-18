@@ -162,7 +162,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         }
 
         $this->displayJavascriptElements($params);
-        $this->displayStylesheetElements($params);
+        $this->displayStylesheetElements();
         $this->displaySyndicationElements();
 
         $this->body($params);
@@ -178,7 +178,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $this->includeJavascriptFile($this->include_asset->getFileURL('tuleap_subset_flamingparrot.js'));
     }
 
-    protected function displayCommonStylesheetElements($params)
+    protected function displayCommonStylesheetElements(): void
     {
         $core_assets = new \Tuleap\Layout\IncludeCoreAssets();
 

@@ -453,16 +453,9 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
     /**
      * Display all the stylesheets for the current page
      */
-    public function displayStylesheetElements($params)
+    public function displayStylesheetElements(): void
     {
-        $this->displayCommonStylesheetElements($params);
-
-        // Stylesheet external files
-        if (isset($params['stylesheet']) && is_array($params['stylesheet'])) {
-            foreach ($params['stylesheet'] as $css) {
-                print '<link rel="stylesheet" type="text/css" href="' . $css . '" />';
-            }
-        }
+        $this->displayCommonStylesheetElements();
 
         // Display custom css
         foreach ($this->getAllStylesheets() as $css) {
@@ -494,7 +487,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         </style>';
     }
 
-    protected function displayCommonStylesheetElements($params)
+    protected function displayCommonStylesheetElements(): void
     {
         $core_assets = $this->getAssets();
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/bootstrap-tuleap-22d39b3.min.css" />';
@@ -657,7 +650,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
                     <title>' . $hp->purify($pagetitle) . '</title>
                     <link rel="SHORTCUT ICON" href="' . $this->imgroot . 'favicon.ico' . '">';
         $this->displayJavascriptElements($params);
-        $this->displayStylesheetElements($params);
+        $this->displayStylesheetElements();
         $this->displaySyndicationElements();
         echo '</head>';
 
@@ -701,7 +694,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
               <head>
                  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
         echo $this->displayJavascriptElements([]);
-        echo $this->displayStylesheetElements([]);
+        $this->displayStylesheetElements();
         echo $this->displaySyndicationElements();
         echo '</head>';
         echo '<body class="' . Codendi_HTMLPurifier::instance()->purify($theme_color_variant) . '" leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0" marginwidth="0" marginheight="0" data-user-locale="' . Codendi_HTMLPurifier::instance()->purify($user_locale) . '">';
