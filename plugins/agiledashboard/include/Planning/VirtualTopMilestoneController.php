@@ -24,6 +24,8 @@ use Tuleap\AgileDashboard\BaseController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\CSRFSynchronizerTokenProvider;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDeprecatedException;
 use Tuleap\Kanban\SplitKanbanConfigurationChecker;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\HeaderConfigurationBuilder;
@@ -54,6 +56,7 @@ final class VirtualTopMilestoneController extends BaseController
         private readonly VirtualTopMilestoneCrumbBuilder $top_milestone_crumb_builder,
         private readonly SplitKanbanConfigurationChecker $flag_checker,
         private readonly CSRFSynchronizerTokenProvider $token_provider,
+        private readonly ScrumForMonoMilestoneChecker $mono_milestone_checker,
     ) {
         parent::__construct('agiledashboard', $request);
         $this->project = $project_manager->getProject($request->get('group_id'));
@@ -72,6 +75,9 @@ final class VirtualTopMilestoneController extends BaseController
      */
     public function showTop(\Closure $displayHeader, \Closure $displayFooter): void
     {
+        if ($this->mono_milestone_checker->isMonoMilestoneEnabled($this->project->getID())) {
+            throw new ScrumForMonoMilestoneDeprecatedException();
+        }
         if ($this->milestone->isNothing() && ! $this->flag_checker->isProjectAllowedToUseSplitKanban($this->project)) {
             $query_parts = ['group_id' => $this->request->get('group_id')];
             $this->redirect($query_parts);

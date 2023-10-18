@@ -24,6 +24,8 @@ use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDeprecatedException;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
@@ -69,6 +71,7 @@ class Planning_MilestoneController extends BaseController
         VisitRecorder $visit_recorder,
         AllBreadCrumbsForMilestoneBuilder $bread_crumbs_for_milestone_builder,
         HeaderOptionsProvider $header_options_provider,
+        private readonly ScrumForMonoMilestoneChecker $mono_milestone_checker,
     ) {
         parent::__construct('agiledashboard', $request);
         $this->milestone_factory                  = $milestone_factory;
@@ -92,6 +95,9 @@ class Planning_MilestoneController extends BaseController
         }
         $this->redirectToCorrectPane();
         $this->recordVisit();
+        if ($this->mono_milestone_checker->isMonoMilestoneEnabled($this->project->getID())) {
+            throw new ScrumForMonoMilestoneDeprecatedException();
+        }
 
         $presenter_data = $this->pane_factory->getPanePresenterData($this->milestone);
         $template_name  = $this->getTemplateName($presenter_data);

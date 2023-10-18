@@ -30,13 +30,14 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\Kanban\CheckSplitKanbanConfiguration;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
-class MilestoneControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MilestoneControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -101,7 +102,6 @@ class MilestoneControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function setUp(): void
     {
-        parent::setUp();
         ForgeConfig::store();
         ForgeConfig::set('codendi_dir', __DIR__ . '/../../../../../..');
 
@@ -155,30 +155,30 @@ class MilestoneControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->visit_recorder,
             $this->crumb_builder,
             Mockery::mock(HeaderOptionsProvider::class),
+            $this->createStub(ScrumForMonoMilestoneChecker::class)
         );
     }
 
     public function tearDown(): void
     {
         ForgeConfig::restore();
-        parent::tearDown();
     }
 
-    public function testItHasOnlyTheServiceBreadCrumbsWhenThereIsNoMilestone()
+    public function testItHasOnlyTheServiceBreadCrumbsWhenThereIsNoMilestone(): void
     {
         $this->milestone_factory->shouldReceive('getBareMilestone')->andReturn($this->nomilestone);
         $this->agile_dashboard_crumb_builder->shouldReceive('build')->andReturn($this->service_breadcrumb);
         $this->top_milestone_crumb_builder->shouldReceive('build')->andReturn($this->top_backlog_breadcrumb);
         $this->milestone_crumb_builder->shouldNotReceive('build');
 
-        $breadcrumbs = $this->milestone_controller->getBreadcrumbs($this->plugin_path);
+        $breadcrumbs = $this->milestone_controller->getBreadcrumbs();
 
         $expected = [$this->service_breadcrumb];
 
         $this->assertEquals($expected, $breadcrumbs->getBreadcrumbs());
     }
 
-    public function testItIncludesBreadcrumbsForParentMilestones()
+    public function testItIncludesBreadcrumbsForParentMilestones(): void
     {
         $product_breadcrumb = new BreadCrumb(new BreadCrumbLink('Product X', 'fake_url'));
         $release_breadcrumb = new BreadCrumb(new BreadCrumbLink('Release 1.0', 'fake_url'));
@@ -194,7 +194,7 @@ class MilestoneControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $sprint_breadcrumb
         );
 
-        $breadcrumbs = $this->milestone_controller->getBreadcrumbs($this->plugin_path);
+        $breadcrumbs = $this->milestone_controller->getBreadcrumbs();
 
         $expected = [
             $this->service_breadcrumb,
