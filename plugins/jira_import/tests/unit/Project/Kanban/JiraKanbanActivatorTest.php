@@ -41,8 +41,10 @@ final class JiraKanbanActivatorTest extends TestCase
 
         self::assertCount(1, $project_xml->agiledashboard->kanban_list->kanban);
         $kanban_xml = $project_xml->agiledashboard->kanban_list->kanban[0];
+        self::assertNotNull($kanban_xml);
         self::assertSame("T1", (string) $kanban_xml['tracker_id']);
         self::assertSame("Issues", (string) $kanban_xml['name']);
         self::assertSame("K01", (string) $kanban_xml['ID']);
+        self::assertSame("1", (string) $kanban_xml['is_promoted']);
     }
 }

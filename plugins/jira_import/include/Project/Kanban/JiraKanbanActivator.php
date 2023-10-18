@@ -58,5 +58,6 @@ final class JiraKanbanActivator
         $xml_kanban->addAttribute("tracker_id", JiraAllIssuesMonoTrackersInXmlExporter::MONO_TRACKER_XML_ID);
         $xml_kanban->addAttribute("name", JiraAllIssuesMonoTrackersInXmlExporter::MONO_TRACKER_NAME);
         $xml_kanban->addAttribute("ID", self::DEFAULT_XML_KANBAN_ID);
+        $xml_kanban->addAttribute("is_promoted", "1");
     }
 }
