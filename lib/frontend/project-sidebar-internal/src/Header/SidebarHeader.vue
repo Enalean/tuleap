@@ -50,7 +50,7 @@
     </div>
     <project-announcement />
     <project-flags />
-    <linked-projects />
+    <linked-projects v-bind:is_sidebar_collapsed="is_sidebar_collapsed" />
 </template>
 <script setup lang="ts">
 import { SIDEBAR_CONFIGURATION } from "../injection-symbols";
@@ -61,6 +61,8 @@ import { sanitizeURL } from "../url-sanitizer";
 import ProjectFlags from "./ProjectFlags.vue";
 import ProjectAnnouncement from "./ProjectAnnouncement.vue";
 import LinkedProjects from "./LinkedProjects.vue";
+
+defineProps<{ is_sidebar_collapsed: boolean }>();
 
 const config = strictInject(SIDEBAR_CONFIGURATION);
 

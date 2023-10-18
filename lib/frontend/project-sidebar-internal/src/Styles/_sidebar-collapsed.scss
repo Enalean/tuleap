@@ -74,6 +74,16 @@
 
     .tlp-popover.tlp-popover-shown.project-sidebar-linked-projects-popover {
         display: flex;
+
+        &:not(.project-sidebar-linked-projects-popover-nb-max-exceeded) {
+            display: flex;
+        }
+    }
+
+    .project-sidebar-linked-projects-popover-content {
+        $magic-number-to-include-popover-body-in-viewport: 120px;
+
+        max-height: calc(100vh - $magic-number-to-include-popover-body-in-viewport);
     }
 
     .project-sidebar-project-flags {

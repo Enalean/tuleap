@@ -32,7 +32,11 @@ vi.mock("@tuleap/vue-strict-inject");
 describe("SidebarHeader", () => {
     it("displays the sidebar header", () => {
         vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(example_config));
-        const wrapper = shallowMount(SidebarHeader);
+        const wrapper = shallowMount(SidebarHeader, {
+            propsData: {
+                is_sidebar_collapsed: false,
+            },
+        });
 
         expect(wrapper.element).toMatchSnapshot();
     });
@@ -41,7 +45,11 @@ describe("SidebarHeader", () => {
         const config = example_config;
         config.user.is_project_administrator = false;
         vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(config));
-        const wrapper = shallowMount(SidebarHeader);
+        const wrapper = shallowMount(SidebarHeader, {
+            propsData: {
+                is_sidebar_collapsed: false,
+            },
+        });
 
         expect(wrapper.find("[data-test=project-administration-link]").exists()).toBe(false);
     });
