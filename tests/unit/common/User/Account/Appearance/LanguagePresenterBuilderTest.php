@@ -22,35 +22,31 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account\Appearance;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Language\LocaleSwitcher;
 
-class LanguagePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LanguagePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testGetLanguagePresenterCollectionForUser()
     {
-        $factory = Mockery::mock(\BaseLanguageFactory::class);
+        $factory = $this->createMock(\BaseLanguageFactory::class);
         $factory
-            ->shouldReceive('getAvailableLanguages')
-            ->once()
-            ->andReturn([
+            ->expects(self::once())
+            ->method('getAvailableLanguages')
+            ->willReturn([
                 'ja_JP' => '日本語',
                 'en_US' => 'English',
                 'fr_FR' => 'Français',
             ]);
 
-        $user = Mockery::mock(\PFUser::class);
+        $user = $this->createMock(\PFUser::class);
         $user
-            ->shouldReceive('getLocale')
-            ->once()
-            ->andReturn('fr_FR');
+            ->expects(self::once())
+            ->method('getLocale')
+            ->willReturn('fr_FR');
 
         $builder           = new LanguagePresenterBuilder($factory, new LocaleSwitcher());
         $beta_warning_text = "Work in progress, you might find untranslated strings.";
-        $this->assertEquals(
+        self::assertEquals(
             [
                 new LanguagePresenter('en_US', 'English', false, true, $beta_warning_text),
                 new LanguagePresenter('fr_FR', 'Français', true, true, $beta_warning_text),

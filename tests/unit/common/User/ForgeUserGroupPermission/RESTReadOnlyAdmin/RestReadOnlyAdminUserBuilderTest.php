@@ -20,15 +20,13 @@
 
 namespace Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\Builders\UserTestBuilder;
 use User_ForgeUserGroupPermissionsManager;
 
-class RestReadOnlyAdminUserBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class RestReadOnlyAdminUserBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
     protected function tearDown(): void
@@ -38,72 +36,67 @@ class RestReadOnlyAdminUserBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         parent::tearDown();
     }
 
-    public function testItReturnsARestReadOnlyAdminUser()
+    public function testItReturnsARestReadOnlyAdminUser(): void
     {
-        $forge_ugroup_permissions_manager = Mockery::mock(User_ForgeUserGroupPermissionsManager::class);
-        $forge_ugroup_permissions_manager->shouldReceive('doesUserHavePermission')->andReturnTrue();
+        $forge_ugroup_permissions_manager = $this->createMock(User_ForgeUserGroupPermissionsManager::class);
+        $forge_ugroup_permissions_manager->method('doesUserHavePermission')->willReturn(true);
 
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('isAnonymous')->andReturnFalse();
-        $user->shouldReceive('toRow')->andReturn([]);
+        $user = UserTestBuilder::anActiveUser()->build();
 
         $_SERVER['REQUEST_METHOD'] = 'get';
 
         $builder = new RestReadOnlyAdminUserBuilder($forge_ugroup_permissions_manager);
 
-        $this->assertInstanceOf(
+        self::assertInstanceOf(
             RestReadOnlyAdminUser::class,
             $builder->buildReadOnlyAdminUser($user)
         );
     }
 
-    public function testItReturnsAPFUserIfRequestMethodIsNeitherGetNorOptions()
+    public function testItReturnsAPFUserIfRequestMethodIsNeitherGetNorOptions(): void
     {
-        $forge_ugroup_permissions_manager = Mockery::mock(User_ForgeUserGroupPermissionsManager::class);
+        $forge_ugroup_permissions_manager = $this->createMock(User_ForgeUserGroupPermissionsManager::class);
 
-        $user = Mockery::mock(PFUser::class);
+        $user = UserTestBuilder::anActiveUser()->build();
 
         $_SERVER['REQUEST_METHOD'] = 'post';
 
         $builder = new RestReadOnlyAdminUserBuilder($forge_ugroup_permissions_manager);
 
-        $this->assertInstanceOf(
+        self::assertInstanceOf(
             PFUser::class,
             $builder->buildReadOnlyAdminUser($user)
         );
     }
 
-    public function testItReturnsAPFUserIfProvidedUserIsAnonymous()
+    public function testItReturnsAPFUserIfProvidedUserIsAnonymous(): void
     {
-        $forge_ugroup_permissions_manager = Mockery::mock(User_ForgeUserGroupPermissionsManager::class);
+        $forge_ugroup_permissions_manager = $this->createMock(User_ForgeUserGroupPermissionsManager::class);
 
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('isAnonymous')->andReturnTrue();
+        $user = UserTestBuilder::anAnonymousUser()->build();
 
         $_SERVER['REQUEST_METHOD'] = 'get';
 
         $builder = new RestReadOnlyAdminUserBuilder($forge_ugroup_permissions_manager);
 
-        $this->assertInstanceOf(
+        self::assertInstanceOf(
             PFUser::class,
             $builder->buildReadOnlyAdminUser($user)
         );
     }
 
-    public function testItReturnsAPFUserIfProvidedUserDoesNotHaveTheDelegationOfPermission()
+    public function testItReturnsAPFUserIfProvidedUserDoesNotHaveTheDelegationOfPermission(): void
     {
-        $forge_ugroup_permissions_manager = Mockery::mock(User_ForgeUserGroupPermissionsManager::class);
-        $forge_ugroup_permissions_manager->shouldReceive('doesUserHavePermission')->andReturnFalse();
+        $forge_ugroup_permissions_manager = $this->createMock(User_ForgeUserGroupPermissionsManager::class);
+        $forge_ugroup_permissions_manager->method('doesUserHavePermission')->willReturn(false);
 
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('isAnonymous')->andReturnFalse();
-        $user->shouldReceive('toRow')->andReturn([]);
+        $user = UserTestBuilder::anActiveUser()->build();
 
         $_SERVER['REQUEST_METHOD'] = 'get';
 
         $builder = new RestReadOnlyAdminUserBuilder($forge_ugroup_permissions_manager);
 
-        $this->assertInstanceOf(
+        self::assertInstanceOf(
             PFUser::class,
             $builder->buildReadOnlyAdminUser($user)
         );

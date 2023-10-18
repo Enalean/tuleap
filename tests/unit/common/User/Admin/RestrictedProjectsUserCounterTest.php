@@ -24,42 +24,39 @@ namespace Tuleap\User\Admin;
 
 use ForgeAccess;
 use ForgeConfig;
-use Mockery;
-use PFUser;
 use TestHelper;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Test\Builders\UserTestBuilder;
 use UserGroupDao;
 
 final class RestrictedProjectsUserCounterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     public function testThereIsNoProjectNotAllowingRestrictedWhenRestrictedUsersAreDisabledAtTheInstanceLevel(): void
     {
-        $user_group_dao = Mockery::mock(UserGroupDao::class);
+        $user_group_dao = $this->createMock(UserGroupDao::class);
         $counter        = new RestrictedProjectsUserCounter($user_group_dao);
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
-        $user = Mockery::mock(PFUser::class);
+        $user = UserTestBuilder::aUser()->build();
 
-        $this->assertEquals(0, $counter->getNumberOfProjectsNotAllowingRestrictedTheUserIsMemberOf($user));
+        self::assertEquals(0, $counter->getNumberOfProjectsNotAllowingRestrictedTheUserIsMemberOf($user));
     }
 
     public function testTotalNumberOfProjectsNotAllowingRestrictedTheUserIsMemberOf(): void
     {
-        $user_group_dao = Mockery::mock(UserGroupDao::class);
+        $user_group_dao = $this->createMock(UserGroupDao::class);
         $counter        = new RestrictedProjectsUserCounter($user_group_dao);
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('getId')->andReturn(400);
+        $user = UserTestBuilder::aUser()->withId(400)->build();
 
         $dar = TestHelper::arrayToDar([1 => 'row1']);
-        $user_group_dao->shouldReceive('searchActiveProjectsByUserIdAndAccessType')->andReturn($dar);
+        $user_group_dao->method('searchActiveProjectsByUserIdAndAccessType')->willReturn($dar);
 
-        $this->assertEquals(1, $counter->getNumberOfProjectsNotAllowingRestrictedTheUserIsMemberOf($user));
+        self::assertEquals(1, $counter->getNumberOfProjectsNotAllowingRestrictedTheUserIsMemberOf($user));
     }
 }

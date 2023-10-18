@@ -24,8 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\User\Account;
 
 use CSRFSynchronizerToken;
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\TemporaryTestDirectory;
@@ -36,7 +34,6 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class DisplayAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;
 
     /**
@@ -47,7 +44,7 @@ final class DisplayAccountInformationControllerTest extends \Tuleap\Test\PHPUnit
      * @var \PFUser
      */
     private $user;
-    private $event_manager;
+    private EventDispatcherInterface $event_manager;
 
     protected function setUp(): void
     {
@@ -76,7 +73,7 @@ final class DisplayAccountInformationControllerTest extends \Tuleap\Test\PHPUnit
         $this->controller = new DisplayAccountInformationController(
             $this->event_manager,
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
-            M::mock(CSRFSynchronizerToken::class)
+            $this->createMock(CSRFSynchronizerToken::class)
         );
 
         $language = $this->createStub(\BaseLanguage::class);
@@ -113,9 +110,9 @@ final class DisplayAccountInformationControllerTest extends \Tuleap\Test\PHPUnit
             []
         );
         $output = ob_get_clean();
-        $this->assertStringContainsString('Account information', $output);
-        $this->assertStringContainsString('Member since', $output);
-        $this->assertStringNotContainsString('Ldap Stuff', $output);
+        self::assertStringContainsString('Account information', $output);
+        self::assertStringContainsString('Member since', $output);
+        self::assertStringNotContainsString('Ldap Stuff', $output);
     }
 
     public function testItRendersThePageWithRealnameEditable(): void
@@ -127,7 +124,7 @@ final class DisplayAccountInformationControllerTest extends \Tuleap\Test\PHPUnit
             []
         );
         $output = ob_get_clean();
-        $this->assertStringContainsString('value="Alice FooBar"', $output);
+        self::assertStringContainsString('value="Alice FooBar"', $output);
     }
 
     public function testItRendersThePageWithRealnameReadOnly(): void
@@ -141,8 +138,8 @@ final class DisplayAccountInformationControllerTest extends \Tuleap\Test\PHPUnit
             []
         );
         $output = ob_get_clean();
-        $this->assertStringContainsString('<p>Alice FooBar</p>', $output);
-        $this->assertStringNotContainsString('value="Alice FooBar"', $output);
+        self::assertStringContainsString('<p>Alice FooBar</p>', $output);
+        self::assertStringNotContainsString('value="Alice FooBar"', $output);
     }
 
     public function testItRendersThePageWithExtraInfoFromPlugin(): void
@@ -156,7 +153,7 @@ final class DisplayAccountInformationControllerTest extends \Tuleap\Test\PHPUnit
             []
         );
         $output = ob_get_clean();
-        $this->assertStringContainsString('Ldap Stuff', $output);
+        self::assertStringContainsString('Ldap Stuff', $output);
     }
 
     public function testItRendersThePageWithEmailEditable(): void
@@ -168,8 +165,8 @@ final class DisplayAccountInformationControllerTest extends \Tuleap\Test\PHPUnit
             []
         );
         $output = ob_get_clean();
-        $this->assertStringContainsString('name="email"', $output);
-        $this->assertStringContainsString('value="alice@example.com"', $output);
+        self::assertStringContainsString('name="email"', $output);
+        self::assertStringContainsString('value="alice@example.com"', $output);
     }
 
     public function testItRendersThePageWithEmailReadOnly(): void
@@ -182,8 +179,8 @@ final class DisplayAccountInformationControllerTest extends \Tuleap\Test\PHPUnit
             []
         );
         $output = ob_get_clean();
-        $this->assertStringContainsString('<p>alice@example.com</p>', $output);
-        $this->assertStringNotContainsString('name="email"', $output);
-        $this->assertStringNotContainsString('value="alice@example.com"', $output);
+        self::assertStringContainsString('<p>alice@example.com</p>', $output);
+        self::assertStringNotContainsString('name="email"', $output);
+        self::assertStringNotContainsString('value="alice@example.com"', $output);
     }
 }

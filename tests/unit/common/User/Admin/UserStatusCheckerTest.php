@@ -22,20 +22,14 @@ namespace Tuleap\User\Admin;
 
 use ForgeAccess;
 use ForgeConfig;
+use Tuleap\ForgeConfigSandbox;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-class UserStatusCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UserStatusCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
-    /**
-     * @var \PFUser
-     */
-    private $user;
-
-    /**
-     * @var UserStatusChecker
-     */
-    private $status_checker;
+    private UserStatusChecker $status_checker;
 
 
     protected function setUp(): void
@@ -43,50 +37,45 @@ class UserStatusCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         parent::setUp();
 
         $this->status_checker = new UserStatusChecker();
-        $this->user           = \Mockery::spy(\PFUser::class);
-
-        ForgeConfig::store();
     }
 
     public function testItReturnsTrueWhenPlatformAllowRestricted(): void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
-        $this->user->shouldReceive('isRestricted')->andReturns(false);
+        $user = UserTestBuilder::anActiveUser()->build();
 
-        $this->assertTrue($this->status_checker->isRestrictedStatusAllowedForUser($this->user));
+        self::assertTrue($this->status_checker->isRestrictedStatusAllowedForUser($user));
     }
 
     public function testItReturnsTrueWhenUserIsRestricted(): void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
-        $this->user->shouldReceive('isRestricted')->andReturns(true);
+        $user = UserTestBuilder::aRestrictedUser()->build();
 
-        $this->assertTrue($this->status_checker->isRestrictedStatusAllowedForUser($this->user));
+        self::assertTrue($this->status_checker->isRestrictedStatusAllowedForUser($user));
     }
 
     public function testItReturnsFalseWhenUserIsSuperUser(): void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
-        $this->user->shouldReceive('isSuperUser')->andReturn(true);
-        $this->user->shouldReceive('isRestricted')->andReturns(false);
+        $user = UserTestBuilder::anActiveUser()->withSiteAdministrator()->build();
 
-        $this->assertFalse($this->status_checker->isRestrictedStatusAllowedForUser($this->user));
+        self::assertFalse($this->status_checker->isRestrictedStatusAllowedForUser($user));
     }
 
     public function testItReturnsTrueWhenUserIsSuperUserAndHeIsRestricted(): void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
-        $this->user->shouldReceive('isSuperUser')->andReturn(true);
-        $this->user->shouldReceive('isRestricted')->andReturns(true);
+        $user = UserTestBuilder::aRestrictedUser()->withSiteAdministrator()->build();
 
-        $this->assertTrue($this->status_checker->isRestrictedStatusAllowedForUser($this->user));
+        self::assertTrue($this->status_checker->isRestrictedStatusAllowedForUser($user));
     }
 
     public function testItReturnsFalseWhenUserIsNotRestrictedAndPlatformDontAllowRestricted(): void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
-        $this->user->shouldReceive('isRestricted')->andReturns(false);
+        $user = UserTestBuilder::anActiveUser()->build();
 
-        $this->assertFalse($this->status_checker->isRestrictedStatusAllowedForUser($this->user));
+        self::assertFalse($this->status_checker->isRestrictedStatusAllowedForUser($user));
     }
 }
