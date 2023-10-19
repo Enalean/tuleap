@@ -66,5 +66,5 @@ defineProps<{ is_sidebar_collapsed: boolean }>();
 
 const config = strictInject(SIDEBAR_CONFIGURATION);
 
-const sanitized_admin_link = computed(() => sanitizeURL(config.value.project.administration_href));
+const sanitized_admin_link = computed(() => sanitizeURL(config.project.administration_href));
 </script>

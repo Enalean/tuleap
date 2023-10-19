@@ -25,14 +25,13 @@ import { shallowMount } from "@vue/test-utils";
 import { example_config } from "../project-sidebar-example-config";
 import ToolList from "./ToolList.vue";
 import ToolPresenter from "./ToolPresenter.vue";
-import { ref } from "vue";
 import * as strict_inject from "@tuleap/vue-strict-inject";
 
 vi.mock("@tuleap/vue-strict-inject");
 
 describe("ToolList", () => {
     it("displays all the tools", () => {
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(example_config));
+        vi.spyOn(strict_inject, "strictInject").mockReturnValue(example_config);
         const wrapper = shallowMount(ToolList);
 
         const tools = wrapper.findAllComponents(ToolPresenter);

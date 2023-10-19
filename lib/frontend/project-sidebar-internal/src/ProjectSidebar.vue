@@ -81,7 +81,9 @@ const can_sidebar_be_collapsed = readonly(
 
 const is_sidebar_collapsed = ref(can_sidebar_be_collapsed.value && (props.collapsed ?? false));
 
-provide(SIDEBAR_CONFIGURATION, sidebar_configuration);
+if (sidebar_configuration.value !== undefined) {
+    provide(SIDEBAR_CONFIGURATION, sidebar_configuration.value);
+}
 const emit = defineEmits<{
     (e: "show-project-announcement"): void;
     (e: "sidebar-collapsed"): void;

@@ -33,7 +33,7 @@
     "pretty-kibibytes": "^4.0.4",
     "sprintf-js": "^1.1.2",
     "tus-js-client": "^3.1.0",
-    "vue": "^3.2.47",
+    "vue": "^3.3.4",
     "vue-dompurify-html": "^4.0.0",
     "vue-router": "^4.1.6",
     "vue3-gettext": "2.4.0",

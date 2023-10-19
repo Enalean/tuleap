@@ -53,7 +53,7 @@ export async function init(mount_point: HTMLElement): Promise<void> {
             CURRENT_USER_ID,
             Number.parseInt(getDatasetItemOrThrow(document.body, "userId"), 10),
         )
-        .provide(PROJECT_ID, project_id)
+        .provide(PROJECT_ID, Number.parseInt(project_id, 10))
         .provide(CURRENT_USER_AVATAR_URL, getDatasetItemOrThrow(mount_point, "userAvatarUrl"))
         .provide(
             USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
