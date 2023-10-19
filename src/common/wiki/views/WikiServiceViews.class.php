@@ -41,21 +41,21 @@ class WikiServiceViews extends WikiViews
         parent::WikiView($controler, $id, $view);
         $pm = ProjectManager::instance();
         if (isset($_REQUEST['pagename']) && ! is_null($_REQUEST['pagename'])) {
-            $this->html_params['title'] = $GLOBALS['Language']->getText(
+            $this->title    = $GLOBALS['Language']->getText(
                 'wiki_views_wikiserviceviews',
                 'wiki_page_title',
                 [ $this->purifier->purify($_REQUEST['pagename'], CODENDI_PURIFIER_CONVERT_HTML) ,
                     $pm->getProject($this->gid)->getPublicName(),
                 ]
             );
-            $this->base_url             = '/wiki/index.php?group_id=' . $this->gid . '&pagename=' . urlencode($_REQUEST['pagename']);
+            $this->base_url = '/wiki/index.php?group_id=' . $this->gid . '&pagename=' . urlencode($_REQUEST['pagename']);
         } else {
-            $this->html_params['title'] = $GLOBALS['Language']->getText(
+            $this->title    = $GLOBALS['Language']->getText(
                 'wiki_views_wikiserviceviews',
                 'wiki_title',
                 [$pm->getProject($this->gid)->getPublicName()]
             );
-            $this->base_url             = '/wiki/index.php?group_id=' . $this->gid;
+            $this->base_url = '/wiki/index.php?group_id=' . $this->gid;
         }
         $GLOBALS['wiki_view'] = $this;
     }
@@ -235,13 +235,10 @@ class WikiServiceViews extends WikiViews
         return $href;
     }
 
-  /**
-   * header - public
-   */
-    public function header()
+    protected function addStylesheets(): void
     {
-        $this->html_params['stylesheet'][] = '/wiki/themes/Codendi/phpwiki.css';
-        parent::header();
+        $GLOBALS['Response']->addStylesheet('/wiki/themes/Codendi/phpwiki.css');
+        parent::addStylesheets();
     }
 
   /**

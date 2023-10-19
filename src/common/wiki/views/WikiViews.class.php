@@ -106,6 +106,7 @@ class WikiViews extends Views
     public string $wikiname;
     public string $wikiLink;
     public string $wikiAdminLink;
+    protected string $title;
 
   /**
    * WikiView - Constructor
@@ -117,7 +118,6 @@ class WikiViews extends Views
         $this->gid = (int) $id;
 
       // Parameters for HTML rendering
-        $this->html_params['toptab'] = 'wiki';
 
       // Wikize project name
         $pm             = ProjectManager::instance();
@@ -143,9 +143,7 @@ class WikiViews extends Views
    */
     public function header()
     {
-        $this->html_params['stylesheet'][] = '/wiki/themes/Codendi/phpwiki-codendi.css';
-        $this->html_params['service_name'] = 'wiki';
-        $this->html_params['project_id']   = $this->gid;
+        $this->addStylesheets();
 
         $GLOBALS['HTML']->addBreadcrumbs([
             [
@@ -155,8 +153,18 @@ class WikiViews extends Views
         ]);
 
         $project = ProjectManager::instance()->getProject($this->gid);
-        site_project_header($project, $this->html_params);
+        site_project_header(
+            $project,
+            \Tuleap\Layout\HeaderConfigurationBuilder::get($this->title)
+                ->inProject($project, Service::WIKI)
+                ->build()
+        );
         $this->displayMenu();
+    }
+
+    protected function addStylesheets(): void
+    {
+        $GLOBALS['Response']->addStylesheet('/wiki/themes/Codendi/phpwiki-codendi.css');
     }
 
     /**
