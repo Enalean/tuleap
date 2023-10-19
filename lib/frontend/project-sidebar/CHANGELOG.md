@@ -1,16 +1,15 @@
 # Changelog
 
-## In development
+## 2.4.0
 
 * 🚸 In order to not clutter the sidebar when the number of linked projects is too big,
   a new configuration variable is added: `project.linked_projects.nb_max_projects_before_popover`.
-  When the number of linked projects exceed this limit, then they are no more displayed in the sidebar,
-  only in the popover on hover. Default is `5`.
+  When the number of linked projects exceeds this limit, then they are no more displayed in the sidebar,
+  only in the popover on click. Default is `5`.
 * 🐛 Linked projects displayed in the popover are now clickable links
 * 🐛 fix broken style for arrow on linked projects popover
+* 🐛 fix broken links in README
 * ⬆️ Bump vue: 3.2.37 -> 3.3.4
-* Projects popover is now opened on click instead of on hover,
-  it will ease linked project access when there are many of them
 
 ## 2.3.0
 
