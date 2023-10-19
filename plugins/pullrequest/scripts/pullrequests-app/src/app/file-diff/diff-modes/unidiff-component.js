@@ -25,10 +25,7 @@ import { PullRequestPresenterBuilder } from "../../comments/PullRequestPresenter
 import { NewInlineCommentContextBuilder } from "../../comments/new-comment-form/NewInlineCommentContextBuilder";
 
 import "../editors/modes.ts";
-import {
-    PullRequestCommentController,
-    PullRequestCommentNewReplySaver,
-} from "@tuleap/plugin-pullrequest-comments";
+import { PullRequestCommentController, NewReplySaver } from "@tuleap/plugin-pullrequest-comments";
 
 import {
     INLINE_COMMENT_POSITION_RIGHT,
@@ -68,7 +65,7 @@ function controller($element, $scope, SharedPropertiesService) {
             document,
             PullRequestCommentController(
                 getStore(),
-                PullRequestCommentNewReplySaver(),
+                NewReplySaver(),
                 PullRequestCurrentUserPresenterBuilder.fromUserInfo(
                     SharedPropertiesService.getUserId(),
                     SharedPropertiesService.getUserAvatarUrl(),

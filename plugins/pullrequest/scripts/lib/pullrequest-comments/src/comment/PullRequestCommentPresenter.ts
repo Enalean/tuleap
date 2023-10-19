@@ -48,9 +48,13 @@ export interface CommonComment {
     color: string;
 }
 
-export interface PullRequestGlobalCommentPresenter extends CommonComment {
-    readonly type: GlobalCommentType | PullRequestActionEventType;
-}
+export type PullRequestGlobalCommentPresenter = CommonComment & {
+    readonly type: GlobalCommentType;
+};
+
+export type PullRequestEventCommentPresenter = CommonComment & {
+    readonly type: PullRequestActionEventType;
+};
 
 export interface PullRequestInlineCommentPresenter extends CommonComment {
     readonly type: InlineCommentType;
@@ -60,7 +64,8 @@ export interface PullRequestInlineCommentPresenter extends CommonComment {
 
 export type PullRequestCommentPresenter =
     | PullRequestGlobalCommentPresenter
-    | PullRequestInlineCommentPresenter;
+    | PullRequestInlineCommentPresenter
+    | PullRequestEventCommentPresenter;
 
 export const PullRequestCommentPresenter = {
     fromCommentReply: (

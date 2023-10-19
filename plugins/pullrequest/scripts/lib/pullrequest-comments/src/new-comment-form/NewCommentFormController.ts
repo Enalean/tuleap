@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { SaveNewComment } from "./NewCommentSaver";
+import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { PullRequestCommentErrorCallback, WritingZoneInteractionsHandler } from "../types";
 import type { NewCommentForm } from "./NewCommentForm";
-import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-types";
-import type { NewCommentFormAuthorPresenter } from "./NewCommentFormPresenter";
 import { NewCommentFormPresenter } from "./NewCommentFormPresenter";
+import type { NewCommentFormAuthorPresenter } from "./NewCommentFormPresenter";
+import type { CommentContext, SaveComment } from "./types";
 
 export interface NewCommentFormComponentConfig {
     readonly is_cancel_allowed: boolean;
@@ -32,7 +32,7 @@ export interface NewCommentFormComponentConfig {
 
 export type ControlNewCommentForm = WritingZoneInteractionsHandler<NewCommentForm> & {
     buildInitialPresenter: (host: NewCommentForm) => void;
-    saveNewComment: (host: NewCommentForm) => void;
+    saveNewComment: (host: NewCommentForm) => Promise<void>;
     cancelNewComment: (host: NewCommentForm) => void;
     triggerPostSubmitCallback: NewCommentPostSubmitCallback;
     shouldFocusWritingZoneOnceRendered: () => boolean;
@@ -43,9 +43,10 @@ export type NewCommentCancelCallback = () => void;
 export type NewCommentPostSubmitCallback = (new_comment_payload: PullRequestComment) => void;
 
 export const NewCommentFormController = (
-    comment_saver: SaveNewComment,
+    comment_saver: SaveComment,
     author: NewCommentFormAuthorPresenter,
     config: NewCommentFormComponentConfig,
+    comment_creation_context: CommentContext,
     post_submit_callback: NewCommentPostSubmitCallback,
     on_error_callback: PullRequestCommentErrorCallback,
     on_cancel_callback?: NewCommentCancelCallback,
@@ -57,10 +58,10 @@ export const NewCommentFormController = (
         host.presenter = NewCommentFormPresenter.buildFromAuthor(author, config);
         on_cancel_callback?.();
     },
-    saveNewComment: (host: NewCommentForm): void => {
-        host.presenter = NewCommentFormPresenter.buildSavingComment(host.presenter);
+    saveNewComment: (host: NewCommentForm): Promise<void> => {
+        host.presenter = NewCommentFormPresenter.buildSubmitted(host.presenter);
 
-        comment_saver.postComment(host.presenter.comment).match(
+        return comment_saver.saveComment(host.presenter, comment_creation_context).match(
             (payload: PullRequestComment) => {
                 post_submit_callback(payload);
 
@@ -68,16 +69,13 @@ export const NewCommentFormController = (
                 host.presenter = NewCommentFormPresenter.buildFromAuthor(author, config);
             },
             (fault) => {
-                host.presenter = NewCommentFormPresenter.buildNotSavingComment(host.presenter);
+                host.presenter = NewCommentFormPresenter.buildNotSubmitted(host.presenter);
                 on_error_callback(fault);
             },
         );
     },
     handleWritingZoneContentChange: (host: NewCommentForm, new_comment: string): void => {
-        host.presenter = NewCommentFormPresenter.buildWithUpdatedComment(
-            host.presenter,
-            new_comment,
-        );
+        host.presenter = NewCommentFormPresenter.updateContent(host.presenter, new_comment);
     },
     triggerPostSubmitCallback: (new_comment_payload: PullRequestComment): void => {
         /**

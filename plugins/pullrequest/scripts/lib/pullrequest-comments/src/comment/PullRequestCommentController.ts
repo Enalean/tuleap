@@ -18,90 +18,43 @@
  */
 
 import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-types";
-import type { PullRequestCommentComponentType } from "./PullRequestComment";
-import type { StorePullRequestCommentReplies } from "./PullRequestCommentRepliesStore";
-import type { SaveNewReplyToComment } from "./PullRequestCommentReplySaver";
-import { ReplyCommentFormPresenter } from "./ReplyCommentFormPresenter";
-import { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
-import type {
-    CurrentPullRequestUserPresenter,
-    PullRequestCommentErrorCallback,
-    WritingZoneInteractionsHandler,
-} from "../types";
-import type { PullRequestPresenter } from "./PullRequestPresenter";
+import type { CurrentPullRequestUserPresenter, PullRequestCommentErrorCallback } from "../types";
 import { RelativeDatesHelper } from "../helpers/relative-dates-helper";
 import type { HelpRelativeDatesDisplay } from "../helpers/relative-dates-helper";
+import type { ControlNewCommentForm } from "../new-comment-form/NewCommentFormController";
+import { NewCommentFormController } from "../new-comment-form/NewCommentFormController";
+import type { SaveComment } from "../new-comment-form/types";
 import type { ControlPullRequestCommentReply } from "./comment-reply/PullRequestCommentReplyController";
 import { PullRequestCommentReplyController } from "./comment-reply/PullRequestCommentReplyController";
+import type { PullRequestCommentComponentType } from "./PullRequestComment";
+import type { StorePullRequestCommentReplies } from "./PullRequestCommentRepliesStore";
+import { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
+import type { PullRequestPresenter } from "./PullRequestPresenter";
+import { ReplyContext } from "./ReplyContext";
 
-export type ControlPullRequestComment =
-    WritingZoneInteractionsHandler<PullRequestCommentComponentType> & {
-        showReplyForm: (host: PullRequestCommentComponentType) => void;
-        hideReplyForm: (host: PullRequestCommentComponentType) => void;
-        displayReplies: (host: PullRequestCommentComponentType) => void;
-        saveReply: (host: PullRequestCommentComponentType) => void;
-        getRelativeDateHelper: () => HelpRelativeDatesDisplay;
-        buildReplyController: () => ControlPullRequestCommentReply;
-        getProjectId: () => number;
-        getCurrentUserId: () => number;
-    };
+export type ControlPullRequestComment = {
+    showReplyForm(host: PullRequestCommentComponentType): void;
+    hideReplyForm(host: PullRequestCommentComponentType): void;
+    displayReplies(host: PullRequestCommentComponentType): void;
+    getRelativeDateHelper(): HelpRelativeDatesDisplay;
+    buildReplyController(): ControlPullRequestCommentReply;
+    buildReplyCreationController(host: PullRequestCommentComponentType): ControlNewCommentForm;
+    getProjectId(): number;
+    getCurrentUserId(): number;
+};
 
 export const PullRequestCommentController = (
     replies_store: StorePullRequestCommentReplies,
-    new_comment_saver: SaveNewReplyToComment,
+    save_reply: SaveComment,
     current_user: CurrentPullRequestUserPresenter,
     current_pull_request: PullRequestPresenter,
     on_error_callback?: PullRequestCommentErrorCallback,
 ): ControlPullRequestComment => ({
     showReplyForm: (host: PullRequestCommentComponentType): void => {
-        host.reply_comment_presenter = ReplyCommentFormPresenter.buildEmpty(
-            current_user,
-            current_pull_request,
-        );
+        host.is_reply_form_shown = true;
     },
     hideReplyForm: (host: PullRequestCommentComponentType): void => {
-        host.reply_comment_presenter = null;
-    },
-    handleWritingZoneContentChange: (
-        host: PullRequestCommentComponentType,
-        reply_content: string,
-    ): void => {
-        const comment_reply = getExistingCommentReplyPresenter(host);
-        host.reply_comment_presenter = ReplyCommentFormPresenter.updateContent(
-            comment_reply,
-            reply_content,
-        );
-    },
-    saveReply: (host: PullRequestCommentComponentType): void => {
-        host.reply_comment_presenter = ReplyCommentFormPresenter.buildSubmitted(
-            getExistingCommentReplyPresenter(host),
-        );
-
-        new_comment_saver.saveReply(host.comment, host.reply_comment_presenter).match(
-            (comment_payload: PullRequestComment) => {
-                host.reply_comment_presenter = null;
-
-                replies_store.addReplyToComment(
-                    host.comment,
-                    PullRequestCommentPresenter.fromCommentReply(host.comment, comment_payload),
-                );
-
-                host.replies = replies_store.getCommentReplies(host.comment);
-                host.comment.color = comment_payload.color;
-            },
-            (fault) => {
-                host.reply_comment_presenter = ReplyCommentFormPresenter.buildNotSubmitted(
-                    getExistingCommentReplyPresenter(host),
-                );
-
-                if (on_error_callback) {
-                    on_error_callback(fault);
-                    return;
-                }
-                // eslint-disable-next-line no-console
-                console.error(String(fault));
-            },
-        );
+        host.is_reply_form_shown = false;
     },
     displayReplies: (host: PullRequestCommentComponentType): void => {
         host.replies = replies_store.getCommentReplies(host.comment);
@@ -116,21 +69,44 @@ export const PullRequestCommentController = (
     buildReplyController: (): ControlPullRequestCommentReply =>
         PullRequestCommentReplyController(current_user, current_pull_request),
 
-    shouldFocusWritingZoneOnceRendered: () => true,
+    buildReplyCreationController: (
+        host: PullRequestCommentComponentType,
+    ): ControlNewCommentForm => {
+        return NewCommentFormController(
+            save_reply,
+            current_user,
+            {
+                is_cancel_allowed: true,
+                project_id: current_pull_request.project_id,
+                is_autofocus_enabled: true,
+            },
+            ReplyContext.fromComment(host.comment, current_user, current_pull_request),
+            (comment_payload: PullRequestComment) => {
+                host.is_reply_form_shown = false;
+
+                replies_store.addReplyToComment(
+                    host.comment,
+                    PullRequestCommentPresenter.fromCommentReply(host.comment, comment_payload),
+                );
+
+                host.replies = replies_store.getCommentReplies(host.comment);
+                host.comment.color = comment_payload.color;
+            },
+            (fault) => {
+                if (on_error_callback) {
+                    on_error_callback(fault);
+                    return;
+                }
+                // eslint-disable-next-line no-console
+                console.error(String(fault));
+            },
+            () => {
+                host.is_reply_form_shown = false;
+            },
+        );
+    },
 
     getProjectId: () => current_pull_request.project_id,
 
     getCurrentUserId: (): number => current_user.user_id,
 });
-
-function getExistingCommentReplyPresenter(
-    host: PullRequestCommentComponentType,
-): ReplyCommentFormPresenter {
-    const comment_reply = host.reply_comment_presenter;
-    if (comment_reply === null) {
-        throw new Error(
-            "Attempting to get the new comment being created while none has been created.",
-        );
-    }
-    return comment_reply;
-}

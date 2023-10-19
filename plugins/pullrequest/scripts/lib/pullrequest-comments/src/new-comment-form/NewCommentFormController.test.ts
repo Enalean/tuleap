@@ -21,13 +21,13 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { Fault } from "@tuleap/fault";
 import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { TYPE_GLOBAL_COMMENT } from "@tuleap/plugin-pullrequest-constants";
-
 import type { PullRequestCommentErrorCallback } from "../types";
-import { SaveNewCommentStub } from "../../tests/stubs/SaveNewCommentStub";
-
+import { SaveCommentStub } from "../../tests/stubs/SaveCommentStub";
+import { NewCommentFormComponentConfigStub } from "../../tests/stubs/NewCommentFormComponentConfigStub";
+import type { ControlWritingZone } from "../writing-zone/WritingZoneController";
 import { NewCommentFormPresenter } from "./NewCommentFormPresenter";
 import { NewCommentFormController } from "./NewCommentFormController";
-import type { SaveNewComment } from "./NewCommentSaver";
+import type { SaveComment, CommentContext } from "./types";
 import type { NewCommentForm } from "./NewCommentForm";
 import type {
     ControlNewCommentForm,
@@ -35,8 +35,6 @@ import type {
     NewCommentFormComponentConfig,
     NewCommentPostSubmitCallback,
 } from "./NewCommentFormController";
-import { NewCommentFormComponentConfigStub } from "../../tests/stubs/NewCommentFormComponentConfigStub";
-import type { ControlWritingZone } from "../writing-zone/WritingZoneController";
 
 const author = { avatar_url: "url/to/user_avatar.png" };
 
@@ -48,12 +46,13 @@ describe("NewCommentFormController", () => {
         host_content: HTMLElement;
 
     const getController = (
-        new_comment_saver: SaveNewComment = SaveNewCommentStub.withDefault(),
+        new_comment_saver: SaveComment = SaveCommentStub.withDefault(),
     ): ControlNewCommentForm =>
         NewCommentFormController(
             new_comment_saver,
             author,
             config,
+            {} as CommentContext,
             post_submit_callback,
             on_error_callback,
             on_cancel_callback,
@@ -110,7 +109,7 @@ describe("NewCommentFormController", () => {
             getController().handleWritingZoneContentChange(host, new_comment);
 
             expect(host.presenter).toStrictEqual(
-                NewCommentFormPresenter.buildWithUpdatedComment(getEmptyPresenter(), new_comment),
+                NewCommentFormPresenter.updateContent(getEmptyPresenter(), new_comment),
             );
         });
     });
@@ -121,7 +120,7 @@ describe("NewCommentFormController", () => {
             And reset the WritingZone + the presenter`, async () => {
             const comment_content = "This is what I have to say";
             const host = {
-                presenter: NewCommentFormPresenter.buildWithUpdatedComment(
+                presenter: NewCommentFormPresenter.updateContent(
                     getEmptyPresenter(),
                     comment_content,
                 ),
@@ -131,7 +130,7 @@ describe("NewCommentFormController", () => {
                 } as unknown as ControlWritingZone,
             } as NewCommentForm;
 
-            const comment_saver = SaveNewCommentStub.withResponsePayload({
+            const comment_saver = SaveCommentStub.withResponsePayload({
                 id: 15,
                 type: TYPE_GLOBAL_COMMENT,
                 content: comment_content,
@@ -146,7 +145,7 @@ describe("NewCommentFormController", () => {
 
         it(`When the comment is saved with error
             Then it should call the on_error_callback with the Fault`, async () => {
-            const presenter = NewCommentFormPresenter.buildWithUpdatedComment(
+            const presenter = NewCommentFormPresenter.updateContent(
                 getEmptyPresenter(),
                 "This is a comment",
             );
@@ -155,14 +154,12 @@ describe("NewCommentFormController", () => {
             } as NewCommentForm;
             const tuleap_api_fault = Fault.fromMessage("Forbidden");
 
-            await getController(SaveNewCommentStub.withFault(tuleap_api_fault)).saveNewComment(
-                host,
-            );
+            await getController(SaveCommentStub.withFault(tuleap_api_fault)).saveNewComment(host);
 
             expect(on_error_callback).toHaveBeenCalledOnce();
             expect(on_error_callback).toHaveBeenCalledWith(tuleap_api_fault);
             expect(host.presenter).toStrictEqual(
-                NewCommentFormPresenter.buildNotSavingComment(presenter),
+                NewCommentFormPresenter.buildNotSubmitted(presenter),
             );
         });
     });

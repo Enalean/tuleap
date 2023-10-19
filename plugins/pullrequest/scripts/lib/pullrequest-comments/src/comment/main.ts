@@ -22,7 +22,6 @@ export {
     PullRequestCommentComponent,
     PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME,
 } from "./PullRequestComment";
-export { PullRequestCommentNewReplySaver } from "./PullRequestCommentReplySaver";
 export { PullRequestCommentController } from "./PullRequestCommentController";
 export { PullRequestCommentRepliesStore } from "./PullRequestCommentRepliesStore";
 

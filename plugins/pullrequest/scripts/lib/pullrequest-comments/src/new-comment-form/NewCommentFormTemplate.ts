@@ -29,7 +29,6 @@ export const getSubmitButton = (
     host: NewCommentForm,
     gettext_provider: GettextProvider,
 ): UpdateFunction<NewCommentForm> => {
-    const is_disabled = host.presenter.is_saving_comment || host.presenter.comment.length === 0;
     const onClickSave = (): void => {
         host.controller.saveNewComment(host);
     };
@@ -37,12 +36,12 @@ export const getSubmitButton = (
     return html`
         <button
             class="pull-request-comment-footer-action-button tlp-button-small tlp-button-primary"
-            disabled="${is_disabled}"
+            disabled="${!host.presenter.is_submittable || host.presenter.is_being_submitted}"
             onclick="${onClickSave}"
             data-test="submit-new-comment-button"
         >
             ${gettext_provider.gettext("Comment")}
-            ${host.presenter.is_saving_comment &&
+            ${host.presenter.is_being_submitted &&
             html`
                 <i
                     class="fa-solid fa-circle-notch fa-spin tlp-button-icon-right"
@@ -70,7 +69,7 @@ export const getCancelButton = (
         <button
             type="button"
             class="pull-request-comment-footer-action-button tlp-button-small tlp-button-primary tlp-button-outline"
-            disabled="${host.presenter.is_saving_comment}"
+            disabled="${host.presenter.is_being_submitted}"
             onclick="${onClickCancel}"
             data-test="cancel-new-comment-button"
         >
@@ -84,7 +83,7 @@ export const getNewCommentFormContent = (
     gettext_provider: GettextProvider,
 ): UpdateFunction<NewCommentForm> => html`
     <div class="pull-request-comment pull-request-new-comment-component">
-        ${getCommentAvatarTemplate(host.presenter.author)}
+        ${getCommentAvatarTemplate(host.presenter.comment_author)}
         <div class="pull-request-comment-content" data-test="new-comment-form-content">
             ${host.writing_zone}
             <div class="pull-request-comment-footer" data-test="pull-request-comment-footer">

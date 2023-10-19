@@ -79,7 +79,7 @@ import OverviewNewCommentForm from "./OverviewNewCommentForm.vue";
 import {
     PullRequestCommentController,
     PullRequestCommentRepliesStore,
-    PullRequestCommentNewReplySaver,
+    NewReplySaver,
     PullRequestDescriptionCommentSaver,
     PullRequestDescriptionCommentController,
 } from "@tuleap/plugin-pullrequest-comments";
@@ -186,7 +186,7 @@ watch(
 
                 comments_controller.value = PullRequestCommentController(
                     replies_store.value,
-                    PullRequestCommentNewReplySaver(),
+                    NewReplySaver(),
                     current_user_presenter.value,
                     current_pull_request_presenter.value,
                     displayTuleapAPIFault,

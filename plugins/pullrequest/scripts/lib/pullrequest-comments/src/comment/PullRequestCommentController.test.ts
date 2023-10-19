@@ -27,35 +27,54 @@ import type { HostElement, PullRequestCommentComponentType } from "./PullRequest
 import type { ControlPullRequestComment } from "./PullRequestCommentController";
 import { PullRequestCommentController } from "./PullRequestCommentController";
 import type { StorePullRequestCommentReplies } from "./PullRequestCommentRepliesStore";
-import { SaveNewReplyToCommentStub } from "../../tests/stubs/SaveNewReplyToCommentStub";
+import { SaveCommentStub } from "../../tests/stubs/SaveCommentStub";
 import { CurrentPullRequestUserPresenterStub } from "../../tests/stubs/CurrentPullRequestUserPresenterStub";
 import { PullRequestCommentPresenterStub } from "../../tests/stubs/PullRequestCommentPresenterStub";
-import { ReplyCommentFormPresenterStub } from "../../tests/stubs/ReplyCommentFormPresenterStub";
+import { NewCommentFormPresenterStub } from "../../tests/stubs/NewCommentFormPresenterStub";
 import { PullRequestCommentRepliesCollectionPresenter } from "./PullRequestCommentRepliesCollectionPresenter";
 import { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 import { PullRequestCommentRepliesStore } from "./PullRequestCommentRepliesStore";
 import { CurrentPullRequestPresenterStub } from "../../tests/stubs/CurrentPullRequestPresenterStub";
-import type { SaveNewReplyToComment } from "./PullRequestCommentReplySaver";
-import type { PullRequestCommentErrorCallback } from "../types";
-import { ReplyCommentFormPresenter } from "./ReplyCommentFormPresenter";
+import type { SaveComment } from "../new-comment-form/types";
+import type { HostElement as NewCommentFormElement } from "../new-comment-form/NewCommentForm";
+import type { ControlWritingZone } from "../writing-zone/WritingZoneController";
+import type { CurrentPullRequestUserPresenter, PullRequestCommentErrorCallback } from "../types";
+import type { PullRequestPresenter } from "./PullRequestPresenter";
 
 describe("PullRequestCommentController", () => {
     let replies_store: StorePullRequestCommentReplies,
-        on_error_callback: PullRequestCommentErrorCallback;
+        on_error_callback: PullRequestCommentErrorCallback,
+        current_pull_request: PullRequestPresenter,
+        current_user: CurrentPullRequestUserPresenter;
 
     beforeEach(() => {
         replies_store = PullRequestCommentRepliesStore([]);
         on_error_callback = vi.fn();
+        current_pull_request = CurrentPullRequestPresenterStub.withDefault();
+        current_user = CurrentPullRequestUserPresenterStub.withDefault();
     });
 
-    const getController = (save_new_comment: SaveNewReplyToComment): ControlPullRequestComment =>
+    const getController = (save_reply: SaveComment): ControlPullRequestComment =>
         PullRequestCommentController(
             replies_store,
-            save_new_comment,
-            CurrentPullRequestUserPresenterStub.withDefault(),
-            CurrentPullRequestPresenterStub.withDefault(),
+            save_reply,
+            current_user,
+            current_pull_request,
             on_error_callback,
         );
+
+    const saveReply = (host: HostElement, save_reply: SaveComment): Promise<void> => {
+        const reply_creation_controller =
+            getController(save_reply).buildReplyCreationController(host);
+        return reply_creation_controller.saveNewComment({
+            presenter: NewCommentFormPresenterStub.buildWithContent("Please don't"),
+            writing_zone_controller: {
+                resetWritingZone: () => {
+                    // Do nothing,
+                },
+            } as unknown as ControlWritingZone,
+        } as NewCommentFormElement);
+    };
 
     it("should show the reply to comment form and sets the focus on the textarea", () => {
         const content = document.implementation.createHTMLDocument().createElement("div");
@@ -64,9 +83,9 @@ describe("PullRequestCommentController", () => {
             content: () => content,
         } as unknown as HostElement;
 
-        getController(SaveNewReplyToCommentStub.withDefault()).showReplyForm(host);
+        getController(SaveCommentStub.withDefault()).showReplyForm(host);
 
-        expect(host.reply_comment_presenter).not.toBeNull();
+        expect(host.is_reply_form_shown).toBe(true);
     });
 
     it("should hide the reply to comment form", () => {
@@ -74,30 +93,16 @@ describe("PullRequestCommentController", () => {
             comment: PullRequestCommentPresenterStub.buildGlobalComment(),
         } as unknown as PullRequestCommentComponentType;
 
-        getController(SaveNewReplyToCommentStub.withDefault()).hideReplyForm(host);
+        getController(SaveCommentStub.withDefault()).hideReplyForm(host);
 
-        expect(host.reply_comment_presenter).toBeNull();
+        expect(host.is_reply_form_shown).toBe(false);
     });
 
-    it("Should update the host reply_comment_presenter content when handleWritingZoneContentChange is called", () => {
-        const host = {
-            comment: PullRequestCommentPresenterStub.buildGlobalComment(),
-            reply_comment_presenter: ReplyCommentFormPresenterStub.buildEmpty(),
-        } as unknown as HostElement;
-
-        getController(SaveNewReplyToCommentStub.withDefault()).handleWritingZoneContentChange(
-            host,
-            "Please rebase",
-        );
-
-        expect(host.reply_comment_presenter?.comment_content).toBe("Please rebase");
-    });
-
-    it("Should save the new comment, hide the form and add the new comment reply in the collection of replies", async () => {
+    it("When a reply has been created, then it should hide the form and add the new comment reply to the collection of replies", async () => {
         const comment = PullRequestCommentPresenterStub.buildGlobalComment();
         const host = {
             comment,
-            reply_comment_presenter: ReplyCommentFormPresenterStub.buildWithContent("Please don't"),
+            is_reply_form_shown: true,
             replies: PullRequestCommentRepliesCollectionPresenter.fromReplies([]),
             post_reply_save_callback: vi.fn(),
         } as unknown as HostElement;
@@ -107,16 +112,10 @@ describe("PullRequestCommentController", () => {
             type: TYPE_GLOBAL_COMMENT,
             content: "Please don't",
         } as PullRequestComment;
-        const new_comment_saver =
-            SaveNewReplyToCommentStub.withResponsePayload(new_comment_reply_payload);
 
-        await getController(new_comment_saver).saveReply(host);
+        await saveReply(host, SaveCommentStub.withResponsePayload(new_comment_reply_payload));
 
-        expect(new_comment_saver.getNbCalls()).toBe(1);
-        expect(new_comment_saver.getLastCallParams()).toStrictEqual(
-            ReplyCommentFormPresenterStub.buildBeingSubmitted("Please don't"),
-        );
-        expect(host.reply_comment_presenter).toBeNull();
+        expect(host.is_reply_form_shown).toBe(false);
         expect(host.replies).toStrictEqual([
             PullRequestCommentPresenter.fromCommentReply(comment, new_comment_reply_payload),
         ]);
@@ -131,19 +130,17 @@ describe("PullRequestCommentController", () => {
             content: "Please don't",
             color: "flamingo-pink",
         } as PullRequestComment;
-        const new_comment_saver =
-            SaveNewReplyToCommentStub.withResponsePayload(new_comment_reply_payload);
 
         const host = {
             comment: PullRequestCommentPresenterStub.buildGlobalComment(),
-            reply_comment_presenter: ReplyCommentFormPresenterStub.buildWithContent("Please don't"),
+            reply_comment_presenter: NewCommentFormPresenterStub.buildWithContent("Please don't"),
             replies: PullRequestCommentRepliesCollectionPresenter.fromReplies([]),
             post_reply_save_callback: vi.fn(),
         } as unknown as HostElement;
 
-        await getController(new_comment_saver).saveReply(host);
+        await saveReply(host, SaveCommentStub.withResponsePayload(new_comment_reply_payload));
 
-        expect(host.reply_comment_presenter).toBeNull();
+        expect(host.is_reply_form_shown).toBe(false);
         expect(host.comment.color).toBe("flamingo-pink");
     });
 
@@ -167,35 +164,31 @@ describe("PullRequestCommentController", () => {
             }),
         ]);
 
-        getController(SaveNewReplyToCommentStub.withDefault()).displayReplies(host);
+        getController(SaveCommentStub.withDefault()).displayReplies(host);
 
         expect(host.replies).toHaveLength(3);
     });
 
     it("should trigger the on_error_callback when it is defined and an error occurred while saving a reply", async () => {
         const tuleap_api_fault = Fault.fromMessage("You cannot");
-        const save_new_comment = SaveNewReplyToCommentStub.withFault(tuleap_api_fault);
-        const reply_comment_presenter =
-            ReplyCommentFormPresenterStub.buildWithContent("Please don't");
-        const comment = PullRequestCommentPresenterStub.buildGlobalComment();
-        const host = {
-            comment,
-            reply_comment_presenter,
-        } as unknown as HostElement;
 
-        await getController(save_new_comment).saveReply(host);
+        await saveReply(
+            {
+                comment: PullRequestCommentPresenterStub.buildGlobalComment(),
+                reply_comment_presenter:
+                    NewCommentFormPresenterStub.buildWithContent("Please don't"),
+            } as unknown as HostElement,
+            SaveCommentStub.withFault(tuleap_api_fault),
+        );
 
         expect(on_error_callback).toHaveBeenCalledWith(tuleap_api_fault);
-        expect(host.reply_comment_presenter).toStrictEqual(
-            ReplyCommentFormPresenter.buildNotSubmitted(reply_comment_presenter),
-        );
     });
 
     it("getProjectId() should return the current project id", () => {
-        expect(getController(SaveNewReplyToCommentStub.withDefault()).getProjectId()).toBe(105);
+        expect(getController(SaveCommentStub.withDefault()).getProjectId()).toBe(105);
     });
 
     it("getCurrentUserId() should return the current user id", () => {
-        expect(getController(SaveNewReplyToCommentStub.withDefault()).getCurrentUserId()).toBe(104);
+        expect(getController(SaveCommentStub.withDefault()).getCurrentUserId()).toBe(104);
     });
 });

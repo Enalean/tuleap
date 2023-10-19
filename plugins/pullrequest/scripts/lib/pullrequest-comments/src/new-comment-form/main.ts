@@ -22,10 +22,10 @@ export {
     PULL_REQUEST_NEW_COMMENT_FORM_ELEMENT_TAG_NAME,
 } from "./NewCommentForm";
 
-export type { NewCommentFormAuthorPresenter } from "./NewCommentFormPresenter";
-
 export { NewCommentSaver } from "./NewCommentSaver";
-export type { InlineCommentContext, SaveNewComment } from "./NewCommentSaver";
+export { NewReplySaver } from "./NewReplySaver";
+
+export type { InlineCommentContext, CommentCreationContext, ReplyCreationContext } from "./types";
 
 export { NewCommentFormController } from "./NewCommentFormController";
 export type {

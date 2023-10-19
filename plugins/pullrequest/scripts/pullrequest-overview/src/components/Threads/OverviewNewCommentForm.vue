@@ -63,13 +63,14 @@ const post_submit_callback = (new_comment: PullRequestComment): void => {
 };
 
 const controller = NewCommentFormController(
-    NewCommentSaver({
+    NewCommentSaver(),
+    { avatar_url },
+    { is_cancel_allowed: false, is_autofocus_enabled: false, project_id },
+    {
         user_id,
         type: TYPE_GLOBAL_COMMENT,
         pull_request_id: pull_request_id,
-    }),
-    { avatar_url },
-    { is_cancel_allowed: false, is_autofocus_enabled: false, project_id },
+    },
     post_submit_callback,
     displayTuleapAPIFault,
 );

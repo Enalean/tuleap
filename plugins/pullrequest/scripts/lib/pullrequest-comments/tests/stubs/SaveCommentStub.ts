@@ -21,36 +21,39 @@ import { okAsync, errAsync } from "neverthrow";
 import type { ResultAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-types";
-import type { SaveNewComment } from "../../src/new-comment-form/NewCommentSaver";
+import type { SaveComment } from "../../src/new-comment-form/types";
+import type { NewCommentFormPresenter } from "../../src/new-comment-form/NewCommentFormPresenter";
 
-export type SaveNewCommentStub = SaveNewComment & {
-    getLastCallParams: () => string | undefined;
+export type SaveCommentStub = SaveComment & {
+    getLastCallParams: () => NewCommentFormPresenter | undefined;
 };
 
-export const SaveNewCommentStub = {
-    withResponsePayload: (payload: PullRequestComment): SaveNewCommentStub => {
-        let last_call_params: string | undefined = undefined;
+export const SaveCommentStub = {
+    withResponsePayload: (payload: PullRequestComment): SaveCommentStub => {
+        let last_call_params: NewCommentFormPresenter | undefined = undefined;
 
         return {
             getLastCallParams: () => last_call_params,
-            postComment: (content: string): ResultAsync<PullRequestComment, Fault> => {
-                last_call_params = content;
+            saveComment: (
+                new_comment: NewCommentFormPresenter,
+            ): ResultAsync<PullRequestComment, Fault> => {
+                last_call_params = new_comment;
 
                 return okAsync(payload);
             },
         };
     },
 
-    withDefault: (): SaveNewComment => ({
-        postComment: (): ResultAsync<PullRequestComment, Fault> =>
+    withDefault: (): SaveComment => ({
+        saveComment: (): ResultAsync<PullRequestComment, Fault> =>
             errAsync(
                 Fault.fromMessage(
-                    "SaveNewCommentStub::postComment was called while it's not configured",
+                    "SaveCommentStub::saveComment was called while it's not configured",
                 ),
             ),
     }),
 
-    withFault: (fault: Fault): SaveNewComment => ({
-        postComment: (): ResultAsync<PullRequestComment, Fault> => errAsync(fault),
+    withFault: (fault: Fault): SaveComment => ({
+        saveComment: (): ResultAsync<PullRequestComment, Fault> => errAsync(fault),
     }),
 };
