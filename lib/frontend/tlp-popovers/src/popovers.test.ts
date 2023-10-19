@@ -23,6 +23,7 @@ import { describe, it, beforeEach, afterEach, expect, vi } from "vitest";
 import type { Popover } from "./popovers";
 import {
     createPopover,
+    EVENT_POPOVER_FORCE_CLOSE,
     EVENT_TLP_POPOVER_HIDDEN,
     EVENT_TLP_POPOVER_SHOWN,
     POPOVER_SHOWN_CLASS_NAME,
@@ -38,6 +39,8 @@ vi.mock("@floating-ui/dom", async () => {
         computePosition: vi.fn(),
     };
 });
+
+vi.useFakeTimers();
 
 describe(`Popovers`, () => {
     let trigger_element: HTMLElement, content_element: HTMLElement;
@@ -441,6 +444,19 @@ describe(`Popovers`, () => {
         });
     });
 
+    describe(`force-close`, () => {
+        it(`when the popover receives a force-close event, it hides itself`, () => {
+            createPopover(doc, trigger_element, content_element);
+            content_element.classList.add(POPOVER_SHOWN_CLASS_NAME);
+
+            doc.dispatchEvent(new CustomEvent(EVENT_POPOVER_FORCE_CLOSE));
+
+            expect(content_element.classList.contains(POPOVER_SHOWN_CLASS_NAME)).toBe(false);
+            expect(dispatchEvent).toHaveBeenCalledOnce();
+            expect(getEventType(dispatchEvent)).toBe(EVENT_TLP_POPOVER_HIDDEN);
+        });
+    });
+
     describe(`with hover trigger`, () => {
         let popover: Popover;
         beforeEach(() => {
@@ -461,23 +477,12 @@ describe(`Popovers`, () => {
             });
 
             it(`will hide all shown popovers`, () => {
-                const { first_content, second_content, cleanup } =
-                    createOtherShownPopoverContents(doc);
-
-                const firstContentDispatchEvent = vi.spyOn(first_content, "dispatchEvent");
-                const secondContentDispatchEvent = vi.spyOn(second_content, "dispatchEvent");
+                const docDispatchEvent = vi.spyOn(doc, "dispatchEvent");
 
                 trigger_element.dispatchEvent(new MouseEvent("mouseover"));
-                expectThePopoverToBeHidden(first_content);
-                expectThePopoverToBeHidden(second_content);
 
-                expect(firstContentDispatchEvent).toHaveBeenCalledOnce();
-                expect(getEventType(firstContentDispatchEvent)).toBe(EVENT_TLP_POPOVER_HIDDEN);
-
-                expect(secondContentDispatchEvent).toHaveBeenCalledOnce();
-                expect(getEventType(secondContentDispatchEvent)).toBe(EVENT_TLP_POPOVER_HIDDEN);
-
-                cleanup();
+                expect(docDispatchEvent).toHaveBeenCalledOnce();
+                expect(getEventType(docDispatchEvent)).toBe(EVENT_POPOVER_FORCE_CLOSE);
             });
         });
 
@@ -486,32 +491,47 @@ describe(`Popovers`, () => {
                 trigger_element.dispatchEvent(new MouseEvent("mouseover"));
             });
 
-            it(`will hide the popover"`, () => {
+            it(`will hide the popover after a delay`, () => {
                 trigger_element.dispatchEvent(new MouseEvent("mouseout"));
+
+                vi.advanceTimersToNextTimer();
 
                 expectThePopoverToBeHidden(content_element);
 
                 expect(getEventType(dispatchEvent, 2)).toBe(EVENT_TLP_POPOVER_HIDDEN);
             });
 
-            it(`will hide all shown popovers`, () => {
-                const { first_content, second_content, cleanup } =
-                    createOtherShownPopoverContents(doc);
-
-                const firstContentDispatchEvent = vi.spyOn(first_content, "dispatchEvent");
-                const secondContentDispatchEvent = vi.spyOn(second_content, "dispatchEvent");
+            it(`will hide all shown popovers after a delay`, () => {
+                const docDispatchEvent = vi.spyOn(doc, "dispatchEvent");
 
                 trigger_element.dispatchEvent(new MouseEvent("mouseout"));
-                expectThePopoverToBeHidden(first_content);
-                expectThePopoverToBeHidden(second_content);
 
-                expect(firstContentDispatchEvent).toHaveBeenCalledOnce();
-                expect(getEventType(firstContentDispatchEvent)).toBe(EVENT_TLP_POPOVER_HIDDEN);
+                vi.advanceTimersToNextTimer();
 
-                expect(secondContentDispatchEvent).toHaveBeenCalledOnce();
-                expect(getEventType(secondContentDispatchEvent)).toBe(EVENT_TLP_POPOVER_HIDDEN);
+                expect(docDispatchEvent).toHaveBeenCalledOnce();
+                expect(getEventType(docDispatchEvent)).toBe(EVENT_POPOVER_FORCE_CLOSE);
+            });
 
-                cleanup();
+            describe("and I try to reach the popover content before the delay", () => {
+                beforeEach(() => {
+                    trigger_element.dispatchEvent(new MouseEvent("mouseout"));
+
+                    content_element.dispatchEvent(new MouseEvent("mouseenter"));
+
+                    vi.advanceTimersToNextTimer();
+                });
+
+                it(`should not hide the popover so I can interact with the popover content`, () => {
+                    expectThePopoverToBeShown(content_element);
+                });
+
+                it(`should hide the popover after a delay as soon as I leave the popover content`, () => {
+                    content_element.dispatchEvent(new MouseEvent("mouseleave"));
+
+                    vi.advanceTimersToNextTimer();
+
+                    expectThePopoverToBeHidden(content_element);
+                });
             });
         });
     });
@@ -547,23 +567,14 @@ describe(`Popovers`, () => {
                 });
 
                 it(`will hide all shown popovers`, () => {
-                    const { first_content, second_content, cleanup } =
-                        createOtherShownPopoverContents(doc);
-
-                    const firstContentDispatchEvent = vi.spyOn(first_content, "dispatchEvent");
-                    const secondContentDispatchEvent = vi.spyOn(second_content, "dispatchEvent");
+                    const docDispatchEvent = vi.spyOn(doc, "dispatchEvent");
 
                     trigger_element.dispatchEvent(new MouseEvent("click"));
-                    expectThePopoverToBeHidden(first_content);
-                    expectThePopoverToBeHidden(second_content);
 
-                    expect(firstContentDispatchEvent).toHaveBeenCalledOnce();
-                    expect(getEventType(firstContentDispatchEvent)).toBe(EVENT_TLP_POPOVER_HIDDEN);
+                    vi.advanceTimersToNextTimer();
 
-                    expect(secondContentDispatchEvent).toHaveBeenCalledOnce();
-                    expect(getEventType(secondContentDispatchEvent)).toBe(EVENT_TLP_POPOVER_HIDDEN);
-
-                    cleanup();
+                    expect(docDispatchEvent).toHaveBeenCalledOnce();
+                    expect(getEventType(docDispatchEvent)).toBe(EVENT_POPOVER_FORCE_CLOSE);
                 });
             });
 
@@ -584,25 +595,15 @@ describe(`Popovers`, () => {
                 });
 
                 it(`and it is shown, it will hide all shown popovers`, () => {
-                    const { first_content, second_content, cleanup } =
-                        createOtherShownPopoverContents(doc);
-
-                    const firstContentDispatchEvent = vi.spyOn(first_content, "dispatchEvent");
-                    const secondContentDispatchEvent = vi.spyOn(second_content, "dispatchEvent");
+                    const docDispatchEvent = vi.spyOn(doc, "dispatchEvent");
 
                     trigger_element.dispatchEvent(new MouseEvent("click"));
                     doc.body.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 
-                    expectThePopoverToBeHidden(first_content);
-                    expectThePopoverToBeHidden(second_content);
+                    vi.advanceTimersToNextTimer();
 
-                    expect(firstContentDispatchEvent).toHaveBeenCalledOnce();
-                    expect(getEventType(firstContentDispatchEvent)).toBe(EVENT_TLP_POPOVER_HIDDEN);
-
-                    expect(secondContentDispatchEvent).toHaveBeenCalledOnce();
-                    expect(getEventType(secondContentDispatchEvent)).toBe(EVENT_TLP_POPOVER_HIDDEN);
-
-                    cleanup();
+                    expect(docDispatchEvent).toHaveBeenCalledTimes(2);
+                    expect(getEventType(docDispatchEvent)).toBe(EVENT_POPOVER_FORCE_CLOSE);
                 });
             });
 
@@ -641,17 +642,17 @@ describe(`Popovers`, () => {
             const dismiss = doc.createElement("button");
             dismiss.dataset.dismiss = "popover";
             content_element.append(dismiss);
-            const { first_content, second_content, cleanup } = createOtherShownPopoverContents(doc);
             const popover = createPopover(doc, trigger_element, content_element, {
                 trigger: "click",
             });
+            const docDispatchEvent = vi.spyOn(doc, "dispatchEvent");
 
             dismiss.dispatchEvent(new MouseEvent("click"));
-            expectThePopoverToBeHidden(first_content);
-            expectThePopoverToBeHidden(second_content);
+
+            expect(docDispatchEvent).toHaveBeenCalledOnce();
+            expect(getEventType(docDispatchEvent)).toBe(EVENT_POPOVER_FORCE_CLOSE);
 
             popover.destroy();
-            cleanup();
             dismiss.remove();
         });
     });
@@ -667,26 +668,6 @@ function expectThePopoverToBeShown(content_element: HTMLElement): void {
 
 function expectThePopoverToBeHidden(content_element: HTMLElement): void {
     expect(content_element.classList.contains(POPOVER_SHOWN_CLASS_NAME)).toBe(false);
-}
-
-interface OtherShownPopovers {
-    first_content: HTMLElement;
-    second_content: HTMLElement;
-    cleanup: () => void;
-}
-
-function createOtherShownPopoverContents(doc: Document): OtherShownPopovers {
-    const first_content = doc.createElement("div");
-    const second_content = doc.createElement("div");
-    first_content.classList.add(POPOVER_SHOWN_CLASS_NAME);
-    second_content.classList.add(POPOVER_SHOWN_CLASS_NAME);
-    doc.body.append(first_content, second_content);
-
-    const cleanup = (): void => {
-        first_content.remove();
-        second_content.remove();
-    };
-    return { first_content, second_content, cleanup };
 }
 
 function getEventType(dispatchEvent: SpyInstance, call_number = 1): string {

@@ -72,6 +72,36 @@ export const example_config: Configuration = {
                     name: "Team B",
                     href: "https://myinstance.example.com/projects/teamb",
                 },
+                {
+                    icon: "",
+                    name: "Team A",
+                    href: "https://myinstance.example.com/projects/teama",
+                },
+                {
+                    icon: "🏡",
+                    name: "Team B",
+                    href: "https://myinstance.example.com/projects/teamb",
+                },
+                {
+                    icon: "",
+                    name: "Team A",
+                    href: "https://myinstance.example.com/projects/teama",
+                },
+                {
+                    icon: "🏡",
+                    name: "Team B",
+                    href: "https://myinstance.example.com/projects/teamb",
+                },
+                {
+                    icon: "",
+                    name: "Team A",
+                    href: "https://myinstance.example.com/projects/teama",
+                },
+                {
+                    icon: "🏡",
+                    name: "Team B",
+                    href: "https://myinstance.example.com/projects/teamb",
+                },
             ],
         },
     },

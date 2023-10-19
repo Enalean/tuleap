@@ -110,7 +110,10 @@
                     v-bind:key="project.href"
                     class="project-sidebar-linked-projects-item"
                 >
-                    <div class="project-sidebar-linked-projects-item-link">
+                    <a
+                        v-bind:href="sanitizeURL(project.href)"
+                        class="project-sidebar-linked-projects-item-link"
+                    >
                         <span
                             v-if="project.icon !== ''"
                             class="project-sidebar-linked-projects-item-icon"
@@ -126,7 +129,7 @@
                         <span class="project-sidebar-linked-projects-item-name">
                             {{ project.name }}
                         </span>
-                    </div>
+                    </a>
                 </li>
             </ul>
         </div>
