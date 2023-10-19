@@ -20,7 +20,7 @@
 import cumulativeFlowChart from "./cumulative-chart.js";
 import moment from "moment";
 /* eslint-disable-next-line you-dont-need-lodash-underscore/map, you-dont-need-lodash-underscore/find, you-dont-need-lodash-underscore/for-each, you-dont-need-lodash-underscore/reduce */
-import { map, find, forEach, defaults, reduce } from "lodash-es";
+import { map, find, forEach, reduce } from "lodash-es";
 import { pointer, select, selectAll } from "d3-selection";
 import { bisector, extent, max } from "d3-array";
 import { scaleOrdinal, scaleTime, scaleLinear } from "d3-scale";
@@ -582,7 +582,9 @@ export default (options = {}) => {
 function parseData(data) {
     const parsed_data = [];
     forEach(data, function (column) {
-        defaults(column, { activated: true });
+        if (column.activated === undefined) {
+            column.activated = true;
+        }
 
         forEach(column.values, function (value, value_index) {
             if (!parsed_data[value_index]) {

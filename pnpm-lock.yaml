@@ -102,8 +102,8 @@ devDependencies:
     specifier: ^9.17.0
     version: 9.17.0(eslint@8.12.0)
   eslint-plugin-you-dont-need-lodash-underscore:
-    specifier: ^6.12.0
-    version: 6.12.0
+    specifier: ^6.13.0
+    version: 6.13.0
   fork-ts-checker-webpack-plugin:
     specifier: ^7.2.13
     version: 7.2.13(typescript@5.2.2)(vue-template-compiler@2.7.8)(webpack@5.88.2)
@@ -2513,8 +2513,8 @@ packages:
       '@types/yargs-parser': 21.0.0
     dev: true
 
-  /@types/yauzl@2.10.1:
-    resolution: {integrity: sha512-CHzgNU3qYBnp/O4S3yv2tXPlvMTq0YWSTVg2/JYLqWZGHwwgJGAwd00poay/11asPq8wLFwHzubyInqHIFmmiw==}
+  /@types/yauzl@2.10.2:
+    resolution: {integrity: sha512-Km7XAtUIduROw7QPgvcft0lIupeG8a8rdKL8RiSyKvlE7dYY31fEn41HVuQsRFDuROA8tA4K2UVL+WdfFmErBA==}
     requiresBuild: true
     dependencies:
       '@types/node': 16.18.48
@@ -5396,11 +5396,11 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-plugin-you-dont-need-lodash-underscore@6.12.0:
-    resolution: {integrity: sha512-WF4mNp+k2532iswT6iUd1BX6qjd3AV4cFy/09VC82GY9SsRtvkxhUIx7JNGSe0/bLyd57oTr4inPFiIaENXhGw==}
+  /eslint-plugin-you-dont-need-lodash-underscore@6.13.0:
+    resolution: {integrity: sha512-6FkFLp/R/QlgfJl5NrxkIXMQ36jMVLczkWDZJvMd7/wr/M3K0DS7mtX7plZ3giTDcbDD7VBfNYUfUVaBCZOXKA==}
     engines: {node: '>=4.0'}
     dependencies:
-      kebab-case: 1.0.1
+      kebab-case: 1.0.2
     dev: true
 
   /eslint-scope@5.1.1:
@@ -5657,7 +5657,7 @@ packages:
       get-stream: 5.2.0
       yauzl: 2.10.0
     optionalDependencies:
-      '@types/yauzl': 2.10.1
+      '@types/yauzl': 2.10.2
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -7439,8 +7439,8 @@ packages:
       verror: 1.10.0
     dev: true
 
-  /kebab-case@1.0.1:
-    resolution: {integrity: sha512-txPHx6nVLhv8PHGXIlAk0nYoh894SpAqGPXNvbg2hh8spvHXIah3+vT87DLoa59nKgC6scD3u3xAuRIgiMqbfQ==}
+  /kebab-case@1.0.2:
+    resolution: {integrity: sha512-7n6wXq4gNgBELfDCpzKc+mRrZFs7D+wgfF5WRFLNAr4DA/qtr9Js8uOAVAfHhuLMfAcQ0pRKqbpjx+TcJVdE1Q==}
     dev: true
 
   /kind-of@3.2.2:
