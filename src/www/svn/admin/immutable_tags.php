@@ -42,9 +42,7 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
 }
 
 // Display the form
-svn_header_admin(['title' => $Language->getText('svn_admin_immutable_tags', 'title'),
-    'help' => 'svn.html#subversion-administration-interface',
-]);
+svn_header_admin($Language->getText('svn_admin_immutable_tags', 'title'));
 
 $pm      = ProjectManager::instance();
 $project = $pm->getProject($group_id);

@@ -26,6 +26,7 @@ require_once __DIR__ . '/../../../www/svn/svn_utils.php';
 use HTTPRequest;
 use Project;
 use Codendi_HTMLPurifier;
+use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Project\CheckProjectAccess;
 use Tuleap\SVNCore\Event\GetSVNLoginNameEvent;
 
@@ -230,11 +231,14 @@ class ViewVCProxy
 
     private function display(Project $project, $path, $body)
     {
-        svn_header($project, [
-            'title' => $GLOBALS['Language']->getText('svn_utils', 'browse_tree'),
-            'path' => urlencode($path),
-            'body_class' => ['viewvc-epel'],
-        ]);
+        svn_header(
+            $project,
+            HeaderConfigurationBuilder::get($GLOBALS['Language']->getText('svn_utils', 'browse_tree'))
+                ->inProject($project, \Service::SVN)
+                ->withBodyClass(['viewvc-epel'])
+                ->build(),
+            urlencode($path)
+        );
         echo util_make_reference_links(
             $body,
             $project->getID()

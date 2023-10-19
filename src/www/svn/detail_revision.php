@@ -42,9 +42,14 @@ if (! $request->valid($vGroupId)) {
     $group_name = $project->getUnixName(false);
     $result     = svn_data_get_revision_detail($group_id, $commit_id, $rev_id, $order);
     if (db_numrows($result) > 0) {
-        svn_header($project, ['title' => $Language->getText('svn_detail_revision', 'svn_rev', db_result($result, 0, 'revision')),
-            'help' => 'svn.html#the-subversion-browsing-interface',
-        ]);
+        $title = $Language->getText('svn_detail_revision', 'svn_rev', db_result($result, 0, 'revision'));
+        svn_header(
+            $project,
+            \Tuleap\Layout\HeaderConfigurationBuilder::get($title)
+                ->inProject($project, Service::SVN)
+                ->build(),
+            null,
+        );
         svn_utils_show_revision_detail($result, $group_id, $group_name, $commit_id);
         svn_footer([]);
     } else {
