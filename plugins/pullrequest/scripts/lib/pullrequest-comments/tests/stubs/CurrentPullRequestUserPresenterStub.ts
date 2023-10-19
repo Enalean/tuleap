@@ -20,12 +20,20 @@
 import type { CurrentPullRequestUserPresenter } from "../../src/types";
 import { PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN } from "@tuleap/tlp-relative-date";
 
+const base_user_presenter: CurrentPullRequestUserPresenter = {
+    user_id: 104,
+    avatar_url: "url/to/avatar.png",
+    user_locale: "fr_FR",
+    preferred_date_format: "Y/M/D H:m",
+    preferred_relative_date_display: PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN,
+};
+
 export const CurrentPullRequestUserPresenterStub = {
     withDefault: (): CurrentPullRequestUserPresenter => ({
-        user_id: 104,
-        avatar_url: "url/to/avatar.png",
-        user_locale: "fr_FR",
-        preferred_date_format: "Y/M/D H:m",
-        preferred_relative_date_display: PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN,
+        ...base_user_presenter,
+    }),
+    withUserId: (user_id: number): CurrentPullRequestUserPresenter => ({
+        ...base_user_presenter,
+        user_id,
     }),
 };

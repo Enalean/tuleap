@@ -25,7 +25,6 @@ import type { HostElement } from "./PullRequestComment";
 import {
     after_render_once_descriptor,
     element_height_descriptor,
-    post_reply_save_callback_descriptor,
     PullRequestCommentComponent,
 } from "./PullRequestComment";
 import { PullRequestCommentPresenterStub } from "../../tests/stubs/PullRequestCommentPresenterStub";
@@ -138,37 +137,6 @@ describe("PullRequestComment", () => {
 
             expect(loadTooltips).toHaveBeenCalledTimes(1);
             expect(loadTooltips).toHaveBeenCalledWith(host, false);
-        });
-
-        it("should load tooltips inside the latest reply when is has just been saved and rendered", () => {
-            const last_reply_text = "Last reply";
-            const host = {
-                comment: PullRequestCommentPresenterStub.buildInlineComment(),
-                relative_date_helper: RelativeDateHelperStub,
-                replies: PullRequestCommentRepliesCollectionPresenter.fromReplies([
-                    PullRequestCommentPresenterStub.buildInlineCommentWithData({
-                        post_processed_content: "First reply",
-                    }),
-                    PullRequestCommentPresenterStub.buildInlineCommentWithData({
-                        post_processed_content: last_reply_text,
-                    }),
-                ]),
-                content: () => target,
-            } as unknown as HostElement;
-
-            const update = PullRequestCommentComponent.content(host);
-            update(host, target);
-            post_reply_save_callback_descriptor.get(host)();
-
-            expect(loadTooltips).toHaveBeenCalledTimes(1);
-
-            const tooltip_target = loadTooltips.mock.calls[0][0];
-            expect(
-                selectOrThrow(
-                    tooltip_target,
-                    "[data-test=pull-request-comment-text]",
-                ).textContent?.trim(),
-            ).toStrictEqual(last_reply_text);
         });
     });
 });

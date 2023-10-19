@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import "./comment-reply/PullRequestCommentReply";
 export {
     PullRequestCommentComponent,
     PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME,

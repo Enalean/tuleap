@@ -64,6 +64,7 @@ export const FileDiffWidgetStub = {
             shouldFocusWritingZoneOnceRendered: () => true,
             getProjectId: () => 105,
             getCurrentUserId: () => 102,
+            buildReplyController: jest.fn(),
         },
         post_rendering_callback: noop,
         ...data,

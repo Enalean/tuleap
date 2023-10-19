@@ -31,6 +31,8 @@ import type {
 import type { PullRequestPresenter } from "./PullRequestPresenter";
 import { RelativeDatesHelper } from "../helpers/relative-dates-helper";
 import type { HelpRelativeDatesDisplay } from "../helpers/relative-dates-helper";
+import type { ControlPullRequestCommentReply } from "./comment-reply/PullRequestCommentReplyController";
+import { PullRequestCommentReplyController } from "./comment-reply/PullRequestCommentReplyController";
 
 export type ControlPullRequestComment =
     WritingZoneInteractionsHandler<PullRequestCommentComponentType> & {
@@ -39,6 +41,7 @@ export type ControlPullRequestComment =
         displayReplies: (host: PullRequestCommentComponentType) => void;
         saveReply: (host: PullRequestCommentComponentType) => void;
         getRelativeDateHelper: () => HelpRelativeDatesDisplay;
+        buildReplyController: () => ControlPullRequestCommentReply;
         getProjectId: () => number;
         getCurrentUserId: () => number;
     };
@@ -85,7 +88,6 @@ export const PullRequestCommentController = (
 
                 host.replies = replies_store.getCommentReplies(host.comment);
                 host.comment.color = comment_payload.color;
-                host.post_reply_save_callback();
             },
             (fault) => {
                 host.reply_comment_presenter = ReplyCommentFormPresenter.buildNotSubmitted(
@@ -110,6 +112,9 @@ export const PullRequestCommentController = (
             current_user.preferred_relative_date_display,
             current_user.user_locale,
         ),
+
+    buildReplyController: (): ControlPullRequestCommentReply =>
+        PullRequestCommentReplyController(current_user, current_pull_request),
 
     shouldFocusWritingZoneOnceRendered: () => true,
 

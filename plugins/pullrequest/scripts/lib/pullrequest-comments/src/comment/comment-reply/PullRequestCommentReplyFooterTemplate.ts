@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,20 +20,17 @@
 import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import type { GettextProvider } from "@tuleap/gettext";
-import {
-    TYPE_EVENT_PULLREQUEST_ACTION,
-    FORMAT_COMMONMARK,
-} from "@tuleap/plugin-pullrequest-constants";
-import type { PullRequestCommentComponentType } from "./PullRequestComment";
+import { FORMAT_COMMONMARK } from "@tuleap/plugin-pullrequest-constants";
+import type { InternalPullRequestCommentReply, HostElement } from "./PullRequestCommentReply";
 
-const shouldDisplayEditButton = (host: PullRequestCommentComponentType): boolean =>
+const shouldDisplayEditButton = (host: InternalPullRequestCommentReply): boolean =>
     host.is_comment_edition_enabled &&
     host.comment.format === FORMAT_COMMONMARK &&
     host.comment.user.id === host.controller.getCurrentUserId();
 
 const getEditButton = (
     gettext_provider: GettextProvider,
-): UpdateFunction<PullRequestCommentComponentType> => html`
+): UpdateFunction<InternalPullRequestCommentReply> => html`
     <button
         type="button"
         class="pull-request-comment-footer-action-button tlp-button-small tlp-button-primary tlp-button-outline"
@@ -47,8 +44,8 @@ const getEditButton = (
 
 const getReplyButton = (
     gettext_provider: GettextProvider,
-): UpdateFunction<PullRequestCommentComponentType> => {
-    const onClickToggleReplyForm = (host: PullRequestCommentComponentType): void => {
+): UpdateFunction<InternalPullRequestCommentReply> => {
+    const onClickToggleReplyForm = (host: HostElement): void => {
         host.controller.showReplyForm(host);
     };
 
@@ -64,16 +61,12 @@ const getReplyButton = (
     `;
 };
 
-export const getCommentFooter = (
-    host: PullRequestCommentComponentType,
+export const buildFooterForComment = (
+    host: InternalPullRequestCommentReply,
     gettext_provider: GettextProvider,
-): UpdateFunction<PullRequestCommentComponentType> => {
-    if (host.comment.type === TYPE_EVENT_PULLREQUEST_ACTION) {
-        return html``;
-    }
-
+): UpdateFunction<InternalPullRequestCommentReply> => {
     const is_edit_button_displayed = shouldDisplayEditButton(host);
-    const is_reply_button_displayed = host.replies.length === 0;
+    const is_reply_button_displayed = host.is_last_reply;
     if (!is_edit_button_displayed && !is_reply_button_displayed) {
         return html``;
     }
