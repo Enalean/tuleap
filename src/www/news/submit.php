@@ -72,16 +72,16 @@ if (user_isloggedin()) {
             }
         }
 
-        /*
-             Show the submit form
-        */
-        news_header(['title' => $Language->getText('news_index', 'news'),
-            'help' => 'collaboration.html#news-service',
-        ]);
 
-        $hp      = Codendi_HTMLPurifier::instance();
         $pm      = ProjectManager::instance();
         $project = $pm->getProject($group_id);
+
+        news_header(\Tuleap\Layout\HeaderConfigurationBuilder::get($GLOBALS['Language']->getText('news_index', 'news'))
+            ->inProject($project, Service::NEWS)
+            ->build());
+
+        $hp = Codendi_HTMLPurifier::instance();
+
         /*
          create a new discussion forum without a default msg
          if one isn't already there

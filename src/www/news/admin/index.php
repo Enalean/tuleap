@@ -101,9 +101,12 @@ if ($group_id && $group_id != ForgeConfig::get('sys_news_group') && (user_ismemb
         }
     }
 
-    news_header(['title' => $Language->getText('news_admin_index', 'title'),
-        'help' => 'collaboration.html#news-service',
-    ]);
+    $project = $pm->getProject($group_id);
+    news_header(
+        \Tuleap\Layout\HeaderConfigurationBuilder::get($GLOBALS['Language']->getText('news_admin_index', 'title'))
+            ->inProject($project, Service::NEWS)
+            ->build()
+    );
 
     $purifier = Codendi_HTMLPurifier::instance();
 
@@ -134,7 +137,7 @@ if ($group_id && $group_id != ForgeConfig::get('sys_news_group') && (user_ismemb
         }
 
         echo '
-        <H3>' . $purifier->purify($Language->getText('news_admin_index', 'approve_for', $pm->getProject($group_id)->getPublicName())) . '</H3>
+        <H3>' . $purifier->purify($Language->getText('news_admin_index', 'approve_for', $project->getPublicName())) . '</H3>
 		<P>
 		<FORM ACTION="" METHOD="POST">
 		<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $purifier->purify(db_result($result, 0, 'group_id')) . '">
@@ -169,10 +172,10 @@ if ($group_id && $group_id != ForgeConfig::get('sys_news_group') && (user_ismemb
         $rows   = db_numrows($result);
         if ($rows < 1) {
             echo '
-                <H4>' . $purifier->purify($Language->getText('news_admin_index', 'no_queued_item_found_for', $pm->getProject($group_id)->getPublicName())) . '</H1>';
+                <H4>' . $purifier->purify($Language->getText('news_admin_index', 'no_queued_item_found_for', $project->getPublicName())) . '</H1>';
         } else {
             echo '
-                <H4>' . $purifier->purify($Language->getText('news_admin_index', 'new_items', $pm->getProject($group_id)->getPublicName())) . '</H4>
+                <H4>' . $purifier->purify($Language->getText('news_admin_index', 'new_items', $project->getPublicName())) . '</H4>
 				<P>';
             for ($i = 0; $i < $rows; $i++) {
                 echo '

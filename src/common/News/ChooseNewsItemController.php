@@ -23,6 +23,7 @@ namespace Tuleap\News;
 use ForgeConfig;
 use HTTPRequest;
 use ProjectManager;
+use Service;
 use TemplateRendererFactory;
 
 require_once __DIR__ . '/../../www/forum/forum_utils.php';
@@ -100,14 +101,13 @@ class ChooseNewsItemController
         $renderer->renderToPage('choose_news', $presenter);
     }
 
-    private function displayHeader()
+    private function displayHeader(): void
     {
+        $project = (ProjectManager::instance())->getProject($this->request->get('project_id'));
         news_header(
-            [
-                'title'      => $GLOBALS['Language']->getText('news_admin_index', 'title'),
-                'help'       => 'collaboration.html#news-service',
-                'project_id' => $this->request->get('project_id'),
-            ]
+            \Tuleap\Layout\HeaderConfigurationBuilder::get($GLOBALS['Language']->getText('news_admin_index', 'title'))
+                ->inProject($project, Service::NEWS)
+                ->build()
         );
     }
 
