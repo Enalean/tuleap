@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\User\AccessKey\REST;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\REST\AccessKeyHeaderExtractor;
@@ -31,14 +30,12 @@ use Tuleap\User\AccessKey\AccessKeyMetadataRetriever;
 
 final class UserAccessKeyRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AccessKeyHeaderExtractor
+     * @var \\PHPUnit\Framework\MockObject\MockObject&AccessKeyHeaderExtractor
      */
     private $access_key_header_extractor;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AccessKeyMetadataRetriever
+     * @var \\PHPUnit\Framework\MockObject\MockObject&AccessKeyMetadataRetriever
      */
     private $metadata_retriever;
 
@@ -49,8 +46,8 @@ final class UserAccessKeyRepresentationRetrieverTest extends \Tuleap\Test\PHPUni
 
     protected function setUp(): void
     {
-        $this->access_key_header_extractor = \Mockery::mock(AccessKeyHeaderExtractor::class);
-        $this->metadata_retriever          = \Mockery::mock(AccessKeyMetadataRetriever::class);
+        $this->access_key_header_extractor = $this->createMock(AccessKeyHeaderExtractor::class);
+        $this->metadata_retriever          = $this->createMock(AccessKeyMetadataRetriever::class);
 
         $this->representation_retriever = new UserAccessKeyRepresentationRetriever(
             $this->access_key_header_extractor,
@@ -61,9 +58,9 @@ final class UserAccessKeyRepresentationRetrieverTest extends \Tuleap\Test\PHPUni
     public function testFindRepresentationFromSelfID(): void
     {
         $access_key = new SplitToken(12, SplitTokenVerificationString::generateNewSplitTokenVerificationString());
-        $this->access_key_header_extractor->shouldReceive('extractAccessKey')->andReturn($access_key);
+        $this->access_key_header_extractor->method('extractAccessKey')->willReturn($access_key);
 
-        $this->metadata_retriever->shouldReceive('getMetadataByUser')->andReturn(
+        $this->metadata_retriever->method('getMetadataByUser')->willReturn(
             [
                 new AccessKeyMetadata(
                     478,
@@ -86,9 +83,9 @@ final class UserAccessKeyRepresentationRetrieverTest extends \Tuleap\Test\PHPUni
             ]
         );
 
-        $this->assertNotNull(
+        self::assertNotNull(
             $this->representation_retriever->getByUserAndID(
-                \Mockery::mock(\PFUser::class),
+                $this->createMock(\PFUser::class),
                 'self'
             )
         );
@@ -96,7 +93,7 @@ final class UserAccessKeyRepresentationRetrieverTest extends \Tuleap\Test\PHPUni
 
     public function testFindRepresentationFromID(): void
     {
-        $this->metadata_retriever->shouldReceive('getMetadataByUser')->andReturn(
+        $this->metadata_retriever->method('getMetadataByUser')->willReturn(
             [
                 new AccessKeyMetadata(
                     13,
@@ -110,9 +107,9 @@ final class UserAccessKeyRepresentationRetrieverTest extends \Tuleap\Test\PHPUni
             ]
         );
 
-        $this->assertNotNull(
+        self::assertNotNull(
             $this->representation_retriever->getByUserAndID(
-                \Mockery::mock(\PFUser::class),
+                $this->createMock(\PFUser::class),
                 '13'
             )
         );
@@ -120,11 +117,11 @@ final class UserAccessKeyRepresentationRetrieverTest extends \Tuleap\Test\PHPUni
 
     public function testCannotFindRepresentationFromSelfIDWhenUserIsNotAuthenticatedWithAnAccessKey(): void
     {
-        $this->access_key_header_extractor->shouldReceive('extractAccessKey')->andReturnNull();
+        $this->access_key_header_extractor->method('extractAccessKey')->willReturn(null);
 
-        $this->assertNull(
+        self::assertNull(
             $this->representation_retriever->getByUserAndID(
-                \Mockery::mock(\PFUser::class),
+                $this->createMock(\PFUser::class),
                 'self'
             )
         );
@@ -132,7 +129,7 @@ final class UserAccessKeyRepresentationRetrieverTest extends \Tuleap\Test\PHPUni
 
     public function testCannotFindRepresentationWhenKeyIDDoesNotExistForTheUser(): void
     {
-        $this->metadata_retriever->shouldReceive('getMetadataByUser')->andReturn(
+        $this->metadata_retriever->method('getMetadataByUser')->willReturn(
             [
                 new AccessKeyMetadata(
                     14,
@@ -146,9 +143,9 @@ final class UserAccessKeyRepresentationRetrieverTest extends \Tuleap\Test\PHPUni
             ]
         );
 
-        $this->assertNull(
+        self::assertNull(
             $this->representation_retriever->getByUserAndID(
-                \Mockery::mock(\PFUser::class),
+                $this->createMock(\PFUser::class),
                 '404'
             )
         );
@@ -156,9 +153,9 @@ final class UserAccessKeyRepresentationRetrieverTest extends \Tuleap\Test\PHPUni
 
     public function testCannotFindRepresentationWhenGivenIDParameterIsNotSelfStringOrAStringLookingLikeAnInteger(): void
     {
-        $this->assertNull(
+        self::assertNull(
             $this->representation_retriever->getByUserAndID(
-                \Mockery::mock(\PFUser::class),
+                $this->createMock(\PFUser::class),
                 'foo'
             )
         );

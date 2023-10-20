@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\User\Account;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\ForgeConfigSandbox;
@@ -34,15 +33,14 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class UserWellKnownChangePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\UserManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&\UserManager
      */
     private $user_manager;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|EventDispatcherInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject&EventDispatcherInterface
      */
     private $event_dispatcher;
     /**
@@ -52,52 +50,52 @@ final class UserWellKnownChangePasswordControllerTest extends \Tuleap\Test\PHPUn
 
     protected function setUp(): void
     {
-        $this->user_manager     = \Mockery::mock(\UserManager::class);
-        $this->event_dispatcher = \Mockery::mock(EventDispatcherInterface::class);
+        $this->user_manager     = $this->createMock(\UserManager::class);
+        $this->event_dispatcher = $this->createMock(EventDispatcherInterface::class);
         $this->controller       = new UserWellKnownChangePasswordController(
             $this->user_manager,
             $this->event_dispatcher,
             HTTPFactoryBuilder::responseFactory(),
             HTTPFactoryBuilder::streamFactory(),
-            \Mockery::mock(EmitterInterface::class)
+            $this->createMock(EmitterInterface::class)
         );
     }
 
     public function testRedirectsUserToChangePasswordPage(): void
     {
-        $current_user = \Mockery::mock(PFUser::class);
-        $current_user->shouldReceive('isAnonymous')->andReturn(false);
-        $current_user->shouldReceive('getUserPw')->andReturn('some_password_hash');
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($current_user);
-        $this->event_dispatcher->shouldReceive('dispatch')->with(\Mockery::type(PasswordPreUpdateEvent::class))
-            ->andReturn(new PasswordPreUpdateEvent($current_user));
+        $current_user = $this->createMock(PFUser::class);
+        $current_user->method('isAnonymous')->willReturn(false);
+        $current_user->method('getUserPw')->willReturn('some_password_hash');
+        $this->user_manager->method('getCurrentUser')->willReturn($current_user);
+        $this->event_dispatcher->method('dispatch')->with(self::isInstanceOf(PasswordPreUpdateEvent::class))
+            ->willReturn(new PasswordPreUpdateEvent($current_user));
 
         \ForgeConfig::set('sys_default_domain', 'example.com');
 
         $response = $this->controller->handle(new NullServerRequest());
 
-        $this->assertEquals(302, $response->getStatusCode());
-        $this->assertEquals('https://example.com/account/security', $response->getHeaderLine('Location'));
+        self::assertEquals(302, $response->getStatusCode());
+        self::assertEquals('https://example.com/account/security', $response->getHeaderLine('Location'));
     }
 
     public function testThrowsANotFoundWhenUserIsNotLoggedIn(): void
     {
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn(UserTestBuilder::anAnonymousUser()->build());
+        $this->user_manager->method('getCurrentUser')->willReturn(UserTestBuilder::anAnonymousUser()->build());
 
         $response = $this->controller->handle(new NullServerRequest());
-        $this->assertEquals(404, $response->getStatusCode());
+        self::assertEquals(404, $response->getStatusCode());
     }
 
     public function testThrowsANotFoundWhenTheUserCannotChangeItsPassword(): void
     {
         $current_user = UserTestBuilder::aUser()->withId(102)->build();
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($current_user);
+        $this->user_manager->method('getCurrentUser')->willReturn($current_user);
         $password_pre_update_event = new PasswordPreUpdateEvent($current_user);
         $password_pre_update_event->forbidUserToChangePassword();
-        $this->event_dispatcher->shouldReceive('dispatch')->with(\Mockery::type(PasswordPreUpdateEvent::class))
-            ->andReturn($password_pre_update_event);
+        $this->event_dispatcher->method('dispatch')->with(self::isInstanceOf(PasswordPreUpdateEvent::class))
+            ->willReturn($password_pre_update_event);
 
         $response = $this->controller->handle(new NullServerRequest());
-        $this->assertEquals(404, $response->getStatusCode());
+        self::assertEquals(404, $response->getStatusCode());
     }
 }

@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\User\Account;
 
 use CSRFSynchronizerToken;
-use Mockery as M;
 use PFUser;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
@@ -34,14 +33,12 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class UpdateSessionPreferencesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     /**
-     * @var CSRFSynchronizerToken|M\LegacyMockInterface|M\MockInterface
+     * @var CSRFSynchronizerToken&\PHPUnit\Framework\MockObject\MockObject
      */
     private $csrf_token;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|\UserManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&\UserManager
      */
     private $user_manager;
     /**
@@ -55,10 +52,9 @@ final class UpdateSessionPreferencesControllerTest extends \Tuleap\Test\PHPUnit\
 
     protected function setUp(): void
     {
-        $this->csrf_token = M::mock(CSRFSynchronizerToken::class);
-        $this->csrf_token->shouldReceive('check')->byDefault();
-        $this->user_manager = M::mock(\UserManager::class);
-        $this->user_manager->shouldReceive('updateDb')->byDefault();
+        $this->csrf_token   = $this->createMock(CSRFSynchronizerToken::class);
+        $this->user_manager = $this->createMock(\UserManager::class);
+
         $this->controller = new UpdateSessionPreferencesController(
             $this->csrf_token,
             $this->user_manager,
@@ -69,7 +65,7 @@ final class UpdateSessionPreferencesControllerTest extends \Tuleap\Test\PHPUnit\
     public function testItThrowsExceptionWhenUserIsAnonymous(): void
     {
         $this->expectException(ForbiddenException::class);
-        $this->user_manager->shouldNotReceive('updateDb');
+        $this->user_manager->expects(self::never())->method('updateDb');
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withAnonymousUser()->build(),
@@ -80,7 +76,9 @@ final class UpdateSessionPreferencesControllerTest extends \Tuleap\Test\PHPUnit\
 
     public function testItChecksCSRFToken(): void
     {
-        $this->csrf_token->shouldReceive('check')->with('/account/security')->once();
+        $this->user_manager->method('updateDb');
+
+        $this->csrf_token->expects(self::once())->method('check')->with('/account/security');
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
@@ -92,9 +90,11 @@ final class UpdateSessionPreferencesControllerTest extends \Tuleap\Test\PHPUnit\
 
     public function testItActivatesRememberMeWhenNoStickyLogin(): void
     {
-        $this->user_manager->shouldReceive('updateDb')->withArgs(static function (PFUser $user) {
+        $this->csrf_token->method('check');
+
+        $this->user_manager->expects(self::once())->method('updateDb')->willReturnCallback(static function (PFUser $user): bool {
             return $user->getStickyLogin() === 1;
-        })->once();
+        });
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
@@ -106,9 +106,11 @@ final class UpdateSessionPreferencesControllerTest extends \Tuleap\Test\PHPUnit\
 
     public function testItDeactivatesRememberMeWhenStickyLoginIsSet(): void
     {
-        $this->user_manager->shouldReceive('updateDb')->withArgs(static function (PFUser $user) {
+        $this->csrf_token->method('check');
+
+        $this->user_manager->expects(self::once())->method('updateDb')->willReturnCallback(static function (PFUser $user): bool {
             return $user->getStickyLogin() === 0;
-        })->once();
+        });
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(

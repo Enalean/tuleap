@@ -24,8 +24,7 @@ declare(strict_types=1);
 namespace Tuleap;
 
 use CSRFSynchronizerToken;
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
@@ -43,14 +42,12 @@ use UserManager;
 
 final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var CSRFSynchronizerToken|M\LegacyMockInterface|M\MockInterface
+     * @var CSRFSynchronizerToken&\PHPUnit\Framework\MockObject\MockObject
      */
     private $csrf_token;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|UserManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&UserManager
      */
     private $user_manager;
     /**
@@ -74,11 +71,11 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
      */
     private $layout;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|EmailUpdater
+     * @var \PHPUnit\Framework\MockObject\MockObject&EmailUpdater
      */
     private $email_updater;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|AvatarGenerator
+     * @var \PHPUnit\Framework\MockObject\MockObject&AvatarGenerator
      */
     private $avatar_generator;
 
@@ -102,12 +99,11 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
             }
         };
 
-        $this->csrf_token = M::mock(CSRFSynchronizerToken::class);
-        $this->csrf_token->shouldReceive('check')->byDefault();
+        $this->csrf_token = $this->createMock(CSRFSynchronizerToken::class);
 
-        $this->user_manager     = M::mock(UserManager::class);
-        $this->email_updater    = M::mock(EmailUpdater::class);
-        $this->avatar_generator = M::mock(AvatarGenerator::class);
+        $this->user_manager     = $this->createMock(UserManager::class);
+        $this->email_updater    = $this->createMock(EmailUpdater::class);
+        $this->avatar_generator = $this->createMock(AvatarGenerator::class);
         $this->controller       = new UpdateAccountInformationController(
             $this->event_manager,
             $this->csrf_token,
@@ -147,7 +143,7 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
 
     public function testItCheckCSRFToken(): void
     {
-        $this->csrf_token->shouldReceive('check')->with(DisplayAccountInformationController::URL)->once();
+        $this->csrf_token->expects(self::once())->method('check')->with(DisplayAccountInformationController::URL);
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
@@ -159,9 +155,11 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
 
     public function testItCannotUpdateRealNameWhenEventSaySo(): void
     {
+        $this->csrf_token->method('check');
+
         $this->event_manager->disable_real_name_change = true;
 
-        $this->user_manager->shouldNotReceive('updateDb');
+        $this->user_manager->expects(self::never())->method('updateDb');
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
@@ -173,11 +171,17 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
 
     public function testItUpdatesRealNameAndAvatarWhenRealNameChanged(): void
     {
-        $this->user_manager->shouldReceive('updateDb')->withArgs(static function (\PFUser $user) {
-            return $user->getRealName() === 'Franck Zappa';
-        })->once()->andReturnTrue();
+        $this->csrf_token->method('check');
 
-        $this->avatar_generator->shouldReceive('generate')->once();
+        $this->user_manager->expects(self::once())->method('updateDb')->with(
+            self::callback(
+                static function (\PFUser $user) {
+                    return $user->getRealName() === 'Franck Zappa';
+                }
+            )
+        )->willReturn(true);
+
+        $this->avatar_generator->expects(self::once())->method('generate');
 
         $has_been_redirected = false;
         try {
@@ -192,20 +196,22 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
 
         self::assertTrue($has_been_redirected);
         $feedback = $this->layout_inspector->getFeedback();
-        $this->assertCount(1, $feedback);
-        $this->assertEquals(\Feedback::INFO, $feedback[0]['level']);
-        $this->assertStringContainsStringIgnoringCase('real name successfully updated', $feedback[0]['message']);
+        self::assertCount(1, $feedback);
+        self::assertEquals(\Feedback::INFO, $feedback[0]['level']);
+        self::assertStringContainsStringIgnoringCase('real name successfully updated', $feedback[0]['message']);
     }
 
     public function testItUpdatesRealNameButNotAvatarWhenRealNameChangedAndUserHasCustomAvatar(): void
     {
+        $this->csrf_token->method('check');
+
         $this->user->setHasCustomAvatar(true);
 
-        $this->user_manager->shouldReceive('updateDb')->withArgs(static function (\PFUser $user) {
+        $this->user_manager->expects(self::once())->method('updateDb')->with(self::callback(static function (\PFUser $user) {
             return $user->getRealName() === 'Franck Zappa';
-        })->once()->andReturnTrue();
+        }))->willReturn(true);
 
-        $this->avatar_generator->shouldReceive('generate')->never();
+        $this->avatar_generator->expects(self::never())->method('generate');
 
         $has_been_redirected = false;
         try {
@@ -220,14 +226,15 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
 
         self::assertTrue($has_been_redirected);
         $feedback = $this->layout_inspector->getFeedback();
-        $this->assertCount(1, $feedback);
-        $this->assertEquals(\Feedback::INFO, $feedback[0]['level']);
-        $this->assertStringContainsStringIgnoringCase('real name successfully updated', $feedback[0]['message']);
+        self::assertCount(1, $feedback);
+        self::assertEquals(\Feedback::INFO, $feedback[0]['level']);
+        self::assertStringContainsStringIgnoringCase('real name successfully updated', $feedback[0]['message']);
     }
 
     public function testItDoesntUpdateRealNameWhenNothingChanged(): void
     {
-        $this->user_manager->shouldNotReceive('updateDb');
+        $this->csrf_token->method('check');
+        $this->user_manager->expects(self::never())->method('updateDb');
 
         $has_been_redirected = false;
         try {
@@ -243,14 +250,15 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
         self::assertTrue($has_been_redirected);
 
         $feedback = $this->layout_inspector->getFeedback();
-        $this->assertCount(1, $feedback);
-        $this->assertEquals(\Feedback::INFO, $feedback[0]['level']);
-        $this->assertStringContainsStringIgnoringCase('nothing changed', $feedback[0]['message']);
+        self::assertCount(1, $feedback);
+        self::assertEquals(\Feedback::INFO, $feedback[0]['level']);
+        self::assertStringContainsStringIgnoringCase('nothing changed', $feedback[0]['message']);
     }
 
     public function testItThrowsAnErrorWhenRealNameIsNotValid(): void
     {
-        $this->user_manager->shouldNotReceive('updateDb');
+        $this->csrf_token->method('check');
+        $this->user_manager->expects(self::never())->method('updateDb');
 
         $has_been_redirected = false;
         try {
@@ -265,14 +273,15 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
 
         self::assertTrue($has_been_redirected);
         $feedback = $this->layout_inspector->getFeedback();
-        $this->assertCount(2, $feedback);
-        $this->assertEquals(\Feedback::ERROR, $feedback[0]['level']);
-        $this->assertEquals('Real name is not valid', $feedback[0]['message']);
+        self::assertCount(2, $feedback);
+        self::assertEquals(\Feedback::ERROR, $feedback[0]['level']);
+        self::assertEquals('Real name is not valid', $feedback[0]['message']);
     }
 
     public function testItDoesntUpdateRealNameWhenDBUpdateFails(): void
     {
-        $this->user_manager->shouldReceive('updateDb')->andReturnFalse();
+        $this->csrf_token->method('check');
+        $this->user_manager->method('updateDb')->willReturn(false);
 
         $has_been_redirected = false;
         try {
@@ -287,16 +296,17 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
 
         self::assertTrue($has_been_redirected);
         $feedback = $this->layout_inspector->getFeedback();
-        $this->assertCount(2, $feedback);
-        $this->assertEquals(\Feedback::ERROR, $feedback[0]['level']);
-        $this->assertStringContainsStringIgnoringCase('real name was not updated', $feedback[0]['message']);
+        self::assertCount(2, $feedback);
+        self::assertEquals(\Feedback::ERROR, $feedback[0]['level']);
+        self::assertStringContainsStringIgnoringCase('real name was not updated', $feedback[0]['message']);
     }
 
     public function testItCannotUpdateEmailWhenEventSaySo(): void
     {
+        $this->csrf_token->method('check');
         $this->event_manager->disable_email_change = true;
 
-        $this->email_updater->shouldNotReceive('setEmailChangeConfirm');
+        $this->email_updater->expects(self::never())->method('sendEmailChangeConfirm');
 
         $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
@@ -308,10 +318,11 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
 
     public function testItUpdatesEmail(): void
     {
-        $this->email_updater->shouldReceive('sendEmailChangeConfirm')->with(M::any(), $this->user)->once();
-        $this->user_manager->shouldReceive('updateDb')->withArgs(static function (\PFUser $user) {
+        $this->csrf_token->method('check');
+        $this->email_updater->expects(self::once())->method('sendEmailChangeConfirm')->with(self::anything(), $this->user);
+        $this->user_manager->expects(self::once())->method('updateDb')->with(self::callback(static function (\PFUser $user) {
             return $user->getEmailNew() === 'bob@example.com' && $user->getConfirmHash() != '';
-        })->once()->andReturnTrue();
+        }))->willReturn(true);
 
         $has_been_redirected = false;
         try {
@@ -326,15 +337,16 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
 
         self::assertTrue($has_been_redirected);
         $feedback = $this->layout_inspector->getFeedback();
-        $this->assertCount(1, $feedback);
-        $this->assertEquals(\Feedback::INFO, $feedback[0]['level']);
-        $this->assertStringContainsStringIgnoringCase('email was successfully saved', $feedback[0]['message']);
+        self::assertCount(1, $feedback);
+        self::assertEquals(\Feedback::INFO, $feedback[0]['level']);
+        self::assertStringContainsStringIgnoringCase('email was successfully saved', $feedback[0]['message']);
     }
 
     public function testItUpdatesEmailButDbUpdateFails(): void
     {
-        $this->email_updater->shouldNotReceive('sendEmailChangeConfirm');
-        $this->user_manager->shouldReceive('updateDb')->andReturnFalse();
+        $this->csrf_token->method('check');
+        $this->email_updater->expects(self::never())->method('sendEmailChangeConfirm');
+        $this->user_manager->method('updateDb')->willReturn(false);
 
         $has_been_redirected = false;
         try {
@@ -349,17 +361,18 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
 
         self::assertTrue($has_been_redirected);
         $feedback = $this->layout_inspector->getFeedback();
-        $this->assertCount(2, $feedback);
-        $this->assertEquals(\Feedback::ERROR, $feedback[0]['level']);
-        $this->assertStringContainsStringIgnoringCase('email was not updated', $feedback[0]['message']);
+        self::assertCount(2, $feedback);
+        self::assertEquals(\Feedback::ERROR, $feedback[0]['level']);
+        self::assertStringContainsStringIgnoringCase('email was not updated', $feedback[0]['message']);
     }
 
     public function testItUpdatesEmailWithoutUpdatingRealname(): void
     {
-        $this->email_updater->shouldReceive('sendEmailChangeConfirm')->with(M::any(), $this->user)->once();
-        $this->user_manager->shouldReceive('updateDb')->withArgs(static function (\PFUser $user) {
+        $this->csrf_token->method('check');
+        $this->email_updater->expects(self::once())->method('sendEmailChangeConfirm')->with(self::anything(), $this->user);
+        $this->user_manager->expects(self::once())->method('updateDb')->with(self::callback(static function (\PFUser $user) {
             return $user->getEmailNew() === 'bob@example.com';
-        })->once()->andReturnTrue();
+        }))->willReturn(true);
 
         $has_been_redirected = false;
         try {
@@ -374,15 +387,16 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
 
         self::assertTrue($has_been_redirected);
         $feedback = $this->layout_inspector->getFeedback();
-        $this->assertCount(1, $feedback);
-        $this->assertEquals(\Feedback::INFO, $feedback[0]['level']);
-        $this->assertStringContainsStringIgnoringCase('email was successfully saved', $feedback[0]['message']);
-        $this->assertStringNotContainsStringIgnoringCase('nothing changed', $feedback[0]['message']);
+        self::assertCount(1, $feedback);
+        self::assertEquals(\Feedback::INFO, $feedback[0]['level']);
+        self::assertStringContainsStringIgnoringCase('email was successfully saved', $feedback[0]['message']);
+        self::assertStringNotContainsStringIgnoringCase('nothing changed', $feedback[0]['message']);
     }
 
     public function testItDoesntUpdatesEmailWhenNoChanges(): void
     {
-        $this->email_updater->shouldNotReceive('setEmailChangeConfirm');
+        $this->csrf_token->method('check');
+        $this->email_updater->expects(self::never())->method('sendEmailChangeConfirm');
 
         $has_been_redirected = false;
         try {
@@ -397,17 +411,18 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
 
         self::assertTrue($has_been_redirected);
         $feedback = $this->layout_inspector->getFeedback();
-        $this->assertCount(1, $feedback);
-        $this->assertEquals(\Feedback::INFO, $feedback[0]['level']);
-        $this->assertStringContainsStringIgnoringCase('nothing changed', $feedback[0]['message']);
+        self::assertCount(1, $feedback);
+        self::assertEquals(\Feedback::INFO, $feedback[0]['level']);
+        self::assertStringContainsStringIgnoringCase('nothing changed', $feedback[0]['message']);
     }
 
     public function testItReportsAnErrorWhenMailCannotBeSent(): void
     {
-        $this->email_updater->shouldReceive('sendEmailChangeConfirm')->andThrow(new EmailNotSentException());
-        $this->user_manager->shouldReceive('updateDb')->withArgs(static function (\PFUser $user) {
+        $this->csrf_token->method('check');
+        $this->email_updater->method('sendEmailChangeConfirm')->willThrowException(new EmailNotSentException());
+        $this->user_manager->expects(self::once())->method('updateDb')->with(self::callback(static function (\PFUser $user) {
             return $user->getEmailNew() === 'bob@example.com';
-        })->once()->andReturnTrue();
+        }))->willReturn(true);
 
         $has_been_redirected = false;
         try {
@@ -422,14 +437,15 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
 
         self::assertTrue($has_been_redirected);
         $feedback = $this->layout_inspector->getFeedback();
-        $this->assertCount(1, $feedback);
-        $this->assertEquals(\Feedback::ERROR, $feedback[0]['level']);
-        $this->assertStringContainsStringIgnoringCase('mail was not accepted for the delivery', $feedback[0]['message']);
+        self::assertCount(1, $feedback);
+        self::assertEquals(\Feedback::ERROR, $feedback[0]['level']);
+        self::assertStringContainsStringIgnoringCase('mail was not accepted for the delivery', $feedback[0]['message']);
     }
 
     public function testItDoesntUpdateWithInvalidTimezone(): void
     {
-        $this->user_manager->shouldNotReceive('updateDb');
+        $this->csrf_token->method('check');
+        $this->user_manager->expects(self::never())->method('updateDb');
 
         $has_been_redirected = false;
         try {
@@ -444,14 +460,15 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
 
         self::assertTrue($has_been_redirected);
         $feedback = $this->layout_inspector->getFeedback();
-        $this->assertCount(2, $feedback);
-        $this->assertEquals(\Feedback::ERROR, $feedback[0]['level']);
-        $this->assertStringContainsStringIgnoringCase('invalid timezone', $feedback[0]['message']);
+        self::assertCount(2, $feedback);
+        self::assertEquals(\Feedback::ERROR, $feedback[0]['level']);
+        self::assertStringContainsStringIgnoringCase('invalid timezone', $feedback[0]['message']);
     }
 
     public function testItDoesntUpdateWithNoTimezoneChange(): void
     {
-        $this->user_manager->shouldNotReceive('updateDb');
+        $this->csrf_token->method('check');
+        $this->user_manager->expects(self::never())->method('updateDb');
 
         $has_been_redirected = false;
         try {
@@ -466,16 +483,17 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
 
         self::assertTrue($has_been_redirected);
         $feedback = $this->layout_inspector->getFeedback();
-        $this->assertCount(1, $feedback);
-        $this->assertEquals(\Feedback::INFO, $feedback[0]['level']);
-        $this->assertStringContainsStringIgnoringCase('nothing changed', $feedback[0]['message']);
+        self::assertCount(1, $feedback);
+        self::assertEquals(\Feedback::INFO, $feedback[0]['level']);
+        self::assertStringContainsStringIgnoringCase('nothing changed', $feedback[0]['message']);
     }
 
     public function testItUpdatesTimezone(): void
     {
-        $this->user_manager->shouldReceive('updateDb')->withArgs(static function (\PFUser $user) {
+        $this->csrf_token->method('check');
+        $this->user_manager->expects(self::once())->method('updateDb')->with(self::callback(static function (\PFUser $user) {
             return $user->getTimezone() === 'Europe/Berlin';
-        })->once()->andReturnTrue();
+        }))->willReturn(true);
 
         $has_been_redirected = false;
         try {
@@ -490,14 +508,15 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
 
         self::assertTrue($has_been_redirected);
         $feedback = $this->layout_inspector->getFeedback();
-        $this->assertCount(1, $feedback);
-        $this->assertEquals(\Feedback::INFO, $feedback[0]['level']);
-        $this->assertStringContainsStringIgnoringCase('timezone successfully updated', $feedback[0]['message']);
+        self::assertCount(1, $feedback);
+        self::assertEquals(\Feedback::INFO, $feedback[0]['level']);
+        self::assertStringContainsStringIgnoringCase('timezone successfully updated', $feedback[0]['message']);
     }
 
     public function testItDoesntUpdateTimezoneWhenDBUpdateFails(): void
     {
-        $this->user_manager->shouldReceive('updateDb')->andReturnFalse();
+        $this->csrf_token->method('check');
+        $this->user_manager->method('updateDb')->willReturn(false);
 
         $has_been_redirected = false;
         try {
@@ -512,26 +531,31 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
 
         self::assertTrue($has_been_redirected);
         $feedback = $this->layout_inspector->getFeedback();
-        $this->assertCount(2, $feedback);
-        $this->assertEquals(\Feedback::ERROR, $feedback[0]['level']);
-        $this->assertStringContainsStringIgnoringCase('timezone was not updated', $feedback[0]['message']);
+        self::assertCount(2, $feedback);
+        self::assertEquals(\Feedback::ERROR, $feedback[0]['level']);
+        self::assertStringContainsStringIgnoringCase('timezone was not updated', $feedback[0]['message']);
     }
 
     public function testItUpdatesEverythingAtOnce(): void
     {
-        $this->email_updater->shouldReceive('sendEmailChangeConfirm')->with(M::any(), $this->user)->once();
+        $this->csrf_token->method('check');
 
-        $this->user_manager->shouldReceive('updateDb')->withArgs(static function (\PFUser $user) {
-            return $user->getRealName() === 'Franck Zappa';
-        })->once()->andReturnTrue();
-        $this->user_manager->shouldReceive('updateDb')->withArgs(static function (\PFUser $user) {
-            return $user->getTimezone() === 'Europe/Berlin';
-        })->once()->andReturnTrue();
-        $this->user_manager->shouldReceive('updateDb')->withArgs(static function (\PFUser $user) {
-            return $user->getEmailNew() === 'bob@example.com';
-        })->once()->andReturnTrue();
+        $this->email_updater->expects(self::once())->method('sendEmailChangeConfirm')->with(self::anything(), $this->user);
+        $this->user_manager->method('updateDb')->willReturnCallback(
+            function (PFUser $user): bool {
+                if (
+                    $user->getRealName() === 'Franck Zappa' ||
+                    $user->getTimezone() === 'Europe/Berlin' ||
+                    $user->getEmailNew() === 'bob@example.com'
+                ) {
+                    return true;
+                }
 
-        $this->avatar_generator->shouldReceive('generate')->once();
+                return false;
+            }
+        );
+
+        $this->avatar_generator->expects(self::once())->method('generate');
 
         $has_been_redirected = false;
         try {
@@ -551,12 +575,12 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
 
         self::assertTrue($has_been_redirected);
         $feedback = $this->layout_inspector->getFeedback();
-        $this->assertCount(3, $feedback);
-        $this->assertEquals(\Feedback::INFO, $feedback[0]['level']);
-        $this->assertStringContainsStringIgnoringCase('real name successfully updated', $feedback[0]['message']);
-        $this->assertEquals(\Feedback::INFO, $feedback[1]['level']);
-        $this->assertStringContainsStringIgnoringCase('email was successfully saved', $feedback[1]['message']);
-        $this->assertEquals(\Feedback::INFO, $feedback[2]['level']);
-        $this->assertStringContainsStringIgnoringCase('timezone successfully updated', $feedback[2]['message']);
+        self::assertCount(3, $feedback);
+        self::assertEquals(\Feedback::INFO, $feedback[0]['level']);
+        self::assertStringContainsStringIgnoringCase('real name successfully updated', $feedback[0]['message']);
+        self::assertEquals(\Feedback::INFO, $feedback[1]['level']);
+        self::assertStringContainsStringIgnoringCase('email was successfully saved', $feedback[1]['message']);
+        self::assertEquals(\Feedback::INFO, $feedback[2]['level']);
+        self::assertStringContainsStringIgnoringCase('timezone successfully updated', $feedback[2]['message']);
     }
 }

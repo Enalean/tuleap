@@ -20,34 +20,31 @@
 
 namespace Tuleap\User\Account;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 
-class UserAvatarSaverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UserAvatarSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public const MINIMAL_PNG_BASE64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==';
 
-    public function testANewAvatarCanBeUploaded()
+    public function testANewAvatarCanBeUploaded(): void
     {
         $filesystem   = vfsStream::setup();
-        $user_manager = \Mockery::mock(\UserManager::class);
+        $user_manager = $this->createMock(\UserManager::class);
 
         $user_avatar_saver = new UserAvatarSaver($user_manager);
 
-        $user             = \Mockery::mock(\PFUser::class);
+        $user             = $this->createMock(\PFUser::class);
         $avatar_file_path = $filesystem->url() . '/folder/user/avatar';
-        $user->shouldReceive('getAvatarFilePath')->andReturns($avatar_file_path);
+        $user->method('getAvatarFilePath')->willReturn($avatar_file_path);
 
-        $user->shouldReceive('setHasCustomAvatar')->with(true)->once();
-        $user_manager->shouldReceive('updateDb')->once();
+        $user->expects(self::once())->method('setHasCustomAvatar')->with(true);
+        $user_manager->expects(self::once())->method('updateDb');
 
         $avatar_temporary_path = $filesystem->url() . '/avatar_tmp_upload';
         file_put_contents($avatar_temporary_path, base64_decode(self::MINIMAL_PNG_BASE64));
 
         $user_avatar_saver->saveAvatar($user, $avatar_temporary_path);
 
-        $this->assertFileExists($avatar_file_path);
+        self::assertFileExists($avatar_file_path);
     }
 }

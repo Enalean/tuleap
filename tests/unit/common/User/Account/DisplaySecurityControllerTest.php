@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\User\Account;
 
 use CSRFSynchronizerToken;
-use Mockery as M;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Password\PasswordSanityChecker;
 use Tuleap\Request\ForbiddenException;
@@ -36,11 +36,10 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class DisplaySecurityControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;
 
     /**
-     * @var CSRFSynchronizerToken|M\LegacyMockInterface|M\MockInterface
+     * @var CSRFSynchronizerToken&MockObject
      */
     private $csrf_token;
     /**
@@ -77,13 +76,19 @@ final class DisplaySecurityControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         };
 
-        $this->csrf_token = M::mock(CSRFSynchronizerToken::class);
+        $password_sanity_checker = $this->createMock(PasswordSanityChecker::class);
+        $password_sanity_checker->method('getValidators')->willReturn([]);
+
+        $user_manager = $this->createMock(\UserManager::class);
+        $user_manager->method('getUserAccessInfo')->willReturn(['last_auth_success' => 1, 'last_auth_failure' => 1, 'nb_auth_failure' => 1, 'prev_auth_success' => 1]);
+
+        $this->csrf_token = $this->createMock(CSRFSynchronizerToken::class);
         $this->controller = new DisplaySecurityController(
             $this->event_manager,
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             $this->csrf_token,
-            M::mock(PasswordSanityChecker::class, ['getValidators' => []]),
-            M::mock(\UserManager::class, ['getUserAccessInfo' => ['last_auth_success' => 1, 'last_auth_failure' => 1, 'nb_auth_failure' => 1, 'prev_auth_success' => 1]])
+            $password_sanity_checker,
+            $user_manager,
         );
         $language         = $this->createStub(\BaseLanguage::class);
         $language->method('getText')->willReturn('');
@@ -115,7 +120,7 @@ final class DisplaySecurityControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             []
         );
         $output = ob_get_clean();
-        $this->assertStringContainsString('Session', $output);
+        self::assertStringContainsString('Session', $output);
     }
 
     public function testItRendersThePageWithPasswords(): void
@@ -127,11 +132,11 @@ final class DisplaySecurityControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             []
         );
         $output = ob_get_clean();
-        $this->assertStringContainsString('Update password', $output);
+        self::assertStringContainsString('Update password', $output);
 
-        $this->assertStringContainsString('name="current_password"', $output);
-        $this->assertStringContainsString('name="new_password"', $output);
-        $this->assertStringContainsString('name="repeat_new_password"', $output);
+        self::assertStringContainsString('name="current_password"', $output);
+        self::assertStringContainsString('name="new_password"', $output);
+        self::assertStringContainsString('name="repeat_new_password"', $output);
     }
 
     public function testItDoesntRenderPasswordUpdateWhenItsNotAllowedForUser(): void
@@ -145,10 +150,10 @@ final class DisplaySecurityControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             []
         );
         $output = ob_get_clean();
-        $this->assertStringNotContainsString('Update password', $output);
+        self::assertStringNotContainsString('Update password', $output);
 
-        $this->assertStringNotContainsString('name="current_password"', $output);
-        $this->assertStringNotContainsString('name="new_password"', $output);
-        $this->assertStringNotContainsString('name="repeat_new_password"', $output);
+        self::assertStringNotContainsString('name="current_password"', $output);
+        self::assertStringNotContainsString('name="new_password"', $output);
+        self::assertStringNotContainsString('name="repeat_new_password"', $output);
     }
 }
