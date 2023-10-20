@@ -17,21 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ControlPullRequestCommentReply } from "../../src/comment/comment-reply/PullRequestCommentReplyController";
-import { RelativeDateHelperStub } from "./RelativeDateHelperStub";
+import type { WritingZoneInteractionsHandler } from "../../types";
+import type { InternalEditionForm } from "./EditionForm";
 
-const noop = (): void => {
-    // Do nothing
-};
+export type ControlEditionForm = WritingZoneInteractionsHandler<InternalEditionForm>;
 
-export const ControlPullRequestCommentReplyStub = (
-    current_user_id = 102,
-): ControlPullRequestCommentReply => ({
-    hideReplyForm: noop,
-    showReplyForm: noop,
-    hideEditionForm: noop,
-    showEditionForm: noop,
-    getRelativeDateHelper: () => RelativeDateHelperStub,
-    getProjectId: () => 105,
-    getCurrentUserId: () => current_user_id,
+export const EditionFormController = (): ControlEditionForm => ({
+    handleWritingZoneContentChange(): void {
+        // Nothing to do for the moment
+    },
+
+    shouldFocusWritingZoneOnceRendered: () => true,
 });

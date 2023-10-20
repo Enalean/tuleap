@@ -27,6 +27,7 @@ import { ControlPullRequestCommentReplyStub } from "../../../tests/stubs/Control
 import type { PullRequestCommentPresenter } from "../PullRequestCommentPresenter";
 import type { HostElement } from "./PullRequestCommentReply";
 import { buildFooterForComment } from "./PullRequestCommentReplyFooterTemplate";
+import type { ControlPullRequestCommentReply } from "./PullRequestCommentReplyController";
 
 const is_comment_edition_enabled = true;
 
@@ -69,11 +70,16 @@ describe("PullRequestCommentReplyFooterTemplate", () => {
     });
 
     describe("Edit button", () => {
+        let controller: ControlPullRequestCommentReply;
         const current_user_id = 102;
+
+        beforeEach(() => {
+            controller = ControlPullRequestCommentReplyStub(current_user_id);
+        });
         const getHost = (comment: PullRequestCommentPresenter): HostElement =>
             ({
                 comment,
-                controller: ControlPullRequestCommentReplyStub(current_user_id),
+                controller,
                 replies: [],
                 is_comment_edition_enabled,
             }) as unknown as HostElement;
@@ -110,6 +116,21 @@ describe("PullRequestCommentReplyFooterTemplate", () => {
             render(host, target);
 
             expect(target.querySelector("[data-test=button-edit-comment]")).toBeNull();
+        });
+
+        it("When it is clicked, then it should show the edition form", () => {
+            const host = getHost(
+                PullRequestCommentPresenterStub.buildGlobalCommentWithData({
+                    user: { id: current_user_id } as User,
+                }),
+            );
+            const showEditionForm = vi.spyOn(controller, "showEditionForm");
+            const render = buildFooterForComment(host, GettextProviderStub);
+            render(host, target);
+
+            selectOrThrow(target, "[data-test=button-edit-comment]").click();
+
+            expect(showEditionForm).toHaveBeenCalledOnce();
         });
     });
 });

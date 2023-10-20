@@ -22,11 +22,13 @@ import type { CurrentPullRequestUserPresenter } from "../../types";
 import type { HelpRelativeDatesDisplay } from "../../helpers/relative-dates-helper";
 import { RelativeDatesHelper } from "../../helpers/relative-dates-helper";
 import type { PullRequestPresenter } from "../PullRequestPresenter";
-import type { HostElement } from "./PullRequestCommentReply";
+import type { HostElement, InternalPullRequestCommentReply } from "./PullRequestCommentReply";
 
 export type ControlPullRequestCommentReply = {
     showReplyForm(host: HostElement): void;
     hideReplyForm(host: HostElement): void;
+    showEditionForm(host: InternalPullRequestCommentReply): void;
+    hideEditionForm(host: InternalPullRequestCommentReply): void;
     getRelativeDateHelper(): HelpRelativeDatesDisplay;
     getProjectId(): number;
     getCurrentUserId(): number;
@@ -42,15 +44,18 @@ export const PullRequestCommentReplyController = (
     hideReplyForm: (host: HostElement): void => {
         dispatch(host, "hide-reply-form");
     },
-
+    showEditionForm: (host: InternalPullRequestCommentReply): void => {
+        host.is_in_edition_mode = true;
+    },
+    hideEditionForm: (host: InternalPullRequestCommentReply): void => {
+        host.is_in_edition_mode = false;
+    },
     getRelativeDateHelper: (): HelpRelativeDatesDisplay =>
         RelativeDatesHelper(
             current_user.preferred_date_format,
             current_user.preferred_relative_date_display,
             current_user.user_locale,
         ),
-
     getProjectId: () => current_pull_request.project_id,
-
     getCurrentUserId: (): number => current_user.user_id,
 });

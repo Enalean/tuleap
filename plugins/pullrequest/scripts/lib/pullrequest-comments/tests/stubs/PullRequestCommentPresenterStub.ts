@@ -40,6 +40,7 @@ const comment_presenter_base: PullRequestGlobalCommentPresenter = {
     },
     post_date: "a moment ago",
     content: "** Please rebase **",
+    raw_content: "** Please rebase **",
     post_processed_content: "<b>Please rebase</b>",
     format: FORMAT_COMMONMARK,
     parent_id: 0,

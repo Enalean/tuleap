@@ -35,6 +35,8 @@ import { ReplyContext } from "./ReplyContext";
 export type ControlPullRequestComment = {
     showReplyForm(host: PullRequestCommentComponentType): void;
     hideReplyForm(host: PullRequestCommentComponentType): void;
+    showEditionForm(host: PullRequestCommentComponentType): void;
+    hideEditionForm(host: PullRequestCommentComponentType): void;
     displayReplies(host: PullRequestCommentComponentType): void;
     getRelativeDateHelper(): HelpRelativeDatesDisplay;
     buildReplyController(): ControlPullRequestCommentReply;
@@ -55,6 +57,12 @@ export const PullRequestCommentController = (
     },
     hideReplyForm: (host: PullRequestCommentComponentType): void => {
         host.is_reply_form_shown = false;
+    },
+    showEditionForm: (host: PullRequestCommentComponentType): void => {
+        host.is_edition_form_shown = true;
+    },
+    hideEditionForm: (host: PullRequestCommentComponentType): void => {
+        host.is_edition_form_shown = false;
     },
     displayReplies: (host: PullRequestCommentComponentType): void => {
         host.replies = replies_store.getCommentReplies(host.comment);

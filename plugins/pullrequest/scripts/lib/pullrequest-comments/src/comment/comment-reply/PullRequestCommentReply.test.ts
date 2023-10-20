@@ -21,7 +21,7 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { SpyInstance } from "vitest";
 import * as tooltip from "@tuleap/tooltip";
 import type { HostElement } from "./PullRequestCommentReply";
-import { after_render_once_descriptor } from "./PullRequestCommentReply";
+import { after_render_once_descriptor, element_height_descriptor } from "./PullRequestCommentReply";
 
 vi.mock("@tuleap/tooltip", () => ({
     loadTooltips: (): void => {
@@ -45,5 +45,20 @@ describe("PullRequestCommentReply", () => {
 
         expect(loadTooltips).toHaveBeenCalledTimes(1);
         expect(loadTooltips).toHaveBeenCalledWith(host, false);
+    });
+
+    it(`When the component's height changes, then it should trigger its parent post_rendering_callback`, () => {
+        const post_rendering_callback = vi.fn();
+        const host = {
+            parent_element: {
+                post_rendering_callback,
+            },
+        } as unknown as HostElement;
+
+        vi.useFakeTimers();
+        element_height_descriptor.observe(host);
+        vi.advanceTimersToNextTimer();
+
+        expect(post_rendering_callback).toHaveBeenCalledOnce();
     });
 });

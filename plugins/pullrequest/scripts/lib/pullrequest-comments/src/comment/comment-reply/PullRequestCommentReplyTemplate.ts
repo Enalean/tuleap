@@ -37,7 +37,7 @@ export const getCommentContentClasses = (host: InternalPullRequestCommentReply):
         "pull-request-comment-content": true,
     };
 
-    if (host.parent_element.comment.color) {
+    if (host.parent_element.comment.color && !host.is_in_edition_mode) {
         classes[`pull-request-comment-content-color`] = true;
         classes[`tlp-swatch-${host.parent_element.comment.color}`] = true;
     }
@@ -73,6 +73,40 @@ const getContent = (comment: PullRequestCommentPresenter): string => {
     return DOMPurify.sanitize(comment.content);
 };
 
+const getCommentContentTemplate = (
+    host: InternalPullRequestCommentReply,
+    gettext_provider: GettextProvider,
+): UpdateFunction<InternalPullRequestCommentReply> => {
+    if (host.is_in_edition_mode) {
+        return html` <tuleap-pullrequest-comment-edition-form
+            class="pull-request-comment-content"
+            comment="${host.comment}"
+            project_id="${host.controller.getProjectId()}"
+            oncancel-edition="${(): void => host.controller.hideEditionForm(host)}"
+        ></tuleap-pullrequest-comment-edition-form>`;
+    }
+
+    return html`
+        <div class="${getCommentContentClasses(host)}">
+            <div class="${getBodyClasses(host)}" data-test="pull-request-comment-body">
+                <div class="pull-request-comment-content-info">
+                    ${getHeaderTemplate(
+                        host.comment.user,
+                        host.relative_date_helper,
+                        host.comment.post_date,
+                    )}
+                </div>
+                <p
+                    class="pull-request-comment-text"
+                    data-test="pull-request-comment-text"
+                    innerHTML="${getContent(host.comment)}"
+                ></p>
+            </div>
+            ${buildFooterForComment(host, gettext_provider)}
+        </div>
+    `;
+};
+
 export const getCommentReplyTemplate = (
     host: InternalPullRequestCommentReply,
     gettext_provider: GettextProvider,
@@ -80,24 +114,7 @@ export const getCommentReplyTemplate = (
     <div class="${getFollowUpClasses(host)}" data-test="comment-reply">
         <div class="pull-request-comment pull-request-comment-follow-up-content">
             ${getCommentAvatarTemplate(host.comment.user)}
-            <div class="${getCommentContentClasses(host)}">
-                <div class="${getBodyClasses(host)}" data-test="pull-request-comment-body">
-                    <div class="pull-request-comment-content-info">
-                        ${getHeaderTemplate(
-                            host.comment.user,
-                            host.relative_date_helper,
-                            host.comment.post_date,
-                        )}
-                    </div>
-
-                    <p
-                        class="pull-request-comment-text"
-                        data-test="pull-request-comment-text"
-                        innerHTML="${getContent(host.comment)}"
-                    ></p>
-                </div>
-                ${buildFooterForComment(host, gettext_provider)}
-            </div>
+            ${getCommentContentTemplate(host, gettext_provider)}
         </div>
     </div>
 `;

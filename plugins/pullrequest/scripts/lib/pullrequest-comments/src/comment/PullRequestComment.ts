@@ -18,16 +18,17 @@
  */
 
 import { define, html } from "hybrids";
+import type { UpdateFunction } from "hybrids";
 import { loadTooltips } from "@tuleap/tooltip";
+import { getCommentAvatarTemplate } from "../templates/CommentAvatarTemplate";
+import type { HelpRelativeDatesDisplay } from "../helpers/relative-dates-helper";
+import { gettext_provider } from "../gettext-provider";
+import type { ElementContainingAWritingZone } from "../types";
 import type { ControlPullRequestComment } from "./PullRequestCommentController";
 import { getCommentBody } from "./PullRequestCommentBodyTemplate";
 import { getCommentFooter } from "./PullRequestCommentFooterTemplate";
-import { getCommentAvatarTemplate } from "../templates/CommentAvatarTemplate";
 import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 import { PullRequestCommentRepliesCollectionPresenter } from "./PullRequestCommentRepliesCollectionPresenter";
-import { gettext_provider } from "../gettext-provider";
-import type { HelpRelativeDatesDisplay } from "../helpers/relative-dates-helper";
-import type { ElementContainingAWritingZone } from "../types";
 
 export const PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME = "tuleap-pullrequest-comment";
 export type HostElement = PullRequestCommentComponentType &
@@ -47,6 +48,7 @@ export type PullRequestCommentComponentType = {
     relative_date_helper: HelpRelativeDatesDisplay;
     replies: PullRequestCommentRepliesCollectionPresenter;
     is_reply_form_shown: boolean;
+    is_edition_form_shown: boolean;
 };
 
 const getCommentClasses = (host: PullRequestCommentComponentType): MapOfClasses => {
@@ -111,10 +113,30 @@ const isLastReply = (
     return host.replies[host.replies.length - 1].id === comment.id;
 };
 
+const getCommentContent = (
+    host: PullRequestCommentComponentType,
+): UpdateFunction<PullRequestCommentComponentType> => {
+    if (host.is_edition_form_shown) {
+        return html` <tuleap-pullrequest-comment-edition-form
+            class="pull-request-comment-content"
+            comment="${host.comment}"
+            project_id="${host.controller.getProjectId()}"
+            oncancel-edition="${(): void => host.controller.hideEditionForm(host)}"
+        ></tuleap-pullrequest-comment-edition-form>`;
+    }
+
+    return html`
+        <div class="${getCommentContentClasses(host)}">
+            ${getCommentBody(host, gettext_provider)} ${getCommentFooter(host, gettext_provider)}
+        </div>
+    `;
+};
+
 export const PullRequestCommentComponent = define<PullRequestCommentComponentType>({
     tag: PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME,
     is_comment_edition_enabled: false,
     is_reply_form_shown: false,
+    is_edition_form_shown: false,
     comment: undefined,
     post_rendering_callback: undefined,
     relative_date_helper: undefined,
@@ -136,12 +158,7 @@ export const PullRequestCommentComponent = define<PullRequestCommentComponentTyp
     content: (host) => html`
         <div class="pull-request-comment-component">
             <div class="${getCommentClasses(host)}" data-test="pullrequest-comment">
-                ${getCommentAvatarTemplate(host.comment.user)}
-
-                <div class="${getCommentContentClasses(host)}">
-                    ${getCommentBody(host, gettext_provider)}
-                    ${getCommentFooter(host, gettext_provider)}
-                </div>
+                ${getCommentAvatarTemplate(host.comment.user)} ${getCommentContent(host)}
             </div>
 
             <div class="pull-request-comment-follow-ups">

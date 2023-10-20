@@ -229,6 +229,7 @@ describe("side-by-side-code-mirror-widget-creator", () => {
                 position: INLINE_COMMENT_POSITION_LEFT,
                 parent_id: 0,
                 content: "Please give more precisions",
+                raw_content: "Please give more precisions",
                 post_processed_content: "Please give more precisions",
                 format: FORMAT_TEXT,
                 file_path: "README.md",

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, beforeEach, expect, it } from "vitest";
+import { describe, beforeEach, expect, it, vi } from "vitest";
 import { selectOrThrow } from "@tuleap/dom";
 import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { FORMAT_TEXT } from "@tuleap/plugin-pullrequest-constants";
@@ -27,6 +27,7 @@ import { GettextProviderStub } from "../../tests/stubs/GettextProviderStub";
 import type { HostElement } from "./PullRequestComment";
 import { getCommentFooter } from "./PullRequestCommentFooterTemplate";
 import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
+import type { ControlPullRequestComment } from "./PullRequestCommentController";
 
 const is_comment_edition_enabled = true;
 
@@ -91,6 +92,7 @@ describe("PullRequestCommentFooterTemplate", () => {
 
     it("When the [Reply] button is clicked, then it should show the reply form", () => {
         const controller = PullRequestCommentControllerStub();
+        const showReplyForm = vi.spyOn(controller, "showReplyForm");
         const host = {
             comment: PullRequestCommentPresenterStub.buildGlobalComment(),
             controller,
@@ -103,21 +105,31 @@ describe("PullRequestCommentFooterTemplate", () => {
 
         selectOrThrow(target, "[data-test=button-reply-to-comment]").click();
 
-        expect(controller.showReplyForm).toHaveBeenCalledTimes(1);
+        expect(showReplyForm).toHaveBeenCalledTimes(1);
     });
 
     describe("Edit button", () => {
+        let controller: ControlPullRequestComment;
         const current_user_id = 102;
+
+        beforeEach(() => {
+            controller = PullRequestCommentControllerStub(current_user_id);
+        });
+
         const getHost = (comment: PullRequestCommentPresenter): HostElement =>
             ({
                 comment,
-                controller: PullRequestCommentControllerStub(current_user_id),
+                controller,
                 replies: [],
                 is_comment_edition_enabled,
             }) as unknown as HostElement;
 
         it("When the current user is the author of the comment, then the footer should contain an [Edit] button", () => {
-            const host = getHost(PullRequestCommentPresenterStub.buildGlobalComment());
+            const host = getHost(
+                PullRequestCommentPresenterStub.buildGlobalCommentWithData({
+                    user: { id: current_user_id } as User,
+                }),
+            );
             const render = getCommentFooter(host, GettextProviderStub);
             render(host, target);
 
@@ -144,6 +156,21 @@ describe("PullRequestCommentFooterTemplate", () => {
             render(host, target);
 
             expect(target.querySelector("[data-test=button-edit-comment]")).toBeNull();
+        });
+
+        it("When it is clicked, then it should show the edition form", () => {
+            const host = getHost(
+                PullRequestCommentPresenterStub.buildGlobalCommentWithData({
+                    user: { id: current_user_id } as User,
+                }),
+            );
+            const showEditionForm = vi.spyOn(controller, "showEditionForm");
+            const render = getCommentFooter(host, GettextProviderStub);
+            render(host, target);
+
+            selectOrThrow(target, "[data-test=button-edit-comment]").click();
+
+            expect(showEditionForm).toHaveBeenCalledOnce();
         });
     });
 });

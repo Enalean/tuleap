@@ -28,6 +28,7 @@ interface CommonNewComment {
     readonly id: number;
     readonly post_date: string;
     readonly content: string;
+    readonly raw_content: string;
     readonly user: User;
     readonly parent_id: number;
     readonly color: string;

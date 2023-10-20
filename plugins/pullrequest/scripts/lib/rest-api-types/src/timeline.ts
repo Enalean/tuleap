@@ -35,6 +35,7 @@ interface CommonComment {
     readonly id: number;
     readonly post_date: string;
     readonly content: string;
+    readonly raw_content: string;
     readonly type: CommentType;
     readonly user: User;
     readonly parent_id: number;
