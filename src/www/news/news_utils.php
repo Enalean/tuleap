@@ -41,17 +41,14 @@ require_once __DIR__ . '/../project/admin/ugroup_utils.php';
 require_once __DIR__ . '/../forum/forum_utils.php';
 
 
-function news_header(array $params)
+function news_header(Tuleap\Layout\HeaderConfiguration $params)
 {
     global $HTML,$group_id,$news_name,$news_id,$Language;
 
     \Tuleap\Project\ServiceInstrumentation::increment('news');
 
-    $params['toptab']  = 'news';
-    $params['project'] = ProjectManager::instance()->getProjectById((int) $group_id);
-
-    if (isset($params['project_id'])) {
-        $group_id = $params['project_id'];
+    if ($params->in_project) {
+        $group_id = $params->in_project->project->getGroupId();
     }
 
     $GLOBALS['HTML']->addBreadcrumbs([
@@ -71,7 +68,7 @@ function news_header(array $params)
         echo '
 			<H2>' . ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME) . ' <A HREF="/news/">' . $Language->getText('news_index', 'news') . '</A></H2>';
     }
-    if (! isset($params['pv']) || ! $params['pv']) {
+    if (! $params->printer_version) {
         $purifier = Codendi_HTMLPurifier::instance();
         echo '<P><B>';
         // 'Admin' tab is only displayed if the user is News admin or project admin
@@ -82,14 +79,6 @@ function news_header(array $params)
               // 'Submit News' tab is only displayed if the user is News writer, or project admin
                 echo '<A HREF="/news/submit.php?group_id=' . $purifier->purify(urlencode($group_id)) . '">' . $Language->getText('news_utils', 'submit_news') . '</A>';
             }
-            if (user_ismember($group_id, 'A') || user_ismember($group_id, 'N2') || user_ismember($group_id, 'N1')) {
-                if (isset($params['help'])) {
-                    echo ' | ';
-                }
-            }
-        }
-        if (isset($params['help'])) {
-            echo help_button($params['help'], $Language->getText('global', 'help'));
         }
         echo '</b><P>';
     }

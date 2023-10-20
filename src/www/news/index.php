@@ -38,18 +38,18 @@ if ($request->valid(new Valid_Pv())) {
     $pv = 0;
 }
 
-$pm = ProjectManager::instance();
+$pm      = ProjectManager::instance();
+$project = $pm->getProject($group_id);
 if ($group_id) {
-    $title = $Language->getText('news_index', 'news_for', $pm->getProject($group_id)->getPublicName());
+    $title = $Language->getText('news_index', 'news_for', $project->getPublicName());
 } else {
     $title = $Language->getText('news_index', 'news');
 }
-$params = ['title' => $title,
-    'help' => 'collaboration.html#news-service',
-    'pv' => $pv,
-];
 
-news_header($params);
+news_header(\Tuleap\Layout\HeaderConfigurationBuilder::get($GLOBALS['Language']->getText('news_admin_index', 'title'))
+    ->inProject($project, Service::NEWS)
+    ->withPrinterVersion($pv)
+    ->build());
 
 if ($pv != 2) {
     if ($pv == 1) {
@@ -84,7 +84,7 @@ $purifier = Codendi_HTMLPurifier::instance();
 if ($rows < 1) {
     echo '<H2>' . $Language->getText('news_index', 'no_news_found');
     if ($group_id) {
-         echo $purifier->purify(' ' . $Language->getText('news_index', 'for', $pm->getProject($group_id)->getPublicName()));
+        echo $purifier->purify(' ' . $Language->getText('news_index', 'for', $project->getPublicName()));
     }
     echo '</H2>';
     echo '
@@ -118,4 +118,4 @@ if ($rows < 1) {
 }
 
 // Display footer page
-news_footer($params);
+news_footer([]);
