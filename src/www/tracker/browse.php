@@ -353,13 +353,9 @@ $masschange = isset($masschange) && $masschange;
 if ($pv != 2) {
     if ($masschange) {
         $_title .=  $Language->getText('tracker_masschange', 'mass_change_report');
-        $_help   = 'ArtifactMassChange.html';
     } else {
         $_title .= $Language->getText('tracker_browse', 'search_report');
-        $_help   = 'tracker-v3.html#artifact-browsing';
     }
-} else {
-    $_help = ''; // printer version without help
 }
 
 $params = ['title' => $_title,
@@ -367,7 +363,6 @@ $params = ['title' => $_title,
     'pagename' => 'tracker_browse',
     'atid' => $ath->getID(),
     'pv' => $pv,
-    'help' => $_help,
 ];
 
 

@@ -41,7 +41,6 @@ if ($request->valid(new Valid_Pv())) {
 
 $pm     = ProjectManager::instance();
 $params = ['title' => sprintf(_('Forums for \'%1$s\''), $pm->getProject($group_id)->getPublicName()),
-    'help' => 'collaboration.html#web-forums',
     'pv'   => isset($pv) ? $pv : false,
 ];
 forum_header($params);

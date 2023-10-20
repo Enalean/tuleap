@@ -35,7 +35,6 @@ $group_id = $ath->getGroupID();
 $params   = ['title' => $group->getPublicName() . ' ' . $ath->getName() . ' #' . $ah->getID() . ' - \'' . $ah->getSummary() . '\'',
     'pagename' => 'tracker',
     'atid' => $ath->getID(),
-    'help' => 'tracker-v3.html#comments',
 ];
 // Display header page
 $ath->header($params);

@@ -49,7 +49,6 @@ function forum_header(array $params)
     $project           = ProjectManager::instance()->getProjectById((int) $group_id);
     $params['project'] = $project;
     $params['toptab']  = 'forum';
-    $params['help']    = 'collaboration.html#web-forums';
 
     /*
 

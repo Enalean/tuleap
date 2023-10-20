@@ -23,7 +23,7 @@ if (! $ath->userCanSubmit()) {
 
 // Display the menus
 $ath->header(['title' => $Language->getText('tracker_add', 'add_a') . " " . $ath->getCapsItemName(),'titlevals' => [$ath->getName()],'pagename' => 'tracker_browse',
-    'atid' => $ath->getID(),'help' => 'ArtifactSubmission.html',
+    'atid' => $ath->getID(),
 ]);
 echo '<div id="tracker_toolbar_clear"></div>';
 

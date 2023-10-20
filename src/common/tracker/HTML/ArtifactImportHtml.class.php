@@ -24,7 +24,7 @@
 require_once __DIR__ . '/../../../www/project/export/project_export_utils.php';
 
 
-class ArtifactImportHtml extends ArtifactImport
+class ArtifactImportHtml extends ArtifactImport // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
   /**
    *
@@ -70,7 +70,6 @@ class ArtifactImportHtml extends ArtifactImport
 
         $this->ath->header(['title' => $Language->getText('tracker_import', 'art_import') . $this->ath->getID() . ' - ' . $this->ath->getName(),'pagename' => 'tracker',
             'atid' => $this->ath->getID(),
-            'help' => 'tracker-v3.html#tracker-artifact-import',
         ]);
         echo '<div id="tracker_toolbar_clear"></div>' . PHP_EOL;
 
@@ -280,7 +279,6 @@ class ArtifactImportHtml extends ArtifactImport
         $at = $this->ath;
         $this->ath->header(['title' => $Language->getText('tracker_import', 'art_import') . ' ' . $this->ath->getID() . ' - ' . $this->ath->getName(),'pagename' => 'tracker',
             'atid' => $this->ath->getID(),
-            'help' => 'tracker-v3.html#tracker-artifact-import',
         ]);
         echo '<div id="tracker_toolbar_clear"></div>' . PHP_EOL;
 
@@ -346,7 +344,6 @@ class ArtifactImportHtml extends ArtifactImport
 
         $this->ath->header(['title' => $Language->getText('tracker_import', 'art_import') . ' ' . $this->ath->getID() . ' - ' . $this->ath->getName(),'pagename' => 'tracker',
             'atid' => $this->ath->getID(),
-            'help' => 'tracker-v3.html#tracker-artifact-import',
         ]);
         echo '<div id="tracker_toolbar_clear"></div>' . PHP_EOL;
 

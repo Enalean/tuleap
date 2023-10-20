@@ -267,7 +267,6 @@ class WikiServiceViews extends WikiViews
         }
         $attatch_menu     = $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'menuattch');
         $preferences_menu = $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'menuprefs');
-        $help_menu        = $GLOBALS['Language']->getText('global', 'help');
         print '
     <ul class="ServiceMenu">
       <li><a href="' . $this->wikiLink . '&view=browsePages" data-test="wiki-browse-pages">' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'menupages') . '</a>&nbsp;|&nbsp;</li>';

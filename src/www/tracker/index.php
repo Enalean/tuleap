@@ -987,7 +987,6 @@ if ($func == 'gotoid') {
         $params['toptab']   = 'tracker';
         $params['pagename'] = 'trackers';
         $params['title']    = $Language->getText('tracker_index', 'trackers_for', $group->getPublicName());
-        $params['help']     = 'tracker-v3.html';
         $params['pv']       = $pv ? $pv : '';
 
         site_project_header($group, $params);
@@ -995,9 +994,6 @@ if ($func == 'gotoid') {
         // Admin link and create link are only displayed if the user is a project administrator
     if (user_ismember($group_id, 'A')) {
         echo '<a href="/tracker/admin/?group_id=' . (int) $group_id . '">' . $Language->getText('tracker_index', 'admin_all_trackers') . '</a>';
-        if ($params['help']) {
-            echo ' | ';
-        }
     }
         echo "</strong><p>";
 
