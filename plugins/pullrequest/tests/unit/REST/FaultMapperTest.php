@@ -29,6 +29,7 @@ use Tuleap\PullRequest\Authorization\CannotAccessToPullRequestFault;
 use Tuleap\PullRequest\Comment\CommentFormatNotAllowedFault;
 use Tuleap\PullRequest\Comment\CommentIsNotFromCurrentUserFault;
 use Tuleap\PullRequest\Comment\CommentNotFoundFault;
+use Tuleap\PullRequest\InlineComment\InlineCommentNotFoundFault;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class FaultMapperTest extends TestCase
@@ -39,6 +40,7 @@ final class FaultMapperTest extends TestCase
         yield 'Comment not found' => [CommentNotFoundFault::withCommentId(15), 404];
         yield 'Cannot update other user comment' => [CommentIsNotFromCurrentUserFault::fromComment(), 403];
         yield 'Cannot edit comment which is not in Markdown' => [CommentFormatNotAllowedFault::withGivenFormat("hehe"), 403];
+        yield 'Inline comment not found' => [InlineCommentNotFoundFault::fromCommentId(785), 404];
     }
 
     /**

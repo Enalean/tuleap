@@ -3,14 +3,14 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 3.4\n"
 
 #, php-format
 msgid ""
@@ -112,10 +112,14 @@ msgstr "Les paramètres par defaut des pull requests ont été mis à jour"
 
 #, php-format
 msgid "Editing comments in '%s' format is not allowed."
-msgstr "L'édition de commentaires au format '%s' n'est pas autorisée"
+msgstr "L'édition de commentaires au format '%s' n'est pas autorisée."
 
 msgid "Fast-forward only"
 msgstr "Avance rapide uniquement"
+
+#, php-format
+msgid "Inline comment #%d not found"
+msgstr "Commentaire en ligne #%d non trouvé"
 
 msgid "Merge"
 msgstr "Fusion"
@@ -144,4 +148,4 @@ msgstr "Cette pull request n'est plus accessible"
 
 msgid "You are not allowed to edit a comment from another user"
 msgstr ""
-"Vous n'êtes pas autorisé à éditer un commentaire d'un autre utilisateur "
+"Vous n'êtes pas autorisé à éditer un commentaire d'un autre utilisateur"
