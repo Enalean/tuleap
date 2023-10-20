@@ -66,18 +66,6 @@ pipeline {
                         }
                     }
                 }
-                stage ('MySQL 5.7') {
-                    stages {
-                        stage('REST CentOS 7 PHP 8.1 MySQL 5.7') {
-                            steps { script { actions.runRESTTests('mysql57', '81') } }
-                            post { always { junit 'results/api-rest/*/rest_tests.xml' } }
-                        }
-                        stage('DB CentOS 7 PHP 8.1 MySQL 5.7') {
-                            steps { script { actions.runDBTests('mysql57', '81') } }
-                            post { always { junit 'results/db/*/db_tests.xml' } }
-                        }
-                    }
-                }
                 stage ('Enterprise Linux 9 (el9)') {
                     stages {
                         stage ('Build and run el9') {
@@ -90,7 +78,7 @@ pipeline {
         stage('E2E tests') {
             options { retry(1) }
             steps {
-                script { actions.runEndToEndTests('full', 'mysql57') }
+                script { actions.runEndToEndTests('full', 'mysql80') }
             }
             post {
                 always {
