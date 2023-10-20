@@ -94,6 +94,7 @@ exports[`LinkedProjects > displays the linked projects with a popover 1`] = `
           <a
             class="project-sidebar-linked-projects-item-link"
             href="https://myinstance.example.com/projects/teama"
+            title="Team A"
           >
             <i
               aria-hidden="true"
@@ -112,6 +113,7 @@ exports[`LinkedProjects > displays the linked projects with a popover 1`] = `
           <a
             class="project-sidebar-linked-projects-item-link"
             href="https://myinstance.example.com/projects/teamb"
+            title="Team B"
           >
             <span
               aria-hidden="true"
