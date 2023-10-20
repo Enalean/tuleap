@@ -63,19 +63,19 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import type { MilestoneData, Pane } from "../../../type";
-import { State } from "vuex-class";
+import { useStore } from "../../../stores/root";
 
 @Component
 export default class ReleaseButtonsDescription extends Vue {
     @Prop()
     readonly release_data!: MilestoneData;
-    @State
-    readonly project_id!: number;
+
+    public root_store = useStore();
 
     get get_overview_link(): string | null {
         return (
             "/plugins/agiledashboard/?group_id=" +
-            encodeURIComponent(this.project_id) +
+            encodeURIComponent(this.root_store.project_id) +
             "&planning_id=" +
             encodeURIComponent(this.release_data.planning.id) +
             "&action=show&aid=" +
@@ -91,7 +91,7 @@ export default class ReleaseButtonsDescription extends Vue {
 
         return (
             "/plugins/agiledashboard/?group_id=" +
-            encodeURIComponent(this.project_id) +
+            encodeURIComponent(this.root_store.project_id) +
             "&planning_id=" +
             encodeURIComponent(this.release_data.planning.id) +
             "&action=show&aid=" +

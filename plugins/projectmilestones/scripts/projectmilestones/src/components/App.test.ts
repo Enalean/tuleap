@@ -20,60 +20,89 @@
 import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import App from "./App.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { MilestoneData, StoreOptions } from "../type";
+import type { MilestoneData } from "../type";
 import { createReleaseWidgetLocalVue } from "../helpers/local-vue-for-test";
 import RoadmapEmptyStateSection from "./ProjectMilestonesEmpty/RoadmapEmptyStateSection.vue";
 import PastSection from "./PastSection/PastSection.vue";
 import WhatsHotSection from "./WhatsHotSection/WhatsHotSection.vue";
 import RoadmapSection from "./RoadmapSection/RoadmapSection.vue";
+import { createTestingPinia } from "@pinia/testing";
+import { defineStore } from "pinia";
 
 const project_id = 102;
 const component_options: ShallowMountOptions<App> = {};
 
-async function getPersonalWidgetInstance(store_options: StoreOptions): Promise<Wrapper<App>> {
-    const store = createStoreMock(store_options);
+let is_loading = false;
+let current_milestones: Array<MilestoneData> = [];
+let nb_backlog_items = 0;
+let nb_past_releases = 0;
+let nb_upcoming_releases = 0;
+let error_message = "";
+let has_rest_error = false;
 
-    component_options.mocks = { $store: store };
+async function getPersonalWidgetInstance(): Promise<Wrapper<App>> {
     component_options.localVue = await createReleaseWidgetLocalVue();
+
+    const useStore = defineStore("root", {
+        state: () => ({
+            is_loading,
+            current_milestones,
+            nb_backlog_items,
+            nb_past_releases,
+            nb_upcoming_releases,
+            error_message,
+        }),
+        actions: {
+            getMilestones: jest.fn(),
+        },
+        getters: {
+            has_rest_error: () => has_rest_error,
+        },
+    });
+    const pinia = createTestingPinia();
+    useStore(pinia);
 
     return shallowMount(App, component_options);
 }
 
 describe("Given a release widget", () => {
-    let store_options: StoreOptions & Required<Pick<StoreOptions, "getters">>;
     beforeEach(() => {
         component_options.propsData = {
             project_id,
             is_browser_IE11: false,
         };
 
-        store_options = {
-            state: {
-                is_loading: false,
-                current_milestones: [],
-                nb_backlog_items: 0,
-                nb_past_releases: 0,
-                nb_upcoming_releases: 0,
-            },
-            getters: {
-                has_rest_error: false,
-            },
-        };
+        is_loading = false;
+        current_milestones = [];
+        nb_backlog_items = 0;
+        nb_past_releases = 0;
+        nb_upcoming_releases = 0;
+        error_message = "";
+        has_rest_error = false;
     });
 
     it("When there are no errors, then the widget content will be displayed", async () => {
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.find("[data-test=widget-content-project-milestones]").exists()).toBe(true);
         expect(wrapper.find("[data-test=show-error-message]").exists()).toBe(false);
         expect(wrapper.find("[data-test=is-loading]").exists()).toBe(false);
     });
 
+    it("When there is a rest error and it is empty, Then another message is displayed", async () => {
+        error_message = "";
+        has_rest_error = true;
+
+        const wrapper = await getPersonalWidgetInstance();
+        expect(wrapper.get("[data-test=show-error-message]").text()).toBe(
+            "Oops, an error occurred!",
+        );
+    });
+
     it("When there is an error, then the widget content will not be displayed", async () => {
-        store_options.state.error_message = "404 Error";
-        store_options.getters.has_rest_error = true;
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        error_message = "404 Error";
+        has_rest_error = true;
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.find("[data-test=show-error-message]").exists()).toBe(true);
         expect(wrapper.find("[data-test=widget-content-project-milestones]").exists()).toBe(false);
@@ -81,26 +110,16 @@ describe("Given a release widget", () => {
     });
 
     it("When it is loading rest data, then a loader will be displayed", async () => {
-        store_options.state.is_loading = true;
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        is_loading = true;
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.find("[data-test=is-loading]").exists()).toBe(true);
         expect(wrapper.find("[data-test=widget-content-project-milestones]").exists()).toBe(false);
         expect(wrapper.find("[data-test=show-error-message]").exists()).toBe(false);
     });
 
-    it("When there is a rest error and it is empty, Then another message is displayed", async () => {
-        store_options.state.error_message = "";
-        store_options.getters.has_rest_error = true;
-
-        const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.get("[data-test=show-error-message]").text()).toBe(
-            "Oops, an error occurred!",
-        );
-    });
-
     it("When there is an empty widget, Then only RoadmapEmptyStateSection component is renderer", async () => {
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.find("[data-test=widget-content-project-milestones]").exists()).toBe(true);
         expect(wrapper.findComponent(RoadmapEmptyStateSection).exists()).toBe(true);
@@ -110,8 +129,8 @@ describe("Given a release widget", () => {
     });
 
     it("When there is at least one backlog item, Then RoadmapSection is displayed", async () => {
-        store_options.state.nb_backlog_items = 2;
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        nb_backlog_items = 2;
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.find("[data-test=widget-content-project-milestones]").exists()).toBe(true);
         expect(wrapper.findComponent(RoadmapEmptyStateSection).exists()).toBe(false);
@@ -121,8 +140,8 @@ describe("Given a release widget", () => {
     });
 
     it("When there is at least one upcoming, Then RoadmapSection is displayed", async () => {
-        store_options.state.nb_upcoming_releases = 2;
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        nb_upcoming_releases = 2;
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.find("[data-test=widget-content-project-milestones]").exists()).toBe(true);
         expect(wrapper.findComponent(RoadmapEmptyStateSection).exists()).toBe(false);
@@ -132,8 +151,8 @@ describe("Given a release widget", () => {
     });
 
     it("When there is at least one past release, Then RoadmapSection is displayed", async () => {
-        store_options.state.nb_past_releases = 2;
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        nb_past_releases = 2;
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.find("[data-test=widget-content-project-milestones]").exists()).toBe(true);
         expect(wrapper.findComponent(RoadmapEmptyStateSection).exists()).toBe(false);
@@ -143,12 +162,12 @@ describe("Given a release widget", () => {
     });
 
     it("When there is at least one current milestone, Then RoadmapSection is displayed", async () => {
-        store_options.state.current_milestones = [
+        current_milestones = [
             {
                 id: 101,
             } as MilestoneData,
         ];
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.find("[data-test=widget-content-project-milestones]").exists()).toBe(true);
         expect(wrapper.findComponent(RoadmapEmptyStateSection).exists()).toBe(false);
@@ -158,16 +177,15 @@ describe("Given a release widget", () => {
     });
 
     it("When there are backlog items, upcoming releases, current milestones and past releases, Then RoadmapSection is displayed", async () => {
-        store_options.state.nb_backlog_items = 2;
-        store_options.state.nb_upcoming_releases = 2;
-        store_options.state.current_milestones = [
+        current_milestones = [
             {
                 id: 101,
             } as MilestoneData,
         ];
-        store_options.state.nb_past_releases = 2;
-
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        nb_backlog_items = 2;
+        nb_past_releases = 2;
+        nb_upcoming_releases = 2;
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.find("[data-test=widget-content-project-milestones]").exists()).toBe(true);
         expect(wrapper.findComponent(RoadmapEmptyStateSection).exists()).toBe(false);

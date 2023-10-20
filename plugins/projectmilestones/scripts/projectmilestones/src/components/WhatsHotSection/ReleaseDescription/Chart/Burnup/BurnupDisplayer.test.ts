@@ -17,49 +17,39 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type {
-    BurnupData,
-    MilestoneData,
-    PointsWithDateForBurnup,
-    StoreOptions,
-} from "../../../../../type";
+import type { BurnupData, MilestoneData, PointsWithDateForBurnup } from "../../../../../type";
 import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import { createReleaseWidgetLocalVue } from "../../../../../helpers/local-vue-for-test";
 import ChartError from "../ChartError.vue";
 import BurnupDisplayer from "./BurnupDisplayer.vue";
 import Burnup from "./Burnup.vue";
+import { createTestingPinia } from "@pinia/testing";
+import { defineStore } from "pinia";
 
 let release_data: MilestoneData;
 const component_options: ShallowMountOptions<BurnupDisplayer> = {};
-const project_id = 102;
 
 describe("BurnupDisplayer", () => {
-    let store_options: StoreOptions;
-    let store;
-
     async function getPersonalWidgetInstance(
-        store_options: StoreOptions,
+        is_timeframe_duration = true,
     ): Promise<Wrapper<BurnupDisplayer>> {
-        store = createStoreMock(store_options);
+        const useStore = defineStore("root", {
+            state: () => ({
+                label_timeframe: "timeframe_field",
+                label_start_date: "start_date_field",
+                is_timeframe_duration,
+            }),
+        });
+        const pinia = createTestingPinia();
+        useStore(pinia);
 
-        component_options.mocks = { $store: store };
         component_options.localVue = await createReleaseWidgetLocalVue();
 
         return shallowMount(BurnupDisplayer, component_options);
     }
 
     beforeEach(() => {
-        store_options = {
-            state: {
-                project_id,
-                is_timeframe_duration: true,
-                label_timeframe: "timeframe",
-                label_start_date: "start_date",
-            },
-        };
-
         release_data = {
             id: 2,
             start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
@@ -80,14 +70,14 @@ describe("BurnupDisplayer", () => {
             release_data,
         };
 
-        getPersonalWidgetInstance(store_options);
+        getPersonalWidgetInstance();
     });
 
     it("When the burnup is under calculation, Then ChartError component is rendered", async () => {
         component_options.propsData = {
             release_data,
         };
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
         const chart_error = wrapper.findComponent(ChartError);
 
         expect(chart_error.attributes("is_under_calculation")).toBeTruthy();
@@ -116,7 +106,7 @@ describe("BurnupDisplayer", () => {
             release_data,
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
         const chart_error = wrapper.findComponent(ChartError);
 
         expect(chart_error.attributes("is_under_calculation")).toBeFalsy();
@@ -145,7 +135,7 @@ describe("BurnupDisplayer", () => {
             release_data,
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
         const chart_error = wrapper.findComponent(ChartError);
 
         expect(chart_error.attributes("is_under_calculation")).toBeFalsy();
@@ -174,7 +164,7 @@ describe("BurnupDisplayer", () => {
             release_data,
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
         const chart_error = wrapper.findComponent(ChartError);
 
         expect(chart_error.attributes("is_under_calculation")).toBeFalsy();
@@ -203,7 +193,7 @@ describe("BurnupDisplayer", () => {
             release_data,
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
         const chart_error = wrapper.findComponent(ChartError);
 
         expect(chart_error.attributes("is_under_calculation")).toBeFalsy();
@@ -232,7 +222,7 @@ describe("BurnupDisplayer", () => {
             release_data,
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
         const chart_error = wrapper.findComponent(ChartError);
 
         expect(chart_error.attributes("is_under_calculation")).toBeTruthy();
@@ -261,13 +251,12 @@ describe("BurnupDisplayer", () => {
             release_data,
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.findComponent(Burnup).exists()).toBe(true);
     });
 
     it("When the timeframe is not on duration field and end date field is null, Then there is an error", async () => {
-        store_options.state.is_timeframe_duration = false;
         release_data = {
             id: 2,
             start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
@@ -289,14 +278,13 @@ describe("BurnupDisplayer", () => {
             release_data,
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance(false);
         const chart_error = wrapper.findComponent(ChartError);
 
         expect(chart_error.attributes("has_error_duration")).toBeTruthy();
     });
 
     it("When the timeframe is not on duration field and there is end date, Then there is no error", async () => {
-        store_options.state.is_timeframe_duration = false;
         release_data = {
             id: 2,
             planning: {
@@ -321,7 +309,7 @@ describe("BurnupDisplayer", () => {
             release_data,
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance(false);
 
         expect(wrapper.findComponent(ChartError).exists()).toBeFalsy();
     });

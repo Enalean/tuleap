@@ -19,7 +19,7 @@ exports[`RoadmapEmptyStateSection Given user display widget, Then a good link to
     <span
       class="empty-state-text"
     >
-      There is no item nor milestone in the my project backlog yet.
+      There is no item nor milestone in the My project backlog yet.
     </span>
      
     <a
@@ -29,10 +29,11 @@ exports[`RoadmapEmptyStateSection Given user display widget, Then a good link to
     >
       <button
         class="tlp-button-primary"
+        data-test="start-planning-button"
         type="button"
       >
         
-                Start Planning
+                Start planning
                 
         <i
           class="tlp-button-icon-right fas fa-long-arrow-alt-right"

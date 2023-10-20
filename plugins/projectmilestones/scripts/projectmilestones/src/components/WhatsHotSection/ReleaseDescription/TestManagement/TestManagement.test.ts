@@ -19,39 +19,34 @@
 
 import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { MilestoneData, StoreOptions } from "../../../../type";
+import type { MilestoneData } from "../../../../type";
 import { createReleaseWidgetLocalVue } from "../../../../helpers/local-vue-for-test";
 import type { DefaultData } from "vue/types/options";
 import TestManagement from "./TestManagement.vue";
+import { createTestingPinia } from "@pinia/testing";
+import { defineStore } from "pinia";
 
 let release_data: MilestoneData;
 const component_options: ShallowMountOptions<TestManagement> = {};
 const project_id = 100;
 
 describe("TestManagement", () => {
-    let store_options: StoreOptions;
-    let store;
+    async function getPersonalWidgetInstance(): Promise<Wrapper<TestManagement>> {
+        const useStore = defineStore("root", {
+            state: () => ({
+                label_tracker_planning: "Releases",
+                project_id,
+            }),
+        });
+        const pinia = createTestingPinia();
+        useStore(pinia);
 
-    async function getPersonalWidgetInstance(
-        store_options: StoreOptions,
-    ): Promise<Wrapper<TestManagement>> {
-        store = createStoreMock(store_options);
-
-        component_options.mocks = { $store: store };
         component_options.localVue = await createReleaseWidgetLocalVue();
 
         return shallowMount(TestManagement, component_options);
     }
 
     beforeEach(() => {
-        store_options = {
-            state: {
-                label_tracker_planning: "Releases",
-                project_id,
-            },
-        };
-
         release_data = {
             id: 2,
             planning: {
@@ -110,12 +105,12 @@ describe("TestManagement", () => {
             release_data,
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
         expect(wrapper.find("[data-test=display-ttm]").exists()).toBe(false);
     });
 
     it("When component is renderer, Then there is a div element with id of release", async () => {
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
         expect(wrapper.element).toMatchSnapshot();
     });
 });

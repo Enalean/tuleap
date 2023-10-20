@@ -20,8 +20,7 @@
 import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ReleaseBadgesOpenSprint from "./ReleaseBadgesOpenSprint.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { MilestoneData, StoreOptions } from "../../../type";
+import type { MilestoneData } from "../../../type";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 import ReleaseButtonsDescription from "../ReleaseDescription/ReleaseButtonsDescription.vue";
 
@@ -29,30 +28,14 @@ let sprint_data: MilestoneData & Required<Pick<MilestoneData, "planning">>;
 const total_sprint = 10;
 const component_options: ShallowMountOptions<ReleaseBadgesOpenSprint> = {};
 
-const project_id = 102;
-
 describe("ReleaseBadgesOpenSprint", () => {
-    let store_options: StoreOptions;
-    let store;
-
-    async function getPersonalWidgetInstance(
-        store_options: StoreOptions,
-    ): Promise<Wrapper<ReleaseBadgesOpenSprint>> {
-        store = createStoreMock(store_options);
-
-        component_options.mocks = { $store: store };
+    async function getPersonalWidgetInstance(): Promise<Wrapper<ReleaseBadgesOpenSprint>> {
         component_options.localVue = await createReleaseWidgetLocalVue();
 
         return shallowMount(ReleaseBadgesOpenSprint, component_options);
     }
 
     beforeEach(() => {
-        store_options = {
-            state: {
-                project_id: project_id,
-            },
-        };
-
         sprint_data = {
             label: "mile",
             id: 2,
@@ -75,19 +58,19 @@ describe("ReleaseBadgesOpenSprint", () => {
 
     describe("Display sprint data", () => {
         it("When the component is rendered, Then the label of sprint is displayed", async () => {
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             expect(wrapper.get("[data-test=sprint-label]").text()).toBe("mile");
         });
 
         it("When the component is rendered, Then ReleaseBadgesButtonOpenSprint is rendered", async () => {
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             expect(wrapper.findComponent(ReleaseButtonsDescription).exists()).toBe(true);
         });
 
         it("When a release is not in progress, Then the badge is outline", async () => {
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             expect(wrapper.get("[data-test=sprint-label]").attributes("class")).toContain(
                 "tlp-badge-outline",
@@ -119,7 +102,7 @@ describe("ReleaseBadgesOpenSprint", () => {
 
             component_options.propsData = { sprint_data };
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             expect(wrapper.get("[data-test=sprint-label]").attributes("class")).not.toContain(
                 "tlp-badge-outline",

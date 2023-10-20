@@ -20,11 +20,9 @@
 import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ReleaseDescription from "./ReleaseDescription.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type {
     MilestoneData,
     Pane,
-    StoreOptions,
     TrackerNumberArtifacts,
     TrackerProjectLabel,
 } from "../../../type";
@@ -32,32 +30,27 @@ import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test
 import ChartDisplayer from "./Chart/ChartDisplayer.vue";
 import TestManagementDisplayer from "./TestManagement/TestManagementDisplayer.vue";
 import ReleaseDescriptionBadgesTracker from "./ReleaseDescriptionBadgesTracker.vue";
+import { createTestingPinia } from "@pinia/testing";
+import { defineStore } from "pinia";
 
 let release_data: MilestoneData;
 const component_options: ShallowMountOptions<ReleaseDescription> = {};
 
 describe("ReleaseDescription", () => {
-    let store_options: StoreOptions;
-    let store;
-
-    async function getPersonalWidgetInstance(
-        store_options: StoreOptions,
-    ): Promise<Wrapper<ReleaseDescription>> {
-        store = createStoreMock(store_options);
-
-        component_options.mocks = { $store: store };
+    async function getPersonalWidgetInstance(): Promise<Wrapper<ReleaseDescription>> {
+        const useStore = defineStore("root", {
+            state: () => ({
+                label_tracker_planning: "Releases",
+            }),
+        });
+        const pinia = createTestingPinia();
+        useStore(pinia);
         component_options.localVue = await createReleaseWidgetLocalVue();
 
         return shallowMount(ReleaseDescription, component_options);
     }
 
     beforeEach(() => {
-        store_options = {
-            state: {
-                label_tracker_planning: "Releases",
-            },
-        };
-
         release_data = {
             id: 2,
             planning: {
@@ -115,12 +108,12 @@ describe("ReleaseDescription", () => {
             release_data,
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
         expect(wrapper.findComponent(ChartDisplayer).exists()).toBe(true);
     });
 
     it("When plugin testplan is activated, Then TestManagementDisplayer is rendered", async () => {
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
         expect(wrapper.findComponent(TestManagementDisplayer).exists()).toBe(true);
     });
 
@@ -145,7 +138,7 @@ describe("ReleaseDescription", () => {
             release_data,
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
         expect(wrapper.findComponent(TestManagementDisplayer).exists()).toBe(false);
     });
 
@@ -177,7 +170,7 @@ describe("ReleaseDescription", () => {
             release_data,
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
         expect(wrapper.findComponent(ReleaseDescriptionBadgesTracker).exists()).toBe(false);
     });
 });

@@ -21,7 +21,7 @@
     <div class="project-release-timeframe">
         <span class="project-release-label"> {{ $gettext("What's hot") }}</span>
         <release-displayer
-            v-for="(milestone, index) in current_milestones"
+            v-for="(milestone, index) in root_store.current_milestones"
             v-bind:key="milestone.id"
             v-bind:is-open="index === 0"
             v-bind:release_data="milestone"
@@ -34,15 +34,13 @@
 <script lang="ts">
 import ReleaseDisplayer from "./ReleaseDisplayer.vue";
 import Vue from "vue";
-import { State } from "vuex-class";
 import { Component } from "vue-property-decorator";
-import type { MilestoneData } from "../../type";
+import { useStore } from "../../stores/root";
 
 @Component({
     components: { ReleaseDisplayer },
 })
 export default class WhatsHotSection extends Vue {
-    @State
-    readonly current_milestones!: MilestoneData[];
+    public root_store = useStore();
 }
 </script>

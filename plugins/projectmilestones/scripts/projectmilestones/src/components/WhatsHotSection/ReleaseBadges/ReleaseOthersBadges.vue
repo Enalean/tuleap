@@ -55,7 +55,7 @@ import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
 import type { MilestoneData } from "../../../type";
 import ReleaseButtonsDescription from "../ReleaseDescription/ReleaseButtonsDescription.vue";
-import { State } from "vuex-class";
+import { useStore } from "../../../stores/root";
 
 @Component({
     components: { ReleaseButtonsDescription },
@@ -63,10 +63,8 @@ import { State } from "vuex-class";
 export default class ReleaseOthersBadges extends Vue {
     @Prop()
     readonly release_data!: MilestoneData;
-    @State
-    readonly user_can_view_sub_milestones_planning!: boolean;
-    @State
-    readonly project_id!: number;
+
+    public root_store = useStore();
 
     get capacity_exists(): boolean {
         if (!this.release_data.capacity) {
@@ -96,7 +94,7 @@ export default class ReleaseOthersBadges extends Vue {
 
     get get_planning_link(): string | null {
         if (
-            !this.user_can_view_sub_milestones_planning ||
+            !this.root_store.user_can_view_sub_milestones_planning ||
             this.release_data.resources.milestones.accept.trackers.length === 0
         ) {
             return null;
@@ -104,7 +102,7 @@ export default class ReleaseOthersBadges extends Vue {
 
         return (
             "/plugins/agiledashboard/?group_id=" +
-            encodeURIComponent(this.project_id) +
+            encodeURIComponent(this.root_store.project_id) +
             "&planning_id=" +
             encodeURIComponent(this.release_data.planning.id) +
             "&action=show&aid=" +

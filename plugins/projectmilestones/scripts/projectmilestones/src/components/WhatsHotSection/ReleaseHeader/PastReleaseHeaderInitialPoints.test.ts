@@ -20,32 +20,20 @@
 import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import PastReleaseHeaderInitialPoints from "./PastReleaseHeaderInitialPoints.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { MilestoneData, StoreOptions } from "../../../type";
+import type { MilestoneData } from "../../../type";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 
 let release_data: MilestoneData;
 let component_options: ShallowMountOptions<PastReleaseHeaderInitialPoints>;
 
 describe("PastReleaseHeaderInitialPoints", () => {
-    let store_options: StoreOptions;
-    let store;
-
-    async function getPersonalWidgetInstance(
-        store_options: StoreOptions,
-    ): Promise<Wrapper<PastReleaseHeaderInitialPoints>> {
-        store = createStoreMock(store_options);
-        component_options.mocks = { $store: store };
+    async function getPersonalWidgetInstance(): Promise<Wrapper<PastReleaseHeaderInitialPoints>> {
         component_options.localVue = await createReleaseWidgetLocalVue();
 
         return shallowMount(PastReleaseHeaderInitialPoints, component_options);
     }
 
     beforeEach(() => {
-        store_options = {
-            state: {},
-        };
-
         release_data = {
             label: "mile",
             initial_effort: 10,
@@ -60,7 +48,7 @@ describe("PastReleaseHeaderInitialPoints", () => {
 
     describe("Display initial effort", () => {
         it("When there is initial effort, Then it's displayed", async () => {
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
             expect(wrapper.get("[data-test=points-initial-value]").text()).toBe("10");
         });
 
@@ -76,7 +64,7 @@ describe("PastReleaseHeaderInitialPoints", () => {
                 },
             };
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
             expect(wrapper.get("[data-test=points-initial-value]").text()).toBe("0");
         });
     });

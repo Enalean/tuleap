@@ -20,38 +20,32 @@
 import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ReleaseBadgesClosedSprints from "./ReleaseBadgesClosedSprints.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { MilestoneData, StoreOptions, TrackerProjectLabel } from "../../../type";
+import type { MilestoneData, TrackerProjectLabel } from "../../../type";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
+import { createTestingPinia } from "@pinia/testing";
+import { defineStore } from "pinia";
 
 let release_data: MilestoneData & Required<Pick<MilestoneData, "planning">>;
 const total_sprint = 10;
 const component_options: ShallowMountOptions<ReleaseBadgesClosedSprints> = {};
 
-const project_id = 102;
-
 describe("ReleaseBadgesClosedSprints", () => {
-    let store_options: StoreOptions;
-    let store;
-
     async function getPersonalWidgetInstance(
-        store_options: StoreOptions,
+        user_can_view_sub_milestones_planning = true,
     ): Promise<Wrapper<ReleaseBadgesClosedSprints>> {
-        store = createStoreMock(store_options);
-
-        component_options.mocks = { $store: store };
+        const useStore = defineStore("root", {
+            state: () => ({
+                user_can_view_sub_milestones_planning,
+            }),
+        });
+        const pinia = createTestingPinia();
+        useStore(pinia);
         component_options.localVue = await createReleaseWidgetLocalVue();
 
         return shallowMount(ReleaseBadgesClosedSprints, component_options);
     }
 
     beforeEach(() => {
-        store_options = {
-            state: {
-                project_id: project_id,
-            },
-        };
-
         component_options.propsData = { release_data };
     });
 
@@ -75,9 +69,8 @@ describe("ReleaseBadgesClosedSprints", () => {
             } as MilestoneData;
 
             component_options.propsData = { release_data };
-            store_options.state.user_can_view_sub_milestones_planning = true;
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             expect(wrapper.find("[data-test=total-closed-sprints]").exists()).toBe(true);
         });
@@ -101,8 +94,7 @@ describe("ReleaseBadgesClosedSprints", () => {
             } as MilestoneData;
 
             component_options.propsData = { release_data };
-            store_options.state.user_can_view_sub_milestones_planning = true;
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             expect(wrapper.find("[data-test=total-closed-sprints]").exists()).toBe(false);
         });
@@ -126,8 +118,7 @@ describe("ReleaseBadgesClosedSprints", () => {
             } as MilestoneData;
 
             component_options.propsData = { release_data };
-            store_options.state.user_can_view_sub_milestones_planning = true;
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             expect(wrapper.find("[data-test=total-closed-sprints]").exists()).toBe(true);
         });
@@ -147,8 +138,7 @@ describe("ReleaseBadgesClosedSprints", () => {
             } as MilestoneData;
 
             component_options.propsData = { release_data };
-            store_options.state.user_can_view_sub_milestones_planning = true;
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             expect(wrapper.find("[data-test=total-closed-sprints]").exists()).toBe(false);
         });
@@ -172,9 +162,8 @@ describe("ReleaseBadgesClosedSprints", () => {
             } as MilestoneData;
 
             component_options.propsData = { release_data };
-            store_options.state.user_can_view_sub_milestones_planning = false;
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance(false);
 
             expect(wrapper.find("[data-test=total-closed-sprints]").exists()).toBe(false);
         });

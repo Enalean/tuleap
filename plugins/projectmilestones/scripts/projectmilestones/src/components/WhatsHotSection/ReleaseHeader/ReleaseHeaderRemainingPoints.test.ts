@@ -20,33 +20,20 @@
 import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ReleaseHeaderRemainingPoints from "./ReleaseHeaderRemainingPoints.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { MilestoneData, StoreOptions } from "../../../type";
+import type { MilestoneData } from "../../../type";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 
 let release_data: MilestoneData;
 const component_options: ShallowMountOptions<ReleaseHeaderRemainingPoints> = {};
 
 describe("ReleaseHeaderRemainingEffort", () => {
-    let store_options: StoreOptions;
-    let store;
-
-    async function getPersonalWidgetInstance(
-        store_options: StoreOptions,
-    ): Promise<Wrapper<ReleaseHeaderRemainingPoints>> {
-        store = createStoreMock(store_options);
-
-        component_options.mocks = { $store: store };
+    async function getPersonalWidgetInstance(): Promise<Wrapper<ReleaseHeaderRemainingPoints>> {
         component_options.localVue = await createReleaseWidgetLocalVue();
 
         return shallowMount(ReleaseHeaderRemainingPoints, component_options);
     }
 
     beforeEach(() => {
-        store_options = {
-            state: {},
-        };
-
         component_options.propsData = {
             release_data,
         };
@@ -64,7 +51,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
                 release_data,
             };
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             const remaining_point_text = wrapper.get("[data-test=points-remaining-value]");
             const remaining_point_value = wrapper.get("[data-test=points-progress-value]");
@@ -92,7 +79,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
                 release_data,
             };
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             const remaining_point_text = wrapper.get("[data-test=points-remaining-value]");
             const remaining_point_value = wrapper.get("[data-test=points-progress-value]");
@@ -116,7 +103,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
                 release_data,
             };
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             const remaining_point_text = wrapper.get("[data-test=points-remaining-value]");
             const remaining_point_value = wrapper.get("[data-test=points-progress-value]");
@@ -140,7 +127,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
                 release_data,
             };
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             const remaining_point_text = wrapper.get("[data-test=points-remaining-value]");
             const remaining_point_value = wrapper.get("[data-test=points-progress-value]");
@@ -167,7 +154,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
                 release_data,
             };
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             const remaining_point_text = wrapper.get("[data-test=points-remaining-value]");
             const remaining_point_value = wrapper.get("[data-test=points-progress-value]");
@@ -191,7 +178,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
                 release_data,
             };
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             const remaining_point_text = wrapper.get("[data-test=points-remaining-value]");
             const remaining_point_value = wrapper.get("[data-test=points-progress-value]");
@@ -215,7 +202,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
                 release_data,
             };
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             const remaining_point_text = wrapper.get("[data-test=points-remaining-value]");
             const remaining_point_value = wrapper.get("[data-test=points-progress-value]");
@@ -241,7 +228,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
                 release_data,
             };
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
             const points_remaining_value = wrapper.get("[data-test=points-remaining-value]");
             const points_remaining_progress = wrapper.get("[data-test=points-progress-value]");
 

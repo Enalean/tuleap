@@ -40,36 +40,31 @@ import type { MilestoneData } from "../../../../../type";
 import Vue from "vue";
 import ChartError from "../ChartError.vue";
 import Burndown from "./Burndown.vue";
-import { State } from "vuex-class";
+import { useStore } from "../../../../../stores/root";
 @Component({
     components: { ChartError, Burndown },
 })
 export default class BurndownDisplayer extends Vue {
     @Prop()
     readonly release_data!: MilestoneData;
-    @State
-    readonly is_timeframe_duration!: boolean;
-    @State
-    readonly label_start_date!: string;
-    @State
-    readonly label_timeframe!: string;
+    public root_store = useStore();
 
     get message_error_duration(): string {
         return this.$gettextInterpolate(
             this.$gettext("'%{field_name}' field is empty or invalid."),
-            { field_name: this.label_timeframe },
+            { field_name: this.root_store.label_timeframe },
         );
     }
 
     get message_error_start_date(): string {
         return this.$gettextInterpolate(
             this.$gettext("'%{field_name}' field is empty or invalid."),
-            { field_name: this.label_start_date },
+            { field_name: this.root_store.label_start_date },
         );
     }
 
     get has_error_duration(): boolean {
-        if (!this.is_timeframe_duration) {
+        if (!this.root_store.is_timeframe_duration) {
             return !this.release_data.end_date;
         }
 

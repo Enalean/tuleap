@@ -20,11 +20,12 @@
 import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ReleaseBadgesDisplayer from "./ReleaseBadgesDisplayer.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { MilestoneData, StoreOptions } from "../../../type";
+import type { MilestoneData } from "../../../type";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 import ReleaseBadgesDisplayerIfOpenSprints from "./ReleaseBadgesDisplayerIfOpenSprints.vue";
 import ReleaseBadgesDisplayerIfOnlyClosedSprints from "./ReleaseBadgesDisplayerIfOnlyClosedSprints.vue";
+import { createTestingPinia } from "@pinia/testing";
+import { defineStore } from "pinia";
 
 let release_data: MilestoneData & Required<Pick<MilestoneData, "planning">>;
 const component_options: ShallowMountOptions<ReleaseBadgesDisplayer> = {};
@@ -32,27 +33,21 @@ const component_options: ShallowMountOptions<ReleaseBadgesDisplayer> = {};
 const project_id = 102;
 
 describe("ReleaseBadgesDisplayer", () => {
-    let store_options: StoreOptions;
-    let store;
+    async function getPersonalWidgetInstance(): Promise<Wrapper<ReleaseBadgesDisplayer>> {
+        const useStore = defineStore("root", {
+            state: () => ({
+                project_id: project_id,
+            }),
+        });
+        const pinia = createTestingPinia();
+        useStore(pinia);
 
-    async function getPersonalWidgetInstance(
-        store_options: StoreOptions,
-    ): Promise<Wrapper<ReleaseBadgesDisplayer>> {
-        store = createStoreMock(store_options);
-
-        component_options.mocks = { $store: store };
         component_options.localVue = await createReleaseWidgetLocalVue();
 
         return shallowMount(ReleaseBadgesDisplayer, component_options);
     }
 
     beforeEach(() => {
-        store_options = {
-            state: {
-                project_id: project_id,
-            },
-        };
-
         component_options.propsData = { release_data };
     });
 
@@ -68,7 +63,7 @@ describe("ReleaseBadgesDisplayer", () => {
                 release_data,
             };
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             expect(wrapper.findComponent(ReleaseBadgesDisplayerIfOpenSprints).exists()).toBe(false);
             expect(wrapper.findComponent(ReleaseBadgesDisplayerIfOnlyClosedSprints).exists()).toBe(
@@ -86,7 +81,7 @@ describe("ReleaseBadgesDisplayer", () => {
                 release_data,
             };
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             expect(wrapper.findComponent(ReleaseBadgesDisplayerIfOpenSprints).exists()).toBe(false);
             expect(wrapper.findComponent(ReleaseBadgesDisplayerIfOnlyClosedSprints).exists()).toBe(
@@ -109,7 +104,7 @@ describe("ReleaseBadgesDisplayer", () => {
                 release_data,
             };
 
-            const wrapper = await getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance();
 
             expect(wrapper.findComponent(ReleaseBadgesDisplayerIfOpenSprints).exists()).toBe(true);
             expect(wrapper.findComponent(ReleaseBadgesDisplayerIfOnlyClosedSprints).exists()).toBe(

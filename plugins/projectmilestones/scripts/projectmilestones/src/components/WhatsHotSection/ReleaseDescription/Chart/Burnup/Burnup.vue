@@ -26,20 +26,18 @@
 
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
-import type { BurnupMode, MilestoneData } from "../../../../../type";
+import type { MilestoneData } from "../../../../../type";
 import Vue from "vue";
 import { createBurnupChart } from "../../../../../chart_builder/burnup_chart_builder/burnup-chart-drawer";
 import type { ChartPropsWithoutTooltip } from "@tuleap/chart-builder";
 import { transformToGenericBurnupData } from "@tuleap/plugin-agiledashboard-burnup-data-transformer";
-import { State } from "vuex-class";
+import { useStore } from "../../../../../stores/root";
 
 @Component
 export default class Burnup extends Vue {
     @Prop()
     readonly release_data!: MilestoneData;
-    @State
-    readonly burnup_mode!: BurnupMode;
-
+    public root_store = useStore();
     getChartProps(container_width: number, container_height: number): ChartPropsWithoutTooltip {
         return {
             graph_width: container_width,
@@ -60,7 +58,7 @@ export default class Burnup extends Vue {
 
         const generic_burnup_data = transformToGenericBurnupData(
             this.release_data.burnup_data,
-            this.burnup_mode,
+            this.root_store.burnup_mode,
         );
         const chart_container = document.getElementById("chart-burnup-" + this.release_data.id);
 

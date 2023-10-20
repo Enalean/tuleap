@@ -36,23 +36,19 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { State } from "vuex-class";
+import { useStore } from "../../stores/root";
 
 @Component
 export default class RoadmapSection extends Vue {
+    public root_store = useStore();
+
     @Prop()
     readonly label_tracker_planning!: string;
-    @State
-    readonly nb_backlog_items!: number;
-    @State
-    readonly nb_upcoming_releases!: number;
-    @State
-    readonly project_id!: number;
 
     get backlog_link(): string {
         return (
             "/plugins/agiledashboard/?action=show-top&group_id=" +
-            encodeURIComponent(this.project_id) +
+            encodeURIComponent(this.root_store.project_id) +
             "&pane=topplanning-v2"
         );
     }
@@ -61,21 +57,23 @@ export default class RoadmapSection extends Vue {
         const translated = this.$ngettext(
             "%{nb_backlog_items} item in the backlog.",
             "%{nb_backlog_items} items in the backlog.",
-            this.nb_backlog_items,
+            this.root_store.nb_backlog_items,
         );
 
-        return this.$gettextInterpolate(translated, { nb_backlog_items: this.nb_backlog_items });
+        return this.$gettextInterpolate(translated, {
+            nb_backlog_items: this.root_store.nb_backlog_items,
+        });
     }
 
     get upcoming_releases(): string {
         const translated = this.$ngettext(
             "%{nb_upcoming_releases} upcoming %{label_tracker}.",
             "%{nb_upcoming_releases} upcoming %{label_tracker}.",
-            this.nb_upcoming_releases,
+            this.root_store.nb_upcoming_releases,
         );
 
         return this.$gettextInterpolate(translated, {
-            nb_upcoming_releases: this.nb_upcoming_releases,
+            nb_upcoming_releases: this.root_store.nb_upcoming_releases,
             label_tracker: this.label_tracker_planning,
         });
     }

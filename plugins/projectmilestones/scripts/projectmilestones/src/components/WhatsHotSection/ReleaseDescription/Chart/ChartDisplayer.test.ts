@@ -22,44 +22,38 @@ import type {
     BurnupData,
     MilestoneData,
     PointsWithDateForBurndown,
-    StoreOptions,
 } from "../../../../type";
 import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import ChartDisplayer from "./ChartDisplayer.vue";
 import { createReleaseWidgetLocalVue } from "../../../../helpers/local-vue-for-test";
 import type { DefaultData } from "vue/types/options";
 import BurndownDisplayer from "./Burndown/BurndownDisplayer.vue";
 import * as rest_querier from "../../../../api/rest-querier";
+import { createTestingPinia } from "@pinia/testing";
+import { defineStore } from "pinia";
 
 let release_data: MilestoneData;
 const component_options: ShallowMountOptions<ChartDisplayer> = {};
 const project_id = 102;
 
 describe("ChartDisplayer", () => {
-    let store_options: StoreOptions;
-    let store;
+    async function getPersonalWidgetInstance(): Promise<Wrapper<ChartDisplayer>> {
+        const useStore = defineStore("root", {
+            state: () => ({
+                project_id,
+                is_timeframe_duration: true,
+            }),
+        });
+        const pinia = createTestingPinia();
+        useStore(pinia);
 
-    async function getPersonalWidgetInstance(
-        store_options: StoreOptions,
-    ): Promise<Wrapper<ChartDisplayer>> {
-        store = createStoreMock(store_options);
-
-        component_options.mocks = { $store: store };
         component_options.localVue = await createReleaseWidgetLocalVue();
 
         return shallowMount(ChartDisplayer, component_options);
     }
 
     beforeEach(() => {
-        store_options = {
-            state: {
-                project_id,
-                is_timeframe_duration: true,
-            },
-        };
-
         release_data = {
             id: 2,
             start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
@@ -80,7 +74,7 @@ describe("ChartDisplayer", () => {
             release_data,
         };
 
-        getPersonalWidgetInstance(store_options);
+        getPersonalWidgetInstance();
     });
 
     it("When the burndown can be created, Then component BurndownDisplayer is rendered", async () => {
@@ -89,7 +83,7 @@ describe("ChartDisplayer", () => {
             is_loading: false,
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.findComponent(BurndownDisplayer).exists()).toBe(true);
     });
@@ -147,7 +141,7 @@ describe("ChartDisplayer", () => {
             release_data,
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
         await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(BurndownDisplayer).exists()).toBe(true);
@@ -173,7 +167,7 @@ describe("ChartDisplayer", () => {
             release_data,
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.find("[data-test=burnup-exists]").exists()).toBe(false);
     });
@@ -191,7 +185,7 @@ describe("ChartDisplayer", () => {
             release_data,
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
         wrapper.setData({ is_loading: true });
         await wrapper.vm.$nextTick();
 
@@ -212,7 +206,7 @@ describe("ChartDisplayer", () => {
             release_data,
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.get("[data-test=error-rest]").text()).toBe("404 Error");
     });

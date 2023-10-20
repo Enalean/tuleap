@@ -20,33 +20,20 @@
 import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ReleaseDescriptionBadgesTracker from "./ReleaseDescriptionBadgesTracker.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { MilestoneData, StoreOptions, TrackerNumberArtifacts } from "../../../type";
+import type { MilestoneData, TrackerNumberArtifacts } from "../../../type";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 
 let release_data: MilestoneData;
 const component_options: ShallowMountOptions<ReleaseDescriptionBadgesTracker> = {};
-const project_id = 102;
 
 describe("ReleaseDescriptionBadgesTracker", () => {
-    let store_options: StoreOptions;
-    let store;
-
-    async function getPersonalWidgetInstance(
-        store_options: StoreOptions,
-    ): Promise<Wrapper<ReleaseDescriptionBadgesTracker>> {
-        store = createStoreMock(store_options);
-        component_options.mocks = { $store: store };
+    async function getPersonalWidgetInstance(): Promise<Wrapper<ReleaseDescriptionBadgesTracker>> {
         component_options.localVue = await createReleaseWidgetLocalVue();
 
         return shallowMount(ReleaseDescriptionBadgesTracker, component_options);
     }
 
     beforeEach(() => {
-        store_options = {
-            state: {},
-        };
-
         release_data = {
             id: 2,
             planning: {
@@ -68,9 +55,7 @@ describe("ReleaseDescriptionBadgesTracker", () => {
     });
 
     it("Given user display widget, Then the good number of artifacts and good color of the tracker is rendered", async () => {
-        store_options.state.project_id = project_id;
-
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.get("[data-test=color-name-tracker-1]").classes()).toEqual([
             "release-number-artifacts-tracker",
@@ -105,7 +90,7 @@ describe("ReleaseDescriptionBadgesTracker", () => {
             release_data,
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.find("[data-test=color-name-tracker-1]").exists()).toBe(false);
         expect(wrapper.find("[data-test=color-name-tracker-2]").exists()).toBe(true);
@@ -121,7 +106,7 @@ describe("ReleaseDescriptionBadgesTracker", () => {
             release_data,
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.find("[data-test=subtitle-tracker]").exists()).toBe(false);
     });
@@ -149,7 +134,7 @@ describe("ReleaseDescriptionBadgesTracker", () => {
             release_data,
         };
 
-        const wrapper = await getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance();
 
         expect(wrapper.get("[data-test=badges-tracker-tooltip-2]").text()).toBe("Sprints");
     });

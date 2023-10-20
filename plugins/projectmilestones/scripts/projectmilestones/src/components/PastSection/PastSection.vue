@@ -19,13 +19,13 @@
 
 <template>
     <div class="project-release-timeframe">
-        <span class="project-release-label" v-if="last_release">{{
+        <span class="project-release-label" v-if="root_store.last_release">{{
             $gettext("Recently closed")
         }}</span>
         <release-displayer
-            v-if="last_release"
-            v-bind:key="last_release.id"
-            v-bind:release_data="last_release"
+            v-if="root_store.last_release"
+            v-bind:key="root_store.last_release.id"
+            v-bind:release_data="root_store.last_release"
             v-bind:is-past-release="true"
             v-bind:is-open="false"
         />
@@ -44,9 +44,8 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { State } from "vuex-class";
 import ReleaseDisplayer from "../WhatsHotSection/ReleaseDisplayer.vue";
-import type { MilestoneData } from "../../type";
+import { useStore } from "../../stores/root";
 
 @Component({
     components: {
@@ -54,19 +53,15 @@ import type { MilestoneData } from "../../type";
     },
 })
 export default class PastSection extends Vue {
-    @State
-    readonly project_id!: number;
-    @State
-    readonly nb_past_releases!: number;
-    @State
-    readonly last_release!: MilestoneData | null;
+    public root_store = useStore();
+
     @Prop()
     readonly label_tracker_planning!: string;
 
     get past_release_link(): string {
         return (
             "/plugins/agiledashboard/?action=show-top&group_id=" +
-            encodeURIComponent(this.project_id) +
+            encodeURIComponent(this.root_store.project_id) +
             "&pane=topplanning-v2&load-all=1"
         );
     }
@@ -75,11 +70,11 @@ export default class PastSection extends Vue {
         const translated = this.$ngettext(
             "%{nb_past} past %{label_tracker}",
             "%{nb_past} past %{label_tracker}",
-            this.nb_past_releases,
+            this.root_store.nb_past_releases,
         );
 
         return this.$gettextInterpolate(translated, {
-            nb_past: this.nb_past_releases,
+            nb_past: this.root_store.nb_past_releases,
             label_tracker: this.label_tracker_planning,
         });
     }
