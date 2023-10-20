@@ -22,54 +22,49 @@ declare(strict_types=1);
 
 namespace Tuleap\User\AccessKey;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeSaver;
 
 final class AccessKeyCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\MockInterface|LastAccessKeyIdentifierStore
+     * @var \PHPUnit\Framework\MockObject\MockObject&LastAccessKeyIdentifierStore
      */
     private $store;
 
     /**
-     * @var \Mockery\MockInterface|SplitTokenVerificationStringHasher
+     * @var \PHPUnit\Framework\MockObject\MockObject&SplitTokenVerificationStringHasher
      */
     private $hasher;
 
     /**
-     * @var \Mockery\MockInterface|AccessKeyDAO
+     * @var \PHPUnit\Framework\MockObject\MockObject&AccessKeyDAO
      */
     private $dao;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AccessKeyScopeSaver
+     * @var \PHPUnit\Framework\MockObject\MockObject&AccessKeyScopeSaver
      */
     private $scope_saver;
 
     /**
-     * @var \Mockery\MockInterface|AccessKeyCreationNotifier
+     * @var \PHPUnit\Framework\MockObject\MockObject&AccessKeyCreationNotifier
      */
     private $notifier;
-    /**
-     * @var AccessKeyCreator
-     */
-    private $access_key_creator;
+    private AccessKeyCreator $access_key_creator;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->store       = \Mockery::mock(LastAccessKeyIdentifierStore::class);
-        $this->dao         = \Mockery::mock(AccessKeyDAO::class);
-        $this->scope_saver = \Mockery::mock(AccessKeyScopeSaver::class);
-        $this->hasher      = \Mockery::mock(SplitTokenVerificationStringHasher::class);
-        $this->notifier    = \Mockery::mock(AccessKeyCreationNotifier::class);
+        $this->store       = $this->createMock(LastAccessKeyIdentifierStore::class);
+        $this->dao         = $this->createMock(AccessKeyDAO::class);
+        $this->scope_saver = $this->createMock(AccessKeyScopeSaver::class);
+        $this->hasher      = $this->createMock(SplitTokenVerificationStringHasher::class);
+        $this->notifier    = $this->createMock(AccessKeyCreationNotifier::class);
 
         $this->access_key_creator = new AccessKeyCreator(
             $this->store,
@@ -83,30 +78,28 @@ final class AccessKeyCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testNewlyCreatedKeyIsCreatedAndAddedToTheLastAccessKeyIdentifierStore(): void
     {
-        $authentication_scope = \Mockery::mock(AuthenticationScope::class);
-        $this->hasher->shouldReceive('computeHash')->andReturns('hashed_identifier');
-        $this->dao->shouldReceive('create')->once()->andReturns(1);
-        $this->scope_saver->shouldReceive('saveKeyScopes')->with(1, $authentication_scope)->once();
-        $this->store->shouldReceive('storeLastGeneratedAccessKeyIdentifier')->once();
-        $this->notifier->shouldReceive('notifyCreation')->once();
+        $authentication_scope = $this->createMock(AuthenticationScope::class);
+        $this->hasher->method('computeHash')->willReturn('hashed_identifier');
+        $this->dao->expects(self::once())->method('create')->willReturn(1);
+        $this->scope_saver->expects(self::once())->method('saveKeyScopes')->with(1, $authentication_scope);
+        $this->store->expects(self::once())->method('storeLastGeneratedAccessKeyIdentifier');
+        $this->notifier->expects(self::once())->method('notifyCreation');
 
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturns(102);
+        $user = UserTestBuilder::aUser()->withId(102)->build();
 
         $this->access_key_creator->create($user, 'description', null, $authentication_scope);
     }
 
     public function testNewlyCreatedKeyIsCreatedWithAnExpirationDateAndAddedToTheLastAccessKeyIdentifierStore(): void
     {
-        $authentication_scope = \Mockery::mock(AuthenticationScope::class);
-        $this->hasher->shouldReceive('computeHash')->andReturns('hashed_identifier');
-        $this->dao->shouldReceive('create')->once()->andReturns(1);
-        $this->store->shouldReceive('storeLastGeneratedAccessKeyIdentifier')->once();
-        $this->scope_saver->shouldReceive('saveKeyScopes')->with(1, $authentication_scope)->once();
-        $this->notifier->shouldReceive('notifyCreation')->once();
+        $authentication_scope = $this->createMock(AuthenticationScope::class);
+        $this->hasher->method('computeHash')->willReturn('hashed_identifier');
+        $this->dao->expects(self::once())->method('create')->willReturn(1);
+        $this->store->expects(self::once())->method('storeLastGeneratedAccessKeyIdentifier');
+        $this->scope_saver->expects(self::once())->method('saveKeyScopes')->with(1, $authentication_scope);
+        $this->notifier->expects(self::once())->method('notifyCreation');
 
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturns(102);
+        $user = UserTestBuilder::aUser()->withId(102)->build();
 
         $expiration_date = new \DateTimeImmutable();
 
@@ -115,18 +108,17 @@ final class AccessKeyCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testNewlyCreatedKeyAlreadyExpiredThrowsAnException(): void
     {
-        $this->hasher->shouldReceive('computeHash')->never();
-        $this->dao->shouldReceive('create')->never();
-        $this->store->shouldReceive('storeLastGeneratedAccessKeyIdentifier')->never();
-        $this->notifier->shouldReceive('notifyCreation')->never();
+        $this->hasher->expects(self::never())->method('computeHash');
+        $this->dao->expects(self::never())->method('create');
+        $this->store->expects(self::never())->method('storeLastGeneratedAccessKeyIdentifier');
+        $this->notifier->expects(self::never())->method('notifyCreation');
 
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturns(102);
+        $user = UserTestBuilder::aUser()->withId(102)->build();
 
         $expiration_date = new \DateTimeImmutable("yesterday");
 
         $this->expectException(AccessKeyAlreadyExpiredException::class);
 
-        $this->access_key_creator->create($user, 'description', $expiration_date, \Mockery::mock(AuthenticationScope::class));
+        $this->access_key_creator->create($user, 'description', $expiration_date, $this->createMock(AuthenticationScope::class));
     }
 }

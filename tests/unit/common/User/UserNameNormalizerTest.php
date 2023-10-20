@@ -18,25 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace common\User;
+namespace Tuleap\User;
 
 use Cocur\Slugify\Slugify;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Rule_UserName;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\User\DataIncompatibleWithUsernameGenerationException;
-use Tuleap\User\UserNameNormalizer;
 
-class UserNameNormalizerTest extends TestCase
+final class UserNameNormalizerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private \Mockery\LegacyMockInterface|Rule_UserName|\Mockery\MockInterface $rules;
+    private \PHPUnit\Framework\MockObject\MockObject&Rule_UserName $rules;
     private UserNameNormalizer $username_normalizer;
 
     protected function setUp(): void
     {
-        $this->rules               = \Mockery::mock(Rule_UserName::class);
+        $this->rules               = $this->createMock(Rule_UserName::class);
         $this->username_normalizer = new UserNameNormalizer($this->rules, new Slugify());
     }
 
@@ -69,18 +64,18 @@ class UserNameNormalizerTest extends TestCase
      */
     public function testGenerateUserLogin(string $expected_username, string $given_username): void
     {
-        $this->rules->shouldReceive('isUnixValid')->with($expected_username)->andReturn(true);
-        $this->rules->shouldReceive('isValid')->with($expected_username)->andReturn(true);
-        $this->assertEquals($expected_username, $this->username_normalizer->normalize($given_username));
+        $this->rules->method('isUnixValid')->with($expected_username)->willReturn(true);
+        $this->rules->method('isValid')->with($expected_username)->willReturn(true);
+        self::assertEquals($expected_username, $this->username_normalizer->normalize($given_username));
     }
 
     public function testGenerateThrowExceptionWhenUsernameIsNotUnixValid(): void
     {
         $slugified_username = "666";
 
-        $this->rules->shouldReceive('atLeastOneChar')->andReturn(true);
-        $this->rules->shouldReceive('isUnixValid')->with($slugified_username)->andReturn(false);
-        $this->rules->shouldReceive('isValid')->never();
+        $this->rules->method('atLeastOneChar')->willReturn(true);
+        $this->rules->method('isUnixValid')->with($slugified_username)->willReturn(false);
+        $this->rules->expects(self::never())->method('isValid');
 
         $this->expectException(DataIncompatibleWithUsernameGenerationException::class);
 
@@ -91,11 +86,13 @@ class UserNameNormalizerTest extends TestCase
     {
         $slugified_username   = "jean_pierre";
         $incremented_username = "jean_pierre1";
-        $this->rules->shouldReceive('isUnixValid')->with($slugified_username)->andReturn(true);
 
-        $this->rules->shouldReceive('isValid')->with($slugified_username)->andReturn(false)->once();
-        $this->rules->shouldReceive('isValid')->with($incremented_username)->andReturn(true)->once();
+        $this->rules->method('isUnixValid')->with($slugified_username)->willReturn(true);
+        $this->rules->method('isValid')->willReturnMap([
+            [$slugified_username, false],
+            [$incremented_username, true],
+        ]);
 
-        $this->assertSame($incremented_username, $this->username_normalizer->normalize("jean pierre"));
+        self::assertSame($incremented_username, $this->username_normalizer->normalize("jean pierre"));
     }
 }

@@ -19,17 +19,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class RandomNumberGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+final class RandomNumberGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testItGeneratesTokenOfTheAskedSize(): void
     {
         $number_generator_8_bits = new RandomNumberGenerator(1);
-        $this->assertEquals(2, strlen($number_generator_8_bits->getNumber()));
+        self::assertEquals(2, strlen($number_generator_8_bits->getNumber()));
         $number_generator_64_bits = new RandomNumberGenerator(8);
-        $this->assertEquals(16, strlen($number_generator_64_bits->getNumber()));
+        self::assertEquals(16, strlen($number_generator_64_bits->getNumber()));
         $number_generator_128_bits = new RandomNumberGenerator();
-        $this->assertEquals(32, strlen($number_generator_128_bits->getNumber()));
+        self::assertEquals(32, strlen($number_generator_128_bits->getNumber()));
     }
 }

@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\User\AccessKey;
 
 use DateTimeImmutable;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeDefinition;
 use Tuleap\Authentication\SplitToken\SplitToken;
@@ -35,45 +35,31 @@ use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
 
 final class AccessKeyVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     private const LAST_ACCESS_RESOLUTION             = 3600;
     private const IP_ADDRESS_REQUESTING_VERIFICATION = '2001:db8::1777';
 
-
+    private AccessKeyDAO&MockObject $dao;
+    private SplitTokenVerificationStringHasher&MockObject $hasher;
+    private \UserManager&MockObject $user_manager;
     /**
-     * @var \Mockery\MockInterface
-     */
-    private $dao;
-    /**
-     * @var \Mockery\MockInterface
-     */
-    private $hasher;
-    /**
-     * @var \Mockery\MockInterface
-     */
-    private $user_manager;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AccessKeyScopeRetriever
+     * @var \PHPUnit\Framework\MockObject\MockObject&AccessKeyScopeRetriever
      */
     private $access_key_scope_retriever;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|SplitToken
+     * @var \PHPUnit\Framework\MockObject\MockObject&SplitToken
      */
     private $access_key;
-    /**
-     * @var AccessKeyVerifier
-     */
-    private $verifier;
+    private AccessKeyVerifier $verifier;
 
     protected function setUp(): void
     {
-        $this->dao                        = \Mockery::mock(AccessKeyDAO::class);
-        $this->hasher                     = \Mockery::mock(SplitTokenVerificationStringHasher::class);
-        $this->user_manager               = \Mockery::mock(\UserManager::class);
-        $this->access_key_scope_retriever = \Mockery::mock(AccessKeyScopeRetriever::class);
-        $this->access_key                 = \Mockery::mock(SplitToken::class);
+        $this->dao                        = $this->createMock(AccessKeyDAO::class);
+        $this->hasher                     = $this->createMock(SplitTokenVerificationStringHasher::class);
+        $this->user_manager               = $this->createMock(\UserManager::class);
+        $this->access_key_scope_retriever = $this->createMock(AccessKeyScopeRetriever::class);
+        $this->access_key                 = $this->createMock(SplitToken::class);
         $this->verifier                   = new AccessKeyVerifier(
             $this->dao,
             $this->hasher,
@@ -88,25 +74,25 @@ final class AccessKeyVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testAUserCanBeRetrievedFromItsAccessKey($expect_to_log_access, $last_usage, $last_ip): void
     {
         \ForgeConfig::set('last_access_resolution', self::LAST_ACCESS_RESOLUTION);
-        $this->access_key->shouldReceive('getID')->andReturns(1);
-        $this->dao->shouldReceive('searchAccessKeyVerificationAndTraceabilityDataByID')->andReturns(
+        $this->access_key->method('getID')->willReturn(1);
+        $this->dao->method('searchAccessKeyVerificationAndTraceabilityDataByID')->willReturn(
             ['user_id' => 101, 'verifier' => 'valid', 'last_usage' => $last_usage, 'last_ip' => $last_ip, 'expiration_date' => null]
         );
-        $verification_string = \Mockery::mock(SplitTokenVerificationString::class);
-        $this->access_key->shouldReceive('getVerificationString')->andReturns($verification_string);
-        $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(true);
-        $scope = \Mockery::mock(AuthenticationScope::class);
-        $scope->shouldReceive('covers')->andReturnTrue();
-        $this->access_key_scope_retriever->shouldReceive('getScopesByAccessKeyID')->andReturn([$scope]);
-        $expected_user = \Mockery::mock(\PFUser::class);
-        $this->user_manager->shouldReceive('getUserById')->with(101)->andReturns($expected_user);
+        $verification_string = $this->createMock(SplitTokenVerificationString::class);
+        $this->access_key->method('getVerificationString')->willReturn($verification_string);
+        $this->hasher->method('verifyHash')->with($verification_string, 'valid')->willReturn(true);
+        $scope = $this->createMock(AuthenticationScope::class);
+        $scope->method('covers')->willReturn(true);
+        $this->access_key_scope_retriever->method('getScopesByAccessKeyID')->willReturn([$scope]);
+        $expected_user = $this->createMock(\PFUser::class);
+        $this->user_manager->method('getUserById')->with(101)->willReturn($expected_user);
         if ($expect_to_log_access) {
-            $this->dao->shouldReceive('updateAccessKeyUsageByID')->once();
+            $this->dao->expects(self::once())->method('updateAccessKeyUsageByID');
         } else {
-            $this->dao->shouldReceive('updateAccessKeyUsageByID')->never();
+            $this->dao->expects(self::never())->method('updateAccessKeyUsageByID');
         }
 
-        $this->verifier->getUser($this->access_key, \Mockery::mock(AuthenticationScope::class), '2001:db8::1777');
+        $this->verifier->getUser($this->access_key, $this->createMock(AuthenticationScope::class), '2001:db8::1777');
     }
 
     public static function lastAccessValuesProvider(): array
@@ -142,52 +128,52 @@ final class AccessKeyVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testVerificationFailsWhenKeyCanNotBeFound(): void
     {
-        $this->access_key->shouldReceive('getID')->andReturns(1);
-        $this->dao->shouldReceive('searchAccessKeyVerificationAndTraceabilityDataByID')->andReturns(null);
+        $this->access_key->method('getID')->willReturn(1);
+        $this->dao->method('searchAccessKeyVerificationAndTraceabilityDataByID')->willReturn(null);
 
         $this->expectException(AccessKeyNotFoundException::class);
 
-        $this->verifier->getUser($this->access_key, \Mockery::mock(AuthenticationScope::class), '2001:db8::1777');
+        $this->verifier->getUser($this->access_key, $this->createMock(AuthenticationScope::class), '2001:db8::1777');
     }
 
     public function testVerificationFailsWhenVerificationStringDoesNotMatch(): void
     {
-        $this->access_key->shouldReceive('getID')->andReturns(1);
-        $this->dao->shouldReceive('searchAccessKeyVerificationAndTraceabilityDataByID')->andReturns(
+        $this->access_key->method('getID')->willReturn(1);
+        $this->dao->method('searchAccessKeyVerificationAndTraceabilityDataByID')->willReturn(
             ['user_id' => 101, 'verifier' => 'invalid', 'last_usage' => 1538408328, 'last_ip' => self::IP_ADDRESS_REQUESTING_VERIFICATION, 'expiration_date' => null]
         );
-        $this->access_key->shouldReceive('getVerificationString')
-            ->andReturns(\Mockery::mock(SplitTokenVerificationString::class));
-        $this->hasher->shouldReceive('verifyHash')->andReturns(false);
+        $this->access_key->method('getVerificationString')
+            ->willReturn($this->createMock(SplitTokenVerificationString::class));
+        $this->hasher->method('verifyHash')->willReturn(false);
 
         $this->expectException(InvalidAccessKeyException::class);
 
-        $this->verifier->getUser($this->access_key, \Mockery::mock(AuthenticationScope::class), self::IP_ADDRESS_REQUESTING_VERIFICATION);
+        $this->verifier->getUser($this->access_key, $this->createMock(AuthenticationScope::class), self::IP_ADDRESS_REQUESTING_VERIFICATION);
     }
 
     public function testVerificationFailsWhenTheCorrespondingUserCanNotBeFound(): void
     {
-        $this->access_key->shouldReceive('getID')->andReturns(1);
-        $this->dao->shouldReceive('searchAccessKeyVerificationAndTraceabilityDataByID')->andReturns(
+        $this->access_key->method('getID')->willReturn(1);
+        $this->dao->method('searchAccessKeyVerificationAndTraceabilityDataByID')->willReturn(
             ['user_id' => 101, 'verifier' => 'valid', 'last_usage' => 1538408328, 'last_ip' => self::IP_ADDRESS_REQUESTING_VERIFICATION, 'expiration_date' => null]
         );
-        $this->access_key->shouldReceive('getVerificationString')
-            ->andReturns(\Mockery::mock(SplitTokenVerificationString::class));
-        $this->hasher->shouldReceive('verifyHash')->andReturns(true);
-        $scope = \Mockery::mock(AuthenticationScope::class);
-        $scope->shouldReceive('covers')->andReturnTrue();
-        $this->access_key_scope_retriever->shouldReceive('getScopesByAccessKeyID')->andReturn([$scope]);
-        $this->user_manager->shouldReceive('getUserById')->andReturns(null);
+        $this->access_key->method('getVerificationString')
+            ->willReturn($this->createMock(SplitTokenVerificationString::class));
+        $this->hasher->method('verifyHash')->willReturn(true);
+        $scope = $this->createMock(AuthenticationScope::class);
+        $scope->method('covers')->willReturn(true);
+        $this->access_key_scope_retriever->method('getScopesByAccessKeyID')->willReturn([$scope]);
+        $this->user_manager->method('getUserById')->willReturn(null);
 
         $this->expectException(AccessKeyMatchingUnknownUserException::class);
 
-        $this->verifier->getUser($this->access_key, \Mockery::mock(AuthenticationScope::class), self::IP_ADDRESS_REQUESTING_VERIFICATION);
+        $this->verifier->getUser($this->access_key, $this->createMock(AuthenticationScope::class), self::IP_ADDRESS_REQUESTING_VERIFICATION);
     }
 
     public function testVerificationFailsWhenTheAccessKeyIsExpired(): void
     {
-        $this->access_key->shouldReceive('getID')->andReturns(1);
-        $this->dao->shouldReceive('searchAccessKeyVerificationAndTraceabilityDataByID')->andReturns(
+        $this->access_key->method('getID')->willReturn(1);
+        $this->dao->method('searchAccessKeyVerificationAndTraceabilityDataByID')->willReturn(
             [
                 'user_id' => 101,
                 'verifier' => 'valid',
@@ -199,27 +185,27 @@ final class AccessKeyVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(ExpiredAccessKeyException::class);
 
-        $this->verifier->getUser($this->access_key, \Mockery::mock(AuthenticationScope::class), self::IP_ADDRESS_REQUESTING_VERIFICATION);
+        $this->verifier->getUser($this->access_key, $this->createMock(AuthenticationScope::class), self::IP_ADDRESS_REQUESTING_VERIFICATION);
     }
 
     public function testVerificationFailsWhenNoneOfTheScopesAssociatedWithTheTokenCoversTheRequiredScope(): void
     {
-        $this->access_key->shouldReceive('getID')->andReturns(1);
-        $this->dao->shouldReceive('searchAccessKeyVerificationAndTraceabilityDataByID')->andReturns(
+        $this->access_key->method('getID')->willReturn(1);
+        $this->dao->method('searchAccessKeyVerificationAndTraceabilityDataByID')->willReturn(
             ['user_id' => 101, 'verifier' => 'valid', 'last_usage' => 1538408328, 'last_ip' => self::IP_ADDRESS_REQUESTING_VERIFICATION, 'expiration_date' => null]
         );
-        $this->access_key->shouldReceive('getVerificationString')
-            ->andReturns(\Mockery::mock(SplitTokenVerificationString::class));
-        $this->hasher->shouldReceive('verifyHash')->andReturns(true);
-        $scope = \Mockery::mock(AuthenticationScope::class);
-        $scope->shouldReceive('covers')->andReturnFalse();
-        $this->access_key_scope_retriever->shouldReceive('getScopesByAccessKeyID')->andReturn([$scope]);
+        $this->access_key->method('getVerificationString')
+            ->willReturn($this->createMock(SplitTokenVerificationString::class));
+        $this->hasher->method('verifyHash')->willReturn(true);
+        $scope = $this->createMock(AuthenticationScope::class);
+        $scope->method('covers')->willReturn(false);
+        $this->access_key_scope_retriever->method('getScopesByAccessKeyID')->willReturn([$scope]);
 
-        $required_scope   = \Mockery::mock(AuthenticationScope::class);
-        $scope_definition = \Mockery::mock(AuthenticationScopeDefinition::class);
-        $scope_definition->shouldReceive('getName')->andReturn('name');
-        $required_scope->shouldReceive('getDefinition')->andReturn($scope_definition);
-        $required_scope->shouldReceive('getIdentifier')->andReturn(AccessKeyScopeIdentifier::fromIdentifierKey('foo:bar'));
+        $required_scope   = $this->createMock(AuthenticationScope::class);
+        $scope_definition = $this->createMock(AuthenticationScopeDefinition::class);
+        $scope_definition->method('getName')->willReturn('name');
+        $required_scope->method('getDefinition')->willReturn($scope_definition);
+        $required_scope->method('getIdentifier')->willReturn(AccessKeyScopeIdentifier::fromIdentifierKey('foo:bar'));
 
         $this->expectException(AccessKeyDoesNotHaveRequiredScopeException::class);
 
@@ -228,20 +214,20 @@ final class AccessKeyVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testVerificationFailsWhenNoScopeSeemsToBeAssociatedWithTheToken(): void
     {
-        $this->access_key->shouldReceive('getID')->andReturns(1);
-        $this->dao->shouldReceive('searchAccessKeyVerificationAndTraceabilityDataByID')->andReturns(
+        $this->access_key->method('getID')->willReturn(1);
+        $this->dao->method('searchAccessKeyVerificationAndTraceabilityDataByID')->willReturn(
             ['user_id' => 101, 'verifier' => 'valid', 'last_usage' => 1538408328, 'last_ip' => self::IP_ADDRESS_REQUESTING_VERIFICATION, 'expiration_date' => null]
         );
-        $this->access_key->shouldReceive('getVerificationString')
-            ->andReturns(\Mockery::mock(SplitTokenVerificationString::class));
-        $this->hasher->shouldReceive('verifyHash')->andReturns(true);
-        $this->access_key_scope_retriever->shouldReceive('getScopesByAccessKeyID')->andReturn([]);
+        $this->access_key->method('getVerificationString')
+            ->willReturn($this->createMock(SplitTokenVerificationString::class));
+        $this->hasher->method('verifyHash')->willReturn(true);
+        $this->access_key_scope_retriever->method('getScopesByAccessKeyID')->willReturn([]);
 
-        $required_scope   = \Mockery::mock(AuthenticationScope::class);
-        $scope_definition = \Mockery::mock(AuthenticationScopeDefinition::class);
-        $scope_definition->shouldReceive('getName')->andReturn('name');
-        $required_scope->shouldReceive('getDefinition')->andReturn($scope_definition);
-        $required_scope->shouldReceive('getIdentifier')->andReturn(AccessKeyScopeIdentifier::fromIdentifierKey('foo:bar'));
+        $required_scope   = $this->createMock(AuthenticationScope::class);
+        $scope_definition = $this->createMock(AuthenticationScopeDefinition::class);
+        $scope_definition->method('getName')->willReturn('name');
+        $required_scope->method('getDefinition')->willReturn($scope_definition);
+        $required_scope->method('getIdentifier')->willReturn(AccessKeyScopeIdentifier::fromIdentifierKey('foo:bar'));
 
         $this->expectException(AccessKeyDoesNotHaveRequiredScopeException::class);
 

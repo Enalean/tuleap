@@ -25,25 +25,19 @@ use Tuleap\User\ForgeUserGroupPermission\SiteAdministratorPermissionChecker;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class User_ForgeUserGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     /**
-     * @var User_ForgeUserGroupPermissionsDao
+     * @var User_ForgeUserGroupPermissionsDao&\PHPUnit\Framework\MockObject\MockObject
      */
     private $dao;
-
-    /**
-     * @var User_ForgeUserGroupManager
-     */
-    private $manager;
+    private User_ForgeUserGroupManager $manager;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dao     = \Mockery::spy(\UserGroupDao::class);
+        $this->dao     = $this->createMock(\UserGroupDao::class);
         $this->manager = new User_ForgeUserGroupManager(
             $this->dao,
-            \Mockery::spy(SiteAdministratorPermissionChecker::class)
+            $this->createMock(SiteAdministratorPermissionChecker::class)
         );
     }
 
@@ -53,7 +47,7 @@ final class User_ForgeUserGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $ugroup = new User_ForgeUGroup(45, 'people', 'to eat');
 
-        $this->dao->shouldReceive('getForgeUGroup')->with(45)->andReturns(false);
+        $this->dao->method('getForgeUGroup')->with(45)->willReturn(false);
 
         $this->manager->updateUserGroup($ugroup);
     }
@@ -62,30 +56,30 @@ final class User_ForgeUserGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $ugroup = new User_ForgeUGroup(45, 'people', 'to eat');
 
-        $this->dao->shouldReceive('getForgeUGroup')->with(45)->andReturns([
+        $this->dao->method('getForgeUGroup')->with(45)->willReturn([
             'group_id'    => 45,
             'name'        => 'people',
             'description' => 'to eat',
         ]);
 
         $update = $this->manager->updateUserGroup($ugroup);
-        $this->assertTrue($update);
+        self::assertTrue($update);
     }
 
     public function testItUpdates(): void
     {
         $ugroup = new User_ForgeUGroup(45, 'people', 'to eat');
 
-        $this->dao->shouldReceive('getForgeUGroup')->with(45)->andReturns([
+        $this->dao->method('getForgeUGroup')->with(45)->willReturn([
             'group_id'    => 45,
             'name'        => 'fish',
             'description' => 'to talk to',
         ]);
 
-        $this->dao->shouldReceive('updateForgeUGroup')->with(45, 'people', 'to eat')->once()->andReturns(true);
+        $this->dao->expects(self::once())->method('updateForgeUGroup')->with(45, 'people', 'to eat')->willReturn(true);
 
         $update = $this->manager->updateUserGroup($ugroup);
-        $this->assertTrue($update);
+        self::assertTrue($update);
     }
 
     public function testItThrowsAnExceptionIfUGroupNameAlreadyExists(): void
@@ -93,15 +87,17 @@ final class User_ForgeUserGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(\User_UserGroupNameInvalidException::class);
         $ugroup = new User_ForgeUGroup(45, 'people', 'to eat');
 
-        $this->dao->shouldReceive('getForgeUGroup')->with(45)->andReturns([
+        $this->dao->method('getForgeUGroup')->with(45)->willReturn([
             'group_id'    => 45,
             'name'        => 'fish',
             'description' => 'to talk to',
         ]);
 
-        $this->dao->shouldReceive('updateForgeUGroup')->with(45, 'people', 'to eat')->once()->andThrows(new User_UserGroupNameInvalidException());
+        $this->dao->expects(self::once())->method('updateForgeUGroup')->with(45, 'people', 'to eat')->willThrowException(
+            new User_UserGroupNameInvalidException()
+        );
 
         $update = $this->manager->updateUserGroup($ugroup);
-        $this->assertTrue($update);
+        self::assertTrue($update);
     }
 }

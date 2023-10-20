@@ -22,24 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\User\AccessKey;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
 final class AccessKeyRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AccessKeyDAO
+     * @var \PHPUnit\Framework\MockObject\MockObject&AccessKeyDAO
      */
     private $dao;
-    /**
-     * @var AccessKeyRevoker
-     */
-    private $revoker;
+    private AccessKeyRevoker $revoker;
 
     protected function setUp(): void
     {
-        $this->dao = \Mockery::mock(AccessKeyDAO::class);
+        $this->dao = $this->createMock(AccessKeyDAO::class);
 
         $this->revoker = new AccessKeyRevoker($this->dao);
     }
@@ -48,8 +41,8 @@ final class AccessKeyRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $current_time = new \DateTimeImmutable('@10');
 
-        $this->dao->shouldReceive('deleteByExpirationDate')->with(10)->once();
-        $this->dao->shouldReceive('deleteKeysWithNoScopes')->once();
+        $this->dao->expects(self::once())->method('deleteByExpirationDate')->with(10);
+        $this->dao->expects(self::once())->method('deleteKeysWithNoScopes');
 
         $this->revoker->revokeUnusableUserAccessKeys($current_time);
     }

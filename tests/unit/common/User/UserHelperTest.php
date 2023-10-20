@@ -24,180 +24,194 @@ declare(strict_types=1);
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 final class UserHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalLanguageMock;
 
     public function testGetDisplayName(): void
     {
-        $uh = \Mockery::mock(\UserHelper::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $uh->shouldReceive('_getCurrentUserUsernameDisplayPreference')->once()->andReturns(1);
-        $uh->shouldReceive('_getCurrentUserUsernameDisplayPreference')->once()->andReturns(2);
-        $uh->shouldReceive('_getCurrentUserUsernameDisplayPreference')->once()->andReturns(3);
-        $uh->shouldReceive('_getCurrentUserUsernameDisplayPreference')->once()->andReturns(4);
-        $uh->shouldReceive('_getCurrentUserUsernameDisplayPreference')->once()->andReturns(666);
+        $user_helper = $this->getMockBuilder(\UserHelper::class)
+            ->onlyMethods(['_getCurrentUserUsernameDisplayPreference'])
+            ->getMock();
 
-        $uh->__construct();
-        $this->assertEquals("user_name (realname)", $uh->getDisplayName("user_name", "realname"));
+        $user_helper->method('_getCurrentUserUsernameDisplayPreference')->willReturnOnConsecutiveCalls(1, 2, 3, 4, 666);
 
-        $uh->__construct();
-        $this->assertEquals("user_name", $uh->getDisplayName("user_name", "realname"));
+        $user_helper->__construct();
+        self::assertEquals("user_name (realname)", $user_helper->getDisplayName("user_name", "realname"));
 
-        $uh->__construct();
-        $this->assertEquals("realname", $uh->getDisplayName("user_name", "realname"));
+        $user_helper->__construct();
+        self::assertEquals("user_name", $user_helper->getDisplayName("user_name", "realname"));
 
-        $uh->__construct();
-        $this->assertEquals("realname (user_name)", $uh->getDisplayName("user_name", "realname"));
+        $user_helper->__construct();
+        self::assertEquals("realname", $user_helper->getDisplayName("user_name", "realname"));
 
-        $uh->__construct();
-        $this->assertEquals("realname (user_name)", $uh->getDisplayName("user_name", "realname"));
+        $user_helper->__construct();
+        self::assertEquals("realname (user_name)", $user_helper->getDisplayName("user_name", "realname"));
+
+        $user_helper->__construct();
+        self::assertEquals("realname (user_name)", $user_helper->getDisplayName("user_name", "realname"));
     }
 
     public function testGetDisplayNameFromUser(): void
     {
-        $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('getUserName')->andReturns('user_name');
-        $user->shouldReceive('getRealName')->andReturns('realname');
+        $user = \Tuleap\Test\Builders\UserTestBuilder::aUser()->withUserName('user_name')->withRealName('realname')->build();
 
-        $uh = \Mockery::mock(\UserHelper::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $uh->shouldReceive('_getCurrentUserUsernameDisplayPreference')->andReturns(1);
-        $uh->__construct();
-        $this->assertEquals("user_name (realname)", $uh->getDisplayNameFromUser($user));
-        $this->assertNull($uh->getDisplayNameFromUser(null));
+        $user_helper = $this->getMockBuilder(\UserHelper::class)
+            ->onlyMethods(['_getCurrentUserUsernameDisplayPreference'])
+            ->getMock();
+
+        $user_helper->method('_getCurrentUserUsernameDisplayPreference')->willReturn(1);
+
+        $user_helper->__construct();
+        self::assertEquals("user_name (realname)", $user_helper->getDisplayNameFromUser($user));
+        self::assertNull($user_helper->getDisplayNameFromUser(null));
     }
 
     public function testGetDisplayNameFromUserId(): void
     {
-        $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('getUserName')->andReturns('user_name');
-        $user->shouldReceive('getRealName')->andReturns('realname');
+        $user = \Tuleap\Test\Builders\UserTestBuilder::aUser()->withUserName('user_name')->withRealName('realname')->build();
 
-        $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('isUserLoadedById')->with(123)->andReturns(true);
-        $um->shouldReceive('getUserById')->with(123)->andReturns($user);
+        $user_manager = $this->createMock(UserManager::class);
+        $user_manager->method('isUserLoadedById')->with(123)->willReturn(true);
+        $user_manager->method('getUserById')->with(123)->willReturn($user);
 
-        $uh = \Mockery::mock(\UserHelper::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $uh->shouldReceive('_getCurrentUserUsernameDisplayPreference')->andReturns(1);
-        $uh->shouldReceive('_getUserManager')->andReturns($um);
-        $uh->__construct();
-        $this->assertEquals("user_name (realname)", $uh->getDisplayNameFromUserId(123));
+        $user_helper = $this->getMockBuilder(\UserHelper::class)
+            ->onlyMethods(['_getCurrentUserUsernameDisplayPreference', '_getUserManager'])
+            ->getMock();
+
+        $user_helper->method('_getCurrentUserUsernameDisplayPreference')->willReturn(1);
+        $user_helper->method('_getUserManager')->willReturn($user_manager);
+
+        $user_helper->__construct();
+        self::assertEquals("user_name (realname)", $user_helper->getDisplayNameFromUserId(123));
     }
 
     public function testGetDisplayNameFromUserName(): void
     {
-        $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('getUserName')->andReturns('user_name');
-        $user->shouldReceive('getRealName')->andReturns('realname');
+        $user = \Tuleap\Test\Builders\UserTestBuilder::aUser()->withUserName('user_name')->withRealName('realname')->build();
 
-        $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('isUserLoadedByUserName')->with('user_name')->andReturns(true);
-        $um->shouldReceive('getUserByUserName')->with('user_name')->andReturns($user);
+        $user_manager = $this->createMock(UserManager::class);
+        $user_manager->method('isUserLoadedByUserName')->with('user_name')->willReturn(true);
+        $user_manager->method('getUserByUserName')->with('user_name')->willReturn($user);
 
-        $uh = \Mockery::mock(\UserHelper::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $uh->shouldReceive('_isUserNameNone')->andReturns(false);
-        $uh->shouldReceive('_getCurrentUserUsernameDisplayPreference')->andReturns(1);
-        $uh->shouldReceive('_getUserManager')->andReturns($um);
-        $uh->__construct();
-        $this->assertEquals("user_name (realname)", $uh->getDisplayNameFromUserName('user_name'));
+        $user_helper = $this->getMockBuilder(\UserHelper::class)
+            ->onlyMethods(['_getCurrentUserUsernameDisplayPreference', '_getUserManager', '_isUserNameNone'])
+            ->getMock();
+
+        $user_helper->method('_getCurrentUserUsernameDisplayPreference')->willReturn(1);
+        $user_helper->method('_getUserManager')->willReturn($user_manager);
+        $user_helper->method('_isUserNameNone')->willReturn(false);
+
+        $user_helper->__construct();
+        self::assertEquals("user_name (realname)", $user_helper->getDisplayNameFromUserName('user_name'));
     }
 
     public function testGetDisplayNameForNone(): void
     {
-        $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('isNone')->andReturns(true);
-        $user->shouldReceive('getUserName')->andReturns('None');
-        $user->shouldReceive('getRealName')->andReturns('0');
+        $user = \Tuleap\Test\Builders\UserTestBuilder::aUser()->withId(100)->withUserName('None')->withRealName('0')->build();
 
-        $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('isUserLoadedById')->with(100)->andReturns(true);
-        $um->shouldReceive('getUserById')->with(100)->andReturns($user);
+        $user_manager = $this->createMock(UserManager::class);
+        $user_manager->method('isUserLoadedById')->with(100)->willReturn(true);
+        $user_manager->method('getUserById')->with(100)->willReturn($user);
 
-        $uh = \Mockery::mock(\UserHelper::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $uh->shouldReceive('_getUserManager')->andReturns($um);
-        $uh->shouldReceive('_isUserNameNone')->with('None')->andReturns(true);
-        $uh->shouldReceive('_isUserNameNone')->with('Aucun')->andReturns(true);
-        $uh->shouldReceive('_getCurrentUserUsernameDisplayPreference')->andReturns(4, 1, 2, 3)->times(4);
+        $user_helper = $this->getMockBuilder(\UserHelper::class)
+            ->onlyMethods(['_getCurrentUserUsernameDisplayPreference', '_getUserManager', '_isUserNameNone'])
+            ->getMock();
 
-        $uh->__construct();
-        $this->assertEquals("None", $uh->getDisplayNameFromUser($user));
+        $user_helper->method('_getCurrentUserUsernameDisplayPreference')->willReturnOnConsecutiveCalls(4, 1, 2, 3);
+        $user_helper->method('_getUserManager')->willReturn($user_manager);
+        $user_helper->method('_isUserNameNone')->willReturnCallback(
+            function (string $user_name): bool {
+                return ($user_name === 'None' || $user_name === 'Aucun');
+            }
+        );
 
-        $uh->__construct();
-        $this->assertEquals("None", $uh->getDisplayNameFromUser($user));
+        $user_helper->__construct();
+        self::assertEquals("None", $user_helper->getDisplayNameFromUser($user));
 
-        $uh->__construct();
-        $this->assertEquals("None", $uh->getDisplayNameFromUser($user));
+        $user_helper->__construct();
+        self::assertEquals("None", $user_helper->getDisplayNameFromUser($user));
 
-        $uh->__construct();
-        $this->assertEquals("None", $uh->getDisplayNameFromUser($user));
-        $this->assertEquals("None", $uh->getDisplayNameFromUserId(100));
-        $this->assertEquals("None", $uh->getDisplayNameFromUserName("None"));
-        $this->assertEquals("Aucun", $uh->getDisplayNameFromUserName("Aucun"));
+        $user_helper->__construct();
+        self::assertEquals("None", $user_helper->getDisplayNameFromUser($user));
+
+        $user_helper->__construct();
+        self::assertEquals("None", $user_helper->getDisplayNameFromUser($user));
+        self::assertEquals("None", $user_helper->getDisplayNameFromUserId(100));
+        self::assertEquals("None", $user_helper->getDisplayNameFromUserName("None"));
+        self::assertEquals("Aucun", $user_helper->getDisplayNameFromUserName("Aucun"));
     }
 
     public function testInternalCachingById(): void
     {
-        $dao = \Mockery::spy(\UserDao::class);
-        $dao->shouldReceive('searchByUserId')->andReturns(['user_name' => 'user_name', 'realname' => 'realname', 'user_id' => 123]);
+        $dao = $this->createMock(\UserDao::class);
+        $dao->method('searchByUserId')->willReturn(['user_name' => 'user_name', 'realname' => 'realname', 'user_id' => 123]);
+        $dao->expects(self::never())->method('searchByUserName');
 
-        $dao->shouldReceive('searchByUserName')->never();
+        $user_manager = $this->createMock(\UserManager::class);
+        $user_manager->method('isUserLoadedById')->with(123)->willReturn(false);
+        $user_manager->method('isUserLoadedByUserName')->with('user_name')->willReturn(false);
+        $user_manager->expects(self::never())->method('getUserById');
+        $user_manager->expects(self::never())->method('getUserByUserName');
 
-        $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('isUserLoadedById')->with(123)->andReturns(false);
-        $um->shouldReceive('isUserLoadedByUserName')->with('user_name')->andReturns(false);
-        $um->shouldReceive('getUserById')->never();
-        $um->shouldReceive('getUserByUserName')->never();
+        $user_helper = $this->getMockBuilder(\UserHelper::class)
+            ->onlyMethods(['_getCurrentUserUsernameDisplayPreference', '_getUserManager', '_isUserNameNone', '_getUserDao'])
+            ->getMock();
 
-        $uh = \Mockery::mock(\UserHelper::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $uh->shouldReceive('_getUserManager')->andReturns($um);
-        $uh->shouldReceive('_isUserNameNone')->andReturns(false);
-        $uh->shouldReceive('_getCurrentUserUsernameDisplayPreference')->andReturns(1);
-        $uh->shouldReceive('_getUserDao')->andReturns($dao);
+        $user_helper->method('_getCurrentUserUsernameDisplayPreference')->willReturn(1);
+        $user_helper->method('_getUserManager')->willReturn($user_manager);
+        $user_helper->method('_isUserNameNone')->willReturn(false);
+        $user_helper->method('_getUserDao')->willReturn($dao);
 
-        $uh->__construct();
-        $this->assertEquals("user_name (realname)", $uh->getDisplayNameFromUserId(123));
-        $this->assertEquals("user_name (realname)", $uh->getDisplayNameFromUserName('user_name'));
+        $user_helper->__construct();
+        self::assertEquals("user_name (realname)", $user_helper->getDisplayNameFromUserId(123));
+        self::assertEquals("user_name (realname)", $user_helper->getDisplayNameFromUserName('user_name'));
     }
 
     public function testInternalCachingByUserName(): void
     {
-        $dao = \Mockery::spy(\UserDao::class);
-        $dao->shouldReceive('searchByUserName')->andReturns(['user_name' => 'user_name', 'realname' => 'realname', 'user_id' => 123]);
+        $dao = $this->createMock(\UserDao::class);
+        $dao->method('searchByUserName')->willReturn(['user_name' => 'user_name', 'realname' => 'realname', 'user_id' => 123]);
+        $dao->expects(self::never())->method('searchByUserId');
 
-        $dao->shouldReceive('searchByUserId')->never();
+        $user_manager = $this->createMock(\UserManager::class);
+        $user_manager->method('isUserLoadedById')->with(123)->willReturn(false);
+        $user_manager->method('isUserLoadedByUserName')->with('user_name')->willReturn(false);
+        $user_manager->expects(self::never())->method('getUserById');
+        $user_manager->expects(self::never())->method('getUserByUserName');
 
-        $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('isUserLoadedById')->with(123)->andReturns(false);
-        $um->shouldReceive('isUserLoadedByUserName')->with('user_name')->andReturns(false);
-        $um->shouldReceive('getUserById')->never();
-        $um->shouldReceive('getUserByUserName')->never();
+        $user_helper = $this->getMockBuilder(\UserHelper::class)
+            ->onlyMethods(['_getCurrentUserUsernameDisplayPreference', '_getUserManager', '_isUserNameNone', '_getUserDao'])
+            ->getMock();
 
-        $uh = \Mockery::mock(\UserHelper::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $uh->shouldReceive('_getUserManager')->andReturns($um);
-        $uh->shouldReceive('_isUserNameNone')->andReturns(false);
-        $uh->shouldReceive('_getCurrentUserUsernameDisplayPreference')->andReturns(1);
-        $uh->shouldReceive('_getUserDao')->andReturns($dao);
+        $user_helper->method('_getUserManager')->willReturn($user_manager);
+        $user_helper->method('_isUserNameNone')->willReturn(false);
+        $user_helper->method('_getCurrentUserUsernameDisplayPreference')->willReturn(1);
+        $user_helper->method('_getUserDao')->willReturn($dao);
 
-        $uh->__construct();
-        $this->assertEquals("user_name (realname)", $uh->getDisplayNameFromUserName('user_name'));
-        $this->assertEquals("user_name (realname)", $uh->getDisplayNameFromUserId(123));
+        $user_helper->__construct();
+        self::assertEquals("user_name (realname)", $user_helper->getDisplayNameFromUserName('user_name'));
+        self::assertEquals("user_name (realname)", $user_helper->getDisplayNameFromUserId(123));
     }
 
     public function testItCachesUnknownNames(): void
     {
         $name = "L'équipe de développement de PhpWiki";
 
-        $dao = \Mockery::spy(\UserDao::class);
-        $dao->shouldReceive('searchByUserName')->with($name)->andReturns(null);
+        $dao = $this->createMock(\UserDao::class);
+        $dao->method('searchByUserName')->with($name)->willReturn(null);
 
-        $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('isUserLoadedByUserName')->with($name)->andReturns(false);
+        $user_manager = $this->createMock(\UserManager::class);
+        $user_manager->method('isUserLoadedByUserName')->with($name)->willReturn(false);
 
-        $uh = \Mockery::mock(\UserHelper::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $uh->shouldReceive('_getUserManager')->andReturns($um);
-        $uh->shouldReceive('_isUserNameNone')->andReturns(false);
-        $uh->shouldReceive('_getCurrentUserUsernameDisplayPreference')->andReturns(1);
-        $uh->shouldReceive('_getUserDao')->andReturns($dao);
+        $user_helper = $this->getMockBuilder(\UserHelper::class)
+            ->onlyMethods(['_getCurrentUserUsernameDisplayPreference', '_getUserManager', '_isUserNameNone', '_getUserDao'])
+            ->getMock();
 
-        $uh->__construct();
-        $this->assertEquals($name, $uh->getDisplayNameFromUserName($name));
+        $user_helper->method('_getUserManager')->willReturn($user_manager);
+        $user_helper->method('_isUserNameNone')->willReturn(false);
+        $user_helper->method('_getCurrentUserUsernameDisplayPreference')->willReturn(1);
+        $user_helper->method('_getUserDao')->willReturn($dao);
+
+        $user_helper->__construct();
+        self::assertEquals($name, $user_helper->getDisplayNameFromUserName($name));
     }
 }

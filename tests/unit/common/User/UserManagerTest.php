@@ -20,40 +20,53 @@
 
 use Tuleap\CookieManager;
 
-class UserManagerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+final class UserManagerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    public function testLogout()
+    public function testLogout(): void
     {
-        $cm = \Mockery::mock(CookieManager::class);
-        $cm->shouldReceive('getCookie')->andReturns('valid_hash');
-        $cm->shouldReceive('removeCookie')->with('session_hash')->once();
+        $cookie_manager = $this->createMock(CookieManager::class);
+        $cookie_manager->method('getCookie')->willReturn('valid_hash');
+        $cookie_manager->expects(self::once())->method('removeCookie')->with('session_hash');
 
-        $user123 = \Mockery::mock(PFUser::class, [
-            'getId'          => 123,
-            'getUserName'    => 'user_123',
-            'getSessionHash' => 'valid_hash',
-            'isAnonymous'    => false,
-            'isSuspended'    => false,
-            'isDeleted'      => false,
-            'isFirstTimer'   => false,
-        ]);
+        $user123 = $this->createMock(PFUser::class);
+        $user123->method('getId')->willReturn(123);
+        $user123->method('getUserName')->willReturn('user_123');
+        $user123->method('getSessionHash')->willReturn('valid_hash');
+        $user123->method('isAnonymous')->willReturn(false);
+        $user123->method('isSuspended')->willReturn(false);
+        $user123->method('isDeleted')->willReturn(false);
+        $user123->method('isFirstTimer')->willReturn(false);
 
-        $session_manager = \Mockery::mock(\Tuleap\User\SessionManager::class, ['getUser' => $user123]);
-        $session_manager->shouldReceive('destroyCurrentSession')->with($user123)->once();
+        $session_manager = $this->createMock(\Tuleap\User\SessionManager::class);
+        $session_manager->method('getUser')->willReturn($user123);
+        $session_manager->expects(self::once())->method('destroyCurrentSession')->with($user123);
 
-        $um = \Mockery::mock(UserManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $um->shouldReceive([
-            'getDao'            => \Mockery::spy(UserDao::class),
-            'getCookieManager'  => $cm,
-            'getSessionManager' => $session_manager,
-            '_getEventManager'  => \Mockery::spy(EventManager::class),
-        ]);
-        $um->shouldReceive('getUserInstanceFromRow')->with(['user_name' => 'user_123', 'user_id' => 123])->andReturn($user123);
+        $user_manager = $this->getMockBuilder(UserManager::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods([
+                'getDao',
+                'getCookieManager',
+                'getSessionManager',
+                '_getEventManager',
+                'getUserInstanceFromRow',
+                'destroySession',
+            ])
+            ->getMock();
 
-        $um->shouldReceive('destroySession')->once();
+        $user_dao = $this->createMock(UserDao::class);
+        $user_dao->method('getUserAccessInfo')->willReturn([]);
+        $user_dao->method('storeLastAccessDate');
 
-        $um->logout();
+        $event_manager = $this->createMock(EventManager::class);
+        $event_manager->method('processEvent');
+
+        $user_manager->method('getDao')->willReturn($user_dao);
+        $user_manager->method('getCookieManager')->willReturn($cookie_manager);
+        $user_manager->method('getSessionManager')->willReturn($session_manager);
+        $user_manager->method('_getEventManager')->willReturn($event_manager);
+        $user_manager->method('getUserInstanceFromRow')->with(['user_name' => 'user_123', 'user_id' => 123])->willReturn($user123);
+        $user_manager->expects(self::once())->method('destroySession');
+
+        $user_manager->logout();
     }
 }
