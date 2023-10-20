@@ -7,6 +7,7 @@
   When the number of linked projects exceed this limit, then they are no more displayed in the sidebar,
   only in the popover on hover. Default is `5`.
 * 🐛 Linked projects displayed in the popover are now clickable links
+* 🐛 fix broken style for arrow on linked projects popover
 * ⬆️ Bump vue: 3.2.37 -> 3.3.4
 
 ## 2.3.0
