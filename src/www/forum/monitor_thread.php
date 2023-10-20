@@ -80,11 +80,14 @@ if ($request->valid($vFrm)) {
     $group_id   = db_result($result, 0, 'group_id');
     $forum_name = db_result($result, 0, 'forum_name');
 
-    $pm     = ProjectManager::instance();
-    $params = ['title' => $pm->getProject($group_id)->getPublicName() . ' forum: ' . $forum_name,
-        'pv'   => isset($pv) ? $pv : false,
-    ];
-    forum_header($params);
+    $pm      = ProjectManager::instance();
+    $project = $pm->getProject($group_id);
+    $title   = $project->getPublicName() . ' forum: ' . $forum_name;
+    $pv      = isset($pv) ? $pv : 0;
+    forum_header(\Tuleap\Layout\HeaderConfigurationBuilder::get($title)
+        ->inProject($project, Service::FORUM)
+        ->withPrinterVersion((int) $pv)
+        ->build());
 
     $sql    = sprintf(
         'SELECT user.user_name,user.realname,forum.has_followups,user.user_id,forum.msg_id,forum.group_forum_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to, forum_group_list.group_id'
@@ -169,9 +172,10 @@ if ($request->valid($vFrm)) {
         $GLOBALS['feedback'] .= _('You are monitoring the whole forum. If you want to monitor only specific threads, Stop Monitoring Forum.');
     }
 
-    forum_footer($params);
+    forum_footer();
 } else {
-    forum_header(['title' => $GLOBALS['Language']->getText('global', 'error')]);
+    forum_header(\Tuleap\Layout\HeaderConfigurationBuilder::get($GLOBALS['Language']->getText('global', 'error'))
+        ->build());
     $GLOBALS['feedback'] .= _('Error - choose a forum first');
-    forum_footer([]);
+    forum_footer();
 }
