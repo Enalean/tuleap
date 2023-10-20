@@ -576,7 +576,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
         echo '<TD>' . frs_show_processor_popup($group_id, $name = 'release_file_processor[]', $files[$i]->getProcessorID()) . '</TD>';
         echo '<TD>' . frs_show_filetype_popup($name = 'release_file_type[]', $files[$i]->getTypeID()) . '</TD>';
         //In case of difference between the inserted md5 and the computed one
-        //we dispaly an editable text field to let the user insert the right value
+        //we display an editable text field to let the user insert the right value
         //to avoid the error message next time
         $value = 'value = "' . $hp->purify($files[$i]->getReferenceMd5()) . '"';
         if ($files_factory->compareMd5Checksums($files[$i]->getComputedMd5(), $files[$i]->getReferenceMd5())) {
