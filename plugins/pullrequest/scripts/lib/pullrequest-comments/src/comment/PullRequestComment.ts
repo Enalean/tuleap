@@ -22,18 +22,12 @@ import { loadTooltips } from "@tuleap/tooltip";
 import type { ControlPullRequestComment } from "./PullRequestCommentController";
 import { getCommentBody } from "./PullRequestCommentBodyTemplate";
 import { getCommentFooter } from "./PullRequestCommentFooterTemplate";
-import { getReplyFormTemplate } from "./PullRequestCommentReplyFormTemplate";
 import { getCommentAvatarTemplate } from "../templates/CommentAvatarTemplate";
 import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 import { PullRequestCommentRepliesCollectionPresenter } from "./PullRequestCommentRepliesCollectionPresenter";
-import type { ReplyCommentFormPresenter } from "./ReplyCommentFormPresenter";
 import { gettext_provider } from "../gettext-provider";
 import type { HelpRelativeDatesDisplay } from "../helpers/relative-dates-helper";
 import type { ElementContainingAWritingZone } from "../types";
-import type { ControlWritingZone } from "../writing-zone/WritingZoneController";
-import { WritingZoneController } from "../writing-zone/WritingZoneController";
-import type { InternalWritingZone } from "../writing-zone/WritingZone";
-import { getWritingZoneElement } from "../writing-zone/WritingZone";
 
 export const PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME = "tuleap-pullrequest-comment";
 export type HostElement = PullRequestCommentComponentType &
@@ -49,12 +43,10 @@ export type PullRequestCommentComponentType = {
     readonly element_height: number;
     readonly post_rendering_callback: (() => void) | undefined;
     readonly controller: ControlPullRequestComment;
-    readonly writing_zone_controller: ControlWritingZone;
-    readonly writing_zone: HTMLElement & InternalWritingZone;
     readonly is_comment_edition_enabled: boolean;
     relative_date_helper: HelpRelativeDatesDisplay;
     replies: PullRequestCommentRepliesCollectionPresenter;
-    reply_comment_presenter: ReplyCommentFormPresenter | null;
+    is_reply_form_shown: boolean;
 };
 
 const getCommentClasses = (host: PullRequestCommentComponentType): MapOfClasses => {
@@ -91,17 +83,6 @@ export const setReplies = (
     return presenter;
 };
 
-export const setNewCommentState = (
-    host: PullRequestCommentComponentType,
-    presenter: ReplyCommentFormPresenter | undefined,
-): ReplyCommentFormPresenter | null => {
-    if (!presenter) {
-        return null;
-    }
-
-    return presenter;
-};
-
 export const after_render_once_descriptor = {
     get: (host: PullRequestCommentComponentType): unknown => host.content(),
     observe(host: HostElement): void {
@@ -133,6 +114,7 @@ const isLastReply = (
 export const PullRequestCommentComponent = define<PullRequestCommentComponentType>({
     tag: PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME,
     is_comment_edition_enabled: false,
+    is_reply_form_shown: false,
     comment: undefined,
     post_rendering_callback: undefined,
     relative_date_helper: undefined,
@@ -150,21 +132,6 @@ export const PullRequestCommentComponent = define<PullRequestCommentComponentTyp
     },
     replies: {
         set: setReplies,
-    },
-    reply_comment_presenter: {
-        set: setNewCommentState,
-    },
-    writing_zone_controller: {
-        get: (host, controller: ControlWritingZone | undefined) =>
-            controller ??
-            WritingZoneController({
-                document,
-                project_id: host.controller.getProjectId(),
-                focus_writing_zone_when_connected: true,
-            }),
-    },
-    writing_zone: {
-        get: getWritingZoneElement,
     },
     content: (host) => html`
         <div class="pull-request-comment-component">
@@ -187,10 +154,16 @@ export const PullRequestCommentComponent = define<PullRequestCommentComponentTyp
                             onshow-reply-form="${(): void => host.controller.showReplyForm(host)}"
                             onhide-reply-form="${(): void => host.controller.hideReplyForm(host)}"
                             is_last_reply="${isLastReply(host, reply)}"
-                        />
+                        ></tuleap-pullrequest-comment-reply>
                     `,
                 )}
-                ${getReplyFormTemplate(host, gettext_provider)}
+                ${host.is_reply_form_shown &&
+                html`
+                    <tuleap-pullrequest-new-comment-form
+                        class="pull-request-comment-reply-form"
+                        controller="${host.controller.buildReplyCreationController(host)}"
+                    ></tuleap-pullrequest-new-comment-form>
+                `}
             </div>
         </div>
     `,

@@ -57,11 +57,9 @@ export const FileDiffWidgetStub = {
         controller: {
             displayReplies: jest.fn(),
             hideReplyForm: jest.fn(),
-            saveReply: jest.fn(),
             showReplyForm: jest.fn(),
-            handleWritingZoneContentChange: jest.fn(),
             getRelativeDateHelper: jest.fn(),
-            shouldFocusWritingZoneOnceRendered: () => true,
+            buildReplyCreationController: jest.fn(),
             getProjectId: () => 105,
             getCurrentUserId: () => 102,
             buildReplyController: jest.fn(),

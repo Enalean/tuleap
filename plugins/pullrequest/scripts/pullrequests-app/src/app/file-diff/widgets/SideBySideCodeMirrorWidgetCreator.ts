@@ -166,17 +166,18 @@ export const SideBySideCodeMirrorWidgetCreator = (
             };
 
             new_comment_element.controller = NewCommentFormController(
-                NewCommentSaver({
-                    type: TYPE_INLINE_COMMENT,
-                    pull_request_id: widget_params.pull_request_id,
-                    user_id: widget_params.user_id,
-                    comment_context: widget_params.context,
-                }),
+                NewCommentSaver(),
                 { avatar_url: widget_params.user_avatar_url },
                 {
                     is_cancel_allowed: true,
                     is_autofocus_enabled: true,
                     project_id: widget_params.project_id,
+                },
+                {
+                    type: TYPE_INLINE_COMMENT,
+                    pull_request_id: widget_params.pull_request_id,
+                    user_id: widget_params.user_id,
+                    comment_context: widget_params.context,
                 },
                 post_submit_callback,
                 (fault) => {

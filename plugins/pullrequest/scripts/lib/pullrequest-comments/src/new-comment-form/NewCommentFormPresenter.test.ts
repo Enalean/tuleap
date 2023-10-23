@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,71 +17,74 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect } from "vitest";
-import { NewCommentFormPresenter } from "./NewCommentFormPresenter";
+import { describe, beforeEach, it, expect } from "vitest";
+import { CurrentPullRequestUserPresenterStub } from "../../tests/stubs/CurrentPullRequestUserPresenterStub";
 import { NewCommentFormComponentConfigStub } from "../../tests/stubs/NewCommentFormComponentConfigStub";
-
-const author = { avatar_url: "url/to/user_avatar.png" };
+import type { CurrentPullRequestUserPresenter } from "../types";
+import { NewCommentFormPresenter } from "./NewCommentFormPresenter";
+import type { NewCommentFormComponentConfig } from "./NewCommentFormController";
 
 describe("NewCommentFormPresenter", () => {
-    const getBasePresenter = (): NewCommentFormPresenter =>
-        NewCommentFormPresenter.buildWithUpdatedComment(
-            NewCommentFormPresenter.buildFromAuthor(
-                author,
-                NewCommentFormComponentConfigStub.withCancelActionAllowed(),
-            ),
-            "This is a new comment",
-        );
+    let comment_author: CurrentPullRequestUserPresenter, config: NewCommentFormComponentConfig;
 
-    it.each([
-        [NewCommentFormComponentConfigStub.withCancelActionAllowed()],
-        [NewCommentFormComponentConfigStub.withCancelActionDisallowed()],
-    ])(
-        "buildFromAuthor() should build a new presenter with the current user avatar url and current config",
-        (config) => {
-            expect(NewCommentFormPresenter.buildFromAuthor(author, config)).toStrictEqual({
-                comment: "",
-                is_saving_comment: false,
-                is_cancel_allowed: config.is_cancel_allowed,
-                author,
-            });
-        },
-    );
+    beforeEach(() => {
+        comment_author = CurrentPullRequestUserPresenterStub.withDefault();
+        config = NewCommentFormComponentConfigStub.withCancelActionAllowed();
+    });
 
-    it("buildWithUpdatedComment() should return a clone of the provided presenter containing the updated comment", () => {
-        expect(
-            NewCommentFormPresenter.buildWithUpdatedComment(
-                getBasePresenter(),
-                "This is a newer comment",
-            ),
-        ).toStrictEqual({
-            comment: "This is a newer comment",
-            is_saving_comment: false,
-            is_cancel_allowed: true,
-            author,
+    it("should build an empty presenter with defaults", () => {
+        const presenter = NewCommentFormPresenter.buildFromAuthor(comment_author, config);
+
+        expect(presenter).toStrictEqual({
+            comment_author,
+            comment_content: "",
+            is_being_submitted: false,
+            is_submittable: false,
+            is_cancel_allowed: config.is_cancel_allowed,
         });
     });
 
-    it("buildSavingComment() should return a clone of the provided presenter containing is_saving_comment as true", () => {
-        expect(NewCommentFormPresenter.buildSavingComment(getBasePresenter())).toStrictEqual({
-            comment: "This is a new comment",
-            is_saving_comment: true,
-            is_cancel_allowed: true,
-            author,
-        });
-    });
+    describe("updates", () => {
+        let presenter: NewCommentFormPresenter;
 
-    it("buildNotSavingComment() should return a clone of the provided presenter containing is_saving_comment as false", () => {
-        const presenter_saving_comment = NewCommentFormPresenter.buildSavingComment(
-            getBasePresenter(),
-        );
-        expect(
-            NewCommentFormPresenter.buildNotSavingComment(presenter_saving_comment),
-        ).toStrictEqual({
-            comment: "This is a new comment",
-            is_saving_comment: false,
-            is_cancel_allowed: true,
-            author,
+        beforeEach(() => {
+            presenter = NewCommentFormPresenter.buildFromAuthor(comment_author, config);
+        });
+
+        it("should return a presenter with its content updated", () => {
+            const updated_presenter = NewCommentFormPresenter.updateContent(
+                presenter,
+                "Please rebase",
+            );
+            expect(updated_presenter.comment_content).toBe("Please rebase");
+            expect(updated_presenter.is_submittable).toBe(true);
+
+            const another_updated_presenter = NewCommentFormPresenter.updateContent(
+                updated_presenter,
+                "",
+            );
+            expect(another_updated_presenter.comment_content).toBe("");
+            expect(another_updated_presenter.is_submittable).toBe(false);
+        });
+
+        it("should return a presenter with the is_being_submitted property set to true", () => {
+            const updated_presenter = NewCommentFormPresenter.updateContent(
+                presenter,
+                "Please rebase",
+            );
+            expect(updated_presenter.is_being_submitted).toBe(false);
+
+            const submitted_presenter = NewCommentFormPresenter.buildSubmitted(presenter);
+
+            expect(submitted_presenter.is_being_submitted).toBe(true);
+        });
+
+        it("should return a presenter with the is_being_submitted property set to false", () => {
+            const updated_presenter = NewCommentFormPresenter.buildSubmitted(presenter);
+            expect(updated_presenter.is_being_submitted).toBe(true);
+
+            const submitted_presenter = NewCommentFormPresenter.buildNotSubmitted(presenter);
+            expect(submitted_presenter.is_being_submitted).toBe(false);
         });
     });
 });

@@ -188,7 +188,8 @@ $thread-border-width: 2px;
     $half-avatar-width: calc($tlp-avatar-width / 2);
     $half-thread-border-width: calc($thread-border-width / 2);
 
-    margin: 0 0 0 calc($follow-up-base-margin-left + $half-avatar-width + $half-thread-border-width);
+    margin: var(--tlp-small-spacing) 0 0
+        calc($follow-up-base-margin-left + $half-avatar-width + $half-thread-border-width);
 }
 
 .pull-request-comment-follow-up-content {

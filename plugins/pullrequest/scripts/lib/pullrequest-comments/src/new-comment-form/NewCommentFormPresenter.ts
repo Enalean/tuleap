@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,35 +24,38 @@ export interface NewCommentFormAuthorPresenter {
 }
 
 export interface NewCommentFormPresenter {
-    readonly comment: string;
-    readonly is_saving_comment: boolean;
+    readonly comment_content: string;
+    readonly comment_author: NewCommentFormAuthorPresenter;
     readonly is_cancel_allowed: boolean;
-    readonly author: NewCommentFormAuthorPresenter;
+    readonly is_being_submitted: boolean;
+    readonly is_submittable: boolean;
 }
 
 export const NewCommentFormPresenter = {
     buildFromAuthor: (
-        author: NewCommentFormAuthorPresenter,
+        comment_author: NewCommentFormAuthorPresenter,
         config: NewCommentFormComponentConfig,
     ): NewCommentFormPresenter => ({
-        comment: "",
-        is_saving_comment: false,
+        comment_author,
+        comment_content: "",
         is_cancel_allowed: config.is_cancel_allowed,
-        author,
+        is_being_submitted: false,
+        is_submittable: false,
     }),
-    buildWithUpdatedComment: (
+    updateContent: (
         presenter: NewCommentFormPresenter,
-        new_comment: string,
+        content: string,
     ): NewCommentFormPresenter => ({
         ...presenter,
-        comment: new_comment,
+        comment_content: content,
+        is_submittable: content.length > 0,
     }),
-    buildSavingComment: (presenter: NewCommentFormPresenter): NewCommentFormPresenter => ({
+    buildSubmitted: (presenter: NewCommentFormPresenter): NewCommentFormPresenter => ({
         ...presenter,
-        is_saving_comment: true,
+        is_being_submitted: true,
     }),
-    buildNotSavingComment: (presenter: NewCommentFormPresenter): NewCommentFormPresenter => ({
+    buildNotSubmitted: (presenter: NewCommentFormPresenter): NewCommentFormPresenter => ({
         ...presenter,
-        is_saving_comment: false,
+        is_being_submitted: false,
     }),
 };

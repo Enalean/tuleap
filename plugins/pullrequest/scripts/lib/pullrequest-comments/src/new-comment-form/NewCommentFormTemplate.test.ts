@@ -50,7 +50,7 @@ describe("NewCommentFormTemplate", () => {
     const getPresenter = (
         config = NewCommentFormComponentConfigStub.withCancelActionAllowed(),
     ): NewCommentFormPresenter =>
-        NewCommentFormPresenter.buildWithUpdatedComment(
+        NewCommentFormPresenter.updateContent(
             NewCommentFormPresenter.buildFromAuthor(
                 { avatar_url: "url/to/user_avatar.png" },
                 config,
@@ -119,7 +119,7 @@ describe("NewCommentFormTemplate", () => {
 
         it("When the comment is being saved, Then the cancel button should be disabled", () => {
             const host = {
-                presenter: NewCommentFormPresenter.buildSavingComment(getPresenter()),
+                presenter: NewCommentFormPresenter.buildSubmitted(getPresenter()),
             } as HostElement;
 
             const render = getCancelButton(host, GettextProviderStub);
@@ -136,7 +136,7 @@ describe("NewCommentFormTemplate", () => {
     describe("Submit button", () => {
         it("Should be disabled and have a spinner when the comment is being saved", () => {
             const host = {
-                presenter: NewCommentFormPresenter.buildSavingComment(getPresenter()),
+                presenter: NewCommentFormPresenter.buildSubmitted(getPresenter()),
             } as HostElement;
 
             const render = getSubmitButton(host, GettextProviderStub);
@@ -152,7 +152,7 @@ describe("NewCommentFormTemplate", () => {
 
         it("Should be disabled when the comment empty", () => {
             const host = {
-                presenter: NewCommentFormPresenter.buildWithUpdatedComment(getPresenter(), ""),
+                presenter: NewCommentFormPresenter.updateContent(getPresenter(), ""),
             } as HostElement;
 
             const render = getSubmitButton(host, GettextProviderStub);

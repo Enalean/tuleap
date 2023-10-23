@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { okAsync } from "neverthrow";
 import * as tuleap_api from "@tuleap/fetch-result";
 import {
@@ -28,6 +28,10 @@ import {
 } from "@tuleap/plugin-pullrequest-constants";
 import { NewCommentSaver } from "./NewCommentSaver";
 import { uri } from "@tuleap/fetch-result";
+import { CurrentPullRequestUserPresenterStub } from "../../tests/stubs/CurrentPullRequestUserPresenterStub";
+import { NewCommentFormComponentConfigStub } from "../../tests/stubs/NewCommentFormComponentConfigStub";
+import type { CommentOnFileCreationContext, GlobalCommentCreationContext } from "./types";
+import { NewCommentFormPresenter } from "./NewCommentFormPresenter";
 
 vi.mock("@tuleap/fetch-result");
 
@@ -38,6 +42,18 @@ const user = {
 };
 
 describe("NewInlineCommentSaver", () => {
+    let presenter: NewCommentFormPresenter;
+
+    beforeEach(() => {
+        presenter = NewCommentFormPresenter.updateContent(
+            NewCommentFormPresenter.buildFromAuthor(
+                CurrentPullRequestUserPresenterStub.withDefault(),
+                NewCommentFormComponentConfigStub.withCancelActionAllowed(),
+            ),
+            "This is fine",
+        );
+    });
+
     it("should save the new inline comment and return a CommentOnFile", async () => {
         const postSpy = vi.spyOn(tuleap_api, "postJSON").mockReturnValue(
             okAsync({
@@ -50,7 +66,8 @@ describe("NewInlineCommentSaver", () => {
             }),
         );
 
-        const comment_saver = NewCommentSaver({
+        const comment_saver = NewCommentSaver();
+        const context: CommentOnFileCreationContext = {
             type: TYPE_INLINE_COMMENT,
             pull_request_id: 1,
             user_id: 102,
@@ -59,9 +76,9 @@ describe("NewInlineCommentSaver", () => {
                 file_path: "README.md",
                 unidiff_offset: 55,
             },
-        });
+        };
 
-        const result = await comment_saver.postComment("This is fine");
+        const result = await comment_saver.saveComment(presenter, context);
         if (!result.isOk()) {
             throw new Error("Expected an ok");
         }
@@ -100,13 +117,14 @@ describe("NewInlineCommentSaver", () => {
             }),
         );
 
-        const comment_saver = NewCommentSaver({
+        const comment_saver = NewCommentSaver();
+        const context: GlobalCommentCreationContext = {
             type: TYPE_GLOBAL_COMMENT,
             user_id: 102,
             pull_request_id: 1,
-        });
+        };
 
-        const result = await comment_saver.postComment("This is fine");
+        const result = await comment_saver.saveComment(presenter, context);
         if (!result.isOk()) {
             throw new Error("Expected an ok");
         }

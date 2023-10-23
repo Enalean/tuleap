@@ -21,6 +21,7 @@ import { vi } from "vitest";
 import type { ControlPullRequestComment } from "../../src/comment/PullRequestCommentController";
 import { RelativeDateHelperStub } from "./RelativeDateHelperStub";
 import { ControlPullRequestCommentReplyStub } from "./ControlPullRequestCommentReplyStub";
+import { ControlNewCommentFormStub } from "./ControlNewCommentFormStub";
 
 export const PullRequestCommentControllerStub = (
     current_user_id = 102,
@@ -28,10 +29,8 @@ export const PullRequestCommentControllerStub = (
     hideReplyForm: vi.fn(),
     showReplyForm: vi.fn(),
     displayReplies: vi.fn(),
-    handleWritingZoneContentChange: vi.fn(),
-    saveReply: vi.fn(),
+    buildReplyCreationController: () => ControlNewCommentFormStub(),
     getRelativeDateHelper: () => RelativeDateHelperStub,
-    shouldFocusWritingZoneOnceRendered: () => true,
     getProjectId: () => 105,
     getCurrentUserId: () => current_user_id,
     buildReplyController: () => ControlPullRequestCommentReplyStub(current_user_id),

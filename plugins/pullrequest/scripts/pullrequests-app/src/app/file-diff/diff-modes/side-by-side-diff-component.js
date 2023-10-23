@@ -28,10 +28,7 @@ import { SideBySideLinesHeightEqualizer } from "../widgets/placeholders/SideBySi
 import { PullRequestCurrentUserPresenterBuilder } from "../../comments/PullRequestCurrentUserPresenterBuilder";
 import { PullRequestPresenterBuilder } from "../../comments/PullRequestPresenterBuilder";
 
-import {
-    PullRequestCommentController,
-    PullRequestCommentNewReplySaver,
-} from "@tuleap/plugin-pullrequest-comments";
+import { PullRequestCommentController, NewReplySaver } from "@tuleap/plugin-pullrequest-comments";
 import {
     INLINE_COMMENT_POSITION_RIGHT,
     INLINE_COMMENT_POSITION_LEFT,
@@ -120,7 +117,7 @@ function controller($element, $scope, SharedPropertiesService) {
             document,
             PullRequestCommentController(
                 getStore(),
-                PullRequestCommentNewReplySaver(),
+                NewReplySaver(),
                 PullRequestCurrentUserPresenterBuilder.fromUserInfo(
                     SharedPropertiesService.getUserId(),
                     SharedPropertiesService.getUserAvatarUrl(),

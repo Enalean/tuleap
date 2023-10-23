@@ -32,4 +32,8 @@ export const CurrentPullRequestPresenterStub = {
         ...base_presenter,
         project_id,
     }),
+    withPullRequestId: (pull_request_id: number): PullRequestPresenter => ({
+        ...base_presenter,
+        pull_request_id,
+    }),
 };
