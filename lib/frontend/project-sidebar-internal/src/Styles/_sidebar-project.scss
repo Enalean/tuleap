@@ -530,14 +530,3 @@
     overflow-y: auto;
     background: var(--tlp-dark-color);
 }
-
-#project-sidebar-linked-projects-popover
-    > .tlp-popover-arrow.project-sidebar-linked-projects-popover-arrow {
-    border-right-color: var(--tlp-dark-color-darker-05);
-    border-bottom-color: transparent;
-    background: var(--tlp-dark-color-darker-20);
-
-    &::before {
-        border-bottom-color: var(--tlp-dark-color-darker-05);
-    }
-}

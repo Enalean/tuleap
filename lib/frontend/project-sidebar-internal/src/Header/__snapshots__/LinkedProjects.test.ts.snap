@@ -26,10 +26,54 @@ exports[`LinkedProjects > displays the linked projects with a popover 1`] = `
         2 aggregated projects
       </span>
     </span>
-    <!--v-if-->
+    <ul
+      class="project-sidebar-linked-projects-list"
+      data-test="nav-bar-linked-projects"
+    >
+      
+      <li
+        class="project-sidebar-linked-projects-item"
+      >
+        <a
+          class="project-sidebar-linked-projects-item-link"
+          href="https://myinstance.example.com/projects/teama"
+        >
+          <i
+            aria-hidden="true"
+            class="project-sidebar-linked-projects-item-icon fa-solid fa-box-archive"
+          />
+          <span
+            class="project-sidebar-linked-projects-item-name"
+          >
+            Team A
+          </span>
+        </a>
+      </li>
+      <li
+        class="project-sidebar-linked-projects-item"
+      >
+        <a
+          class="project-sidebar-linked-projects-item-link"
+          href="https://myinstance.example.com/projects/teamb"
+        >
+          <span
+            aria-hidden="true"
+            class="project-sidebar-linked-projects-item-icon"
+          >
+            🏡
+          </span>
+          <span
+            class="project-sidebar-linked-projects-item-name"
+          >
+            Team B
+          </span>
+        </a>
+      </li>
+      
+    </ul>
   </div>
   <div
-    class="tlp-popover project-sidebar-linked-projects-popover project-sidebar-linked-projects-popover-nb-max-exceeded"
+    class="tlp-popover project-sidebar-linked-projects-popover"
     data-test="popover"
     id="project-sidebar-linked-projects-popover"
   >
@@ -44,120 +88,6 @@ exports[`LinkedProjects > displays the linked projects with a popover 1`] = `
         class="project-sidebar-linked-projects-list-popover"
       >
         
-        <li
-          class="project-sidebar-linked-projects-item"
-        >
-          <a
-            class="project-sidebar-linked-projects-item-link"
-            href="https://myinstance.example.com/projects/teama"
-          >
-            <i
-              aria-hidden="true"
-              class="project-sidebar-linked-projects-item-icon fa-solid fa-box-archive"
-            />
-            <span
-              class="project-sidebar-linked-projects-item-name"
-            >
-              Team A
-            </span>
-          </a>
-        </li>
-        <li
-          class="project-sidebar-linked-projects-item"
-        >
-          <a
-            class="project-sidebar-linked-projects-item-link"
-            href="https://myinstance.example.com/projects/teamb"
-          >
-            <span
-              aria-hidden="true"
-              class="project-sidebar-linked-projects-item-icon"
-            >
-              🏡
-            </span>
-            <span
-              class="project-sidebar-linked-projects-item-name"
-            >
-              Team B
-            </span>
-          </a>
-        </li>
-        <li
-          class="project-sidebar-linked-projects-item"
-        >
-          <a
-            class="project-sidebar-linked-projects-item-link"
-            href="https://myinstance.example.com/projects/teama"
-          >
-            <i
-              aria-hidden="true"
-              class="project-sidebar-linked-projects-item-icon fa-solid fa-box-archive"
-            />
-            <span
-              class="project-sidebar-linked-projects-item-name"
-            >
-              Team A
-            </span>
-          </a>
-        </li>
-        <li
-          class="project-sidebar-linked-projects-item"
-        >
-          <a
-            class="project-sidebar-linked-projects-item-link"
-            href="https://myinstance.example.com/projects/teamb"
-          >
-            <span
-              aria-hidden="true"
-              class="project-sidebar-linked-projects-item-icon"
-            >
-              🏡
-            </span>
-            <span
-              class="project-sidebar-linked-projects-item-name"
-            >
-              Team B
-            </span>
-          </a>
-        </li>
-        <li
-          class="project-sidebar-linked-projects-item"
-        >
-          <a
-            class="project-sidebar-linked-projects-item-link"
-            href="https://myinstance.example.com/projects/teama"
-          >
-            <i
-              aria-hidden="true"
-              class="project-sidebar-linked-projects-item-icon fa-solid fa-box-archive"
-            />
-            <span
-              class="project-sidebar-linked-projects-item-name"
-            >
-              Team A
-            </span>
-          </a>
-        </li>
-        <li
-          class="project-sidebar-linked-projects-item"
-        >
-          <a
-            class="project-sidebar-linked-projects-item-link"
-            href="https://myinstance.example.com/projects/teamb"
-          >
-            <span
-              aria-hidden="true"
-              class="project-sidebar-linked-projects-item-icon"
-            >
-              🏡
-            </span>
-            <span
-              class="project-sidebar-linked-projects-item-name"
-            >
-              Team B
-            </span>
-          </a>
-        </li>
         <li
           class="project-sidebar-linked-projects-item"
         >
