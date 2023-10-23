@@ -29,12 +29,6 @@ export const ReplyContext = {
         current_user: CurrentPullRequestUserPresenter,
         current_pull_request: PullRequestPresenter,
     ): ReplyCreationContext {
-        if (comment.type !== TYPE_INLINE_COMMENT && comment.type !== TYPE_GLOBAL_COMMENT) {
-            throw new Error(
-                "Reply context creation failed: It is impossible to reply to a timeline-event",
-            );
-        }
-
         if (comment.type === TYPE_INLINE_COMMENT) {
             return {
                 user_id: current_user.user_id,

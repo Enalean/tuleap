@@ -102,23 +102,6 @@ describe("PullRequestComment", () => {
             expect(root_classes).toContain("comment");
         });
 
-        it(`Given a pull-request event comment, then it should have the right classes`, () => {
-            const host = {
-                comment: PullRequestCommentPresenterStub.buildPullRequestEventComment(),
-                relative_date_helper: RelativeDateHelperStub,
-                replies: PullRequestCommentRepliesCollectionPresenter.buildEmpty(),
-            } as unknown as HostElement;
-            const update = PullRequestCommentComponent.content(host);
-
-            update(host, target);
-
-            const root = selectOrThrow(target, "[data-test=pullrequest-comment]");
-            const root_classes = Array.from(root.classList);
-
-            expect(root_classes).toContain("pull-request-comment");
-            expect(root_classes).toContain("timeline-event");
-        });
-
         it("should execute the post_rendering_callback each time the component height changes", () => {
             vi.useFakeTimers();
 

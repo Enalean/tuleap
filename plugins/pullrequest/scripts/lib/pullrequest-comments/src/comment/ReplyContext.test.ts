@@ -72,14 +72,4 @@ describe("ReplyContext", () => {
         expect(context.user_id).toBe(current_user_id);
         expect(context.pull_request_id).toBe(current_pull_request_id);
     });
-
-    it("Given a timeline event, then it should throw an error", () => {
-        expect(() =>
-            ReplyContext.fromComment(
-                PullRequestCommentPresenterStub.buildPullRequestEventComment(),
-                CurrentPullRequestUserPresenterStub.withUserId(current_user_id),
-                CurrentPullRequestPresenterStub.withPullRequestId(current_pull_request_id),
-            ),
-        ).toThrow();
-    });
 });

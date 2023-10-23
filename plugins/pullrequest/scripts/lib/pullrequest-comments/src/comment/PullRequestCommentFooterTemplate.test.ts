@@ -59,11 +59,6 @@ describe("PullRequestCommentFooterTemplate", () => {
 
     it.each([
         [
-            "a pull-request event comment",
-            PullRequestCommentPresenterStub.buildPullRequestEventComment(),
-            [],
-        ],
-        [
             "that the current comment is the root comment and there are some replies",
             PullRequestCommentPresenterStub.buildGlobalComment(),
             [],

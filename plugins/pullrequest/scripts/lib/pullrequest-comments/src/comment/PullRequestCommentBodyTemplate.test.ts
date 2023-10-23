@@ -88,10 +88,6 @@ describe("PullRequestCommentBodyTemplate", () => {
     it.each([
         ["a global comment", PullRequestCommentPresenterStub.buildGlobalComment()],
         [
-            "a pull-request event comment",
-            PullRequestCommentPresenterStub.buildPullRequestEventComment(),
-        ],
-        [
             "an inline-comment which is a reply to another inline-comment",
             PullRequestCommentPresenterStub.buildInlineCommentWithData({
                 parent_id: 12,

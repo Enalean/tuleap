@@ -20,10 +20,7 @@
 import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import type { GettextProvider } from "@tuleap/gettext";
-import {
-    TYPE_EVENT_PULLREQUEST_ACTION,
-    FORMAT_COMMONMARK,
-} from "@tuleap/plugin-pullrequest-constants";
+import { FORMAT_COMMONMARK } from "@tuleap/plugin-pullrequest-constants";
 import type { PullRequestCommentComponentType } from "./PullRequestComment";
 
 const shouldDisplayEditButton = (host: PullRequestCommentComponentType): boolean =>
@@ -73,10 +70,6 @@ export const getCommentFooter = (
     host: PullRequestCommentComponentType,
     gettext_provider: GettextProvider,
 ): UpdateFunction<PullRequestCommentComponentType> => {
-    if (host.comment.type === TYPE_EVENT_PULLREQUEST_ACTION) {
-        return html``;
-    }
-
     const is_edit_button_displayed = shouldDisplayEditButton(host);
     const is_reply_button_displayed = host.replies.length === 0;
     if (!is_edit_button_displayed && !is_reply_button_displayed) {

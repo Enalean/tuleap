@@ -38,15 +38,24 @@
                 v-bind:description="description_comment_presenter"
                 v-bind:controller="description_comment_controller"
             />
-            <tuleap-pullrequest-comment
-                data-test="pull-request-thread"
-                class="pull-request-overview-thread"
-                v-for="(thread, index) in threads.list"
-                v-bind:key="`${index}${thread.id}`"
-                v-bind:comment="thread"
-                v-bind:controller="comments_controller"
-                v-bind:is_comment_edition_enabled="is_comment_edition_enabled"
-            />
+            <template v-for="(item, index) in timeline.list">
+                <tuleap-pullrequest-timeline-event-comment
+                    v-if="isAnEvent(item)"
+                    data-test="pull-request-overview-action-event"
+                    v-bind:key="index"
+                    v-bind:event="item"
+                    v-bind:current_user="current_user_presenter"
+                />
+                <tuleap-pullrequest-comment
+                    v-if="isAComment(item)"
+                    data-test="pull-request-thread"
+                    class="pull-request-overview-thread"
+                    v-bind:key="`${index}${item.id}`"
+                    v-bind:comment="item"
+                    v-bind:controller="comments_controller"
+                    v-bind:is_comment_edition_enabled="is_comment_edition_enabled"
+                />
+            </template>
         </div>
         <overview-new-comment-form v-if="!is_loading_threads" />
     </section>
@@ -54,9 +63,13 @@
 
 <script setup lang="ts">
 import { ref, reactive, provide, watch } from "vue";
-import { useGettext } from "vue3-gettext";
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
-import type { PullRequest, User } from "@tuleap/plugin-pullrequest-rest-api-types";
+import type {
+    ActionOnPullRequestEvent,
+    PullRequest,
+    PullRequestComment,
+    User,
+} from "@tuleap/plugin-pullrequest-rest-api-types";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import {
     PULL_REQUEST_ID_KEY,
@@ -89,16 +102,20 @@ import type {
     ControlPullRequestComment,
     CurrentPullRequestUserPresenter,
     PullRequestPresenter,
-    SupportedTimelineItem,
     ControlPullRequestDescriptionComment,
     StorePullRequestCommentReplies,
     PullRequestDescriptionCommentPresenter,
 } from "@tuleap/plugin-pullrequest-comments";
-
-import { TYPE_EVENT_REVIEWER_CHANGE } from "@tuleap/plugin-pullrequest-constants";
+import {
+    PULL_REQUEST_ACTIONS_LIST,
+    TYPE_EVENT_REVIEWER_CHANGE,
+    TYPE_GLOBAL_COMMENT,
+    TYPE_INLINE_COMMENT,
+} from "@tuleap/plugin-pullrequest-constants";
 import { DescriptionCommentPresenterBuilder } from "./DescriptionCommentPresenterBuilder";
 
-const { $gettext } = useGettext();
+type DisplayableItem = PullRequestCommentPresenter | ActionOnPullRequestEvent;
+type SupportedTimelineItem = PullRequestComment | ActionOnPullRequestEvent;
 
 const props = defineProps<{
     pull_request_info: PullRequest | null;
@@ -119,10 +136,9 @@ const relative_date_display: RelativeDatesDisplayPreference = strictInject(
 const is_comment_edition_enabled: boolean = strictInject(IS_COMMENT_EDITION_ENABLED);
 
 const is_loading_threads = ref(true);
-const threads = reactive<{ list: PullRequestCommentPresenter[] }>({ list: [] });
-const comments_presenters = ref<PullRequestCommentPresenter[]>([]);
+const timeline = reactive<{ list: DisplayableItem[] }>({ list: [] });
 const comments_controller = ref<null | ControlPullRequestComment>(null);
-const replies_store = ref<null | StorePullRequestCommentReplies>(null);
+const replies_store = ref<StorePullRequestCommentReplies>();
 const current_user_presenter = ref<CurrentPullRequestUserPresenter>({
     user_id,
     avatar_url,
@@ -143,6 +159,14 @@ const description_comment_controller = ref<ControlPullRequestDescriptionComment>
     ),
 );
 
+const isAnEvent = (
+    item: DisplayableItem | SupportedTimelineItem,
+): item is ActionOnPullRequestEvent =>
+    "event_type" in item && PULL_REQUEST_ACTIONS_LIST.includes(item.event_type);
+
+const isAComment = (item: DisplayableItem | SupportedTimelineItem): item is PullRequestComment =>
+    "type" in item && (item.type === TYPE_GLOBAL_COMMENT || item.type === TYPE_INLINE_COMMENT);
+
 provide(DISPLAY_NEWLY_CREATED_GLOBAL_COMMENT, addNewRootComment);
 
 watch(
@@ -159,30 +183,32 @@ watch(
                 project_id,
             );
 
-        fetchPullRequestTimelineItems(pull_request_id)
-            .match(
-                (result) => {
-                    comments_presenters.value = result
-                        .filter(
-                            (comment): comment is SupportedTimelineItem =>
-                                comment.type !== TYPE_EVENT_REVIEWER_CHANGE,
-                        )
-                        .map((comment) =>
-                            CommentPresenterBuilder.fromPayload(
-                                comment,
-                                base_url,
-                                pull_request_id,
-                                $gettext,
-                            ),
+        fetchPullRequestTimelineItems(pull_request_id).match(
+            (timeline_items) => {
+                const supported_timeline_items = timeline_items.filter(
+                    (timeline_item): timeline_item is SupportedTimelineItem =>
+                        timeline_item.type !== TYPE_EVENT_REVIEWER_CHANGE,
+                );
+
+                const action_events = supported_timeline_items.filter(isAnEvent);
+                const comments = supported_timeline_items.filter(isAComment);
+
+                replies_store.value = PullRequestCommentRepliesStore(
+                    comments.map((timeline_item) => {
+                        return CommentPresenterBuilder.fromPayload(
+                            timeline_item,
+                            base_url,
+                            pull_request_id,
                         );
-                },
-                (fault) => {
-                    displayTuleapAPIFault(fault);
-                },
-            )
-            .then(() => {
-                replies_store.value = PullRequestCommentRepliesStore(comments_presenters.value);
-                threads.list = [...replies_store.value.getAllRootComments()];
+                    }),
+                );
+
+                const display = [...replies_store.value.getAllRootComments(), ...action_events];
+
+                timeline.list = display.sort(
+                    (a: { post_date: string }, b: { post_date: string }) =>
+                        Date.parse(a.post_date) - Date.parse(b.post_date),
+                );
 
                 comments_controller.value = PullRequestCommentController(
                     replies_store.value,
@@ -193,7 +219,11 @@ watch(
                 );
 
                 is_loading_threads.value = false;
-            });
+            },
+            (fault) => {
+                displayTuleapAPIFault(fault);
+            },
+        );
     },
 );
 
@@ -203,7 +233,7 @@ function addNewRootComment(comment: PullRequestCommentPresenter): void {
     }
 
     replies_store.value.addRootComment(comment);
-    threads.list.push(comment);
+    timeline.list.push(comment);
 }
 </script>
 
@@ -212,7 +242,8 @@ function addNewRootComment(comment: PullRequestCommentPresenter): void {
 
 .pull-request-overview-thread > .pull-request-comment-component,
 .pull-request-description > .pull-request-description-comment,
-.pull-request-comment-skeleton {
+.pull-request-comment-skeleton,
+.pull-request-timeline-event {
     margin: 0 0 var(--tlp-small-spacing);
 }
 

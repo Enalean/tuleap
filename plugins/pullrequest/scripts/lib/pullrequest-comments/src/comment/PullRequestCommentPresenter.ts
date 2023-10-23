@@ -21,11 +21,9 @@ import type {
     GlobalCommentType,
     InlineCommentPosition,
     InlineCommentType,
-    PullRequestActionEventType,
     CommentTextFormat,
 } from "@tuleap/plugin-pullrequest-constants";
 import type { PullRequestComment, User } from "@tuleap/plugin-pullrequest-rest-api-types";
-import type { SupportedTimelineItemTypes } from "../types";
 import { TYPE_GLOBAL_COMMENT, TYPE_INLINE_COMMENT } from "@tuleap/plugin-pullrequest-constants";
 
 export interface PullRequestCommentFile {
@@ -43,7 +41,6 @@ export interface CommonComment {
     readonly raw_content: string;
     readonly post_processed_content: string;
     readonly format: CommentTextFormat | "";
-    readonly type: SupportedTimelineItemTypes;
     readonly post_date: string;
     readonly parent_id: number;
     color: string;
@@ -51,10 +48,6 @@ export interface CommonComment {
 
 export type PullRequestGlobalCommentPresenter = CommonComment & {
     readonly type: GlobalCommentType;
-};
-
-export type PullRequestEventCommentPresenter = CommonComment & {
-    readonly type: PullRequestActionEventType;
 };
 
 export interface PullRequestInlineCommentPresenter extends CommonComment {
@@ -65,8 +58,7 @@ export interface PullRequestInlineCommentPresenter extends CommonComment {
 
 export type PullRequestCommentPresenter =
     | PullRequestGlobalCommentPresenter
-    | PullRequestInlineCommentPresenter
-    | PullRequestEventCommentPresenter;
+    | PullRequestInlineCommentPresenter;
 
 export const PullRequestCommentPresenter = {
     fromCommentReply: (

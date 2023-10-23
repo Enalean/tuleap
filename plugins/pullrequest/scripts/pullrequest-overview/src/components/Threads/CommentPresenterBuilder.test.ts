@@ -19,25 +19,14 @@
 
 import { describe, it, expect, beforeEach } from "vitest";
 import { CommentPresenterBuilder } from "./CommentPresenterBuilder";
-import type {
-    CommentOnFile,
-    TimelineItem,
-    ActionOnPullRequestEvent,
-} from "@tuleap/plugin-pullrequest-rest-api-types";
+import type { CommentOnFile, TimelineItem } from "@tuleap/plugin-pullrequest-rest-api-types";
 import {
-    EVENT_TYPE_ABANDON,
-    EVENT_TYPE_MERGE,
-    EVENT_TYPE_REBASE,
-    EVENT_TYPE_REOPEN,
-    EVENT_TYPE_UPDATE,
     INLINE_COMMENT_POSITION_LEFT,
-    TYPE_EVENT_PULLREQUEST_ACTION,
     TYPE_GLOBAL_COMMENT,
     TYPE_INLINE_COMMENT,
     FORMAT_TEXT,
 } from "@tuleap/plugin-pullrequest-constants";
 
-const $gettext = (msgid: string): string => msgid;
 const pull_request_id = 15;
 const user = {
     id: 102,
@@ -67,12 +56,7 @@ describe("CommentPresenterBuilder", () => {
             parent_id: 0,
         };
 
-        const presenter = CommentPresenterBuilder.fromPayload(
-            payload,
-            base_url,
-            pull_request_id,
-            $gettext,
-        );
+        const presenter = CommentPresenterBuilder.fromPayload(payload, base_url, pull_request_id);
 
         expect(presenter).toStrictEqual({
             id: 12,
@@ -106,12 +90,7 @@ describe("CommentPresenterBuilder", () => {
             unidiff_offset: 150,
         };
 
-        const presenter = CommentPresenterBuilder.fromPayload(
-            payload,
-            base_url,
-            pull_request_id,
-            $gettext,
-        );
+        const presenter = CommentPresenterBuilder.fromPayload(payload, base_url, pull_request_id);
 
         expect(presenter).toStrictEqual({
             id: 12,
@@ -134,42 +113,4 @@ describe("CommentPresenterBuilder", () => {
             },
         });
     });
-
-    it.each([
-        [EVENT_TYPE_UPDATE, "Has updated the pull request."],
-        [EVENT_TYPE_REBASE, "Has rebased the pull request."],
-        [EVENT_TYPE_MERGE, "Has merged the pull request."],
-        [EVENT_TYPE_ABANDON, "Has abandoned the pull request."],
-        [EVENT_TYPE_REOPEN, "Has reopened the pull request."],
-    ])(
-        'Given the payload of a "%s" pull-request event, then it should build its presenter',
-        (event_type, expected_content) => {
-            const payload: ActionOnPullRequestEvent = {
-                post_date: "2023-03-03T10:50:00Z",
-                type: TYPE_EVENT_PULLREQUEST_ACTION,
-                user,
-                event_type,
-            };
-
-            const presenter = CommentPresenterBuilder.fromPayload(
-                payload,
-                base_url,
-                pull_request_id,
-                $gettext,
-            );
-
-            expect(presenter).toStrictEqual({
-                id: 0,
-                user,
-                content: expected_content,
-                raw_content: "",
-                post_processed_content: "",
-                format: "",
-                type: TYPE_EVENT_PULLREQUEST_ACTION,
-                post_date: "2023-03-03T10:50:00Z",
-                parent_id: 0,
-                color: "",
-            });
-        },
-    );
 });

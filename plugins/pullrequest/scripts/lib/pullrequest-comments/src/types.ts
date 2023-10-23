@@ -17,16 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type {
-    CommentType,
-    PullRequestEventType,
-    TYPE_EVENT_PULLREQUEST_ACTION,
-} from "@tuleap/plugin-pullrequest-constants";
-import type {
-    ActionOnPullRequestEvent,
-    CommentOnFile,
-    GlobalComment,
-} from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 import type { Fault } from "@tuleap/fault";
 import type { ControlWritingZone } from "./writing-zone/WritingZoneController";
@@ -39,10 +29,6 @@ export interface CurrentPullRequestUserPresenter {
     readonly user_locale: string;
 }
 
-export type SupportedTimelineItemTypes =
-    | CommentType
-    | Extract<PullRequestEventType, typeof TYPE_EVENT_PULLREQUEST_ACTION>;
-export type SupportedTimelineItem = GlobalComment | CommentOnFile | ActionOnPullRequestEvent;
 export type PullRequestCommentErrorCallback = (fault: Fault) => void;
 
 export type WritingZoneInteractionsHandler<ElementType> = {
