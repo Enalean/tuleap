@@ -50,7 +50,7 @@ final class SearchTest extends DocmanTestExecutionHelper
 
         $search_response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'docman_search/' . $folder_search_id)
-                                  ->withBody($this->stream_factory->createStream(json_encode($query)))
+                ->withBody($this->stream_factory->createStream(json_encode($query)))
         );
 
         $this->assertSame(200, $search_response->getStatusCode());
@@ -73,7 +73,7 @@ final class SearchTest extends DocmanTestExecutionHelper
 
         $foo_search_response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'docman_search/' . $folder_search_id)
-                                  ->withBody($this->stream_factory->createStream(json_encode($foo_query)))
+                ->withBody($this->stream_factory->createStream(json_encode($foo_query)))
         );
 
 

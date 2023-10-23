@@ -99,17 +99,17 @@ class TrackerForceNotificationsLevelCommand extends Command
     protected function configure()
     {
         $this->setDescription('Force tracker notification level to all trackers of projects')
-             ->addArgument(
-                 'notification_level',
-                 InputArgument::REQUIRED,
-                 "Notification level, authorized values: " .
+            ->addArgument(
+                'notification_level',
+                InputArgument::REQUIRED,
+                "Notification level, authorized values: " .
                  implode(", ", self::AUTHORIZED_CONFIGURATION_LEVEL)
-             )
-             ->addArgument(
-                 'project_id',
-                 InputArgument::IS_ARRAY | InputArgument::REQUIRED,
-                 'List of project ids (separate ids by space)'
-             );
+            )
+            ->addArgument(
+                'project_id',
+                InputArgument::IS_ARRAY | InputArgument::REQUIRED,
+                'List of project ids (separate ids by space)'
+            );
     }
 
     /**

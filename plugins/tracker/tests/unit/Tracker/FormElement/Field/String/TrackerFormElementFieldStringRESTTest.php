@@ -30,8 +30,8 @@ class TrackerFormElementFieldStringRESTTest extends \Tuleap\Test\PHPUnit\TestCas
     public function testItReturnsTheValueIndexedByFieldName()
     {
         $field =  Mockery::mock(Tracker_FormElement_Field_String::class)
-                         ->makePartial()
-                         ->shouldAllowMockingProtectedMethods();
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
 
         $value = [
             "field_id" => 330,

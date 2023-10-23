@@ -23,17 +23,18 @@ namespace Tuleap\Tracker\Rule;
 
 use Tracker_Rule_List;
 
+// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_Rule_ListTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testApplyTo()
     {
         $trv = new Tracker_Rule_List();
         $trv->setSourceValue('source_value')
-                ->setTargetValue('target_value')
-                ->setId('id')
-                ->setTrackerId('tracker_id')
-                ->setSourceFieldId('source_field')
-                ->setTargetFieldId('target_field');
+            ->setTargetValue('target_value')
+            ->setId('id')
+            ->setTrackerId('tracker_id')
+            ->setSourceFieldId('source_field')
+            ->setTargetFieldId('target_field');
         $this->assertTrue($trv->applyTo('tracker_id', 'source_field', 'source_value', 'target_field', 'target_value'));
         $this->assertFalse($trv->applyTo('tracker_id', 'source_field', 'source_value', 'target_field', 'false_target_value'));
         //$this->assertFalse($trv->applyTo('false_tracker_id', 'source_field',        'source_value',       'target_field',       'target_value'      ));
@@ -50,11 +51,11 @@ class Tracker_Rule_ListTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $trv = new Tracker_Rule_List();
         $trv->setSourceValue('source_value')
-                ->setTargetValue('target_value')
-                ->setId('id')
-                ->setTrackerId('tracker_id')
-                ->setSourceFieldId('source_field')
-                ->setTargetFieldId('target_field');
+            ->setTargetValue('target_value')
+            ->setId('id')
+            ->setTrackerId('tracker_id')
+            ->setSourceFieldId('source_field')
+            ->setTargetFieldId('target_field');
         $this->assertTrue($trv->canApplyTo('tracker_id', 'source_field', 'source_value', 'target_field', 'target_value'));
         $this->assertTrue($trv->canApplyTo('tracker_id', 'source_field', 'source_value', 'target_field', 'false_target_value'));
         //$this->assertFalse($trv->canApplyTo('false_tracker_id', 'source_field',        'source_value',       'target_field',       'target_value'      ));

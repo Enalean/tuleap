@@ -53,8 +53,8 @@ class TrackerFormElementFieldStringTest extends \Tuleap\Test\PHPUnit\TestCase
     public function setUp(): void
     {
         $this->string = Mockery::mock(Tracker_FormElement_Field_String::class)
-                               ->makePartial()
-                               ->shouldAllowMockingProtectedMethods();
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
 
         $this->artifact    = Mockery::mock(Artifact::class);
         $this->rule_string = Mockery::mock(Rule_String::class);

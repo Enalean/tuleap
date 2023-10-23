@@ -157,22 +157,22 @@ class CleanUnusedTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] Delete data dir", []])->twice();
 
         $this->dao->shouldReceive('getMediawikiDatabasesInUsedServices')
-                  ->andReturn(
-                      [
-                          [
-                              'project_id' => 101,
-                              'database_name' => 'mediawiki_101',
-                          ],
-                          [
-                              'project_id' => 102,
-                              'database_name' => 'mediawiki_102',
-                          ],
-                          [
-                              'project_id' => 103,
-                              'database_name' => 'mediawiki_103',
-                          ],
-                      ]
-                  );
+            ->andReturn(
+                [
+                    [
+                        'project_id' => 101,
+                        'database_name' => 'mediawiki_101',
+                    ],
+                    [
+                        'project_id' => 102,
+                        'database_name' => 'mediawiki_102',
+                    ],
+                    [
+                        'project_id' => 103,
+                        'database_name' => 'mediawiki_103',
+                    ],
+                ]
+            );
 
         $this->dao->shouldReceive('getMediawikiDatabaseInUnusedServices')->once()->andReturn([]);
         $this->dao->shouldReceive('getAllMediawikiBasesNotReferenced')->once()->andReturn([]);
@@ -187,23 +187,23 @@ class CleanUnusedTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->shouldReceive('desactivateService')->once()->withArgs([103, false]);
 
         $this->media_wiki_dao->shouldReceive('getMediawikiPagesNumberOfAProject')
-                             ->with($this->project_1)
-                             ->once()
-                             ->andReturn(
-                                 ['result' => 2]
-                             );
+            ->with($this->project_1)
+            ->once()
+            ->andReturn(
+                ['result' => 2]
+            );
         $this->media_wiki_dao->shouldReceive('getMediawikiPagesNumberOfAProject')
-                             ->with($this->project_2)
-                             ->once()
-                             ->andReturn(
-                                 ['result' => 0]
-                             );
+            ->with($this->project_2)
+            ->once()
+            ->andReturn(
+                ['result' => 0]
+            );
         $this->media_wiki_dao->shouldReceive('getMediawikiPagesNumberOfAProject')
-                             ->with($this->project_3)
-                             ->once()
-                             ->andReturn(
-                                 ['result' => 0]
-                             );
+            ->with($this->project_3)
+            ->once()
+            ->andReturn(
+                ['result' => 0]
+            );
 
         $this->dao->shouldReceive('purge')->twice();
 
@@ -219,23 +219,23 @@ class CleanUnusedTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->logger->shouldReceive('log')->withArgs([LogLevel::WARNING, "[MW Purge] Project project_2 (102) is a template. Skipped.", []])->once();
 
         $this->dao->shouldReceive('getMediawikiDatabasesInUsedServices')
-                  ->once()
-                  ->andReturn(
-                      [
-                          [
-                              'project_id' => 101,
-                              'database_name' => 'mediawiki_101',
-                          ],
-                          [
-                              'project_id' => 102,
-                              'database_name' => 'mediawiki_102',
-                          ],
-                          [
-                              'project_id' => 103,
-                              'database_name' => 'mediawiki_103',
-                          ],
-                      ]
-                  );
+            ->once()
+            ->andReturn(
+                [
+                    [
+                        'project_id' => 101,
+                        'database_name' => 'mediawiki_101',
+                    ],
+                    [
+                        'project_id' => 102,
+                        'database_name' => 'mediawiki_102',
+                    ],
+                    [
+                        'project_id' => 103,
+                        'database_name' => 'mediawiki_103',
+                    ],
+                ]
+            );
 
         $this->dao->shouldReceive('getMediawikiDatabaseInUnusedServices')->once()->andReturn([]);
         $this->dao->shouldReceive('getAllMediawikiBasesNotReferenced')->once()->andReturn([]);
@@ -248,19 +248,19 @@ class CleanUnusedTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->shouldReceive('desactivateService')->once()->withArgs([103, false]);
 
         $this->media_wiki_dao->shouldReceive('getMediawikiPagesNumberOfAProject')
-                             ->with($this->project_1)
-                             ->once()
-                             ->andReturn(['result' => 2]);
+            ->with($this->project_1)
+            ->once()
+            ->andReturn(['result' => 2]);
 
         $this->media_wiki_dao->shouldReceive('getMediawikiPagesNumberOfAProject')
-                             ->with($this->project_2)
-                             ->once()
-                             ->andReturn(['result' => 0]);
+            ->with($this->project_2)
+            ->once()
+            ->andReturn(['result' => 0]);
 
         $this->media_wiki_dao->shouldReceive('getMediawikiPagesNumberOfAProject')
-                             ->with($this->project_3)
-                            ->once()
-                            ->andReturn(['result' => 0]);
+            ->with($this->project_3)
+            ->once()
+            ->andReturn(['result' => 0]);
 
         $this->dao->shouldReceive('purge')->once();
 
@@ -307,23 +307,23 @@ class CleanUnusedTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->logger->shouldReceive('log')->withArgs([LogLevel::WARNING, "[MW Purge] Project project_2 (102) is a template. Skipped.", []])->once();
 
         $this->dao->shouldReceive('getMediawikiDatabasesInUsedServices')
-                 ->once()
-                 ->andReturn(
-                     [
-                         [
-                             'project_id' => 101,
-                             'database_name' => 'mediawiki_101',
-                         ],
-                         [
-                             'project_id' => 102,
-                             'database_name' => 'mediawiki_102',
-                         ],
-                         [
-                             'project_id' => 103,
-                             'database_name' => 'mediawiki_103',
-                         ],
-                     ]
-                 );
+            ->once()
+            ->andReturn(
+                [
+                    [
+                        'project_id' => 101,
+                        'database_name' => 'mediawiki_101',
+                    ],
+                    [
+                        'project_id' => 102,
+                        'database_name' => 'mediawiki_102',
+                    ],
+                    [
+                        'project_id' => 103,
+                        'database_name' => 'mediawiki_103',
+                    ],
+                ]
+            );
 
         $this->dao->shouldReceive('getMediawikiDatabaseInUnusedServices')->once()->andReturn([]);
         $this->dao->shouldReceive('getAllMediawikiBasesNotReferenced')->once()->andReturn([]);
@@ -336,19 +336,19 @@ class CleanUnusedTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->shouldReceive('desactivateService')->once()->withArgs([103, false]);
 
         $this->media_wiki_dao->shouldReceive('getMediawikiPagesNumberOfAProject')
-                             ->with($this->project_1)
-                             ->once()
-                             ->andReturn(['result' => 2]);
+            ->with($this->project_1)
+            ->once()
+            ->andReturn(['result' => 2]);
 
         $this->media_wiki_dao->shouldReceive('getMediawikiPagesNumberOfAProject')
-                             ->with($this->project_2)
-                             ->once()
-                             ->andReturn(['result' => 0]);
+            ->with($this->project_2)
+            ->once()
+            ->andReturn(['result' => 0]);
 
         $this->media_wiki_dao->shouldReceive('getMediawikiPagesNumberOfAProject')
-                             ->with($this->project_3)
-                             ->once()
-                             ->andReturn(['result' => 0]);
+            ->with($this->project_3)
+            ->once()
+            ->andReturn(['result' => 0]);
 
         $this->dao->shouldReceive('purge')->once();
 

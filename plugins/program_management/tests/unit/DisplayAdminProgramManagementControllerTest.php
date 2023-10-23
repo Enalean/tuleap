@@ -176,7 +176,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
         $this->project_manager->method('getProjectByUnixName')->willReturn($project);
         $this->expectException(NotFoundException::class);
         $this->getController()
-             ->process($this->request, LayoutBuilder::build(), $this->variables);
+            ->process($this->request, LayoutBuilder::build(), $this->variables);
     }
 
     public function testThrownAnErrorWhenProjectIsATeam(): void
@@ -189,7 +189,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
         $project = $this->mockProject();
         $this->project_manager->method('getProjectByUnixName')->willReturn($project);
         $this->getController()
-             ->process($this->request, LayoutBuilder::build(), $this->variables);
+            ->process($this->request, LayoutBuilder::build(), $this->variables);
     }
 
     public function testThrowAnErrorIfUserIsNotProjectAdmin(): void
@@ -202,14 +202,14 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
         $project = $this->mockProject();
         $this->project_manager->method('getProjectByUnixName')->willReturn($project);
         $this->getController()
-             ->process($this->request, LayoutBuilder::build(), $this->variables);
+            ->process($this->request, LayoutBuilder::build(), $this->variables);
     }
 
     public function testItDisplayAdminProgram(): void
     {
         $this->template_renderer->expects(self::once())
-                                ->method('renderToPage')
-                                ->with('admin', self::isInstanceOf(ProgramAdminPresenter::class));
+            ->method('renderToPage')
+            ->with('admin', self::isInstanceOf(ProgramAdminPresenter::class));
 
         $this->breadcrumbs_builder->expects(self::once())->method('build');
 
@@ -217,7 +217,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
         $this->project_manager->method('getProjectByUnixName')->willReturn($project);
 
         $this->getController()
-             ->process($this->request, LayoutBuilder::build(), $this->variables);
+            ->process($this->request, LayoutBuilder::build(), $this->variables);
     }
 
     private function mockProject(bool $is_service_active = true): Project

@@ -818,8 +818,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                     if ($a  = Tracker_ArtifactFactory::instance()->getArtifactById($object_id)) {
                         $ret       = 'art #' . $a->getId();
                         $semantics = $a->getTracker()
-                                       ->getTrackerSemanticManager()
-                                       ->getSemantics();
+                            ->getTrackerSemanticManager()
+                            ->getSemantics();
                         if (isset($semantics['title'])) {
                             if ($field = Tracker_FormElementFactory::instance()->getFormElementById($semantics['title']->getFieldId())) {
                                 $value = $a->getValue($field);

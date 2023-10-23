@@ -70,11 +70,11 @@ final class IterationUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $queue = $this->createMock(PersistentQueue::class);
         $queue->expects(self::once())
-              ->method('pushSinglePersistentMessage')
-              ->with(
-                  IterationUpdateEvent::TOPIC,
-                  self::isInstanceOf(PendingIterationUpdateRepresentation::class)
-              );
+            ->method('pushSinglePersistentMessage')
+            ->with(
+                IterationUpdateEvent::TOPIC,
+                self::isInstanceOf(PendingIterationUpdateRepresentation::class)
+            );
         $this->queue_factory->method('getPersistentQueue')->willReturn($queue);
 
         $this->getIterationUpdateDispatcher()->dispatchUpdate($this->iteration_update);

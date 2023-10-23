@@ -206,10 +206,10 @@ class Tracker_Rule_List_Factory
     private function populate(Tracker_Rule_List $list_rule, $tracker_id, $source_field_id, $target_field_id, $source_value, $target_value)
     {
         $list_rule->setTrackerId($tracker_id)
-                ->setSourceFieldId($source_field_id)
-                ->setTargetFieldId($target_field_id)
-                ->setSourceValue($source_value)
-                ->setTargetValue($target_value);
+            ->setSourceFieldId($source_field_id)
+            ->setTargetFieldId($target_field_id)
+            ->setSourceValue($source_value)
+            ->setTargetValue($target_value);
 
         return $list_rule;
     }

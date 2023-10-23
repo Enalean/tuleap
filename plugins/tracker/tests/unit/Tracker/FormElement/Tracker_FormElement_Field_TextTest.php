@@ -94,7 +94,7 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
     public function testDefaultFormatIsCommonMark(): void
     {
         $this->text_field->shouldReceive('getProperty')->with('default_value')
-                         ->andReturns(Mockery::any());
+            ->andReturns(Mockery::any());
         $this->user->shouldReceive('getPreference')->andReturnFalse();
 
         $this->assertTrue($this->text_field->hasDefaultValue());
@@ -110,7 +110,7 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
     public function testTheFormatIsCommonMarkWhenTheUserHasCommonMarkFormatPreference(): void
     {
         $this->text_field->shouldReceive('getProperty')->with('default_value')
-                         ->andReturns(Mockery::any());
+            ->andReturns(Mockery::any());
         $this->user->shouldReceive('getPreference')->andReturn('commonmark');
 
         $this->assertTrue($this->text_field->hasDefaultValue());
@@ -126,7 +126,7 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
     public function testTheFormatIsHTMLAndContentConvertedToHTMLWhenTheUserHasHTMLFormatPreference(): void
     {
         $this->text_field->shouldReceive('getProperty')->with('default_value')
-                         ->andReturns("Eeny, meeny,\nminy, <b>moe");
+            ->andReturns("Eeny, meeny,\nminy, <b>moe");
         $this->user->shouldReceive('getPreference')->andReturn('html');
 
         $this->assertTrue($this->text_field->hasDefaultValue());
@@ -142,7 +142,7 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
     public function testTheFormatIsTextWhenTheUserHasTextFormatPreference(): void
     {
         $this->text_field->shouldReceive('getProperty')->with('default_value')
-                         ->andReturns(Mockery::any());
+            ->andReturns(Mockery::any());
         $this->user->shouldReceive('getPreference')->andReturn('text');
 
         $this->assertTrue($this->text_field->hasDefaultValue());

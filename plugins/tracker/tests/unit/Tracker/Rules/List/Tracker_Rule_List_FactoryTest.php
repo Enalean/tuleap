@@ -53,7 +53,7 @@ final class Tracker_Rule_List_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $target_value    = 102;
 
         $list_rule = $this->list_rule_factory
-                ->create($source_field_id, $target_field_id, $tracker_id, $source_value, $target_value);
+            ->create($source_field_id, $target_field_id, $tracker_id, $source_value, $target_value);
 
         $this->assertInstanceOf(\Tracker_Rule_List::class, $list_rule);
         $this->assertEquals($tracker_id, $list_rule->getTrackerId());
@@ -67,7 +67,7 @@ final class Tracker_Rule_List_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->list_rule_dao->shouldReceive('searchById')->andReturns([]);
         $list_rule = $this->list_rule_factory
-                ->searchById(999);
+            ->searchById(999);
 
         $this->assertNull($list_rule);
     }
@@ -84,7 +84,7 @@ final class Tracker_Rule_List_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->list_rule_dao->shouldReceive('searchById')->andReturns($data);
         $list_rule = $this->list_rule_factory
-                ->searchById(999);
+            ->searchById(999);
 
         $this->assertNotNull($list_rule);
     }
@@ -93,7 +93,7 @@ final class Tracker_Rule_List_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->list_rule_dao->shouldReceive('searchByTrackerId')->andReturns([]);
         $list_rule = $this->list_rule_factory
-                ->searchByTrackerId(999);
+            ->searchByTrackerId(999);
 
         $this->assertIsArray($list_rule);
         $this->assertCount(0, $list_rule);
@@ -111,7 +111,7 @@ final class Tracker_Rule_List_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->list_rule_dao->shouldReceive('searchByTrackerId')->andReturns([$data]);
         $list_rules = $this->list_rule_factory
-                ->searchByTrackerId(999);
+            ->searchByTrackerId(999);
 
         $this->assertNotNull($list_rules);
         $this->assertIsArray($list_rules);

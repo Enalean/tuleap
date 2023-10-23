@@ -108,7 +108,7 @@ class BurndownCacheGenerationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->remaining_effort_adder->shouldReceive('addRemainingEffortDataForREST');
 
         $this->value_checker->shouldReceive('doesUserCanReadRemainingEffort')->withArgs([$this->artifact, $this->user])
-                            ->andReturn(false);
+            ->andReturn(false);
         $this->event_manager->shouldReceive('areThereMultipleEventsQueuedMatchingFirstParameter')->andReturn(false);
 
         $this->cache_generator->shouldReceive('forceBurndownCacheGeneration')->never();
@@ -133,9 +133,9 @@ class BurndownCacheGenerationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->remaining_effort_adder->shouldReceive('addRemainingEffortDataForREST');
 
         $this->value_checker->shouldReceive('doesUserCanReadRemainingEffort')->withArgs([$this->artifact, $this->user])
-                            ->andReturn(true);
+            ->andReturn(true);
         $this->value_checker->shouldReceive('hasStartDate')->withArgs([$this->artifact, $this->user])
-                            ->andReturn(false);
+            ->andReturn(false);
 
         $this->event_manager->shouldReceive('areThereMultipleEventsQueuedMatchingFirstParameter')->andReturn(false);
 
@@ -159,9 +159,9 @@ class BurndownCacheGenerationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testCalculateCacheShouldBeLaunchedWhenMissingRemainingEffortAndCacheGenerationIsNotAlreadyAsked()
     {
         $this->value_checker->shouldReceive('doesUserCanReadRemainingEffort')->withArgs([$this->artifact, $this->user])
-                            ->andReturn(true);
+            ->andReturn(true);
         $this->value_checker->shouldReceive('hasStartDate')->withArgs([$this->artifact, $this->user])
-                            ->andReturn(true);
+            ->andReturn(true);
 
         $this->computed_dao->shouldReceive('getCachedDays');
         $this->cached_days_comparator->shouldReceive('isNumberOfCachedDaysExpected')->andReturn(false);
@@ -193,9 +193,9 @@ class BurndownCacheGenerationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testDoNoStackEventCallWhenMissingRemainingEffortAndCacheGenerationIsAlreadyAsked()
     {
         $this->value_checker->shouldReceive('doesUserCanReadRemainingEffort')->withArgs([$this->artifact, $this->user])
-                            ->andReturn(true);
+            ->andReturn(true);
         $this->value_checker->shouldReceive('hasStartDate')->withArgs([$this->artifact, $this->user])
-                            ->andReturn(true);
+            ->andReturn(true);
 
         $this->computed_dao->shouldReceive('getCachedDays');
         $this->cached_days_comparator->shouldReceive('isNumberOfCachedDaysExpected')->andReturn(true);

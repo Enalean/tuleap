@@ -78,17 +78,17 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
             'PUT',
             $this->getGerritURL($server, '/projects/' . urlencode($gerrit_project_name))
         )->withHeader(self::HEADER_CONTENT_TYPE, self::MIME_JSON)
-        ->withBody(
-            $this->stream_factory->createStream(
-                json_encode(
-                    [
-                        'description' => "Migration of $gerrit_project_name from Tuleap",
-                        'parent' => $parent_project_name,
-                    ],
-                    JSON_THROW_ON_ERROR
+            ->withBody(
+                $this->stream_factory->createStream(
+                    json_encode(
+                        [
+                            'description' => "Migration of $gerrit_project_name from Tuleap",
+                            'parent' => $parent_project_name,
+                        ],
+                        JSON_THROW_ON_ERROR
+                    )
                 )
-            )
-        );
+            );
         $response = $this->sendRequest($server, $request);
 
         if ($response->getStatusCode() !== 201) {
@@ -112,18 +112,18 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
             'PUT',
             $this->getGerritURL($server, '/projects/' . urlencode($parent_project_name))
         )->withHeader(self::HEADER_CONTENT_TYPE, self::MIME_JSON)
-        ->withBody(
-            $this->stream_factory->createStream(
-                json_encode(
-                    [
-                        'description' => "Migration of $parent_project_name from Tuleap",
-                        'permissions_only' => true,
-                        'owners' => [$admin_group_name],
-                    ],
-                    JSON_THROW_ON_ERROR
+            ->withBody(
+                $this->stream_factory->createStream(
+                    json_encode(
+                        [
+                            'description' => "Migration of $parent_project_name from Tuleap",
+                            'permissions_only' => true,
+                            'owners' => [$admin_group_name],
+                        ],
+                        JSON_THROW_ON_ERROR
+                    )
                 )
-            )
-        );
+            );
 
         $response = $this->sendRequest($server, $request);
 
@@ -376,9 +376,9 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
             'POST',
             $this->getGerritURL($server, '/groups/' . urlencode($group_name) . '/groups.delete')
         )->withHeader(self::HEADER_CONTENT_TYPE, self::MIME_JSON)
-        ->withBody(
-            $this->stream_factory->createStream(json_encode(['groups' => $exiting_groups], JSON_THROW_ON_ERROR))
-        );
+            ->withBody(
+                $this->stream_factory->createStream(json_encode(['groups' => $exiting_groups], JSON_THROW_ON_ERROR))
+            );
 
         $response = $this->sendRequest($server, $request);
 
@@ -406,7 +406,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
                 'POST',
                 $this->getGerritURL($server, '/accounts/' . urlencode($user->getSSHUserName()) . '/sshkeys')
             )->withHeader(self::HEADER_CONTENT_TYPE, self::MIME_TEXT)
-            ->withBody($this->stream_factory->createStream($ssh_key))
+                ->withBody($this->stream_factory->createStream($ssh_key))
         );
         $response_status_code = $response->getStatusCode();
         if ($response_status_code !== 200 && $response_status_code !== 201) {
@@ -469,7 +469,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
             'PUT',
             $this->getGerritURL($server, '/projects/' . urlencode($project_name) . '/parent')
         )->withHeader(self::HEADER_CONTENT_TYPE, self::MIME_JSON)
-        ->withBody($this->stream_factory->createStream(json_encode(['parent' => $parent_project_name], JSON_THROW_ON_ERROR)));
+            ->withBody($this->stream_factory->createStream(json_encode(['parent' => $parent_project_name], JSON_THROW_ON_ERROR)));
 
         $response = $this->sendRequest($server, $request);
 
@@ -551,7 +551,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
             'PUT',
             $this->getGerritURL($server, '/projects/' . urlencode($gerrit_project_full_name) . '/config')
         )->withHeader(self::HEADER_CONTENT_TYPE, self::MIME_JSON)
-        ->withBody($this->stream_factory->createStream(json_encode(['state' => 'READ_ONLY'], JSON_THROW_ON_ERROR)));
+            ->withBody($this->stream_factory->createStream(json_encode(['state' => 'READ_ONLY'], JSON_THROW_ON_ERROR)));
 
         $response = $this->sendRequest($server, $request);
 

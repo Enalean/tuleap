@@ -101,8 +101,8 @@ final class HTTPAccessControlTest extends \Tuleap\Test\PHPUnit\TestCase
         $git_repository->shouldReceive('getFullName');
         $_SERVER['PHP_AUTH_USER'] = 'user1';
         $_SERVER['PHP_AUTH_PW']   = 'password';
-        $replication_http_user_authenticator->shouldReceive('authenticate')->
-            andThrows(\Mockery::spy(\Git_RemoteServer_NotFoundException::class));
+        $replication_http_user_authenticator->shouldReceive('authenticate')
+            ->andThrows(\Mockery::spy(\Git_RemoteServer_NotFoundException::class));
         $_SERVER['REMOTE_ADDR'] = '2001:db8::3';
         $access_key_authenticator->shouldReceive('getUser')->andReturnNull();
         $expected_user = \Mockery::mock(\PFUser::class);
@@ -188,8 +188,8 @@ final class HTTPAccessControlTest extends \Tuleap\Test\PHPUnit\TestCase
         $git_repository->shouldReceive('getFullName');
         $_SERVER['PHP_AUTH_USER'] = 'user1';
         $_SERVER['PHP_AUTH_PW']   = 'access_key';
-        $replication_http_user_authenticator->shouldReceive('authenticate')->
-        andThrows(\Mockery::spy(\Git_RemoteServer_NotFoundException::class));
+        $replication_http_user_authenticator->shouldReceive('authenticate')
+            ->andThrows(\Mockery::spy(\Git_RemoteServer_NotFoundException::class));
         $_SERVER['REMOTE_ADDR'] = '2001:db8::3';
         $found_user             = \Mockery::mock(\PFUser::class);
         $found_user->shouldReceive('getUserName')->andReturn('username');
@@ -235,12 +235,12 @@ final class HTTPAccessControlTest extends \Tuleap\Test\PHPUnit\TestCase
         $git_repository->shouldReceive('getFullName');
         $_SERVER['PHP_AUTH_USER'] = 'user1';
         $_SERVER['PHP_AUTH_PW']   = 'invalid_password';
-        $replication_http_user_authenticator->shouldReceive('authenticate')->
-            andThrows(\Mockery::spy(\Git_RemoteServer_NotFoundException::class));
+        $replication_http_user_authenticator->shouldReceive('authenticate')
+            ->andThrows(\Mockery::spy(\Git_RemoteServer_NotFoundException::class));
         $_SERVER['REMOTE_ADDR'] = '2001:db8::3';
         $access_key_authenticator->shouldReceive('getUser')->andReturnNull();
-        $user_login_manager->shouldReceive('authenticate')->
-            andThrows(\Mockery::spy(\User_LoginException::class));
+        $user_login_manager->shouldReceive('authenticate')
+            ->andThrows(\Mockery::spy(\User_LoginException::class));
 
         $ask_auth_throwable_test = new \RuntimeException('Thrown exception for test purposes');
         $ask_basic_authentication_challenge->shouldReceive('askBasicAuthenticationChallenge')->andThrow($ask_auth_throwable_test);

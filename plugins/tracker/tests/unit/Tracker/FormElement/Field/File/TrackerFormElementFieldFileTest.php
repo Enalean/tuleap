@@ -729,8 +729,8 @@ final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCas
     public function testItReturnsTrueWhenTheFieldIsEmptyAtArtifactCreation()
     {
         $formelement_field_file = Mockery::mock(Tracker_FormElement_Field_File::class)
-                                         ->makePartial()
-                                         ->shouldAllowMockingProtectedMethods();
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
         $submitted_value        = [];
 
         $no_changeset = Mockery::mock(\Tracker_Artifact_Changeset_Null::class);

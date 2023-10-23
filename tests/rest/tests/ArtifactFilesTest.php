@@ -296,7 +296,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
         ]);
 
         $response = $this->getResponse($this->request_factory->createRequest('POST', 'artifacts')
-                                           ->withBody($this->stream_factory->createStream($params)));
+            ->withBody($this->stream_factory->createStream($params)));
         $this->assertEquals($response->getStatusCode(), 201);
         $posted_artifact = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 

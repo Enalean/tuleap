@@ -334,16 +334,16 @@ final class ChartConfigurationValueCheckerTest extends \Tuleap\Test\PHPUnit\Test
             ->andReturn(TimePeriodWithoutWeekEnd::buildFromDuration(12345678, 5));
 
         $this->configuration_field_retriever->shouldReceive('doesEndDateFieldExist')
-                                            ->with($this->tracker, $this->user)
-                                            ->andReturns(false);
+            ->with($this->tracker, $this->user)
+            ->andReturns(false);
 
         $this->new_changeset->shouldReceive('getValue')
-                            ->with($this->start_date_field)
-                            ->andReturn($this->start_date_changeset);
+            ->with($this->start_date_field)
+            ->andReturn($this->start_date_changeset);
 
         $this->new_changeset->shouldReceive('getValue')
-                            ->with($this->duration_field)
-                            ->andReturn($this->duration_changeset);
+            ->with($this->duration_field)
+            ->andReturn($this->duration_changeset);
 
         $this->start_date_changeset->shouldReceive('hasChanged')->andReturnFalse();
         $this->duration_changeset->shouldReceive('hasChanged')->andReturnTrue();
@@ -371,16 +371,16 @@ final class ChartConfigurationValueCheckerTest extends \Tuleap\Test\PHPUnit\Test
             ->andReturn(TimePeriodWithoutWeekEnd::buildFromDuration(12345678, 5));
 
         $this->configuration_field_retriever->shouldReceive('getEndDateField')
-                                            ->with($this->tracker, $this->user)
-                                            ->andReturn($this->end_date_field);
+            ->with($this->tracker, $this->user)
+            ->andReturn($this->end_date_field);
 
         $this->new_changeset->shouldReceive('getValue')
-                            ->with($this->start_date_field)
-                            ->andReturn($this->start_date_changeset);
+            ->with($this->start_date_field)
+            ->andReturn($this->start_date_changeset);
 
         $this->new_changeset->shouldReceive('getValue')
-                            ->with($this->end_date_field)
-                            ->andReturn($this->end_date_changeset);
+            ->with($this->end_date_field)
+            ->andReturn($this->end_date_changeset);
 
         $this->start_date_changeset->shouldReceive('hasChanged')->andReturnFalse();
         $this->end_date_changeset->shouldReceive('hasChanged')->andReturnTrue();

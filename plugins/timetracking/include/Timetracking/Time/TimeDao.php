@@ -135,6 +135,6 @@ class TimeDao extends DataAccessObject
                              GROUP BY tracker.id, times.user_id
                              LIMIT ?, ?";
         return $this->getDB()
-                    ->safeQuery($sql, array_merge($trackers_list->values(), [$start_date->format('Y-m-d'), $end_date->format('Y-m-d'), $offset, $limit]));
+            ->safeQuery($sql, array_merge($trackers_list->values(), [$start_date->format('Y-m-d'), $end_date->format('Y-m-d'), $offset, $limit]));
     }
 }

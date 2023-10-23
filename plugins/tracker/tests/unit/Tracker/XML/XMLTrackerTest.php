@@ -474,9 +474,9 @@ class XMLTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker = (new XMLTracker('id', 'bug'))
             ->withFormElement(
                 (new XMLFieldset('fieldset', 'details'))
-                ->withFormElements(
-                    (new XMLStringField('some_id', 'name'))->withoutPermissions()
-                )
+                    ->withFormElements(
+                        (new XMLStringField('some_id', 'name'))->withoutPermissions()
+                    )
             )
             ->withReports(
                 (new XMLReport('Default'))
@@ -670,18 +670,18 @@ class XMLTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
             )
             ->withArtifact(
                 (new XMLArtifact(123))
-                ->withChangeset(
-                    (new XMLChangeset(
-                        XMLUser::buildUsername('jane'),
-                        $submitted_on
-                    ))
-                    ->withFieldChange(
-                        new XMLStringChangesetValue(
-                            'name',
-                            'Sprint 1'
+                    ->withChangeset(
+                        (new XMLChangeset(
+                            XMLUser::buildUsername('jane'),
+                            $submitted_on
+                        ))
+                        ->withFieldChange(
+                            new XMLStringChangesetValue(
+                                'name',
+                                'Sprint 1'
+                            )
                         )
                     )
-                )
             );
 
         $node = $tracker->export(new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>'));

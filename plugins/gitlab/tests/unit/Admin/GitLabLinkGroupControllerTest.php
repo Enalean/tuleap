@@ -75,10 +75,10 @@ final class GitLabLinkGroupControllerTest extends TestCase
         $this->template_renderer      = new TemplateRendererStub();
 
         $this->project = ProjectTestBuilder::aProject()
-                                           ->withId(self::PROJECT_ID)
-                                           ->withUnixName(self::PROJECT_UNIX_NAME)
-                                           ->withUsedService(GitPlugin::SERVICE_SHORTNAME)
-                                           ->build();
+            ->withId(self::PROJECT_ID)
+            ->withUnixName(self::PROJECT_UNIX_NAME)
+            ->withUsedService(GitPlugin::SERVICE_SHORTNAME)
+            ->build();
 
         $this->project_factory = ProjectByUnixUnixNameFactory::buildWith($this->project);
         $this->group_retriever = RetrieveGroupLinkedToProjectStub::withNoGroupLink();

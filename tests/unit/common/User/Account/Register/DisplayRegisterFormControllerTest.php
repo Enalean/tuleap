@@ -48,8 +48,8 @@ final class DisplayRegisterFormControllerTest extends TestCase
             IExtractInvitationToEmailStub::withInvitation(
                 InvitationToEmail::fromInvitation(
                     InvitationTestBuilder::aSentInvitation(1)
-                    ->to('jdoe@example.com')
-                    ->build(),
+                        ->to('jdoe@example.com')
+                        ->build(),
                     new ConcealedString('secret'),
                 ),
             ),
@@ -83,8 +83,8 @@ final class DisplayRegisterFormControllerTest extends TestCase
             IExtractInvitationToEmailStub::withInvitation(
                 InvitationToEmail::fromInvitation(
                     InvitationTestBuilder::aSentInvitation(1)
-                    ->to('jdoe@example.com')
-                    ->build(),
+                        ->to('jdoe@example.com')
+                        ->build(),
                     new ConcealedString('secret'),
                 ),
             ),
@@ -120,8 +120,8 @@ final class DisplayRegisterFormControllerTest extends TestCase
             IExtractInvitationToEmailStub::withInvitation(
                 InvitationToEmail::fromInvitation(
                     InvitationTestBuilder::aSentInvitation(1)
-                    ->to('jdoe@example.com')
-                    ->build(),
+                        ->to('jdoe@example.com')
+                        ->build(),
                     new ConcealedString('secret'),
                 ),
             ),
@@ -145,8 +145,8 @@ final class DisplayRegisterFormControllerTest extends TestCase
             IExtractInvitationToEmailStub::withInvitation(
                 InvitationToEmail::fromInvitation(
                     InvitationTestBuilder::aSentInvitation(1)
-                    ->to('jdoe@example.com')
-                    ->build(),
+                        ->to('jdoe@example.com')
+                        ->build(),
                     new ConcealedString('secret'),
                 ),
             ),

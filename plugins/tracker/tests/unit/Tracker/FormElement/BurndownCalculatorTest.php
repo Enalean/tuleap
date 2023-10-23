@@ -75,7 +75,7 @@ final class BurndownCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $already_seen->addArtifactAsAlreadyProcessed('1234');
 
         $this->computed_dao->shouldReceive('getBurndownManualValueAtGivenTimestamp')->once()
-        ->andReturn(['value' => 12]);
+            ->andReturn(['value' => 12]);
 
         $expected = [
             'children'   => false,

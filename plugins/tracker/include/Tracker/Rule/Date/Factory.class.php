@@ -208,12 +208,12 @@ class Tracker_Rule_Date_Factory
         $source_field = $this->element_factory->getFormElementById($source_field_id);
         $target_field = $this->element_factory->getFormElementById($target_field_id);
         $date_rule->setTrackerId($tracker_id)
-                ->setSourceFieldId($source_field_id)
-                ->setSourceField($source_field)
-                ->setTargetFieldId($target_field_id)
-                ->setTargetField($target_field)
-                ->setTrackerId($tracker_id)
-                ->setComparator($comparator);
+            ->setSourceFieldId($source_field_id)
+            ->setSourceField($source_field)
+            ->setTargetFieldId($target_field_id)
+            ->setTargetField($target_field)
+            ->setTrackerId($tracker_id)
+            ->setComparator($comparator);
 
         if ($date_rule !== null) {
             $date_rule->setId($id);

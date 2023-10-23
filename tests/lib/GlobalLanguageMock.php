@@ -31,12 +31,12 @@ trait GlobalLanguageMock
     protected function mockLanguage(): void
     {
         $GLOBALS['Language'] = $this->getMockBuilder(BaseLanguage::class)
-                ->disableOriginalConstructor()
-                ->disableOriginalClone()
-                ->disableArgumentCloning()
-                ->disallowMockingUnknownTypes()
-                ->enableAutoReturnValueGeneration()
-                ->getMock();
+            ->disableOriginalConstructor()
+            ->disableOriginalClone()
+            ->disableArgumentCloning()
+            ->disallowMockingUnknownTypes()
+            ->enableAutoReturnValueGeneration()
+            ->getMock();
     }
 
     /**

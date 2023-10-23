@@ -392,10 +392,10 @@ final class ItemRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit
 
         $this->item_representation_builder->shouldReceive('buildItemRepresentation')
             ->withArgs([$docman_folder1, $user, ItemRepresentation::TYPE_FOLDER, null, null, null, null, null])
-                                          ->andReturns($representation1);
+            ->andReturns($representation1);
         $this->item_representation_builder->shouldReceive('buildItemRepresentation')
             ->withArgs([$docman_folder2, $user, ItemRepresentation::TYPE_FOLDER, null, null, null, null, null])
-                                          ->andReturns($representation2);
+            ->andReturns($representation2);
 
         $representation = $this->item_representation_collection_builder->buildParentsItemRepresentation($item, $user, 50, 0);
 

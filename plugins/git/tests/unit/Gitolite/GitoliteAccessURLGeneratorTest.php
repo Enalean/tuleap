@@ -60,8 +60,8 @@ class GitoliteAccessURLGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $git_plugin_info = \Mockery::mock(\GitPluginInfo::class);
         $git_plugin_info->shouldReceive('getPropertyValueForName')->with('git_ssh_url');
-        $git_plugin_info->shouldReceive('getPropertyValueForName')->with('git_http_url')->
-            andReturns('https://%server_name%/plugins/git');
+        $git_plugin_info->shouldReceive('getPropertyValueForName')->with('git_http_url')
+            ->andReturns('https://%server_name%/plugins/git');
 
         $access_url_generator = new GitoliteAccessURLGenerator($git_plugin_info);
 
@@ -94,8 +94,8 @@ class GitoliteAccessURLGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetSSHAccessWorksWithCustomSSHURL()
     {
         $git_plugin_info = \Mockery::mock(\GitPluginInfo::class);
-        $git_plugin_info->shouldReceive('getPropertyValueForName')->with('git_ssh_url')->
-            andReturns('ssh://git@stuf.example.com:2222');
+        $git_plugin_info->shouldReceive('getPropertyValueForName')->with('git_ssh_url')
+            ->andReturns('ssh://git@stuf.example.com:2222');
 
         $access_url_generator = new GitoliteAccessURLGenerator($git_plugin_info);
 
@@ -114,8 +114,8 @@ class GitoliteAccessURLGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $git_plugin_info = \Mockery::mock(\GitPluginInfo::class);
         $git_plugin_info->shouldReceive('getPropertyValueForName')->with('git_ssh_url');
-        $git_plugin_info->shouldReceive('getPropertyValueForName')->with('git_http_url')->
-        andReturns('https://%server_name%/plugins/git');
+        $git_plugin_info->shouldReceive('getPropertyValueForName')->with('git_http_url')
+            ->andReturns('https://%server_name%/plugins/git');
 
         $access_url_generator = new GitoliteAccessURLGenerator($git_plugin_info);
 

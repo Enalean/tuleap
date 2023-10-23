@@ -89,21 +89,21 @@ class DocmanItemUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->docman_item_factory->shouldReceive("getItemFromDb")->once()->with(100)->andReturn($item);
 
         $this->approval_table_action_checker->shouldReceive('checkAvailableUpdateAction')
-                                            ->once()
-                                            ->with($approval_table_action)
-                                            ->andReturn(true);
+            ->once()
+            ->with($approval_table_action)
+            ->andReturn(true);
 
         $this->approval_table_updater->shouldReceive('updateApprovalTable')
-                                     ->once()
-                                     ->withArgs([$item, $user, $approval_table_action]);
+            ->once()
+            ->withArgs([$item, $user, $approval_table_action]);
 
         $this->lock_factory->shouldReceive('lock')->once()->withArgs([$item, $user]);
         $this->lock_factory->shouldReceive('itemIsLocked')->never();
         $this->lock_factory->shouldReceive('unlock')->never();
 
         $this->post_update_event_adder->shouldReceive('triggerPostUpdateEvents')
-                                      ->once()
-                                      ->withArgs([$item, $user, $version]);
+            ->once()
+            ->withArgs([$item, $user, $version]);
 
         $this->updator->updateCommonData($item, true, $user, $approval_table_action, $version);
     }
@@ -120,17 +120,17 @@ class DocmanItemUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->docman_item_factory->shouldReceive("getItemFromDb")->never();
 
         $this->approval_table_action_checker->shouldReceive('checkAvailableUpdateAction')
-                                            ->never();
+            ->never();
         $this->approval_table_updater->shouldReceive('updateApprovalTable')
-                                     ->never();
+            ->never();
 
         $this->lock_factory->shouldReceive('lock')->never();
         $this->lock_factory->shouldReceive('itemIsLocked')->once()->andReturn(false);
         $this->lock_factory->shouldReceive('unlock')->never();
 
         $this->post_update_event_adder->shouldReceive('triggerPostUpdateEvents')
-                                      ->once()
-                                      ->withArgs([$item, $user, $version]);
+            ->once()
+            ->withArgs([$item, $user, $version]);
 
         $this->updator->updateCommonData($item, false, $user, $approval_table_action, $version);
     }
@@ -147,17 +147,17 @@ class DocmanItemUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->docman_item_factory->shouldReceive("getItemFromDb")->never();
 
         $this->approval_table_action_checker->shouldReceive('checkAvailableUpdateAction')
-                                            ->never();
+            ->never();
         $this->approval_table_updater->shouldReceive('updateApprovalTable')
-                                     ->never();
+            ->never();
 
         $this->lock_factory->shouldReceive('lock')->never();
         $this->lock_factory->shouldReceive('itemIsLocked')->once()->andReturn(true);
         $this->lock_factory->shouldReceive('unlock')->once()->withArgs([$item, $user]);
 
         $this->post_update_event_adder->shouldReceive('triggerPostUpdateEvents')
-                                      ->once()
-                                      ->withArgs([$item, $user, $version]);
+            ->once()
+            ->withArgs([$item, $user, $version]);
 
         $this->updator->updateCommonDataWithoutApprovalTable($item, false, $user, $version);
     }

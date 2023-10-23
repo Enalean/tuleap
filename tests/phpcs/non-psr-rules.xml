@@ -54,9 +54,29 @@
     </rule>
     <!-- Force alignment of corresponding assignment statement tokens -->
     <rule ref="Generic.Formatting.MultipleStatementAlignment">
-        <properties>
-            <property name="error" value="true"/>
-        </properties>
+          <properties>
+              <property name="error" value="true"/>
+          </properties>
+    </rule>
+    <!-- Force array element indentation with 4 spaces -->
+    <rule ref="Generic.Arrays.ArrayIndent"/>
+    <!-- Force level of indentation for each call in a method chain. Each call should be indented exactly once respective to the origin of the chain.
+         ```
+         Instead of this:
+         $very_long_result_name->map()
+                               ->andThen()
+                               ->match();
+         Produce this:
+         $very_long_result_name->map()
+             ->andThen()
+             ->match();
+         ```
+         This is common for Results, Options, Mocks and Builders.
+     -->
+    <rule ref="PEAR.WhiteSpace.ObjectOperatorIndent">
+      <properties>
+        <property name="multilevel" value="true"/>
+      </properties>
     </rule>
     <rule ref="Generic.PHP.ForbiddenFunctions">
         <properties>
@@ -159,8 +179,6 @@
     <rule ref="SlevomatCodingStandard.Namespaces.UselessAlias"/>
     <!-- Require /* @var type $foo */ and similar simple inline annotations to be replaced by assert() -->
     <rule ref="SlevomatCodingStandard.PHP.RequireExplicitAssertion"/>
-    <!-- Force array element indentation with 4 spaces -->
-    <rule ref="Generic.Arrays.ArrayIndent"/>
     <!-- Forbid `array(...)` -->
     <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
     <rule ref="SlevomatCodingStandard.PHP.ForbiddenClasses">

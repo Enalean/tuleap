@@ -247,48 +247,48 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $response = M::mock(BaseLayout::class);
         $request  = M::mock(\HTTPRequest::class);
         $request->shouldReceive('getValidated')
-                ->with('service_id', M::any(), M::any())
-                ->once()
-                ->andReturn(12);
+            ->with('service_id', M::any(), M::any())
+            ->once()
+            ->andReturn(12);
         $request->shouldReceive('getValidated')
-                ->with('short_name', M::any(), M::any())
-                ->once()
-                ->andReturn('admin');
+            ->with('short_name', M::any(), M::any())
+            ->once()
+            ->andReturn('admin');
         $request->shouldReceive('exist')
-                ->with('short_name')
-                ->once()
-                ->andReturnTrue();
+            ->with('short_name')
+            ->once()
+            ->andReturnTrue();
         $request->shouldReceive('getValidated')
-                ->with('label', M::any(), M::any())
-                ->once()
-                ->andReturn('My custom service');
+            ->with('label', M::any(), M::any())
+            ->once()
+            ->andReturn('My custom service');
         $request->shouldReceive('getValidated')
-                ->with('icon_name', M::any(), M::any())
-                ->once()
-                ->andReturn('fa-invalid-icon-name');
+            ->with('icon_name', M::any(), M::any())
+            ->once()
+            ->andReturn('fa-invalid-icon-name');
         $request->shouldReceive('getValidated')
-                ->with('description', M::any(), M::any())
-                ->once()
-                ->andReturn('');
+            ->with('description', M::any(), M::any())
+            ->once()
+            ->andReturn('');
         $request->shouldReceive('getValidated')
-                ->with('rank', M::any(), M::any())
-                ->once()
-                ->andReturn(1230);
+            ->with('rank', M::any(), M::any())
+            ->once()
+            ->andReturn(1230);
         $request->shouldReceive('getValidated')
-                ->with('is_active', M::any(), M::any())
-                ->once()
-                ->andReturn(1);
+            ->with('is_active', M::any(), M::any())
+            ->once()
+            ->andReturn(1);
         $request->shouldReceive('get')
-                ->with('is_in_iframe')
-                ->once()
-                ->andReturnFalse();
+            ->with('is_in_iframe')
+            ->once()
+            ->andReturnFalse();
         $request->shouldReceive('get')
-                ->with('is_in_new_tab')
-                ->once()
-                ->andReturnFalse();
+            ->with('is_in_new_tab')
+            ->once()
+            ->andReturnFalse();
         $request->shouldReceive('getValidated')
-                ->with('link', M::any(), M::any())
-                ->andReturn('https://example.com/custom');
+            ->with('link', M::any(), M::any())
+            ->andReturn('https://example.com/custom');
 
         $current_admin_service = new Service($project, ['label' => 'Admin', 'short_name' => Service::ADMIN, 'description' => 'admin']);
 
@@ -348,8 +348,8 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->andReturnFalse();
         $request->shouldReceive('getValidated')
-                ->with('link', M::any(), M::any())
-                ->andReturn('https://example.com/custom');
+            ->with('link', M::any(), M::any())
+            ->andReturn('https://example.com/custom');
 
         $this->expectException(InvalidServicePOSTDataException::class);
 
@@ -380,41 +380,41 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $response = M::mock(BaseLayout::class);
         $request  = M::mock(\HTTPRequest::class);
         $request->shouldReceive('getValidated')
-                ->with('service_id', M::any(), M::any())
-                ->andReturn(12);
+            ->with('service_id', M::any(), M::any())
+            ->andReturn(12);
         $request->shouldReceive('getValidated')
-                ->with('short_name', M::any(), M::any())
-                ->andReturn('');
+            ->with('short_name', M::any(), M::any())
+            ->andReturn('');
         $request->shouldReceive('exist')
-                ->with('short_name')
-                ->andReturnFalse();
+            ->with('short_name')
+            ->andReturnFalse();
         $request->shouldReceive('getValidated')
-                ->with('label', M::any(), M::any())
-                ->andReturn($submitted_label);
+            ->with('label', M::any(), M::any())
+            ->andReturn($submitted_label);
         $request->shouldReceive('getValidated')
-                ->with('icon_name', M::any(), M::any())
-                ->andReturn('fa-bolt');
+            ->with('icon_name', M::any(), M::any())
+            ->andReturn('fa-bolt');
         $request->shouldReceive('getValidated')
-                ->with('description', M::any(), M::any())
-                ->andReturn($submitted_description);
+            ->with('description', M::any(), M::any())
+            ->andReturn($submitted_description);
         $request->shouldReceive('getValidated')
-                ->with('rank', M::any(), M::any())
-                ->andReturn(123);
+            ->with('rank', M::any(), M::any())
+            ->andReturn(123);
         $request->shouldReceive('getValidated')
-                ->with('is_active', M::any(), M::any())
-                ->andReturn(1);
+            ->with('is_active', M::any(), M::any())
+            ->andReturn(1);
         $request->shouldReceive('getValidated')
-                ->with('is_used', M::any(), M::any())
-                ->andReturn(true);
+            ->with('is_used', M::any(), M::any())
+            ->andReturn(true);
         $request->shouldReceive('get')
-                ->with('is_in_iframe')
-                ->andReturn(false);
+            ->with('is_in_iframe')
+            ->andReturn(false);
         $request->shouldReceive('get')
-                ->with('is_in_new_tab')
-                ->andReturnFalse();
+            ->with('is_in_new_tab')
+            ->andReturnFalse();
         $request->shouldReceive('getValidated')
-                ->with('link', M::any(), M::any())
-                ->andReturn('https://example.com/custom');
+            ->with('link', M::any(), M::any())
+            ->andReturn('https://example.com/custom');
 
         $service = $this->service_postdata_builder->buildFromRequest($request, $project, $service, $response);
 

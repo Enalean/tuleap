@@ -105,8 +105,8 @@ class URLVerificationRedirectionTests extends \Tuleap\Test\PHPUnit\TestCase
     public function testRestrictedUserCanAccessSearchOnTracker(): void
     {
         $this->url_verification = \Mockery::mock(\URLVerification::class)
-                                          ->makePartial()
-                                          ->shouldAllowMockingProtectedMethods();
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
 
         $user = \Mockery::mock(\PFUser::class);
         $this->url_verification->shouldReceive('getCurrentUser')->andReturns($user);
@@ -133,8 +133,8 @@ class URLVerificationRedirectionTests extends \Tuleap\Test\PHPUnit\TestCase
     public function testRestrictedUserCanNotAccessSearchOnPeople(): void
     {
         $this->url_verification = \Mockery::mock(\URLVerification::class)
-                                          ->makePartial()
-                                          ->shouldAllowMockingProtectedMethods();
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
 
         $user = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('isRestricted')->andReturns(true);

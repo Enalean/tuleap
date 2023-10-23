@@ -96,9 +96,9 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $end_date_field   = Mockery::mock(\Tracker_FormElement_Field_Date::class);
 
         $this->form_element_factory->shouldReceive('getUsedDateFieldById')
-                ->with($this->story_tracker, 101)
-                ->once()
-                ->andReturn($start_date_field);
+            ->with($this->story_tracker, 101)
+            ->once()
+            ->andReturn($start_date_field);
 
         $this->form_element_factory->shouldReceive('getUsedDateFieldById')
             ->with($this->story_tracker, 104)
