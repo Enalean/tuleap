@@ -113,6 +113,7 @@
                     <a
                         v-bind:href="sanitizeURL(project.href)"
                         class="project-sidebar-linked-projects-item-link"
+                        v-bind:title="project.name"
                     >
                         <span
                             v-if="project.icon !== ''"

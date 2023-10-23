@@ -413,6 +413,14 @@
     margin: 0;
     padding: 0;
     list-style: none;
+
+    > .project-sidebar-linked-projects-item > .project-sidebar-linked-projects-item-link {
+        > .project-sidebar-linked-projects-item-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
 }
 
 .project-sidebar-linked-projects-title {
@@ -512,7 +520,10 @@
 }
 
 .project-sidebar-linked-projects-popover {
-    width: max-content;
+    &.tlp-popover {
+        width: auto;
+        max-width: 400px;
+    }
 
     .fa-tlp-project-boxes,
     .project-sidebar-linked-projects-icon-parent {
