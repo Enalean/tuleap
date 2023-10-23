@@ -2,11 +2,11 @@
 let
   mediawiki = pkgs.stdenvNoCC.mkDerivation rec {
     pname = "mediawiki";
-    version = "1.35.11";
+    version = "1.35.13";
 
     src = pkgs.fetchurl {
       url = "https://releases.wikimedia.org/mediawiki/${pkgs.lib.versions.majorMinor version}/${pname}-${version}.tar.gz";
-      hash = "sha256-xmUbDcSgWWxGqRXNI7von/iziYPjYZCLX8gvApZJwRA=";
+      hash = "sha256-KpcAzhk9sZMtt74+G/3fE11iLUOZumvW0FcORR22O2E=";
     };
 
     patches = [
