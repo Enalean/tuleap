@@ -26,7 +26,7 @@
 *
 * Provide user interface to manage rules.
 */
-class ArtifactRulesManagerHtml extends ArtifactRulesManager
+class ArtifactRulesManagerHtml extends ArtifactRulesManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public $artifact_type;
     public $href;
@@ -312,16 +312,15 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager
         exit();
     }
 
-    public function _header()
+    public function _header() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $params          = [];
         $params['title'] = $this->artifact_type->getName() . ' ' . $GLOBALS['Language']->getText('tracker_include_type', 'mng_field_dependencies');
-        $params['help']  = 'tracker-v3.html#field-dependencies';
         $this->artifact_type->adminHeader($params);
         $this->artifact_type->displayAdminTitle($GLOBALS['Language']->getText('tracker_include_type', 'mng_field_dependencies_title'));
     }
 
-    public function _footer()
+    public function _footer() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $this->artifact_type->footer([]);
     }

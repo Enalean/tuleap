@@ -35,7 +35,6 @@ $params = ['title' => $group->getPublicName() . ' ' . $ath->getName() . ' #' . $
     'pagename' => 'tracker',
     'atid' => $ath->getID(),
     'pv' => $pv,
-    'help' => 'tracker-v3.html#new-artifact-submission',
 ];
 
 $ath->header($params);

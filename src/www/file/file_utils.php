@@ -299,7 +299,7 @@ function frs_display_package_form(FRSPackage $package, $title, $url, $siblings)
         ),
     );
 
-    file_utils_header(['title' => $title, 'help' => 'frs.html#delivery-manager-administration']);
+    file_utils_header(['title' => $title]);
     echo '<h3>' . $hp->purify($title, CODENDI_PURIFIER_CONVERT_HTML) . '</h3>
 
     <form action="' . $url . '" method="post">
@@ -379,7 +379,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
         'title' => $GLOBALS['Language']->getText(
             'file_admin_editreleases',
             'release_new_file_version'
-        ), 'help' => 'frs.html#delivery-manager-administration',
+        ),
     ]);
 
     echo '<H3>' . $hp->purify($title, CODENDI_PURIFIER_CONVERT_HTML) . '</H3>';

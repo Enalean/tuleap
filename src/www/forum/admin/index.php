@@ -167,7 +167,6 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
             Show page for deleting messages
         */
         forum_header(['title' => _('Delete a message'),
-            'help' => 'collaboration.html#web-forums',
         ]);
 
         echo '
@@ -192,7 +191,6 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
             Show the form for adding forums
         */
         forum_header(['title' => _('Add a Forum'),
-            'help' => 'collaboration.html#web-forums',
         ]);
 
         $sql    = "SELECT forum_name FROM forum_group_list WHERE group_id=" . db_ei($group_id);
@@ -234,7 +232,6 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
             Change a forum to public/private
         */
         forum_header(['title' => _('Change Forum Status'),
-            'help' => 'collaboration.html#web-forums',
         ]);
 
         $sql    = "SELECT * FROM forum_group_list WHERE group_id=" . db_ei($group_id);
@@ -298,7 +295,6 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
       either moderotor or delete
      */
         forum_header(['title' => _('Forum Administration'),
-            'help' => 'collaboration.html#web-forums',
         ]);
 
         echo '

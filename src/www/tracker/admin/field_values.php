@@ -23,7 +23,6 @@ if (! $ath->isValid()) {
 
 $ath->adminHeader([
     'title' => $Language->getText('tracker_admin_field_usage', 'tracker_admin') . $Language->getText('tracker_admin_field_values_details', 'values_admin'),
-    'help' => 'tracker-v3.html#field-values-management',
 ]);
 
 $hp = Codendi_HTMLPurifier::instance();
