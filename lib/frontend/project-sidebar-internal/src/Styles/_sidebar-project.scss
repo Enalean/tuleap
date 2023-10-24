@@ -456,6 +456,10 @@
     color: var(--tlp-neutral-normal-color);
 }
 
+.project-sidebar-linked-projects-label:hover {
+    text-decoration: underline;
+}
+
 .project-sidebar-linked-projects-item {
     padding: 2px 0;
     font-size: 0.75rem;

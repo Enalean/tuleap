@@ -9,6 +9,8 @@
 * 🐛 Linked projects displayed in the popover are now clickable links
 * 🐛 fix broken style for arrow on linked projects popover
 * ⬆️ Bump vue: 3.2.37 -> 3.3.4
+* Projects popover is now opened on click instead of on hover,
+  it will ease linked project access when there are many of them
 
 ## 2.3.0
 
