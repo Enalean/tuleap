@@ -95,7 +95,7 @@ final class Tracker_Rule_Date_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->date_rule_dao->shouldReceive('searchById')->andReturns([]);
         $date_rule = $this->date_rule_factory
-                ->getRule($this->tracker, 20);
+            ->getRule($this->tracker, 20);
 
         $this->assertNull($date_rule);
     }
@@ -113,7 +113,7 @@ final class Tracker_Rule_Date_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->date_rule_dao->shouldReceive('searchById')->with($this->tracker_id, 20)->andReturns($data);
         $this->date_rule_dao->shouldReceive('searchById')->andReturns([]);
         $date_rule = $this->date_rule_factory
-                ->getRule($this->tracker, 20);
+            ->getRule($this->tracker, 20);
 
         $this->assertNotNull($date_rule);
     }
@@ -122,7 +122,7 @@ final class Tracker_Rule_Date_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->date_rule_dao->shouldReceive('searchByTrackerId')->andReturns([]);
         $date_rule = $this->date_rule_factory
-                ->searchByTrackerId($this->tracker_id);
+            ->searchByTrackerId($this->tracker_id);
 
         $this->assertIsArray($date_rule);
         $this->assertCount(0, $date_rule);
@@ -140,7 +140,7 @@ final class Tracker_Rule_Date_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->date_rule_dao->shouldReceive('searchByTrackerId')->andReturns([$data]);
         $date_rules = $this->date_rule_factory
-                ->searchByTrackerId($this->tracker_id);
+            ->searchByTrackerId($this->tracker_id);
 
         $this->assertNotNull($date_rules);
         $this->assertIsArray($date_rules);
@@ -288,13 +288,13 @@ final class Tracker_Rule_Date_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $r1 = new Tracker_Rule_Date();
         $r1->setComparator(Tracker_Rule_Date::COMPARATOR_NOT_EQUALS)
-                ->setSourceFieldId(102)
-                ->setTargetFieldId(801);
+            ->setSourceFieldId(102)
+            ->setTargetFieldId(801);
 
         $r2 = new Tracker_Rule_Date();
         $r2->setComparator(Tracker_Rule_Date::COMPARATOR_GREATER_THAN_OR_EQUALS)
-                ->setSourceFieldId(103)
-                ->setTargetFieldId(806);
+            ->setSourceFieldId(103)
+            ->setTargetFieldId(806);
 
         $trm = \Mockery::mock(\Tracker_Rule_Date_Factory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $trm->shouldReceive('searchByTrackerId')->andReturns([$r1, $r2]);

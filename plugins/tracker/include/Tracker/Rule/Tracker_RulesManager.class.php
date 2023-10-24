@@ -98,7 +98,7 @@ class Tracker_RulesManager
     {
         if (! isset($this->rules_by_tracker_id[$tracker_id])) {
             $this->rules_by_tracker_id[$tracker_id] = $this->getRuleFactory()
-                    ->getAllListRulesByTrackerWithOrder($tracker_id);
+                ->getAllListRulesByTrackerWithOrder($tracker_id);
         }
         return $this->rules_by_tracker_id[$tracker_id];
     }
@@ -111,7 +111,7 @@ class Tracker_RulesManager
     public function getAllDateRulesByTrackerId($tracker_id)
     {
         return $this->getTrackerRuleDateFactory()
-                    ->searchByTrackerId($tracker_id);
+            ->searchByTrackerId($tracker_id);
     }
 
     /**

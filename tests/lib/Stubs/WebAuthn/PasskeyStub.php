@@ -144,10 +144,10 @@ final class PasskeyStub
             TrustPathLoader::loadTrustPath(['type' => 'Webauthn\\TrustPath\\EmptyTrustPath']),
             Uuid::v4(),
             (string) MapObject::create() // see https://www.rfc-editor.org/rfc/rfc9053#section-7
-            ->add(NegativeIntegerObject::create(-1), UnsignedIntegerObject::create(6)) // crv => Ed25519
-            ->add(NegativeIntegerObject::create(-2), ByteStringObject::create($public_key)) // x-coordinate
-            ->add(UnsignedIntegerObject::create(1), UnsignedIntegerObject::create(1)) // kty => OKP
-            ->add(UnsignedIntegerObject::create(3), NegativeIntegerObject::create(Algorithms::COSE_ALGORITHM_EDDSA)), // alg
+                ->add(NegativeIntegerObject::create(-1), UnsignedIntegerObject::create(6)) // crv => Ed25519
+                ->add(NegativeIntegerObject::create(-2), ByteStringObject::create($public_key)) // x-coordinate
+                ->add(UnsignedIntegerObject::create(1), UnsignedIntegerObject::create(1)) // kty => OKP
+                ->add(UnsignedIntegerObject::create(3), NegativeIntegerObject::create(Algorithms::COSE_ALGORITHM_EDDSA)), // alg
             $user_id,
             0
         );

@@ -81,13 +81,13 @@ class DocumentMetadataCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $metadata_list = [['id' => 10, 'value' => 'Text']];
         $this->metadata_dao->shouldReceive('searchById')
-                           ->andReturn(
-                               TestHelper::arrayToDar(
-                                   [
-                                       'data_type' => PLUGIN_DOCMAN_METADATA_TYPE_TEXT,
-                                   ]
-                               )
-                           );
+            ->andReturn(
+                TestHelper::arrayToDar(
+                    [
+                        'data_type' => PLUGIN_DOCMAN_METADATA_TYPE_TEXT,
+                    ]
+                )
+            );
 
         $this->value_creator->shouldReceive('createMetadataObject')->once();
 

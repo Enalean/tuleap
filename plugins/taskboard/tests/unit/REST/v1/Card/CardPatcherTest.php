@@ -81,8 +81,8 @@ final class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $field = $this->createMock(Tracker_FormElement_Field_Float::class);
         $field->method('userCanUpdate')
-              ->with($this->user)
-              ->willReturn(false);
+            ->with($this->user)
+            ->willReturn(false);
 
         $this->factory
             ->expects(self::once())
@@ -127,10 +127,10 @@ final class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         $field = $this->createMock(Tracker_FormElement_Field_Integer::class);
 
         $field->method('userCanUpdate')
-              ->with($this->user)
-              ->willReturn(true);
+            ->with($this->user)
+            ->willReturn(true);
         $field->method('getId')
-              ->willReturn("1001");
+            ->willReturn("1001");
 
         $this->factory
             ->expects(self::once())
@@ -150,10 +150,10 @@ final class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         ArtifactValuesRepresentation $expected_value,
     ): void {
         $field->method('userCanUpdate')
-              ->with($this->user)
-              ->willReturn(true);
+            ->with($this->user)
+            ->willReturn(true);
         $field->method('getId')
-              ->willReturn("1001");
+            ->willReturn("1001");
 
         $this->factory
             ->expects(self::once())

@@ -48,7 +48,7 @@ final class UploadPathAllocator implements PathAllocator
     public function getPathForItemBeingUploaded(TusFileInformation $file_information): string
     {
         return $this->getDelegatedUploadPathAllocator($file_information)
-                    ->getPathForItemBeingUploaded($file_information);
+            ->getPathForItemBeingUploaded($file_information);
     }
 
     private function getDelegatedUploadPathAllocator(TusFileInformation $file_information): DelegatedUploadPathAllocator

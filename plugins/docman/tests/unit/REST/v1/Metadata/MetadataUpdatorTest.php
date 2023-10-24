@@ -152,8 +152,8 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $current_user = \Mockery::mock(\PFUser::class);
 
         $this->event_processor->shouldReceive('raiseUpdateEvent')
-                              ->withArgs([$item, $current_user, 'old user name', 'new user name', 'owner'])
-                              ->once();
+            ->withArgs([$item, $current_user, 'old user name', 'new user name', 'owner'])
+            ->once();
 
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
         $this->item_factory->shouldReceive('update')->once();
@@ -392,8 +392,8 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $current_user = \Mockery::mock(\PFUser::class);
 
         $this->event_processor->shouldReceive('raiseUpdateEvent')
-                              ->withArgs([$item, $current_user, PLUGIN_DOCMAN_ITEM_STATUS_APPROVED, PLUGIN_DOCMAN_ITEM_STATUS_DRAFT, 'status'])
-                              ->once();
+            ->withArgs([$item, $current_user, PLUGIN_DOCMAN_ITEM_STATUS_APPROVED, PLUGIN_DOCMAN_ITEM_STATUS_DRAFT, 'status'])
+            ->once();
 
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
         $this->item_factory->shouldReceive('update')->once();

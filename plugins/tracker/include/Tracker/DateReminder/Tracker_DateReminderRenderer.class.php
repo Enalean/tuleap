@@ -489,9 +489,9 @@ class Tracker_DateReminderRenderer
             }
             $html_table = new HTML_Table_Bootstrap();
             return $html_table->
-                    setColumnsTitle($titles)->
-                    setBody($output)->
-                    render();
+                    setColumnsTitle($titles)
+                ->setBody($output)
+                ->render();
         }
 
         return '';

@@ -66,9 +66,9 @@ final class GroupLinkUpdaterTest extends TestCase
         );
 
         $group_link = GroupLinkBuilder::aGroupLink($group_link_id)
-                                      ->withAllowArtifactClosure(true)
-                                      ->withNoBranchPrefix()
-                                      ->build();
+            ->withAllowArtifactClosure(true)
+            ->withNoBranchPrefix()
+            ->build();
 
         $updator = new GroupLinkUpdater(
             $this->branch_prefix_updater,

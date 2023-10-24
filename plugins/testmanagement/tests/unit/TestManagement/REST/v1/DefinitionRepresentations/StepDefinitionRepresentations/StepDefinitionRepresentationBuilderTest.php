@@ -59,9 +59,9 @@ class StepDefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         $purifier = \Mockery::mock(\Codendi_HTMLPurifier::class);
         $purifier->shouldReceive('purifyHTMLWithReferences')->with($description, 101)->andReturn($description)->once();
         $purifier->shouldReceive('purifyHTMLWithReferences')
-                 ->with($expected_results, 101)
-                 ->andReturn($expected_results)
-                 ->once();
+            ->with($expected_results, 101)
+            ->andReturn($expected_results)
+            ->once();
         $representation = StepDefinitionRepresentationBuilder::build(
             $step,
             $artifact,
@@ -96,9 +96,9 @@ class StepDefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         $purifier = \Mockery::mock(\Codendi_HTMLPurifier::class);
         $purifier->shouldReceive('purifyHTMLWithReferences')->with($description, 101)->andReturn($description)->once();
         $purifier->shouldReceive('purifyHTMLWithReferences')
-                 ->with($expected_results, 101)
-                 ->andReturn($expected_results)
-                 ->once();
+            ->with($expected_results, 101)
+            ->andReturn($expected_results)
+            ->once();
         $representation = StepDefinitionRepresentationBuilder::build(
             $step,
             $artifact,

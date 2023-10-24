@@ -42,7 +42,7 @@ abstract class Cardwall_UserPreferences_UserPreferencesAutostack
     public function setColumnPreference(Cardwall_Column $column)
     {
         $column->setAutostack($this->isColumnAutoStacked($column))
-               ->setAutostackPreference($this->getName($column));
+            ->setAutostackPreference($this->getName($column));
     }
 
     public function forceColumnAutoStacked(Cardwall_Column $column)
@@ -50,7 +50,7 @@ abstract class Cardwall_UserPreferences_UserPreferencesAutostack
         $preference_name = $this->getName($column);
         $this->user->setPreference($preference_name, self::STACK);
         $column->setAutostack(self::STACK)
-               ->setAutostackPreference($preference_name);
+            ->setAutostackPreference($preference_name);
     }
 
     public function columnHasPreference(Cardwall_Column $column)

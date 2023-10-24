@@ -115,34 +115,34 @@ class Tracker_ArtifactFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact_with_multiple_parents_id = 1;
         $artifact_with_single_parents_id   = 2;
         $this->dao->shouldReceive('getParents')
-                  ->andReturns(
-                      \TestHelper::arrayToDar(
-                          [
-                              'child_id'                 => $artifact_with_multiple_parents_id,
-                              'id'                       => 10,
-                              'tracker_id'               => 1,
-                              'submitted_by'             => 123,
-                              'submitted_on'             => 123456789,
-                              'use_artifact_permissions' => false,
-                          ],
-                          [
-                              'child_id'                 => $artifact_with_multiple_parents_id,
-                              'id'                       => 20,
-                              'tracker_id'               => 1,
-                              'submitted_by'             => 123,
-                              'submitted_on'             => 123456789,
-                              'use_artifact_permissions' => false,
-                          ],
-                          [
-                              'child_id'                 => $artifact_with_single_parents_id,
-                              'id'                       => 100,
-                              'tracker_id'               => 1,
-                              'submitted_by'             => 123,
-                              'submitted_on'             => 123456789,
-                              'use_artifact_permissions' => false,
-                          ]
-                      ),
-                  );
+            ->andReturns(
+                \TestHelper::arrayToDar(
+                    [
+                        'child_id'                 => $artifact_with_multiple_parents_id,
+                        'id'                       => 10,
+                        'tracker_id'               => 1,
+                        'submitted_by'             => 123,
+                        'submitted_on'             => 123456789,
+                        'use_artifact_permissions' => false,
+                    ],
+                    [
+                        'child_id'                 => $artifact_with_multiple_parents_id,
+                        'id'                       => 20,
+                        'tracker_id'               => 1,
+                        'submitted_by'             => 123,
+                        'submitted_on'             => 123456789,
+                        'use_artifact_permissions' => false,
+                    ],
+                    [
+                        'child_id'                 => $artifact_with_single_parents_id,
+                        'id'                       => 100,
+                        'tracker_id'               => 1,
+                        'submitted_by'             => 123,
+                        'submitted_on'             => 123456789,
+                        'use_artifact_permissions' => false,
+                    ]
+                ),
+            );
 
         $parents = $this->artifact_factory->getParents(
             [

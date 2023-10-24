@@ -46,8 +46,8 @@ class HardcodedMetdataObsolescenceDateCheckerTest extends \Tuleap\Test\PHPUnit\T
         $checker = new HardcodedMetdataObsolescenceDateChecker($this->docman_settings_bo);
 
         $this->docman_settings_bo->shouldReceive('getMetadataUsage')
-                                 ->with('obsolescence_date')
-                                 ->andReturn("1");
+            ->with('obsolescence_date')
+            ->andReturn("1");
 
         $checker->checkObsolescenceDateUsageForDocument('2019-06-04');
 
@@ -59,8 +59,8 @@ class HardcodedMetdataObsolescenceDateCheckerTest extends \Tuleap\Test\PHPUnit\T
         $checker = new HardcodedMetdataObsolescenceDateChecker($this->docman_settings_bo);
 
         $this->docman_settings_bo->shouldReceive('getMetadataUsage')
-                                 ->with('obsolescence_date')
-                                 ->andReturn("0");
+            ->with('obsolescence_date')
+            ->andReturn("0");
 
         $checker->checkObsolescenceDateUsageForDocument(ItemRepresentation::OBSOLESCENCE_DATE_NONE);
 
@@ -72,8 +72,8 @@ class HardcodedMetdataObsolescenceDateCheckerTest extends \Tuleap\Test\PHPUnit\T
         $checker = new HardcodedMetdataObsolescenceDateChecker($this->docman_settings_bo);
 
         $this->docman_settings_bo->shouldReceive('getMetadataUsage')
-                                 ->with('obsolescence_date')
-                                 ->andReturn("1");
+            ->with('obsolescence_date')
+            ->andReturn("1");
 
         $checker->checkObsolescenceDateUsageForDocument('2019-06-04');
 
@@ -94,8 +94,8 @@ class HardcodedMetdataObsolescenceDateCheckerTest extends \Tuleap\Test\PHPUnit\T
         $checker = new HardcodedMetdataObsolescenceDateChecker($this->docman_settings_bo);
 
         $this->docman_settings_bo->shouldReceive('getMetadataUsage')
-                                 ->with('obsolescence_date')
-                                 ->andReturn((int) ItemRepresentation::OBSOLESCENCE_DATE_NONE);
+            ->with('obsolescence_date')
+            ->andReturn((int) ItemRepresentation::OBSOLESCENCE_DATE_NONE);
 
         $this->expectException(HardCodedMetadataException::class);
         $this->expectExceptionMessage('obsolescence date is not enabled for project');
@@ -126,8 +126,8 @@ class HardcodedMetdataObsolescenceDateCheckerTest extends \Tuleap\Test\PHPUnit\T
         $current_date      = $obsolescence_date->add(new \DateInterval('P1D'));
 
         $this->docman_settings_bo->shouldReceive('getMetadataUsage')
-                                 ->with('obsolescence_date')
-                                 ->andReturn('1');
+            ->with('obsolescence_date')
+            ->andReturn('1');
 
         $this->expectException(HardCodedMetadataException::class);
         $this->expectExceptionMessage("obsolescence date before today");
@@ -145,7 +145,7 @@ class HardcodedMetdataObsolescenceDateCheckerTest extends \Tuleap\Test\PHPUnit\T
         $obsolescence_date = new DateTimeImmutable();
 
         $this->docman_settings_bo->shouldReceive('getMetadataUsage')
-                                 ->never();
+            ->never();
 
         $checker->checkDateValidity(
             (int) ItemRepresentation::OBSOLESCENCE_DATE_NONE,

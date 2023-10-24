@@ -105,8 +105,8 @@ class ApprovalTableRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->approval_table_factory->shouldReceive('getFromItem')->with($item, $version_id)->andReturn($table_factory);
 
         $this->approval_table_factory->shouldReceive('getSpecificFactoryFromItem')
-                                     ->with($item)
-                                     ->andReturn(null);
+            ->with($item)
+            ->andReturn(null);
 
         $this->assertEquals(null, $this->approval_table_retriever->retrieveByItem($item));
     }
@@ -126,8 +126,8 @@ class ApprovalTableRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $factory = Mockery::mock(Docman_ApprovalTableItemFactory::class);
         $factory->shouldReceive('getTable')->andReturn(null);
         $this->approval_table_factory->shouldReceive('getSpecificFactoryFromItem')
-                                     ->with($item)
-                                     ->andReturn($factory);
+            ->with($item)
+            ->andReturn($factory);
 
         $this->assertEquals(null, $this->approval_table_retriever->retrieveByItem($item));
     }
@@ -149,8 +149,8 @@ class ApprovalTableRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $factory->shouldReceive('getTable')->andReturn($table);
         $table->shouldReceive('isDisabled')->andReturn(true);
         $this->approval_table_factory->shouldReceive('getSpecificFactoryFromItem')
-                                     ->with($item)
-                                     ->andReturn($factory);
+            ->with($item)
+            ->andReturn($factory);
 
         $this->assertEquals(null, $this->approval_table_retriever->retrieveByItem($item));
     }
@@ -172,8 +172,8 @@ class ApprovalTableRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $factory->shouldReceive('getTable')->andReturn($table);
         $table->shouldReceive('isDisabled')->andReturn(false);
         $this->approval_table_factory->shouldReceive('getSpecificFactoryFromItem')
-                                     ->with($item)
-                                     ->andReturn($factory);
+            ->with($item)
+            ->andReturn($factory);
 
         $this->assertEquals($table, $this->approval_table_retriever->retrieveByItem($item));
     }
@@ -194,8 +194,8 @@ class ApprovalTableRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $table   = Mockery::mock(\Docman_ApprovalTable::class);
 
         $this->approval_table_factory->shouldReceive('getSpecificFactoryFromItem')
-                                     ->with($item)
-                                     ->andReturn($factory);
+            ->with($item)
+            ->andReturn($factory);
 
         $factory->shouldReceive('getTable')->andReturn($table);
 
@@ -217,8 +217,8 @@ class ApprovalTableRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $factory = Mockery::mock(Docman_ApprovalTableItemFactory::class);
 
         $this->approval_table_factory->shouldReceive('getSpecificFactoryFromItem')
-                                     ->with($item)
-                                     ->andReturn($factory);
+            ->with($item)
+            ->andReturn($factory);
 
         $factory->shouldReceive('getTable')->andReturn(null);
 
@@ -238,8 +238,8 @@ class ApprovalTableRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->approval_table_factory->shouldReceive('getFromItem')->with($item, $version_id)->andReturn($table_factory);
 
         $this->approval_table_factory->shouldReceive('getSpecificFactoryFromItem')
-                                     ->with($item)
-                                     ->andReturn(null);
+            ->with($item)
+            ->andReturn(null);
 
         $this->assertFalse($this->approval_table_retriever->hasApprovalTable($item));
     }

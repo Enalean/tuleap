@@ -146,12 +146,12 @@ final class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $this->mockChangesetValue($definition_artifact, $changeset, $field, $text_field);
 
         $this->tracker_form_element_factory->shouldReceive('getUsedFieldByNameForUser')
-                                           ->with(
-                                               $tracker_id,
-                                               Mockery::any(),
-                                               $user
-                                           )
-                                           ->andReturnNull();
+            ->with(
+                $tracker_id,
+                Mockery::any(),
+                $user
+            )
+            ->andReturnNull();
         $this->tracker_form_element_factory->shouldReceive('getSelectboxFieldByNameForUser')->andReturnNull();
 
         $this->mockArtifactRepresentationBuilder($definition_artifact);
@@ -216,8 +216,8 @@ final class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         )->andReturnTrue();
 
         $this->requirement_retriever->shouldReceive('getAllRequirementsForDefinition')
-                                    ->with($definition_artifact, $user)
-                                    ->andReturn([]);
+            ->with($definition_artifact, $user)
+            ->andReturn([]);
 
         $this->assertTrackerFormElementFactory($user, $field);
 
@@ -253,12 +253,12 @@ final class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $this->mockChangesetValue($definition_artifact, $changeset, $field, $text_field);
 
         $this->tracker_form_element_factory->shouldReceive('getUsedFieldByNameForUser')
-                                           ->with(
-                                               Mockery::any(),
-                                               Mockery::any(),
-                                               $user
-                                           )
-                                           ->andReturn($field);
+            ->with(
+                Mockery::any(),
+                Mockery::any(),
+                $user
+            )
+            ->andReturn($field);
 
         $text_field->shouldReceive('getText')->andReturn('');
         $text_field->shouldReceive('getFormat')->andReturn('wololo');
@@ -277,12 +277,12 @@ final class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     private function assertTrackerFormElementFactory(PFUser $user, \Tracker_FormElement_Field $field): void
     {
         $this->tracker_form_element_factory->shouldReceive('getUsedFieldByNameForUser')
-                                           ->with(
-                                               Mockery::any(),
-                                               Mockery::any(),
-                                               $user
-                                           )
-                                           ->andReturn($field);
+            ->with(
+                Mockery::any(),
+                Mockery::any(),
+                $user
+            )
+            ->andReturn($field);
         $this->tracker_form_element_factory->shouldReceive('getSelectboxFieldByNameForUser')->andReturnNull();
     }
 
@@ -304,8 +304,8 @@ final class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         )->andReturnTrue();
 
         $this->requirement_retriever->shouldReceive('getAllRequirementsForDefinition')
-                                    ->with($definition_artifact, $user)
-                                    ->andReturn([]);
+            ->with($definition_artifact, $user)
+            ->andReturn([]);
 
         return $definition_artifact;
     }

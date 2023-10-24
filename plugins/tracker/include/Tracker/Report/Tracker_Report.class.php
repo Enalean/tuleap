@@ -441,9 +441,9 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         }
 
         $this->getCommentCriterionFromWhere($additional_criteria)
-             ->apply(function ($comment_from_where) use (&$from_where) {
+            ->apply(function ($comment_from_where) use (&$from_where) {
                  $from_where = $this->addFromWhere($from_where, $comment_from_where);
-             });
+            });
 
         $matching_ids = $this->getMatchingIdsInDb($from_where);
 
@@ -484,7 +484,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
 
         return Option::fromValue(
             $this->getCommentFromWhereBuilder()
-                 ->getFromWhereWithComment($comment_criterion->getValue(), self::COMMENT_CRITERION_NAME)
+                ->getFromWhereWithComment($comment_criterion->getValue(), self::COMMENT_CRITERION_NAME)
         );
     }
 

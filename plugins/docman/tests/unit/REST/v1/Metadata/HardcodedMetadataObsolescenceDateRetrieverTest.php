@@ -51,11 +51,11 @@ class HardcodedMetadataObsolescenceDateRetrieverTest extends \Tuleap\Test\PHPUni
         $obsolescence_date_formatted = $obsolescence_date->format('Y-m-d');
 
         $this->metadata_obsolescence_date_checker->shouldReceive('checkObsolescenceDateUsageForDocument')
-                                                 ->withArgs(
-                                                     [
-                                                         $obsolescence_date_formatted,
-                                                     ]
-                                                 )->once();
+            ->withArgs(
+                [
+                    $obsolescence_date_formatted,
+                ]
+            )->once();
         $this->metadata_obsolescence_date_checker->shouldReceive('isObsolescenceMetadataUsed')->andReturn('1');
         $this->metadata_obsolescence_date_checker->shouldReceive('checkDateValidity')->never();
 
@@ -76,11 +76,11 @@ class HardcodedMetadataObsolescenceDateRetrieverTest extends \Tuleap\Test\PHPUni
         $obsolescence_date_formatted = $obsolescence_date->format('Y-m-d');
 
         $this->metadata_obsolescence_date_checker->shouldReceive('checkObsolescenceDateUsageForDocument')
-                                                 ->withArgs(
-                                                     [
-                                                         $obsolescence_date_formatted,
-                                                     ]
-                                                 )->once();
+            ->withArgs(
+                [
+                    $obsolescence_date_formatted,
+                ]
+            )->once();
         $this->metadata_obsolescence_date_checker->shouldReceive('isObsolescenceMetadataUsed')->andReturn('1');
         $this->metadata_obsolescence_date_checker->shouldReceive('checkDateValidity')->once();
 
@@ -97,8 +97,8 @@ class HardcodedMetadataObsolescenceDateRetrieverTest extends \Tuleap\Test\PHPUni
         $retriever = new HardcodedMetadataObsolescenceDateRetriever($this->metadata_obsolescence_date_checker);
 
         $this->metadata_obsolescence_date_checker->shouldReceive('checkObsolescenceDateUsageForDocument')
-                                                 ->withArgs([ItemRepresentation::OBSOLESCENCE_DATE_NONE])
-                                                 ->once();
+            ->withArgs([ItemRepresentation::OBSOLESCENCE_DATE_NONE])
+            ->once();
 
         $this->metadata_obsolescence_date_checker->shouldReceive('isObsolescenceMetadataUsed')->andReturn('1');
 
@@ -131,8 +131,8 @@ class HardcodedMetadataObsolescenceDateRetrieverTest extends \Tuleap\Test\PHPUni
         $retriever = new HardcodedMetadataObsolescenceDateRetriever($this->metadata_obsolescence_date_checker);
 
         $this->metadata_obsolescence_date_checker->shouldReceive('checkObsolescenceDateUsageForDocument')
-                                                 ->withArgs([null])
-                                                 ->once();
+            ->withArgs([null])
+            ->once();
 
         $this->metadata_obsolescence_date_checker->shouldReceive('isObsolescenceMetadataUsed')->andReturn('1');
 

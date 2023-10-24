@@ -38,8 +38,8 @@ final class CanSubmitNewEventProxyTest extends TestCase
         $user    = UserTestBuilder::aUser()->build();
         $project = ProjectTestBuilder::aProject()->withId(101)->build();
         $tracker = TrackerTestBuilder::aTracker()->withId(98)
-                                                               ->withProject($project)
-                                                               ->build();
+            ->withProject($project)
+            ->build();
 
         $this->event = new CanSubmitNewArtifact($user, $tracker);
     }

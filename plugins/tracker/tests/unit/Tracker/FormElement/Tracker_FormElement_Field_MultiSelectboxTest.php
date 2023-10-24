@@ -174,13 +174,13 @@ class Tracker_FormElement_Field_MultiSelectboxTest extends \Tuleap\Test\PHPUnit\
             ->andReturnTrue();
 
         $this->permission_manager->shouldReceive('userHasPermission')
-        ->with(
-            1,
-            'PLUGIN_TRACKER_FIELD_UPDATE',
-            Mockery::any()
-        )
-        ->once()
-        ->andReturnTrue();
+            ->with(
+                1,
+                'PLUGIN_TRACKER_FIELD_UPDATE',
+                Mockery::any()
+            )
+            ->once()
+            ->andReturnTrue();
 
         $this->field->augmentDataFromRequest($fields_data);
 

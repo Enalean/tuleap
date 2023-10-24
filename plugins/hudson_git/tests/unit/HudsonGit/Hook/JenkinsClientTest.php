@@ -170,7 +170,7 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $http_client->addResponse(
             $http_response_factory->createResponse()
-                                  ->withStatus(200)
+                ->withStatus(200)
         );
 
         $jenkins_client->pushJenkinsTuleapPluginNotification(
@@ -210,7 +210,7 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $http_client->addResponse(
             $http_response_factory->createResponse()
-                                  ->withStatus(400)
+                ->withStatus(400)
         );
 
         $this->expectException(UnableToLaunchBuildException::class);

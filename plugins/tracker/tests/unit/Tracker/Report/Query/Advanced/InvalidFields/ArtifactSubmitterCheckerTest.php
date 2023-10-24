@@ -66,8 +66,8 @@ class ArtifactSubmitterCheckerTest extends TestCase
     public function testItThrowExceptionWhenUserDoesntExist(): void
     {
         $this->values_extractor->method("extractCollectionOfValues")
-                               ->with($this->wrapper, $this->field)
-                               ->willReturn(['user_1', '', 'fake_user']);
+            ->with($this->wrapper, $this->field)
+            ->willReturn(['user_1', '', 'fake_user']);
 
         $this->user_manager->method('getUserByLoginName')->willReturnCallback(
             fn (string $username): ?\PFUser => match ($username) {

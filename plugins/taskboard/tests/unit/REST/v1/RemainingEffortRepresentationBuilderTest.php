@@ -64,8 +64,8 @@ final class RemainingEffortRepresentationBuilderTest extends \Tuleap\Test\PHPUni
     {
         $field = $this->createMock(\Tracker_FormElement_Field_Float::class);
         $field->method('userCanUpdate')
-              ->with($this->user)
-              ->willReturn(false);
+            ->with($this->user)
+            ->willReturn(false);
 
         $this->factory
             ->expects(self::once())
@@ -107,8 +107,8 @@ final class RemainingEffortRepresentationBuilderTest extends \Tuleap\Test\PHPUni
     {
         $field = $this->createMock(\Tracker_FormElement_Field_Float::class);
         $field->method('userCanUpdate')
-              ->with($this->user)
-              ->willReturn(true);
+            ->with($this->user)
+            ->willReturn(true);
 
         $this->factory
             ->expects(self::once())

@@ -330,7 +330,7 @@ class ProjectResource
             $artifacts_count       = count($matching_artifact_ids);
             $slice_matching_ids    = array_slice($matching_artifact_ids, $offset, $limit);
             $artifacts             = $this->testmanagement_artifact_factory
-                                          ->getArtifactsByIdListUserCanView($this->user, $slice_matching_ids);
+                ->getArtifactsByIdListUserCanView($this->user, $slice_matching_ids);
         }
 
         return [
@@ -346,14 +346,14 @@ class ProjectResource
     {
         $paginated_artifacts =
             $this->testmanagement_artifact_factory
-                 ->getPaginatedArtifactsByTrackerIdUserCanView(
-                     $this->user,
-                     $tracker_id,
-                     null,
-                     $limit,
-                     $offset,
-                     false
-                 );
+            ->getPaginatedArtifactsByTrackerIdUserCanView(
+                $this->user,
+                $tracker_id,
+                null,
+                $limit,
+                $offset,
+                false
+            );
 
         $artifacts       = $paginated_artifacts->getArtifacts();
         $artifacts_count = $paginated_artifacts->getTotalSize();
@@ -372,7 +372,7 @@ class ProjectResource
         foreach ($artifacts as $artifact) {
             $definition_representation =
                 $this->definition_representation_builder
-                     ->getMinimalRepresentation($this->user, $artifact);
+                ->getMinimalRepresentation($this->user, $artifact);
 
             if ($definition_representation) {
                 $definition_representations[] = $definition_representation;

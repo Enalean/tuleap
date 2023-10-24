@@ -131,9 +131,9 @@ final class FilesHeaderPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
         $commit->allows()->GetCommitterEpoch()->andReturn(12345);
 
         $this->commit_retriever->allows()
-                               ->getCommitOfCurrentTree()
-                               ->with($this->request, $this->gitphp_project)
-                               ->andReturn($commit);
+            ->getCommitOfCurrentTree()
+            ->with($this->request, $this->gitphp_project)
+            ->andReturn($commit);
 
         $presenter = $this->builder->build($this->request, $this->repository);
 
@@ -164,9 +164,9 @@ final class FilesHeaderPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
         $commit->allows()->GetCommitterEpoch()->andReturn(12345);
 
         $this->commit_retriever->allows()
-                               ->getCommitOfCurrentTree()
-                               ->with($this->request, $this->gitphp_project)
-                               ->andReturn($commit);
+            ->getCommitOfCurrentTree()
+            ->with($this->request, $this->gitphp_project)
+            ->andReturn($commit);
 
         $presenter = $this->builder->build($this->request, $this->repository);
 
@@ -315,9 +315,9 @@ final class FilesHeaderPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
         $commit->allows()->GetCommitterEpoch()->andReturn(12345);
 
         $this->commit_retriever->allows()
-                               ->getCommitOfCurrentTree()
-                               ->with($this->request, $this->gitphp_project)
-                               ->andReturn($commit);
+            ->getCommitOfCurrentTree()
+            ->with($this->request, $this->gitphp_project)
+            ->andReturn($commit);
 
         $presenter = $this->builder->build($this->request, $this->repository);
 
@@ -350,9 +350,9 @@ final class FilesHeaderPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
         $commit->allows()->GetCommitterEpoch()->andReturn(12345);
 
         $this->commit_retriever->allows()
-                               ->getCommitOfCurrentTree()
-                               ->with($this->request, $this->gitphp_project)
-                               ->andReturn($commit);
+            ->getCommitOfCurrentTree()
+            ->with($this->request, $this->gitphp_project)
+            ->andReturn($commit);
 
         $presenter = $this->builder->build($this->request, $this->repository);
 
@@ -379,9 +379,9 @@ final class FilesHeaderPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
         $commit->allows()->GetCommitterEpoch()->andReturn(12345);
 
         $this->commit_retriever->allows()
-                               ->getCommitOfCurrentTree()
-                               ->with($this->request, $this->gitphp_project)
-                               ->andReturn($commit);
+            ->getCommitOfCurrentTree()
+            ->with($this->request, $this->gitphp_project)
+            ->andReturn($commit);
 
         $presenter = $this->builder->build($this->request, $this->repository);
 
@@ -397,15 +397,15 @@ final class FilesHeaderPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->repository->allows()->isCreated()->andReturns(true);
         $this->gitphp_project_retriever->allows()
-                                       ->getFromRepository()
-                                       ->with($this->repository)
-                                       ->andReturns($this->gitphp_project);
+            ->getFromRepository()
+            ->with($this->repository)
+            ->andReturns($this->gitphp_project);
         $this->gitphp_project->allows()->GetRefs()->andReturns([Mockery::mock(Head::class)]);
 
         $this->commit_retriever->allows()
-                               ->getCommitOfCurrentTree()
-                               ->with($this->request, $this->gitphp_project)
-                               ->andReturn(null);
+            ->getCommitOfCurrentTree()
+            ->with($this->request, $this->gitphp_project)
+            ->andReturn(null);
 
         $presenter = $this->builder->build($this->request, $this->repository);
 
@@ -422,15 +422,15 @@ final class FilesHeaderPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->repository->allows()->isCreated()->andReturns(true);
         $this->gitphp_project_retriever->allows()
-                                       ->getFromRepository()
-                                       ->with($this->repository)
-                                       ->andReturns($this->gitphp_project);
+            ->getFromRepository()
+            ->with($this->repository)
+            ->andReturns($this->gitphp_project);
         $this->gitphp_project->allows()->GetRefs()->andReturns([]);
 
         $this->commit_retriever->allows()
-                               ->getCommitOfCurrentTree()
-                               ->with($this->request, $this->gitphp_project)
-                               ->andReturn(null);
+            ->getCommitOfCurrentTree()
+            ->with($this->request, $this->gitphp_project)
+            ->andReturn(null);
 
         $presenter = $this->builder->build($this->request, $this->repository);
 

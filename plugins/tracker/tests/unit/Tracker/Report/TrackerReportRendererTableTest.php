@@ -196,8 +196,8 @@ final class TrackerReportRendererTableTest extends \Tuleap\Test\PHPUnit\TestCase
     private function mapFieldWithNature($id, $nature, $format)
     {
         $field = \Mockery::mock(\Tracker_FormElement_Field_String::class)
-                         ->makePartial()
-                         ->shouldAllowMockingProtectedMethods();
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
         $field->shouldReceive('getId')->andReturn($id);
         $xml_mapping['F' . $field->getId()] = $field->getId();
 

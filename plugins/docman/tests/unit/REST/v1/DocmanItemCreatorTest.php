@@ -853,17 +853,17 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $project->shouldReceive('getID')->andReturns(102);
 
         $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')
-                                 ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
+            ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
 
         $obsolescence_date_time_stamp = 123456;
         $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')
-                                                  ->withArgs(
-                                                      [
-                                                          $post_representation->obsolescence_date,
-                                                          $current_time,
-                                                      ]
-                                                  )
-                                                  ->andReturn($obsolescence_date_time_stamp);
+            ->withArgs(
+                [
+                    $post_representation->obsolescence_date,
+                    $current_time,
+                ]
+            )
+            ->andReturn($obsolescence_date_time_stamp);
 
         $created_item = \Mockery::mock(Docman_Empty::class);
         $created_item->shouldReceive('getId')->andReturns(12);
@@ -914,17 +914,17 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $project->shouldReceive('getID')->andReturns(102);
 
         $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')
-                                 ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
+            ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
 
         $obsolescence_date_time_stamp = 123456;
         $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')
-                                                  ->withArgs(
-                                                      [
-                                                          $post_representation->obsolescence_date,
-                                                          $current_time,
-                                                      ]
-                                                  )
-                                                  ->andReturn($obsolescence_date_time_stamp);
+            ->withArgs(
+                [
+                    $post_representation->obsolescence_date,
+                    $current_time,
+                ]
+            )
+            ->andReturn($obsolescence_date_time_stamp);
 
         $created_item = \Mockery::mock(Docman_Empty::class);
         $created_item->shouldReceive('getId')->andReturns(12);
@@ -988,17 +988,17 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $project->shouldReceive('getID')->andReturns(102);
 
         $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')
-                                 ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_REJECTED);
+            ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_REJECTED);
 
         $obsolescence_date_time_stamp = 123456;
         $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')
-                                                  ->withArgs(
-                                                      [
-                                                          $post_representation->obsolescence_date,
-                                                          $current_time,
-                                                      ]
-                                                  )
-                                                  ->andReturn($obsolescence_date_time_stamp);
+            ->withArgs(
+                [
+                    $post_representation->obsolescence_date,
+                    $current_time,
+                ]
+            )
+            ->andReturn($obsolescence_date_time_stamp);
 
         $created_item = \Mockery::mock(Docman_Link::class);
         $created_item->shouldReceive('getId')->andReturns(12);
@@ -1069,13 +1069,13 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $obsolescence_date_time_stamp = 123456;
         $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')
-                                                  ->withArgs(
-                                                      [
-                                                          $post_representation->obsolescence_date,
-                                                          $current_time,
-                                                      ]
-                                                  )
-                                                  ->andReturn($obsolescence_date_time_stamp);
+            ->withArgs(
+                [
+                    $post_representation->obsolescence_date,
+                    $current_time,
+                ]
+            )
+            ->andReturn($obsolescence_date_time_stamp);
 
         $created_item = \Mockery::mock(Docman_Wiki::class);
         $created_item->shouldReceive('getId')->andReturns(12);
@@ -1144,13 +1144,13 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $obsolescence_date_time_stamp = 123456;
         $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')
-                                                  ->withArgs(
-                                                      [
-                                                          $post_representation->obsolescence_date,
-                                                          $current_time,
-                                                      ]
-                                                  )
-                                                  ->andReturn($obsolescence_date_time_stamp);
+            ->withArgs(
+                [
+                    $post_representation->obsolescence_date,
+                    $current_time,
+                ]
+            )
+            ->andReturn($obsolescence_date_time_stamp);
 
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
         $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->never();

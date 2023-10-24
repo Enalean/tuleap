@@ -126,19 +126,19 @@ XML;
 
         $list_rule_expected = new Tracker_Rule_List();
         $list_rule_expected->setSourceValue($array_xml_mapping['F28-V1'])
-                           ->setTargetValue($array_xml_mapping['F25-V3'])
-                           ->setId(0)
-                           ->setTrackerId($this->tracker->getId())
-                           ->setSourceField($array_xml_mapping['F28'])
-                           ->setTargetField($array_xml_mapping['F25']);
+            ->setTargetValue($array_xml_mapping['F25-V3'])
+            ->setId(0)
+            ->setTrackerId($this->tracker->getId())
+            ->setSourceField($array_xml_mapping['F28'])
+            ->setTargetField($array_xml_mapping['F25']);
 
         $list_rule_expected2 = new Tracker_Rule_List();
         $list_rule_expected2->setSourceValue($array_xml_mapping['F28-V1'])
-                            ->setTargetValue($array_xml_mapping['F25-V4'])
-                            ->setId(0)
-                            ->setTrackerId($this->tracker->getId())
-                            ->setSourceField($array_xml_mapping['F28'])
-                            ->setTargetField($array_xml_mapping['F25']);
+            ->setTargetValue($array_xml_mapping['F25-V4'])
+            ->setId(0)
+            ->setTrackerId($this->tracker->getId())
+            ->setSourceField($array_xml_mapping['F28'])
+            ->setTargetField($array_xml_mapping['F25']);
 
         $this->assertEquals(2, count($rules['list_rules']));
         $this->assertEquals($list_rule_expected, $rules['list_rules'][0]);
@@ -172,15 +172,15 @@ XML;
 
         $date_rule_expected = new Tracker_Rule_Date();
         $date_rule_expected->setComparator(Tracker_Rule_Date::COMPARATOR_NOT_EQUALS)
-                           ->setTrackerId($this->tracker->getId())
-                           ->setSourceField($array_xml_mapping['F28'])
-                           ->setTargetField($array_xml_mapping['F25']);
+            ->setTrackerId($this->tracker->getId())
+            ->setSourceField($array_xml_mapping['F28'])
+            ->setTargetField($array_xml_mapping['F25']);
 
         $date_rule_expected2 = new Tracker_Rule_Date();
         $date_rule_expected2->setComparator(Tracker_Rule_Date::COMPARATOR_LESS_THAN_OR_EQUALS)
-                            ->setTrackerId($this->tracker->getId())
-                            ->setSourceField($array_xml_mapping['F29'])
-                            ->setTargetField($array_xml_mapping['F30']);
+            ->setTrackerId($this->tracker->getId())
+            ->setSourceField($array_xml_mapping['F29'])
+            ->setTargetField($array_xml_mapping['F30']);
 
         $this->assertEquals(2, count($rules['date_rules']));
         $this->assertEquals($date_rule_expected, $rules['date_rules'][0]);
@@ -196,8 +196,8 @@ XML;
         $rule_list_factory = Mockery::mock(Tracker_Rule_List_Factory::class);
         $rule_date_factory = Mockery::mock(Tracker_Rule_Date_Factory::class);
         $rule_factory      = Mockery::mock(Tracker_RuleFactory::class)
-                                    ->makePartial()
-                                    ->shouldAllowMockingProtectedMethods();
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
 
         $rule_factory->shouldReceive('getListFactory')->andReturn($rule_list_factory);
         $rule_factory->shouldReceive('getDateFactory')->andReturn($rule_date_factory);

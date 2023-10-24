@@ -255,7 +255,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
         if ($renderer_parameters && is_array($renderer_parameters)) {
             if (isset($renderer_parameters['add_chart'])) {
                 $this->chart_to_edit = $this->getChartFactory()
-                                            ->createChart($this, $renderer_parameters['add_chart']);
+                    ->createChart($this, $renderer_parameters['add_chart']);
                 $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?' . http_build_query([
                     'report' => $this->report->id,
                     'renderer' => $this->id,
@@ -266,7 +266,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
 
             if (isset($renderer_parameters['edit_chart']) && ! $current_user->isAnonymous()) {
                 $this->chart_to_edit = $this->getChartFactory()
-                                            ->getChart($this, $renderer_parameters['edit_chart']);
+                    ->getChart($this, $renderer_parameters['edit_chart']);
                 if (isset($renderer_parameters['update_chart']) && is_array($request->get('chart'))) {
                     $chart_data = $request->get('chart');
                     if ($this->chart_to_edit->update($chart_data)) {
@@ -297,7 +297,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
                 }
                 if (
                     $chart = $this->getChartFactory()
-                                  ->getChart($this, $renderer_parameters['stroke'], $store_in_session)
+                        ->getChart($this, $renderer_parameters['stroke'], $store_in_session)
                 ) {
                     $chart->stroke(! $store_in_session);
                     exit;
@@ -429,7 +429,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
         if ($renderer_id = $rrf->saveRenderer($this->report, $this->name, $this->description, $this->getType())) {
             //Save charts
             $charts = $this->getChartFactory()
-                     ->getCharts($this);
+                ->getCharts($this);
 
             foreach ($charts as $chart_id => $chart) {
                 //Add new chart

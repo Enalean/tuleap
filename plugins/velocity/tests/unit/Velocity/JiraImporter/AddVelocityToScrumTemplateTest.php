@@ -34,12 +34,12 @@ final class AddVelocityToScrumTemplateTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItExportVelocityFieldAndSemantic(): void
     {
         $tracker = (new XMLTracker('T1', 'bug'))
-        ->withFormElement(
-            (new XMLFieldset('F100', 'details'))
-            ->withFormElements(
-                new XMLColumn('F200', ScrumTrackerBuilder::DETAILS_RIGHT_COLUMN_NAME)
-            )
-        );
+            ->withFormElement(
+                (new XMLFieldset('F100', 'details'))
+                ->withFormElements(
+                    new XMLColumn('F200', ScrumTrackerBuilder::DETAILS_RIGHT_COLUMN_NAME)
+                )
+            );
 
         $tracker = (new AddVelocityToScrumTemplate())
             ->addVelocityToStructure($tracker, new FieldAndValueIDGenerator());

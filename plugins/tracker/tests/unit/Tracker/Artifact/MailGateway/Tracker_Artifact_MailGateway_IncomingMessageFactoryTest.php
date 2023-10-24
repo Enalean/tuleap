@@ -41,8 +41,8 @@ class Tracker_Artifact_MailGateway_IncomingMessageFactoryTest extends \PHPUnit\F
 
         $recipient_factory = Mockery::mock(Tracker_Artifact_MailGateway_RecipientFactory::class);
         $recipient_factory->shouldReceive('getFromEmail')
-                          ->with('<1661-08c450c149f11d38955ad983a9b3b857-107-1234@crampons.cro.example.com>')
-                          ->andReturns($recipient);
+            ->with('<1661-08c450c149f11d38955ad983a9b3b857-107-1234@crampons.cro.example.com>')
+            ->andReturns($recipient);
         $incoming_message_token_builder = new Tracker_Artifact_IncomingMessageTokenBuilder($recipient_factory);
 
         $incoming_message_factory = new Tracker_Artifact_MailGateway_IncomingMessageFactory(
@@ -53,10 +53,10 @@ class Tracker_Artifact_MailGateway_IncomingMessageFactoryTest extends \PHPUnit\F
 
         $incoming_mail = Mockery::mock(\Tuleap\Tracker\Artifact\MailGateway\IncomingMail::class);
         $incoming_mail->shouldReceive('getHeaderValue')
-                      ->with('references')
-                      ->andReturns(
-                          '<CACbijxsMSUpnKPi3Kq5k9rA=7RZ=ntXT_ayYW0Z2UP9qC=7=jA@mail.gmail.com> <1661-08c450c149f11d38955ad983a9b3b857-107-1234@crampons.cro.example.com>'
-                      );
+            ->with('references')
+            ->andReturns(
+                '<CACbijxsMSUpnKPi3Kq5k9rA=7RZ=ntXT_ayYW0Z2UP9qC=7=jA@mail.gmail.com> <1661-08c450c149f11d38955ad983a9b3b857-107-1234@crampons.cro.example.com>'
+            );
         $incoming_mail->shouldReceive('getSubject')->andReturns('Subject');
         $incoming_mail->shouldReceive('getBodyText')->andReturns('Text');
 

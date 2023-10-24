@@ -33,11 +33,11 @@ class Tracker_Rule_List extends Tracker_Rule
     public function __construct($id = null, $tracker_id = null, $source_field = null, $source_value = null, $target_field = null, $target_value = null)
     {
         $this->setId($id)
-                ->setTrackerId($tracker_id)
-                ->setSourceFieldId($source_field)
-                ->setTargetFieldId($target_field)
-                ->setSourceValue($source_value)
-                ->setTargetValue($target_value);
+            ->setTrackerId($tracker_id)
+            ->setSourceFieldId($source_field)
+            ->setTargetFieldId($target_field)
+            ->setSourceValue($source_value)
+            ->setTargetValue($target_value);
     }
 
     /**

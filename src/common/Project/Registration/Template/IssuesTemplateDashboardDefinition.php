@@ -55,23 +55,23 @@ final class IssuesTemplateDashboardDefinition implements Dispatchable
         $global_dashboard = (new XMLDashboard('0 - Global Dashboard'))
             ->withLine(
                 XMLLine::withLayout('two-columns-big-small')
-                ->withColumn(
-                    $this->global_dashboard_left_column
-                        ->withWidget(new XMLWidget('projectheartbeat'))
-                )
-                ->withColumn((new XMLColumn())
-                    ->withWidget((new XMLWidget('projectnote'))
-                        ->withPreference((new XMLPreference('note'))
-                            ->withValue(
-                                XMLPreferenceValue::text(
-                                    'title',
-                                    'Note from the Tuleap team'
+                    ->withColumn(
+                        $this->global_dashboard_left_column
+                            ->withWidget(new XMLWidget('projectheartbeat'))
+                    )
+                    ->withColumn((new XMLColumn())
+                        ->withWidget((new XMLWidget('projectnote'))
+                            ->withPreference((new XMLPreference('note'))
+                                ->withValue(
+                                    XMLPreferenceValue::text(
+                                        'title',
+                                        'Note from the Tuleap team'
+                                    )
                                 )
-                            )
-                            ->withValue(
-                                XMLPreferenceValue::text(
-                                    'content',
-                                    <<<EOS
+                                ->withValue(
+                                    XMLPreferenceValue::text(
+                                        'content',
+                                        <<<EOS
                                         Welcome to your new project!
 
                                         It is based on Issue Tracking template.
@@ -80,23 +80,23 @@ final class IssuesTemplateDashboardDefinition implements Dispatchable
                                         and a Git to create all repositories your team needs.
 
                                         EOS
-                                )
-                            )))
-                    ->withWidget(new XMLWidget('projectmembers'))
-                    ->withWidget(new XMLWidget('projectcontacts')))
+                                    )
+                                )))
+                        ->withWidget(new XMLWidget('projectmembers'))
+                        ->withWidget(new XMLWidget('projectcontacts')))
             );
 
         $team_dashboard = (new XMLDashboard('0 - Team View'))
             ->withLine(
                 XMLLine::withDefaultLayout()
-                ->withColumn($this->team_dashboard_left_column)
-                ->withColumn($this->team_dashboard_right_column)
+                    ->withColumn($this->team_dashboard_left_column)
+                    ->withColumn($this->team_dashboard_right_column)
             );
 
         $manager_dashboard = (new XMLDashboard('2 - Manager View'))
             ->withLine(
                 XMLLine::withDefaultLayout()
-                ->withColumn($this->manager_dashboard_main_column)
+                    ->withColumn($this->manager_dashboard_main_column)
             );
 
         return [$global_dashboard, $team_dashboard, $manager_dashboard];

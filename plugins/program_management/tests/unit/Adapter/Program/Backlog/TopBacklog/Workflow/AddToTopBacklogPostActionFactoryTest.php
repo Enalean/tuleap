@@ -51,7 +51,7 @@ final class AddToTopBacklogPostActionFactoryTest extends \Tuleap\Test\PHPUnit\Te
                 'getId'      => (string) $workflow_id,
                 'getTracker' =>
                     TrackerTestBuilder::aTracker()
-                                      ->withProject(new \Project(['group_id' => 101]))->build(),
+                        ->withProject(new \Project(['group_id' => 101]))->build(),
             ]
         );
 

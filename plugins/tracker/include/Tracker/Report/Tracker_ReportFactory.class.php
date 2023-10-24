@@ -58,8 +58,8 @@ class Tracker_ReportFactory
     public function getReportById($id, $user_id, $store_in_session = true)
     {
         $row = $this->getDao()
-                    ->searchById($id, $user_id)
-                    ->getRow();
+            ->searchById($id, $user_id)
+            ->getRow();
         $r   = null;
         if ($row) {
             $r = $this->getInstanceFromRow($row, $store_in_session);

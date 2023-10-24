@@ -857,7 +857,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     public function getUsedStaticSbFields(Tracker $tracker)
     {
         return $this->getDao()->searchUsedStaticSbFieldByTrackerId($tracker->getId())
-                    ->instanciateWith([$this, 'getCachedInstanceFromRow']);
+            ->instanciateWith([$this, 'getCachedInstanceFromRow']);
     }
 
     public function getUsedListFieldById($tracker, $field_id)

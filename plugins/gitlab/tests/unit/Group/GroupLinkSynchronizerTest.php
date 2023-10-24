@@ -72,10 +72,10 @@ final class GroupLinkSynchronizerTest extends TestCase
     private function synchronizeGroupLink(): Ok|Err
     {
         $group_link = GroupLinkBuilder::aGroupLink(self::GROUP_LINK_ID)
-                                      ->withAllowArtifactClosure(true)
-                                      ->withNoBranchPrefix()
-                                      ->withProjectId(self::PROJECT_ID)
-                                      ->build();
+            ->withAllowArtifactClosure(true)
+            ->withNoBranchPrefix()
+            ->withProjectId(self::PROJECT_ID)
+            ->build();
 
         $group_link_synchronize = new GroupLinkSynchronizer(
             new DBTransactionExecutorPassthrough(),

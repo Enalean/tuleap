@@ -70,8 +70,8 @@ class Tracker_Report_RendererFactory
     public function getReportRendererById($id, ?Tracker_Report $report, bool $store_in_session = true)
     {
         $row = $this->getDao()
-                    ->searchById($id)
-                    ->getRow();
+            ->searchById($id)
+            ->getRow();
         if ($row) {
             if (! $report) {
                 //try to dynamically load it
@@ -207,13 +207,13 @@ class Tracker_Report_RendererFactory
                         break;
                     default:
                         $this->getEventManager()
-                                    ->processEvent(
-                                        'tracker_report_create_renderer',
-                                        ['renderer_id' => $renderer_id,
-                                            'type'        => $type,
-                                            'report'      => $report,
-                                        ]
-                                    );
+                            ->processEvent(
+                                'tracker_report_create_renderer',
+                                ['renderer_id' => $renderer_id,
+                                    'type'        => $type,
+                                    'report'      => $report,
+                                ]
+                            );
                         break;
                 }
             }
@@ -245,11 +245,11 @@ class Tracker_Report_RendererFactory
                         break;
                 }
                 $this->getReportRendererById($id, $to_report)
-                     ->duplicate(
-                         $this->getReportRendererById($row['id'], $from_report),
-                         $field_mapping,
-                         $mapping_registry,
-                     );
+                    ->duplicate(
+                        $this->getReportRendererById($row['id'], $from_report),
+                        $field_mapping,
+                        $mapping_registry,
+                    );
             }
         }
     }
@@ -294,13 +294,13 @@ class Tracker_Report_RendererFactory
                     break;
                 default:
                     $this->getEventManager()
-                                ->processEvent(
-                                    'tracker_report_create_renderer_in_session',
-                                    ['renderer_id' => $renderer_id,
-                                        'type'        => $type,
-                                        'report'      => $report,
-                                    ]
-                                );
+                        ->processEvent(
+                            'tracker_report_create_renderer_in_session',
+                            ['renderer_id' => $renderer_id,
+                                'type'        => $type,
+                                'report'      => $report,
+                            ]
+                        );
                     break;
             }
         }
@@ -339,10 +339,10 @@ class Tracker_Report_RendererFactory
     {
         $types = [Tracker_Report_Renderer::TABLE => dgettext('tuleap-tracker', 'Table')];
         $this->getEventManager()
-                    ->processEvent(
-                        'tracker_report_renderer_types',
-                        ['types' => &$types]
-                    );
+            ->processEvent(
+                'tracker_report_renderer_types',
+                ['types' => &$types]
+            );
         return $types;
     }
 
@@ -412,8 +412,8 @@ class Tracker_Report_RendererFactory
                         $row['chunksz']   = 15;
                         $row['multisort'] = 0;
                         $table_row        = $this->getTableDao()
-                                    ->searchByRendererId($row['id'])
-                                    ->getRow();
+                            ->searchByRendererId($row['id'])
+                            ->getRow();
                         if ($table_row) {
                             $row['chunksz']   = $table_row['chunksz'];
                             $row['multisort'] = $table_row['multisort'];

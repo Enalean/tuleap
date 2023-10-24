@@ -158,7 +158,7 @@ class DocmanFoldersResource extends AuthenticatedResource
         $this->checkItemCanHaveSubitems($parent);
         $project = $item_request->getProject();
         $this->getDocmanFolderPermissionChecker($project)
-             ->checkUserCanWriteFolder($current_user, $id);
+            ->checkUserCanWriteFolder($current_user, $id);
 
         $this->addAllEvent($project);
 
@@ -322,7 +322,7 @@ class DocmanFoldersResource extends AuthenticatedResource
         $this->checkItemCanHaveSubitems($parent);
         $project = $item_request->getProject();
         $this->getDocmanFolderPermissionChecker($project)
-             ->checkUserCanWriteFolder($current_user, $id);
+            ->checkUserCanWriteFolder($current_user, $id);
 
         $this->addAllEvent($project);
 
@@ -397,7 +397,7 @@ class DocmanFoldersResource extends AuthenticatedResource
         $this->checkItemCanHaveSubitems($parent);
         $project = $item_request->getProject();
         $this->getDocmanFolderPermissionChecker($project)
-             ->checkUserCanWriteFolder($current_user, $id);
+            ->checkUserCanWriteFolder($current_user, $id);
 
         $this->addAllEvent($project);
 
@@ -470,7 +470,7 @@ class DocmanFoldersResource extends AuthenticatedResource
         $this->checkItemCanHaveSubitems($parent);
         $project = $item_request->getProject();
         $this->getDocmanFolderPermissionChecker($project)
-             ->checkUserCanWriteFolder($current_user, $id);
+            ->checkUserCanWriteFolder($current_user, $id);
 
         $this->addAllEvent($project);
 
@@ -555,7 +555,7 @@ class DocmanFoldersResource extends AuthenticatedResource
         $this->checkItemCanHaveSubitems($parent);
         $project = $item_request->getProject();
         $this->getDocmanFolderPermissionChecker($project)
-             ->checkUserCanWriteFolder($current_user, $id);
+            ->checkUserCanWriteFolder($current_user, $id);
 
         $this->addAllEvent($project);
 
@@ -761,7 +761,7 @@ class DocmanFoldersResource extends AuthenticatedResource
         $item->accept($validator, []);
 
         $this->getDocmanFolderPermissionChecker($project)
-             ->checkUserCanWriteFolder($current_user, $id);
+            ->checkUserCanWriteFolder($current_user, $id);
 
         $this->addAllEvent($project);
 

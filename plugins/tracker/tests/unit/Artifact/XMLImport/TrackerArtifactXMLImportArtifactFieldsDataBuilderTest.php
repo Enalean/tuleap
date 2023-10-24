@@ -129,14 +129,14 @@ final class TrackerArtifactXMLImportArtifactFieldsDataBuilderTest extends \Tulea
         $external_field->shouldReceive('getId')->andReturn(3)->once();
 
         $this->formelement_factory->shouldReceive('getUsedFieldByName')
-                                  ->withArgs([111, 'summary'])
-                                  ->andReturn($field_1);
+            ->withArgs([111, 'summary'])
+            ->andReturn($field_1);
         $this->formelement_factory->shouldReceive('getUsedFieldByName')
-                                  ->withArgs([111, 'details'])
-                                  ->andReturn($field_2);
+            ->withArgs([111, 'details'])
+            ->andReturn($field_2);
         $this->formelement_factory->shouldReceive('getUsedFieldByName')
-                                  ->withArgs([111, 'steps'])
-                                  ->andReturn($external_field);
+            ->withArgs([111, 'steps'])
+            ->andReturn($external_field);
 
         self::assertCount(3, $this->artifact_fields_data_builder->getFieldsData($xml, $this->user, $this->artifact, $this->context));
     }

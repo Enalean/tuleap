@@ -1967,7 +1967,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
         if (
             $this->getGlobalAdminPermissionsChecker()
-            ->doesUserHaveTrackerGlobalAdminRightsOnProject($this->getProject(), $user)
+                ->doesUserHaveTrackerGlobalAdminRightsOnProject($this->getProject(), $user)
         ) {
             $cache_is_admin[$this->getId()][$user->getId()] = true;
             return true;
@@ -2011,7 +2011,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         }
 
         return $this->getTrackerArtifactSubmissionPermission()
-                    ->canUserSubmitArtifact($user, $this);
+            ->canUserSubmitArtifact($user, $this);
     }
 
     /**
