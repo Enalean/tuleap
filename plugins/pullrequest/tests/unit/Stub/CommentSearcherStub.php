@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Tests\Stub;
 
+use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Comment\CommentSearcher;
 
 final class CommentSearcherStub implements CommentSearcher
@@ -56,6 +57,21 @@ final class CommentSearcherStub implements CommentSearcher
     {
         $row           = self::defaultRow();
         $row['format'] = $format;
+        return new self($row);
+    }
+
+    public static function fromComment(Comment $comment): self
+    {
+        $row = [
+            'id'              => $comment->getId(),
+            'pull_request_id' => $comment->getPullRequestId(),
+            'user_id'         => $comment->getUserId(),
+            'post_date'       => $comment->getPostDate(),
+            'content'         => $comment->getContent(),
+            'parent_id'       => $comment->getParentId(),
+            'color'           => $comment->getColor(),
+            'format'           => $comment->getFormat(),
+        ];
         return new self($row);
     }
 

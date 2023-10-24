@@ -62,6 +62,7 @@ use Tuleap\Project\REST\UserRESTReferenceRetriever;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Comment\Comment;
+use Tuleap\PullRequest\Comment\CommentRetriever;
 use Tuleap\PullRequest\Comment\Dao as CommentDao;
 use Tuleap\PullRequest\Comment\Factory as CommentFactory;
 use Tuleap\PullRequest\Comment\ThreadCommentDao;
@@ -105,10 +106,10 @@ use Tuleap\PullRequest\PullRequestMerger;
 use Tuleap\PullRequest\PullRequestReopener;
 use Tuleap\PullRequest\PullRequestUpdater;
 use Tuleap\PullRequest\PullRequestWithGitReference;
-use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorAssigner;
-use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorRetriever;
 use Tuleap\PullRequest\REST\v1\Comment\ParentIdValidatorForComment;
 use Tuleap\PullRequest\REST\v1\Comment\ParentIdValidatorForInlineComment;
+use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorAssigner;
+use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorRetriever;
 use Tuleap\PullRequest\REST\v1\Info\PullRequestInfoUpdater;
 use Tuleap\PullRequest\REST\v1\Permissions\PullRequestIsMergeableChecker;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewerRepresentationInformationExtractor;
@@ -1122,11 +1123,11 @@ class PullRequestsResource extends AuthenticatedResource
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
             $git_repository->getProject()
         );
-
         $dao                 = new CommentDao();
+        $comment_retriever   = new CommentRetriever($dao);
         $color_retriever     = new ThreadCommentColorRetriever(new ThreadCommentDao(), $dao);
         $color_assigner      = new ThreadCommentColorAssigner($dao, $dao);
-        $parent_id_validator = new ParentIdValidatorForComment($this->comment_factory);
+        $parent_id_validator = new ParentIdValidatorForComment($comment_retriever);
         $current_time        = time();
         $format              = $comment_data->format;
         if (! $format) {
