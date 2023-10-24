@@ -36,6 +36,19 @@ final class ReportCriteriaDaoTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->db  = DBFactory::getMainTuleapDBConnection()->getDB();
     }
 
+    protected function tearDown(): void
+    {
+        $db = DBFactory::getMainTuleapDBConnection()->getDB();
+        $db->run('DELETE FROM tracker_report_criteria_permissionsonartifact_value');
+        $db->run('DELETE FROM tracker_report_criteria_file_value');
+        $db->run('DELETE FROM tracker_report_criteria_openlist_value');
+        $db->run('DELETE FROM tracker_report_criteria_list_value');
+        $db->run('DELETE FROM tracker_report_criteria_date_value');
+        $db->run('DELETE FROM tracker_report_criteria_alphanum_value');
+        $db->run('DELETE FROM tracker_report_criteria_comment_value');
+        $db->run('DELETE FROM tracker_report_criteria');
+    }
+
     public function testItDuplicateListFieldValues(): void
     {
         $from_report_id      = 10;
