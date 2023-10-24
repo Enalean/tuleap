@@ -71,4 +71,32 @@ final class Comment implements TimelineEvent, TimelineComment
     {
         return $this->format;
     }
+
+    public static function buildWithNewContent(Comment $comment, string $new_content): self
+    {
+        return new self(
+            $comment->id,
+            $comment->pull_request_id,
+            $comment->user_id,
+            $comment->post_date,
+            $new_content,
+            $comment->parent_id,
+            $comment->color,
+            $comment->format
+        );
+    }
+
+    public static function buildFromRow(array $row): self
+    {
+        return new Comment(
+            $row['id'],
+            $row['pull_request_id'],
+            $row['user_id'],
+            $row['post_date'],
+            $row['content'],
+            (int) $row['parent_id'],
+            $row['color'],
+            $row['format']
+        );
+    }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,22 +15,24 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\PullRequest\REST;
+declare(strict_types=1);
 
-use Tuleap\PullRequest\REST\v1\PullRequestRepresentation;
-use Tuleap\PullRequest\REST\v1\PullRequestCommentsResource;
+namespace Tuleap\PullRequest\REST\v1;
 
 /**
- * Inject resource into restler
+ * @psalm-immutable
  */
-class ResourcesInjector
+final class CommentPATCHRepresentation
 {
-    public function populate(\Luracast\Restler\Restler $restler)
+    /**
+     * @var string The new content of the comment {@required true}
+     */
+    public string $content;
+    public function __construct(string $content)
     {
-        $restler->addAPIClass('\\Tuleap\\PullRequest\\REST\\v1\\PullRequestsResource', PullRequestRepresentation::ROUTE);
-        $restler->addAPIClass(PullRequestCommentsResource::class, PullRequestCommentsResource::ROUTE);
+        $this->content = $content;
     }
 }

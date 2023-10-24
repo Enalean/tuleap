@@ -30,29 +30,13 @@ use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 use Tuleap\PullRequest\PullRequest;
 
-class PullRequestPermissionChecker
+class PullRequestPermissionChecker implements CheckUserCanAccessPullRequest
 {
-    /**
-     * @var GitRepositoryFactory
-     */
-    private $git_repository_factory;
-    /**
-     * @var ProjectAccessChecker
-     */
-    private $project_access_checker;
-    /**
-     * @var AccessControlVerifier
-     */
-    private $access_control_verifier;
-
     public function __construct(
-        GitRepositoryFactory $git_repository_factory,
-        ProjectAccessChecker $project_access_checker,
-        AccessControlVerifier $access_control_verifier,
+        private readonly GitRepositoryFactory $git_repository_factory,
+        private readonly ProjectAccessChecker $project_access_checker,
+        private readonly AccessControlVerifier $access_control_verifier,
     ) {
-        $this->git_repository_factory  = $git_repository_factory;
-        $this->project_access_checker  = $project_access_checker;
-        $this->access_control_verifier = $access_control_verifier;
     }
 
     /**

@@ -69,12 +69,24 @@ msgstr ""
 msgid "Abandonned"
 msgstr ""
 
+#, php-format
+msgid "Comment #%d not found"
+msgstr ""
+
+#, php-format
+msgid "Comment not found: %s"
+msgstr ""
+
 msgid ""
 "Default (Will fast-forward when possible, fallback to merge when not "
 "possible)"
 msgstr ""
 
 msgid "Default pull requests settings updated"
+msgstr ""
+
+#, php-format
+msgid "Editing comments in '%s' format is not allowed."
 msgstr ""
 
 msgid "Fast-forward only"
@@ -98,5 +110,12 @@ msgstr ""
 msgid "Review"
 msgstr ""
 
+#, php-format
+msgid "The pull request #%d does not exist"
+msgstr ""
+
 msgid "The pull request is not accessible anymore"
+msgstr ""
+
+msgid "You are not allowed to edit a comment from another user"
 msgstr ""
