@@ -28,6 +28,7 @@ use Tuleap\PullRequest\Authorization\CannotAccessToPullRequestFault;
 use Tuleap\PullRequest\Comment\CommentFormatNotAllowedFault;
 use Tuleap\PullRequest\Comment\CommentIsNotFromCurrentUserFault;
 use Tuleap\PullRequest\Comment\CommentNotFoundFault;
+use Tuleap\PullRequest\PullRequestNotFoundFault;
 
 final class FaultMapper
 {
@@ -38,7 +39,7 @@ final class FaultMapper
     {
         $status_code = match ($fault::class) {
             CommentIsNotFromCurrentUserFault::class, CommentFormatNotAllowedFault::class => 403,
-            CommentNotFoundFault::class, CannotAccessToPullRequestFault::class => 404,
+            CommentNotFoundFault::class, CannotAccessToPullRequestFault::class, PullRequestNotFoundFault::class => 404,
             default => 500,
         };
         throw new RestException($status_code, (string) $fault);

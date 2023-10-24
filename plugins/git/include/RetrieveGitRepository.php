@@ -20,29 +20,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Stub;
+namespace Tuleap\Git;
 
 use GitRepository;
-use Tuleap\Git\RetrieveGitRepository;
 
-final class RetrieveGitRepositoryStub implements RetrieveGitRepository
+interface RetrieveGitRepository
 {
-    private function __construct(private readonly ?GitRepository $git_repository)
-    {
-    }
-
-    public function getRepositoryById(int $id): ?GitRepository
-    {
-        return $this->git_repository;
-    }
-
-    public static function withGitRepository(GitRepository $git_repository): self
-    {
-        return new self($git_repository);
-    }
-
-    public static function withoutGitRepository(): self
-    {
-        return new self(null);
-    }
+    public function getRepositoryById(int $id): ?GitRepository;
 }

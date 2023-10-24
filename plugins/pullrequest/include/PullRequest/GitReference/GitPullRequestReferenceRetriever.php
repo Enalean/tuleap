@@ -24,14 +24,8 @@ use Tuleap\PullRequest\PullRequest;
 
 class GitPullRequestReferenceRetriever
 {
-    /**
-     * @var GitPullRequestReferenceDAO
-     */
-    private $dao;
-
-    public function __construct(GitPullRequestReferenceDAO $dao)
+    public function __construct(private readonly GetReferenceByPullRequestId $dao)
     {
-        $this->dao = $dao;
     }
 
     /**

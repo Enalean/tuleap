@@ -22,7 +22,7 @@ namespace Tuleap\PullRequest\GitReference;
 
 use Tuleap\DB\DataAccessObject;
 
-class GitPullRequestReferenceDAO extends DataAccessObject
+class GitPullRequestReferenceDAO extends DataAccessObject implements GetReferenceByPullRequestId
 {
     public function createGitReferenceForPullRequest($pull_request_id, $status)
     {
@@ -102,10 +102,7 @@ class GitPullRequestReferenceDAO extends DataAccessObject
         return $this->getDB()->single($sql, [$repository_id]);
     }
 
-    /**
-     * @return array
-     */
-    public function getReferenceByPullRequestId($pull_request_id)
+    public function getReferenceByPullRequestId(int $pull_request_id): array
     {
         return $this->getDB()->row('SELECT * FROM plugin_pullrequest_git_reference WHERE pr_id = ?', $pull_request_id);
     }
