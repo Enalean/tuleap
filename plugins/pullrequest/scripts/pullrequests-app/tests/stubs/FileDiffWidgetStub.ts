@@ -58,6 +58,8 @@ export const FileDiffWidgetStub = {
             displayReplies: jest.fn(),
             hideReplyForm: jest.fn(),
             showReplyForm: jest.fn(),
+            hideEditionForm: jest.fn(),
+            showEditionForm: jest.fn(),
             getRelativeDateHelper: jest.fn(),
             buildReplyCreationController: jest.fn(),
             getProjectId: () => 105,

@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import "./edition/EditionForm";
 import "./comment-reply/PullRequestCommentReply";
 export {
     PullRequestCommentComponent,

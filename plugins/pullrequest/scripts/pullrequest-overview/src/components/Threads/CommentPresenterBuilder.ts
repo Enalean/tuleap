@@ -91,12 +91,14 @@ function getContentData(
     $gettext: (msgid: string) => string,
 ): {
     content: string;
+    raw_content: string;
     post_processed_content: string;
     format: CommentTextFormat | "";
 } {
     if (payload.type === TYPE_EVENT_PULLREQUEST_ACTION) {
         return {
             content: getContentMessage(payload, $gettext),
+            raw_content: "",
             post_processed_content: "",
             format: "",
         };
@@ -104,6 +106,7 @@ function getContentData(
 
     return {
         content: getContentMessage(payload, $gettext),
+        raw_content: payload.raw_content,
         post_processed_content: payload.post_processed_content,
         format: payload.format,
     };

@@ -29,16 +29,20 @@ import {
 } from "./PullRequestCommentReplyTemplate";
 
 describe("PullRequestCommentReplyTemplate", () => {
-    let comment: PullRequestCommentPresenter, parent_element_color: string;
+    let comment: PullRequestCommentPresenter,
+        parent_element_color: string,
+        is_in_edition_mode: boolean;
 
     beforeEach(() => {
         comment = PullRequestCommentPresenterStub.buildGlobalComment();
         parent_element_color = "red-wine";
+        is_in_edition_mode = false;
     });
 
     const getHost = (): HostElement =>
         ({
             comment,
+            is_in_edition_mode,
             relative_date_helper: RelativeDateHelperStub,
             parent_element: {
                 comment: PullRequestCommentPresenterStub.buildGlobalCommentWithData({
@@ -48,8 +52,9 @@ describe("PullRequestCommentReplyTemplate", () => {
         }) as HostElement;
 
     describe("getCommentContentClasses()", () => {
-        it("should assign color classes when the parent comment has a color", () => {
+        it("should assign color classes when the parent comment has a color and the comment is not being edited", () => {
             parent_element_color = "red-wine";
+            is_in_edition_mode = false;
 
             expect(getCommentContentClasses(getHost())).toStrictEqual({
                 "pull-request-comment-content": true,
@@ -60,6 +65,16 @@ describe("PullRequestCommentReplyTemplate", () => {
 
         it("should NOT assign color classes when the parent comment has NOT a color", () => {
             parent_element_color = "";
+            is_in_edition_mode = false;
+
+            expect(getCommentContentClasses(getHost())).toStrictEqual({
+                "pull-request-comment-content": true,
+            });
+        });
+
+        it("should NOT assign color classes when the comment is being edited", () => {
+            parent_element_color = "red-wine";
+            is_in_edition_mode = true;
 
             expect(getCommentContentClasses(getHost())).toStrictEqual({
                 "pull-request-comment-content": true,

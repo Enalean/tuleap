@@ -43,6 +43,7 @@ describe("PullRequestCommentPresenterBuilder", () => {
             id: 12,
             post_date: "2020/07/13 16:16",
             content: "my comment",
+            raw_content: "my comment",
             post_processed_content: "<p>my comment</p>",
             format: FORMAT_COMMONMARK,
             user,

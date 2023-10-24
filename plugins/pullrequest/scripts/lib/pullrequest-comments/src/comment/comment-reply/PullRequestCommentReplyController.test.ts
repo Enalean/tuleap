@@ -56,6 +56,32 @@ describe("PullRequestCommentReplyController", () => {
         expect(dispatchEvent.mock.calls[0][0].type).toBe("hide-reply-form");
     });
 
+    it("showEditionForm() should show the edition form", () => {
+        const host = {
+            is_edition_form_shown: false,
+        } as unknown as HostElement;
+
+        PullRequestCommentReplyController(
+            CurrentPullRequestUserPresenterStub.withDefault(),
+            CurrentPullRequestPresenterStub.withDefault(),
+        ).showEditionForm(host);
+
+        expect(host.is_in_edition_mode).toBe(true);
+    });
+
+    it("hideEditionForm() should hide the edition form", () => {
+        const host = {
+            is_edition_form_shown: true,
+        } as unknown as HostElement;
+
+        PullRequestCommentReplyController(
+            CurrentPullRequestUserPresenterStub.withDefault(),
+            CurrentPullRequestPresenterStub.withDefault(),
+        ).hideEditionForm(host);
+
+        expect(host.is_in_edition_mode).toBe(false);
+    });
+
     it("getCurrentUserId() should return the current user id", () => {
         const user_id = 140;
         expect(

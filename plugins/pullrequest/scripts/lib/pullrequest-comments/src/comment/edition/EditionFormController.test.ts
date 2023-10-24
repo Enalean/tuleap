@@ -17,21 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ControlPullRequestCommentReply } from "../../src/comment/comment-reply/PullRequestCommentReplyController";
-import { RelativeDateHelperStub } from "./RelativeDateHelperStub";
+import { describe, it, expect } from "vitest";
+import { EditionFormController } from "./EditionFormController";
 
-const noop = (): void => {
-    // Do nothing
-};
-
-export const ControlPullRequestCommentReplyStub = (
-    current_user_id = 102,
-): ControlPullRequestCommentReply => ({
-    hideReplyForm: noop,
-    showReplyForm: noop,
-    hideEditionForm: noop,
-    showEditionForm: noop,
-    getRelativeDateHelper: () => RelativeDateHelperStub,
-    getProjectId: () => 105,
-    getCurrentUserId: () => current_user_id,
+describe("EditionFormController", () => {
+    it("shouldFocusWritingZoneOnceRendered() should return true", () => {
+        expect(EditionFormController().shouldFocusWritingZoneOnceRendered()).toBe(true);
+    });
 });

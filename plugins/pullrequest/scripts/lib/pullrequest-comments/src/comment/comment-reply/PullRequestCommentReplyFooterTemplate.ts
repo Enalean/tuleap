@@ -30,17 +30,22 @@ const shouldDisplayEditButton = (host: InternalPullRequestCommentReply): boolean
 
 const getEditButton = (
     gettext_provider: GettextProvider,
-): UpdateFunction<InternalPullRequestCommentReply> => html`
-    <button
-        type="button"
-        class="pull-request-comment-footer-action-button tlp-button-small tlp-button-primary tlp-button-outline"
-        title="Comment edition is under implementation"
-        disabled
-        data-test="button-edit-comment"
-    >
-        ${gettext_provider.gettext("Edit")}
-    </button>
-`;
+): UpdateFunction<InternalPullRequestCommentReply> => {
+    const onClickToggleEditionForm = (host: InternalPullRequestCommentReply): void => {
+        host.controller.showEditionForm(host);
+    };
+
+    return html`
+        <button
+            type="button"
+            class="pull-request-comment-footer-action-button tlp-button-small tlp-button-primary tlp-button-outline"
+            onclick="${onClickToggleEditionForm}"
+            data-test="button-edit-comment"
+        >
+            ${gettext_provider.gettext("Edit")}
+        </button>
+    `;
+};
 
 const getReplyButton = (
     gettext_provider: GettextProvider,

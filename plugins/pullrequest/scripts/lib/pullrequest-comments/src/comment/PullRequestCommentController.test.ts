@@ -76,11 +76,10 @@ describe("PullRequestCommentController", () => {
         } as NewCommentFormElement);
     };
 
-    it("should show the reply to comment form and sets the focus on the textarea", () => {
-        const content = document.implementation.createHTMLDocument().createElement("div");
+    it("showReplyForm() should show the reply form", () => {
         const host = {
             comment: PullRequestCommentPresenterStub.buildGlobalComment(),
-            content: () => content,
+            is_reply_form_shown: false,
         } as unknown as HostElement;
 
         getController(SaveCommentStub.withDefault()).showReplyForm(host);
@@ -88,14 +87,37 @@ describe("PullRequestCommentController", () => {
         expect(host.is_reply_form_shown).toBe(true);
     });
 
-    it("should hide the reply to comment form", () => {
+    it("hideReplyForm() should hide the reply form", () => {
         const host = {
             comment: PullRequestCommentPresenterStub.buildGlobalComment(),
+            is_reply_form_shown: true,
         } as unknown as PullRequestCommentComponentType;
 
         getController(SaveCommentStub.withDefault()).hideReplyForm(host);
 
         expect(host.is_reply_form_shown).toBe(false);
+    });
+
+    it("showEditionForm() should show the edition form", () => {
+        const host = {
+            comment: PullRequestCommentPresenterStub.buildGlobalComment(),
+            is_edition_form_shown: false,
+        } as unknown as HostElement;
+
+        getController(SaveCommentStub.withDefault()).showEditionForm(host);
+
+        expect(host.is_edition_form_shown).toBe(true);
+    });
+
+    it("hideEditionForm() should hide the edition form", () => {
+        const host = {
+            comment: PullRequestCommentPresenterStub.buildGlobalComment(),
+            is_edition_form_shown: true,
+        } as unknown as PullRequestCommentComponentType;
+
+        getController(SaveCommentStub.withDefault()).hideEditionForm(host);
+
+        expect(host.is_edition_form_shown).toBe(false);
     });
 
     it("When a reply has been created, then it should hide the form and add the new comment reply to the collection of replies", async () => {

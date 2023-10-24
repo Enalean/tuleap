@@ -47,6 +47,7 @@ const comment_presenter_base: PullRequestInlineCommentPresenter = {
     },
     post_date: "a moment ago",
     content: "Please rebase",
+    raw_content: "Please rebase",
     post_processed_content: "Please rebase",
     format: FORMAT_TEXT,
     parent_id: 0,

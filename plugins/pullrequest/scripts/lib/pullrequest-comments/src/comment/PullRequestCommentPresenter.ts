@@ -40,6 +40,7 @@ export interface CommonComment {
     readonly id: number;
     readonly user: User;
     readonly content: string;
+    readonly raw_content: string;
     readonly post_processed_content: string;
     readonly format: CommentTextFormat | "";
     readonly type: SupportedTimelineItemTypes;
@@ -77,6 +78,7 @@ export const PullRequestCommentPresenter = {
             user: reply.user,
             post_date: reply.post_date,
             content: replaceLineReturns(reply.content),
+            raw_content: reply.raw_content,
             post_processed_content: reply.post_processed_content,
             format: reply.format,
             parent_id: reply.parent_id,

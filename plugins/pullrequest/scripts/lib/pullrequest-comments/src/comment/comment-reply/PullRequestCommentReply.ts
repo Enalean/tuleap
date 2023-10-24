@@ -41,6 +41,8 @@ export type InternalPullRequestCommentReply = Readonly<PullRequestCommentReply> 
     relative_date_helper: HelpRelativeDatesDisplay;
     parent_element: PullRequestCommentComponentType;
     after_render_once: unknown;
+    element_height: unknown;
+    is_in_edition_mode: boolean;
 };
 
 export type HostElement = InternalPullRequestCommentReply & HTMLElement;
@@ -52,14 +54,26 @@ export const after_render_once_descriptor = {
     },
 };
 
+export const element_height_descriptor = {
+    get: (host: InternalPullRequestCommentReply): number =>
+        host.content().getBoundingClientRect().height,
+    observe(host: InternalPullRequestCommentReply): void {
+        setTimeout(() => {
+            host.parent_element.post_rendering_callback?.();
+        });
+    },
+};
+
 export const PullRequestCommentReply = define<InternalPullRequestCommentReply>({
     tag: TAG,
     is_comment_edition_enabled: false,
     is_last_reply: false,
+    is_in_edition_mode: false,
     comment: undefined,
     relative_date_helper: undefined,
     parent_element: parent(PullRequestCommentComponent),
     after_render_once: after_render_once_descriptor,
+    element_height: element_height_descriptor,
     controller: {
         set: (
             host: InternalPullRequestCommentReply,

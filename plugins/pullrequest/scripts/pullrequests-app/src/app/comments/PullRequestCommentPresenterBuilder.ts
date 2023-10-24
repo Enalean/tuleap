@@ -27,6 +27,7 @@ export const PullRequestCommentPresenterBuilder = {
         user: comment.user,
         post_date: comment.post_date,
         content: replaceLineReturns(comment.content),
+        raw_content: comment.raw_content,
         post_processed_content: comment.post_processed_content,
         format: comment.format,
         type: TYPE_INLINE_COMMENT,
