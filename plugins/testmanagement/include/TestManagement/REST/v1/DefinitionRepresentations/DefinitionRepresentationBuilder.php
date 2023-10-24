@@ -82,6 +82,51 @@ class DefinitionRepresentationBuilder
      */
     public function getDefinitionRepresentation(PFUser $user, Artifact $definition_artifact, ?Tracker_Artifact_Changeset $changeset): DefinitionRepresentation
     {
+        $definition_artifact_representation = $this->artifact_representation_builder->getArtifactRepresentation(
+            $user,
+            $definition_artifact,
+            StatusValueRepresentation::buildFromArtifact($definition_artifact, $user),
+        );
+
+        return $this->buildDefinitionRepresentation(
+            $user,
+            $definition_artifact,
+            $changeset,
+            $definition_artifact_representation,
+        );
+    }
+
+    /**
+     * @throws StepDefinitionFormatNotFoundException
+     * @throws DefinitionDescriptionFormatNotFoundException
+     */
+    public function getDefinitionRepresentationWithFullArtifactDefinition(PFUser $user, Artifact $definition_artifact, ?Tracker_Artifact_Changeset $changeset): DefinitionRepresentation
+    {
+        $definition_artifact_representation = $this->artifact_representation_builder->getArtifactRepresentationWithFieldValues(
+            $user,
+            $definition_artifact,
+            MinimalTrackerRepresentation::build($definition_artifact->getTracker()),
+            StatusValueRepresentation::buildFromArtifact($definition_artifact, $user),
+        );
+
+        return $this->buildDefinitionRepresentation(
+            $user,
+            $definition_artifact,
+            $changeset,
+            $definition_artifact_representation,
+        );
+    }
+
+    /**
+     * @throws StepDefinitionFormatNotFoundException
+     * @throws DefinitionDescriptionFormatNotFoundException
+     */
+    private function buildDefinitionRepresentation(
+        PFUser $user,
+        Artifact $definition_artifact,
+        ?Tracker_Artifact_Changeset $changeset,
+        ArtifactRepresentation $definition_artifact_representation,
+    ): DefinitionRepresentation {
         $all_requirements = array_map(
             static fn(Artifact $requirement): ArtifactRepresentation => ArtifactRepresentation::build(
                 $user,
@@ -103,13 +148,6 @@ class DefinitionRepresentationBuilder
             $definition_artifact,
             $changeset,
             DefinitionRepresentation::FIELD_DESCRIPTION
-        );
-
-        $definition_artifact_representation = $this->artifact_representation_builder->getArtifactRepresentationWithFieldValues(
-            $user,
-            $definition_artifact,
-            MinimalTrackerRepresentation::build($definition_artifact->getTracker()),
-            StatusValueRepresentation::buildFromArtifact($definition_artifact, $user),
         );
 
         if (! $description_text_field) {
@@ -165,20 +203,11 @@ class DefinitionRepresentationBuilder
         }
 
         $changeset = null;
-
-        $definition_artifact_representation = $this->artifact_representation_builder->getArtifactRepresentationWithFieldValues(
-            $user,
-            $artifact,
-            MinimalTrackerRepresentation::build($artifact->getTracker()),
-            StatusValueRepresentation::buildFromArtifact($artifact, $user),
-        );
-
         return new MinimalDefinitionRepresentation(
             $artifact,
-            $definition_artifact_representation,
             $this->tracker_form_element_factory,
             $user,
-            $changeset
+            $changeset,
         );
     }
 

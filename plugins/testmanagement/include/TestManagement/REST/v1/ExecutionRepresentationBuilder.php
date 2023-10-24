@@ -116,18 +116,16 @@ class ExecutionRepresentationBuilder
         $this->definition_representation_builder    = $definition_representation_builder;
     }
 
-    /**
-     * @return \Tuleap\TestManagement\REST\v1\SlicedExecutionRepresentations
-     */
     public function getPaginatedExecutionsRepresentationsForCampaign(
         PFUser $user,
         Artifact $artifact,
         \Tracker $execution_tracker,
         int $limit,
         int $offset,
-    ) {
+        DefinitionRepresentationFormat $definition_representation_format,
+    ): SlicedExecutionRepresentations {
         $executions      = $this->getSlicedExecutionsForCampaign($artifact, $user, $execution_tracker, $limit, $offset);
-        $representations = $this->getListOfRepresentations($user, $executions, $execution_tracker);
+        $representations = $this->getListOfRepresentations($user, $executions, $execution_tracker, $definition_representation_format);
 
         return new SlicedExecutionRepresentations($representations, $executions->getTotalSize());
     }
@@ -142,7 +140,13 @@ class ExecutionRepresentationBuilder
         $definitions_changeset_ids = $this->getDefinitionsChangesetIdsForExecutions([$execution->getId()]);
         $file_fields               = $this->tracker_form_element_factory->getUsedFileFields($execution->getTracker());
 
-        return $this->getExecutionRepresentationWithSpecificChangesetForDefinition($user, $execution, $definitions_changeset_ids, $file_fields);
+        return $this->getExecutionRepresentationWithSpecificChangesetForDefinition(
+            $user,
+            $execution,
+            $definitions_changeset_ids,
+            $file_fields,
+            DefinitionRepresentationFormat::DEFAULT,
+        );
     }
 
     /**
@@ -157,6 +161,7 @@ class ExecutionRepresentationBuilder
         Artifact $execution,
         array $definitions_changeset_ids,
         array $file_fields,
+        DefinitionRepresentationFormat $definition_representation_format,
     ) {
         $previous_result_representation = $this->getPreviousResultRepresentationForExecution($user, $execution);
 
@@ -167,7 +172,8 @@ class ExecutionRepresentationBuilder
             $user,
             $execution,
             $definition,
-            $definitions_changeset_ids
+            $definitions_changeset_ids,
+            $definition_representation_format,
         );
 
         $execution_representation = new ExecutionRepresentation(
@@ -219,12 +225,12 @@ class ExecutionRepresentationBuilder
         return $files;
     }
 
-    /**
-     *
-     * @return array
-     */
-    private function getListOfRepresentations(PFUser $user, PaginatedExecutions $executions, \Tracker $execution_tracker)
-    {
+    private function getListOfRepresentations(
+        PFUser $user,
+        PaginatedExecutions $executions,
+        \Tracker $execution_tracker,
+        DefinitionRepresentationFormat $definition_representation_format,
+    ): array {
         $executions_representations = [];
         $definitions_changeset_ids  = $executions->getDefinitionsChangesetIds();
         $file_fields                = $this->tracker_form_element_factory->getUsedFileFields($execution_tracker);
@@ -235,7 +241,8 @@ class ExecutionRepresentationBuilder
                     $user,
                     $execution,
                     $definitions_changeset_ids,
-                    $file_fields
+                    $file_fields,
+                    $definition_representation_format,
                 );
             } catch (DefinitionNotFoundException $e) {
                 // Ignore, the user may not be allowed to read the Definition
@@ -301,16 +308,29 @@ class ExecutionRepresentationBuilder
         Artifact $execution,
         Artifact $definition,
         array $definitions_changeset_ids,
+        DefinitionRepresentationFormat $definition_representation_format,
     ): DefinitionRepresentation {
-        return $this->definition_representation_builder->getDefinitionRepresentation(
-            $user,
-            $definition,
-            $this->getSpecificDefinitionChangesetForExecution(
-                $execution,
+        if ($definition_representation_format === DefinitionRepresentationFormat::FULL) {
+            return $this->definition_representation_builder->getDefinitionRepresentationWithFullArtifactDefinition(
+                $user,
                 $definition,
-                $definitions_changeset_ids
-            )
-        );
+                $this->getSpecificDefinitionChangesetForExecution(
+                    $execution,
+                    $definition,
+                    $definitions_changeset_ids,
+                ),
+            );
+        } else {
+            return $this->definition_representation_builder->getDefinitionRepresentation(
+                $user,
+                $definition,
+                $this->getSpecificDefinitionChangesetForExecution(
+                    $execution,
+                    $definition,
+                    $definitions_changeset_ids,
+                ),
+            );
+        }
     }
 
     /**

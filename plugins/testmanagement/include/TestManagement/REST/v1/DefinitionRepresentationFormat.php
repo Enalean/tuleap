@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,16 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { recursiveGet } from "@tuleap/tlp-fetch";
-import type { TestExecutionResponse } from "@tuleap/plugin-docgen-docx";
-import type { Campaign } from "../../../type";
+namespace Tuleap\TestManagement\REST\v1;
 
-export function getExecutions(campaign: Campaign): Promise<TestExecutionResponse[]> {
-    const id = campaign.id;
-    return recursiveGet(
-        `/api/v1/testmanagement_campaigns/${encodeURIComponent(id)}/testmanagement_executions`,
-        {
-            params: { limit: 50, definition_format: "full" },
-        },
-    );
+enum DefinitionRepresentationFormat: string
+{
+    case MINIMAL = 'minimal';
+    case FULL    = 'full';
+
+    public const DEFAULT = self::MINIMAL;
+
+    public static function buildFromName(string $format): self
+    {
+        return self::tryFrom($format) ?? self::DEFAULT;
+    }
 }

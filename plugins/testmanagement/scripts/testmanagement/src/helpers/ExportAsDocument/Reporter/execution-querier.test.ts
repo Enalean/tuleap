@@ -53,7 +53,7 @@ describe("getExecutions", () => {
         expect(tlpRecursiveGet).toHaveBeenCalledWith(
             "/api/v1/testmanagement_campaigns/101/testmanagement_executions",
             {
-                params: { limit: 50 },
+                params: { limit: 50, definition_format: "full" },
             },
         );
     });

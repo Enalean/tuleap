@@ -23,25 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\TestPlan\REST\v1;
 
 use PFUser;
-use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
-use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\MinimalDefinitionRepresentation;
 use Tuleap\TestPlan\TestDefinition\TestPlanTestDefinitionWithTestStatus;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\CachingTrackerPrivateCommentInformationRetriever;
-use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
-use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentInformationRetriever;
-use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\REST\Artifact\ArtifactReferenceRepresentation;
-use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
-use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
-use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
-use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
-use Tuleap\Tracker\REST\Artifact\StatusValueRepresentation;
-use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
-use UserManager;
 
 /**
  * @psalm-immutable
@@ -73,7 +59,6 @@ final class DefinitionLinkedToABacklogItemRepresentation extends MinimalDefiniti
      */
     private function __construct(
         Artifact $artifact,
-        ArtifactRepresentation $artifact_representation,
         Tracker_FormElementFactory $form_element_factory,
         PFUser $user,
         string $short_type,
@@ -81,7 +66,7 @@ final class DefinitionLinkedToABacklogItemRepresentation extends MinimalDefiniti
         ?TestExecutionUsedToDefineStatusRepresentation $test_exec,
         ?ArtifactReferenceRepresentation $test_campaign,
     ) {
-        parent::__construct($artifact, $artifact_representation, $form_element_factory, $user, null);
+        parent::__construct($artifact, $form_element_factory, $user, null);
         $this->short_type                           = $short_type;
         $this->test_status                          = $test_status;
         $this->test_execution_used_to_define_status = $test_exec;
@@ -95,30 +80,8 @@ final class DefinitionLinkedToABacklogItemRepresentation extends MinimalDefiniti
     ): self {
         $test_definition = $test_definition_with_test_status->getTestDefinition();
 
-        $artifact_representation_builder = new ArtifactRepresentationBuilder(
-            Tracker_FormElementFactory::instance(),
-            Tracker_ArtifactFactory::instance(),
-            new TypeDao(),
-            new ChangesetRepresentationBuilder(
-                UserManager::instance(),
-                Tracker_FormElementFactory::instance(),
-                new CommentRepresentationBuilder(
-                    CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
-                ),
-                new PermissionChecker(new CachingTrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentUGroupEnabledDao())))
-            )
-        );
-
-        $test_definition_representation = $artifact_representation_builder->getArtifactRepresentationWithFieldValues(
-            $user,
-            $test_definition,
-            MinimalTrackerRepresentation::build($test_definition->getTracker()),
-            StatusValueRepresentation::buildFromArtifact($test_definition, $user),
-        );
-
         return new self(
             $test_definition,
-            $test_definition_representation,
             $form_element_factory,
             $user,
             $test_definition->getTracker()->getItemName(),
