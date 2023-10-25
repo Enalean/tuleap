@@ -68,15 +68,10 @@ const displayFileNameIfNeeded = (
 };
 
 const displayOutdatedBadgeIfNeeded = (
-    host: PullRequestCommentComponentType,
     comment: PullRequestCommentPresenter,
     gettext_provider: GettextProvider,
 ): UpdateFunction<PullRequestCommentComponentType> => {
-    if (comment.type !== TYPE_INLINE_COMMENT) {
-        return html``;
-    }
-
-    if (host.comment.id !== comment.id || !comment.is_outdated) {
+    if (comment.type !== TYPE_INLINE_COMMENT || !comment.is_outdated) {
         return html``;
     }
 
@@ -103,29 +98,26 @@ const getContent = (comment: PullRequestCommentPresenter): string => {
     return DOMPurify.sanitize(comment.content);
 };
 
-export const buildBodyForComment = (
+export const getCommentBody = (
     host: PullRequestCommentComponentType,
-    comment: PullRequestCommentPresenter,
     gettext_provider: GettextProvider,
 ): UpdateFunction<PullRequestCommentComponentType> => html`
     <div class="${getBodyClasses(host)}" data-test="pull-request-comment-body">
         <div class="pull-request-comment-content-info">
-            ${getHeaderTemplate(comment.user, host.relative_date_helper, comment.post_date)}
-            ${displayOutdatedBadgeIfNeeded(host, comment, gettext_provider)}
+            ${getHeaderTemplate(
+                host.comment.user,
+                host.relative_date_helper,
+                host.comment.post_date,
+            )}
+            ${displayOutdatedBadgeIfNeeded(host.comment, gettext_provider)}
         </div>
 
-        ${displayFileNameIfNeeded(comment)}
+        ${displayFileNameIfNeeded(host.comment)}
 
         <p
             class="pull-request-comment-text"
             data-test="pull-request-comment-text"
-            innerHTML="${getContent(comment)}"
+            innerHTML="${getContent(host.comment)}"
         ></p>
     </div>
 `;
-
-export const getCommentBody = (
-    host: PullRequestCommentComponentType,
-    gettext_provider: GettextProvider,
-): UpdateFunction<PullRequestCommentComponentType> =>
-    buildBodyForComment(host, host.comment, gettext_provider);

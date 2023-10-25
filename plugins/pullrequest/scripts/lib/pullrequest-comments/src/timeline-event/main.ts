@@ -17,12 +17,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "../themes/style.scss";
-import "@tuleap/commonmark-popover";
-
-export * from "./types";
-export * from "./comment/main";
-export * from "./new-comment-form/main";
-export * from "./description-comment/main";
-export * from "./skeleton/main";
-export * from "./timeline-event/main";
+export { TimelineEvent } from "./TimelineEvent";

@@ -51,6 +51,14 @@ export const EVENT_TYPE_MERGE: ActionOnPullRequestEventType = "merge";
 export const EVENT_TYPE_ABANDON: ActionOnPullRequestEventType = "abandon";
 export const EVENT_TYPE_REOPEN: ActionOnPullRequestEventType = "reopen";
 
+export const PULL_REQUEST_ACTIONS_LIST: ReadonlyArray<ActionOnPullRequestEventType> = [
+    EVENT_TYPE_UPDATE,
+    EVENT_TYPE_REBASE,
+    EVENT_TYPE_MERGE,
+    EVENT_TYPE_ABANDON,
+    EVENT_TYPE_REOPEN,
+];
+
 export type PullRequestMergeStatusType =
     | "conflict"
     | "no_fastforward"

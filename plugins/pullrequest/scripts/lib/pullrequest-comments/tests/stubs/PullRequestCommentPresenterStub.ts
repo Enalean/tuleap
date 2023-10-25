@@ -20,10 +20,8 @@
 import type {
     PullRequestInlineCommentPresenter,
     PullRequestGlobalCommentPresenter,
-    PullRequestEventCommentPresenter,
 } from "../../src/comment/PullRequestCommentPresenter";
 import {
-    TYPE_EVENT_PULLREQUEST_ACTION,
     TYPE_GLOBAL_COMMENT,
     TYPE_INLINE_COMMENT,
     INLINE_COMMENT_POSITION_RIGHT,
@@ -92,10 +90,5 @@ export const PullRequestCommentPresenterStub = {
         ...comment_presenter_base,
         type: TYPE_GLOBAL_COMMENT,
         ...data,
-    }),
-
-    buildPullRequestEventComment: (): PullRequestEventCommentPresenter => ({
-        ...comment_presenter_base,
-        type: TYPE_EVENT_PULLREQUEST_ACTION,
     }),
 };

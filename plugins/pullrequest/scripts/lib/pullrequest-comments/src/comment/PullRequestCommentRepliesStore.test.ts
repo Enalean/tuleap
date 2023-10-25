@@ -87,21 +87,6 @@ describe("PullRequestCommentRepliesStore", () => {
         expect(comment_3_replies.map(({ id }) => id)).toStrictEqual([]);
     });
 
-    it("should return root comments (timeline-events and comments with no parent)", () => {
-        const timeline_event = PullRequestCommentPresenterStub.buildPullRequestEventComment();
-
-        comments.push(timeline_event);
-
-        const store = PullRequestCommentRepliesStore(comments);
-
-        expect(store.getAllRootComments().map(({ id }) => id)).toStrictEqual([
-            comment_1.id,
-            comment_2.id,
-            comment_3.id,
-            timeline_event.id,
-        ]);
-    });
-
     it("should add a root comment", () => {
         const new_comment = PullRequestCommentPresenterStub.buildInlineComment();
         const store = PullRequestCommentRepliesStore([]);

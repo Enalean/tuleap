@@ -25,7 +25,6 @@
 </template>
 
 <script setup lang="ts">
-import { useGettext } from "vue3-gettext";
 import { NewCommentSaver, NewCommentFormController } from "@tuleap/plugin-pullrequest-comments";
 import { TYPE_GLOBAL_COMMENT } from "@tuleap/plugin-pullrequest-constants";
 import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-types";
@@ -42,8 +41,6 @@ import {
 } from "../../constants";
 import { CommentPresenterBuilder } from "./CommentPresenterBuilder";
 
-const { $gettext } = useGettext();
-
 const user_id: number = strictInject(CURRENT_USER_ID);
 const pull_request_id: number = strictInject(PULL_REQUEST_ID_KEY);
 const base_url: URL = strictInject(OVERVIEW_APP_BASE_URL_KEY);
@@ -58,7 +55,7 @@ const post_submit_callback = (new_comment: PullRequestComment): void => {
     }
 
     displayNewlyCreatedGlobalComment(
-        CommentPresenterBuilder.fromPayload(new_comment, base_url, pull_request_id, $gettext),
+        CommentPresenterBuilder.fromPayload(new_comment, base_url, pull_request_id),
     );
 };
 

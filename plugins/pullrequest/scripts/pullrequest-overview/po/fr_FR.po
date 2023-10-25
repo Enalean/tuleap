@@ -81,21 +81,6 @@ msgstr "Échec le"
 msgid "HTTP"
 msgstr "HTTP"
 
-msgid "Has abandoned the pull request."
-msgstr "A abandonné la pull request."
-
-msgid "Has merged the pull request."
-msgstr "A intégré la pull request."
-
-msgid "Has rebased the pull request."
-msgstr "A rebasé la pull request."
-
-msgid "Has reopened the pull request."
-msgstr "A rouvert la pull request."
-
-msgid "Has updated the pull request."
-msgstr "A mis à jour la pull request."
-
 msgid "Labels"
 msgstr "Labels"
 

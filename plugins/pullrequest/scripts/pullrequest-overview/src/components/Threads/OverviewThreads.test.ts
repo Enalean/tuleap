@@ -24,13 +24,20 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount, flushPromises } from "@vue/test-utils";
 import { Fault } from "@tuleap/fault";
 import { PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN } from "@tuleap/tlp-relative-date";
+import * as strict_inject from "@tuleap/vue-strict-inject";
 import {
     PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME,
     PULL_REQUEST_COMMENT_SKELETON_ELEMENT_TAG_NAME,
     PULL_REQUEST_COMMENT_DESCRIPTION_ELEMENT_TAG_NAME,
 } from "@tuleap/plugin-pullrequest-comments";
-import * as tuleap_api from "../../api/tuleap-rest-querier";
+import type { TimelineItem } from "@tuleap/plugin-pullrequest-rest-api-types";
+import {
+    TYPE_GLOBAL_COMMENT,
+    EVENT_TYPE_MERGE,
+    TYPE_EVENT_PULLREQUEST_ACTION,
+} from "@tuleap/plugin-pullrequest-constants";
 import { getGlobalTestOptions } from "../../../tests/helpers/global-options-for-tests";
+import * as tuleap_api from "../../api/tuleap-rest-querier";
 import {
     CURRENT_USER_AVATAR_URL,
     CURRENT_USER_ID,
@@ -44,8 +51,6 @@ import {
     USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
 } from "../../constants";
 import OverviewThreads from "./OverviewThreads.vue";
-import type { TimelineItem } from "@tuleap/plugin-pullrequest-rest-api-types";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 
 vi.mock("@tuleap/vue-strict-inject");
 
@@ -116,11 +121,28 @@ describe("OverviewThreads", () => {
 
     it(`When the pull-request and the pull-request author have loaded
         Then it should fetch the comments
-        And display the description comment + the root comments as threads`, async () => {
+        And display the description comment, the root comments as threads, and action events`, async () => {
         vi.spyOn(tuleap_api, "fetchPullRequestTimelineItems").mockReturnValue(
             okAsync([
-                { id: 102, parent_id: 0, content: "What do you think?" } as TimelineItem,
-                { id: 103, parent_id: 102, content: "I'm ok with that" } as TimelineItem,
+                {
+                    id: 102,
+                    type: TYPE_GLOBAL_COMMENT,
+                    parent_id: 0,
+                    content: "What do you think?",
+                    post_date: "2023-10-23T10:00:00Z",
+                } as TimelineItem,
+                {
+                    id: 103,
+                    type: TYPE_GLOBAL_COMMENT,
+                    parent_id: 102,
+                    content: "I'm ok with that",
+                    post_date: "2023-10-23T10:01:00Z",
+                } as TimelineItem,
+                {
+                    type: TYPE_EVENT_PULLREQUEST_ACTION,
+                    event_type: EVENT_TYPE_MERGE,
+                    post_date: "2023-10-23T10:03:00Z",
+                } as TimelineItem,
             ]),
         );
 
@@ -142,13 +164,16 @@ describe("OverviewThreads", () => {
 
         const threads = wrapper.find("[data-test=pull-request-threads]");
         expect(threads.exists()).toBe(true);
-        expect(threads.element.childElementCount).toBe(2);
+        expect(threads.element.childElementCount).toBe(3);
 
         const displayed_thread = wrapper.find("[data-test=pull-request-thread]");
         expect(displayed_thread.exists()).toBe(true);
 
         const displayed_description = wrapper.find("[data-test=pull-request-overview-description]");
         expect(displayed_description.exists()).toBe(true);
+
+        const displayed_event = wrapper.find("[data-test=pull-request-overview-action-event]");
+        expect(displayed_event.exists()).toBe(true);
     });
 
     it("When an error occurs while retrieving the comments, Then it should call the display_error_callback with the fault", async () => {
