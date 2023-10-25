@@ -25,7 +25,6 @@ namespace Tuleap\SVN\Commit;
 
 use ForgeConfig;
 use Symfony\Component\Process\Process;
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\SVN\Repository\SvnRepository;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -34,14 +33,15 @@ use function PHPUnit\Framework\assertEquals;
 final class SvnlookTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use TemporaryTestDirectory;
-    use ForgeConfigSandbox;
 
-    /**
-     * @var SvnRepository
-     */
-    private $repository;
-    private $working_copy;
-    private $svnrepo;
+    // Cannot use ForgeConfigSandbox here, you will generate an instance of CodendiDataAccess with invalid DB creds.
+    // It will break in other tests as soon as you try to access something with CodendiDataAccess
+    // use ForgeConfigSandbox;
+
+    private SvnRepository $repository;
+    private string $working_copy;
+    private string $svnrepo;
+    private string|bool $initial_sys_data_dir;
 
     protected function setUp(): void
     {
@@ -59,9 +59,15 @@ final class SvnlookTest extends \Tuleap\Test\PHPUnit\TestCase
         (new Process(['svn', 'mkdir', '-m', 'Base layout', "file://$this->svnrepo/trunk"]))->mustRun();
         (new Process(['svn', 'checkout', "file://$this->svnrepo", $this->working_copy]))->mustRun();
 
+        $this->initial_sys_data_dir = ForgeConfig::get('sys_data_dir');
         ForgeConfig::set('sys_data_dir', $this->getTmpDir());
 
         $this->repository = SvnRepository::buildActiveRepository(2, $repository_name, $project);
+    }
+
+    protected function tearDown(): void
+    {
+        ForgeConfig::set('sys_data_dir', $this->initial_sys_data_dir);
     }
 
     /**
