@@ -246,8 +246,8 @@ devDependencies:
     specifier: ^5.1.4
     version: 5.1.4(webpack@5.88.2)
   webpack-merge:
-    specifier: ^5.8.0
-    version: 5.8.0
+    specifier: ^5.10.0
+    version: 5.10.0
   webpack-merge-and-include-globally:
     specifier: ^2.3.4
     version: 2.3.4(webpack@5.88.2)
@@ -5822,6 +5822,11 @@ packages:
       rimraf: 3.0.2
     dev: true
 
+  /flat@5.0.2:
+    resolution: {integrity: sha512-b6suED+5/3rTpUBdG1gupIl8MPFCAMA0QXwmljLhvCUKcUvdE4gWky9zpuGCcXHOsz4J9wPGNWq6OKpmIzz3hQ==}
+    hasBin: true
+    dev: true
+
   /flatted@3.2.9:
     resolution: {integrity: sha512-36yxDn5H7OFZQla0/jFJmbIKTdZAQHngCedGxiMmpNfEZM0sdEeT+WczLQrjK6D7o2aiyLYDnkw0R3JK0Qv1RQ==}
     dev: true
@@ -6717,7 +6722,7 @@ packages:
     dev: true
 
   /isobject@3.0.1:
-    resolution: {integrity: sha1-TkMekrEalzFjaqH5yNHMvP2reN8=}
+    resolution: {integrity: sha512-WhB9zCku7EGTj/HQQRz5aUQEUeoQZH2bWcltRErOpymJ4boYE6wL9Tbr23krRPSZ+C5zqNSrSw+Cc7sZZ4b7vg==}
     engines: {node: '>=0.10.0'}
     dev: true
 
@@ -10525,7 +10530,7 @@ packages:
       interpret: 3.1.1
       rechoir: 0.8.0
       webpack: 5.88.2(webpack-cli@5.1.4)
-      webpack-merge: 5.8.0
+      webpack-merge: 5.10.0
     dev: true
 
   /webpack-merge-and-include-globally@2.3.4(webpack@5.88.2):
@@ -10539,12 +10544,13 @@ packages:
       webpack: 5.88.2(webpack-cli@5.1.4)
     dev: true
 
-  /webpack-merge@5.8.0:
-    resolution: {integrity: sha512-/SaI7xY0831XwP6kzuwhKWVKDP9t1QY1h65lAFLbZqMPIuYcD9QAW4u9STIbU9kaJbPBB/geU/gLr1wDjOhQ+Q==}
+  /webpack-merge@5.10.0:
+    resolution: {integrity: sha512-+4zXKdx7UnO+1jaN4l2lHVD+mFvnlZQP/6ljaJVb4SZiwIKeUnrT5l0gkT8z+n4hKpC+jpOv6O9R+gLtag7pSA==}
     engines: {node: '>=10.0.0'}
     dependencies:
       clone-deep: 4.0.1
-      wildcard: 2.0.0
+      flat: 5.0.2
+      wildcard: 2.0.1
     dev: true
 
   /webpack-remove-empty-scripts@1.0.1(webpack@5.88.2):
@@ -10688,8 +10694,8 @@ packages:
       stackback: 0.0.2
     dev: true
 
-  /wildcard@2.0.0:
-    resolution: {integrity: sha512-JcKqAHLPxcdb9KM49dufGXn2x3ssnfjbcaQdLlfZsL9rH9wgDQjUtDxbo8NE0F6SFvydeu1VhZe7hZuHsB2/pw==}
+  /wildcard@2.0.1:
+    resolution: {integrity: sha512-CC1bOL87PIWSBhDcTrdeLo6eGT7mCFtrg0uIJtqJUFyK+eJnzl8A1niH56uu7KMa5XFrtiV+AQuHO3n7DsHnLQ==}
     dev: true
 
   /wrap-ansi@6.2.0:
