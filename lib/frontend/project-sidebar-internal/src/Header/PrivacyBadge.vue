@@ -69,6 +69,7 @@ onMounted(() => {
         createPopover(badge.value, popover_content.value, {
             placement: "right-start",
             anchor: popover_anchor.value,
+            trigger: "click",
         });
     }
 });

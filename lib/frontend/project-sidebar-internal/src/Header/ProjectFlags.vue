@@ -80,6 +80,7 @@ onMounted(() => {
     if (popover_anchor.value !== undefined && popover_content.value !== undefined) {
         createPopover(popover_anchor.value, popover_content.value, {
             placement: "right-start",
+            trigger: "click",
         });
     }
 });

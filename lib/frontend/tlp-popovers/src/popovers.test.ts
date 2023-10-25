@@ -40,8 +40,6 @@ vi.mock("@floating-ui/dom", async () => {
     };
 });
 
-vi.useFakeTimers();
-
 describe(`Popovers`, () => {
     let trigger_element: HTMLElement, content_element: HTMLElement;
     let doc: Document;
@@ -491,47 +489,21 @@ describe(`Popovers`, () => {
                 trigger_element.dispatchEvent(new MouseEvent("mouseover"));
             });
 
-            it(`will hide the popover after a delay`, () => {
+            it(`will hide the popover`, () => {
                 trigger_element.dispatchEvent(new MouseEvent("mouseout"));
-
-                vi.advanceTimersToNextTimer();
 
                 expectThePopoverToBeHidden(content_element);
 
                 expect(getEventType(dispatchEvent, 2)).toBe(EVENT_TLP_POPOVER_HIDDEN);
             });
 
-            it(`will hide all shown popovers after a delay`, () => {
+            it(`will hide all shown popovers`, () => {
                 const docDispatchEvent = vi.spyOn(doc, "dispatchEvent");
 
                 trigger_element.dispatchEvent(new MouseEvent("mouseout"));
 
-                vi.advanceTimersToNextTimer();
-
                 expect(docDispatchEvent).toHaveBeenCalledOnce();
                 expect(getEventType(docDispatchEvent)).toBe(EVENT_POPOVER_FORCE_CLOSE);
-            });
-
-            describe("and I try to reach the popover content before the delay", () => {
-                beforeEach(() => {
-                    trigger_element.dispatchEvent(new MouseEvent("mouseout"));
-
-                    content_element.dispatchEvent(new MouseEvent("mouseenter"));
-
-                    vi.advanceTimersToNextTimer();
-                });
-
-                it(`should not hide the popover so I can interact with the popover content`, () => {
-                    expectThePopoverToBeShown(content_element);
-                });
-
-                it(`should hide the popover after a delay as soon as I leave the popover content`, () => {
-                    content_element.dispatchEvent(new MouseEvent("mouseleave"));
-
-                    vi.advanceTimersToNextTimer();
-
-                    expectThePopoverToBeHidden(content_element);
-                });
             });
         });
     });
@@ -571,8 +543,6 @@ describe(`Popovers`, () => {
 
                     trigger_element.dispatchEvent(new MouseEvent("click"));
 
-                    vi.advanceTimersToNextTimer();
-
                     expect(docDispatchEvent).toHaveBeenCalledOnce();
                     expect(getEventType(docDispatchEvent)).toBe(EVENT_POPOVER_FORCE_CLOSE);
                 });
@@ -599,8 +569,6 @@ describe(`Popovers`, () => {
 
                     trigger_element.dispatchEvent(new MouseEvent("click"));
                     doc.body.dispatchEvent(new MouseEvent("click", { bubbles: true }));
-
-                    vi.advanceTimersToNextTimer();
 
                     expect(docDispatchEvent).toHaveBeenCalledTimes(2);
                     expect(getEventType(docDispatchEvent)).toBe(EVENT_POPOVER_FORCE_CLOSE);
