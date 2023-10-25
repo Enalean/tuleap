@@ -27,6 +27,7 @@ use Tracker_Artifact_Changeset;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Notifications\RemoveRecipient\ArtifactStatusChangeDetector;
 use Tuleap\Tracker\Notifications\RemoveRecipient\ArtifactStatusChangeDetectorImpl;
+use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientThatAreTechnicalUsers;
 use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientThatCannotReadAnything;
 use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientThatDoesntWantMailForTheirOwnActions;
 use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientThatHaveUnsubscribedFromNotification;
@@ -53,6 +54,7 @@ class RecipientsManager
     ) {
         $this->status_change_detector       = new ArtifactStatusChangeDetectorImpl();
         $this->recipient_removal_strategies = [
+            new RemoveRecipientThatAreTechnicalUsers(),
             new RemoveRecipientThatDoesntWantMailForTheirOwnActions(),
             new RemoveRecipientThatCannotReadAnything($this->form_element_factory),
             new RemoveRecipientThatHaveUnsubscribedFromNotification($this->unsubscribers_notification_dao),
