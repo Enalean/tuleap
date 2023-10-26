@@ -99,4 +99,18 @@ final class Comment implements TimelineEvent, TimelineComment
             $row['format']
         );
     }
+
+    public static function buildWithNewId(int $new_comment_id, Comment $comment): self
+    {
+        return new self(
+            $new_comment_id,
+            $comment->pull_request_id,
+            $comment->user_id,
+            $comment->post_date,
+            $comment->content,
+            $comment->parent_id,
+            $comment->color,
+            $comment->format
+        );
+    }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2023 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,12 +15,12 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\PullRequest\REST\v1;
+namespace Tuleap\PullRequest\REST\v1\Comment;
 
 use Codendi_HTMLPurifier;
 use Tuleap\PullRequest\Comment\Comment;
@@ -30,7 +30,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ContentInterpretorStub;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
-final class CommentRepresentationTest extends TestCase
+final class CommentRepresentationBuilderTest extends TestCase
 {
     private Codendi_HTMLPurifier $purifier;
     private ContentInterpretorStub $interpreter;
@@ -46,9 +46,7 @@ final class CommentRepresentationTest extends TestCase
     public function testItBuildsRepresentationForText(): void
     {
         $comment = new Comment(1, 2, (int) $this->user->id, 123456789, "My **comment**", 1, "inca-silver", TimelineComment::FORMAT_TEXT);
-        CommentRepresentation::build(
-            $this->purifier,
-            $this->interpreter,
+        (new CommentRepresentationBuilder($this->purifier, $this->interpreter))->buildRepresentation(
             1,
             101,
             $this->user,
@@ -61,9 +59,7 @@ final class CommentRepresentationTest extends TestCase
     public function testItBuildsRepresentationForMarkdown(): void
     {
         $comment = new Comment(1, 2, (int) $this->user->id, 123456789, "My **comment**", 1, "inca-silver", TimelineComment::FORMAT_MARKDOWN);
-        CommentRepresentation::build(
-            $this->purifier,
-            $this->interpreter,
+        (new CommentRepresentationBuilder($this->purifier, $this->interpreter))->buildRepresentation(
             1,
             101,
             $this->user,

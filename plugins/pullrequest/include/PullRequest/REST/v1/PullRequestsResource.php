@@ -103,6 +103,7 @@ use Tuleap\PullRequest\PullRequestReopener;
 use Tuleap\PullRequest\PullRequestRetriever;
 use Tuleap\PullRequest\PullRequestUpdater;
 use Tuleap\PullRequest\PullRequestWithGitReference;
+use Tuleap\PullRequest\REST\v1\Comment\CommentRepresentationBuilder;
 use Tuleap\PullRequest\REST\v1\Comment\ParentIdValidatorForComment;
 use Tuleap\PullRequest\REST\v1\Comment\ParentIdValidatorForInlineComment;
 use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorAssigner;
@@ -140,8 +141,6 @@ class PullRequestsResource extends AuthenticatedResource
     private GitRepositoryFactory $git_repository_factory;
     private PullRequestFactory $pull_request_factory;
     private CommentFactory $comment_factory;
-    private PaginatedTimelineRepresentationBuilder $paginated_timeline_representation_builder;
-    private PaginatedCommentsRepresentationsBuilder $paginated_comments_representations_builder;
     private UserManager $user_manager;
     private PullRequestCloser $pull_request_closer;
     private PullRequestCreator $pull_request_creator;
@@ -191,20 +190,6 @@ class PullRequestsResource extends AuthenticatedResource
         $content_interpretor = CommonMarkInterpreter::build(
             $purifier,
             new EnhancedCodeBlockExtension(new CodeBlockFeatures())
-        );
-
-        $this->paginated_timeline_representation_builder = new PaginatedTimelineRepresentationBuilder(
-            $timeline_factory,
-            $this->user_manager,
-            $purifier,
-            $content_interpretor
-        );
-
-        $this->paginated_comments_representations_builder = new PaginatedCommentsRepresentationsBuilder(
-            $this->comment_factory,
-            $this->user_manager,
-            $purifier,
-            $content_interpretor
         );
 
         $this->event_manager        = EventManager::instance();
@@ -1022,7 +1007,36 @@ class PullRequestsResource extends AuthenticatedResource
             $git_repository->getProject()
         );
 
-        $paginated_timeline_representation = $this->paginated_timeline_representation_builder->getPaginatedTimelineRepresentation(
+        $comment_dao        = new CommentDao();
+        $inline_comment_dao = new InlineCommentDao();
+        $timeline_dao       = new TimelineDao();
+        $timeline_factory   = new TimelineFactory(
+            $comment_dao,
+            $inline_comment_dao,
+            $timeline_dao,
+            new ReviewerChangeRetriever(
+                new ReviewerChangeDAO(),
+                $this->pull_request_factory,
+                $this->user_manager,
+            )
+        );
+
+        $purifier            = \Codendi_HTMLPurifier::instance();
+        $content_interpreter = CommonMarkInterpreter::build(
+            $purifier,
+            new EnhancedCodeBlockExtension(new CodeBlockFeatures())
+        );
+
+
+        $paginated_timeline_representation_builder = new PaginatedTimelineRepresentationBuilder(
+            $timeline_factory,
+            UserManager::instance(),
+            $purifier,
+            $content_interpreter,
+            new CommentRepresentationBuilder($purifier, $content_interpreter)
+        );
+
+        $paginated_timeline_representation = $paginated_timeline_representation_builder->getPaginatedTimelineRepresentation(
             $pull_request,
             $project_id,
             $limit,
@@ -1074,8 +1088,19 @@ class PullRequestsResource extends AuthenticatedResource
             $user,
             $git_repository->getProject()
         );
+        $purifier            = \Codendi_HTMLPurifier::instance();
+        $content_interpreter = CommonMarkInterpreter::build(
+            $purifier,
+            new EnhancedCodeBlockExtension(new CodeBlockFeatures())
+        );
 
-        $paginated_comments_representations = $this->paginated_comments_representations_builder->getPaginatedCommentsRepresentations(
+        $paginated_comments_representations_builder = new PaginatedCommentsRepresentationsBuilder(
+            $this->comment_factory,
+            $this->user_manager,
+            new CommentRepresentationBuilder($purifier, $content_interpreter)
+        );
+
+        $paginated_comments_representations = $paginated_comments_representations_builder->getPaginatedCommentsRepresentations(
             $id,
             $project_id,
             $limit,
@@ -1130,12 +1155,13 @@ class PullRequestsResource extends AuthenticatedResource
             $format = TimelineComment::FORMAT_MARKDOWN;
         }
 
-        $comment = new Comment(0, $id, (int) $user->getId(), $current_time, $comment_data->content, (int) $comment_data->parent_id, '', $format);
-        $color   = $color_retriever->retrieveColor($id, (int) $comment_data->parent_id);
+        $color = $color_retriever->retrieveColor($id, (int) $comment_data->parent_id);
         $color_assigner->assignColor((int) $comment_data->parent_id, $color);
+        $comment = new Comment(0, $id, (int) $user->getId(), $current_time, $comment_data->content, (int) $comment_data->parent_id, $color, $format);
 
         $parent_id_validator->checkParentValidity((int) $comment_data->parent_id, $id);
         $new_comment_id = $this->comment_factory->save($comment, $user, $project_id);
+        $new_comment    = Comment::buildWithNewId($new_comment_id, $comment);
 
         $user_representation = MinimalUserRepresentation::build($user);
 
@@ -1145,7 +1171,7 @@ class PullRequestsResource extends AuthenticatedResource
             new EnhancedCodeBlockExtension(new CodeBlockFeatures())
         );
 
-        return CommentRepresentation::build($purifier, $content_interpretor, $new_comment_id, $project_id, $user_representation, $color, $comment);
+        return (new CommentRepresentationBuilder($purifier, $content_interpretor))->buildRepresentation($new_comment_id, $project_id, $user_representation, $color, $new_comment);
     }
 
     /**
