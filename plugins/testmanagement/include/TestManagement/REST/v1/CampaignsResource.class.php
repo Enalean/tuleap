@@ -676,11 +676,15 @@ class CampaignsResource
 
         foreach ($executions_to_remove as $execution) {
             $this->execution_dao->removeExecution($execution->getId());
-            $this->realtime_message_sender->sendExecutionDeleted($user, $artifact, $execution, $_SERVER[RealTimeMessageSender::HTTP_CLIENT_UUID]);
+            if (isset($_SERVER[RealTimeMessageSender::HTTP_CLIENT_UUID])) {
+                $this->realtime_message_sender->sendExecutionDeleted($user, $artifact, $execution, $_SERVER[RealTimeMessageSender::HTTP_CLIENT_UUID]);
+            }
         }
 
         foreach ($executions_to_add as $execution) {
-            $this->realtime_message_sender->sendExecutionCreated($user, $artifact, $execution, $_SERVER[RealTimeMessageSender::HTTP_CLIENT_UUID]);
+            if (isset($_SERVER[RealTimeMessageSender::HTTP_CLIENT_UUID])) {
+                $this->realtime_message_sender->sendExecutionCreated($user, $artifact, $execution, $_SERVER[RealTimeMessageSender::HTTP_CLIENT_UUID]);
+            }
         }
 
         $this->sendAllowHeadersForExecutionsList($artifact);
