@@ -467,6 +467,11 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         return $this->is_super_user;
     }
 
+    public function isATechnicalUser(): bool
+    {
+        return str_starts_with($this->getUserName(), Rule_UserName::RESERVED_PREFIX);
+    }
+
     public function setIsSuperUser(bool $is_super_user): void
     {
         $this->is_super_user = $is_super_user;
