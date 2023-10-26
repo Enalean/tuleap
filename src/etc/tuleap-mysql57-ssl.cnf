@@ -1,8 +1,0 @@
-[mysqld]
-# If you want to use SSL connection to the Database you need to stop the DB
-# container, un-comment the config bellow and start again. Please configure
-# Tuleap accordingly.
-ssl_ca=/var/lib/mysql/ca.pem
-ssl_cert=/var/lib/mysql/server-cert.pem
-ssl_key=/var/lib/mysql/server-key.pem
-require_secure_transport=ON

@@ -7,15 +7,11 @@ set -euxo pipefail
 plugins_compose_file="$(find ./plugins/*/tests/e2e/ -name docker-compose.yml -printf '-f %p ')"
 
 case "${1:-}" in
-    "mysql57")
-    export DB_HOST="mysql57"
-    ;;
     "mysql80")
     export DB_HOST="mysql80"
     ;;
     *)
     echo "A database type must be provided as parameter. Allowed values are:"
-    echo "* mysql57"
     echo "* mysql80"
     exit 1
 esac

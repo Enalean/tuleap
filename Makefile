@@ -156,24 +156,24 @@ generate-po: ## Generate translatable strings
 generate-mo: ## Compile translated strings into binary format
 	@tools/utils/generate-mo.sh `pwd`
 
-tests-rest: ## Run all REST tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION to select the version of PHP to use (81). DB to select the database to use (mysql57, mysql80, mariadb103)
+tests-rest: ## Run all REST tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION to select the version of PHP to use (81). DB to select the database to use (mysql80)
 	$(eval PHP_VERSION ?= 81)
 	$(eval DB ?= mysql80)
 	$(eval SETUP_ONLY ?= 0)
 	$(eval TESTS_RESULT ?= ./test_results_rest_$(PHP_VERSION)_$(DB))
 	SETUP_ONLY="$(SETUP_ONLY)" TESTS_RESULT="$(TESTS_RESULT)" tests/rest/bin/run-compose.sh "$(PHP_VERSION)" "$(DB)"
 
-tests-db: ## Run all DB integration tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION to select the version of PHP to use (81,82). DB to select the database to use (mysql57, mariadb103, mysql80)
+tests-db: ## Run all DB integration tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION to select the version of PHP to use (81,82). DB to select the database to use (mysql80)
 	$(eval PHP_VERSION ?= 81)
 	$(eval DB ?= mysql80)
 	$(eval SETUP_ONLY ?= 0)
 	SETUP_ONLY="$(SETUP_ONLY)" tests/integration/bin/run-compose.sh "$(PHP_VERSION)" "$(DB)"
 
-tests-e2e: ## Run E2E tests. DB to select the database to use (mysql57, mysql80).
+tests-e2e: ## Run E2E tests. DB to select the database to use (mysql80).
 	$(eval DB ?= mysql80)
 	@tests/e2e/full/wrap.sh "$(DB)"
 
-tests-e2e-dev: ## Run E2E tests. DB to select the database to use (mysql57, mysql80).
+tests-e2e-dev: ## Run E2E tests. DB to select the database to use (mysql80).
 	$(eval DB ?= mysql80)
 	@tests/e2e/full/wrap_for_dev_context.sh "$(DB)"
 
@@ -387,12 +387,6 @@ start-all:
 	echo "Start all containers (Web, LDAP, DB, Elasticsearch)"
 	@$(DOCKER_COMPOSE) up -d
 
-switch-to-mysql57:
-	$(eval DB57 := $(shell $(DOCKER_COMPOSE) ps -q db))
-	$(DOCKER_COMPOSE) exec db55 sh -c 'exec mysqldump --all-databases  -uroot -p"$$MYSQL_ROOT_PASSWORD"' | $(DOCKER) exec -i $(DB57) sh -c 'exec mysql -uroot -p"$$MYSQL_ROOT_PASSWORD"'
-	$(DOCKER_COMPOSE) exec db sh -c 'mysql -uroot -p"$$MYSQL_ROOT_PASSWORD" -e "FLUSH PRIVILEGES;"'
-	@echo "Data were migrated to MySQL 5.7"
-
 switch-to-mysql80:
 	$(eval DB80 := $(shell $(DOCKER_COMPOSE) ps -q db))
 	$(DOCKER_COMPOSE) exec db57 sh -c 'exec mysqldump --all-databases -uroot -p"$$MYSQL_ROOT_PASSWORD"' | $(DOCKER) exec -i $(DB80) sh -c 'exec mysql -uroot -p"$$MYSQL_ROOT_PASSWORD" -f'
@@ -400,11 +394,3 @@ switch-to-mysql80:
 	$(DOCKER_COMPOSE) restart db
 	$(DOCKER_COMPOSE) stop db57
 	@echo "Data were migrated to MySQL 8.0"
-
-load-mariadb: # Works only with tuleap DB ATM (not mediawiki)
-	$(eval MARIADB := $(shell $(DOCKER_COMPOSE) ps -q db-maria-10.3))
-	$(DOCKER_COMPOSE) exec db57 sh -c 'exec mysqldump -uroot -p"$$MYSQL_ROOT_PASSWORD" tuleap' 2>/dev/null 1>all.sql
-	$(DOCKER) exec -i $(MARIADB) sh -c 'exec mysql -uroot -p"$$MYSQL_ROOT_PASSWORD" -e "Create database tuleap DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;"'
-	$(DOCKER) exec -i $(MARIADB) sh -c 'exec mysql -uroot -p"$$MYSQL_ROOT_PASSWORD" tuleap' < all.sql
-	$(DOCKER_COMPOSE) exec db-maria-10.3 sh -c 'mysql -uroot -p"$$MYSQL_ROOT_PASSWORD" -e "FLUSH PRIVILEGES;"'
-	@echo "Data were migrated to MariaDB 10.3, you now need to update /etc/tuleap/conf/database.inc in web container to set `sys_dbhost` to 'db-maria-10.3'"

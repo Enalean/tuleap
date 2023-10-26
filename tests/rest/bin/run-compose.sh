@@ -21,20 +21,12 @@ case "${1:-}" in
 esac
 
 case "${2:-}" in
-    "mysql57")
-    export DB_HOST="mysql57"
-    ;;
     "mysql80")
     export DB_HOST="mysql80"
     ;;
-    "mariadb103")
-    export DB_HOST="mariadb-10.3"
-    ;;
     *)
     echo "A database type must be provided as parameter. Allowed values are:"
-    echo "* mysql57"
     echo "* mysql80"
-    echo "* mariadb103"
     exit 1
 esac
 
