@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, beforeEach, expect } from "vitest";
+import { describe, it, beforeEach, expect, vi } from "vitest";
 import { selectOrThrow } from "@tuleap/dom";
 import { FORMAT_COMMONMARK, FORMAT_TEXT } from "@tuleap/plugin-pullrequest-constants";
 import type { HostElement } from "./PullRequestDescriptionComment";
@@ -143,12 +143,13 @@ describe("PullRequestDescriptionContentTemplate", () => {
             },
         } as HostElement;
 
+        const showEditionForm = vi.spyOn(host.controller, "showEditionForm");
         const render = getDescriptionContentTemplate(host, GettextProviderStub);
         render(host, target);
 
         selectOrThrow(target, "[data-test=button-edit-description-comment]").click();
 
-        expect(host.controller.showEditionForm).toHaveBeenCalledOnce();
-        expect(host.controller.showEditionForm).toHaveBeenCalledWith(host);
+        expect(showEditionForm).toHaveBeenCalledOnce();
+        expect(showEditionForm).toHaveBeenCalledWith(host);
     });
 });

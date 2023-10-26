@@ -17,15 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { vi } from "vitest";
 import type { ControlPullRequestDescriptionComment } from "../../src/description-comment/PullRequestDescriptionCommentController";
 import { RelativeDateHelperStub } from "./RelativeDateHelperStub";
 
+const noop = (): void => {
+    // Do nothing
+};
+
 export const ControlPullRequestDescriptionCommentStub: ControlPullRequestDescriptionComment = {
-    showEditionForm: vi.fn(),
-    hideEditionForm: vi.fn(),
-    handleWritingZoneContentChange: vi.fn(),
-    saveDescriptionComment: vi.fn(),
+    showEditionForm: noop,
+    hideEditionForm: noop,
+    handleWritingZoneContentChange: noop,
+    saveDescriptionComment: noop,
     getRelativeDateHelper: () => RelativeDateHelperStub,
     shouldFocusWritingZoneOnceRendered: () => true,
 };

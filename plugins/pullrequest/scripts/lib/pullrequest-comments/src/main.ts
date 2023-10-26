@@ -26,3 +26,4 @@ export * from "./new-comment-form/main";
 export * from "./description-comment/main";
 export * from "./skeleton/main";
 export * from "./timeline-event/main";
+export * from "../tests/stubs/main";

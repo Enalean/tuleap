@@ -17,17 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { vi } from "vitest";
 import type { ControlNewCommentForm } from "../../src/new-comment-form/NewCommentFormController";
 
+const noop = (): void => {
+    // Do nothing
+};
+
 export const ControlNewCommentFormStub = (): ControlNewCommentForm => ({
-    buildInitialPresenter: vi.fn(),
-    saveNewComment: vi.fn(),
-    cancelNewComment: vi.fn(),
-    handleWritingZoneContentChange: vi.fn(),
-    triggerPostSubmitCallback: (): void => {
-        // Do nothing
+    buildInitialPresenter: noop,
+    saveNewComment: (): Promise<void> => {
+        return Promise.resolve();
     },
+    cancelNewComment: noop,
+    handleWritingZoneContentChange: noop,
+    triggerPostSubmitCallback: noop,
     shouldFocusWritingZoneOnceRendered: () => true,
     getProjectId: () => 105,
 });

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean 2022 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,12 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN } from "@tuleap/tlp-relative-date";
-import type { HelpRelativeDatesDisplay } from "../../src/helpers/relative-dates-helper";
-
-export const RelativeDateHelperStub: HelpRelativeDatesDisplay = {
-    getRelativeDatePreference: (): string => PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,
-    getRelativeDatePlacement: (): string => "right",
-    getUserLocale: (): string => "en_US",
-    getFormattedDateUsingPreferredUserFormat: (date: string): string => date,
-};
+/**
+ * The stubs exported below are only meant to be used in tests when needed. DO NOT USE IN PRODUCTION.
+ */
+export { ControlNewCommentFormStub } from "./ControlNewCommentFormStub";
+export { ControlPullRequestCommentStub } from "./ControlPullRequestCommentStub";

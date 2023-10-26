@@ -17,6 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {
+    ControlPullRequestCommentStub,
+    ControlNewCommentFormStub,
+} from "@tuleap/plugin-pullrequest-comments";
 import type {
     FileDiffCommentWidget,
     FileDiffPlaceholderWidget,
@@ -54,18 +58,7 @@ export const FileDiffWidgetStub = {
         is_comment_edition_enabled: true,
         getBoundingClientRect: stubBounding(height),
         comment: PullRequestCommentPresenterStub.buildInlineComment(),
-        controller: {
-            displayReplies: jest.fn(),
-            hideReplyForm: jest.fn(),
-            showReplyForm: jest.fn(),
-            hideEditionForm: jest.fn(),
-            showEditionForm: jest.fn(),
-            getRelativeDateHelper: jest.fn(),
-            buildReplyCreationController: jest.fn(),
-            getProjectId: () => 105,
-            getCurrentUserId: () => 102,
-            buildReplyController: jest.fn(),
-        },
+        controller: ControlPullRequestCommentStub(),
         post_rendering_callback: noop,
         ...data,
     }),
@@ -74,15 +67,7 @@ export const FileDiffWidgetStub = {
         ...base_element,
         localName: "tuleap-pullrequest-new-comment-form",
         getBoundingClientRect: stubBounding(height),
-        controller: {
-            cancelNewComment: jest.fn(),
-            saveNewComment: jest.fn(),
-            handleWritingZoneContentChange: jest.fn(),
-            buildInitialPresenter: jest.fn(),
-            triggerPostSubmitCallback: jest.fn(),
-            shouldFocusWritingZoneOnceRendered: () => true,
-            getProjectId: () => 105,
-        },
+        controller: ControlNewCommentFormStub(),
         post_rendering_callback: noop,
     }),
 
