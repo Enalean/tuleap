@@ -23,31 +23,25 @@ declare(strict_types=1);
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class User_ForgeUserGroupFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     /**
-     * @var UserGroupDao
+     * @var UserGroupDao&\PHPUnit\Framework\MockObject\MockObject
      */
     protected $dao;
-
-    /**
-     * @var UserGroupDao
-     */
-    protected $factory;
+    protected User_ForgeUserGroupFactory $factory;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dao     = \Mockery::spy(\UserGroupDao::class);
+        $this->dao     = $this->createMock(\UserGroupDao::class);
         $this->factory = new User_ForgeUserGroupFactory($this->dao);
     }
 
     public function testItReturnsEmptyArrayIfNoResultsInDb(): void
     {
-        $this->dao->shouldReceive('getAllForgeUGroups')->andReturns(false);
+        $this->dao->method('getAllForgeUGroups')->willReturn(false);
         $all = $this->factory->getAllForgeUserGroups();
 
-        $this->assertCount(0, $all);
+        self::assertCount(0, $all);
     }
 
     public function testItReturnsArrayOfUserGroups(): void
@@ -70,30 +64,30 @@ final class User_ForgeUserGroupFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ];
 
-        $this->dao->shouldReceive('getAllForgeUGroups')->andReturns($data);
+        $this->dao->method('getAllForgeUGroups')->willReturn($data);
         $all = $this->factory->getAllForgeUserGroups();
 
-        $this->assertCount(3, $all);
+        self::assertCount(3, $all);
 
         $first  = $all[0];
         $second = $all[1];
         $third  = $all[2];
 
-        $this->assertInstanceOf(\User_ForgeUGroup::class, $first);
-        $this->assertInstanceOf(\User_ForgeUGroup::class, $second);
-        $this->assertInstanceOf(\User_ForgeUGroup::class, $third);
+        self::assertInstanceOf(\User_ForgeUGroup::class, $first);
+        self::assertInstanceOf(\User_ForgeUGroup::class, $second);
+        self::assertInstanceOf(\User_ForgeUGroup::class, $third);
 
-        $this->assertEquals(10, $first->getId());
-        $this->assertEquals(12, $second->getId());
-        $this->assertEquals(15, $third->getId());
+        self::assertEquals(10, $first->getId());
+        self::assertEquals(12, $second->getId());
+        self::assertEquals(15, $third->getId());
 
-        $this->assertEquals('thom thumbs', $first->getName());
-        $this->assertEquals('wild rover', $second->getName());
-        $this->assertEquals('nb,er', $third->getName());
+        self::assertEquals('thom thumbs', $first->getName());
+        self::assertEquals('wild rover', $second->getName());
+        self::assertEquals('nb,er', $third->getName());
 
-        $this->assertEquals('whatever', $first->getDescription());
-        $this->assertEquals('whatttttt', $second->getDescription());
-        $this->assertEquals('whatever gbgf', $third->getDescription());
+        self::assertEquals('whatever', $first->getDescription());
+        self::assertEquals('whatttttt', $second->getDescription());
+        self::assertEquals('whatever gbgf', $third->getDescription());
     }
 
     public function testItGetsForgeUGroup(): void
@@ -105,13 +99,13 @@ final class User_ForgeUserGroupFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             'description' => 'user group',
         ];
 
-        $this->dao->shouldReceive('getForgeUGroup')->with($user_group_id)->andReturns($row);
+        $this->dao->method('getForgeUGroup')->with($user_group_id)->willReturn($row);
 
         $ugroup = $this->factory->getForgeUserGroupById($user_group_id);
 
-        $this->assertEquals(105, $ugroup->getId());
-        $this->assertEquals('my name', $ugroup->getName());
-        $this->assertEquals('user group', $ugroup->getDescription());
+        self::assertEquals(105, $ugroup->getId());
+        self::assertEquals('my name', $ugroup->getName());
+        self::assertEquals('user group', $ugroup->getDescription());
     }
 
     public function testItThrowsExceptionIfUGroupNotFound(): void
@@ -120,7 +114,7 @@ final class User_ForgeUserGroupFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $user_group_id = 105;
 
-        $this->dao->shouldReceive('getForgeUGroup')->once()->with($user_group_id)->andReturns(false);
+        $this->dao->expects(self::once())->method('getForgeUGroup')->with($user_group_id)->willReturn(false);
 
         $this->factory->getForgeUserGroupById($user_group_id);
     }
@@ -131,13 +125,13 @@ final class User_ForgeUserGroupFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $description = 'my desc';
         $id          = 102;
 
-        $this->dao->shouldReceive('createForgeUGroup')->with($name, $description)->andReturns($id);
+        $this->dao->method('createForgeUGroup')->with($name, $description)->willReturn($id);
 
         $ugroup = $this->factory->createForgeUGroup($name, $description);
 
-        $this->assertEquals(102, $ugroup->getId());
-        $this->assertEquals('my group', $ugroup->getName());
-        $this->assertEquals('my desc', $ugroup->getDescription());
+        self::assertEquals(102, $ugroup->getId());
+        self::assertEquals('my group', $ugroup->getName());
+        self::assertEquals('my desc', $ugroup->getDescription());
     }
 
     public function testItThrowsExceptionIfUGroupNameExists(): void
@@ -145,7 +139,9 @@ final class User_ForgeUserGroupFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $name        = 'my group';
         $description = 'my desc';
 
-        $this->dao->shouldReceive('createForgeUGroup')->with($name, $description)->andThrows(new User_UserGroupNameInvalidException());
+        $this->dao->method('createForgeUGroup')->with($name, $description)->willThrowException(
+            new User_UserGroupNameInvalidException()
+        );
 
         $this->expectException(\User_UserGroupNameInvalidException::class);
         $this->factory->createForgeUGroup($name, $description);

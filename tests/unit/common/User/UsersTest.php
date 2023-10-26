@@ -22,25 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\User;
 
-use Mockery;
-use PFUser;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Users;
 
 final class UsersTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testItExtractsUserNames(): void
     {
-        $users = new Users($this->getUserWithUsername('user1'), $this->getUserWithUsername('user2'));
+        $users = new Users(UserTestBuilder::aUser()->withUserName('user1')->build(), UserTestBuilder::aUser()->withUserName('user2')->build());
 
-        $this->assertEquals(['user1', 'user2'], $users->getNames());
-    }
-
-    private function getUserWithUsername(string $username): PFUser
-    {
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('getUserName')->andReturn($username);
-        return $user;
+        self::assertEqualsCanonicalizing(
+            ['user1', 'user2'],
+            $users->getNames(),
+        );
     }
 }

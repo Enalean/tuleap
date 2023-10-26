@@ -103,7 +103,7 @@ class UserSuspensionManager
         $this->renderer               = $renderer;
         $this->mail                   = $mail;
         $this->dao                    = $dao;
-        $this->user_manager           = $user_manager->instance();
+        $this->user_manager           = $user_manager;
         $this->lang_factory           = $lang_factory;
         $this->logger                 = $logger;
         $this->locale_switcher        = $locale_switcher;

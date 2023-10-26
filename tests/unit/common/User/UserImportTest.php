@@ -22,48 +22,41 @@ declare(strict_types=1);
 namespace Tuleap\User;
 
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use UserHelper;
 use UserImport;
 use UserManager;
 
 final class UserImportTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    private $user_email_filename;
-    private $user_filename;
-    /**
-     * @var UserImport
-     */
-    private $user_import;
+    private string $user_email_filename;
+    private string $user_filename;
+    private UserImport $user_import;
 
     /**
-     * @var UserHelper
+     * @var UserHelper&MockObject
      */
     private $user_helper;
 
     /**
-     * @var UserManager
+     * @var UserManager&MockObject
      */
     private $user_manager;
-
-    /**
-     * @var Project
-     */
-    private $project;
+    private Project $project;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->user_helper         = \Mockery::spy(\UserHelper::class);
-        $this->project             = \Mockery::spy(\Project::class, ['getID' => 110, 'getUserName' => false, 'isPublic' => false]);
-        $this->user_manager        = \Mockery::spy(\UserManager::class);
+        $this->user_helper         = $this->createMock(\UserHelper::class);
+        $this->project             = ProjectTestBuilder::aProject()->withId(110)->withAccessPrivate()->build();
+        $this->user_manager        = $this->createMock(\UserManager::class);
         $this->user_filename       = __DIR__ . '/_fixtures/user_import.txt';
         $this->user_email_filename = __DIR__ . '/_fixtures/user_email_import.txt';
-        $this->user_import         = new UserImport($this->user_manager, $this->user_helper, \Mockery::mock(ProjectMemberAdder::class));
+        $this->user_import         = new UserImport($this->user_manager, $this->user_helper, $this->createMock(ProjectMemberAdder::class));
     }
 
     protected function tearDown(): void
@@ -77,9 +70,9 @@ final class UserImportTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user = $this->getUser(102);
 
-        $this->user_manager->shouldReceive('findUser')->with('zurg')->andReturns($user);
+        $this->user_manager->method('findUser')->with('zurg')->willReturn($user);
 
-        $user_collection = $this->user_import->parse($this->project->getID(), $this->user_filename);
+        $user_collection = $this->user_import->parse((int) $this->project->getID(), $this->user_filename);
 
         $expected_user = [
             'has_avatar'       => 'false',
@@ -90,18 +83,19 @@ final class UserImportTest extends \Tuleap\Test\PHPUnit\TestCase
             'avatar_url'       => '',
         ];
 
-        $this->assertEquals([$expected_user], $user_collection->getFormattedUsers());
-        $this->assertEmpty($user_collection->getWarningsMultipleUsers());
-        $this->assertEmpty($user_collection->getWarningsInvalidUsers());
+        self::assertEquals([$expected_user], $user_collection->getFormattedUsers());
+        self::assertEmpty($user_collection->getWarningsMultipleUsers());
+        self::assertEmpty($user_collection->getWarningsInvalidUsers());
     }
 
     public function testItImportsUserByEmail(): void
     {
         $user = $this->getUser(102);
 
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('zurg@example.com')->andReturns([$user]);
+        $this->user_manager->method('findUser')->willReturn(null);
+        $this->user_manager->method('getAllUsersByEmail')->with('zurg@example.com')->willReturn([$user]);
 
-        $user_collection = $this->user_import->parse($this->project->getID(), $this->user_email_filename);
+        $user_collection = $this->user_import->parse((int) $this->project->getID(), $this->user_email_filename);
 
         $expected_user = [
             'has_avatar'       => 'false',
@@ -112,9 +106,9 @@ final class UserImportTest extends \Tuleap\Test\PHPUnit\TestCase
             'avatar_url'       => '',
         ];
 
-        $this->assertEquals([$expected_user], $user_collection->getFormattedUsers());
-        $this->assertEmpty($user_collection->getWarningsMultipleUsers());
-        $this->assertEmpty($user_collection->getWarningsInvalidUsers());
+        self::assertEquals([$expected_user], $user_collection->getFormattedUsers());
+        self::assertEmpty($user_collection->getWarningsMultipleUsers());
+        self::assertEmpty($user_collection->getWarningsInvalidUsers());
     }
 
     public function testItDoesNotImportUserByEmailIfEmailLinkedToMultipleUsers(): void
@@ -122,30 +116,31 @@ final class UserImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $user  = $this->getUser(102);
         $user2 = $this->getUser(103);
 
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('zurg@example.com')->andReturns([$user, $user2]);
+        $this->user_manager->method('findUser')->willReturn(null);
+        $this->user_manager->method('getAllUsersByEmail')->with('zurg@example.com')->willReturn([$user, $user2]);
 
-        $user_collection = $this->user_import->parse($this->project->getID(), $this->user_email_filename);
+        $user_collection = $this->user_import->parse((int) $this->project->getID(), $this->user_email_filename);
 
-        $this->assertEmpty($user_collection->getFormattedUsers());
-        $this->assertEquals(
+        self::assertEmpty($user_collection->getFormattedUsers());
+        self::assertEquals(
             [
                 ['warning' => 'zurg@example.com has multiple corresponding users.'],
             ],
             $user_collection->getWarningsMultipleUsers(),
         );
-        $this->assertEmpty($user_collection->getWarningsInvalidUsers());
+        self::assertEmpty($user_collection->getWarningsInvalidUsers());
     }
 
     public function testItDoesNotImportUserIfUserNameDoesNotExist(): void
     {
-        $this->user_manager->shouldReceive('findUser')->with('zurg')->andReturns(null);
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->andReturns([]);
+        $this->user_manager->method('findUser')->with('zurg')->willReturn(null);
+        $this->user_manager->method('getAllUsersByEmail')->willReturn([]);
 
-        $user_collection = $this->user_import->parse($this->project->getID(), $this->user_filename);
+        $user_collection = $this->user_import->parse((int) $this->project->getID(), $this->user_filename);
 
-        $this->assertEmpty($user_collection->getFormattedUsers());
-        $this->assertEmpty($user_collection->getWarningsMultipleUsers());
-        $this->assertEquals(
+        self::assertEmpty($user_collection->getFormattedUsers());
+        self::assertEmpty($user_collection->getWarningsMultipleUsers());
+        self::assertEquals(
             [
                 ['warning' => "User 'zurg' does not exist"],
             ],
@@ -153,17 +148,18 @@ final class UserImportTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    private function getUser(int $id): PFUser
+    private function getUser(int $id): PFUser&MockObject
     {
-        $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('isActive')->andReturns(true);
-        $user->shouldReceive('isMember')->with($this->project->getID())->andReturns(false);
-        $user->shouldReceive('getEmail')->andReturns('zurg@example.com');
-        $user->shouldReceive('getUserName')->andReturns('zurg');
-        $user->shouldReceive('getRealname')->andReturns('zorg');
-        $user->shouldReceive('hasAvatar')->andReturns('false');
-        $user->shouldReceive('getId')->andReturns($id);
-        $this->user_helper->shouldReceive('getDisplayName')->andReturns('getDisplayName');
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isActive')->willReturn(true);
+        $user->method('isMember')->with($this->project->getID())->willReturn(false);
+        $user->method('getEmail')->willReturn('zurg@example.com');
+        $user->method('getUserName')->willReturn('zurg');
+        $user->method('getRealname')->willReturn('zorg');
+        $user->method('hasAvatar')->willReturn('false');
+        $user->method('getId')->willReturn($id);
+        $user->method('getAvatarUrl')->willReturn('');
+        $this->user_helper->method('getDisplayName')->willReturn('getDisplayName');
 
         return $user;
     }

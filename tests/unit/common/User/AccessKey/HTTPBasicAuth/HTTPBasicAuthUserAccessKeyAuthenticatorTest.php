@@ -22,38 +22,32 @@ declare(strict_types=1);
 
 namespace Tuleap\User\AccessKey\HTTPBasicAuth;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Authentication\Scope\AuthenticationTestCoveringScope;
 use Tuleap\Authentication\Scope\AuthenticationTestScopeIdentifier;
 use Tuleap\Authentication\SplitToken\InvalidIdentifierFormatException;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\User\AccessKey\AccessKeyException;
 use Tuleap\User\AccessKey\AccessKeyVerifier;
 
 final class HTTPBasicAuthUserAccessKeyAuthenticatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|SplitTokenIdentifierTranslator
+     * @var \PHPUnit\Framework\MockObject\MockObject&SplitTokenIdentifierTranslator
      */
     private $access_key_identifier_unserializer;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AccessKeyVerifier
+     * @var \PHPUnit\Framework\MockObject\MockObject&AccessKeyVerifier
      */
     private $access_key_verifier;
-
-    /**
-     * @var HTTPBasicAuthUserAccessKeyAuthenticator
-     */
-    private $authenticator;
+    private HTTPBasicAuthUserAccessKeyAuthenticator $authenticator;
 
     protected function setUp(): void
     {
-        $this->access_key_identifier_unserializer = \Mockery::mock(SplitTokenIdentifierTranslator::class);
-        $this->access_key_verifier                = \Mockery::mock(AccessKeyVerifier::class);
+        $this->access_key_identifier_unserializer = $this->createMock(SplitTokenIdentifierTranslator::class);
+        $this->access_key_verifier                = $this->createMock(AccessKeyVerifier::class);
 
         $this->authenticator = new HTTPBasicAuthUserAccessKeyAuthenticator(
             $this->access_key_identifier_unserializer,
@@ -65,14 +59,13 @@ final class HTTPBasicAuthUserAccessKeyAuthenticatorTest extends \Tuleap\Test\PHP
 
     public function testUserCanBeAuthenticatedFromItsAccessKey(): void
     {
-        $split_token = \Mockery::mock(SplitToken::class);
-        $this->access_key_identifier_unserializer->shouldReceive('getSplitToken')
-            ->andReturn($split_token);
-        $expected_user = \Mockery::mock(\PFUser::class);
-        $expected_user->shouldReceive('getUserName')->andReturn('username');
-        $this->access_key_verifier->shouldReceive('getUser')
-            ->with($split_token, \Mockery::any(), \Mockery::any())
-            ->andReturn($expected_user);
+        $split_token = $this->createMock(SplitToken::class);
+        $this->access_key_identifier_unserializer->method('getSplitToken')
+            ->willReturn($split_token);
+        $expected_user = UserTestBuilder::aUser()->withUserName('username')->build();
+        $this->access_key_verifier->method('getUser')
+            ->with($split_token, self::anything(), self::anything())
+            ->willReturn($expected_user);
 
         $user = $this->authenticator->getUser(
             'username',
@@ -85,8 +78,8 @@ final class HTTPBasicAuthUserAccessKeyAuthenticatorTest extends \Tuleap\Test\PHP
 
     public function testDoesNotAuthenticateUserWhenThePasswordStringDoesNotLookLikeAnAccessKey(): void
     {
-        $this->access_key_identifier_unserializer->shouldReceive('getSplitToken')
-            ->andThrow(InvalidIdentifierFormatException::class);
+        $this->access_key_identifier_unserializer->method('getSplitToken')
+            ->willThrowException(new InvalidIdentifierFormatException());
 
         $user = $this->authenticator->getUser(
             'username',
@@ -99,10 +92,10 @@ final class HTTPBasicAuthUserAccessKeyAuthenticatorTest extends \Tuleap\Test\PHP
 
     public function testDoesNotAuthenticateUserWhenTheGivenAccessKeyIsNotValid(): void
     {
-        $this->access_key_identifier_unserializer->shouldReceive('getSplitToken')
-            ->andReturn(\Mockery::mock(SplitToken::class));
-        $this->access_key_verifier->shouldReceive('getUser')
-            ->andThrow(
+        $this->access_key_identifier_unserializer->method('getSplitToken')
+            ->willReturn($this->createMock(SplitToken::class));
+        $this->access_key_verifier->method('getUser')
+            ->willThrowException(
                 new class extends AccessKeyException
                 {
                 }
@@ -119,13 +112,12 @@ final class HTTPBasicAuthUserAccessKeyAuthenticatorTest extends \Tuleap\Test\PHP
 
     public function testDoesNotAuthenticateUserWhenTheAccessKeyDoesNotMatchTheGivenUsername(): void
     {
-        $split_token = \Mockery::mock(SplitToken::class);
-        $this->access_key_identifier_unserializer->shouldReceive('getSplitToken')
-            ->andReturn($split_token);
-        $found_user_from_access_key = \Mockery::mock(\PFUser::class);
-        $found_user_from_access_key->shouldReceive('getUserName')->andReturn('different_user');
-        $this->access_key_verifier->shouldReceive('getUser')
-            ->andReturn($found_user_from_access_key);
+        $split_token = $this->createMock(SplitToken::class);
+        $this->access_key_identifier_unserializer->method('getSplitToken')
+            ->willReturn($split_token);
+        $found_user_from_access_key = UserTestBuilder::aUser()->withUserName('different_user')->build();
+        $this->access_key_verifier->method('getUser')
+            ->willReturn($found_user_from_access_key);
 
         $this->expectException(HTTPBasicAuthUserAccessKeyMisusageException::class);
         $this->authenticator->getUser(

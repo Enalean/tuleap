@@ -22,24 +22,22 @@ declare(strict_types=1);
 
 namespace Tuleap\User;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Layout\SearchFormPresenter;
 use Tuleap\Layout\SearchFormPresenterBuilder;
 use Tuleap\Project\ListOfProjectPresentersBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\AnonymousUserTestProvider;
 
-class SwitchToPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SwitchToPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     public function testNullIfUserIsNotLoggedIn(): void
     {
         $builder = new SwitchToPresenterBuilder(
-            Mockery::mock(ListOfProjectPresentersBuilder::class),
-            Mockery::mock(SearchFormPresenterBuilder::class)
+            $this->createMock(ListOfProjectPresentersBuilder::class),
+            $this->createMock(SearchFormPresenterBuilder::class)
         );
 
         self::assertNull($builder->build(CurrentUserWithLoggedInInformation::fromAnonymous(new AnonymousUserTestProvider())));
@@ -50,22 +48,20 @@ class SwitchToPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         \ForgeConfig::set("access_mode", "restricted");
         \ForgeConfig::set("is_trove_cat_enabled", false);
 
-        $user = Mockery::mock(\PFUser::class)->shouldReceive(
-            ['isAnonymous' => false, 'isRestricted' => false, 'isAlive' => true]
-        )->getMock();
+        $user = UserTestBuilder::anActiveUser()->build();
 
-        $project_presenters_builder = Mockery::mock(ListOfProjectPresentersBuilder::class);
+        $project_presenters_builder = $this->createMock(ListOfProjectPresentersBuilder::class);
         $project_presenters_builder
-            ->shouldReceive('getProjectPresenters')
+            ->expects(self::once())
+            ->method('getProjectPresenters')
             ->with($user)
-            ->once()
-            ->andReturn([]);
+            ->willReturn([]);
 
-        $search_form_presenter_builder = Mockery::mock(SearchFormPresenterBuilder::class);
+        $search_form_presenter_builder = $this->createMock(SearchFormPresenterBuilder::class);
         $search_form_presenter_builder
-            ->shouldReceive('build')
-            ->once()
-            ->andReturn(new SearchFormPresenter("soft", []));
+            ->expects(self::once())
+            ->method('build')
+            ->willReturn(new SearchFormPresenter("soft", []));
 
         $builder = new SwitchToPresenterBuilder($project_presenters_builder, $search_form_presenter_builder);
 
@@ -83,22 +79,20 @@ class SwitchToPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         \ForgeConfig::set("access_mode", "restricted");
         \ForgeConfig::set("is_trove_cat_enabled", false);
 
-        $user = Mockery::mock(\PFUser::class)->shouldReceive(
-            ['isAnonymous' => false, 'isRestricted' => false, 'isAlive' => false]
-        )->getMock();
+        $user = UserTestBuilder::aUser()->withId(101)->withStatus('D')->build();
 
-        $project_presenters_builder = Mockery::mock(ListOfProjectPresentersBuilder::class);
+        $project_presenters_builder = $this->createMock(ListOfProjectPresentersBuilder::class);
         $project_presenters_builder
-            ->shouldReceive('getProjectPresenters')
+            ->expects(self::once())
+            ->method('getProjectPresenters')
             ->with($user)
-            ->once()
-            ->andReturn([]);
+            ->willReturn([]);
 
-        $search_form_presenter_builder = Mockery::mock(SearchFormPresenterBuilder::class);
+        $search_form_presenter_builder = $this->createMock(SearchFormPresenterBuilder::class);
         $search_form_presenter_builder
-            ->shouldReceive('build')
-            ->once()
-            ->andReturn(new SearchFormPresenter("soft", []));
+            ->expects(self::once())
+            ->method('build')
+            ->willReturn(new SearchFormPresenter("soft", []));
 
         $builder = new SwitchToPresenterBuilder($project_presenters_builder, $search_form_presenter_builder);
 
@@ -112,22 +106,20 @@ class SwitchToPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         \ForgeConfig::set("access_mode", "restricted");
         \ForgeConfig::set("is_trove_cat_enabled", false);
 
-        $user = Mockery::mock(\PFUser::class)->shouldReceive(
-            ['isAnonymous' => false, 'isRestricted' => true, 'isAlive' => true]
-        )->getMock();
+        $user = UserTestBuilder::aRestrictedUser()->build();
 
-        $project_presenters_builder = Mockery::mock(ListOfProjectPresentersBuilder::class);
+        $project_presenters_builder = $this->createMock(ListOfProjectPresentersBuilder::class);
         $project_presenters_builder
-            ->shouldReceive('getProjectPresenters')
+            ->expects(self::once())
+            ->method('getProjectPresenters')
             ->with($user)
-            ->once()
-            ->andReturn([]);
+            ->willReturn([]);
 
-        $search_form_presenter_builder = Mockery::mock(SearchFormPresenterBuilder::class);
+        $search_form_presenter_builder = $this->createMock(SearchFormPresenterBuilder::class);
         $search_form_presenter_builder
-            ->shouldReceive('build')
-            ->once()
-            ->andReturn(new SearchFormPresenter("soft", []));
+            ->expects(self::once())
+            ->method('build')
+            ->willReturn(new SearchFormPresenter("soft", []));
 
         $builder = new SwitchToPresenterBuilder($project_presenters_builder, $search_form_presenter_builder);
 

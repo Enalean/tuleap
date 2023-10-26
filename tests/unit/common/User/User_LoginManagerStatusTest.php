@@ -22,11 +22,10 @@ declare(strict_types=1);
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class User_LoginManagerStatusTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\ForgeConfigSandbox;
     use \Tuleap\GlobalLanguageMock;
 
-    private $user_status_manager;
+    private User_UserStatusManager $user_status_manager;
 
     protected function setUp(): void
     {

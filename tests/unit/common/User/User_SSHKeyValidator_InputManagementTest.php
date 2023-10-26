@@ -21,9 +21,9 @@
 
 declare(strict_types=1);
 
-class User_SSHKeyValidator_InputManagementTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+final class User_SSHKeyValidator_InputManagementTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalResponseMock;
     use \Tuleap\GlobalLanguageMock;
 
@@ -57,8 +57,8 @@ class User_SSHKeyValidator_InputManagementTest extends \PHPUnit\Framework\TestCa
     {
         $keys = $this->validator->validateAllKeys([$this->key1]);
 
-        $this->assertCount(1, $keys);
-        $this->assertEquals($this->key1, $keys[0]);
+        self::assertCount(1, $keys);
+        self::assertEquals($this->key1, $keys[0]);
     }
 
     public function testItUpdatesWithTwoKeys(): void
@@ -68,9 +68,9 @@ class User_SSHKeyValidator_InputManagementTest extends \PHPUnit\Framework\TestCa
             $this->key2,
         ]);
 
-        $this->assertCount(2, $keys);
-        $this->assertEquals($this->key1, $keys[0]);
-        $this->assertEquals($this->key2, $keys[1]);
+        self::assertCount(2, $keys);
+        self::assertEquals($this->key1, $keys[0]);
+        self::assertEquals($this->key2, $keys[1]);
     }
 
     public function testItUpdatesWithAnExtraSpaceAfterFirstKey(): void
@@ -80,9 +80,9 @@ class User_SSHKeyValidator_InputManagementTest extends \PHPUnit\Framework\TestCa
             $this->key2,
         ]);
 
-        $this->assertCount(2, $keys);
-        $this->assertEquals($this->key1, $keys[0]);
-        $this->assertEquals($this->key2, $keys[1]);
+        self::assertCount(2, $keys);
+        self::assertEquals($this->key1, $keys[0]);
+        self::assertEquals($this->key2, $keys[1]);
     }
 
     public function testItUpdatesWithAnEmptyKey(): void
@@ -93,8 +93,8 @@ class User_SSHKeyValidator_InputManagementTest extends \PHPUnit\Framework\TestCa
             $this->key2,
         ]);
 
-        $this->assertCount(2, $keys);
-        $this->assertEquals($this->key1, $keys[0]);
-        $this->assertEquals($this->key2, $keys[1]);
+        self::assertCount(2, $keys);
+        self::assertEquals($this->key1, $keys[0]);
+        self::assertEquals($this->key2, $keys[1]);
     }
 }

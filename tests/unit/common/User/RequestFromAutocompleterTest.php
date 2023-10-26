@@ -23,52 +23,65 @@ declare(strict_types=1);
 namespace Tuleap\User;
 
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use ProjectUGroup;
 use Rule_Email;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class RequestFromAutocompleterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalResponseMock;
 
-    private $rule_email;
-    private $user_manager;
-    private $project_members;
-    private $developers;
-    private $project;
-    private $ugroup_manager;
-    private $secret;
-    private $current_user;
-    private $smith;
-    private $thomas;
-    /** @var InvalidEntryInAutocompleterCollection */
-    private $invalid_entries;
+    private Rule_Email $rule_email;
+    private \UserManager&MockObject $user_manager;
+    private ProjectUGroup $project_members;
+    private ProjectUGroup $developers;
+    private \Project $project;
+    private \UGroupManager&MockObject $ugroup_manager;
+    private ProjectUGroup $secret;
+    private PFUser&MockObject $current_user;
+    private PFUser $smith;
+    private PFUser $thomas;
+    private InvalidEntryInAutocompleterCollection $invalid_entries;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->current_user = \Mockery::spy(\PFUser::class);
+        $this->current_user = $this->createMock(\PFUser::class);
         $this->smith        = new PFUser(['user_id' => 234, 'language_id' => 'en_US']);
         $this->thomas       = new PFUser(['user_id' => 235, 'language_id' => 'en_US']);
+
+        $this->current_user->method('isAdmin')->willReturn(false);
 
         $this->project_members = new ProjectUGroup(['ugroup_id' => 3]);
         $this->developers      = new ProjectUGroup(['ugroup_id' => 103]);
         $this->secret          = new ProjectUGroup(['ugroup_id' => 104]);
 
-        $this->project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUserName' => false, 'isPublic' => false]);
-        $this->current_user->shouldReceive('isMemberOfUGroup')->with($this->developers->getId(), $this->project->getId())->andReturns(true);
-        $this->current_user->shouldReceive('isMemberOfUGroup')->with($this->secret->getId(), $this->project->getId())->andReturns(false);
+        $this->project = ProjectTestBuilder::aProject()->withId(101)->withAccessPrivate()->build();
+        $this->current_user->method('isMemberOfUGroup')->willReturnCallback(
+            function (int $ugroup_id, string $group_id): bool {
+                if ($group_id === "101" && $ugroup_id === 103) {
+                    return true;
+                }
 
-        $this->ugroup_manager = \Mockery::spy(\UGroupManager::class);
-        $this->ugroup_manager->shouldReceive('getUgroupByName')->with($this->project, 'project_members')->andReturns($this->project_members);
-        $this->ugroup_manager->shouldReceive('getUgroupByName')->with($this->project, 'Developers')->andReturns($this->developers);
-        $this->ugroup_manager->shouldReceive('getUgroupByName')->with($this->project, 'Secret')->andReturns($this->secret);
+                    return false;
+            }
+        );
 
-        $this->user_manager = \Mockery::spy(\UserManager::class);
-        $this->user_manager->shouldReceive('findUser')->with('Smith (asmith)')->andReturns($this->smith);
-        $this->user_manager->shouldReceive('findUser')->with('Thomas A. Anderson (neo)')->andReturns($this->thomas);
+        $this->ugroup_manager = $this->createMock(\UGroupManager::class);
+        $this->ugroup_manager->method('getUgroupByName')->willReturnMap([
+            [$this->project, 'project_members', $this->project_members],
+            [$this->project, 'Developers', $this->developers],
+            [$this->project, 'Secret', $this->secret],
+        ]);
+
+        $this->user_manager = $this->createMock(\UserManager::class);
+        $this->user_manager->method('findUser')->willReturnMap([
+            ['Smith (asmith)', $this->smith],
+            ['Thomas A. Anderson (neo)', $this->thomas],
+        ]);
 
         $this->invalid_entries = new InvalidEntryInAutocompleterCollection();
 
@@ -95,53 +108,53 @@ final class RequestFromAutocompleterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $request = $this->getRequest('jdoe@example.com,smith@example.com');
 
-        $this->assertEquals(['jdoe@example.com', 'smith@example.com'], $request->getEmails());
+        self::assertEquals(['jdoe@example.com', 'smith@example.com'], $request->getEmails());
     }
 
     public function testItIgnoresIfItIsUnknown(): void
     {
         $request = $this->getRequest(',bla,');
 
-        $this->assertEmpty($request->getEmails());
-        $this->assertEmpty($request->getUsers());
-        $this->assertEmpty($request->getUgroups());
+        self::assertEmpty($request->getEmails());
+        self::assertEmpty($request->getUsers());
+        self::assertEmpty($request->getUgroups());
     }
 
     public function testItExtractsUgroups(): void
     {
         $request = $this->getRequest('_ugroup:project_members,_ugroup:Developers');
 
-        $this->assertEquals([$this->project_members, $this->developers], $request->getUgroups());
+        self::assertEquals([$this->project_members, $this->developers], $request->getUgroups());
     }
 
     public function testItDoesNotLeakSecretUgroups(): void
     {
         $request = $this->getRequest('_ugroup:Secret');
 
-        $this->assertEquals([], $request->getUgroups());
+        self::assertEquals([], $request->getUgroups());
     }
 
     public function testItExtractsUsers(): void
     {
         $request = $this->getRequest('Smith (asmith),Thomas A. Anderson (neo)');
 
-        $this->assertEquals([$this->smith, $this->thomas], $request->getUsers());
+        self::assertEquals([$this->smith, $this->thomas], $request->getUsers());
     }
 
     public function testItIgnoresUnknownPeople(): void
     {
         $request = $this->getRequest('Unknown (seraph)');
 
-        $this->assertEquals([], $request->getUsers());
+        self::assertEquals([], $request->getUsers());
     }
 
     public function testItExtractsEmailsAndUgroupsAndUsers(): void
     {
         $request = $this->getRequest('jdoe@example.com,Thomas A. Anderson (neo),_ugroup:Developers');
 
-        $this->assertEquals(['jdoe@example.com'], $request->getEmails());
-        $this->assertEquals([$this->developers], $request->getUgroups());
-        $this->assertEquals([$this->thomas], $request->getUsers());
+        self::assertEquals(['jdoe@example.com'], $request->getEmails());
+        self::assertEquals([$this->developers], $request->getUgroups());
+        self::assertEquals([$this->thomas], $request->getUsers());
     }
 
     public function testItCollectsUnknownEntries(): void

@@ -20,6 +20,7 @@
 
 namespace Tuleap\User;
 
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\User\ForgeUserGroupPermission\RestProjectManagementPermission;
 use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminPermission;
 use Tuleap\User\ForgeUserGroupPermission\RetrieveSystemEventsInformationApi;
@@ -31,35 +32,34 @@ use User_ForgeUserGroupPermission_RetrieveUserMembershipInformation;
 use User_ForgeUserGroupPermission_UserManagement;
 use User_ForgeUserGroupPermissionsDao;
 
-class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends \PHPUnit\Framework\TestCase // @codingStandardsIgnoreLine
+// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     /**
-     * @var User_ForgeUserGroupPermissionsDao
+     * @var User_ForgeUserGroupPermissionsDao&\PHPUnit\Framework\MockObject\MockObject
      */
     protected $dao;
-
-    /**
-     * @var User_ForgeUserGroupPermissionsFactory
-     */
-    protected $factory;
+    protected User_ForgeUserGroupPermissionsFactory $factory;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dao     = \Mockery::spy(\User_ForgeUserGroupPermissionsDao::class);
-        $this->factory = new User_ForgeUserGroupPermissionsFactory($this->dao, \Mockery::spy(\EventManager::class));
+        $this->dao     = $this->createMock(\User_ForgeUserGroupPermissionsDao::class);
+        $event_manager = $this->createMock(\EventManager::class);
+
+        $event_manager->method('processEvent');
+
+        $this->factory = new User_ForgeUserGroupPermissionsFactory($this->dao, $event_manager);
     }
 
     public function testItReturnsEmptyArrayIfNoResultsInDb(): void
     {
         $user_group = new User_ForgeUGroup(101, '', '');
 
-        $this->dao->shouldReceive('getPermissionsForForgeUGroup')->with(101)->andReturns(false);
+        $this->dao->method('getPermissionsForForgeUGroup')->with(101)->willReturn(false);
         $all = $this->factory->getPermissionsForForgeUserGroup($user_group);
 
-        $this->assertEquals(0, count($all));
+        self::assertEquals(0, count($all));
     }
 
     public function testItReturnsAnArrayOfDistinctPermissions(): void
@@ -72,14 +72,14 @@ class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends \PH
             ['permission_id' => $expected_id],
         ];
 
-        $this->dao->shouldReceive('getPermissionsForForgeUGroup')->with(101)->andReturns($permission_ids);
+        $this->dao->method('getPermissionsForForgeUGroup')->with(101)->willReturn($permission_ids);
         $all = $this->factory->getPermissionsForForgeUserGroup($user_group);
 
-        $this->assertCount(1, $all);
+        self::assertCount(1, $all);
 
         $permission = $all[0];
-        $this->assertInstanceOf(\User_ForgeUserGroupPermission_ProjectApproval::class, $permission);
-        $this->assertEquals($expected_id, $permission->getId());
+        self::assertInstanceOf(\User_ForgeUserGroupPermission_ProjectApproval::class, $permission);
+        self::assertEquals($expected_id, $permission->getId());
     }
 
     public function testItReturnsEmptyArrayIfAllForgeUserGroupHasAllPermissions(): void
@@ -103,20 +103,20 @@ class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends \PH
             ['permission_id' => $expected_id9],
         ];
 
-        $this->dao->shouldReceive('getPermissionsForForgeUGroup')->with(101)->andReturns($permission_ids);
+        $this->dao->method('getPermissionsForForgeUGroup')->with(101)->willReturn($permission_ids);
         $all = $this->factory->getAllUnusedForgePermissionsForForgeUserGroup($user_group);
 
-        $this->assertEquals(0, count($all));
+        self::assertEquals(0, count($all));
     }
 
     public function testItReturnsArrayIfAllForgeUserGroupHasNoPermission(): void
     {
         $user_group = new UserForgeUGroupPresenter(new User_ForgeUGroup(101, '', ''), true);
 
-        $this->dao->shouldReceive('getPermissionsForForgeUGroup')->with(101)->andReturns(false);
+        $this->dao->method('getPermissionsForForgeUGroup')->with(101)->willReturn(false);
         $all = $this->factory->getAllUnusedForgePermissionsForForgeUserGroup($user_group);
 
         $available_permissions = $this->factory->getAllAvailableForgePermissions();
-        $this->assertEquals(count($available_permissions), count($all));
+        self::assertEquals(count($available_permissions), count($all));
     }
 }

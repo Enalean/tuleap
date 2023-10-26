@@ -27,10 +27,9 @@ use BaseLanguageFactory;
 use Codendi_Mail;
 use DateInterval;
 use ForgeConfig;
-use Hamcrest\Matchers;
 use MailPresenterFactory;
-use Mockery;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use TemplateRenderer;
 use Tuleap\Dao\UserSuspensionDao;
@@ -42,20 +41,19 @@ use UserManager;
 
 class UserSuspensionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
-    private $dao;
-    private $lang_factory;
-    private $language;
-    private $mail;
-    private $mail_account_suspension_alert_presenter;
-    private $mail_presenter_factory;
-    private $template_renderer;
-    private $user_manager;
-    private $user_suspension_logger;
-    private $user_suspension_manager;
-    private $mail_account_suspension_presenter;
+    private UserSuspensionDao&MockObject $dao;
+    private BaseLanguageFactory&MockObject $lang_factory;
+    private BaseLanguage&MockObject $language;
+    private Codendi_Mail&MockObject $mail;
+    private MailAccountSuspensionAlertPresenter&MockObject $mail_account_suspension_alert_presenter;
+    private MailPresenterFactory&MockObject $mail_presenter_factory;
+    private TemplateRenderer&MockObject $template_renderer;
+    private UserManager&MockObject $user_manager;
+    private LoggerInterface&MockObject $user_suspension_logger;
+    private UserSuspensionManager $user_suspension_manager;
+    private MailAccountSuspensionPresenter&MockObject $mail_account_suspension_presenter;
 
     public function setUp(): void
     {
@@ -66,17 +64,17 @@ class UserSuspensionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set('sys_suspend_non_project_member_delay', 4);
         ForgeConfig::set('sys_suspend_send_account_suspension_email', 1);
 
-        $this->mail_account_suspension_alert_presenter = Mockery::mock(MailAccountSuspensionAlertPresenter::class);
-        $this->mail_account_suspension_presenter       = Mockery::mock(MailAccountSuspensionPresenter::class);
-        $this->mail_presenter_factory                  = Mockery::mock(MailPresenterFactory::class);
-        $this->template_renderer                       = Mockery::mock(TemplateRenderer::class);
-        $this->mail                                    = Mockery::mock(Codendi_Mail::class);
-        $this->dao                                     = Mockery::mock(UserSuspensionDao::class);
-        $this->language                                = Mockery::mock(BaseLanguage::class);
-        $this->lang_factory                            = Mockery::mock(BaseLanguageFactory::class);
-        $this->user_manager                            = Mockery::mock(UserManager::class);
-        $this->user_manager->shouldReceive('instance')->andReturn($this->user_manager);
-        $this->user_suspension_logger = Mockery::mock(LoggerInterface::class);
+        $this->mail_account_suspension_alert_presenter = $this->createMock(MailAccountSuspensionAlertPresenter::class);
+        $this->mail_account_suspension_presenter       = $this->createMock(MailAccountSuspensionPresenter::class);
+        $this->mail_presenter_factory                  = $this->createMock(MailPresenterFactory::class);
+        $this->template_renderer                       = $this->createMock(TemplateRenderer::class);
+        $this->mail                                    = $this->createMock(Codendi_Mail::class);
+        $this->dao                                     = $this->createMock(UserSuspensionDao::class);
+        $this->language                                = $this->createMock(BaseLanguage::class);
+        $this->lang_factory                            = $this->createMock(BaseLanguageFactory::class);
+        $this->user_manager                            = $this->createMock(UserManager::class);
+
+        $this->user_suspension_logger = $this->createMock(LoggerInterface::class);
 
         $this->user_suspension_manager = new UserSuspensionManager(
             $this->mail_presenter_factory,
@@ -86,7 +84,7 @@ class UserSuspensionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->user_manager,
             $this->lang_factory,
             $this->user_suspension_logger,
-            new LocaleSwitcher()
+            new LocaleSwitcher(),
         );
     }
 
@@ -101,23 +99,23 @@ class UserSuspensionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $idle_user = new PFUser(["email" => "valid_mail@domain.com", "user_id" => 111, "user_name" => "idle_user", "language_id" => "fr_FR"]);
 
-        $this->dao->shouldReceive('getIdleAccounts')
-            ->andReturn([['user_id' => 111, 'last_access_date' => $last_access_date->getTimestamp()]]);
-        $this->user_manager->shouldReceive('getUserbyId')->with(111)->andReturn($idle_user);
-        $this->lang_factory->shouldReceive('getBaseLanguage')->andReturn($this->language);
-        $this->user_suspension_logger->shouldReceive('info');
-        $this->mail_presenter_factory->shouldReceive('createMailAccountSuspensionAlertPresenter')
-            ->with(Matchers::equalTo($last_access_date), Matchers::equalTo($suspension_date), $this->language)
-            ->andReturn($this->mail_account_suspension_alert_presenter);
+        $this->dao->method('getIdleAccounts')
+            ->willReturn([['user_id' => 111, 'last_access_date' => $last_access_date->getTimestamp()]]);
+        $this->user_manager->method('getUserbyId')->with(111)->willReturn($idle_user);
+        $this->lang_factory->method('getBaseLanguage')->willReturn($this->language);
+        $this->user_suspension_logger->method('info');
+        $this->mail_presenter_factory->method('createMailAccountSuspensionAlertPresenter')
+            ->with($last_access_date, $suspension_date, $this->language)
+            ->willReturn($this->mail_account_suspension_alert_presenter);
 
-        $this->mail->shouldReceive('setFrom')->with(ForgeConfig::get('sys_noreply'));
-        $this->mail->shouldReceive('setTo')->with($idle_user->getEmail());
-        $this->mail->shouldReceive('setSubject');
-        $this->mail->shouldReceive('setBodyHtml');
-        $this->mail->shouldReceive('send')->andReturn(true)->atLeast()->once();
-        $this->template_renderer->shouldReceive('renderToString')
+        $this->mail->method('setFrom')->with(ForgeConfig::get('sys_noreply'));
+        $this->mail->method('setTo')->with($idle_user->getEmail());
+        $this->mail->method('setSubject');
+        $this->mail->method('setBodyHtml');
+        $this->mail->expects(self::atLeast(1))->method('send')->willReturn(true);
+        $this->template_renderer->method('renderToString')
             ->with('mail-suspension-alert', $this->mail_account_suspension_alert_presenter)
-            ->andReturn('Rendered_Email');
+            ->willReturn('Rendered_Email');
 
         $this->user_suspension_manager->sendNotificationMailToIdleAccounts($test_date);
     }
@@ -132,23 +130,31 @@ class UserSuspensionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $non_project_members  = [['user_id' => 103], ['user_id' => 104]];
         $non_project_member_1 = 103;
         $non_project_member_2 = 104;
-        $this->user_suspension_logger->shouldReceive('info');
-        $this->user_suspension_logger->shouldReceive('error');
-        $this->user_suspension_logger->shouldReceive('debug');
+        $this->user_suspension_logger->method('info');
+        $this->user_suspension_logger->method('error');
+        $this->user_suspension_logger->method('debug');
 
-        $this->dao->shouldReceive('returnNotProjectMembers')->andReturn($non_project_members);
-        $this->dao->shouldReceive('delayForBeingNotProjectMembers')->with($non_project_member_1)->andReturn([]);
-        $this->dao->shouldReceive('delayForBeingNotProjectMembers')->with($non_project_member_2)->andReturn([['date' => 1579267252]]);
+        $this->dao->method('returnNotProjectMembers')->willReturn($non_project_members);
+        $this->dao->method('delayForBeingNotProjectMembers')->willReturnCallback(
+            function (int $user_id) use ($non_project_member_1, $non_project_member_2): array {
+                if ($user_id === $non_project_member_1) {
+                    return [];
+                } elseif ($user_id === $non_project_member_2) {
+                    return [['date' => 1579267252]];
+                }
 
-        $this->dao->shouldReceive('delayForBeingSubscribed')
-            ->with($non_project_member_1, Matchers::equalTo($last_remove))
-            ->andReturn([[null]]);
+                throw new \LogicException('must not be here.');
+            }
+        );
 
-        $this->dao->shouldReceive('suspendAccount')->with($non_project_member_1);
-        $this->dao->shouldReceive('suspendAccount')->with($non_project_member_2);
+        $this->dao->method('delayForBeingSubscribed')
+            ->with($non_project_member_1, $last_remove)
+            ->willReturn([[null]]);
 
-        $this->dao->shouldReceive('suspendInactiveAccounts')->with(Matchers::equalTo($last_valid_access))->once();
-        $this->dao->shouldReceive('suspendExpiredAccounts')->with($test_date)->once();
+        $this->dao->method('suspendAccount')->withConsecutive([$non_project_member_1], [$non_project_member_2]);
+
+        $this->dao->expects(self::once())->method('suspendInactiveAccounts')->with($last_valid_access);
+        $this->dao->expects(self::once())->method('suspendExpiredAccounts')->with($test_date);
 
         $this->user_suspension_manager->checkUserAccountValidity($test_date);
     }
@@ -163,23 +169,23 @@ class UserSuspensionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $inactive_user = new PFUser(["email" => "valid_mail@domain.com", "user_id" => 111, "user_name" => "inactive_user", "language_id" => "fr_FR"]);
 
-        $this->dao->shouldReceive('getUsersWithoutConnectionOrAccessBetweenDates')
-            ->andReturn([['user_id' => 111, 'last_access_date' => 1578752699]]);
-        $this->user_manager->shouldReceive('getUserbyId')->with(111)->andReturn($inactive_user);
-        $this->lang_factory->shouldReceive('getBaseLanguage')->andReturn($this->language);
-        $this->user_suspension_logger->shouldReceive('info');
-        $this->mail_presenter_factory->shouldReceive('createMailAccountSuspensionPresenter')
-            ->with(Matchers::equalTo($last_access_date), $this->language)
-            ->andReturn($this->mail_account_suspension_presenter);
+        $this->dao->method('getUsersWithoutConnectionOrAccessBetweenDates')
+            ->willReturn([['user_id' => 111, 'last_access_date' => 1578752699]]);
+        $this->user_manager->method('getUserbyId')->with(111)->willReturn($inactive_user);
+        $this->lang_factory->method('getBaseLanguage')->willReturn($this->language);
+        $this->user_suspension_logger->method('info');
+        $this->mail_presenter_factory->method('createMailAccountSuspensionPresenter')
+            ->with($last_access_date, $this->language)
+            ->willReturn($this->mail_account_suspension_presenter);
 
-        $this->mail->shouldReceive('setFrom')->with(ForgeConfig::get('sys_noreply'));
-        $this->mail->shouldReceive('setTo')->with($inactive_user->getEmail());
-        $this->mail->shouldReceive('setSubject');
-        $this->mail->shouldReceive('setBodyHtml');
-        $this->mail->shouldReceive('send')->andReturn(true)->atLeast()->once();
-        $this->template_renderer->shouldReceive('renderToString')
+        $this->mail->method('setFrom')->with(ForgeConfig::get('sys_noreply'));
+        $this->mail->method('setTo')->with($inactive_user->getEmail());
+        $this->mail->method('setSubject');
+        $this->mail->method('setBodyHtml');
+        $this->mail->expects(self::atLeast(1))->method('send')->willReturn(true);
+        $this->template_renderer->method('renderToString')
             ->with('mail-suspension', $this->mail_account_suspension_presenter)
-            ->andReturn('Rendered_Email');
+            ->willReturn('Rendered_Email');
 
         $this->user_suspension_manager->sendSuspensionMailToInactiveAccounts($test_date);
     }
