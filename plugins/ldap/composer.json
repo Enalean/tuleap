@@ -1,5 +1,5 @@
 {
-  "name": "tuleap/plugin-label",
+  "name": "tuleap/plugin-ldap",
   "autoload": {
     "psr-4": {
       "Tuleap\\LDAP\\": ["include/"]
