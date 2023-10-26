@@ -23,36 +23,39 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\REST\v1\Comment;
 
 use Tuleap\PullRequest\Comment\Comment;
-use Tuleap\PullRequest\Comment\Factory;
+use Tuleap\PullRequest\Comment\CommentRetriever;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
+use Tuleap\PullRequest\Tests\Stub\CommentSearcherStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class ParentIdValidatorForCommentTest extends TestCase
 {
-    /**
-     * @var Factory&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $comment_factory;
-    private ParentIdValidatorForComment $validator;
     private const PULL_REQUEST_ID = 10;
+    private CommentSearcherStub $comment_dao;
 
     protected function setUp(): void
     {
-        $this->comment_factory = $this->createMock(Factory::class);
-        $this->validator       = new ParentIdValidatorForComment($this->comment_factory);
+        $this->comment_dao = CommentSearcherStub::withDefaultRow();
+    }
+
+    private function checkParentValidity(int $parent_id): void
+    {
+        $validator = new ParentIdValidatorForComment(new CommentRetriever($this->comment_dao));
+
+        $validator->checkParentValidity($parent_id, self::PULL_REQUEST_ID);
     }
 
     public function testItDoesNothingIfParentIdIsZero(): void
     {
-        $this->expectNotToPerformAssertions();
-        $this->validator->checkParentValidity(0, self::PULL_REQUEST_ID);
+        self::expectNotToPerformAssertions();
+        $this->checkParentValidity(0);
     }
 
     public function testItThrowsAnExceptionWhenCommentIsNotAddedOnARootComment(): void
     {
-        $parent_id = 1;
-        $comment   = new Comment(
+        $parent_id         = 1;
+        $comment           = new Comment(
             1,
             self::PULL_REQUEST_ID,
             (int) UserTestBuilder::anActiveUser()->build()->getId(),
@@ -62,17 +65,17 @@ final class ParentIdValidatorForCommentTest extends TestCase
             "graffiti-yellow",
             TimelineComment::FORMAT_TEXT
         );
-        $this->comment_factory->method('getCommentByID')->willReturn($comment);
+        $this->comment_dao = CommentSearcherStub::fromComment($comment);
 
-        $this->expectExceptionCode(400);
-        $this->expectDeprecationMessage("first comment of thread");
-        $this->validator->checkParentValidity($parent_id, self::PULL_REQUEST_ID);
+        self::expectExceptionCode(400);
+        self::expectExceptionMessage("first comment of thread");
+        $this->checkParentValidity($parent_id);
     }
 
-    public function testITThrowsAnExceptionWhenCommentIsNotAddedOnTheSamePullRequestThanTheProvidedOne(): void
+    public function testItThrowsAnExceptionWhenCommentIsNotAddedOnTheSamePullRequestThanTheProvidedOne(): void
     {
-        $parent_id = 1;
-        $comment   = new Comment(
+        $parent_id         = 1;
+        $comment           = new Comment(
             1,
             1234,
             (int) UserTestBuilder::anActiveUser()->build()->getId(),
@@ -82,19 +85,19 @@ final class ParentIdValidatorForCommentTest extends TestCase
             "graffiti-yellow",
             TimelineComment::FORMAT_TEXT
         );
-        $this->comment_factory->method('getCommentByID')->willReturn($comment);
+        $this->comment_dao = CommentSearcherStub::fromComment($comment);
 
-        $this->expectExceptionCode(400);
-        $this->expectDeprecationMessage("must be the same than provided comment");
-        $this->validator->checkParentValidity($parent_id, self::PULL_REQUEST_ID);
+        self::expectExceptionCode(400);
+        self::expectExceptionMessage("must be the same than provided comment");
+        $this->checkParentValidity($parent_id);
     }
 
     public function testItDoesNotThrowIfParentIdIsValidForComment(): void
     {
-        $this->expectNotToPerformAssertions();
+        self::expectNotToPerformAssertions();
 
-        $parent_id = 1;
-        $comment   = new Comment(
+        $parent_id         = 1;
+        $comment           = new Comment(
             1,
             self::PULL_REQUEST_ID,
             (int) UserTestBuilder::anActiveUser()->build()->getId(),
@@ -104,8 +107,8 @@ final class ParentIdValidatorForCommentTest extends TestCase
             "graffiti-yellow",
             TimelineComment::FORMAT_TEXT
         );
-        $this->comment_factory->method('getCommentByID')->willReturn($comment);
+        $this->comment_dao = CommentSearcherStub::fromComment($comment);
 
-        $this->validator->checkParentValidity($parent_id, self::PULL_REQUEST_ID);
+        $this->checkParentValidity($parent_id);
     }
 }

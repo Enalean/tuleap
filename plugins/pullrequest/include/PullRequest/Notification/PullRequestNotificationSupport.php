@@ -40,6 +40,8 @@ use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\BranchUpdate\PullRequestUpdateCommitDiff;
 use Tuleap\PullRequest\BranchUpdate\PullRequestUpdatedEvent;
 use Tuleap\PullRequest\BranchUpdate\PullRequestUpdatedNotificationToProcessBuilder;
+use Tuleap\PullRequest\Comment\CommentRetriever;
+use Tuleap\PullRequest\Comment\Dao as CommentDao;
 use Tuleap\PullRequest\Comment\Notification\PullRequestNewCommentEvent;
 use Tuleap\PullRequest\Comment\Notification\PullRequestNewCommentNotificationToProcessBuilder;
 use Tuleap\PullRequest\Dao;
@@ -248,11 +250,7 @@ final class PullRequestNotificationSupport
                                     new Dao(),
                                     $reference_manager
                                 ),
-                                new \Tuleap\PullRequest\Comment\Factory(
-                                    new \Tuleap\PullRequest\Comment\Dao(),
-                                    $reference_manager,
-                                    self::buildSynchronousDispatcher()
-                                ),
+                                new CommentRetriever(new CommentDao()),
                                 new OwnerRetriever(
                                     $user_manager,
                                     new ReviewerRetriever(

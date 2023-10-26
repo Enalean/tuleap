@@ -23,11 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\REST\v1\Comment;
 
 use Luracast\Restler\RestException;
-use Tuleap\PullRequest\Comment\Factory;
+use Tuleap\PullRequest\Comment\Comment;
+use Tuleap\PullRequest\Comment\CommentRetriever;
 
 final class ParentIdValidatorForComment
 {
-    public function __construct(private Factory $comment_factory)
+    public function __construct(private readonly CommentRetriever $comment_retriever)
     {
     }
 
@@ -37,17 +38,19 @@ final class ParentIdValidatorForComment
             return;
         }
 
-        $comment = $this->comment_factory->getCommentByID($parent_id);
-        if (! $comment) {
-            throw new RestException(404, sprintf('Comment with id #%d is not found', $parent_id));
-        }
+        $this->comment_retriever->getCommentByID($parent_id)->match(
+            function (Comment $comment) use ($pullrequest_id, $parent_id) {
+                if ($comment->getParentId() !== 0) {
+                    throw new RestException(400, 'You can only add parent on the first comment of thread of pullrequest');
+                }
 
-        if ($comment->getParentId() !== 0) {
-            throw new RestException(400, 'You can only add parent on the first comment of thread of pullrequest');
-        }
-
-        if ($comment->getPullRequestId() !== $pullrequest_id) {
-            throw new RestException(400, sprintf('Parent comment #%d must be the same than provided comment #%d for reply', $parent_id, $pullrequest_id));
-        }
+                if ($comment->getPullRequestId() !== $pullrequest_id) {
+                    throw new RestException(400, sprintf('Parent comment #%d must be the same than provided comment #%d for reply', $parent_id, $pullrequest_id));
+                }
+            },
+            function () use ($parent_id) {
+                throw new RestException(404, sprintf('Comment with id #%d is not found', $parent_id));
+            }
+        );
     }
 }

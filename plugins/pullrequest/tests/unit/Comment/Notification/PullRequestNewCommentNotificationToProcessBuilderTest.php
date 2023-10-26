@@ -24,6 +24,7 @@ namespace Tuleap\PullRequest\Comment\Notification;
 
 use PFUser;
 use Tuleap\PullRequest\Comment\Comment;
+use Tuleap\PullRequest\Comment\CommentRetriever;
 use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
 use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\Notification\FilterUserFromCollection;
@@ -31,6 +32,7 @@ use Tuleap\PullRequest\Notification\OwnerRetriever;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
+use Tuleap\PullRequest\Tests\Stub\CommentSearcherStub;
 use Tuleap\PullRequest\Tests\Stub\FormatNotificationContentStub;
 use UserHelper;
 use UserManager;
@@ -46,10 +48,6 @@ final class PullRequestNewCommentNotificationToProcessBuilderTest extends \Tulea
      */
     private $pull_request_factory;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\Tuleap\PullRequest\Comment\Factory
-     */
-    private $comment_factory;
-    /**
      * @var \PHPUnit\Framework\MockObject\MockObject&OwnerRetriever
      */
     private $owner_retriever;
@@ -61,27 +59,31 @@ final class PullRequestNewCommentNotificationToProcessBuilderTest extends \Tulea
      * @var \PHPUnit\Framework\MockObject\MockObject&HTMLURLBuilder
      */
     private $html_url_builder;
-    private PullRequestNewCommentNotificationToProcessBuilder $builder;
+    private CommentSearcherStub $comment_dao;
 
     protected function setUp(): void
     {
         $this->user_manager         = $this->createMock(UserManager::class);
         $this->pull_request_factory = $this->createMock(Factory::class);
-        $this->comment_factory      = $this->createMock(\Tuleap\PullRequest\Comment\Factory::class);
+        $this->comment_dao          = CommentSearcherStub::withDefaultRow();
         $this->owner_retriever      = $this->createMock(OwnerRetriever::class);
         $this->user_helper          = $this->createMock(UserHelper::class);
         $this->html_url_builder     = $this->createMock(HTMLURLBuilder::class);
+    }
 
-        $this->builder = new PullRequestNewCommentNotificationToProcessBuilder(
+    private function getNotificationsToProcess(PullRequestNewCommentEvent $event): array
+    {
+        $builder = new PullRequestNewCommentNotificationToProcessBuilder(
             $this->user_manager,
             $this->pull_request_factory,
-            $this->comment_factory,
+            new CommentRetriever($this->comment_dao),
             $this->owner_retriever,
             new FilterUserFromCollection(),
             $this->user_helper,
             $this->html_url_builder,
             FormatNotificationContentStub::withDefault(),
         );
+        return $builder->getNotificationsToProcess($event);
     }
 
     public function testBuildNewCommentNotificationFromPullRequestNewCommentEvent(): void
@@ -95,10 +97,9 @@ final class PullRequestNewCommentNotificationToProcessBuilderTest extends \Tulea
 
         $event = PullRequestNewCommentEvent::fromCommentID($comment->getId());
 
-        $this->comment_factory->method('getCommentByID')
-            ->with($comment->getId())->willReturn($comment);
+        $this->comment_dao = CommentSearcherStub::fromComment($comment);
         $this->pull_request_factory->method('getPullRequestById')
-            ->with($pull_request->getId())->willReturn($pull_request);
+                ->with($pull_request->getId())->willReturn($pull_request);
         $this->user_manager->method('getUserById')
             ->with($change_user->getId())->willReturn($change_user);
         $this->owner_retriever->method('getOwners')->willReturn($owners);
@@ -106,7 +107,7 @@ final class PullRequestNewCommentNotificationToProcessBuilderTest extends \Tulea
         $this->user_helper->method('getAbsoluteUserURL')->willReturn('https://example.com/users/foo');
         $this->html_url_builder->method('getAbsolutePullRequestOverviewUrl')->willReturn('https://example.com/link-to-pr');
 
-        $notifications = $this->builder->getNotificationsToProcess($event);
+        $notifications = $this->getNotificationsToProcess($event);
         $this->assertCount(1, $notifications);
         $this->assertInstanceOf(PullRequestNewCommentNotification::class, $notifications[0]);
     }
@@ -117,9 +118,9 @@ final class PullRequestNewCommentNotificationToProcessBuilderTest extends \Tulea
 
         $event = PullRequestNewCommentEvent::fromCommentID($comment->getId());
 
-        $this->comment_factory->method('getCommentByID')->willReturn(null);
+        $this->comment_dao = CommentSearcherStub::withNoRow();
 
-        $this->assertEmpty($this->builder->getNotificationsToProcess($event));
+        $this->assertEmpty($this->getNotificationsToProcess($event));
     }
 
     public function testNoNotificationIsBuiltWhenThePullRequestCannotBeFound(): void
@@ -128,10 +129,11 @@ final class PullRequestNewCommentNotificationToProcessBuilderTest extends \Tulea
 
         $event = PullRequestNewCommentEvent::fromCommentID($comment->getId());
 
-        $this->comment_factory->method('getCommentByID')->willReturn($comment);
+        $this->comment_dao = CommentSearcherStub::fromComment($comment);
+
         $this->pull_request_factory->method('getPullRequestById')->willThrowException(new PullRequestNotFoundException());
 
-        $this->assertEmpty($this->builder->getNotificationsToProcess($event));
+        $this->assertEmpty($this->getNotificationsToProcess($event));
     }
 
     public function testNoNotificationIsBuiltWhenTheUserCommentingCannotBeFound(): void
@@ -140,11 +142,11 @@ final class PullRequestNewCommentNotificationToProcessBuilderTest extends \Tulea
 
         $event = PullRequestNewCommentEvent::fromCommentID($comment->getId());
 
-        $this->comment_factory->method('getCommentByID')->willReturn($comment);
+        $this->comment_dao = CommentSearcherStub::fromComment($comment);
         $this->pull_request_factory->method('getPullRequestById')->willReturn($this->createMock(PullRequest::class));
         $this->user_manager->method('getUserById')->willReturn(null);
 
-        $this->assertEmpty($this->builder->getNotificationsToProcess($event));
+        $this->assertEmpty($this->getNotificationsToProcess($event));
     }
 
     private function buildUser(int $user_id): PFUser

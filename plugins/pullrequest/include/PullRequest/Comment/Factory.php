@@ -71,17 +71,6 @@ class Factory
         return new PaginatedComments($comments, $this->dao->foundRows());
     }
 
-    public function getCommentByID(int $comment_id): ?Comment
-    {
-        $row = $this->dao->searchByCommentID($comment_id);
-
-        if ($row === null) {
-            return null;
-        }
-
-        return $this->instantiateFromRow($row);
-    }
-
     private function instantiateFromRow($row): Comment
     {
         return new Comment(
