@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\Tests\Builders;
 
 use Tuleap\PullRequest\InlineComment\InlineComment;
+use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 
 final class InlineCommentTestBuilder
@@ -32,11 +33,11 @@ final class InlineCommentTestBuilder
     private int $user_id         = 105;
     private int $post_date       = 1695212990;
     private int $parent_id       = 0;
-    private string $color        = "";
-    private string $file_path    = "plugins/pullrequests/tests/unit/Builder/InlineCommentTestBuilder.php";
+    private string $color        = '';
+    private string $file_path    = 'plugins/pullrequests/tests/unit/Builder/InlineCommentTestBuilder.php';
     private int $unidiff_offset  = 37;
     private bool $is_outdated    = false;
-    private string $position     = "right";
+    private string $position     = 'right';
 
     private function __construct(
         private readonly string $content,
@@ -60,9 +61,33 @@ final class InlineCommentTestBuilder
         );
     }
 
+    public function withId(int $inline_comment_id): self
+    {
+        $this->id = $inline_comment_id;
+        return $this;
+    }
+
     public function withFilePath(string $file_path): self
     {
         $this->file_path = $file_path;
+        return $this;
+    }
+
+    public function byAuthor(\PFUser $author): self
+    {
+        $this->user_id = (int) $author->getId();
+        return $this;
+    }
+
+    public function onPullRequest(PullRequest $pull_request): self
+    {
+        $this->pull_request_id = $pull_request->getId();
+        return $this;
+    }
+
+    public function childOf(int $parent_comment_id): self
+    {
+        $this->parent_id = $parent_comment_id;
         return $this;
     }
 

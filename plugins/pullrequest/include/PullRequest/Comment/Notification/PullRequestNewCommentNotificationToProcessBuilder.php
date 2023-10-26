@@ -32,8 +32,8 @@ use Tuleap\PullRequest\Notification\FormatNotificationContent;
 use Tuleap\PullRequest\Notification\NotificationToProcessBuilder;
 use Tuleap\PullRequest\Notification\OwnerRetriever;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
+use Tuleap\User\RetrieveUserById;
 use UserHelper;
-use UserManager;
 
 /**
  * @template-implements NotificationToProcessBuilder<PullRequestNewCommentEvent>
@@ -41,7 +41,7 @@ use UserManager;
 final class PullRequestNewCommentNotificationToProcessBuilder implements NotificationToProcessBuilder
 {
     public function __construct(
-        private readonly UserManager $user_manager,
+        private readonly RetrieveUserById $user_retriever,
         private readonly PullRequestFactory $pull_request_factory,
         private readonly CommentRetriever $comment_retriever,
         private readonly OwnerRetriever $owner_retriever,
@@ -62,7 +62,7 @@ final class PullRequestNewCommentNotificationToProcessBuilder implements Notific
                     return [];
                 }
 
-                $change_user = $this->user_manager->getUserById($comment->getUserId());
+                $change_user = $this->user_retriever->getUserById($comment->getUserId());
                 if ($change_user === null) {
                     return [];
                 }

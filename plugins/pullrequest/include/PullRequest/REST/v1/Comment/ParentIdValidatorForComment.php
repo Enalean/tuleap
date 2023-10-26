@@ -32,6 +32,9 @@ final class ParentIdValidatorForComment
     {
     }
 
+    /**
+     * @throws RestException
+     */
     public function checkParentValidity(int $parent_id, int $pullrequest_id): void
     {
         if ($parent_id === 0) {
@@ -48,9 +51,7 @@ final class ParentIdValidatorForComment
                     throw new RestException(400, sprintf('Parent comment #%d must be the same than provided comment #%d for reply', $parent_id, $pullrequest_id));
                 }
             },
-            function () use ($parent_id) {
-                throw new RestException(404, sprintf('Comment with id #%d is not found', $parent_id));
-            }
+            fn () => throw new RestException(404, sprintf('Comment with id #%d is not found', $parent_id))
         );
     }
 }

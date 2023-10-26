@@ -22,95 +22,81 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\REST\v1\Comment;
 
-use Tuleap\PullRequest\InlineComment\InlineComment;
 use Tuleap\PullRequest\InlineComment\InlineCommentRetriever;
-use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
-use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\PullRequest\Tests\Builders\InlineCommentTestBuilder;
+use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
+use Tuleap\PullRequest\Tests\Stub\InlineCommentSearcherStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class ParentIdValidatorForInlineCommentTest extends TestCase
 {
-    private ParentIdValidatorForInlineComment $validator;
     private const PULL_REQUEST_ID = 10;
-    /**
-     * @var InlineCommentRetriever&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $inline_comment_retriever;
+    private int $parent_id;
+    private InlineCommentSearcherStub $comment_dao;
 
     protected function setUp(): void
     {
-        $this->inline_comment_retriever = $this->createMock(InlineCommentRetriever::class);
-        $this->validator                = new ParentIdValidatorForInlineComment($this->inline_comment_retriever);
+        $this->parent_id   = 1;
+        $this->comment_dao = InlineCommentSearcherStub::withNoComment();
+    }
+
+    private function checkValidity(): void
+    {
+        $validator = new ParentIdValidatorForInlineComment(new InlineCommentRetriever($this->comment_dao));
+        $validator->checkParentValidity($this->parent_id, self::PULL_REQUEST_ID);
     }
 
     public function testItDoesNothingIfParentIdIsZero(): void
     {
+        $this->parent_id = 0;
         $this->expectNotToPerformAssertions();
-        $this->validator->checkParentValidity(0, self::PULL_REQUEST_ID);
+        $this->checkValidity();
     }
 
-    public function testItThrowAnExceptionIfParentIdDoesNotBelongToAComment(): void
+    public function testItThrowsAnExceptionIfParentIdDoesNotBelongToAComment(): void
     {
-        $parent_id = 1;
-        $this->inline_comment_retriever->method('getInlineCommentByID')->willReturn(null);
-
+        $this->parent_id = -1;
         $this->expectExceptionCode(404);
-        $this->validator->checkParentValidity($parent_id, self::PULL_REQUEST_ID);
+        $this->checkValidity();
     }
 
-    public function testItThrowAnExceptionIfParentIdDoesNotBelongToAInlineComment(): void
+    public function testItThrowsWhenCommentIsNotAddedOnARootComment(): void
     {
-        $parent_id = 1;
-        $this->inline_comment_retriever->method('getInlineCommentByID')->willReturn(null);
-
-        $this->expectExceptionCode(404);
-        $this->validator->checkParentValidity($parent_id, self::PULL_REQUEST_ID);
-    }
-
-    public function testITThrowsAnExceptionWhenInlineCommentIsNotAddedOnTheSamePullRequestThanTheProvidedOne(): void
-    {
-        $parent_id = 1;
-        $comment   = new InlineComment(
-            1,
-            1234,
-            (int) UserTestBuilder::anActiveUser()->build()->getId(),
-            time(),
-            "/file/path",
-            1,
-            "My content",
-            false,
-            0,
-            "right",
-            "",
-            TimelineComment::FORMAT_TEXT
-        );
-        $this->inline_comment_retriever->method('getInlineCommentByID')->willReturn($comment);
+        $comment           = InlineCommentTestBuilder::aMarkdownComment('siliquose fabiform')
+            ->childOf(550)
+            ->build();
+        $this->comment_dao = InlineCommentSearcherStub::withComment($comment);
 
         $this->expectExceptionCode(400);
-        $this->expectExceptionMessage("must be the same than provided comment");
-        $this->validator->checkParentValidity($parent_id, self::PULL_REQUEST_ID);
+        $this->checkValidity();
+    }
+
+    public function testItThrowsAnExceptionWhenInlineCommentIsNotAddedOnTheSamePullRequestThanTheProvidedOne(): void
+    {
+        $pull_request      = PullRequestTestBuilder::aPullRequestInReview()
+            ->withId(1234)
+            ->build();
+        $comment           = InlineCommentTestBuilder::aMarkdownComment('siliquose fabiform')
+            ->onPullRequest($pull_request)
+            ->build();
+        $this->comment_dao = InlineCommentSearcherStub::withComment($comment);
+
+        $this->expectExceptionCode(400);
+        $this->expectExceptionMessage('must be the same than provided comment');
+        $this->checkValidity();
     }
 
     public function testItDoesNotThrowIfParentIdIsValidForInlineComment(): void
     {
-        $this->expectNotToPerformAssertions();
-        $parent_id = 1;
-        $comment   = new InlineComment(
-            1,
-            self::PULL_REQUEST_ID,
-            (int) UserTestBuilder::anActiveUser()->build()->getId(),
-            time(),
-            "/file/path",
-            1,
-            "My content",
-            false,
-            0,
-            "right",
-            "",
-            TimelineComment::FORMAT_TEXT
-        );
-        $this->inline_comment_retriever->method('getInlineCommentByID')->willReturn($comment);
+        $pull_request      = PullRequestTestBuilder::aPullRequestInReview()
+            ->withId(self::PULL_REQUEST_ID)
+            ->build();
+        $comment           = InlineCommentTestBuilder::aMarkdownComment('siliquose fabiform')
+            ->onPullRequest($pull_request)
+            ->build();
+        $this->comment_dao = InlineCommentSearcherStub::withComment($comment);
 
-        $this->validator->checkParentValidity($parent_id, self::PULL_REQUEST_ID);
+        $this->expectNotToPerformAssertions();
+        $this->checkValidity();
     }
 }

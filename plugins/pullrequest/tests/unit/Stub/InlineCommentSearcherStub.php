@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2023-present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,23 +15,22 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Tests\Stub;
 
-use Tuleap\PullRequest\Comment\Comment;
-use Tuleap\PullRequest\Comment\CommentSearcher;
+use Tuleap\PullRequest\InlineComment\InlineComment;
 
-final class CommentSearcherStub implements CommentSearcher
+final class InlineCommentSearcherStub implements \Tuleap\PullRequest\InlineComment\InlineCommentSearcher
 {
     private function __construct(private readonly ?array $row)
     {
     }
 
-    public function searchByCommentID(int $comment_id): ?array
+    public function searchByCommentID(int $inline_comment_id): ?array
     {
         return $this->row;
     }
@@ -41,15 +40,19 @@ final class CommentSearcherStub implements CommentSearcher
         return new self(null);
     }
 
-    public static function withComment(Comment $comment): self
+    public static function withComment(InlineComment $comment): self
     {
         $row = [
             'id'              => $comment->getId(),
             'pull_request_id' => $comment->getPullRequestId(),
             'user_id'         => $comment->getUserId(),
             'post_date'       => $comment->getPostDate(),
+            'file_path'       => $comment->getFilePath(),
+            'unidiff_offset'  => $comment->getUnidiffOffset(),
             'content'         => $comment->getContent(),
+            'is_outdated'     => $comment->isOutdated() ? 1 : 0,
             'parent_id'       => $comment->getParentId(),
+            'position'        => $comment->getPosition(),
             'color'           => $comment->getColor(),
             'format'          => $comment->getFormat(),
         ];

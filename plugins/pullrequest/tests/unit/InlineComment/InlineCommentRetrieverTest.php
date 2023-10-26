@@ -22,45 +22,41 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\InlineComment;
 
-use PHPUnit\Framework\MockObject\MockObject;
-use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
+use Tuleap\Option\Option;
+use Tuleap\PullRequest\Tests\Builders\InlineCommentTestBuilder;
+use Tuleap\PullRequest\Tests\Stub\InlineCommentSearcherStub;
 
 final class InlineCommentRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private Dao&MockObject $dao;
-    private InlineCommentRetriever $retriever;
+    private const INLINE_COMMENT_ID = 12;
+    private InlineCommentSearcherStub $dao;
 
     protected function setUp(): void
     {
-        $this->dao = $this->createMock(Dao::class);
+        $this->dao = InlineCommentSearcherStub::withNoComment();
+    }
 
-        $this->retriever = new InlineCommentRetriever($this->dao);
+    /**
+     * @return Option<InlineComment>
+     */
+    private function getInlineComment(): Option
+    {
+        $retriever = new InlineCommentRetriever($this->dao);
+        return $retriever->getInlineCommentByID(self::INLINE_COMMENT_ID);
     }
 
     public function testInlineCommentCanBeRetrievedWhenItExists(): void
     {
-        $this->dao->method('searchByCommentID')->willReturn([
-            'id' => 12,
-            'pull_request_id' => 147,
-            'user_id' => 102,
-            'post_date' => 10,
-            'file_path' => 'path',
-            'unidiff_offset' => 2,
-            'content' => 'My comment',
-            'is_outdated' => 0,
-            'parent_id' => 0,
-            'position' => 'right',
-            "color" => '',
-            "format" => TimelineComment::FORMAT_TEXT,
-        ]);
+        $comment   = InlineCommentTestBuilder::aTextComment('My comment')
+            ->withId(self::INLINE_COMMENT_ID)
+            ->build();
+        $this->dao = InlineCommentSearcherStub::withComment($comment);
 
-        self::assertNotNull($this->retriever->getInlineCommentByID(12));
+        self::assertTrue($this->getInlineComment()->isValue());
     }
 
     public function testInlineCommentCannotBeRetrievedWhenItDoesNotExist(): void
     {
-        $this->dao->method('searchByCommentID')->willReturn(null);
-
-        self::assertNull($this->retriever->getInlineCommentByID(404));
+        self::assertTrue($this->getInlineComment()->isNothing());
     }
 }

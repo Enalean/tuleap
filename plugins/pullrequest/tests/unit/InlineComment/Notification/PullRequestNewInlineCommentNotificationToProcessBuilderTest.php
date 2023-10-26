@@ -22,66 +22,54 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\InlineComment\Notification;
 
-use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
 use Tuleap\PullRequest\Factory;
-use Tuleap\PullRequest\InlineComment\InlineComment;
 use Tuleap\PullRequest\InlineComment\InlineCommentRetriever;
 use Tuleap\PullRequest\Notification\FilterUserFromCollection;
 use Tuleap\PullRequest\Notification\OwnerRetriever;
 use Tuleap\PullRequest\PullRequest;
-use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
+use Tuleap\PullRequest\Tests\Builders\InlineCommentTestBuilder;
+use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
 use Tuleap\PullRequest\Tests\Stub\FormatNotificationContentStub;
+use Tuleap\PullRequest\Tests\Stub\InlineCommentSearcherStub;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use UserHelper;
-use UserManager;
 
 final class PullRequestNewInlineCommentNotificationToProcessBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&UserManager
-     */
-    private $user_manager;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&Factory
-     */
-    private $pull_request_factory;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&InlineCommentRetriever
-     */
-    private $inline_comment_retriever;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&OwnerRetriever
-     */
-    private $owner_retriever;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&InlineCommentCodeContextExtractor
-     */
-    private $code_context_extractor;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&UserHelper
-     */
-    private $user_helper;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&HTMLURLBuilder
-     */
-    private $html_url_builder;
-    private PullRequestNewInlineCommentNotificationToProcessBuilder $builder;
+    private RetrieveUserByIdStub $user_retriever;
+    private Factory & MockObject $pull_request_factory;
+    private InlineCommentSearcherStub $inline_comment_searcher;
+    private OwnerRetriever & MockObject $owner_retriever;
+    private InlineCommentCodeContextExtractor & MockObject $code_context_extractor;
+    private UserHelper & MockObject $user_helper;
+    private HTMLURLBuilder & MockObject $html_url_builder;
+    private PullRequest $pull_request;
+    private \PFUser $change_user;
 
     protected function setUp(): void
     {
-        $this->user_manager             = $this->createMock(UserManager::class);
-        $this->pull_request_factory     = $this->createMock(Factory::class);
-        $this->inline_comment_retriever = $this->createMock(InlineCommentRetriever::class);
-        $this->code_context_extractor   = $this->createMock(InlineCommentCodeContextExtractor::class);
-        $this->owner_retriever          = $this->createMock(OwnerRetriever::class);
-        $this->user_helper              = $this->createMock(UserHelper::class);
-        $this->html_url_builder         = $this->createMock(HTMLURLBuilder::class);
+        $this->change_user  = UserTestBuilder::buildWithId(102);
+        $this->pull_request = PullRequestTestBuilder::aPullRequestInReview()->build();
 
-        $this->builder = new PullRequestNewInlineCommentNotificationToProcessBuilder(
-            $this->user_manager,
+        $this->user_retriever          = RetrieveUserByIdStub::withUser($this->change_user);
+        $this->pull_request_factory    = $this->createMock(Factory::class);
+        $this->code_context_extractor  = $this->createMock(InlineCommentCodeContextExtractor::class);
+        $this->owner_retriever         = $this->createMock(OwnerRetriever::class);
+        $this->user_helper             = $this->createMock(UserHelper::class);
+        $this->html_url_builder        = $this->createMock(HTMLURLBuilder::class);
+        $this->inline_comment_searcher = InlineCommentSearcherStub::withNoComment();
+    }
+
+    private function getNotifications(PullRequestNewInlineCommentEvent $event): array
+    {
+        $builder = new PullRequestNewInlineCommentNotificationToProcessBuilder(
+            $this->user_retriever,
             $this->pull_request_factory,
-            $this->inline_comment_retriever,
+            new InlineCommentRetriever($this->inline_comment_searcher),
             $this->owner_retriever,
             $this->code_context_extractor,
             new FilterUserFromCollection(),
@@ -89,114 +77,91 @@ final class PullRequestNewInlineCommentNotificationToProcessBuilderTest extends 
             $this->html_url_builder,
             FormatNotificationContentStub::withDefault(),
         );
+        return $builder->getNotificationsToProcess($event);
     }
 
     public function testBuildNewInlineCommentNotificationFromPullRequestNewInlineCommentEvent(): void
     {
-        $pull_request = $this->createMock(PullRequest::class);
-        $pull_request->method('getId')->willReturn(12);
-        $pull_request->method('getTitle')->willReturn('PR Title');
-        $change_user = $this->buildUser(102);
-        $owners      = [$change_user, $this->buildUser(104), $this->buildUser(105)];
-        $comment     = $this->buildInlineComment(41, (int) $change_user->getId(), $pull_request->getId());
+        $owners  = [$this->change_user, UserTestBuilder::buildWithId(104), UserTestBuilder::buildWithId(105)];
+        $comment = InlineCommentTestBuilder::aMarkdownComment('nonintellectual radialization')
+            ->onPullRequest($this->pull_request)
+            ->byAuthor($this->change_user)
+            ->build();
 
         $event = PullRequestNewInlineCommentEvent::fromInlineCommentID($comment->getId());
 
-        $this->inline_comment_retriever->method('getInlineCommentByID')
-            ->with($comment->getId())->willReturn($comment);
+        $this->inline_comment_searcher = InlineCommentSearcherStub::withComment($comment);
         $this->pull_request_factory->method('getPullRequestById')
-            ->with($pull_request->getId())->willReturn($pull_request);
-        $this->user_manager->method('getUserById')
-            ->with($change_user->getId())->willReturn($change_user);
+            ->with($this->pull_request->getId())->willReturn($this->pull_request);
         $this->owner_retriever->method('getOwners')->willReturn($owners);
         $this->code_context_extractor->method('getCodeContext')->willReturn('+Some code');
         $this->user_helper->method('getDisplayNameFromUser')->willReturn('Display name');
         $this->user_helper->method('getAbsoluteUserURL')->willReturn('https://example.com/users/foo');
-        $this->html_url_builder->method('getAbsolutePullRequestOverviewUrl')->willReturn('https://example.com/link-to-pr');
+        $this->html_url_builder->method('getAbsolutePullRequestOverviewUrl')->willReturn(
+            'https://example.com/link-to-pr'
+        );
 
-        $notifications = $this->builder->getNotificationsToProcess($event);
+        $notifications = $this->getNotifications($event);
         $this->assertCount(1, $notifications);
         $this->assertInstanceOf(PullRequestNewInlineCommentNotification::class, $notifications[0]);
     }
 
     public function testNoNotificationIsBuiltWhenTheInlineCommentCannotBeFound(): void
     {
-        $comment = $this->buildInlineComment(404, 102, 12);
+        $this->inline_comment_searcher = InlineCommentSearcherStub::withNoComment();
 
-        $event = PullRequestNewInlineCommentEvent::fromInlineCommentID($comment->getId());
-
-        $this->inline_comment_retriever->method('getInlineCommentByID')->willReturn(null);
-
-        $this->assertEmpty($this->builder->getNotificationsToProcess($event));
+        $event = PullRequestNewInlineCommentEvent::fromInlineCommentID(404);
+        $this->assertEmpty($this->getNotifications($event));
     }
 
     public function testNoNotificationIsBuiltWhenThePullRequestCannotBeFound(): void
     {
-        $comment = $this->buildInlineComment(14, 102, 404);
+        $comment = InlineCommentTestBuilder::aMarkdownComment('nonintellectual radialization')->build();
 
         $event = PullRequestNewInlineCommentEvent::fromInlineCommentID($comment->getId());
 
-        $this->inline_comment_retriever->method('getInlineCommentByID')->willReturn($comment);
-        $this->pull_request_factory->method('getPullRequestById')->willThrowException(new PullRequestNotFoundException());
+        $this->inline_comment_searcher = InlineCommentSearcherStub::withComment($comment);
+        $this->pull_request_factory->method('getPullRequestById')->willThrowException(
+            new PullRequestNotFoundException()
+        );
 
-        $this->assertEmpty($this->builder->getNotificationsToProcess($event));
+        $this->assertEmpty($this->getNotifications($event));
     }
 
     public function testNoNotificationIsBuiltWhenTheUserCommentingCannotBeFound(): void
     {
-        $comment = $this->buildInlineComment(14, 404, 16);
+        $comment = InlineCommentTestBuilder::aMarkdownComment('nonintellectual radialization')
+            ->onPullRequest($this->pull_request)
+            ->build();
 
         $event = PullRequestNewInlineCommentEvent::fromInlineCommentID($comment->getId());
 
-        $this->inline_comment_retriever->method('getInlineCommentByID')->willReturn($comment);
-        $this->pull_request_factory->method('getPullRequestById')->willReturn($this->createMock(PullRequest::class));
-        $this->user_manager->method('getUserById')->willReturn(null);
+        $this->inline_comment_searcher = InlineCommentSearcherStub::withComment($comment);
+        $this->pull_request_factory->method('getPullRequestById')->willReturn($this->pull_request);
+        $this->user_retriever = RetrieveUserByIdStub::withNoUser();
 
-        $this->assertEmpty($this->builder->getNotificationsToProcess($event));
+        $this->assertEmpty($this->getNotifications($event));
     }
 
     public function testNoNotificationIsBuiltWhenTheCodeContextExtractionFails(): void
     {
-        $change_user = $this->buildUser(102);
-        $comment     = $this->buildInlineComment(14, (int) $change_user->getId(), 16);
+        $comment = InlineCommentTestBuilder::aMarkdownComment('nonintellectual radialization')
+            ->onPullRequest($this->pull_request)
+            ->byAuthor($this->change_user)
+            ->build();
 
         $event = PullRequestNewInlineCommentEvent::fromInlineCommentID($comment->getId());
 
-        $this->inline_comment_retriever->method('getInlineCommentByID')->willReturn($comment);
-        $this->pull_request_factory->method('getPullRequestById')->willReturn($this->createMock(PullRequest::class));
-        $this->user_manager->method('getUserById')->with($change_user->getId())->willReturn($change_user);
-        $this->owner_retriever->method('getOwners')->willReturn([$change_user]);
+        $this->inline_comment_searcher = InlineCommentSearcherStub::withComment($comment);
+        $this->pull_request_factory->method('getPullRequestById')->willReturn($this->pull_request);
+        $this->owner_retriever->method('getOwners')->willReturn([$this->change_user]);
 
         $this->code_context_extractor->method('getCodeContext')
             ->willThrowException(
-                new class extends InlineCommentCodeContextException
-                {
+                new class extends InlineCommentCodeContextException {
                 }
             );
 
-        $this->assertEmpty($this->builder->getNotificationsToProcess($event));
-    }
-
-    private function buildUser(int $user_id): PFUser
-    {
-        return new PFUser(['user_id' => $user_id, 'language_id' => 'en']);
-    }
-
-    private function buildInlineComment(int $comment_id, int $user_id, int $pr_id): InlineComment
-    {
-        return new InlineComment(
-            $comment_id,
-            $pr_id,
-            $user_id,
-            10,
-            'file_/path',
-            2,
-            'My comment',
-            false,
-            0,
-            "right",
-            "",
-            TimelineComment::FORMAT_TEXT
-        );
+        $this->assertEmpty($this->getNotifications($event));
     }
 }

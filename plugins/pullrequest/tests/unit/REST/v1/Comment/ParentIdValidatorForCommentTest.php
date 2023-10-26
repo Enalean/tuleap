@@ -22,93 +22,83 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\REST\v1\Comment;
 
-use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Comment\CommentRetriever;
-use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
+use Tuleap\PullRequest\Tests\Builders\CommentTestBuilder;
+use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
 use Tuleap\PullRequest\Tests\Stub\CommentSearcherStub;
-use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class ParentIdValidatorForCommentTest extends TestCase
 {
     private const PULL_REQUEST_ID = 10;
+    private int $parent_id;
     private CommentSearcherStub $comment_dao;
 
     protected function setUp(): void
     {
-        $this->comment_dao = CommentSearcherStub::withDefaultRow();
+        $this->parent_id   = 1;
+        $this->comment_dao = CommentSearcherStub::withNoComment();
     }
 
-    private function checkParentValidity(int $parent_id): void
+    private function checkParentValidity(): void
     {
         $validator = new ParentIdValidatorForComment(new CommentRetriever($this->comment_dao));
 
-        $validator->checkParentValidity($parent_id, self::PULL_REQUEST_ID);
+        $validator->checkParentValidity($this->parent_id, self::PULL_REQUEST_ID);
     }
 
     public function testItDoesNothingIfParentIdIsZero(): void
     {
-        self::expectNotToPerformAssertions();
-        $this->checkParentValidity(0);
+        $this->parent_id = 0;
+        $this->expectNotToPerformAssertions();
+        $this->checkParentValidity();
+    }
+
+    public function testItThrowsAnExceptionIfParentIdIsNotFound(): void
+    {
+        $this->parent_id = -1;
+        $this->expectExceptionCode(404);
+        $this->checkParentValidity();
     }
 
     public function testItThrowsAnExceptionWhenCommentIsNotAddedOnARootComment(): void
     {
-        $parent_id         = 1;
-        $comment           = new Comment(
-            1,
-            self::PULL_REQUEST_ID,
-            (int) UserTestBuilder::anActiveUser()->build()->getId(),
-            time(),
-            "My content",
-            1234,
-            "graffiti-yellow",
-            TimelineComment::FORMAT_TEXT
-        );
-        $this->comment_dao = CommentSearcherStub::fromComment($comment);
+        $comment           = CommentTestBuilder::aMarkdownComment('predecease nonimmateriality')
+            ->childOf(675)
+            ->build();
+        $this->comment_dao = CommentSearcherStub::withComment($comment);
 
-        self::expectExceptionCode(400);
-        self::expectExceptionMessage("first comment of thread");
-        $this->checkParentValidity($parent_id);
+        $this->expectExceptionCode(400);
+        $this->expectExceptionMessage('first comment of thread');
+        $this->checkParentValidity();
     }
 
     public function testItThrowsAnExceptionWhenCommentIsNotAddedOnTheSamePullRequestThanTheProvidedOne(): void
     {
-        $parent_id         = 1;
-        $comment           = new Comment(
-            1,
-            1234,
-            (int) UserTestBuilder::anActiveUser()->build()->getId(),
-            time(),
-            "My content",
-            0,
-            "graffiti-yellow",
-            TimelineComment::FORMAT_TEXT
-        );
-        $this->comment_dao = CommentSearcherStub::fromComment($comment);
+        $pull_request      = PullRequestTestBuilder::aPullRequestInReview()
+            ->withId(1234)
+            ->build();
+        $comment           = CommentTestBuilder::aMarkdownComment('predecease nonimmateriality')
+            ->onPullRequest($pull_request)
+            ->build();
+        $this->comment_dao = CommentSearcherStub::withComment($comment);
 
-        self::expectExceptionCode(400);
-        self::expectExceptionMessage("must be the same than provided comment");
-        $this->checkParentValidity($parent_id);
+        $this->expectExceptionCode(400);
+        $this->expectExceptionMessage('must be the same than provided comment');
+        $this->checkParentValidity();
     }
 
     public function testItDoesNotThrowIfParentIdIsValidForComment(): void
     {
-        self::expectNotToPerformAssertions();
+        $pull_request      = PullRequestTestBuilder::aPullRequestInReview()
+            ->withId(self::PULL_REQUEST_ID)
+            ->build();
+        $comment           = CommentTestBuilder::aMarkdownComment('predecease nonimmateriality')
+            ->onPullRequest($pull_request)
+            ->build();
+        $this->comment_dao = CommentSearcherStub::withComment($comment);
 
-        $parent_id         = 1;
-        $comment           = new Comment(
-            1,
-            self::PULL_REQUEST_ID,
-            (int) UserTestBuilder::anActiveUser()->build()->getId(),
-            time(),
-            "My content",
-            0,
-            "graffiti-yellow",
-            TimelineComment::FORMAT_TEXT
-        );
-        $this->comment_dao = CommentSearcherStub::fromComment($comment);
-
-        $this->checkParentValidity($parent_id);
+        $this->expectNotToPerformAssertions();
+        $this->checkParentValidity();
     }
 }

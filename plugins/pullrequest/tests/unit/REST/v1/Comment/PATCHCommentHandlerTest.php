@@ -35,6 +35,8 @@ use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 use Tuleap\PullRequest\PullRequestRetriever;
 use Tuleap\PullRequest\REST\v1\Comment\PATCHCommentHandler;
 use Tuleap\PullRequest\REST\v1\CommentPATCHRepresentation;
+use Tuleap\PullRequest\Tests\Builders\CommentTestBuilder;
+use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
 use Tuleap\PullRequest\Tests\Stub\CheckUserCanAccessPullRequestStub;
 use Tuleap\PullRequest\Tests\Stub\CommentSearcherStub;
 use Tuleap\PullRequest\Tests\Stub\CommentUpdaterStub;
@@ -51,14 +53,23 @@ final class PATCHCommentHandlerTest extends TestCase
     private CommentUpdaterStub $comment_updater_dao;
     private SearchPullRequestStub $pull_request_dao;
     private CheckUserCanAccessPullRequestStub $pull_request_permission_checker;
+    private \PFUser $comment_author;
 
     protected function setUp(): void
     {
         $this->comment_data = new CommentPATCHRepresentation("B35");
 
-        $this->comment_dao_searcher            = CommentSearcherStub::withCustomUser(self::CURRENT_USER_ID);
+        $this->comment_author = UserTestBuilder::buildWithId(self::CURRENT_USER_ID);
+
+        $pull_request = PullRequestTestBuilder::aPullRequestInReview()->build();
+        $comment      = CommentTestBuilder::aMarkdownComment('smarting meliponine')
+            ->byAuthor($this->comment_author)
+            ->onPullRequest($pull_request)
+            ->build();
+
+        $this->comment_dao_searcher            = CommentSearcherStub::withComment($comment);
         $this->comment_updater_dao             = CommentUpdaterStub::fromDefault();
-        $this->pull_request_dao                = SearchPullRequestStub::withDefaultRow();
+        $this->pull_request_dao                = SearchPullRequestStub::withPullRequest($pull_request);
         $this->pull_request_permission_checker = CheckUserCanAccessPullRequestStub::withDefault();
     }
 
@@ -73,14 +84,12 @@ final class PATCHCommentHandlerTest extends TestCase
             new PullRequestRetriever($this->pull_request_dao),
             $this->pull_request_permission_checker,
         );
-        $user                = UserTestBuilder::buildWithId(self::CURRENT_USER_ID);
-
-        return $put_handler_comment->handle($user, 1058, $this->comment_data);
+        return $put_handler_comment->handle($this->comment_author, 1058, $this->comment_data);
     }
 
     public function testItReturnsAnErrorIfTheCommentIsNotFound(): void
     {
-        $this->comment_dao_searcher = CommentSearcherStub::withNoRow();
+        $this->comment_dao_searcher = CommentSearcherStub::withNoComment();
 
         $result = $this->handle();
 
@@ -91,8 +100,11 @@ final class PATCHCommentHandlerTest extends TestCase
 
     public function testItReturnsAnErrorIfTheUSerTryToEditACommentOfAnotherUser(): void
     {
-        $other_user_id              = 128;
-        $this->comment_dao_searcher = CommentSearcherStub::withCustomUser($other_user_id);
+        $this->comment_dao_searcher = CommentSearcherStub::withComment(
+            CommentTestBuilder::aMarkdownComment('smarting meliponine')
+                ->byAuthor(UserTestBuilder::buildWithId(128))
+                ->build()
+        );
 
         $result = $this->handle();
 
@@ -114,7 +126,9 @@ final class PATCHCommentHandlerTest extends TestCase
 
     public function testItReturnsAnErrorWhenTheEditedCommentIsNotInMarkdown(): void
     {
-        $this->comment_dao_searcher = CommentSearcherStub::withFormat("text");
+        $this->comment_dao_searcher = CommentSearcherStub::withComment(
+            CommentTestBuilder::aTextComment('smarting meliponine')->build()
+        );
 
         $result = $this->handle();
         self::assertTrue(Result::isErr($result));
