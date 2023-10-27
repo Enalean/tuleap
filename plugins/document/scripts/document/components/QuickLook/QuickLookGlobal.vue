@@ -71,27 +71,24 @@ import { iconForMimeType } from "../../helpers/icon-for-mime-type";
 import QuickLookDocumentProperties from "./QuickLookDocumentProperties.vue";
 import QuickLookDocumentPreview from "./QuickLookDocumentPreview.vue";
 import QuickLookItemIsLockedMessage from "./QuickLookItemIsLockedMessage.vue";
-import { useState } from "vuex-composition-helpers";
-import type { State } from "../../type";
+import type { Item } from "../../type";
 import { computed, defineAsyncComponent } from "vue";
 import { isFile } from "../../helpers/type-check-helper";
 
-const { currently_previewed_item } = useState<Pick<State, "currently_previewed_item">>([
-    "currently_previewed_item",
-]);
+const props = defineProps<{ currently_previewed_item: Item }>();
 
 const emit = defineEmits<{
     (e: "close-quick-look-event"): void;
 }>();
 
 const get_description = computed((): string => {
-    return currently_previewed_item.value
-        ? currently_previewed_item.value.post_processed_description
+    return props.currently_previewed_item
+        ? props.currently_previewed_item.post_processed_description
         : "";
 });
 
 const icon_class = computed((): string => {
-    const item = currently_previewed_item.value;
+    const item = props.currently_previewed_item;
     if (!item) {
         return ICON_EMPTY;
     }
@@ -115,10 +112,10 @@ const icon_class = computed((): string => {
 });
 
 const quick_look_component_action = computed(() => {
-    if (!currently_previewed_item.value) {
+    if (!props.currently_previewed_item) {
         return null;
     }
-    switch (currently_previewed_item.value.type) {
+    switch (props.currently_previewed_item.type) {
         case TYPE_FILE:
             return defineAsyncComponent(
                 () => import(/* webpackChunkName: "quick-look-file" */ `./QuickLookFile.vue`),

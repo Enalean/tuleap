@@ -35,8 +35,8 @@
             >
                 <embedded-properties
                     v-if="embedded_file_model"
-                    v-model="embedded_file_model"
                     v-bind:item="embedded_item"
+                    v-bind:value="embedded_file_model.content"
                     key="embedded-props"
                 />
             </item-update-properties>
@@ -102,11 +102,13 @@ export default {
         emitter.on("update-version-title", this.updateTitleValue);
         emitter.on("update-changelog-property", this.updateChangelogValue);
         emitter.on("update-lock", this.updateLock);
+        emitter.on("update-embedded-properties", this.updateContent);
     },
     beforeUnmount() {
         emitter.off("update-version-title", this.updateTitleValue);
         emitter.off("update-changelog-property", this.updateChangelogValue);
         emitter.off("update-lock", this.updateLock);
+        emitter.off("update-embedded-properties", this.updateContent);
     },
     methods: {
         ...mapActions(["loadDocument"]),
@@ -178,6 +180,9 @@ export default {
         },
         updateLock(is_locked) {
             this.version.is_file_locked = is_locked;
+        },
+        updateContent(content) {
+            this.embedded_file_model.content = content;
         },
     },
 };

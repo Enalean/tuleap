@@ -35,11 +35,12 @@ describe("QuickLookGlobal", () => {
         } as ItemFile;
 
         const wrapper = shallowMount(QuickLookGlobal, {
+            props: {
+                currently_previewed_item,
+            },
             global: {
                 ...getGlobalTestOptions({
-                    state: {
-                        currently_previewed_item,
-                    } as unknown as RootState,
+                    state: {} as unknown as RootState,
                 }),
                 directives: {
                     "dompurify-html": jest.fn(),
