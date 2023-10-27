@@ -72,6 +72,7 @@ final class DefinitionRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
         $commonmark_interpreter = \Mockery::mock(ContentInterpretor::class);
         $priority_manager       = $this->createStub(\Tracker_Artifact_PriorityManager::class);
         $priority_manager->method('getGlobalRank')->willReturn(1);
+
         $representation = new DefinitionTextOrHTMLRepresentation(
             $purifier,
             $commonmark_interpreter,

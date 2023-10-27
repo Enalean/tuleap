@@ -163,6 +163,7 @@ use Workflow_Transition_ConditionFactory;
 class CampaignsResource
 {
     public const MAX_LIMIT = 50;
+
     /**
      * @var CampaignCreator
      */
@@ -556,15 +557,16 @@ class CampaignsResource
      * @param int $id     Id of the campaign
      * @param int $limit  Number of elements displayed per page {@from path}
      * @param int $offset Position of the first element to display {@from path}
+     * @param string $definition_format The format of the artifact defintion retrieved {@from path} {@choice minimal,full}
      *
-     * @return array {@type ExecutionRepresentation}
+     * @return ExecutionRepresentation[]
      *
      * @access hybrid
      *
      * @throws RestException 400
      * @throws RestException 403
      */
-    public function getExecutions($id, $limit = 10, $offset = 0)
+    public function getExecutions($id, $limit = 10, $offset = 0, string $definition_format = 'minimal')
     {
         $this->optionsExecutions($id);
 
@@ -582,13 +584,15 @@ class CampaignsResource
             throw new RestException(400, "There isn't any execution tracker configured");
         }
 
-        $execution_representations = $this->execution_representation_builder
+        $definition_representation_format = DefinitionRepresentationFormat::buildFromName($definition_format);
+        $execution_representations        = $this->execution_representation_builder
             ->getPaginatedExecutionsRepresentationsForCampaign(
                 $user,
                 $artifact,
                 $execution_tracker,
                 $limit,
-                $offset
+                $offset,
+                $definition_representation_format,
             );
 
         $this->sendPaginationHeaders($limit, $offset, $execution_representations->getTotalSize());
@@ -698,7 +702,8 @@ class CampaignsResource
                     $artifact,
                     $execution_tracker,
                     $limit,
-                    $offset
+                    $offset,
+                    DefinitionRepresentationFormat::DEFAULT,
                 );
         } catch (DefinitionNotFoundException $e) {
             $execution_id = $e->getExecutionArtifact()->getId();

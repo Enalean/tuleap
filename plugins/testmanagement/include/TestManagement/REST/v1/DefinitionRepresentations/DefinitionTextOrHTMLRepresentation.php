@@ -66,6 +66,8 @@ final class DefinitionTextOrHTMLRepresentation extends MinimalDefinitionRepresen
 
     public readonly int $rank;
 
+    public readonly ArtifactRepresentation $artifact;
+
     /**
      * @param ArtifactRepresentation[] $all_requirements
      * @throws StepDefinitionFormatNotFoundException
@@ -82,7 +84,9 @@ final class DefinitionTextOrHTMLRepresentation extends MinimalDefinitionRepresen
         array $all_requirements,
         ?Tracker_Artifact_Changeset $changeset = null,
     ) {
-        parent::__construct($artifact, $artifact_representation, $form_element_factory, $user, $changeset);
+        parent::__construct($artifact, $form_element_factory, $user, $changeset);
+
+        $this->artifact = $artifact_representation;
 
         $this->description = self::getTextFieldValueWithCrossReferences(
             $purifier,

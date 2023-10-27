@@ -332,7 +332,7 @@ final class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             $definition_artifact->getTracker(),
         );
 
-        $this->artifact_representation_builder->method("getArtifactRepresentationWithFieldValues")->willReturn(
+        $this->artifact_representation_builder->method("getArtifactRepresentation")->willReturn(
             $this->createMock(ArtifactRepresentation::class)
         );
     }
