@@ -15,15 +15,11 @@ if [ -f "${EXTRA_COMPOSE_FILE:-}" ]; then
 fi
 
 case "${1:-}" in
-    "mysql57")
-    export DB_HOST="mysql57"
-    ;;
     "mysql80")
     export DB_HOST="mysql80"
     ;;
     *)
     echo "A database type must be provided as parameter. Allowed values are:"
-    echo "* mysql57"
     echo "* mysql80"
     exit 1
 esac

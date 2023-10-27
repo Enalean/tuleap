@@ -54,18 +54,6 @@ pipeline {
         stage('Tests') {
             failFast false
             parallel {
-                stage ('MariaDB 10.3') {
-                    stages {
-                        stage('REST CentOS 7 PHP 8.1 MariaDB 10.3') {
-                            steps { script { actions.runRESTTests('mariadb103', '81') } }
-                            post { always { junit 'results/api-rest/*/rest_tests.xml' } }
-                        }
-                        stage('DB CentOS 7 PHP 8.1 MariaDB 10.3') {
-                            steps { script { actions.runDBTests('mariadb103', '81') } }
-                            post { always { junit 'results/db/*/db_tests.xml' } }
-                        }
-                    }
-                }
                 stage ('Enterprise Linux 9 (el9)') {
                     stages {
                         stage ('Build and run el9') {

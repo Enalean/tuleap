@@ -74,7 +74,7 @@ final class SetupMysqlInitCommand extends Command
         $ssl_verify_ca = MysqlCommandHelper::SSL_VERIFY_CA;
         $ssl_ca_file   = MysqlCommandHelper::OPT_SSL_CA;
         return <<<EOT
-        Initialize the database (MySQL > 5.7 or MariaDB 10.3) for use with Tuleap
+        Initialize the database (MySQL 8.0) for use with Tuleap
 
         This command is idempotent so it's safe to be used several times (with same parameters...).
 
