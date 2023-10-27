@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { sortTimesChronologically } from "../../../time-formatters";
-import { SUCCESS_TYPE } from "../../../constants.js";
+import { sortTimesChronologically } from "@tuleap/plugin-timetracking-time-formatters";
+import { SUCCESS_TYPE } from "@tuleap/plugin-timetracking-constants";
 
 export default {
     toggleReadingMode(state) {

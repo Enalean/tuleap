@@ -29,7 +29,7 @@ import {
     REST_FEEDBACK_DELETE,
     REST_FEEDBACK_EDIT,
     SUCCESS_TYPE,
-} from "../../../constants.js";
+} from "@tuleap/plugin-timetracking-constants";
 
 describe("Store mutations", () => {
     let state;

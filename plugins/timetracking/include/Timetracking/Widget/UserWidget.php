@@ -81,14 +81,14 @@ class UserWidget extends Widget
 
     public function getStylesheetDependencies(): CssAssetCollection
     {
-        return new CssAssetCollection([new CssAssetWithoutVariantDeclinaisons($this->getAssets(), 'style-bp')]);
+        return new CssAssetCollection([new CssAssetWithoutVariantDeclinaisons($this->getAssets(), 'style-bp-personal')]);
     }
 
     private function getAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../frontend-assets',
-            '/assets/timetracking'
+            __DIR__ . '/../../../scripts/personal-timetracking-widget/frontend-assets',
+            '/assets/timetracking/personal-timetracking-widget'
         );
     }
 }

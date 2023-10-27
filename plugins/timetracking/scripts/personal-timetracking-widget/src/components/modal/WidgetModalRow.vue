@@ -58,7 +58,10 @@
     </tr>
 </template>
 <script>
-import { formatDateUsingPreferredUserFormat, formatMinutes } from "../../../../time-formatters.js";
+import {
+    formatDateUsingPreferredUserFormat,
+    formatMinutes,
+} from "@tuleap/plugin-timetracking-time-formatters";
 import { mapState } from "vuex";
 import WidgetModalEditTime from "./WidgetModalEditTime.vue";
 import { createPopover } from "tlp";

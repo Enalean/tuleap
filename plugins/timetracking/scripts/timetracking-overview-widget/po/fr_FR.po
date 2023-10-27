@@ -1,0 +1,64 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Thomas Gorka <thomas.gorka@enalean.com>\n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.6\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Add"
+msgstr "Ajouter"
+
+msgid "All users"
+msgstr "Tout les utilisateurs"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "From"
+msgstr "Du"
+
+msgid "Hide void trackers"
+msgstr "Cacher les trackers vides"
+
+msgid "No time have been found for this period and these trackers"
+msgstr "Aucun temps n'a été trouvé pour cette période et ces outils de suivi"
+
+msgid "No trackers selected"
+msgstr "Aucun élément séléctionné"
+
+msgid "Please choose..."
+msgstr "Veuillez choisir..."
+
+msgid "Project"
+msgstr "Projet"
+
+msgid "Report has been successfully saved"
+msgstr "Le rapport a été enregistré avec succès"
+
+msgid "Save report"
+msgstr "Enregistrer le rapport"
+
+msgid "Search"
+msgstr "Rechercher"
+
+msgid "Show void trackers"
+msgstr "Montrer les trackers vides"
+
+msgid "The time is displayed in hours:minutes"
+msgstr "Le temps est affiché en heures:minutes"
+
+msgid "Time"
+msgstr "Temps"
+
+msgid "To"
+msgstr "Au"
+
+msgid "Tracker"
+msgstr "Outil de suivi"

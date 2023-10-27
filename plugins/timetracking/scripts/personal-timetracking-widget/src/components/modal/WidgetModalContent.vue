@@ -48,7 +48,7 @@ import {
     REST_FEEDBACK_EDIT,
     REST_FEEDBACK_DELETE,
     ERROR_OCCURRED,
-} from "../../../../constants.js";
+} from "@tuleap/plugin-timetracking-constants";
 import WidgetModalArtifactInfo from "./WidgetModalArtifactInfo.vue";
 import WidgetModalTable from "./WidgetModalTable.vue";
 import WidgetLinkToArtifact from "../WidgetLinkToArtifact.vue";

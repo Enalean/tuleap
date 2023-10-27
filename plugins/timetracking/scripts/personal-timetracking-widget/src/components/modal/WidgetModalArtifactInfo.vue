@@ -53,7 +53,7 @@
 
 <script>
 import { mapGetters, mapState } from "vuex";
-import { formatDateUsingPreferredUserFormat } from "../../../../time-formatters.js";
+import { formatDateUsingPreferredUserFormat } from "@tuleap/plugin-timetracking-time-formatters";
 export default {
     name: "WidgetModalArtifactInfo",
     computed: {

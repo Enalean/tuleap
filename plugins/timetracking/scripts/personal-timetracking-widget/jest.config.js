@@ -20,5 +20,5 @@
 const { defineJestConfiguration } = require("@tuleap/build-system-configurator");
 module.exports = {
     ...defineJestConfiguration(),
-    displayName: "timetracking",
+    displayName: "personal-timetracking-widget",
 };

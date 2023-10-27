@@ -1,0 +1,26 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-timetracking-personal-widget",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "dependencies": {
+    "@tuleap/burningparrot-theme": "workspace:*",
+    "@tuleap/tlp-fetch": "workspace:*",
+    "vue": "^2.7.4",
+    "vue-gettext": "^2.1.12",
+    "vuex": "^3.6.2"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/vuex-store-wrapper-jest": "workspace:*",
+    "@tuleap/plugin-timetracking-constants": "workspace:*",
+    "@tuleap/plugin-timetracking-time-formatters": "workspace:*",
+    "@vue/test-utils": "^1.3"
+  },
+  "scripts": {
+    "build": "webpack --config webpack.prod.js",
+    "watch": "webpack --config webpack.dev.js --watch",
+    "test": "jest"
+  }
+}

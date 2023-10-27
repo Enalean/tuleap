@@ -1,9 +1,13 @@
 {
     "name": "timetracking",
     "gettext-vue": {
-        "timetracking": {
-            "src": "scripts",
-            "po": "scripts/po"
+        "personal-timetracking-widget": {
+            "src": "scripts/personal-timetracking-widget/src",
+            "po": "scripts/personal-timetracking-widget/po"
+        },
+        "timetracking-overview-widget": {
+            "src": "scripts/timetracking-overview-widget/src",
+            "po": "scripts/timetracking-overview-widget/po"
         }
     }
 }
