@@ -36,7 +36,7 @@ use Tuleap\Docman\Download\DocmanFileDownloadController;
 use Tuleap\Docman\Download\DocmanFileDownloadResponseGenerator;
 use Tuleap\Docman\FilenamePattern\FilenamePatternRetriever;
 use Tuleap\Docman\PostUpdate\PostUpdateFileHandler;
-use Tuleap\Docman\REST\v1\OpenItemHref;
+use Tuleap\Docman\Item\OpenItemHref;
 use Tuleap\Docman\Settings\SettingsDAO;
 use Tuleap\Docman\Version\CoAuthorDao;
 use Tuleap\Document\Tree\Create\NewItemAlternative;

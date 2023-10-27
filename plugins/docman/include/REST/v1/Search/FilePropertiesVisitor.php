@@ -25,7 +25,7 @@ namespace Tuleap\Docman\REST\v1\Search;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Docman\Item\ItemVisitor;
 use Tuleap\Docman\REST\v1\Files\FilePropertiesRepresentation;
-use Tuleap\Docman\REST\v1\OpenItemHref;
+use Tuleap\Docman\Item\OpenItemHref;
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 /**

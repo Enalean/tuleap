@@ -19,21 +19,28 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+declare(strict_types=1);
+
+use Tuleap\Document\Reference\ReferenceURLBuilder;
+
 class Docman_ReferenceFactory
 {
-    /**
-     * @return Docman_Reference
-     */
-    public function getInstanceFromRowAndProjectId($row, $project_id)
+    public function __construct(private readonly ReferenceURLBuilder $reference_url_builder)
     {
+    }
+
+    public function buildReferenceFromRowAndItem(
+        array $row,
+        Docman_Item $docman_item,
+    ): Docman_Reference {
         return new Docman_Reference(
             $row['keyword'],
             $row['description'],
-            $row['link'],
+            $this->reference_url_builder->buildURLForReference($docman_item, $row['link']),
             $row['scope'],
             $row['service_short_name'],
             $row['nature'],
-            $project_id
+            $docman_item->getGroupId(),
         );
     }
 }

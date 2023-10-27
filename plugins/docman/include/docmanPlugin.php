@@ -1089,14 +1089,19 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         if ($reference_row) {
             $docman_element_id   = $event->getValue();
             $docman_item_factory = new Docman_ItemFactory();
-            $reference_factory   = new Docman_ReferenceFactory();
-
-            $docman_item = $docman_item_factory->getItemFromDb($docman_element_id);
+            $docman_item         = $docman_item_factory->getItemFromDb($docman_element_id);
 
             if ($docman_item) {
-                $reference = $reference_factory->getInstanceFromRowAndProjectId(
+                $reference_factory = new Docman_ReferenceFactory(
+                    new \Tuleap\Document\Reference\ReferenceURLBuilder(
+                        EventManager::instance(),
+                        ProjectManager::instance(),
+                    ),
+                );
+
+                $reference = $reference_factory->buildReferenceFromRowAndItem(
                     $reference_row,
-                    $docman_item->getGroupId()
+                    $docman_item,
                 );
 
                 $event->setReference($reference);
