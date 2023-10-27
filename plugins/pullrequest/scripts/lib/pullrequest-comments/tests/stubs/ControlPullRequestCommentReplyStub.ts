@@ -19,6 +19,7 @@
 
 import type { ControlPullRequestCommentReply } from "../../src/comment/comment-reply/PullRequestCommentReplyController";
 import { RelativeDateHelperStub } from "./RelativeDateHelperStub";
+import { ControlEditionFormStub } from "./ControlEditionFormStub";
 
 const noop = (): void => {
     // Do nothing
@@ -34,4 +35,5 @@ export const ControlPullRequestCommentReplyStub = (
     getRelativeDateHelper: () => RelativeDateHelperStub,
     getProjectId: () => 105,
     getCurrentUserId: () => current_user_id,
+    buildCommentEditionController: ControlEditionFormStub,
 });

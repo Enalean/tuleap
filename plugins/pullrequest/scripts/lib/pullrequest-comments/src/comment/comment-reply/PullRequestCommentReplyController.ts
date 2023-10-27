@@ -18,11 +18,15 @@
  */
 
 import { dispatch } from "hybrids";
+import { loadTooltips } from "@tuleap/tooltip";
 import type { CurrentPullRequestUserPresenter } from "../../types";
 import type { HelpRelativeDatesDisplay } from "../../helpers/relative-dates-helper";
 import { RelativeDatesHelper } from "../../helpers/relative-dates-helper";
 import type { PullRequestPresenter } from "../PullRequestPresenter";
 import type { HostElement, InternalPullRequestCommentReply } from "./PullRequestCommentReply";
+import { EditionFormController } from "../edition/EditionFormController";
+import type { ControlEditionForm } from "../edition/EditionFormController";
+import { EditedCommentSaver } from "../edition/EditedCommentSaver";
 
 export type ControlPullRequestCommentReply = {
     showReplyForm(host: HostElement): void;
@@ -32,6 +36,7 @@ export type ControlPullRequestCommentReply = {
     getRelativeDateHelper(): HelpRelativeDatesDisplay;
     getProjectId(): number;
     getCurrentUserId(): number;
+    buildCommentEditionController(host: InternalPullRequestCommentReply): ControlEditionForm;
 };
 
 export const PullRequestCommentReplyController = (
@@ -58,4 +63,19 @@ export const PullRequestCommentReplyController = (
         ),
     getProjectId: () => current_pull_request.project_id,
     getCurrentUserId: (): number => current_user.user_id,
+
+    buildCommentEditionController: (host: InternalPullRequestCommentReply): ControlEditionForm =>
+        EditionFormController(
+            EditedCommentSaver(),
+            (updated_comment) => {
+                host.comment = updated_comment;
+                host.is_in_edition_mode = false;
+                loadTooltips(host.content(), false);
+            },
+            () => {
+                host.is_in_edition_mode = false;
+                loadTooltips(host.content(), false);
+            },
+            host.parent_element.controller.getErrorCallback(),
+        ),
 });

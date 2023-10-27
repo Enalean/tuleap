@@ -80,9 +80,9 @@ const getCommentContentTemplate = (
     if (host.is_in_edition_mode) {
         return html` <tuleap-pullrequest-comment-edition-form
             class="pull-request-comment-content"
+            controller="${host.controller.buildCommentEditionController(host)}"
             comment="${host.comment}"
             project_id="${host.controller.getProjectId()}"
-            oncancel-edition="${(): void => host.controller.hideEditionForm(host)}"
         ></tuleap-pullrequest-comment-edition-form>`;
     }
 

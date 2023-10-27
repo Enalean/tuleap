@@ -25,23 +25,24 @@ import type { InternalWritingZone } from "../../writing-zone/WritingZone";
 import { getWritingZoneElement } from "../../writing-zone/WritingZone";
 import type { PullRequestCommentPresenter } from "../PullRequestCommentPresenter";
 import type { ControlEditionForm } from "./EditionFormController";
-import { EditionFormController } from "./EditionFormController";
 import { getEditionForm } from "./EditionFormTemplate";
 import { gettext_provider } from "../../gettext-provider";
+import { EditionFormPresenter } from "./EditionFormPresenter";
 
 export const TAG = "tuleap-pullrequest-comment-edition-form";
 
 export type EditionForm = {
+    readonly controller: ControlEditionForm;
     readonly comment: PullRequestCommentPresenter;
     readonly project_id: number;
 };
 
 export type InternalEditionForm = Readonly<EditionForm> & {
-    controller: ControlEditionForm;
     writing_zone_controller: ControlWritingZone;
     writing_zone: HTMLElement & InternalWritingZone;
     after_render_once: unknown;
     content: () => HTMLElement;
+    presenter: EditionFormPresenter;
 };
 
 export type HostElement = InternalEditionForm &
@@ -51,20 +52,20 @@ export type HostElement = InternalEditionForm &
 export const after_render_once_descriptor = {
     get: (host: InternalEditionForm): unknown => host.content(),
     observe(host: InternalEditionForm): void {
-        host.writing_zone_controller.setWritingZoneContent(
-            host.writing_zone,
-            host.comment.raw_content,
-        );
+        host.controller.initEditionForm(host);
     },
 };
 export const EditionForm = define<InternalEditionForm>({
     tag: TAG,
     project_id: undefined,
-    comment: undefined,
-    controller: {
-        get: (host, controller: ControlEditionForm | undefined) =>
-            controller ?? EditionFormController(),
+    comment: {
+        set: (host, comment) => {
+            host.presenter = EditionFormPresenter.fromComment(comment);
+            return comment;
+        },
     },
+    presenter: undefined,
+    controller: undefined,
     writing_zone_controller: {
         get: (host, controller: ControlWritingZone | undefined) =>
             controller ??

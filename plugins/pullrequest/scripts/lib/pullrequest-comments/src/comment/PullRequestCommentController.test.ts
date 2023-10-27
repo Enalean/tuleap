@@ -30,7 +30,6 @@ import type { StorePullRequestCommentReplies } from "./PullRequestCommentReplies
 import { SaveCommentStub } from "../../tests/stubs/SaveCommentStub";
 import { CurrentPullRequestUserPresenterStub } from "../../tests/stubs/CurrentPullRequestUserPresenterStub";
 import { PullRequestCommentPresenterStub } from "../../tests/stubs/PullRequestCommentPresenterStub";
-import { NewCommentFormPresenterStub } from "../../tests/stubs/NewCommentFormPresenterStub";
 import { PullRequestCommentRepliesCollectionPresenter } from "./PullRequestCommentRepliesCollectionPresenter";
 import { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 import { PullRequestCommentRepliesStore } from "./PullRequestCommentRepliesStore";
@@ -67,7 +66,6 @@ describe("PullRequestCommentController", () => {
         const reply_creation_controller =
             getController(save_reply).buildReplyCreationController(host);
         return reply_creation_controller.saveNewComment({
-            presenter: NewCommentFormPresenterStub.buildWithContent("Please don't"),
             writing_zone_controller: {
                 resetWritingZone: () => {
                     // Do nothing,
@@ -155,7 +153,6 @@ describe("PullRequestCommentController", () => {
 
         const host = {
             comment: PullRequestCommentPresenterStub.buildGlobalComment(),
-            reply_comment_presenter: NewCommentFormPresenterStub.buildWithContent("Please don't"),
             replies: PullRequestCommentRepliesCollectionPresenter.fromReplies([]),
             post_reply_save_callback: vi.fn(),
         } as unknown as HostElement;
@@ -197,8 +194,6 @@ describe("PullRequestCommentController", () => {
         await saveReply(
             {
                 comment: PullRequestCommentPresenterStub.buildGlobalComment(),
-                reply_comment_presenter:
-                    NewCommentFormPresenterStub.buildWithContent("Please don't"),
             } as unknown as HostElement,
             SaveCommentStub.withFault(tuleap_api_fault),
         );
