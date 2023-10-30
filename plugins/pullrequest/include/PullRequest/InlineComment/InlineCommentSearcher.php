@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,21 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\InlineComment;
 
-use Tuleap\Option\Option;
-
-final class InlineCommentRetriever
+interface InlineCommentSearcher
 {
-    public function __construct(private readonly InlineCommentSearcher $dao)
-    {
-    }
-
-    public function getInlineCommentByID(int $inline_comment_id): Option
-    {
-        $row = $this->dao->searchByCommentID($inline_comment_id);
-        if ($row === null) {
-            return Option::nothing(InlineComment::class);
-        }
-
-        return Option::fromValue(InlineComment::buildFromRow($row));
-    }
+    /**
+     * @psalm-return array{
+     *     id: int,
+     *     pull_request_id: int,
+     *     user_id: int,
+     *     post_date: int,
+     *     file_path: string,
+     *     unidiff_offset: int,
+     *     content: string,
+     *     is_outdated: 0|1,
+     *     parent_id: int,
+     *     position: string,
+     *     color: string,
+     *     format: string
+     * }|null
+     */
+    public function searchByCommentID(int $inline_comment_id): ?array;
 }

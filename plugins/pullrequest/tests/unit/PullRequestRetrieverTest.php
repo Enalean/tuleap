@@ -26,16 +26,23 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
 use Tuleap\PullRequest\Tests\Stub\SearchPullRequestStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class PullRequestRetrieverTest extends TestCase
 {
+    private const PULL_REQUEST_ID = 548;
+    private const TITLE           = 'antasthenic pseudosessile';
     private SearchPullRequestStub $pull_request_dao;
 
     protected function setUp(): void
     {
-        $this->pull_request_dao = SearchPullRequestStub::withDefaultRow();
+        $pull_request           = PullRequestTestBuilder::aPullRequestInReview()
+            ->withId(self::PULL_REQUEST_ID)
+            ->withTitle(self::TITLE)
+            ->build();
+        $this->pull_request_dao = SearchPullRequestStub::withPullRequest($pull_request);
     }
 
     /**
@@ -46,7 +53,7 @@ final class PullRequestRetrieverTest extends TestCase
         $pull_request_retriever = new PullRequestRetriever(
             $this->pull_request_dao
         );
-        return $pull_request_retriever->getPullRequestById(1);
+        return $pull_request_retriever->getPullRequestById(self::PULL_REQUEST_ID);
     }
 
     public function testItReturnsAnErrorIfThereIsNoPullRequestInDB(): void
@@ -66,7 +73,7 @@ final class PullRequestRetrieverTest extends TestCase
         self::assertTrue(Result::isOk($result));
         self::assertInstanceOf(PullRequest::class, $result->value);
         $pull_request = $result->value;
-        self::assertSame(1, $pull_request->getId());
-        self::assertSame('title', $pull_request->getTitle());
+        self::assertSame(self::PULL_REQUEST_ID, $pull_request->getId());
+        self::assertSame(self::TITLE, $pull_request->getTitle());
     }
 }

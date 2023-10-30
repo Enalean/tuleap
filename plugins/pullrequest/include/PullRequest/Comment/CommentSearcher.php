@@ -24,5 +24,17 @@ namespace Tuleap\PullRequest\Comment;
 
 interface CommentSearcher
 {
+    /**
+     * @psalm-return array{
+     *     id: int,
+     *     pull_request_id: int,
+     *     user_id: int,
+     *     post_date: int,
+     *     content: string,
+     *     parent_id: int,
+     *     color: string,
+     *     format: string
+     * }|null
+     */
     public function searchByCommentID(int $comment_id): ?array;
 }

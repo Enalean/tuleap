@@ -24,11 +24,8 @@ use Tuleap\DB\DataAccessObject;
 use Tuleap\PullRequest\Comment\ParentCommentSearcher;
 use Tuleap\PullRequest\Comment\ThreadColorUpdater;
 
-class Dao extends DataAccessObject implements ParentCommentSearcher, ThreadColorUpdater
+class Dao extends DataAccessObject implements ParentCommentSearcher, ThreadColorUpdater, InlineCommentSearcher
 {
-    /**
-     * @psalm-return array{id:int,pull_request_id:int,user_id:int,post_date:int,file_path:string,unidiff_offset:int,content:string,is_outdated:0|1,parent_id:int,position:string, color: string}|null
-     */
     public function searchByCommentID(int $inline_comment_id): ?array
     {
         return $this->getDB()->row(

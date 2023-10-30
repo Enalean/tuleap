@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\Tests\Builders;
 
 use Tuleap\PullRequest\Comment\Comment;
+use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 
 final class CommentTestBuilder
@@ -32,7 +33,7 @@ final class CommentTestBuilder
     private int $user_id         = 105;
     private int $post_date       = 1695212990;
     private int $parent_id       = 0;
-    private string $color        = "";
+    private string $color        = '';
 
     private function __construct(
         private readonly string $content,
@@ -54,6 +55,30 @@ final class CommentTestBuilder
             $content,
             TimelineComment::FORMAT_TEXT
         );
+    }
+
+    public function withId(int $comment_id): self
+    {
+        $this->id = $comment_id;
+        return $this;
+    }
+
+    public function byAuthor(\PFUser $author): self
+    {
+        $this->user_id = (int) $author->getId();
+        return $this;
+    }
+
+    public function onPullRequest(PullRequest $pull_request): self
+    {
+        $this->pull_request_id = $pull_request->getId();
+        return $this;
+    }
+
+    public function childOf(int $parent_comment_id): self
+    {
+        $this->parent_id = $parent_comment_id;
+        return $this;
     }
 
     public function build(): Comment

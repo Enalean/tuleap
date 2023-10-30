@@ -23,31 +23,45 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\REST\v1\Comment;
 
 use Luracast\Restler\RestException;
+use Tuleap\PullRequest\InlineComment\InlineComment;
 use Tuleap\PullRequest\InlineComment\InlineCommentRetriever;
 
 final class ParentIdValidatorForInlineComment
 {
-    public function __construct(private InlineCommentRetriever $inline_comment_retriever)
+    public function __construct(private readonly InlineCommentRetriever $inline_comment_retriever)
     {
     }
 
+    /**
+     * @throws RestException
+     */
     public function checkParentValidity(int $parent_id, int $pullrequest_id): void
     {
         if ($parent_id === 0) {
             return;
         }
 
-        $inline_comment = $this->inline_comment_retriever->getInlineCommentByID($parent_id);
-        if (! $inline_comment) {
-            throw new RestException(404, sprintf('Comment with id #%d is not found', $parent_id));
-        }
+        $this->inline_comment_retriever->getInlineCommentByID($parent_id)->match(
+            function (InlineComment $inline_comment) use ($pullrequest_id) {
+                if ($inline_comment->getParentId() !== 0) {
+                    throw new RestException(
+                        400,
+                        'You can only add parent on the first comment of thread of pullrequest'
+                    );
+                }
 
-        if ($inline_comment->getParentId() !== 0) {
-            throw new RestException(400, 'You can only add parent on the first comment of thread of pullrequest');
-        }
-
-        if ($inline_comment->getPullRequestId() !== $pullrequest_id) {
-            throw new RestException(400, sprintf('Parent comment #%d must be the same than provided comment #%d for reply', $parent_id, $pullrequest_id));
-        }
+                if ($inline_comment->getPullRequestId() !== $pullrequest_id) {
+                    throw new RestException(
+                        400,
+                        sprintf(
+                            'Parent comment #%d must be the same than provided comment #%d for reply',
+                            $inline_comment->getParentId(),
+                            $pullrequest_id
+                        )
+                    );
+                }
+            },
+            fn() => throw new RestException(404, sprintf('Comment with id #%d is not found', $parent_id))
+        );
     }
 }

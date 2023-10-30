@@ -22,50 +22,41 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Comment\Notification;
 
-use PFUser;
-use Tuleap\PullRequest\Comment\Comment;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\PullRequest\Comment\CommentRetriever;
 use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
 use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\Notification\FilterUserFromCollection;
 use Tuleap\PullRequest\Notification\OwnerRetriever;
 use Tuleap\PullRequest\PullRequest;
-use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
+use Tuleap\PullRequest\Tests\Builders\CommentTestBuilder;
+use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
 use Tuleap\PullRequest\Tests\Stub\CommentSearcherStub;
 use Tuleap\PullRequest\Tests\Stub\FormatNotificationContentStub;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use UserHelper;
-use UserManager;
 
 final class PullRequestNewCommentNotificationToProcessBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&UserManager
-     */
-    private $user_manager;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&Factory
-     */
-    private $pull_request_factory;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&OwnerRetriever
-     */
-    private $owner_retriever;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&UserHelper
-     */
-    private $user_helper;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&HTMLURLBuilder
-     */
-    private $html_url_builder;
+    private RetrieveUserByIdStub $user_retriever;
+    private Factory & MockObject $pull_request_factory;
+    private OwnerRetriever & MockObject $owner_retriever;
+    private UserHelper & MockObject $user_helper;
+    private HTMLURLBuilder & MockObject $html_url_builder;
     private CommentSearcherStub $comment_dao;
+    private PullRequest $pull_request;
+    private \PFUser $change_user;
 
     protected function setUp(): void
     {
-        $this->user_manager         = $this->createMock(UserManager::class);
+        $this->pull_request = PullRequestTestBuilder::aPullRequestInReview()->build();
+        $this->change_user  = UserTestBuilder::buildWithId(102);
+
+        $this->user_retriever       = RetrieveUserByIdStub::withUser($this->change_user);
         $this->pull_request_factory = $this->createMock(Factory::class);
-        $this->comment_dao          = CommentSearcherStub::withDefaultRow();
+        $this->comment_dao          = CommentSearcherStub::withNoComment();
         $this->owner_retriever      = $this->createMock(OwnerRetriever::class);
         $this->user_helper          = $this->createMock(UserHelper::class);
         $this->html_url_builder     = $this->createMock(HTMLURLBuilder::class);
@@ -74,7 +65,7 @@ final class PullRequestNewCommentNotificationToProcessBuilderTest extends \Tulea
     private function getNotificationsToProcess(PullRequestNewCommentEvent $event): array
     {
         $builder = new PullRequestNewCommentNotificationToProcessBuilder(
-            $this->user_manager,
+            $this->user_retriever,
             $this->pull_request_factory,
             new CommentRetriever($this->comment_dao),
             $this->owner_retriever,
@@ -88,24 +79,23 @@ final class PullRequestNewCommentNotificationToProcessBuilderTest extends \Tulea
 
     public function testBuildNewCommentNotificationFromPullRequestNewCommentEvent(): void
     {
-        $pull_request = $this->createMock(PullRequest::class);
-        $pull_request->method('getId')->willReturn(12);
-        $pull_request->method('getTitle')->willReturn('PR Title');
-        $change_user = $this->buildUser(102);
-        $owners      = [$change_user, $this->buildUser(104), $this->buildUser(105)];
-        $comment     = $this->buildComment(41, (int) $change_user->getId(), $pull_request->getId());
+        $owners  = [$this->change_user, UserTestBuilder::buildWithId(104), UserTestBuilder::buildWithId(105)];
+        $comment = CommentTestBuilder::aMarkdownComment('alodiary commandant')
+            ->onPullRequest($this->pull_request)
+            ->byAuthor($this->change_user)
+            ->build();
 
         $event = PullRequestNewCommentEvent::fromCommentID($comment->getId());
 
-        $this->comment_dao = CommentSearcherStub::fromComment($comment);
+        $this->comment_dao = CommentSearcherStub::withComment($comment);
         $this->pull_request_factory->method('getPullRequestById')
-                ->with($pull_request->getId())->willReturn($pull_request);
-        $this->user_manager->method('getUserById')
-            ->with($change_user->getId())->willReturn($change_user);
+            ->with($this->pull_request->getId())->willReturn($this->pull_request);
         $this->owner_retriever->method('getOwners')->willReturn($owners);
         $this->user_helper->method('getDisplayNameFromUser')->willReturn('Display name');
         $this->user_helper->method('getAbsoluteUserURL')->willReturn('https://example.com/users/foo');
-        $this->html_url_builder->method('getAbsolutePullRequestOverviewUrl')->willReturn('https://example.com/link-to-pr');
+        $this->html_url_builder->method('getAbsolutePullRequestOverviewUrl')->willReturn(
+            'https://example.com/link-to-pr'
+        );
 
         $notifications = $this->getNotificationsToProcess($event);
         $this->assertCount(1, $notifications);
@@ -114,57 +104,38 @@ final class PullRequestNewCommentNotificationToProcessBuilderTest extends \Tulea
 
     public function testNoNotificationIsBuiltWhenTheCommentCannotBeFound(): void
     {
-        $comment = $this->buildComment(404, 102, 12);
+        $this->comment_dao = CommentSearcherStub::withNoComment();
 
-        $event = PullRequestNewCommentEvent::fromCommentID($comment->getId());
-
-        $this->comment_dao = CommentSearcherStub::withNoRow();
-
+        $event = PullRequestNewCommentEvent::fromCommentID(404);
         $this->assertEmpty($this->getNotificationsToProcess($event));
     }
 
     public function testNoNotificationIsBuiltWhenThePullRequestCannotBeFound(): void
     {
-        $comment = $this->buildComment(14, 102, 404);
+        $comment = CommentTestBuilder::aMarkdownComment('alodiary commandant')->build();
 
         $event = PullRequestNewCommentEvent::fromCommentID($comment->getId());
 
-        $this->comment_dao = CommentSearcherStub::fromComment($comment);
-
-        $this->pull_request_factory->method('getPullRequestById')->willThrowException(new PullRequestNotFoundException());
+        $this->comment_dao = CommentSearcherStub::withComment($comment);
+        $this->pull_request_factory->method('getPullRequestById')->willThrowException(
+            new PullRequestNotFoundException()
+        );
 
         $this->assertEmpty($this->getNotificationsToProcess($event));
     }
 
     public function testNoNotificationIsBuiltWhenTheUserCommentingCannotBeFound(): void
     {
-        $comment = $this->buildComment(14, 404, 16);
+        $comment = CommentTestBuilder::aMarkdownComment('alodiary commandant')
+            ->onPullRequest($this->pull_request)
+            ->build();
 
         $event = PullRequestNewCommentEvent::fromCommentID($comment->getId());
 
-        $this->comment_dao = CommentSearcherStub::fromComment($comment);
-        $this->pull_request_factory->method('getPullRequestById')->willReturn($this->createMock(PullRequest::class));
-        $this->user_manager->method('getUserById')->willReturn(null);
+        $this->comment_dao = CommentSearcherStub::withComment($comment);
+        $this->pull_request_factory->method('getPullRequestById')->willReturn($this->pull_request);
+        $this->user_retriever = RetrieveUserByIdStub::withNoUser();
 
         $this->assertEmpty($this->getNotificationsToProcess($event));
-    }
-
-    private function buildUser(int $user_id): PFUser
-    {
-        return new PFUser(['user_id' => $user_id, 'language_id' => 'en']);
-    }
-
-    private function buildComment(int $comment_id, int $user_id, int $pr_id): Comment
-    {
-        return new Comment(
-            $comment_id,
-            $pr_id,
-            $user_id,
-            10,
-            'My comment',
-            0,
-            "inca-silver",
-            TimelineComment::FORMAT_TEXT
-        );
     }
 }

@@ -24,6 +24,7 @@ namespace Tuleap\PullRequest\InlineComment\Notification;
 
 use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
 use Tuleap\PullRequest\Factory;
+use Tuleap\PullRequest\InlineComment\InlineComment;
 use Tuleap\PullRequest\InlineComment\InlineCommentRetriever;
 use Tuleap\PullRequest\Notification\EventSubjectToNotification;
 use Tuleap\PullRequest\Notification\FilterUserFromCollection;
@@ -31,8 +32,8 @@ use Tuleap\PullRequest\Notification\FormatNotificationContent;
 use Tuleap\PullRequest\Notification\NotificationToProcessBuilder;
 use Tuleap\PullRequest\Notification\OwnerRetriever;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
+use Tuleap\User\RetrieveUserById;
 use UserHelper;
-use UserManager;
 
 /**
  * @template-implements NotificationToProcessBuilder<PullRequestNewInlineCommentEvent>
@@ -40,7 +41,7 @@ use UserManager;
 final class PullRequestNewInlineCommentNotificationToProcessBuilder implements NotificationToProcessBuilder
 {
     public function __construct(
-        private readonly UserManager $user_manager,
+        private readonly RetrieveUserById $user_retriever,
         private readonly Factory $pull_request_factory,
         private readonly InlineCommentRetriever $inline_comment_retriever,
         private readonly OwnerRetriever $owner_retriever,
@@ -54,41 +55,40 @@ final class PullRequestNewInlineCommentNotificationToProcessBuilder implements N
 
     public function getNotificationsToProcess(EventSubjectToNotification $event): array
     {
-        $comment = $this->inline_comment_retriever->getInlineCommentByID($event->getInlineCommentID());
+        return $this->inline_comment_retriever->getInlineCommentByID($event->getInlineCommentID())->mapOr(
+            function (InlineComment $comment) {
+                try {
+                    $pull_request = $this->pull_request_factory->getPullRequestById($comment->getPullRequestId());
+                } catch (PullRequestNotFoundException $e) {
+                    return [];
+                }
 
-        if ($comment === null) {
-            return [];
-        }
+                $change_user = $this->user_retriever->getUserById($comment->getUserId());
+                if ($change_user === null) {
+                    return [];
+                }
 
-        try {
-            $pull_request = $this->pull_request_factory->getPullRequestById($comment->getPullRequestId());
-        } catch (PullRequestNotFoundException $e) {
-            return [];
-        }
+                $pull_request_owners = $this->owner_retriever->getOwners($pull_request);
 
-        $change_user = $this->user_manager->getUserById($comment->getUserId());
-        if ($change_user === null) {
-            return [];
-        }
-
-        $pull_request_owners = $this->owner_retriever->getOwners($pull_request);
-
-        try {
-            return [
-                PullRequestNewInlineCommentNotification::fromOwnersAndInlineComment(
-                    $this->user_helper,
-                    $this->html_url_builder,
-                    $this->filter_user_from_collection,
-                    $pull_request,
-                    $change_user,
-                    $pull_request_owners,
-                    $comment,
-                    $this->code_context_extractor,
-                    $this->format_notification_content
-                ),
-            ];
-        } catch (InlineCommentCodeContextException $exception) {
-            return [];
-        }
+                try {
+                    return [
+                        PullRequestNewInlineCommentNotification::fromOwnersAndInlineComment(
+                            $this->user_helper,
+                            $this->html_url_builder,
+                            $this->filter_user_from_collection,
+                            $pull_request,
+                            $change_user,
+                            $pull_request_owners,
+                            $comment,
+                            $this->code_context_extractor,
+                            $this->format_notification_content
+                        ),
+                    ];
+                } catch (InlineCommentCodeContextException $exception) {
+                    return [];
+                }
+            },
+            []
+        );
     }
 }

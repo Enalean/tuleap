@@ -23,16 +23,21 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\Comment;
 
 use Tuleap\Option\Option;
+use Tuleap\PullRequest\Tests\Builders\CommentTestBuilder;
 use Tuleap\PullRequest\Tests\Stub\CommentSearcherStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class CommentRetrieverTest extends TestCase
 {
+    private const COMMENT_ID = 15;
     private CommentSearcherStub $comment_dao;
 
     protected function setUp(): void
     {
-        $this->comment_dao = CommentSearcherStub::withDefaultRow();
+        $comment           = CommentTestBuilder::aMarkdownComment('squireless spitz')
+            ->withId(self::COMMENT_ID)
+            ->build();
+        $this->comment_dao = CommentSearcherStub::withComment($comment);
     }
 
     /**
@@ -41,12 +46,12 @@ final class CommentRetrieverTest extends TestCase
     private function getCommentByID(): Option
     {
         $comment_retriever = new CommentRetriever($this->comment_dao);
-        return $comment_retriever->getCommentByID(15);
+        return $comment_retriever->getCommentByID(self::COMMENT_ID);
     }
 
     public function testItReturnsNothingIfTheCommentIsNotFound(): void
     {
-        $this->comment_dao = CommentSearcherStub::withNoRow();
+        $this->comment_dao = CommentSearcherStub::withNoComment();
         $result            = $this->getCommentByID();
 
         self::assertTrue($result->isNothing());
