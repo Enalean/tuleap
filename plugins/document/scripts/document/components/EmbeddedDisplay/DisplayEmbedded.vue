@@ -49,6 +49,8 @@ import type { ErrorGetters } from "../../store/error/error-getters";
 import type { PreferenciesActions } from "../../store/preferencies/preferencies-actions";
 import { isEmbedded } from "../../helpers/type-check-helper";
 import { getEmbeddedFileVersionContent } from "../../api/version-rest-querier";
+import type { ItemHasJustBeenUpdatedEvent } from "../../helpers/emitter";
+import emitter from "../../helpers/emitter";
 
 const props = withDefaults(defineProps<{ item_id: number; version_id?: number | null }>(), {
     version_id: null,
@@ -124,9 +126,17 @@ onBeforeMount(async () => {
     const preference = await getEmbeddedFileDisplayPreference(embedded_file.value);
     shouldDisplayEmbeddedInLargeMode(!preference);
     loadContent();
+    emitter.on("item-has-just-been-updated", updateDisplayedContent);
 });
 
 onUnmounted(() => {
+    emitter.off("item-has-just-been-updated", updateDisplayedContent);
     updateCurrentlyPreviewedItem(null);
 });
+
+function updateDisplayedContent(item: ItemHasJustBeenUpdatedEvent): void {
+    if (isEmbedded(item.item)) {
+        embedded_content.value = item.item.embedded_file_properties?.content;
+    }
+}
 </script>

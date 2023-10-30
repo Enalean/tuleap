@@ -28,7 +28,7 @@
                 name="embedded-content"
                 ref="embedded_editor"
                 v-bind:placeholder="placeholder"
-                v-bind:value="value?.content ?? ''"
+                v-bind:value="value"
             ></textarea>
         </div>
     </div>

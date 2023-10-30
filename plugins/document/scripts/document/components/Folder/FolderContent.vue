@@ -24,7 +24,9 @@
                 <table class="tlp-table">
                     <thead>
                         <tr>
-                            <th class="document-tree-head-name">{{ $gettext("Name") }}</th>
+                            <th class="document-tree-head-name">
+                                {{ $gettext("Name") }}
+                            </th>
                             <template v-if="!toggle_quick_look">
                                 <th
                                     class="document-tree-head-owner"
@@ -60,7 +62,10 @@
                 v-bind:class="quick_look_dropzone_class"
                 v-bind:data-item-id="item_id"
             >
-                <quicklook-global v-on:close-quick-look-event="closeQuickLook" />
+                <quicklook-global
+                    v-bind:currently_previewed_item="currently_previewed_item"
+                    v-on:close-quick-look-event="closeQuickLook"
+                />
             </section>
         </div>
     </div>
