@@ -49,6 +49,7 @@ be added.
 * Florian Caillol
 * Thomas Piras
 * Kevin Traini
+* Clarisse Deschamps
 
 ### Previous contributors (no longer active committers)
 
