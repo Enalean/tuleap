@@ -22,7 +22,13 @@ import { defineJestConfiguration } from "@tuleap/build-system-configurator";
 
 env.DISABLE_TS_TYPECHECK = "true";
 
+const configuration = defineJestConfiguration();
+
 export default {
-    ...defineJestConfiguration(),
+    ...configuration,
     displayName: "projectmilestones",
+    transform: {
+        ...configuration.transform,
+        "^.+\\.vue$": "unplugin-vue2-script-setup/jest",
+    },
 };

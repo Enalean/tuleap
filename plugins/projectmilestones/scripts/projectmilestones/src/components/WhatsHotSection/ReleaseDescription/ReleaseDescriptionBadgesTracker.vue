@@ -44,24 +44,19 @@
         </div>
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
 import type { MilestoneData, TrackerNumberArtifacts } from "../../../type";
 
-@Component
-export default class ReleaseDescriptionBadgesTracker extends Vue {
-    @Prop()
-    readonly release_data!: MilestoneData;
+const props = defineProps<{ release_data: MilestoneData }>();
 
-    get trackers_to_display(): TrackerNumberArtifacts[] {
-        return this.release_data.number_of_artifact_by_trackers.filter(
-            (tracker) => tracker.total_artifact > 0,
-        );
-    }
+const trackers_to_display = computed((): TrackerNumberArtifacts[] => {
+    return props.release_data.number_of_artifact_by_trackers.filter(
+        (tracker) => tracker.total_artifact > 0,
+    );
+});
 
-    get display_badges_trackers_section(): boolean {
-        return this.trackers_to_display.length > 0;
-    }
-}
+const display_badges_trackers_section = computed((): boolean => {
+    return trackers_to_display.value.length > 0;
+});
 </script>
