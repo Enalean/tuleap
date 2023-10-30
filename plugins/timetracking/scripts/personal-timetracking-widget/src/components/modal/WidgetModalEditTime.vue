@@ -80,7 +80,10 @@
     </tr>
 </template>
 <script>
-import { formatDatetimeToISO, formatMinutes } from "@tuleap/plugin-timetracking-time-formatters";
+import {
+    formatMinutes,
+    formatDatetimeToYearMonthDay,
+} from "@tuleap/plugin-timetracking-time-formatters";
 import { TIME_REGEX } from "@tuleap/plugin-timetracking-constants";
 import { datePicker } from "tlp";
 import { mapGetters } from "vuex";
@@ -97,7 +100,7 @@ export default {
     },
     data() {
         const data = this.timeData || {};
-        const { date = formatDatetimeToISO(new Date().toISOString()), step = "" } = data;
+        const { date = formatDatetimeToYearMonthDay(new Date().toISOString()), step = "" } = data;
         return {
             date,
             step,

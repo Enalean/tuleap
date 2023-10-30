@@ -28,6 +28,7 @@ import {
     formatDatetimeToISO,
     formatDateUsingPreferredUserFormat,
     sortTimesChronologically,
+    formatDatetimeToYearMonthDay,
 } from "./time-formatters.js";
 
 describe("Time formatters", () => {
@@ -91,6 +92,14 @@ describe("Time formatters", () => {
             ];
             const sorted_times = sortTimesChronologically([times[1], times[0], times[2]]);
             expect(sorted_times).toEqual(times);
+        });
+    });
+
+    describe("formatDatetimeToYearMonthDay", () => {
+        it("When I call this method, then it should return the current date in YYYY-mm-dd format", () => {
+            const formatted_date = formatDatetimeToYearMonthDay("2018-01-01T00:00:00Z");
+
+            expect(formatted_date).toBe("2018-01-01");
         });
     });
 });

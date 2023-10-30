@@ -25,6 +25,7 @@ export {
     formatMinutes,
     formatDatetimeToISO,
     formatDateUsingPreferredUserFormat,
+    formatDatetimeToYearMonthDay,
     sortTimesChronologically,
 };
 
@@ -59,6 +60,14 @@ function formatDatetimeToISO(string_date) {
         padTimeNumber(date.getUTCSeconds()) +
         "Z"
     );
+}
+
+function formatDatetimeToYearMonthDay(string_date) {
+    const date = new Date(string_date);
+
+    return `${date.getUTCFullYear()}-${padTimeNumber(date.getUTCMonth() + 1)}-${padTimeNumber(
+        date.getUTCDate(),
+    )}`;
 }
 
 function formatDateUsingPreferredUserFormat(date, user_locale) {
