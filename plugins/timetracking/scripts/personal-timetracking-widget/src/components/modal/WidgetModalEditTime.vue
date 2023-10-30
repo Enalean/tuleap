@@ -80,8 +80,8 @@
     </tr>
 </template>
 <script>
-import { formatDatetimeToISO, formatMinutes } from "../../../../time-formatters.js";
-import { TIME_REGEX } from "../../../../constants.js";
+import { formatDatetimeToISO, formatMinutes } from "@tuleap/plugin-timetracking-time-formatters";
+import { TIME_REGEX } from "@tuleap/plugin-timetracking-constants";
 import { datePicker } from "tlp";
 import { mapGetters } from "vuex";
 

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { formatMinutes } from "../../../time-formatters.js";
+import { formatMinutes } from "@tuleap/plugin-timetracking-time-formatters";
 
 export function get_formatted_total_sum(state) {
     const sum = [].concat(...state.times).reduce((sum, { minutes }) => minutes + sum, 0);

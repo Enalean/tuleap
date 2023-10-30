@@ -15,9 +15,6 @@ msgstr ""
 msgid "Add"
 msgstr "Ajouter"
 
-msgid "All users"
-msgstr "Tout les utilisateurs"
-
 msgid "An error occurred"
 msgstr "Une erreur est survenue"
 
@@ -45,14 +42,8 @@ msgstr "Détails"
 msgid "From"
 msgstr "Du"
 
-msgid "Hide void trackers"
-msgstr "Cacher les trackers vides"
-
 msgid "Load more"
 msgstr "Voir plus"
-
-msgid "No time have been found for this period and these trackers"
-msgstr "Aucun temps n'a été trouvé pour cette période et ces outils de suivi"
 
 msgid "No tracked time have been found for this period"
 msgstr "Aucun temps suivi n'a été trouvé pour cette période"
@@ -60,29 +51,14 @@ msgstr "Aucun temps suivi n'a été trouvé pour cette période"
 msgid "No tracked times have been found for this period and artifact"
 msgstr "Aucun temps suivi n'a été trouvé sur cette période et cet artéfact"
 
-msgid "No trackers selected"
-msgstr "Aucun élément séléctionné"
-
 msgid "Please check time's format (hh:mm)"
 msgstr "Vérifiez le format du temps (hh:mm)"
-
-msgid "Please choose..."
-msgstr "Veuillez choisir..."
 
 msgid "Project"
 msgstr "Projet"
 
-msgid "Report has been successfully saved"
-msgstr "Le rapport a été enregistré avec succès"
-
-msgid "Save report"
-msgstr "Enregistrer le rapport"
-
 msgid "Search"
 msgstr "Rechercher"
-
-msgid "Show void trackers"
-msgstr "Montrer les trackers vides"
 
 msgid "Steps"
 msgstr "Etapes"
@@ -113,9 +89,6 @@ msgstr "Temps"
 
 msgid "To"
 msgstr "Au"
-
-msgid "Tracker"
-msgstr "Outil de suivi"
 
 msgid "Wait a minute..."
 msgstr "Attendez une minute..."

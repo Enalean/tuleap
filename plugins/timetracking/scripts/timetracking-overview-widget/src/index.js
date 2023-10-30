@@ -21,7 +21,7 @@ import Vue from "vue";
 import { createStore } from "./store/index.js";
 import TimeTrackingOverview from "./components/TimeTrackingOverview.vue";
 import GetTextPlugin from "vue-gettext";
-import french_translations from "../../po/fr_FR.po";
+import french_translations from "../po/fr_FR.po";
 
 document.addEventListener("DOMContentLoaded", () => {
     const widgets = document.querySelectorAll(".timetracking-overview-widget");

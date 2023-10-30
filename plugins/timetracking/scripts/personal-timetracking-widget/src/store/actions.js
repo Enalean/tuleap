@@ -28,8 +28,8 @@ import {
     REST_FEEDBACK_ADD,
     REST_FEEDBACK_EDIT,
     REST_FEEDBACK_DELETE,
-} from "../../../constants.js";
-import { updateEvent } from "../../../TimetrackingEvents.js";
+} from "@tuleap/plugin-timetracking-constants";
+import { updateEvent } from "../TimetrackingEvents.js";
 
 export function setDatesAndReload(context, [start_date, end_date]) {
     context.commit("setParametersForNewQuery", [start_date, end_date]);

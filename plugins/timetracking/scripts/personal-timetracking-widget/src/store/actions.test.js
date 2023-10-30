@@ -25,7 +25,7 @@ import {
     REST_FEEDBACK_EDIT,
     REST_FEEDBACK_DELETE,
     ERROR_OCCURRED,
-} from "../../../constants.js";
+} from "@tuleap/plugin-timetracking-constants";
 
 describe("Store actions", () => {
     let context;

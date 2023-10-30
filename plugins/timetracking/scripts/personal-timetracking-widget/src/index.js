@@ -19,7 +19,7 @@
 
 import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
-import french_translations from "../../po/fr_FR.po";
+import french_translations from "../po/fr_FR.po";
 import TimetrackingWidget from "./components/TimetrackingWidget.vue";
 import { createStore } from "./store/index.js";
 

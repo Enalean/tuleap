@@ -17,11 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.dashboard-widget-content-timetracking,
-.dashboard-widget-content-timetracking-overview {
-    margin: 0;
-}
-
 .timetracking-reading-mode {
     display: flex;
 
@@ -38,26 +33,6 @@
     margin: var(--tlp-medium-spacing);
 }
 
-.timetracking-overview-writing-mode-actions-cancel {
-    margin: 0 var(--tlp-medium-spacing) 0 0;
-}
-
-.timetracking-overview-selector {
-    display: flex;
-}
-
-.timetracking-overview-selected-tracker {
-    margin: 0 10px 10px 0;
-
-    &:last-child {
-        margin: 0 0 10px;
-    }
-}
-
-.timetracking-overview-form-trackers-selected {
-    margin: 0 0 0 20px;
-}
-
 .timetracking-writing-mode-selected-dates,
 .timetracking-reading-mode-dates {
     display: flex;
@@ -65,36 +40,7 @@
     margin: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
 }
 
-.timetracking-overview-writing-mode {
-    margin: 0;
-}
-
-.timetracking-overview-writing-mode-selected-dates {
-    display: flex;
-    margin: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
-}
-
-.timetracking-overview-users-selector-input.tlp-select-small {
-    padding: 0 var(--tlp-medium-spacing) 0 var(--tlp-small-spacing);
-}
-
-.timetracking-overview-project-selector-input,
-.timetracking-overview-users-selector-input,
-.timetracking-overview-trackers-selector-input.tlp-select {
-    min-width: 150px;
-}
-
-.timetracking-writing-mode-selected-tracker {
-    display: flex;
-    align-items: center;
-}
-
-.timetracking-writing-mode-selected-project {
-    margin: 0 var(--tlp-medium-spacing) 0 0;
-}
-
 .timetracking-writing-mode-selected-date:last-of-type,
-.timetracking-overview-writing-mode-selected-date:last-of-type,
 .timetracking-reading-date:last-of-type {
     margin: 0 0 0 var(--tlp-medium-spacing);
 }
@@ -103,8 +49,7 @@
     margin: 0 0 0 var(--tlp-medium-spacing);
 }
 
-.timetracking-artifacts-table,
-.timetracking-overview-widget-table {
+.timetracking-artifacts-table {
     margin: var(--tlp-medium-spacing);
 }
 
@@ -118,45 +63,6 @@
 .timetracking-time-tooltip {
     margin: 0 0 0 5px;
     vertical-align: middle;
-}
-
-.timetracking-overview-reading-mode-trackers-list {
-    display: flex;
-    flex-direction: row;
-    margin: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-small-spacing);
-    color: var(--tlp-main-color);
-}
-
-.timetracking-overview-reading-mode-trackers {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.timetracking-overview-reading-mode-tracker {
-    display: flex;
-    flex-direction: column;
-    margin: 0 var(--tlp-medium-spacing) var(--tlp-small-spacing) 0;
-}
-
-.timetracking-overview-reading-mode-tracker-project-name {
-    display: flex;
-    align-items: center;
-    margin: 5px 0 0;
-    color: var(--tlp-dimmed-color);
-    font-size: 14px;
-    font-weight: 400;
-
-    > .timetracking-overview-project-icon {
-        margin: 0 5px;
-        fill: var(--tlp-main-color);
-    }
-}
-
-.timetracking-overview-reading-mode-trackers-empty {
-    display: flex;
-    align-items: center;
-    margin: 0 0 0 var(--tlp-medium-spacing);
-    font-style: italic;
 }
 
 .timetracking-badge-direct-link-to-artifact {
@@ -176,8 +82,7 @@
 
 .timetracking-loader {
     height: 100px;
-    background: url("../../../../../src/www/themes/BurningParrot/images/spinner.gif") no-repeat
-        center center;
+    background: url("@tuleap/burningparrot-theme/images/spinner.gif") no-repeat center center;
 }
 
 .timetracking-total-sum {
@@ -264,33 +169,4 @@
     &::after {
         opacity: 1;
     }
-}
-
-.timetracking-overview-trackers-empty {
-    display: flex;
-    align-items: center;
-    margin: 0;
-    color: var(--tlp-main-color);
-    font-style: italic;
-}
-
-.timetracking-overview-tracker-selector {
-    display: flex;
-    align-items: center;
-    margin: var(--tlp-medium-spacing) var(--tlp-small-spacing) 0;
-}
-
-.timetracking-archive {
-    margin: 0 3px 0 0;
-    font-size: 12px;
-}
-
-.reading-mode-actions {
-    display: flex;
-    justify-content: center;
-    margin: var(--tlp-small-spacing) var(--tlp-medium-spacing) var(--tlp-medium-spacing);
-}
-
-.reading-mode-actions-cancel {
-    margin: 0 var(--tlp-medium-spacing) 0 0;
 }

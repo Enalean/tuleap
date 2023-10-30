@@ -22,11 +22,12 @@ const { webpack_configurator } = require("@tuleap/build-system-configurator");
 const context = __dirname;
 const output = webpack_configurator.configureOutput(
     path.resolve(__dirname, "./frontend-assets"),
-    "/assets/timetracking/script/personal-timetracking-widget",
+    "/assets/timetracking/timetracking-overview-widget/",
 );
 
 let entry_points = {
-    "style-fp": "./themes/FlamingParrot/css/style.scss",
+    "timetracking-overview": "./src/index.js",
+    "style-bp-overview": "./themes/style.scss",
 };
 
 module.exports = [
@@ -38,12 +39,21 @@ module.exports = [
             tlp: "tlp",
         },
         module: {
-            rules: [webpack_configurator.rule_scss_loader, webpack_configurator.rule_css_assets],
+            rules: [
+                webpack_configurator.rule_easygettext_loader,
+                webpack_configurator.rule_vue_loader,
+                webpack_configurator.rule_scss_loader,
+                webpack_configurator.rule_css_assets,
+            ],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
+            webpack_configurator.getVueLoaderPlugin(),
             ...webpack_configurator.getCSSExtractionPlugins(),
         ],
+        resolveLoader: {
+            alias: webpack_configurator.easygettext_loader_alias,
+        },
     },
 ];

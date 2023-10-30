@@ -30,7 +30,7 @@ import {
     saveNewReport,
     setDisplayPreference,
 } from "../api/rest-querier.js";
-import { ERROR_OCCURRED } from "../../../constants.js";
+import { ERROR_OCCURRED } from "@tuleap/plugin-timetracking-constants";
 
 export async function initWidgetWithReport(context) {
     try {

@@ -7,4 +7,4 @@ settings:
 devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
-    version: link:../../lib/frontend/build-system-configurator
+    version: link:../../../../../lib/frontend/build-system-configurator

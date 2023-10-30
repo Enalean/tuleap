@@ -20,7 +20,7 @@
 import * as actions from "../../store/actions.js";
 import initial_state from "../../store/state.js";
 import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import { ERROR_OCCURRED } from "../../../../constants.js";
+import { ERROR_OCCURRED } from "@tuleap/plugin-timetracking-constants";
 import * as rest_querier from "../../api/rest-querier.js";
 
 describe("Store actions", () => {

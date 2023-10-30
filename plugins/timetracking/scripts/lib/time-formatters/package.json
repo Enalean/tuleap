@@ -1,0 +1,23 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-timetracking-time-formatters",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "main": "dist/plugin-timetracking-time-formatters.umd.cjs",
+  "exports": {
+    ".": {
+      "import": "./dist/plugin-timetracking-time-formatters.js",
+      "require": "./dist/plugin-timetracking-time-formatters.umd.cjs"
+    }
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*"
+  },
+  "scripts": {
+    "build": "vite build",
+    "test": "vitest",
+    "watch": "vite build --watch --mode development --minify false"
+  }
+}

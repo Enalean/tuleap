@@ -22,7 +22,7 @@
  */
 
 import { get, put, patch } from "@tuleap/tlp-fetch";
-import { formatDatetimeToISO } from "../../../time-formatters";
+import { formatDatetimeToISO } from "@tuleap/plugin-timetracking-time-formatters";
 
 export {
     getTrackersFromReport,

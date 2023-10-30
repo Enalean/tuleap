@@ -132,14 +132,14 @@ class TimeTrackingOverview extends Widget
 
     public function getStylesheetDependencies(): CssAssetCollection
     {
-        return new CssAssetCollection([new CssAssetWithoutVariantDeclinaisons($this->getAssets(), 'style-bp')]);
+        return new CssAssetCollection([new CssAssetWithoutVariantDeclinaisons($this->getAssets(), 'style-bp-overview')]);
     }
 
     private function getAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../frontend-assets',
-            '/assets/timetracking'
+            __DIR__ . '/../../../scripts/timetracking-overview-widget/frontend-assets',
+            '/assets/timetracking/timetracking-overview-widget'
         );
     }
 

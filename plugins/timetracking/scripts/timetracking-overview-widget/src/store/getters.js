@@ -21,7 +21,7 @@ export const has_error = (state) => state.error_message !== null;
 
 export const has_success_message = (state) => state.success_message !== null;
 
-import { formatMinutes } from "../../../time-formatters.js";
+import { formatMinutes } from "@tuleap/plugin-timetracking-time-formatters";
 
 export function get_formatted_total_sum(state) {
     let sum = getTotalSum(state);
