@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, beforeEach, expect } from "vitest";
+import { describe, it, beforeEach, expect, vi } from "vitest";
 import { selectOrThrow } from "@tuleap/dom";
 import type { HostElement } from "./PullRequestDescriptionComment";
 import type { PullRequestDescriptionCommentPresenter } from "./PullRequestDescriptionCommentPresenter";
@@ -52,23 +52,25 @@ describe("PullRequestDescriptionCommentFormTemplate", () => {
     });
 
     it("When the user clicks [Cancel], Then the controller should be asked to hide the reply form", () => {
+        const hideEditionForm = vi.spyOn(host.controller, "hideEditionForm");
         const render = getDescriptionCommentFormTemplate(host, GettextProviderStub);
         render(host, target);
 
         selectOrThrow(target, "[data-test=button-cancel-edition]").click();
 
-        expect(host.controller.hideEditionForm).toHaveBeenCalledOnce();
-        expect(host.controller.hideEditionForm).toHaveBeenCalledWith(host);
+        expect(hideEditionForm).toHaveBeenCalledOnce();
+        expect(hideEditionForm).toHaveBeenCalledWith(host);
     });
 
     it("When the user clicks [Save], Then the controller should be asked to save the description", () => {
+        const saveDescriptionComment = vi.spyOn(host.controller, "saveDescriptionComment");
         const render = getDescriptionCommentFormTemplate(host, GettextProviderStub);
         render(host, target);
 
         selectOrThrow(target, "[data-test=button-save-edition]").click();
 
-        expect(host.controller.saveDescriptionComment).toHaveBeenCalledOnce();
-        expect(host.controller.saveDescriptionComment).toHaveBeenCalledWith(host);
+        expect(saveDescriptionComment).toHaveBeenCalledOnce();
+        expect(saveDescriptionComment).toHaveBeenCalledWith(host);
     });
 
     it("When some content has been updated in the writing zone, then the controller should update the template", () => {
@@ -86,6 +88,10 @@ describe("PullRequestDescriptionCommentFormTemplate", () => {
             writing_zone: getWritingZoneElement(base_host),
         };
 
+        const handleWritingZoneContentChange = vi.spyOn(
+            host.controller,
+            "handleWritingZoneContentChange",
+        );
         const render = getDescriptionCommentFormTemplate(
             host_with_writing_zone,
             GettextProviderStub,
@@ -101,8 +107,6 @@ describe("PullRequestDescriptionCommentFormTemplate", () => {
             new CustomEvent("writing-zone-input", { detail: { content: "Some comment" } }),
         );
 
-        expect(
-            host_with_writing_zone.controller.handleWritingZoneContentChange,
-        ).toHaveBeenCalledOnce();
+        expect(handleWritingZoneContentChange).toHaveBeenCalledOnce();
     });
 });

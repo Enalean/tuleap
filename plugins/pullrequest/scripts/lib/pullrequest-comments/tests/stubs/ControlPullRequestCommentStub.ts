@@ -26,7 +26,7 @@ const noop = (): void => {
     // Do nothing
 };
 
-export const PullRequestCommentControllerStub = (
+export const ControlPullRequestCommentStub = (
     current_user_id = 102,
 ): ControlPullRequestComment => ({
     hideReplyForm: noop,

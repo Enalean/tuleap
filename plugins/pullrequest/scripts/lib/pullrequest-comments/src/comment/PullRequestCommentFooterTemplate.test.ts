@@ -22,7 +22,7 @@ import { selectOrThrow } from "@tuleap/dom";
 import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { FORMAT_TEXT } from "@tuleap/plugin-pullrequest-constants";
 import { PullRequestCommentPresenterStub } from "../../tests/stubs/PullRequestCommentPresenterStub";
-import { PullRequestCommentControllerStub } from "../../tests/stubs/PullRequestCommentControllerStub";
+import { ControlPullRequestCommentStub } from "../../tests/stubs/ControlPullRequestCommentStub";
 import { GettextProviderStub } from "../../tests/stubs/GettextProviderStub";
 import type { HostElement } from "./PullRequestComment";
 import { getCommentFooter } from "./PullRequestCommentFooterTemplate";
@@ -86,7 +86,7 @@ describe("PullRequestCommentFooterTemplate", () => {
     });
 
     it("When the [Reply] button is clicked, then it should show the reply form", () => {
-        const controller = PullRequestCommentControllerStub();
+        const controller = ControlPullRequestCommentStub();
         const showReplyForm = vi.spyOn(controller, "showReplyForm");
         const host = {
             comment: PullRequestCommentPresenterStub.buildGlobalComment(),
@@ -108,7 +108,7 @@ describe("PullRequestCommentFooterTemplate", () => {
         const current_user_id = 102;
 
         beforeEach(() => {
-            controller = PullRequestCommentControllerStub(current_user_id);
+            controller = ControlPullRequestCommentStub(current_user_id);
         });
 
         const getHost = (comment: PullRequestCommentPresenter): HostElement =>

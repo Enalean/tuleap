@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, beforeEach, expect } from "vitest";
+import { describe, it, beforeEach, expect, vi } from "vitest";
 import type { HostElement } from "./NewCommentForm";
 import { NewCommentFormPresenter } from "./NewCommentFormPresenter";
 import {
@@ -74,6 +74,10 @@ describe("NewCommentFormTemplate", () => {
             writing_zone: getWritingZoneElement(host),
         };
 
+        const handleWritingZoneContentChange = vi.spyOn(
+            host.controller,
+            "handleWritingZoneContentChange",
+        );
         const render = getNewCommentFormContent(host_with_writing_zone, GettextProviderStub);
         render(host_with_writing_zone, target);
 
@@ -86,7 +90,7 @@ describe("NewCommentFormTemplate", () => {
             new CustomEvent("writing-zone-input", { detail: { content: "Some comment" } }),
         );
 
-        expect(host.controller.handleWritingZoneContentChange).toHaveBeenCalledOnce();
+        expect(handleWritingZoneContentChange).toHaveBeenCalledOnce();
     });
 
     describe("Cancel button", () => {
@@ -109,12 +113,13 @@ describe("NewCommentFormTemplate", () => {
                 controller: ControlNewCommentFormStub(),
             } as HostElement;
 
+            const cancelNewComment = vi.spyOn(host.controller, "cancelNewComment");
             const render = getCancelButton(host, GettextProviderStub);
             render(host, target);
 
             selectOrThrow(target, "[data-test=cancel-new-comment-button]").click();
 
-            expect(host.controller.cancelNewComment).toHaveBeenCalledOnce();
+            expect(cancelNewComment).toHaveBeenCalledOnce();
         });
 
         it("When the comment is being saved, Then the cancel button should be disabled", () => {
@@ -171,12 +176,13 @@ describe("NewCommentFormTemplate", () => {
                 controller: ControlNewCommentFormStub(),
             } as HostElement;
 
+            const saveNewComment = vi.spyOn(host.controller, "saveNewComment");
             const render = getSubmitButton(host, GettextProviderStub);
             render(host, target);
 
             selectOrThrow(target, "[data-test=submit-new-comment-button]").click();
 
-            expect(host.controller.saveNewComment).toHaveBeenCalledOnce();
+            expect(saveNewComment).toHaveBeenCalledOnce();
         });
     });
 });
