@@ -624,6 +624,59 @@ describe(`Popovers`, () => {
             dismiss.remove();
         });
     });
+
+    describe(`with accessible click trigger`, () => {
+        let popover: Popover;
+        beforeEach(() => {
+            trigger_element.tabIndex = 0;
+            trigger_element.role = "button";
+            popover = createPopover(doc, trigger_element, content_element, {
+                trigger: "click",
+            });
+        });
+
+        afterEach(() => {
+            popover.destroy();
+        });
+
+        describe.each([" ", "Enter"])(
+            `when I press "%s" on the trigger element when it has button role and is accessible`,
+            (pressed_key) => {
+                it(`when the popover is not already shown, it will show it`, () => {
+                    trigger_element.dispatchEvent(
+                        new KeyboardEvent("keydown", { key: pressed_key }),
+                    );
+                    expectThePopoverToBeShown(content_element);
+
+                    expect(dispatchEvent).toHaveBeenCalledOnce();
+                    expect(getEventType(dispatchEvent)).toBe(EVENT_TLP_POPOVER_SHOWN);
+                });
+
+                it(`when the popover is already shown, it will hide it`, () => {
+                    trigger_element.dispatchEvent(
+                        new KeyboardEvent("keydown", { key: pressed_key }),
+                    );
+                    trigger_element.dispatchEvent(
+                        new KeyboardEvent("keydown", { key: pressed_key }),
+                    );
+
+                    expectThePopoverToBeHidden(content_element);
+                    expect(getEventType(dispatchEvent, 2)).toBe(EVENT_TLP_POPOVER_HIDDEN);
+                });
+
+                it(`will hide all shown popovers`, () => {
+                    const docDispatchEvent = vi.spyOn(doc, "dispatchEvent");
+
+                    trigger_element.dispatchEvent(
+                        new KeyboardEvent("keydown", { key: pressed_key }),
+                    );
+
+                    expect(docDispatchEvent).toHaveBeenCalledOnce();
+                    expect(getEventType(docDispatchEvent)).toBe(EVENT_POPOVER_FORCE_CLOSE);
+                });
+            },
+        );
+    });
 });
 
 function createLocalDocument(): Document {

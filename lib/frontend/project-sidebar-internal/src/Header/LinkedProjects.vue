@@ -24,10 +24,16 @@
     <div
         v-if="config.project.linked_projects !== null"
         id="project-sidebar-linked-projects"
-        ref="popover_anchor"
         class="project-sidebar-linked-projects"
     >
-        <span class="project-sidebar-linked-projects-title">
+        <span
+            ref="popover_anchor"
+            data-test="popover_anchor"
+            v-bind:role="tabindex >= 0 ? 'button' : ''"
+            v-bind:tabindex="tabindex"
+            class="project-sidebar-linked-projects-title"
+            v-bind:aria-label="config.project.linked_projects.label"
+        >
             <span
                 v-if="config.project.linked_projects.is_in_children_projects_context"
                 class="project-sidebar-linked-projects-icon"
@@ -86,24 +92,20 @@
             'project-sidebar-linked-projects-popover-nb-max-exceeded': is_nb_max_exceeded,
         }"
         data-test="popover"
+        role="dialog"
+        v-bind:aria-label="config.project.linked_projects.label"
+        aria-describedby="project-sidebar-linked-projects-popover-content"
     >
         <div class="tlp-popover-arrow project-sidebar-linked-projects-popover-arrow"></div>
         <div class="tlp-popover-header" v-if="is_sidebar_collapsed">
-            <i
-                v-if="config.project.linked_projects.is_in_children_projects_context"
-                class="fa-solid fa-fw fa-tlp-project-boxes"
-                aria-hidden="true"
-            ></i>
-            <i
-                v-else
-                class="fa-solid fa-fw fa-turn-up fa-flip-horizontal project-sidebar-linked-projects-icon-parent"
-                aria-hidden="true"
-            ></i>
             <h1 class="tlp-popover-title">
                 {{ config.project.linked_projects.label }}
             </h1>
         </div>
-        <div class="tlp-popover-body project-sidebar-linked-projects-popover-content">
+        <div
+            class="tlp-popover-body project-sidebar-linked-projects-popover-content"
+            id="project-sidebar-linked-projects-popover-content"
+        >
             <ul class="project-sidebar-linked-projects-list-popover">
                 <li
                     v-for="project in config.project.linked_projects.projects"
@@ -137,13 +139,13 @@
     </div>
 </template>
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { SIDEBAR_CONFIGURATION } from "../injection-symbols";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { createPopover } from "@tuleap/tlp-popovers";
 import { sanitizeURL } from "../url-sanitizer";
 
-defineProps<{ is_sidebar_collapsed: boolean }>();
+const props = defineProps<{ is_sidebar_collapsed: boolean }>();
 
 const config = strictInject(SIDEBAR_CONFIGURATION);
 
@@ -156,6 +158,7 @@ const is_nb_max_exceeded = ref<boolean>(
             (config.project.linked_projects.nb_max_projects_before_popover ?? 5),
 );
 const can_display_linked_projects_in_sidebar = ref<boolean>(!is_nb_max_exceeded.value);
+const tabindex = computed(() => (is_nb_max_exceeded.value || props.is_sidebar_collapsed ? 0 : -1));
 
 onMounted(() => {
     if (popover_anchor.value !== undefined && popover_content.value !== undefined) {

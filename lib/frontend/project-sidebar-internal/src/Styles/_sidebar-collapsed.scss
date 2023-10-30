@@ -70,6 +70,24 @@
     .project-sidebar-linked-projects {
         flex-direction: row;
         justify-content: center;
+        margin: 0;
+    }
+
+    .project-sidebar-linked-projects-title {
+        margin: 0 var(--tlp-small-spacing);
+        padding: var(--tlp-small-spacing);
+        border-radius: var(--tlp-large-radius);
+
+        &:focus {
+            background-color: var(--tlp-dark-color);
+            // stylelint-disable-next-line function-linear-gradient-no-nonstandard-direction
+            background-image: linear-gradient(
+                0,
+                var(--tlp-sidebar-action-background-hover),
+                var(--tlp-sidebar-action-background-hover)
+            );
+            background-blend-mode: overlay;
+        }
     }
 
     .tlp-popover.tlp-popover-shown.project-sidebar-linked-projects-popover {
@@ -77,6 +95,10 @@
 
         &:not(.project-sidebar-linked-projects-popover-nb-max-exceeded) {
             display: flex;
+        }
+
+        > .tlp-popover-header {
+            white-space: nowrap;
         }
     }
 

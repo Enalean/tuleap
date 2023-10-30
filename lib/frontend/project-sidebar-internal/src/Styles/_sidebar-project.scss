@@ -193,9 +193,15 @@
 .project-sidebar-project-flags {
     display: flex;
     align-items: center;
-    margin: var(--tlp-small-spacing) var(--tlp-medium-spacing);
+    margin: 0 var(--tlp-small-spacing);
+    padding: var(--tlp-small-spacing);
+    border-radius: var(--tlp-large-radius);
     color: var(--tlp-neutral-normal-color);
     cursor: help;
+
+    &:focus {
+        @extend %background-action-hover;
+    }
 
     > .project-sidebar-project-flags-icon {
         @extend %round-icon;
@@ -426,6 +432,13 @@
 .project-sidebar-linked-projects-title {
     display: flex;
     align-items: center;
+    cursor: pointer;
+
+    &:focus {
+        > .project-sidebar-linked-projects-label {
+            text-decoration: underline;
+        }
+    }
 }
 
 .project-sidebar-linked-projects-icon {
@@ -458,7 +471,6 @@
 
 .project-sidebar-linked-projects-label:hover {
     text-decoration: underline;
-    cursor: pointer;
 }
 
 .project-sidebar-linked-projects-item {
