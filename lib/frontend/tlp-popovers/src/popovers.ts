@@ -26,6 +26,8 @@ export const EVENT_TLP_POPOVER_SHOWN = "tlp-popover-shown";
 
 export const EVENT_POPOVER_FORCE_CLOSE = "tlp-popover-force-close";
 
+const TIMEOUT_BEFORE_POPOVER_IS_HIDDEN_ON_MOUSEOUT_IN_MS = 200;
+
 type Configuration = {
     readonly anchor: HTMLElement;
     readonly trigger: Trigger;
@@ -230,6 +232,8 @@ function buildListeners(
         return [
             buildMouseOverListener(doc, popover_trigger, popover_content, updatePositionOfContent),
             buildMouseOutListener(doc, popover_trigger, popover_content),
+            buildMouseEnterListener(doc, popover_content),
+            buildMouseLeaveListener(doc, popover_content),
             buildForceClosePopover(doc, popover_content),
         ];
     }
@@ -306,6 +310,8 @@ function buildFocusListener(
     };
 }
 
+let timeout = 0;
+
 function buildBlurListener(
     doc: Document,
     popover_trigger: HTMLElement,
@@ -346,10 +352,43 @@ function buildMouseOutListener(
         element: popover_trigger,
         type: "mouseout",
         handler(): void {
-            hideAllShownPopovers(doc);
-            hidePopover(popover_content);
+            startTimeout(doc, popover_content);
         },
     };
+}
+
+function buildMouseLeaveListener(doc: Document, popover_content: HTMLElement): EventListener {
+    return {
+        element: popover_content,
+        type: "mouseleave",
+        handler(): void {
+            startTimeout(doc, popover_content);
+        },
+    };
+}
+
+function buildMouseEnterListener(doc: Document, popover_content: HTMLElement): EventListener {
+    return {
+        element: popover_content,
+        type: "mouseenter",
+        handler(): void {
+            stopTimeout();
+        },
+    };
+}
+
+function startTimeout(doc: Document, popover_content: HTMLElement): void {
+    timeout = window.setTimeout(() => {
+        hideAllShownPopovers(doc);
+        hidePopover(popover_content);
+    }, TIMEOUT_BEFORE_POPOVER_IS_HIDDEN_ON_MOUSEOUT_IN_MS);
+}
+
+function stopTimeout(): void {
+    if (timeout) {
+        window.clearTimeout(timeout);
+        timeout = 0;
+    }
 }
 
 function buildTriggerClickListener(
@@ -457,6 +496,8 @@ function hidePopover(popover_content: Element): void {
 
 function hideAllShownPopovers(doc: Document): void {
     doc.dispatchEvent(new CustomEvent(EVENT_POPOVER_FORCE_CLOSE));
+
+    stopTimeout();
 }
 
 function showPopover(popover_content: HTMLElement, updatePositionOfContent: () => void): void {
