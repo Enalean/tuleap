@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Renderer\GetAdditionalCssAssetsForArtifactDisplay;
+
 /**
  * First class collection of Tracker_Artifact_View_View
  */
@@ -25,6 +27,10 @@ class Tracker_Artifact_View_ViewCollection
 {
     /** @var Tracker_Artifact_View_View[] */
     private $views = [];
+
+    public function __construct(private readonly EventManager $event_manager)
+    {
+    }
 
     public function add(Tracker_Artifact_View_View $view)
     {
@@ -34,6 +40,12 @@ class Tracker_Artifact_View_ViewCollection
     public function fetchRequestedView(Codendi_Request $request)
     {
         $requested_view = $this->getRequestedView($request);
+
+        $event = new GetAdditionalCssAssetsForArtifactDisplay($requested_view->getIdentifier());
+        $this->event_manager->dispatch($event);
+        foreach ($event->getCssAssets() as $asset) {
+            $GLOBALS['HTML']->addCssAsset($asset);
+        }
 
         $html  = '';
         $html .= $this->fetchTabs($requested_view);

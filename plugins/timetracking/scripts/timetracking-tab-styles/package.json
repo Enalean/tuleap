@@ -1,14 +1,15 @@
 {
   "author": "Enalean Team",
-  "name": "@tuleap/plugin-timetracking",
+  "name": "@tuleap/plugin-timetracking-tab-styles",
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
+  "type": "module",
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*"
   },
   "scripts": {
-    "build": "webpack --config webpack.prod.js",
-    "watch": "webpack --config webpack.dev.js --watch"
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false"
   }
 }
