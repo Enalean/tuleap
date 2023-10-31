@@ -20,9 +20,9 @@ In your HTML content, add the element:
 
 The `config` property is mandatory. It is a JSON encoded string that you can retrieve from the endpoint you use to
 communicate with Tuleap. For test purposes you can find the description of expected schema in
-[configuration.ts](https://tuleap.net/plugins/git/tuleap/tuleap/stable?a=blob&hb=refs%2Fheads%2Fmaster&f=src%2Fscripts%2Flib%2Fproject-sidebar-internal%2Fsrc%2Fconfiguration.ts)
+[configuration.ts](https://tuleap.net/plugins/git/tuleap/tuleap/stable?a=blob&hb=refs%2Fheads%2Fmaster&f=lib%2Ffrontend%2Fproject-sidebar-internal%2Fsrc%2Fconfiguration.ts)
 and a complete example in
-[project-sidebar-example-config.ts](https://tuleap.net/plugins/git/tuleap/tuleap/stable?a=blob&hb=refs%2Fheads%2Fmaster&f=src%2Fscripts%2Flib%2Fproject-sidebar-internal%2Fsrc%2Fproject-sidebar-example-config.ts).
+[project-sidebar-example-config.ts](https://tuleap.net/plugins/git/tuleap/tuleap/stable?a=blob&hb=refs%2Fheads%2Fmaster&f=lib%2Ffrontend%2Fproject-sidebar-internal%2Fsrc%2Fproject-sidebar-example-config.ts).
 For production, the configuration can be retrieved from the REST endpoint `GET /api/projects/:id/3rd_party_integration_data`.
 As it is likely to be too costful to retrieve the information each time you display the sidebar we suggest you retrieve
 it once and then cache it for some time. The cache needs to be done per user and per project.
@@ -53,7 +53,7 @@ The custom element throws a [CustomEvent](https://developer.mozilla.org/en-US/do
 
 You will need to load the code defining the custom element (see below) and to load a stylesheet with the [CSS
 variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties) used by Tuleap. Access to the
-[appropriate flavor of the stylesheet](https://tuleap.net/plugins/git/tuleap/tuleap/stable?a=blob&hb=refs%2Fheads%2Fmaster&f=src%2Fthemes%2Ftlp%2Fsrc%2Fscss%2Fcomponents%2F_css-var-root.scss)
+[appropriate flavor of the stylesheet](https://tuleap.net/plugins/git/tuleap/tuleap/stable?a=blob&hb=refs%2Fheads%2Fmaster&f=src%2Fscripts%2Ftlp%2Fsrc%2Fscss%2Fcomponents%2F_css-var-root.scss)
 will be provided through the communication channel you have with Tuleap.
 
 ### Loading the custom element when using a bundler (Webpack, Rollup, Vite…)
