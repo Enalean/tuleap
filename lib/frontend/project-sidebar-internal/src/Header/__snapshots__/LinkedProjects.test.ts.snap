@@ -10,7 +10,11 @@ exports[`LinkedProjects > displays the linked projects with a popover 1`] = `
     id="project-sidebar-linked-projects"
   >
     <span
+      aria-label="2 aggregated projects"
       class="project-sidebar-linked-projects-title"
+      data-test="popover_anchor"
+      role=""
+      tabindex="-1"
     >
       <span
         class="project-sidebar-linked-projects-icon"
@@ -73,9 +77,12 @@ exports[`LinkedProjects > displays the linked projects with a popover 1`] = `
     </ul>
   </div>
   <div
+    aria-describedby="project-sidebar-linked-projects-popover-content"
+    aria-label="2 aggregated projects"
     class="tlp-popover project-sidebar-linked-projects-popover"
     data-test="popover"
     id="project-sidebar-linked-projects-popover"
+    role="dialog"
   >
     <div
       class="tlp-popover-arrow project-sidebar-linked-projects-popover-arrow"
@@ -83,6 +90,7 @@ exports[`LinkedProjects > displays the linked projects with a popover 1`] = `
     <!--v-if-->
     <div
       class="tlp-popover-body project-sidebar-linked-projects-popover-content"
+      id="project-sidebar-linked-projects-popover-content"
     >
       <ul
         class="project-sidebar-linked-projects-list-popover"

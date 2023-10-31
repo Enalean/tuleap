@@ -49,15 +49,19 @@ describe("LinkedProjects", () => {
     });
 
     it("display nothing if there is no linked projects", () => {
-        const config = example_config;
-        config.project.linked_projects = null;
+        const config = {
+            ...example_config,
+            project: {
+                ...example_config.project,
+                linked_projects: null,
+            },
+        };
         vi.spyOn(strict_inject, "strictInject").mockReturnValue(config);
         const wrapper = shallowMount(LinkedProjects, {
             propsData: {
                 is_sidebar_collapsed: false,
             },
         });
-
         expect(wrapper.element.textContent).toBe("");
     });
 
@@ -145,4 +149,61 @@ describe("LinkedProjects", () => {
             ).toBe(expected_popover);
         },
     );
+
+    it(`Given sidebar is collapsed
+        Then accessible attributes are added to the popover anchor
+        So that popover can be displayed with keyboard`, () => {
+        vi.spyOn(tlp_popovers, "createPopover").mockReturnValue({} as Popover);
+        vi.spyOn(strict_inject, "strictInject").mockReturnValue({ ...example_config });
+        const wrapper = shallowMount(LinkedProjects, {
+            propsData: {
+                is_sidebar_collapsed: true,
+            },
+        });
+
+        expect(wrapper.find("[data-test=popover_anchor]").attributes("tabindex")).toBe("0");
+        expect(wrapper.find("[data-test=popover_anchor]").attributes("role")).toBe("button");
+    });
+
+    it(`Given sidebar is not collapsed
+        And projects are displayed in the sidebar
+        Then accessible attributes are not added to the popover anchor
+        Because we don't need to display a popover`, () => {
+        vi.spyOn(tlp_popovers, "createPopover").mockReturnValue({} as Popover);
+        vi.spyOn(strict_inject, "strictInject").mockReturnValue({ ...example_config });
+
+        const wrapper = shallowMount(LinkedProjects, {
+            propsData: {
+                is_sidebar_collapsed: false,
+            },
+        });
+        expect(wrapper.find("[data-test=popover_anchor]").attributes("tabindex")).toBe("-1");
+        expect(wrapper.find("[data-test=popover_anchor]").attributes("role")).toBe("");
+    });
+
+    it(`Given sidebar is not collapsed
+        And projects are not displayed in the sidebar
+        Then accessible attributes are added to the popover anchor
+        So that popover can be displayed with keyboard`, () => {
+        vi.spyOn(tlp_popovers, "createPopover").mockReturnValue({} as Popover);
+        vi.spyOn(strict_inject, "strictInject").mockReturnValue({
+            ...example_config,
+            project: {
+                ...example_config.project,
+                linked_projects: {
+                    ...example_config.project.linked_projects,
+                    nb_max_projects_before_popover: 3,
+                    projects: Array(20).fill({ name: "acme" }),
+                },
+            },
+        });
+
+        const wrapper = shallowMount(LinkedProjects, {
+            propsData: {
+                is_sidebar_collapsed: false,
+            },
+        });
+        expect(wrapper.find("[data-test=popover_anchor]").attributes("tabindex")).toBe("0");
+        expect(wrapper.find("[data-test=popover_anchor]").attributes("role")).toBe("button");
+    });
 });

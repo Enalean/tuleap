@@ -25,6 +25,8 @@
         v-if="config.project.flags.length > 0"
         ref="popover_anchor"
         class="project-sidebar-project-flags"
+        role="button"
+        tabindex="0"
     >
         <div class="project-sidebar-project-flags-icon">
             <project-shield-icon />

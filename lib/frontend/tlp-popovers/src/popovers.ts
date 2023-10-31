@@ -200,6 +200,7 @@ type EventType =
     | "mouseleave"
     | "mouseover"
     | "keyup"
+    | "keydown"
     | "focus"
     | "blur"
     | typeof EVENT_POPOVER_FORCE_CLOSE;
@@ -244,6 +245,16 @@ function buildListeners(
             buildEscapeListener(doc, popover_content),
             buildForceClosePopover(doc, popover_content),
         ];
+        if (popover_trigger.role === "button" && popover_trigger.tabIndex >= 0) {
+            listeners.push(
+                buildTriggerAccessibleClickListener(
+                    doc,
+                    popover_trigger,
+                    popover_content,
+                    updatePositionOfContent,
+                ),
+            );
+        }
         for (const dismiss of dismiss_buttons) {
             listeners.push(buildDismissClickListener(doc, dismiss));
         }
@@ -351,6 +362,33 @@ function buildTriggerClickListener(
         element: popover_trigger,
         type: "click",
         handler(): void {
+            const is_shown = popover_content.classList.contains(POPOVER_SHOWN_CLASS_NAME);
+            hideAllShownPopovers(doc);
+            if (!is_shown) {
+                popover_content.setAttribute("x-trigger", "click");
+                showPopover(popover_content, updatePositionOfContent);
+            }
+        },
+    };
+}
+
+function buildTriggerAccessibleClickListener(
+    doc: Document,
+    popover_trigger: HTMLElement,
+    popover_content: HTMLElement,
+    updatePositionOfContent: () => void,
+): EventListener {
+    return {
+        element: popover_trigger,
+        type: "keydown",
+        handler(event: Event): void {
+            if (!(event instanceof KeyboardEvent)) {
+                return;
+            }
+            if (event.key !== "Enter" && event.key !== " ") {
+                return;
+            }
+
             const is_shown = popover_content.classList.contains(POPOVER_SHOWN_CLASS_NAME);
             hideAllShownPopovers(doc);
             if (!is_shown) {
