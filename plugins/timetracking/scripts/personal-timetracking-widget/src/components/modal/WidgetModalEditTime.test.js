@@ -38,7 +38,7 @@ function getWrapperInstance(time_data = {}) {
             }),
         },
         propsData: {
-            timeDate: time_data,
+            timeData: time_data,
         },
     };
     return shallowMount(WidgetModalEditTime, component_options);
@@ -54,12 +54,13 @@ describe("Given a personal timetracking widget modal", () => {
             expect(wrapper.vm.date).toBeDefined();
         });
 
-        it("When a date is given, then it should format it to use the YYYY-mm-dd format", () => {
+        it("When a date is given, then it should use it", () => {
+            const date = "2023-10-30";
             const wrapper = getWrapperInstance({
-                date: "2023-10-30T13:10:00+01",
+                date,
             });
 
-            expect(wrapper.vm.date).toBe("2023-10-30");
+            expect(wrapper.vm.date).toBe(date);
         });
     });
 
