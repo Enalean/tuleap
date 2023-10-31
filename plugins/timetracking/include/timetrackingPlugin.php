@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 use Tuleap\Timetracking\Admin\AdminController;
 use Tuleap\Timetracking\Admin\AdminDao;
@@ -26,6 +25,7 @@ use Tuleap\Timetracking\Admin\TimetrackingEnabler;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupDao;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupRetriever;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupSaver;
+use Tuleap\Timetracking\ArtifactView\ArtifactView;
 use Tuleap\Timetracking\ArtifactView\ArtifactViewBuilder;
 use Tuleap\Timetracking\JiraImporter\Configuration\JiraTimetrackingConfigurationRetriever;
 use Tuleap\Timetracking\JiraImporter\JiraXMLExport;
@@ -47,11 +47,14 @@ use Tuleap\Timetracking\Widget\TimeTrackingOverview;
 use Tuleap\Timetracking\Widget\UserWidget;
 use Tuleap\Timetracking\XML\XMLImport;
 use Tuleap\Timetracking\XML\XMLExport;
+use Tuleap\Tracker\Artifact\Renderer\GetAdditionalCssAssetsForArtifactDisplay;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfigurationForExternalPluginsEvent;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraImporterExternalPluginsEvent;
 use Tuleap\Tracker\REST\v1\Event\GetTrackersWithCriteria;
 use Tuleap\Tracker\XML\Exporter\TrackerEventExportFullXML;
 use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\CssViteAsset;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once 'constants.php';
@@ -81,24 +84,18 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
         return ['tracker'];
     }
 
-    #[\Tuleap\Plugin\ListeningToEventName('cssfile')]
-    public function cssfile($params): void
-    {
-        if (
-            strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
-            strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL) === 0
-        ) {
-            $style_css_url = $this->getAssets()->getFileURL('style-fp.css');
-
-            echo '<link rel="stylesheet" type="text/css" href="' . $style_css_url . '" />';
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function getAdditionalCssAssetsForArtifactDisplay(
+        GetAdditionalCssAssetsForArtifactDisplay $event,
+    ): void {
+        if ($event->getViewIdentifier() !== ArtifactView::IDENTIFIER) {
+            return;
         }
-    }
-
-    private function getAssets(): IncludeAssets
-    {
-        return new IncludeAssets(
-            __DIR__ . '/../frontend-assets',
-            '/assets/timetracking'
+        $event->addCssAsset(
+            CssViteAsset::fromFileName(
+                new IncludeViteAssets(__DIR__ . '/../scripts/timetracking-tab-styles/frontend-assets', '/assets/timetracking/timetracking-tab-styles'),
+                'themes/style.scss'
+            ),
         );
     }
 
