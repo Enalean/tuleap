@@ -26,6 +26,7 @@ import {
     formatPropertyListMultipleValue,
 } from "./value-transformer/list-value-helper";
 import type { Folder, Item, Property } from "../../type";
+import { toRaw } from "vue";
 
 export function transformFolderPropertiesForRecursionAtUpdate(
     item: Folder,
@@ -98,7 +99,7 @@ export function formatCustomPropertiesForFolderUpdate(
     properties_to_update: Array<string>,
     recursion_option: string,
 ): Folder {
-    const updated_item = structuredClone(item_to_update);
+    const updated_item = structuredClone(toRaw(item_to_update));
     updated_item.properties.forEach((item_properties) => {
         if (properties_to_update.find((short_name) => short_name === item_properties.short_name)) {
             item_properties.recursion = recursion_option;
