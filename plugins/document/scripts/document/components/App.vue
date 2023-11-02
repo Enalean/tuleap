@@ -77,9 +77,6 @@ export default {
         can_user_switch() {
             return this.can_user_switch_to_old_ui;
         },
-        has_global_modal_error() {
-            return this.has_global_modal_error;
-        },
     },
     created() {
         const base_title = document.title;
