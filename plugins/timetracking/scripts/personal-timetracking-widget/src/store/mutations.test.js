@@ -70,7 +70,7 @@ describe("Store mutations", () => {
 
             it("When states updated with error message, Then we call setAddMode, states must change", () => {
                 state.rest_feedback.message = REST_FEEDBACK_ADD;
-                state.rest_feedback.type = "success";
+                state.rest_feedback.type = SUCCESS_TYPE;
                 mutations.setAddMode(state, true);
 
                 expect(state.is_add_mode).toBe(true);
@@ -90,24 +90,41 @@ describe("Store mutations", () => {
             });
 
             it("When states updated with error message, Then we call replaceCurrentTime, states must change", () => {
-                state.current_times = [
+                const times = [
                     {
                         artifact: {},
                         project: {},
                         id: 1,
                         minutes: 20,
+                        date: "2023-01-01",
+                    },
+                    {
+                        artifact: {},
+                        project: {},
+                        id: 2,
+                        minutes: 20,
+                        date: "2023-01-02",
+                    },
+                    {
+                        artifact: {},
+                        project: {},
+                        id: 3,
+                        minutes: 20,
+                        date: "2023-01-04",
                     },
                 ];
+                state.current_times = times;
                 const updated_time = {
                     artifact: {},
                     project: {},
                     id: 1,
                     minutes: 40,
+                    date: "2023-01-03",
                 };
                 mutations.replaceInCurrentTimes(state, [updated_time, REST_FEEDBACK_EDIT]);
-                expect(state.current_times).toEqual([updated_time]);
-                expect(state.rest_feedback.message).toEqual(REST_FEEDBACK_EDIT);
-                expect(state.rest_feedback.type).toBe("success");
+                expect(state.current_times).toStrictEqual([times[0], updated_time, times[2]]);
+                expect(state.rest_feedback.message).toBe(REST_FEEDBACK_EDIT);
+                expect(state.rest_feedback.type).toBe(SUCCESS_TYPE);
             });
 
             it("When we call deleteCurrentTime, Then the deleted time should be removed from state.current_times anymore", () => {
@@ -128,8 +145,40 @@ describe("Store mutations", () => {
                         minutes: null,
                     },
                 ]);
-                expect(state.rest_feedback.message).toEqual(REST_FEEDBACK_DELETE);
-                expect(state.rest_feedback.type).toEqual(SUCCESS_TYPE);
+                expect(state.rest_feedback.message).toBe(REST_FEEDBACK_DELETE);
+                expect(state.rest_feedback.type).toBe(SUCCESS_TYPE);
+            });
+        });
+        describe("Given a new time", () => {
+            it("When I call the pushCurrentTimes() mutation with it, Then it should add it to the times collection and sort it chronologically", () => {
+                const times = [
+                    {
+                        artifact: {},
+                        project: {},
+                        id: 1,
+                        minutes: 20,
+                        date: "2023-01-01",
+                    },
+                    {
+                        artifact: {},
+                        project: {},
+                        id: 3,
+                        minutes: 20,
+                        date: "2023-01-03",
+                    },
+                ];
+                state.current_times = times;
+                const updated_time = {
+                    artifact: {},
+                    project: {},
+                    id: 2,
+                    minutes: 20,
+                    date: "2023-01-02",
+                };
+                mutations.pushCurrentTimes(state, [[updated_time], REST_FEEDBACK_EDIT]);
+                expect(state.current_times).toStrictEqual([times[1], updated_time, times[0]]);
+                expect(state.rest_feedback.message).toBe(REST_FEEDBACK_EDIT);
+                expect(state.rest_feedback.type).toBe(SUCCESS_TYPE);
             });
         });
     });

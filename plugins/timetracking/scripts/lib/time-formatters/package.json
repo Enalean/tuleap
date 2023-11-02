@@ -8,6 +8,7 @@
   "main": "dist/plugin-timetracking-time-formatters.umd.cjs",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/plugin-timetracking-time-formatters.js",
       "require": "./dist/plugin-timetracking-time-formatters.umd.cjs"
     }
@@ -16,6 +17,7 @@
     "@tuleap/build-system-configurator": "workspace:*"
   },
   "scripts": {
+    "typecheck": "tsc --noEmit",
     "build": "vite build",
     "test": "vitest",
     "watch": "vite build --watch --mode development --minify false"
