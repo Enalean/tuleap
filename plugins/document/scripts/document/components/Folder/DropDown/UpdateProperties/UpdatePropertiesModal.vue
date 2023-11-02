@@ -87,7 +87,7 @@ export default {
     computed: {
         ...mapState(["current_folder"]),
         ...mapState("configuration", ["project_id", "is_status_property_used"]),
-        ...mapState("error", ["has_modal_error"]),
+        ...mapState("error", ["has_modal_error", "has_global_modal_error"]),
         submit_button_label() {
             return this.$gettext("Update properties");
         },
@@ -138,6 +138,10 @@ export default {
         transformDocumentPropertiesForUpdate(this.item_to_update, this.is_status_property_used);
     },
     mounted() {
+        if (this.has_global_modal_error === true) {
+            return;
+        }
+
         this.modal = createModal(this.$el);
 
         this.formatted_item_properties = getCustomProperties(this.item_to_update);

@@ -43,6 +43,12 @@ describe("UpdatePropertiesModal", () => {
                                 },
                                 namespaced: true,
                             },
+                            error: {
+                                state: {
+                                    has_global_modal_error: false,
+                                },
+                                namespaced: true,
+                            },
                         },
                         state: {
                             current_folder: {
