@@ -31,7 +31,7 @@
                     v-on:click="setAddMode(!is_add_mode)"
                 >
                     <i class="fa fa-plus tlp-button-icon"></i>
-                    <translate>Add</translate>
+                    {{ $gettext("Add") }}
                 </button>
             </div>
             <div v-if="rest_feedback.type" v-bind:class="feedback_class" data-test="feedback">

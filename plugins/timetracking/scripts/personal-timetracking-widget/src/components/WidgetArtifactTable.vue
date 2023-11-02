@@ -26,10 +26,10 @@
         <table v-if="can_results_be_displayed" class="tlp-table" data-test="artifact-table">
             <thead>
                 <tr>
-                    <th v-translate>Artifact</th>
-                    <th v-translate>Project</th>
+                    <th>{{ $gettext("Artifact") }}</th>
+                    <th>{{ $gettext("Project") }}</th>
                     <th class="tlp-table-cell-numeric">
-                        <translate>Time</translate>
+                        {{ $gettext("Time") }}
                         <span
                             class="tlp-tooltip tlp-tooltip-left timetracking-time-tooltip"
                             v-bind:data-tlp-tooltip="time_format_tooltip"
@@ -43,8 +43,8 @@
             </thead>
             <tbody>
                 <tr v-if="!has_data_to_display">
-                    <td colspan="4" class="tlp-table-cell-empty" v-translate data-test="empty-tab">
-                        No tracked time have been found for this period
+                    <td colspan="4" class="tlp-table-cell-empty" data-test="empty-tab">
+                        {{ $gettext("No tracked time have been found for this period") }}
                     </td>
                 </tr>
                 <artifact-table-row
@@ -74,7 +74,7 @@
                 v-bind:disabled="is_loading_more"
             >
                 <i v-if="is_loading_more" class="tlp-button-icon fa fa-spinner fa-spin"></i>
-                <translate>Load more</translate>
+                {{ $gettext("Load more") }}
             </button>
         </div>
     </div>

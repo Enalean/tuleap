@@ -36,9 +36,8 @@
                 v-on:click.prevent="show_modal"
                 v-bind:href="link_to_artifact_timetracking"
                 data-test="timetracking-details"
-                v-translate
             >
-                Details
+                {{ $gettext("Details") }}
             </a>
         </td>
         <widget-modal-times ref="timetracking_modal" />
