@@ -25,6 +25,7 @@ use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\InlineComment\InlineComment;
 use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\REST\v1\Comment\CommentRepresentationBuilder;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewerChangeTimelineEventRepresentation;
 use Tuleap\PullRequest\Reviewer\Change\ReviewerChange;
 use Tuleap\PullRequest\Timeline\Factory;
@@ -35,8 +36,13 @@ use UserManager;
 
 class PaginatedTimelineRepresentationBuilder
 {
-    public function __construct(private readonly Factory $timeline_factory, private readonly UserManager $user_manager, private readonly Codendi_HTMLPurifier $purifier, private readonly CommonMarkInterpreter $common_mark_interpreter)
-    {
+    public function __construct(
+        private readonly Factory $timeline_factory,
+        private readonly UserManager $user_manager,
+        private readonly Codendi_HTMLPurifier $purifier,
+        private readonly CommonMarkInterpreter $common_mark_interpreter,
+        private readonly CommentRepresentationBuilder $comment_representation_builder,
+    ) {
     }
 
     public function getPaginatedTimelineRepresentation(PullRequest $pull_request, $project_id, $limit, $offset)
@@ -59,9 +65,7 @@ class PaginatedTimelineRepresentationBuilder
         switch ($event::class) {
             case Comment::class:
                 assert($event instanceof Comment);
-                return CommentRepresentation::build(
-                    $this->purifier,
-                    $this->common_mark_interpreter,
+                return $this->comment_representation_builder->buildRepresentation(
                     $event->getId(),
                     $project_id,
                     $this->buildMinimalUserRepresentation($event->getUserId()),
