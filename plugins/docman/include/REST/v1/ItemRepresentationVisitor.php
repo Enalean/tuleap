@@ -28,6 +28,7 @@ use Docman_Item;
 use Docman_Link;
 use Docman_Wiki;
 use Tuleap\Docman\Item\ItemVisitor;
+use Tuleap\Docman\Item\OpenItemHref;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFilePropertiesFullRepresentation;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFilePropertiesMinimalRepresentation;
 use Tuleap\Docman\REST\v1\Files\FilePropertiesRepresentation;

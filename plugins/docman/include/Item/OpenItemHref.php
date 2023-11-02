@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\REST\v1;
+namespace Tuleap\Docman\Item;
 
 class OpenItemHref implements \Tuleap\Event\Dispatchable
 {
