@@ -18,7 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class GitRepositoryFactory
+use Tuleap\Git\RetrieveGitRepository;
+
+class GitRepositoryFactory implements RetrieveGitRepository
 {
     /**
      * @var GitDao
@@ -43,7 +45,7 @@ class GitRepositoryFactory
      *
      * @return GitRepository|null the repository or null if not found
      */
-    public function getRepositoryById($id)
+    public function getRepositoryById(int $id): ?GitRepository
     {
         if ($id == GitRepositoryGitoliteAdmin::ID) {
             return new GitRepositoryGitoliteAdmin();

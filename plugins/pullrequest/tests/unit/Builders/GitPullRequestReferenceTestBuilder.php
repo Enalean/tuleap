@@ -20,36 +20,37 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\PullRequest\Tests\Stub;
+namespace Tuleap\PullRequest\Tests\Builders;
 
-use PFUser;
-use Throwable;
-use Tuleap\PullRequest\Authorization\CheckUserCanAccessPullRequest;
-use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\GitReference\GitPullRequestReference;
 
-final class CheckUserCanAccessPullRequestStub implements CheckUserCanAccessPullRequest
+final class GitPullRequestReferenceTestBuilder
 {
-    private function __construct(private readonly ?Throwable $exception)
+    private int $status = GitPullRequestReference::STATUS_OK;
+
+    private function __construct(private readonly int $git_reference_id)
     {
     }
 
-    /**
-     * @throws Throwable
-     */
-    public function checkPullRequestIsReadableByUser(PullRequest $pull_request, PFUser $user): void
+    public static function aReference(int $reference_id): self
     {
-        if ($this->exception) {
-            throw $this->exception;
-        }
+        return new self($reference_id);
     }
 
-    public static function withAllowed(): self
+    public function thatIsBroken(): self
     {
-        return new self(null);
+        $this->status = GitPullRequestReference::STATUS_BROKEN;
+        return $this;
     }
 
-    public static function withException(Throwable $exception): self
+    public function thatIsNotYetCreated(): self
     {
-        return new self($exception);
+        $this->status = GitPullRequestReference::STATUS_NOT_YET_CREATED;
+        return $this;
+    }
+
+    public function build(): GitPullRequestReference
+    {
+        return new GitPullRequestReference($this->git_reference_id, $this->status);
     }
 }

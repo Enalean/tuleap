@@ -24,7 +24,7 @@ use GitRepository;
 use Tuleap\PullRequest\GitExec;
 use Tuleap\PullRequest\PullRequest;
 
-class GitPullRequestReferenceUpdater
+class GitPullRequestReferenceUpdater implements UpdateGitPullRequestReference
 {
     /**
      * @var GitPullRequestReferenceDAO
@@ -52,7 +52,7 @@ class GitPullRequestReferenceUpdater
         GitExec $executor_repository_source,
         GitExec $executor_repository_destination,
         GitRepository $repository_destination,
-    ) {
+    ): void {
         if ((int) $pull_request->getRepoDestId() !== (int) $repository_destination->getId()) {
             throw new \LogicException('Destination repository ID does not match the one of the PR');
         }

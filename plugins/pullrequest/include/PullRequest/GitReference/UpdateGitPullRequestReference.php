@@ -20,36 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\PullRequest\Tests\Stub;
+namespace Tuleap\PullRequest\GitReference;
 
-use PFUser;
-use Throwable;
-use Tuleap\PullRequest\Authorization\CheckUserCanAccessPullRequest;
+use GitRepository;
+use Tuleap\PullRequest\GitExec;
 use Tuleap\PullRequest\PullRequest;
 
-final class CheckUserCanAccessPullRequestStub implements CheckUserCanAccessPullRequest
+interface UpdateGitPullRequestReference
 {
-    private function __construct(private readonly ?Throwable $exception)
-    {
-    }
-
     /**
-     * @throws Throwable
+     * @throws \Git_Command_Exception
+     * @throws GitReferenceNotFound
      */
-    public function checkPullRequestIsReadableByUser(PullRequest $pull_request, PFUser $user): void
-    {
-        if ($this->exception) {
-            throw $this->exception;
-        }
-    }
-
-    public static function withAllowed(): self
-    {
-        return new self(null);
-    }
-
-    public static function withException(Throwable $exception): self
-    {
-        return new self($exception);
-    }
+    public function updatePullRequestReference(
+        PullRequest $pull_request,
+        GitExec $executor_repository_source,
+        GitExec $executor_repository_destination,
+        GitRepository $repository_destination,
+    ): void;
 }

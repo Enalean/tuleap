@@ -74,6 +74,12 @@ final class PullRequestTestBuilder
         return $this;
     }
 
+    public function withRepositoryId(int $repository_id): self
+    {
+        $this->repository_id = $repository_id;
+        return $this;
+    }
+
     public function build(): PullRequest
     {
         return new PullRequest(

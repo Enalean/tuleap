@@ -24,7 +24,7 @@ namespace Tuleap\Git\Hook\Asynchronous;
 
 use Psr\Log\NullLogger;
 use Tuleap\Git\Hook\DefaultBranchPush\DefaultBranchPushReceived;
-use Tuleap\Git\Stub\RetrieveGitRepositoryStub;
+use Tuleap\Git\Stub\Hook\Asynchronous\RetrieveGitRepositoryStub;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;

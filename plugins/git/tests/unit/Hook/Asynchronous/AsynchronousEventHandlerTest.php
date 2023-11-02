@@ -22,13 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Hook\Asynchronous;
 
-use Psr\Log\NullLogger;
 use ColinODell\PsrTestLogger\TestLogger;
+use Psr\Log\NullLogger;
 use Tuleap\Git\Hook\DefaultBranchPush\DefaultBranchPushProcessor;
 use Tuleap\Git\Stub\BuildDefaultBranchPushProcessorStub;
+use Tuleap\Git\Stub\Hook\Asynchronous\RetrieveGitRepositoryStub;
 use Tuleap\Git\Stub\RetrieveAuthorStub;
 use Tuleap\Git\Stub\RetrieveCommitMessageStub;
-use Tuleap\Git\Stub\RetrieveGitRepositoryStub;
 use Tuleap\Git\Stub\VerifyArtifactClosureIsAllowedStub;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\Queue\WorkerEvent;

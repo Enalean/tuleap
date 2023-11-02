@@ -20,36 +20,34 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\PullRequest\Tests\Stub;
+namespace Tuleap\Git\Stub\Hook\Asynchronous;
 
-use PFUser;
-use Throwable;
-use Tuleap\PullRequest\Authorization\CheckUserCanAccessPullRequest;
-use Tuleap\PullRequest\PullRequest;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 
-final class CheckUserCanAccessPullRequestStub implements CheckUserCanAccessPullRequest
+final class RetrieveGitRepositoryStub implements \Tuleap\Git\Hook\Asynchronous\RetrieveGitRepository
 {
-    private function __construct(private readonly ?Throwable $exception)
-    {
-    }
-
     /**
-     * @throws Throwable
+     * @param Ok<\GitRepository> | Err<Fault> $result
      */
-    public function checkPullRequestIsReadableByUser(PullRequest $pull_request, PFUser $user): void
+    private function __construct(private Ok|Err $result)
     {
-        if ($this->exception) {
-            throw $this->exception;
-        }
     }
 
-    public static function withAllowed(): self
+    public static function withGitRepository(\GitRepository $repository): self
     {
-        return new self(null);
+        return new self(Result::ok($repository));
     }
 
-    public static function withException(Throwable $exception): self
+    public static function withFault(Fault $fault): self
     {
-        return new self($exception);
+        return new self(Result::err($fault));
+    }
+
+    public function getRepository(int $repository_id, \PFUser $user): Ok|Err
+    {
+        return $this->result;
     }
 }
