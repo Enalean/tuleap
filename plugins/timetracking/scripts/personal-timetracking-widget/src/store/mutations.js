@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { sortTimesChronologically } from "@tuleap/plugin-timetracking-time-formatters";
 import { SUCCESS_TYPE } from "@tuleap/plugin-timetracking-constants";
 
 export default {
@@ -33,7 +32,9 @@ export default {
     },
 
     setCurrentTimes(state, times) {
-        state.current_times = sortTimesChronologically(times);
+        state.current_times = times.sort((a, b) => {
+            return new Date(b.date) - new Date(a.date);
+        });
     },
 
     loadAChunkOfTimes(state, [times, total]) {
@@ -74,7 +75,9 @@ export default {
             (current_time) => current_time.id === time.id,
         );
         state.current_times[time_to_update_index] = time;
-        state.current_times = sortTimesChronologically(state.current_times);
+        state.current_times = state.current_times.sort((a, b) => {
+            return new Date(b.date) - new Date(a.date);
+        });
         state.rest_feedback.message = feedback_message;
         state.rest_feedback.type = SUCCESS_TYPE;
     },
@@ -112,7 +115,9 @@ export default {
             state.current_times = [];
         }
         state.current_times = state.current_times.concat(Object.values(times));
-        state.current_times = sortTimesChronologically(state.current_times);
+        state.current_times = state.current_times.sort((a, b) => {
+            return new Date(b.date) - new Date(a.date);
+        });
         state.is_add_mode = false;
         state.rest_feedback.message = feedback_message;
         state.rest_feedback.type = SUCCESS_TYPE;
