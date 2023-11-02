@@ -156,6 +156,7 @@ export default {
             this.modal.addEventListener("tlp-modal-hidden", this.reset);
         },
         reset() {
+            this.$store.commit("error/resetModalError");
             this.is_displayed = false;
             this.$emit("update-properties-modal-closed");
         },
@@ -165,14 +166,19 @@ export default {
             this.$store.commit("error/resetModalError");
 
             this.item_to_update.properties = this.formatted_item_properties;
-            await this.$store.dispatch("properties/updateProperties", {
-                item: this.item,
-                item_to_update: this.item_to_update,
-                current_folder: this.current_folder,
-            });
-            this.is_loading = false;
-            if (this.has_modal_error === false) {
-                this.modal.hide();
+            try {
+                await this.$store.dispatch("properties/updateProperties", {
+                    item: this.item,
+                    item_to_update: this.item_to_update,
+                    current_folder: this.current_folder,
+                });
+                this.is_loading = false;
+                if (this.has_modal_error === false) {
+                    this.modal.hide();
+                }
+            } catch (exception) {
+                this.is_loading = false;
+                throw exception;
             }
         },
         updateMultiplePropertiesListValue(event) {

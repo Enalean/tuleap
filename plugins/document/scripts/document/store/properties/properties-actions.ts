@@ -170,7 +170,7 @@ export const updateProperties = async (
             context.commit("updateCurrentItemForQuickLokDisplay", updated_item, { root: true });
         }
     } catch (exception) {
-        await context.dispatch("error/handleGlobalModalError", exception, { root: true });
+        await context.dispatch("error/handleErrorsForModal", exception, { root: true });
         throw exception;
     }
 };
