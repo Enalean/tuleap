@@ -39,6 +39,7 @@ use Tuleap\PullRequest\REST\v1\Comment\PATCHInlineCommentHandler;
 use Tuleap\PullRequest\Tests\Builders\InlineCommentTestBuilder;
 use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
 use Tuleap\PullRequest\Tests\Stub\CheckUserCanAccessPullRequestStub;
+use Tuleap\PullRequest\Tests\Stub\InlineCommentSaverStub;
 use Tuleap\PullRequest\Tests\Stub\InlineCommentSearcherStub;
 use Tuleap\PullRequest\Tests\Stub\SearchPullRequestStub;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -47,16 +48,19 @@ use Tuleap\Test\PHPUnit\TestCase;
 final class PATCHInlineCommentHandlerTest extends TestCase
 {
     private const INLINE_COMMENT_ID = 49;
+    private string $updated_content;
     private InlineCommentSearcherStub $comment_searcher;
     private PullRequest $pull_request;
     private \PFUser $comment_author;
     private CheckUserCanAccessPullRequestStub $permission_checker;
+    private InlineCommentSaverStub $comment_saver;
 
     protected function setUp(): void
     {
-        $this->comment_author = UserTestBuilder::buildWithId(150);
-        $this->pull_request   = PullRequestTestBuilder::aPullRequestInReview()->build();
-        $inline_comment       = InlineCommentTestBuilder::aMarkdownComment('initial content')
+        $this->updated_content = 'animastical zebrawood';
+        $this->comment_author  = UserTestBuilder::buildWithId(150);
+        $this->pull_request    = PullRequestTestBuilder::aPullRequestInReview()->build();
+        $inline_comment        = InlineCommentTestBuilder::aMarkdownComment('initial content')
             ->withId(self::INLINE_COMMENT_ID)
             ->onPullRequest($this->pull_request)
             ->byAuthor($this->comment_author)
@@ -64,6 +68,7 @@ final class PATCHInlineCommentHandlerTest extends TestCase
 
         $this->comment_searcher   = InlineCommentSearcherStub::withComment($inline_comment);
         $this->permission_checker = CheckUserCanAccessPullRequestStub::withAllowed();
+        $this->comment_saver      = InlineCommentSaverStub::withCallCount();
     }
 
     /**
@@ -75,18 +80,23 @@ final class PATCHInlineCommentHandlerTest extends TestCase
             new InlineCommentRetriever($this->comment_searcher),
             new PullRequestRetriever(SearchPullRequestStub::withPullRequest($this->pull_request)),
             $this->permission_checker,
+            $this->comment_saver,
         );
         return $handler->handle(
             $this->comment_author,
             self::INLINE_COMMENT_ID,
-            new InlineCommentPATCHRepresentation('animastical zebrawood')
+            new InlineCommentPATCHRepresentation($this->updated_content)
         );
     }
 
-    public function testItDoesNothingWhenAllChecksArePassed(): void
+    public function testItUpdatesTheComment(): void
     {
         $result = $this->handle();
         self::assertTrue(Result::isOk($result));
+        self::assertNull($result->value);
+        self::assertSame(1, $this->comment_saver->getCallCount());
+        $updated_comment = $this->comment_saver->getLastArgument();
+        self::assertSame($this->updated_content, $updated_comment?->getContent());
     }
 
     public function testItReturnsAnErrWhenInlineCommentCantBeFound(): void
@@ -96,6 +106,7 @@ final class PATCHInlineCommentHandlerTest extends TestCase
         $result = $this->handle();
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(InlineCommentNotFoundFault::class, $result->error);
+        self::assertSame(0, $this->comment_saver->getCallCount());
     }
 
     public function testItReturnsAnErrWhenTheInlineCommentIsNotInMarkdown(): void
@@ -107,6 +118,7 @@ final class PATCHInlineCommentHandlerTest extends TestCase
         $result = $this->handle();
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(CommentFormatNotAllowedFault::class, $result->error);
+        self::assertSame(0, $this->comment_saver->getCallCount());
     }
 
     public function testItReturnsAnErrWhenUserTriesToModifyTheCommentOfAnotherUser(): void
@@ -121,6 +133,7 @@ final class PATCHInlineCommentHandlerTest extends TestCase
         $result = $this->handle();
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(CommentIsNotFromCurrentUserFault::class, $result->error);
+        self::assertSame(0, $this->comment_saver->getCallCount());
     }
 
     public static function generateExceptions(): iterable
@@ -146,5 +159,6 @@ final class PATCHInlineCommentHandlerTest extends TestCase
         $result = $this->handle();
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(CannotAccessToPullRequestFault::class, $result->error);
+        self::assertSame(0, $this->comment_saver->getCallCount());
     }
 }

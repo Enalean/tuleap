@@ -24,7 +24,7 @@ use Tuleap\DB\DataAccessObject;
 use Tuleap\PullRequest\Comment\ParentCommentSearcher;
 use Tuleap\PullRequest\Comment\ThreadColorUpdater;
 
-class Dao extends DataAccessObject implements ParentCommentSearcher, ThreadColorUpdater, InlineCommentSearcher
+class Dao extends DataAccessObject implements ParentCommentSearcher, ThreadColorUpdater, InlineCommentSearcher, InlineCommentSaver
 {
     public function searchByCommentID(int $inline_comment_id): ?array
     {
@@ -98,5 +98,14 @@ class Dao extends DataAccessObject implements ParentCommentSearcher, ThreadColor
             WHERE id=?';
 
         $this->getDB()->run($sql, $color, $id);
+    }
+
+    public function saveUpdatedComment(InlineComment $comment): void
+    {
+        $this->getDB()->update(
+            'plugin_pullrequest_inline_comments',
+            ['content' => $comment->getContent()],
+            ['id' => $comment->getId()]
+        );
     }
 }

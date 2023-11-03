@@ -30,7 +30,6 @@ use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\FeatureFlagEditComments;
-use Tuleap\PullRequest\InlineComment\Dao;
 use Tuleap\PullRequest\InlineComment\InlineCommentRetriever;
 use Tuleap\PullRequest\PullRequestRetriever;
 use Tuleap\PullRequest\REST\v1\Comment\InlineCommentPATCHRepresentation;
@@ -71,10 +70,11 @@ final class PullRequestInlineCommentsResource extends AuthenticatedResource
             throw new RestException(501, 'This route is under construction');
         }
 
-        $current_user     = \UserManager::instance()->getCurrentUser();
-        $pull_request_dao = new \Tuleap\PullRequest\Dao();
-        $handler          = new PATCHInlineCommentHandler(
-            new InlineCommentRetriever(new Dao()),
+        $current_user       = \UserManager::instance()->getCurrentUser();
+        $pull_request_dao   = new \Tuleap\PullRequest\Dao();
+        $inline_comment_dao = new \Tuleap\PullRequest\InlineComment\Dao();
+        $handler            = new PATCHInlineCommentHandler(
+            new InlineCommentRetriever($inline_comment_dao),
             new PullRequestRetriever($pull_request_dao),
             new PullRequestPermissionChecker(
                 new \GitRepositoryFactory(new \GitDao(), \ProjectManager::instance()),
@@ -86,7 +86,8 @@ final class PullRequestInlineCommentsResource extends AuthenticatedResource
                     new FineGrainedRetriever(new FineGrainedDao()),
                     new \System_Command()
                 )
-            )
+            ),
+            $inline_comment_dao
         );
         $handler->handle($current_user, $id, $comment_data)->mapErr(FaultMapper::mapToRestException(...));
     }
