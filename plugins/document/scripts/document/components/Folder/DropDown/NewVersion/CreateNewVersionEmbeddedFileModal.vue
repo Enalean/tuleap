@@ -61,6 +61,7 @@ import ModalFooter from "../../ModalCommon/ModalFooter.vue";
 import EmbeddedProperties from "../PropertiesForCreateOrUpdate/EmbeddedProperties.vue";
 import ItemUpdateProperties from "./PropertiesForUpdate/ItemUpdateProperties.vue";
 import emitter from "../../../../helpers/emitter";
+import { toRaw } from "vue";
 
 export default {
     name: "CreateNewVersionEmbeddedFileModal",
@@ -96,7 +97,7 @@ export default {
         },
     },
     mounted() {
-        this.embedded_item = this.item;
+        this.embedded_item = structuredClone(toRaw(this.item));
         this.modal = createModal(this.$el);
         this.registerEvents();
         emitter.on("update-version-title", this.updateTitleValue);
