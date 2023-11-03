@@ -157,7 +157,7 @@ final class GitGerritRouteTest extends \Tuleap\Test\PHPUnit\TestCase
                 \Mockery::spy(\Tuleap\Git\Permissions\PermissionChangesDetector::class),
                 \Mockery::spy(\Tuleap\Git\Permissions\TemplatePermissionsUpdater::class),
                 \Mockery::spy(\ProjectHistoryDao::class),
-                new \Tuleap\Git\DefaultBranch\DefaultBranchUpdater(new \Tuleap\Git\DefaultBranch\DefaultBranchUpdateTestExecutor()),
+                new \Tuleap\Git\DefaultBranch\DefaultBranchUpdater(new \Tuleap\Git\Tests\Stub\DefaultBranch\DefaultBranchUpdateExecutorStub()),
                 \Mockery::spy(\Tuleap\Git\Repository\DescriptionUpdater::class),
                 \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class),
                 \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedEnabler::class),

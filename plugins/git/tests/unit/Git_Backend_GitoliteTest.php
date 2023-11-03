@@ -20,7 +20,7 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\Git\DefaultBranch\DefaultBranchUpdateTestExecutor;
+use Tuleap\Git\Tests\Stub\DefaultBranch\DefaultBranchUpdateExecutorStub;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\TemporaryTestDirectory;
 
@@ -120,7 +120,7 @@ class Git_Backend_GitoliteTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 $driver,
                 \Mockery::spy(GitoliteAccessURLGenerator::class),
-                new DefaultBranchUpdateTestExecutor(),
+                new DefaultBranchUpdateExecutorStub(),
                 \Mockery::spy(\Psr\Log\LoggerInterface::class),
             ]
         )
@@ -161,7 +161,7 @@ class Git_Backend_GitoliteTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 $driver,
                 \Mockery::spy(GitoliteAccessURLGenerator::class),
-                new DefaultBranchUpdateTestExecutor(),
+                new DefaultBranchUpdateExecutorStub(),
                 \Mockery::spy(\Psr\Log\LoggerInterface::class),
             ]
         )
@@ -196,7 +196,7 @@ class Git_Backend_GitoliteTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 $driver,
                 \Mockery::spy(GitoliteAccessURLGenerator::class),
-                new DefaultBranchUpdateTestExecutor(),
+                new DefaultBranchUpdateExecutorStub(),
                 \Mockery::spy(\Psr\Log\LoggerInterface::class),
             ]
         )
@@ -305,7 +305,7 @@ class Git_Backend_GitoliteTest extends \Tuleap\Test\PHPUnit\TestCase
         $dao                = \Mockery::spy(GitDao::class);
         $permissionsManager = \Mockery::spy(\PermissionsManager::class);
         $gitPlugin          = \Mockery::mock(GitPlugin::class);
-        $backend            = new Git_Backend_Gitolite($driver, \Mockery::spy(GitoliteAccessURLGenerator::class), new DefaultBranchUpdateTestExecutor(), \Mockery::spy(\Psr\Log\LoggerInterface::class));
+        $backend            = new Git_Backend_Gitolite($driver, \Mockery::spy(GitoliteAccessURLGenerator::class), new DefaultBranchUpdateExecutorStub(), \Mockery::spy(\Psr\Log\LoggerInterface::class));
         $backend->setDao($dao);
         $backend->setPermissionsManager($permissionsManager);
         $backend->setGitPlugin($gitPlugin);

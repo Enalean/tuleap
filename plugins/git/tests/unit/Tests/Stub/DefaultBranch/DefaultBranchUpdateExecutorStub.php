@@ -21,9 +21,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\DefaultBranch;
+namespace Tuleap\Git\Tests\Stub\DefaultBranch;
 
-final class DefaultBranchUpdateTestExecutor implements DefaultBranchUpdateExecutor
+use Tuleap\Git\DefaultBranch\DefaultBranchUpdateExecutor;
+
+final class DefaultBranchUpdateExecutorStub implements DefaultBranchUpdateExecutor
 {
     /**
      * @var callable|null

@@ -23,16 +23,17 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\DefaultBranch;
 
+use Tuleap\Git\Tests\Stub\DefaultBranch\DefaultBranchUpdateExecutorStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class DefaultBranchPostReceiveUpdaterTest extends TestCase
 {
-    private DefaultBranchUpdateTestExecutor $default_branch_update_executor;
+    private DefaultBranchUpdateExecutorStub $default_branch_update_executor;
     private DefaultBranchPostReceiveUpdater $default_branch_post_receive_updater;
 
     protected function setUp(): void
     {
-        $this->default_branch_update_executor      = new DefaultBranchUpdateTestExecutor();
+        $this->default_branch_update_executor      = new DefaultBranchUpdateExecutorStub();
         $this->default_branch_post_receive_updater = new DefaultBranchPostReceiveUpdater($this->default_branch_update_executor);
     }
 

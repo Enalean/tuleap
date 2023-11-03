@@ -20,23 +20,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Stub;
+namespace Tuleap\Git\Tests\Stub;
 
-use Tuleap\Git\Hook\DefaultBranchPush\DefaultBranchPushProcessor;
+use Tuleap\Git\Hook\DefaultBranchPush\VerifyIsDefaultBranch;
 
-final class BuildDefaultBranchPushProcessorStub implements \Tuleap\Git\Hook\Asynchronous\BuildDefaultBranchPushProcessor
+final class VerifyIsDefaultBranchStub implements VerifyIsDefaultBranch
 {
-    private function __construct(private DefaultBranchPushProcessor $processor)
+    private function __construct(private bool $return_value)
     {
     }
 
-    public static function withProcessor(DefaultBranchPushProcessor $processor): self
+    public static function withAlwaysDefaultBranch(): self
     {
-        return new self($processor);
+        return new self(true);
     }
 
-    public function getProcessor(\GitRepository $repository): DefaultBranchPushProcessor
+    public static function withNeverDefaultBranch(): self
     {
-        return $this->processor;
+        return new self(false);
+    }
+
+    public function isDefaultBranch(string $refname): bool
+    {
+        return $this->return_value;
     }
 }

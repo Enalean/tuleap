@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Stub;
+namespace Tuleap\Git\Tests\Stub;
 
 final class RetrieveCommitMessageStub implements \Tuleap\Git\CommitMetadata\RetrieveCommitMessage
 {

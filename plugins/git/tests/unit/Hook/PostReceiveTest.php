@@ -23,7 +23,7 @@ namespace Tuleap\Git\Hook;
 use Mockery;
 use Tuleap\Git\DefaultBranch\DefaultBranchPostReceiveUpdater;
 use Tuleap\Git\Hook\DefaultBranchPush\PushAnalyzer;
-use Tuleap\Git\Stub\VerifyIsDefaultBranchStub;
+use Tuleap\Git\Tests\Stub\VerifyIsDefaultBranchStub;
 use Tuleap\Git\Webhook\WebhookRequestSender;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;

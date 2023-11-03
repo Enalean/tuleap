@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2022 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,27 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Stub;
+namespace Tuleap\Git\Tests\Stub;
 
-use Tuleap\Git\CommitMetadata\RetrieveAuthor;
-use Tuleap\User\UserName;
+use Tuleap\Git\Hook\DefaultBranchPush\DefaultBranchPushProcessor;
 
-/**
- * @psalm-immutable
- */
-final class RetrieveAuthorStub implements RetrieveAuthor
+final class BuildDefaultBranchPushProcessorStub implements \Tuleap\Git\Hook\Asynchronous\BuildDefaultBranchPushProcessor
 {
-    private function __construct(private UserName $user)
+    private function __construct(private DefaultBranchPushProcessor $processor)
     {
     }
 
-    public static function buildWithUser(UserName $user): self
+    public static function withProcessor(DefaultBranchPushProcessor $processor): self
     {
-        return new self($user);
+        return new self($processor);
     }
 
-    public function getAuthor(string $sha1): UserName
+    public function getProcessor(\GitRepository $repository): DefaultBranchPushProcessor
     {
-        return $this->user;
+        return $this->processor;
     }
 }

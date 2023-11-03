@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,26 +20,27 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Stub;
+namespace Tuleap\Git\Tests\Stub;
 
-final class VerifyUserIsGitAdministratorStub implements \Tuleap\Git\Permissions\VerifyUserIsGitAdministrator
+use Tuleap\Git\CommitMetadata\RetrieveAuthor;
+use Tuleap\User\UserName;
+
+/**
+ * @psalm-immutable
+ */
+final class RetrieveAuthorStub implements RetrieveAuthor
 {
-    private function __construct(private bool $return_value)
+    private function __construct(private UserName $user)
     {
     }
 
-    public static function withAlwaysGitAdministrator(): self
+    public static function buildWithUser(UserName $user): self
     {
-        return new self(true);
+        return new self($user);
     }
 
-    public static function withNeverGitAdministrator(): self
+    public function getAuthor(string $sha1): UserName
     {
-        return new self(false);
-    }
-
-    public function userIsGitAdmin(\PFUser $user, \Project $project): bool
-    {
-        return $this->return_value;
+        return $this->user;
     }
 }

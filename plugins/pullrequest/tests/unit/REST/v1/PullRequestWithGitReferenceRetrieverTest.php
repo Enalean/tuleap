@@ -25,7 +25,7 @@ namespace Tuleap\PullRequest\REST\v1;
 use GitRepository;
 use Luracast\Restler\RestException;
 use Tuleap\Git\RetrieveGitRepository;
-use Tuleap\Git\Stub\RetrieveGitRepositoryStub;
+use Tuleap\Git\Tests\Stub\RetrieveGitRepositoryStub;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceRetriever;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequest\REST\v1\AccessiblePullRequestRESTRetriever;

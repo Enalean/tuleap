@@ -26,31 +26,31 @@ use Tuleap\Markdown\ContentInterpretor;
 
 final class ContentInterpretorStub implements ContentInterpretor
 {
-    private function __construct(private $interpreted_content_count, private $interpreted_content_with_references_count, private $interpreted_stripped_of_tag_content_count)
+    private int $interpreted_content_with_references_count = 0;
+
+    private function __construct()
     {
     }
 
     public static function build(): self
     {
-        return new self(0, 0, 0);
+        return new self();
     }
 
     public function getInterpretedContent(string $content): string
     {
-        $this->interpreted_content_count++;
-        return "";
+        return '';
     }
 
     public function getInterpretedContentWithReferences(string $content, int $project_id): string
     {
         $this->interpreted_content_with_references_count++;
-        return "";
+        return '';
     }
 
     public function getContentStrippedOfTags(string $content): string
     {
-        $this->interpreted_stripped_of_tag_content_count++;
-        return "";
+        return '';
     }
 
     public function getInterpretedContentWithReferencesCount(): int

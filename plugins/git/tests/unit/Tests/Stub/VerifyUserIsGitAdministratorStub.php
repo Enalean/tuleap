@@ -20,27 +20,25 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Stub;
+namespace Tuleap\Git\Tests\Stub;
 
-use Tuleap\Git\Repository\Settings\ArtifactClosure\VerifyArtifactClosureIsAllowed;
-
-final class VerifyArtifactClosureIsAllowedStub implements VerifyArtifactClosureIsAllowed
+final class VerifyUserIsGitAdministratorStub implements \Tuleap\Git\Permissions\VerifyUserIsGitAdministrator
 {
     private function __construct(private bool $return_value)
     {
     }
 
-    public static function withAlwaysAllowed(): self
+    public static function withAlwaysGitAdministrator(): self
     {
         return new self(true);
     }
 
-    public static function withNeverAllowed(): self
+    public static function withNeverGitAdministrator(): self
     {
         return new self(false);
     }
 
-    public function isArtifactClosureAllowed(int $repository_id): bool
+    public function userIsGitAdmin(\PFUser $user, \Project $project): bool
     {
         return $this->return_value;
     }
