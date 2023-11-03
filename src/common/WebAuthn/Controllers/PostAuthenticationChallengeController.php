@@ -36,6 +36,7 @@ use Tuleap\User\RetrieveUserByUserName;
 use Tuleap\WebAuthn\Challenge\SaveWebAuthnChallenge;
 use Tuleap\WebAuthn\Source\GetAllCredentialSourceByUserId;
 use Tuleap\WebAuthn\Source\WebAuthnCredentialSource;
+use Webauthn\PublicKeyCredentialDescriptor;
 use Webauthn\PublicKeyCredentialRequestOptions;
 use function Psl\Json\decode as psl_json_decode;
 
@@ -56,7 +57,8 @@ final class PostAuthenticationChallengeController extends DispatchablePSR15Compa
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $current_user = $this->user_manager->getCurrentUser();
-        if ($current_user->isAnonymous()) {
+        $is_anonymous = $current_user->isAnonymous();
+        if ($is_anonymous) {
             if (empty($body = $request->getBody()->getContents())) {
                 return $this->error_response_builder->build(400, _('Request body is empty'));
             }
@@ -80,17 +82,23 @@ final class PostAuthenticationChallengeController extends DispatchablePSR15Compa
             }
         }
 
-        return $this->generateResponseForUser($current_user);
+        return $this->generateResponseForUser($current_user, $is_anonymous);
     }
 
-    private function generateResponseForUser(\PFUser $user): ResponseInterface
+    private function generateResponseForUser(\PFUser $user, bool $is_anonymous): ResponseInterface
     {
         $authenticators = array_map(
             static fn(WebAuthnCredentialSource $source) => $source->getSource()->getPublicKeyCredentialDescriptor(),
             $this->source_dao->getAllByUserId((int) $user->getId())
         );
         if (empty($authenticators)) {
-            return $this->error_response_builder->build(403, _('You have to register your passkey before authenticate with it'));
+            if ($is_anonymous) {
+                $authenticators = [
+                    PublicKeyCredentialDescriptor::create(PublicKeyCredentialDescriptor::CREDENTIAL_TYPE_PUBLIC_KEY, 'false_id'),
+                ];
+            } else {
+                return $this->error_response_builder->build(403, _('You have to register your passkey before authenticate with it'));
+            }
         }
 
         $challenge = random_bytes(32);
