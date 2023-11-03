@@ -92,6 +92,10 @@ msgstr ""
 msgid "Fast-forward only"
 msgstr ""
 
+#, php-format
+msgid "Inline comment #%d not found"
+msgstr ""
+
 msgid "Merge"
 msgstr ""
 
