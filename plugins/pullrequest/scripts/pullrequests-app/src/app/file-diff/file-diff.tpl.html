@@ -19,7 +19,7 @@
 
 <div ng-if="$ctrl.is_loading" class="pull-request-file-diff-loading"></div>
 
-<div ng-if="$ctrl.has_potentially_dangerous_bidirectional_unicode_text" class="tlp-alert-warning">
+<div ng-if="$ctrl.has_potentially_dangerous_bidirectional_unicode_text" class="tlp-alert-warning pull-request-file-diff-bidi-warning">
     <p translate>
         This file contains bidirectional Unicode text. It may be interpreted differently than what is shown.
         This might be used to inject malicious code that looks safe.
@@ -35,15 +35,19 @@
     <i class="far fa-file"></i><br>{{:: 'Git LFS file' | translate }}
 </div>
 
-<file-unidiff ng-if="$ctrl.shouldShowUnifiedDiff()"
-              diff="$ctrl.diff"
-              file-path="{{ $ctrl.file_path }}"
-              pull-request-id="{{ $ctrl.pull_request_id }}"
-              comment-id="{{ $ctrl.comment_id }}"
+<file-unidiff
+    ng-if="$ctrl.shouldShowUnifiedDiff()"
+    class="pull-request-file-unidiff"
+    diff="$ctrl.diff"
+    file-path="{{ $ctrl.file_path }}"
+    pull-request-id="{{ $ctrl.pull_request_id }}"
+    comment-id="{{ $ctrl.comment_id }}"
 ></file-unidiff>
-<side-by-side-diff ng-if="$ctrl.shouldShowSideBySideDiff()"
-                   diff="$ctrl.diff"
-                   file-path="{{ $ctrl.file_path }}"
-                   pull-request-id="{{ $ctrl.pull_request_id }}"
-                   comment-id="{{ $ctrl.comment_id }}"
+<side-by-side-diff
+    ng-if="$ctrl.shouldShowSideBySideDiff()"
+    class="pull-request-file-side-by-side"
+    diff="$ctrl.diff"
+    file-path="{{ $ctrl.file_path }}"
+    pull-request-id="{{ $ctrl.pull_request_id }}"
+    comment-id="{{ $ctrl.comment_id }}"
 ></side-by-side-diff>

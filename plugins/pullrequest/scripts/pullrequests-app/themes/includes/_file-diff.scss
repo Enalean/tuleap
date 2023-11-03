@@ -63,7 +63,18 @@
 }
 
 .pull-request-file-diff {
+    display: flex;
     flex: 1;
+    flex-direction: column;
+
+    > .pull-request-file-diff-bidi-warning {
+        flex: 0;
+    }
+
+    > .pull-request-file-unidiff,
+    > .pull-request-file-side-by-side {
+        flex: 1;
+    }
 
     /* stylelint-disable selector-class-pattern */
     .CodeMirror {
@@ -105,7 +116,10 @@
 }
 
 .pull-request-file-diff-not-displayable-file {
-    padding: 100px;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
     border: 1px solid #dddddd;
     border-radius: var(--tlp-medium-radius);
     color: #cccccc;
