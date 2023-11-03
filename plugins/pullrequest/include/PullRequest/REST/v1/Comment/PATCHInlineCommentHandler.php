@@ -34,6 +34,7 @@ use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 use Tuleap\PullRequest\InlineComment\InlineComment;
 use Tuleap\PullRequest\InlineComment\InlineCommentNotFoundFault;
 use Tuleap\PullRequest\InlineComment\InlineCommentRetriever;
+use Tuleap\PullRequest\InlineComment\InlineCommentSaver;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\PullRequestRetriever;
@@ -44,6 +45,7 @@ final class PATCHInlineCommentHandler
         private readonly InlineCommentRetriever $comment_retriever,
         private readonly PullRequestRetriever $pull_request_retriever,
         private readonly CheckUserCanAccessPullRequest $pull_request_permission_checker,
+        private readonly InlineCommentSaver $comment_saver,
     ) {
     }
 
@@ -58,7 +60,7 @@ final class PATCHInlineCommentHandler
         return $this->comment_retriever
             ->getInlineCommentByID($inline_comment_id)
             ->okOr(Result::err(InlineCommentNotFoundFault::fromCommentId($inline_comment_id)))
-            ->andThen(function (InlineComment $comment) use ($user) {
+            ->andThen(function (InlineComment $comment) use ($comment_data, $user) {
                 if ($comment->getFormat() !== TimelineComment::FORMAT_MARKDOWN) {
                     return Result::err(CommentFormatNotAllowedFault::withGivenFormat($comment->getFormat()));
                 }
@@ -68,12 +70,14 @@ final class PATCHInlineCommentHandler
                 }
 
                 return $this->pull_request_retriever->getPullRequestById($comment->getPullRequestId())
-                    ->andThen(function (PullRequest $pull_request) use ($user) {
+                    ->andThen(function (PullRequest $pull_request) use ($comment_data, $comment, $user) {
                         try {
                             $this->pull_request_permission_checker->checkPullRequestIsReadableByUser($pull_request, $user);
                         } catch (\GitRepoNotFoundException | UserCannotReadGitRepositoryException | \Project_AccessException $e) {
                             return Result::err(CannotAccessToPullRequestFault::fromUpdatingComment($e));
                         }
+                        $updated_comment = InlineComment::buildWithNewContent($comment, $comment_data->content);
+                        $this->comment_saver->saveUpdatedComment($updated_comment);
                         return Result::ok(null);
                     });
             });

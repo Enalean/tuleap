@@ -41,6 +41,24 @@ final class InlineComment implements TimelineEvent, TimelineComment
     ) {
     }
 
+    public static function buildWithNewContent(self $comment, string $new_content): self
+    {
+        return new self(
+            $comment->id,
+            $comment->pull_request_id,
+            $comment->user_id,
+            $comment->post_date,
+            $comment->file_path,
+            $comment->unidiff_offset,
+            $new_content,
+            $comment->is_outdated,
+            $comment->parent_id,
+            $comment->position,
+            $comment->color,
+            $comment->format
+        );
+    }
+
     public static function buildFromRow($row): InlineComment
     {
         return new InlineComment(

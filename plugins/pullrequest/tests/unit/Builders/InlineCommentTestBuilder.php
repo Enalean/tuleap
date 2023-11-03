@@ -91,6 +91,18 @@ final class InlineCommentTestBuilder
         return $this;
     }
 
+    public function thatIsUpToDate(): self
+    {
+        $this->is_outdated = false;
+        return $this;
+    }
+
+    public function onUnidiffOffset(int $unidiff_offset): self
+    {
+        $this->unidiff_offset = $unidiff_offset;
+        return $this;
+    }
+
     public function build(): InlineComment
     {
         return new InlineComment(
