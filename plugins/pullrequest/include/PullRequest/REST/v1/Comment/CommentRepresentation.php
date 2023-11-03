@@ -25,7 +25,7 @@ use Tuleap\REST\JsonCast;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 /**
- * @psalm-immutable
+ * @psalm-mutation-free
  */
 final class CommentRepresentation
 {
@@ -36,6 +36,8 @@ final class CommentRepresentation
     public int $project_id;
 
     public string $post_date;
+
+    public ?string $last_edition_date;
 
     public string $content;
 
@@ -54,17 +56,16 @@ final class CommentRepresentation
     public function __construct(
         Comment $comment,
         CommentContent $comment_content,
-        int $id,
         int $project_id,
         public MinimalUserRepresentation $user,
-        string $color,
     ) {
         $this->id                     = $comment->getId();
         $this->color                  = $comment->getColor();
         $this->parent_id              = $comment->getParentId();
         $this->format                 = $comment->getFormat();
-        $this->project_id             = $project_id;
         $this->post_date              = JsonCast::toDate($comment->getPostDate());
+        $this->last_edition_date      = JsonCast::toDate($comment->getLastEditionDate()->unwrapOr(null));
+        $this->project_id             = $project_id;
         $this->type                   = self::TYPE;
         $this->content                = $comment_content->purified_content;
         $this->raw_content            = $comment_content->raw_content;

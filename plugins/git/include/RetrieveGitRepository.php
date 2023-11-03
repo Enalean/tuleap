@@ -23,8 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Git;
 
 use GitRepository;
+use PFUser;
 
 interface RetrieveGitRepository
 {
     public function getRepositoryById(int $id): ?GitRepository;
+
+    public function getRepositoryByIdUserCanSee(PFUser $user, int $id): GitRepository;
 }

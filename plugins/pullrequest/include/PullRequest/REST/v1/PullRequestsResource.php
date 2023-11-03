@@ -55,6 +55,7 @@ use Tuleap\Label\UnknownLabelException;
 use Tuleap\Markdown\CodeBlockFeatures;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Markdown\EnhancedCodeBlockExtension;
+use Tuleap\Option\Option;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\REST\UserRESTReferenceRetriever;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
@@ -130,6 +131,7 @@ use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use URLVerification;
 use UserManager;
+use function Psl\Type\int;
 
 class PullRequestsResource extends AuthenticatedResource
 {
@@ -1157,7 +1159,7 @@ class PullRequestsResource extends AuthenticatedResource
 
         $color = $color_retriever->retrieveColor($id, (int) $comment_data->parent_id);
         $color_assigner->assignColor((int) $comment_data->parent_id, $color);
-        $comment = new Comment(0, $id, (int) $user->getId(), $current_time, $comment_data->content, (int) $comment_data->parent_id, $color, $format);
+        $comment = new Comment(0, $id, (int) $user->getId(), $current_time, $comment_data->content, (int) $comment_data->parent_id, $color, $format, Option::nothing(int()));
 
         $parent_id_validator->checkParentValidity((int) $comment_data->parent_id, $id);
         $new_comment_id = $this->comment_factory->save($comment, $user, $project_id);
@@ -1171,7 +1173,7 @@ class PullRequestsResource extends AuthenticatedResource
             new EnhancedCodeBlockExtension(new CodeBlockFeatures())
         );
 
-        return (new CommentRepresentationBuilder($purifier, $content_interpretor))->buildRepresentation($new_comment_id, $project_id, $user_representation, $color, $new_comment);
+        return (new CommentRepresentationBuilder($purifier, $content_interpretor))->buildRepresentation($project_id, $user_representation, $new_comment);
     }
 
     /**

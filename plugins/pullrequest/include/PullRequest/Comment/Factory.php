@@ -65,23 +65,9 @@ class Factory
         $comments = [];
 
         foreach ($this->dao->searchByPullRequestId($pull_request_id, $limit, $offset, $order) as $row) {
-            $comments[] = $this->instantiateFromRow($row);
+            $comments[] = Comment::buildFromRow($row);
         }
 
         return new PaginatedComments($comments, $this->dao->foundRows());
-    }
-
-    private function instantiateFromRow($row): Comment
-    {
-        return new Comment(
-            $row['id'],
-            $row['pull_request_id'],
-            $row['user_id'],
-            $row['post_date'],
-            $row['content'],
-            (int) $row['parent_id'],
-            $row['color'],
-            $row['format']
-        );
     }
 }

@@ -133,6 +133,7 @@ final class Option
     }
 
     /**
+     * @psalm-mutation-free
      * @return Value|mixed
      */
     public function unwrapOr(mixed $default)

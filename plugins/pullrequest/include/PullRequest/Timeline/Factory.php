@@ -59,7 +59,7 @@ class Factory
     {
         $comments = [];
         foreach ($this->comments_dao->searchAllByPullRequestId($pull_request->getId()) as $row) {
-            $comments[] = $this->buildComment($row);
+            $comments[] = Comment::buildFromRow($row);
         }
         $total_comment_events = $this->comments_dao->foundRows();
 
@@ -84,19 +84,5 @@ class Factory
         $timeline     = array_slice($full_timeline, $offset, $limit);
         $total_events = $total_comment_events + $total_inline_comment_events + count($reviewer_changes) + $total_timeline_events;
         return new PaginatedTimeline($timeline, $total_events);
-    }
-
-    private function buildComment(array $row): Comment
-    {
-        return new Comment(
-            $row['id'],
-            $row['pull_request_id'],
-            $row['user_id'],
-            $row['post_date'],
-            $row['content'],
-            $row['parent_id'],
-            $row['color'],
-            $row['format'],
-        );
     }
 }

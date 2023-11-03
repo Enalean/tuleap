@@ -52,6 +52,7 @@ final class CommentSearcherStub implements CommentSearcher
             'parent_id'       => $comment->getParentId(),
             'color'           => $comment->getColor(),
             'format'          => $comment->getFormat(),
+            'last_edition_date' => $comment->getLastEditionDate(),
         ];
         return new self($row);
     }

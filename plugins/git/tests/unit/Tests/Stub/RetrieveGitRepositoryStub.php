@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Tests\Stub;
 
+use GitRepoNotFoundException;
 use GitRepository;
+use PFUser;
 use Tuleap\Git\RetrieveGitRepository;
 
 final class RetrieveGitRepositoryStub implements RetrieveGitRepository
@@ -33,6 +35,17 @@ final class RetrieveGitRepositoryStub implements RetrieveGitRepository
 
     public function getRepositoryById(int $id): ?GitRepository
     {
+        return $this->git_repository;
+    }
+
+    /**
+     * @throws GitRepoNotFoundException
+     */
+    public function getRepositoryByIdUserCanSee(PFUser $user, int $id): GitRepository
+    {
+        if (! $this->git_repository) {
+            throw new GitRepoNotFoundException();
+        }
         return $this->git_repository;
     }
 
