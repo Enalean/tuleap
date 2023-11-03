@@ -24,9 +24,8 @@
             v-if="is_current_tracker_load_failed"
             class="tlp-alert-danger"
             data-test-type="tracker-load-error-message"
-            v-translate
         >
-            Tracker cannot be loaded
+            {{ $gettext("Tracker cannot be loaded") }}
         </div>
         <template v-else>
             <div v-if="is_operation_failed" class="tlp-alert-danger">
@@ -35,7 +34,9 @@
             <section class="tlp-pane">
                 <div class="tlp-pane-container">
                     <div class="tlp-pane-header">
-                        <h1 class="tlp-pane-title" v-translate>Transitions rules configuration</h1>
+                        <h1 class="tlp-pane-title">
+                            {{ $gettext("Transitions rules configuration") }}
+                        </h1>
                     </div>
                     <template v-if="is_tracker_available">
                         <template v-if="is_base_field_configured">

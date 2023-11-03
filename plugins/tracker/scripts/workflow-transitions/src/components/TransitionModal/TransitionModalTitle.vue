@@ -18,20 +18,13 @@
   -->
 <template>
     <h1 class="tlp-modal-title" id="configure-modal-title">
-        <translate v-if="!current_transition" key="loading_label">Loading transition</translate>
-        <translate
-            v-else-if="is_workflow_advanced"
-            key="transition_label"
-            v-bind:translate-params="{
-                from_state_label,
-                to_state_label,
-            }"
-        >
-            Configure transition from %{from_state_label} to %{to_state_label}
-        </translate>
-        <translate v-else key="state_label" v-bind:translate-params="{ to_state_label }">
-            Configure all transitions to %{to_state_label}
-        </translate>
+        <span v-if="!current_transition" key="loading_label">{{
+            $gettext("Loading transition")
+        }}</span>
+        <span v-else-if="is_workflow_advanced" key="transition_label">{{
+            configure_transition_from_to_message()
+        }}</span>
+        <span v-else key="state_label">{{ configure_all_transition_message() }}</span>
     </h1>
 </template>
 <script>
@@ -63,6 +56,23 @@ export default {
                 ).label;
             },
         }),
+    },
+    methods: {
+        configure_transition_from_to_message() {
+            let translated = this.$gettext(
+                `Configure transition from %{from_state_label} to %{to_state_label}`,
+            );
+            return this.$gettextInterpolate(translated, {
+                from_state_label: this.from_state_label,
+                to_state_label: this.to_state_label,
+            });
+        },
+        configure_all_transition_message() {
+            let translated = this.$gettext(`Configure all transitions to %{to_state_label}`);
+            return this.$gettextInterpolate(translated, {
+                to_state_label: this.to_state_label,
+            });
+        },
     },
 };
 </script>

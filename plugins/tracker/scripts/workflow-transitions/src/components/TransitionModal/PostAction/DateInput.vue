@@ -20,14 +20,14 @@
 
 <template>
     <select class="tlp-select" v-model="field_value" v-bind:disabled="disabled" required>
-        <option data-test-type="placeholder" v-bind:value="null" v-translate disabled>
-            Please choose
+        <option data-test-type="placeholder" v-bind:value="null" disabled>
+            {{ $gettext("Please choose") }}
         </option>
-        <option data-test-type="clear" v-bind:value="DATE_FIELD_VALUE.CLEAR" v-translate>
-            Clear
+        <option data-test-type="clear" v-bind:value="DATE_FIELD_VALUE.CLEAR">
+            {{ $gettext("Clear") }}
         </option>
-        <option data-test-type="current" v-bind:value="DATE_FIELD_VALUE.CURRENT" v-translate>
-            Current time
+        <option data-test-type="current" v-bind:value="DATE_FIELD_VALUE.CURRENT">
+            {{ $gettext("Current time") }}
         </option>
     </select>
 </template>

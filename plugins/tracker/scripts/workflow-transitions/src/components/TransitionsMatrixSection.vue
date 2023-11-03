@@ -45,12 +45,14 @@
             </tbody>
         </table>
         <section v-else class="empty-state-pane">
-            <p class="empty-state-text" v-translate>
-                The field on which the transitions are based has no selectable value
+            <p class="empty-state-text">
+                {{
+                    $gettext("The field on which the transitions are based has no selectable value")
+                }}
             </p>
             <a class="empty-state-action tlp-button-primary" v-bind:href="configure_field_url">
                 <i class="fa fa-cog tlp-button-icon"></i>
-                <span v-translate>Configure it</span>
+                <span>{{ $gettext("Configure it") }}</span>
             </a>
         </section>
     </section>

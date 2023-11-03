@@ -24,9 +24,8 @@
         data-test="configure-state"
         v-bind:class="{ 'tlp-button-success': transition.updated }"
         v-on:click="openModal()"
-        v-translate
     >
-        Configure state
+        {{ $gettext("Configure state") }}
     </button>
 </template>
 <script>

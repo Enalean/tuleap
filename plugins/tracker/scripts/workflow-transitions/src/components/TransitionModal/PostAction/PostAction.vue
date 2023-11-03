@@ -55,8 +55,8 @@
                     />
                 </optgroup>
                 <optgroup v-bind:label="other_actions_title">
-                    <option v-bind:value="POST_ACTION_TYPE.RUN_JOB" v-translate>
-                        Launch a CI job
+                    <option v-bind:value="POST_ACTION_TYPE.RUN_JOB">
+                        {{ $gettext("Launch a CI job") }}
                     </option>
                     <option
                         v-bind:value="POST_ACTION_TYPE.SET_FIELD_VALUE"

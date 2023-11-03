@@ -22,8 +22,8 @@
         v-bind:is_transition_from_new_artifact="is_transition_from_new_artifact"
     >
         <template slot="authorized-ugroups">
-            <label for="workflow-configuration-permission" class="tlp-label" v-translate>
-                Groups that may process the transition
+            <label for="workflow-configuration-permission" class="tlp-label">
+                {{ $gettext("Groups that may process the transition") }}
             </label>
             <select
                 id="workflow-configuration-permission"
@@ -46,8 +46,8 @@
             </select>
         </template>
         <template slot="fields-not-empty">
-            <label for="workflow-configuration-not-empty-fields" class="tlp-label" v-translate>
-                Field(s) that must not be empty
+            <label for="workflow-configuration-not-empty-fields" class="tlp-label">
+                {{ $gettext("Field(s) that must not be empty") }}
             </label>
 
             <select
@@ -81,7 +81,7 @@
                 v-bind:disabled="is_modal_save_running"
                 data-test="not-empty-comment-checkbox"
             />
-            <translate>Comment must not be empty</translate>
+            <span>{{ $gettext("Comment must not be empty") }}</span>
         </label>
     </pre-conditions-section>
 </template>

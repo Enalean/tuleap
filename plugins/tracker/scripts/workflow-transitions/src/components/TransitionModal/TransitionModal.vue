@@ -43,10 +43,9 @@
                 class="tlp-button-primary tlp-button-outline tlp-modal-action"
                 data-dismiss="modal"
                 data-test="cancel-button"
-                v-translate
                 v-bind:disabled="is_modal_save_running"
             >
-                Cancel
+                {{ $gettext("Cancel") }}
             </button>
             <button
                 type="submit"
@@ -60,7 +59,7 @@
                     data-test="save-button-spinner"
                 ></i>
                 <i class="tlp-button-icon fa fa-fw fa-save" v-else></i>
-                <span v-translate>Save configuration</span>
+                <span>{{ $gettext("Save configuration") }}</span>
             </button>
         </div>
     </form>

@@ -19,7 +19,7 @@
 
 <template>
     <section class="tlp-modal-body-section tracker-workflow-transition-modal-actions-section">
-        <h2 class="tlp-modal-subtitle" v-translate>Actions automatically performed</h2>
+        <h2 class="tlp-modal-subtitle">{{ $gettext("Actions automatically performed") }}</h2>
         <post-action-skeleton v-if="is_loading_modal" data-test-type="skeleton" />
         <template v-else-if="has_post_actions">
             <component
@@ -37,7 +37,7 @@
                 data-test="add-post-action"
             >
                 <i class="fa fa-plus tlp-button-icon"></i>
-                <translate>Add another action</translate>
+                <span>{{ $gettext("Add another action") }}</span>
             </button>
         </template>
         <empty-post-action v-else data-test-type="empty-message" />
