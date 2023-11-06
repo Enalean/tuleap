@@ -17,14 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { vite } from "@tuleap/build-system-configurator";
+import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
 import * as path from "path";
 
 export default vite.defineLibConfig({
     build: {
         lib: {
-            entry: path.resolve(__dirname, "src/time-formatters.js"),
+            entry: path.resolve(__dirname, "src/time-formatters.ts"),
             name: "TimeTrackingTimeFormatters",
         },
     },
+    plugins: [viteDtsPlugin()],
 });

@@ -21,30 +21,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export {
-    formatMinutes,
-    formatDatetimeToISO,
-    formatDateUsingPreferredUserFormat,
-    formatDatetimeToYearMonthDay,
-    sortTimesChronologically,
-};
-
-function padTimeNumber(number) {
+function padTimeNumber(number: number): string {
     if (number < 10) {
         return "0" + number;
     }
-    return number;
+    return String(number);
 }
 
-function formatMinutes(minutes) {
-    const remaining_minutes = minutes % 60;
-    const hours = (minutes - remaining_minutes) / 60;
+export function formatMinutes(minutes: number): string {
+    const remaining_minutes: number = minutes % 60;
+    const hours: number = (minutes - remaining_minutes) / 60;
 
     return `${padTimeNumber(hours)}:${padTimeNumber(remaining_minutes)}`;
 }
 
-function formatDatetimeToISO(string_date) {
-    const date = new Date(string_date);
+export function formatDatetimeToISO(string_date: string): string {
+    const date: Date = new Date(string_date);
 
     return (
         date.getUTCFullYear() +
@@ -62,20 +54,14 @@ function formatDatetimeToISO(string_date) {
     );
 }
 
-function formatDatetimeToYearMonthDay(string_date) {
-    const date = new Date(string_date);
+export function formatDatetimeToYearMonthDay(string_date: string): string {
+    const date: Date = new Date(string_date);
 
     return `${date.getUTCFullYear()}-${padTimeNumber(date.getUTCMonth() + 1)}-${padTimeNumber(
         date.getUTCDate(),
     )}`;
 }
 
-function formatDateUsingPreferredUserFormat(date, user_locale) {
+export function formatDateUsingPreferredUserFormat(date: Date, user_locale: string): string {
     return new Intl.DateTimeFormat(user_locale).format(new Date(date));
-}
-
-function sortTimesChronologically(times) {
-    return times.sort((a, b) => {
-        return new Date(b.date) - new Date(a.date);
-    });
 }
