@@ -19,7 +19,7 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\Git\DefaultBranch\DefaultBranchUpdateTestExecutor;
+use Tuleap\Git\Tests\Stub\DefaultBranch\DefaultBranchUpdateExecutorStub;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 
 require_once __DIR__ . '/bootstrap.php';
@@ -35,7 +35,7 @@ class Git_Backend_GitoliteAccessURLTest extends \Tuleap\Test\PHPUnit\TestCase
         $backend       = new Git_Backend_Gitolite(
             Mockery::mock(Git_GitoliteDriver::class),
             $url_generator,
-            new DefaultBranchUpdateTestExecutor(),
+            new DefaultBranchUpdateExecutorStub(),
             Mockery::mock(\Psr\Log\LoggerInterface::class)
         );
 
@@ -53,7 +53,7 @@ class Git_Backend_GitoliteAccessURLTest extends \Tuleap\Test\PHPUnit\TestCase
         $backend       = new Git_Backend_Gitolite(
             Mockery::mock(Git_GitoliteDriver::class),
             $url_generator,
-            new DefaultBranchUpdateTestExecutor(),
+            new DefaultBranchUpdateExecutorStub(),
             Mockery::mock(\Psr\Log\LoggerInterface::class)
         );
 
@@ -71,7 +71,7 @@ class Git_Backend_GitoliteAccessURLTest extends \Tuleap\Test\PHPUnit\TestCase
         $backend       = new Git_Backend_Gitolite(
             Mockery::mock(Git_GitoliteDriver::class),
             $url_generator,
-            new DefaultBranchUpdateTestExecutor(),
+            new DefaultBranchUpdateExecutorStub(),
             Mockery::mock(\Psr\Log\LoggerInterface::class)
         );
 
@@ -89,7 +89,7 @@ class Git_Backend_GitoliteAccessURLTest extends \Tuleap\Test\PHPUnit\TestCase
         $backend       = new Git_Backend_Gitolite(
             Mockery::mock(Git_GitoliteDriver::class),
             $url_generator,
-            new DefaultBranchUpdateTestExecutor(),
+            new DefaultBranchUpdateExecutorStub(),
             Mockery::mock(\Psr\Log\LoggerInterface::class)
         );
 

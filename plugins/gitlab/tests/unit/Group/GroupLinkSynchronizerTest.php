@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Group;
 
-use Tuleap\Git\Stub\VerifyUserIsGitAdministratorStub;
+use Tuleap\Git\Tests\Stub\VerifyUserIsGitAdministratorStub;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabRequestFault;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;

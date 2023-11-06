@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Group;
 
-use Tuleap\Git\Stub\VerifyUserIsGitAdministratorStub;
+use Tuleap\Git\Tests\Stub\VerifyUserIsGitAdministratorStub;
 use Tuleap\Gitlab\Core\ProjectRetriever;
 use Tuleap\Gitlab\Permission\GitAdministratorChecker;
 use Tuleap\Gitlab\Test\Builder\GroupLinkBuilder;

@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Stub\Hook\Asynchronous;
+namespace Tuleap\Git\Tests\Stub\Hook\Asynchronous;
 
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;

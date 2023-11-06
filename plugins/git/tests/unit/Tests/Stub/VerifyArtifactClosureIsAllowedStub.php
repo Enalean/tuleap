@@ -20,27 +20,27 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Stub;
+namespace Tuleap\Git\Tests\Stub;
 
-use Tuleap\Git\Hook\DefaultBranchPush\VerifyIsDefaultBranch;
+use Tuleap\Git\Repository\Settings\ArtifactClosure\VerifyArtifactClosureIsAllowed;
 
-final class VerifyIsDefaultBranchStub implements VerifyIsDefaultBranch
+final class VerifyArtifactClosureIsAllowedStub implements VerifyArtifactClosureIsAllowed
 {
     private function __construct(private bool $return_value)
     {
     }
 
-    public static function withAlwaysDefaultBranch(): self
+    public static function withAlwaysAllowed(): self
     {
         return new self(true);
     }
 
-    public static function withNeverDefaultBranch(): self
+    public static function withNeverAllowed(): self
     {
         return new self(false);
     }
 
-    public function isDefaultBranch(string $refname): bool
+    public function isArtifactClosureAllowed(int $repository_id): bool
     {
         return $this->return_value;
     }

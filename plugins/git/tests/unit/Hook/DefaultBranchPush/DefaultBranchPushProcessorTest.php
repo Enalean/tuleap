@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Git\Hook\DefaultBranchPush;
 
 use Tuleap\Git\Repository\Settings\ArtifactClosure\ArtifactClosureNotAllowedFault;
-use Tuleap\Git\Stub\RetrieveAuthorStub;
-use Tuleap\Git\Stub\RetrieveCommitMessageStub;
-use Tuleap\Git\Stub\VerifyArtifactClosureIsAllowedStub;
+use Tuleap\Git\Tests\Stub\RetrieveAuthorStub;
+use Tuleap\Git\Tests\Stub\RetrieveCommitMessageStub;
+use Tuleap\Git\Tests\Stub\VerifyArtifactClosureIsAllowedStub;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;

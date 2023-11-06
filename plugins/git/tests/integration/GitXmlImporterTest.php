@@ -49,10 +49,10 @@ use SimpleXMLElement;
 use SiteCache;
 use System_Command;
 use Tuleap\ForgeUpgrade\ForgeUpgrade;
-use Tuleap\Git\DefaultBranch\DefaultBranchUpdateTestExecutor;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\Git\Permissions\FineGrainedPermission;
 use Tuleap\Git\Repository\Settings\ArtifactClosure\ConfigureAllowArtifactClosure;
+use Tuleap\Git\Tests\Stub\DefaultBranch\DefaultBranchUpdateExecutorStub;
 use Tuleap\TemporaryTestDirectory;
 use UGroupManager;
 use UserManager;
@@ -223,7 +223,7 @@ final class GitXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->configure_artifact_closure = $this->createMock(ConfigureAllowArtifactClosure::class);
 
-        $gitolite       = new Git_Backend_Gitolite($git_gitolite_driver, \Mockery::spy(GitoliteAccessURLGenerator::class), new DefaultBranchUpdateTestExecutor(), $this->logger);
+        $gitolite       = new Git_Backend_Gitolite($git_gitolite_driver, \Mockery::spy(GitoliteAccessURLGenerator::class), new DefaultBranchUpdateExecutorStub(), $this->logger);
         $this->importer = new GitXmlImporter(
             $this->logger,
             $this->git_manager,

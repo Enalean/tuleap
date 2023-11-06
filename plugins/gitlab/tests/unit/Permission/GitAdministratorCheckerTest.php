@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Permission;
 
-use Tuleap\Git\Stub\VerifyUserIsGitAdministratorStub;
+use Tuleap\Git\Tests\Stub\VerifyUserIsGitAdministratorStub;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;

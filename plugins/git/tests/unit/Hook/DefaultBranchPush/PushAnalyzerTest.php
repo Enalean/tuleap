@@ -24,7 +24,7 @@ namespace Tuleap\Git\Hook\DefaultBranchPush;
 
 use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Git\Hook\PushDetails;
-use Tuleap\Git\Stub\VerifyIsDefaultBranchStub;
+use Tuleap\Git\Tests\Stub\VerifyIsDefaultBranchStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class PushAnalyzerTest extends \Tuleap\Test\PHPUnit\TestCase
