@@ -6,7 +6,7 @@
   "private": true,
   "bin": "node_modules/mathoid/cli.js",
   "dependencies": {
-    "mathoid": "https://github.com/wikimedia/mediawiki-services-mathoid/tarball/2d0a7c3f9004a49818c9f528627367e2ae4ecbdb"
+    "mathoid": "https://gitlab.wikimedia.org/repos/mediawiki/services/mathoid/-/archive/221d528610a851c458db8a177e9e2803209dd43c/mathoid-221d528610a851c458db8a177e9e2803209dd43c.tar.gz"
   },
   "pkg": {
     "assets": "node_modules/**/*.js",

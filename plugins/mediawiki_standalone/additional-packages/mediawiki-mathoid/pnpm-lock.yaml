@@ -1,9 +1,13 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
 dependencies:
   mathoid:
-    specifier: https://github.com/wikimedia/mediawiki-services-mathoid/tarball/2d0a7c3f9004a49818c9f528627367e2ae4ecbdb
-    version: '@github.com/wikimedia/mediawiki-services-mathoid/tarball/2d0a7c3f9004a49818c9f528627367e2ae4ecbdb'
+    specifier: https://gitlab.wikimedia.org/repos/mediawiki/services/mathoid/-/archive/221d528610a851c458db8a177e9e2803209dd43c/mathoid-221d528610a851c458db8a177e9e2803209dd43c.tar.gz
+    version: '@gitlab.wikimedia.org/repos/mediawiki/services/mathoid/-/archive/221d528610a851c458db8a177e9e2803209dd43c/mathoid-221d528610a851c458db8a177e9e2803209dd43c.tar.gz'
 
 devDependencies:
   pkg:
@@ -167,7 +171,7 @@ packages:
     dev: false
 
   /array-flatten@1.1.1:
-    resolution: {integrity: sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=}
+    resolution: {integrity: sha512-PCVAQswWemu6UdxsDFFX/+gVeYqKAod3D3UVm91jHwynguOwAvYPhx8nNlM++NqRcK6CxxpUafjmhIdKiHibqg==}
     dev: false
 
   /array-union@2.1.0:
@@ -213,6 +217,7 @@ packages:
 
   /balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -228,6 +233,7 @@ packages:
 
   /bindings@1.5.0:
     resolution: {integrity: sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==}
+    requiresBuild: true
     dependencies:
       file-uri-to-path: 1.0.0
     dev: false
@@ -302,6 +308,7 @@ packages:
 
   /brace-expansion@1.1.11:
     resolution: {integrity: sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==}
+    requiresBuild: true
     dependencies:
       balanced-match: 1.0.2
       concat-map: 0.0.1
@@ -343,7 +350,7 @@ packages:
     dev: false
 
   /bytes@3.0.0:
-    resolution: {integrity: sha1-0ygVQE1olpn4Wk6k+odV3ROpYEg=}
+    resolution: {integrity: sha512-pMhOfFDPiv9t5jjIXkHosWmkSyQbvsgEVNkz0ERHbuLh2T/7j4Mqqpz523Fe8MVY89KC6Sh/QfS2sM+SjgFDcw==}
     engines: {node: '>= 0.8'}
     dev: false
 
@@ -413,6 +420,11 @@ packages:
       delayed-stream: 1.0.0
     dev: false
 
+  /commander@11.1.0:
+    resolution: {integrity: sha512-yPVavfyCcRhmorC7rWlkHn15b4wDVgVmBA7kV4QVBsF7kv/9TKJAbAXVTxvTnwP8HHKjRCJDClKbciiYS7p0DQ==}
+    engines: {node: '>=16'}
+    dev: false
+
   /commander@7.2.0:
     resolution: {integrity: sha512-QrWXB+ZQSVPmIWIhtEO9H+gwHaMGYiF5ChvoJ+K9ZGHG/sVsa6yiesAD1GC/x46sET00Xlwo1u49RVVVzvcSkw==}
     engines: {node: '>= 10'}
@@ -420,11 +432,6 @@ packages:
 
   /commander@9.2.0:
     resolution: {integrity: sha512-e2i4wANQiSXgnrBlIatyHtP1odfUp0BbV5Y5nEGbxtIrStkEOAAzCUirvLBNXHLr7kwLvJl6V+4V3XV9x7Wd9w==}
-    engines: {node: ^12.20.0 || >=14}
-    dev: false
-
-  /commander@9.4.1:
-    resolution: {integrity: sha512-5EEkTNyHNGFPD2H+c/dXXfQZYa/scCKasxWcXJaWnNJ99pnQN9Vnmqow+p+PlFPE63Q6mThaZws1T+HxfpgtPw==}
     engines: {node: ^12.20.0 || >=14}
     dev: false
 
@@ -451,7 +458,8 @@ packages:
     dev: false
 
   /concat-map@0.0.1:
-    resolution: {integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=}
+    resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -702,7 +710,7 @@ packages:
     dev: false
 
   /ee-first@1.1.1:
-    resolution: {integrity: sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=}
+    resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
     dev: false
 
   /emoji-regex@8.0.0:
@@ -858,6 +866,7 @@ packages:
 
   /file-uri-to-path@1.0.0:
     resolution: {integrity: sha512-0Zt+s3L7Vf1biwWZ29aARiVYLx7iMGnEUl9x33fbB/j3jR81u/O2LbqK+Bm1CDSNDKVtJ/YjwY7TUd5SkeLQLw==}
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -977,6 +986,7 @@ packages:
 
   /glob@6.0.4:
     resolution: {integrity: sha512-MKZeRNyYZAVVVG1oZeLaWie1uweH40m9AZwIwxyPbTSX4hHrVYSzLg0Ro5Z5R7XKkIX+Cc6oD1rqeDJnwsB8/A==}
+    requiresBuild: true
     dependencies:
       inflight: 1.0.6
       inherits: 2.0.4
@@ -1126,6 +1136,7 @@ packages:
 
   /inflight@1.0.6:
     resolution: {integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==}
+    requiresBuild: true
     dependencies:
       once: 1.4.0
       wrappy: 1.0.2
@@ -1334,22 +1345,22 @@ packages:
     dependencies:
       yallist: 4.0.0
 
-  /mathoid-mathjax-node@0.7.1:
-    resolution: {integrity: sha512-Q2nrchTXavwrw+W1/HIv9luUyzi3bcjUq1/ED3U9oW5fcJm/fM3oyxtj6UYkQv4eLuchkU6wMDJMmL2bn/qQsg==}
+  /mathoid-mathjax-node@0.7.2:
+    resolution: {integrity: sha512-Gg5hSyQ8gAoGXsFYRNlBS5gFkc9S5O05vhdOZrJZo1RfaJzrS4P1S1kjr4wYFo/96BxCOWih9d2F7nLvyf6pKQ==}
     dependencies:
       jsdom: 6.5.1
-      mathoid-mathjax: 2.7.2
+      mathoid-mathjax: 2.7.3
     dev: false
 
-  /mathoid-mathjax@2.7.2:
-    resolution: {integrity: sha512-t4GExroBwRWl4urWSOckEPwJIKjvYcO3IthsBSBB3NEr22tt8dqgoKffoGsWxvMOYBDoqckRHMb4NTdNFR9mzQ==}
+  /mathoid-mathjax@2.7.3:
+    resolution: {integrity: sha512-Ghusu4x05hQlbOD4sCCb6XDm7x4sWfXPvxeXOUbqgf97UAO8mUntOuekTpFnZABRch0DxOE+nh+OkOWHrSDgaA==}
     dev: false
 
-  /mathoid-texvcjs@0.5.1:
-    resolution: {integrity: sha512-nGqZOFNg0Np3LeHOgV7RyJbwHS7y7la7NPNEkB7LuvuGPxz4L7DqdVg+albi2TmNjamOY7vZNgM0FqxwYcB5XA==}
+  /mathoid-texvcjs@0.5.4:
+    resolution: {integrity: sha512-MGKGw2fyBroR0ruHbdAsVA8eN7TqVn7WS5Fc3xVP8eeHQAKDi0ZJV3obthbko5iiC7bEMWo1LTfdOqb/QaAKEA==}
     hasBin: true
     dependencies:
-      commander: 9.4.1
+      commander: 11.1.0
     dev: false
 
   /mdn-data@2.0.28:
@@ -1361,12 +1372,12 @@ packages:
     dev: false
 
   /media-typer@0.3.0:
-    resolution: {integrity: sha1-hxDXrwqmJvj/+hzgAWhUUmMlV0g=}
+    resolution: {integrity: sha512-dq+qelQ9akHpcOl/gUVRTxVIOkAJ1wR3QAvb4RsVjS8oVoFjDGTc679wJYmUmknUF5HwMLOgb5O+a3KxfWapPQ==}
     engines: {node: '>= 0.6'}
     dev: false
 
   /merge-descriptors@1.0.1:
-    resolution: {integrity: sha1-sAqqVW3YtEVoFQ7J0blT8/kMu2E=}
+    resolution: {integrity: sha512-cCi6g3/Zr1iqQi6ySbseM1Xvooa98N0w31jzUYrXPX2xqObmFGHJ0tQ5u74H3mVh7wLouTseZyYIq39g8cNp1w==}
     dev: false
 
   /merge2@1.4.1:
@@ -1417,6 +1428,7 @@ packages:
 
   /minimatch@3.1.2:
     resolution: {integrity: sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw==}
+    requiresBuild: true
     dependencies:
       brace-expansion: 1.1.11
     dev: false
@@ -1542,6 +1554,7 @@ packages:
 
   /nan@2.17.0:
     resolution: {integrity: sha512-2ZTgtl0nJsO0KQCjEpxcIr5D+Yv90plTitZt9JBfQvVJDS5seMl3FOvsh3+9CoYWXf/1l5OaZzzF6nDm4cagaQ==}
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -1552,6 +1565,7 @@ packages:
   /ncp@2.0.0:
     resolution: {integrity: sha512-zIdGUrPRFTUELUvr3Gmc7KZ2Sw/h1PiVM0Af/oHB6zgnV1ikqSfRk+TOufi79aHYCW3NiOXmr1BP5nWbzojLaA==}
     hasBin: true
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -1723,6 +1737,7 @@ packages:
   /path-is-absolute@1.0.1:
     resolution: {integrity: sha512-AVbw3UJ2e9bq64vSaS9Am0fje1Pa8pbGqTTsmXfaIiMpnr5DlDhfJOuLj9Sf95ZPVDAUerDfEk88MPmPe7UCQg==}
     engines: {node: '>=0.10.0'}
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -1731,7 +1746,7 @@ packages:
     dev: true
 
   /path-to-regexp@0.1.7:
-    resolution: {integrity: sha1-32BBeABfUi8V60SQ5yR6G/qmf4w=}
+    resolution: {integrity: sha512-5DFkuoqlv1uYQKxy8omFBeJPQcdoE07Kv2sferDCrAq1ohOU+MSDswDIbnx3YAM60qIOnYa53wBhXW0EbMonrQ==}
     dev: false
 
   /path-type@4.0.0:
@@ -2005,6 +2020,7 @@ packages:
   /rimraf@2.4.5:
     resolution: {integrity: sha512-J5xnxTyqaiw06JjMftq7L9ouA448dw/E7dKghkP9WpKNuwmARNNg+Gk8/u5ryb9N/Yo2+z3MCwuqFK/+qPOPfQ==}
     hasBin: true
+    requiresBuild: true
     dependencies:
       glob: 6.0.4
     dev: false
@@ -2269,8 +2285,8 @@ packages:
       uuid: 3.4.0
     dev: false
 
-  /swagger-ui-dist@4.18.1:
-    resolution: {integrity: sha512-n7AT4wzKIPpHy/BGflJOepGMrbY/7Cd5yVd9ptVczaJGAKScbVJrZxFbAE2ZSZa8KmqdQ0+pOs3/5mWY5tSMZQ==}
+  /swagger-ui-dist@5.9.1:
+    resolution: {integrity: sha512-5zAx+hUwJb9T3EAntc7TqYkV716CMqG6sZpNlAAMOMWkNXRYxGkN8ADIvD55dQZ10LxN90ZM/TQmN7y1gpICnw==}
     requiresBuild: true
     dev: false
     optional: true
@@ -2424,7 +2440,7 @@ packages:
     dev: false
 
   /verror@1.10.0:
-    resolution: {integrity: sha1-OhBcoXBTr1XW4nDB+CiGguGNpAA=}
+    resolution: {integrity: sha512-ZZKSmDAEFOijERBLkmYfJ+vmk3w+7hOLYDNkRCuRuMJGEmqYNCNLyBBFwWKVMhfwaEF3WOd0Zlw86U/WC/+nYw==}
     engines: {'0': node >=0.6.0}
     dependencies:
       assert-plus: 1.0.0
@@ -2534,8 +2550,8 @@ packages:
       y18n: 5.0.8
       yargs-parser: 20.2.9
 
-  '@github.com/wikimedia/mediawiki-services-mathoid/tarball/2d0a7c3f9004a49818c9f528627367e2ae4ecbdb':
-    resolution: {tarball: https://github.com/wikimedia/mediawiki-services-mathoid/tarball/2d0a7c3f9004a49818c9f528627367e2ae4ecbdb}
+  '@gitlab.wikimedia.org/repos/mediawiki/services/mathoid/-/archive/221d528610a851c458db8a177e9e2803209dd43c/mathoid-221d528610a851c458db8a177e9e2803209dd43c.tar.gz':
+    resolution: {tarball: https://gitlab.wikimedia.org/repos/mediawiki/services/mathoid/-/archive/221d528610a851c458db8a177e9e2803209dd43c/mathoid-221d528610a851c458db8a177e9e2803209dd43c.tar.gz}
     name: mathoid
     version: 0.7.6
     engines: {node: '>=16'}
@@ -2548,8 +2564,8 @@ packages:
       express: 4.18.2
       http-shutdown: 1.2.2
       js-yaml: 4.1.0
-      mathoid-mathjax-node: 0.7.1
-      mathoid-texvcjs: 0.5.1
+      mathoid-mathjax-node: 0.7.2
+      mathoid-texvcjs: 0.5.4
       mock-express-request: 0.2.2
       mock-express-response: 0.3.0
       npm: 9.6.2
@@ -2559,7 +2575,7 @@ packages:
       svgo: 3.0.2
       swagger-router: 0.7.4
     optionalDependencies:
-      swagger-ui-dist: 4.18.1
+      swagger-ui-dist: 5.9.1
     transitivePeerDependencies:
       - supports-color
     dev: false
