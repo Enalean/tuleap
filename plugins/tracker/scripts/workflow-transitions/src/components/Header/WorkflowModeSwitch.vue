@@ -28,7 +28,7 @@
                 for="workflow-advanced-configuration"
                 v-on:click.prevent="showModal()"
             >
-                <translate>Use advanced configuration</translate>
+                {{ $gettext("Use advanced configuration") }}
                 <span
                     class="tlp-tooltip tlp-tooltip-top"
                     v-bind:data-tlp-tooltip="advanced_configuration_tooltip"
@@ -62,34 +62,36 @@
             v-bind:is_operation_running="is_workflow_mode_change_running"
         >
             <template slot="modal-body">
-                <p v-if="is_workflow_advanced" key="simple_text" v-translate>
-                    You're about to switch to simple configuration mode. The first configuration in
-                    the destination state column will be applied to the whole state. Please check
-                    that each state configuration is correct.
+                <p v-if="is_workflow_advanced" key="simple_text">
+                    {{
+                        $gettext(
+                            "You're about to switch to simple configuration mode. The first configuration in the destination state column will be applied to the whole state. Please check that each state configuration is correct.",
+                        )
+                    }}
                 </p>
-                <p v-else key="advanced_text" v-translate>
-                    You're about to switch to advanced configuration mode. Each transition will be
-                    configurable independently. They will copy their state configuration during the
-                    switch.
+                <p v-else key="advanced_text">
+                    {{
+                        $gettext(
+                            "You're about to switch to advanced configuration mode. Each transition will be configurable independently. They will copy their state configuration during the switch.",
+                        )
+                    }}
                 </p>
-                <p v-translate>Please confirm your action.</p>
-                <p
-                    v-translate
-                    class="tlp-alert-danger"
-                    v-if="!is_workflow_advanced"
-                    key="warning_switch"
-                >
-                    If you have any post actions of type "Frozen Fields" or "Hidden Fieldsets", they
-                    will be deleted.
+                <p>{{ $gettext("Please confirm your action.") }}</p>
+                <p class="tlp-alert-danger" v-if="!is_workflow_advanced" key="warning_switch">
+                    {{
+                        $gettext(
+                            'If you have any post actions of type "Frozen Fields" or "Hidden Fieldsets", they will be deleted.',
+                        )
+                    }}
                 </p>
             </template>
             <template slot="switch-button-label">
-                <translate v-if="is_workflow_advanced" key="switch_to_simple">
-                    Switch to simple configuration
-                </translate>
-                <translate v-else key="switch_to_advanced">
-                    Switch to advanced configuration
-                </translate>
+                <span v-if="is_workflow_advanced" key="switch_to_simple">
+                    {{ $gettext("Switch to simple configuration") }}
+                </span>
+                <span v-else key="switch_to_advanced">
+                    {{ $gettext("Switch to advanced configuration") }}
+                </span>
             </template>
         </workflow-mode-switch-modal>
     </div>

@@ -17,17 +17,26 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
+<template>
     <section class="tlp-modal-body-section">
-        <h2 class="tlp-modal-subtitle" v-translate>Conditions of the transition</h2>
+        <h2 class="tlp-modal-subtitle">{{ $gettext("Conditions of the transition") }}</h2>
         <div class="tlp-form-element">
             <slot name="authorized-ugroups"></slot>
         </div>
         <div class="tlp-form-element" data-test="not-empty-field-form-element">
             <slot name="fields-not-empty"></slot>
         </div>
-        <div class="tlp-form-element" v-if="!props.is_transition_from_new_artifact">
+        <div class="tlp-form-element" v-if="!is_transition_from_new_artifact">
             <slot name="comment-not-empty"></slot>
         </div>
     </section>
 </template>
+
+<script>
+export default {
+    name: "PreConditionsSection",
+    props: {
+        is_transition_from_new_artifact: Boolean,
+    },
+};
+</script>

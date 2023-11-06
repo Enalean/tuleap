@@ -24,7 +24,7 @@
             v-bind:class="{ 'tracker-workflow-property-disabled': is_operation_running }"
         >
             <label class="tlp-label">
-                <span v-translate>Field</span>
+                <span>{{ $gettext("Field") }}</span>
                 <span
                     class="tlp-tooltip tlp-tooltip-top"
                     v-bind:data-tlp-tooltip="$gettext('Transitions based field')"
@@ -42,7 +42,7 @@
                     data-test="change-or-remove-button"
                 >
                     <i class="fas fa-sync tlp-button-icon"></i>
-                    <span v-translate>Change or remove</span>
+                    <span>{{ $gettext("Change or remove") }}</span>
                 </button>
             </div>
         </div>

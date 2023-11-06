@@ -22,7 +22,7 @@
     <post-action v-bind:post_action="post_action">
         <div class="tracker-workflow-transition-modal-action-details-element tlp-form-element">
             <label v-bind:for="job_url_input_id" class="tlp-label">
-                <translate>Job url</translate>
+                {{ $gettext("Job url") }}
                 <i class="fa fa-asterisk"></i>
             </label>
             <input
@@ -36,26 +36,29 @@
                 required
                 v-bind:disabled="is_modal_save_running"
             />
-            <p class="tlp-text-info" v-translate>
-                Tuleap will automatically pass the following parameters to the job:
+            <p class="tlp-text-info">
+                {{
+                    $gettext("Tuleap will automatically pass the following parameters to the job:")
+                }}
             </p>
             <ul class="tlp-text-info">
-                <li v-translate>
-                    userId: identifier of Tuleap user who made the transition (integer)
+                <li>
+                    {{
+                        $gettext(
+                            "userId: identifier of Tuleap user who made the transition (integer)",
+                        )
+                    }}
                 </li>
-                <li v-translate="{ project_id: current_tracker.project.id }">
-                    projectId: identifier of the current project (ie. %{ project_id }) (integer)
+                <li>{{ configure_project_id_message() }}</li>
+                <li>{{ configure_tracker_id_message() }}</li>
+                <li>
+                    {{
+                        $gettext(
+                            "artifactId: identifier of the artifact where the transition happens (integer)",
+                        )
+                    }}
                 </li>
-                <li v-translate="{ tracker_id: current_tracker.id }">
-                    trackerId: identifier of the current tracker (ie. %{ tracker_id }) (integer)
-                </li>
-                <li v-translate>
-                    artifactId: identifier of the artifact where the transition happens (integer)
-                </li>
-                <li v-translate="{ transition_id: current_transition.id }">
-                    triggerFieldValue: value of current transition target (ie. %{ transition_id })
-                    (string)
-                </li>
+                <li>{{ configure_transition_id_message() }}</li>
             </ul>
         </div>
     </post-action>
@@ -89,6 +92,32 @@ export default {
                     job_url,
                 });
             },
+        },
+    },
+    methods: {
+        configure_project_id_message() {
+            let translated = this.$gettext(
+                `projectId: identifier of the current project (ie. %{ project_id }) (integer)`,
+            );
+            return this.$gettextInterpolate(translated, {
+                project_id: this.current_tracker.project.id,
+            });
+        },
+        configure_tracker_id_message() {
+            let translated = this.$gettext(
+                `trackerId: identifier of the current tracker (ie. %{ tracker_id }) (integer)`,
+            );
+            return this.$gettextInterpolate(translated, {
+                tracker_id: this.current_tracker.id,
+            });
+        },
+        configure_transition_id_message() {
+            let translated = this.$gettext(
+                `triggerFieldValue: value of current transition target (ie. %{ transition_id }) (string)`,
+            );
+            return this.$gettextInterpolate(translated, {
+                transition_id: this.current_transition.id,
+            });
         },
     },
 };

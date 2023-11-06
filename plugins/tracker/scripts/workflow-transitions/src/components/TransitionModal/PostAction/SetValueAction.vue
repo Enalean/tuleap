@@ -22,7 +22,7 @@
     <post-action v-bind:post_action="post_action">
         <div class="tracker-workflow-transition-modal-action-details-element tlp-form-element">
             <label v-bind:for="field_id_input_id" class="tlp-label">
-                <translate>Choose a field</translate>
+                {{ $gettext("Choose a field") }}
                 <i class="fa fa-asterisk"></i>
             </label>
             <select
@@ -34,7 +34,7 @@
                 required
                 v-bind:disabled="is_modal_save_running"
             >
-                <option v-bind:value="null" v-translate disabled>Please choose</option>
+                <option v-bind:value="null" disabled>{{ $gettext("Please choose") }}</option>
                 <optgroup
                     v-for="group in available_fields_by_groups"
                     v-bind:key="group.label"
@@ -56,7 +56,7 @@
 
         <div class="tracker-workflow-transition-modal-action-details-element tlp-form-element">
             <label v-bind:for="value_input_id" class="tlp-label">
-                <translate>New value</translate>
+                {{ $gettext("New value") }}
                 <i class="fa fa-asterisk"></i>
             </label>
             <component

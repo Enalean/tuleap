@@ -19,8 +19,8 @@
 
 <template>
     <section class="empty-state-page">
-        <p class="empty-state-text" v-translate>
-            No action is currently defined. Start by adding one.
+        <p class="empty-state-text">
+            {{ $gettext("No action is currently defined. Start by adding one.") }}
         </p>
         <button
             class="empty-state-action tlp-button-primary tlp-button-outline"
@@ -29,7 +29,7 @@
             data-test="add-post-action"
         >
             <i class="fa fa-plus tlp-button-icon"></i>
-            <translate>Add action</translate>
+            <span>{{ $gettext("Add action") }}</span>
         </button>
     </section>
 </template>

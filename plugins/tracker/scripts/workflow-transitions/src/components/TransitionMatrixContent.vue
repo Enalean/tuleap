@@ -56,9 +56,8 @@
                 v-bind:class="{ 'tlp-button-success': is_transition_updated }"
                 v-on:click="openModal()"
                 data-test-action="configure-transition"
-                v-translate
             >
-                Configure
+                {{ $gettext("Configure") }}
             </button>
         </template>
     </td>

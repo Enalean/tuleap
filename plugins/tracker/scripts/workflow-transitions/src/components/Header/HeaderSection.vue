@@ -25,8 +25,8 @@
             class="tlp-form-element tracker-workflow-transition-configuration-form-item"
             v-bind:class="{ 'tlp-form-element-disabled': is_operation_running }"
         >
-            <label class="tlp-label" for="workflow-transitions-enabled" v-translate>
-                Enable transition rules
+            <label class="tlp-label" for="workflow-transitions-enabled">
+                {{ $gettext("Enable transition rules") }}
             </label>
             <div class="tlp-switch">
                 <input

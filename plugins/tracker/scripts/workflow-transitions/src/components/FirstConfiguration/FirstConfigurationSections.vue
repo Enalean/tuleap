@@ -23,15 +23,17 @@
         data-test="tracker-workflow-first-configuration"
     >
         <section class="tlp-pane-section">
-            <p v-translate>
-                In order to configure transitions rules on this tracker, your first need to choose a
-                list field. Once chosen, you will be able to configure transition using the
-                configuration matrix.
+            <p>
+                {{
+                    $gettext(
+                        "In order to configure transitions rules on this tracker, your first need to choose a list field. Once chosen, you will be able to configure transition using the configuration matrix.",
+                    )
+                }}
             </p>
 
             <div class="tlp-form-element">
                 <label for="workflow-field" class="tlp-label">
-                    <span v-translate>Field</span>
+                    <span> {{ $gettext("Field") }}</span>
                     <span
                         class="tlp-tooltip tlp-tooltip-top"
                         v-bind:data-tlp-tooltip="$gettext(`Transitions based field`)"
@@ -74,7 +76,7 @@
                         'fa-long-arrow-right': !is_operation_running,
                     }"
                 ></i>
-                <span v-translate>Save and start configuration</span>
+                <span> {{ $gettext("Save and start configuration") }}</span>
             </button>
         </section>
     </form>
