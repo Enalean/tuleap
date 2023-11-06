@@ -71,7 +71,7 @@ final class PostAuthenticationChallengeControllerTest extends TestCase
         self::assertSame(404, $response->getStatusCode());
     }
 
-    public function testItReturns403WhenNoRegisteredKeyForAnonymous(): void
+    public function testItReturns200WhenNoRegisteredKeyForAnonymous(): void
     {
         $user     = UserTestBuilder::anActiveUser()->build();
         $response = $this->handle(
@@ -81,7 +81,7 @@ final class PostAuthenticationChallengeControllerTest extends TestCase
             ['username' => $user->getUserName()]
         );
 
-        self::assertSame(403, $response->getStatusCode());
+        self::assertSame(200, $response->getStatusCode());
     }
 
     public function testItReturnsOptionsForAnonymousUser(): void
