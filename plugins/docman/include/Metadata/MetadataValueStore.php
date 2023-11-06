@@ -115,7 +115,7 @@ class MetadataValueStore
     {
         $this->reference_manager->extractCrossRef(
             $metadata_value->getValue(),
-            $metadata_value->getItemId(),
+            (string) $metadata_value->getItemId(),
             ReferenceManager::REFERENCE_NATURE_DOCUMENT,
             $project_id
         );

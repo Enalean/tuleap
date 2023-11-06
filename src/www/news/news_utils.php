@@ -54,7 +54,7 @@ function news_header(Tuleap\Layout\HeaderConfiguration $params)
     $GLOBALS['HTML']->addBreadcrumbs([
         [
             'title' => $Language->getText('news_index', 'news'),
-            'url' => '/news/?group_id=' . urlencode($group_id),
+            'url' => '/news/?group_id=' . urlencode((string) $group_id),
         ],
     ]);
 
@@ -74,10 +74,10 @@ function news_header(Tuleap\Layout\HeaderConfiguration $params)
         // 'Admin' tab is only displayed if the user is News admin or project admin
         if ($group_id) {
             if (user_ismember($group_id, 'A') || user_ismember($group_id, 'N2')) {
-                echo '<A HREF="/news/submit.php?group_id=' . $purifier->purify(urlencode($group_id)) . '">' . $Language->getText('news_utils', 'submit_news') . '</A> | <A HREF="/news/admin/?group_id=' . $purifier->purify(urlencode($group_id)) . '">' . $Language->getText('news_utils', 'admin') . '</A>';
+                echo '<A HREF="/news/submit.php?group_id=' . $purifier->purify(urlencode((string) $group_id)) . '">' . $Language->getText('news_utils', 'submit_news') . '</A> | <A HREF="/news/admin/?group_id=' . $purifier->purify(urlencode((string) $group_id)) . '">' . $Language->getText('news_utils', 'admin') . '</A>';
             } elseif (user_ismember($group_id, 'A') || user_ismember($group_id, 'N1')) {
               // 'Submit News' tab is only displayed if the user is News writer, or project admin
-                echo '<A HREF="/news/submit.php?group_id=' . $purifier->purify(urlencode($group_id)) . '">' . $Language->getText('news_utils', 'submit_news') . '</A>';
+                echo '<A HREF="/news/submit.php?group_id=' . $purifier->purify(urlencode((string) $group_id)) . '">' . $Language->getText('news_utils', 'submit_news') . '</A>';
             }
         }
         echo '</b><P>';
