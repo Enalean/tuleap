@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 use Tuleap\AgileDashboard\Stub\Milestone\Sidebar\DuplicateMilestonesInSidebarConfigStub;
 use Tuleap\AgileDashboard\Stub\Milestone\Sidebar\UpdateMilestonesInSidebarConfigStub;
-use Tuleap\Kanban\Stubs\Legacy\LegacyKanbanRetrieverStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -43,7 +42,6 @@ final class AgileDashboard_ConfigurationManagerTest extends \Tuleap\Test\PHPUnit
 
         $configuration_manager = new AgileDashboard_ConfigurationManager(
             $config_dao,
-            LegacyKanbanRetrieverStub::withoutActivatedKanban(),
             $event_dispatcher,
             DuplicateMilestonesInSidebarConfigStub::build(),
             UpdateMilestonesInSidebarConfigStub::build(),
@@ -67,7 +65,6 @@ final class AgileDashboard_ConfigurationManagerTest extends \Tuleap\Test\PHPUnit
 
         $configuration_manager = new AgileDashboard_ConfigurationManager(
             $config_dao,
-            LegacyKanbanRetrieverStub::withoutActivatedKanban(),
             $event_dispatcher,
             DuplicateMilestonesInSidebarConfigStub::build(),
             UpdateMilestonesInSidebarConfigStub::build(),
@@ -85,7 +82,6 @@ final class AgileDashboard_ConfigurationManagerTest extends \Tuleap\Test\PHPUnit
 
         $configuration_manager = new AgileDashboard_ConfigurationManager(
             $config_dao,
-            LegacyKanbanRetrieverStub::withoutActivatedKanban(),
             \Tuleap\Test\Stubs\EventDispatcherStub::withIdentityCallback(),
             $milestones_in_sidebar_config_duplicator,
             UpdateMilestonesInSidebarConfigStub::build(),
@@ -106,7 +102,6 @@ final class AgileDashboard_ConfigurationManagerTest extends \Tuleap\Test\PHPUnit
 
         $configuration_manager = new AgileDashboard_ConfigurationManager(
             $config_dao,
-            LegacyKanbanRetrieverStub::withoutActivatedKanban(),
             \Tuleap\Test\Stubs\EventDispatcherStub::withIdentityCallback(),
             DuplicateMilestonesInSidebarConfigStub::build(),
             $milestones_in_sidebar_config,
@@ -128,7 +123,6 @@ final class AgileDashboard_ConfigurationManagerTest extends \Tuleap\Test\PHPUnit
 
         $configuration_manager = new AgileDashboard_ConfigurationManager(
             $config_dao,
-            LegacyKanbanRetrieverStub::withoutActivatedKanban(),
             \Tuleap\Test\Stubs\EventDispatcherStub::withIdentityCallback(),
             DuplicateMilestonesInSidebarConfigStub::build(),
             $milestones_in_sidebar_config,

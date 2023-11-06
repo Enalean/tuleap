@@ -77,8 +77,6 @@ class Planning_FormPresenter extends PlanningPresenter
         array $available_planning_trackers,
         $cardwall_admin,
         array $warning_list,
-        private readonly Project $project,
-        private readonly \Tuleap\Kanban\SplitKanbanConfigurationChecker $split_kanban_configuration_checker,
     ) {
         parent::__construct($planning);
 
@@ -99,11 +97,7 @@ class Planning_FormPresenter extends PlanningPresenter
 
     public function adminTitle()
     {
-        if ($this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($this->project)) {
-            return dgettext('tuleap-agiledashboard', 'Backlog administration');
-        }
-
-        return dgettext('tuleap-agiledashboard', 'Agile Dashboard Administration');
+        return dgettext('tuleap-agiledashboard', 'Backlog administration');
     }
 
     public function createPlanning()

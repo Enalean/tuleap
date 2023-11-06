@@ -30,7 +30,6 @@ use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
 use Tuleap\AgileDashboard\Artifact\RedirectParameterInjector;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
-use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\CreateBacklogController;
 use Tuleap\AgileDashboard\CSRFSynchronizerTokenProvider;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
@@ -88,8 +87,6 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Http\Server\ServiceInstrumentationMiddleware;
-use Tuleap\Kanban\CheckSplitKanbanConfiguration;
-use Tuleap\Kanban\Legacy\ServiceForKanbanEvent;
 use Tuleap\Kanban\Service\KanbanService;
 use Tuleap\Layout\AfterStartProjectContainer;
 use Tuleap\Layout\BeforeStartProjectHeader;
@@ -97,7 +94,6 @@ use Tuleap\Layout\Feedback\FeedbackSerializer;
 use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeViteAssets;
-use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
@@ -206,7 +202,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         // Do not load the plugin if tracker is not installed & active
         if (defined('TRACKER_BASE_URL')) {
             $this->addHook('cssfile', 'cssfile');
-            $this->addHook('javascript_file');
             $this->addHook(trackerPlugin::TRACKER_EVENT_INCLUDE_CSS_FILE);
             $this->addHook(BuildArtifactFormActionEvent::NAME);
             $this->addHook(RedirectAfterArtifactCreationOrUpdateEvent::NAME);
@@ -412,7 +407,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     {
         return new AgileDashboard_ConfigurationManager(
             new AgileDashboard_ConfigurationDao(),
-            new \Tuleap\Kanban\Legacy\LegacyConfigurationDao(),
             EventManager::instance(),
             new MilestonesInSidebarDao(),
             new MilestonesInSidebarDao(),
@@ -595,12 +589,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     }
 
     #[\Tuleap\Plugin\ListeningToEventClass]
-    public function serviceForKanbanEvent(ServiceForKanbanEvent $event): void
-    {
-        $event->service = $event->project->getService($this->getServiceShortname());
-    }
-
-    #[\Tuleap\Plugin\ListeningToEventClass]
     public function generalSettingsEvent(GeneralSettingsEvent $event): void
     {
         $hierarchyChecker = new AgileDashboard_HierarchyChecker(
@@ -666,11 +654,9 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         $is_used_in_backlog  = PlanningFactory::build()->isTrackerUsedInBacklog($tracker_id);
 
         if ($is_used_in_planning || $is_used_in_backlog) {
-            $is_project_allowed_to_use_split_kanban = (new CheckSplitKanbanConfiguration(EventManager::instance()))
-                ->isProjectAllowedToUseSplitKanban($tracker->getProject());
-            $result['can_be_deleted']               = false;
-            $result['message']                      = $is_project_allowed_to_use_split_kanban ? dgettext('tuleap-agiledashboard', 'Backlog') : 'Agile Dashboard';
-            $params['result']                       = $result;
+            $result['can_be_deleted'] = false;
+            $result['message']        = dgettext('tuleap-agiledashboard', 'Backlog');
+            $params['result']         = $result;
         }
     }
 
@@ -717,15 +703,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         if ($this->isAnAgiledashboardRequest()) {
             $css_file_url = $this->getIncludeAssets()->getFileURL('style-fp.css');
             echo '<link rel="stylesheet" type="text/css" href="' . $css_file_url . '" />';
-        }
-    }
-
-    public function javascript_file(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        if ($this->isAnAgiledashboardRequest()) {
-            $layout = $params['layout'];
-            assert($layout instanceof \Tuleap\Layout\BaseLayout);
-            $layout->addJavascriptAsset(new JavascriptAsset($this->getIncludeAssets(), 'home-burndowns.js'));
         }
     }
 
@@ -1319,7 +1296,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
 
         return new AgileDashboardLegacyController(
             new AgileDashboardRouterBuilder(
-                PluginFactory::instance(),
                 $this->getMilestonePaneFactory(),
                 new VisitRecorder(new RecentlyVisitedDao()),
                 $this->getAllBreadCrumbsForMilestoneBuilder(),
@@ -1331,17 +1307,13 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
 
     public function getAllBreadCrumbsForMilestoneBuilder(): AllBreadCrumbsForMilestoneBuilder
     {
-        $split_kanban_configuration_checker = new CheckSplitKanbanConfiguration(EventManager::instance());
-
         return new AllBreadCrumbsForMilestoneBuilder(
-            new AgileDashboardCrumbBuilder($split_kanban_configuration_checker),
-            new VirtualTopMilestoneCrumbBuilder($this->getPluginPath()),
+            new AgileDashboardCrumbBuilder(),
             new MilestoneCrumbBuilder(
                 $this->getPluginPath(),
                 $this->getMilestonePaneFactory(),
                 $this->getMilestoneFactory()
             ),
-            $split_kanban_configuration_checker,
         );
     }
 
@@ -1488,7 +1460,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             ),
             new PlanningTrackerBacklogChecker($this->getPlanningFactory()),
             EventManager::instance(),
-            new CheckSplitKanbanConfiguration(EventManager::instance())
         );
 
         $action = $builder->buildArtifactAction($artifact, $user);
@@ -1505,7 +1476,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $this->getPlanningFactory(),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/masschange'),
             EventManager::instance(),
-            new CheckSplitKanbanConfiguration(EventManager::instance())
         );
 
         $additional_action = $builder->buildMasschangeAction($event->getTracker(), $event->getUser());
@@ -1526,7 +1496,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             new PlannedArtifactDao(),
             $this->getUnplannedArtifactsAdder(),
             EventManager::instance(),
-            new CheckSplitKanbanConfiguration(EventManager::instance())
         );
 
         $processor->processAction(
@@ -1774,13 +1743,8 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
 
     public function getSemanticProgressUsageEvent(GetSemanticProgressUsageEvent $event): void
     {
-        $is_project_allowed_to_use_split_kanban = (new CheckSplitKanbanConfiguration(EventManager::instance()))
-            ->isProjectAllowedToUseSplitKanban($event->tracker->getProject());
-
         $event->addFutureUsageLocation(
-            $is_project_allowed_to_use_split_kanban
-                ? dgettext('tuleap-agiledashboard', 'the Backlog')
-                : dgettext('tuleap-agiledashboard', 'the Agile Dashboard')
+            dgettext('tuleap-agiledashboard', 'the Backlog')
         );
     }
 
@@ -1790,14 +1754,10 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         if (! $project->usesService($this->getServiceShortname())) {
             return;
         }
-        $is_project_allowed_to_use_split_kanban = (new CheckSplitKanbanConfiguration(EventManager::instance()))
-            ->isProjectAllowedToUseSplitKanban($project);
 
         $event->setExternalServicesDescriptions(
             new SemanticDoneUsedExternalService(
-                $is_project_allowed_to_use_split_kanban
-                    ? dgettext('tuleap-agiledashboard', 'Backlog service')
-                    : dgettext('tuleap-agiledashboard', 'AgileDashboard service'),
+                dgettext('tuleap-agiledashboard', 'Backlog service'),
                 dgettext('tuleap-agiledashboard', 'burnup and velocity charts')
             )
         );
@@ -1888,10 +1848,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         $kanban_service  = $project->getService(KanbanService::SERVICE_SHORTNAME);
         $backlog_service = $project->getService($this->getServiceShortname());
         if (! $kanban_service && ! $backlog_service) {
-            return false;
-        }
-
-        if (! (new CheckSplitKanbanConfiguration(EventManager::instance()))->isProjectAllowedToUseSplitKanban($project)) {
             return false;
         }
 

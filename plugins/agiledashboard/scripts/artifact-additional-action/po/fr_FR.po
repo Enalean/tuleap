@@ -4,41 +4,19 @@ msgstr "Content-Type: text/plain; charset=UTF-8\n"
 msgid "Add to backlog"
 msgstr "Ajouter au backlog"
 
-msgid "Add to top backlog"
-msgstr "Ajouter à la planification générale"
-
 msgid "An error occurred while adding this artifact to backlog."
 msgstr ""
 "Une erreur s'est produite lors de l'ajout de cet artéfact dans le backlog."
-
-msgid "An error occurred while adding this artifact to top backlog."
-msgstr ""
-"Une erreur s'est produite lors de l'ajout de cet artéfact dans la "
-"planification générale."
 
 msgid "An error occurred while removing this artifact from backlog."
 msgstr ""
 "Une erreur s'est produite lors de la suppression de cet artéfact du backlog."
 
-msgid "An error occurred while removing this artifact from top backlog."
-msgstr ""
-"Une erreur s'est produite lors de la suppression de cet artéfact dans la "
-"planification générale."
-
 msgid "Remove from backlog"
 msgstr "Supprimer du backlog"
-
-msgid "Remove from top backlog"
-msgstr "Supprimer de la planification générale"
 
 msgid "This artifact has been added to backlog."
 msgstr "Cet artéfact a été ajouté au backlog."
 
-msgid "This artifact has been added to top backlog."
-msgstr "Cet artéfact a été ajouté à la planification générale."
-
 msgid "This artifact has been removed from backlog."
 msgstr "Cet artéfact a été supprimé du backlog."
-
-msgid "This artifact has been removed from top backlog."
-msgstr "Cet artéfact a été supprimé de la planification générale."

@@ -29,12 +29,9 @@ use Tuleap\AgileDashboard\Planning\Admin\PlanningEditionPresenterBuilder;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningWarningPossibleMisconfigurationPresenter;
 use Tuleap\AgileDashboard\Planning\Admin\UpdateRequestValidator;
 use Tuleap\AgileDashboard\Planning\BacklogTrackersUpdateChecker;
-use Tuleap\AgileDashboard\Planning\Configuration\ScrumConfiguration;
 use Tuleap\AgileDashboard\Planning\ImportTemplateFormPresenter;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
-use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkEvent;
-use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkPresenter;
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
 use Tuleap\AgileDashboard\Planning\RootPlanning\UpdateIsAllowedChecker;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
@@ -42,11 +39,6 @@ use Tuleap\AgileDashboard\Planning\TrackerHaveAtLeastOneAddToTopBacklogPostActio
 use Tuleap\AgileDashboard\Planning\TrackersHaveAtLeastOneHierarchicalLinkException;
 use Tuleap\AgileDashboard\Planning\TrackersWithHierarchicalLinkDefinedNotFoundException;
 use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\Kanban\KanbanManager;
-use Tuleap\Kanban\Home\KanbanSummaryPresenter;
-use Tuleap\Kanban\KanbanFactory;
-use Tuleap\Kanban\KanbanItemDao;
-use Tuleap\Kanban\Service\KanbanService;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\IncludeAssets;
@@ -56,7 +48,6 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Report\TrackerNotFoundException;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 /**
  * Handles the HTTP actions related to a planning.
@@ -81,28 +72,11 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
      */
     public const AGILEDASHBOARD_EVENT_PLANNING_CONFIG_UPDATE = 'agiledashboard_event_planning_config_update';
 
-    /**
-     * Checks if cardwall is enabled
-     *
-     * Parameters:
-     * 'tracker' => The Planning Tracker of the planning that is being configured
-     * 'enabled' => boolean
-     */
-    public const AGILEDASHBOARD_EVENT_IS_CARDWALL_ENABLED = 'agiledashboard_event_is_cardwall_enabled';
-
     public const AGILE_DASHBOARD_TEMPLATE_NAME = 'agile_dashboard_template.xml';
-    public const PAST_PERIOD                   = 'past';
-    public const FUTURE_PERIOD                 = 'future';
-    public const NUMBER_PAST_MILESTONES_SHOWN  = 10;
 
     private PlanningFactory $planning_factory;
-    private Planning_MilestoneFactory $milestone_factory;
     private ProjectManager $project_manager;
     private AgileDashboard_XMLFullStructureExporter $xml_exporter;
-    private string $plugin_path;
-    private KanbanManager $kanban_manager;
-    private AgileDashboard_ConfigurationManager $config_manager;
-    private KanbanFactory $kanban_factory;
     private PlanningPermissionsManager $planning_permissions_manager;
     private ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker;
     private ScrumPlanningFilter $scrum_planning_filter;
@@ -110,7 +84,6 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     private Project $project;
     private AgileDashboardCrumbBuilder $service_crumb_builder;
     private AdministrationCrumbBuilder $admin_crumb_builder;
-    private SemanticTimeframeBuilder $semantic_timeframe_builder;
     private DBTransactionExecutor $transaction_executor;
     private ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao;
     private PlanningUpdater $planning_updater;
@@ -123,20 +96,14 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     public function __construct(
         Codendi_Request $request,
         PlanningFactory $planning_factory,
-        Planning_MilestoneFactory $milestone_factory,
         ProjectManager $project_manager,
         AgileDashboard_XMLFullStructureExporter $xml_exporter,
-        $plugin_path,
-        KanbanManager $kanban_manager,
-        AgileDashboard_ConfigurationManager $config_manager,
-        KanbanFactory $kanban_factory,
         PlanningPermissionsManager $planning_permissions_manager,
         ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
         ScrumPlanningFilter $scrum_planning_filter,
         Tracker_FormElementFactory $tracker_form_element_factory,
         AgileDashboardCrumbBuilder $service_crumb_builder,
         AdministrationCrumbBuilder $admin_crumb_builder,
-        SemanticTimeframeBuilder $semantic_timeframe_builder,
         DBTransactionExecutor $transaction_executor,
         ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
         PlanningUpdater $planning_updater,
@@ -146,27 +113,20 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         PlanningEditionPresenterBuilder $planning_edition_presenter_builder,
         UpdateRequestValidator $update_request_validator,
         private BacklogTrackersUpdateChecker $backlog_trackers_update_checker,
-        private readonly \Tuleap\Kanban\SplitKanbanConfigurationChecker $split_kanban_configuration_checker,
     ) {
         parent::__construct('agiledashboard', $request);
 
         $this->project                            = $this->request->getProject();
         $this->group_id                           = $this->project->getID();
         $this->planning_factory                   = $planning_factory;
-        $this->milestone_factory                  = $milestone_factory;
         $this->project_manager                    = $project_manager;
         $this->xml_exporter                       = $xml_exporter;
-        $this->plugin_path                        = $plugin_path;
-        $this->kanban_manager                     = $kanban_manager;
-        $this->config_manager                     = $config_manager;
-        $this->kanban_factory                     = $kanban_factory;
         $this->planning_permissions_manager       = $planning_permissions_manager;
         $this->scrum_mono_milestone_checker       = $scrum_mono_milestone_checker;
         $this->scrum_planning_filter              = $scrum_planning_filter;
         $this->tracker_form_element_factory       = $tracker_form_element_factory;
         $this->service_crumb_builder              = $service_crumb_builder;
         $this->admin_crumb_builder                = $admin_crumb_builder;
-        $this->semantic_timeframe_builder         = $semantic_timeframe_builder;
         $this->transaction_executor               = $transaction_executor;
         $this->artifacts_in_explicit_backlog_dao  = $artifacts_in_explicit_backlog_dao;
         $this->planning_updater                   = $planning_updater;
@@ -175,309 +135,6 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $this->root_planning_update_checker       = $root_planning_update_checker;
         $this->planning_edition_presenter_builder = $planning_edition_presenter_builder;
         $this->update_request_validator           = $update_request_validator;
-    }
-
-    /**
-     * @param \Closure(string $title, BreadCrumbCollection $breadcrumbs, \Tuleap\Layout\HeaderConfiguration $header_configuration): void $displayHeader
-     * @param \Closure(): void $displayFooter
-     */
-    public function index(\Closure $displayHeader, \Closure $displayFooter): void
-    {
-        $user          = $this->request->getCurrentUser();
-        $configuration = ScrumConfiguration::fromProjectId($this->planning_factory, $this->group_id, $user);
-
-        $kanban_is_activated = $this->config_manager->kanbanIsActivatedForProject($this->group_id);
-        $scrum_is_configured = $configuration->isNotEmpty();
-
-        if (! $scrum_is_configured && ! $kanban_is_activated) {
-            $this->showEmptyHome($displayHeader, $displayFooter);
-        }
-
-        $this->redirectToTopBacklogPlanningInMonoMilestoneWhenKanbanIsDisabled();
-
-        $project = $this->getProjectFromRequest();
-
-        $service                 = $project->getService(KanbanService::SERVICE_SHORTNAME);
-        $is_using_kanban_service = $this->isUsingKanbanService($project, $service);
-
-        $is_split_feature_flag_enabled = $this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($this->project);
-
-        $presenter = new Planning_Presenter_HomePresenter(
-            $this->getMilestoneAccessPresenters($configuration->getPlannings()),
-            $this->group_id,
-            $this->getLastLevelMilestonesPresenters($configuration->getLastPlannings(), $user),
-            $this->request->get('period'),
-            $project->getPublicName(),
-            $kanban_is_activated,
-            $this->kanban_manager->getTrackersWithKanbanUsage($this->group_id, $user),
-            $this->getKanbanSummaryPresenters(),
-            $this->config_manager->scrumIsActivatedForProject($this->project),
-            $scrum_is_configured,
-            $this->config_manager->getScrumTitle($this->group_id),
-            $this->isUserAdmin(),
-            $this->isScrumMonoMilestoneEnabled(),
-            $this->isPlanningManagementDelegated(),
-            \Tuleap\Kanban\Home\CreateKanbanController::getUrl($project),
-            \Tuleap\CSRFSynchronizerTokenPresenter::fromToken(
-                (new \Tuleap\Kanban\Home\CSRFSynchronizerTokenProvider())->getCSRF($project),
-            ),
-            $is_using_kanban_service,
-            $service?->getUrl(),
-            $is_split_feature_flag_enabled
-        );
-
-        $title = dgettext('tuleap-agiledashboard', 'Agile Dashboard');
-
-        $displayHeader(
-            $title,
-            $this->getBreadcrumbs(),
-            HeaderConfigurationBuilder::get($title)
-                ->inProject($this->project, \AgileDashboardPlugin::PLUGIN_SHORTNAME)
-                ->withBodyClass(['agiledashboard_homepage'])
-                ->build()
-        );
-        echo $this->renderToString('home', $presenter);
-        $displayFooter();
-    }
-
-    private function redirectToTopBacklogPlanningInMonoMilestoneWhenKanbanIsDisabled()
-    {
-        if ($this->isScrumMonoMilestoneEnabled() === true && $this->config_manager->kanbanIsActivatedForProject($this->group_id) == '0') {
-            $GLOBALS['Response']->redirect(AGILEDASHBOARD_BASE_URL . "/?action=show-top&group_id=" . $this->group_id . "&pane=topplanning-v2");
-        }
-    }
-
-    private function isScrumMonoMilestoneEnabled()
-    {
-        return $this->scrum_mono_milestone_checker->isMonoMilestoneEnabled($this->group_id) === true;
-    }
-
-    private function isPlanningManagementDelegated(): bool
-    {
-        $planning_administration_delegation = new PlanningAdministrationDelegation($this->request->getProject());
-        $this->event_manager->dispatch($planning_administration_delegation);
-        return $planning_administration_delegation->isPlanningAdministrationDelegated();
-    }
-
-    /**
-     * @return KanbanSummaryPresenter[]
-     */
-    private function getKanbanSummaryPresenters(): array
-    {
-        $kanban_presenters = [];
-
-        $user = $this->request->getCurrentUser();
-
-        $list_of_kanban = $this->kanban_factory->getListOfKanbansForProject(
-            $user,
-            $this->group_id
-        );
-
-        foreach ($list_of_kanban as $kanban_for_project) {
-            $kanban_presenters[] = new KanbanSummaryPresenter(
-                $kanban_for_project,
-                new KanbanItemDao()
-            );
-        }
-
-        return $kanban_presenters;
-    }
-
-    /**
-     * @param \Closure(string $title, BreadCrumbCollection $breadcrumbs, \Tuleap\Layout\HeaderConfiguration $header_configuration): void $displayHeader
-     * @param \Closure(): void $displayFooter
-     */
-    private function showEmptyHome(\Closure $displayHeader, \Closure $displayFooter): void
-    {
-        $project                 = $this->getProjectFromRequest();
-        $service                 = $project->getService(KanbanService::SERVICE_SHORTNAME);
-        $is_using_kanban_service = $this->isUsingKanbanService($project, $service);
-
-        $presenter = new Planning_Presenter_BaseHomePresenter(
-            $this->group_id,
-            $this->isUserAdmin(),
-            $this->isScrumMonoMilestoneEnabled(),
-            $this->isPlanningManagementDelegated(),
-            $is_using_kanban_service,
-        );
-
-        $title = dgettext('tuleap-agiledashboard', 'Agile Dashboard');
-
-        $displayHeader(
-            $title,
-            $this->getBreadcrumbs(),
-            HeaderConfigurationBuilder::get($title)
-                ->inProject($this->project, \AgileDashboardPlugin::PLUGIN_SHORTNAME)
-                ->withBodyClass(['agiledashboard_homepage'])
-                ->build()
-        );
-        echo $this->renderToString('empty-home', $presenter);
-        $displayFooter();
-    }
-
-    private function isUsingKanbanService(Project $project, ?Service $service): bool
-    {
-        return $service !== null && $this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project);
-    }
-
-    /**
-     * @return Planning_Presenter_MilestoneAccessPresenter
-     */
-    private function getMilestoneAccessPresenters($plannings)
-    {
-        $milestone_access_presenters = [];
-        foreach ($plannings as $planning) {
-            $milestone_type      = $planning->getPlanningTracker();
-            $milestone_presenter = new Planning_Presenter_MilestoneAccessPresenter(
-                $this->getPlanningMilestonesDependingOnTimePeriodOrStatus($planning),
-                $milestone_type->getName()
-            );
-
-            $milestone_access_presenters[] = $milestone_presenter;
-        }
-
-        return $milestone_access_presenters;
-    }
-
-    private function getPlanningMilestonesDependingOnTimePeriodOrStatus(Planning $planning)
-    {
-        $set_in_time = $this->semantic_timeframe_builder->getSemantic($planning->getPlanningTracker())->isDefined();
-
-        if ($set_in_time) {
-            $milestones = $this->getPlanningMilestonesForTimePeriod($planning);
-        } else {
-            $milestones = $this->getPlanningMilestonesByStatus($planning);
-        }
-
-        return $milestones;
-    }
-
-    /**
-     * @param Planning[] $last_plannings
-     * @return Planning_Presenter_LastLevelMilestone[]
-     */
-    private function getLastLevelMilestonesPresenters($last_plannings, PFUser $user)
-    {
-        $presenters = [];
-
-        foreach ($last_plannings as $last_planning) {
-            $presenters[] = new Planning_Presenter_LastLevelMilestone(
-                $this->getMilestoneSummaryPresenters($last_planning, $user),
-                $last_planning->getPlanningTracker()->getName()
-            );
-        }
-
-        return $presenters;
-    }
-
-    /**
-     * @return Planning_Presenter_MilestoneSummaryPresenter[]
-     */
-    private function getMilestoneSummaryPresenters(Planning $last_planning, PFUser $user)
-    {
-        $presenters   = [];
-        $has_cardwall = $this->hasCardwall($last_planning);
-
-        $last_planning_current_milestones = $this->getPlanningMilestonesDependingOnTimePeriodOrStatus($last_planning);
-
-        if (empty($last_planning_current_milestones)) {
-            return $presenters;
-        }
-
-        foreach ($last_planning_current_milestones as $milestone) {
-            $this->milestone_factory->addMilestoneAncestors($user, $milestone);
-            $milestone = $this->milestone_factory->updateMilestoneContextualInfo($user, $milestone);
-
-            $event = new AlternativeBoardLinkEvent($milestone);
-            $this->event_manager->processEvent($event);
-            $alternative_board_link = $event->getAlternativeBoardLinkPresenter();
-            if ($alternative_board_link === null && $has_cardwall) {
-                $alternative_board_link = new AlternativeBoardLinkPresenter(
-                    '?' . http_build_query(
-                        [
-                            'group_id'    => $this->group_id,
-                            'planning_id' => $milestone->getPlanningId(),
-                            'action'      => 'show',
-                            'aid'         => $milestone->getArtifactId(),
-                            'pane'        => 'cardwall',
-                        ]
-                    ),
-                    'fa-th-large',
-                    dgettext('tuleap-agiledashboard', 'Cardwall')
-                );
-            }
-
-            if ($milestone->hasUsableBurndownField()) {
-                $burndown_data = $milestone->getBurndownData($user);
-
-                $presenters[] = new Planning_Presenter_MilestoneBurndownSummaryPresenter(
-                    $milestone,
-                    $this->plugin_path,
-                    $alternative_board_link,
-                    $burndown_data
-                );
-            } else {
-                $presenters[] = new Planning_Presenter_MilestoneSummaryPresenter(
-                    $milestone,
-                    $this->plugin_path,
-                    $alternative_board_link,
-                    $this->milestone_factory->getMilestoneStatusCount($user, $milestone)
-                );
-            }
-        }
-
-        return $presenters;
-    }
-
-    /**
-     * @return Planning_Milestone[]
-     */
-    private function getPlanningMilestonesForTimePeriod(Planning $planning)
-    {
-        $user = $this->request->getCurrentUser();
-
-        switch ($this->request->get('period')) {
-            case self::PAST_PERIOD:
-                return $this->milestone_factory->getPastMilestones(
-                    $user,
-                    $planning,
-                    self::NUMBER_PAST_MILESTONES_SHOWN
-                );
-            case self::FUTURE_PERIOD:
-                return $this->milestone_factory->getAllFutureMilestones(
-                    $user,
-                    $planning
-                );
-            default:
-                return $this->milestone_factory->getAllCurrentMilestones(
-                    $user,
-                    $planning
-                );
-        }
-    }
-
-    private function getPlanningMilestonesByStatus(Planning $planning)
-    {
-        $user = $this->request->getCurrentUser();
-
-        switch ($this->request->get('period')) {
-            case self::PAST_PERIOD:
-                return $this->milestone_factory->getAllClosedMilestones(
-                    $user,
-                    $planning
-                );
-
-            case self::FUTURE_PERIOD:
-                return $this->milestone_factory->getAllOpenMilestones(
-                    $user,
-                    $planning
-                );
-            default:
-                return $this->milestone_factory->getAllOpenMilestones(
-                    $user,
-                    $planning
-                );
-        }
     }
 
     /**
@@ -537,15 +194,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             $this->importConfiguration();
         }
 
-        $service                  = $project->getService(KanbanService::SERVICE_SHORTNAME);
-        $is_using_kanban_service  = $this->isUsingKanbanService($project, $service);
-        $is_legacy_agiledashboard = ! $this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project);
-
-        $presenter = new ImportTemplateFormPresenter(
-            $project,
-            $is_using_kanban_service,
-            $is_legacy_agiledashboard,
-        );
+        $presenter = new ImportTemplateFormPresenter($project);
 
         $GLOBALS['HTML']->addJavascriptAsset(
             new JavascriptViteAsset(
@@ -732,25 +381,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             $planning_trackers_filtered,
             $cardwall_admin,
             $this->getWarnings($planning),
-            $this->request->getProject(),
-            $this->split_kanban_configuration_checker,
         );
-    }
-
-    private function hasCardwall(Planning $planning)
-    {
-        $tracker = $planning->getPlanningTracker();
-        $enabled = false;
-
-        $this->event_manager->processEvent(
-            self::AGILEDASHBOARD_EVENT_IS_CARDWALL_ENABLED,
-            [
-                'tracker' => $tracker,
-                'enabled' => &$enabled,
-            ]
-        );
-
-        return $enabled;
     }
 
     private function getCardwallConfiguration(Planning $planning)

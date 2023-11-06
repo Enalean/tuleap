@@ -55,8 +55,6 @@ export function initArtifactAdditionalAction(mount_point: Document): void {
         throw new Error("Cannot find button icon, title or parent element");
     }
 
-    const is_split_feature_flag_enabled = action_button.dataset.isSplitFeatureFlagEnabled;
-
     action_button.addEventListener("click", async (): Promise<void> => {
         if (action_button_wrapper.classList.contains("disabled")) {
             return;
@@ -82,13 +80,9 @@ export function initArtifactAdditionalAction(mount_point: Document): void {
             } catch (e) {
                 addFeedback(
                     "error",
-                    is_split_feature_flag_enabled
-                        ? gettext_provider.gettext(
-                              "An error occurred while adding this artifact to backlog.",
-                          )
-                        : gettext_provider.gettext(
-                              "An error occurred while adding this artifact to top backlog.",
-                          ),
+                    gettext_provider.gettext(
+                        "An error occurred while adding this artifact to backlog.",
+                    ),
                 );
 
                 return;
@@ -98,15 +92,11 @@ export function initArtifactAdditionalAction(mount_point: Document): void {
 
             addFeedback(
                 "info",
-                is_split_feature_flag_enabled
-                    ? gettext_provider.gettext("This artifact has been added to backlog.")
-                    : gettext_provider.gettext("This artifact has been added to top backlog."),
+                gettext_provider.gettext("This artifact has been added to backlog."),
             );
             action_button_icon.classList.remove("fa-tlp-add-to-backlog");
             action_button_icon.classList.add("fa-tlp-remove-from-backlog");
-            action_button_title.textContent = is_split_feature_flag_enabled
-                ? gettext_provider.gettext("Remove from backlog")
-                : gettext_provider.gettext("Remove from top backlog");
+            action_button_title.textContent = gettext_provider.gettext("Remove from backlog");
             action = "remove";
         } else if (action === "remove") {
             action_button_wrapper.classList.add("disabled");
@@ -122,13 +112,9 @@ export function initArtifactAdditionalAction(mount_point: Document): void {
             } catch (e) {
                 addFeedback(
                     "error",
-                    is_split_feature_flag_enabled
-                        ? gettext_provider.gettext(
-                              "An error occurred while removing this artifact from backlog.",
-                          )
-                        : gettext_provider.gettext(
-                              "An error occurred while removing this artifact from top backlog.",
-                          ),
+                    gettext_provider.gettext(
+                        "An error occurred while removing this artifact from backlog.",
+                    ),
                 );
 
                 return;
@@ -137,15 +123,11 @@ export function initArtifactAdditionalAction(mount_point: Document): void {
             }
             addFeedback(
                 "info",
-                is_split_feature_flag_enabled
-                    ? gettext_provider.gettext("This artifact has been removed from backlog.")
-                    : gettext_provider.gettext("This artifact has been removed from top backlog."),
+                gettext_provider.gettext("This artifact has been removed from backlog."),
             );
             action_button_icon.classList.remove("fa-tlp-remove-from-backlog");
             action_button_icon.classList.add("fa-tlp-add-to-backlog");
-            action_button_title.textContent = is_split_feature_flag_enabled
-                ? gettext_provider.gettext("Add to backlog")
-                : gettext_provider.gettext("Add to top backlog");
+            action_button_title.textContent = gettext_provider.gettext("Add to backlog");
             action = "add";
         }
     });

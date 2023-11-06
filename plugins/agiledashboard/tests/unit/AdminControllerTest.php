@@ -28,14 +28,10 @@ use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\Kanban\CheckSplitKanbanConfiguration;
-use Tuleap\Kanban\KanbanFactory;
-use Tuleap\Kanban\KanbanManager;
 use Tuleap\Test\Builders\LayoutInspector;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\TestLayout;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Test\Stubs\EventDispatcherStub;
 
 final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -45,10 +41,7 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private const PROJECT_ID = 123;
     private \Codendi_Request & Stub $request;
     private \PlanningFactory & Stub $planning_factory;
-    private KanbanManager & Stub $kanban_manager;
     private \AgileDashboard_ConfigurationManager & MockObject $config_manager;
-    private \TrackerFactory & Stub $tracker_factory;
-    private KanbanFactory & Stub $kanban_factory;
     private \EventManager & Stub $event_manager;
     private CountElementsModeChecker & Stub $count_element_mode_checker;
     private \PFUser $user;
@@ -59,10 +52,7 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->request                    = $this->createStub(\Codendi_Request::class);
         $this->planning_factory           = $this->createStub(\PlanningFactory::class);
-        $this->kanban_manager             = $this->createStub(KanbanManager::class);
         $this->config_manager             = $this->createMock(\AgileDashboard_ConfigurationManager::class);
-        $this->tracker_factory            = $this->createStub(\TrackerFactory::class);
-        $this->kanban_factory             = $this->createStub(KanbanFactory::class);
         $this->event_manager              = $this->createStub(\EventManager::class);
         $this->count_element_mode_checker = $this->createStub(CountElementsModeChecker::class);
 
@@ -81,17 +71,13 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $controller = new AdminController(
             $this->request,
             $this->planning_factory,
-            $this->kanban_manager,
-            $this->kanban_factory,
             $this->config_manager,
-            $this->tracker_factory,
             $this->event_manager,
             $this->createStub(AgileDashboardCrumbBuilder::class),
             $this->createStub(AdministrationCrumbBuilder::class),
             $this->count_element_mode_checker,
             $this->createStub(ScrumPresenterBuilder::class),
             new TestLayout(new LayoutInspector()),
-            new CheckSplitKanbanConfiguration(EventDispatcherStub::withIdentityCallback()),
         );
         $controller->updateConfiguration();
     }

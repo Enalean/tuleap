@@ -23,10 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning;
 
-use AgileDashboard_ConfigurationManager;
-use Tuleap\Kanban\CheckSplitKanbanConfiguration;
-use Tuleap\Kanban\KanbanFactory;
-use Tuleap\Kanban\KanbanManager;
 use AgileDashboard_XMLFullStructureExporter;
 use Codendi_Request;
 use EventManager;
@@ -35,7 +31,6 @@ use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Planning_Controller;
-use Planning_MilestoneFactory;
 use PlanningFactory;
 use PlanningParameters;
 use PlanningPermissionsManager;
@@ -52,8 +47,6 @@ use Tuleap\AgileDashboard\Planning\RootPlanning\UpdateIsAllowedChecker;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
-use Tuleap\Test\Stubs\EventDispatcherStub;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 final class PlanningControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -113,8 +106,6 @@ final class PlanningControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::store();
         ForgeConfig::set('codendi_dir', AGILEDASHBOARD_BASE_DIR . '/../../..');
 
-        $plugin_path = "/plugins/agiledashboard";
-
         $this->request = Mockery::mock(Codendi_Request::class);
         $project       = Mockery::mock(Project::class);
         $this->request->shouldReceive('getProject')->andReturn($project);
@@ -136,20 +127,14 @@ final class PlanningControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->planning_controller = new Planning_Controller(
             $this->request,
             $this->planning_factory,
-            Mockery::mock(Planning_MilestoneFactory::class),
             Mockery::mock(ProjectManager::class),
             Mockery::mock(AgileDashboard_XMLFullStructureExporter::class),
-            $plugin_path,
-            Mockery::mock(KanbanManager::class),
-            Mockery::mock(AgileDashboard_ConfigurationManager::class),
-            Mockery::mock(KanbanFactory::class),
             Mockery::mock(PlanningPermissionsManager::class),
             $this->scrum_mono_milestone_checker,
             Mockery::mock(ScrumPlanningFilter::class),
             Mockery::mock(Tracker_FormElementFactory::class),
             Mockery::mock(AgileDashboardCrumbBuilder::class),
             Mockery::mock(AdministrationCrumbBuilder::class),
-            Mockery::mock(SemanticTimeframeBuilder::class),
             new DBTransactionExecutorPassthrough(),
             $this->explicit_backlog_dao,
             $this->planning_updater,
@@ -159,7 +144,6 @@ final class PlanningControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             Mockery::mock(PlanningEditionPresenterBuilder::class),
             $this->update_request_validator,
             $this->backlog_trackers_update_checker,
-            new CheckSplitKanbanConfiguration(EventDispatcherStub::withIdentityCallback()),
         );
     }
 

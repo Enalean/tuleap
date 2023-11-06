@@ -108,9 +108,6 @@ function BacklogItemDetailsController(
     }
 
     function getRemoveFromBacklogText() {
-        const $is_split_feature_flag_enabled = SharedPropertiesService.isSplitFeatureFlagEnabled();
-        return $is_split_feature_flag_enabled
-            ? gettextCatalog.getString("Remove from backlog")
-            : gettextCatalog.getString("Remove from top backlog");
+        return gettextCatalog.getString("Remove from backlog");
     }
 }

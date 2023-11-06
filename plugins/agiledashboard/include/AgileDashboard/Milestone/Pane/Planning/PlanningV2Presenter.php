@@ -43,7 +43,6 @@ final class PlanningV2Presenter
         string $milestone_id,
         bool $is_in_explicit_top_backlog,
         array $allowed_additional_panes_to_display,
-        public readonly bool $is_split_feature_flag_enabled,
     ) {
         $this->user_id                             = (int) $current_user->getId();
         $this->lang                                = $this->getLanguageAbbreviation($current_user);

@@ -66,7 +66,6 @@ const webpack_config_for_charts = {
 
 const webpack_config_for_javascript = {
     entry: {
-        "home-burndowns": "./scripts/home.js",
         "planning-admin": "./scripts/planning-admin.js",
     },
     context,
@@ -75,7 +74,6 @@ const webpack_config_for_javascript = {
         tlp: "tlp",
         codendi: "codendi",
         tuleap: "tuleap",
-        jquery: "jQuery",
     },
     plugins: [manifest_plugin],
 };

@@ -28,7 +28,6 @@ use TemplateRenderer;
 use Tracker;
 use Tuleap\AgileDashboard\ExplicitBacklog\VerifyProjectUsesExplicitBacklog;
 use Tuleap\AgileDashboard\Planning\RetrieveRootPlanning;
-use Tuleap\Kanban\SplitKanbanConfigurationChecker;
 
 class AdditionalMasschangeActionBuilder
 {
@@ -37,7 +36,6 @@ class AdditionalMasschangeActionBuilder
         private readonly RetrieveRootPlanning $planning_factory,
         private readonly TemplateRenderer $template_renderer,
         private readonly EventDispatcherInterface $event_dispatcher,
-        private readonly SplitKanbanConfigurationChecker $split_kanban_configuration_checker,
     ) {
     }
 
@@ -69,10 +67,8 @@ class AdditionalMasschangeActionBuilder
             return null;
         }
 
-        $is_split_feature_flag_enabled = $this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project);
-
-        $add_to_top_backlog_text    = $is_split_feature_flag_enabled ? dgettext('tuleap-agiledashboard', 'Add to backlog') : dgettext('tuleap-agiledashboard', 'Add to top backlog');
-        $remove_to_top_backlog_text = $is_split_feature_flag_enabled ? dgettext('tuleap-agiledashboard', 'Remove from backlog') : dgettext('tuleap-agiledashboard', 'Remove from top backlog');
+        $add_to_top_backlog_text    = dgettext('tuleap-agiledashboard', 'Add to backlog');
+        $remove_to_top_backlog_text = dgettext('tuleap-agiledashboard', 'Remove from backlog');
 
         return $this->template_renderer->renderToString(
             'explicit-backlog-actions',

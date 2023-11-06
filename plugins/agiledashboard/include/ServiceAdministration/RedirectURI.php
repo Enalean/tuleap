@@ -41,22 +41,6 @@ final class RedirectURI implements \Stringable
         return new self($uri);
     }
 
-    public static function buildLegacyKanbanAdministration(\Project $project): self
-    {
-        $uri = '/plugins/agiledashboard/?' . http_build_query([
-            'group_id' => $project->getID(),
-            'action'   => 'admin',
-            'pane'     => 'kanban',
-        ]);
-        return new self($uri);
-    }
-
-    public static function buildLegacyAgileDashboardHomepage(\Project $project): self
-    {
-        $uri = '/plugins/agiledashboard/?' . http_build_query(['group_id' => $project->getID()]);
-        return new self($uri);
-    }
-
     public static function buildProjectBacklog(\Project $project): self
     {
         $uri = '/plugins/agiledashboard/?' . http_build_query([

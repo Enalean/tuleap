@@ -31,12 +31,6 @@ msgstr "Ajouter au backlog"
 msgid "Add to the backlog (already used)"
 msgstr "Ajouter au backlog (déjà utilisé)"
 
-msgid "Add to the top backlog"
-msgstr "Ajouter à la planification générale"
-
-msgid "Add to the top backlog (already used)"
-msgstr "Ajouter à la plannification générale (déjà utilisé)"
-
 msgid "Advanced configuration is incompatible with this post-action"
 msgstr "La configuration avancée est incompatible avec cette post-action"
 
@@ -253,24 +247,10 @@ msgstr ""
 "déjà présent, rien ne sera fait."
 
 msgid ""
-"The artifact is added to Scrum top backlog (Agile Dashboard). If it's "
-"already present, nothing is done."
-msgstr ""
-"L'artéfact est ajouté à la planification générale de scrum (Tableau de bord "
-"agile). S'il est déjà présent, rien ne sera fait."
-
-msgid ""
 "The artifact is added to the backlog. If it's already present, nothing is "
 "done."
 msgstr ""
 "L'artéfact est ajouté au backlog. S'il est déjà présent, rien ne sera fait."
-
-msgid ""
-"The artifact is added to the top backlog. If it's already present, nothing "
-"is done."
-msgstr ""
-"L'artéfact est ajouté à la planification générale. S'il est déjà présent, "
-"rien ne sera fait."
 
 msgid "The field on which the transitions are based has no selectable value"
 msgstr ""

@@ -177,14 +177,6 @@ interface Planning_Milestone // @codingStandardsIgnoreLine
 
     public function hasBurdownField(PFUser $user);
 
-    /**
-     * Get the Burndown data of the milestone
-     *
-     *
-     * @return mixed Tracker_Chart_Data_Burndown | null
-     */
-    public function getBurndownData(PFUser $user);
-
     public function setDatePeriod(DatePeriodWithoutWeekEnd $date_period): void;
 
     public function setCapacity($capacity);

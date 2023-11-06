@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
+import { mapGetters } from "vuex";
 import { EXTERNAL_POST_ACTION_TYPE } from "../../../constants/workflow-constants.js";
 
 export default {
@@ -40,7 +40,6 @@ export default {
         post_action_type: String,
     },
     computed: {
-        ...mapState("transitionModal", ["is_split_feature_flag_enabled"]),
         ...mapGetters("transitionModal", ["is_program_management_used", "post_actions"]),
         add_to_backlog_information() {
             if (
@@ -50,17 +49,13 @@ export default {
             ) {
                 return {
                     valid: false,
-                    option: this.is_split_feature_flag_enabled
-                        ? this.$gettext("Add to the backlog (already used)")
-                        : this.$gettext("Add to the top backlog (already used)"),
+                    option: this.$gettext("Add to the backlog (already used)"),
                     title: this.$gettext("You can only have this post-action once."),
                 };
             }
             return {
                 valid: true,
-                option: this.is_split_feature_flag_enabled
-                    ? this.$gettext("Add to the backlog")
-                    : this.$gettext("Add to the top backlog"),
+                option: this.$gettext("Add to the backlog"),
                 title: "",
             };
         },

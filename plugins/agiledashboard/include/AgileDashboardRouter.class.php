@@ -34,9 +34,6 @@ use Tuleap\AgileDashboard\FormElement\BurnupCacheGenerator;
 use Tuleap\AgileDashboard\FormElement\FormElementController;
 use Tuleap\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarDao;
 use Tuleap\AgileDashboard\Planning\MilestoneControllerFactory;
-use Tuleap\Kanban\CheckSplitKanbanConfiguration;
-use Tuleap\Kanban\KanbanManager;
-use Tuleap\Kanban\KanbanFactory;
 use Tuleap\AgileDashboard\Milestone\Backlog\TopBacklogElementsToAddChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetriever;
@@ -48,10 +45,8 @@ use Tuleap\AgileDashboard\Planning\RootPlanning\UpdateIsAllowedChecker;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\Kanban\Service\KanbanService;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 /**
  * Routes HTTP requests to the appropriate controllers
@@ -69,11 +64,6 @@ class AgileDashboardRouter
      * @var Planning_RequestValidator
      */
     private $planning_request_validator;
-
-    /**
-     * @var Plugin
-     */
-    private $plugin;
 
     /**
      * @var Service|null
@@ -105,14 +95,8 @@ class AgileDashboardRouter
      */
     private $xml_exporter;
 
-    /** @var KanbanManager */
-    private $kanban_manager;
-
     /** @var AgileDashboard_ConfigurationManager */
     private $config_manager;
-
-    /** @var KanbanFactory */
-    private $kanban_factory;
 
     /** @var PlanningPermissionsManager */
     private $planning_permissions_manager;
@@ -138,11 +122,6 @@ class AgileDashboardRouter
      * @var AdministrationCrumbBuilder
      */
     private $admin_crumb_builder;
-
-    /**
-     * @var SemanticTimeframeBuilder
-     */
-    private $semantic_timeframe_builder;
 
     /**
      * @var CountElementsModeChecker
@@ -186,22 +165,18 @@ class AgileDashboardRouter
     private $update_request_validator;
 
     public function __construct(
-        Plugin $plugin,
         Planning_MilestoneFactory $milestone_factory,
         PlanningFactory $planning_factory,
         MilestoneControllerFactory $milestone_controller_factory,
         ProjectManager $project_manager,
         AgileDashboard_XMLFullStructureExporter $xml_exporter,
-        KanbanManager $kanban_manager,
         AgileDashboard_ConfigurationManager $config_manager,
-        KanbanFactory $kanban_factory,
         PlanningPermissionsManager $planning_permissions_manager,
         ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
         ScrumPlanningFilter $planning_filter,
         AgileDashboardJSONPermissionsRetriever $permissions_retriever,
         AgileDashboardCrumbBuilder $service_crumb_builder,
         AdministrationCrumbBuilder $admin_crumb_builder,
-        SemanticTimeframeBuilder $semantic_timeframe_builder,
         CountElementsModeChecker $count_elements_mode_checker,
         DBTransactionExecutor $transaction_executor,
         ArtifactsInExplicitBacklogDao $explicit_backlog_dao,
@@ -214,24 +189,19 @@ class AgileDashboardRouter
         PlanningEditionPresenterBuilder $planning_edition_presenter_builder,
         UpdateRequestValidator $update_request_validator,
         private BacklogTrackersUpdateChecker $backlog_trackers_update_checker,
-        private readonly \Tuleap\Kanban\SplitKanbanConfigurationChecker $split_kanban_configuration_checker,
     ) {
-        $this->plugin                             = $plugin;
         $this->milestone_factory                  = $milestone_factory;
         $this->planning_factory                   = $planning_factory;
         $this->milestone_controller_factory       = $milestone_controller_factory;
         $this->project_manager                    = $project_manager;
         $this->xml_exporter                       = $xml_exporter;
-        $this->kanban_manager                     = $kanban_manager;
         $this->config_manager                     = $config_manager;
-        $this->kanban_factory                     = $kanban_factory;
         $this->planning_permissions_manager       = $planning_permissions_manager;
         $this->scrum_mono_milestone_checker       = $scrum_mono_milestone_checker;
         $this->planning_filter                    = $planning_filter;
         $this->permissions_retriever              = $permissions_retriever;
         $this->service_crumb_builder              = $service_crumb_builder;
         $this->admin_crumb_builder                = $admin_crumb_builder;
-        $this->semantic_timeframe_builder         = $semantic_timeframe_builder;
         $this->count_elements_mode_checker        = $count_elements_mode_checker;
         $this->transaction_executor               = $transaction_executor;
         $this->explicit_backlog_dao               = $explicit_backlog_dao;
@@ -314,12 +284,7 @@ class AgileDashboardRouter
                 if ($this->userIsAdmin($request)) {
                     $pane = $request->get('pane');
                     if ($pane === self::PANE_KANBAN) {
-                        $service = $request->getProject()->getService(KanbanService::SERVICE_SHORTNAME);
-                        if ($service !== null && $this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($request->getProject())) {
-                            throw new \Tuleap\Request\NotFoundException();
-                        }
-
-                        $this->renderAction($this->buildController($request), 'adminKanban', $request);
+                        throw new \Tuleap\Request\NotFoundException();
                     } elseif ($pane === self::PANE_CHARTS) {
                         $this->renderAction($this->buildController($request), 'adminCharts', $request);
                     } else {
@@ -378,14 +343,10 @@ class AgileDashboardRouter
             case 'index':
             default:
                 $project = $request->getProject();
-                if ($this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project)) {
-                    $layout = $GLOBALS['Response'];
-                    assert($layout instanceof \Tuleap\Layout\BaseLayout);
+                $layout  = $GLOBALS['Response'];
+                assert($layout instanceof \Tuleap\Layout\BaseLayout);
 
-
-                    $layout->redirect(AgileDashboardServiceHomepageUrlBuilder::getTopBacklogUrl($project));
-                }
-                $this->renderAction($planning_controller, 'index', $request);
+                $layout->redirect(AgileDashboardServiceHomepageUrlBuilder::getTopBacklogUrl($project));
         }
     }
 
@@ -418,9 +379,7 @@ class AgileDashboardRouter
                 $GLOBALS['Language']->getText(
                     'project_service',
                     'service_not_used',
-                    $this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($request->getProject())
-                        ? dgettext('tuleap-agiledashboard', 'Backlog')
-                        : dgettext('tuleap-agiledashboard', 'Agile Dashboard')
+                    dgettext('tuleap-agiledashboard', 'Backlog'),
                 )
             );
         }
@@ -443,20 +402,14 @@ class AgileDashboardRouter
         return new Planning_Controller(
             $request,
             $this->planning_factory,
-            $this->milestone_factory,
             $this->project_manager,
             $this->xml_exporter,
-            $this->plugin->getPluginPath(),
-            $this->kanban_manager,
-            $this->config_manager,
-            $this->kanban_factory,
             $this->planning_permissions_manager,
             $this->scrum_mono_milestone_checker,
             $this->planning_filter,
             Tracker_FormElementFactory::instance(),
             $this->service_crumb_builder,
             $this->admin_crumb_builder,
-            $this->semantic_timeframe_builder,
             $this->transaction_executor,
             $this->explicit_backlog_dao,
             $this->planning_updater,
@@ -466,7 +419,6 @@ class AgileDashboardRouter
             $this->planning_edition_presenter_builder,
             $this->update_request_validator,
             $this->backlog_trackers_update_checker,
-            $this->split_kanban_configuration_checker,
         );
     }
 
@@ -477,17 +429,13 @@ class AgileDashboardRouter
         return new AdminController(
             $request,
             $this->planning_factory,
-            $this->kanban_manager,
-            $this->kanban_factory,
             $this->config_manager,
-            TrackerFactory::instance(),
             EventManager::instance(),
             $this->service_crumb_builder,
             $this->admin_crumb_builder,
             $this->count_elements_mode_checker,
             $this->scrum_presenter_builder,
             $layout,
-            new CheckSplitKanbanConfiguration(EventManager::instance()),
         );
     }
 
@@ -561,11 +509,6 @@ class AgileDashboardRouter
 
     public function routeShowTopPlanning(Codendi_Request $request, $default_controller)
     {
-        $user = $request->getCurrentUser();
-        if (! $user) {
-            $this->renderAction($default_controller, 'index', $request);
-        }
-
         $service = $this->getService($request);
         if (! $service) {
             exit_error(
@@ -573,9 +516,7 @@ class AgileDashboardRouter
                 $GLOBALS['Language']->getText(
                     'project_service',
                     'service_not_used',
-                    $this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($request->getProject())
-                        ? dgettext('tuleap-agiledashboard', 'Backlog')
-                        : dgettext('tuleap-agiledashboard', 'Agile Dashboard')
+                    dgettext('tuleap-agiledashboard', 'Backlog'),
                 )
             );
         }

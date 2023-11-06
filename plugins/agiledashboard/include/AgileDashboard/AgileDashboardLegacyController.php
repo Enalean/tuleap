@@ -101,7 +101,6 @@ class AgileDashboardLegacyController implements DispatchableWithRequest, Dispatc
     {
         return $request->get('action') === 'import-form'
             || $request->get('action') === 'admin'
-            && $request->get('pane') !== 'kanban'
             && $request->get('pane') !== 'charts';
     }
 

@@ -93,14 +93,6 @@ class Cardwall_OnTop_ConfigFactory
     }
 
     /**
-     * @return bool
-     */
-    public function isOnTopConfigEnabledForPlanning(Tracker $tracker)
-    {
-        return $this->getOnTopDao()->isEnabled($tracker->getId());
-    }
-
-    /**
      * @return Cardwall_OnTop_Config_Updater
      */
     public function getOnTopConfigUpdater(Tracker $tracker)

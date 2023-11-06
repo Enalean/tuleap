@@ -23,84 +23,51 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\BacklogPlugin;
 
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Tuleap\AgileDashboard\Stub\RetrievePlanningStub;
 use Tuleap\Option\Option;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullProjectStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Test\Stubs\EventDispatcherStub;
-use Tuleap\Tracker\Events\SplitBacklogFeatureFlagEvent;
 
 final class ProgramServiceBlockerTest extends TestCase
 {
     private const PROJECT_ID = 101;
-    private RetrievePlanningStub $planning_retriever;
-    private EventDispatcherInterface $event_dispatcher;
-    private \Project $project;
-
-    protected function setUp(): void
-    {
-        $this->planning_retriever = RetrievePlanningStub::stubNoPlannings();
-        $this->event_dispatcher   = EventDispatcherStub::withIdentityCallback();
-        $this->project            = ProjectTestBuilder::aProject()
-            ->withId(self::PROJECT_ID)
-            ->withoutServices()
-            ->build();
-    }
 
     /**
      * @return Option<string>
      */
-    private function getBlockedMessage(): Option
+    private function getBlockedMessage(\Project $project): Option
     {
         $verifier = new ProgramServiceBlocker(
-            $this->planning_retriever,
-            RetrieveUserStub::withGenericUser(),
-            $this->event_dispatcher,
-            RetrieveFullProjectStub::withProject($this->project)
+            RetrieveFullProjectStub::withProject($project)
         );
 
         return $verifier->shouldProgramServiceBeBlocked(
             UserIdentifierStub::buildGenericUser(),
-            ProjectIdentifierStub::buildWithId(self::PROJECT_ID)
+            ProjectIdentifierStub::buildWithId((int) $project->getID())
         );
-    }
-
-    public function testItBlocksProgramServiceWhenThereIsOneScrumPlanning(): void
-    {
-        $this->planning_retriever = RetrievePlanningStub::stubAllPlannings();
-        self::assertTrue($this->getBlockedMessage()->isValue());
     }
 
     public function testItDoesNotBlockProgramService(): void
     {
-        self::assertFalse($this->getBlockedMessage()->isValue());
-    }
+        $project = ProjectTestBuilder::aProject()
+            ->withId(self::PROJECT_ID)
+            ->withoutServices()
+            ->build();
 
-    public function testItDoesNotBlockProgramServiceWhenBacklogServiceIsNotUsed(): void
-    {
-        $this->event_dispatcher = EventDispatcherStub::withCallback(function (SplitBacklogFeatureFlagEvent $event) {
-            $event->enableSplitFeatureFlag();
-            return $event;
-        });
-        self::assertFalse($this->getBlockedMessage()->isValue());
+        $blocked_message = $this->getBlockedMessage($project);
+        self::assertFalse($blocked_message->isValue());
     }
 
     public function testItBlocksProgramServiceWhenBacklogServiceIsUsed(): void
     {
-        $this->project          = ProjectTestBuilder::aProject()
+        $project = ProjectTestBuilder::aProject()
             ->withId(self::PROJECT_ID)
             ->withUsedService(\AgileDashboardPlugin::PLUGIN_SHORTNAME)
             ->build();
-        $this->event_dispatcher = EventDispatcherStub::withCallback(function (SplitBacklogFeatureFlagEvent $event) {
-            $event->enableSplitFeatureFlag();
-            return $event;
-        });
 
-        self::assertTrue($this->getBlockedMessage()->isValue());
+        $option = $this->getBlockedMessage($project);
+        self::assertTrue($option->isValue());
     }
 }

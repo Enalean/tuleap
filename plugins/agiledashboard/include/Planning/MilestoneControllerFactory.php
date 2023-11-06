@@ -22,12 +22,10 @@ namespace Tuleap\AgileDashboard\Planning;
 
 use Tuleap\AgileDashboard\AgileDashboard\Milestone\Backlog\RecentlyVisitedTopBacklogDao;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
-use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\CSRFSynchronizerTokenProvider;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
-use Tuleap\Kanban\SplitKanbanConfigurationChecker;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
 /**
@@ -41,11 +39,9 @@ class MilestoneControllerFactory
         private readonly \Planning_MilestonePaneFactory $pane_factory,
         private readonly VirtualTopMilestonePresenterBuilder $top_milestone_presenter_builder,
         private readonly AgileDashboardCrumbBuilder $service_crumb_builder,
-        private readonly VirtualTopMilestoneCrumbBuilder $top_milestone_crumb_builder,
         private readonly VisitRecorder $visit_recorder,
         private readonly AllBreadCrumbsForMilestoneBuilder $bread_crumbs_for_milestone_builder,
         private readonly HeaderOptionsProvider $header_options_provider,
-        private readonly SplitKanbanConfigurationChecker $flag_checker,
         private readonly CSRFSynchronizerTokenProvider $token_provider,
         private readonly ScrumForMonoMilestoneChecker $mono_milestone_checker,
         private readonly RecentlyVisitedTopBacklogDao $recently_visited_top_backlog_dao,
@@ -74,8 +70,6 @@ class MilestoneControllerFactory
             $this->project_manager,
             $this->top_milestone_presenter_builder,
             $this->service_crumb_builder,
-            $this->top_milestone_crumb_builder,
-            $this->flag_checker,
             $this->token_provider,
             $this->mono_milestone_checker,
             $this->recently_visited_top_backlog_dao,

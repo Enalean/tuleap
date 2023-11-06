@@ -24,7 +24,6 @@ namespace Tuleap\Layout;
 
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\Project\Service\HideServiceInUserInterfaceEvent;
 use Tuleap\Project\Service\CollectServicesAllowedForRestrictedEvent;
 use Tuleap\Project\Service\UserCanAccessToServiceEvent;
 use Tuleap\Sanitizer\URISanitizer;
@@ -103,7 +102,7 @@ final class ProjectSidebarToolsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
 
         $this->event_dispatcher = EventDispatcherStub::withCallback(
-            function (UserCanAccessToServiceEvent|CollectServicesAllowedForRestrictedEvent|HideServiceInUserInterfaceEvent $event) use (
+            function (UserCanAccessToServiceEvent|CollectServicesAllowedForRestrictedEvent $event) use (
                 $allowed_service_shortname
             ) {
                 if ($event instanceof CollectServicesAllowedForRestrictedEvent) {
@@ -132,33 +131,5 @@ final class ProjectSidebarToolsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         self::assertCount(0, $this->buildServices());
-    }
-
-    public function testItRemovesServiceThatMustBeHiddenInUserInterface(): void
-    {
-        $hidden_service_short_name = 'hidden';
-        $shown_service_label       = 'Shown';
-        $hidden_service            = ServiceBuilder::aSystemService($this->project)
-                                               ->withShortName($hidden_service_short_name)
-                                               ->build();
-        $shown_service             = ServiceBuilder::aProjectDefinedService($this->project)
-                                               ->withLabel($shown_service_label)
-                                               ->build();
-        $this->project->method('getServices')->willReturn([$hidden_service, $shown_service]);
-
-        $this->event_dispatcher = EventDispatcherStub::withCallback(
-            function (UserCanAccessToServiceEvent | HideServiceInUserInterfaceEvent $event) use ($hidden_service_short_name) {
-                if ($event instanceof HideServiceInUserInterfaceEvent) {
-                    if ($event->service->getShortName() === $hidden_service_short_name) {
-                        $event->hideService();
-                    }
-                }
-                return $event;
-            }
-        );
-
-        $services = $this->buildServices();
-        self::assertCount(1, $services);
-        self::assertSame($shown_service_label, $services[0]->label);
     }
 }

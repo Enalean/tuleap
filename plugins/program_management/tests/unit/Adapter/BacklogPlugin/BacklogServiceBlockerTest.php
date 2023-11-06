@@ -27,60 +27,38 @@ use Tuleap\ProgramManagement\Tests\Stub\ProjectIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullProjectStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Test\Stubs\EventDispatcherStub;
-use Tuleap\Tracker\Events\SplitBacklogFeatureFlagEvent;
 
 final class BacklogServiceBlockerTest extends TestCase
 {
     private const PROJECT_ID = 134;
 
-    private EventDispatcherStub $event_dispatcher;
-    private \Project $project;
-
-    protected function setUp(): void
+    public function testItReturnsFalseWhenProgramServiceIsNotUsed(): void
     {
-        $this->event_dispatcher = EventDispatcherStub::withIdentityCallback();
-
-        $this->project = ProjectTestBuilder::aProject()
+        $project = ProjectTestBuilder::aProject()
             ->withId(self::PROJECT_ID)
             ->withoutServices()
             ->build();
-    }
 
-    private function shouldBlock(): bool
-    {
         $blocker = new BacklogServiceBlocker(
-            RetrieveFullProjectStub::withProject($this->project),
-            $this->event_dispatcher,
+            RetrieveFullProjectStub::withProject($project),
         );
-        return $blocker->shouldBacklogServiceBeBlocked(ProjectIdentifierStub::buildWithId(self::PROJECT_ID));
-    }
-
-    public function testItReturnsFalseWhenFeatureFlagIsInactive(): void
-    {
-        self::assertFalse($this->shouldBlock());
-    }
-
-    public function testItReturnsFalseWhenProgramServiceIsNotUsed(): void
-    {
-        $this->event_dispatcher = EventDispatcherStub::withCallback(function (SplitBacklogFeatureFlagEvent $event) {
-            $event->enableSplitFeatureFlag();
-            return $event;
-        });
-        self::assertFalse($this->shouldBlock());
+        self::assertFalse(
+            $blocker->shouldBacklogServiceBeBlocked(ProjectIdentifierStub::buildWithId(self::PROJECT_ID))
+        );
     }
 
     public function testItReturnsTrueWhenProgramServiceIsUsedAndFeatureFlagIsActive(): void
     {
-        $this->event_dispatcher = EventDispatcherStub::withCallback(function (SplitBacklogFeatureFlagEvent $event) {
-            $event->enableSplitFeatureFlag();
-            return $event;
-        });
-        $this->project          = ProjectTestBuilder::aProject()
+        $project = ProjectTestBuilder::aProject()
             ->withId(self::PROJECT_ID)
             ->withUsedService(ProgramService::SERVICE_SHORTNAME)
             ->build();
 
-        self::assertTrue($this->shouldBlock());
+        $blocker = new BacklogServiceBlocker(
+            RetrieveFullProjectStub::withProject($project),
+        );
+        self::assertTrue(
+            $blocker->shouldBacklogServiceBeBlocked(ProjectIdentifierStub::buildWithId(self::PROJECT_ID))
+        );
     }
 }

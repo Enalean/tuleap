@@ -103,36 +103,21 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic
 
     public function fetchForSemanticsHomepage(): string
     {
-        $is_project_allowed_to_use_split_kanban = (new \Tuleap\Kanban\CheckSplitKanbanConfiguration(EventManager::instance()))
-            ->isProjectAllowedToUseSplitKanban($this->tracker->getProject());
-
-        $html = dgettext('tuleap-agiledashboard', 'This is used in the Agile Dashboard if enabled.');
-        if ($is_project_allowed_to_use_split_kanban) {
-            $html = dgettext('tuleap-agiledashboard', 'This is used in the Backlog if enabled.');
-        }
+        $html = dgettext('tuleap-agiledashboard', 'This is used in the Backlog if enabled.');
 
         if ($field = Tracker_FormElementFactory::instance()->getUsedFormElementById($this->getFieldId())) {
             $purifier = Codendi_HTMLPurifier::instance();
 
-            if ($is_project_allowed_to_use_split_kanban) {
-                $html .= '<p>' . sprintf(
-                    dgettext(
-                        'tuleap-agiledashboard',
-                        'The initial effort of this tracker will be represented in the Backlog by the field %s.'
-                    ),
-                    '<strong>' . $purifier->purify($field->getLabel()) . '</strong>'
-                ) . '</p>';
-                return $html;
-            }
             $html .= '<p>' . sprintf(
                 dgettext(
                     'tuleap-agiledashboard',
-                    'The initial effort of this tracker will be represented in the Agile Dashboard by the field %s.'
+                    'The initial effort of this tracker will be represented in the Backlog by the field %s.'
                 ),
                 '<strong>' . $purifier->purify($field->getLabel()) . '</strong>'
             ) . '</p>';
             return $html;
         }
+
         $html .= '<p>' . sprintf(
             dgettext('tuleap-agiledashboard', 'This tracker does not have an %s initial effort %s field yet.'),
             '<em>',

@@ -32,7 +32,6 @@ use Tuleap\AgileDashboard\BlockScrumAccess;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
 use Tuleap\GlobalResponseMock;
-use Tuleap\Kanban\CheckSplitKanbanConfiguration;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -81,7 +80,6 @@ class AdditionalMasschangeActionProcessorTest extends TestCase
             $this->planned_artifact_dao,
             $this->unplanned_artifacts_adder,
             $this->event_dispatcher,
-            new CheckSplitKanbanConfiguration($this->event_dispatcher)
         );
         $user            = UserTestBuilder::buildWithDefaults();
         $this->processor->processAction($user, $this->tracker, $request, ['125', '144']);

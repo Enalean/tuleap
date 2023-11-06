@@ -24,7 +24,6 @@ use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2Presenter;
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
 use Tuleap\AgileDashboard\Planning\AllowedAdditionalPanesToDisplayCollector;
-use Tuleap\Kanban\CheckSplitKanbanConfiguration;
 use Tuleap\Tracker\Milestone\PaneInfo;
 
 /**
@@ -186,8 +185,6 @@ class Planning_MilestonePaneFactory // phpcs:ignore PSR1.Classes.ClassDeclaratio
 
         $project = $this->request->getProject();
 
-        $is_split_feature_flag_enabled = (new CheckSplitKanbanConfiguration($this->event_manager))->isProjectAllowedToUseSplitKanban($project);
-
         return new AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane(
             $info,
             new PlanningV2Presenter(
@@ -196,7 +193,6 @@ class Planning_MilestonePaneFactory // phpcs:ignore PSR1.Classes.ClassDeclaratio
                 (string) $milestone->getArtifactId(),
                 false,
                 $allowed_additional_panes_to_display_collector->getIdentifiers(),
-                $is_split_feature_flag_enabled
             )
         );
     }

@@ -22,19 +22,13 @@ namespace Tuleap\AgileDashboard;
 
 use AgileDashboard_BacklogItemDao;
 use AgileDashboard_ConfigurationManager;
-use AgileDashboard_FirstScrumCreator;
 use Codendi_Request;
 use CSRFSynchronizerToken;
 use EventManager;
 use MilestoneReportCriterionDao;
-use PFUser;
 use Planning_MilestoneFactory;
 use PlanningFactory;
 use Project;
-use ProjectXMLImporter;
-use Tracker_ReportFactory;
-use TrackerFactory;
-use TrackerXmlImport;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
@@ -52,47 +46,25 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDisabler;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneEnabler;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
-use Tuleap\AgileDashboard\ServiceAdministration\ConfigurationResponse;
 use Tuleap\AgileDashboard\ServiceAdministration\RedirectURI;
 use Tuleap\AgileDashboard\ServiceAdministration\ScrumConfigurationUpdater;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
-use Tuleap\Kanban\AdminKanbanPresenter;
-use Tuleap\Kanban\CheckSplitKanbanConfiguration;
-use Tuleap\Kanban\FirstKanbanCreator;
-use Tuleap\Kanban\KanbanConfigurationUpdater;
-use Tuleap\Kanban\KanbanFactory;
-use Tuleap\Kanban\KanbanManager;
-use Tuleap\Kanban\Legacy\LegacyConfigurationDao;
-use Tuleap\Kanban\Service\KanbanService;
-use Tuleap\Kanban\SplitKanbanConfigurationChecker;
-use Tuleap\Kanban\TrackerReport\TrackerReportDao;
-use Tuleap\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
-use UserManager;
-use XMLImportHelper;
+use Tuleap\Request\ForbiddenException;
 
 class AdminController extends BaseController
 {
-    /** @var KanbanFactory */
-    private $kanban_factory;
-
     /** @var PlanningFactory */
     private $planning_factory;
 
-    /** @var KanbanManager */
-    private $kanban_manager;
-
     /** @var AgileDashboard_ConfigurationManager */
     private $config_manager;
-
-    /** @var TrackerFactory */
-    private $tracker_factory;
 
     /** @var EventManager */
     private $event_manager;
@@ -123,27 +95,20 @@ class AdminController extends BaseController
     public function __construct(
         Codendi_Request $request,
         PlanningFactory $planning_factory,
-        KanbanManager $kanban_manager,
-        KanbanFactory $kanban_factory,
         AgileDashboard_ConfigurationManager $config_manager,
-        TrackerFactory $tracker_factory,
         EventManager $event_manager,
         AgileDashboardCrumbBuilder $service_crumb_builder,
         AdministrationCrumbBuilder $admin_crumb_builder,
         CountElementsModeChecker $count_elements_mode_checker,
         ScrumPresenterBuilder $scrum_presenter_builder,
         private readonly BaseLayout $layout,
-        private readonly SplitKanbanConfigurationChecker $split_kanban_configuration_checker,
     ) {
         parent::__construct('agiledashboard', $request);
 
         $this->group_id                    = (int) $this->request->get('group_id');
         $this->project                     = $this->request->getProject();
         $this->planning_factory            = $planning_factory;
-        $this->kanban_manager              = $kanban_manager;
-        $this->kanban_factory              = $kanban_factory;
         $this->config_manager              = $config_manager;
-        $this->tracker_factory             = $tracker_factory;
         $this->event_manager               = $event_manager;
         $this->service_crumb_builder       = $service_crumb_builder;
         $this->admin_crumb_builder         = $admin_crumb_builder;
@@ -179,7 +144,7 @@ class AdminController extends BaseController
      */
     public function adminScrum(\Closure $displayHeader, \Closure $displayFooter): void
     {
-        $this->redirectToKanbanPaneIfScrumAccessIsBlocked();
+        $this->checkScrumAccessIsNotBlocked();
         $this->layout->addJavascriptAsset(
             new JavascriptViteAsset(
                 new IncludeViteAssets(
@@ -190,12 +155,7 @@ class AdminController extends BaseController
             )
         );
 
-        $is_project_allowed_to_use_split_kanban = $this->split_kanban_configuration_checker
-            ->isProjectAllowedToUseSplitKanban($this->project);
-
-        $title = $is_project_allowed_to_use_split_kanban
-            ? dgettext('tuleap-agiledashboard', 'Scrum Administration of Backlog')
-            : dgettext('tuleap-agiledashboard', 'Scrum Administration of Agile Dashboard');
+        $title = dgettext('tuleap-agiledashboard', 'Scrum Administration of Backlog');
 
         $displayHeader(
             $title,
@@ -219,35 +179,9 @@ class AdminController extends BaseController
      * @param \Closure(string $title, BreadCrumbCollection $breadcrumbs, \Tuleap\Layout\HeaderConfiguration $header_configuration): void $displayHeader
      * @param \Closure(): void $displayFooter
      */
-    public function adminKanban(\Closure $displayHeader, \Closure $displayFooter): void
-    {
-        $title = dgettext('tuleap-agiledashboard', 'Kanban Administration of Agile Dashboard');
-
-        $displayHeader(
-            $title,
-            $this->getBreadcrumbs(),
-            HeaderConfigurationBuilder::get($title)
-                ->inProject($this->project, \AgileDashboardPlugin::PLUGIN_SHORTNAME)
-                ->withBodyClass(['agiledashboard-body'])
-                ->build()
-        );
-        echo $this->renderToString(
-            'admin-kanban',
-            $this->getAdminKanbanPresenter(
-                $this->getCurrentUser(),
-                (int) $this->group_id
-            )
-        );
-        $displayFooter();
-    }
-
-    /**
-     * @param \Closure(string $title, BreadCrumbCollection $breadcrumbs, \Tuleap\Layout\HeaderConfiguration $header_configuration): void $displayHeader
-     * @param \Closure(): void $displayFooter
-     */
     public function adminCharts(\Closure $displayHeader, \Closure $displayFooter): void
     {
-        $this->redirectToKanbanPaneIfScrumAccessIsBlocked();
+        $this->checkScrumAccessIsNotBlocked();
         $title = dgettext("tuleap-agiledashboard", "Charts configuration");
         $displayHeader(
             $title,
@@ -266,18 +200,6 @@ class AdminController extends BaseController
         $displayFooter();
     }
 
-    private function getAdminKanbanPresenter(PFUser $user, int $project_id): AdminKanbanPresenter
-    {
-        $has_kanban = count($this->kanban_factory->getListOfKanbansForProject($user, $project_id)) > 0;
-
-        return new AdminKanbanPresenter(
-            $project_id,
-            $this->config_manager->kanbanIsActivatedForProject($project_id),
-            $has_kanban,
-            $this->isScrumAccessible(),
-        );
-    }
-
     public function updateConfiguration(): void
     {
         if (! $this->request->getCurrentUser()->isAdmin($this->group_id)) {
@@ -292,38 +214,10 @@ class AdminController extends BaseController
         $token = new CSRFSynchronizerToken('/plugins/agiledashboard/?action=admin');
         $token->check();
 
-        $request_comes_from_homepage = $this->request->exist('home-ease-onboarding');
+        $request_comes_from_homepage = false;
         $project                     = $this->request->getProject();
-        $response                    = new ConfigurationResponse();
 
         $this->additional_scrum_sections->notifyAdditionalSectionsControllers(\HTTPRequest::instance());
-
-        if ($this->request->exist('activate-kanban')) {
-            $legacy_kanban_configuration_dao = new LegacyConfigurationDao();
-
-            $updater = new KanbanConfigurationUpdater(
-                $this->request,
-                $legacy_kanban_configuration_dao,
-                $legacy_kanban_configuration_dao,
-                $legacy_kanban_configuration_dao,
-                $response,
-                new FirstKanbanCreator(
-                    $project,
-                    $this->kanban_manager,
-                    $this->tracker_factory,
-                    TrackerXmlImport::build(new XMLImportHelper(UserManager::instance())),
-                    $this->kanban_factory,
-                    new TrackerReportUpdater(new TrackerReportDao()),
-                    Tracker_ReportFactory::instance()
-                )
-            );
-
-            $updater->updateConfiguration();
-            $redirect_uri = $request_comes_from_homepage
-                ? RedirectURI::buildLegacyAgileDashboardHomepage($project)
-                : RedirectURI::buildLegacyKanbanAdministration($project);
-            $this->layout->redirect((string) $redirect_uri);
-        }
 
         if ($this->request->exist("burnup-count-mode")) {
             $updater = new AgileDashboardChartsConfigurationUpdater(
@@ -343,15 +237,6 @@ class AdminController extends BaseController
         $updater                  = new ScrumConfigurationUpdater(
             $this->request,
             $this->config_manager,
-            $response,
-            new AgileDashboard_FirstScrumCreator(
-                $this->planning_factory,
-                $this->tracker_factory,
-                ProjectXMLImporter::build(
-                    new XMLImportHelper(UserManager::instance()),
-                    \ProjectCreator::buildSelfByPassValidation()
-                )
-            ),
             new ScrumForMonoMilestoneEnabler($scrum_mono_milestone_dao),
             new ScrumForMonoMilestoneDisabler($scrum_mono_milestone_dao),
             new ScrumForMonoMilestoneChecker($scrum_mono_milestone_dao, $this->planning_factory),
@@ -371,7 +256,6 @@ class AdminController extends BaseController
                 $this->event_manager
             ),
             $this->event_manager,
-            new CheckSplitKanbanConfiguration($this->event_manager),
             new MilestonesInSidebarDao(),
         );
 
@@ -381,9 +265,7 @@ class AdminController extends BaseController
             \Feedback::INFO,
             dgettext('tuleap-agiledashboard', 'Scrum configuration successfully updated.')
         );
-        $redirect_uri = $request_comes_from_homepage
-            ? RedirectURI::buildLegacyAgileDashboardHomepage($project)
-            : RedirectURI::buildScrumAdministration($project);
+        $redirect_uri = RedirectURI::buildScrumAdministration($project);
         $this->layout->redirect((string) $redirect_uri);
     }
 
@@ -395,10 +277,10 @@ class AdminController extends BaseController
         return $block_access_scrum->isScrumAccessEnabled();
     }
 
-    private function redirectToKanbanPaneIfScrumAccessIsBlocked(): void
+    private function checkScrumAccessIsNotBlocked(): void
     {
         if (! $this->isScrumAccessible()) {
-            $this->redirect(['group_id' => $this->project->getID(), 'action' => 'admin', 'pane' => 'kanban']);
+            throw new ForbiddenException();
         }
     }
 
@@ -406,17 +288,10 @@ class AdminController extends BaseController
     {
         $token = new CSRFSynchronizerToken('/plugins/agiledashboard/?action=admin');
 
-        $service                 = $project->getService(KanbanService::SERVICE_SHORTNAME);
-        $is_using_kanban_service = $service !== null;
-
-        $is_split_feature_flag_enabled = $this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project);
-        $is_legacy_agiledashboard      = ! $is_split_feature_flag_enabled;
-
         return new AdminChartsPresenter(
             $project,
             $token,
             $this->count_elements_mode_checker->burnupMustUseCountElementsMode($project),
-            $is_legacy_agiledashboard,
         );
     }
 }

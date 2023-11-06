@@ -25,16 +25,13 @@ use Planning_Milestone;
 use Project;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
-use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 
 class AllBreadCrumbsForMilestoneBuilder
 {
     public function __construct(
         private readonly AgileDashboardCrumbBuilder $agile_dashboard_crumb_builder,
-        private readonly VirtualTopMilestoneCrumbBuilder $top_milestone_crumb_builder,
         private readonly MilestoneCrumbBuilder $milestone_crumb_builder,
-        private readonly \Tuleap\Kanban\SplitKanbanConfigurationChecker $split_kanban_configuration_checker,
     ) {
     }
 
@@ -44,11 +41,6 @@ class AllBreadCrumbsForMilestoneBuilder
         $breadcrumbs->addBreadCrumb(
             $this->agile_dashboard_crumb_builder->build($user, $project)
         );
-        if (! $this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project)) {
-            $breadcrumbs->addBreadCrumb(
-                $this->top_milestone_crumb_builder->build($project)
-            );
-        }
 
         if ($milestone->getArtifact()) {
             foreach (array_reverse($milestone->getAncestors()) as $ancestor) {

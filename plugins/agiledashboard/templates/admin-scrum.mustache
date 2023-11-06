@@ -1,10 +1,5 @@
 <h1 class="agiledashboard-administration-title">
-    {{# is_legacy_agiledashboard }}
-        {{# dgettext }} tuleap-agiledashboard | Agile Dashboard administration {{/ dgettext }}
-    {{/ is_legacy_agiledashboard }}
-    {{^ is_legacy_agiledashboard }}
-        {{# dgettext }} tuleap-agiledashboard | Backlog administration {{/ dgettext }}
-    {{/ is_legacy_agiledashboard }}
+    {{# dgettext }} tuleap-agiledashboard | Backlog administration {{/ dgettext }}
 </h1>
 
 <div class="main-project-tabs">
@@ -12,11 +7,6 @@
         <a class="tlp-tab tlp-tab-active"
            href="?group_id={{ group_id }}&action=admin&pane=scrum">{{# dgettext }} tuleap-agiledashboard | Scrum {{/ dgettext }}
         </a>
-        {{# is_legacy_agiledashboard }}
-            <a class="tlp-tab"
-               href="?group_id={{ group_id }}&action=admin&pane=kanban" data-test="admin-kanban-pane">{{# dgettext }} tuleap-agiledashboard | Kanban {{/ dgettext }}
-            </a>
-        {{/ is_legacy_agiledashboard }}
         <a class="tlp-tab"
            href="?group_id={{ group_id }}&action=admin&pane=charts">{{# dgettext }} tuleap-agiledashboard | Charts {{/ dgettext }}
         </a>
@@ -35,26 +25,6 @@
                         </h1>
                     </div>
                     <section class="tlp-pane-section">
-                        {{# is_legacy_agiledashboard }}
-                            <div class="tlp-form-element">
-                                <label class="tlp-label tlp-checkbox">
-                                    <input type="checkbox"
-                                        id="activate-scrum"
-                                        name="activate-scrum"
-                                        value="1"
-                                        {{# scrum_activated }} checked {{/ scrum_activated }}
-                                    > {{ activate_scrum_label }}
-                                </label>
-                                {{^ scrum_activated }}
-                                    {{^ has_plannings }}
-                                        <p class="tlp-text-info">
-                                            <i class="fa fa-info-circle"></i> {{ first_scrum_will_be_created }}
-                                        </p>
-                                    {{/ has_plannings }}
-                                {{/ scrum_activated }}
-                            </div>
-                        {{/ is_legacy_agiledashboard }}
-
                         {{# can_scrum_mono_milestone_be_enabled }}
                             <div class="tlp-form-element">
                                 <label class="tlp-label tlp-checkbox">

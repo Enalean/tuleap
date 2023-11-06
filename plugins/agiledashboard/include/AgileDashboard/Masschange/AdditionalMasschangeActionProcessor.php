@@ -32,7 +32,6 @@ use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactAlreadyPlannedException;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
-use Tuleap\Kanban\SplitKanbanConfigurationChecker;
 
 class AdditionalMasschangeActionProcessor
 {
@@ -41,7 +40,6 @@ class AdditionalMasschangeActionProcessor
         private readonly PlannedArtifactDao $planned_artifact_dao,
         private readonly UnplannedArtifactsAdder $unplanned_artifacts_adder,
         private readonly EventDispatcherInterface $event_dispatcher,
-        private readonly SplitKanbanConfigurationChecker $split_kanban_configuration_checker,
     ) {
     }
 
@@ -90,12 +88,9 @@ class AdditionalMasschangeActionProcessor
                 $GLOBALS['Response']->addFeedback(
                     Feedback::WARN,
                     sprintf(
-                        $this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project) ? dgettext(
+                        dgettext(
                             'tuleap-agiledashboard',
                             "Artifact #%d not removed from the backlog because it's already planned in a submilestone."
-                        ) : dgettext(
-                            'tuleap-agiledashboard',
-                            "Artifact #%d not removed from the top backlog because it's already planned in a submilestone."
                         ),
                         $artifact_id
                     )
@@ -123,12 +118,9 @@ class AdditionalMasschangeActionProcessor
                 $GLOBALS['Response']->addFeedback(
                     Feedback::WARN,
                     sprintf(
-                        $this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project) ? dgettext(
+                        dgettext(
                             'tuleap-agiledashboard',
                             "Artifact #%d not added in the backlog because it's already planned in a submilestone."
-                        ) : dgettext(
-                            'tuleap-agiledashboard',
-                            "Artifact #%d not added in the top backlog because it's already planned in a submilestone."
                         ),
                         $artifact_id
                     )

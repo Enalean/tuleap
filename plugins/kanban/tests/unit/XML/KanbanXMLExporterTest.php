@@ -25,7 +25,7 @@ namespace Tuleap\Kanban\XML;
 
 use Tuleap\Kanban\Kanban;
 use Tuleap\Kanban\KanbanFactory;
-use Tuleap\Kanban\Stubs\Legacy\LegacyKanbanRetrieverStub;
+use Tuleap\Kanban\Service\KanbanService;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use XML_RNGValidator;
@@ -34,14 +34,15 @@ final class KanbanXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItExportsNothingIfNoKanban(): void
     {
-        $project = ProjectTestBuilder::aProject()->build();
+        $project = ProjectTestBuilder::aProject()
+            ->withoutServices()
+            ->build();
 
         $xml_data    = '<?xml version="1.0" encoding="UTF-8"?>
                  <project></project>';
         $xml_element = new \SimpleXMLElement($xml_data);
 
         $kanban_export = new KanbanXMLExporter(
-            LegacyKanbanRetrieverStub::withoutActivatedKanban(),
             $this->createMock(KanbanFactory::class),
             $this->createMock(XML_RNGValidator::class),
         );
@@ -52,7 +53,9 @@ final class KanbanXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItExportsKanban(): void
     {
-        $project = ProjectTestBuilder::aProject()->build();
+        $project = ProjectTestBuilder::aProject()
+            ->withUsedService(KanbanService::SERVICE_SHORTNAME)
+            ->build();
 
         $kanban1 = new Kanban(10, TrackerTestBuilder::aTracker()->withId(1)->build(), true, 'Alice task');
         $kanban2 = new Kanban(20, TrackerTestBuilder::aTracker()->withId(2)->build(), false, 'Bob task');
@@ -74,7 +77,6 @@ final class KanbanXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $xml_validator->expects(self::once())->method('validate');
 
         $kanban_export = new KanbanXMLExporter(
-            LegacyKanbanRetrieverStub::withActivatedKanban(),
             $kanban_factory,
             $xml_validator,
         );
@@ -101,7 +103,9 @@ final class KanbanXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItUsesAlreadyCreatedAgiledashboardNode(): void
     {
-        $project = ProjectTestBuilder::aProject()->build();
+        $project = ProjectTestBuilder::aProject()
+            ->withUsedService(KanbanService::SERVICE_SHORTNAME)
+            ->build();
 
         $kanban = new Kanban(10, TrackerTestBuilder::aTracker()->withId(1)->build(), false, 'Alice task');
 
@@ -117,7 +121,6 @@ final class KanbanXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $xml_validator->expects(self::once())->method('validate');
 
         $kanban_export = new KanbanXMLExporter(
-            LegacyKanbanRetrieverStub::withActivatedKanban(),
             $kanban_factory,
             $xml_validator,
         );

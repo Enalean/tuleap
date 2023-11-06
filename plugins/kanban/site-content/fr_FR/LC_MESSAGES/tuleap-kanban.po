@@ -26,16 +26,6 @@ msgid_plural "%s open"
 msgstr[0] "%s ouverte"
 msgstr[1] "%s ouvertes"
 
-msgid ""
-"A first Kanban will be created during the activation. This operation can "
-"take a few seconds."
-msgstr ""
-"Une première instance de Kanban sera créée lors de l'activation. Ceci peut "
-"prendre quelques secondes."
-
-msgid "Activate Kanban"
-msgstr "Activer Kanban"
-
 msgid "Add Kanban to dashboard"
 msgstr "Ajouter Kanban au tableau de bord"
 
@@ -80,9 +70,6 @@ msgstr "Erreur pendant la création du Kanban %1$s."
 msgid "Filter:"
 msgstr "Filtre :"
 
-msgid "General settings"
-msgstr "Options générales"
-
 msgid "Kanban"
 msgstr "Kanban"
 
@@ -95,12 +82,6 @@ msgstr "Tableaux Kanban"
 
 msgid "Kanban cards"
 msgstr "Cartes de Kanban"
-
-msgid "Kanban is currently active."
-msgstr "Kanban est actuellement actif."
-
-msgid "Kanban is not currently active."
-msgstr "Kanban n'est actuellement pas actif."
 
 msgid "Kanban name"
 msgstr "Nom du Kanban"
@@ -120,9 +101,6 @@ msgstr "Aucun"
 msgid "Nothing to see here."
 msgstr "Il n'y a rien ici."
 
-msgid "Save"
-msgstr "Sauvegarder"
-
 msgid "Source tracker"
 msgstr "Tracker source"
 
@@ -134,24 +112,6 @@ msgstr "Il n’y a aucun élément visible"
 
 msgid "Tracker already used by another Kanban."
 msgstr "Le tracker est déjà utilisé par un autre Kanban."
-
-#, php-format
-msgid "We created <a href=\"%1$s\">a first kanban</a> for you. Enjoy!"
-msgstr ""
-"Une <a href=\"%1$s\">première instance de kanban</a> a été créée pour vous !"
-
-#, php-format
-msgid ""
-"We tried to create a first kanban for you but an existing tracker (%1$s) "
-"prevented it."
-msgstr ""
-"Un outil de suivi existant (%1$s) a empêché la création d'une première "
-"instance de kanban."
-
-msgid ""
-"We tried to create a first kanban for you but an internal error prevented it."
-msgstr ""
-"Une erreur interne a empêché la création d'une première instance de kanban."
 
 msgid "closed"
 msgstr "fermés"

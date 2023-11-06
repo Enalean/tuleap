@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\Kanban;
 
 use PFUser;
-use Project;
 use Tracker;
 use TrackerFactory;
 
@@ -72,22 +71,6 @@ class KanbanManager
 
             $tracker_representation['used'] = false;
             $trackers[]                     = $tracker_representation;
-        }
-
-        return $trackers;
-    }
-
-    /**
-     * @return Tracker[]
-     */
-    public function getTrackersUsedAsKanban(Project $project): array
-    {
-        $trackers = [];
-        foreach ($this->dao->getKanbansForProject((int) $project->getId()) as $row) {
-            $tracker = $this->tracker_factory->getTrackerById($row['tracker_id']);
-            if ($tracker) {
-                $trackers[] = $tracker;
-            }
         }
 
         return $trackers;

@@ -24,7 +24,6 @@ use ForgeConfig;
 use PFUser;
 use Project;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Tuleap\Project\Service\HideServiceInUserInterfaceEvent;
 use Tuleap\Project\Service\CollectServicesAllowedForRestrictedEvent;
 use Tuleap\Project\Service\ProjectDefinedService;
 use Tuleap\Project\Service\UserCanAccessToServiceEvent;
@@ -119,7 +118,8 @@ class ProjectSidebarToolsBuilder
         if (! $is_permission_allowed_for_user) {
             return false;
         }
-        return $this->event_manager->dispatch(new HideServiceInUserInterfaceEvent($service))->isShown();
+
+        return true;
     }
 
     private function getLink(\Service $service, Project $project): string

@@ -43,22 +43,6 @@ final class RedirectURITest extends TestCase
         );
     }
 
-    public function testItBuildsLegacyKanbanAdministrationURI(): void
-    {
-        self::assertSame(
-            '/plugins/agiledashboard/?group_id=' . self::PROJECT_ID . '&action=admin&pane=kanban',
-            (string) RedirectURI::buildLegacyKanbanAdministration($this->project)
-        );
-    }
-
-    public function testItBuildsLegacyAgileDashboardHomePageURI(): void
-    {
-        self::assertSame(
-            '/plugins/agiledashboard/?group_id=' . self::PROJECT_ID,
-            (string) RedirectURI::buildLegacyAgileDashboardHomepage($this->project)
-        );
-    }
-
     public function testItBuildsProjectBacklogURI(): void
     {
         self::assertSame(

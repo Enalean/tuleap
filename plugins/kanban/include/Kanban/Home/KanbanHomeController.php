@@ -25,7 +25,6 @@ namespace Tuleap\Kanban\Home;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use PFUser;
 use Project;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -34,9 +33,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Kanban\KanbanItemDao;
 use Tuleap\Kanban\KanbanManager;
-use Tuleap\Kanban\Legacy\ServiceForKanbanEvent;
 use Tuleap\Kanban\Service\KanbanService;
-use Tuleap\Kanban\SplitKanbanConfigurationChecker;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -51,8 +48,6 @@ final class KanbanHomeController extends DispatchablePSR15Compatible implements 
         private readonly KanbanFactory $kanban_factory,
         private readonly KanbanItemDao $kanban_item_dao,
         private readonly \TemplateRendererFactory $renderer_factory,
-        private readonly SplitKanbanConfigurationChecker $splitted_kanban_configuration_checker,
-        private readonly EventDispatcherInterface $dispatcher,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
     ) {
@@ -71,18 +66,8 @@ final class KanbanHomeController extends DispatchablePSR15Compatible implements 
         assert($layout instanceof BaseLayout);
 
         $service = $project->getService(KanbanService::SERVICE_SHORTNAME);
-        if (
-            ! $service instanceof KanbanService ||
-            ! $this->splitted_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project)
-        ) {
-            $legacy_service = $this->dispatcher->dispatch(new ServiceForKanbanEvent($project))->service;
-            if (! $legacy_service) {
-                throw new NotFoundException();
-            }
-
-            return $this->response_factory
-                ->createResponse(302)
-                ->withHeader('Location', $legacy_service->getUrl());
+        if (! $service instanceof KanbanService) {
+            throw new NotFoundException();
         }
 
         ob_start();
