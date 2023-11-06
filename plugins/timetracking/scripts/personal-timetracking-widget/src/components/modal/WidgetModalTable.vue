@@ -21,9 +21,9 @@
     <table class="tlp-table">
         <thead>
             <tr>
-                <th v-translate>Date</th>
-                <th v-translate>Steps</th>
-                <th v-translate>Times</th>
+                <th>{{ $gettext("Date") }}</th>
+                <th>{{ $gettext("Steps") }}</th>
+                <th>{{ $gettext("Times") }}</th>
             </tr>
         </thead>
         <tbody v-if="has_times_on_artifact" data-test="table-body-with-row">
@@ -47,8 +47,8 @@
                 data-test="edit-time-without-row"
             />
             <tr>
-                <td colspan="4" class="tlp-table-cell-empty" v-translate>
-                    No tracked times have been found for this period and artifact
+                <td colspan="4" class="tlp-table-cell-empty">
+                    {{ $gettext("No tracked times have been found for this period and artifact") }}
                 </td>
             </tr>
         </tbody>

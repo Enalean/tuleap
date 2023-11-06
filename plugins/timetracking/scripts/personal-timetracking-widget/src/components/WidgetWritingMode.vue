@@ -22,7 +22,7 @@
         <div class="timetracking-writing-mode-selected-dates">
             <div class="tlp-form-element timetracking-writing-mode-selected-date">
                 <label for="timetracking-start-date" class="tlp-label">
-                    <translate>From</translate>
+                    {{ $gettext("From") }}
                     <i class="fa fa-asterisk"></i>
                 </label>
                 <div class="tlp-form-element tlp-form-element-prepend">
@@ -41,7 +41,7 @@
 
             <div class="tlp-form-element timetracking-writing-mode-selected-date">
                 <label for="timetracking-end-date" class="tlp-label">
-                    <translate>To</translate>
+                    {{ $gettext("To") }}
                     <i class="fa fa-asterisk"></i>
                 </label>
                 <div class="tlp-form-element tlp-form-element-prepend">
@@ -63,18 +63,16 @@
                 class="tlp-button-primary tlp-button-outline"
                 type="button"
                 v-on:click="toggleReadingMode()"
-                v-translate
             >
-                Cancel
+                {{ $gettext("Cancel") }}
             </button>
             <button
                 class="tlp-button-primary timetracking-writing-search"
                 type="button"
                 data-test="timetracking-search-for-dates"
                 v-on:click="changeDates"
-                v-translate
             >
-                Search
+                {{ $gettext("Search") }}
             </button>
         </div>
     </form>

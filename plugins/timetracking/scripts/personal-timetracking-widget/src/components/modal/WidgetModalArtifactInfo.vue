@@ -20,7 +20,7 @@
 <template>
     <div class="timetracking-details-modal-artifact-infos-container">
         <div class="timetracking-details-modal-artifact-infos">
-            <span v-translate>Submission date</span>
+            <span>{{ $gettext("Submission date") }}</span>
             <span>
                 {{ submission_date }}
             </span>
@@ -40,7 +40,7 @@
                         transform="translate(-23 -16)"
                     />
                 </svg>
-                <translate>Project</translate>
+                {{ $gettext("Project") }}
             </span>
             <span class="timetracking-details-modal-artifact-infos-project-name">
                 <a v-bind:href="project_link">

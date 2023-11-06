@@ -182,4 +182,32 @@ describe("Store mutations", () => {
             });
         });
     });
+    describe("sortTimesChronologically", () => {
+        it("return times sorted on dates", () => {
+            const times = [
+                {
+                    artifact: {},
+                    project: {},
+                    minutes: 20,
+                    date: "2018-03-01",
+                },
+                {
+                    artifact: {},
+                    project: {},
+                    minutes: 20,
+                    date: "2018-02-01",
+                },
+                {
+                    artifact: {},
+                    project: {},
+                    minutes: 20,
+                    date: "2018-01-01",
+                },
+            ];
+            const sorted_times = [times[1], times[0], times[2]].sort((a, b) => {
+                return new Date(b.date) - new Date(a.date);
+            });
+            expect(sorted_times).toEqual(times);
+        });
+    });
 });

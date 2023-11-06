@@ -21,19 +21,18 @@
     <section class="tlp-popover tlp-popover-danger">
         <div class="tlp-popover-arrow"></div>
         <div class="tlp-popover-header">
-            <h1 class="tlp-popover-title" v-translate>Wait a minute...</h1>
+            <h1 class="tlp-popover-title">{{ $gettext("Wait a minute...") }}</h1>
         </div>
         <div class="tlp-popover-body">
-            <p v-translate>You're about to remove the time. Please confirm your action.</p>
+            <p>{{ $gettext("You're about to remove the time. Please confirm your action.") }}</p>
         </div>
         <div class="tlp-popover-footer">
             <button
                 type="button"
                 class="tlp-button-danger tlp-button-outline"
                 data-dismiss="popover"
-                v-translate
             >
-                Cancel
+                {{ $gettext("Cancel") }}
             </button>
             <button
                 type="button"
@@ -41,9 +40,8 @@
                 v-on:click="removeTime"
                 data-dismiss="popover"
                 data-test="timetracking-confirm-time-deletion"
-                v-translate
             >
-                Confirm deletion
+                {{ $gettext("Confirm deletion") }}
             </button>
         </div>
     </section>

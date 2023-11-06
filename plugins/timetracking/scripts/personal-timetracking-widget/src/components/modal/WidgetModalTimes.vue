@@ -21,7 +21,7 @@
     <div class="tlp-modal" role="dialog">
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title">
-                <translate>Detailed times</translate>
+                {{ $gettext("Detailed times") }}
             </h1>
             <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="Close">
                 <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
@@ -34,7 +34,7 @@
                 class="tlp-button-primary tlp-button-outline tlp-modal-action"
                 data-dismiss="modal"
             >
-                <translate>Close</translate>
+                {{ $gettext("Close") }}
             </button>
         </div>
     </div>
