@@ -124,7 +124,7 @@ function forum_header(array $params)
                 if (user_ismember($group_id, 'F2')) {
                     $admin_link = new BreadCrumbLink(
                         _('Administration'),
-                        '/forum/admin/?group_id=' . urlencode($group_id),
+                        '/forum/admin/?group_id=' . urlencode((string) $group_id),
                     );
 
                     $sub_items = new BreadCrumbSubItems();

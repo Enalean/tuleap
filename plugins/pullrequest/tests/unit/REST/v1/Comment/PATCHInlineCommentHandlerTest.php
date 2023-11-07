@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Tests\PullRequest\REST\v1\Comment;
 
+use Tuleap\Git\Tests\Stub\RetrieveGitRepositoryStub;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -44,6 +45,7 @@ use Tuleap\PullRequest\Tests\Stub\InlineCommentSearcherStub;
 use Tuleap\PullRequest\Tests\Stub\SearchPullRequestStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\ExtractAndSaveCrossReferencesStub;
 
 final class PATCHInlineCommentHandlerTest extends TestCase
 {
@@ -54,6 +56,7 @@ final class PATCHInlineCommentHandlerTest extends TestCase
     private \PFUser $comment_author;
     private CheckUserCanAccessPullRequestStub $permission_checker;
     private InlineCommentSaverStub $comment_saver;
+    private ExtractAndSaveCrossReferencesStub $cross_references_saver;
 
     protected function setUp(): void
     {
@@ -66,9 +69,10 @@ final class PATCHInlineCommentHandlerTest extends TestCase
             ->byAuthor($this->comment_author)
             ->build();
 
-        $this->comment_searcher   = InlineCommentSearcherStub::withComment($inline_comment);
-        $this->permission_checker = CheckUserCanAccessPullRequestStub::withAllowed();
-        $this->comment_saver      = InlineCommentSaverStub::withCallCount();
+        $this->comment_searcher       = InlineCommentSearcherStub::withComment($inline_comment);
+        $this->permission_checker     = CheckUserCanAccessPullRequestStub::withAllowed();
+        $this->comment_saver          = InlineCommentSaverStub::withCallCount();
+        $this->cross_references_saver = ExtractAndSaveCrossReferencesStub::withCallCount();
     }
 
     /**
@@ -81,6 +85,8 @@ final class PATCHInlineCommentHandlerTest extends TestCase
             new PullRequestRetriever(SearchPullRequestStub::withPullRequest($this->pull_request)),
             $this->permission_checker,
             $this->comment_saver,
+            RetrieveGitRepositoryStub::withGitRepository(new \GitRepository()),
+            $this->cross_references_saver
         );
         return $handler->handle(
             $this->comment_author,
@@ -97,6 +103,7 @@ final class PATCHInlineCommentHandlerTest extends TestCase
         self::assertSame(1, $this->comment_saver->getCallCount());
         $updated_comment = $this->comment_saver->getLastArgument();
         self::assertSame($this->updated_content, $updated_comment?->getContent());
+        self::assertSame(1, $this->cross_references_saver->getCallCount());
     }
 
     public function testItReturnsAnErrWhenInlineCommentCantBeFound(): void

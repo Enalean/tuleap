@@ -70,14 +70,15 @@ final class PullRequestInlineCommentsResource extends AuthenticatedResource
             throw new RestException(501, 'This route is under construction');
         }
 
-        $current_user       = \UserManager::instance()->getCurrentUser();
-        $pull_request_dao   = new \Tuleap\PullRequest\Dao();
-        $inline_comment_dao = new \Tuleap\PullRequest\InlineComment\Dao();
-        $handler            = new PATCHInlineCommentHandler(
+        $current_user           = \UserManager::instance()->getCurrentUser();
+        $pull_request_dao       = new \Tuleap\PullRequest\Dao();
+        $inline_comment_dao     = new \Tuleap\PullRequest\InlineComment\Dao();
+        $git_repository_factory = new \GitRepositoryFactory(new \GitDao(), \ProjectManager::instance());
+        $handler                = new PATCHInlineCommentHandler(
             new InlineCommentRetriever($inline_comment_dao),
             new PullRequestRetriever($pull_request_dao),
             new PullRequestPermissionChecker(
-                new \GitRepositoryFactory(new \GitDao(), \ProjectManager::instance()),
+                $git_repository_factory,
                 new ProjectAccessChecker(
                     new RestrictedUserCanAccessProjectVerifier(),
                     \EventManager::instance()
@@ -87,7 +88,9 @@ final class PullRequestInlineCommentsResource extends AuthenticatedResource
                     new \System_Command()
                 )
             ),
-            $inline_comment_dao
+            $inline_comment_dao,
+            $git_repository_factory,
+            new \ReferenceManager()
         );
         $handler->handle($current_user, $id, $comment_data)->mapErr(FaultMapper::mapToRestException(...));
     }

@@ -21,6 +21,7 @@
 
 use Tuleap\Reference\CrossReference;
 use Tuleap\Reference\CrossReferencesDao;
+use Tuleap\Reference\ExtractAndSaveCrossReferences;
 use Tuleap\Reference\ExtractReferences;
 use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\Nature;
@@ -34,7 +35,7 @@ use Tuleap\Reference\NatureCollection;
  * Reference Manager
  * Performs all operations on references, including DB access (through ReferenceDAO)
  */
-class ReferenceManager implements ExtractReferences // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferences // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
      * array of active Reference objects arrays of arrays, indexed by group_id, keyword, and num args.
@@ -797,20 +798,14 @@ class ReferenceManager implements ExtractReferences // phpcs:ignore PSR1.Classes
         }
     }
 
-    /**
-     * Extract References from a given text and insert extracted refs into the database
-     *
-     * @param String  $html        Text to parse
-     * @param int|string $source_id Id of the item where the text was added
-     * @param String  $source_type Nature of the source
-     * @param int $source_gid Project Id of the project the source item belongs to
-     * @param int $user_id User who owns the text to parse
-     * @param String  $source_key  Keyword to use for the reference (if different from the one associated to the nature)
-     *
-     * @retrun Boolean True if no error
-     */
-    public function extractCrossRef($html, $source_id, $source_type, $source_gid, $user_id = 0, $source_key = null)
-    {
+    public function extractCrossRef(
+        mixed $html,
+        int|string $source_id,
+        string $source_type,
+        int|string $source_gid,
+        int|string $user_id = 0,
+        ?string $source_key = null,
+    ): bool {
         $this->setProjectIdForProjectReferences($source_gid);
 
         $dao = $this->_getReferenceDao();
@@ -850,7 +845,7 @@ class ReferenceManager implements ExtractReferences // phpcs:ignore PSR1.Classes
 
             $cross_reference = new CrossReference(
                 $source_id,
-                $source_gid,
+                (int) $source_gid,
                 $source_type,
                 (string) $source_key,
                 $target_id,

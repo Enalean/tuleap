@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\REST\v1\Comment;
 
+use Tuleap\Git\RetrieveGitRepository;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -38,6 +39,7 @@ use Tuleap\PullRequest\InlineComment\InlineCommentSaver;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\PullRequestRetriever;
+use Tuleap\Reference\ExtractAndSaveCrossReferences;
 
 final class PATCHInlineCommentHandler
 {
@@ -46,6 +48,8 @@ final class PATCHInlineCommentHandler
         private readonly PullRequestRetriever $pull_request_retriever,
         private readonly CheckUserCanAccessPullRequest $pull_request_permission_checker,
         private readonly InlineCommentSaver $comment_saver,
+        private readonly RetrieveGitRepository $repository_retriever,
+        private readonly ExtractAndSaveCrossReferences $cross_references_saver,
     ) {
     }
 
@@ -78,6 +82,19 @@ final class PATCHInlineCommentHandler
                         }
                         $updated_comment = InlineComment::buildWithNewContent($comment, $comment_data->content);
                         $this->comment_saver->saveUpdatedComment($updated_comment);
+
+                        $destination_repository = $this->repository_retriever->getRepositoryById($pull_request->getRepoDestId());
+                        if ($destination_repository === null) {
+                            throw new \LogicException('Could not retrieve the destination repository of the pull request, but it should have already been checked');
+                        }
+                        $this->cross_references_saver->extractCrossRef(
+                            $updated_comment->getContent(),
+                            $pull_request->getId(),
+                            \pullrequestPlugin::REFERENCE_NATURE,
+                            (int) $destination_repository->getProjectId(),
+                            $user->getId(),
+                            \pullrequestPlugin::PULLREQUEST_REFERENCE_KEYWORD
+                        );
                         return Result::ok(null);
                     });
             });
