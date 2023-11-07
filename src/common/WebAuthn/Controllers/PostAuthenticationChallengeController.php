@@ -33,6 +33,7 @@ use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\User\ProvideCurrentUser;
 use Tuleap\User\RetrieveUserByUserName;
+use Tuleap\WebAuthn\Authentication\WebAuthnAuthentication;
 use Tuleap\WebAuthn\Challenge\SaveWebAuthnChallenge;
 use Tuleap\WebAuthn\Source\GetAllCredentialSourceByUserId;
 use Tuleap\WebAuthn\Source\WebAuthnCredentialSource;
@@ -59,6 +60,10 @@ final class PostAuthenticationChallengeController extends DispatchablePSR15Compa
         $current_user = $this->user_manager->getCurrentUser();
         $is_anonymous = $current_user->isAnonymous();
         if ($is_anonymous) {
+            if (\ForgeConfig::getFeatureFlag(WebAuthnAuthentication::FEATURE_FLAG_LOGIN) !== '1') {
+                return $this->error_response_builder->build(403, _('Passwordless login is not available'));
+            }
+
             if (empty($body = $request->getBody()->getContents())) {
                 return $this->error_response_builder->build(400, _('Request body is empty'));
             }

@@ -23,6 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\WebAuthn\Authentication;
 
 use Psl\Json\Exception\DecodeException;
+use Tuleap\Config\ConfigKeyHidden;
+use Tuleap\Config\ConfigKeyInt;
+use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -40,6 +43,11 @@ use function Psl\Json\decode as psl_json_decode;
 
 final class WebAuthnAuthentication
 {
+    #[FeatureFlagConfigKey('Feature flag to enable/disable passwordless login')]
+    #[ConfigKeyInt(0)]
+    #[ConfigKeyHidden]
+    public const FEATURE_FLAG_LOGIN = 'enable_passwordless_login';
+
     public function __construct(
         private readonly GetAllCredentialSourceByUserId $source_dao,
         private readonly RetrieveWebAuthnChallenge $challenge_dao,

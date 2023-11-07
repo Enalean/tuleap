@@ -2309,6 +2309,9 @@ msgstr "Robustez da senha"
 msgid "Password successfully updated"
 msgstr "Senha atualizada com sucesso"
 
+msgid "Passwordless login is not available"
+msgstr ""
+
 msgid "Passwords do not match"
 msgstr "As senhas não correspondem"
 
