@@ -81,33 +81,36 @@ final class OnlyOfficeEditorController extends DispatchablePSR15Compatible
             $item_id,
             new \DateTimeImmutable()
         )->match(
-            function (string $config_token) use ($document_server_url, $csp_nonce): ResponseInterface {
-                $document_server_url_csp_encoded = str_replace([',', ';'], ['%2C', '%3B'], $document_server_url);
-
-                $csp_header  = "default-src 'report-sample'; object-src 'none'; base-uri 'none'; frame-ancestors 'self'; sandbox allow-scripts allow-same-origin allow-downloads; report-uri /csp-violation;";
-                $csp_header .= "style-src 'nonce-$csp_nonce'; script-src 'nonce-$csp_nonce' 'strict-dynamic'; frame-src $document_server_url_csp_encoded;";
-
-                return $this->response_factory->createResponse()
-                    ->withHeader(
-                        'Content-Security-Policy',
-                        $csp_header
-                    )
-                    ->withBody(
-                        $this->stream_factory->createStream($this->template_renderer->renderToString(
-                            'editor',
-                            new OnlyOfficeEditorPresenter(
-                                (new JavascriptViteAsset($this->assets, 'src/onlyoffice-editor.ts'))->getFileURL(),
-                                $csp_nonce,
-                                $document_server_url,
-                                $config_token,
-                            )
-                        ))
-                    );
-            },
-            function (Fault $fault): void {
+            fn(string $config_token): ResponseInterface => $this->buildSuccessfulResponse($config_token, $document_server_url, $csp_nonce),
+            function (Fault $fault): never {
                 Fault::writeToLogger($fault, $this->logger, LogLevel::DEBUG);
                 throw new NotFoundException();
             }
         );
+    }
+
+    private function buildSuccessfulResponse(string $config_token, string $document_server_url, string $csp_nonce): ResponseInterface
+    {
+        $document_server_url_csp_encoded = str_replace([',', ';'], ['%2C', '%3B'], $document_server_url);
+
+        $csp_header  = "default-src 'report-sample'; object-src 'none'; base-uri 'none'; frame-ancestors 'self'; sandbox allow-scripts allow-same-origin allow-downloads allow-popups allow-popups-to-escape-sandbox; report-uri /csp-violation;";
+        $csp_header .= "style-src 'nonce-$csp_nonce'; script-src 'nonce-$csp_nonce' 'strict-dynamic'; frame-src $document_server_url_csp_encoded;";
+
+        return $this->response_factory->createResponse()
+            ->withHeader(
+                'Content-Security-Policy',
+                $csp_header
+            )
+            ->withBody(
+                $this->stream_factory->createStream($this->template_renderer->renderToString(
+                    'editor',
+                    new OnlyOfficeEditorPresenter(
+                        (new JavascriptViteAsset($this->assets, 'src/onlyoffice-editor.ts'))->getFileURL(),
+                        $csp_nonce,
+                        $document_server_url,
+                        $config_token,
+                    )
+                ))
+            );
     }
 }
