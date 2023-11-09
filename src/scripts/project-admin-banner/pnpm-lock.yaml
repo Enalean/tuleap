@@ -8,6 +8,9 @@ dependencies:
   '@tuleap/tlp-fetch':
     specifier: workspace:*
     version: link:../../../lib/frontend/tlp-fetch
+  '@tuleap/vue2-gettext-composition-helper':
+    specifier: workspace:^
+    version: link:../../../lib/frontend/vue2-gettext-composition-helpers
   '@tuleap/vue2-gettext-init':
     specifier: workspace:*
     version: link:../../../lib/frontend/vue2-gettext-init
@@ -31,12 +34,6 @@ devDependencies:
   '@vue/test-utils':
     specifier: ^1.3.5
     version: 1.3.5(vue@2.7.8)
-  vue-class-component:
-    specifier: ^7.2.6
-    version: 7.2.6(vue@2.7.8)
-  vue-property-decorator:
-    specifier: ^9.1.2
-    version: 9.1.2(vue-class-component@7.2.6)(vue@2.7.8)
 
 packages:
 
@@ -290,24 +287,6 @@ packages:
   /to-fast-properties@2.0.0:
     resolution: {integrity: sha512-/OaKK0xYrs3DmxRYqL/yDc+FxFUVYhDlXMhRmv3z915w2HF1tnN1omB354j8VUGO/hbRzyD6Y3sA7v7GS/ceog==}
     engines: {node: '>=4'}
-
-  /vue-class-component@7.2.6(vue@2.7.8):
-    resolution: {integrity: sha512-+eaQXVrAm/LldalI272PpDe3+i4mPis0ORiMYxF6Ae4hyuCh15W8Idet7wPUEs4N4YptgFHGys4UrgNQOMyO6w==}
-    peerDependencies:
-      vue: ^2.0.0
-    dependencies:
-      vue: 2.7.8
-    dev: true
-
-  /vue-property-decorator@9.1.2(vue-class-component@7.2.6)(vue@2.7.8):
-    resolution: {integrity: sha512-xYA8MkZynPBGd/w5QFJ2d/NM0z/YeegMqYTphy7NJQXbZcuU6FC6AOdUAcy4SXP+YnkerC6AfH+ldg7PDk9ESQ==}
-    peerDependencies:
-      vue: '*'
-      vue-class-component: '*'
-    dependencies:
-      vue: 2.7.8
-      vue-class-component: 7.2.6(vue@2.7.8)
-    dev: true
 
   /vue@2.7.8:
     resolution: {integrity: sha512-ncwlZx5qOcn754bCu5/tS/IWPhXHopfit79cx+uIlLMyt3vCMGcXai5yCG5y+I6cDmEj4ukRYyZail9FTQh7lQ==}

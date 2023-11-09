@@ -18,50 +18,46 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
 import App from "./App.vue";
 import { createProjectAdminBannerLocalVue } from "../helpers/local-vue-for-tests";
 import BannerPresenter from "./BannerPresenter.vue";
 import * as rest_querier from "../api/rest-querier";
 
 describe("App", () => {
-    it("displays something when no banner is set", async () => {
-        const wrapper = shallowMount(App, {
-            localVue: await createProjectAdminBannerLocalVue(),
-            propsData: {
-                message: "",
-                project_id: 108,
-                location: window.location,
-            },
-        });
-
-        expect(wrapper.element).toMatchSnapshot();
+    let banner_message: string, location: Location;
+    beforeEach(() => {
+        banner_message = "some message";
+        location = window.location;
     });
 
-    it("displays message and remove button when banner is not empty", async () => {
-        const banner_message = "<b>My banner content</b>";
-
-        const wrapper = shallowMount(App, {
+    const getWrapper = async (): Promise<Wrapper<InstanceType<typeof App>>> => {
+        return shallowMount(App, {
             localVue: await createProjectAdminBannerLocalVue(),
             propsData: {
                 message: banner_message,
                 project_id: 108,
-                location: window.location,
+                location,
             },
         });
+    };
 
+    it("displays something when no banner is set", async () => {
+        banner_message = "";
+        const wrapper = await getWrapper();
+        expect(wrapper.element).toMatchSnapshot();
+    });
+
+    it("displays message and remove button when banner is not empty", async () => {
+        banner_message = "<b>My banner content</b>";
+        const wrapper = await getWrapper();
         expect(wrapper.element).toMatchSnapshot();
     });
 
     it("displays success message when the banner has been successfully modified", async () => {
-        location.hash = "#banner-change-success";
-        const wrapper = shallowMount(App, {
-            localVue: await createProjectAdminBannerLocalVue(),
-            propsData: {
-                message: "",
-                project_id: 108,
-                location: window.location,
-            },
-        });
+        banner_message = "";
+        window.location.hash = "#banner-change-success";
+        const wrapper = await getWrapper();
         await wrapper.vm.$nextTick();
 
         expect(wrapper.element).toMatchSnapshot();
@@ -69,21 +65,12 @@ describe("App", () => {
     });
 
     it("Should be able to send the deletion request", async () => {
-        const location = { ...window.location, reload: jest.fn() };
-        const wrapper = shallowMount(App, {
-            localVue: await createProjectAdminBannerLocalVue(),
-            propsData: {
-                message: "some message",
-                project_id: 108,
-                location,
-            },
-        });
+        location = { ...window.location, reload: jest.fn() };
+        const wrapper = await getWrapper();
 
         const delete_banner = jest
             .spyOn(rest_querier, "deleteBannerForProject")
-            .mockImplementation(() => {
-                return Promise.resolve();
-            });
+            .mockResolvedValue();
 
         wrapper
             .findComponent(BannerPresenter)
@@ -97,18 +84,11 @@ describe("App", () => {
     });
 
     it("Should display an error if banner deletion fails", async () => {
-        const wrapper = shallowMount(App, {
-            localVue: await createProjectAdminBannerLocalVue(),
-            propsData: {
-                message: "some message",
-                project_id: 108,
-                location: window.location,
-            },
-        });
+        const wrapper = await getWrapper();
 
-        jest.spyOn(rest_querier, "deleteBannerForProject").mockImplementation(() => {
-            return Promise.reject(new Error("an error message"));
-        });
+        jest.spyOn(rest_querier, "deleteBannerForProject").mockRejectedValue(
+            Error("an error message"),
+        );
 
         wrapper
             .findComponent(BannerPresenter)
@@ -121,21 +101,10 @@ describe("App", () => {
     });
 
     it("Should be able to send the update request and lock form while doing it", async () => {
-        const location: Location = { ...window.location, reload: jest.fn() };
-        const wrapper = shallowMount(App, {
-            localVue: await createProjectAdminBannerLocalVue(),
-            propsData: {
-                message: "some message",
-                project_id: 108,
-                location,
-            },
-        });
+        location = { ...window.location, reload: jest.fn() };
+        const wrapper = await getWrapper();
 
-        const save_banner = jest
-            .spyOn(rest_querier, "saveBannerForProject")
-            .mockImplementation(() => {
-                return Promise.resolve();
-            });
+        const save_banner = jest.spyOn(rest_querier, "saveBannerForProject").mockResolvedValue();
 
         wrapper
             .findComponent(BannerPresenter)
@@ -150,18 +119,11 @@ describe("App", () => {
     });
 
     it("Should display an error if banner update fails", async () => {
-        const wrapper = shallowMount(App, {
-            localVue: await createProjectAdminBannerLocalVue(),
-            propsData: {
-                message: "some message",
-                project_id: 108,
-                location: window.location,
-            },
-        });
+        const wrapper = await getWrapper();
 
-        jest.spyOn(rest_querier, "saveBannerForProject").mockImplementation(() => {
-            return Promise.reject(new Error("Ooops something went wrong"));
-        });
+        jest.spyOn(rest_querier, "saveBannerForProject").mockRejectedValue(
+            Error("Ooops something went wrong"),
+        );
 
         wrapper
             .findComponent(BannerPresenter)

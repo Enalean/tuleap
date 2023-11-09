@@ -31,7 +31,6 @@ exports[`BannerPresenter disables the whole form when on loading state 1`] = `
         id="description"
         name="description"
         placeholder="Choose a banner message"
-        style="visibility: hidden;"
       />
        
       <p
@@ -98,7 +97,6 @@ exports[`BannerPresenter displays a default message and an unchecked switch if b
         id="description"
         name="description"
         placeholder="Choose a banner message"
-        style="visibility: hidden;"
       />
        
       <p
@@ -162,7 +160,6 @@ exports[`BannerPresenter displays the banner and a checked switch if banner is s
         id="description"
         name="description"
         placeholder="Choose a banner message"
-        style="visibility: hidden;"
       />
        
       <p
