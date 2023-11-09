@@ -9,12 +9,6 @@
         </div>
         {{/ is_localinc_obsolete }}
 
-        {{^ is_emailgateway_available }}
-        <div class="tlp-alert-info">
-            {{# dgettext }}tuleap-tracker | The configured mail transport of the platform does not allow the usage of the tracker email gateway.{{/ dgettext }}
-        </div>
-        {{/ is_emailgateway_available }}
-
         <section class="tlp-pane">
             <div class="tlp-pane-container">
                 <div class="tlp-pane-header">
@@ -32,7 +26,6 @@
                                 <input type="radio"
                                     name="emailgateway_mode"
                                     value="disabled"
-                                    {{^ is_emailgateway_available }} disabled="disabled" {{/ is_emailgateway_available }}
                                     {{# is_emailgateway_disabled }}checked{{/ is_emailgateway_disabled }}
                                 >
                                 {{ disable }}
@@ -44,7 +37,6 @@
                                 <input type="radio"
                                     name="emailgateway_mode"
                                     value="token"
-                                    {{^ is_emailgateway_available }} disabled="disabled" {{/ is_emailgateway_available }}
                                     {{# is_token_based_emailgateway_enabled }}checked{{/ is_token_based_emailgateway_enabled }}
                                 >
                                 {{ token }}
@@ -56,7 +48,6 @@
                                 <input type="radio"
                                     name="emailgateway_mode"
                                     value="insecure"
-                                    {{^ is_emailgateway_available }} disabled="disabled" {{/ is_emailgateway_available }}
                                     {{# is_insecure_emailgateway_enabled }}checked{{/ is_insecure_emailgateway_enabled }}
                                 >
                                 {{ insecure }}
@@ -65,7 +56,7 @@
                         </div>
 
                         <div class="tlp-pane-section-submit">
-                            <button type="submit" class="tlp-button-primary" {{^ is_emailgateway_available }} disabled="disabled" {{/ is_emailgateway_available }}>
+                            <button type="submit" class="tlp-button-primary">
                                 <i class="fa fa-save tlp-button-icon" aria-hidden="true"></i>
                                 {{# dgettext }}tuleap-tracker | Save configuration{{/ dgettext }}
                             </button>

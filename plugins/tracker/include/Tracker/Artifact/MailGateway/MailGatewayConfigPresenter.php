@@ -21,7 +21,6 @@
 
 namespace Tuleap\Tracker\Artifact\MailGateway;
 
-use Tuleap\Mail\Transport\Configuration\PlatformMailConfiguration;
 use Tuleap\Tracker\Config\EmailGateWayPresenter;
 use CSRFSynchronizerToken;
 
@@ -43,19 +42,14 @@ class MailGatewayConfigPresenter
     public $is_emailgateway_disabled;
     public $sections;
 
-    public bool $is_emailgateway_available;
-
     public function __construct(
         CSRFSynchronizerToken $csrf,
         string $title,
         string $localinc_path,
         MailGatewayConfig $config,
-        PlatformMailConfiguration $configuration,
     ) {
         $this->title      = $title;
         $this->csrf_token = $csrf->fetchHTMLInput();
-
-        $this->is_emailgateway_available = $configuration->mustGeneratesSelfHostedConfigurationAndFeatures();
 
         $this->is_insecure_emailgateway_enabled    = $config->getEmailgatewayRowMode() === MailGatewayConfig::INSECURE;
         $this->is_token_based_emailgateway_enabled = $config->getEmailgatewayRowMode() === MailGatewayConfig::TOKEN;

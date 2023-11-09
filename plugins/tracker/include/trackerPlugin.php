@@ -47,7 +47,6 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\NewDropdown\NewDropdownProjectLinksCollector;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
-use Tuleap\Mail\Transport\MailTransportBuilder;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Project\Admin\History\GetHistoryKeyLabel;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
@@ -1416,7 +1415,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
     {
         $config = new MailGatewayConfig(
             new MailGatewayConfigDao(),
-            MailTransportBuilder::getPlatformMailConfiguration(),
         );
 
         $src_dir = ForgeConfig::get('codendi_dir');
@@ -2029,7 +2027,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             new MailGatewayConfigController(
                 new MailGatewayConfig(
                     new MailGatewayConfigDao(),
-                    MailTransportBuilder::getPlatformMailConfiguration(),
                 ),
                 new Config_LocalIncFinder(),
                 EventManager::instance(),

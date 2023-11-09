@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Mail\Transport\MailTransportBuilder;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayFilter;
@@ -37,7 +36,7 @@ $logger = BackendLogger::getDefaultLogger();
 $logger->info("Entering email gateway");
 
 $recipient_factory                 = Tracker_Artifact_MailGateway_RecipientFactory::build();
-$tracker_config                    = new MailGatewayConfig(new MailGatewayConfigDao(), MailTransportBuilder::getPlatformMailConfiguration());
+$tracker_config                    = new MailGatewayConfig(new MailGatewayConfigDao());
 $user_manager                      = UserManager::instance();
 $tracker_factory                   = TrackerFactory::instance();
 $artifact_factory                  = Tracker_ArtifactFactory::instance();

@@ -31,7 +31,6 @@ use Tuleap\Config\ConfigKeyInt;
 use Tuleap\Config\ConfigKeySecret;
 use Tuleap\Config\ConfigKeyString;
 use Tuleap\Config\ConfigKeyValueValidator;
-use Tuleap\Mail\Transport\Configuration\PlatformMailConfiguration;
 use Tuleap\Mail\Transport\SmtpOptions\SMTPAuthTypeValidator;
 use Tuleap\Mail\Transport\SmtpOptions\SmtpOptionsBuilder;
 
@@ -73,16 +72,6 @@ class MailTransportBuilder
             static fn(string $relay_host) => new Mail\Transport\Smtp(SmtpOptionsBuilder::buildSmtpOptionFromForgeConfig($relay_host)),
             static fn() => new NotConfiguredSmtpTransport($logger),
             static fn() => new InvalidDefinedTransport($logger),
-        );
-    }
-
-    public static function getPlatformMailConfiguration(): PlatformMailConfiguration
-    {
-        return self::buildFromMailConfiguration(
-            static fn() => PlatformMailConfiguration::allowSelfHostedConfigurationAndFeatures(),
-            static fn() => PlatformMailConfiguration::disallowSelfHostedConfigurationAndFeatures(),
-            static fn() => PlatformMailConfiguration::disallowSelfHostedConfigurationAndFeatures(),
-            static fn() => PlatformMailConfiguration::disallowSelfHostedConfigurationAndFeatures(),
         );
     }
 

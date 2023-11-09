@@ -22,17 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\MailGateway;
 
-use Tuleap\Mail\Transport\Configuration\PlatformMailConfiguration;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class MailGatewayConfigTest extends TestCase
 {
-    public function testInsecureEmailgatewayEnabledIfSetInDatabaseAndMailTransportConfigurationCompatible(): void
+    public function testInsecureEmailgatewayEnabledIfSetInDatabase(): void
     {
         $dao    = $this->createMock(MailGatewayConfigDao::class);
         $config = new MailGatewayConfig(
             $dao,
-            PlatformMailConfiguration::allowSelfHostedConfigurationAndFeatures(),
         );
 
         $dao->method('searchEmailgatewayConfiguration')->willReturn(['value' => 'insecure']);
@@ -40,42 +38,15 @@ final class MailGatewayConfigTest extends TestCase
         self::assertTrue($config->isInsecureEmailgatewayEnabled());
     }
 
-    public function testInsecureEmailgatewayNotEnabledIMailTransportConfigurationNotCompatible(): void
+    public function testTokenBasedEmailgatewayEnabledIfSetInDatabase(): void
     {
         $dao    = $this->createMock(MailGatewayConfigDao::class);
         $config = new MailGatewayConfig(
             $dao,
-            PlatformMailConfiguration::disallowSelfHostedConfigurationAndFeatures(),
-        );
-
-        $dao->method('searchEmailgatewayConfiguration')->willReturn(['value' => 'insecure']);
-
-        self::assertFalse($config->isInsecureEmailgatewayEnabled());
-    }
-
-    public function testTokenBasedEmailgatewayEnabledIfSetInDatabaseAndMailTransportConfigurationCompatible(): void
-    {
-        $dao    = $this->createMock(MailGatewayConfigDao::class);
-        $config = new MailGatewayConfig(
-            $dao,
-            PlatformMailConfiguration::allowSelfHostedConfigurationAndFeatures(),
         );
 
         $dao->method('searchEmailgatewayConfiguration')->willReturn(['value' => 'token']);
 
         self::assertTrue($config->isTokenBasedEmailgatewayEnabled());
-    }
-
-    public function testTokenBasedEmailgatewayNotEnabledIMailTransportConfigurationNotCompatible(): void
-    {
-        $dao    = $this->createMock(MailGatewayConfigDao::class);
-        $config = new MailGatewayConfig(
-            $dao,
-            PlatformMailConfiguration::disallowSelfHostedConfigurationAndFeatures(),
-        );
-
-        $dao->method('searchEmailgatewayConfiguration')->willReturn(['value' => 'token']);
-
-        self::assertFalse($config->isTokenBasedEmailgatewayEnabled());
     }
 }

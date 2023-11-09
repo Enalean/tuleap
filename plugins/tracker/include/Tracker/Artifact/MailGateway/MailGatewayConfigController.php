@@ -29,7 +29,6 @@ use Codendi_Request;
 use Feedback;
 use Event;
 use Tuleap\Admin\AdminPageRenderer;
-use Tuleap\Mail\Transport\MailTransportBuilder;
 
 class MailGatewayConfigController
 {
@@ -72,7 +71,6 @@ class MailGatewayConfigController
                 $title,
                 $this->localincfinder->getLocalIncPath(),
                 $this->config,
-                MailTransportBuilder::getPlatformMailConfiguration()
             )
         );
     }
