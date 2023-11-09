@@ -18,7 +18,9 @@
  */
 
 import { defineJestConfiguration } from "@tuleap/build-system-configurator";
+import { env } from "node:process";
 
+env.DISABLE_TS_TYPECHECK = "true";
 export default {
     ...defineJestConfiguration(),
     displayName: "@tuleap/plugin-tracker-artifact-ckeditor-image-upload",
