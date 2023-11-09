@@ -27,6 +27,7 @@
     "css.escape": "^1.5.1"
   },
   "scripts": {
+    "typecheck": "tsc --noEmit",
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false",
     "test": "jest"

@@ -18,9 +18,10 @@
  */
 
 import { defineJestConfiguration } from "@tuleap/build-system-configurator";
+import { env } from "node:process";
 
-const jest_base_config = defineJestConfiguration();
+env.DISABLE_TS_TYPECHECK = "true";
 export default {
-    ...jest_base_config,
+    ...defineJestConfiguration(),
     displayName: "@tuleap/core-account",
 };
