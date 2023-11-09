@@ -22,7 +22,7 @@ import {
     deleteTime as deleteTimeQuerrier,
     getTrackedTimes,
     updateTime as updateTimeQuerrier,
-} from "../api/rest-querier.js";
+} from "../api/rest-querier";
 import {
     ERROR_OCCURRED,
     REST_FEEDBACK_ADD,

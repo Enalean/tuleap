@@ -1,0 +1,25 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-timetracking-rest-api-types",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "types": "./src/main.ts",
+  "exports": {
+    ".": {
+      "types": "./src/main.ts"
+    }
+  },
+  "dependencies": {
+    "@tuleap/core-rest-api-types": "workspace:*",
+    "@tuleap/plugin-tracker-rest-api-types": "workspace:*",
+    "@tuleap/core-constants": "workspace:*"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  }
+}

@@ -6,6 +6,7 @@
   "private": true,
   "type": "module",
   "main": "dist/plugin-timetracking-time-formatters.umd.cjs",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

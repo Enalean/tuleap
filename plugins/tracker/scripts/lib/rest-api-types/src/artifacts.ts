@@ -231,4 +231,6 @@ export interface ArtifactResponseNoInstance {
     readonly is_open: boolean;
     readonly values: ReadonlyArray<ChangesetValue>;
     readonly full_status: Status | null;
+    readonly uri: string;
+    readonly submitted_on: string;
 }

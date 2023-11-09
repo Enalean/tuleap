@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,36 +18,32 @@
  */
 
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-
-import { getTrackedTimes, addTime, deleteTime } from "./rest-querier.js";
-
+import { getTrackedTimes, addTime, deleteTime } from "./rest-querier";
+import type { PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
 import * as tlp_fetch from "@tuleap/tlp-fetch";
 
-describe("getTrackedTimes() -", () => {
-    it("the REST API will be queried with ISO-8601 dates and the times returned", async () => {
+describe("getTrackedTimes() -", (): void => {
+    it("the REST API will be queried with ISO-8601 dates and the times returned", async (): Promise<void> => {
         const limit = 1,
             offset = 0,
             user_id = 102;
 
-        const times = [
+        const times: PersonalTime[][] = [
             [
                 {
-                    artifact: {},
-                    project: {},
                     minutes: 20,
-                },
+                } as PersonalTime,
             ],
         ];
 
         const tlpGet = jest.spyOn(tlp_fetch, "get");
         mockFetchSuccess(tlpGet, {
             headers: {
-                get: (header_name) => {
-                    const headers = {
-                        "X-PAGINATION-SIZE": 1,
-                    };
-
-                    return headers[header_name];
+                get: (header_name: string) => {
+                    if (header_name === "X-PAGINATION-SIZE") {
+                        return "1";
+                    }
+                    return null;
                 },
             },
             return_json: times,
@@ -65,16 +61,14 @@ describe("getTrackedTimes() -", () => {
             },
         });
 
-        expect(result.times).toEqual(times);
+        expect(result.times).toStrictEqual(times);
         expect(result.total).toBe(1);
     });
 
-    it("the REST API will add date and the new time should be returned", async () => {
+    it("the REST API will add date and the new time should be returned", async (): Promise<void> => {
         const time = {
-            artifact: {},
-            project: {},
             minutes: 20,
-        };
+        } as PersonalTime;
 
         const tlpPost = jest.spyOn(tlp_fetch, "post");
         mockFetchSuccess(tlpPost, {
@@ -94,10 +88,10 @@ describe("getTrackedTimes() -", () => {
             headers,
             body,
         });
-        expect(result).toEqual(time);
+        expect(result).toStrictEqual(time);
     });
 
-    it("the REST API should delete the given time", async () => {
+    it("the REST API should delete the given time", async (): Promise<void> => {
         const tlpDel = jest.spyOn(tlp_fetch, "del");
         mockFetchSuccess(tlpDel, {
             return_json: [],
