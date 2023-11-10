@@ -699,7 +699,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
                     __DIR__ . '/../scripts/permissions-per-group/frontend-assets',
                     '/assets/agiledashboard/permissions-per-group'
                 ),
-                'src/index.js'
+                'src/index.ts'
             )
         );
     }

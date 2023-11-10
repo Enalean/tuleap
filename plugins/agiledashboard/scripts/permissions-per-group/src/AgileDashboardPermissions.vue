@@ -19,17 +19,13 @@
 
 <template>
     <section class="tlp-pane-section">
-        <div class="tlp-alert-danger" v-if="hasError">
+        <div class="tlp-alert-danger" v-if="has_error">
             {{ error }}
         </div>
 
-        <div class="permission-per-group-load-button" v-if="displayButtonLoadAll">
-            <button
-                class="tlp-button-primary tlp-button-outline"
-                v-on:click="loadAll()"
-                v-translate
-            >
-                See all plannings permissions
+        <div class="permission-per-group-load-button" v-if="display_button_load_all">
+            <button class="tlp-button-primary tlp-button-outline" v-on:click="loadAll()">
+                {{ $gettext("See all plannings permissions") }}
             </button>
         </div>
 
@@ -38,8 +34,8 @@
         <table class="tlp-table permission-per-group-table" v-if="is_loaded">
             <thead>
                 <tr class="permission-per-group-double-column-table">
-                    <th v-translate>Planning</th>
-                    <th v-translate>Who can prioritize?</th>
+                    <th>{{ $gettext("Planning") }}</th>
+                    <th>{{ $gettext("Who can prioritize?") }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -51,33 +47,26 @@
                         <agile-dashboard-permissions-badge
                             v-for="group in permission.ugroups"
                             v-bind:key="group.ugroup_name"
-                            v-bind:is-project-admin="group.is_project_admin"
-                            v-bind:is-static="group.is_static"
-                            v-bind:is-custom="group.is_custom"
-                            v-bind:group-name="group.ugroup_name"
+                            v-bind:is_project_admin="group.is_project_admin"
+                            v-bind:is_static="group.is_static"
+                            v-bind:is_custom="group.is_custom"
+                            v-bind:group_name="group.ugroup_name"
                         />
                     </td>
                 </tr>
             </tbody>
-            <tbody v-if="isEmpty">
+            <tbody v-if="is_empty">
                 <tr>
                     <td
                         v-if="has_a_selected_u_group"
                         key="selected-ugroup"
                         colspan="2"
                         class="tlp-table-cell-empty"
-                        v-translate="{ user_group: selectedUgroupName }"
                     >
-                        %{ user_group } has no permission for agiledashboard plannings
+                        {{ no_perms_label }}
                     </td>
-                    <td
-                        v-else
-                        key="no-selected-ugroup"
-                        colspan="2"
-                        class="tlp-table-cell-empty"
-                        v-translate
-                    >
-                        Agiledashboard has no planning defined
+                    <td v-else key="no-selected-ugroup" colspan="2" class="tlp-table-cell-empty">
+                        {{ $gettext("Agiledashboard has no planning defined") }}
                     </td>
                 </tr>
             </tbody>
@@ -85,57 +74,48 @@
     </section>
 </template>
 
-<script>
+<script setup lang="ts">
+import type { PlanningsPermissions } from "./rest-querier.js";
 import { getAgiledashboardPermissions } from "./rest-querier.js";
-import AgileDashboardPermissionsBadge from "@tuleap/vue-permissions-per-group-badge";
+import AgileDashboardPermissionsBadge from "@tuleap/vue3-permissions-per-group-badge";
+import { computed, ref } from "vue";
+import { useGettext } from "vue3-gettext";
 
-export default {
-    name: "AgileDashboardPermissions",
-    components: { AgileDashboardPermissionsBadge },
-    props: {
-        selectedUgroupId: String,
-        selectedProjectId: String,
-        selectedUgroupName: String,
-    },
-    data() {
-        return {
-            is_loaded: false,
-            is_loading: false,
-            permissions: [],
-            error: null,
-        };
-    },
-    computed: {
-        isEmpty() {
-            return this.permissions.length === 0;
+const props = defineProps<{
+    selected_project_id: string;
+    selected_ugroup_id: string;
+    selected_ugroup_name: string;
+}>();
+
+const permissions = ref<PlanningsPermissions>([]);
+const error = ref<string | null>(null);
+const is_loaded = ref(false);
+const is_loading = ref(false);
+
+const is_empty = computed(() => permissions.value.length === 0);
+const has_error = computed(() => error.value !== null);
+const display_button_load_all = computed(() => !is_loaded.value && !is_loading.value);
+const has_a_selected_u_group = computed(() => props.selected_ugroup_name !== "");
+
+const { interpolate, $gettext } = useGettext();
+const no_perms_label = computed(() =>
+    interpolate($gettext("%{ user_group } has no permission for agiledashboard plannings"), {
+        user_group: props.selected_ugroup_name,
+    }),
+);
+
+function loadAll(): void {
+    is_loading.value = true;
+    getAgiledashboardPermissions(props.selected_project_id, props.selected_ugroup_id).match(
+        ({ plannings_permissions }: { plannings_permissions: PlanningsPermissions }) => {
+            is_loaded.value = true;
+            is_loading.value = false;
+            permissions.value = plannings_permissions;
         },
-        hasError() {
-            return this.error !== null;
+        (fault) => {
+            is_loading.value = false;
+            error.value = String(fault);
         },
-        displayButtonLoadAll() {
-            return !this.is_loaded && !this.is_loading;
-        },
-        has_a_selected_u_group() {
-            return this.selectedUgroupName !== "";
-        },
-    },
-    methods: {
-        async loadAll() {
-            try {
-                this.is_loading = true;
-                const { plannings_permissions } = await getAgiledashboardPermissions(
-                    this.selectedProjectId,
-                    this.selectedUgroupId,
-                );
-                this.is_loaded = true;
-                this.permissions = plannings_permissions;
-            } catch (e) {
-                const { error } = await e.response.json();
-                this.error = error;
-            } finally {
-                this.is_loading = false;
-            }
-        },
-    },
-};
+    );
+}
 </script>

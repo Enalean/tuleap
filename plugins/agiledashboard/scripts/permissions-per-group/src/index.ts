@@ -17,11 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import {
-    initVueGettextFromPoGettextPlugin,
-    getPOFileFromLocaleWithoutExtension,
-} from "@tuleap/vue2-gettext-init";
+import { createApp } from "vue";
+import { createGettext } from "vue3-gettext";
+import { initVueGettext, getPOFileFromLocaleWithoutExtension } from "@tuleap/vue3-gettext-init";
 import AgileDashboardPermissions from "./AgileDashboardPermissions.vue";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -31,12 +29,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    await initVueGettextFromPoGettextPlugin(Vue, (locale) =>
-        import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
-    );
+    const gettext = await initVueGettext(createGettext, (locale: string) => {
+        return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
+    });
 
-    const RootComponent = Vue.extend(AgileDashboardPermissions);
-    new RootComponent({
-        propsData: { ...vue_mount_point.dataset },
-    }).$mount(vue_mount_point);
+    const app = createApp(AgileDashboardPermissions, {
+        selected_project_id: vue_mount_point.dataset.selectedProjectId,
+        selected_ugroup_id: vue_mount_point.dataset.selectedUgroupId,
+        selected_ugroup_name: vue_mount_point.dataset.selectedUgroupName,
+    });
+    app.use(gettext);
+    app.mount(vue_mount_point);
 });

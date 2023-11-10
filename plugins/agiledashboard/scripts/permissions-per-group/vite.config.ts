@@ -19,7 +19,7 @@
 
 import { vite } from "@tuleap/build-system-configurator";
 import * as path from "node:path";
-import vue from "@vitejs/plugin-vue2";
+import vue from "@vitejs/plugin-vue";
 import POGettextPlugin from "@tuleap/po-gettext-plugin";
 
 export default vite.defineAppConfig(
@@ -32,7 +32,7 @@ export default vite.defineAppConfig(
         build: {
             rollupOptions: {
                 input: {
-                    "permissions-per-group": path.resolve(__dirname, "src/index.js"),
+                    "permissions-per-group": path.resolve(__dirname, "src/index.ts"),
                 },
             },
         },

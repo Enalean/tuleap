@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,18 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get } from "@tuleap/tlp-fetch";
+import { vite } from "@tuleap/build-system-configurator";
+import vue from "@vitejs/plugin-vue";
+import * as path from "path";
 
-export { getAgiledashboardPermissions };
-
-async function getAgiledashboardPermissions(project_id, selected_ugroup_id) {
-    const response = await get("/plugins/agiledashboard/", {
-        params: {
-            group_id: project_id,
-            selected_ugroup_id: selected_ugroup_id,
-            action: "permission-per-group",
+export default vite.defineLibConfig({
+    plugins: [vue()],
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/PermissionsPerGroupBadge.vue"),
+            name: "PermissionsPerGroupBadge",
         },
-    });
-
-    return response.json();
-}
+        rollupOptions: {
+            external: ["vue"],
+            output: {
+                globals: {
+                    vue: "Vue",
+                },
+            },
+        },
+    },
+});

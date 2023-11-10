@@ -1,0 +1,30 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/vue3-permissions-per-group-badge",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "module": "dist/vue3-permissions-per-group-badge.js",
+  "main": "dist/vue3-permissions-per-group-badge.umd.cjs",
+  "types": "src/PermissionsPerGroupBadge.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/vue3-permissions-per-group-badge.js",
+      "require": "./dist/vue3-permissions-per-group-badge.umd.cjs"
+    }
+  },
+  "peerDependencies": {
+    "vue": "3.3.4"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*",
+    "vue": "3.3.4",
+    "@vitejs/plugin-vue": "^4.2.3"
+  },
+  "scripts": {
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false"
+  }
+}
