@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tus;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
@@ -30,8 +29,6 @@ use Tuleap\Http\HTTPFactoryBuilder;
 
 final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var ResponseFactoryInterface
      */
@@ -42,60 +39,60 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->response_factory          = HTTPFactoryBuilder::responseFactory();
-        $this->data_store                = \Mockery::mock(TusDataStore::class);
-        $this->file_information_provider = \Mockery::mock(TusFileInformationProvider::class);
-        $this->data_store->shouldReceive('getFileInformationProvider')->andReturns($this->file_information_provider);
+        $this->data_store                = $this->createMock(TusDataStore::class);
+        $this->file_information_provider = $this->createMock(TusFileInformationProvider::class);
+        $this->data_store->method('getFileInformationProvider')->willReturn($this->file_information_provider);
     }
 
     public function testInformationAboutTheServerCanBeGathered(): void
     {
-        $this->data_store->shouldReceive('getTerminater')->andReturns(null);
+        $this->data_store->method('getTerminater')->willReturn(null);
         $server = new TusServer($this->response_factory, $this->data_store);
 
-        $incoming_request = \Mockery::mock(ServerRequestInterface::class);
-        $incoming_request->shouldReceive('getMethod')->andReturns('OPTIONS');
+        $incoming_request = $this->createMock(ServerRequestInterface::class);
+        $incoming_request->method('getMethod')->willReturn('OPTIONS');
 
         $response = $server->handle($incoming_request);
 
-        $this->assertEquals(204, $response->getStatusCode());
-        $this->assertTrue($response->hasHeader('Tus-Version'));
-        $this->assertFalse($response->hasHeader('Tus-Extension'));
+        self::assertEquals(204, $response->getStatusCode());
+        self::assertTrue($response->hasHeader('Tus-Version'));
+        self::assertFalse($response->hasHeader('Tus-Extension'));
     }
 
     public function testInformationAboutExtensionsAreGivenIfThereIsAnAvailableExtension(): void
     {
-        $this->data_store->shouldReceive('getTerminater')->andReturns(\Mockery::mock(TusTerminaterDataStore::class));
+        $this->data_store->method('getTerminater')->willReturn($this->createMock(TusTerminaterDataStore::class));
         $server = new TusServer($this->response_factory, $this->data_store);
 
-        $incoming_request = \Mockery::mock(ServerRequestInterface::class);
-        $incoming_request->shouldReceive('getMethod')->andReturns('OPTIONS');
+        $incoming_request = $this->createMock(ServerRequestInterface::class);
+        $incoming_request->method('getMethod')->willReturn('OPTIONS');
 
         $response = $server->handle($incoming_request);
 
-        $this->assertTrue($response->hasHeader('Tus-Extension'));
-        $this->assertNotEmpty(\explode(',', $response->getHeaderLine('Tus-Extension')));
+        self::assertTrue($response->hasHeader('Tus-Extension'));
+        self::assertNotEmpty(\explode(',', $response->getHeaderLine('Tus-Extension')));
     }
 
     public function testInformationAboutTheFileBeingUploadedCanBeGathered(): void
     {
         $server = new TusServer($this->response_factory, $this->data_store);
 
-        $incoming_request = \Mockery::mock(ServerRequestInterface::class);
-        $incoming_request->shouldReceive('getMethod')->andReturns('HEAD');
-        $incoming_request->shouldReceive('getHeaderLine')->with('Tus-Resumable')->andReturns('1.0.0');
+        $incoming_request = $this->createMock(ServerRequestInterface::class);
+        $incoming_request->method('getMethod')->willReturn('HEAD');
+        $incoming_request->method('getHeaderLine')->with('Tus-Resumable')->willReturn('1.0.0');
 
-        $file_information = \Mockery::mock(TusFileInformation::class);
-        $file_information->shouldReceive('getLength')->andReturns(123456);
-        $file_information->shouldReceive('getOffset')->andReturns(123);
-        $this->file_information_provider->shouldReceive('getFileInformation')->andReturns($file_information);
+        $file_information = $this->createMock(TusFileInformation::class);
+        $file_information->method('getLength')->willReturn(123456);
+        $file_information->method('getOffset')->willReturn(123);
+        $this->file_information_provider->method('getFileInformation')->willReturn($file_information);
 
         $response = $server->handle($incoming_request);
 
-        $this->assertEquals(204, $response->getStatusCode());
-        $this->assertTrue($response->hasHeader('Tus-Resumable'));
-        $this->assertEquals(123456, $response->getHeaderLine('Upload-Length'));
-        $this->assertEquals(123, $response->getHeaderLine('Upload-Offset'));
-        $this->assertEquals('no-cache', $response->getHeaderLine('Cache-Control'));
+        self::assertEquals(204, $response->getStatusCode());
+        self::assertTrue($response->hasHeader('Tus-Resumable'));
+        self::assertEquals(123456, $response->getHeaderLine('Upload-Length'));
+        self::assertEquals(123, $response->getHeaderLine('Upload-Offset'));
+        self::assertEquals('no-cache', $response->getHeaderLine('Cache-Control'));
     }
 
     /**
@@ -103,57 +100,61 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testFileCanBeUploaded(int $upload_offset, string $body_content, string $content_type, bool $has_finisher): void
     {
-        $data_writer = \Mockery::mock(TusWriter::class);
-        $this->data_store->shouldReceive('getWriter')->andReturns($data_writer);
-        $finisher_data_store = \Mockery::mock(TusFinisherDataStore::class);
+        $data_writer = $this->createMock(TusWriter::class);
+        $this->data_store->method('getWriter')->willReturn($data_writer);
+        $finisher_data_store = $this->createMock(TusFinisherDataStore::class);
         if ($has_finisher) {
-            $this->data_store->shouldReceive('getFinisher')->andReturns($finisher_data_store);
+            $this->data_store->method('getFinisher')->willReturn($finisher_data_store);
         } else {
-            $this->data_store->shouldReceive('getFinisher')->andReturns(null);
+            $this->data_store->method('getFinisher')->willReturn(null);
         }
-        $locker = \Mockery::mock(TusLocker::class);
-        $this->data_store->shouldReceive('getLocker')->andReturns($locker);
+        $locker = $this->createMock(TusLocker::class);
+        $this->data_store->method('getLocker')->willReturn($locker);
         $server = new TusServer($this->response_factory, $this->data_store);
 
-        $upload_request = \Mockery::mock(ServerRequestInterface::class);
-        $upload_request->shouldReceive('getMethod')->andReturns('PATCH');
-        $upload_request->shouldReceive('getHeaderLine')->with('Tus-Resumable')->andReturns('1.0.0');
-        $upload_request->shouldReceive('getHeaderLine')->with('Content-Type')->andReturns($content_type);
-        $upload_request->shouldReceive('hasHeader')->with('Upload-Offset')->andReturns(true);
-        $upload_request->shouldReceive('getHeaderLine')->with('Upload-Offset')->andReturns($upload_offset);
-        $request_body        = \Mockery::mock(StreamInterface::class);
+        $upload_request = $this->createMock(ServerRequestInterface::class);
+        $upload_request->method('getMethod')->willReturn('PATCH');
+        $upload_request->method('hasHeader')->with('Upload-Offset')->willReturn(true);
+
+        $upload_request->method('getHeaderLine')->willReturnMap([
+            ['Upload-Offset', $upload_offset],
+            ['Tus-Resumable', '1.0.0'],
+            ['Content-Type', $content_type],
+        ]);
+
+        $request_body        = $this->createMock(StreamInterface::class);
         $request_body_stream = fopen('php://memory', 'rb+');
         fwrite($request_body_stream, $body_content);
         rewind($request_body_stream);
-        $request_body->shouldReceive('detach')->andReturns($request_body_stream);
-        $upload_request->shouldReceive('getBody')->andReturns($request_body);
+        $request_body->method('detach')->willReturn($request_body_stream);
+        $upload_request->method('getBody')->willReturn($request_body);
 
-        $file_information = \Mockery::mock(TusFileInformation::class);
-        $file_information->shouldReceive('getLength')->andReturns(strlen($body_content));
-        $file_information->shouldReceive('getOffset')->andReturns($upload_offset);
-        $this->file_information_provider->shouldReceive('getFileInformation')->andReturns($file_information);
+        $file_information = $this->createMock(TusFileInformation::class);
+        $file_information->method('getLength')->willReturn(strlen($body_content));
+        $file_information->method('getOffset')->willReturn($upload_offset);
+        $this->file_information_provider->method('getFileInformation')->willReturn($file_information);
 
-        $data_writer->shouldReceive('writeChunk')->once()
+        $data_writer->expects(self::once())->method('writeChunk')
             ->with(
                 $file_information,
                 $upload_offset,
-                \Mockery::on(
+                self::callback(
                     function ($input_resource) use ($body_content): bool {
                         return stream_get_contents($input_resource) === $body_content;
                     }
                 )
-            )->andReturns(strlen($body_content));
+            )->willReturn(strlen($body_content));
         if ($has_finisher) {
-            $finisher_data_store->shouldReceive('finishUpload')->with($file_information)->once();
+            $finisher_data_store->expects(self::once())->method('finishUpload')->with($file_information);
         }
-        $locker->shouldReceive('lock')->andReturns(true)->once();
-        $locker->shouldReceive('unlock')->once();
+        $locker->expects(self::once())->method('lock')->willReturn(true);
+        $locker->expects(self::once())->method('unlock');
 
         $response = $server->handle($upload_request);
 
-        $this->assertEquals(204, $response->getStatusCode());
+        self::assertEquals(204, $response->getStatusCode());
 
-        $this->assertEquals($upload_offset + strlen($body_content), $response->getHeaderLine('Upload-Offset'));
+        self::assertEquals($upload_offset + strlen($body_content), $response->getHeaderLine('Upload-Offset'));
     }
 
     public static function validUploadRequestProvider(): array
@@ -173,238 +174,269 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $server = new TusServer($this->response_factory, $this->data_store);
 
-        $incoming_request = \Mockery::mock(ServerRequestInterface::class);
-        $incoming_request->shouldReceive('getMethod')->andReturns('HEAD');
-        $incoming_request->shouldReceive('getHeaderLine')->with('Tus-Resumable')->andReturns('0.2.2');
+        $incoming_request = $this->createMock(ServerRequestInterface::class);
+        $incoming_request->method('getMethod')->willReturn('HEAD');
+        $incoming_request->method('getHeaderLine')->with('Tus-Resumable')->willReturn('0.2.2');
 
         $response = $server->handle($incoming_request);
 
-        $this->assertEquals(412, $response->getStatusCode());
-        $this->assertTrue($response->hasHeader('Tus-Version'));
+        self::assertEquals(412, $response->getStatusCode());
+        self::assertTrue($response->hasHeader('Tus-Version'));
     }
 
     public function testAnUploadRequestWithAnIncorrectOffsetIsRejected(): void
     {
-        $this->data_store->shouldReceive('getLocker')->andReturns(null);
+        $this->data_store->method('getLocker')->willReturn(null);
         $server = new TusServer($this->response_factory, $this->data_store);
 
-        $incoming_request = \Mockery::mock(ServerRequestInterface::class);
-        $incoming_request->shouldReceive('getMethod')->andReturns('PATCH');
-        $incoming_request->shouldReceive('getHeaderLine')->with('Tus-Resumable')->andReturns('1.0.0');
-        $incoming_request->shouldReceive('getHeaderLine')->with('Content-Type')->andReturns('application/offset+octet-stream');
-        $incoming_request->shouldReceive('hasHeader')->with('Upload-Offset')->andReturns(true);
-        $incoming_request->shouldReceive('getHeaderLine')->with('Upload-Offset')->andReturns(10);
-        $request_body        = \Mockery::mock(StreamInterface::class);
-        $request_body_stream = fopen('php://memory', 'rb+');
-        $request_body->shouldReceive('detach')->andReturns($request_body_stream);
-        $incoming_request->shouldReceive('getBody')->andReturns($request_body);
+        $incoming_request = $this->createMock(ServerRequestInterface::class);
+        $incoming_request->method('getMethod')->willReturn('PATCH');
+        $incoming_request->method('hasHeader')->with('Upload-Offset')->willReturn(true);
 
-        $file_information = \Mockery::mock(TusFileInformation::class);
-        $file_information->shouldReceive('getOffset')->andReturns(20);
-        $this->file_information_provider->shouldReceive('getFileInformation')->andReturns($file_information);
+        $incoming_request->method('getHeaderLine')->willReturnMap([
+            ['Upload-Offset', 10],
+            ['Tus-Resumable', '1.0.0'],
+            ['Content-Type', 'application/offset+octet-stream'],
+        ]);
+
+        $request_body        = $this->createMock(StreamInterface::class);
+        $request_body_stream = fopen('php://memory', 'rb+');
+        $request_body->method('detach')->willReturn($request_body_stream);
+        $incoming_request->method('getBody')->willReturn($request_body);
+
+        $file_information = $this->createMock(TusFileInformation::class);
+        $file_information->method('getOffset')->willReturn(20);
+        $this->file_information_provider->method('getFileInformation')->willReturn($file_information);
 
         $response = $server->handle($incoming_request);
 
-        $this->assertEquals(409, $response->getStatusCode());
+        self::assertEquals(409, $response->getStatusCode());
     }
 
     public function testAnUploadRequestWithoutTheOffsetIsRejected(): void
     {
         $server = new TusServer($this->response_factory, $this->data_store);
 
-        $incoming_request = \Mockery::mock(ServerRequestInterface::class);
-        $incoming_request->shouldReceive('getMethod')->andReturns('PATCH');
-        $incoming_request->shouldReceive('getHeaderLine')->with('Tus-Resumable')->andReturns('1.0.0');
-        $incoming_request->shouldReceive('getHeaderLine')->with('Content-Type')->andReturns('application/offset+octet-stream');
-        $incoming_request->shouldReceive('hasHeader')->with('Upload-Offset')->andReturns(false);
+        $incoming_request = $this->createMock(ServerRequestInterface::class);
+        $incoming_request->method('getMethod')->willReturn('PATCH');
+        $incoming_request->method('hasHeader')->with('Upload-Offset')->willReturn(false);
 
-        $this->file_information_provider->shouldReceive('getFileInformation')->andReturns(\Mockery::mock(TusFileInformation::class));
+        $incoming_request->method('getHeaderLine')->willReturnMap([
+            ['Tus-Resumable', '1.0.0'],
+            ['Content-Type', 'application/offset+octet-stream'],
+        ]);
+
+        $this->file_information_provider->method('getFileInformation')->willReturn($this->createMock(TusFileInformation::class));
 
         $response = $server->handle($incoming_request);
 
-        $this->assertEquals(400, $response->getStatusCode());
+        self::assertEquals(400, $response->getStatusCode());
     }
 
     public function testAnUploadRequestWithAnIncorrectContentTypeIsRejected(): void
     {
         $server = new TusServer($this->response_factory, $this->data_store);
 
-        $incoming_request = \Mockery::mock(ServerRequestInterface::class);
-        $incoming_request->shouldReceive('getMethod')->andReturns('PATCH');
-        $incoming_request->shouldReceive('getHeaderLine')->with('Tus-Resumable')->andReturns('1.0.0');
-        $incoming_request->shouldReceive('getHeaderLine')->with('Content-Type')->andReturns('image/png');
+        $incoming_request = $this->createMock(ServerRequestInterface::class);
+        $incoming_request->method('getMethod')->willReturn('PATCH');
 
-        $this->file_information_provider->shouldReceive('getFileInformation')->andReturns(\Mockery::mock(TusFileInformation::class));
+        $incoming_request->method('getHeaderLine')->willReturnMap([
+            ['Tus-Resumable', '1.0.0'],
+            ['Content-Type', 'image/png'],
+        ]);
+
+        $this->file_information_provider->method('getFileInformation')->willReturn($this->createMock(TusFileInformation::class));
 
         $response = $server->handle($incoming_request);
 
-        $this->assertEquals(415, $response->getStatusCode());
+        self::assertEquals(415, $response->getStatusCode());
     }
 
     public function testAnErrorIsGivenWhenTheIncomingRequestBodyCannotBeRead(): void
     {
-        $data_writer = \Mockery::mock(TusWriter::class);
-        $this->data_store->shouldReceive('getWriter')->andReturns($data_writer);
-        $this->data_store->shouldReceive('getLocker')->andReturns(null);
+        $data_writer = $this->createMock(TusWriter::class);
+        $this->data_store->method('getWriter')->willReturn($data_writer);
+        $this->data_store->method('getLocker')->willReturn(null);
         $server = new TusServer($this->response_factory, $this->data_store);
 
-        $incoming_request = \Mockery::mock(ServerRequestInterface::class);
-        $incoming_request->shouldReceive('getMethod')->andReturns('PATCH');
-        $incoming_request->shouldReceive('getHeaderLine')->with('Tus-Resumable')->andReturns('1.0.0');
-        $incoming_request->shouldReceive('getHeaderLine')->with('Content-Type')->andReturns('application/offset+octet-stream');
-        $incoming_request->shouldReceive('hasHeader')->with('Upload-Offset')->andReturns(true);
-        $incoming_request->shouldReceive('getHeaderLine')->with('Upload-Offset')->andReturns(0);
-        $request_body = \Mockery::mock(StreamInterface::class);
-        $request_body->shouldReceive('detach')->andReturns(null);
-        $incoming_request->shouldReceive('getBody')->andReturns($request_body);
+        $incoming_request = $this->createMock(ServerRequestInterface::class);
+        $incoming_request->method('getMethod')->willReturn('PATCH');
+        $incoming_request->method('hasHeader')->with('Upload-Offset')->willReturn(true);
 
-        $file_information = \Mockery::mock(TusFileInformation::class);
-        $this->file_information_provider->shouldReceive('getFileInformation')->andReturns($file_information);
+        $incoming_request->method('getHeaderLine')->willReturnMap([
+            ['Upload-Offset', 0],
+            ['Tus-Resumable', '1.0.0'],
+            ['Content-Type', 'application/offset+octet-stream'],
+        ]);
+
+        $request_body = $this->createMock(StreamInterface::class);
+        $request_body->method('detach')->willReturn(null);
+        $incoming_request->method('getBody')->willReturn($request_body);
+
+        $file_information = $this->createMock(TusFileInformation::class);
+        $this->file_information_provider->method('getFileInformation')->willReturn($file_information);
 
         $response = $server->handle($incoming_request);
-        $this->assertEquals(500, $response->getStatusCode());
+        self::assertEquals(500, $response->getStatusCode());
     }
 
     public function testAnErrorIsGivenWhenTheFileCanNotBeSaved(): void
     {
-        $data_writer = \Mockery::mock(TusWriter::class);
-        $this->data_store->shouldReceive('getWriter')->andReturns($data_writer);
-        $this->data_store->shouldReceive('getLocker')->andReturns(null);
+        $data_writer = $this->createMock(TusWriter::class);
+        $this->data_store->method('getWriter')->willReturn($data_writer);
+        $this->data_store->method('getLocker')->willReturn(null);
         $server = new TusServer($this->response_factory, $this->data_store);
 
-        $incoming_request = \Mockery::mock(ServerRequestInterface::class);
-        $incoming_request->shouldReceive('getMethod')->andReturns('PATCH');
-        $incoming_request->shouldReceive('getHeaderLine')->with('Tus-Resumable')->andReturns('1.0.0');
-        $incoming_request->shouldReceive('getHeaderLine')->with('Content-Type')->andReturns('application/offset+octet-stream');
-        $incoming_request->shouldReceive('hasHeader')->with('Upload-Offset')->andReturns(true);
-        $incoming_request->shouldReceive('getHeaderLine')->with('Upload-Offset')->andReturns(0);
-        $request_body        = \Mockery::mock(StreamInterface::class);
-        $request_body_stream = fopen('php://memory', 'rb+');
-        $request_body->shouldReceive('detach')->andReturns($request_body_stream);
-        $incoming_request->shouldReceive('getBody')->andReturns($request_body);
+        $incoming_request = $this->createMock(ServerRequestInterface::class);
+        $incoming_request->method('getMethod')->willReturn('PATCH');
+        $incoming_request->method('hasHeader')->with('Upload-Offset')->willReturn(true);
 
-        $file_information = \Mockery::mock(TusFileInformation::class);
-        $file_information->shouldReceive('getLength')->andReturns(123456);
-        $file_information->shouldReceive('getOffset')->andReturns(0);
-        $this->file_information_provider->shouldReceive('getFileInformation')->andReturns($file_information);
-        $data_writer->shouldReceive('writeChunk')->andThrows(new CannotWriteFileException());
+        $incoming_request->method('getHeaderLine')->willReturnMap([
+            ['Upload-Offset', 0],
+            ['Tus-Resumable', '1.0.0'],
+            ['Content-Type', 'application/offset+octet-stream'],
+        ]);
+
+        $request_body        = $this->createMock(StreamInterface::class);
+        $request_body_stream = fopen('php://memory', 'rb+');
+        $request_body->method('detach')->willReturn($request_body_stream);
+        $incoming_request->method('getBody')->willReturn($request_body);
+
+        $file_information = $this->createMock(TusFileInformation::class);
+        $file_information->method('getLength')->willReturn(123456);
+        $file_information->method('getOffset')->willReturn(0);
+        $this->file_information_provider->method('getFileInformation')->willReturn($file_information);
+        $data_writer->method('writeChunk')->willThrowException(new CannotWriteFileException());
 
         $response = $server->handle($incoming_request);
 
-        $this->assertEquals(500, $response->getStatusCode());
-        $this->assertTrue($response->hasHeader('Tus-Resumable'));
+        self::assertEquals(500, $response->getStatusCode());
+        self::assertTrue($response->hasHeader('Tus-Resumable'));
     }
 
     public function testANotFoundErrorIsGivenWhenTheFileCanNotBeProvided(): void
     {
         $server = new TusServer($this->response_factory, $this->data_store);
 
-        $incoming_request = \Mockery::mock(ServerRequestInterface::class);
-        $incoming_request->shouldReceive('getMethod')->andReturns('PATCH');
-        $incoming_request->shouldReceive('getHeaderLine')->with('Tus-Resumable')->andReturns('1.0.0');
-        $incoming_request->shouldReceive('getHeaderLine')->with('Content-Type')->andReturns('application/offset+octet-stream');
+        $incoming_request = $this->createMock(ServerRequestInterface::class);
+        $incoming_request->method('getMethod')->willReturn('PATCH');
 
-        $this->file_information_provider->shouldReceive('getFileInformation')->andReturns(null);
+        $incoming_request->method('getHeaderLine')->willReturnMap([
+            ['Tus-Resumable', '1.0.0'],
+            ['Content-Type', 'application/offset+octet-stream'],
+        ]);
+
+        $this->file_information_provider->method('getFileInformation')->willReturn(null);
 
         $response = $server->handle($incoming_request);
 
-        $this->assertEquals(404, $response->getStatusCode());
+        self::assertEquals(404, $response->getStatusCode());
     }
 
     public function testAnUploadCanBeTerminatedWhenTheTerminationExtensionIsEnabled(): void
     {
-        $terminater = \Mockery::mock(TusTerminaterDataStore::class);
-        $this->data_store->shouldReceive('getTerminater')->andReturns($terminater);
+        $terminater = $this->createMock(TusTerminaterDataStore::class);
+        $this->data_store->method('getTerminater')->willReturn($terminater);
         $server = new TusServer($this->response_factory, $this->data_store);
 
-        $incoming_request = \Mockery::mock(ServerRequestInterface::class);
-        $incoming_request->shouldReceive('getMethod')->andReturns('DELETE');
-        $incoming_request->shouldReceive('getHeaderLine')->with('Tus-Resumable')->andReturns('1.0.0');
+        $incoming_request = $this->createMock(ServerRequestInterface::class);
+        $incoming_request->method('getMethod')->willReturn('DELETE');
+        $incoming_request->method('getHeaderLine')->with('Tus-Resumable')->willReturn('1.0.0');
 
-        $this->file_information_provider->shouldReceive('getFileInformation')->andReturns(\Mockery::mock(TusFileInformation::class));
+        $this->file_information_provider->method('getFileInformation')->willReturn($this->createMock(TusFileInformation::class));
 
-        $terminater->shouldReceive('terminateUpload')->once();
+        $terminater->expects(self::once())->method('terminateUpload');
 
         $response = $server->handle($incoming_request);
 
-        $this->assertEquals(204, $response->getStatusCode());
+        self::assertEquals(204, $response->getStatusCode());
     }
 
     public function testAnUploadCanNotBeTerminatedWhenTheTerminationExtensionIsNotEnabled(): void
     {
-        $this->data_store->shouldReceive('getTerminater')->andReturns(null);
+        $this->data_store->method('getTerminater')->willReturn(null);
         $server = new TusServer($this->response_factory, $this->data_store);
 
-        $incoming_request = \Mockery::mock(ServerRequestInterface::class);
-        $incoming_request->shouldReceive('getMethod')->andReturns('DELETE');
-        $incoming_request->shouldReceive('getHeaderLine')->with('Tus-Resumable')->andReturns('1.0.0');
+        $incoming_request = $this->createMock(ServerRequestInterface::class);
+        $incoming_request->method('getMethod')->willReturn('DELETE');
+        $incoming_request->method('getHeaderLine')->with('Tus-Resumable')->willReturn('1.0.0');
 
         $response = $server->handle($incoming_request);
 
-        $this->assertEquals(405, $response->getStatusCode());
+        self::assertEquals(405, $response->getStatusCode());
     }
 
     public function testAnUploadIsNotFinishedWhenAllDataHasNotBeenCopied(): void
     {
-        $data_writer = \Mockery::mock(TusWriter::class);
-        $this->data_store->shouldReceive('getWriter')->andReturns($data_writer);
-        $finisher = \Mockery::mock(TusFinisherDataStore::class);
-        $this->data_store->shouldReceive('getFinisher')->andReturns($finisher);
-        $this->data_store->shouldReceive('getLocker')->andReturns(null);
+        $data_writer = $this->createMock(TusWriter::class);
+        $this->data_store->method('getWriter')->willReturn($data_writer);
+        $finisher = $this->createMock(TusFinisherDataStore::class);
+        $this->data_store->method('getFinisher')->willReturn($finisher);
+        $this->data_store->method('getLocker')->willReturn(null);
         $server = new TusServer($this->response_factory, $this->data_store);
 
-        $incomplete_upload_request = \Mockery::mock(ServerRequestInterface::class);
-        $incomplete_upload_request->shouldReceive('getMethod')->andReturns('PATCH');
-        $incomplete_upload_request->shouldReceive('getHeaderLine')->with('Tus-Resumable')->andReturns('1.0.0');
-        $incomplete_upload_request->shouldReceive('getHeaderLine')->with('Content-Type')->andReturns('application/offset+octet-stream');
-        $incomplete_upload_request->shouldReceive('hasHeader')->with('Upload-Offset')->andReturns(true);
-        $incomplete_upload_request->shouldReceive('getHeaderLine')->with('Upload-Offset')->andReturns(0);
-        $request_body = \Mockery::mock(StreamInterface::class);
+        $incomplete_upload_request = $this->createMock(ServerRequestInterface::class);
+        $incomplete_upload_request->method('getMethod')->willReturn('PATCH');
+        $incomplete_upload_request->method('hasHeader')->with('Upload-Offset')->willReturn(true);
+
+        $incomplete_upload_request->method('getHeaderLine')->willReturnMap([
+            ['Upload-Offset', 0],
+            ['Tus-Resumable', '1.0.0'],
+            ['Content-Type', 'application/offset+octet-stream'],
+        ]);
+
+        $request_body = $this->createMock(StreamInterface::class);
         $body_size    = 12;
-        $request_body->shouldReceive('detach')->andReturns(fopen('php://memory', 'rb+'));
-        $incomplete_upload_request->shouldReceive('getBody')->andReturns($request_body);
+        $request_body->method('detach')->willReturn(fopen('php://memory', 'rb+'));
+        $incomplete_upload_request->method('getBody')->willReturn($request_body);
 
-        $file_information = \Mockery::mock(TusFileInformation::class);
-        $file_information->shouldReceive('getLength')->andReturns($body_size * 100);
-        $file_information->shouldReceive('getOffset')->andReturns(0);
-        $this->file_information_provider->shouldReceive('getFileInformation')->andReturns($file_information);
+        $file_information = $this->createMock(TusFileInformation::class);
+        $file_information->method('getLength')->willReturn($body_size * 100);
+        $file_information->method('getOffset')->willReturn(0);
+        $this->file_information_provider->method('getFileInformation')->willReturn($file_information);
 
-        $data_writer->shouldReceive('writeChunk')->andReturns($body_size);
+        $data_writer->method('writeChunk')->willReturn($body_size);
 
-        $finisher->shouldReceive('finishUpload')->with($file_information)->never();
+        $finisher->expects(self::never())->method('finishUpload')->with($file_information);
 
         $server->handle($incomplete_upload_request);
     }
 
     public function testALockedUploadIsNotOverwritten(): void
     {
-        $locker = \Mockery::mock(TusLocker::class);
-        $this->data_store->shouldReceive('getLocker')->andReturns($locker);
+        $locker = $this->createMock(TusLocker::class);
+        $this->data_store->method('getLocker')->willReturn($locker);
         $server = new TusServer($this->response_factory, $this->data_store);
 
-        $incoming_request = \Mockery::mock(ServerRequestInterface::class);
-        $incoming_request->shouldReceive('getMethod')->andReturns('PATCH');
-        $incoming_request->shouldReceive('getHeaderLine')->with('Tus-Resumable')->andReturns('1.0.0');
-        $incoming_request->shouldReceive('getHeaderLine')->with('Content-Type')->andReturns('application/offset+octet-stream');
-        $incoming_request->shouldReceive('hasHeader')->with('Upload-Offset')->andReturns(true);
-        $incoming_request->shouldReceive('getHeaderLine')->with('Upload-Offset')->andReturns(0);
-        $request_body        = \Mockery::mock(StreamInterface::class);
+        $incoming_request = $this->createMock(ServerRequestInterface::class);
+        $incoming_request->method('getMethod')->willReturn('PATCH');
+        $incoming_request->method('hasHeader')->with('Upload-Offset')->willReturn(true);
+
+        $incoming_request->method('getHeaderLine')->willReturnMap([
+            ['Upload-Offset', 0],
+            ['Tus-Resumable', '1.0.0'],
+            ['Content-Type', 'application/offset+octet-stream'],
+        ]);
+
+        $request_body        = $this->createMock(StreamInterface::class);
         $request_body_stream = fopen('php://memory', 'rb+');
-        $request_body->shouldReceive('detach')->andReturns($request_body_stream);
-        $incoming_request->shouldReceive('getBody')->andReturns($request_body);
+        $request_body->method('detach')->willReturn($request_body_stream);
+        $incoming_request->method('getBody')->willReturn($request_body);
 
-        $file_information = \Mockery::mock(TusFileInformation::class);
-        $file_information->shouldReceive('getLength')->andReturns(123456);
-        $file_information->shouldReceive('getOffset')->andReturns(0);
-        $this->file_information_provider->shouldReceive('getFileInformation')->andReturns($file_information);
-        $this->file_information_provider->shouldReceive('getFileInformation')->andReturns(\Mockery::mock(TusFileInformation::class));
+        $file_information = $this->createMock(TusFileInformation::class);
+        $file_information->method('getLength')->willReturn(123456);
+        $file_information->method('getOffset')->willReturn(0);
+        $this->file_information_provider->method('getFileInformation')->willReturnOnConsecutiveCalls(
+            $file_information,
+            $this->createMock(TusFileInformation::class)
+        );
 
-        $locker->shouldReceive('lock')->andReturns(false);
-        $locker->shouldReceive('unlock');
-        $this->data_store->shouldReceive('getWriter')->never();
+        $locker->method('lock')->willReturn(false);
+        $locker->method('unlock');
+        $this->data_store->expects(self::never())->method('getWriter');
 
         $response = $server->handle($incoming_request);
 
-        $this->assertEquals(423, $response->getStatusCode());
+        self::assertEquals(423, $response->getStatusCode());
     }
 }

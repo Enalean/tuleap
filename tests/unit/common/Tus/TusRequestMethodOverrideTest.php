@@ -22,35 +22,32 @@ declare(strict_types=1);
 
 namespace Tuleap\Tus;
 
-use Mockery;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\AlwaysSuccessfulRequestHandler;
 
 final class TusRequestMethodOverrideTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testMethodCanBeOverridden(): void
     {
-        $request = Mockery::mock(ServerRequestInterface::class);
-        $request->shouldReceive('getHeaderLine')->with('X-Http-Method-Override')->andReturn('PATCH');
-        $request->shouldReceive('getMethod')->andReturn('POST');
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->method('getHeaderLine')->with('X-Http-Method-Override')->willReturn('PATCH');
+        $request->method('getMethod')->willReturn('POST');
 
         $response_factory = HTTPFactoryBuilder::responseFactory();
         $method_overrider = new TusRequestMethodOverride($response_factory);
 
-        $request->shouldReceive('withMethod')->with('PATCH')->andReturnSelf()->once();
+        $request->expects(self::once())->method('withMethod')->with('PATCH')->willReturnSelf();
 
         $method_overrider->process($request, new AlwaysSuccessfulRequestHandler($response_factory));
     }
 
     public function testMethodIsLeftUntouchedWhenThereIsNoOverrideHeader(): void
     {
-        $request = Mockery::mock(ServerRequestInterface::class);
-        $request->shouldReceive('getHeaderLine')->with('X-Http-Method-Override')->andReturn('');
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->method('getHeaderLine')->with('X-Http-Method-Override')->willReturn('');
 
-        $request->shouldNotReceive('withMethod');
+        $request->expects(self::never())->method('withMethod');
 
         $response_factory = HTTPFactoryBuilder::responseFactory();
         $method_overrider = new TusRequestMethodOverride($response_factory);
@@ -60,29 +57,29 @@ final class TusRequestMethodOverrideTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRequestIsRejectedIfTheMethodToOverrideIsNotAllowed(): void
     {
-        $request = Mockery::mock(ServerRequestInterface::class);
-        $request->shouldReceive('getHeaderLine')->with('X-Http-Method-Override')->andReturn('PATCH');
-        $request->shouldReceive('getMethod')->andReturn('GET');
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->method('getHeaderLine')->with('X-Http-Method-Override')->willReturn('PATCH');
+        $request->method('getMethod')->willReturn('GET');
 
         $response_factory = HTTPFactoryBuilder::responseFactory();
         $method_overrider = new TusRequestMethodOverride($response_factory);
 
         $response = $method_overrider->process($request, new AlwaysSuccessfulRequestHandler($response_factory));
 
-        $this->assertEquals(405, $response->getStatusCode());
+        self::assertEquals(405, $response->getStatusCode());
     }
 
     public function testRequestIsRejectedIfTheRequestedOverrideMethodIsNotAllowed(): void
     {
-        $request = Mockery::mock(ServerRequestInterface::class);
-        $request->shouldReceive('getHeaderLine')->with('X-Http-Method-Override')->andReturn('LOCK');
-        $request->shouldReceive('getMethod')->andReturn('PATCH');
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->method('getHeaderLine')->with('X-Http-Method-Override')->willReturn('LOCK');
+        $request->method('getMethod')->willReturn('PATCH');
 
         $response_factory = HTTPFactoryBuilder::responseFactory();
         $method_overrider = new TusRequestMethodOverride($response_factory);
 
         $response = $method_overrider->process($request, new AlwaysSuccessfulRequestHandler($response_factory));
 
-        $this->assertEquals(405, $response->getStatusCode());
+        self::assertEquals(405, $response->getStatusCode());
     }
 }
