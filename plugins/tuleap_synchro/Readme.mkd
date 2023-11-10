@@ -1,3 +1,0 @@
-# Tuleap Synchronisation
-
-Import artifacts across multiple tuleap instances
