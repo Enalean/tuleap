@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import common from "./webpack.common.js";
-import { webpack_configurator } from "@tuleap/build-system-configurator";
+import type { Fault } from "@tuleap/fault";
+import { getJSON, uri } from "@tuleap/fetch-result";
+import type { ResultAsync } from "neverthrow";
 
-export default webpack_configurator.extendDevConfiguration(common);
+export type RepositoriesPermissions = Array<{
+    readonly url: string;
+    readonly name: string;
+}>;
+
+function getSVNPermissions(project_id: string): ResultAsync<
+    {
+        readonly repositories_representation: RepositoriesPermissions;
+    },
+    Fault
+> {
+    return getJSON<{ readonly repositories_representation: RepositoriesPermissions }>(
+        uri`/plugins/svn/?group_id=${project_id}&action=permission-per-group`,
+    );
+}
+
+export { getSVNPermissions };

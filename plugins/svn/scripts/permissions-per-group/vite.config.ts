@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,17 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get } from "@tuleap/tlp-fetch";
+import { vite } from "@tuleap/build-system-configurator";
+import * as path from "node:path";
+import vue from "@vitejs/plugin-vue";
+import POGettextPlugin from "@tuleap/po-gettext-plugin";
 
-export { getSVNPermissions };
-
-async function getSVNPermissions(project_id) {
-    const response = await get("/plugins/svn/", {
-        params: {
-            group_id: project_id,
-            action: "permission-per-group",
+export default vite.defineAppConfig(
+    {
+        plugin_name: path.basename(path.resolve(__dirname, "../..")),
+        sub_app_name: path.basename(__dirname),
+    },
+    {
+        plugins: [POGettextPlugin.vite(), vue()],
+        build: {
+            rollupOptions: {
+                input: {
+                    "permissions-per-group": path.resolve(__dirname, "src/index.ts"),
+                },
+            },
         },
-    });
-
-    return response.json();
-}
+    },
+);

@@ -17,9 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import { initVueGettextFromPoGettextPlugin, getPOFileFromLocale } from "@tuleap/vue2-gettext-init";
+import { createApp } from "vue";
 import SvnPermissions from "./SVNPermissions.vue";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
+import { createGettext } from "vue3-gettext";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("svn-permission-per-group");
@@ -33,12 +34,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         throw new Error("Could not read data-project-id from mount point");
     }
 
-    await initVueGettextFromPoGettextPlugin(Vue, (locale) =>
-        import(`../po/${getPOFileFromLocale(locale)}`),
-    );
+    const gettext = await initVueGettext(createGettext, (locale: string) => {
+        return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
+    });
 
-    const RootComponent = Vue.extend(SvnPermissions);
-    new RootComponent({
-        propsData: { projectId: project_id },
-    }).$mount(vue_mount_point);
+    const app = createApp(SvnPermissions, {
+        project_id,
+    });
+    app.use(gettext);
+    app.mount(vue_mount_point);
 });
