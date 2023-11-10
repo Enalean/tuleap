@@ -17,8 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import { getPOFileFromLocale, initVueGettextFromPoGettextPlugin } from "@tuleap/vue2-gettext-init";
+import { createApp } from "vue";
+import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue3-gettext-init";
+import { createGettext } from "vue3-gettext";
 import App from "./components/App.vue";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -31,22 +32,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    await initVueGettextFromPoGettextPlugin(
-        Vue,
-        (locale) =>
-            import(
-                /* webpackChunkName: "project-admin-banner-po-" */ `../po/${getPOFileFromLocale(
-                    locale,
-                )}`
-            ),
+    const app = createApp(App, {
+        message: vue_mount_point.dataset.bannerMessage ?? "",
+        project_id: Number.parseInt(vue_mount_point.dataset.projectId, 10),
+        location: window.location,
+    });
+    app.use(
+        await initVueGettext(
+            createGettext,
+            (locale) => import(`../po/${getPOFileFromLocale(locale)}`),
+        ),
     );
-
-    const AppComponent = Vue.extend(App);
-    new AppComponent({
-        propsData: {
-            message: vue_mount_point.dataset.bannerMessage || "",
-            project_id: parseInt(vue_mount_point.dataset.projectId, 10),
-            location: window.location,
-        },
-    }).$mount(vue_mount_point);
+    app.mount(vue_mount_point);
 });

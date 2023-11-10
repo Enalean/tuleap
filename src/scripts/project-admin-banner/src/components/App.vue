@@ -38,7 +38,7 @@
 <script setup lang="ts">
 import type { Ref } from "vue";
 import { computed, onMounted, ref } from "vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import BannerPresenter from "./BannerPresenter.vue";
 import { deleteBannerForProject, saveBannerForProject } from "../api/rest-querier";
 import type { BannerState } from "../type";
