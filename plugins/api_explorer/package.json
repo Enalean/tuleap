@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "react": "^18.2.0",
-    "swagger-ui": "^5.0.0"
+    "swagger-ui": "^5.9.3"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
