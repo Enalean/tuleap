@@ -34,6 +34,7 @@
                     class="tlp-textarea"
                     id="description"
                     name="description"
+                    data-test="banner-message"
                     v-model="current_message"
                     v-bind:placeholder="$gettext('Choose a banner message')"
                 ></textarea>

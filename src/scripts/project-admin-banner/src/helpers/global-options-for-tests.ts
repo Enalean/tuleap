@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,15 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createLocalVue } from "@vue/test-utils";
-import { initVueGettext } from "@tuleap/vue2-gettext-init";
-import type { Vue } from "vue/types/vue";
+import type { MountingOptions } from "@vue/test-utils";
+import { createGettext } from "vue3-gettext";
 
-export async function createProjectAdminBannerLocalVue(): Promise<typeof Vue> {
-    const local_vue = createLocalVue();
-    await initVueGettext(local_vue, () => {
-        throw new Error("Fallback to default");
-    });
-
-    return local_vue;
-}
+export const getGlobalTestOptions = (): MountingOptions<unknown>["global"] => ({
+    plugins: [createGettext({ silent: true })],
+});

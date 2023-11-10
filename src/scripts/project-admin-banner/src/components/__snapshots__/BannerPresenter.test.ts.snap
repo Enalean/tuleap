@@ -14,7 +14,6 @@ exports[`BannerPresenter disables the whole form when on loading state 1`] = `
       Activate the banner on this project
     </label>
   </div>
-   
   <div>
     <div
       class="tlp-form-element tlp-form-element-disabled"
@@ -25,40 +24,34 @@ exports[`BannerPresenter disables the whole form when on loading state 1`] = `
       >
         Message
       </label>
-       
       <textarea
         class="tlp-textarea"
+        data-test="banner-message"
         id="description"
         name="description"
         placeholder="Choose a banner message"
       />
-       
       <p
         class="tlp-text-muted"
       >
-        
-                Your message will be condensed to one line
-            
+        Your message will be condensed to one line
       </p>
     </div>
   </div>
-   
   <div
     class="tlp-pane-section-submit"
   >
     <button
       class="tlp-button-primary"
       data-tlp-tooltip="Message is mandatory"
-      disabled="disabled"
+      disabled=""
       type="button"
     >
       <i
         class="tlp-button-icon fa fa-fw fa-spin fa-circle fa-circle-o-notch"
       />
-       
-      <!---->
+      <!--v-if-->
       Save the configuration
-        
     </button>
   </div>
 </div>
@@ -78,7 +71,6 @@ exports[`BannerPresenter displays a default message and an unchecked switch if b
       Activate the banner on this project
     </label>
   </div>
-   
   <div
     style="display: none;"
   >
@@ -91,24 +83,20 @@ exports[`BannerPresenter displays a default message and an unchecked switch if b
       >
         Message
       </label>
-       
       <textarea
         class="tlp-textarea"
+        data-test="banner-message"
         id="description"
         name="description"
         placeholder="Choose a banner message"
       />
-       
       <p
         class="tlp-text-muted"
       >
-        
-                Your message will be condensed to one line
-            
+        Your message will be condensed to one line
       </p>
     </div>
   </div>
-   
   <div
     class="tlp-pane-section-submit"
   >
@@ -117,13 +105,11 @@ exports[`BannerPresenter displays a default message and an unchecked switch if b
       data-tlp-tooltip="Message is mandatory"
       type="button"
     >
-      <!---->
-       
+      <!--v-if-->
       <i
         class="tlp-button-icon fa fa-save"
       />
       Save the configuration
-        
     </button>
   </div>
 </div>
@@ -143,7 +129,6 @@ exports[`BannerPresenter displays the banner and a checked switch if banner is s
       Activate the banner on this project
     </label>
   </div>
-   
   <div>
     <div
       class="tlp-form-element"
@@ -154,24 +139,20 @@ exports[`BannerPresenter displays the banner and a checked switch if banner is s
       >
         Message
       </label>
-       
       <textarea
         class="tlp-textarea"
+        data-test="banner-message"
         id="description"
         name="description"
         placeholder="Choose a banner message"
       />
-       
       <p
         class="tlp-text-muted"
       >
-        
-                Your message will be condensed to one line
-            
+        Your message will be condensed to one line
       </p>
     </div>
   </div>
-   
   <div
     class="tlp-pane-section-submit"
   >
@@ -180,13 +161,11 @@ exports[`BannerPresenter displays the banner and a checked switch if banner is s
       data-tlp-tooltip="Message is mandatory"
       type="button"
     >
-      <!---->
-       
+      <!--v-if-->
       <i
         class="tlp-button-icon fa fa-save"
       />
       Save the configuration
-        
     </button>
   </div>
 </div>

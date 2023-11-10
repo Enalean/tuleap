@@ -5,13 +5,11 @@ exports[`App Should display an error if banner deletion fails 1`] = `
   <div
     class="tlp-alert-danger"
   >
-    
-        An error occurred: an error message
-    
+    An error occurred: an error message
   </div>
-   
   <div>
     <banner-presenter-stub
+      loading="false"
       message="some message"
     />
   </div>
@@ -23,13 +21,11 @@ exports[`App Should display an error if banner update fails 1`] = `
   <div
     class="tlp-alert-danger"
   >
-    
-        An error occurred: Ooops something went wrong
-    
+    An error occurred: Ooops something went wrong
   </div>
-   
   <div>
     <banner-presenter-stub
+      loading="false"
       message="some message"
     />
   </div>
@@ -38,10 +34,10 @@ exports[`App Should display an error if banner update fails 1`] = `
 
 exports[`App displays message and remove button when banner is not empty 1`] = `
 <div>
-  <!---->
-   
+  <!--v-if-->
   <div>
     <banner-presenter-stub
+      loading="false"
       message=<b>My banner content</b>
     />
   </div>
@@ -50,10 +46,10 @@ exports[`App displays message and remove button when banner is not empty 1`] = `
 
 exports[`App displays something when no banner is set 1`] = `
 <div>
-  <!---->
-   
+  <!--v-if-->
   <div>
     <banner-presenter-stub
+      loading="false"
       message=""
     />
   </div>
@@ -65,13 +61,11 @@ exports[`App displays success message when the banner has been successfully modi
   <div
     class="tlp-alert-success"
   >
-    
-        The banner has been successfully modified
-    
+    The banner has been successfully modified
   </div>
-   
   <div>
     <banner-presenter-stub
+      loading="false"
       message=""
     />
   </div>
