@@ -22,7 +22,7 @@ tuleap-project-sidebar {
     --tuleap-project-sidebar-icon-font-family-brands: "Font Awesome 6 Brands";
 
     position: fixed;
-    z-index: 1000;
+    z-index: 2004;
     top: var(--platform-banner-offset-height, 0);
     left: 0;
     height: calc(100vh - var(--platform-banner-offset-height, 0px));
