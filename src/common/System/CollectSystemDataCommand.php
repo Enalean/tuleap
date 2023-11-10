@@ -89,6 +89,7 @@ final class CollectSystemDataCommand extends Command
 
         $this->gatherVersion($archive, $prefix);
         $this->gatherLogs($archive, $prefix);
+        $this->gatherHardwareInformation($archive, $prefix);
         $this->gatherConfiguration($archive, $prefix);
 
         $archive->close();
@@ -105,6 +106,12 @@ final class CollectSystemDataCommand extends Command
         $archive->addPattern('/.*(_syslog|_log|_error)$/', '/var/log/tuleap', ['add_path' => $prefix . '/log/tuleap/', 'remove_all_path' => true, 'comp_method' => ZipArchive::CM_XZ]);
         $this->addCompressedFile($archive, $prefix, '/var/log/nginx/error.log', 'log/nginx/error.log');
         $this->addCompressedFile($archive, $prefix, '/var/log/nginx/access.log', 'log/nginx/access.log');
+    }
+
+    private function gatherHardwareInformation(ZipArchive $archive, string $prefix): void
+    {
+        $this->addCompressedString($archive, $prefix, file_get_contents('/proc/cpuinfo'), 'cpuinfo');
+        $this->addCompressedString($archive, $prefix, file_get_contents('/proc/meminfo'), 'meminfo');
     }
 
     private function gatherConfiguration(ZipArchive $archive, string $prefix): void
