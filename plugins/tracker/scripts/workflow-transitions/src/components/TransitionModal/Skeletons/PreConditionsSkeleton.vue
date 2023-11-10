@@ -18,8 +18,8 @@
   -->
 
 <template>
-    <pre-conditions-section v-bind:is_transition_from_new_artifact="false">
-        <template slot="authorized-ugroups">
+    <section class="tlp-modal-body-section">
+        <div class="tlp-form-element">
             <label class="tlp-label tlp-label-skeleton">
                 <span class="tlp-skeleton-text"></span>
             </label>
@@ -27,25 +27,22 @@
                 class="tlp-select tlp-skeleton-field tracker-workflow-transition-modal-authorized-ugroups"
                 disabled
             ></select>
-        </template>
-        <template slot="fields-not-empty">
+        </div>
+        <div class="tlp-form-element">
             <label class="tlp-label tlp-label-skeleton">
                 <span class="tlp-skeleton-text"></span>
             </label>
             <select class="tlp-select tlp-skeleton-field" disabled></select>
-        </template>
+        </div>
         <label class="tlp-label tlp-checkbox" slot="comment-not-empty">
             <input type="checkbox" class="tlp-skeleton-field" disabled />
             <span class="tlp-skeleton-text"></span>
         </label>
-    </pre-conditions-section>
+    </section>
 </template>
 
 <script>
-import PreConditionsSection from "../PreConditionsSection.vue";
-
 export default {
     name: "PreConditionsSkeleton",
-    components: { PreConditionsSection },
 };
 </script>
