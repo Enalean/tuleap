@@ -9,8 +9,8 @@ future migration to Vue 3.
 ## Example
 
 ```ts
-const { $ngettext, interpolate } = useGettext();
+const gettext_provider = useGettext();
 
-const translated = $ngettext("%{ n } foo", "%{ n } foos", n);
-const interpolated = interpolate(translated, { n: n });
+const translated = gettext_provider.$ngettext("%{ n } foo", "%{ n } foos", n);
+const interpolated = gettext_provider.interpolate(translated, { n: n });
 ```

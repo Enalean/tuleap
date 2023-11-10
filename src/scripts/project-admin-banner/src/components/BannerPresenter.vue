@@ -62,109 +62,103 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import CKEDITOR from "ckeditor4";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import type { BannerState } from "../type";
-import "ckeditor4";
 
-@Component
-export default class BannerPresenter extends Vue {
-    @Prop({ required: true, type: String })
-    readonly message!: string;
+const props = defineProps<{
+    message: string;
+    loading: boolean;
+}>();
 
-    @Prop({ required: true, type: Boolean })
-    readonly loading!: boolean;
+const emit = defineEmits<{
+    (e: "save-banner", payload: BannerState): void;
+}>();
 
-    banner_is_activated: boolean = this.message !== "";
-    current_message: string = this.message;
-    // eslint-disable-next-line no-undef
-    editor: CKEDITOR.editor | null = null;
+const banner_is_activated = ref(props.message !== "");
+const current_message = ref(props.message);
+const embedded_editor = ref<HTMLTextAreaElement | null>(null);
+let editor: CKEDITOR.editor | null = null;
 
-    get should_tooltip_be_displayed(): boolean {
-        return this.current_message.length === 0 && this.banner_is_activated && !this.loading;
+const should_tooltip_be_displayed = computed(
+    () => current_message.value.length === 0 && banner_is_activated.value && !props.loading,
+);
+
+const is_save_button_disabled = computed(
+    () =>
+        (current_message.value.length === 0 && banner_is_activated.value) || props.loading === true,
+);
+
+const onChange = (): void => {
+    if (editor === null) {
+        return;
     }
 
-    get is_save_button_disabled(): boolean {
-        return (this.current_message.length === 0 && this.banner_is_activated) || this.loading;
+    current_message.value = editor.getData();
+};
+
+const onInstanceReady = (): void => {
+    if (editor === null) {
+        return;
     }
 
-    public mounted(): void {
-        this.createEditor();
-    }
+    editor.on("change", onChange);
 
-    public beforeDestroy(): void {
-        this.destroyEditor();
-    }
-
-    private createEditor(): void {
-        this.destroyEditor();
-
-        const text_area = this.$refs.embedded_editor;
-        if (!(text_area instanceof HTMLTextAreaElement)) {
-            throw new Error("The ref embedded_editor is not a HTMLTextAreaElement");
-        }
-
-        // eslint-disable-next-line no-undef
-        this.editor = CKEDITOR.replace(text_area, {
-            toolbar: [
-                ["Cut", "Copy", "Paste", "Undo", "Redo", "Link", "Unlink"],
-                ["Bold", "Italic"],
-            ],
-            disableNativeSpellChecker: false,
-            linkShowTargetTab: false,
-        });
-
-        this.editor.on("instanceReady", this.onInstanceReady);
-    }
-
-    private onInstanceReady(): void {
-        if (this.editor === null) {
+    editor.on("mode", () => {
+        if (editor === null) {
             return;
         }
 
-        this.editor.on("change", this.onChange);
-
-        this.editor.on("mode", () => {
-            if (this.editor === null) {
-                return;
-            }
-
-            if (this.editor.mode === "source") {
-                const editable = this.editor.editable();
-                editable.attachListener(editable, "input", () => {
-                    this.onChange();
-                });
-            }
-        });
-    }
-
-    private onChange(): void {
-        if (this.editor === null) {
-            return;
+        if (editor.mode === "source") {
+            const editable = editor.editable();
+            editable.attachListener(editable, "input", () => {
+                onChange();
+            });
         }
+    });
+};
 
-        this.current_message = this.editor.getData();
+const destroyEditor = (): void => {
+    if (editor !== null) {
+        editor.destroy();
+        editor = null;
+    }
+};
+
+const createEditor = (): void => {
+    destroyEditor();
+
+    const text_area = embedded_editor.value;
+    if (!(text_area instanceof HTMLTextAreaElement)) {
+        throw new Error("The ref embedded_editor is not a HTMLTextAreaElement");
     }
 
-    private destroyEditor(): void {
-        if (this.editor !== null) {
-            this.editor.destroy();
-            this.editor = null;
-        }
+    editor = CKEDITOR.replace(text_area, {
+        toolbar: [
+            ["Cut", "Copy", "Paste", "Undo", "Redo", "Link", "Unlink"],
+            ["Bold", "Italic"],
+        ],
+        disableNativeSpellChecker: false,
+        linkShowTargetTab: false,
+    });
+
+    editor.on("instanceReady", onInstanceReady);
+};
+
+const save = (): void => {
+    if (current_message.value.length === 0 && banner_is_activated.value) {
+        return;
     }
 
-    public save(): void {
-        if (this.current_message.length === 0 && this.banner_is_activated) {
-            return;
-        }
+    const banner_save_payload: BannerState = {
+        message: current_message.value,
+        activated: banner_is_activated.value,
+    };
 
-        const banner_save_payload: BannerState = {
-            message: this.current_message,
-            activated: this.banner_is_activated,
-        };
+    emit("save-banner", banner_save_payload);
+};
 
-        this.$emit("save-banner", banner_save_payload);
-    }
-}
+onMounted(createEditor);
+onBeforeUnmount(destroyEditor);
 </script>

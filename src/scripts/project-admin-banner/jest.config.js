@@ -19,6 +19,11 @@
 
 import { defineJestConfiguration } from "@tuleap/build-system-configurator";
 import { env } from "node:process";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 env.DISABLE_TS_TYPECHECK = "true";
 
@@ -26,4 +31,12 @@ const jest_base_config = defineJestConfiguration();
 export default {
     ...jest_base_config,
     displayName: "@tuleap/core-project-admin-banner",
+    transform: {
+        ...jest_base_config.transform,
+        "^.+\\.vue$": "unplugin-vue2-script-setup/jest",
+    },
+    moduleNameMapper: {
+        ...jest_base_config.moduleNameMapper,
+        "^vue$": path.resolve(__dirname, "./node_modules/vue/"),
+    },
 };

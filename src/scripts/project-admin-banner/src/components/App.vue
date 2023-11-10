@@ -30,94 +30,87 @@
             <banner-presenter
                 v-bind:message="message"
                 v-bind:loading="banner_presenter_is_loading"
-                v-on:delete-banner="deleteBanner"
                 v-on:save-banner="saveBanner"
             />
         </div>
     </div>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import type { Ref } from "vue";
+import { computed, onMounted, ref } from "vue";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import BannerPresenter from "./BannerPresenter.vue";
 import { deleteBannerForProject, saveBannerForProject } from "../api/rest-querier";
 import type { BannerState } from "../type";
 
+const gettext_provider = useGettext();
+
 const LOCATION_HASH_SUCCESS = "#banner-change-success";
 
-@Component({
-    components: {
-        BannerPresenter,
-    },
-})
-export default class App extends Vue {
-    @Prop({ required: true, type: String })
-    readonly message!: string;
+const props = defineProps<{
+    message: string;
+    project_id: number;
+    location: Location;
+}>();
 
-    @Prop({ required: true, type: Number })
-    readonly project_id!: number;
+const error_message: Ref<string | null> = ref(null);
+const has_banner_been_modified = ref(false);
+const banner_presenter_is_loading = ref(false);
+const location = ref(props.location);
 
-    @Prop({ required: true })
-    readonly location!: Location;
+const shouldDisplayErrorBanner = computed(() => error_message.value !== null);
 
-    private error_message: string | null = null;
-    has_banner_been_modified = false;
-    banner_presenter_is_loading = false;
+const translatedErrorMessage = computed(() =>
+    gettext_provider.interpolate(
+        gettext_provider.$gettext("An error occurred: %{ error_message }"),
+        {
+            error_message: String(error_message.value),
+        },
+    ),
+);
 
-    public mounted(): void {
-        if (this.location.hash === LOCATION_HASH_SUCCESS) {
-            this.location.hash = "";
-            this.has_banner_been_modified = true;
-        }
-    }
+const refreshOnSuccessChange = (): void => {
+    location.value.hash = LOCATION_HASH_SUCCESS;
+    location.value.reload();
+};
 
-    public saveBanner(bannerState: BannerState): void {
-        this.banner_presenter_is_loading = true;
-
-        if (!bannerState.activated) {
-            this.deleteBanner();
-            return;
-        }
-
-        this.saveBannerMessage(bannerState.message);
-    }
-
-    private saveBannerMessage(message: string): void {
-        saveBannerForProject(this.project_id, message)
-            .then(() => {
-                this.refreshOnSuccessChange();
-            })
-            .catch((error) => {
-                this.error_message = error.message;
-                this.banner_presenter_is_loading = false;
-            });
-    }
-
-    deleteBanner(): void {
-        deleteBannerForProject(this.project_id)
-            .then(() => {
-                this.refreshOnSuccessChange();
-            })
-            .catch((error) => {
-                this.error_message = error.message;
-                this.banner_presenter_is_loading = false;
-            });
-    }
-
-    get shouldDisplayErrorBanner(): boolean {
-        return this.error_message !== null;
-    }
-
-    get translatedErrorMessage(): string {
-        return this.$gettextInterpolate(this.$gettext("An error occurred: %{ error_message }"), {
-            error_message: this.error_message,
+const deleteBanner = (): void => {
+    deleteBannerForProject(props.project_id)
+        .then(() => {
+            refreshOnSuccessChange();
+        })
+        .catch((error) => {
+            error_message.value = error.message;
+            banner_presenter_is_loading.value = false;
         });
+};
+
+const saveBannerMessage = (message: string): void => {
+    saveBannerForProject(props.project_id, message)
+        .then(() => {
+            refreshOnSuccessChange();
+        })
+        .catch((error) => {
+            error_message.value = error.message;
+            banner_presenter_is_loading.value = false;
+        });
+};
+
+const saveBanner = (bannerState: BannerState): void => {
+    banner_presenter_is_loading.value = true;
+
+    if (!bannerState.activated) {
+        deleteBanner();
+        return;
     }
 
-    private refreshOnSuccessChange(): void {
-        this.location.hash = LOCATION_HASH_SUCCESS;
-        this.location.reload();
+    saveBannerMessage(bannerState.message);
+};
+
+onMounted((): void => {
+    if (location.value.hash === LOCATION_HASH_SUCCESS) {
+        location.value.hash = "";
+        has_banner_been_modified.value = true;
     }
-}
+});
 </script>
