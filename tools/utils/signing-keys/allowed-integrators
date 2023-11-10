@@ -1,7 +1,6 @@
 ## Active keys
 # Thomas Gerbet
 thomas.gerbet@enalean.com valid-after="20220307" sk-ecdsa-sha2-nistp256@openssh.com AAAAInNrLWVjZHNhLXNoYTItbmlzdHAyNTZAb3BlbnNzaC5jb20AAAAIbmlzdHAyNTYAAABBBGDWCQpV6NYUFXtickmEDX4cpKqwEclZ8I95eKlsLUX2h48RhGNNaddax9trF6eFoHhvfcQaAxT9DiVKlylpTE4AAAAEc3NoOg==
-thomas.gerbet@enalean.com valid-after="20220307" ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDBkQCdKDiEH+Rht+TICKsZqrUrLpypgJB6ZrYBfktNkxWB59Cvks6dPaynzDeYZjJsoCkhjGreG1oA9kTsPscqv+9gxm2eGGy1q7yCvEGeEd2uHu6v9vMg0ZtQzIWQ/dp3WJ5IDOoWmW9usBfdEU6+3mZy0jp3cMd4m7dssaZfCZdEc++HLURlGVc+ltP1TLIpegT0RH5MhkrN47EQ5R7WBfAUeRhMtQiqdcYkaECxjL+yMoem2fCLOiijIkNyXJjh4qvy7WCBjAe3TIsNilF/nkKu8qF/TIaXzHEpvym8vro5j5y0b5einRjXlECHZL8qBybktFmVpyaGBiYGQs6n
 # Joris MASSON
 joris.masson@enalean.com valid-after="20230724" sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIFMRico1Ry9nrRSRFBgsmh2cvH7opt/We64VQiqwOa86AAAAD3NzaDpTaWduQ29tbWl0cw==
 # Marie Ange GARNIER
@@ -20,3 +19,5 @@ nicolas.terray@enalean.com valid-after="20230504" sk-ecdsa-sha2-nistp256@openssh
 benjamin.dauton@enalean.com valid-after="20220313",valid-before="20230901" ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBACk5YB748T15wCdccF/spo+yt7FTz14FwR6Ty2TPlzRp/m8W/ANB2WALqt5KGbfkoYkNwwqsLGhusanxc6p7EM=
 # Joris MASSON
 joris.masson@enalean.com valid-after="20220309",valid-before="20230725" sk-ecdsa-sha2-nistp256@openssh.com AAAAInNrLWVjZHNhLXNoYTItbmlzdHAyNTZAb3BlbnNzaC5jb20AAAAIbmlzdHAyNTYAAABBBJzauleaSdTSKPKhEEv/vfugysMHmkYUf0GVvjiE96m9BzoXzig1zlm4Brebatqw/vYOng4Vm1TsF3/gwlk7YKEAAAAEc3NoOg==
+# Thomas GERBET
+thomas.gerbet@enalean.com valid-after="20220307",valid-before="20230901" ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDBkQCdKDiEH+Rht+TICKsZqrUrLpypgJB6ZrYBfktNkxWB59Cvks6dPaynzDeYZjJsoCkhjGreG1oA9kTsPscqv+9gxm2eGGy1q7yCvEGeEd2uHu6v9vMg0ZtQzIWQ/dp3WJ5IDOoWmW9usBfdEU6+3mZy0jp3cMd4m7dssaZfCZdEc++HLURlGVc+ltP1TLIpegT0RH5MhkrN47EQ5R7WBfAUeRhMtQiqdcYkaECxjL+yMoem2fCLOiijIkNyXJjh4qvy7WCBjAe3TIsNilF/nkKu8qF/TIaXzHEpvym8vro5j5y0b5einRjXlECHZL8qBybktFmVpyaGBiYGQs6n
