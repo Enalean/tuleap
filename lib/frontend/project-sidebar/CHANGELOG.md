@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.5.0
+
+* Collapse of the sidebar is no longer deprecated.
+* When sidebar is collapsed, the services are no longer displayed.
+
 ## 2.4.0
 
 * 🚸 In order to not clutter the sidebar when the number of linked projects is too big,
