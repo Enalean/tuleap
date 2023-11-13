@@ -79,7 +79,7 @@ class SkinTuleap123 extends SkinTemplate
         $current_user  = UserManager::instance()->getCurrentUser();
         $sidebar_state = $current_user->getPreference('sidebar_state');
 
-        if (! $sidebar_state || \ForgeConfig::getFeatureFlag(\Tuleap\Layout\ProjectSidebar\ProjectSidebarConfigRepresentation::FEATURE_FLAG) !== '1') {
+        if (! $sidebar_state) {
             $sidebar_state = 'sidebar-expanded';
         }
 
