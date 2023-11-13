@@ -22,21 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\Upload;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Tus\TusFileInformation;
 
-class FileBeingUploadedLockerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FileBeingUploadedLockerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
-    /**
-     * @var string
-     */
-    private $tmp_dir;
+    private string $tmp_dir;
 
     protected function setUp(): void
     {
@@ -64,33 +59,33 @@ class FileBeingUploadedLockerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testALockCanOnlyBeAcquiredOnce(): void
     {
         \ForgeConfig::set('tmp_dir', $this->tmp_dir);
-        $path_allocator = \Mockery::mock(PathAllocator::class);
+        $path_allocator = $this->createMock(PathAllocator::class);
         $path_allocator
-            ->shouldReceive('getPathForItemBeingUploaded')
-            ->andReturn("$this->tmp_dir/12");
+            ->method('getPathForItemBeingUploaded')
+            ->willReturn("$this->tmp_dir/12");
         $locker = new FileBeingUploadedLocker($path_allocator);
 
-        $file_information = \Mockery::mock(TusFileInformation::class);
-        $file_information->shouldReceive('getID')->andReturns(12);
+        $file_information = $this->createMock(TusFileInformation::class);
+        $file_information->method('getID')->willReturn(12);
 
-        $this->assertTrue($locker->lock($file_information));
-        $this->assertFalse($locker->lock($file_information));
+        self::assertTrue($locker->lock($file_information));
+        self::assertFalse($locker->lock($file_information));
     }
 
     public function testALockCanBeAcquiredAgainAfterHavingBeenReleased(): void
     {
         \ForgeConfig::set('tmp_dir', $this->tmp_dir);
-        $path_allocator = \Mockery::mock(PathAllocator::class);
+        $path_allocator = $this->createMock(PathAllocator::class);
         $path_allocator
-            ->shouldReceive('getPathForItemBeingUploaded')
-            ->andReturn("$this->tmp_dir/12");
+            ->method('getPathForItemBeingUploaded')
+            ->willReturn("$this->tmp_dir/12");
         $locker = new FileBeingUploadedLocker($path_allocator);
 
-        $file_information = \Mockery::mock(TusFileInformation::class);
-        $file_information->shouldReceive('getID')->andReturns(12);
+        $file_information = $this->createMock(TusFileInformation::class);
+        $file_information->method('getID')->willReturn(12);
 
-        $this->assertTrue($locker->lock($file_information));
+        self::assertTrue($locker->lock($file_information));
         $locker->unlock($file_information);
-        $this->assertTrue($locker->lock($file_information));
+        self::assertTrue($locker->lock($file_information));
     }
 }
