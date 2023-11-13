@@ -66,10 +66,8 @@ class PaginatedTimelineRepresentationBuilder
             case Comment::class:
                 assert($event instanceof Comment);
                 return $this->comment_representation_builder->buildRepresentation(
-                    $event->getId(),
                     $project_id,
                     $this->buildMinimalUserRepresentation($event->getUserId()),
-                    $event->getColor(),
                     $event
                 );
             case InlineComment::class:

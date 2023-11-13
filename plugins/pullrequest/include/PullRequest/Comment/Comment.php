@@ -20,16 +20,28 @@
 
 namespace Tuleap\PullRequest\Comment;
 
+use DateTimeImmutable;
+use Tuleap\Option\Option;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\Timeline\TimelineEvent;
+use function Psl\Type\int;
 
 /**
  * @psalm-immutable
  */
 final class Comment implements TimelineEvent, TimelineComment
 {
-    public function __construct(private int $id, private int $pull_request_id, private int $user_id, private int $post_date, private string $content, private int $parent_id, private string $color, private string $format)
-    {
+    public function __construct(
+        private int $id,
+        private int $pull_request_id,
+        private int $user_id,
+        private int $post_date,
+        private string $content,
+        private int $parent_id,
+        private string $color,
+        private string $format,
+        private Option $last_edition_date,
+    ) {
     }
 
     public function getId(): int
@@ -72,7 +84,15 @@ final class Comment implements TimelineEvent, TimelineComment
         return $this->format;
     }
 
-    public static function buildWithNewContent(Comment $comment, string $new_content): self
+    /**
+     * @return Option<int>
+     */
+    public function getLastEditionDate(): Option
+    {
+        return $this->last_edition_date;
+    }
+
+    public static function buildWithNewContent(Comment $comment, string $new_content, DateTimeImmutable $last_edition_date): self
     {
         return new self(
             $comment->id,
@@ -82,7 +102,8 @@ final class Comment implements TimelineEvent, TimelineComment
             $new_content,
             $comment->parent_id,
             $comment->color,
-            $comment->format
+            $comment->format,
+            Option::fromValue($last_edition_date->getTimestamp())
         );
     }
 
@@ -96,7 +117,8 @@ final class Comment implements TimelineEvent, TimelineComment
             $row['content'],
             (int) $row['parent_id'],
             $row['color'],
-            $row['format']
+            $row['format'],
+            $row['last_edition_date'] ?  Option::fromValue($row['last_edition_date']) : Option::nothing(int())
         );
     }
 
@@ -110,7 +132,8 @@ final class Comment implements TimelineEvent, TimelineComment
             $comment->content,
             $comment->parent_id,
             $comment->color,
-            $comment->format
+            $comment->format,
+            $comment->last_edition_date
         );
     }
 }

@@ -387,11 +387,9 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
     }
 
     /**
-     * @param Intger $id
-     *
      * @return array
      */
-    public function searchProjectRepositoryById($id)
+    public function searchProjectRepositoryById(int $id)
     {
         return $this->getDB()->row(
             'SELECT * FROM plugin_git WHERE repository_id = ? AND repository_deletion_date = "0000-00-00 00:00:00"',

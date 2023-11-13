@@ -34,7 +34,7 @@ final class CommentRepresentationBuilder
     {
     }
 
-    public function buildRepresentation(int $id, int $project_id, MinimalUserRepresentation $user_representation, string $color, Comment $comment): CommentRepresentation
+    public function buildRepresentation(int $project_id, MinimalUserRepresentation $user_representation, Comment $comment): CommentRepresentation
     {
         $comment_content = new CommentContent(
             $this->getPurifiedContent($project_id, $comment->getContent()),
@@ -44,10 +44,8 @@ final class CommentRepresentationBuilder
         return new CommentRepresentation(
             $comment,
             $comment_content,
-            $id,
             $project_id,
             $user_representation,
-            $color
         );
     }
 

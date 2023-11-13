@@ -54,12 +54,7 @@ class GitRepositoryFactory implements RetrieveGitRepository
         return $this->getRepositoryFromRow($row);
     }
 
-    /**
-     * Get a project repository by its id
-     *
-     * @return GitRepository the repository or null if not found
-     */
-    public function getRepositoryByIdUserCanSee(PFUser $user, $id)
+    public function getRepositoryByIdUserCanSee(PFUser $user, int $id): GitRepository
     {
         if ($id == GitRepositoryGitoliteAdmin::ID) {
             return new GitRepositoryGitoliteAdmin();

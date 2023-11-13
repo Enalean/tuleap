@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\REST\v1\Comment;
 
 use Codendi_HTMLPurifier;
-use Tuleap\PullRequest\Comment\Comment;
-use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
+use DateTimeImmutable;
+use Tuleap\PullRequest\Tests\Builders\CommentTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ContentInterpretorStub;
@@ -45,12 +45,10 @@ final class CommentRepresentationBuilderTest extends TestCase
 
     public function testItBuildsRepresentationForText(): void
     {
-        $comment = new Comment(1, 2, (int) $this->user->id, 123456789, "My **comment**", 1, "inca-silver", TimelineComment::FORMAT_TEXT);
+        $comment = CommentTestBuilder::aTextComment("Galant AMG")->withEditionDate(new DateTimeImmutable())->build();
         (new CommentRepresentationBuilder($this->purifier, $this->interpreter))->buildRepresentation(
-            1,
             101,
             $this->user,
-            "placid-blue",
             $comment
         );
         self::assertSame($this->interpreter->getInterpretedContentWithReferencesCount(), 0);
@@ -58,12 +56,10 @@ final class CommentRepresentationBuilderTest extends TestCase
 
     public function testItBuildsRepresentationForMarkdown(): void
     {
-        $comment = new Comment(1, 2, (int) $this->user->id, 123456789, "My **comment**", 1, "inca-silver", TimelineComment::FORMAT_MARKDOWN);
+        $comment = CommentTestBuilder::aMarkdownComment("Galant AMG")->build();
         (new CommentRepresentationBuilder($this->purifier, $this->interpreter))->buildRepresentation(
-            1,
             101,
             $this->user,
-            "placid-blue",
             $comment
         );
         self::assertSame($this->interpreter->getInterpretedContentWithReferencesCount(), 1);

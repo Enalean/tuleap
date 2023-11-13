@@ -22,68 +22,80 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\REST\v1\Comment;
 
+use DateTimeImmutable;
 use GitRepoNotFoundException;
+use LogicException;
+use Luracast\Restler\RestException;
 use PFUser;
-use Project_AccessException;
+use Tuleap\Git\RetrieveGitRepository;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
-use Tuleap\PullRequest\Authorization\CannotAccessToPullRequestFault;
-use Tuleap\PullRequest\Authorization\CheckUserCanAccessPullRequest;
 use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Comment\CommentFormatNotAllowedFault;
 use Tuleap\PullRequest\Comment\CommentIsNotFromCurrentUserFault;
 use Tuleap\PullRequest\Comment\CommentNotFoundFault;
 use Tuleap\PullRequest\Comment\CommentRetriever;
 use Tuleap\PullRequest\Comment\CommentUpdater;
-use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
-use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\PullRequest\REST\v1\AccessiblePullRequestRESTRetriever;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
-use Tuleap\PullRequest\PullRequestRetriever;
 use Tuleap\PullRequest\REST\v1\CommentPATCHRepresentation;
+use Tuleap\User\REST\MinimalUserRepresentation;
 
 final class PATCHCommentHandler
 {
     public function __construct(
         private readonly CommentRetriever $comment_retriever,
         private readonly CommentUpdater $comment_dao,
-        private readonly PullRequestRetriever $pull_request_retriever,
-        private readonly CheckUserCanAccessPullRequest $pull_request_permission_checker,
+        private readonly AccessiblePullRequestRESTRetriever $pull_request_permission_retriever,
+        private readonly CommentRepresentationBuilder $comment_representation_builder,
+        private readonly RetrieveGitRepository $git_repository_factory,
     ) {
     }
 
     /**
-     * @return Ok<null>|Err<Fault>
+     * @return Ok<CommentRepresentation>|Err<Fault>
+     * @throw RestException
      */
-    public function handle(PFUser $user, int $comment_id, CommentPATCHRepresentation $comment_data): Ok|Err
+    public function handle(PFUser $user, int $comment_id, CommentPATCHRepresentation $comment_data, DateTimeImmutable $comment_edition_time): Ok|Err
     {
         $comment_to_update_option = $this->comment_retriever->getCommentByID($comment_id);
         return $comment_to_update_option->okOr(Result::err(CommentNotFoundFault::withCommentId($comment_id)))
                 ->andThen(
-                    function (Comment $comment_to_update) use ($user, $comment_data) {
+                    function (Comment $comment_to_update) use ($user, $comment_data, $comment_edition_time) {
                         if ($comment_to_update->getFormat() !== TimelineComment::FORMAT_MARKDOWN) {
                             return Result::err(CommentFormatNotAllowedFault::withGivenFormat($comment_to_update->getFormat()));
                         }
 
-                        $pull_request_result = $this->pull_request_retriever->getPullRequestById($comment_to_update->getPullRequestId());
-                        return $pull_request_result->andThen(
-                            function (PullRequest $pull_request) use ($comment_to_update, $user, $comment_data) {
-                                try {
-                                    $this->pull_request_permission_checker->checkPullRequestIsReadableByUser($pull_request, $user);
-                                } catch (GitRepoNotFoundException | Project_AccessException | UserCannotReadGitRepositoryException $e) {
-                                    return Result::err(CannotAccessToPullRequestFault::fromUpdatingComment($e));
-                                }
-                                if ((int) $user->getId() !== $comment_to_update->getUserId()) {
-                                    return Result::err(CommentIsNotFromCurrentUserFault::fromComment());
-                                }
+                        if ((int) $user->getId() !== $comment_to_update->getUserId()) {
+                            return Result::err(CommentIsNotFromCurrentUserFault::fromComment());
+                        }
 
-                                $new_comment = Comment::buildWithNewContent($comment_to_update, $comment_data->content);
-                                $this->comment_dao->updateComment($new_comment);
-                                return Result::ok(null);
-                            }
+                        $new_comment = Comment::buildWithNewContent($comment_to_update, $comment_data->content, $comment_edition_time);
+                        $this->comment_dao->updateComment($new_comment);
+
+                        $project_id = $this->getProjectIdFromPullRequest($new_comment, $user);
+
+                        return Result::ok(
+                            $this->comment_representation_builder->buildRepresentation(
+                                $project_id,
+                                MinimalUserRepresentation::build($user),
+                                $new_comment
+                            )
                         );
                     }
                 );
+    }
+
+    private function getProjectIdFromPullRequest(Comment $comment, PFUser $user): int
+    {
+        $pull_request = $this->pull_request_permission_retriever->getAccessiblePullRequest($comment->getPullRequestId(), $user);
+        try {
+            $repository = $this->git_repository_factory->getRepositoryByIdUserCanSee($user, $pull_request->getRepoDestId());
+            return (int) $repository->getProject()->getID();
+        } catch (GitRepoNotFoundException $exception) {
+            throw new LogicException("Exception should already be caught by AccessiblePullRequestRESTRetriever::getAccessiblePullRequest");
+        }
     }
 }
