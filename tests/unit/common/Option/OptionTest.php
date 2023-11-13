@@ -33,6 +33,17 @@ final class OptionTest extends TestCase
         self::assertSame('nothing', Option::nothing(\Psl\Type\string())->unwrapOr('nothing'));
     }
 
+    private function getNullable(bool $return_null): ?string
+    {
+        return ($return_null) ? null : 'value';
+    }
+
+    public function testFromNullable(): void
+    {
+        self::assertSame('value', Option::fromNullable($this->getNullable(false))->unwrapOr('nothing'));
+        self::assertSame('nothing', Option::fromNullable($this->getNullable(true))->unwrapOr('nothing'));
+    }
+
     public function testCanApplyWhenValueIsProvided(): void
     {
         $value         = new \stdClass();

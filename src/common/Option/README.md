@@ -28,6 +28,18 @@ If you work on a scalar/array value you can use `::nothing()` this way:
 \Tuleap\Option\Option::nothing(\Psl\Type\string()); // \Tuleap\Option\Option<string>
 ```
 
+When working with existing code that returns `null|<ValueType>`, you can use `Option::fromNullable()`:
+
+Example:
+
+```php
+function returnsANullable(): ?\PFUser
+{
+}
+
+$option = Option::fromNullable($this->returnsANullable()); // \Tuleap\Option\Option<\PFUser>
+```
+
 You can then use the resulting value using `::apply()`:
 ```php
 $option = getSuperUser($current_user);

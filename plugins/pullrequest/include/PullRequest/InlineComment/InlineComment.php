@@ -20,11 +20,15 @@
 
 namespace Tuleap\PullRequest\InlineComment;
 
+use Tuleap\Option\Option;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\Timeline\TimelineEvent;
 
 final class InlineComment implements TimelineEvent, TimelineComment
 {
+    /**
+     * @param Option<int> $last_edition_date
+     */
     public function __construct(
         private int $id,
         private int $pull_request_id,
@@ -38,10 +42,11 @@ final class InlineComment implements TimelineEvent, TimelineComment
         private string $position,
         private string $color,
         private string $format,
+        private Option $last_edition_date,
     ) {
     }
 
-    public static function buildWithNewContent(self $comment, string $new_content): self
+    public static function buildWithNewContent(self $comment, string $new_content, \DateTimeImmutable $last_edition_date): self
     {
         return new self(
             $comment->id,
@@ -55,7 +60,8 @@ final class InlineComment implements TimelineEvent, TimelineComment
             $comment->parent_id,
             $comment->position,
             $comment->color,
-            $comment->format
+            $comment->format,
+            Option::fromValue($last_edition_date->getTimestamp())
         );
     }
 
@@ -73,7 +79,8 @@ final class InlineComment implements TimelineEvent, TimelineComment
             (int) $row['parent_id'],
             $row['position'],
             $row['color'],
-            $row['format']
+            $row['format'],
+            Option::fromNullable($row['last_edition_date'])
         );
     }
 
@@ -145,5 +152,11 @@ final class InlineComment implements TimelineEvent, TimelineComment
     public function getFormat(): string
     {
         return $this->format;
+    }
+
+    /** @return Option<int> */
+    public function getLastEditionDate(): Option
+    {
+        return $this->last_edition_date;
     }
 }

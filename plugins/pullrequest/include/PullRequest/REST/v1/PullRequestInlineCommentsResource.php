@@ -92,6 +92,7 @@ final class PullRequestInlineCommentsResource extends AuthenticatedResource
             $git_repository_factory,
             new \ReferenceManager()
         );
-        $handler->handle($current_user, $id, $comment_data)->mapErr(FaultMapper::mapToRestException(...));
+        $handler->handle($current_user, $id, $comment_data, new \DateTimeImmutable())
+            ->mapErr(FaultMapper::mapToRestException(...));
     }
 }

@@ -24,7 +24,6 @@ use DateTimeImmutable;
 use Tuleap\Option\Option;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\Timeline\TimelineEvent;
-use function Psl\Type\int;
 
 /**
  * @psalm-immutable
@@ -118,7 +117,7 @@ final class Comment implements TimelineEvent, TimelineComment
             (int) $row['parent_id'],
             $row['color'],
             $row['format'],
-            $row['last_edition_date'] ?  Option::fromValue($row['last_edition_date']) : Option::nothing(int())
+            Option::fromNullable($row['last_edition_date']),
         );
     }
 

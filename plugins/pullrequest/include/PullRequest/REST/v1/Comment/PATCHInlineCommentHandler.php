@@ -60,11 +60,12 @@ final class PATCHInlineCommentHandler
         \PFUser $user,
         int $inline_comment_id,
         InlineCommentPATCHRepresentation $comment_data,
+        \DateTimeImmutable $comment_edition_date,
     ): Ok|Err {
         return $this->comment_retriever
             ->getInlineCommentByID($inline_comment_id)
             ->okOr(Result::err(InlineCommentNotFoundFault::fromCommentId($inline_comment_id)))
-            ->andThen(function (InlineComment $comment) use ($comment_data, $user) {
+            ->andThen(function (InlineComment $comment) use ($comment_edition_date, $comment_data, $user) {
                 if ($comment->getFormat() !== TimelineComment::FORMAT_MARKDOWN) {
                     return Result::err(CommentFormatNotAllowedFault::withGivenFormat($comment->getFormat()));
                 }
@@ -74,13 +75,13 @@ final class PATCHInlineCommentHandler
                 }
 
                 return $this->pull_request_retriever->getPullRequestById($comment->getPullRequestId())
-                    ->andThen(function (PullRequest $pull_request) use ($comment_data, $comment, $user) {
+                    ->andThen(function (PullRequest $pull_request) use ($comment_edition_date, $comment_data, $comment, $user) {
                         try {
                             $this->pull_request_permission_checker->checkPullRequestIsReadableByUser($pull_request, $user);
                         } catch (\GitRepoNotFoundException | UserCannotReadGitRepositoryException | \Project_AccessException $e) {
                             return Result::err(CannotAccessToPullRequestFault::fromUpdatingComment($e));
                         }
-                        $updated_comment = InlineComment::buildWithNewContent($comment, $comment_data->content);
+                        $updated_comment = InlineComment::buildWithNewContent($comment, $comment_data->content, $comment_edition_date);
                         $this->comment_saver->saveUpdatedComment($updated_comment);
 
                         $destination_repository = $this->repository_retriever->getRepositoryById($pull_request->getRepoDestId());
