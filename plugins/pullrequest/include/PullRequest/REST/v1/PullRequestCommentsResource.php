@@ -28,6 +28,7 @@ use GitDao;
 use GitRepositoryFactory;
 use Luracast\Restler\RestException;
 use ProjectManager;
+use ReferenceManager;
 use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
@@ -127,7 +128,8 @@ final class PullRequestCommentsResource extends AuthenticatedResource
             $comment_dao,
             $accessible_pull_request_retriever,
             new CommentRepresentationBuilder($purifier, $content_interpreter),
-            $git_repository_factory
+            $git_repository_factory,
+            ReferenceManager::instance()
         );
 
         $current_user = UserManager::instance()->getCurrentUser();

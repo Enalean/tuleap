@@ -55,6 +55,7 @@ use Tuleap\REST\JsonCast;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\ExtractAndSaveCrossReferencesStub;
 
 final class PATCHCommentHandlerTest extends TestCase
 {
@@ -69,6 +70,7 @@ final class PATCHCommentHandlerTest extends TestCase
     private \PFUser $comment_author;
     private RetrieveGitRepositoryStub $git_factory;
     private DateTimeImmutable $last_edition_date;
+    private ExtractAndSaveCrossReferencesStub $cross_references_saver;
 
     protected function setUp(): void
     {
@@ -85,7 +87,7 @@ final class PATCHCommentHandlerTest extends TestCase
         $this->comment_updater_dao             = CommentUpdaterStub::fromDefault();
         $this->pull_request_dao                = SearchPullRequestStub::withPullRequest($pull_request);
         $this->pull_request_permission_checker = CheckUserCanAccessPullRequestStub::withAllowed();
-
+        $this->cross_references_saver          = ExtractAndSaveCrossReferencesStub::withCallCount();
 
         $git_repository = new GitRepository();
         $git_repository->setProject(ProjectTestBuilder::aProject()->withId(15)->build());
@@ -111,7 +113,8 @@ final class PATCHCommentHandlerTest extends TestCase
                     new EnhancedCodeBlockExtension(new CodeBlockFeatures())
                 )
             ),
-            $this->git_factory
+            $this->git_factory,
+            $this->cross_references_saver
         );
         return $put_handler_comment->handle($this->comment_author, 1058, $this->comment_data, $this->last_edition_date);
     }
@@ -125,6 +128,7 @@ final class PATCHCommentHandlerTest extends TestCase
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(CommentNotFoundFault::class, $result->error);
         self::assertSame(0, $this->comment_updater_dao->getUpdateCommentMethodCount());
+        self::assertSame(0, $this->cross_references_saver->getCallCount());
     }
 
     public function testItReturnsAnErrorIfTheUSerTryToEditACommentOfAnotherUser(): void
@@ -140,6 +144,7 @@ final class PATCHCommentHandlerTest extends TestCase
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(CommentIsNotFromCurrentUserFault::class, $result->error);
         self::assertSame(0, $this->comment_updater_dao->getUpdateCommentMethodCount());
+        self::assertSame(0, $this->cross_references_saver->getCallCount());
     }
 
     public function testUserCannotSeeThePullRequest(): void
@@ -153,6 +158,7 @@ final class PATCHCommentHandlerTest extends TestCase
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(CannotAccessToPullRequestFault::class, $result->error);
         self::assertSame(0, $this->comment_updater_dao->getUpdateCommentMethodCount());
+        self::assertSame(0, $this->cross_references_saver->getCallCount());
     }
 
     public function testItReturnsAnErrorWhenTheEditedCommentIsNotInMarkdown(): void
@@ -165,6 +171,7 @@ final class PATCHCommentHandlerTest extends TestCase
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(CommentFormatNotAllowedFault::class, $result->error);
         self::assertSame(0, $this->comment_updater_dao->getUpdateCommentMethodCount());
+        self::assertSame(0, $this->cross_references_saver->getCallCount());
     }
 
     public function testUpdatesTheComment(): void
@@ -191,5 +198,6 @@ final class PATCHCommentHandlerTest extends TestCase
         self::assertSame(JsonCast::toDate($this->last_edition_date->getTimestamp()), $updated_comment->last_edition_date);
 
         self::assertSame(1, $this->comment_updater_dao->getUpdateCommentMethodCount());
+        self::assertSame(1, $this->cross_references_saver->getCallCount());
     }
 }
