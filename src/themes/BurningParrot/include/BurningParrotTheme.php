@@ -458,7 +458,7 @@ class BurningParrotTheme extends BaseLayout
     private function shouldIncludeSitebarStatePreference(array $params)
     {
         $is_in_siteadmin     = $this->isInSiteAdmin($params);
-        $user_has_preference = \ForgeConfig::getFeatureFlag(\Tuleap\Layout\ProjectSidebar\ProjectSidebarConfigRepresentation::FEATURE_FLAG) === '1' && $this->current_user->user->getPreference('sidebar_state');
+        $user_has_preference = $this->current_user->user->getPreference('sidebar_state');
 
         return ! $is_in_siteadmin && $user_has_preference;
     }

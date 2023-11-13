@@ -24,8 +24,6 @@ namespace Tuleap\Layout\ProjectSidebar;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\BuildVersion\FlavorFinder;
-use Tuleap\Config\ConfigKeyString;
-use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Layout\Logo\IDetectIfLogoIsCustomized;
 use Tuleap\Layout\ProjectSidebar\InstanceInformation\ProjectSidebarInstanceInformation;
@@ -44,16 +42,6 @@ use Tuleap\User\CurrentUserWithLoggedInInformation;
  */
 final class ProjectSidebarConfigRepresentation
 {
-    #[FeatureFlagConfigKey(<<<'EOF'
-    Feature flag to allow users to collapse the sidebar.
-    0 => users cannot collapse the sidebar (default)
-    1 => users can collapse the sidebar
-    ⚠️  will be removed soon. Please warn us if you activate this flag.
-    EOF
-    )]
-    #[ConfigKeyString('0')]
-    public const FEATURE_FLAG = 'allow_collapse_of_sidebar';
-
     /**
      * @param SidebarServicePresenter[] $tools
      */
@@ -63,7 +51,6 @@ final class ProjectSidebarConfigRepresentation
         public ProjectSidebarUser $user,
         public ProjectSidebarInstanceInformation $instance_information,
         public array $tools,
-        public bool $is_collapsible,
     ) {
     }
 
@@ -102,7 +89,6 @@ final class ProjectSidebarConfigRepresentation
                 $glyph_finder,
             ),
             [...$project_sidebar_tools_builder->getSidebarTools($current_user->user, $currently_active_service, $active_promoted_item_id, $project)],
-            \ForgeConfig::getFeatureFlag(self::FEATURE_FLAG) === '1',
         );
     }
 }
