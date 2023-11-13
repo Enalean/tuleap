@@ -360,10 +360,12 @@ class AgileDashboardRouter
                 if (! $request->getCurrentUser()->isAdmin($request->getProject()->getID())) {
                     $GLOBALS['Response']->send400JSONErrors(
                         [
-                            'error' => dgettext(
-                                'tuleap-agiledashboard',
-                                "You don't have permissions to see user groups."
-                            ),
+                            'error' => [
+                                'message' => dgettext(
+                                    'tuleap-agiledashboard',
+                                    "You don't have permissions to see user groups."
+                                ),
+                            ],
                         ]
                     );
                 }
