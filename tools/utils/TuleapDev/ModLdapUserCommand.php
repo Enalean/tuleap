@@ -41,7 +41,8 @@ final class ModLdapUserCommand extends Command
         $this->setName('mod-ldap-user')
             ->setDescription('Modify a LDAP user into development directory')
             ->addArgument('login', InputArgument::REQUIRED, 'Login name (uid)')
-            ->addOption('realname', '', InputOption::VALUE_REQUIRED, 'New Realname');
+            ->addOption('realname', '', InputOption::VALUE_REQUIRED, 'New Realname')
+            ->addOption('login', '', InputOption::VALUE_REQUIRED, 'New login (uid)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -52,8 +53,10 @@ final class ModLdapUserCommand extends Command
             return Command::INVALID;
         }
         $real_name = $input->getOption('realname');
-        if (! $real_name) {
-            $output->writeln('<error>Real name is missing</error>');
+        $new_uid   = $input->getOption('login');
+
+        if (! $real_name && ! $new_uid) {
+            $output->writeln('<error>You must change at least one thing (realname, login, ...)</error>');
             return Command::INVALID;
         }
 
@@ -64,7 +67,7 @@ final class ModLdapUserCommand extends Command
         $ldap_plugin->getPluginInfo();
 
         $result = $this->getLdapConnection()
-            ->andThen(function (Connection $ds) use ($login, $real_name) {
+            ->andThen(function (Connection $ds) use ($login, $real_name, $new_uid) {
                 $login_search = \ForgeConfig::get('sys_ldap_uid') . '=' . ldap_escape($login, '', LDAP_ESCAPE_FILTER);
                 $sr           = ldap_search($ds, \ForgeConfig::get('sys_ldap_dn'), $login_search);
                 $entries      = ldap_get_entries($ds, $sr);
@@ -72,14 +75,35 @@ final class ModLdapUserCommand extends Command
                     return Result::err(Fault::fromMessage('There is no entry that corresponds to this login'));
                 }
 
-                $info                = $this->getExistingUserInfo($entries);
-                $info['cn']          = $real_name;
-                $info['sn']          = $real_name;
-                $info['displayName'] = $real_name;
+                $info         = $this->getExistingUserInfo($entries);
+                $info_changed = false;
+                if ($real_name && $info['cn'] !== $real_name) {
+                    $info['cn']          = $real_name;
+                    $info['sn']          = $real_name;
+                    $info['displayName'] = $real_name;
+                    $info_changed        = true;
+                }
 
-                $user_dn = 'uid=' . ldap_escape($login) . ',' . \ForgeConfig::get('sys_ldap_people_dn');
-                if (! ldap_mod_replace($ds, $user_dn, $info)) {
-                    return Result::err(Fault::fromMessage('Unable to modify user in LDAP: ' . ldap_error($ds)));
+                if ($new_uid && $new_uid !== $login) {
+                    $info['uid']  = $new_uid;
+                    $info_changed = true;
+                }
+
+                if ($new_uid && $new_uid !== $login) {
+                    $existing_full_user_dn = 'uid=' . ldap_escape($login) . ',' . \ForgeConfig::get('sys_ldap_people_dn');
+                    $new_user_dn           = 'uid=' . ldap_escape($new_uid);
+                    $parent_dn             = \ForgeConfig::get('sys_ldap_people_dn');
+                    if (! ldap_rename($ds, $existing_full_user_dn, $new_user_dn, $parent_dn, true)) {
+                        return Result::err(Fault::fromMessage('Unable to modify user in LDAP: ' . ldap_error($ds)));
+                    }
+                    $login = $new_uid;
+                }
+
+                if ($info_changed) {
+                    $user_dn = 'uid=' . ldap_escape($login) . ',' . \ForgeConfig::get('sys_ldap_people_dn');
+                    if (! ldap_mod_replace($ds, $user_dn, $info)) {
+                        return Result::err(Fault::fromMessage('Unable to modify user in LDAP: ' . ldap_error($ds)));
+                    }
                 }
 
                 return Result::ok('User modified in LDAP');
