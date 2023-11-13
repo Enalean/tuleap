@@ -26,17 +26,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Backend;
 
+use Backend;
 use BackendSVN;
 use Event;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use EventManager;
 use org\bovigo\vfs\vfsStream;
 use Tuleap\GlobalSVNPollution;
-use Backend;
-use EventManager;
 
 final class BackendTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalSVNPollution;
 
     protected function tearDown(): void
@@ -48,10 +46,10 @@ final class BackendTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testFactoryCore(): void
     {
         // Core backends
-        $this->assertInstanceOf(\BackendSVN::class, Backend::instance(Backend::SVN));
-        $this->assertInstanceOf(\Backend::class, Backend::instance(Backend::BACKEND));
-        $this->assertInstanceOf(\BackendSystem::class, Backend::instance(Backend::SYSTEM));
-        $this->assertInstanceOf(\BackendAliases::class, Backend::instance(Backend::ALIASES));
+        self::assertInstanceOf(\BackendSVN::class, Backend::instance(Backend::SVN));
+        self::assertInstanceOf(\Backend::class, Backend::instance(Backend::BACKEND));
+        self::assertInstanceOf(\BackendSystem::class, Backend::instance(Backend::SYSTEM));
+        self::assertInstanceOf(\BackendAliases::class, Backend::instance(Backend::ALIASES));
     }
 
     public function testFactoryPlugin(): void
@@ -63,14 +61,14 @@ final class BackendTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         };
         //Plugin backends. Give the base classname to build the backend
-        $this->assertInstanceOf($fake_backend::class, Backend::instance('plugin_fake', $fake_backend::class)); //like plugins !
+        self::assertInstanceOf($fake_backend::class, Backend::instance('plugin_fake', $fake_backend::class)); //like plugins !
     }
 
     public function testFactoryPluginBad(): void
     {
         //The base classname is mandatory for unkown (by core) backends
         // else it search for Backend . $type
-        $this->expectException(\RuntimeException::class);
+        self::expectException(\RuntimeException::class);
         Backend::instance('plugin_fake');
     }
 
@@ -91,7 +89,7 @@ final class BackendTest extends \Tuleap\Test\PHPUnit\TestCase
             'getBackend',
             false
         );
-        $this->assertInstanceOf($backend_overridden_by_plugin::class, Backend::instance(Backend::SVN));
+        self::assertInstanceOf($backend_overridden_by_plugin::class, Backend::instance(Backend::SVN));
     }
 
     public function testFactoryOverrideWithoutParameters(): void
@@ -118,7 +116,7 @@ final class BackendTest extends \Tuleap\Test\PHPUnit\TestCase
             false
         );
         $b = Backend::instance(Backend::SVN);
-        $this->assertEquals($b->a_variable_for_tests, -25);
+        self::assertEquals(-25, $b->a_variable_for_tests);
     }
 
     public function testFactoryOverrideWithParameters(): void
@@ -145,7 +143,7 @@ final class BackendTest extends \Tuleap\Test\PHPUnit\TestCase
             false
         );
         $b = Backend::instance(Backend::SVN, null, [1, 2, 3]);
-        $this->assertEquals($b->a_variable_for_tests, 9);
+        self::assertEquals(9, $b->a_variable_for_tests);
     }
 
     public function testFactoryOverrideWithParametersDefinedInPlugin(): void
@@ -190,7 +188,7 @@ final class BackendTest extends \Tuleap\Test\PHPUnit\TestCase
             false
         );
         $b = Backend::instance(Backend::SVN);
-        $this->assertEquals($b->a_variable_for_tests, 9);
+        self::assertEquals(9, $b->a_variable_for_tests);
     }
 
     public function testFactoryOverrideWithParametersButNoSetUp(): void
@@ -209,8 +207,8 @@ final class BackendTest extends \Tuleap\Test\PHPUnit\TestCase
             'getBackend',
             false
         );
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('does not have setUp');
+        self::expectException(\Exception::class);
+        self::expectExceptionMessage('does not have setUp');
         Backend::instance(Backend::SVN, null, [1, 2, 3]);
     }
 
@@ -232,11 +230,11 @@ final class BackendTest extends \Tuleap\Test\PHPUnit\TestCase
         // Check result
 
         // Direcory should not be removed
-        $this->assertDirectoryExists($test_dir);
+        self::assertDirectoryExists($test_dir);
         // And should be empty
         $d = opendir($test_dir);
         while (($file = readdir($d)) !== false) {
-            $this->assertTrue($file === '.' || $file === '..', 'Directory should be empty');
+            self::assertTrue($file === '.' || $file === '..', 'Directory should be empty');
         }
         closedir($d);
         rmdir($test_dir);

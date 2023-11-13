@@ -23,25 +23,23 @@ declare(strict_types=1);
 namespace Tuleap\Backend;
 
 use BackendSVN;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\MockInterface;
-use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use Project_AccessRestrictedException;
 use ProjectUGroup;
 use Tuleap\FakeDataAccessResult;
 use Tuleap\GlobalSVNPollution;
 use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use UGroupDao;
 
 class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalSVNPollution;
 
     /**
-     * @var MockInterface|BackendSVN
+     * @var MockObject&BackendSVN
      */
     private $backend;
 
@@ -50,13 +48,17 @@ class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function createInstance(): void
     {
-        $this->backend = Mockery::mock(BackendSVN::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->backend = $this->createPartialMock(BackendSVN::class, [
+            'getUGroupDao',
+            'getUGroupFromRow',
+            'getProjectAccessChecker',
+        ]);
     }
 
     public function testItAddsProjectMembers()
     {
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getMembersUserNames')->andReturn(
+        $project = $this->createMock(Project::class);
+        $project->method('getMembersUserNames')->willReturn(
             [
                 ['user_name' => 'user1'],
                 ['user_name' => 'user2'],
@@ -65,82 +67,69 @@ class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $project_members_line = $this->backend->getSVNAccessProjectMembers($project);
 
-        $this->assertEquals("members = user1, user2\n", $project_members_line);
+        self::assertEquals("members = user1, user2\n", $project_members_line);
     }
 
     public function testItAddUserGroupMembers()
     {
-        $user1 = Mockery::mock(PFUser::class);
-        $user1->shouldReceive('getUserName')->andReturn('user1');
+        $user1 = UserTestBuilder::aUser()->withUserName('user1')->build();
+        $user2 = UserTestBuilder::aUser()->withUserName('user2')->build();
 
-        $user2 = Mockery::mock(PFUser::class);
-        $user2->shouldReceive('getUserName')->andReturn('user2');
+        $project = ProjectTestBuilder::aProject()->withId(101)->build();
 
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturn(101);
+        $dao = $this->createMock(UGroupDao::class);
+        $dao->method('searchByGroupId')->willReturn(new FakeDataAccessResult([['name' => 'Perms']]));
 
-        $dao = Mockery::mock(UGroupDao::class);
-        $dao->shouldReceive('searchByGroupId')->andReturn(new FakeDataAccessResult([['name' => 'Perms']]));
+        $ugroup = $this->createMock(ProjectUGroup::class);
+        $ugroup->method('getMembers')->willReturn([$user1, $user2]);
+        $ugroup->method('getName')->willReturn('Perms');
 
-        $ugroup = Mockery::mock(ProjectUGroup::class);
-        $ugroup->shouldReceive(
-            [
-                'getMembers' => [$user1, $user2],
-                'getName'    => 'Perms',
-            ]
+        $project_access_checker = $this->createMock(ProjectAccessChecker::class);
+        $project_access_checker->method('checkUserCanAccessProject')->withConsecutive(
+            [$user1, $project],
+            [$user2, $project],
         );
 
-        $project_access_checker = Mockery::mock(ProjectAccessChecker::class);
-        $project_access_checker
-            ->shouldReceive('checkUserCanAccessProject')->with($user1, $project)->once();
-        $project_access_checker
-            ->shouldReceive('checkUserCanAccessProject')->with($user2, $project)->once();
-
-        $this->backend->shouldReceive('getUGroupDao')->andReturn($dao);
-        $this->backend->shouldReceive('getUGroupFromRow')->andReturn($ugroup);
-        $this->backend->shouldReceive('getProjectAccessChecker')->andReturn($project_access_checker);
+        $this->backend->method('getUGroupDao')->willReturn($dao);
+        $this->backend->method('getUGroupFromRow')->willReturn($ugroup);
+        $this->backend->method('getProjectAccessChecker')->willReturn($project_access_checker);
 
         $ugroup_members_line = $this->backend->getSVNAccessUserGroupMembers($project);
 
-        $this->assertEquals("Perms = user1, user2\n\n", $ugroup_members_line);
+        self::assertEquals("Perms = user1, user2\n\n", $ugroup_members_line);
     }
 
     public function testItRejectUsersThatCannotAccessToProjects()
     {
-        $user1 = Mockery::mock(PFUser::class);
-        $user1->shouldReceive('getUserName')->andReturn('user1');
+        $user1 = UserTestBuilder::aUser()->withUserName('user1')->build();
+        $user2 = UserTestBuilder::aUser()->withUserName('user2')->build();
 
-        $user2 = Mockery::mock(PFUser::class);
-        $user2->shouldReceive('getUserName')->andReturn('user2');
+        $project = ProjectTestBuilder::aProject()->withId(101)->build();
 
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturn(101);
+        $dao = $this->createMock(UGroupDao::class);
+        $dao->method('searchByGroupId')->willReturn(new FakeDataAccessResult([['name' => 'Perms']]));
 
-        $dao = Mockery::mock(UGroupDao::class);
-        $dao->shouldReceive('searchByGroupId')->andReturn(new FakeDataAccessResult([['name' => 'Perms']]));
+        $ugroup = $this->createMock(ProjectUGroup::class);
+        $ugroup->method('getMembers')->willReturn([$user1, $user2]);
+        $ugroup->method('getName')->willReturn('Perms');
 
-        $ugroup = Mockery::mock(ProjectUGroup::class);
-        $ugroup->shouldReceive(
-            [
-                'getMembers' => [$user1, $user2],
-                'getName'    => 'Perms',
-            ]
+        $project_access_checker = $this->createMock(ProjectAccessChecker::class);
+        $project_access_checker->method('checkUserCanAccessProject')->withConsecutive(
+            [$user1, $project],
+            [$user2, $project],
+        )->will(
+            $this->onConsecutiveCalls(
+                true,
+                $this->throwException(new Project_AccessRestrictedException())
+            )
         );
 
-        $project_access_checker = Mockery::mock(ProjectAccessChecker::class);
-        $project_access_checker
-            ->shouldReceive('checkUserCanAccessProject')->with($user1, $project)->once();
-        $project_access_checker
-            ->shouldReceive('checkUserCanAccessProject')->with($user2, $project)->once()->andThrow(
-                Project_AccessRestrictedException::class
-            );
-
-        $this->backend->shouldReceive('getUGroupDao')->andReturn($dao);
-        $this->backend->shouldReceive('getUGroupFromRow')->andReturn($ugroup);
-        $this->backend->shouldReceive('getProjectAccessChecker')->andReturn($project_access_checker);
+        $this->backend->method('getUGroupDao')->willReturn($dao);
+        $this->backend->method('getUGroupFromRow')->willReturn($ugroup);
+        $this->backend->method('getProjectAccessChecker')->willReturn($project_access_checker);
 
         $ugroup_members_line = $this->backend->getSVNAccessUserGroupMembers($project);
 
-        $this->assertEquals("Perms = user1\n\n", $ugroup_members_line);
+        self::assertEquals("Perms = user1\n\n", $ugroup_members_line);
     }
 }
