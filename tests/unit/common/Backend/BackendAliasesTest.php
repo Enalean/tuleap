@@ -26,14 +26,12 @@ namespace Tuleap\Backend;
 use Backend;
 use Event;
 use EventManager;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use System_Alias;
 use Tuleap\ForgeConfigSandbox;
 
 final class BackendAliasesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     private $alias_file;
@@ -45,19 +43,9 @@ final class BackendAliasesTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->alias_file = \ForgeConfig::get('alias_file');
         \ForgeConfig::set('codendi_bin_prefix', '/bin/');
 
-        $listdao = \Mockery::spy(\MailingListDao::class);
-        $listdao->shouldReceive('searchAllActiveML')->andReturns(
-            \TestHelper::arrayToDar(
-                ["list_name" => "list1"],
-                ["list_name" => "list2"],
-                ["list_name" => "list3"],
-                ["list_name" => "list4"],
-                ["list_name" => 'list with an unexpected quote "'],
-                ["list_name" => "list with an unexpected newline\n"]
-            )
-        );
-
-        $this->backend = \Mockery::mock(\BackendAliases::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->backend = $this->createPartialMock(\BackendAliases::class, [
+            'system',
+        ]);
 
         $plugin = new class {
             public function hook(array $params): void
@@ -81,37 +69,37 @@ final class BackendAliasesTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTrueInCaseOfSuccess(): void
     {
-        $this->backend->shouldReceive('system')->andReturns(true);
-        $this->assertEquals($this->backend->update(), true);
+        $this->backend->method('system')->willReturn(true);
+        self::assertTrue($this->backend->update());
     }
 
     public function testItRunNewaliasesCommand(): void
     {
-        $this->backend->shouldReceive('system')->with('/usr/bin/newaliases > /dev/null')->once();
+        $this->backend->expects(self::once())->method('system')->with('/usr/bin/newaliases > /dev/null');
         $this->backend->update();
     }
 
     public function testItGeneratesAnAliasesFile(): void
     {
-        $this->backend->shouldReceive('system')->andReturns(true);
+        $this->backend->method('system')->willReturn(true);
         $this->backend->update();
         $aliases = file_get_contents($this->alias_file);
-        $this->assertFalse($aliases === false);
+        self::assertFalse($aliases === false);
     }
 
     public function testItGenerateSiteWideAliases(): void
     {
-        $this->backend->shouldReceive('system')->andReturns(true);
+        $this->backend->method('system')->willReturn(true);
         $this->backend->update();
         $aliases = file_get_contents($this->alias_file);
-        $this->assertStringContainsString('codendi-contact', $aliases, "Codendi-wide aliases not set");
+        self::assertStringContainsString('codendi-contact', $aliases, "Codendi-wide aliases not set");
     }
 
     public function testItGeneratesUserAliasesGivenByPlugins(): void
     {
-        $this->backend->shouldReceive('system')->andReturns(true);
+        $this->backend->method('system')->willReturn(true);
         $this->backend->update();
         $aliases = file_get_contents($this->alias_file);
-        $this->assertStringContainsString('"forge__tracker":', $aliases, "Alias of plugins not set");
+        self::assertStringContainsString('"forge__tracker":', $aliases, "Alias of plugins not set");
     }
 }
