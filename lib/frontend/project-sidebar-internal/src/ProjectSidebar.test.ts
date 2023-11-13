@@ -25,6 +25,8 @@ import ProjectSidebar from "./ProjectSidebar.vue";
 import { shallowMount } from "@vue/test-utils";
 import { example_config } from "./project-sidebar-example-config";
 import SidebarCollapseButton from "./SidebarCollapseButton.vue";
+import SidebarHeader from "./Header/SidebarHeader.vue";
+import ToolList from "./Tools/ToolList.vue";
 
 describe("ProjectSidebar", () => {
     it("displays sidebar", () => {
@@ -112,4 +114,16 @@ describe("ProjectSidebar", () => {
             ).toBe(false);
         },
     );
+
+    it("Does not display sidebar header nor tools when sidebar is collapsed", () => {
+        const wrapper = shallowMount(ProjectSidebar, {
+            props: {
+                config: { config: JSON.stringify(example_config) },
+                collapsed: true,
+            },
+        });
+
+        expect(wrapper.findComponent(SidebarHeader).exists()).toBe(false);
+        expect(wrapper.findComponent(ToolList).exists()).toBe(false);
+    });
 });

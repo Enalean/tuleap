@@ -28,8 +28,11 @@
     >
         <sidebar-logo />
         <div class="sidebar-content-vertical-scroll">
-            <sidebar-header v-bind:is_sidebar_collapsed="is_sidebar_collapsed" />
-            <tool-list />
+            <sidebar-header
+                v-if="!is_sidebar_collapsed"
+                v-bind:is_sidebar_collapsed="is_sidebar_collapsed"
+            />
+            <tool-list v-if="!is_sidebar_collapsed" />
             <sidebar-collapse-button
                 v-model:is_sidebar_collapsed="is_sidebar_collapsed"
                 v-bind:can_sidebar_be_collapsed="can_sidebar_be_collapsed"
@@ -70,8 +73,6 @@ const can_sidebar_be_collapsed = readonly(
         if (sidebar_configuration.value.is_collapsible === undefined) {
             // If `is_collapsible` is not given then we keep backward compatibility
             // and consider that the sidebar can be collapsed.
-            // Note: This is only for when the sidebar component is used outside of Tuleap,
-            // because the latter always give `is_collapsible`.
             return true;
         }
 
