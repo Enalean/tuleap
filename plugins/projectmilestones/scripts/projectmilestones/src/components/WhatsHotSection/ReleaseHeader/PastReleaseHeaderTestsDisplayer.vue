@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div v-if="is_testplan_activated" class="past-release closed-release-header-badge">
+    <div v-if="is_testplan_activated_value" class="past-release closed-release-header-badge">
         <i class="release-remaining-icon fa fa-check"></i>
         <span class="release-remaining-value" data-test="number-tests">
             {{ number_tests }}
@@ -27,36 +27,32 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
 import type { MilestoneData } from "../../../type";
 import { is_testplan_activated } from "../../../helpers/test-management-helper";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-@Component
-export default class PastReleaseHeaderTestsDisplayer extends Vue {
-    @Prop()
-    readonly release_data!: MilestoneData;
+const { $ngettext } = useGettext();
 
-    get number_tests(): number {
-        if (!this.release_data.campaign) {
-            return 0;
-        }
+const props = defineProps<{ release_data: MilestoneData }>();
 
-        return (
-            this.release_data.campaign.nb_of_failed +
-            this.release_data.campaign.nb_of_blocked +
-            this.release_data.campaign.nb_of_notrun +
-            this.release_data.campaign.nb_of_passed
-        );
+const number_tests = computed((): number => {
+    if (!props.release_data.campaign) {
+        return 0;
     }
 
-    get is_testplan_activated(): boolean {
-        return is_testplan_activated(this.release_data);
-    }
-
-    get test_label(): string {
-        return this.$ngettext("test", "tests", this.number_tests);
-    }
-}
+    return (
+        props.release_data.campaign.nb_of_failed +
+        props.release_data.campaign.nb_of_blocked +
+        props.release_data.campaign.nb_of_notrun +
+        props.release_data.campaign.nb_of_passed
+    );
+});
+const is_testplan_activated_value = computed((): boolean => {
+    return is_testplan_activated(props.release_data);
+});
+const test_label = computed((): string => {
+    return $ngettext("test", "tests", number_tests.value);
+});
 </script>

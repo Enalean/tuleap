@@ -21,27 +21,26 @@
     <div class="past-release closed-release-header-badge">
         <i class="release-remaining-icon fa fa-flag-checkered"></i>
         <span class="release-remaining-value" data-test="points-initial-value">
-            {{ formatPoints(release_data.initial_effort) }}
+            {{ formatPoints }}
         </span>
         <span class="release-remaining-text">{{ pts_done }}</span>
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
 import type { MilestoneData } from "../../../type";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-@Component
-export default class PastReleaseHeaderInitialPoints extends Vue {
-    @Prop()
-    readonly release_data!: MilestoneData;
+const { $ngettext } = useGettext();
 
-    formatPoints = (pts: number | null): number => pts ?? 0;
+const props = defineProps<{ release_data: MilestoneData }>();
 
-    get pts_done(): string {
-        const initial_effort = this.release_data.initial_effort ?? 0;
-        return this.$ngettext("pt done", "pts done", initial_effort);
-    }
-}
+const formatPoints = computed((): number => {
+    return props.release_data.initial_effort ?? 0;
+});
+
+const pts_done = computed((): string => {
+    return $ngettext("pt done", "pts done", formatPoints.value);
+});
 </script>

@@ -17,46 +17,44 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import PastReleaseHeaderTestsDisplayer from "./PastReleaseHeaderTestsDisplayer.vue";
-import type { MilestoneData, Pane } from "../../../type";
+import type { MilestoneData, Pane, TestManagementCampaign } from "../../../type";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 
-let release_data: MilestoneData;
-let component_options: ShallowMountOptions<PastReleaseHeaderTestsDisplayer>;
-
 describe("PastReleaseHeaderTestsDisplayer", () => {
-    async function getPersonalWidgetInstance(): Promise<Wrapper<PastReleaseHeaderTestsDisplayer>> {
-        component_options.localVue = await createReleaseWidgetLocalVue();
+    async function getPersonalWidgetInstance(
+        additional_panes: Array<Pane>,
+        campaign: TestManagementCampaign | null,
+    ): Promise<Wrapper<Vue, Element>> {
+        const release_data = {
+            label: "mile",
+            initial_effort: 10,
+            resources: {
+                additional_panes,
+            },
+            campaign,
+        } as MilestoneData;
+
+        const component_options = {
+            propsData: {
+                release_data,
+            },
+            localVue: await createReleaseWidgetLocalVue(),
+        };
 
         return shallowMount(PastReleaseHeaderTestsDisplayer, component_options);
     }
 
-    beforeEach(() => {
-        release_data = {
-            label: "mile",
-            initial_effort: 10,
-            resources: {
-                additional_panes: [] as Pane[],
-            },
-        } as MilestoneData;
-
-        component_options = {
-            propsData: {
-                release_data,
-            },
-        };
-    });
-
     describe("Display number of test", () => {
         it("When testplan is disabled, Then the number is not displayed", async () => {
-            const wrapper = await getPersonalWidgetInstance();
+            const wrapper = await getPersonalWidgetInstance([], null);
             expect(wrapper.find("[data-test=number-tests]").exists()).toBe(false);
         });
 
         it("When testplan is enabled but there are no test, Then 0 is displayed", async () => {
-            release_data.resources.additional_panes = [
+            const additional_panes = [
                 {
                     icon_name: "fa-check",
                     identifier: "testplan",
@@ -65,12 +63,12 @@ describe("PastReleaseHeaderTestsDisplayer", () => {
                 },
             ];
 
-            const wrapper = await getPersonalWidgetInstance();
+            const wrapper = await getPersonalWidgetInstance(additional_panes, null);
             expect(wrapper.find("[data-test=number-tests]").text()).toBe("0");
         });
 
         it("When testplan is enabled but there are some tests, Then the number is displayed", async () => {
-            release_data.resources.additional_panes = [
+            const additional_panes = [
                 {
                     icon_name: "fa-check",
                     identifier: "testplan",
@@ -79,14 +77,14 @@ describe("PastReleaseHeaderTestsDisplayer", () => {
                 },
             ];
 
-            release_data.campaign = {
+            const campaign = {
                 nb_of_blocked: 10,
                 nb_of_notrun: 5,
                 nb_of_passed: 0,
                 nb_of_failed: 4,
             };
 
-            const wrapper = await getPersonalWidgetInstance();
+            const wrapper = await getPersonalWidgetInstance(additional_panes, campaign);
             expect(wrapper.find("[data-test=number-tests]").text()).toBe("19");
         });
     });

@@ -21,7 +21,6 @@ import { vite } from "@tuleap/build-system-configurator";
 import * as path from "path";
 import POGettextPlugin from "@tuleap/po-gettext-plugin";
 import vue from "@vitejs/plugin-vue2";
-
 export default vite.defineAppConfig(
     {
         plugin_name: path.basename(path.resolve(__dirname, "../..")),
@@ -36,6 +35,9 @@ export default vite.defineAppConfig(
                     "project-milestones-style": path.resolve(__dirname, "themes/style.scss"),
                 },
             },
+        },
+        resolve: {
+            dedupe: ["vue"],
         },
     },
 );

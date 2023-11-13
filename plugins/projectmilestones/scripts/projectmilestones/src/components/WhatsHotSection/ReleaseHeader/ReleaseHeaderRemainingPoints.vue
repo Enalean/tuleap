@@ -50,74 +50,77 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
 import type { MilestoneData } from "../../../type";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-@Component
-export default class ReleaseHeaderRemainingPoints extends Vue {
-    @Prop()
-    readonly release_data!: MilestoneData;
+const { $ngettext, $gettext, interpolate } = useGettext();
 
-    disabled_points =
-        typeof this.release_data.remaining_effort !== "number" ||
-        !this.release_data.initial_effort ||
-        this.release_data.initial_effort < this.release_data.remaining_effort;
+const props = defineProps<{
+    release_data: MilestoneData;
+}>();
 
-    formatPoints = (pts: number | null): number => pts ?? 0;
-
-    get are_all_effort_defined(): boolean {
-        if (
-            typeof this.release_data.remaining_effort !== "number" ||
-            typeof this.release_data.initial_effort !== "number"
-        ) {
-            return false;
-        }
-        return (
-            this.release_data.remaining_effort > 0 &&
-            this.release_data.initial_effort > 0 &&
-            this.release_data.initial_effort >= this.release_data.remaining_effort
-        );
-    }
-
-    get get_tooltip_effort_points(): string {
-        const remaining_effort = this.release_data.remaining_effort;
-        const initial_effort = this.release_data.initial_effort;
-
-        if (typeof remaining_effort !== "number") {
-            return this.$gettext("No remaining effort defined.");
-        }
-
-        if (typeof initial_effort !== "number") {
-            return this.$gettext("No initial effort defined.");
-        }
-
-        if (initial_effort === 0) {
-            return this.$gettext("Initial effort equal at 0.");
-        }
-
-        if (initial_effort < remaining_effort) {
-            return this.$gettextInterpolate(
-                this.$gettext(
-                    "Initial effort (%{initial_effort}) should be bigger or equal to remaining effort (%{remaining_effort}).",
-                ),
-                {
-                    initial_effort,
-                    remaining_effort,
-                },
-            );
-        }
-
-        return (
-            (((initial_effort - remaining_effort) / initial_effort) * 100).toFixed(2).toString() +
-            "%"
-        );
-    }
-
-    get pts_to_go_label(): string {
-        const remaining_effort = this.release_data.remaining_effort ?? 0;
-        return this.$ngettext("pt to go", "pts to go", remaining_effort);
-    }
+function formatPoints(pts: number | null): number {
+    return pts ?? 0;
 }
+
+const disabled_points = computed((): boolean => {
+    return (
+        typeof props.release_data.remaining_effort !== "number" ||
+        !props.release_data.initial_effort ||
+        props.release_data.initial_effort < props.release_data.remaining_effort
+    );
+});
+
+const are_all_effort_defined = computed((): boolean => {
+    if (
+        typeof props.release_data.remaining_effort !== "number" ||
+        typeof props.release_data.initial_effort !== "number"
+    ) {
+        return false;
+    }
+    return (
+        props.release_data.remaining_effort > 0 &&
+        props.release_data.initial_effort > 0 &&
+        props.release_data.initial_effort >= props.release_data.remaining_effort
+    );
+});
+
+const get_tooltip_effort_points = computed((): string => {
+    const remaining_effort = props.release_data.remaining_effort;
+    const initial_effort = props.release_data.initial_effort;
+
+    if (typeof remaining_effort !== "number") {
+        return $gettext("No remaining effort defined.");
+    }
+
+    if (typeof initial_effort !== "number") {
+        return $gettext("No initial effort defined.");
+    }
+
+    if (initial_effort === 0) {
+        return $gettext("Initial effort equal at 0.");
+    }
+
+    if (initial_effort < remaining_effort) {
+        return interpolate(
+            $gettext(
+                "Initial effort (%{initial_effort}) should be bigger or equal to remaining effort (%{remaining_effort}).",
+            ),
+            {
+                initial_effort,
+                remaining_effort,
+            },
+        );
+    }
+
+    return (
+        (((initial_effort - remaining_effort) / initial_effort) * 100).toFixed(2).toString() + "%"
+    );
+});
+const pts_to_go_label = computed((): string => {
+    const remaining_effort = props.release_data.remaining_effort ?? 0;
+    return $ngettext("pt to go", "pts to go", remaining_effort);
+});
 </script>
