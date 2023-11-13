@@ -26,137 +26,93 @@ use Git_GitRepositoryUrlManager;
 use GitRepositoryFactory;
 use Tuleap\Git\GitPHP\ProjectProvider;
 use Tuleap\Git\GitPHP\RepositoryAccessException;
-use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
-use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\Notification\EventSubjectToNotification;
 use Tuleap\PullRequest\Notification\FilterUserFromCollection;
 use Tuleap\PullRequest\Notification\NotificationToProcessBuilder;
 use Tuleap\PullRequest\Notification\OwnerRetriever;
+use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\PullRequestRetriever;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
+use Tuleap\User\RetrieveUserById;
 use UserHelper;
-use UserManager;
 
 /**
  * @template-implements NotificationToProcessBuilder<PullRequestUpdatedEvent>
  */
 final class PullRequestUpdatedNotificationToProcessBuilder implements NotificationToProcessBuilder
 {
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-    /**
-     * @var Factory
-     */
-    private $pull_request_factory;
-    /**
-     * @var GitRepositoryFactory
-     */
-    private $git_repository_factory;
-    /**
-     * @var OwnerRetriever
-     */
-    private $owner_retriever;
-    /**
-     * @var FilterUserFromCollection
-     */
-    private $filter_user_from_collection;
-    /**
-     * @var UserHelper
-     */
-    private $user_helper;
-    /**
-     * @var HTMLURLBuilder
-     */
-    private $html_url_builder;
-    /**
-     * @var Git_GitRepositoryUrlManager
-     */
-    private $url_manager;
-    /**
-     * @var PullRequestUpdateCommitDiff
-     */
-    private $commit_diff;
-
     public function __construct(
-        UserManager $user_manager,
-        Factory $pull_request_factory,
-        GitRepositoryFactory $git_repository_factory,
-        OwnerRetriever $owner_retriever,
-        FilterUserFromCollection $filter_user_from_collection,
-        UserHelper $user_helper,
-        HTMLURLBuilder $html_url_builder,
-        Git_GitRepositoryUrlManager $url_manager,
-        PullRequestUpdateCommitDiff $commit_diff,
+        private readonly RetrieveUserById $user_manager,
+        private readonly PullRequestRetriever $pull_request_retriever,
+        private readonly GitRepositoryFactory $git_repository_factory,
+        private readonly OwnerRetriever $owner_retriever,
+        private readonly FilterUserFromCollection $filter_user_from_collection,
+        private readonly UserHelper $user_helper,
+        private readonly HTMLURLBuilder $html_url_builder,
+        private readonly Git_GitRepositoryUrlManager $url_manager,
+        private readonly PullRequestUpdateCommitDiff $commit_diff,
     ) {
-        $this->user_manager                = $user_manager;
-        $this->pull_request_factory        = $pull_request_factory;
-        $this->git_repository_factory      = $git_repository_factory;
-        $this->owner_retriever             = $owner_retriever;
-        $this->filter_user_from_collection = $filter_user_from_collection;
-        $this->user_helper                 = $user_helper;
-        $this->html_url_builder            = $html_url_builder;
-        $this->url_manager                 = $url_manager;
-        $this->commit_diff                 = $commit_diff;
     }
 
     public function getNotificationsToProcess(EventSubjectToNotification $event): array
     {
-        try {
-            $pull_request = $this->pull_request_factory->getPullRequestById($event->getPullRequestID());
-        } catch (PullRequestNotFoundException $e) {
-            return [];
-        }
+        $pull_request_result = $this->pull_request_retriever->getPullRequestById($event->getPullRequestID());
+        return $pull_request_result->match(
+            function (PullRequest $pull_request) use ($event) {
+                $change_user = $this->user_manager->getUserById($event->getUserID());
+                if ($change_user === null) {
+                    return [];
+                }
 
-        $change_user = $this->user_manager->getUserById($event->getUserID());
-        if ($change_user === null) {
-            return [];
-        }
+                $git_repository = $this->git_repository_factory->getRepositoryById($pull_request->getRepoDestId());
+                if ($git_repository === null) {
+                    return [];
+                }
 
-        $git_repository = $this->git_repository_factory->getRepositoryById($pull_request->getRepoDestId());
-        if ($git_repository === null) {
-            return [];
-        }
+                try {
+                    $git_resource_accessor_provider = new ProjectProvider($git_repository);
+                } catch (RepositoryAccessException $exception) {
+                    return [];
+                }
 
-        try {
-            $git_resource_accessor_provider = new ProjectProvider($git_repository);
-        } catch (RepositoryAccessException $exception) {
-            return [];
-        }
+                $git_exec = \Git_Exec::buildFromRepository($git_repository);
+                try {
+                    $new_commits = $this->commit_diff->findNewCommitReferences(
+                        $git_exec,
+                        $event->getOldSourceReference(),
+                        $event->getNewSourceReference(),
+                        $event->getOldDestinationReference(),
+                        $event->getNewDestinationReference(),
+                    );
+                } catch (\Git_Command_Exception $exception) {
+                    return [];
+                }
 
-        $git_exec = \Git_Exec::buildFromRepository($git_repository);
-        try {
-            $new_commits = $this->commit_diff->findNewCommitReferences(
-                $git_exec,
-                $event->getOldSourceReference(),
-                $event->getNewSourceReference(),
-                $event->getOldDestinationReference(),
-                $event->getNewDestinationReference(),
-            );
-        } catch (\Git_Command_Exception $exception) {
-            return [];
-        }
+                if (empty($new_commits)) {
+                    return [];
+                }
 
-        if (empty($new_commits)) {
-            return [];
-        }
+                $url_builder = new RepositoryURLToCommitBuilder($this->url_manager, $git_repository);
 
-        $url_builder = new RepositoryURLToCommitBuilder($this->url_manager, $git_repository);
+                $pull_request_owners = $this->owner_retriever->getOwners($pull_request);
 
-        $pull_request_owners = $this->owner_retriever->getOwners($pull_request);
-
-        return array_filter([
-            PullRequestUpdatedNotification::fromOwnersAndReferences(
-                $this->user_helper,
-                $this->html_url_builder,
-                $this->filter_user_from_collection,
-                $pull_request,
-                $change_user,
-                $pull_request_owners,
-                $git_resource_accessor_provider->GetProject(),
-                $url_builder,
-                $new_commits
-            ),
-        ]);
+                return array_filter(
+                    [
+                        PullRequestUpdatedNotification::fromOwnersAndReferences(
+                            $this->user_helper,
+                            $this->html_url_builder,
+                            $this->filter_user_from_collection,
+                            $pull_request,
+                            $change_user,
+                            $pull_request_owners,
+                            $git_resource_accessor_provider->GetProject(),
+                            $url_builder,
+                            $new_commits
+                        ),
+                    ]
+                );
+            },
+            fn() => []
+        );
     }
 }

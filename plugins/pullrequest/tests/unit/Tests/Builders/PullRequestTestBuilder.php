@@ -80,6 +80,12 @@ final class PullRequestTestBuilder
         return $this;
     }
 
+    public function withRepositoryDestinationId(int $repo_dest_id): self
+    {
+        $this->repo_dest_id = $repo_dest_id;
+        return $this;
+    }
+
     public function build(): PullRequest
     {
         return new PullRequest(
