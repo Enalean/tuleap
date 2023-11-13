@@ -19,30 +19,30 @@
 
 <template>
     <section class="tlp-pane-section">
-        <div class="tlp-alert-danger" v-if="hasError">
+        <div class="tlp-alert-danger" v-if="has_error">
             {{ error }}
         </div>
 
-        <div class="permission-per-group-load-button" v-if="displayButtonLoadAll">
-            <button
-                class="tlp-button-primary tlp-button-outline"
-                v-on:click="loadAll()"
-                v-translate
-            >
-                See all repositories
+        <div class="permission-per-group-load-button" v-if="display_button_load_all">
+            <button class="tlp-button-primary tlp-button-outline" v-on:click="loadAll()">
+                {{ $gettext("See all repositories") }}
             </button>
         </div>
 
         <div class="permission-per-group-loader" v-if="is_loading"></div>
 
-        <h2 class="tlp-pane-subtitle" v-if="is_loaded" v-translate>Repositories permissions</h2>
+        <h2 class="tlp-pane-subtitle" v-if="is_loaded">
+            {{ $gettext("Repositories permissions") }}
+        </h2>
         <table class="tlp-table" v-if="is_loaded">
             <thead>
                 <tr>
-                    <th class="svn-permission-per-group-repository" v-translate>Repository</th>
+                    <th class="svn-permission-per-group-repository">
+                        {{ $gettext("Repository") }}
+                    </th>
                 </tr>
             </thead>
-            <tbody v-if="!isEmpty" key="not-empty">
+            <tbody v-if="!is_empty" key="not-empty">
                 <tr v-for="permission in permissions" v-bind:key="permission.name">
                     <td>
                         <a v-bind:href="permission.url">
@@ -53,8 +53,8 @@
             </tbody>
             <tbody v-else key="empty">
                 <tr>
-                    <td class="tlp-table-cell-empty" v-translate>
-                        No repository found for project
+                    <td class="tlp-table-cell-empty">
+                        {{ $gettext("No repository found for project") }}
                     </td>
                 </tr>
             </tbody>
@@ -62,48 +62,40 @@
     </section>
 </template>
 
-<script>
-import { getSVNPermissions } from "./rest-querier.js";
+<script setup lang="ts">
+import type { RepositoriesPermissions } from "./rest-querier";
+import { getSVNPermissions } from "./rest-querier";
+import { computed, ref } from "vue";
 
-export default {
-    name: "SVNPermissions",
-    props: {
-        projectId: String,
-    },
-    data() {
-        return {
-            is_loading: false,
-            is_loaded: false,
-            permissions: [],
-            error: null,
-        };
-    },
-    computed: {
-        displayButtonLoadAll() {
-            return !this.is_loaded && !this.is_loading;
-        },
-        isEmpty() {
-            return this.permissions.length === 0;
-        },
-        hasError() {
-            return this.error !== null;
-        },
-    },
-    methods: {
-        async loadAll() {
-            try {
-                this.is_loading = true;
-                const { repositories_representation } = await getSVNPermissions(this.projectId);
+const props = defineProps<{
+    project_id: string;
+}>();
 
-                this.permissions = repositories_representation;
-                this.is_loaded = true;
-            } catch (e) {
-                const { error } = await e.response.json();
-                this.error = error;
-            } finally {
-                this.is_loading = false;
-            }
+const permissions = ref<RepositoriesPermissions>([]);
+const error = ref<string | null>(null);
+const is_loaded = ref(false);
+const is_loading = ref(false);
+
+const is_empty = computed(() => permissions.value.length === 0);
+const has_error = computed(() => error.value !== null);
+const display_button_load_all = computed(() => !is_loaded.value && !is_loading.value);
+
+function loadAll(): void {
+    is_loading.value = true;
+    getSVNPermissions(props.project_id).match(
+        ({
+            repositories_representation,
+        }: {
+            repositories_representation: RepositoriesPermissions;
+        }) => {
+            is_loaded.value = true;
+            is_loading.value = false;
+            permissions.value = repositories_representation;
         },
-    },
-};
+        (fault) => {
+            is_loading.value = false;
+            error.value = String(fault);
+        },
+    );
+}
 </script>

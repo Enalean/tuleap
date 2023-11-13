@@ -1223,11 +1223,15 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
     #[ListeningToEventClass]
     public function permissionPerGroupDisplayEvent(PermissionPerGroupDisplayEvent $event): void
     {
-        $assets = new IncludeAssets(
-            __DIR__ . '/../scripts/permissions-per-group/frontend-assets',
-            '/assets/svn/permissions-per-group'
+        $event->addJavascript(
+            new \Tuleap\Layout\JavascriptViteAsset(
+                new \Tuleap\Layout\IncludeViteAssets(
+                    __DIR__ . '/../scripts/permissions-per-group/frontend-assets',
+                    '/assets/svn/permissions-per-group'
+                ),
+                'src/index.ts'
+            )
         );
-        $event->addJavascript(new \Tuleap\Layout\JavascriptAsset($assets, 'permission-per-group.js'));
     }
 
     private function getIncludeAssets(): IncludeAssets
