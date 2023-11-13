@@ -41,6 +41,7 @@ use Tuleap\PullRequest\Comment\CommentUpdater;
 use Tuleap\PullRequest\PullRequest\REST\v1\AccessiblePullRequestRESTRetriever;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\REST\v1\CommentPATCHRepresentation;
+use Tuleap\Reference\ExtractAndSaveCrossReferences;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 final class PATCHCommentHandler
@@ -51,6 +52,7 @@ final class PATCHCommentHandler
         private readonly AccessiblePullRequestRESTRetriever $pull_request_permission_retriever,
         private readonly CommentRepresentationBuilder $comment_representation_builder,
         private readonly RetrieveGitRepository $git_repository_factory,
+        private readonly ExtractAndSaveCrossReferences $cross_references_saver,
     ) {
     }
 
@@ -76,6 +78,15 @@ final class PATCHCommentHandler
                         $this->comment_dao->updateComment($new_comment);
 
                         $project_id = $this->getProjectIdFromPullRequest($new_comment, $user);
+
+                        $this->cross_references_saver->extractCrossRef(
+                            $new_comment->getContent(),
+                            $new_comment->getPullRequestId(),
+                            \pullrequestPlugin::REFERENCE_NATURE,
+                            $project_id,
+                            $user->getId(),
+                            \pullrequestPlugin::PULLREQUEST_REFERENCE_KEYWORD
+                        );
 
                         return Result::ok(
                             $this->comment_representation_builder->buildRepresentation(
