@@ -29,11 +29,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    await initVueGettextFromPoGettextPlugin(Vue, (locale) =>
-        import(
-            /* webpackChunkName: "permissions-per-group-news-po-" */ "../po/" +
-                getPOFileFromLocale(locale)
-        ),
+    await initVueGettextFromPoGettextPlugin(
+        Vue,
+        (locale) =>
+            import(
+                /* webpackChunkName: "permissions-per-group-news-po-" */ "../po/" +
+                    getPOFileFromLocale(locale)
+            ),
     );
 
     const rootComponent = Vue.extend(NewsPermissions);

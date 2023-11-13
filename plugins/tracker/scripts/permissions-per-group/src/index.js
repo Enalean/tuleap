@@ -27,8 +27,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    await initVueGettextFromPoGettextPlugin(Vue, (locale) =>
-        import(`../po/${getPOFileFromLocale(locale)}`),
+    await initVueGettextFromPoGettextPlugin(
+        Vue,
+        (locale) => import(`../po/${getPOFileFromLocale(locale)}`),
     );
 
     const RootComponent = Vue.extend(BaseTrackerPermissionsComponent);

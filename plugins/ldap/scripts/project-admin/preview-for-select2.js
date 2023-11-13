@@ -26,10 +26,14 @@ import { getPOFileFromLocale, initGettext } from "@tuleap/gettext";
 export async function initLdapBindingPreview(options, callback) {
     const { preserve, button, preview, display_name, select } = options;
 
-    const gettext_provider = await initGettext(select.dataset.locale, "ldap-bindings", (locale) =>
-        import(
-            /* webpackChunkName: "project-admin-ldap-po-" */ "./po/" + getPOFileFromLocale(locale)
-        ),
+    const gettext_provider = await initGettext(
+        select.dataset.locale,
+        "ldap-bindings",
+        (locale) =>
+            import(
+                /* webpackChunkName: "project-admin-ldap-po-" */ "./po/" +
+                    getPOFileFromLocale(locale)
+            ),
     );
 
     const select2 = autocomplete_groups_for_select2(select, {
