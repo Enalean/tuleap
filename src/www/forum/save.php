@@ -62,7 +62,8 @@ if (user_isloggedin()) {
         $forum_name = db_result($result, 0, 'forum_name');
 
 
-        forum_header(['title' => _('Save your place')]);
+        forum_header(\Tuleap\Layout\HeaderConfigurationBuilder::get(_('Save your place'))
+            ->build());
 
         echo '
 			<H2>' . _('Save Your Place') . '</H2>';
@@ -101,12 +102,13 @@ if (user_isloggedin()) {
                 echo "<P>" . _('New messages will be highlighted when you return.');
             }
         }
-        forum_footer([]);
+        forum_footer();
     } else {
-        forum_header(['title' => _('Choose a forum First')]);
+        forum_header(\Tuleap\Layout\HeaderConfigurationBuilder::get(_('Choose a forum First'))
+            ->build());
         echo '
 			<H1>' . _('Error - choose a forum first') . '</H1>';
-        forum_footer([]);
+        forum_footer();
     }
 } else {
     exit_not_logged_in();

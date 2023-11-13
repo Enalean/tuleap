@@ -39,11 +39,14 @@ if ($request->valid(new Valid_Pv())) {
 }
 
 
-$pm     = ProjectManager::instance();
-$params = ['title' => sprintf(_('Forums for \'%1$s\''), $pm->getProject($group_id)->getPublicName()),
-    'pv'   => isset($pv) ? $pv : false,
-];
-forum_header($params);
+$pm      = ProjectManager::instance();
+$project = $pm->getProject($group_id);
+$title   = sprintf(_('Forums for \'%1$s\''), $project->getPublicName());
+
+forum_header(\Tuleap\Layout\HeaderConfigurationBuilder::get($title)
+    ->inProject($project, Service::FORUM)
+    ->withPrinterVersion((int) $pv)
+    ->build());
 
 
 if (user_isloggedin() && user_ismember($group_id)) {
@@ -66,9 +69,9 @@ $purifier = Codendi_HTMLPurifier::instance();
 
 if (! $result || $rows < 1) {
     $pm = ProjectManager::instance();
-    echo '<H1>' . $purifier->purify(sprintf(_('No forums found for \'%1$s\''), $pm->getProject($group_id)->getPublicName())) . '</H1>';
+    echo '<H1>' . $purifier->purify(sprintf(_('No forums found for \'%1$s\''), $project->getPublicName())) . '</H1>';
     echo db_error();
-    forum_footer($params);
+    forum_footer();
     exit;
 }
 
@@ -100,4 +103,4 @@ for ($j = 0; $j < $rows; $j++) {
     echo $purifier->purify(html_entity_decode(db_result($result, $j, 'description'))) . '<P>';
 }
 // Display footer page
-forum_footer($params);
+forum_footer();

@@ -166,8 +166,9 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
         /*
             Show page for deleting messages
         */
-        forum_header(['title' => _('Delete a message'),
-        ]);
+        forum_header(\Tuleap\Layout\HeaderConfigurationBuilder::get(_('Delete a message'))
+            ->inProject($current_project, Service::FORUM)
+            ->build());
 
         echo '
 			<H2>' . _('Delete a message') . '</H2>
@@ -185,13 +186,14 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
 			<INPUT CLASS="btn" TYPE="SUBMIT" NAME="SUBMIT" VALUE="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '">
 			</FORM>';
 
-        forum_footer([]);
+        forum_footer();
     } elseif ($request->existAndNonEmpty('add_forum')) {
         /*
             Show the form for adding forums
         */
-        forum_header(['title' => _('Add a Forum'),
-        ]);
+        forum_header(\Tuleap\Layout\HeaderConfigurationBuilder::get(_('Add a Forum'))
+            ->inProject($current_project, Service::FORUM)
+            ->build());
 
         $sql    = "SELECT forum_name FROM forum_group_list WHERE group_id=" . db_ei($group_id);
         $result = db_query($sql);
@@ -226,13 +228,15 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
 			<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="' . _('Add This Forum') . '">
 			</FORM>';
 
-        forum_footer([]);
+        forum_footer();
     } elseif ($request->existAndNonEmpty('change_status')) {
         /*
             Change a forum to public/private
         */
-        forum_header(['title' => _('Change Forum Status'),
-        ]);
+        forum_header(\Tuleap\Layout\HeaderConfigurationBuilder::get(_('Change Forum Status'))
+            ->inProject($current_project, Service::FORUM)
+            ->build());
+
 
         $sql    = "SELECT * FROM forum_group_list WHERE group_id=" . db_ei($group_id);
         $result = db_query($sql);
@@ -288,14 +292,15 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
             echo '</TABLE>';
         }
 
-        forum_footer([]);
+        forum_footer();
     } else {
      /*
       Show main page for choosing
       either moderotor or delete
      */
-        forum_header(['title' => _('Forum Administration'),
-        ]);
+        forum_header(\Tuleap\Layout\HeaderConfigurationBuilder::get(_('Forum Administration'))
+            ->inProject($current_project, Service::FORUM)
+            ->build());
 
         echo '
 			<H2>' . _('Forum Administration') . '</H2>
@@ -304,7 +309,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
 			<A HREF="?group_id=' . $purifier->purify(urlencode($group_id)) . '&delete=1">' . _('Delete Message') . '</A><BR>
 			<A HREF="?group_id=' . $purifier->purify(urlencode($group_id)) . '&change_status=1">' . _('Update Forum Info/Status') . '</A>';
 
-        forum_footer([]);
+        forum_footer();
     }
 } else {
     /*

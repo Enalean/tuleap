@@ -68,7 +68,8 @@ if (user_isloggedin()) {
         $group_id   = db_result($result, 0, 'group_id');
         $forum_name = db_result($result, 0, 'forum_name');
 
-        forum_header(['title' => _('Monitor a forum')]);
+        forum_header(\Tuleap\Layout\HeaderConfigurationBuilder::get(_('Monitor a forum'))
+            ->build());
 
         echo '
 			<H2>' . _('Monitor a forum') . '</H2>';
@@ -84,12 +85,13 @@ if (user_isloggedin()) {
         if ($forum_monitor_error) {
             echo "<span class=\"highlight\">" . _('Error inserting into forum_monitoring') . "</span>";
         }
-        forum_footer([]);
+        forum_footer();
     } else {
-        forum_header(['title' => _('Choose a forum First')]);
+        forum_header(\Tuleap\Layout\HeaderConfigurationBuilder::get(_('Choose a forum First'))
+            ->build());
         echo '
 			<H1>' . _('Error - choose a forum first') . '</H1>';
-        forum_footer([]);
+        forum_footer();
     }
 } else {
     exit_not_logged_in();

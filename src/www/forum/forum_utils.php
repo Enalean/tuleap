@@ -35,10 +35,11 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
+use Tuleap\Layout\HeaderConfiguration;
 
 require_once __DIR__ . '/../news/news_utils.php';
 
-function forum_header(array $params)
+function forum_header(HeaderConfiguration $params)
 {
     global $HTML,$group_id,$forum_name,$thread_id,$msg_id,$forum_id,$et,$et_cookie,$Language;
 
@@ -46,9 +47,7 @@ function forum_header(array $params)
     $hp = Codendi_HTMLPurifier::instance();
     $uh = new UserHelper();
 
-    $project           = ProjectManager::instance()->getProjectById((int) $group_id);
-    $params['project'] = $project;
-    $params['toptab']  = 'forum';
+    $project = ProjectManager::instance()->getProjectById((int) $group_id);
 
     /*
 
@@ -69,15 +68,22 @@ function forum_header(array $params)
          //backwards shim for all "generic news" that used to be submitted
          //as of may, "generic news" is not permitted - only project-specific news
             if (db_result($result, 0, 'group_id') != ForgeConfig::get('sys_news_group')) {
-                $params['toptab'] = 'news';
-                $group_id         = db_result($result, 0, 'group_id');
+                $in_project = $params->in_project;
+                if ($in_project) {
+                    $params = \Tuleap\Layout\HeaderConfigurationBuilder::get($params->title)
+                        ->inProject($in_project->project, Service::NEWS)
+                        ->withPrinterVersion($params->printer_version)
+                        ->build();
+                }
+
+                $group_id = db_result($result, 0, 'group_id');
                 $GLOBALS['HTML']->addBreadcrumbs([
                     [
                         'title' => $Language->getText('news_index', 'news'),
                         'url' => '/news/?group_id=' . urlencode($group_id),
                     ],
                 ]);
-                site_project_header(ProjectManager::instance()->getProjectById((int) $group_id), $params);
+                site_project_header($project, $params);
             } else {
                 $HTML->header($params);
                 echo '
@@ -147,7 +153,7 @@ function forum_header(array $params)
         echo '<P><H3>' . _('Discussion Forums') . ': <A HREF="/forum/forum.php?forum_id=' . $forum_id . '">' . $forum_name . '</A></H3>';
     }
 
-    if (! isset($params['pv']) || (isset($params['pv']) && ! $params['pv'])) {
+    if ($params->printer_version) {
         $request = HTTPRequest::instance();
         if ($forum_id && user_isloggedin() && ! $request->exist('delete')) {
             echo '<P><B>';
@@ -175,7 +181,7 @@ function forum_header(array $params)
     }
 }
 
-function forum_footer($params)
+function forum_footer()
 {
     global $group_id,$HTML;
     /*
@@ -186,9 +192,9 @@ function forum_footer($params)
 
     //backwards compatibility for "general news" which is no longer permitted to be submitted
     if ($group_id == ForgeConfig::get('sys_news_group')) {
-        $HTML->footer($params);
+        $HTML->footer([]);
     } else {
-        site_project_footer($params);
+        site_project_footer([]);
     }
 }
 

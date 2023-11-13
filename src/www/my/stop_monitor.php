@@ -49,10 +49,11 @@ if (user_isloggedin()) {
             $forum_monitor_error = ! forum_add_monitor($forum_id, $user_id);
         }
     } else {
-        forum_header(['title' => _('Choose a forum First')]);
+        forum_header(\Tuleap\Layout\HeaderConfigurationBuilder::get(_('Choose a forum First'))
+            ->build());
         echo '
 			<H1>' . _('Error - choose a forum first') . '</H1>';
-        forum_footer([]);
+        forum_footer();
     }
 } else {
     exit_not_logged_in();

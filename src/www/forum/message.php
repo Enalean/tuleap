@@ -52,12 +52,12 @@ if ($request->valid($vMsg)) {
     $group_id   = $message->getProjectId();
     $forum_name = $message->getForumName();
     $forum_id   = $message->getForumId();
+    $project    = (ProjectManager::instance())->getProject($group_id);
 
-    $params = [
-        'title' => $message->getSubject(),
-        'pv'    => isset($pv) ? $pv : false,
-    ];
-    forum_header($params);
+    forum_header(\Tuleap\Layout\HeaderConfigurationBuilder::get($message->getSubject())
+        ->inProject($project, Service::FORUM)
+        ->withPrinterVersion((int) $pv)
+        ->build());
 
     echo "<P>";
 
@@ -111,4 +111,4 @@ if ($request->valid($vMsg)) {
     exit_error($Language->getText('global', 'error'), _('Must choose a message first'));
 }
 
-forum_footer($params);
+forum_footer();
