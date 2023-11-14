@@ -21,6 +21,7 @@ import type { Vue } from "vue/types/vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import { createLocalVue } from "@vue/test-utils";
 import { initVueGettext } from "@tuleap/vue2-gettext-init";
+import { PiniaVuePlugin } from "pinia";
 
 export async function createReleaseWidgetLocalVue(): Promise<typeof Vue> {
     const local_vue = createLocalVue();
@@ -28,6 +29,7 @@ export async function createReleaseWidgetLocalVue(): Promise<typeof Vue> {
         throw new Error("Fallback to default");
     });
     local_vue.use(VueDOMPurifyHTML);
+    local_vue.use(PiniaVuePlugin);
 
     return local_vue;
 }

@@ -32,35 +32,20 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
 import type { MilestoneData } from "../../../type";
-import ReleaseBadgesAllSprints from "./ReleaseBadgesAllSprints.vue";
-import ReleaseOthersBadges from "./ReleaseOthersBadges.vue";
-import ReleaseBadgesClosedSprints from "./ReleaseBadgesClosedSprints.vue";
 import ReleaseBadgesDisplayerIfOpenSprints from "./ReleaseBadgesDisplayerIfOpenSprints.vue";
 import ReleaseBadgesDisplayerIfOnlyClosedSprints from "./ReleaseBadgesDisplayerIfOnlyClosedSprints.vue";
 import { openSprintsExist } from "../../../helpers/milestones-sprints-helper";
-@Component({
-    components: {
-        ReleaseBadgesDisplayerIfOnlyClosedSprints,
-        ReleaseBadgesDisplayerIfOpenSprints,
-        ReleaseBadgesClosedSprints,
-        ReleaseOthersBadges,
-        ReleaseBadgesAllSprints,
-    },
-})
-export default class ReleaseBadgesDisplayer extends Vue {
-    @Prop()
-    readonly release_data!: MilestoneData;
-    @Prop()
-    readonly isOpen!: boolean;
-    @Prop()
-    readonly isPastRelease!: boolean;
 
-    get open_sprints_exist(): boolean {
-        return openSprintsExist(this.release_data);
-    }
-}
+const props = defineProps<{
+    release_data: MilestoneData;
+    isOpen: boolean;
+    isPastRelease: boolean;
+}>();
+
+const open_sprints_exist = computed((): boolean => {
+    return openSprintsExist(props.release_data);
+});
 </script>

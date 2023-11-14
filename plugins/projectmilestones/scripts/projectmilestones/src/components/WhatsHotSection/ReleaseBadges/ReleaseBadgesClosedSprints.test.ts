@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ReleaseBadgesClosedSprints from "./ReleaseBadgesClosedSprints.vue";
 import type { MilestoneData, TrackerProjectLabel } from "../../../type";
@@ -25,14 +25,13 @@ import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test
 import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
 
-let release_data: MilestoneData & Required<Pick<MilestoneData, "planning">>;
 const total_sprint = 10;
-const component_options: ShallowMountOptions<ReleaseBadgesClosedSprints> = {};
 
 describe("ReleaseBadgesClosedSprints", () => {
     async function getPersonalWidgetInstance(
-        user_can_view_sub_milestones_planning = true,
-    ): Promise<Wrapper<ReleaseBadgesClosedSprints>> {
+        user_can_view_sub_milestones_planning: boolean,
+        release_data: MilestoneData,
+    ): Promise<Wrapper<Vue, Element>> {
         const useStore = defineStore("root", {
             state: () => ({
                 user_can_view_sub_milestones_planning,
@@ -40,18 +39,17 @@ describe("ReleaseBadgesClosedSprints", () => {
         });
         const pinia = createTestingPinia();
         useStore(pinia);
-        component_options.localVue = await createReleaseWidgetLocalVue();
 
-        return shallowMount(ReleaseBadgesClosedSprints, component_options);
+        return shallowMount(ReleaseBadgesClosedSprints, {
+            localVue: await createReleaseWidgetLocalVue(),
+            propsData: { release_data },
+            pinia,
+        });
     }
-
-    beforeEach(() => {
-        component_options.propsData = { release_data };
-    });
 
     describe("Display total of closed sprints", () => {
         it("When there are some closed sprints, Then the total is displayed", async () => {
-            release_data = {
+            const release_data = {
                 id: 2,
                 total_sprint,
                 total_closed_sprint: 6,
@@ -68,15 +66,13 @@ describe("ReleaseBadgesClosedSprints", () => {
                 },
             } as MilestoneData;
 
-            component_options.propsData = { release_data };
-
-            const wrapper = await getPersonalWidgetInstance();
+            const wrapper = await getPersonalWidgetInstance(true, release_data);
 
             expect(wrapper.find("[data-test=total-closed-sprints]").exists()).toBe(true);
         });
 
         it("When the total of closed sprints is null, Then the total is not displayed", async () => {
-            release_data = {
+            const release_data = {
                 id: 2,
                 total_sprint,
                 total_closed_sprint: null,
@@ -93,14 +89,13 @@ describe("ReleaseBadgesClosedSprints", () => {
                 },
             } as MilestoneData;
 
-            component_options.propsData = { release_data };
-            const wrapper = await getPersonalWidgetInstance();
+            const wrapper = await getPersonalWidgetInstance(true, release_data);
 
             expect(wrapper.find("[data-test=total-closed-sprints]").exists()).toBe(false);
         });
 
         it("When the total of closed sprints is 0, Then the total is displayed", async () => {
-            release_data = {
+            const release_data = {
                 id: 2,
                 total_sprint,
                 total_closed_sprint: 0,
@@ -117,14 +112,13 @@ describe("ReleaseBadgesClosedSprints", () => {
                 },
             } as MilestoneData;
 
-            component_options.propsData = { release_data };
-            const wrapper = await getPersonalWidgetInstance();
+            const wrapper = await getPersonalWidgetInstance(true, release_data);
 
             expect(wrapper.find("[data-test=total-closed-sprints]").exists()).toBe(true);
         });
 
         it("When there is no trackers of sprints, Then the total is not displayed", async () => {
-            release_data = {
+            const release_data = {
                 id: 2,
                 total_sprint,
                 total_closed_sprint: 0,
@@ -137,14 +131,13 @@ describe("ReleaseBadgesClosedSprints", () => {
                 },
             } as MilestoneData;
 
-            component_options.propsData = { release_data };
-            const wrapper = await getPersonalWidgetInstance();
+            const wrapper = await getPersonalWidgetInstance(true, release_data);
 
             expect(wrapper.find("[data-test=total-closed-sprints]").exists()).toBe(false);
         });
 
         it("When the user can't see the tracker's label, Then the total is not displayed", async () => {
-            release_data = {
+            const release_data = {
                 id: 2,
                 total_sprint,
                 total_closed_sprint: 6,
@@ -161,9 +154,7 @@ describe("ReleaseBadgesClosedSprints", () => {
                 },
             } as MilestoneData;
 
-            component_options.propsData = { release_data };
-
-            const wrapper = await getPersonalWidgetInstance(false);
+            const wrapper = await getPersonalWidgetInstance(false, release_data);
 
             expect(wrapper.find("[data-test=total-closed-sprints]").exists()).toBe(false);
         });
