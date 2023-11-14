@@ -29,13 +29,13 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Psr\Log\LoggerInterface;
 use SystemEventManager;
-use TimePeriodWithoutWeekEnd;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_Chart_Data_Burndown;
 use Tracker_FormElement_Chart_Field_Exception;
 use Tracker_FormElement_Field_Burndown;
 use Tracker_FormElementFactory;
 use TrackerManager;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 
@@ -262,8 +262,8 @@ class Tracker_FormElement_Field_BurndownTest extends \Tuleap\Test\PHPUnit\TestCa
         $timestamp = mktime(0, 0, 0, 7, 3, 2011);
         $duration  = 5;
 
-        $time_period   = TimePeriodWithoutWeekEnd::buildFromDuration($timestamp, $duration);
-        $burndown_data = new Tracker_Chart_Data_Burndown($time_period);
+        $date_period   = DatePeriodWithoutWeekEnd::buildFromDuration($timestamp, $duration);
+        $burndown_data = new Tracker_Chart_Data_Burndown($date_period);
 
         $burndown_view = \Mockery::spy(\Tracker_Chart_BurndownView::class);
 

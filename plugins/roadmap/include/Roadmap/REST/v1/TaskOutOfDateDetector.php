@@ -25,6 +25,7 @@ namespace Tuleap\Roadmap\REST\v1;
 use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
 use Tracker_Semantic_Status;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
@@ -144,8 +145,8 @@ final class TaskOutOfDateDetector implements IDetectIfArtifactIsOutOfDate
         DateTimeImmutable $now,
     ): bool {
         $timeframe_calculator = $semantic_timeframe->getTimeframeCalculator();
-        $time_period          = $timeframe_calculator->buildTimePeriodWithoutWeekendForArtifactForREST($artifact, $user, $this->logger);
-        $task_end_date        = $this->getDateTheTaskEnds($time_period);
+        $date_period          = $timeframe_calculator->buildDatePeriodWithoutWeekendForArtifactForREST($artifact, $user, $this->logger);
+        $task_end_date        = $this->getDateTheTaskEnds($date_period);
 
         if ($task_end_date === null) {
             return false;
@@ -165,10 +166,10 @@ final class TaskOutOfDateDetector implements IDetectIfArtifactIsOutOfDate
         return in_array($value_id, $semantic_status->getOpenValues());
     }
 
-    private function getDateTheTaskEnds(\TimePeriodWithoutWeekEnd $time_period): ?DateTimeImmutable
+    private function getDateTheTaskEnds(DatePeriodWithoutWeekEnd $date_period): ?DateTimeImmutable
     {
-        $start_date = $time_period->getStartDate();
-        $end_date   = $time_period->getEndDate();
+        $start_date = $date_period->getStartDate();
+        $end_date   = $date_period->getEndDate();
 
         if ($start_date === null && $end_date === null) {
             return null;

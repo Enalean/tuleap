@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\FormElement\Field\Burndown;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use TimePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
@@ -115,14 +115,14 @@ class BurndownCacheGenerationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $start_date  = 1543404090;
         $duration    = 10;
-        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
         $capacity = 5;
         $this->assertFalse(
             $this->cache_checker->isBurndownUnderCalculationBasedOnServerTimezone(
                 $this->artifact,
                 $this->user,
-                $time_period,
+                $date_period,
                 $capacity
             )
         );
@@ -143,14 +143,14 @@ class BurndownCacheGenerationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $start_date  = 1543404090;
         $duration    = 10;
-        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
         $capacity = 5;
         $this->assertFalse(
             $this->cache_checker->isBurndownUnderCalculationBasedOnServerTimezone(
                 $this->artifact,
                 $this->user,
-                $time_period,
+                $date_period,
                 $capacity
             )
         );
@@ -177,14 +177,14 @@ class BurndownCacheGenerationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $start_date  = 1543404090;
         $duration    = 10;
-        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
         $capacity = 5;
         $this->assertTrue(
             $this->cache_checker->isBurndownUnderCalculationBasedOnServerTimezone(
                 $this->artifact,
                 $this->user,
-                $time_period,
+                $date_period,
                 $capacity
             )
         );
@@ -210,14 +210,14 @@ class BurndownCacheGenerationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $start_date  = 1543404090;
         $duration    = 10;
-        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
         $capacity = 5;
         $this->assertTrue(
             $this->cache_checker->isBurndownUnderCalculationBasedOnServerTimezone(
                 $this->artifact,
                 $this->user,
-                $time_period,
+                $date_period,
                 $capacity
             )
         );

@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Tracker\Artifact\Artifact;
 
 /**
@@ -184,7 +185,7 @@ interface Planning_Milestone // @codingStandardsIgnoreLine
      */
     public function getBurndownData(PFUser $user);
 
-    public function setTimePeriod(TimePeriodWithoutWeekEnd $time_period);
+    public function setDatePeriod(DatePeriodWithoutWeekEnd $date_period): void;
 
     public function setCapacity($capacity);
 

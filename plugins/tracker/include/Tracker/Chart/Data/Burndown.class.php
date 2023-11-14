@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Tracker\REST\Artifact\BurndownRepresentation;
 
 /**
@@ -29,19 +30,17 @@ class Tracker_Chart_Data_Burndown
      * @var array
      */
     private $remaining_efforts_at_date;
-    /**
-     * @var TimePeriodWithoutWeekEnd
-     */
-    private $time_period;
+
+    private DatePeriodWithoutWeekEnd $date_period;
 
     private $remaining_effort;
     private $ideal_effort;
     private $capacity;
     private $is_under_calcul;
 
-    public function __construct(TimePeriodWithoutWeekEnd $time_period, $capacity = null, $is_under_calcul = false)
+    public function __construct(DatePeriodWithoutWeekEnd $time_period, $capacity = null, $is_under_calcul = false)
     {
-        $this->time_period               = $time_period;
+        $this->date_period               = $time_period;
         $this->capacity                  = $capacity;
         $this->is_under_calcul           = $is_under_calcul;
         $this->remaining_effort          = [];
@@ -81,13 +80,13 @@ class Tracker_Chart_Data_Burndown
     {
         $remaining_effort = [];
 
-        if ($this->time_period->isTodayBeforeTimePeriod()) {
+        if ($this->date_period->isTodayBeforeDatePeriod()) {
             $remaining_effort[] = null;
 
             return $remaining_effort;
         }
 
-        $number_of_days = $this->time_period->getCountDayUntilDate($_SERVER['REQUEST_TIME']);
+        $number_of_days = $this->date_period->getCountDayUntilDate($_SERVER['REQUEST_TIME']);
         for ($day_offset = 0; $day_offset < $number_of_days; $day_offset++) {
             if (isset($this->remaining_effort[$day_offset])) {
                 $remaining_effort[] = $this->remaining_effort[$day_offset];
@@ -110,7 +109,7 @@ class Tracker_Chart_Data_Burndown
      */
     public function getHumanReadableDates()
     {
-        return $this->time_period->getHumanReadableDates();
+        return $this->date_period->getHumanReadableDates();
     }
 
     /**
@@ -123,7 +122,7 @@ class Tracker_Chart_Data_Burndown
         $start_effort = $this->getFirstEffort();
         $x_axis       = 0;
 
-        foreach ($this->time_period->getDayOffsets() as $day_offset) {
+        foreach ($this->date_period->getDayOffsets() as $day_offset) {
             $this->ideal_effort[$x_axis] = $this->getIdealEffortAtDay($x_axis, $start_effort);
             $x_axis++;
         }
@@ -186,15 +185,12 @@ class Tracker_Chart_Data_Burndown
 
     private function getDuration()
     {
-        return $this->time_period->getDuration();
+        return $this->date_period->getDuration();
     }
 
-    /**
-     * @return TimePeriodWithoutWeekEnd
-     */
-    public function getTimePeriod()
+    public function getDatePeriod(): DatePeriodWithoutWeekEnd
     {
-        return $this->time_period;
+        return $this->date_period;
     }
 
     private function getFirstEffort()

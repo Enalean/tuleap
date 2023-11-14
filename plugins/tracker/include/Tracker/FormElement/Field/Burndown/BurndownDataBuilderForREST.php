@@ -22,8 +22,8 @@ namespace Tuleap\Tracker\FormElement\Field\Burndown;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
-use TimePeriodWithoutWeekEnd;
 use Tracker_Chart_Data_Burndown;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
 
@@ -54,7 +54,7 @@ class BurndownDataBuilderForREST
         $this->common_data_builder    = $common_data_builder;
     }
 
-    public function build(Artifact $artifact, PFUser $user, TimePeriodWithoutWeekEnd $time_period)
+    public function build(Artifact $artifact, PFUser $user, DatePeriodWithoutWeekEnd $date_period)
     {
         $capacity      = $this->common_data_builder->getCapacity($artifact, $user);
         $user_timezone = TimezoneRetriever::getUserTimezone($user);
@@ -62,7 +62,7 @@ class BurndownDataBuilderForREST
         $is_burndown_under_calculation = $this->common_data_builder->getBurndownCalculationStatus(
             $artifact,
             $user,
-            $time_period,
+            $date_period,
             $capacity,
             $user_timezone
         );
@@ -70,7 +70,7 @@ class BurndownDataBuilderForREST
         $efforts = $this->addBurndownRemainingEffortDotsBasedOnServerTimezoneForREST(
             $artifact,
             $user,
-            $time_period,
+            $date_period,
             $capacity,
             $is_burndown_under_calculation
         );
@@ -85,11 +85,11 @@ class BurndownDataBuilderForREST
     private function addBurndownRemainingEffortDotsBasedOnServerTimezoneForREST(
         Artifact $artifact,
         PFUser $user,
-        TimePeriodWithoutWeekEnd $time_period,
+        DatePeriodWithoutWeekEnd $date_period,
         $capacity,
         $is_burndown_under_calculation,
     ) {
-        $user_time_period   = $this->common_data_builder->getTimePeriod($time_period);
+        $user_time_period   = $this->common_data_builder->getDatePeriod($date_period);
         $user_burndown_data = new Tracker_Chart_Data_Burndown($user_time_period, $capacity);
 
         if ($is_burndown_under_calculation === false) {

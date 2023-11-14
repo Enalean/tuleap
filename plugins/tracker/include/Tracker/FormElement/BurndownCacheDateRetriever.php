@@ -21,7 +21,7 @@
 namespace Tuleap\Tracker\FormElement;
 
 use DateTime;
-use TimePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 
 class BurndownCacheDateRetriever
 {
@@ -33,7 +33,7 @@ class BurndownCacheDateRetriever
         return $date->getTimestamp();
     }
 
-    public function getWorkedDaysToCacheForPeriod(TimePeriodWithoutWeekEnd $burndown_period, DateTime $yesterday)
+    public function getWorkedDaysToCacheForPeriod(DatePeriodWithoutWeekEnd $burndown_period, DateTime $yesterday)
     {
         $start_date = $this->getFirstDayToCache($burndown_period);
         $end_date   = $this->getLastDayToCache($burndown_period);
@@ -41,7 +41,7 @@ class BurndownCacheDateRetriever
         $day = [];
 
         while ($start_date <= $end_date && $start_date <= $yesterday) {
-            if (TimePeriodWithoutWeekEnd::isNotWeekendDay($this->removeLastSecondOfCachedDayForJPGraph($start_date))) {
+            if (DatePeriodWithoutWeekEnd::isNotWeekendDay($this->removeLastSecondOfCachedDayForJPGraph($start_date))) {
                 $day[] = $this->removeLastSecondOfCachedDayForJPGraph($start_date);
             }
 
@@ -51,7 +51,7 @@ class BurndownCacheDateRetriever
         return $day;
     }
 
-    private function getFirstDayToCache(TimePeriodWithoutWeekEnd $burndown_period)
+    private function getFirstDayToCache(DatePeriodWithoutWeekEnd $burndown_period)
     {
         $start_date = new DateTime();
         $start_date->setTimestamp((int) $burndown_period->getStartDate());
@@ -60,7 +60,7 @@ class BurndownCacheDateRetriever
         return $start_date;
     }
 
-    private function getLastDayToCache(TimePeriodWithoutWeekEnd $burndown_period)
+    private function getLastDayToCache(DatePeriodWithoutWeekEnd $burndown_period)
     {
         $end_date = new DateTime();
         $end_date->setTimestamp((int) $burndown_period->getEndDate());

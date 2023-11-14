@@ -45,12 +45,12 @@ final class TimeframeTooltipEntry implements OtherSemanticTooltipEntryFetcher
             return '';
         }
 
-        $time_period = $semantic_timeframe
+        $date_period = $semantic_timeframe
             ->getTimeframeCalculator()
-            ->buildTimePeriodWithoutWeekendForArtifactForREST($artifact, $user, $this->logger);
+            ->buildDatePeriodWithoutWeekendForArtifactForREST($artifact, $user, $this->logger);
 
-        $start_date = $time_period->getStartDate();
-        $end_date   = $time_period->getEndDate();
+        $start_date = $date_period->getStartDate();
+        $end_date   = $date_period->getEndDate();
 
         if ($start_date === null && $end_date === null) {
             return '';
@@ -67,7 +67,7 @@ final class TimeframeTooltipEntry implements OtherSemanticTooltipEntryFetcher
             'start_date'                => $start ? $formatter->format($start) : '',
             'end_date'                  => $end ? $formatter->format($end) : '',
             'is_end_date_in_error'      => ! $this->haveEndDateGreaterOrEqualToStartDate($start, $end),
-            'time_period_error_message' => $time_period->getErrorMessage(),
+            'date_period_error_message' => $date_period->getErrorMessage(),
         ]);
     }
 

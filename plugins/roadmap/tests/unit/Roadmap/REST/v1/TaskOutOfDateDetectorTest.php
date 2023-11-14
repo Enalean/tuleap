@@ -25,10 +25,10 @@ namespace Tuleap\Roadmap\REST\v1;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use TimePeriodWithoutWeekEnd;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_List;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -129,10 +129,10 @@ final class TaskOutOfDateDetectorTest extends TestCase
 
         $this->semantic_status->expects(self::once())->method('getField')->willReturn($this->status_field);
         $this->semantic_status->expects(self::once())->method('isOpen')->with($this->artifact)->willReturn(false);
-        $this->timeframe_calculator->method('buildTimePeriodWithoutWeekendForArtifactForREST')
+        $this->timeframe_calculator->method('buildDatePeriodWithoutWeekendForArtifactForREST')
             ->with($this->artifact, $this->user, $this->logger)
             ->willReturn(
-                $this->getTimePeriodWithoutWeekend("2021-01-01", null)
+                $this->getDatePeriodWithoutWeekend("2021-01-01", null)
             );
 
         $this->artifact->setChangesets(
@@ -198,10 +198,10 @@ final class TaskOutOfDateDetectorTest extends TestCase
 
         $this->semantic_status->expects(self::once())->method('getField')->willReturn($this->status_field);
         $this->semantic_status->expects(self::once())->method('isOpen')->with($this->artifact)->willReturn(false);
-        $this->timeframe_calculator->method('buildTimePeriodWithoutWeekendForArtifactForREST')
+        $this->timeframe_calculator->method('buildDatePeriodWithoutWeekendForArtifactForREST')
             ->with($this->artifact, $this->user, $this->logger)
             ->willReturn(
-                $this->getTimePeriodWithoutWeekend("2021-01-01", null)
+                $this->getDatePeriodWithoutWeekend("2021-01-01", null)
             );
 
         $this->artifact->setChangesets(
@@ -239,10 +239,10 @@ final class TaskOutOfDateDetectorTest extends TestCase
 
         $this->semantic_status->expects(self::once())->method('getField')->willReturn($this->status_field);
         $this->semantic_status->expects(self::once())->method('isOpen')->with($this->artifact)->willReturn(false);
-        $this->timeframe_calculator->method('buildTimePeriodWithoutWeekendForArtifactForREST')
+        $this->timeframe_calculator->method('buildDatePeriodWithoutWeekendForArtifactForREST')
             ->with($this->artifact, $this->user, $this->logger)
             ->willReturn(
-                $this->getTimePeriodWithoutWeekend("2021-01-01", null)
+                $this->getDatePeriodWithoutWeekend("2021-01-01", null)
             );
 
         $submitted_on = new \DateTimeImmutable("2021-04-13 15:30");
@@ -288,10 +288,10 @@ final class TaskOutOfDateDetectorTest extends TestCase
 
         $this->semantic_status->expects(self::once())->method('getField')->willReturn($this->status_field);
         $this->semantic_status->expects(self::once())->method('isOpen')->with($this->artifact)->willReturn(false);
-        $this->timeframe_calculator->method('buildTimePeriodWithoutWeekendForArtifactForREST')
+        $this->timeframe_calculator->method('buildDatePeriodWithoutWeekendForArtifactForREST')
             ->with($this->artifact, $this->user, $this->logger)
             ->willReturn(
-                $this->getTimePeriodWithoutWeekend("2021-01-01", null)
+                $this->getDatePeriodWithoutWeekend("2021-01-01", null)
             );
 
         $submitted_on = new \DateTimeImmutable("2021-04-13 15:30");
@@ -384,10 +384,10 @@ final class TaskOutOfDateDetectorTest extends TestCase
 
         $now_string_date = "2021-04-14";
 
-        $this->timeframe_calculator->method('buildTimePeriodWithoutWeekendForArtifactForREST')
+        $this->timeframe_calculator->method('buildDatePeriodWithoutWeekendForArtifactForREST')
             ->with($this->artifact, $this->user, $this->logger)
             ->willReturn(
-                $this->getTimePeriodWithoutWeekend("2020-01-01", $end_string_date)
+                $this->getDatePeriodWithoutWeekend("2020-01-01", $end_string_date)
             );
 
         $this->semantic_status->expects(self::once())->method('getField')->willReturn($this->status_field);
@@ -449,13 +449,13 @@ final class TaskOutOfDateDetectorTest extends TestCase
         return $changeset;
     }
 
-    private function getTimePeriodWithoutWeekend(
+    private function getDatePeriodWithoutWeekend(
         string $start_date_string,
         ?string $end_date_string,
-    ): TimePeriodWithoutWeekEnd {
+    ): DatePeriodWithoutWeekEnd {
         $end = $end_date_string !== null ? (new \DateTimeImmutable($end_date_string))->getTimestamp() : null;
 
-        return TimePeriodWithoutWeekEnd::buildFromEndDate(
+        return DatePeriodWithoutWeekEnd::buildFromEndDate(
             (new \DateTimeImmutable($start_date_string))->getTimestamp(),
             $end,
             new NullLogger()

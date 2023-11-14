@@ -22,6 +22,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Date\DatePeriodWithWeekEnd;
+
 class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5
 {
     /**
@@ -29,7 +31,7 @@ class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5
      *
      * @param Burndown_Engine $engine object
      */
-    public function buildProperties($engine)
+    public function buildProperties($engine): void
     {
         parent::buildProperties($engine);
 
@@ -38,8 +40,8 @@ class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5
         $type                 = $form_element_factory->getType($effort_field);
 
         if ($this->isValidEffortField($effort_field, $type) && $this->isValidType($type)) {
-            $time_period  = new TimePeriodWithWeekEnd($this->chart->getStartDate(), $this->chart->getDuration());
-            $engine->data = $this->getBurnDownData($effort_field->getId(), $type, $time_period);
+            $date_period  = new DatePeriodWithWeekEnd($this->chart->getStartDate(), $this->chart->getDuration());
+            $engine->data = $this->getBurnDownData($effort_field->getId(), $type, $date_period);
         }
 
         $engine->legend     = null;
@@ -47,7 +49,7 @@ class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5
         $engine->duration   = $this->chart->getDuration();
     }
 
-    protected function getBurnDownData($effort_field_id, $type, TimePeriodWithWeekEnd $time_period)
+    protected function getBurnDownData($effort_field_id, $type, DatePeriodWithWeekEnd $date_period)
     {
         $artifact_ids = explode(',', $this->artifacts['id']);
 
@@ -60,7 +62,7 @@ class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5
                         WHERE c.artifact_id IN  (" . db_ei_implode($artifact_ids) . ")
                         ORDER BY day, cvi.changeset_value_id DESC";
 
-        return new GraphOnTrackersV5_Burndown_Data(db_query($sql), $artifact_ids, $time_period);
+        return new GraphOnTrackersV5_Burndown_Data(db_query($sql), $artifact_ids, $date_period);
     }
 
     protected function isValidEffortField($effort_field, $type)

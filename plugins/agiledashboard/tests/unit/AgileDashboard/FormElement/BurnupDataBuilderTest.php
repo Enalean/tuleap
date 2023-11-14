@@ -20,15 +20,16 @@
 
 namespace Tuleap\AgileDashboard\FormElement;
 
+use ColinODell\PsrTestLogger\TestLogger;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use ColinODell\PsrTestLogger\TestLogger;
 use Tracker;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCalculator;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsInfo;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -108,12 +109,12 @@ final class BurnupDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact->shouldReceive('getTracker')->andReturn($this->artifact_tracker);
         $artifact->shouldReceive('getTrackerId')->andReturn($this->artifact_tracker->getId());
 
-        $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration(1560760543, 3);
+        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration(1560760543, 3);
 
-        $this->chart_configuration_value_retriever->shouldReceive('getTimePeriod')
+        $this->chart_configuration_value_retriever->shouldReceive('getDatePeriod')
             ->with($artifact, $user)
             ->once()
-            ->andReturn($time_period);
+            ->andReturn($date_period);
 
         $this->burnup_cache_checker->shouldReceive('isBurnupUnderCalculation')
             ->with($artifact, Mockery::any(), $user)
@@ -142,12 +143,12 @@ final class BurnupDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact->shouldReceive('getTracker')->andReturn($this->artifact_tracker);
         $artifact->shouldReceive('getTrackerId')->andReturn($this->artifact_tracker->getId());
 
-        $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration(1560760543, 3);
+        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration(1560760543, 3);
 
-        $this->chart_configuration_value_retriever->shouldReceive('getTimePeriod')
+        $this->chart_configuration_value_retriever->shouldReceive('getDatePeriod')
             ->with($artifact, $user)
             ->once()
-            ->andReturn($time_period);
+            ->andReturn($date_period);
 
         $this->burnup_cache_checker->shouldReceive('isBurnupUnderCalculation')
             ->with($artifact, Mockery::any(), $user)
@@ -181,12 +182,12 @@ final class BurnupDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact->shouldReceive('getId')->andReturn(101);
         $artifact->shouldReceive('getTrackerId')->andReturn($this->artifact_tracker->getId());
 
-        $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration(1560760543, 3);
+        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration(1560760543, 3);
 
-        $this->chart_configuration_value_retriever->shouldReceive('getTimePeriod')
+        $this->chart_configuration_value_retriever->shouldReceive('getDatePeriod')
             ->with($artifact, $user)
             ->once()
-            ->andReturn($time_period);
+            ->andReturn($date_period);
 
         $this->burnup_cache_checker->shouldReceive('isBurnupUnderCalculation')
             ->with($artifact, Mockery::any(), $user)
@@ -215,12 +216,12 @@ final class BurnupDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $start_date = new \DateTime();
         $start_date->setTime(0, 0, 0);
 
-        $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration($start_date->getTimestamp(), 3);
+        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date->getTimestamp(), 3);
 
-        $this->chart_configuration_value_retriever->shouldReceive('getTimePeriod')
+        $this->chart_configuration_value_retriever->shouldReceive('getDatePeriod')
             ->with($artifact, $user)
             ->once()
-            ->andReturn($time_period);
+            ->andReturn($date_period);
 
         $this->burnup_cache_checker->shouldReceive('isBurnupUnderCalculation')
             ->with($artifact, Mockery::any(), $user)

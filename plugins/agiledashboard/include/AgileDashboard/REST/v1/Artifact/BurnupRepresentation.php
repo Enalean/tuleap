@@ -63,8 +63,8 @@ class BurnupRepresentation
         if ($burnup_data === null) {
             return;
         }
-        $this->start_date           = JsonCast::toDate($burnup_data->getTimePeriod()->getStartDate());
-        $this->duration             = JsonCast::toInt($burnup_data->getTimePeriod()->getDuration());
+        $this->start_date           = JsonCast::toDate($burnup_data->getDatePeriod()->getStartDate());
+        $this->duration             = JsonCast::toInt($burnup_data->getDatePeriod()->getDuration());
         $this->is_under_calculation = JsonCast::toBoolean($burnup_data->isBeingCalculated());
         $this->opening_days         = [1, 2, 3, 4, 5];
         foreach ($burnup_data->getEfforts() as $timestamp => $burnup_effort) {

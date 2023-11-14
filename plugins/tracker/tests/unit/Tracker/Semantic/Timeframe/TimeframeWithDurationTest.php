@@ -166,7 +166,7 @@ class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItBuildATimePeriodWithoutWeekObjectForArtifactForREST(): void
+    public function testItBuildADatePeriodWithoutWeekObjectForArtifactForREST(): void
     {
         // Sprint 10 days, from `Monday, Jul 1, 2013` to `Monday, Jul 15, 2013`
         $duration          = 10;
@@ -179,18 +179,18 @@ class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mockStartDateFieldWithValue($start_date);
         $this->mockDurationFieldWithValue($duration);
 
-        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifactForREST(
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifactForREST(
             $this->artifact,
             $this->user,
             new NullLogger()
         );
 
-        $this->assertSame(strtotime($start_date), $time_period->getStartDate());
-        $this->assertSame(strtotime($expected_end_date), $time_period->getEndDate());
-        $this->assertSame(10, $time_period->getDuration());
+        $this->assertSame(strtotime($start_date), $date_period->getStartDate());
+        $this->assertSame(strtotime($expected_end_date), $date_period->getEndDate());
+        $this->assertSame(10, $date_period->getDuration());
     }
 
-    public function testItBuildsATimePeriodWithoutWeekObjectForRESTWithStartDateAsNullForArtifactIfNoLastChangesetValueForStartDate(): void
+    public function testItBuildsADatePeriodWithoutWeekObjectForRESTWithStartDateAsNullForArtifactIfNoLastChangesetValueForStartDate(): void
     {
         $duration = 10;
 
@@ -203,18 +203,18 @@ class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->mockDurationFieldWithValue($duration);
 
-        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifactForREST(
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifactForREST(
             $this->artifact,
             $this->user,
             new NullLogger()
         );
 
-        $this->assertNull($time_period->getStartDate());
-        $this->assertNull($time_period->getEndDate());
-        $this->assertSame(10, $time_period->getDuration());
+        $this->assertNull($date_period->getStartDate());
+        $this->assertNull($date_period->getEndDate());
+        $this->assertSame(10, $date_period->getDuration());
     }
 
-    public function testItBuildsATimePeriodForRESTWithNullDurationWhenDurationFieldHasNoLastChangeset(): void
+    public function testItBuildsADatePeriodForRESTWithNullDurationWhenDurationFieldHasNoLastChangeset(): void
     {
         $start_date = '07/01/2013';
 
@@ -226,18 +226,18 @@ class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->artifact)
             ->will(self::returnValue(null));
 
-        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifactForREST(
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifactForREST(
             $this->artifact,
             $this->user,
             new NullLogger()
         );
 
-        $this->assertSame(strtotime($start_date), $time_period->getStartDate());
-        self::assertNull($time_period->getEndDate());
-        self::assertNull($time_period->getDuration());
+        $this->assertSame(strtotime($start_date), $date_period->getStartDate());
+        self::assertNull($date_period->getEndDate());
+        self::assertNull($date_period->getDuration());
     }
 
-    public function testItBuildsTimePeriodWithoutWeekendsForArtifacts(): void
+    public function testItBuildsDatePeriodWithoutWeekendsForArtifacts(): void
     {
         // Sprint 10 days, from `Monday, Jul 1, 2013` to `Monday, Jul 15, 2013`
         $duration          = 10;
@@ -250,18 +250,18 @@ class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mockStartDateFieldWithValue($start_date);
         $this->mockDurationFieldWithValue($duration);
 
-        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifact(
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifact(
             $this->artifact,
             $this->user,
             new NullLogger()
         );
 
-        $this->assertSame(strtotime($start_date), $time_period->getStartDate());
-        $this->assertSame(strtotime($expected_end_date), $time_period->getEndDate());
-        $this->assertSame(10, $time_period->getDuration());
+        $this->assertSame(strtotime($start_date), $date_period->getStartDate());
+        $this->assertSame(strtotime($expected_end_date), $date_period->getEndDate());
+        $this->assertSame(10, $date_period->getDuration());
     }
 
-    public function testItBuildsATimePeriodWithoutWeekObjectWithStartDateAsZeroForArtifactIfNoLastChangesetValueForStartDate(): void
+    public function testItBuildsADatePeriodWithoutWeekObjectWithStartDateAsZeroForArtifactIfNoLastChangesetValueForStartDate(): void
     {
         $duration = 10;
 
@@ -273,18 +273,18 @@ class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
             ->will(self::returnValue(null));
         $this->mockDurationFieldWithValue($duration);
 
-        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifact(
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifact(
             $this->artifact,
             $this->user,
             new NullLogger()
         );
 
-        $this->assertSame(0, $time_period->getStartDate());
-        $this->assertNull($time_period->getEndDate());
-        $this->assertSame(10, $time_period->getDuration());
+        $this->assertSame(0, $date_period->getStartDate());
+        $this->assertNull($date_period->getEndDate());
+        $this->assertSame(10, $date_period->getDuration());
     }
 
-    public function testItBuildsATimePeriodWithZeroDurationWhenDurationFieldHasNoLastChangeset(): void
+    public function testItBuildsADatePeriodWithZeroDurationWhenDurationFieldHasNoLastChangeset(): void
     {
         $start_date = '07/01/2013';
 
@@ -296,18 +296,18 @@ class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->artifact)
             ->will(self::returnValue(null));
 
-        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifact(
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifact(
             $this->artifact,
             $this->user,
             new NullLogger()
         );
 
-        $this->assertSame(strtotime($start_date), $time_period->getStartDate());
-        $this->assertSame(strtotime($start_date), $time_period->getEndDate());
-        $this->assertSame(0, $time_period->getDuration());
+        $this->assertSame(strtotime($start_date), $date_period->getStartDate());
+        $this->assertSame(strtotime($start_date), $date_period->getEndDate());
+        $this->assertSame(0, $date_period->getDuration());
     }
 
-    public function testItBuildsATimePeriodForChartWhenStartDateAndDurationAreSet(): void
+    public function testItBuildsADatePeriodForChartWhenStartDateAndDurationAreSet(): void
     {
         // Sprint 10 days, from `Monday, Jul 1, 2013` to `Monday, Jul 15, 2013`
         $duration          = 10;
@@ -320,15 +320,15 @@ class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mockStartDateFieldWithValue($start_date);
         $this->mockDurationFieldWithValue($duration);
 
-        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifactChartRendering(
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifactChartRendering(
             $this->artifact,
             $this->user,
             new NullLogger()
         );
 
-        $this->assertSame(strtotime($start_date), $time_period->getStartDate());
-        $this->assertSame(strtotime($expected_end_date), $time_period->getEndDate());
-        $this->assertSame(10, $time_period->getDuration());
+        $this->assertSame(strtotime($start_date), $date_period->getStartDate());
+        $this->assertSame(strtotime($expected_end_date), $date_period->getEndDate());
+        $this->assertSame(10, $date_period->getDuration());
     }
 
     public function testItThrowsAnExceptionWhenStartDateIsEmptyOrHasNoValueInChartContext(): void
@@ -347,7 +347,7 @@ class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::expectException(\Tracker_FormElement_Chart_Field_Exception::class);
 
-        $this->timeframe->buildTimePeriodWithoutWeekendForArtifactChartRendering(
+        $this->timeframe->buildDatePeriodWithoutWeekendForArtifactChartRendering(
             $this->artifact,
             $this->user,
             new NullLogger()
@@ -372,7 +372,7 @@ class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(\Tracker_FormElement_Chart_Field_Exception::class);
 
-        $this->timeframe->buildTimePeriodWithoutWeekendForArtifactChartRendering(
+        $this->timeframe->buildDatePeriodWithoutWeekendForArtifactChartRendering(
             $this->artifact,
             $this->user,
             new NullLogger()
@@ -393,7 +393,7 @@ class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(\Tracker_FormElement_Chart_Field_Exception::class);
 
-        $this->timeframe->buildTimePeriodWithoutWeekendForArtifactChartRendering(
+        $this->timeframe->buildDatePeriodWithoutWeekendForArtifactChartRendering(
             $this->artifact,
             $this->user,
             new NullLogger()

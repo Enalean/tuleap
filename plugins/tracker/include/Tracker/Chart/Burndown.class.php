@@ -92,7 +92,7 @@ class Tracker_Chart_Burndown
         $remaining_effort = $this->burndown_data->getRemainingEffort();
 
         $date = new DateTime();
-        $date->setTimestamp($this->burndown_data->getTimePeriod()->getStartDate());
+        $date->setTimestamp($this->burndown_data->getDatePeriod()->getStartDate());
 
         $data                  = [];
         $last_remaining_effort = null;
@@ -107,7 +107,7 @@ class Tracker_Chart_Burndown
             }
         }
 
-        foreach ($this->burndown_data->getTimePeriod()->getDayOffsets() as $day) {
+        foreach ($this->burndown_data->getDatePeriod()->getDayOffsets() as $day) {
             if ($date->getTimestamp() <= time()) {
                 if (isset($remaining_effort[$date->format('Ymd')])) {
                     foreach ($remaining_effort[$date->format('Ymd')] as $artifact => $value) {

@@ -153,14 +153,14 @@ class IterationsRetriever
                 continue;
             }
 
-            $time_period = $timeframes_calculator->buildTimePeriodWithoutWeekendForArtifactForREST($artifact, $user, $this->logger);
-            $start_date  = $time_period->getStartDate();
+            $date_period = $timeframes_calculator->buildDatePeriodWithoutWeekendForArtifactForREST($artifact, $user, $this->logger);
+            $start_date  = $date_period->getStartDate();
             if (! $start_date) {
                 continue;
             }
             $start = (new \DateTimeImmutable())->setTimestamp($start_date);
 
-            $end_date = $time_period->getEndDate();
+            $end_date = $date_period->getEndDate();
             if (! $end_date) {
                 continue;
             }

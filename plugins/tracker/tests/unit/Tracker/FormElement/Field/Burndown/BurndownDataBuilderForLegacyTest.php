@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\FormElement\Field\Burndown;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use TimePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\REST\JsonCast;
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
@@ -106,12 +106,12 @@ class BurndownDataBuilderForLegacyTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $start_date  = strtotime('2018-11-01');
         $duration    = 5;
-        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
-        $user_burndown_data = $this->burndown_data_builder->build($this->artifact, $this->user, $time_period);
+        $user_burndown_data = $this->burndown_data_builder->build($this->artifact, $this->user, $date_period);
 
         $shifted_start_date = 1541026800;
-        $this->assertEquals($user_burndown_data->getTimePeriod()->getStartDate(), $shifted_start_date);
+        $this->assertEquals($user_burndown_data->getDatePeriod()->getStartDate(), $shifted_start_date);
     }
 
     public function testStartDateDoesNotShiftForUsersLocatedInUTCPositive()
@@ -120,12 +120,12 @@ class BurndownDataBuilderForLegacyTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $start_date  = strtotime('2018-11-01');
         $duration    = 5;
-        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
-        $user_burndown_data = $this->burndown_data_builder->build($this->artifact, $this->user, $time_period);
+        $user_burndown_data = $this->burndown_data_builder->build($this->artifact, $this->user, $date_period);
 
         $shifted_start_date = 1541026800;
-        $this->assertEquals($user_burndown_data->getTimePeriod()->getStartDate(), $shifted_start_date);
+        $this->assertEquals($user_burndown_data->getDatePeriod()->getStartDate(), $shifted_start_date);
     }
 
     public function testRemainingEffortAreNotShiftedUsersLocatedInUTCNegative()
@@ -134,12 +134,12 @@ class BurndownDataBuilderForLegacyTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $start_date  = strtotime('2018-11-01');
         $duration    = 2;
-        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
         $second_day = strtotime('2018-11-02');
         $third_day  = strtotime('2018-11-03');
 
-        $user_burndown_data = $this->burndown_data_builder->build($this->artifact, $this->user, $time_period);
+        $user_burndown_data = $this->burndown_data_builder->build($this->artifact, $this->user, $date_period);
 
         $this->assertEquals($user_burndown_data->getRESTRepresentation()->points_with_date[0]->date, JsonCast::toDate($start_date));
         $this->assertEquals($user_burndown_data->getRESTRepresentation()->points_with_date[1]->date, JsonCast::toDate($second_day));
@@ -152,12 +152,12 @@ class BurndownDataBuilderForLegacyTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $start_date  = strtotime('2018-11-01');
         $duration    = 2;
-        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
         $second_day = strtotime('2018-11-02');
         $third_day  = strtotime('2018-11-03');
 
-        $user_burndown_data = $this->burndown_data_builder->build($this->artifact, $this->user, $time_period);
+        $user_burndown_data = $this->burndown_data_builder->build($this->artifact, $this->user, $date_period);
 
         $this->assertEquals($user_burndown_data->getRESTRepresentation()->points_with_date[0]->date, JsonCast::toDate($start_date));
         $this->assertEquals($user_burndown_data->getRESTRepresentation()->points_with_date[1]->date, JsonCast::toDate($second_day));

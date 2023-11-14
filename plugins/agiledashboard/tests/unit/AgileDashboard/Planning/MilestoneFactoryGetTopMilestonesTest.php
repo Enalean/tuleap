@@ -35,12 +35,12 @@ use PlanningFactory;
 use PlanningPermissionsManager;
 use Project;
 use Psr\Log\NullLogger;
-use TimePeriodWithoutWeekEnd;
 use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
@@ -139,15 +139,15 @@ final class MilestoneFactoryGetTopMilestonesTest extends \Tuleap\Test\PHPUnit\Te
             $artifact_2,
         ];
 
-        $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
+        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForArtifact')
             ->with($artifact_1, $this->user, $this->logger)
             ->once()
-            ->andReturn(TimePeriodWithoutWeekEnd::buildFromDuration(1, 1));
+            ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
-        $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
+        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForArtifact')
             ->with($artifact_2, $this->user, $this->logger)
             ->once()
-            ->andReturn(TimePeriodWithoutWeekEnd::buildFromDuration(1, 1));
+            ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
         $this->artifact_factory->shouldReceive('getArtifactsByTrackerId')->andReturn($my_artifacts);
 
@@ -179,10 +179,10 @@ final class MilestoneFactoryGetTopMilestonesTest extends \Tuleap\Test\PHPUnit\Te
             $artifact_2,
         ];
 
-        $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
+        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForArtifact')
             ->with($artifact_2, $this->user, $this->logger)
             ->once()
-            ->andReturn(TimePeriodWithoutWeekEnd::buildFromDuration(1, 1));
+            ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
         $this->artifact_factory->shouldReceive('getArtifactsByTrackerId')->andReturn($my_artifacts);
 

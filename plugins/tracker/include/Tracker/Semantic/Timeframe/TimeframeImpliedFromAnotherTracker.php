@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
 use Psr\Log\LoggerInterface;
-use TimePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\Exceptions\ArtifactHasNoLinkToArtifactOfTargetTracker;
@@ -77,49 +77,49 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
         return null;
     }
 
-    public function buildTimePeriodWithoutWeekendForArtifactForREST(Artifact $artifact, \PFUser $user, LoggerInterface $logger): TimePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForArtifactForREST(Artifact $artifact, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
     {
         try {
             $artifact_from_target_tracker = $this->getReverselyLinkedArtifactFromTracker($artifact, $user);
             return $this->semantic_timeframe_implied_from_tracker->getTimeframeCalculator()
-                ->buildTimePeriodWithoutWeekendForArtifactForREST(
+                ->buildDatePeriodWithoutWeekendForArtifactForREST(
                     $artifact_from_target_tracker,
                     $user,
                     $logger
                 );
         } catch (ArtifactHasTooManyLinksToArtifactsOfTargetTracker $exception) {
-            return TimePeriodWithoutWeekEnd::buildFromNothingWithErrorMessage($exception->getMessage());
+            return DatePeriodWithoutWeekEnd::buildFromNothingWithErrorMessage($exception->getMessage());
         } catch (ArtifactHasNoLinkToArtifactOfTargetTracker $exception) {
-            return TimePeriodWithoutWeekEnd::buildWithoutAnyDates();
+            return DatePeriodWithoutWeekEnd::buildWithoutAnyDates();
         }
     }
 
-    public function buildTimePeriodWithoutWeekendForArtifact(Artifact $artifact, \PFUser $user, LoggerInterface $logger): TimePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForArtifact(Artifact $artifact, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
     {
         try {
             $artifact_from_target_tracker = $this->getReverselyLinkedArtifactFromTracker($artifact, $user);
             return $this->semantic_timeframe_implied_from_tracker->getTimeframeCalculator()
-                ->buildTimePeriodWithoutWeekendForArtifact(
+                ->buildDatePeriodWithoutWeekendForArtifact(
                     $artifact_from_target_tracker,
                     $user,
                     $logger
                 );
         } catch (ArtifactHasTooManyLinksToArtifactsOfTargetTracker $exception) {
-            return TimePeriodWithoutWeekEnd::buildFromNothingWithErrorMessage($exception->getMessage());
+            return DatePeriodWithoutWeekEnd::buildFromNothingWithErrorMessage($exception->getMessage());
         } catch (ArtifactHasNoLinkToArtifactOfTargetTracker $exception) {
-            return TimePeriodWithoutWeekEnd::buildWithoutAnyDates();
+            return DatePeriodWithoutWeekEnd::buildWithoutAnyDates();
         }
     }
 
     /**
      * @throws \Tracker_FormElement_Chart_Field_Exception
      */
-    public function buildTimePeriodWithoutWeekendForArtifactChartRendering(Artifact $artifact, \PFUser $user, LoggerInterface $logger): TimePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForArtifactChartRendering(Artifact $artifact, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
     {
         try {
             $artifact_from_target_tracker = $this->getReverselyLinkedArtifactFromTracker($artifact, $user);
             return $this->semantic_timeframe_implied_from_tracker->getTimeframeCalculator()
-                ->buildTimePeriodWithoutWeekendForArtifactChartRendering(
+                ->buildDatePeriodWithoutWeekendForArtifactChartRendering(
                     $artifact_from_target_tracker,
                     $user,
                     $logger

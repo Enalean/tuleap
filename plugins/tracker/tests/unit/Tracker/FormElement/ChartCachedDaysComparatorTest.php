@@ -22,33 +22,33 @@ namespace Tuleap\Tracker\FormElement;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Log\LoggerInterface;
-use TimePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 
 final class ChartCachedDaysComparatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testItVerifiesCacheIsCompleteForChartWhenCacheDaysAreTheSameThanTimePeriodDays(): void
+    public function testItVerifiesCacheIsCompleteForChartWhenCacheDaysAreTheSameThanDatePeriodDays(): void
     {
         $number_of_cached_days = 6;
         $start_date            = mktime(0, 0, 0, 20, 12, 2016);
         $duration              = 5;
 
-        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
         $cache_days_comparator = new ChartCachedDaysComparator(\Mockery::spy(LoggerInterface::class));
-        $this->assertTrue($cache_days_comparator->isNumberOfCachedDaysExpected($time_period, $number_of_cached_days));
+        $this->assertTrue($cache_days_comparator->isNumberOfCachedDaysExpected($date_period, $number_of_cached_days));
     }
 
-    public function testItVerifiesCacheIsCompleteForChartWhenCacheDaysAreNotTheSameThanTimePeriodDays(): void
+    public function testItVerifiesCacheIsCompleteForChartWhenCacheDaysAreNotTheSameThanDatePeriodDays(): void
     {
         $number_of_cached_days = 6;
         $start_date            = mktime(0, 0, 0, 20, 12, 2016);
         $duration              = 15;
 
-        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
         $cache_days_comparator = new ChartCachedDaysComparator(\Mockery::spy(LoggerInterface::class));
-        $this->assertFalse($cache_days_comparator->isNumberOfCachedDaysExpected($time_period, $number_of_cached_days));
+        $this->assertFalse($cache_days_comparator->isNumberOfCachedDaysExpected($date_period, $number_of_cached_days));
     }
 }

@@ -33,11 +33,11 @@ use PlanningFactory;
 use PlanningPermissionsManager;
 use Project;
 use Psr\Log\NullLogger;
-use TimePeriodWithoutWeekEnd;
 use Tracker;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
@@ -132,25 +132,25 @@ class MilestoneFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $milestone_dao                = Mockery::mock(AgileDashboard_Milestone_MilestoneDao::class);
         $scrum_mono_milestone_checker = Mockery::mock(ScrumForMonoMilestoneChecker::class);
 
-        $time_period_open_current_without_start_date = Mockery::mock(TimePeriodWithoutWeekEnd::class);
-        $time_period_open_current_without_start_date->shouldReceive('isTodayBeforeTimePeriod')->andReturn(false);
-        $time_period_open_current_without_start_date->shouldReceive('getStartDate')->andReturn(0);
+        $date_period_open_current_without_start_date = Mockery::mock(DatePeriodWithoutWeekEnd::class);
+        $date_period_open_current_without_start_date->shouldReceive('isTodayBeforeDatePeriod')->andReturn(false);
+        $date_period_open_current_without_start_date->shouldReceive('getStartDate')->andReturn(0);
 
-        $time_period_open_current_with_start_date = Mockery::mock(TimePeriodWithoutWeekEnd::class);
-        $time_period_open_current_with_start_date->shouldReceive('isTodayBeforeTimePeriod')->andReturn(false);
-        $time_period_open_current_with_start_date->shouldReceive('getStartDate')->andReturn(strtotime('2015-12-03T14:55:00'));
+        $date_period_open_current_with_start_date = Mockery::mock(DatePeriodWithoutWeekEnd::class);
+        $date_period_open_current_with_start_date->shouldReceive('isTodayBeforeDatePeriod')->andReturn(false);
+        $date_period_open_current_with_start_date->shouldReceive('getStartDate')->andReturn(strtotime('2015-12-03T14:55:00'));
 
-        $time_period_open_future_with_start_date = Mockery::mock(TimePeriodWithoutWeekEnd::class);
-        $time_period_open_future_with_start_date->shouldReceive('isTodayBeforeTimePeriod')->andReturn(true);
-        $time_period_open_future_with_start_date->shouldReceive('getStartDate')->andReturn(strtotime('2015-12-03T14:55:00'));
+        $date_period_open_future_with_start_date = Mockery::mock(DatePeriodWithoutWeekEnd::class);
+        $date_period_open_future_with_start_date->shouldReceive('isTodayBeforeDatePeriod')->andReturn(true);
+        $date_period_open_future_with_start_date->shouldReceive('getStartDate')->andReturn(strtotime('2015-12-03T14:55:00'));
 
-        $time_period_open_future_without_start_date = Mockery::mock(TimePeriodWithoutWeekEnd::class);
-        $time_period_open_future_without_start_date->shouldReceive('isTodayBeforeTimePeriod')->andReturn(true);
-        $time_period_open_future_without_start_date->shouldReceive('getStartDate')->andReturn(0);
+        $date_period_open_future_without_start_date = Mockery::mock(DatePeriodWithoutWeekEnd::class);
+        $date_period_open_future_without_start_date->shouldReceive('isTodayBeforeDatePeriod')->andReturn(true);
+        $date_period_open_future_without_start_date->shouldReceive('getStartDate')->andReturn(0);
 
-        $time_period_closed_passed = Mockery::mock(TimePeriodWithoutWeekEnd::class);
-        $time_period_closed_passed->shouldReceive('getStartDate')->andReturn(0);
-        $time_period_closed_passed->shouldReceive('getEndDate')->andReturn(strtotime('2015-12-03T14:55:00'));
+        $date_period_closed_passed = Mockery::mock(DatePeriodWithoutWeekEnd::class);
+        $date_period_closed_passed->shouldReceive('getStartDate')->andReturn(0);
+        $date_period_closed_passed->shouldReceive('getEndDate')->andReturn(strtotime('2015-12-03T14:55:00'));
 
         $logger                     = new NullLogger();
         $timeframe_calculator       = Mockery::mock(IComputeTimeframes::class);
@@ -161,25 +161,25 @@ class MilestoneFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn($semantic_timeframe);
 
         $timeframe_calculator
-            ->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
+            ->shouldReceive('buildDatePeriodWithoutWeekendForArtifact')
             ->withArgs([$this->artifact_open_current_without_start_date, $this->user, $logger])
-            ->andReturn($time_period_open_current_without_start_date);
+            ->andReturn($date_period_open_current_without_start_date);
         $timeframe_calculator
-            ->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
+            ->shouldReceive('buildDatePeriodWithoutWeekendForArtifact')
             ->withArgs([$this->artifact_open_current_with_start_date, $this->user, $logger])
-            ->andReturn($time_period_open_current_with_start_date);
+            ->andReturn($date_period_open_current_with_start_date);
         $timeframe_calculator
-            ->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
+            ->shouldReceive('buildDatePeriodWithoutWeekendForArtifact')
             ->withArgs([$this->artifact_closed_passed, $this->user, $logger])
-            ->andReturn($time_period_closed_passed);
+            ->andReturn($date_period_closed_passed);
         $timeframe_calculator
-            ->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
+            ->shouldReceive('buildDatePeriodWithoutWeekendForArtifact')
             ->withArgs([$this->artifact_open_future_with_start_date, $this->user, $logger])
-            ->andReturn($time_period_open_future_with_start_date);
+            ->andReturn($date_period_open_future_with_start_date);
         $timeframe_calculator
-            ->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
+            ->shouldReceive('buildDatePeriodWithoutWeekendForArtifact')
             ->withArgs([$this->artifact_open_future_without_start_date, $this->user, $logger])
-            ->andReturn($time_period_open_future_without_start_date);
+            ->andReturn($date_period_open_future_without_start_date);
 
         $milestone_burndown_field_checker = Mockery::mock(MilestoneBurndownFieldChecker::class);
         $milestone_burndown_field_checker->shouldReceive('hasUsableBurndownField')->andReturn(true);

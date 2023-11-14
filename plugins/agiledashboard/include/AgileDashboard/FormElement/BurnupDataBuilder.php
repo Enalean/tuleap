@@ -22,12 +22,12 @@ namespace Tuleap\AgileDashboard\FormElement;
 
 use DateTime;
 use Psr\Log\LoggerInterface;
-use TimePeriodWithoutWeekEnd;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCalculator;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsInfo;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
@@ -53,11 +53,11 @@ class BurnupDataBuilder
      */
     public function buildBurnupData(Artifact $artifact, \PFUser $user)
     {
-        $time_period = $this->chart_configuration_value_retriever->getTimePeriod($artifact, $user);
+        $date_period = $this->chart_configuration_value_retriever->getDatePeriod($artifact, $user);
 
         return $this->getBurnupData(
             $artifact,
-            $time_period,
+            $date_period,
             $user
         );
     }
@@ -65,21 +65,21 @@ class BurnupDataBuilder
     /**
      * @return BurnupData
      */
-    private function getBurnupData(Artifact $artifact, TimePeriodWithoutWeekEnd $time_period, \PFUser $user)
+    private function getBurnupData(Artifact $artifact, DatePeriodWithoutWeekEnd $date_period, \PFUser $user)
     {
         $user_timezone   = date_default_timezone_get();
         $server_timezone = TimezoneRetriever::getServerTimezone();
         date_default_timezone_set($server_timezone);
 
         $start = new DateTime();
-        $start->setTimestamp((int) $time_period->getStartDate());
+        $start->setTimestamp((int) $date_period->getStartDate());
         $start->setTime(0, 0, 0);
 
         $this->logger->debug("Start date after updating timezone: " . $start->getTimestamp());
 
-        $time_period          = TimePeriodWithoutWeekEnd::buildFromDuration($start->getTimestamp(), $time_period->getDuration());
-        $is_under_calculation = $this->cache_checker->isBurnupUnderCalculation($artifact, $time_period, $user);
-        $burnup_data          = new BurnupData($time_period, $is_under_calculation);
+        $date_period          = DatePeriodWithoutWeekEnd::buildFromDuration($start->getTimestamp(), $date_period->getDuration());
+        $is_under_calculation = $this->cache_checker->isBurnupUnderCalculation($artifact, $date_period, $user);
+        $burnup_data          = new BurnupData($date_period, $is_under_calculation);
 
         $planning_infos = $this->planning_dao->searchByMilestoneTrackerId($artifact->getTrackerId());
         if (! $is_under_calculation && $planning_infos) {
@@ -101,7 +101,7 @@ class BurnupDataBuilder
     {
         $cached_days_result = $this->burnup_cache_dao->searchCachedDaysValuesByArtifactId(
             $artifact->getId(),
-            $burnup_data->getTimePeriod()->getStartDate()
+            $burnup_data->getDatePeriod()->getStartDate()
         );
 
         foreach ($cached_days_result as $cached_day) {
@@ -109,7 +109,7 @@ class BurnupDataBuilder
             $burnup_data->addEffort($effort, $cached_day['timestamp']);
         }
 
-        if ($burnup_data->getTimePeriod()->isTodayWithinTimePeriod()) {
+        if ($burnup_data->getDatePeriod()->isTodayWithinDatePeriod()) {
             $now    = time();
             $effort = $this->burnup_calculator->getValue($artifact->getId(), $now, $backlog_trackers_ids);
             $burnup_data->addEffort($effort, $now);
@@ -120,7 +120,7 @@ class BurnupDataBuilder
     {
         $cached_days_result = $this->count_elements_cache_dao->searchCachedDaysValuesByArtifactId(
             $artifact->getId(),
-            (int) $burnup_data->getTimePeriod()->getStartDate()
+            (int) $burnup_data->getDatePeriod()->getStartDate()
         );
 
         if (is_array($cached_days_result)) {
@@ -130,7 +130,7 @@ class BurnupDataBuilder
             }
         }
 
-        if ($burnup_data->getTimePeriod()->isTodayWithinTimePeriod()) {
+        if ($burnup_data->getDatePeriod()->isTodayWithinDatePeriod()) {
             $now            = time();
             $count_elements = $this->count_elements_calculator->getValue($artifact->getId(), $now, $backlog_trackers_ids);
             $burnup_data->addCountElements($count_elements, $now);

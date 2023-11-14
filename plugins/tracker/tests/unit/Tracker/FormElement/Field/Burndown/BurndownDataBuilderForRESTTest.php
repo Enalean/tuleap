@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\FormElement\Field\Burndown;
 use DateTime;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\REST\JsonCast;
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
@@ -128,14 +129,14 @@ class BurndownDataBuilderForRESTTest extends \Tuleap\Test\PHPUnit\TestCase
         $start_date = strtotime('2018-11-01');
         $duration   = 5;
 
-        $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
         $this->computed_cache->shouldReceive("searchCachedDays")->andReturns([]);
 
-        $user_burndown_data = $this->burndown_data_builder_for_d3->build($this->artifact, $this->user, $time_period);
+        $user_burndown_data = $this->burndown_data_builder_for_d3->build($this->artifact, $this->user, $date_period);
 
         $shifted_start_date = 1541026800;
-        $this->assertEquals($user_burndown_data->getTimePeriod()->getStartDate(), $shifted_start_date);
+        $this->assertEquals($user_burndown_data->getDatePeriod()->getStartDate(), $shifted_start_date);
     }
 
     public function testStartDateDoesNotShiftForUsersLocatedInUTCPositive()
@@ -145,14 +146,14 @@ class BurndownDataBuilderForRESTTest extends \Tuleap\Test\PHPUnit\TestCase
         $start_date = strtotime('2018-11-01');
         $duration   = 5;
 
-        $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
         $this->computed_cache->shouldReceive("searchCachedDays")->andReturns([]);
 
-        $user_burndown_data = $this->burndown_data_builder_for_d3->build($this->artifact, $this->user, $time_period);
+        $user_burndown_data = $this->burndown_data_builder_for_d3->build($this->artifact, $this->user, $date_period);
 
         $shifted_start_date = 1541026800;
-        $this->assertEquals($user_burndown_data->getTimePeriod()->getStartDate(), $shifted_start_date);
+        $this->assertEquals($user_burndown_data->getDatePeriod()->getStartDate(), $shifted_start_date);
     }
 
     public function testRemainingEffortAreNotShiftedUsersLocatedInUTCNegative()
@@ -186,9 +187,9 @@ class BurndownDataBuilderForRESTTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
-        $user_burndown_data = $this->burndown_data_builder_for_d3->build($this->artifact, $this->user, $time_period);
+        $user_burndown_data = $this->burndown_data_builder_for_d3->build($this->artifact, $this->user, $date_period);
 
         $this->assertEquals($user_burndown_data->getRESTRepresentation()->points_with_date[0]->date, JsonCast::toDate($start_date));
         $this->assertEquals($user_burndown_data->getRESTRepresentation()->points_with_date[1]->date, JsonCast::toDate($second_day));
@@ -226,9 +227,9 @@ class BurndownDataBuilderForRESTTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $duration = 2;
 
-        $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
-        $user_burndown_data = $this->burndown_data_builder_for_d3->build($this->artifact, $this->user, $time_period);
+        $user_burndown_data = $this->burndown_data_builder_for_d3->build($this->artifact, $this->user, $date_period);
 
         $this->assertEquals($user_burndown_data->getRESTRepresentation()->points_with_date[0]->date, JsonCast::toDate($start_date));
         $this->assertEquals($user_burndown_data->getRESTRepresentation()->points_with_date[1]->date, JsonCast::toDate($second_day));
@@ -244,9 +245,9 @@ class BurndownDataBuilderForRESTTest extends \Tuleap\Test\PHPUnit\TestCase
         $duration = 2;
 
         $start_date  = new DateTime('+1d');
-        $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration($start_date->getTimestamp(), $duration);
+        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date->getTimestamp(), $duration);
 
-        $user_burndown_data = $this->burndown_data_builder_for_d3->build($this->artifact, $this->user, $time_period);
+        $user_burndown_data = $this->burndown_data_builder_for_d3->build($this->artifact, $this->user, $date_period);
         $this->assertSame([0 => null], $user_burndown_data->getRemainingEffort());
     }
 }

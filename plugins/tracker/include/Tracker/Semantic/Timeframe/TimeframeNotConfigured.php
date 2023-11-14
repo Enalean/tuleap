@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
 use Psr\Log\LoggerInterface;
-use TimePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Tracker\Artifact\Artifact;
 
 class TimeframeNotConfigured implements IComputeTimeframes
@@ -79,16 +79,16 @@ class TimeframeNotConfigured implements IComputeTimeframes
         return null;
     }
 
-    public function buildTimePeriodWithoutWeekendForArtifactForREST(Artifact $artifact, \PFUser $user, LoggerInterface $logger): TimePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForArtifactForREST(Artifact $artifact, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
     {
-        return TimePeriodWithoutWeekEnd::buildFromNothingWithErrorMessage(
+        return DatePeriodWithoutWeekEnd::buildFromNothingWithErrorMessage(
             $this->getErrorMessage($artifact)
         );
     }
 
-    public function buildTimePeriodWithoutWeekendForArtifact(Artifact $artifact, \PFUser $user, LoggerInterface $logger): TimePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForArtifact(Artifact $artifact, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
     {
-        return TimePeriodWithoutWeekEnd::buildFromNothingWithErrorMessage(
+        return DatePeriodWithoutWeekEnd::buildFromNothingWithErrorMessage(
             $this->getErrorMessage($artifact)
         );
     }
@@ -96,7 +96,7 @@ class TimeframeNotConfigured implements IComputeTimeframes
     /**
      * @throws \Tracker_FormElement_Chart_Field_Exception
      */
-    public function buildTimePeriodWithoutWeekendForArtifactChartRendering(Artifact $artifact, \PFUser $user, LoggerInterface $logger): TimePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForArtifactChartRendering(Artifact $artifact, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
     {
         throw new \Tracker_FormElement_Chart_Field_Exception(
             $this->getErrorMessage($artifact)
