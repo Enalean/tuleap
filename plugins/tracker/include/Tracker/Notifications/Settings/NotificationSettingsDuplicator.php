@@ -42,6 +42,7 @@ final class NotificationSettingsDuplicator
         private readonly ConfigNotificationAssignedToDao $assigned_to_dao,
         private readonly ConfigNotificationEmailCustomSenderDao $custom_sender_dao,
         private readonly DateReminderDao $date_reminder_dao,
+        private readonly CalendarEventConfigDao $calendar_event_config_dao,
     ) {
     }
 
@@ -56,6 +57,7 @@ final class NotificationSettingsDuplicator
         $this->duplicateAssignedTo($template_tracker_id, $new_tracker_id);
         $this->duplicateCustomSender($template_tracker_id, $new_tracker_id);
         $this->duplicateReminders($template_tracker_id, $new_tracker_id, $duplication_user_group_mapping, $field_mapping);
+        $this->duplicateCalendarEventConfig($template_tracker_id, $new_tracker_id);
     }
 
     private function duplicateGlobalNotifications(int $template_tracker_id, int $new_tracker_id, TrackerDuplicationUserGroupMapping $duplication_user_group_mapping): void
@@ -80,5 +82,10 @@ final class NotificationSettingsDuplicator
     private function duplicateReminders(int $template_tracker_id, int $new_tracker_id, TrackerDuplicationUserGroupMapping $duplication_user_group_mapping, array $field_mapping): void
     {
         $this->date_reminder_dao->duplicate($template_tracker_id, $new_tracker_id, $duplication_user_group_mapping, $field_mapping);
+    }
+
+    private function duplicateCalendarEventConfig(int $template_tracker_id, int $new_tracker_id): void
+    {
+        $this->calendar_event_config_dao->duplicate($template_tracker_id, $new_tracker_id);
     }
 }
