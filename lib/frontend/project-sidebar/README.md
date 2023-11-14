@@ -41,9 +41,6 @@ The collapse behavior can be removed by adding an attribute `no-collapse-button`
 Collapse of the sidebar can be disabled via `is_collapsible` property in `config` (see above). If this property is provided
 and is `false`, then sidebar cannot be collapsed (regardless of the `collapsed` and `no-collapse-button` attributes).
 
-**Note:** ⚠️ collapse of the sidebar is deprecated. `is_collapsible`, `collapsed`, and `no-collapse-button` will be
-removed in a future version of this component.
-
 ### Events
 
 The custom element throws a [CustomEvent](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent)
