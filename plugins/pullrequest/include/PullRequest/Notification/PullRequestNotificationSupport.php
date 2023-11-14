@@ -52,6 +52,7 @@ use Tuleap\PullRequest\InlineComment\Notification\InlineCommentCodeContextExtrac
 use Tuleap\PullRequest\InlineComment\Notification\PullRequestNewInlineCommentEvent;
 use Tuleap\PullRequest\InlineComment\Notification\PullRequestNewInlineCommentNotificationToProcessBuilder;
 use Tuleap\PullRequest\Notification\Strategy\PullRequestNotificationSendMail;
+use Tuleap\PullRequest\PullRequestRetriever;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 use Tuleap\PullRequest\Reviewer\Change\ReviewerChangeDAO;
 use Tuleap\PullRequest\Reviewer\Change\ReviewerChangeEvent;
@@ -200,9 +201,8 @@ final class PullRequestNotificationSupport
                             self::buildPullRequestNotificationSendMail($git_repository_factory, $html_url_builder),
                             new PullRequestUpdatedNotificationToProcessBuilder(
                                 $user_manager,
-                                new Factory(
+                                new PullRequestRetriever(
                                     new Dao(),
-                                    \ReferenceManager::instance()
                                 ),
                                 $git_repository_factory,
                                 new OwnerRetriever(
