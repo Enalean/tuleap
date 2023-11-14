@@ -17,15 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it, jest } from "@jest/globals";
+import type { EncodedURI, OptionsWithAutoEncodedParameters } from "@tuleap/fetch-result";
 import * as fetch_result from "@tuleap/fetch-result";
+import { uri } from "@tuleap/fetch-result";
 import type { QueryResults } from "./search-querier";
 import { querier } from "./search-querier";
 import type { ResultAsync } from "neverthrow";
 import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import type { ItemDefinition } from "../type";
-import type { EncodedURI, OptionsWithAutoEncodedParameters } from "@tuleap/fetch-result";
-import { uri } from "@tuleap/fetch-result";
 
 describe("search-querier", () => {
     const url = uri`/search`;

@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { jest } from "@jest/globals";
 import { createGettext } from "vue3-gettext";
 import type { GlobalMountOptions } from "@vue/test-utils/dist/types";
 import type { Pinia } from "pinia";

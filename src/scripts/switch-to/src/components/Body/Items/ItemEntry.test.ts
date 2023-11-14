@@ -17,14 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { afterEach, beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { shallowMount } from "@vue/test-utils";
-import type { QuickLink, ItemDefinition, ItemBadge } from "../../../type";
+import type { ItemBadge, ItemDefinition, QuickLink } from "../../../type";
 import ItemEntry from "./ItemEntry.vue";
 import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
 import type { KeyboardNavigationState } from "../../../stores/type";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
-import { render, configure, cleanup, waitFor } from "@testing-library/vue";
+import { cleanup, configure, render, waitFor } from "@testing-library/vue";
 import { default as ItemBadgeComponent } from "./ItemBadge.vue";
 
 describe("ItemEntry", () => {

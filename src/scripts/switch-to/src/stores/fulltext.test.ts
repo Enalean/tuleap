@@ -17,7 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { afterEach, beforeEach, describe, expect, it, jest } from "@jest/globals";
 import * as search_querier from "../helpers/search-querier";
+import type { StoppableQuery } from "../helpers/delayed-querier";
 import * as delayed_querier from "../helpers/delayed-querier";
 import { createPinia, setActivePinia } from "pinia";
 import { useFullTextStore } from "./fulltext";
@@ -26,13 +28,14 @@ import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import type { ItemDefinition, Project, QuickLink } from "../type";
 import { useRootStore } from "./root";
-import type { StoppableQuery } from "../helpers/delayed-querier";
 import { useKeyboardNavigationStore } from "./keyboard-navigation";
 import { uri } from "@tuleap/fetch-result";
 
+type ScheduleQueryCallback = (query: StoppableQuery) => void;
+
 describe("FullText Store", () => {
     let cancelPendingQuery: jest.Mock;
-    let scheduleQuery: jest.Mock;
+    let scheduleQuery: jest.Mock<ScheduleQueryCallback>;
 
     beforeEach(() => {
         setActivePinia(createPinia());

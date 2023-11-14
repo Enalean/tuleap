@@ -17,25 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { afterEach, beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { createPinia, defineStore, setActivePinia } from "pinia";
+import type { ItemDefinition, Project, QuickLink } from "../type";
+import { useRootStore } from "./root";
+import { useKeyboardNavigationStore } from "./keyboard-navigation";
+import type { State } from "./type";
+import { useFullTextStore } from "./fulltext";
 
-const search = jest.fn();
-const focusFirstSearchResult = jest.fn();
 jest.mock("./fulltext", () => {
     return {
         useFullTextStore: defineStore("fulltext", {
             actions: {
-                search,
-                focusFirstSearchResult,
+                search: jest.fn(),
+                focusFirstSearchResult: jest.fn(),
             },
         }),
     };
 });
-
-import type { Project, ItemDefinition, QuickLink } from "../type";
-import { useRootStore } from "./root";
-import { useKeyboardNavigationStore } from "./keyboard-navigation";
-import type { State } from "./type";
 
 describe("Keyboard navigation store", () => {
     beforeEach(() => {
@@ -899,6 +898,10 @@ describe("Keyboard navigation store", () => {
                 });
 
                 it("should focus the first search result if the last project has already the focus and we are searching for something and there is no recent item", () => {
+                    const focusFirstSearchResult = jest.spyOn(
+                        useFullTextStore(),
+                        "focusFirstSearchResult",
+                    );
                     const first_project = {
                         project_uri: "/first",
                         project_name: "lorem First",
@@ -1387,6 +1390,10 @@ describe("Keyboard navigation store", () => {
                 });
 
                 it("should focus the first search result if the last recent item has already the focus and we are searching for something", () => {
+                    const focusFirstSearchResult = jest.spyOn(
+                        useFullTextStore(),
+                        "focusFirstSearchResult",
+                    );
                     const first_entry = { html_url: "/first", title: "a lorem" } as ItemDefinition;
                     const another_entry = {
                         html_url: "/another",
@@ -1502,6 +1509,10 @@ describe("Keyboard navigation store", () => {
             });
 
             it("should focus the first search result if there is no project and there is no recent item", () => {
+                const focusFirstSearchResult = jest.spyOn(
+                    useFullTextStore(),
+                    "focusFirstSearchResult",
+                );
                 const store = useRootStore();
                 store.$patch({
                     history: {

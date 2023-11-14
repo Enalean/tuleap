@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { beforeEach, describe, expect, it } from "@jest/globals";
 import { shallowMount } from "@vue/test-utils";
 import SearchResults from "./SearchResults.vue";
 import SearchResultsError from "./SearchResultsError.vue";
@@ -25,7 +26,7 @@ import SearchResultsList from "./SearchResultsList.vue";
 import SearchQueryTooSmall from "./SearchQueryTooSmall.vue";
 import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
-import type { Project, UserHistory, ItemDefinition } from "../../../../type";
+import type { ItemDefinition, Project, UserHistory } from "../../../../type";
 import type { FullTextState } from "../../../../stores/type";
 import { FULLTEXT_MINIMUM_LENGTH_FOR_QUERY } from "../../../../stores/type";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";

@@ -365,6 +365,6 @@ module.exports = {
         },
     ],
     settings: {
-        "import/core-modules": ["vitest", "vite-plugin-dts"],
+        "import/core-modules": ["@jest/globals", "vitest", "vite-plugin-dts"],
     },
 };
