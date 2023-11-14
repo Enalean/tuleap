@@ -89,7 +89,7 @@ final class CommentTestBuilder
         return $this;
     }
 
-    public function withEditionDate(DateTimeImmutable $last_edition_date): self
+    public function editedOn(DateTimeImmutable $last_edition_date): self
     {
         $this->last_edition_date = Option::fromValue($last_edition_date->getTimestamp());
         return $this;

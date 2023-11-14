@@ -24,6 +24,7 @@ namespace Tuleap\PullRequest\REST\v1\Comment;
 
 use Codendi_HTMLPurifier;
 use DateTimeImmutable;
+use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Tests\Builders\CommentTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -43,25 +44,26 @@ final class CommentRepresentationBuilderTest extends TestCase
         $this->user        = MinimalUserRepresentation::build(UserTestBuilder::anActiveUser()->build());
     }
 
+    private function build(Comment $comment): CommentRepresentation
+    {
+        $builder = new CommentRepresentationBuilder($this->purifier, $this->interpreter);
+        return $builder->buildRepresentation(101, $this->user, $comment);
+    }
+
     public function testItBuildsRepresentationForText(): void
     {
-        $comment = CommentTestBuilder::aTextComment("Galant AMG")->withEditionDate(new DateTimeImmutable())->build();
-        (new CommentRepresentationBuilder($this->purifier, $this->interpreter))->buildRepresentation(
-            101,
-            $this->user,
-            $comment
-        );
+        $comment        = CommentTestBuilder::aTextComment("Galant AMG")->editedOn(new DateTimeImmutable())->build();
+        $representation = $this->build($comment);
         self::assertSame($this->interpreter->getInterpretedContentWithReferencesCount(), 0);
+        self::assertNotNull($representation->last_edition_date);
     }
 
     public function testItBuildsRepresentationForMarkdown(): void
     {
-        $comment = CommentTestBuilder::aMarkdownComment("Galant AMG")->build();
-        (new CommentRepresentationBuilder($this->purifier, $this->interpreter))->buildRepresentation(
-            101,
-            $this->user,
-            $comment
-        );
+        $comment        = CommentTestBuilder::aMarkdownComment("Galant AMG")->build();
+        $representation = $this->build($comment);
         self::assertSame($this->interpreter->getInterpretedContentWithReferencesCount(), 1);
+        self::assertSame('commonmark', $representation->format);
+        self::assertNull($representation->last_edition_date);
     }
 }

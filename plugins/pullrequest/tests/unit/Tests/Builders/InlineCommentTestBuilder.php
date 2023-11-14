@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Tests\Builders;
 
+use Tuleap\Option\Option;
 use Tuleap\PullRequest\InlineComment\InlineComment;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
@@ -38,11 +39,14 @@ final class InlineCommentTestBuilder
     private int $unidiff_offset  = 37;
     private bool $is_outdated    = false;
     private string $position     = 'right';
+    /** @var Option<int> */
+    private Option $last_edition_date;
 
     private function __construct(
         private readonly string $content,
         private readonly string $format,
     ) {
+        $this->last_edition_date = Option::nothing(\Psl\Type\int());
     }
 
     public static function aMarkdownComment(string $content): self
@@ -103,6 +107,12 @@ final class InlineCommentTestBuilder
         return $this;
     }
 
+    public function editedOn(\DateTimeImmutable $last_edition_date): self
+    {
+        $this->last_edition_date = Option::fromValue($last_edition_date->getTimestamp());
+        return $this;
+    }
+
     public function build(): InlineComment
     {
         return new InlineComment(
@@ -118,6 +128,7 @@ final class InlineCommentTestBuilder
             $this->position,
             $this->color,
             $this->format,
+            $this->last_edition_date
         );
     }
 }

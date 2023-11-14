@@ -28,6 +28,37 @@ namespace Tuleap\Option;
  */
 final class TypeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    public function testNothingIsAssignableToGivenType(): void
+    {
+        $test = new class {
+            /** @var Option<string> */
+            public Option $expectation;
+        };
+
+        $test->expectation = Option::nothing(\Psl\Type\string());
+        self::assertTrue($test->expectation->isNothing());
+    }
+
+    private function getNullable(bool $return_null): ?int
+    {
+        return ($return_null) ? null : 54;
+    }
+
+    public function testFromNullableInfersType(): void
+    {
+        $test = new class {
+            /** @var Option<int> */
+            public Option $expectation;
+        };
+
+        $test->expectation = Option::fromNullable($this->getNullable(true));
+        self::assertTrue($test->expectation->isNothing());
+
+        $test->expectation = Option::fromNullable($this->getNullable(false));
+        self::assertTrue($test->expectation->isValue());
+        self::assertSame(54, $test->expectation->unwrapOr(0));
+    }
+
     public function testAndThenCanMapValueToADifferentTypeThanTheInitialOption(): void
     {
         $option = Option::fromValue(10);

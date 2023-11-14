@@ -63,6 +63,21 @@ final class Option
     }
 
     /**
+     * @template T
+     * @psalm-param T|null $value
+     * @psalm-return self<T>
+     */
+    public static function fromNullable(mixed $value): self
+    {
+        if ($value === null) {
+            /** @psalm-var self<T> $res */
+            $res = new self(null, false);
+            return $res;
+        }
+        return new self($value, true);
+    }
+
+    /**
      * @psalm-param callable(Value): void $fn
      */
     public function apply(callable $fn): void

@@ -43,18 +43,19 @@ final class InlineCommentSearcherStub implements \Tuleap\PullRequest\InlineComme
     public static function withComment(InlineComment $comment): self
     {
         $row = [
-            'id'              => $comment->getId(),
-            'pull_request_id' => $comment->getPullRequestId(),
-            'user_id'         => $comment->getUserId(),
-            'post_date'       => $comment->getPostDate(),
-            'file_path'       => $comment->getFilePath(),
-            'unidiff_offset'  => $comment->getUnidiffOffset(),
-            'content'         => $comment->getContent(),
-            'is_outdated'     => $comment->isOutdated() ? 1 : 0,
-            'parent_id'       => $comment->getParentId(),
-            'position'        => $comment->getPosition(),
-            'color'           => $comment->getColor(),
-            'format'          => $comment->getFormat(),
+            'id'                => $comment->getId(),
+            'pull_request_id'   => $comment->getPullRequestId(),
+            'user_id'           => $comment->getUserId(),
+            'post_date'         => $comment->getPostDate(),
+            'file_path'         => $comment->getFilePath(),
+            'unidiff_offset'    => $comment->getUnidiffOffset(),
+            'content'           => $comment->getContent(),
+            'is_outdated'       => $comment->isOutdated() ? 1 : 0,
+            'parent_id'         => $comment->getParentId(),
+            'position'          => $comment->getPosition(),
+            'color'             => $comment->getColor(),
+            'format'            => $comment->getFormat(),
+            'last_edition_date' => $comment->getLastEditionDate()->unwrapOr(null),
         ];
         return new self($row);
     }

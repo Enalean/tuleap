@@ -23,40 +23,48 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\InlineComment\Notification;
 
 use GitRepositoryFactory;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\PullRequest\FileUniDiff;
 use Tuleap\PullRequest\FileUniDiffBuilder;
 use Tuleap\PullRequest\InlineComment\InlineComment;
 use Tuleap\PullRequest\PullRequest;
-use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
+use Tuleap\PullRequest\Tests\Builders\InlineCommentTestBuilder;
+use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
 use Tuleap\PullRequest\UniDiffLine;
 
 final class InlineCommentCodeContextExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&FileUniDiffBuilder
-     */
-    private $file_unidiff_builder;
-    /**
-     * @var GitRepositoryFactory&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $git_repository_factory;
-    private InlineCommentCodeContextExtractor $code_context_extractor;
+    private MockObject & FileUniDiffBuilder $file_unidiff_builder;
+    private MockObject & GitRepositoryFactory $git_repository_factory;
+    private InlineComment $inline_comment;
+    private PullRequest $pull_request;
 
     protected function setUp(): void
     {
         $this->file_unidiff_builder   = $this->createMock(FileUniDiffBuilder::class);
         $this->git_repository_factory = $this->createMock(GitRepositoryFactory::class);
 
-        $this->code_context_extractor = new InlineCommentCodeContextExtractor(
+        $this->pull_request   = PullRequestTestBuilder::aPullRequestInReview()->withId(56)->build();
+        $this->inline_comment = InlineCommentTestBuilder::aTextComment('unrepiqued macroelement')
+            ->onPullRequest($this->pull_request)
+            ->build();
+    }
+
+    private function extract(): string
+    {
+        $code_context_extractor = new InlineCommentCodeContextExtractor(
             $this->file_unidiff_builder,
             $this->git_repository_factory
         );
+        return $code_context_extractor->getCodeContext($this->inline_comment, $this->pull_request);
     }
 
     public function testCodeContextIsExtracted(): void
     {
-        $pr             = $this->buildPullRequest(56);
-        $inline_comment = $this->buildInlineComment(125, $pr->getId(), 8);
+        $this->inline_comment = InlineCommentTestBuilder::aTextComment('unrepiqued macroelement')
+            ->onPullRequest($this->pull_request)
+            ->onUnidiffOffset(8)
+            ->build();
 
         $repository = $this->createMock(\GitRepository::class);
         $repository->method('getFullPath')->willReturn('/repo_path');
@@ -74,8 +82,6 @@ final class InlineCommentCodeContextExtractorTest extends \Tuleap\Test\PHPUnit\T
         $unidiff->addLine(UniDiffLine::KEPT, 9, 9, 9, 'Should not be present');
         $this->file_unidiff_builder->method('buildFileUniDiffFromCommonAncestor')->willReturn($unidiff);
 
-        $code_context = $this->code_context_extractor->getCodeContext($inline_comment, $pr);
-
         self::assertEquals(
             <<<EOF
              C
@@ -85,14 +91,16 @@ final class InlineCommentCodeContextExtractorTest extends \Tuleap\Test\PHPUnit\T
             -Foo
             +Bar
             EOF,
-            $code_context
+            $this->extract()
         );
     }
 
     public function testCodeContextIsExtractedOnASmallFile(): void
     {
-        $pr             = $this->buildPullRequest(57);
-        $inline_comment = $this->buildInlineComment(128, $pr->getId(), 1);
+        $this->inline_comment = InlineCommentTestBuilder::aTextComment('unrepiqued macroelement')
+            ->onPullRequest($this->pull_request)
+            ->onUnidiffOffset(1)
+            ->build();
 
         $repository = $this->createMock(\GitRepository::class);
         $repository->method('getFullPath')->willReturn('/repo_path');
@@ -102,15 +110,15 @@ final class InlineCommentCodeContextExtractorTest extends \Tuleap\Test\PHPUnit\T
         $unidiff->addLine(UniDiffLine::ADDED, 1, null, 1, 'Baz');
         $this->file_unidiff_builder->method('buildFileUniDiffFromCommonAncestor')->willReturn($unidiff);
 
-        $code_context = $this->code_context_extractor->getCodeContext($inline_comment, $pr);
-
-        self::assertEquals('+Baz', $code_context);
+        self::assertEquals('+Baz', $this->extract());
     }
 
     public function testCodeContextEndingWithEmptyLinesIsKept(): void
     {
-        $pr             = $this->buildPullRequest(57);
-        $inline_comment = $this->buildInlineComment(128, $pr->getId(), 5);
+        $this->inline_comment = InlineCommentTestBuilder::aTextComment('unrepiqued macroelement')
+            ->onPullRequest($this->pull_request)
+            ->onUnidiffOffset(5)
+            ->build();
 
         $repository = $this->createMock(\GitRepository::class);
         $repository->method('getFullPath')->willReturn('/repo_path');
@@ -124,65 +132,24 @@ final class InlineCommentCodeContextExtractorTest extends \Tuleap\Test\PHPUnit\T
         $unidiff->addLine(UniDiffLine::KEPT, 5, 5, 5, '');
         $this->file_unidiff_builder->method('buildFileUniDiffFromCommonAncestor')->willReturn($unidiff);
 
-        $code_context = $this->code_context_extractor->getCodeContext($inline_comment, $pr);
-
-        self::assertEquals(" \n \n \n \n ", $code_context);
+        self::assertEquals(" \n \n \n \n ", $this->extract());
     }
 
     public function testRefusesToExtractWhenTheInlineCommentDoesNotMatchTheGivenPullRequest(): void
     {
+        $this->inline_comment = InlineCommentTestBuilder::aTextComment('unrepiqued macroelement')
+            ->onPullRequest(PullRequestTestBuilder::aPullRequestInReview()->withId(60)->build())
+            ->build();
+
         $this->expectException(\LogicException::class);
-        $this->code_context_extractor->getCodeContext(
-            $this->buildInlineComment(129, 60, 5),
-            $this->buildPullRequest(59)
-        );
+        $this->extract();
     }
 
     public function testDoesNotExtractWhenTheRepositoryCannotBeFound(): void
     {
-        $pr             = $this->buildPullRequest(61);
-        $inline_comment = $this->buildInlineComment(130, $pr->getId(), 1);
-
         $this->git_repository_factory->method('getRepositoryById')->willReturn(null);
 
         $this->expectException(InlineCommentCodeContextRepositoryNotFoundException::class);
-
-        $this->code_context_extractor->getCodeContext($inline_comment, $pr);
-    }
-
-    private function buildInlineComment(int $id, int $pull_request_id, int $unidiff_offset): InlineComment
-    {
-        return new InlineComment(
-            $id,
-            $pull_request_id,
-            102,
-            12,
-            'file/path',
-            $unidiff_offset,
-            'Comment',
-            false,
-            0,
-            'right',
-            "",
-            TimelineComment::FORMAT_TEXT
-        );
-    }
-
-    private function buildPullRequest(int $id): PullRequest
-    {
-        return new PullRequest(
-            $id,
-            'Title',
-            'Description',
-            78,
-            102,
-            10,
-            'dev',
-            '103e3d371a6f7ee7013ae64ba0d5879fc330af91',
-            78,
-            'master',
-            'f65cc8e2740a819af60c9f624ae378676291888d',
-            TimelineComment::FORMAT_TEXT
-        );
+        $this->extract();
     }
 }

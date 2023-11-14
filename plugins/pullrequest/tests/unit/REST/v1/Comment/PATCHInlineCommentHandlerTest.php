@@ -57,17 +57,19 @@ final class PATCHInlineCommentHandlerTest extends TestCase
     private CheckUserCanAccessPullRequestStub $permission_checker;
     private InlineCommentSaverStub $comment_saver;
     private ExtractAndSaveCrossReferencesStub $cross_references_saver;
+    private \DateTimeImmutable $comment_edition_date;
 
     protected function setUp(): void
     {
-        $this->updated_content = 'animastical zebrawood';
-        $this->comment_author  = UserTestBuilder::buildWithId(150);
-        $this->pull_request    = PullRequestTestBuilder::aPullRequestInReview()->build();
-        $inline_comment        = InlineCommentTestBuilder::aMarkdownComment('initial content')
+        $this->updated_content      = 'animastical zebrawood';
+        $this->comment_author       = UserTestBuilder::buildWithId(150);
+        $this->pull_request         = PullRequestTestBuilder::aPullRequestInReview()->build();
+        $inline_comment             = InlineCommentTestBuilder::aMarkdownComment('initial content')
             ->withId(self::INLINE_COMMENT_ID)
             ->onPullRequest($this->pull_request)
             ->byAuthor($this->comment_author)
             ->build();
+        $this->comment_edition_date = new \DateTimeImmutable('@1420598064');
 
         $this->comment_searcher       = InlineCommentSearcherStub::withComment($inline_comment);
         $this->permission_checker     = CheckUserCanAccessPullRequestStub::withAllowed();
@@ -91,7 +93,8 @@ final class PATCHInlineCommentHandlerTest extends TestCase
         return $handler->handle(
             $this->comment_author,
             self::INLINE_COMMENT_ID,
-            new InlineCommentPATCHRepresentation($this->updated_content)
+            new InlineCommentPATCHRepresentation($this->updated_content),
+            $this->comment_edition_date
         );
     }
 
@@ -103,6 +106,10 @@ final class PATCHInlineCommentHandlerTest extends TestCase
         self::assertSame(1, $this->comment_saver->getCallCount());
         $updated_comment = $this->comment_saver->getLastArgument();
         self::assertSame($this->updated_content, $updated_comment?->getContent());
+        self::assertSame(
+            $this->comment_edition_date->getTimestamp(),
+            $updated_comment?->getLastEditionDate()->unwrapOr(0)
+        );
         self::assertSame(1, $this->cross_references_saver->getCallCount());
     }
 
