@@ -22,22 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\Templating\Mustache;
 
-use Hamcrest\Matchers;
 use Tuleap\Language\Gettext\POTEntry;
 
 final class GettextCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testItCollectsGettext(): void
     {
         $collector = new GettextCollector(new GettextSectionContentTransformer());
-        $entries   = \Mockery::mock(\Tuleap\Language\Gettext\POTEntryCollection::class);
+        $entries   = $this->createMock(\Tuleap\Language\Gettext\POTEntryCollection::class);
 
-        $entries->shouldReceive('add')->with(
+        $entries->expects(self::once())->method('add')->with(
             'tuleap-core',
-            Matchers::equalTo(new POTEntry('whatever', ''))
-        )->once();
+            self::callback(
+                function (POTEntry $entry): bool {
+                    return $entry->getMsgid() === 'whatever';
+                }
+            ),
+        );
 
         $collector->collectEntry('gettext', 'whatever', $entries);
     }
@@ -45,12 +46,17 @@ final class GettextCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItCollectsNgettext(): void
     {
         $collector = new GettextCollector(new GettextSectionContentTransformer());
-        $entries   = \Mockery::mock(\Tuleap\Language\Gettext\POTEntryCollection::class);
+        $entries   = $this->createMock(\Tuleap\Language\Gettext\POTEntryCollection::class);
 
-        $entries->shouldReceive('add')->with(
+        $entries->expects(self::once())->method('add')->with(
             'tuleap-core',
-            Matchers::equalTo(new POTEntry('singular', 'plural'))
-        )->once();
+            self::callback(
+                function (POTEntry $entry): bool {
+                    return $entry->getMsgid() === 'singular' &&
+                        $entry->getMsgidPlural() === 'plural';
+                }
+            ),
+        );
 
         $collector->collectEntry('ngettext', 'singular | plural', $entries);
     }
@@ -58,12 +64,16 @@ final class GettextCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItCollectsDgettext(): void
     {
         $collector = new GettextCollector(new GettextSectionContentTransformer());
-        $entries   = \Mockery::mock(\Tuleap\Language\Gettext\POTEntryCollection::class);
+        $entries   = $this->createMock(\Tuleap\Language\Gettext\POTEntryCollection::class);
 
-        $entries->shouldReceive('add')->with(
+        $entries->expects(self::once())->method('add')->with(
             'mydomain',
-            Matchers::equalTo(new POTEntry('whatever', ''))
-        )->once();
+            self::callback(
+                function (POTEntry $entry): bool {
+                    return $entry->getMsgid() === 'whatever';
+                }
+            ),
+        );
 
         $collector->collectEntry('dgettext', 'mydomain | whatever', $entries);
     }
@@ -71,12 +81,17 @@ final class GettextCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItCollectsDngettext(): void
     {
         $collector = new GettextCollector(new GettextSectionContentTransformer());
-        $entries   = \Mockery::mock(\Tuleap\Language\Gettext\POTEntryCollection::class);
+        $entries   = $this->createMock(\Tuleap\Language\Gettext\POTEntryCollection::class);
 
-        $entries->shouldReceive('add')->with(
+        $entries->expects(self::once())->method('add')->with(
             'mydomain',
-            Matchers::equalTo(new POTEntry('singular', 'plural'))
-        )->once();
+            self::callback(
+                function (POTEntry $entry): bool {
+                    return $entry->getMsgid() === 'singular' &&
+                        $entry->getMsgidPlural() === 'plural';
+                }
+            ),
+        );
 
         $collector->collectEntry('dngettext', 'mydomain | singular | plural', $entries);
     }
@@ -84,7 +99,7 @@ final class GettextCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRaisesAnExceptionIfSectionNameIsUnknown(): void
     {
         $collector = new GettextCollector(new GettextSectionContentTransformer());
-        $entries   = \Mockery::spy(\Tuleap\Language\Gettext\POTEntryCollection::class);
+        $entries   = $this->createMock(\Tuleap\Language\Gettext\POTEntryCollection::class);
 
         $this->expectException(\RuntimeException::class);
 

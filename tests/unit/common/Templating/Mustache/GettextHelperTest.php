@@ -20,44 +20,44 @@
 
 namespace Tuleap\Templating\Mustache;
 
+use PHPUnit\Framework\MockObject\MockObject;
+
 final class GettextHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testItTranslateASimpleString(): void
     {
         $helper = new GettextHelper(new GettextSectionContentTransformer());
 
-        $this->assertEquals('A text', $helper->gettext('A text'));
-        $this->assertEquals('A text', $helper->dgettext('domain | A text'));
+        self::assertEquals('A text', $helper->gettext('A text'));
+        self::assertEquals('A text', $helper->dgettext('domain | A text'));
     }
 
     public function testItReplacesArgumentsIfTheyAreGiven(): void
     {
         $helper = new GettextHelper(new GettextSectionContentTransformer());
 
-        $this->assertEquals('A useful text', $helper->gettext('A %s text|useful'));
-        $this->assertEquals('A useful text', $helper->dgettext('domain | A %s text|useful'));
+        self::assertEquals('A useful text', $helper->gettext('A %s text|useful'));
+        self::assertEquals('A useful text', $helper->dgettext('domain | A %s text|useful'));
     }
 
     public function testItTrimsTextAndArguments(): void
     {
         $helper = new GettextHelper(new GettextSectionContentTransformer());
 
-        $this->assertEquals('A useful text', $helper->gettext(' A %s text | useful '));
-        $this->assertEquals('A useful text', $helper->dgettext(' domain | A %s text | useful '));
+        self::assertEquals('A useful text', $helper->gettext(' A %s text | useful '));
+        self::assertEquals('A useful text', $helper->dgettext(' domain | A %s text | useful '));
     }
 
     public function testItReturnsSingular(): void
     {
         $helper = new GettextHelper(new GettextSectionContentTransformer());
-        $lambda = \Mockery::mock(\Mustache_LambdaHelper::class)->shouldReceive('render')->with('{{ nb }}')->andReturns('1')->getMock();
+        $lambda = $this->buildLambda('1');
 
-        $this->assertEquals(
+        self::assertEquals(
             'A text',
             $helper->ngettext('A text | Several texts | {{ nb }}', $lambda),
         );
-        $this->assertEquals(
+        self::assertEquals(
             'A text',
             $helper->dngettext('domain | A text | Several texts | {{ nb }}', $lambda),
         );
@@ -66,13 +66,13 @@ final class GettextHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsPlural(): void
     {
         $helper = new GettextHelper(new GettextSectionContentTransformer());
-        $lambda = \Mockery::mock(\Mustache_LambdaHelper::class)->shouldReceive('render')->with('{{ nb }}')->andReturns('2')->getMock();
+        $lambda = $this->buildLambda('2');
 
-        $this->assertEquals(
+        self::assertEquals(
             'Several texts',
             $helper->ngettext('A text | Several texts | {{ nb }}', $lambda),
         );
-        $this->assertEquals(
+        self::assertEquals(
             'Several texts',
             $helper->dngettext('domain | A text | Several texts | {{ nb }}', $lambda),
         );
@@ -81,13 +81,13 @@ final class GettextHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItUsesNbAsArgumentByDefault(): void
     {
         $helper = new GettextHelper(new GettextSectionContentTransformer());
-        $lambda = \Mockery::mock(\Mustache_LambdaHelper::class)->shouldReceive('render')->with('{{ nb }}')->andReturns('2')->getMock();
+        $lambda = $this->buildLambda('2');
 
-        $this->assertEquals(
+        self::assertEquals(
             '2 texts',
             $helper->ngettext('%d text | %d texts | {{ nb }}', $lambda),
         );
-        $this->assertEquals(
+        self::assertEquals(
             '2 texts',
             $helper->dngettext('domain | %d text | %d texts | {{ nb }}', $lambda),
         );
@@ -96,13 +96,13 @@ final class GettextHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNotUseNbAsArgumentIfDevelopersGaveExtraArguments(): void
     {
         $helper = new GettextHelper(new GettextSectionContentTransformer());
-        $lambda = \Mockery::mock(\Mustache_LambdaHelper::class)->shouldReceive('render')->with('{{ nb }}')->andReturns('2')->getMock();
+        $lambda = $this->buildLambda('2');
 
-        $this->assertEquals(
+        self::assertEquals(
             'Users "{{ name }}"',
             $helper->ngettext('User "%s" | Users "%s" | {{ nb }} | {{ name }}', $lambda),
         );
-        $this->assertEquals(
+        self::assertEquals(
             'Users "{{ name }}"',
             $helper->dngettext('domain | User "%s" | Users "%s" | {{ nb }} | {{ name }}', $lambda),
         );
@@ -129,10 +129,18 @@ final class GettextHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->expectException(\Tuleap\Templating\Mustache\InvalidGettextStringException::class);
 
-        $lambda = \Mockery::mock(\Mustache_LambdaHelper::class)->shouldReceive('render')->with('{{ nb }}')->andReturns('2')->getMock();
+        $lambda = $this->buildLambda('2');
 
         $helper = new GettextHelper(new GettextSectionContentTransformer());
         $helper->ngettext('%d text | %d texts', $lambda);
         $helper->dngettext('domain | %d text | %d texts', $lambda);
+    }
+
+    private function buildLambda(string $value): \Mustache_LambdaHelper&MockObject
+    {
+        $lambda = $this->createMock(\Mustache_LambdaHelper::class);
+        $lambda->method('render')->with('{{ nb }}')->willReturn($value);
+
+        return $lambda;
     }
 }

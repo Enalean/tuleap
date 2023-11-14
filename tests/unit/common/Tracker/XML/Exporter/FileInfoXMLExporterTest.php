@@ -22,38 +22,35 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\XML\Exporter;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use SimpleXMLElement;
 use Tracker_FileInfo;
 use Tracker_XML_Exporter_FilePathXMLExporter;
 use Tracker_XML_Exporter_InArchiveFilePathXMLExporter;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-class FileInfoXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FileInfoXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testItDoesNotExportAnything()
+    public function testItDoesNotExportAnything(): void
     {
         $artifact_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
 
-        $artifact = Mockery::mock(Artifact::class)->shouldReceive(['getId' => 123])->getMock();
+        $artifact = ArtifactTestBuilder::anArtifact(123)->build();
 
-        $path_exporter = Mockery::mock(Tracker_XML_Exporter_FilePathXMLExporter::class);
+        $path_exporter = $this->createMock(Tracker_XML_Exporter_FilePathXMLExporter::class);
         $exporter      = new FileInfoXMLExporter($path_exporter);
 
         $exporter->export($artifact_xml, $artifact);
-        $this->assertEmpty($artifact_xml->file);
+        self::assertEmpty($artifact_xml->file);
     }
 
-    public function testItExportsFileInfoForArtifact()
+    public function testItExportsFileInfoForArtifact(): void
     {
         $artifact_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
 
-        $artifact = Mockery::mock(Artifact::class)->shouldReceive(['getId' => 123])->getMock();
+        $artifact = ArtifactTestBuilder::anArtifact(123)->build();
         \assert($artifact instanceof Artifact);
-        $another_artifact = Mockery::mock(Artifact::class)->shouldReceive(['getId' => 124])->getMock();
+        $another_artifact = ArtifactTestBuilder::anArtifact(124)->build();
         \assert($another_artifact instanceof Artifact);
 
         $path_exporter = new Tracker_XML_Exporter_InArchiveFilePathXMLExporter();
@@ -63,7 +60,7 @@ class FileInfoXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $another_artifact,
             new Tracker_FileInfo(
                 188,
-                Mockery::mock(\Tracker_FormElement_Field_File::class),
+                $this->createMock(\Tracker_FormElement_Field_File::class),
                 101,
                 '',
                 'avatar.png',
@@ -75,7 +72,7 @@ class FileInfoXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $artifact,
             new Tracker_FileInfo(
                 190,
-                Mockery::mock(\Tracker_FormElement_Field_File::class),
+                $this->createMock(\Tracker_FormElement_Field_File::class),
                 101,
                 '',
                 'document.txt',
@@ -87,7 +84,7 @@ class FileInfoXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $artifact,
             new Tracker_FileInfo(
                 191,
-                Mockery::mock(\Tracker_FormElement_Field_File::class),
+                $this->createMock(\Tracker_FormElement_Field_File::class),
                 102,
                 '',
                 'landscape.png',
@@ -97,12 +94,12 @@ class FileInfoXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $exporter->export($artifact_xml, $artifact);
-        $this->assertCount(2, $artifact_xml->file);
-        $this->assertEquals('fileinfo_190', (string) $artifact_xml->file[0]['id']);
-        $this->assertEquals('document.txt', (string) $artifact_xml->file[0]->filename);
-        $this->assertEquals('data/Artifact190', (string) $artifact_xml->file[0]->path);
-        $this->assertEquals('fileinfo_191', (string) $artifact_xml->file[1]['id']);
-        $this->assertEquals('landscape.png', (string) $artifact_xml->file[1]->filename);
-        $this->assertEquals('data/Artifact191', (string) $artifact_xml->file[1]->path);
+        self::assertCount(2, $artifact_xml->file);
+        self::assertEquals('fileinfo_190', (string) $artifact_xml->file[0]['id']);
+        self::assertEquals('document.txt', (string) $artifact_xml->file[0]->filename);
+        self::assertEquals('data/Artifact190', (string) $artifact_xml->file[0]->path);
+        self::assertEquals('fileinfo_191', (string) $artifact_xml->file[1]['id']);
+        self::assertEquals('landscape.png', (string) $artifact_xml->file[1]->filename);
+        self::assertEquals('data/Artifact191', (string) $artifact_xml->file[1]->path);
     }
 }
