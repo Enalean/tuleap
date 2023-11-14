@@ -52,7 +52,7 @@ final class PullRequestNewInlineCommentNotificationTest extends \Tuleap\Test\PHP
     public function testNewInlineCommentNotificationCanBeBuilt(): void
     {
         $notification = $this->buildNotification(
-            InlineCommentTestBuilder::aTextComment("Foo comment")->withFilePath('path/to/file')->build(),
+            InlineCommentTestBuilder::aTextComment("Foo comment")->onFile('path/to/file')->build(),
             FormatNotificationContentStub::withDefault(),
         );
 
@@ -85,7 +85,7 @@ final class PullRequestNewInlineCommentNotificationTest extends \Tuleap\Test\PHP
     public function testNewInlineCommentInMarkdownNotificationCanBeBuilt(): void
     {
         $notification = $this->buildNotification(
-            InlineCommentTestBuilder::aMarkdownComment("**Foo comment**")->withFilePath('path/to/file')->build(),
+            InlineCommentTestBuilder::aMarkdownComment("**Foo comment**")->onFile('path/to/file')->build(),
             FormatNotificationContentStub::withFormattedContent("<em>Foo comment</em>"),
         );
 

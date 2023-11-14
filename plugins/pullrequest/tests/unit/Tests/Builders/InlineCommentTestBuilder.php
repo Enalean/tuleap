@@ -71,7 +71,7 @@ final class InlineCommentTestBuilder
         return $this;
     }
 
-    public function withFilePath(string $file_path): self
+    public function onFile(string $file_path): self
     {
         $this->file_path = $file_path;
         return $this;
