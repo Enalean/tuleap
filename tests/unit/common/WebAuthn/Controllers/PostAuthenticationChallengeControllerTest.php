@@ -24,6 +24,7 @@ namespace Tuleap\WebAuthn\Controllers;
 
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use Psr\Http\Message\ResponseInterface;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Http\Response\RestlerErrorResponseBuilder;
@@ -36,6 +37,7 @@ use Tuleap\Test\Stubs\WebAuthn\WebAuthnChallengeDaoStub;
 use Tuleap\Test\Stubs\WebAuthn\WebAuthnCredentialSourceDaoStub;
 use Tuleap\User\ProvideCurrentUser;
 use Tuleap\User\RetrieveUserByUserName;
+use Tuleap\WebAuthn\Authentication\WebAuthnAuthentication;
 use Tuleap\WebAuthn\Challenge\SaveWebAuthnChallenge;
 use Tuleap\WebAuthn\Source\GetAllCredentialSourceByUserId;
 use function Psl\Json\decode as psl_json_decode;
@@ -43,12 +45,15 @@ use function Psl\Json\encode as psl_json_encode;
 
 final class PostAuthenticationChallengeControllerTest extends TestCase
 {
+    use ForgeConfigSandbox;
+
     /**
      * @dataProvider getTest400Data
      */
     public function testItReturnsError400ForAnonymous(
         string|array $body,
     ): void {
+        \ForgeConfig::setFeatureFlag(WebAuthnAuthentication::FEATURE_FLAG_LOGIN, '1');
         $response = $this->handle(
             ProvideAndRetrieveUserStub::build(UserTestBuilder::anAnonymousUser()->build()),
             WebAuthnCredentialSourceDaoStub::withoutCredentialSources(),
@@ -61,6 +66,7 @@ final class PostAuthenticationChallengeControllerTest extends TestCase
 
     public function testItReturns404WhenUserNotFound(): void
     {
+        \ForgeConfig::setFeatureFlag(WebAuthnAuthentication::FEATURE_FLAG_LOGIN, '1');
         $response = $this->handle(
             ProvideAndRetrieveUserStub::build(UserTestBuilder::anAnonymousUser()->build()),
             WebAuthnCredentialSourceDaoStub::withoutCredentialSources(),
@@ -73,6 +79,7 @@ final class PostAuthenticationChallengeControllerTest extends TestCase
 
     public function testItReturns200WhenNoRegisteredKeyForAnonymous(): void
     {
+        \ForgeConfig::setFeatureFlag(WebAuthnAuthentication::FEATURE_FLAG_LOGIN, '1');
         $user     = UserTestBuilder::anActiveUser()->build();
         $response = $this->handle(
             ProvideAndRetrieveUserStub::build(UserTestBuilder::anAnonymousUser()->build())->withUsers([$user]),
@@ -84,8 +91,22 @@ final class PostAuthenticationChallengeControllerTest extends TestCase
         self::assertSame(200, $response->getStatusCode());
     }
 
+    public function testItReturns403ForAnonymousUserWhenFeatureFlagOff(): void
+    {
+        \ForgeConfig::setFeatureFlag(WebAuthnAuthentication::FEATURE_FLAG_LOGIN, '0');
+        $response = $this->handle(
+            ProvideAndRetrieveUserStub::build(UserTestBuilder::anAnonymousUser()->build()),
+            WebAuthnCredentialSourceDaoStub::withCredentialSources('id1'),
+            new WebAuthnChallengeDaoStub(),
+            []
+        );
+
+        self::assertSame(403, $response->getStatusCode());
+    }
+
     public function testItReturnsOptionsForAnonymousUser(): void
     {
+        \ForgeConfig::setFeatureFlag(WebAuthnAuthentication::FEATURE_FLAG_LOGIN, '1');
         $user     = UserTestBuilder::anActiveUser()->build();
         $response = $this->handle(
             ProvideAndRetrieveUserStub::build(UserTestBuilder::anAnonymousUser()->build())->withUsers([$user]),

@@ -2349,6 +2349,9 @@ msgstr "Robustesse du mot de passe"
 msgid "Password successfully updated"
 msgstr "Le mot de passe a été mis à jour avec succès"
 
+msgid "Passwordless login is not available"
+msgstr "L'authentification sans mot de passe n'est pas disponible"
+
 msgid "Passwords do not match"
 msgstr "Les deux mots de passe soumis sont différents"
 

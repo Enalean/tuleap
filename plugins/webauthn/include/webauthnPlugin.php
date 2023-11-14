@@ -20,6 +20,8 @@
 
 declare(strict_types=1);
 
+use Tuleap\WebAuthn\Authentication\WebAuthnAuthentication;
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
@@ -122,7 +124,9 @@ final class WebAuthnPlugin extends Plugin
     {
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (FastRoute\RouteCollector $r) {
             $r->get('/account', $this->getRouteHandler('getAccountSettings'));
-            $r->addRoute(['GET', 'POST'], '/login', $this->getRouteHandler('getLogin'));
+            if (ForgeConfig::getFeatureFlag(WebAuthnAuthentication::FEATURE_FLAG_LOGIN) === '1') {
+                $r->addRoute(['GET', 'POST'], '/login', $this->getRouteHandler('getLogin'));
+            }
         });
     }
 
@@ -148,9 +152,17 @@ final class WebAuthnPlugin extends Plugin
     #[Tuleap\Plugin\ListeningToEventClass]
     public function additionalConnectorsCollector(Tuleap\User\AdditionalConnectorsCollector $collector): void
     {
-        $collector->addConnector(Tuleap\WebAuthn\PasswordlessConnectorBuilder::build(
-            $this->getPluginPath(),
-            $collector->return_to
-        ));
+        if (ForgeConfig::getFeatureFlag(WebAuthnAuthentication::FEATURE_FLAG_LOGIN) === '1') {
+            $collector->addConnector(Tuleap\WebAuthn\PasswordlessConnectorBuilder::build(
+                $this->getPluginPath(),
+                $collector->return_to
+            ));
+        }
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function getConfigKeys(\Tuleap\Config\GetConfigKeys $event): void
+    {
+        $event->addConfigClass(WebAuthnAuthentication::class);
     }
 }
