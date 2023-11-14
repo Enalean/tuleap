@@ -21,12 +21,8 @@
 
 namespace Tuleap\Dashboard\Widget;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
 class WidgetDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var DashboardWidget
      */
@@ -56,22 +52,22 @@ class WidgetDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDeletesColumn()
     {
-        $dao     = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
+        $dao     = $this->createMock(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $deletor = new DashboardWidgetDeletor($dao);
 
-        $dao->shouldReceive('removeColumn')->once();
-        $dao->shouldReceive('reorderColumns')->once();
+        $dao->expects(self::once())->method('removeColumn');
+        $dao->expects(self::once())->method('reorderColumns');
 
         $deletor->deleteColumn($this->column);
     }
 
     public function testItnDeletesLine()
     {
-        $dao     = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
+        $dao     = $this->createMock(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $deletor = new DashboardWidgetDeletor($dao);
 
-        $dao->shouldReceive('removeLine')->once();
-        $dao->shouldReceive('reorderLines')->once();
+        $dao->expects(self::once())->method('removeLine');
+        $dao->expects(self::once())->method('reorderLines');
 
         $deletor->deleteLineByColumn($this->column);
     }
