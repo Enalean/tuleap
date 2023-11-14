@@ -43,8 +43,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const mount_point = document.createElement("div");
     container.appendChild(mount_point);
 
-    const gettext = await initVueGettext(createGettext, (locale) =>
-        import(`./${getPOFileFromLocale(locale)}`),
+    const gettext = await initVueGettext(
+        createGettext,
+        (locale) => import(`./${getPOFileFromLocale(locale)}`),
     );
 
     const app = createApp(App, {

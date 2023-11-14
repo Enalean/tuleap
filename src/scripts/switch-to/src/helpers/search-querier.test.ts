@@ -71,10 +71,10 @@ describe("search-querier", () => {
                             name === PAGINATION_SIZE_HEADER
                                 ? "2"
                                 : name === PAGINATION_LIMIT_MAX_HEADER
-                                ? "50"
-                                : name === PAGINATION_LIMIT_HEADER
-                                ? "50"
-                                : null,
+                                  ? "50"
+                                  : name === PAGINATION_LIMIT_HEADER
+                                    ? "50"
+                                    : null,
                     },
                     json: () =>
                         Promise.resolve([
@@ -124,10 +124,10 @@ describe("search-querier", () => {
                             name === PAGINATION_SIZE_HEADER
                                 ? "2"
                                 : name === PAGINATION_LIMIT_MAX_HEADER
-                                ? "50"
-                                : name === PAGINATION_LIMIT_HEADER
-                                ? "50"
-                                : null,
+                                  ? "50"
+                                  : name === PAGINATION_LIMIT_HEADER
+                                    ? "50"
+                                    : null,
                     },
                     json: () => Promise.resolve([] as ItemDefinition[]),
                 } as unknown as Response);
@@ -168,10 +168,10 @@ describe("search-querier", () => {
                             name === PAGINATION_SIZE_HEADER
                                 ? "200"
                                 : name === PAGINATION_LIMIT_MAX_HEADER
-                                ? "50"
-                                : name === PAGINATION_LIMIT_HEADER
-                                ? "50"
-                                : null,
+                                  ? "50"
+                                  : name === PAGINATION_LIMIT_HEADER
+                                    ? "50"
+                                    : null,
                     },
                     json: () =>
                         Promise.resolve([
@@ -222,10 +222,10 @@ describe("search-querier", () => {
                             name === PAGINATION_SIZE_HEADER
                                 ? "2"
                                 : name === PAGINATION_LIMIT_MAX_HEADER
-                                ? "50"
-                                : name === PAGINATION_LIMIT_HEADER
-                                ? "50"
-                                : null,
+                                  ? "50"
+                                  : name === PAGINATION_LIMIT_HEADER
+                                    ? "50"
+                                    : null,
                     },
                     json: () =>
                         Promise.resolve([
@@ -264,10 +264,10 @@ describe("search-querier", () => {
                             name === PAGINATION_SIZE_HEADER
                                 ? "2"
                                 : name === PAGINATION_LIMIT_MAX_HEADER
-                                ? "50"
-                                : name === PAGINATION_LIMIT_HEADER
-                                ? "50"
-                                : null,
+                                  ? "50"
+                                  : name === PAGINATION_LIMIT_HEADER
+                                    ? "50"
+                                    : null,
                     },
                     json: () =>
                         Promise.resolve([
@@ -357,10 +357,10 @@ describe("search-querier", () => {
                                 name === PAGINATION_SIZE_HEADER
                                     ? "2000"
                                     : name === PAGINATION_LIMIT_MAX_HEADER
-                                    ? "50"
-                                    : name === PAGINATION_LIMIT_HEADER
-                                    ? "50"
-                                    : null,
+                                      ? "50"
+                                      : name === PAGINATION_LIMIT_HEADER
+                                        ? "50"
+                                        : null,
                         },
                         json: () => Promise.resolve(results),
                     } as unknown as Response);
@@ -450,10 +450,10 @@ describe("search-querier", () => {
                                 name === PAGINATION_SIZE_HEADER
                                     ? "2000"
                                     : name === PAGINATION_LIMIT_MAX_HEADER
-                                    ? "50"
-                                    : name === PAGINATION_LIMIT_HEADER
-                                    ? "50"
-                                    : null,
+                                      ? "50"
+                                      : name === PAGINATION_LIMIT_HEADER
+                                        ? "50"
+                                        : null,
                         },
                         json: () => Promise.resolve(results),
                     } as unknown as Response);
@@ -513,10 +513,10 @@ describe("search-querier", () => {
                             name === PAGINATION_SIZE_HEADER
                                 ? "2"
                                 : name === PAGINATION_LIMIT_MAX_HEADER
-                                ? "50"
-                                : name === PAGINATION_LIMIT_HEADER
-                                ? "50"
-                                : null,
+                                  ? "50"
+                                  : name === PAGINATION_LIMIT_HEADER
+                                    ? "50"
+                                    : null,
                     },
                     json: () =>
                         Promise.resolve([
@@ -571,10 +571,10 @@ describe("search-querier", () => {
                                 name === PAGINATION_SIZE_HEADER
                                     ? "2000"
                                     : name === PAGINATION_LIMIT_MAX_HEADER
-                                    ? "50"
-                                    : name === PAGINATION_LIMIT_HEADER
-                                    ? "50"
-                                    : null,
+                                      ? "50"
+                                      : name === PAGINATION_LIMIT_HEADER
+                                        ? "50"
+                                        : null,
                         },
                         json: () => Promise.resolve(results),
                     } as unknown as Response);

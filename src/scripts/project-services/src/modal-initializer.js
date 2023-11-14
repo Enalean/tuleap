@@ -26,8 +26,10 @@ import { escaper } from "@tuleap/html-escaper";
 import { gettext_provider } from "./helpers/gettext_provider.js";
 
 export async function setupModalButtons(addModalCallback, editModalCallback) {
-    await initVueGettextFromPoGettextPlugin(Vue, (locale) =>
-        import(/* webpackChunkName: "services-po-" */ `../po/${getPOFileFromLocale(locale)}`),
+    await initVueGettextFromPoGettextPlugin(
+        Vue,
+        (locale) =>
+            import(/* webpackChunkName: "services-po-" */ `../po/${getPOFileFromLocale(locale)}`),
     );
     setupAddButton(addModalCallback);
     setupEditButtons(editModalCallback);

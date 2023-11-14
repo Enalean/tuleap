@@ -85,55 +85,62 @@ export default {
             }
 
             if (this.error_modal_shown === this.MAX_SIZE_ERROR) {
-                return defineAsyncComponent(() =>
-                    import(
-                        /* webpackChunkName: "document-max-size-dragndrop-error-modal" */ "./MaxSizeDragndropErrorModal.vue"
-                    ),
+                return defineAsyncComponent(
+                    () =>
+                        import(
+                            /* webpackChunkName: "document-max-size-dragndrop-error-modal" */ "./MaxSizeDragndropErrorModal.vue"
+                        ),
                 );
             }
 
             if (this.error_modal_shown === this.ALREADY_EXISTS_ERROR) {
-                return defineAsyncComponent(() =>
-                    import(
-                        /* webpackChunkName: "document-max-size-dragndrop-error-modal" */ "./FileAlreadyExistsDragndropErrorModal.vue"
-                    ),
+                return defineAsyncComponent(
+                    () =>
+                        import(
+                            /* webpackChunkName: "document-max-size-dragndrop-error-modal" */ "./FileAlreadyExistsDragndropErrorModal.vue"
+                        ),
                 );
             }
 
             if (this.error_modal_shown === this.CREATION_ERROR) {
-                return defineAsyncComponent(() =>
-                    import(
-                        /* webpackChunkName: "document-max-size-dragndrop-error-modal" */ "./CreationErrorDragndropErrorModal.vue"
-                    ),
+                return defineAsyncComponent(
+                    () =>
+                        import(
+                            /* webpackChunkName: "document-max-size-dragndrop-error-modal" */ "./CreationErrorDragndropErrorModal.vue"
+                        ),
                 );
             }
 
             if (this.error_modal_shown === this.EDITION_LOCKED) {
-                return defineAsyncComponent(() =>
-                    import(
-                        /* webpackChunkName: "document-edition-locked-error-modal" */ "./DocumentLockedForEditionErrorModal.vue"
-                    ),
+                return defineAsyncComponent(
+                    () =>
+                        import(
+                            /* webpackChunkName: "document-edition-locked-error-modal" */ "./DocumentLockedForEditionErrorModal.vue"
+                        ),
                 );
             }
 
             if (this.error_modal_shown === this.DROPPED_ITEM_IS_NOT_A_FILE) {
-                return defineAsyncComponent(() =>
-                    import(
-                        /* webpackChunkName: "document-droppped-item-is-folder-error" */ "./DroppedItemIsAFolderErrorModal.vue"
-                    ),
+                return defineAsyncComponent(
+                    () =>
+                        import(
+                            /* webpackChunkName: "document-droppped-item-is-folder-error" */ "./DroppedItemIsAFolderErrorModal.vue"
+                        ),
                 );
             }
             if (this.error_modal_shown === this.FILENAME_PATTERN_IS_SET_ERROR) {
-                return defineAsyncComponent(() =>
-                    import(
-                        /* webpackChunkName: "document-filename-pattern-set-error-modal" */ "./FilenamePatternSetErrorModal.vue"
-                    ),
+                return defineAsyncComponent(
+                    () =>
+                        import(
+                            /* webpackChunkName: "document-filename-pattern-set-error-modal" */ "./FilenamePatternSetErrorModal.vue"
+                        ),
                 );
             }
-            return defineAsyncComponent(() =>
-                import(
-                    /* webpackChunkName: "document-max-files-dragndrop-error-modal" */ "./MaxFilesDragndropErrorModal.vue"
-                ),
+            return defineAsyncComponent(
+                () =>
+                    import(
+                        /* webpackChunkName: "document-max-files-dragndrop-error-modal" */ "./MaxFilesDragndropErrorModal.vue"
+                    ),
             );
         },
     },

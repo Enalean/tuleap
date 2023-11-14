@@ -35,8 +35,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         },
     });
 
-    await initVueGettextFromPoGettextPlugin(Vue, (locale) =>
-        import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
+    await initVueGettextFromPoGettextPlugin(
+        Vue,
+        (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );
 
     const widgets = document.getElementsByClassName("labeled-items-widget");

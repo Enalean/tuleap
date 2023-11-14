@@ -112,8 +112,8 @@ export class Dropdown {
         const side = this.dropdown_menu.classList.contains("tlp-dropdown-menu-top")
             ? "top"
             : this.dropdown_menu.classList.contains("tlp-dropdown-menu-side")
-            ? "right"
-            : "bottom";
+              ? "right"
+              : "bottom";
         const alignment = "start";
         const wanted_placement: Placement = `${side}-${alignment}`;
 

@@ -286,9 +286,8 @@ const project_background_themes = [
     "wooden-surface",
 ];
 for (const background of project_background_themes) {
-    theme_entry_points[
-        `project-background/${background}`
-    ] = `./node_modules/@tuleap/common-theme/css/project-background/${background}.scss`;
+    theme_entry_points[`project-background/${background}`] =
+        `./node_modules/@tuleap/common-theme/css/project-background/${background}.scss`;
 }
 
 const webpack_config_for_burning_parrot_css = {
