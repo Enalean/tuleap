@@ -29,6 +29,7 @@ class DatabaseInitialization extends \DatabaseInitialization
     public function setUp()
     {
         $this->mysqli->select_db(ForgeConfig::get('sys_dbname'));
+        $this->enableCommentFeatureFlag();
         $this->insertPullRequest();
         $this->insertFakeGitPullRequestReferences();
         $this->insertPullRequestComments();
@@ -66,6 +67,12 @@ class DatabaseInitialization extends \DatabaseInitialization
                        (1, 102, "I am never at home on Sundays."),
                        (2, 102, "I am never at home on Mondays.")';
 
+        $this->mysqli->real_query($sql);
+    }
+
+    private function enableCommentFeatureFlag(): void
+    {
+        $sql = 'INSERT INTO forgeconfig (name, value) VALUES ("feature_flag_allow_pull_requests_comments_edition", 1)';
         $this->mysqli->real_query($sql);
     }
 }
