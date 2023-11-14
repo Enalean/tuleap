@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it } from "@jest/globals";
 import { isMatchingFilterValue } from "./is-matching-filter-value";
 
 describe("isMatchingFilterValue", () => {

@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it } from "@jest/globals";
 import type { ItemDefinition, QuickLink } from "../../type";
 import { shallowMount } from "@vue/test-utils";
 import { default as QuickLinkComponent } from "./QuickLink.vue";

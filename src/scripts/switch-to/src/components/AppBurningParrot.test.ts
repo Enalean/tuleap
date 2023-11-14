@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { beforeEach, describe, expect, it } from "@jest/globals";
 import { shallowMount } from "@vue/test-utils";
 import AppBurningParrot from "./AppBurningParrot.vue";
 import { getGlobalTestOptions } from "../helpers/global-options-for-test";

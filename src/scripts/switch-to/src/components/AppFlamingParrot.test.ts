@@ -17,10 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { afterEach, beforeEach, describe, expect, it, jest } from "@jest/globals";
 import AppFlamingParrot from "./AppFlamingParrot.vue";
 import { useRootStore } from "../stores/root";
 import { getGlobalTestOptions } from "../helpers/global-options-for-test";
-import { render, fireEvent, configure, cleanup } from "@testing-library/vue";
+import { cleanup, configure, fireEvent, render } from "@testing-library/vue";
 
 describe("AppFlamingParrot", () => {
     beforeEach(() => {

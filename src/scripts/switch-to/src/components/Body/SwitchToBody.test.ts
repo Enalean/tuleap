@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it } from "@jest/globals";
 import { shallowMount } from "@vue/test-utils";
 import SwitchToBody from "./SwitchToBody.vue";
 import { createTestingPinia } from "@pinia/testing";

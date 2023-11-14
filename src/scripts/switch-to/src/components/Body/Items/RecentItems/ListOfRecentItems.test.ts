@@ -18,10 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it } from "@jest/globals";
 import { shallowMount } from "@vue/test-utils";
 import ListOfRecentItems from "./ListOfRecentItems.vue";
 import { createTestingPinia } from "@pinia/testing";
-import type { UserHistory, ItemDefinition } from "../../../../type";
+import type { ItemDefinition, UserHistory } from "../../../../type";
 import RecentItemsErrorState from "./RecentItemsErrorState.vue";
 import RecentItemsEmptyState from "./RecentItemsEmptyState.vue";
 import RecentItemsLoadingState from "./RecentItemsLoadingState.vue";

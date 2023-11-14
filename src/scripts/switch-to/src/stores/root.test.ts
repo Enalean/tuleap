@@ -17,25 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { afterEach, beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { createPinia, defineStore, setActivePinia } from "pinia";
+import * as tlp from "@tuleap/tlp-fetch";
+import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
+import type { ItemDefinition, Project } from "../type";
+import { useRootStore } from "./root";
+import { useFullTextStore } from "./fulltext";
 
-const search = jest.fn();
-const focusFirstSearchResult = jest.fn();
 jest.mock("./fulltext", () => {
     return {
         useFullTextStore: defineStore("fulltext", {
             actions: {
-                search,
-                focusFirstSearchResult,
+                search: jest.fn(),
+                focusFirstSearchResult: jest.fn(),
             },
         }),
     };
 });
-
-import * as tlp from "@tuleap/tlp-fetch";
-import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import type { Project, ItemDefinition } from "../type";
-import { useRootStore } from "./root";
 
 describe("Root store", () => {
     beforeEach(() => {
@@ -103,6 +102,7 @@ describe("Root store", () => {
 
         describe("updateFilterValue", () => {
             it("updates the filter value in the store and ask to perform a fulltext search", () => {
+                const search = jest.spyOn(useFullTextStore(), "search");
                 const store = useRootStore();
                 store.$patch({
                     filter_value: "acme",
@@ -117,6 +117,7 @@ describe("Root store", () => {
             });
 
             it("does not ask to perform a fulltext search if it is the same value as before", () => {
+                const search = jest.spyOn(useFullTextStore(), "search");
                 const store = useRootStore();
                 store.$patch({
                     filter_value: "acme",
@@ -130,6 +131,7 @@ describe("Root store", () => {
             });
 
             it("does not ask to perform a fulltext search if there is no keywords", () => {
+                const search = jest.spyOn(useFullTextStore(), "search");
                 const store = useRootStore();
                 store.$patch({
                     filter_value: "",
@@ -141,6 +143,7 @@ describe("Root store", () => {
             });
 
             it("should pass the keywords and not the raw filter_value", () => {
+                const search = jest.spyOn(useFullTextStore(), "search");
                 const store = useRootStore();
                 store.$patch({
                     filter_value: "",
