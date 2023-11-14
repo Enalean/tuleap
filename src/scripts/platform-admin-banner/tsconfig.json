@@ -1,8 +1,8 @@
 {
     "extends": "@tuleap/build-system-configurator/tsc/tsconfig-for-apps.json",
     "compilerOptions": {
-        "skipLibCheck": true,
-        "types": ["ckeditor", "jest"]
+        "types": ["ckeditor", "jest"],
+        "skipLibCheck": true
     },
     "include": ["src/**/*"]
 }
