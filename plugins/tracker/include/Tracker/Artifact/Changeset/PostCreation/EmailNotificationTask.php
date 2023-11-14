@@ -41,57 +41,17 @@ final class EmailNotificationTask implements PostCreationTask
         'realname' => 'realname',
     ];
 
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var UserHelper
-     */
-    private $user_helper;
-    /**
-     * @var RecipientsManager
-     */
-    private $recipients_manager;
-    /**
-     * @var MailGatewayConfig
-     */
-    private $mail_gateway_config;
-    /**
-     * @var MailSender
-     */
-    private $mail_sender;
-    /**
-     * @var ConfigNotificationAssignedTo
-     */
-    private $config_notification_assigned_to;
-    /**
-     * @var ConfigNotificationEmailCustomSender
-     */
-    private $config_notification_custom_sender;
-    /**
-     * @var Tracker_Artifact_MailGateway_RecipientFactory
-     */
-    private $recipient_factory;
-
     public function __construct(
-        LoggerInterface $logger,
-        UserHelper $user_helper,
-        RecipientsManager $recipients_manager,
-        Tracker_Artifact_MailGateway_RecipientFactory $recipient_factory,
-        MailGatewayConfig $mail_gateway_config,
-        MailSender $mail_sender,
-        ConfigNotificationAssignedTo $config_notification_assigned_to,
-        ConfigNotificationEmailCustomSender $config_notification_custom_sender,
+        private readonly LoggerInterface $logger,
+        private readonly UserHelper $user_helper,
+        private readonly RecipientsManager $recipients_manager,
+        private readonly Tracker_Artifact_MailGateway_RecipientFactory $recipient_factory,
+        private readonly MailGatewayConfig $mail_gateway_config,
+        private readonly MailSender $mail_sender,
+        private readonly ConfigNotificationAssignedTo $config_notification_assigned_to,
+        private readonly ConfigNotificationEmailCustomSender $config_notification_custom_sender,
+        private readonly ProvideEmailNotificationAttachment $attachment_provider,
     ) {
-        $this->logger                            = $logger;
-        $this->user_helper                       = $user_helper;
-        $this->recipients_manager                = $recipients_manager;
-        $this->recipient_factory                 = $recipient_factory;
-        $this->mail_gateway_config               = $mail_gateway_config;
-        $this->mail_sender                       = $mail_sender;
-        $this->config_notification_assigned_to   = $config_notification_assigned_to;
-        $this->config_notification_custom_sender = $config_notification_custom_sender;
     }
 
     public function execute(Tracker_Artifact_Changeset $changeset, bool $send_notifications): void
@@ -119,9 +79,9 @@ final class EmailNotificationTask implements PostCreationTask
         $messages = [];
 
         if ($this->mail_gateway_config->isTokenBasedEmailgatewayEnabled() || $this->isNotificationAssignedToEnabled($tracker)) {
-            $messages = $this->buildAMessagePerRecipient($changeset, $recipients, $is_update);
+            $messages = $this->buildAMessagePerRecipient($changeset, $recipients, $is_update, $logger);
         } else {
-            $messages = $this->buildOneMessageForMultipleRecipients($changeset, $recipients, $is_update);
+            $messages = $this->buildOneMessageForMultipleRecipients($changeset, $recipients, $is_update, $logger);
         }
 
         // 3. Send the notification
@@ -135,7 +95,8 @@ final class EmailNotificationTask implements PostCreationTask
                 $message['subject'],
                 $message['htmlBody'],
                 $message['txtBody'],
-                $message['message-id']
+                $message['message-id'],
+                $message['attachments'],
             );
         }
         $logger->debug('End mail notification');
@@ -149,7 +110,7 @@ final class EmailNotificationTask implements PostCreationTask
         return $this->config_notification_assigned_to->isAssignedToSubjectEnabled($tracker);
     }
 
-    public function buildAMessagePerRecipient(Tracker_Artifact_Changeset $changeset, array $recipients, $is_update)
+    public function buildAMessagePerRecipient(Tracker_Artifact_Changeset $changeset, array $recipients, $is_update, LoggerInterface $logger): array
     {
         $messages       = [];
         $anonymous_mail = 0;
@@ -161,19 +122,21 @@ final class EmailNotificationTask implements PostCreationTask
                 $headers    = array_filter([$this->getCustomReplyToHeader($changeset->getArtifact())]);
                 $message_id = $this->getMessageId($user, $changeset);
 
-                $messages[$message_id]               = $this->getMessageContent($changeset, $user, $is_update, $check_perms);
-                $messages[$message_id]['from']       = $this->getSenderName($changeset) . '<' . $changeset->getArtifact()->getTokenBasedEmailAddress() . '>';
-                $messages[$message_id]['message-id'] = $message_id;
-                $messages[$message_id]['headers']    = $headers;
-                $messages[$message_id]['recipients'] = [$user->getEmail()];
+                $messages[$message_id]                = $this->getMessageContent($changeset, $user, $is_update, $check_perms);
+                $messages[$message_id]['from']        = $this->getSenderName($changeset) . '<' . $changeset->getArtifact()->getTokenBasedEmailAddress() . '>';
+                $messages[$message_id]['message-id']  = $message_id;
+                $messages[$message_id]['headers']     = $headers;
+                $messages[$message_id]['recipients']  = [$user->getEmail()];
+                $messages[$message_id]['attachments'] = $this->getMessageAttachments($changeset, $user, $logger);
             } else {
                 $headers = [$this->getAnonymousHeaders()];
 
-                $messages[$anonymous_mail]               = $this->getMessageContent($changeset, $user, $is_update, $check_perms);
-                $messages[$anonymous_mail]['from']       = $this->getEmailSenderAddress($changeset);
-                $messages[$anonymous_mail]['message-id'] = null;
-                $messages[$anonymous_mail]['headers']    = $headers;
-                $messages[$anonymous_mail]['recipients'] = [$user->getEmail()];
+                $messages[$anonymous_mail]                = $this->getMessageContent($changeset, $user, $is_update, $check_perms);
+                $messages[$anonymous_mail]['from']        = $this->getEmailSenderAddress($changeset);
+                $messages[$anonymous_mail]['message-id']  = null;
+                $messages[$anonymous_mail]['headers']     = $headers;
+                $messages[$anonymous_mail]['recipients']  = [$user->getEmail()];
+                $messages[$anonymous_mail]['attachments'] = $this->getMessageAttachments($changeset, $user, $logger);
 
                 $anonymous_mail += 1;
             }
@@ -182,7 +145,7 @@ final class EmailNotificationTask implements PostCreationTask
         return $messages;
     }
 
-    public function buildOneMessageForMultipleRecipients(Tracker_Artifact_Changeset $changeset, array $recipients, $is_update)
+    public function buildOneMessageForMultipleRecipients(Tracker_Artifact_Changeset $changeset, array $recipients, $is_update, LoggerInterface $logger): array
     {
         $messages = [];
         foreach ($recipients as $recipient => $check_perms) {
@@ -192,23 +155,30 @@ final class EmailNotificationTask implements PostCreationTask
                 $ignore_perms    = ! $check_perms;
                 $recipient_mail  = $user->getEmail();
                 $message_content = $this->getMessageContent($changeset, $user, $is_update, $check_perms);
+                $attachments     = $this->getMessageAttachments($changeset, $user, $logger);
                 $headers         = array_filter([$this->getCustomReplyToHeader($changeset->getArtifact())]);
-                $hash            = md5($message_content['htmlBody'] . $message_content['txtBody'] . serialize($message_content['subject']));
+                $hash            = md5($message_content['htmlBody'] . $message_content['txtBody'] . serialize($message_content['subject']) . serialize($attachments));
 
                 if (isset($messages[$hash])) {
                     $messages[$hash]['recipients'][] = $recipient_mail;
                 } else {
                     $messages[$hash] = $message_content;
 
-                    $messages[$hash]['message-id'] = null;
-                    $messages[$hash]['headers']    = $headers;
-                    $messages[$hash]['recipients'] = [$recipient_mail];
+                    $messages[$hash]['message-id']  = null;
+                    $messages[$hash]['headers']     = $headers;
+                    $messages[$hash]['recipients']  = [$recipient_mail];
+                    $messages[$hash]['attachments'] = $attachments;
                 }
 
                 $messages[$hash]['from'] = $this->getEmailSenderAddress($changeset);
             }
         }
         return $messages;
+    }
+
+    private function getMessageAttachments(Tracker_Artifact_Changeset $changeset, \PFUser $recipient, LoggerInterface $logger): array
+    {
+        return $this->attachment_provider->getAttachments($changeset, $recipient, $logger);
     }
 
     /**

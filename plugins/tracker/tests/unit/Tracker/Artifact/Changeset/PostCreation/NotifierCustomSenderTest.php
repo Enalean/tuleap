@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
 require_once __DIR__ . '/../../../../bootstrap.php';
 
+use ColinODell\PsrTestLogger\TestLogger;
 use ConfigNotificationAssignedTo;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
@@ -34,6 +35,7 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderFormatter;
 use Tuleap\Tracker\Notifications\RecipientsManager;
+use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation\ProvideEmailNotificationAttachmentStub;
 use UserHelper;
 
 class NotifierCustomSenderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -82,7 +84,8 @@ class NotifierCustomSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->mail_gateway_config,
             $this->mail_sender,
             $config_notification_assigned_to,
-            $this->custom_email_sender
+            $this->custom_email_sender,
+            ProvideEmailNotificationAttachmentStub::withoutAttachments(),
         );
 
         $this->user_realname        = "J. Doe";
@@ -145,7 +148,7 @@ class NotifierCustomSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        return $this->mail_notification_task->buildOneMessageForMultipleRecipients($changeset, $this->recipients_manager->getRecipients($changeset, true, new NullLogger()), false);
+        return $this->mail_notification_task->buildOneMessageForMultipleRecipients($changeset, $this->recipients_manager->getRecipients($changeset, true, new NullLogger()), false, new TestLogger());
     }
 
     public function testFetchesTheCorrectlyFormattedSenderFieldWhenEnabled()

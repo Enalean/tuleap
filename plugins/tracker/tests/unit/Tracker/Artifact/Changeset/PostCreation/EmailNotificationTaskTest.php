@@ -25,10 +25,12 @@ require_once __DIR__ . '/../../../../bootstrap.php';
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Log\LoggerInterface;
 use Tracker_Artifact_MailGateway_Recipient;
+use Tuleap\Mail\MailAttachment;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender;
 use Tuleap\Tracker\Notifications\RecipientsManager;
+use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation\ProvideEmailNotificationAttachmentStub;
 
 class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -101,6 +103,9 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker->shouldReceive('getItemName')->andReturns('story');
         $this->artifact->shouldReceive('getId')->andReturns(666);
 
+        $attachment1 = new MailAttachment('text/plain', 'doc.txt', 'Lorem');
+        $attachment2 = new MailAttachment('text/plain', 'another.txt', 'Ipsum');
+
         $mail_sender = \Mockery::mock(MailSender::class);
         $mail_sender->shouldReceive('send')->withArgs([
             $this->changeset,
@@ -114,7 +119,8 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
             '[story #666] The title in the mail', // subject
             \Mockery::any(), // html body
             \Mockery::any(), // text body
-            \Mockery::any(),  // msg id
+            \Mockery::any(),  // msg id,
+            [$attachment1, $attachment2],
         ])->once();
 
         $mail_notification_task = new EmailNotificationTask(
@@ -125,7 +131,8 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->mail_gateway_config,
             $mail_sender,
             $this->config_notification_assigned_to,
-            $this->custom_email_sender
+            $this->custom_email_sender,
+            ProvideEmailNotificationAttachmentStub::withAttachments($attachment1, $attachment2),
         );
         $mail_notification_task->execute($this->changeset, true);
     }
@@ -145,7 +152,8 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->mail_gateway_config,
             $mail_sender,
             $this->config_notification_assigned_to,
-            $this->custom_email_sender
+            $this->custom_email_sender,
+            ProvideEmailNotificationAttachmentStub::withoutAttachments(),
         );
         $mail_notification_task->execute($this->changeset, true);
     }
@@ -165,7 +173,8 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->mail_gateway_config,
             $mail_sender,
             $this->config_notification_assigned_to,
-            $this->custom_email_sender
+            $this->custom_email_sender,
+            ProvideEmailNotificationAttachmentStub::withoutAttachments(),
         );
         $mail_notification_task->execute($this->changeset, false);
     }
@@ -183,7 +192,8 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->mail_gateway_config,
             \Mockery::mock(MailSender::class),
             $this->config_notification_assigned_to,
-            $this->custom_email_sender
+            $this->custom_email_sender,
+            ProvideEmailNotificationAttachmentStub::withoutAttachments(),
         );
         $body_text              = $mail_notification_task->getBodyText(
             $this->changeset,
@@ -217,9 +227,10 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->mail_gateway_config,
             \Mockery::mock(MailSender::class),
             $this->config_notification_assigned_to,
-            $this->custom_email_sender
+            $this->custom_email_sender,
+            ProvideEmailNotificationAttachmentStub::withoutAttachments(),
         );
-        $res                    = $mail_notification_task->buildOneMessageForMultipleRecipients($this->changeset, ['user01' => false], true);
+        $res                    = $mail_notification_task->buildOneMessageForMultipleRecipients($this->changeset, ['user01' => false], true, $this->logger);
 
         self::assertNotEmpty($res);
     }
@@ -263,7 +274,8 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->mail_gateway_config,
             \Mockery::mock(MailSender::class),
             $this->config_notification_assigned_to,
-            $this->custom_email_sender
+            $this->custom_email_sender,
+            ProvideEmailNotificationAttachmentStub::withoutAttachments(),
         );
 
         $recipients = [
@@ -272,7 +284,7 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
             'user03' => false,
         ];
 
-        $messages = $mail_notification_task->buildAMessagePerRecipient($this->changeset, $recipients, true);
+        $messages = $mail_notification_task->buildAMessagePerRecipient($this->changeset, $recipients, true, $this->logger);
 
         $this->assertCount(3, $messages);
     }
