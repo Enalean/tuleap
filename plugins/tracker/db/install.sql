@@ -949,6 +949,11 @@ CREATE TABLE IF NOT EXISTS plugin_tracker_private_comment_disabled_tracker(
     tracker_id INT(11) PRIMARY KEY
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS plugin_tracker_calendar_event_config(
+    tracker_id INT(11) PRIMARY KEY,
+    should_send_event_in_notification BOOL NOT NULL
+) ENGINE=InnoDB;
+
 CREATE TABLE IF NOT EXISTS plugin_tracker_private_comment_permission(
     comment_id INT(11) NOT NULL,
     ugroup_id int(11) NOT NULL,

@@ -46,6 +46,7 @@ class NotificationSettingsDuplicatorTest extends TestCase
             new ConfigNotificationAssignedToDao(),
             new ConfigNotificationEmailCustomSenderDao(),
             new DateReminderDao(),
+            new CalendarEventConfigDao(),
         );
     }
 
@@ -59,6 +60,7 @@ class NotificationSettingsDuplicatorTest extends TestCase
         $db->query('TRUNCATE TABLE plugin_tracker_notification_email_custom_sender_format');
         $db->query('TRUNCATE TABLE tracker_reminder');
         $db->query('TRUNCATE TABLE tracker_reminder_notified_roles');
+        $db->query('TRUNCATE TABLE plugin_tracker_calendar_event_config');
         $db->query('SET FOREIGN_KEY_CHECKS=1'); // because plugin_tracker_notification_email_custom_sender_format has a constraint we don't want to resolve in tests
     }
 
@@ -390,5 +392,29 @@ class NotificationSettingsDuplicatorTest extends TestCase
 
         $role_rows = $db->column('SELECT role_id FROM tracker_reminder_notified_roles WHERE reminder_id = ?', [$rows[0]['reminder_id']]);
         self::assertEqualsCanonicalizing([\Tracker_DateReminder_Role_Assignee::IDENTIFIER, \Tracker_DateReminder_Role_Submitter::IDENTIFIER], $role_rows);
+    }
+
+    public function testDuplicationOfCalendarEventConfig(): void
+    {
+        $template_tracker_id = 1;
+        $new_tracker_id      = 2;
+
+        $db = DBFactory::getMainTuleapDBConnection()->getDB();
+        $db->insert(
+            'plugin_tracker_calendar_event_config',
+            ['tracker_id' => $template_tracker_id, 'should_send_event_in_notification' => 1]
+        );
+
+        $this->duplicator->duplicate(
+            $template_tracker_id,
+            $new_tracker_id,
+            TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping([]),
+            [],
+        );
+
+        self::assertSame(
+            1,
+            $db->cell('SELECT should_send_event_in_notification FROM plugin_tracker_calendar_event_config WHERE tracker_id = ?', $new_tracker_id),
+        );
     }
 }
