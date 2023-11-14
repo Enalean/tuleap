@@ -21,12 +21,8 @@
 
 namespace Tuleap\Dashboard\Widget;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
 class WidgetReorderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var DashboardWidgetColumn[]
      */
@@ -80,38 +76,38 @@ class WidgetReorderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReordersWidgetsInSameColumn()
     {
-        $dao              = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
+        $dao              = $this->createMock(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $remover          = new DashboardWidgetRemoverInList();
         $widget_reorder   = new DashboardWidgetReorder($dao, $remover);
         $widget_to_update = new DashboardWidget(1, 'image', 10, 1, 0, 0);
 
-        $dao->shouldReceive('updateColumnIdByWidgetId')->never();
-        $dao->shouldReceive('updateWidgetRankByWidgetId')->atLeast()->once();
+        $dao->expects(self::never())->method('updateColumnIdByWidgetId');
+        $dao->expects(self::atLeastOnce())->method('updateWidgetRankByWidgetId');
 
         $widget_reorder->reorderWidgets($this->line_one_columns[0], $this->line_one_columns[0], $widget_to_update, 1);
     }
 
     public function testItReordersWidgetsInNewColumn()
     {
-        $dao            = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
+        $dao            = $this->createMock(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $remover        = new DashboardWidgetRemoverInList();
         $widget_reorder = new DashboardWidgetReorder($dao, $remover);
 
-        $dao->shouldReceive('searchAllWidgetByColumnId')->andReturns(\TestHelper::arrayToDar([
-            'id'         => 3,
-            'colum_id'   => 1,
-            'rank'       => 0,
-            'name'       => 'image',
+        $dao->method('searchAllWidgetByColumnId')->willReturn(\TestHelper::arrayToDar([
+            'id' => 3,
+            'colum_id' => 1,
+            'rank' => 0,
+            'name' => 'image',
             'content_id' => 12,
         ]));
-        $dao->shouldReceive('searchAllColumnsByLineIdOrderedByRank')->andReturns(\TestHelper::arrayToDar([
-            'id'      => 1,
+        $dao->method('searchAllColumnsByLineIdOrderedByRank')->willReturn(\TestHelper::arrayToDar([
+            'id' => 1,
             'line_id' => 1,
-            'rank'    => 0,
+            'rank' => 0,
         ]));
 
-        $dao->shouldReceive('updateColumnIdByWidgetId')->once();
-        $dao->shouldReceive('updateWidgetRankByWidgetId')->atLeast()->once();
+        $dao->expects(self::once())->method('updateColumnIdByWidgetId');
+        $dao->expects(self::atLeastOnce())->method('updateWidgetRankByWidgetId');
 
         $widget_reorder->reorderWidgets($this->line_one_columns[1], $this->line_one_columns[0], $this->widget_one, 2);
     }
