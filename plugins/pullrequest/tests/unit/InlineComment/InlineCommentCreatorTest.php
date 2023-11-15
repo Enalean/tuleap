@@ -22,119 +22,108 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\InlineComment;
 
-use Psr\EventDispatcher\EventDispatcherInterface;
-use ReferenceManager;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\PullRequest\Comment\ParentCommentSearcher;
+use Tuleap\PullRequest\Comment\ThreadColorUpdater;
 use Tuleap\PullRequest\Comment\ThreadCommentDao;
 use Tuleap\PullRequest\InlineComment\Notification\PullRequestNewInlineCommentEvent;
-use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\Notification\EventSubjectToNotification;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorAssigner;
 use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorRetriever;
 use Tuleap\PullRequest\REST\v1\PullRequestInlineCommentPOSTRepresentation;
+use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
+use Tuleap\PullRequest\Tests\Stub\CreateInlineCommentStub;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\EventDispatcherStub;
+use Tuleap\Test\Stubs\ExtractAndSaveCrossReferencesStub;
 
 final class InlineCommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testNewInlineCommentCanBeCreatedInTextFormat(): void
+    private const INSERTED_ID = 47;
+    private PullRequestInlineCommentPOSTRepresentation $comment_data;
+    private CreateInlineCommentStub $comment_saver;
+    private ExtractAndSaveCrossReferencesStub $reference_manager;
+    private ThreadCommentDao & Stub $thread_comment_dao;
+    private ParentCommentSearcher & Stub $parent_comment_searcher;
+    private ThreadColorUpdater & MockObject $thread_color_updater;
+    private EventDispatcherStub $event_dispatcher;
+
+    protected function setUp(): void
     {
-        $dao                     = $this->createMock(Dao::class);
-        $reference_manager       = $this->createMock(ReferenceManager::class);
-        $event_dispatcher        = $this->createMock(EventDispatcherInterface::class);
-        $thread_comment_dao      = $this->createMock(ThreadCommentDao::class);
-        $parent_comment_searcher = $this->createMock(ParentCommentSearcher::class);
-        $thread_comment_dao->method('searchAllThreadByPullRequestId')->willReturn([]);
-        $dao->method('searchByCommentID')->willReturn(['parent_id' => 0, "id" => 1, 'color' => ""]);
-        $parent_comment_searcher->method('searchByCommentID')->willReturn(['parent_id' => 0, "id" => 1, 'color' => ""]);
-        $color_retriever = new ThreadCommentColorRetriever($thread_comment_dao, $parent_comment_searcher);
-        $color_assigner  = new ThreadCommentColorAssigner($dao, $dao);
-
-        $creator = new InlineCommentCreator($dao, $reference_manager, $event_dispatcher, $color_retriever, $color_assigner);
-
-        $pull_request = $this->createMock(PullRequest::class);
-        $pull_request->method('getId')->willReturn(12);
-        $user = UserTestBuilder::anActiveUser()->build();
-
-        $representation = PullRequestInlineCommentPOSTRepresentation::build(
-            "stuff",
-            "/tmp",
+        $this->comment_data = PullRequestInlineCommentPOSTRepresentation::build(
+            'stuff',
+            '/tmp',
             10,
-            "2",
+            'right',
             1,
             TimelineComment::FORMAT_TEXT
         );
 
-        $inserted_id = 47;
+        $this->comment_saver           = CreateInlineCommentStub::withInsertedId(self::INSERTED_ID);
+        $this->reference_manager       = ExtractAndSaveCrossReferencesStub::withCallCount();
+        $this->event_dispatcher        = EventDispatcherStub::withIdentityCallback();
+        $this->thread_comment_dao      = $this->createStub(ThreadCommentDao::class);
+        $this->parent_comment_searcher = $this->createStub(ParentCommentSearcher::class);
+        $this->thread_color_updater    = $this->createMock(ThreadColorUpdater::class);
+    }
 
-        $dao->expects(self::once())->method('insert')->willReturn($inserted_id);
-        $dao->expects(self::once())->method('setThreadColor');
-        $reference_manager->expects(self::once())->method('extractCrossRef');
-        $event_dispatcher->expects(self::once())->method('dispatch')->with(self::isInstanceOf(PullRequestNewInlineCommentEvent::class));
+    private function create(): InsertedInlineComment
+    {
+        $pull_request   = PullRequestTestBuilder::aPullRequestInReview()->build();
+        $comment_author = UserTestBuilder::buildWithDefaults();
+        $post_date      = new \DateTimeImmutable('@1700000000');
+        $project_id     = 127;
 
-        $inline_comment = $creator->insert(
-            $pull_request,
-            $user,
-            $representation,
-            10,
-            1001,
+        $creator = new InlineCommentCreator(
+            $this->comment_saver,
+            $this->reference_manager,
+            $this->event_dispatcher,
+            new ThreadCommentColorRetriever($this->thread_comment_dao, $this->parent_comment_searcher),
+            new ThreadCommentColorAssigner($this->parent_comment_searcher, $this->thread_color_updater)
         );
-        self::assertEquals(InsertedInlineComment::build($inserted_id, "graffiti-yellow"), $inline_comment);
+        return $creator->insert($pull_request, $comment_author, $this->comment_data, $post_date, $project_id);
+    }
+
+    public function testNewInlineCommentCanBeCreatedInTextFormat(): void
+    {
+        $this->thread_comment_dao->method('searchAllThreadByPullRequestId')->willReturn([]);
+        $this->parent_comment_searcher->method('searchByCommentID')->willReturn(
+            ['parent_id' => 0, 'id' => 1, 'color' => '']
+        );
+        $this->thread_color_updater->expects(self::once())->method('setThreadColor');
+
+        $this->event_dispatcher = EventDispatcherStub::withCallback(static function (EventSubjectToNotification $event) {
+            self::assertInstanceOf(PullRequestNewInlineCommentEvent::class, $event);
+            return $event;
+        });
+
+        $inline_comment = $this->create();
+        self::assertEquals(InsertedInlineComment::build(self::INSERTED_ID, 'graffiti-yellow'), $inline_comment);
+        self::assertSame(1, $this->reference_manager->getCallCount());
     }
 
     public function testWhenFormatIsNotDefinedThenDefaultCommentFormatIsMarkdown(): void
     {
-        $dao                     = $this->createMock(Dao::class);
-        $reference_manager       = $this->createMock(ReferenceManager::class);
-        $event_dispatcher        = $this->createMock(EventDispatcherInterface::class);
-        $thread_comment_dao      = $this->createMock(ThreadCommentDao::class);
-        $parent_comment_searcher = $this->createMock(ParentCommentSearcher::class);
-        $thread_comment_dao->method('searchAllThreadByPullRequestId')->willReturn([]);
-        $dao->method('searchByCommentID')->willReturn(['parent_id' => 0, "id" => 1, 'color' => ""]);
-        $parent_comment_searcher->method('searchByCommentID')->willReturn(['parent_id' => 0, "id" => 1, 'color' => ""]);
-        $color_retriever = new ThreadCommentColorRetriever($thread_comment_dao, $parent_comment_searcher);
-        $color_assigner  = new ThreadCommentColorAssigner($dao, $dao);
+        $this->thread_comment_dao->method('searchAllThreadByPullRequestId')->willReturn([]);
+        $this->parent_comment_searcher->method('searchByCommentID')->willReturn(
+            ['parent_id' => 0, 'id' => 1, 'color' => '']
+        );
+        $this->thread_color_updater->expects(self::once())->method('setThreadColor');
 
-        $creator = new InlineCommentCreator($dao, $reference_manager, $event_dispatcher, $color_retriever, $color_assigner);
-
-        $pull_request    = $this->createMock(PullRequest::class);
-        $pull_request_id = 12;
-        $pull_request->method('getId')->willReturn($pull_request_id);
-        $user = UserTestBuilder::anActiveUser()->build();
-
-        $representation = PullRequestInlineCommentPOSTRepresentation::build(
-            "stuff",
-            "/tmp",
+        $this->comment_data = PullRequestInlineCommentPOSTRepresentation::build(
+            'stuff',
+            '/tmp',
             10,
-            "2",
+            'right',
             1,
-            ""
+            ''
         );
 
-        $inserted_id = 47;
-        $post_date   = 10;
+        $inline_comment = $this->create();
 
-        $dao->expects(self::once())->method('insert')->with(
-            $pull_request_id,
-            $user->getId(),
-            $representation->file_path,
-            $post_date,
-            $representation->unidiff_offset,
-            $representation->content,
-            $representation->position,
-            (int) $representation->parent_id,
-            TimelineComment::FORMAT_MARKDOWN
-        )->willReturn($inserted_id);
-        $dao->expects(self::once())->method('setThreadColor');
-        $reference_manager->expects(self::once())->method('extractCrossRef');
-        $event_dispatcher->expects(self::once())->method('dispatch')->with(self::isInstanceOf(PullRequestNewInlineCommentEvent::class));
-
-        $inline_comment = $creator->insert(
-            $pull_request,
-            $user,
-            $representation,
-            $post_date,
-            1001,
-        );
-        self::assertEquals(InsertedInlineComment::build($inserted_id, "graffiti-yellow"), $inline_comment);
+        self::assertEquals(InsertedInlineComment::build(self::INSERTED_ID, 'graffiti-yellow'), $inline_comment);
+        self::assertSame(TimelineComment::FORMAT_MARKDOWN, $this->comment_saver->getLastArgument()?->format);
     }
 }
