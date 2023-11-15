@@ -35,13 +35,27 @@ final class EmailNotificationAttachmentProvider implements ProvideEmailNotificat
     /**
      * @return MailAttachment[]
      */
-    public function getAttachments(\Tracker_Artifact_Changeset $changeset, \PFUser $recipient, \Psr\Log\LoggerInterface $logger): array
-    {
+    public function getAttachments(
+        \Tracker_Artifact_Changeset $changeset,
+        \PFUser $recipient,
+        \Psr\Log\LoggerInterface $logger,
+        bool $should_check_permissions,
+    ): array {
         if ($this->config->shouldSendEventInNotification($changeset->getTracker()->getId())) {
             $logger->debug('Tracker is configured to send calendar events alongside notification');
             $title_field = Tracker_Semantic_Title::load($changeset->getTracker())->getField();
             if (! $title_field) {
                 $logger->debug('The tracker does not have title semantic, we cannot build calendar events');
+                return [];
+            }
+            if ($should_check_permissions && ! $title_field->userCanRead($recipient)) {
+                $logger->debug(
+                    sprintf(
+                        'The user #%s (%s) cannot read the title, we cannot build calendar events',
+                        $recipient->getId(),
+                        $recipient->getEmail(),
+                    )
+                );
                 return [];
             }
 

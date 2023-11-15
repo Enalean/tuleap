@@ -29,5 +29,10 @@ interface ProvideEmailNotificationAttachment
     /**
      * @return MailAttachment[]
      */
-    public function getAttachments(\Tracker_Artifact_Changeset $changeset, \PFUser $recipient, \Psr\Log\LoggerInterface $logger): array;
+    public function getAttachments(
+        \Tracker_Artifact_Changeset $changeset,
+        \PFUser $recipient,
+        \Psr\Log\LoggerInterface $logger,
+        bool $should_check_permissions,
+    ): array;
 }

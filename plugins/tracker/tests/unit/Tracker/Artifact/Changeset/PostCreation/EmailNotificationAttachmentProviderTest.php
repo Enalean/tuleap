@@ -54,19 +54,19 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
         Tracker_Semantic_Title::clearInstances();
     }
 
-    public function testNoAttachentsWhenTrackerIsNotConfiguredTo(): void
+    public function testNoAttachmentsWhenTrackerIsNotConfiguredTo(): void
     {
         $provider = new EmailNotificationAttachmentProvider(
             CheckEventShouldBeSentInNotificationStub::withoutEventInNotification(),
         );
 
-        $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger);
+        $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, true);
 
         self::assertEmpty($attachements);
         self::assertFalse($this->logger->hasDebugRecords());
     }
 
-    public function testNoAttachentsWhenTrackerDoesNotHaveTitleSemantic(): void
+    public function testNoAttachmentsWhenTrackerDoesNotHaveTitleSemantic(): void
     {
         $provider = new EmailNotificationAttachmentProvider(
             CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
@@ -74,10 +74,80 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
 
         $this->semantic_title->method('getField')->willReturn(null);
 
-        $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger);
+        $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, true);
 
         self::assertEmpty($attachements);
-        self::assertTrue($this->logger->hasDebugThatContains('Tracker is configured to send calendar events alongside notification'));
-        self::assertTrue($this->logger->hasDebugThatContains('The tracker does not have title semantic, we cannot build calendar events'));
+        $this->assertDebugLogEquals(
+            'Tracker is configured to send calendar events alongside notification',
+            'The tracker does not have title semantic, we cannot build calendar events',
+        );
+    }
+
+    public function testNoAttachmentsWhenTitleIsNotReadable(): void
+    {
+        $provider = new EmailNotificationAttachmentProvider(
+            CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
+        );
+
+        $title_field = $this->createMock(\Tracker_FormElement_Field_Text::class);
+        $title_field->method('userCanRead')->willReturn(false);
+        $this->semantic_title->method('getField')->willReturn($title_field);
+
+        $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, true);
+
+        self::assertEmpty($attachements);
+        $this->assertDebugLogEquals(
+            'Tracker is configured to send calendar events alongside notification',
+            'The user #110 (john@example.com) cannot read the title, we cannot build calendar events',
+        );
+    }
+
+    public function testNoAttachmentsWhenTitleIsNotReadableButWeBypassPermissionsBecauseFeatureIsNotImplementedYet(): void
+    {
+        $provider = new EmailNotificationAttachmentProvider(
+            CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
+        );
+
+        $title_field = $this->createMock(\Tracker_FormElement_Field_Text::class);
+        $title_field->method('userCanRead')->willReturn(false);
+        $this->semantic_title->method('getField')->willReturn($title_field);
+
+        $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, false);
+
+        self::assertEmpty($attachements);
+        $this->assertDebugLogEquals(
+            'Tracker is configured to send calendar events alongside notification',
+            'No calendar event for this changeset',
+        );
+    }
+
+    public function testNoAttachmentsWhenEverythingIsAwesomeBecauseFeatureIsNotImplementedYet(): void
+    {
+        $provider = new EmailNotificationAttachmentProvider(
+            CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
+        );
+
+        $title_field = $this->createMock(\Tracker_FormElement_Field_Text::class);
+        $title_field->method('userCanRead')->willReturn(true);
+        $this->semantic_title->method('getField')->willReturn($title_field);
+
+        $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, true);
+
+        self::assertEmpty($attachements);
+        $this->assertDebugLogEquals(
+            'Tracker is configured to send calendar events alongside notification',
+            'No calendar event for this changeset',
+        );
+    }
+
+    private function assertDebugLogEquals(string $message, string ...$other_messages): void
+    {
+        self::assertEquals(
+            array_map(
+                static fn(string $message) => ['level' => 'debug', 'message' => $message, 'context' => []],
+                [$message, ...$other_messages]
+            ),
+            $this->logger->records,
+        );
     }
 }
