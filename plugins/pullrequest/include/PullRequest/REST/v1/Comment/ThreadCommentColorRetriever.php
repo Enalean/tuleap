@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\REST\v1\Comment;
 
 use Tuleap\PullRequest\Comment\ParentCommentSearcher;
-use Tuleap\PullRequest\Comment\ThreadCommentDao;
+use Tuleap\PullRequest\Comment\CountThreads;
 
 class ThreadCommentColorRetriever
 {
-    public function __construct(private ThreadCommentDao $comment_dao, private ParentCommentSearcher $dao)
+    public function __construct(private CountThreads $comment_dao, private ParentCommentSearcher $dao)
     {
     }
 
@@ -42,13 +42,16 @@ class ThreadCommentColorRetriever
             return $parent_comment['color'];
         }
 
-        $all_comments = $this->comment_dao->searchAllThreadByPullRequestId($id);
-        return $this->getCorrespondingTlpColor($all_comments);
+        $number_of_threads = $this->comment_dao->countAllThreadsOfPullRequest($id);
+        return $this->getCorrespondingTlpColor($number_of_threads);
     }
 
-    private function getCorrespondingTlpColor(array $all_comments): string
+    /**
+     * @psalm-param int<0, max> $number_of_threads
+     */
+    private function getCorrespondingTlpColor(int $number_of_threads): string
     {
-        $count = count($all_comments);
+        $count = $number_of_threads;
         if ($count >= count(ThreadColors::TLP_COLORS)) {
             $count %= count(ThreadColors::TLP_COLORS);
         }

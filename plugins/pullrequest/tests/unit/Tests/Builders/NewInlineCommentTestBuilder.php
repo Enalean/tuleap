@@ -69,6 +69,12 @@ final class NewInlineCommentTestBuilder
         return $this;
     }
 
+    public function childOf(int $parent_comment_id): self
+    {
+        $this->parent_id = $parent_comment_id;
+        return $this;
+    }
+
     public function build(): NewInlineComment
     {
         return new NewInlineComment(

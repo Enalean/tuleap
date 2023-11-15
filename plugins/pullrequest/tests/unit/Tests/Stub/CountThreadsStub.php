@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2022 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,10 +20,27 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\PullRequest\Comment;
+namespace Tuleap\PullRequest\Tests\Stub;
 
-interface ParentCommentSearcher
+final class CountThreadsStub implements \Tuleap\PullRequest\Comment\CountThreads
 {
-    /** @psalm-return null|array{id: int, parent_id: int, color: string, ...} */
-    public function searchByCommentID(int $inline_comment_id): ?array;
+    /**
+     * @psalm-param int<0, max> $number_of_threads
+     */
+    private function __construct(private readonly int $number_of_threads)
+    {
+    }
+
+    /**
+     * @psalm-param int<0, max> $number_of_threads
+     */
+    public static function withNumberOfThreads(int $number_of_threads): self
+    {
+        return new self($number_of_threads);
+    }
+
+    public function countAllThreadsOfPullRequest(int $id): int
+    {
+        return $this->number_of_threads;
+    }
 }

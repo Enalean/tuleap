@@ -111,6 +111,7 @@ use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorAssigner;
 use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorRetriever;
 use Tuleap\PullRequest\REST\v1\Info\PullRequestInfoUpdater;
 use Tuleap\PullRequest\REST\v1\InlineComment\InlineCommentRepresentationBuilder;
+use Tuleap\PullRequest\REST\v1\InlineComment\POSTHandler;
 use Tuleap\PullRequest\REST\v1\Permissions\PullRequestIsMergeableChecker;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewerRepresentationInformationExtractor;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewersPUTRepresentation;
@@ -149,7 +150,6 @@ class PullRequestsResource extends AuthenticatedResource
     private PullRequestCreator $pull_request_creator;
     private EventManager $event_manager;
     private LoggerInterface $logger;
-    private InlineCommentCreator $inline_comment_creator;
     private AccessControlVerifier $access_control_verifier;
     private GitPlugin $git_plugin;
     private GitCommitRepresentationBuilder $commit_representation_builder;
@@ -176,25 +176,6 @@ class PullRequestsResource extends AuthenticatedResource
 
         $this->user_manager = UserManager::instance();
 
-        $inline_comment_dao = new InlineCommentDao();
-        $timeline_dao       = new TimelineDao();
-        $timeline_factory   = new TimelineFactory(
-            $comment_dao,
-            $inline_comment_dao,
-            $timeline_dao,
-            new ReviewerChangeRetriever(
-                new ReviewerChangeDAO(),
-                $this->pull_request_factory,
-                $this->user_manager,
-            )
-        );
-
-        $purifier            = \Codendi_HTMLPurifier::instance();
-        $content_interpretor = CommonMarkInterpreter::build(
-            $purifier,
-            new EnhancedCodeBlockExtension(new CodeBlockFeatures())
-        );
-
         $this->event_manager        = EventManager::instance();
         $pull_request_merger        = new PullRequestMerger(
             new MergeSettingRetriever(new MergeSettingDAO())
@@ -215,11 +196,6 @@ class PullRequestsResource extends AuthenticatedResource
             new TimelineEventCreator(new TimelineDao()),
             $event_dispatcher
         );
-
-        $dao                          = new \Tuleap\PullRequest\InlineComment\Dao();
-        $color_retriever              = new ThreadCommentColorRetriever(new ThreadCommentDao(), $dao);
-        $color_assigner               = new ThreadCommentColorAssigner($dao, $dao);
-        $this->inline_comment_creator = new InlineCommentCreator($dao, $reference_manager, $event_dispatcher, $color_retriever, $color_assigner);
 
         $this->access_control_verifier = new AccessControlVerifier(
             new FineGrainedRetriever(new FineGrainedDao()),
@@ -257,9 +233,9 @@ class PullRequestsResource extends AuthenticatedResource
     /**
      * @url OPTIONS
      */
-    public function options()
+    public function options(): void
     {
-        return $this->sendAllowHeadersForPullRequests();
+        $this->sendAllowHeadersForPullRequests();
     }
 
     /**
@@ -676,7 +652,6 @@ class PullRequestsResource extends AuthenticatedResource
         $user                            = $this->user_manager->getCurrentUser();
         $pull_request_with_git_reference = $this->getPullRequestWithGitReferenceRetriever()->getAccessiblePullRequestWithGitReferenceForCurrentUser($id, $user);
         $pull_request                    = $pull_request_with_git_reference->getPullRequest();
-        $git_repository_source           = $this->getRepository($pull_request->getRepositoryId());
         $git_repository_destination      = $this->getRepository($pull_request->getRepoDestId());
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
@@ -703,37 +678,29 @@ class PullRequestsResource extends AuthenticatedResource
 
         $post_date = new \DateTimeImmutable();
 
-        $inserted_inline_comment = $this->inline_comment_creator->insert(
-            $pull_request,
-            $user,
-            $comment_data,
-            $post_date,
-            $git_repository_source->getProjectId()
+        $dao                 = new \Tuleap\PullRequest\InlineComment\Dao();
+        $color_retriever     = new ThreadCommentColorRetriever(new ThreadCommentDao(), $dao);
+        $color_assigner      = new ThreadCommentColorAssigner($dao, $dao);
+        $comment_creator     = new InlineCommentCreator(
+            $dao,
+            ReferenceManager::instance(),
+            PullRequestNotificationSupport::buildDispatcher($this->logger),
+            $color_retriever,
+            $color_assigner
         );
-
-        $user_representation = MinimalUserRepresentation::build($this->user_manager->getUserById($user->getId()));
-
         $purifier            = \Codendi_HTMLPurifier::instance();
-        $content_interpretor = CommonMarkInterpreter::build(
+        $content_interpreter = CommonMarkInterpreter::build(
             $purifier,
             new EnhancedCodeBlockExtension(new CodeBlockFeatures())
         );
 
-        return PullRequestInlineCommentRepresentation::build(
+        $handler = new POSTHandler(
+            $this->git_repository_factory,
+            $comment_creator,
             $purifier,
-            $content_interpretor,
-            $comment_data->unidiff_offset,
-            $user_representation,
-            $post_date->getTimestamp(),
-            $comment_data->content,
-            (int) $git_repository_source->getProjectId(),
-            $comment_data->position,
-            (int) $comment_data->parent_id,
-            $inserted_inline_comment->id,
-            $comment_data->file_path,
-            $inserted_inline_comment->color,
-            $comment_data->format ?? ""
+            $content_interpreter,
         );
+        return $handler->handle($comment_data, $user, $post_date, $pull_request);
     }
 
     /**
