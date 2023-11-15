@@ -23,7 +23,6 @@ namespace Tuleap\AgileDashboard\FormElement\SystemEvent;
 use DateTime;
 use Psr\Log\LoggerInterface;
 use SystemEvent;
-use TimePeriodWithoutWeekEnd;
 use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCalculator;
@@ -32,6 +31,7 @@ use Tuleap\AgileDashboard\FormElement\BurnupCacheDateRetriever;
 use Tuleap\AgileDashboard\FormElement\BurnupCalculator;
 use Tuleap\AgileDashboard\FormElement\BurnupDataDAO;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 final class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsIgnoreLine
@@ -126,13 +126,13 @@ final class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsI
 
         $burnup_period = null;
         if (isset($burnup_information['end_date'])) {
-            $burnup_period = TimePeriodWithoutWeekEnd::buildFromEndDate(
+            $burnup_period = DatePeriodWithoutWeekEnd::buildFromEndDate(
                 $burnup_information['start_date'],
                 $burnup_information['end_date'],
                 $this->logger
             );
         } elseif (isset($burnup_information['duration'])) {
-            $burnup_period = TimePeriodWithoutWeekEnd::buildFromDuration(
+            $burnup_period = DatePeriodWithoutWeekEnd::buildFromDuration(
                 $burnup_information['start_date'],
                 $burnup_information['duration']
             );

@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
 use Psr\Log\LoggerInterface;
-use TimePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\SemanticTimeframeWithDurationRepresentation;
 
@@ -133,7 +133,7 @@ class TimeframeWithDuration implements IComputeTimeframes
         return null;
     }
 
-    public function buildTimePeriodWithoutWeekendForArtifactForREST(Artifact $artifact, \PFUser $user, LoggerInterface $logger): TimePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForArtifactForREST(Artifact $artifact, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
     {
         try {
             $start_date = TimeframeArtifactFieldsValueRetriever::getTimestamp($this->start_date_field, $user, $artifact);
@@ -147,10 +147,10 @@ class TimeframeWithDuration implements IComputeTimeframes
             $duration = null;
         }
 
-        return TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        return DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
     }
 
-    public function buildTimePeriodWithoutWeekendForArtifact(Artifact $artifact, \PFUser $user, LoggerInterface $logger): TimePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForArtifact(Artifact $artifact, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
     {
         try {
             $start_date = TimeframeArtifactFieldsValueRetriever::getTimestamp($this->start_date_field, $user, $artifact);
@@ -164,13 +164,13 @@ class TimeframeWithDuration implements IComputeTimeframes
             $duration = 0;
         }
 
-        return TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        return DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
     }
 
     /**
      * @throws \Tracker_FormElement_Chart_Field_Exception
      */
-    public function buildTimePeriodWithoutWeekendForArtifactChartRendering(Artifact $artifact, \PFUser $user, LoggerInterface $logger): TimePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForArtifactChartRendering(Artifact $artifact, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
     {
         try {
             try {
@@ -220,7 +220,7 @@ class TimeframeWithDuration implements IComputeTimeframes
             );
         }
 
-        return TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        return DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
     }
 
     public function getTrackerFromWhichTimeframeIsImplied(): ?\Tracker

@@ -23,8 +23,8 @@ namespace Tuleap\Tracker\FormElement\Field\Burndown;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use TimePeriodWithoutWeekEnd;
 use Tracker_Chart_Data_Burndown;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
@@ -71,13 +71,13 @@ class BurndownRemainingEffortAdderForRESTTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItDoesNotDoAnyAdditionWhenBurndownDoesNotHaveARemainingEffortField()
     {
-        $time_period = Mockery::mock(TimePeriodWithoutWeekEnd::class);
+        $date_period = Mockery::mock(DatePeriodWithoutWeekEnd::class);
         $capacity    = 10;
 
-        $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
+        $burndown_data = new Tracker_Chart_Data_Burndown($date_period, $capacity);
 
         $this->field_retriever->shouldReceive('getBurndownRemainingEffortField')->andReturn(null);
-        $time_period->shouldReceive('getStartDate')->never();
+        $date_period->shouldReceive('getStartDate')->never();
 
         $this->adder->addRemainingEffortDataForREST($burndown_data, $this->artifact, $this->user);
 
@@ -89,9 +89,9 @@ class BurndownRemainingEffortAdderForRESTTest extends \Tuleap\Test\PHPUnit\TestC
         $date_in_future = strtotime('+1 month');
         $capacity       = 5;
         $duration       = 20;
-        $time_period    = TimePeriodWithoutWeekEnd::buildFromDuration($date_in_future, $duration);
+        $date_period    = DatePeriodWithoutWeekEnd::buildFromDuration($date_in_future, $duration);
 
-        $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
+        $burndown_data = new Tracker_Chart_Data_Burndown($date_period, $capacity);
 
         $remaining_effort_field = Mockery::mock(\Tracker_FormElement_Field_Computed::class);
         $remaining_effort_field->shouldReceive('getId')->andReturn(1);
@@ -112,8 +112,8 @@ class BurndownRemainingEffortAdderForRESTTest extends \Tuleap\Test\PHPUnit\TestC
         $old_start_date         = strtotime('-3 month');
         $remaining_effort_field = Mockery::mock(\Tracker_FormElement_Field_Computed::class);
 
-        $time_period   = TimePeriodWithoutWeekEnd::buildFromDuration($old_start_date, 5);
-        $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $duration);
+        $date_period   = DatePeriodWithoutWeekEnd::buildFromDuration($old_start_date, 5);
+        $burndown_data = new Tracker_Chart_Data_Burndown($date_period, $duration);
 
         $remaining_effort_field->shouldReceive('getId')->andReturn($field_id);
 
@@ -136,8 +136,8 @@ class BurndownRemainingEffortAdderForRESTTest extends \Tuleap\Test\PHPUnit\TestC
         $old_start_date         = strtotime('-3 month');
         $remaining_effort_field = Mockery::mock(\Tracker_FormElement_Field_Computed::class);
 
-        $time_period   = TimePeriodWithoutWeekEnd::buildFromDuration($old_start_date, 5);
-        $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $duration);
+        $date_period   = DatePeriodWithoutWeekEnd::buildFromDuration($old_start_date, 5);
+        $burndown_data = new Tracker_Chart_Data_Burndown($date_period, $duration);
 
         $remaining_effort_field->shouldReceive('getId')->andReturn($field_id);
 
@@ -203,8 +203,8 @@ class BurndownRemainingEffortAdderForRESTTest extends \Tuleap\Test\PHPUnit\TestC
         $recent_start_date      = strtotime('-3 days');
         $remaining_effort_field = Mockery::mock(\Tracker_FormElement_Field_Computed::class);
 
-        $time_period   = TimePeriodWithoutWeekEnd::buildFromDuration($recent_start_date, 5);
-        $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $duration);
+        $date_period   = DatePeriodWithoutWeekEnd::buildFromDuration($recent_start_date, 5);
+        $burndown_data = new Tracker_Chart_Data_Burndown($date_period, $duration);
 
         $this->field_retriever->shouldReceive('getBurndownRemainingEffortField')->andReturn($remaining_effort_field);
         $remaining_effort_field->shouldReceive('getId')->andReturn($field_id);

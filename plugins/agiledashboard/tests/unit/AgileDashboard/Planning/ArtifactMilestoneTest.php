@@ -29,6 +29,7 @@ use Planning_ArtifactMilestone;
 use Project;
 use Tracker_FormElement_Field_Burndown;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Tracker\Artifact\Artifact;
 
 require_once __DIR__ . '/../../bootstrap.php';
@@ -223,24 +224,24 @@ final class ArtifactMilestoneTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testEndDateIsNullIfNoStartDate()
     {
-        $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration(0, 10);
-        $this->milestone->setTimePeriod($time_period);
+        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration(0, 10);
+        $this->milestone->setDatePeriod($date_period);
 
         $this->assertNull($this->milestone->getEndDate());
     }
 
     public function testEndDateIsNullIfNoDuration()
     {
-        $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration(10, 0);
-        $this->milestone->setTimePeriod($time_period);
+        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration(10, 0);
+        $this->milestone->setDatePeriod($date_period);
 
         $this->assertNull($this->milestone->getEndDate());
     }
 
     public function testEndDateIsNullIfNegativeDuration()
     {
-        $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration(10, -2);
-        $this->milestone->setTimePeriod($time_period);
+        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration(10, -2);
+        $this->milestone->setDatePeriod($date_period);
 
         $this->assertNull($this->milestone->getEndDate());
     }
@@ -250,8 +251,8 @@ final class ArtifactMilestoneTest extends \Tuleap\Test\PHPUnit\TestCase
         $user           = Mockery::mock(PFUser::class);
         $burndown_field = Mockery::mock(Tracker_FormElement_Field_Burndown::class);
 
-        $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration(10, 10);
-        $this->milestone->setTimePeriod($time_period);
+        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration(10, 10);
+        $this->milestone->setDatePeriod($date_period);
 
         $this->artifact->shouldReceive('getABurndownField')
             ->times(2)
@@ -259,7 +260,7 @@ final class ArtifactMilestoneTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn($burndown_field);
 
         $burndown_field->shouldReceive('getBurndownData')
-            ->with($this->artifact, $user, $time_period)
+            ->with($this->artifact, $user, $date_period)
             ->once();
 
         $this->milestone->getBurndownData($user);

@@ -19,6 +19,7 @@
  */
 
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Tracker\Artifact\Artifact;
 
 /**
@@ -74,10 +75,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone
      */
     private $parent_milestones = [];
 
-    /**
-     * @var TimePeriodWithoutWeekEnd|null
-     */
-    private $time_period = null;
+    private ?DatePeriodWithoutWeekEnd $date_period = null;
 
     /**
      * The capacity of the milestone
@@ -258,8 +256,8 @@ class Planning_ArtifactMilestone implements Planning_Milestone
 
     public function getStartDate()
     {
-        if ($this->time_period !== null) {
-            return $this->time_period->getStartDate();
+        if ($this->date_period !== null) {
+            return $this->date_period->getStartDate();
         }
 
         return null;
@@ -275,8 +273,8 @@ class Planning_ArtifactMilestone implements Planning_Milestone
             return null;
         }
 
-        if ($this->time_period !== null) {
-            return (int) $this->time_period->getEndDate();
+        if ($this->date_period !== null) {
+            return (int) $this->date_period->getEndDate();
         }
 
         return null;
@@ -284,8 +282,8 @@ class Planning_ArtifactMilestone implements Planning_Milestone
 
     public function getDaysSinceStart()
     {
-        if ($this->time_period !== null) {
-            return $this->time_period->getNumberOfDaysSinceStart();
+        if ($this->date_period !== null) {
+            return $this->date_period->getNumberOfDaysSinceStart();
         }
 
         return null;
@@ -293,8 +291,8 @@ class Planning_ArtifactMilestone implements Planning_Milestone
 
     public function getDaysUntilEnd()
     {
-        if ($this->time_period !== null) {
-            return $this->time_period->getNumberOfDaysUntilEnd();
+        if ($this->date_period !== null) {
+            return $this->date_period->getNumberOfDaysUntilEnd();
         }
 
         return null;
@@ -347,8 +345,8 @@ class Planning_ArtifactMilestone implements Planning_Milestone
      */
     public function getDuration()
     {
-        if ($this->time_period !== null) {
-            return $this->time_period->getDuration();
+        if ($this->date_period !== null) {
+            return $this->date_period->getDuration();
         }
 
         return null;
@@ -405,7 +403,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone
             return null;
         }
 
-        if ($this->time_period === null) {
+        if ($this->date_period === null) {
             return null;
         }
 
@@ -415,12 +413,12 @@ class Planning_ArtifactMilestone implements Planning_Milestone
         return $burndown_field->getBurndownData(
             $milestone_artifact,
             $user,
-            $this->time_period
+            $this->date_period
         );
     }
 
-    public function setTimePeriod(TimePeriodWithoutWeekEnd $time_period)
+    public function setDatePeriod(DatePeriodWithoutWeekEnd $date_period): void
     {
-        $this->time_period = $time_period;
+        $this->date_period = $date_period;
     }
 }

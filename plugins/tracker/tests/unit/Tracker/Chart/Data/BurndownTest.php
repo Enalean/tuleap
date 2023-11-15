@@ -18,22 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 
 final class Tracker_Chart_Data_BurndownTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private $start_date;
-    private $time_period;
+    private $date_period;
 
     protected function setUp(): void
     {
         $this->start_date  = mktime(0, 0, 0, 7, 4, 2011);
-        $this->time_period = TimePeriodWithoutWeekEnd::buildFromDuration($this->start_date, 5);
+        $this->date_period = DatePeriodWithoutWeekEnd::buildFromDuration($this->start_date, 5);
     }
 
     public function testItAddsRemainingEffort(): void
     {
-        $time_period   = TimePeriodWithoutWeekEnd::buildFromDuration($this->start_date, 2);
-        $burndown_data = new Tracker_Chart_Data_Burndown($time_period);
+        $date_period   = DatePeriodWithoutWeekEnd::buildFromDuration($this->start_date, 2);
+        $burndown_data = new Tracker_Chart_Data_Burndown($date_period);
         $burndown_data->addEffortAt(0, 14);
         $burndown_data->addEffortAt(1, 13);
         $burndown_data->addEffortAt(2, 12);
@@ -43,7 +44,7 @@ final class Tracker_Chart_Data_BurndownTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItCompletesMissingRemainingEffortWithLastValue(): void
     {
-        $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period);
+        $burndown_data = new Tracker_Chart_Data_Burndown($this->date_period);
         $burndown_data->addEffortAt(0, 14);
 
         $this->assertEquals([14, null, null, null, null, null], $burndown_data->getRemainingEffort());
@@ -51,7 +52,7 @@ final class Tracker_Chart_Data_BurndownTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItComputesIdealBurndownWhenAddingRemainingEffort(): void
     {
-        $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period);
+        $burndown_data = new Tracker_Chart_Data_Burndown($this->date_period);
         $burndown_data->addEffortAt(0, 5);
 
         $this->assertEquals([5, 4, 3, 2, 1, 0], $burndown_data->getIdealEffort());
@@ -60,7 +61,7 @@ final class Tracker_Chart_Data_BurndownTest extends \Tuleap\Test\PHPUnit\TestCas
     public function testIestBurndownWillUseCapacityIfSet(): void
     {
         $capacity      = 100;
-        $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period, $capacity);
+        $burndown_data = new Tracker_Chart_Data_Burndown($this->date_period, $capacity);
 
         $this->assertEquals([100, 80, 60, 40, 20, 0], $burndown_data->getIdealEffort());
     }
@@ -68,7 +69,7 @@ final class Tracker_Chart_Data_BurndownTest extends \Tuleap\Test\PHPUnit\TestCas
     public function testIestBurndownWillGivePriorityToCapacity(): void
     {
         $capacity      = 100;
-        $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period, $capacity);
+        $burndown_data = new Tracker_Chart_Data_Burndown($this->date_period, $capacity);
         $burndown_data->addEffortAt(0, 5);
 
         $this->assertEquals([100, 80, 60, 40, 20, 0], $burndown_data->getIdealEffort());
@@ -77,7 +78,7 @@ final class Tracker_Chart_Data_BurndownTest extends \Tuleap\Test\PHPUnit\TestCas
     public function testIestBurndownWillIgnoreNullCapacity(): void
     {
         $capacity      = null;
-        $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period, $capacity);
+        $burndown_data = new Tracker_Chart_Data_Burndown($this->date_period, $capacity);
         $burndown_data->addEffortAt(0, 5);
 
         $this->assertEquals([5, 4, 3, 2, 1, 0], $burndown_data->getIdealEffort());
@@ -86,7 +87,7 @@ final class Tracker_Chart_Data_BurndownTest extends \Tuleap\Test\PHPUnit\TestCas
     public function testIestBurndownWillIgnoreZeroCapacity(): void
     {
         $capacity      = 0;
-        $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period, $capacity);
+        $burndown_data = new Tracker_Chart_Data_Burndown($this->date_period, $capacity);
         $burndown_data->addEffortAt(0, 5);
 
         $this->assertEquals([5, 4, 3, 2, 1, 0], $burndown_data->getIdealEffort());
@@ -95,7 +96,7 @@ final class Tracker_Chart_Data_BurndownTest extends \Tuleap\Test\PHPUnit\TestCas
     public function testItReturnsAnEmptyArrayWhenBurndownIsUnderCalculation(): void
     {
         $capacity      = 7;
-        $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period, $capacity);
+        $burndown_data = new Tracker_Chart_Data_Burndown($this->date_period, $capacity);
         $burndown_data->addEffortAt(0, 5);
         $burndown_data->addEffortAt(1, 4);
         $burndown_data->addEffortAt(2, 3);
@@ -115,7 +116,7 @@ final class Tracker_Chart_Data_BurndownTest extends \Tuleap\Test\PHPUnit\TestCas
     public function testItReturnsBurndownDataInJson(): void
     {
         $capacity      = 7;
-        $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period, $capacity);
+        $burndown_data = new Tracker_Chart_Data_Burndown($this->date_period, $capacity);
         $burndown_data->addEffortAt(0, 5);
         $burndown_data->addEffortAt(1, 4);
         $burndown_data->addEffortAt(2, 3);
@@ -133,7 +134,7 @@ final class Tracker_Chart_Data_BurndownTest extends \Tuleap\Test\PHPUnit\TestCas
     public function testItReturnsBurndownDataInJsonAndDealWithNullValues(): void
     {
         $capacity      = 7;
-        $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period, $capacity);
+        $burndown_data = new Tracker_Chart_Data_Burndown($this->date_period, $capacity);
         $burndown_data->addEffortAt(0, 5);
         $burndown_data->addEffortAt(1, 4);
         $burndown_data->addEffortAt(2, null);
@@ -150,15 +151,15 @@ final class Tracker_Chart_Data_BurndownTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItHasNoRemainingEffort(): void
     {
-        $time_period   = TimePeriodWithoutWeekEnd::buildFromDuration($this->start_date, 2);
-        $burndown_data = new Tracker_Chart_Data_Burndown($time_period);
+        $date_period   = DatePeriodWithoutWeekEnd::buildFromDuration($this->start_date, 2);
+        $burndown_data = new Tracker_Chart_Data_Burndown($date_period);
         $this->assertSame([null, null, null], $burndown_data->getRemainingEffort());
     }
 
     public function testItReturnsValidRemainingEffortWhenOnlyAddingNull(): void
     {
-        $time_period   = TimePeriodWithoutWeekEnd::buildFromDuration($this->start_date, 2);
-        $burndown_data = new Tracker_Chart_Data_Burndown($time_period);
+        $date_period   = DatePeriodWithoutWeekEnd::buildFromDuration($this->start_date, 2);
+        $burndown_data = new Tracker_Chart_Data_Burndown($date_period);
         $burndown_data->addEffortAt(0, null);
         $burndown_data->addEffortAt(1, null);
         $burndown_data->addEffortAt(2, null);
@@ -167,8 +168,8 @@ final class Tracker_Chart_Data_BurndownTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItHasNoIdealBurndown(): void
     {
-        $time_period   = TimePeriodWithoutWeekEnd::buildFromDuration($this->start_date, 2);
-        $burndown_data = new Tracker_Chart_Data_Burndown($time_period);
+        $date_period   = DatePeriodWithoutWeekEnd::buildFromDuration($this->start_date, 2);
+        $burndown_data = new Tracker_Chart_Data_Burndown($date_period);
         $this->assertSame([0, 0, 0], $burndown_data->getIdealEffort());
     }
 }

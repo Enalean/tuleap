@@ -22,6 +22,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-interface TimePeriod
+declare(strict_types=1);
+
+namespace Tuleap\Date;
+
+interface DatePeriod
 {
 }

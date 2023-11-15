@@ -22,8 +22,8 @@ namespace Tuleap\Tracker\FormElement\Field\Burndown;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
-use TimePeriodWithoutWeekEnd;
 use Tracker_Chart_Data_Burndown;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
@@ -66,7 +66,7 @@ class BurndownDataBuilderForLegacy
         $this->remaining_effort_adder = $remaining_effort_adder;
     }
 
-    public function build(Artifact $artifact, PFUser $user, TimePeriodWithoutWeekEnd $time_period)
+    public function build(Artifact $artifact, PFUser $user, DatePeriodWithoutWeekEnd $date_period)
     {
         $capacity      = $this->getCapacity($artifact, $user);
         $user_timezone = TimezoneRetriever::getUserTimezone($user);
@@ -74,7 +74,7 @@ class BurndownDataBuilderForLegacy
         $is_burndown_under_calculation = $this->getBurndownCalculationStatus(
             $artifact,
             $user,
-            $time_period,
+            $date_period,
             $capacity,
             $user_timezone
         );
@@ -82,7 +82,7 @@ class BurndownDataBuilderForLegacy
         $efforts = $this->addBurndownRemainingEffortDotsBasedOnServerTimezone(
             $artifact,
             $user,
-            $time_period,
+            $date_period,
             $capacity,
             $is_burndown_under_calculation
         );
@@ -109,7 +109,7 @@ class BurndownDataBuilderForLegacy
     private function getBurndownCalculationStatus(
         Artifact $artifact,
         PFUser $user,
-        TimePeriodWithoutWeekEnd $time_period,
+        DatePeriodWithoutWeekEnd $date_period,
         $capacity,
         $user_timezone,
     ) {
@@ -120,15 +120,15 @@ class BurndownDataBuilderForLegacy
         date_default_timezone_set($server_timezone);
 
         $this->logger->debug("Capacity: " . $capacity);
-        $this->logger->debug("Original start date: " . (string) $time_period->getStartDate());
-        $this->logger->debug("Duration: " . (string) $time_period->getDuration());
+        $this->logger->debug("Original start date: " . (string) $date_period->getStartDate());
+        $this->logger->debug("Duration: " . (string) $date_period->getDuration());
         $this->logger->debug("User Timezone: " . $user_timezone);
         $this->logger->debug("Server timezone: " . $server_timezone);
 
         return $this->cache_checker->isBurndownUnderCalculationBasedOnServerTimezone(
             $artifact,
             $user,
-            $time_period,
+            $date_period,
             $capacity
         );
     }
@@ -136,12 +136,12 @@ class BurndownDataBuilderForLegacy
     private function addBurndownRemainingEffortDotsBasedOnServerTimezone(
         Artifact $artifact,
         PFUser $user,
-        TimePeriodWithoutWeekEnd $time_period,
+        DatePeriodWithoutWeekEnd $date_period,
         $capacity,
         $is_burndown_under_calculation,
     ) {
-        $user_time_period   = $this->getTimePeriod($time_period);
-        $user_burndown_data = new Tracker_Chart_Data_Burndown($user_time_period, $capacity);
+        $user_date_period   = $this->getDatePeriod($date_period);
+        $user_burndown_data = new Tracker_Chart_Data_Burndown($user_date_period, $capacity);
 
         if ($is_burndown_under_calculation === false) {
             $this->remaining_effort_adder->addRemainingEffortDataForLegacy(
@@ -156,12 +156,12 @@ class BurndownDataBuilderForLegacy
         return $user_burndown_data;
     }
 
-    private function getTimePeriod(TimePeriodWithoutWeekEnd $time_period): TimePeriodWithoutWeekEnd
+    private function getDatePeriod(DatePeriodWithoutWeekEnd $date_period): DatePeriodWithoutWeekEnd
     {
-        if ($time_period->getStartDate() === null) {
-            return TimePeriodWithoutWeekEnd::buildFromDuration($_SERVER['REQUEST_TIME'], $time_period->getDuration());
+        if ($date_period->getStartDate() === null) {
+            return DatePeriodWithoutWeekEnd::buildFromDuration($_SERVER['REQUEST_TIME'], $date_period->getDuration());
         }
 
-        return $time_period;
+        return $date_period;
     }
 }

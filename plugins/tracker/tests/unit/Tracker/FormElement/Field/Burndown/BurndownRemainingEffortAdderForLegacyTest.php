@@ -27,6 +27,7 @@ use PFUser;
 use Tracker_Chart_Data_Burndown;
 use Tracker_FormElement_Field_Burndown;
 use Tracker_UserWithReadAllPermission;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\UserWithReadAllPermissionBuilder;
@@ -61,9 +62,9 @@ class BurndownRemainingEffortAdderForLegacyTest extends \Tuleap\Test\PHPUnit\Tes
         $capacity    = 10;
         $duration    = 4;
         $date        = new DateTime('2019-06-17');
-        $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration($date->getTimestamp(), $duration);
+        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($date->getTimestamp(), $duration);
 
-        $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
+        $burndown_data = new Tracker_Chart_Data_Burndown($date_period, $capacity);
 
         $artifact = Mockery::mock(Artifact::class);
         $user     = Mockery::mock(PFUser::class);
@@ -130,9 +131,9 @@ class BurndownRemainingEffortAdderForLegacyTest extends \Tuleap\Test\PHPUnit\Tes
         $capacity    = 10;
         $duration    = 4;
         $now         = new DateTime();
-        $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration($now->getTimestamp() + 10000, $duration);
+        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($now->getTimestamp() + 10000, $duration);
 
-        $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
+        $burndown_data = new Tracker_Chart_Data_Burndown($date_period, $capacity);
 
         $artifact = Mockery::mock(Artifact::class);
         $user     = Mockery::mock(PFUser::class);
@@ -161,9 +162,9 @@ class BurndownRemainingEffortAdderForLegacyTest extends \Tuleap\Test\PHPUnit\Tes
         $capacity    = 10;
         $duration    = 5;
         $now         = new DateTime();
-        $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration($now->getTimestamp() - 1000, $duration);
+        $date_period = DatePeriodWithoutWeekEnd::buildFromDuration($now->getTimestamp() - 1000, $duration);
 
-        $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
+        $burndown_data = new Tracker_Chart_Data_Burndown($date_period, $capacity);
 
         $artifact = Mockery::mock(Artifact::class);
         $user     = Mockery::mock(PFUser::class);

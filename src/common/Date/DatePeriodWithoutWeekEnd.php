@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,48 +20,50 @@
 
 declare(strict_types=1);
 
-class TimePeriodWithoutWeekEnd implements TimePeriod
+namespace Tuleap\Date;
+
+class DatePeriodWithoutWeekEnd implements DatePeriod
 {
     /**
-     * @var int|null The time period start date, as a Unix timestamp.
+     * The time period start date, as a Unix timestamp.
      */
-    private $start_date;
+    private ?int $start_date;
 
     /**
-     * @var int|null The time period duration, in days.
+     * The time period duration, in days.
      */
-    private $duration;
+    private ?int $duration;
 
     /**
-     * @var int|null The time period end date, as a Unix timestamp.
+     * The time period end date, as a Unix timestamp.
      */
-    private $end_date;
+    private ?int $end_date;
 
     private string $error_message;
 
-    private function __construct(?int $start_date, ?int $duration, ?int $end_date, string $error_message)
+    private function __construct(?int $start_date, int|string|null $duration, ?int $end_date, string $error_message)
     {
         $this->start_date    = $start_date;
-        $this->duration      = $duration;
+        $this->duration      = $duration === null ? $duration : (int) $duration;
         $this->end_date      = $end_date;
         $this->error_message = $error_message;
     }
 
-    public static function buildFromDuration(?int $start_date, $duration): TimePeriodWithoutWeekEnd
+    public static function buildFromDuration(?int $start_date, int|float|string|null $duration): DatePeriodWithoutWeekEnd
     {
         if (is_numeric($duration)) {
             $duration = (int) ceil((float) $duration);
         }
 
         if ($duration === null || ! $start_date) {
-            return new TimePeriodWithoutWeekEnd($start_date, $duration, null, '');
+            return new DatePeriodWithoutWeekEnd($start_date, $duration, null, '');
         }
 
         $day_offsets = self::getDayOffsetsFromStartDateAndDuration($start_date, (int) $duration);
         $last_offset = end($day_offsets);
         $end_date    = (int) strtotime("+$last_offset days", $start_date);
 
-        return new TimePeriodWithoutWeekEnd(
+        return new DatePeriodWithoutWeekEnd(
             $start_date,
             $duration,
             $end_date,
@@ -69,7 +71,7 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
         );
     }
 
-    public static function buildFromEndDate(?int $start_date, ?int $end_date, \Psr\Log\LoggerInterface $logger): TimePeriodWithoutWeekEnd
+    public static function buildFromEndDate(?int $start_date, ?int $end_date, \Psr\Log\LoggerInterface $logger): DatePeriodWithoutWeekEnd
     {
         if ($start_date === null) {
             return new self(null, null, $end_date, '');
@@ -94,12 +96,12 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
         return new self($start_date, $duration, $end_date, '');
     }
 
-    public static function buildFromNothingWithErrorMessage(string $error_message): TimePeriodWithoutWeekEnd
+    public static function buildFromNothingWithErrorMessage(string $error_message): DatePeriodWithoutWeekEnd
     {
         return new self(null, null, null, $error_message);
     }
 
-    public static function buildWithoutAnyDates(): TimePeriodWithoutWeekEnd
+    public static function buildWithoutAnyDates(): DatePeriodWithoutWeekEnd
     {
         return new self(null, null, null, '');
     }
@@ -115,7 +117,7 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
     /**
      * @psalm-pure
      */
-    public static function isNotWeekendDay($day): bool
+    public static function isNotWeekendDay(int $day): bool
     {
         return ! ((int) date('N', $day) === 6 || (int) date('N', $day) === 7);
     }
@@ -156,7 +158,7 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
     /**
      * @psalm-mutation-free
      */
-    public function isTodayBeforeTimePeriod(): bool
+    public function isTodayBeforeDatePeriod(): bool
     {
         return $this->getStartDate() > $this->getTodayTimestamp();
     }
@@ -177,9 +179,9 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
     protected function getTodayDate(): string
     {
         if (isset($_SERVER['REQUEST_TIME'])) {
-            return (string) date('Y-m-d', $_SERVER['REQUEST_TIME']);
+            return date('Y-m-d', $_SERVER['REQUEST_TIME']);
         }
-        return (string) date('Y-m-d');
+        return date('Y-m-d');
     }
 
     /**
@@ -316,10 +318,10 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
 
     private function isToday(int $day): bool
     {
-        return $this->getTodayDate() === (string) date('Y-m-d', $day);
+        return $this->getTodayDate() === date('Y-m-d', $day);
     }
 
-    public function isTodayWithinTimePeriod(): bool
+    public function isTodayWithinDatePeriod(): bool
     {
         if (
             $this->getStartDate() <= $this->getTodayTimestamp() &&

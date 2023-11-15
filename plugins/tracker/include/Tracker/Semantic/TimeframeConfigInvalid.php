@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic;
 
-use TimePeriodWithoutWeekEnd;
-use Tuleap\Tracker\Artifact\Artifact;
 use Psr\Log\LoggerInterface;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 use Tuleap\Tracker\Semantic\Timeframe\IRepresentSemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
@@ -82,16 +82,16 @@ class TimeframeConfigInvalid implements IComputeTimeframes
         return null;
     }
 
-    public function buildTimePeriodWithoutWeekendForArtifactForREST(Artifact $artifact, \PFUser $user, LoggerInterface $logger): TimePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForArtifactForREST(Artifact $artifact, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
     {
-        return TimePeriodWithoutWeekEnd::buildFromNothingWithErrorMessage(
+        return DatePeriodWithoutWeekEnd::buildFromNothingWithErrorMessage(
             $this->getInvalidConfigDifferentProjectsMessage()
         );
     }
 
-    public function buildTimePeriodWithoutWeekendForArtifact(Artifact $artifact, \PFUser $user, LoggerInterface $logger): TimePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForArtifact(Artifact $artifact, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
     {
-        return TimePeriodWithoutWeekEnd::buildFromNothingWithErrorMessage(
+        return DatePeriodWithoutWeekEnd::buildFromNothingWithErrorMessage(
             $this->getInvalidConfigDifferentProjectsMessage()
         );
     }
@@ -99,7 +99,7 @@ class TimeframeConfigInvalid implements IComputeTimeframes
     /**
      * @throws \Tracker_FormElement_Chart_Field_Exception
      */
-    public function buildTimePeriodWithoutWeekendForArtifactChartRendering(Artifact $artifact, \PFUser $user, LoggerInterface $logger): TimePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForArtifactChartRendering(Artifact $artifact, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
     {
         throw new \Tracker_FormElement_Chart_Field_Exception(
             $this->getInvalidConfigDifferentProjectsMessage()

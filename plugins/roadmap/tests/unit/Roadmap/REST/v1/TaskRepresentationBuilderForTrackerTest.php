@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Roadmap\REST\v1;
 
 use Psr\Log\NullLogger;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Semantic\Progress\MethodNotConfigured;
@@ -52,7 +53,7 @@ final class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit
         $this->dependencies_retriever = $this->createMock(IRetrieveDependencies::class);
         $this->timeframe_calculator   = $this->getMockBuilder(TimeframeImpliedFromAnotherTracker::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(['buildTimePeriodWithoutWeekendForArtifactForREST'])
+            ->onlyMethods(['buildDatePeriodWithoutWeekendForArtifactForREST'])
             ->getMock();
 
         $this->user = UserTestBuilder::aUser()->build();
@@ -88,8 +89,8 @@ final class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit
             new NullLogger()
         );
 
-        $this->timeframe_calculator->method('buildTimePeriodWithoutWeekendForArtifactForREST')->willReturn(
-            \TimePeriodWithoutWeekEnd::buildFromEndDate(
+        $this->timeframe_calculator->method('buildDatePeriodWithoutWeekendForArtifactForREST')->willReturn(
+            DatePeriodWithoutWeekEnd::buildFromEndDate(
                 (new \DateTimeImmutable('@1234567890'))->getTimestamp(),
                 1234567891,
                 new NullLogger()

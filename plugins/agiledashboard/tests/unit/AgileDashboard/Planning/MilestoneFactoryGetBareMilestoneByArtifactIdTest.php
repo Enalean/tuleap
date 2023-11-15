@@ -33,11 +33,11 @@ use PlanningFactory;
 use PlanningPermissionsManager;
 use Project;
 use Psr\Log\NullLogger;
-use TimePeriodWithoutWeekEnd;
 use Tracker;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
@@ -122,10 +122,10 @@ final class MilestoneFactoryGetBareMilestoneByArtifactIdTest extends \Tuleap\Tes
         $artifact->shouldReceive('getAllAncestors')->with($this->user)->once()->andReturn([]);
         $this->artifact_factory->shouldReceive('getArtifactById')->with($this->artifact_id)->andReturn($artifact);
 
-        $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
+        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForArtifact')
             ->with($artifact, $this->user, $this->logger)
             ->once()
-            ->andReturn(TimePeriodWithoutWeekEnd::buildFromDuration(1, 1));
+            ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
         $milestone = $this->milestone_factory->getBareMilestoneByArtifactId($this->user, $this->artifact_id);
         $this->assertEquals($artifact, $milestone->getArtifact());

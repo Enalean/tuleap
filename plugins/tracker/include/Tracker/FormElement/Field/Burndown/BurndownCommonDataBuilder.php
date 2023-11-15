@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\FormElement\Field\Burndown;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
-use TimePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
@@ -68,7 +68,7 @@ class BurndownCommonDataBuilder
     public function getBurndownCalculationStatus(
         Artifact $artifact,
         PFUser $user,
-        TimePeriodWithoutWeekEnd $time_period,
+        DatePeriodWithoutWeekEnd $date_period,
         $capacity,
         $user_timezone,
     ) {
@@ -79,15 +79,15 @@ class BurndownCommonDataBuilder
         date_default_timezone_set($server_timezone);
 
         $this->logger->debug("Capacity: " . $capacity);
-        $this->logger->debug("Original start date: " . (string) $time_period->getStartDate());
-        $this->logger->debug("Duration: " . (string) $time_period->getDuration());
+        $this->logger->debug("Original start date: " . (string) $date_period->getStartDate());
+        $this->logger->debug("Duration: " . (string) $date_period->getDuration());
         $this->logger->debug("User Timezone: " . $user_timezone);
         $this->logger->debug("Server timezone: " . $server_timezone);
 
         return $this->cache_checker->isBurndownUnderCalculationBasedOnServerTimezone(
             $artifact,
             $user,
-            $time_period,
+            $date_period,
             $capacity
         );
     }
@@ -106,12 +106,12 @@ class BurndownCommonDataBuilder
         return $capacity;
     }
 
-    public function getTimePeriod(TimePeriodWithoutWeekEnd $time_period): TimePeriodWithoutWeekEnd
+    public function getDatePeriod(DatePeriodWithoutWeekEnd $date_period): DatePeriodWithoutWeekEnd
     {
-        if ($time_period->getStartDate() === null) {
-            return TimePeriodWithoutWeekEnd::buildFromDuration($_SERVER['REQUEST_TIME'], $time_period->getDuration());
+        if ($date_period->getStartDate() === null) {
+            return DatePeriodWithoutWeekEnd::buildFromDuration($_SERVER['REQUEST_TIME'], $date_period->getDuration());
         }
 
-        return $time_period;
+        return $date_period;
     }
 }

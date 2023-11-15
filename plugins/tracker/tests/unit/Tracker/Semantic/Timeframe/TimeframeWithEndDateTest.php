@@ -169,7 +169,7 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItBuildsATimePeriodWithNoEndDateWhenNoEndDateValueExist(): void
+    public function testItBuildsADatePeriodWithNoEndDateWhenNoEndDateValueExist(): void
     {
         $start_date = '01/20/2021';
 
@@ -179,18 +179,18 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mockDateFieldWithValue($this->start_date_field, $start_date);
         $this->mockDateFieldWithValue($this->end_date_field, null);
 
-        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifactForREST(
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifactForREST(
             $this->artifact,
             $this->user,
             new NullLogger()
         );
 
-        self::assertSame(strtotime($start_date), $time_period->getStartDate());
-        self::assertNull($time_period->getEndDate());
-        self::assertSame(null, $time_period->getDuration());
+        self::assertSame(strtotime($start_date), $date_period->getStartDate());
+        self::assertNull($date_period->getEndDate());
+        self::assertSame(null, $date_period->getDuration());
     }
 
-    public function testItBuildsATimePeriodForRESTFromEndDate(): void
+    public function testItBuildsADatePeriodForRESTFromEndDate(): void
     {
         $start_date = '07/01/2013';
         $end_date   = '07/03/2013';
@@ -201,18 +201,18 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mockDateFieldWithValue($this->start_date_field, $start_date);
         $this->mockDateFieldWithValue($this->end_date_field, $end_date);
 
-        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifactForREST(
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifactForREST(
             $this->artifact,
             $this->user,
             new NullLogger()
         );
 
-        $this->assertSame(strtotime($start_date), $time_period->getStartDate());
-        $this->assertSame(strtotime($end_date), $time_period->getEndDate());
-        $this->assertEquals(2, $time_period->getDuration());
+        $this->assertSame(strtotime($start_date), $date_period->getStartDate());
+        $this->assertSame(strtotime($end_date), $date_period->getEndDate());
+        $this->assertEquals(2, $date_period->getDuration());
     }
 
-    public function testItBuildsATimePeriodForRESTFromEndDateWithNullIfEndDateIsNotReadable(): void
+    public function testItBuildsADatePeriodForRESTFromEndDateWithNullIfEndDateIsNotReadable(): void
     {
         $start_date = '07/01/2013';
 
@@ -221,18 +221,18 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->mockDateFieldWithValue($this->start_date_field, $start_date);
 
-        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifactForREST(
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifactForREST(
             $this->artifact,
             $this->user,
             new NullLogger()
         );
 
-        $this->assertSame(strtotime($start_date), $time_period->getStartDate());
-        $this->assertNull($time_period->getEndDate());
-        $this->assertNull($time_period->getDuration());
+        $this->assertSame(strtotime($start_date), $date_period->getStartDate());
+        $this->assertNull($date_period->getEndDate());
+        $this->assertNull($date_period->getDuration());
     }
 
-    public function testItBuildsATimePeriodForRESTFromEndDateWithNullIfEndDateHasNoValue(): void
+    public function testItBuildsADatePeriodForRESTFromEndDateWithNullIfEndDateHasNoValue(): void
     {
         $start_date = '07/01/2013';
 
@@ -245,18 +245,18 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->artifact)
             ->will(self::returnValue(null));
 
-        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifactForREST(
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifactForREST(
             $this->artifact,
             $this->user,
             new NullLogger()
         );
 
-        $this->assertSame(strtotime($start_date), $time_period->getStartDate());
-        $this->assertNull($time_period->getEndDate());
-        $this->assertNull($time_period->getDuration());
+        $this->assertSame(strtotime($start_date), $date_period->getStartDate());
+        $this->assertNull($date_period->getEndDate());
+        $this->assertNull($date_period->getDuration());
     }
 
-    public function testItBuildsATimePeriodWithEndDateForArtifact(): void
+    public function testItBuildsADatePeriodWithEndDateForArtifact(): void
     {
         $start_date = '07/01/2013';
         $end_date   = '07/03/2013';
@@ -267,18 +267,18 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mockDateFieldWithValue($this->start_date_field, $start_date);
         $this->mockDateFieldWithValue($this->end_date_field, $end_date);
 
-        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifact(
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifact(
             $this->artifact,
             $this->user,
             new NullLogger()
         );
 
-        self::assertSame(strtotime($start_date), $time_period->getStartDate());
-        self::assertSame(strtotime($end_date), $time_period->getEndDate());
-        self::assertSame(2, $time_period->getDuration());
+        self::assertSame(strtotime($start_date), $date_period->getStartDate());
+        self::assertSame(strtotime($end_date), $date_period->getEndDate());
+        self::assertSame(2, $date_period->getDuration());
     }
 
-    public function testItBuildsATimePeriodWithEndDateForArtifactWithZeroForEndDateIfUserCannotRead(): void
+    public function testItBuildsADatePeriodWithEndDateForArtifactWithZeroForEndDateIfUserCannotRead(): void
     {
         $start_date = '07/01/2013';
         $logger     = $this->getMockBuilder(LoggerInterface::class)->disableOriginalConstructor()->getMock();
@@ -289,20 +289,20 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->mockDateFieldWithValue($this->start_date_field, $start_date);
 
-        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifact(
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifact(
             $this->artifact,
             $this->user,
             $logger
         );
 
-        $this->assertSame(strtotime($start_date), $time_period->getStartDate());
-        $this->assertSame(0, $time_period->getEndDate());
+        $this->assertSame(strtotime($start_date), $date_period->getStartDate());
+        $this->assertSame(0, $date_period->getEndDate());
         // duration between start date (07/01/2013) and 01/01/1970 since user cannot read the field.
         // Weird but consistent with date field/duration behavior.
-        $this->assertSame(-11347, $time_period->getDuration());
+        $this->assertSame(-11347, $date_period->getDuration());
     }
 
-    public function testItBuildsATimePeriodWithEndDateForArtifactWithZeroForEndDateIfNoLastChangesetValue(): void
+    public function testItBuildsADatePeriodWithEndDateForArtifactWithZeroForEndDateIfNoLastChangesetValue(): void
     {
         $start_date = '07/01/2013';
         $logger     = $this->getMockBuilder(LoggerInterface::class)->disableOriginalConstructor()->getMock();
@@ -314,17 +314,17 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mockDateFieldWithValue($this->start_date_field, $start_date);
         $this->mockDateFieldWithValue($this->end_date_field, null);
 
-        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifact(
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifact(
             $this->artifact,
             $this->user,
             $logger
         );
 
-        $this->assertSame(strtotime($start_date), $time_period->getStartDate());
-        $this->assertSame(0, $time_period->getEndDate());
+        $this->assertSame(strtotime($start_date), $date_period->getStartDate());
+        $this->assertSame(0, $date_period->getEndDate());
         // duration between start date (07/01/2013) and 01/01/1970 since user cannot read the field.
         // Weird but consistent with date field/duration behavior.
-        $this->assertSame(-11347, $time_period->getDuration());
+        $this->assertSame(-11347, $date_period->getDuration());
     }
 
     public function testItThrowsAnExceptionWhenEndDateHasNoLastChangesetValueInChartContext(): void
@@ -341,7 +341,7 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
             ->will(self::returnValue(null));
 
         $this->expectException(\Tracker_FormElement_Chart_Field_Exception::class);
-        $this->timeframe->buildTimePeriodWithoutWeekendForArtifactChartRendering(
+        $this->timeframe->buildDatePeriodWithoutWeekendForArtifactChartRendering(
             $this->artifact,
             $this->user,
             new NullLogger()
@@ -358,7 +358,7 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mockDateFieldWithValue($this->start_date_field, $start_date);
 
         $this->expectException(\Tracker_FormElement_Chart_Field_Exception::class);
-        $this->timeframe->buildTimePeriodWithoutWeekendForArtifactChartRendering(
+        $this->timeframe->buildDatePeriodWithoutWeekendForArtifactChartRendering(
             $this->artifact,
             $this->user,
             new NullLogger()
@@ -376,7 +376,7 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mockDateFieldWithValue($this->end_date_field, null);
 
         $this->expectException(\Tracker_FormElement_Chart_Field_Exception::class);
-        $this->timeframe->buildTimePeriodWithoutWeekendForArtifactChartRendering(
+        $this->timeframe->buildDatePeriodWithoutWeekendForArtifactChartRendering(
             $this->artifact,
             $this->user,
             new NullLogger()
@@ -394,15 +394,15 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mockDateFieldWithValue($this->start_date_field, $start_date);
         $this->mockDateFieldWithValue($this->end_date_field, $end_date);
 
-        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifactChartRendering(
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifactChartRendering(
             $this->artifact,
             $this->user,
             new NullLogger()
         );
 
-        $this->assertSame(strtotime($start_date), $time_period->getStartDate());
-        $this->assertSame(strtotime($end_date), $time_period->getEndDate());
-        $this->assertSame(10, $time_period->getDuration());
+        $this->assertSame(strtotime($start_date), $date_period->getStartDate());
+        $this->assertSame(strtotime($end_date), $date_period->getEndDate());
+        $this->assertSame(10, $date_period->getDuration());
     }
 
     private function getMockedDateField(int $field_id): \Tracker_FormElement_Field_Date

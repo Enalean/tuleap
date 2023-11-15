@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Date\DatePeriodWithWeekEnd;
+
 /**
  * this class build data required to build a burndown
  *
@@ -28,12 +30,9 @@ class GraphOnTrackersV5_Burndown_Data
     private $remaining_effort = [];
     private $min_day          = PHP_INT_MAX;
     private $max_day          = 0;
-    /**
-     * @var TimePeriodWithWeekEnd
-     */
-    private $time_period;
+    private DatePeriodWithWeekEnd $date_period;
 
-    public function __construct($query_result, array $artifact_ids, TimePeriodWithWeekEnd $time_period)
+    public function __construct($query_result, array $artifact_ids, DatePeriodWithWeekEnd $date_period)
     {
         $this->artifact_ids = $artifact_ids;
         while ($row = db_fetch_array($query_result)) {
@@ -43,7 +42,7 @@ class GraphOnTrackersV5_Burndown_Data
                 $this->remaining_effort[$day][$artifact_id] = $row['value'];
             }
         }
-        $this->time_period = $time_period;
+        $this->date_period = $date_period;
     }
 
     public function getRemainingEffort()
@@ -67,10 +66,10 @@ class GraphOnTrackersV5_Burndown_Data
     }
 
     /**
-     * @return TimePeriodWithWeekEnd
+     * @return DatePeriodWithWeekEnd
      */
-    public function getTimePeriod()
+    public function getDatePeriod()
     {
-        return $this->time_period;
+        return $this->date_period;
     }
 }

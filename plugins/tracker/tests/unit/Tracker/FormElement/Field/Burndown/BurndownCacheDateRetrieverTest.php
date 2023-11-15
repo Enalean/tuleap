@@ -21,7 +21,7 @@
 namespace Tuleap\Tracker\FormElement;
 
 use DateTime;
-use TimePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 
 class BurndownCacheDateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -38,7 +38,7 @@ class BurndownCacheDateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItAssertThatNumberOfDaysAreCorrectWhenBurndownIsComputedInPast(): void
     {
         $start_date           = mktime(23, 59, 59, 10, 1, 2016);
-        $octobre_month_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, 20);
+        $octobre_month_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, 20);
 
         $today      = mktime(0, 0, 0, 11, 8, 2016);
         $today_time = new DateTime();
@@ -77,7 +77,7 @@ class BurndownCacheDateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItAssertThatNumberOfDaysAreCorrectWhenBurndownIsCurrent(): void
     {
         $start_date           = mktime(23, 59, 59, 10, 1, 2016);
-        $octobre_month_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, 21);
+        $octobre_month_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, 21);
 
         $today      = mktime(0, 0, 0, 10, 15, 2016);
         $today_time = new DateTime();

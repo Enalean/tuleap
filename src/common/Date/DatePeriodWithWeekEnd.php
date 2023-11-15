@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,28 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\Date;
+
 /**
- * A time period, starting at a given date, and with a given duration.
+ * A date period, starting at a given date, and with a given duration.
  */
-class TimePeriodWithWeekEnd implements TimePeriod
+class DatePeriodWithWeekEnd implements DatePeriod
 {
     /**
-     * @var int The time period start date, as a Unix timestamp.
+     * The date period start date, as a Unix timestamp.
      */
-    private $start_date;
+    private int $start_date;
 
     /**
-     * @var int The time period duration, in days.
+     * The date period duration, in days.
      */
-    private $duration;
+    private int $duration;
 
-    public function __construct($start_date, $duration)
+    public function __construct(int $start_date, int|float|string $duration)
     {
         $this->start_date = $start_date;
-        $this->duration   = $this->formatDuration($duration);
+        $this->duration   = (int) $this->formatDuration($duration);
     }
 
-    private function formatDuration($duration)
+    private function formatDuration(int|float|string $duration): int|string
     {
         if (is_numeric($duration)) {
             return (int) ceil((float) $duration);
@@ -48,18 +52,12 @@ class TimePeriodWithWeekEnd implements TimePeriod
         return $duration;
     }
 
-    /**
-     * @return int
-     */
-    public function getStartDate()
+    public function getStartDate(): int
     {
         return $this->start_date;
     }
 
-    /**
-     * @return int
-     */
-    public function getEndDate()
+    public function getEndDate(): int
     {
         $day_offsets = $this->getDayOffsets();
         $last_offset = end($day_offsets);
@@ -69,9 +67,9 @@ class TimePeriodWithWeekEnd implements TimePeriod
     /**
      * To be used to iterate consistently over the time period
      *
-     * @return array of int
+     * @return int[]
      */
-    public function getDayOffsets()
+    public function getDayOffsets(): array
     {
         if ($this->duration < 0) {
             return [0];

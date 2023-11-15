@@ -21,8 +21,8 @@
 namespace Tuleap\GraphOnTrackersV5;
 
 use GraphOnTrackersV5_Burndown_Data;
-use TimePeriodWithoutWeekEnd;
 use Tracker_Chart_Burndown;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 
 require_once __DIR__ . '/bootstrap.php';
 
@@ -59,9 +59,9 @@ final class GraphOnTrackersV5_BurndownDataTest extends \Tuleap\Test\PHPUnit\Test
         ];
         $start_date        = mktime(8, 0, 0, 9, 1, 2017);
         $duration          = 5;
-        $time_period       = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period       = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
-        $this->burndown_data->method('getTimePeriod')->willReturn($time_period);
+        $this->burndown_data->method('getDatePeriod')->willReturn($date_period);
         $this->burndown_data->method('getRemainingEffort')->willReturn($remaining_efforts);
 
         $burndown = new Tracker_Chart_Burndown($this->burndown_data);
@@ -84,9 +84,9 @@ final class GraphOnTrackersV5_BurndownDataTest extends \Tuleap\Test\PHPUnit\Test
         $remaining_efforts = [];
         $start_date        = mktime(8, 0, 0, 9, 1, 2017);
         $duration          = 5;
-        $time_period       = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period       = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
-        $this->burndown_data->method('getTimePeriod')->willReturn($time_period);
+        $this->burndown_data->method('getDatePeriod')->willReturn($date_period);
         $this->burndown_data->method('getRemainingEffort')->willReturn($remaining_efforts);
 
         $burndown = new Tracker_Chart_Burndown($this->burndown_data);
@@ -109,9 +109,9 @@ final class GraphOnTrackersV5_BurndownDataTest extends \Tuleap\Test\PHPUnit\Test
         $remaining_efforts = [];
         $start_date        = time();
         $duration          = 5;
-        $time_period       = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period       = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
-        $this->burndown_data->method('getTimePeriod')->willReturn($time_period);
+        $this->burndown_data->method('getDatePeriod')->willReturn($date_period);
         $this->burndown_data->method('getRemainingEffort')->willReturn($remaining_efforts);
 
         $burndown = new Tracker_Chart_Burndown($this->burndown_data);
@@ -151,9 +151,9 @@ final class GraphOnTrackersV5_BurndownDataTest extends \Tuleap\Test\PHPUnit\Test
         ];
         $start_date        = mktime(8, 0, 0, 9, 1, 2016);
         $duration          = 5;
-        $time_period       = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period       = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
-        $this->burndown_data->method('getTimePeriod')->willReturn($time_period);
+        $this->burndown_data->method('getDatePeriod')->willReturn($date_period);
         $this->burndown_data->method('getRemainingEffort')->willReturn($remaining_efforts);
 
         $burndown = new Tracker_Chart_Burndown($this->burndown_data);
@@ -193,9 +193,9 @@ final class GraphOnTrackersV5_BurndownDataTest extends \Tuleap\Test\PHPUnit\Test
         ];
         $start_date        = mktime(8, 0, 0, 9, 1, 2017);
         $duration          = 5;
-        $time_period       = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period       = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
-        $this->burndown_data->method('getTimePeriod')->willReturn($time_period);
+        $this->burndown_data->method('getDatePeriod')->willReturn($date_period);
         $this->burndown_data->method('getRemainingEffort')->willReturn($remaining_efforts);
 
         $burndown = new Tracker_Chart_Burndown($this->burndown_data);
@@ -233,9 +233,9 @@ final class GraphOnTrackersV5_BurndownDataTest extends \Tuleap\Test\PHPUnit\Test
         ];
         $start_date        = mktime(8, 0, 0, 9, 1, 2017);
         $duration          = 20;
-        $time_period       = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period       = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
-        $this->burndown_data->method('getTimePeriod')->willReturn($time_period);
+        $this->burndown_data->method('getDatePeriod')->willReturn($date_period);
         $this->burndown_data->method('getRemainingEffort')->willReturn($remaining_efforts);
 
         $burndown = new Tracker_Chart_Burndown($this->burndown_data);
@@ -260,9 +260,9 @@ final class GraphOnTrackersV5_BurndownDataTest extends \Tuleap\Test\PHPUnit\Test
             ],
         ];
         $duration          = 5;
-        $time_period       = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+        $date_period       = DatePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
-        $this->burndown_data->method('getTimePeriod')->willReturn($time_period);
+        $this->burndown_data->method('getDatePeriod')->willReturn($date_period);
         $this->burndown_data->method('getRemainingEffort')->willReturn($remaining_efforts);
 
         $burndown = new Tracker_Chart_Burndown($this->burndown_data);

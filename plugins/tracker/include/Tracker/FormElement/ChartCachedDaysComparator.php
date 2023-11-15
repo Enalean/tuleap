@@ -21,7 +21,7 @@
 namespace Tuleap\Tracker\FormElement;
 
 use Psr\Log\LoggerInterface;
-use TimePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 
 class ChartCachedDaysComparator
 {
@@ -38,11 +38,11 @@ class ChartCachedDaysComparator
     /**
      * @return bool
      */
-    public function isNumberOfCachedDaysExpected(TimePeriodWithoutWeekEnd $time_period_without_week_end, $number_of_cached_days)
+    public function isNumberOfCachedDaysExpected(DatePeriodWithoutWeekEnd $date_period_without_week_end, $number_of_cached_days)
     {
-        $days = $time_period_without_week_end->getCountDayUntilDate($_SERVER['REQUEST_TIME']);
+        $days = $date_period_without_week_end->getCountDayUntilDate($_SERVER['REQUEST_TIME']);
 
-        if ($this->isTodayAWeekDayAndIsTodayBeforeTimePeriodEnd($time_period_without_week_end)) {
+        if ($this->isTodayAWeekDayAndIsTodayBeforeDatePeriodEnd($date_period_without_week_end)) {
             $this->logger->debug("Period is current");
             $this->logger->debug("Day cached: " . $number_of_cached_days);
             $this->logger->debug("Period days: " . $days);
@@ -58,10 +58,10 @@ class ChartCachedDaysComparator
         return $this->compareCachedDaysWithPeriodDays((int) $number_of_cached_days, $days);
     }
 
-    private function isTodayAWeekDayAndIsTodayBeforeTimePeriodEnd(TimePeriodWithoutWeekEnd $time_period_without_week_end)
+    private function isTodayAWeekDayAndIsTodayBeforeDatePeriodEnd(DatePeriodWithoutWeekEnd $date_period_without_week_end): bool
     {
-        return $time_period_without_week_end->isTodayWithinTimePeriod()
-            && TimePeriodWithoutWeekEnd::isNotWeekendDay($_SERVER['REQUEST_TIME']);
+        return $date_period_without_week_end->isTodayWithinDatePeriod()
+               && DatePeriodWithoutWeekEnd::isNotWeekendDay($_SERVER['REQUEST_TIME']);
     }
 
     private function compareCachedDaysWhenLastDayIsAComputedValue($cache_days, $number_of_days_for_period)

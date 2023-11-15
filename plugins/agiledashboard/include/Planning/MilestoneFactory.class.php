@@ -27,6 +27,7 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\AgileDashboard\Planning\NotFoundException;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
@@ -263,7 +264,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     {
         $artifact = $milestone->getArtifact();
 
-        $milestone->setTimePeriod($this->getMilestoneTimePeriod($artifact, $user));
+        $milestone->setDatePeriod($this->getMilestoneDatePeriod($artifact, $user));
         $milestone->setCapacity($this->getComputedFieldValue($user, $artifact, Planning_Milestone::CAPACITY_FIELD_NAME));
         $milestone->setRemainingEffort($this->getComputedFieldValue($user, $artifact, Planning_Milestone::REMAINING_EFFORT_FIELD_NAME));
 
@@ -541,7 +542,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                 continue;
             }
 
-            $milestone->setTimePeriod($this->getMilestoneTimePeriod($milestone->getArtifact(), $user));
+            $milestone->setDatePeriod($this->getMilestoneDatePeriod($milestone->getArtifact(), $user));
 
             $milestones[] = $milestone;
         }
@@ -936,20 +937,20 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
 
     private function getMilestoneEndDate(Artifact $milestone_artifact, PFUser $user)
     {
-        return $this->getMilestoneTimePeriod($milestone_artifact, $user)
+        return $this->getMilestoneDatePeriod($milestone_artifact, $user)
             ->getEndDate();
     }
 
     private function isMilestoneCurrent(Artifact $milestone_artifact, PFUser $user)
     {
-        return $milestone_artifact->isOpen() && ! $this->getMilestoneTimePeriod($milestone_artifact, $user)
-            ->isTodayBeforeTimePeriod();
+        return $milestone_artifact->isOpen() && ! $this->getMilestoneDatePeriod($milestone_artifact, $user)
+            ->isTodayBeforeDatePeriod();
     }
 
     private function isMilestoneFuture(Artifact $milestone_artifact, PFUser $user)
     {
-        return $milestone_artifact->isOpen() && $this->getMilestoneTimePeriod($milestone_artifact, $user)
-            ->isTodayBeforeTimePeriod();
+        return $milestone_artifact->isOpen() && $this->getMilestoneDatePeriod($milestone_artifact, $user)
+            ->isTodayBeforeDatePeriod();
     }
 
     private function isMilestonePast(Artifact $milestone_artifact)
@@ -958,12 +959,12 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     }
 
     /**
-     * @return TimePeriodWithoutWeekEnd
+     * @return DatePeriodWithoutWeekEnd
      */
-    private function getMilestoneTimePeriod(Artifact $milestone_artifact, PFUser $user)
+    private function getMilestoneDatePeriod(Artifact $milestone_artifact, PFUser $user)
     {
         $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($milestone_artifact->getTracker());
-        return $semantic_timeframe->getTimeframeCalculator()->buildTimePeriodWithoutWeekendForArtifact(
+        return $semantic_timeframe->getTimeframeCalculator()->buildDatePeriodWithoutWeekendForArtifact(
             $milestone_artifact,
             $user,
             $this->logger
@@ -972,9 +973,9 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
 
     private function milestoneHasStartDate(Artifact $milestone_artifact, PFUser $user)
     {
-        $time_period = $this->getMilestoneTimePeriod($milestone_artifact, $user);
+        $date_period = $this->getMilestoneDatePeriod($milestone_artifact, $user);
 
-        return (bool) $time_period->getStartDate() > 0;
+        return (bool) $date_period->getStartDate() > 0;
     }
 
     /**

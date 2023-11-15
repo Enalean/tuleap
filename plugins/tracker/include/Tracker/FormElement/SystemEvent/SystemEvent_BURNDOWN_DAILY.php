@@ -22,10 +22,10 @@ namespace Tuleap\Tracker\FormElement\SystemEvent;
 
 use Psr\Log\LoggerInterface;
 use SystemEvent;
-use TimePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownFieldDao;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDaoCache;
-use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\FieldCalculator;
 
 class SystemEvent_BURNDOWN_DAILY extends SystemEvent //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
@@ -78,19 +78,19 @@ class SystemEvent_BURNDOWN_DAILY extends SystemEvent //phpcs:ignore Squiz.Classe
     public function cacheYesterdayValues()
     {
         $yesterday = $this->date_retriever->getYesterday();
-        if (! TimePeriodWithoutWeekEnd::isNotWeekendDay($yesterday)) {
+        if (! DatePeriodWithoutWeekEnd::isNotWeekendDay($yesterday)) {
             return;
         }
 
         foreach ($this->burndown_dao->getArtifactsWithBurndown() as $burndown) {
             if (empty($burndown['duration'])) {
-                $burndown_period = TimePeriodWithoutWeekEnd::buildFromEndDate(
+                $burndown_period = DatePeriodWithoutWeekEnd::buildFromEndDate(
                     $burndown['start_date'],
                     $burndown['end_date'],
                     $this->logger
                 );
             } else {
-                $burndown_period = TimePeriodWithoutWeekEnd::buildFromDuration(
+                $burndown_period = DatePeriodWithoutWeekEnd::buildFromDuration(
                     $burndown['start_date'],
                     $burndown['duration']
                 );

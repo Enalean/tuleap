@@ -24,6 +24,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PFUser;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
@@ -51,9 +52,9 @@ class BurnupCacheCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $artifact;
     /**
-     * @var \TimePeriodWithoutWeekEnd
+     * @var DatePeriodWithoutWeekEnd
      */
-    private $time_period;
+    private $date_period;
     /**
      * @var BurnupCacheChecker
      */
@@ -85,7 +86,7 @@ class BurnupCacheCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $start_date        = new \DateTime();
         $duration          = 10;
-        $this->time_period = \TimePeriodWithoutWeekEnd::buildFromDuration($start_date->getTimestamp(), $duration);
+        $this->date_period = DatePeriodWithoutWeekEnd::buildFromDuration($start_date->getTimestamp(), $duration);
 
         $this->user = Mockery::mock(PFUser::class);
         $this->user->shouldReceive('getId')->andReturn(101);
@@ -96,7 +97,7 @@ class BurnupCacheCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->chart_value_checker->shouldReceive('hasStartDate')->andReturnFalse();
 
         $this->assertFalse(
-            $this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->time_period, $this->user)
+            $this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->date_period, $this->user)
         );
     }
 
@@ -109,11 +110,11 @@ class BurnupCacheCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             'cached_days' => 1,
         ]);
         $this->cache_days_comparator->shouldReceive('isNumberOfCachedDaysExpected')
-            ->with($this->time_period, 1)
+            ->with($this->date_period, 1)
             ->andReturnFalse();
 
         $this->assertTrue(
-            $this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->time_period, $this->user)
+            $this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->date_period, $this->user)
         );
     }
 
@@ -126,13 +127,13 @@ class BurnupCacheCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             'cached_days' => 1,
         ]);
         $this->cache_days_comparator->shouldReceive('isNumberOfCachedDaysExpected')
-            ->with($this->time_period, 1)
+            ->with($this->date_period, 1)
             ->andReturnFalse();
 
         $this->cache_generator->shouldReceive('forceBurnupCacheGeneration')->once();
 
         $this->assertTrue(
-            $this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->time_period, $this->user)
+            $this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->date_period, $this->user)
         );
     }
 
@@ -145,13 +146,13 @@ class BurnupCacheCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             'cached_days' => 1,
         ]);
         $this->cache_days_comparator->shouldReceive('isNumberOfCachedDaysExpected')
-            ->with($this->time_period, 1)
+            ->with($this->date_period, 1)
             ->andReturnTrue();
 
         $this->cache_generator->shouldReceive('forceBurnupCacheGeneration')->with($this->artifact->getId())->never();
 
         $this->assertFalse(
-            $this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->time_period, $this->user)
+            $this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->date_period, $this->user)
         );
     }
 }

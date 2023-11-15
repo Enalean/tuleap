@@ -67,8 +67,8 @@ class BurndownRepresentation
 
     public function __construct(Tracker_Chart_Data_Burndown $data_burndown)
     {
-        $this->start_date           = JsonCast::toDate($data_burndown->getTimePeriod()->getStartDate());
-        $this->duration             = JsonCast::toInt($data_burndown->getTimePeriod()->getDuration());
+        $this->start_date           = JsonCast::toDate($data_burndown->getDatePeriod()->getStartDate());
+        $this->duration             = JsonCast::toInt($data_burndown->getDatePeriod()->getDuration());
         $this->capacity             = JsonCast::toFloat($data_burndown->getCapacity());
         $this->points               = self::getPoints($data_burndown);
         $this->is_under_calculation = JsonCast::toBoolean($data_burndown->isUnderCalcul());

@@ -33,6 +33,7 @@ use Tuleap\AgileDashboard\Milestone\Request\SubMilestoneRequest;
 use Tuleap\AgileDashboard\Milestone\Request\TopMilestoneRequest;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
@@ -204,8 +205,8 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
             ->andReturn($first_artifact, $second_artifact);
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')
             ->andReturn($this->top_planning);
-        $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
-            ->andReturn(\TimePeriodWithoutWeekEnd::buildFromDuration(1, 1));
+        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForArtifact')
+            ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
         $milestones = $this->getTopMilestones();
 
@@ -255,8 +256,8 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')
             ->with($this->sub_milestone_tracker)
             ->andReturn($this->sub_planning);
-        $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
-            ->andReturn(\TimePeriodWithoutWeekEnd::buildFromDuration(1, 1));
+        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForArtifact')
+            ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
         $sub_milestones = $this->getSubMilestones();
 
@@ -325,8 +326,8 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')
             ->with($top_milestone_tracker)
             ->andReturn($this->top_planning);
-        $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
-            ->andReturn(\TimePeriodWithoutWeekEnd::buildFromDuration(1, 1));
+        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForArtifact')
+            ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
         $sibling_milestones = $this->getSiblingMilestones();
 
@@ -387,8 +388,8 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')
             ->with($this->sub_milestone_tracker)
             ->andReturn($this->sub_planning);
-        $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
-            ->andReturn(\TimePeriodWithoutWeekEnd::buildFromDuration(1, 1));
+        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForArtifact')
+            ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
         $sibling_milestones = $this->getSiblingMilestones();
 

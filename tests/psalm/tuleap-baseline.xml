@@ -68398,7 +68398,7 @@
       <code>\ITimeInterval</code>
     </UndefinedDocblockClass>
   </file>
-  <file src="src/common/date/TimePeriodWithWeekEnd.class.php">
+  <file src="src/common/date/DatePeriodWithWeekEnd.class.php">
     <MissingParamType>
       <code>$duration</code>
       <code>$duration</code>
@@ -68408,7 +68408,7 @@
       <code>formatDuration</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/date/TimePeriodWithoutWeekEnd.class.php">
+  <file src="src/common/date/DatePeriodWithoutWeekEnd.class.php">
     <MissingParamType>
       <code>$day</code>
       <code>$duration</code>

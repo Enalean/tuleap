@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Stub\Semantic\Timeframe;
 
 use Psr\Log\LoggerInterface;
-use TimePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 use Tuleap\Tracker\Semantic\Timeframe\IRepresentSemanticTimeframe;
@@ -32,7 +32,7 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 final class IComputeTimeframesStub implements IComputeTimeframes
 {
     private function __construct(
-        private readonly TimePeriodWithoutWeekEnd $timeperiod,
+        private readonly DatePeriodWithoutWeekEnd $date_period,
         private readonly ?\Tracker_FormElement_Field_Date $start,
         private readonly ?\Tracker_FormElement_Field_Date $end,
         private readonly ?\Tracker_FormElement_Field_Numeric $duration,
@@ -40,19 +40,19 @@ final class IComputeTimeframesStub implements IComputeTimeframes
     }
 
     public static function fromStartAndEndDates(
-        TimePeriodWithoutWeekEnd $timeperiod,
+        DatePeriodWithoutWeekEnd $date_period,
         \Tracker_FormElement_Field_Date $start,
         \Tracker_FormElement_Field_Date $end,
     ): self {
-        return new self($timeperiod, $start, $end, null);
+        return new self($date_period, $start, $end, null);
     }
 
     public static function fromStartAndDuration(
-        TimePeriodWithoutWeekEnd $timeperiod,
+        DatePeriodWithoutWeekEnd $date_period,
         \Tracker_FormElement_Field_Date $start,
         \Tracker_FormElement_Field_Numeric $duration,
     ): self {
-        return new self($timeperiod, $start, null, $duration);
+        return new self($date_period, $start, null, $duration);
     }
 
     public static function getName(): string
@@ -85,28 +85,28 @@ final class IComputeTimeframesStub implements IComputeTimeframes
         return null;
     }
 
-    public function buildTimePeriodWithoutWeekendForArtifactForREST(
+    public function buildDatePeriodWithoutWeekendForArtifactForREST(
         Artifact $artifact,
         \PFUser $user,
         LoggerInterface $logger,
-    ): TimePeriodWithoutWeekEnd {
-        return $this->timeperiod;
+    ): DatePeriodWithoutWeekEnd {
+        return $this->date_period;
     }
 
-    public function buildTimePeriodWithoutWeekendForArtifact(
+    public function buildDatePeriodWithoutWeekendForArtifact(
         Artifact $artifact,
         \PFUser $user,
         LoggerInterface $logger,
-    ): TimePeriodWithoutWeekEnd {
-        return $this->timeperiod;
+    ): DatePeriodWithoutWeekEnd {
+        return $this->date_period;
     }
 
-    public function buildTimePeriodWithoutWeekendForArtifactChartRendering(
+    public function buildDatePeriodWithoutWeekendForArtifactChartRendering(
         Artifact $artifact,
         \PFUser $user,
         LoggerInterface $logger,
-    ): TimePeriodWithoutWeekEnd {
-        return $this->timeperiod;
+    ): DatePeriodWithoutWeekEnd {
+        return $this->date_period;
     }
 
     public function exportToXML(\SimpleXMLElement $root, array $xml_mapping): void

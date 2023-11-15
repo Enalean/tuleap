@@ -23,11 +23,11 @@ namespace Tuleap\Tracker\FormElement\SystemEvent;
 use DateTime;
 use Psr\Log\LoggerInterface;
 use SystemEvent;
-use TimePeriodWithoutWeekEnd;
 use Tracker_ArtifactFactory;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownFieldDao;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDaoCache;
-use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\FieldCalculator;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
@@ -132,13 +132,13 @@ class SystemEvent_BURNDOWN_GENERATE extends SystemEvent // phpcs:ignore Squiz.Cl
         $this->logger->debug("Calculating burndown for artifact #" . $artifact_id);
         if ($burndown_informations) {
             if (! isset($burndown_informations['duration'])) {
-                $burndown = TimePeriodWithoutWeekEnd::buildFromEndDate(
+                $burndown = DatePeriodWithoutWeekEnd::buildFromEndDate(
                     $burndown_informations['start_date'],
                     $burndown_informations['end_date'],
                     $this->logger
                 );
             } else {
-                $burndown = TimePeriodWithoutWeekEnd::buildFromDuration(
+                $burndown = DatePeriodWithoutWeekEnd::buildFromDuration(
                     $burndown_informations['start_date'],
                     $burndown_informations['duration']
                 );

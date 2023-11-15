@@ -36,11 +36,11 @@ use PlanningPermissionsManager;
 use Project;
 use Psr\Log\NullLogger;
 use TestHelper;
-use TimePeriodWithoutWeekEnd;
 use Tracker;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
@@ -167,20 +167,20 @@ final class MilestoneFactoryGetMilestoneTest extends \Tuleap\Test\PHPUnit\TestCa
             $hackfest_planning
         );
 
-        $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
+        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForArtifact')
             ->with($sprint_1, $this->user, $this->logger)
             ->once()
-            ->andReturn(TimePeriodWithoutWeekEnd::buildFromDuration(1, 1));
+            ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
-        $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
+        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForArtifact')
             ->with($sprint_2, $this->user, $this->logger)
             ->once()
-            ->andReturn(TimePeriodWithoutWeekEnd::buildFromDuration(1, 1));
+            ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
-        $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
+        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForArtifact')
             ->with($hackfest_2012, $this->user, $this->logger)
             ->once()
-            ->andReturn(TimePeriodWithoutWeekEnd::buildFromDuration(1, 1));
+            ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
         $milestone = Mockery::mock(Planning_ArtifactMilestone::class);
         $milestone->shouldReceive('getArtifact')->andReturn($release_1_0);
@@ -212,10 +212,10 @@ final class MilestoneFactoryGetMilestoneTest extends \Tuleap\Test\PHPUnit\TestCa
             ->andReturn($artifact)
             ->once();
 
-        $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
+        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForArtifact')
             ->with($artifact, $this->user, $this->logger)
             ->once()
-            ->andReturn(TimePeriodWithoutWeekEnd::buildFromDuration(1, 1));
+            ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
         $this->planning_factory->shouldReceive('getPlanning')->andReturn(Mockery::mock(Planning::class));
 

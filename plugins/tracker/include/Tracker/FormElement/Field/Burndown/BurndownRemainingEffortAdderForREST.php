@@ -71,7 +71,7 @@ class BurndownRemainingEffortAdderForREST
             $burndown_data->addEffortAt($key, $cached_day['value']);
         }
 
-        if ($burndown_data->getTimePeriod()->isTodayWithinTimePeriod()) {
+        if ($burndown_data->getDatePeriod()->isTodayWithinDatePeriod()) {
             $remaining_effort = $field->getComputedValue($user, $artifact, null);
             $burndown_data->addEffortAtDateTime($this->getLastTodayTime(new DateTime()), $remaining_effort);
             $burndown_data->addEffortAt(count($cached_days_result) + 1, $remaining_effort);

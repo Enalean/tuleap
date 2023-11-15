@@ -76,8 +76,8 @@ class ChartConfigurationValueChecker
     public function areBurndownFieldsCorrectlySet(Artifact $artifact, PFUser $user)
     {
         try {
-            $time_period = $this->configuration_value_retriever->getTimePeriod($artifact, $user);
-            return (bool) ($time_period->getStartDate() !== null && $time_period->getDuration() !== null);
+            $date_period = $this->configuration_value_retriever->getDatePeriod($artifact, $user);
+            return $date_period->getStartDate() !== null && $date_period->getDuration() !== null;
         } catch (Tracker_FormElement_Chart_Field_Exception $e) {
             return false;
         }

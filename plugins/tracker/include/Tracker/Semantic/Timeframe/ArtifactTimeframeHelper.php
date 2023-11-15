@@ -75,16 +75,16 @@ class ArtifactTimeframeHelper
     public function getEndDateArtifactHelperForReadOnlyView(PFUser $user, Artifact $artifact): string
     {
         $timeframe_semantic = $this->semantic_builder->getSemantic($artifact->getTracker());
-        $time_period        = $timeframe_semantic
+        $date_period        = $timeframe_semantic
             ->getTimeframeCalculator()
-            ->buildTimePeriodWithoutWeekendForArtifact(
+            ->buildDatePeriodWithoutWeekendForArtifact(
                 $artifact,
                 $user,
                 $this->logger
             );
 
         $end_date = new DateTime();
-        $end_date->setTimestamp((int) $time_period->getEndDate());
+        $end_date->setTimestamp((int) $date_period->getEndDate());
 
         return $end_date->format($GLOBALS['Language']->getText('system', 'datefmt_short'));
     }
@@ -94,7 +94,7 @@ class ArtifactTimeframeHelper
         $timeframe_semantic = $this->semantic_builder->getSemantic($artifact->getTracker());
         $duration           = (int) $timeframe_semantic
             ->getTimeframeCalculator()
-            ->buildTimePeriodWithoutWeekendForArtifact($artifact, $user, $this->logger)
+            ->buildDatePeriodWithoutWeekendForArtifact($artifact, $user, $this->logger)
             ->getDuration();
 
         return sprintf(dngettext('tuleap-tracker', '%s working day', '%s working days', $duration), $duration);

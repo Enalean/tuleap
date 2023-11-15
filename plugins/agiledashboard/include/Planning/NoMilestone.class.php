@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
+
 /**
  * Null-object pattern for planning milestones.
  */
@@ -180,7 +182,7 @@ class Planning_NoMilestone implements Planning_Milestone
         return null;
     }
 
-    public function setTimePeriod(TimePeriodWithoutWeekEnd $time_period)
+    public function setDatePeriod(DatePeriodWithoutWeekEnd $date_period): void
     {
     }
 

@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox;
 
 use Psr\Log\LoggerInterface;
-use TimePeriodWithoutWeekEnd;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Timebox\RetrieveTimeframeValueUserCanSee;
@@ -55,13 +55,13 @@ final class TimeframeValueRetriever implements RetrieveTimeframeValueUserCanSee
     private function loadTimePeriod(
         TimeboxIdentifier $timebox_identifier,
         UserIdentifier $user_identifier,
-    ): ?TimePeriodWithoutWeekEnd {
+    ): ?DatePeriodWithoutWeekEnd {
         $artifact = $this->artifact_retriever->getNonNullArtifact($timebox_identifier);
         $user     = $this->retrieve_user->getUserWithId($user_identifier);
 
         $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($artifact->getTracker());
 
-        return $semantic_timeframe->getTimeframeCalculator()->buildTimePeriodWithoutWeekendForArtifact(
+        return $semantic_timeframe->getTimeframeCalculator()->buildDatePeriodWithoutWeekendForArtifact(
             $artifact,
             $user,
             $this->logger

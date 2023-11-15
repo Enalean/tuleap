@@ -23,8 +23,8 @@ namespace Tuleap\Tracker\FormElement\Field\Burndown;
 use DateTime;
 use PFUser;
 use Psr\Log\LoggerInterface;
-use TimePeriodWithoutWeekEnd;
 use Tracker_Chart_Data_Burndown;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
@@ -98,23 +98,23 @@ class BurndownCacheGenerationChecker
     public function isBurndownUnderCalculationBasedOnServerTimezone(
         Artifact $artifact,
         PFUser $user,
-        TimePeriodWithoutWeekEnd $time_period,
+        DatePeriodWithoutWeekEnd $date_period,
         $capacity,
     ) {
-        $start = $this->getTimePeriodStartDateAtMidnight($time_period);
+        $start = $this->getDatePeriodStartDateAtMidnight($date_period);
 
         $this->logger->debug("Start date after updating timezone: " . $start->getTimestamp());
 
-        $time_period_with_start_date_from_midnight = TimePeriodWithoutWeekEnd::buildFromDuration(
+        $date_period_with_start_date_from_midnight = DatePeriodWithoutWeekEnd::buildFromDuration(
             $start->getTimestamp(),
-            $time_period->getDuration()
+            $date_period->getDuration()
         );
 
-        $server_burndown_data = new Tracker_Chart_Data_Burndown($time_period_with_start_date_from_midnight, $capacity);
+        $server_burndown_data = new Tracker_Chart_Data_Burndown($date_period_with_start_date_from_midnight, $capacity);
 
         $this->remaining_effort_adder->addRemainingEffortDataForREST($server_burndown_data, $artifact, $user);
         if (
-            $this->isCacheCompleteForBurndown($time_period_with_start_date_from_midnight, $artifact, $user) === false
+            $this->isCacheCompleteForBurndown($date_period_with_start_date_from_midnight, $artifact, $user) === false
             && $this->isCacheBurndownAlreadyAsked($artifact) === false
         ) {
             $this->cache_generator->forceBurndownCacheGeneration($artifact->getId());
@@ -127,7 +127,7 @@ class BurndownCacheGenerationChecker
     }
 
     private function isCacheCompleteForBurndown(
-        TimePeriodWithoutWeekEnd $time_period,
+        DatePeriodWithoutWeekEnd $date_period,
         Artifact $artifact,
         PFUser $user,
     ) {
@@ -140,15 +140,15 @@ class BurndownCacheGenerationChecker
                 $this->field_retriever->getBurndownRemainingEffortField($artifact, $user)->getId()
             );
 
-            return $this->cached_days_comparator->isNumberOfCachedDaysExpected($time_period, $cached_days['cached_days'] ?? 0);
+            return $this->cached_days_comparator->isNumberOfCachedDaysExpected($date_period, $cached_days['cached_days'] ?? 0);
         }
 
         return true;
     }
 
-    private function getTimePeriodStartDateAtMidnight(TimePeriodWithoutWeekEnd $time_period): DateTime
+    private function getDatePeriodStartDateAtMidnight(DatePeriodWithoutWeekEnd $date_period): DateTime
     {
-        $start_date = $time_period->getStartDate();
+        $start_date = $date_period->getStartDate();
 
         if ($start_date === null) {
             $start_date = $_SERVER['REQUEST_TIME'];

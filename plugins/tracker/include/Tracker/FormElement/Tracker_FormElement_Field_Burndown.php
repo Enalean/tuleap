@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -155,7 +156,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             $burndown_data = $this->getBurndownData(
                 $artifact,
                 $user,
-                $value_retriever->getTimePeriod($artifact, $user)
+                $value_retriever->getDatePeriod($artifact, $user)
             );
 
             if ($burndown_data->isBeingCalculated()) {
@@ -323,18 +324,18 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             $this->getBurndownDataForREST(
                 $artifact,
                 $user,
-                $this->getTimePeriodForRESTRepresentation($artifact, $user)
+                $this->getDatePeriodForRESTRepresentation($artifact, $user)
             )->getRESTRepresentation()
         );
 
         return $artifact_field_value_representation;
     }
 
-    private function getTimePeriodForRESTRepresentation(Artifact $artifact, PFUser $user)
+    private function getDatePeriodForRESTRepresentation(Artifact $artifact, PFUser $user): DatePeriodWithoutWeekEnd
     {
         $calculator = $this->getTimeframeCalculator();
 
-        return $calculator->buildTimePeriodWithoutWeekendForArtifactForREST($artifact, $user, $this->getLogger());
+        return $calculator->buildDatePeriodWithoutWeekendForArtifactForREST($artifact, $user, $this->getLogger());
     }
 
     protected function getLogger(): \Psr\Log\LoggerInterface
@@ -346,19 +347,19 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @return Tracker_Chart_Data_Burndown
      * @throws BurndownCacheIsCurrentlyCalculatedException
      */
-    public function getBurndownData(Artifact $artifact, PFUser $user, TimePeriodWithoutWeekEnd $time_period)
+    public function getBurndownData(Artifact $artifact, PFUser $user, DatePeriodWithoutWeekEnd $date_period)
     {
         $builder = $this->getBurndownDataBuilderForREST();
-        return $builder->build($artifact, $user, $time_period);
+        return $builder->build($artifact, $user, $date_period);
     }
 
     /**
      * @return Tracker_Chart_Data_Burndown
      * @throws BurndownCacheIsCurrentlyCalculatedException
      */
-    public function getBurndownDataForREST(Artifact $artifact, PFUser $user, TimePeriodWithoutWeekEnd $time_period)
+    public function getBurndownDataForREST(Artifact $artifact, PFUser $user, DatePeriodWithoutWeekEnd $date_period)
     {
-        return $this->getBurndownData($artifact, $user, $time_period);
+        return $this->getBurndownData($artifact, $user, $date_period);
     }
 
     private function getSystemEventManager()
@@ -778,10 +779,10 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     protected function buildBurndownDataForLegacy(PFUser $user, Artifact $artifact)
     {
-        $time_period = $this->getBurndownConfigurationValueRetriever()->getTimePeriod($artifact, $user);
+        $date_period = $this->getBurndownConfigurationValueRetriever()->getDatePeriod($artifact, $user);
         $builder     = $this->getBurndownDataBuilderForLegacy();
 
-        return $builder->build($artifact, $user, $time_period);
+        return $builder->build($artifact, $user, $date_period);
     }
 
     private function getBurndownDataBuilderForLegacy()

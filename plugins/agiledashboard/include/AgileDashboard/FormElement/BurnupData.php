@@ -21,13 +21,14 @@
 namespace Tuleap\AgileDashboard\FormElement;
 
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsInfo;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 
 class BurnupData
 {
     /**
-     * @var \TimePeriodWithoutWeekEnd
+     * @var DatePeriodWithoutWeekEnd
      */
-    private $time_period;
+    private $date_period;
 
     /**
      * @var bool
@@ -44,18 +45,18 @@ class BurnupData
      */
     private $count_elements = [];
 
-    public function __construct(\TimePeriodWithoutWeekEnd $time_period, $is_under_calculation)
+    public function __construct(DatePeriodWithoutWeekEnd $date_period, $is_under_calculation)
     {
         $this->is_under_calculation = $is_under_calculation;
-        $this->time_period          = $time_period;
+        $this->date_period          = $date_period;
     }
 
     /**
-     * @return \TimePeriodWithoutWeekEnd
+     * @return DatePeriodWithoutWeekEnd
      */
-    public function getTimePeriod()
+    public function getDatePeriod()
     {
-        return $this->time_period;
+        return $this->date_period;
     }
 
     /**

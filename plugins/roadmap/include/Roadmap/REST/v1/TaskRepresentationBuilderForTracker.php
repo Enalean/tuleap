@@ -73,10 +73,10 @@ final class TaskRepresentationBuilderForTracker implements IBuildATaskRepresenta
             throw new \RuntimeException("Given artifact is not part of the tracker");
         }
 
-        $time_period = $this->timeframe_calculator->buildTimePeriodWithoutWeekendForArtifactForREST($artifact, $user, $this->logger);
-        $start_date  = $time_period->getStartDate();
+        $date_period = $this->timeframe_calculator->buildDatePeriodWithoutWeekendForArtifactForREST($artifact, $user, $this->logger);
+        $start_date  = $date_period->getStartDate();
         $start       = $start_date ? (new \DateTimeImmutable())->setTimestamp($start_date) : null;
-        $end_date    = $time_period->getEndDate();
+        $end_date    = $date_period->getEndDate();
         $end         = $end_date ? (new \DateTimeImmutable())->setTimestamp($end_date) : null;
 
         $progress_result   = $this->progress_calculator->computeProgression($artifact, $user);
@@ -94,7 +94,7 @@ final class TaskRepresentationBuilderForTracker implements IBuildATaskRepresenta
             $end,
             $are_dates_implied,
             $artifact->isOpen(),
-            $time_period->getErrorMessage(),
+            $date_period->getErrorMessage(),
             $this->dependencies_retriever->getDependencies($artifact),
             new ProjectReference($artifact->getTracker()->getProject()),
         );
