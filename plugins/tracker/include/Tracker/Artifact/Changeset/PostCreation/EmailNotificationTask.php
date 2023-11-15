@@ -127,7 +127,7 @@ final class EmailNotificationTask implements PostCreationTask
                 $messages[$message_id]['message-id']  = $message_id;
                 $messages[$message_id]['headers']     = $headers;
                 $messages[$message_id]['recipients']  = [$user->getEmail()];
-                $messages[$message_id]['attachments'] = $this->getMessageAttachments($changeset, $user, $logger);
+                $messages[$message_id]['attachments'] = $this->getMessageAttachments($changeset, $user, $logger, $check_perms);
             } else {
                 $headers = [$this->getAnonymousHeaders()];
 
@@ -136,7 +136,7 @@ final class EmailNotificationTask implements PostCreationTask
                 $messages[$anonymous_mail]['message-id']  = null;
                 $messages[$anonymous_mail]['headers']     = $headers;
                 $messages[$anonymous_mail]['recipients']  = [$user->getEmail()];
-                $messages[$anonymous_mail]['attachments'] = $this->getMessageAttachments($changeset, $user, $logger);
+                $messages[$anonymous_mail]['attachments'] = $this->getMessageAttachments($changeset, $user, $logger, $check_perms);
 
                 $anonymous_mail += 1;
             }
@@ -155,7 +155,7 @@ final class EmailNotificationTask implements PostCreationTask
                 $ignore_perms    = ! $check_perms;
                 $recipient_mail  = $user->getEmail();
                 $message_content = $this->getMessageContent($changeset, $user, $is_update, $check_perms);
-                $attachments     = $this->getMessageAttachments($changeset, $user, $logger);
+                $attachments     = $this->getMessageAttachments($changeset, $user, $logger, $check_perms);
                 $headers         = array_filter([$this->getCustomReplyToHeader($changeset->getArtifact())]);
                 $hash            = md5($message_content['htmlBody'] . $message_content['txtBody'] . serialize($message_content['subject']) . serialize($attachments));
 
@@ -176,9 +176,9 @@ final class EmailNotificationTask implements PostCreationTask
         return $messages;
     }
 
-    private function getMessageAttachments(Tracker_Artifact_Changeset $changeset, \PFUser $recipient, LoggerInterface $logger): array
+    private function getMessageAttachments(Tracker_Artifact_Changeset $changeset, \PFUser $recipient, LoggerInterface $logger, bool $check_perms): array
     {
-        return $this->attachment_provider->getAttachments($changeset, $recipient, $logger);
+        return $this->attachment_provider->getAttachments($changeset, $recipient, $logger, $check_perms);
     }
 
     /**
