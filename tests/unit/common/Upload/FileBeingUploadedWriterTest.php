@@ -22,15 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Upload;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use Tuleap\DB\DBConnection;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Tus\TusFileInformation;
 
-class FileBeingUploadedWriterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FileBeingUploadedWriterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     public function testWriteChunk(): void
@@ -38,14 +36,14 @@ class FileBeingUploadedWriterTest extends \Tuleap\Test\PHPUnit\TestCase
         $tmp_dir = vfsStream::setup()->url();
         \ForgeConfig::set('tmp_dir', $tmp_dir);
 
-        $path_allocator = \Mockery::mock(PathAllocator::class);
+        $path_allocator = $this->createMock(PathAllocator::class);
         $path_allocator
-            ->shouldReceive('getPathForItemBeingUploaded')
-            ->andReturn("$tmp_dir/12");
-        $db_connection = \Mockery::mock(DBConnection::class);
+            ->method('getPathForItemBeingUploaded')
+            ->willReturn("$tmp_dir/12");
+        $db_connection = $this->createMock(DBConnection::class);
         $writer        = new FileBeingUploadedWriter($path_allocator, $db_connection);
 
-        $db_connection->shouldReceive('reconnectAfterALongRunningProcess')->twice();
+        $db_connection->expects(self::exactly(2))->method('reconnectAfterALongRunningProcess');
 
         $item_id          = 12;
         $file_information = new FileBeingUploadedInformation($item_id, 'Filename', 123, 0);
@@ -62,11 +60,11 @@ class FileBeingUploadedWriterTest extends \Tuleap\Test\PHPUnit\TestCase
         $written_size += $writer->writeChunk($file_information, 1, $input_stream);
         fclose($input_stream);
 
-        $this->assertSame(
+        self::assertSame(
             $content,
             file_get_contents($path_allocator->getPathForItemBeingUploaded($file_information))
         );
-        $this->assertSame($written_size, strlen($content));
+        self::assertSame($written_size, strlen($content));
     }
 
     public function testCanNotWriteMoreThanTheFileSize(): void
@@ -74,14 +72,14 @@ class FileBeingUploadedWriterTest extends \Tuleap\Test\PHPUnit\TestCase
         $tmp_dir = vfsStream::setup()->url();
         \ForgeConfig::set('tmp_dir', $tmp_dir);
 
-        $path_allocator = \Mockery::mock(PathAllocator::class);
+        $path_allocator = $this->createMock(PathAllocator::class);
         $path_allocator
-            ->shouldReceive('getPathForItemBeingUploaded')
-            ->andReturn("$tmp_dir/12");
-        $db_connection = \Mockery::mock(DBConnection::class);
+            ->method('getPathForItemBeingUploaded')
+            ->willReturn("$tmp_dir/12");
+        $db_connection = $this->createMock(DBConnection::class);
         $writer        = new FileBeingUploadedWriter($path_allocator, $db_connection);
 
-        $db_connection->shouldReceive('reconnectAfterALongRunningProcess')->once();
+        $db_connection->expects(self::once())->method('reconnectAfterALongRunningProcess');
 
         $item_id          = 12;
         $file_length      = 123;
@@ -94,20 +92,20 @@ class FileBeingUploadedWriterTest extends \Tuleap\Test\PHPUnit\TestCase
         $written_size = $writer->writeChunk($file_information, 0, $input_stream);
         fclose($input_stream);
 
-        $this->assertSame(
+        self::assertSame(
             str_repeat('A', $file_length),
             file_get_contents($path_allocator->getPathForItemBeingUploaded($file_information))
         );
-        $this->assertSame($written_size, $file_length);
+        self::assertSame($written_size, $file_length);
     }
 
     public function testInputThatIsNotAResourceIsRejected(): void
     {
-        $writer = new FileBeingUploadedWriter(\Mockery::mock(PathAllocator::class), \Mockery::mock(DBConnection::class));
+        $writer = new FileBeingUploadedWriter($this->createMock(PathAllocator::class), $this->createMock(DBConnection::class));
 
         $this->expectException(\InvalidArgumentException::class);
 
         $not_a_resource = false;
-        $writer->writeChunk(\Mockery::mock(TusFileInformation::class), 0, $not_a_resource);
+        $writer->writeChunk($this->createMock(TusFileInformation::class), 0, $not_a_resource);
     }
 }
