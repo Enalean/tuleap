@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Notifications\Settings;
 
 use Tuleap\DB\DataAccessObject;
 
-final class CalendarEventConfigDao extends DataAccessObject
+final class CalendarEventConfigDao extends DataAccessObject implements CheckEventShouldBeSentInNotification
 {
     public function duplicate(int $source_tracker_id, int $target_tracker_id): void
     {
@@ -35,5 +35,18 @@ final class CalendarEventConfigDao extends DataAccessObject
         WHERE tracker_id = ?
         EOSQL;
         $this->getDB()->run($sql, $target_tracker_id, $source_tracker_id);
+    }
+
+    public function shouldSendEventInNotification(int $tracker_id): bool
+    {
+        return $this->getDB()
+            ->cell(
+                <<<EOSQL
+                SELECT should_send_event_in_notification
+                FROM plugin_tracker_calendar_event_config
+                WHERE tracker_id = ?
+                EOSQL,
+                $tracker_id
+            ) === 1;
     }
 }

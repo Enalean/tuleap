@@ -48,6 +48,7 @@ use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderDao;
 use Tuleap\Tracker\Notifications\InvolvedNotificationDao;
 use Tuleap\Tracker\Notifications\RecipientsManager;
+use Tuleap\Tracker\Notifications\Settings\CalendarEventConfigDao;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Notifications\UserNotificationOnlyStatusChangeDAO;
@@ -121,7 +122,8 @@ class ActionsRunner
                 ),
                 new MailSender(),
                 new ConfigNotificationAssignedTo(new ConfigNotificationAssignedToDao()),
-                new ConfigNotificationEmailCustomSender(new ConfigNotificationEmailCustomSenderDao())
+                new ConfigNotificationEmailCustomSender(new ConfigNotificationEmailCustomSenderDao()),
+                new EmailNotificationAttachmentProvider(new CalendarEventConfigDao()),
             ),
             new WebhookNotificationTask(
                 $logger,
