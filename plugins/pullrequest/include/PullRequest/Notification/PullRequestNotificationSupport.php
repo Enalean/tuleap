@@ -240,15 +240,13 @@ final class PullRequestNotificationSupport
                         $git_repository_factory = self::buildGitRepositoryFactory();
                         $html_url_builder       = self::buildHTMLURLBuilder($git_repository_factory);
                         $user_manager           = \UserManager::instance();
-                        $reference_manager      = \ReferenceManager::instance();
                         $html_purifier          = \Codendi_HTMLPurifier::instance();
                         return new EventSubjectToNotificationListener(
                             self::buildPullRequestNotificationSendMail($git_repository_factory, $html_url_builder),
                             new PullRequestNewCommentNotificationToProcessBuilder(
                                 $user_manager,
-                                new Factory(
+                                new PullRequestRetriever(
                                     new Dao(),
-                                    $reference_manager
                                 ),
                                 new CommentRetriever(new CommentDao()),
                                 new OwnerRetriever(
@@ -289,15 +287,13 @@ final class PullRequestNotificationSupport
                         $git_repository_factory = self::buildGitRepositoryFactory();
                         $html_url_builder       = self::buildHTMLURLBuilder($git_repository_factory);
                         $user_manager           = \UserManager::instance();
-                        $reference_manager      = \ReferenceManager::instance();
                         $html_purifier          = \Codendi_HTMLPurifier::instance();
                         return new EventSubjectToNotificationListener(
                             self::buildPullRequestNotificationSendMail($git_repository_factory, $html_url_builder),
                             new PullRequestNewInlineCommentNotificationToProcessBuilder(
                                 $user_manager,
-                                new Factory(
+                                new PullRequestRetriever(
                                     new Dao(),
-                                    $reference_manager
                                 ),
                                 new InlineCommentRetriever(new \Tuleap\PullRequest\InlineComment\Dao()),
                                 new OwnerRetriever(

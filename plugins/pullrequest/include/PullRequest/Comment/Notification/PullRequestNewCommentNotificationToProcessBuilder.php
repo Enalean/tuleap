@@ -24,13 +24,13 @@ namespace Tuleap\PullRequest\Comment\Notification;
 
 use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Comment\CommentRetriever;
-use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
-use Tuleap\PullRequest\Factory as PullRequestFactory;
 use Tuleap\PullRequest\Notification\EventSubjectToNotification;
 use Tuleap\PullRequest\Notification\FilterUserFromCollection;
 use Tuleap\PullRequest\Notification\FormatNotificationContent;
 use Tuleap\PullRequest\Notification\NotificationToProcessBuilder;
 use Tuleap\PullRequest\Notification\OwnerRetriever;
+use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\PullRequestRetriever;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 use Tuleap\User\RetrieveUserById;
 use UserHelper;
@@ -42,7 +42,7 @@ final class PullRequestNewCommentNotificationToProcessBuilder implements Notific
 {
     public function __construct(
         private readonly RetrieveUserById $user_retriever,
-        private readonly PullRequestFactory $pull_request_factory,
+        private readonly PullRequestRetriever $pull_request_factory,
         private readonly CommentRetriever $comment_retriever,
         private readonly OwnerRetriever $owner_retriever,
         private readonly FilterUserFromCollection $filter_user_from_collection,
@@ -56,31 +56,30 @@ final class PullRequestNewCommentNotificationToProcessBuilder implements Notific
     {
         return $this->comment_retriever->getCommentByID($event->getCommentID())->mapOr(
             function (Comment $comment) {
-                try {
-                    $pull_request = $this->pull_request_factory->getPullRequestById($comment->getPullRequestId());
-                } catch (PullRequestNotFoundException $e) {
-                    return [];
-                }
+                return $this->pull_request_factory->getPullRequestById($comment->getPullRequestId())->match(
+                    function (PullRequest $pull_request) use ($comment) {
+                        $change_user = $this->user_retriever->getUserById($comment->getUserId());
+                        if ($change_user === null) {
+                            return [];
+                        }
 
-                $change_user = $this->user_retriever->getUserById($comment->getUserId());
-                if ($change_user === null) {
-                    return [];
-                }
+                        $pull_request_owners = $this->owner_retriever->getOwners($pull_request);
 
-                $pull_request_owners = $this->owner_retriever->getOwners($pull_request);
-
-                return [
-                    PullRequestNewCommentNotification::fromOwnersAndComment(
-                        $this->user_helper,
-                        $this->html_url_builder,
-                        $this->filter_user_from_collection,
-                        $this->format_notification_content,
-                        $pull_request,
-                        $change_user,
-                        $pull_request_owners,
-                        $comment
-                    ),
-                ];
+                        return [
+                            PullRequestNewCommentNotification::fromOwnersAndComment(
+                                $this->user_helper,
+                                $this->html_url_builder,
+                                $this->filter_user_from_collection,
+                                $this->format_notification_content,
+                                $pull_request,
+                                $change_user,
+                                $pull_request_owners,
+                                $comment
+                            ),
+                        ];
+                    },
+                    fn() => []
+                );
             },
             []
         );

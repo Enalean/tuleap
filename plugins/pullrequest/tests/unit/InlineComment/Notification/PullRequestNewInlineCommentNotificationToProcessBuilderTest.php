@@ -23,17 +23,17 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\InlineComment\Notification;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
-use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\InlineComment\InlineCommentRetriever;
 use Tuleap\PullRequest\Notification\FilterUserFromCollection;
 use Tuleap\PullRequest\Notification\OwnerRetriever;
 use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\PullRequestRetriever;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 use Tuleap\PullRequest\Tests\Builders\InlineCommentTestBuilder;
 use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
 use Tuleap\PullRequest\Tests\Stub\FormatNotificationContentStub;
 use Tuleap\PullRequest\Tests\Stub\InlineCommentSearcherStub;
+use Tuleap\PullRequest\Tests\Stub\SearchPullRequestStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use UserHelper;
@@ -41,7 +41,6 @@ use UserHelper;
 final class PullRequestNewInlineCommentNotificationToProcessBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private RetrieveUserByIdStub $user_retriever;
-    private Factory & MockObject $pull_request_factory;
     private InlineCommentSearcherStub $inline_comment_searcher;
     private OwnerRetriever & MockObject $owner_retriever;
     private InlineCommentCodeContextExtractor & MockObject $code_context_extractor;
@@ -49,6 +48,7 @@ final class PullRequestNewInlineCommentNotificationToProcessBuilderTest extends 
     private HTMLURLBuilder & MockObject $html_url_builder;
     private PullRequest $pull_request;
     private \PFUser $change_user;
+    private SearchPullRequestStub $pull_request_dao;
 
     protected function setUp(): void
     {
@@ -56,7 +56,7 @@ final class PullRequestNewInlineCommentNotificationToProcessBuilderTest extends 
         $this->pull_request = PullRequestTestBuilder::aPullRequestInReview()->build();
 
         $this->user_retriever          = RetrieveUserByIdStub::withUser($this->change_user);
-        $this->pull_request_factory    = $this->createMock(Factory::class);
+        $this->pull_request_dao        = SearchPullRequestStub::withPullRequest($this->pull_request);
         $this->code_context_extractor  = $this->createMock(InlineCommentCodeContextExtractor::class);
         $this->owner_retriever         = $this->createMock(OwnerRetriever::class);
         $this->user_helper             = $this->createMock(UserHelper::class);
@@ -68,7 +68,7 @@ final class PullRequestNewInlineCommentNotificationToProcessBuilderTest extends 
     {
         $builder = new PullRequestNewInlineCommentNotificationToProcessBuilder(
             $this->user_retriever,
-            $this->pull_request_factory,
+            new PullRequestRetriever($this->pull_request_dao),
             new InlineCommentRetriever($this->inline_comment_searcher),
             $this->owner_retriever,
             $this->code_context_extractor,
@@ -91,8 +91,6 @@ final class PullRequestNewInlineCommentNotificationToProcessBuilderTest extends 
         $event = PullRequestNewInlineCommentEvent::fromInlineCommentID($comment->getId());
 
         $this->inline_comment_searcher = InlineCommentSearcherStub::withComment($comment);
-        $this->pull_request_factory->method('getPullRequestById')
-            ->with($this->pull_request->getId())->willReturn($this->pull_request);
         $this->owner_retriever->method('getOwners')->willReturn($owners);
         $this->code_context_extractor->method('getCodeContext')->willReturn('+Some code');
         $this->user_helper->method('getDisplayNameFromUser')->willReturn('Display name');
@@ -121,9 +119,7 @@ final class PullRequestNewInlineCommentNotificationToProcessBuilderTest extends 
         $event = PullRequestNewInlineCommentEvent::fromInlineCommentID($comment->getId());
 
         $this->inline_comment_searcher = InlineCommentSearcherStub::withComment($comment);
-        $this->pull_request_factory->method('getPullRequestById')->willThrowException(
-            new PullRequestNotFoundException()
-        );
+        $this->pull_request_dao        = SearchPullRequestStub::withNoRow();
 
         $this->assertEmpty($this->getNotifications($event));
     }
@@ -137,8 +133,7 @@ final class PullRequestNewInlineCommentNotificationToProcessBuilderTest extends 
         $event = PullRequestNewInlineCommentEvent::fromInlineCommentID($comment->getId());
 
         $this->inline_comment_searcher = InlineCommentSearcherStub::withComment($comment);
-        $this->pull_request_factory->method('getPullRequestById')->willReturn($this->pull_request);
-        $this->user_retriever = RetrieveUserByIdStub::withNoUser();
+        $this->user_retriever          = RetrieveUserByIdStub::withNoUser();
 
         $this->assertEmpty($this->getNotifications($event));
     }
@@ -153,7 +148,6 @@ final class PullRequestNewInlineCommentNotificationToProcessBuilderTest extends 
         $event = PullRequestNewInlineCommentEvent::fromInlineCommentID($comment->getId());
 
         $this->inline_comment_searcher = InlineCommentSearcherStub::withComment($comment);
-        $this->pull_request_factory->method('getPullRequestById')->willReturn($this->pull_request);
         $this->owner_retriever->method('getOwners')->willReturn([$this->change_user]);
 
         $this->code_context_extractor->method('getCodeContext')
