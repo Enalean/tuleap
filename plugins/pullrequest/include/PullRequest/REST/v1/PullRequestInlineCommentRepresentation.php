@@ -33,10 +33,7 @@ final class PullRequestInlineCommentRepresentation
      */
     public $unidiff_offset;
 
-    /**
-     * @var MinimalUserRepresentation {@type MinimalUserRepresentation}
-     */
-    public $user;
+    public MinimalUserRepresentation $user;
 
     /**
      * @var string {@type string}

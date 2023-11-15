@@ -128,7 +128,7 @@ final class InlineCommentDAOTest extends TestCase
         $this->markCommentAsOutdated($outdated_comment_id, $outdated_comment->getUnidiffOffset());
 
         $all_rows  = $this->dao->searchAllByPullRequestId($pull_request_id);
-        $found_ids = $this->mapToIds($all_rows);
+        $found_ids = $this->mapRowsToIds($all_rows);
 
         self::assertCount(4, $all_rows);
         self::assertContains($first_comment_id, $found_ids);
@@ -137,16 +137,16 @@ final class InlineCommentDAOTest extends TestCase
         self::assertContains($outdated_comment_id, $found_ids);
         self::assertNotContains($comment_on_another_pr_id, $found_ids);
 
-        $rows_by_path = $this->dao->searchUpToDateByFilePath($pull_request_id, $file_path);
-        $found_ids    = $this->mapToIds($rows_by_path);
+        $comments_by_path = $this->dao->searchUpToDateByFilePath($pull_request_id, $file_path);
+        $found_ids        = $this->mapCommentsToIds($comments_by_path);
 
-        self::assertCount(2, $rows_by_path);
+        self::assertCount(2, $comments_by_path);
         self::assertContains($first_comment_id, $found_ids);
         self::assertContains($second_comment_id, $found_ids);
         self::assertNotContains($outdated_comment_id, $found_ids);
 
         $rows_by_pull_request_id = $this->dao->searchUpToDateByPullRequestId($pull_request_id);
-        $found_ids               = $this->mapToIds($rows_by_pull_request_id);
+        $found_ids               = $this->mapRowsToIds($rows_by_pull_request_id);
 
         self::assertCount(3, $rows_by_pull_request_id);
         self::assertContains($first_comment_id, $found_ids);
@@ -156,9 +156,15 @@ final class InlineCommentDAOTest extends TestCase
     }
 
     /** @psalm-return list<int> */
-    private function mapToIds(array $rows): array
+    private function mapRowsToIds(array $rows): array
     {
         return array_map(static fn(array $row) => $row['id'], $rows);
+    }
+
+    /** @psalm-return list<int> */
+    private function mapCommentsToIds(array $comments): array
+    {
+        return array_map(static fn(InlineComment $comment) => $comment->getId(), $comments);
     }
 
     private function insert(InlineComment $comment): int

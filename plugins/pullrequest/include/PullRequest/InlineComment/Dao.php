@@ -24,7 +24,7 @@ use Tuleap\DB\DataAccessObject;
 use Tuleap\PullRequest\Comment\ParentCommentSearcher;
 use Tuleap\PullRequest\Comment\ThreadColorUpdater;
 
-class Dao extends DataAccessObject implements ParentCommentSearcher, ThreadColorUpdater, InlineCommentSearcher, InlineCommentSaver
+class Dao extends DataAccessObject implements ParentCommentSearcher, ThreadColorUpdater, InlineCommentSearcher, InlineCommentSaver, SearchInlineCommentsOnFile
 {
     public function searchByCommentID(int $inline_comment_id): ?array
     {
@@ -36,13 +36,18 @@ class Dao extends DataAccessObject implements ParentCommentSearcher, ThreadColor
         );
     }
 
-    public function searchUpToDateByFilePath($pull_request_id, $file_path)
+    public function searchUpToDateByFilePath(int $pull_request_id, string $file_path): array
     {
         $sql = 'SELECT * FROM plugin_pullrequest_inline_comments
                 WHERE pull_request_id=?
                 AND file_path=? AND is_outdated=false';
 
-        return $this->getDB()->run($sql, $pull_request_id, $file_path);
+        $rows     = $this->getDB()->run($sql, $pull_request_id, $file_path);
+        $comments = [];
+        foreach ($rows as $row) {
+            $comments[] = InlineComment::buildFromRow($row);
+        }
+        return $comments;
     }
 
     public function searchUpToDateByPullRequestId($pull_request_id)
@@ -105,7 +110,7 @@ class Dao extends DataAccessObject implements ParentCommentSearcher, ThreadColor
         $this->getDB()->update(
             'plugin_pullrequest_inline_comments',
             [
-                'content' => $comment->getContent(),
+                'content'           => $comment->getContent(),
                 'last_edition_date' => $comment->getLastEditionDate()->unwrapOr(null),
             ],
             ['id' => $comment->getId()]
