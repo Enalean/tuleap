@@ -20,12 +20,10 @@
 
 namespace Tuleap\Dashboard\Project;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class ProjectDashboardRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /** @var Project */
     private $project_with_a_dashboard;
 
@@ -34,39 +32,41 @@ class ProjectDashboardRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     /** @var ProjectDashboardRetriever */
     private $project_retriever;
+    private ProjectDashboardDao&MockObject $dao;
 
     protected function setUp(): void
     {
-        $this->project_with_a_dashboard  = \Mockery::spy(\Project::class, ['getID' => 1, 'getUnixName' => false, 'isPublic' => false]);
-        $this->project_without_dashboard = \Mockery::spy(\Project::class, ['getID' => 2, 'getUnixName' => false, 'isPublic' => false]);
+        $this->project_with_a_dashboard = $this->createMock(\Project::class);
+        $this->project_with_a_dashboard->method('getID')->willReturn(1);
+        $this->project_without_dashboard = $this->createMock(\Project::class);
+        $this->project_without_dashboard->method('getID')->willReturn(2);
 
-        $dao = \Mockery::spy(\Tuleap\Dashboard\Project\ProjectDashboardDao::class);
+        $this->dao = $this->createMock(\Tuleap\Dashboard\Project\ProjectDashboardDao::class);
 
-        $dao->shouldReceive('searchAllProjectDashboards')->with(1)->andReturns(\TestHelper::arrayToDar([
-            'id'         => 1,
-            'project_id' => 1,
-            'name'       => 'dashboard_one',
-        ]));
-        $dao->shouldReceive('searchAllProjectDashboards')->with(2)->andReturns(\TestHelper::emptyDar());
-
-        $this->project_retriever = new ProjectDashboardRetriever($dao);
+        $this->project_retriever = new ProjectDashboardRetriever($this->dao);
     }
 
     public function testItGetsAllDashboards()
     {
+        $this->dao->method('searchAllProjectDashboards')->with(1)->willReturn(\TestHelper::arrayToDar([
+            'id' => 1,
+            'project_id' => 1,
+            'name' => 'dashboard_one',
+        ]));
         $result = $this->project_retriever->getAllProjectDashboards($this->project_with_a_dashboard);
 
         $expected_result = [
             new ProjectDashboard(1, 1, 'dashboard_one'),
         ];
 
-        $this->assertEquals($expected_result, $result);
+        self::assertEquals($expected_result, $result);
     }
 
     public function testItReturnsAnEmptyIfThereAreNoDashboards()
     {
+        $this->dao->method('searchAllProjectDashboards')->with(2)->willReturn(\TestHelper::emptyDar());
         $result = $this->project_retriever->getAllProjectDashboards($this->project_without_dashboard);
 
-        $this->assertEmpty($result);
+        self::assertEmpty($result);
     }
 }

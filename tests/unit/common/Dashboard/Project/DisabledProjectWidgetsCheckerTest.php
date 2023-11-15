@@ -22,17 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Dashboard\Project;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Dashboard\User\UserDashboard;
 use Widget;
 
 class DisabledProjectWidgetsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|DisabledProjectWidgetsDao
+     * @var MockObject&DisabledProjectWidgetsDao
      */
     private $dao;
 
@@ -42,7 +39,7 @@ class DisabledProjectWidgetsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private $checker;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Widget
+     * @var MockObject&Widget
      */
     private $widget;
 
@@ -50,38 +47,39 @@ class DisabledProjectWidgetsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->dao     = Mockery::mock(DisabledProjectWidgetsDao::class);
+        $this->dao     = $this->createMock(DisabledProjectWidgetsDao::class);
         $this->checker = new DisabledProjectWidgetsChecker($this->dao);
 
-        $this->widget = Mockery::mock(Widget::class)->shouldReceive('getId')->andReturn('widget01')->getMock();
+        $this->widget = $this->createMock(Widget::class);
+        $this->widget->method('getId')->willReturn('widget01');
     }
 
-    public function testItReturnsFalseIfDashboardTypeIsNotProject()
+    public function testItReturnsFalseIfDashboardTypeIsNotProject(): void
     {
-        $this->dao->shouldNotReceive('isWidgetDisabled');
-        $this->assertFalse($this->checker->isWidgetDisabled($this->widget, 'whatever'));
+        $this->dao->method('isWidgetDisabled');
+        self::assertFalse($this->checker->isWidgetDisabled($this->widget, 'whatever'));
 
         $dashboard = new UserDashboard(1, 101, 'dash');
-        $this->assertFalse($this->checker->checkWidgetIsDisabledFromDashboard($this->widget, $dashboard));
+        self::assertFalse($this->checker->checkWidgetIsDisabledFromDashboard($this->widget, $dashboard));
     }
 
-    public function testItReturnsTrueIfDashboardTypeIsProjectAndWidgetIsInDB()
+    public function testItReturnsTrueIfDashboardTypeIsProjectAndWidgetIsInDB(): void
     {
-        $this->dao->shouldReceive('isWidgetDisabled')->with('widget01')->andReturnTrue();
-        $this->assertTrue($this->checker->isWidgetDisabled($this->widget, 'project'));
-        $this->assertTrue($this->checker->isWidgetDisabled($this->widget, 'g'));
+        $this->dao->method('isWidgetDisabled')->with('widget01')->willReturn(true);
+        self::assertTrue($this->checker->isWidgetDisabled($this->widget, 'project'));
+        self::assertTrue($this->checker->isWidgetDisabled($this->widget, 'g'));
 
         $dashboard = new ProjectDashboard(1, 101, 'dash');
-        $this->assertTrue($this->checker->checkWidgetIsDisabledFromDashboard($this->widget, $dashboard));
+        self::assertTrue($this->checker->checkWidgetIsDisabledFromDashboard($this->widget, $dashboard));
     }
 
-    public function testItReturnsFalseIfDashboardTypeIsProjectAndWidgetIsNotInDB()
+    public function testItReturnsFalseIfDashboardTypeIsProjectAndWidgetIsNotInDB(): void
     {
-        $this->dao->shouldReceive('isWidgetDisabled')->with('widget01')->andReturnFalse();
-        $this->assertFalse($this->checker->isWidgetDisabled($this->widget, 'project'));
-        $this->assertFalse($this->checker->isWidgetDisabled($this->widget, 'g'));
+        $this->dao->method('isWidgetDisabled')->with('widget01')->willReturn(false);
+        self::assertFalse($this->checker->isWidgetDisabled($this->widget, 'project'));
+        self::assertFalse($this->checker->isWidgetDisabled($this->widget, 'g'));
 
         $dashboard = new UserDashboard(1, 101, 'dash');
-        $this->assertFalse($this->checker->checkWidgetIsDisabledFromDashboard($this->widget, $dashboard));
+        self::assertFalse($this->checker->checkWidgetIsDisabledFromDashboard($this->widget, $dashboard));
     }
 }

@@ -20,7 +20,7 @@
 
 namespace Tuleap\Dashboard\Project;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use Tuleap\Dashboard\Widget\DashboardWidget;
 use Tuleap\Dashboard\Widget\DashboardWidgetColumn;
@@ -29,8 +29,6 @@ use Tuleap\Project\MappingRegistry;
 
 class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var ProjectDashboardDuplicator
      */
@@ -47,38 +45,28 @@ class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private $new_project;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|DisabledProjectWidgetsChecker
+     * @var MockObject&DisabledProjectWidgetsChecker
      */
     private $checker;
-    /**
-     * @var ProjectDashboardDao&\Mockery\MockInterface
-     */
-    private ProjectDashboardDao|\Mockery\LegacyMockInterface|\Mockery\MockInterface $dao;
-    /**
-     * @var ProjectDashboardRetriever&\Mockery\MockInterface
-     */
-    private ProjectDashboardRetriever|\Mockery\LegacyMockInterface|\Mockery\MockInterface $retriever;
-    /**
-     * @var \Tuleap\Dashboard\Widget\DashboardWidgetDao&\Mockery\MockInterface
-     */
-    private \Tuleap\Dashboard\Widget\DashboardWidgetDao|\Mockery\MockInterface|\Mockery\LegacyMockInterface $widget_dao;
-    /**
-     * @var \Tuleap\Dashboard\Widget\DashboardWidgetRetriever&\Mockery\MockInterface
-     */
-    private \Tuleap\Dashboard\Widget\DashboardWidgetRetriever|\Mockery\LegacyMockInterface|\Mockery\MockInterface $widget_retriever;
-    /**
-     * @var \Tuleap\Widget\WidgetFactory&\Mockery\MockInterface
-     */
-    private \Tuleap\Widget\WidgetFactory|\Mockery\LegacyMockInterface|\Mockery\MockInterface $widget_factory;
+    private ProjectDashboardDao&MockObject $dao;
+    private ProjectDashboardRetriever&MockObject $retriever;
+    private \Tuleap\Dashboard\Widget\DashboardWidgetDao&MockObject $widget_dao;
+    private \Tuleap\Dashboard\Widget\DashboardWidgetRetriever&MockObject $widget_retriever;
+    private \Tuleap\Widget\WidgetFactory&MockObject $widget_factory;
 
     protected function setUp(): void
     {
-        $this->dao              = \Mockery::spy(\Tuleap\Dashboard\Project\ProjectDashboardDao::class);
-        $this->retriever        = \Mockery::spy(\Tuleap\Dashboard\Project\ProjectDashboardRetriever::class);
-        $this->widget_dao       = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
-        $this->widget_retriever = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetRetriever::class);
-        $this->widget_factory   = \Mockery::spy(\Tuleap\Widget\WidgetFactory::class);
-        $this->checker          = \Mockery::mock(DisabledProjectWidgetsChecker::class);
+        $this->dao = $this->createMock(\Tuleap\Dashboard\Project\ProjectDashboardDao::class);
+        $this->dao->method('startTransaction');
+        $this->dao->method('commit');
+        $this->dao->method('duplicateDashboard');
+        $this->retriever  = $this->createMock(\Tuleap\Dashboard\Project\ProjectDashboardRetriever::class);
+        $this->widget_dao = $this->createMock(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
+        $this->widget_dao->method('duplicateLine');
+        $this->widget_dao->method('duplicateColumn');
+        $this->widget_retriever = $this->createMock(\Tuleap\Dashboard\Widget\DashboardWidgetRetriever::class);
+        $this->widget_factory   = $this->createMock(\Tuleap\Widget\WidgetFactory::class);
+        $this->checker          = $this->createMock(DisabledProjectWidgetsChecker::class);
 
         $this->duplicator = new ProjectDashboardDuplicator(
             $this->dao,
@@ -89,45 +77,47 @@ class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->checker
         );
 
-        $this->template_project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
-        $this->new_project      = \Mockery::spy(\Project::class, ['getID' => 102, 'getUnixName' => false, 'isPublic' => false]);
+        $this->template_project = $this->createMock(\Project::class);
+        $this->template_project->method('getID')->willReturn(101);
+        $this->new_project = $this->createMock(\Project::class);
+        $this->new_project->method('getID')->willReturn(102);
     }
 
-    public function testItDuplicatesEachDasboards()
+    public function testItDuplicatesEachDashboards(): void
     {
         $dashboard_01 = new ProjectDashboard(1, 101, 'dashboard');
         $dashboard_02 = new ProjectDashboard(2, 101, 'dashboard 2');
 
-        $this->widget_retriever->shouldReceive('getAllWidgets')->andReturns([]);
+        $this->widget_retriever->method('getAllWidgets')->willReturn([]);
 
-        $this->retriever->shouldReceive('getAllProjectDashboards')->with($this->template_project)->andReturns([$dashboard_01, $dashboard_02]);
+        $this->retriever->method('getAllProjectDashboards')->with($this->template_project)->willReturn([$dashboard_01, $dashboard_02]);
 
-        $this->dao->shouldReceive('duplicateDashboard')->times(2);
+        $this->dao->expects(self::exactly(2))->method('duplicateDashboard');
 
         $this->duplicator->duplicate($this->template_project, $this->new_project, new MappingRegistry([]));
     }
 
-    public function testItDuplicatesEachLinesForADashboard()
+    public function testItDuplicatesEachLinesForADashboard(): void
     {
         $dashboard = new ProjectDashboard(1, 101, 'dashboard');
 
-        $this->retriever->shouldReceive('getAllProjectDashboards')->with($this->template_project)->andReturns([$dashboard]);
+        $this->retriever->method('getAllProjectDashboards')->with($this->template_project)->willReturn([$dashboard]);
 
         $line_01 = new DashboardWidgetLine(1, 'one-column', []);
         $line_02 = new DashboardWidgetLine(2, 'one-column', []);
 
-        $this->widget_retriever->shouldReceive('getAllWidgets')->with(1, 'project')->andReturns([$line_01, $line_02]);
+        $this->widget_retriever->method('getAllWidgets')->with(1, 'project')->willReturn([$line_01, $line_02]);
 
-        $this->widget_dao->shouldReceive('duplicateLine')->times(2);
+        $this->widget_dao->expects(self::exactly(2))->method('duplicateLine');
 
         $this->duplicator->duplicate($this->template_project, $this->new_project, new MappingRegistry([]));
     }
 
-    public function testItDuplicatesEachColumnsForALine()
+    public function testItDuplicatesEachColumnsForALine(): void
     {
         $dashboard = new ProjectDashboard(1, 101, 'dashboard');
 
-        $this->retriever->shouldReceive('getAllProjectDashboards')->with($this->template_project)->andReturns([$dashboard]);
+        $this->retriever->method('getAllProjectDashboards')->with($this->template_project)->willReturn([$dashboard]);
 
         $column_01 = new DashboardWidgetColumn(1, 1, []);
         $column_02 = new DashboardWidgetColumn(2, 2, []);
@@ -138,18 +128,18 @@ class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             [$column_01, $column_02]
         );
 
-        $this->widget_retriever->shouldReceive('getAllWidgets')->with(1, 'project')->andReturns([$line]);
+        $this->widget_retriever->method('getAllWidgets')->with(1, 'project')->willReturn([$line]);
 
-        $this->widget_dao->shouldReceive('duplicateColumn')->times(2);
+        $this->widget_dao->expects(self::exactly(2))->method('duplicateColumn');
 
         $this->duplicator->duplicate($this->template_project, $this->new_project, new MappingRegistry([]));
     }
 
-    public function testItDuplicatesEachWidgetForAColumn()
+    public function testItDuplicatesEachWidgetForAColumn(): void
     {
         $dashboard = new ProjectDashboard(1, 101, 'dashboard');
 
-        $this->retriever->shouldReceive('getAllProjectDashboards')->with($this->template_project)->andReturns([$dashboard]);
+        $this->retriever->method('getAllProjectDashboards')->with($this->template_project)->willReturn([$dashboard]);
 
         $widget_01 = new DashboardWidget(1, 'projectimageviewer', 1, 1, 1, 0);
         $widget_02 = new DashboardWidget(2, 'projectcontacts', 0, 1, 2, 0);
@@ -161,36 +151,36 @@ class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             [$column]
         );
 
-        $this->widget_retriever->shouldReceive('getAllWidgets')->with(1, 'project')->andReturns([$line]);
+        $this->widget_retriever->method('getAllWidgets')->with(1, 'project')->willReturn([$line]);
 
-        $widget_instance_01 = \Mockery::spy(\Widget::class);
-        $widget_instance_02 = \Mockery::spy(\Widget::class);
+        $widget_instance_01 = $this->createMock(\Widget::class);
+        $widget_instance_01->method('setOwner');
+        $widget_instance_02 = $this->createMock(\Widget::class);
+        $widget_instance_02->method('setOwner');
 
-        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectimageviewer')->andReturns($widget_instance_01);
-        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectcontacts')->andReturns($widget_instance_02);
+        $this->widget_factory->method('getInstanceByWidgetName')->withConsecutive(
+            ['projectimageviewer'],
+            ['projectcontacts'],
+        )->willReturnOnConsecutiveCalls($widget_instance_01, $widget_instance_02);
 
-        $this->widget_dao->shouldReceive('duplicateWidget')->times(2);
-        $widget_instance_01->shouldReceive('cloneContent')->once();
-        $widget_instance_02->shouldReceive('cloneContent')->once();
+        $this->widget_dao->expects(self::exactly(2))->method('duplicateWidget');
+        $widget_instance_01->expects(self::once())->method('cloneContent');
+        $widget_instance_02->expects(self::once())->method('cloneContent');
 
-        $this->checker->shouldReceive('isWidgetDisabled')
-            ->with($widget_instance_01, ProjectDashboardController::DASHBOARD_TYPE)
-            ->once()
-            ->andReturnFalse();
-
-        $this->checker->shouldReceive('isWidgetDisabled')
-            ->with($widget_instance_02, ProjectDashboardController::DASHBOARD_TYPE)
-            ->once()
-            ->andReturnFalse();
+        $this->checker->method('isWidgetDisabled')
+            ->withConsecutive(
+                [$widget_instance_01, ProjectDashboardController::DASHBOARD_TYPE],
+                [$widget_instance_02, ProjectDashboardController::DASHBOARD_TYPE],
+            )->willReturn(false);
 
         $this->duplicator->duplicate($this->template_project, $this->new_project, new MappingRegistry([]));
     }
 
-    public function testItDoesNotDuplicateDisabledProjectWidgetForAColumn()
+    public function testItDoesNotDuplicateDisabledProjectWidgetForAColumn(): void
     {
         $dashboard = new ProjectDashboard(1, 101, 'dashboard');
 
-        $this->retriever->shouldReceive('getAllProjectDashboards')->with($this->template_project)->andReturns([$dashboard]);
+        $this->retriever->method('getAllProjectDashboards')->with($this->template_project)->willReturn([$dashboard]);
 
         $widget_01 = new DashboardWidget(1, 'projectimageviewer', 1, 1, 1, 0);
         $widget_02 = new DashboardWidget(2, 'projectcontacts', 0, 1, 2, 0);
@@ -202,36 +192,35 @@ class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             [$column]
         );
 
-        $this->widget_retriever->shouldReceive('getAllWidgets')->with(1, 'project')->andReturns([$line]);
+        $this->widget_retriever->method('getAllWidgets')->with(1, 'project')->willReturn([$line]);
 
-        $widget_instance_01 = \Mockery::spy(\Widget::class);
-        $widget_instance_02 = \Mockery::spy(\Widget::class);
+        $widget_instance_01 = $this->createMock(\Widget::class);
+        $widget_instance_01->method('setOwner');
+        $widget_instance_02 = $this->createMock(\Widget::class);
 
-        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectimageviewer')->andReturns($widget_instance_01);
-        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectcontacts')->andReturns($widget_instance_02);
+        $this->widget_factory->method('getInstanceByWidgetName')->withConsecutive(
+            ['projectimageviewer'],
+            ['projectcontacts'],
+        )->willReturnOnConsecutiveCalls($widget_instance_01, $widget_instance_02);
 
-        $this->widget_dao->shouldReceive('duplicateWidget')->once();
-        $widget_instance_01->shouldReceive('cloneContent')->once();
-        $widget_instance_02->shouldReceive('cloneContent')->never();
+        $this->widget_dao->expects(self::once())->method('duplicateWidget');
+        $widget_instance_01->expects(self::once())->method('cloneContent');
+        $widget_instance_02->expects(self::never())->method('cloneContent');
 
-        $this->checker->shouldReceive('isWidgetDisabled')
-            ->with($widget_instance_01, ProjectDashboardController::DASHBOARD_TYPE)
-            ->once()
-            ->andReturnFalse();
-
-        $this->checker->shouldReceive('isWidgetDisabled')
-            ->with($widget_instance_02, ProjectDashboardController::DASHBOARD_TYPE)
-            ->once()
-            ->andReturnTrue();
+        $this->checker->method('isWidgetDisabled')
+            ->withConsecutive(
+                [$widget_instance_01, ProjectDashboardController::DASHBOARD_TYPE],
+                [$widget_instance_02, ProjectDashboardController::DASHBOARD_TYPE],
+            )->willReturnOnConsecutiveCalls(false, true);
 
         $this->duplicator->duplicate($this->template_project, $this->new_project, new MappingRegistry([]));
     }
 
-    public function testItDoesNotDuplicateUnknownWidgetForAColumn()
+    public function testItDoesNotDuplicateUnknownWidgetForAColumn(): void
     {
         $dashboard = new ProjectDashboard(1, 101, 'dashboard');
 
-        $this->retriever->shouldReceive('getAllProjectDashboards')->with($this->template_project)->andReturns([$dashboard]);
+        $this->retriever->method('getAllProjectDashboards')->with($this->template_project)->willReturn([$dashboard]);
 
         $widget = new DashboardWidget(1, 'projectimageviewer', 1, 1, 1, 0);
 
@@ -242,13 +231,13 @@ class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             [$column]
         );
 
-        $this->widget_retriever->shouldReceive('getAllWidgets')->with(1, 'project')->andReturns([$line]);
+        $this->widget_retriever->method('getAllWidgets')->with(1, 'project')->willReturn([$line]);
 
-        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectimageviewer')->andReturns(null);
+        $this->widget_factory->method('getInstanceByWidgetName')->with('projectimageviewer')->willReturn(null);
 
-        $this->widget_dao->shouldReceive('duplicateWidget')->never();
+        $this->widget_dao->expects(self::never())->method('duplicateWidget');
 
-        $this->checker->shouldReceive('isWidgetDisabled')->never();
+        $this->checker->expects(self::never())->method('isWidgetDisabled');
 
         $this->duplicator->duplicate($this->template_project, $this->new_project, new MappingRegistry([]));
     }
