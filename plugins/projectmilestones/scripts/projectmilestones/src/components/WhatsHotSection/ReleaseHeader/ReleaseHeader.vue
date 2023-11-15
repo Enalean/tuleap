@@ -23,7 +23,7 @@
         <h1 class="project-release-title" data-test="title-release">
             {{ release_data.label }}
         </h1>
-        <span class="project-release-date" v-if="startDateExist()">
+        <span class="project-release-date" v-if="start_date_exist">
             {{ formatDate(release_data.start_date) }}
             <i class="release-date-icon fas fa-long-arrow-alt-right" data-test="display-arrow"></i>
             {{ formatDate(release_data.end_date) }}
@@ -34,13 +34,17 @@
             class="tlp-skeleton-text release-remaining-disabled"
             data-test="display-skeleton"
         ></div>
-        <div v-else-if="!isPastRelease" class="release-remaining-effort-badges">
+        <div
+            v-else-if="!isPastRelease"
+            class="release-remaining-effort-badges"
+            data-test="is-current-release"
+        >
             <release-header-remaining-days v-bind:release_data="release_data" />
             <release-header-remaining-points v-bind:release_data="release_data" />
         </div>
         <div v-else class="closed-release-header-badges">
             <past-release-header-tests-displayer
-                v-if="is_testplan_activated"
+                v-if="is_testplan_activated_value"
                 v-bind:release_data="release_data"
             />
             <past-release-header-initial-points v-bind:release_data="release_data" />
@@ -48,42 +52,32 @@
     </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { formatDateYearMonthDay } from "@tuleap/date-helper";
 import ReleaseHeaderRemainingDays from "./ReleaseHeaderRemainingDays.vue";
 import ReleaseHeaderRemainingPoints from "./ReleaseHeaderRemainingPoints.vue";
-import Vue from "vue";
+import { computed } from "vue";
 import type { MilestoneData } from "../../../type";
-import { Component, Prop } from "vue-property-decorator";
 import PastReleaseHeaderInitialPoints from "./PastReleaseHeaderInitialPoints.vue";
 import PastReleaseHeaderTestsDisplayer from "./PastReleaseHeaderTestsDisplayer.vue";
 import { is_testplan_activated } from "../../../helpers/test-management-helper";
 import { getUserLocale } from "../../../helpers/user-locale-helper";
 
-@Component({
-    components: {
-        PastReleaseHeaderTestsDisplayer,
-        PastReleaseHeaderInitialPoints,
-        ReleaseHeaderRemainingPoints,
-        ReleaseHeaderRemainingDays,
-    },
-})
-export default class ReleaseHeader extends Vue {
-    @Prop()
-    readonly release_data!: MilestoneData;
-    @Prop()
-    readonly isLoading!: boolean;
-    @Prop()
-    readonly isPastRelease!: boolean;
+const props = defineProps<{
+    release_data: MilestoneData;
+    isLoading: boolean;
+    isPastRelease: boolean;
+}>();
 
-    formatDate = (date: string | null): string => formatDateYearMonthDay(getUserLocale(), date);
-
-    startDateExist(): boolean {
-        return this.release_data.start_date !== null;
-    }
-
-    get is_testplan_activated(): boolean {
-        return is_testplan_activated(this.release_data) && this.release_data.campaign !== null;
-    }
+function formatDate(date: string | null): string {
+    return formatDateYearMonthDay(getUserLocale(), date);
 }
+
+const start_date_exist = computed((): boolean => {
+    return props.release_data.start_date !== null;
+});
+
+const is_testplan_activated_value = computed((): boolean => {
+    return is_testplan_activated(props.release_data) && props.release_data.campaign !== null;
+});
 </script>

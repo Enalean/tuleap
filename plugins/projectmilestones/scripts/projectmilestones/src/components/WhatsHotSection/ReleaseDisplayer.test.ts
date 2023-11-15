@@ -60,6 +60,7 @@ describe("ReleaseDisplayer", () => {
             propsData: {
                 release_data,
                 isOpen: true,
+                isPastRelease: false,
             },
             data(): DefaultData<ReleaseDisplayer> {
                 return {
@@ -110,6 +111,7 @@ describe("ReleaseDisplayer", () => {
             propsData: {
                 release_data,
                 isOpen: false,
+                isPastRelease: false,
             },
         };
 
