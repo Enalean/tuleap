@@ -28,6 +28,7 @@
             <test-management
                 v-else-if="are_some_tests_to_display"
                 v-bind:release_data="release_data"
+                v-bind:campaign="campaign"
             />
         </div>
     </div>
@@ -36,7 +37,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import type { MilestoneData } from "../../../../type";
+import type { MilestoneData, TestManagementCampaign } from "../../../../type";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { is_testplan_activated } from "../../../../helpers/test-management-helper";
 import TestManagement from "./TestManagement.vue";
@@ -52,17 +53,17 @@ export default class TestManagementDisplayer extends Vue {
 
     is_loading = true;
     message_error_rest: string | null = null;
+    campaign: TestManagementCampaign | null = null;
 
     get has_rest_error(): boolean {
         return this.message_error_rest !== null;
     }
 
     async created(): Promise<void> {
-        if (!this.release_data.campaign) {
+        this.campaign = this.release_data.campaign;
+        if (!this.campaign) {
             try {
-                this.release_data.campaign = await this.root_store.getTestManagementCampaigns(
-                    this.release_data,
-                );
+                this.campaign = await this.root_store.getTestManagementCampaigns(this.release_data);
             } catch (rest_error) {
                 await this.handle_error(rest_error);
             } finally {
@@ -91,15 +92,15 @@ export default class TestManagementDisplayer extends Vue {
     }
 
     get are_some_tests_to_display(): boolean {
-        if (!this.release_data.campaign) {
+        if (!this.campaign) {
             return false;
         }
 
         if (
-            this.release_data.campaign.nb_of_notrun > 0 ||
-            this.release_data.campaign.nb_of_failed > 0 ||
-            this.release_data.campaign.nb_of_passed > 0 ||
-            this.release_data.campaign.nb_of_blocked > 0
+            this.campaign.nb_of_notrun > 0 ||
+            this.campaign.nb_of_failed > 0 ||
+            this.campaign.nb_of_passed > 0 ||
+            this.campaign.nb_of_blocked > 0
         ) {
             this.$emit("ttm-exists");
             return true;

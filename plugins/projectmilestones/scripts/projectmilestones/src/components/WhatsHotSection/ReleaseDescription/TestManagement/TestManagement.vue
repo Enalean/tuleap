@@ -29,7 +29,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import type { MilestoneData } from "../../../../type";
+import type { MilestoneData, TestManagementCampaign } from "../../../../type";
 import { is_testplan_activated } from "../../../../helpers/test-management-helper";
 import type { DataPieChart } from "@tuleap/pie-chart";
 import { createPieChart } from "../../../../chart_builder/pie_chart_drawer/pie-chart-drawer";
@@ -38,6 +38,8 @@ import { createPieChart } from "../../../../chart_builder/pie_chart_drawer/pie-c
 export default class TestManagement extends Vue {
     @Prop()
     readonly release_data!: MilestoneData;
+    @Prop()
+    readonly campaign!: TestManagementCampaign;
 
     PIE_CHART_HEIGHT_WIDTH = 170;
     PIE_CHART_RADIUS = 170;
@@ -51,7 +53,7 @@ export default class TestManagement extends Vue {
     }
 
     get getDataPieChartCampaign(): DataPieChart[] {
-        if (!this.release_data.campaign) {
+        if (!this.campaign) {
             return [];
         }
 
@@ -59,28 +61,28 @@ export default class TestManagement extends Vue {
             {
                 key: "notrun",
                 label: this.$gettext("Not run"),
-                count: this.release_data.campaign.nb_of_notrun,
+                count: this.campaign.nb_of_notrun,
             },
             {
                 key: "passed",
                 label: this.$gettext("Passed"),
-                count: this.release_data.campaign.nb_of_passed,
+                count: this.campaign.nb_of_passed,
             },
             {
                 key: "failed",
                 label: this.$gettext("Failed"),
-                count: this.release_data.campaign.nb_of_failed,
+                count: this.campaign.nb_of_failed,
             },
             {
                 key: "blocked",
                 label: this.$gettext("Blocked"),
-                count: this.release_data.campaign.nb_of_blocked,
+                count: this.campaign.nb_of_blocked,
             },
         ];
     }
 
     mounted(): void {
-        if (this.release_data.campaign) {
+        if (this.campaign) {
             const chart_container = document.getElementById(
                 "release-widget-pie-chart-ttm-" + this.release_data.id,
             );
@@ -92,7 +94,7 @@ export default class TestManagement extends Vue {
     }
 
     get is_testmanagement_available(): boolean {
-        return is_testplan_activated(this.release_data) && this.release_data.campaign !== null;
+        return is_testplan_activated(this.release_data) && this.campaign !== null;
     }
 }
 </script>
