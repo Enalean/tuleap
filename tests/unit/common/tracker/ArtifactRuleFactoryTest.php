@@ -24,12 +24,10 @@ declare(strict_types=1);
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 final class ArtifactRuleFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testGetRuleById(): void
     {
-        $rules_dar = \Mockery::spy(\DataAccessResult::class);
-        $rules_dar->shouldReceive('getRow')->andReturns([
+        $rules_dar = $this->createMock(\DataAccessResult::class);
+        $rules_dar->method('getRow')->willReturn([
             'id'                => 123,
             'group_artifact_id' => 1,
             'source_field_id'   => 2,
@@ -39,22 +37,25 @@ final class ArtifactRuleFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             'target_value_id'   => 100,
         ]);
 
-        $rules_dao = \Mockery::spy(\ArtifactRuleDao::class);
-        $rules_dao->shouldReceive('searchById')->with(123)->andReturns($rules_dar);
+        $rules_dao = $this->createMock(\ArtifactRuleDao::class);
+        $rules_dao->method('searchById')->willReturnMap([
+            [123, $rules_dar],
+            [124, []],
+        ]);
 
         $arf = new ArtifactRuleFactory($rules_dao);
 
         $r = $arf->getRuleById(123);
-        $this->assertInstanceOf(\ArtifactRule::class, $r);
-        $this->assertInstanceOf(\ArtifactRuleValue::class, $r);
-        $this->assertEquals(123, $r->id);
-        $this->assertEquals(2, $r->source_field);
-        $this->assertEquals(4, $r->target_field);
-        $this->assertEquals(10, $r->source_value);
-        $this->assertEquals(100, $r->target_value);
+        self::assertInstanceOf(\ArtifactRule::class, $r);
+        self::assertInstanceOf(\ArtifactRuleValue::class, $r);
+        self::assertEquals(123, $r->id);
+        self::assertEquals(2, $r->source_field);
+        self::assertEquals(4, $r->target_field);
+        self::assertEquals(10, $r->source_value);
+        self::assertEquals(100, $r->target_value);
 
-        $this->assertNull($arf->getRuleById(124), 'If id is inexistant, then return will be null');
+        self::assertNull($arf->getRuleById(124), 'If id is inexistant, then return will be null');
 
-        $this->assertSame($r, $arf->getRuleById(123), 'We do not create two different instances for the same id');
+        self::assertSame($r, $arf->getRuleById(123), 'We do not create two different instances for the same id');
     }
 }

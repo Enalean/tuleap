@@ -24,7 +24,6 @@ declare(strict_types=1);
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 final class ArtifactRulesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalResponseMock;
 
     public function testValidate(): void
@@ -60,58 +59,105 @@ final class ArtifactRulesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $r6 = new ArtifactRuleValue(6, 1, 'F3', 'C1', 'F2', 'B3');
         $r7 = new ArtifactRuleValue(7, 1, 'F3', 'C2', 'F2', 'B2');
 
-        $arf = \Mockery::spy(\ArtifactRuleFactory::class);
-        $arf->shouldReceive('getAllRulesByArtifactTypeWithOrder')->andReturns([&$r1, &$r2, &$r3, &$r4, &$r5, &$r6, &$r7]);
+        $arf = $this->createMock(\ArtifactRuleFactory::class);
+        $arf->method('getAllRulesByArtifactTypeWithOrder')->willReturn([&$r1, &$r2, &$r3, &$r4, &$r5, &$r6, &$r7]);
 
-        $f1 = \Mockery::spy(\ArtifactField::class);
-        $f1->shouldReceive('getID')->andReturns('F1');
-        $f1->shouldReceive('getLabel')->andReturns('f_1');
-        $f1->shouldReceive('getFieldPredefinedValues')->andReturns(null);
+        $f1 = $this->createMock(\ArtifactField::class);
+        $f1->method('getID')->willReturn('F1');
+        $f1->method('getLabel')->willReturn('f_1');
+        $f1->method('getFieldPredefinedValues')->willReturn(null);
 
-        $f2 = \Mockery::spy(\ArtifactField::class);
-        $f2->shouldReceive('getID')->andReturns('F2');
-        $f2->shouldReceive('getLabel')->andReturns('f_2');
-        $f2->shouldReceive('getFieldPredefinedValues')->andReturns(null);
+        $f2 = $this->createMock(\ArtifactField::class);
+        $f2->method('getID')->willReturn('F2');
+        $f2->method('getLabel')->willReturn('f_2');
+        $f2->method('getFieldPredefinedValues')->willReturn(null);
 
-        $f3 = \Mockery::spy(\ArtifactField::class);
-        $f3->shouldReceive('getID')->andReturns('F3');
-        $f3->shouldReceive('getLabel')->andReturns('f_3');
-        $f3->shouldReceive('getFieldPredefinedValues')->andReturns(null);
+        $f3 = $this->createMock(\ArtifactField::class);
+        $f3->method('getID')->willReturn('F3');
+        $f3->method('getLabel')->willReturn('f_3');
+        $f3->method('getFieldPredefinedValues')->willReturn(null);
 
-        $f4 = \Mockery::spy(\ArtifactField::class);
-        $f4->shouldReceive('getID')->andReturns('F4');
-        $f4->shouldReceive('getLabel')->andReturns('f_4');
-        $f4->shouldReceive('getFieldPredefinedValues')->andReturns(null);
+        $f4 = $this->createMock(\ArtifactField::class);
+        $f4->method('getID')->willReturn('F4');
+        $f4->method('getLabel')->willReturn('f_4');
+        $f4->method('getFieldPredefinedValues')->willReturn(null);
 
-        $aff = \Mockery::spy(\ArtifactFieldFactory::class);
-        $aff->shouldReceive('getFieldFromName')->with('f_1')->andReturns($f1);
-        $aff->shouldReceive('getFieldFromName')->with('f_2')->andReturns($f2);
-        $aff->shouldReceive('getFieldFromName')->with('f_3')->andReturns($f3);
-        $aff->shouldReceive('getFieldFromName')->with('f_4')->andReturns($f4);
+        $aff = $this->createMock(\ArtifactFieldFactory::class);
+        $aff->method('getFieldFromName')->willReturnMap([
+            ['f_1', $f1],
+            ['f_2', $f2],
+            ['f_3', $f3],
+            ['f_4', $f4],
+        ]);
 
-        $arm = \Mockery::mock(\ArtifactRulesManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $arm->shouldReceive('_getArtifactRuleFactory')->andReturns($arf);
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F1', 'A1')->andReturns(['a_1']);
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F1', 'A2')->andReturns(['a_2']);
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F2', 'B1')->andReturns(['b_1']);
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F2', 'B2')->andReturns(['b_2']);
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F2', 'B3')->andReturns(['b_3']);
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F3', 'C1')->andReturns(['c_1']);
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F3', 'C2')->andReturns(['c_2']);
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F1', ['A1'])->andReturns(['a_1']);
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F1', ['A2'])->andReturns(['a_2']);
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F2', ['B1'])->andReturns(['b_1']);
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F2', ['B2'])->andReturns(['b_2']);
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F2', ['B3'])->andReturns(['b_3']);
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F3', ['C1'])->andReturns(['c_1']);
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F3', ['C2'])->andReturns(['c_2']);
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F3', ['A1', 'A2'])->andReturns(['a_1', 'a_2']);
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F3', ['B1', 'B3'])->andReturns(['b_1', 'b_3']);
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F3', ['B1', 'B2'])->andReturns(['b_1', 'b_2']);
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F3', ['B2', 'B3'])->andReturns(['b_2', 'b_3']);
+        $arm = $this->getMockBuilder(\ArtifactRulesManager::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['_getArtifactRuleFactory', '_getSelectedValuesForField'])
+            ->getMock();
+        $arm->method('_getArtifactRuleFactory')->willReturn($arf);
+        $arm->method('_getSelectedValuesForField')->willReturnCallback(
+            function ($db_result, $field_id, $field_values): array {
+                if ($db_result === null && $field_id === 'F1' && $field_values === 'A1') {
+                    return ['a_1'];
+                }
+                if ($db_result === null && $field_id === 'F1' && $field_values === 'A2') {
+                    return ['a_2'];
+                }
+                if ($db_result === null && $field_id === 'F2' && $field_values === 'B1') {
+                    return ['b_1'];
+                }
+                if ($db_result === null && $field_id === 'F2' && $field_values === 'B2') {
+                    return ['b_2'];
+                }
+                if ($db_result === null && $field_id === 'F2' && $field_values === 'B3') {
+                    return ['b_3'];
+                }
+                if ($db_result === null && $field_id === 'F3' && $field_values === 'C1') {
+                    return ['c_1'];
+                }
+                if ($db_result === null && $field_id === 'F3' && $field_values === 'C2') {
+                    return ['c_2'];
+                }
+                if ($db_result === null && $field_id === 'F1' && $field_values === ['A1']) {
+                    return ['a_1'];
+                }
+                if ($db_result === null && $field_id === 'F1' && $field_values === ['A2']) {
+                    return ['a_2'];
+                }
+                if ($db_result === null && $field_id === 'F2' && $field_values === ['B1']) {
+                    return ['b_1'];
+                }
+                if ($db_result === null && $field_id === 'F2' && $field_values === ['B2']) {
+                    return ['b_2'];
+                }
+                if ($db_result === null && $field_id === 'F2' && $field_values === ['B3']) {
+                    return ['b_3'];
+                }
+                if ($db_result === null && $field_id === 'F3' && $field_values === ['C1']) {
+                    return ['c_1'];
+                }
+                if ($db_result === null && $field_id === 'F3' && $field_values === ['C2']) {
+                    return ['c_2'];
+                }
+                if ($db_result === null && $field_id === 'F3' && $field_values === ['A1', 'A2']) {
+                    return ['a_1', 'a_2'];
+                }
+                if ($db_result === null && $field_id === 'F3' && $field_values === ['B1', 'B3']) {
+                    return ['b_1', 'b_3'];
+                }
+                if ($db_result === null && $field_id === 'F3' && $field_values === ['B1', 'B2']) {
+                    return ['b_1', 'b_2'];
+                }
+                if ($db_result === null && $field_id === 'F3' && $field_values === ['B2', 'B3']) {
+                    return ['b_2', 'b_3'];
+                }
+
+                throw new RuntimeException();
+            }
+        );
 
         //S1
-        $this->assertTrue(
+        self::assertTrue(
             $arm->validate(
                 1,
                 [
@@ -123,9 +169,9 @@ final class ArtifactRulesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $aff
             )
         );
-        //$this->assertEqual($GLOBALS['feedback'], '');
+        //self::assertEqual($GLOBALS['feedback'], '');
         //S2
-        $this->assertFalse(
+        self::assertFalse(
             $arm->validate(
                 1,
                 [
@@ -137,9 +183,9 @@ final class ArtifactRulesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $aff
             )
         );
-        //$this->assertEqual($GLOBALS['feedback'],  'f_3(c_2) -> f_2(b_3) : ');
+        //self::assertEqual($GLOBALS['feedback'],  'f_3(c_2) -> f_2(b_3) : ');
         //S3
-        $this->assertTrue(
+        self::assertTrue(
             $arm->validate(
                 1,
                 [
@@ -151,10 +197,10 @@ final class ArtifactRulesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $aff
             )
         );
-        //$this->assertEqual($GLOBALS['feedback'],  '');
+        //self::assertEqual($GLOBALS['feedback'],  '');
         //S4
-        $GLOBALS['Response'] = \Mockery::spy(\Response::class);
-        $this->assertTrue(
+        $GLOBALS['Response'] = $this->createMock(\Response::class);
+        self::assertTrue(
             $arm->validate(
                 1,
                 [
@@ -166,11 +212,11 @@ final class ArtifactRulesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $aff
             )
         );
-        //$this->assertEqual($GLOBALS['feedback'],  '');
+        //self::assertEqual($GLOBALS['feedback'],  '');
         //S5
-        $GLOBALS['Response'] = \Mockery::spy(\Response::class);
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with('error', 'f_3(c_2) -> f_2(b_3)')->never();
-        $this->assertTrue(
+        $GLOBALS['Response'] = $this->createMock(\Response::class);
+        $GLOBALS['Response']->expects(self::never())->method('addFeedback')->with('error', 'f_3(c_2) -> f_2(b_3)');
+        self::assertTrue(
             $arm->validate(
                 1,
                 [
@@ -182,11 +228,11 @@ final class ArtifactRulesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $aff
             )
         );
-        //$this->assertEqual($GLOBALS['feedback'],  '');
+        //self::assertEqual($GLOBALS['feedback'],  '');
         //S6
-        $GLOBALS['Response'] = \Mockery::spy(\Response::class);
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with('error', 'f_1(a_1) -> f_2(b_2)')->once();
-        $this->assertFalse(
+        $GLOBALS['Response'] = $this->createMock(\Response::class);
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('error', 'f_1(a_1) -> f_2(b_2)');
+        self::assertFalse(
             $arm->validate(
                 1,
                 [
@@ -198,7 +244,7 @@ final class ArtifactRulesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $aff
             )
         );
-        //$this->assertEqual($GLOBALS['feedback'],  'f_1(a_1) -> f_2(b_2)');
+        //self::assertEqual($GLOBALS['feedback'],  'f_1(a_1) -> f_2(b_2)');
     }
 
     public function testForbidden(): void
@@ -207,53 +253,56 @@ final class ArtifactRulesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $r2 = new ArtifactRuleValue(2, 1, 'B', '3', 'C', '4');
         $r3 = new ArtifactRuleValue(3, 1, 'D', '5', 'E', '6');
 
-        $arf = \Mockery::spy(\ArtifactRuleFactory::class);
-        $arf->shouldReceive('getAllRulesByArtifactTypeWithOrder')->andReturns([$r1, $r2, $r3]);
+        $arf = $this->createMock(\ArtifactRuleFactory::class);
+        $arf->method('getAllRulesByArtifactTypeWithOrder')->willReturn([$r1, $r2, $r3]);
 
-        $arm = \Mockery::mock(\ArtifactRulesManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $arm->shouldReceive('_getArtifactRuleFactory')->andReturns($arf);
+        $arm = $this->getMockBuilder(\ArtifactRulesManager::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['_getArtifactRuleFactory'])
+            ->getMock();
+        $arm->method('_getArtifactRuleFactory')->willReturn($arf);
 
         //Forbidden sources
-        $this->assertTrue($arm->fieldIsAForbiddenSource(1, 'A', 'A'), "Field A cannot be the source of field A");
-        $this->assertTrue($arm->fieldIsAForbiddenSource(1, 'B', 'A'), "Field B cannot be the source of field A because A->B->A is cyclic");
-        $this->assertTrue($arm->fieldIsAForbiddenSource(1, 'C', 'A'), "Field C cannot be the source of field A because A->B->C->A is cyclic");
-        $this->assertFalse($arm->fieldIsAForbiddenSource(1, 'D', 'A'), "Field D can be the source of field A");
+        self::assertTrue($arm->fieldIsAForbiddenSource(1, 'A', 'A'), "Field A cannot be the source of field A");
+        self::assertTrue($arm->fieldIsAForbiddenSource(1, 'B', 'A'), "Field B cannot be the source of field A because A->B->A is cyclic");
+        self::assertTrue($arm->fieldIsAForbiddenSource(1, 'C', 'A'), "Field C cannot be the source of field A because A->B->C->A is cyclic");
+        self::assertFalse($arm->fieldIsAForbiddenSource(1, 'D', 'A'), "Field D can be the source of field A");
 
-        $this->assertFalse($arm->fieldIsAForbiddenSource(1, 'A', 'B'), "Field A is the source of field B");
-        $this->assertTrue($arm->fieldIsAForbiddenSource(1, 'B', 'B'), "Field B cannot be the source of field B");
-        $this->assertTrue($arm->fieldIsAForbiddenSource(1, 'C', 'B'), "Field C cannot be the source of field B because B is already a target");
-        $this->assertTrue($arm->fieldIsAForbiddenSource(1, 'D', 'B'), "Field D cannot be the source of field B because B is already a target");
+        self::assertFalse($arm->fieldIsAForbiddenSource(1, 'A', 'B'), "Field A is the source of field B");
+        self::assertTrue($arm->fieldIsAForbiddenSource(1, 'B', 'B'), "Field B cannot be the source of field B");
+        self::assertTrue($arm->fieldIsAForbiddenSource(1, 'C', 'B'), "Field C cannot be the source of field B because B is already a target");
+        self::assertTrue($arm->fieldIsAForbiddenSource(1, 'D', 'B'), "Field D cannot be the source of field B because B is already a target");
 
-        $this->assertTrue($arm->fieldIsAForbiddenSource(1, 'A', 'C'), "Field A cannot be the source of field C because C is already a target");
-        $this->assertFalse($arm->fieldIsAForbiddenSource(1, 'B', 'C'), "Field B is the source of field C");
-        $this->assertTrue($arm->fieldIsAForbiddenSource(1, 'C', 'C'), "Field C cannot be the source of field C");
-        $this->assertTrue($arm->fieldIsAForbiddenSource(1, 'D', 'C'), "Field D cannot be the source of field C because C is already a target");
+        self::assertTrue($arm->fieldIsAForbiddenSource(1, 'A', 'C'), "Field A cannot be the source of field C because C is already a target");
+        self::assertFalse($arm->fieldIsAForbiddenSource(1, 'B', 'C'), "Field B is the source of field C");
+        self::assertTrue($arm->fieldIsAForbiddenSource(1, 'C', 'C'), "Field C cannot be the source of field C");
+        self::assertTrue($arm->fieldIsAForbiddenSource(1, 'D', 'C'), "Field D cannot be the source of field C because C is already a target");
 
-        $this->assertFalse($arm->fieldIsAForbiddenSource(1, 'A', 'D'), "Field A can be the source of field D");
-        $this->assertFalse($arm->fieldIsAForbiddenSource(1, 'B', 'D'), "Field B can be the source of field D");
-        $this->assertFalse($arm->fieldIsAForbiddenSource(1, 'C', 'D'), "Field C can be the source of field D");
-        $this->assertTrue($arm->fieldIsAForbiddenSource(1, 'D', 'D'), "Field D cannot be the source of field D");
+        self::assertFalse($arm->fieldIsAForbiddenSource(1, 'A', 'D'), "Field A can be the source of field D");
+        self::assertFalse($arm->fieldIsAForbiddenSource(1, 'B', 'D'), "Field B can be the source of field D");
+        self::assertFalse($arm->fieldIsAForbiddenSource(1, 'C', 'D'), "Field C can be the source of field D");
+        self::assertTrue($arm->fieldIsAForbiddenSource(1, 'D', 'D'), "Field D cannot be the source of field D");
 
         //Forbidden targets
-        $this->assertTrue($arm->fieldIsAForbiddenTarget(1, 'A', 'A'), "Field A cannot be the target of field A");
-        $this->assertFalse($arm->fieldIsAForbiddenTarget(1, 'B', 'A'), "Field B is the target of field A");
-        $this->assertTrue($arm->fieldIsAForbiddenTarget(1, 'C', 'A'), "Field C cannot be the target of field A because C is already a target");
-        $this->assertFalse($arm->fieldIsAForbiddenTarget(1, 'D', 'A'), "Field D can be the target of field A");
+        self::assertTrue($arm->fieldIsAForbiddenTarget(1, 'A', 'A'), "Field A cannot be the target of field A");
+        self::assertFalse($arm->fieldIsAForbiddenTarget(1, 'B', 'A'), "Field B is the target of field A");
+        self::assertTrue($arm->fieldIsAForbiddenTarget(1, 'C', 'A'), "Field C cannot be the target of field A because C is already a target");
+        self::assertFalse($arm->fieldIsAForbiddenTarget(1, 'D', 'A'), "Field D can be the target of field A");
 
-        $this->assertTrue($arm->fieldIsAForbiddenTarget(1, 'A', 'B'), "Field A cannot be the target of field B because A->B->A is cyclic");
-        $this->assertTrue($arm->fieldIsAForbiddenTarget(1, 'B', 'B'), "Field B cannot be the target of field B");
-        $this->assertFalse($arm->fieldIsAForbiddenTarget(1, 'C', 'B'), "Field C is the target of field B");
-        $this->assertFalse($arm->fieldIsAForbiddenTarget(1, 'D', 'B'), "Field D can be the target of field B");
+        self::assertTrue($arm->fieldIsAForbiddenTarget(1, 'A', 'B'), "Field A cannot be the target of field B because A->B->A is cyclic");
+        self::assertTrue($arm->fieldIsAForbiddenTarget(1, 'B', 'B'), "Field B cannot be the target of field B");
+        self::assertFalse($arm->fieldIsAForbiddenTarget(1, 'C', 'B'), "Field C is the target of field B");
+        self::assertFalse($arm->fieldIsAForbiddenTarget(1, 'D', 'B'), "Field D can be the target of field B");
 
-        $this->assertTrue($arm->fieldIsAForbiddenTarget(1, 'A', 'C'), "Field A cannot be the target of field C because A->B->C->A is cyclic");
-        $this->assertTrue($arm->fieldIsAForbiddenTarget(1, 'B', 'C'), "Field B cannot be the target of field C because B is already a target");
-        $this->assertTrue($arm->fieldIsAForbiddenTarget(1, 'C', 'C'), "Field C cannot be the target of field C");
-        $this->assertFalse($arm->fieldIsAForbiddenTarget(1, 'D', 'C'), "Field D can be the target of field C");
+        self::assertTrue($arm->fieldIsAForbiddenTarget(1, 'A', 'C'), "Field A cannot be the target of field C because A->B->C->A is cyclic");
+        self::assertTrue($arm->fieldIsAForbiddenTarget(1, 'B', 'C'), "Field B cannot be the target of field C because B is already a target");
+        self::assertTrue($arm->fieldIsAForbiddenTarget(1, 'C', 'C'), "Field C cannot be the target of field C");
+        self::assertFalse($arm->fieldIsAForbiddenTarget(1, 'D', 'C'), "Field D can be the target of field C");
 
-        $this->assertFalse($arm->fieldIsAForbiddenTarget(1, 'A', 'D'), "Field A can be the target of field D");
-        $this->assertTrue($arm->fieldIsAForbiddenTarget(1, 'B', 'D'), "Field B cannot be the target of field D because B is already a target");
-        $this->assertTrue($arm->fieldIsAForbiddenTarget(1, 'C', 'D'), "Field C cannot be the target of field D because C is already a target");
-        $this->assertTrue($arm->fieldIsAForbiddenTarget(1, 'D', 'D'), "Field D cannot be the target of field D");
+        self::assertFalse($arm->fieldIsAForbiddenTarget(1, 'A', 'D'), "Field A can be the target of field D");
+        self::assertTrue($arm->fieldIsAForbiddenTarget(1, 'B', 'D'), "Field B cannot be the target of field D because B is already a target");
+        self::assertTrue($arm->fieldIsAForbiddenTarget(1, 'C', 'D'), "Field C cannot be the target of field D because C is already a target");
+        self::assertTrue($arm->fieldIsAForbiddenTarget(1, 'D', 'D'), "Field D cannot be the target of field D");
     }
 
     public function testFieldHasSourceTarget(): void
@@ -262,25 +311,28 @@ final class ArtifactRulesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $r2 = new ArtifactRuleValue(2, 1, 'B', '3', 'C', '4');
         $r3 = new ArtifactRuleValue(3, 1, 'D', '5', 'E', '6');
 
-        $arf = \Mockery::spy(\ArtifactRuleFactory::class);
-        $arf->shouldReceive('getAllRulesByArtifactTypeWithOrder')->andReturns([$r1, $r2, $r3]);
+        $arf = $this->createMock(\ArtifactRuleFactory::class);
+        $arf->method('getAllRulesByArtifactTypeWithOrder')->willReturn([$r1, $r2, $r3]);
 
-        $arm = \Mockery::mock(\ArtifactRulesManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $arm->shouldReceive('_getArtifactRuleFactory')->andReturns($arf);
+        $arm = $this->getMockBuilder(\ArtifactRulesManager::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['_getArtifactRuleFactory'])
+            ->getMock();
+        $arm->method('_getArtifactRuleFactory')->willReturn($arf);
 
-        $this->assertFalse($arm->fieldHasSource(1, 'A'));
-        $this->assertTrue($arm->fieldHasSource(1, 'B'));
-        $this->assertTrue($arm->fieldHasSource(1, 'C'));
-        $this->assertFalse($arm->fieldHasSource(1, 'D'));
-        $this->assertTrue($arm->fieldHasSource(1, 'E'));
-        $this->assertFalse($arm->fieldHasSource(1, 'F'));
+        self::assertFalse($arm->fieldHasSource(1, 'A'));
+        self::assertTrue($arm->fieldHasSource(1, 'B'));
+        self::assertTrue($arm->fieldHasSource(1, 'C'));
+        self::assertFalse($arm->fieldHasSource(1, 'D'));
+        self::assertTrue($arm->fieldHasSource(1, 'E'));
+        self::assertFalse($arm->fieldHasSource(1, 'F'));
 
-        $this->assertTrue($arm->fieldHasTarget(1, 'A'));
-        $this->assertTrue($arm->fieldHasTarget(1, 'B'));
-        $this->assertFalse($arm->fieldHasTarget(1, 'C'));
-        $this->assertTrue($arm->fieldHasTarget(1, 'D'));
-        $this->assertFalse($arm->fieldHasTarget(1, 'E'));
-        $this->assertFalse($arm->fieldHasTarget(1, 'F'));
+        self::assertTrue($arm->fieldHasTarget(1, 'A'));
+        self::assertTrue($arm->fieldHasTarget(1, 'B'));
+        self::assertFalse($arm->fieldHasTarget(1, 'C'));
+        self::assertTrue($arm->fieldHasTarget(1, 'D'));
+        self::assertFalse($arm->fieldHasTarget(1, 'E'));
+        self::assertFalse($arm->fieldHasTarget(1, 'F'));
     }
 
     public function testIsCyclic(): void
@@ -289,41 +341,44 @@ final class ArtifactRulesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $r2 = new ArtifactRuleValue(2, 1, 'B', '3', 'C', '4');
         $r3 = new ArtifactRuleValue(3, 1, 'D', '5', 'E', '6');
 
-        $arf = \Mockery::spy(\ArtifactRuleFactory::class);
-        $arf->shouldReceive('getAllRulesByArtifactTypeWithOrder')->andReturns([$r1, $r2, $r3]);
+        $arf = $this->createMock(\ArtifactRuleFactory::class);
+        $arf->method('getAllRulesByArtifactTypeWithOrder')->willReturn([$r1, $r2, $r3]);
 
-        $arm = \Mockery::mock(\ArtifactRulesManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $arm->shouldReceive('_getArtifactRuleFactory')->andReturns($arf);
+        $arm = $this->getMockBuilder(\ArtifactRulesManager::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['_getArtifactRuleFactory'])
+            ->getMock();
+        $arm->method('_getArtifactRuleFactory')->willReturn($arf);
 
-        $this->assertTrue($arm->isCyclic(1, 'A', 'A'));
-        $this->assertFalse($arm->isCyclic(1, 'A', 'B'));
-        $this->assertFalse($arm->isCyclic(1, 'A', 'C'));
-        $this->assertFalse($arm->isCyclic(1, 'A', 'D'));
-        $this->assertFalse($arm->isCyclic(1, 'A', 'E'));
+        self::assertTrue($arm->isCyclic(1, 'A', 'A'));
+        self::assertFalse($arm->isCyclic(1, 'A', 'B'));
+        self::assertFalse($arm->isCyclic(1, 'A', 'C'));
+        self::assertFalse($arm->isCyclic(1, 'A', 'D'));
+        self::assertFalse($arm->isCyclic(1, 'A', 'E'));
 
-        $this->assertTrue($arm->isCyclic(1, 'B', 'A'));
-        $this->assertTrue($arm->isCyclic(1, 'B', 'B'));
-        $this->assertFalse($arm->isCyclic(1, 'B', 'C'));
-        $this->assertFalse($arm->isCyclic(1, 'B', 'D'));
-        $this->assertFalse($arm->isCyclic(1, 'B', 'E'));
+        self::assertTrue($arm->isCyclic(1, 'B', 'A'));
+        self::assertTrue($arm->isCyclic(1, 'B', 'B'));
+        self::assertFalse($arm->isCyclic(1, 'B', 'C'));
+        self::assertFalse($arm->isCyclic(1, 'B', 'D'));
+        self::assertFalse($arm->isCyclic(1, 'B', 'E'));
 
-        $this->assertTrue($arm->isCyclic(1, 'C', 'A'));
-        $this->assertTrue($arm->isCyclic(1, 'C', 'B'));
-        $this->assertTrue($arm->isCyclic(1, 'C', 'C'));
-        $this->assertFalse($arm->isCyclic(1, 'C', 'D'));
-        $this->assertFalse($arm->isCyclic(1, 'C', 'E'));
+        self::assertTrue($arm->isCyclic(1, 'C', 'A'));
+        self::assertTrue($arm->isCyclic(1, 'C', 'B'));
+        self::assertTrue($arm->isCyclic(1, 'C', 'C'));
+        self::assertFalse($arm->isCyclic(1, 'C', 'D'));
+        self::assertFalse($arm->isCyclic(1, 'C', 'E'));
 
-        $this->assertFalse($arm->isCyclic(1, 'D', 'A'));
-        $this->assertFalse($arm->isCyclic(1, 'D', 'B'));
-        $this->assertFalse($arm->isCyclic(1, 'D', 'C'));
-        $this->assertTrue($arm->isCyclic(1, 'D', 'D'));
-        $this->assertFalse($arm->isCyclic(1, 'D', 'E'));
+        self::assertFalse($arm->isCyclic(1, 'D', 'A'));
+        self::assertFalse($arm->isCyclic(1, 'D', 'B'));
+        self::assertFalse($arm->isCyclic(1, 'D', 'C'));
+        self::assertTrue($arm->isCyclic(1, 'D', 'D'));
+        self::assertFalse($arm->isCyclic(1, 'D', 'E'));
 
-        $this->assertFalse($arm->isCyclic(1, 'E', 'A'));
-        $this->assertFalse($arm->isCyclic(1, 'E', 'B'));
-        $this->assertFalse($arm->isCyclic(1, 'E', 'C'));
-        $this->assertTrue($arm->isCyclic(1, 'E', 'D'));
-        $this->assertTrue($arm->isCyclic(1, 'E', 'E'));
+        self::assertFalse($arm->isCyclic(1, 'E', 'A'));
+        self::assertFalse($arm->isCyclic(1, 'E', 'B'));
+        self::assertFalse($arm->isCyclic(1, 'E', 'C'));
+        self::assertTrue($arm->isCyclic(1, 'E', 'D'));
+        self::assertTrue($arm->isCyclic(1, 'E', 'E'));
     }
 
     public function testRuleExists(): void
@@ -332,42 +387,45 @@ final class ArtifactRulesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $r2 = new ArtifactRuleValue(2, 1, 'B', '3', 'C', '4');
         $r3 = new ArtifactRuleValue(3, 1, 'D', '5', 'E', '6');
 
-        $arf = \Mockery::spy(\ArtifactRuleFactory::class);
-        $arf->shouldReceive('getAllRulesByArtifactTypeWithOrder')->andReturns([$r1, $r2, $r3]);
+        $arf = $this->createMock(\ArtifactRuleFactory::class);
+        $arf->method('getAllRulesByArtifactTypeWithOrder')->willReturn([$r1, $r2, $r3]);
 
-        $arm = \Mockery::mock(\ArtifactRulesManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $arm->shouldReceive('_getArtifactRuleFactory')->andReturns($arf);
+        $arm = $this->getMockBuilder(\ArtifactRulesManager::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['_getArtifactRuleFactory'])
+            ->getMock();
+        $arm->method('_getArtifactRuleFactory')->willReturn($arf);
 
         //Rule exists
-        $this->assertFalse($arm->ruleExists(1, 'A', 'A'));
-        $this->assertTrue($arm->ruleExists(1, 'A', 'B'));
-        $this->assertFalse($arm->ruleExists(1, 'A', 'C'));
-        $this->assertFalse($arm->ruleExists(1, 'A', 'D'));
-        $this->assertFalse($arm->ruleExists(1, 'A', 'E'));
+        self::assertFalse($arm->ruleExists(1, 'A', 'A'));
+        self::assertTrue($arm->ruleExists(1, 'A', 'B'));
+        self::assertFalse($arm->ruleExists(1, 'A', 'C'));
+        self::assertFalse($arm->ruleExists(1, 'A', 'D'));
+        self::assertFalse($arm->ruleExists(1, 'A', 'E'));
 
-        $this->assertFalse($arm->ruleExists(1, 'B', 'A'));
-        $this->assertFalse($arm->ruleExists(1, 'B', 'B'));
-        $this->assertTrue($arm->ruleExists(1, 'B', 'C'));
-        $this->assertFalse($arm->ruleExists(1, 'B', 'D'));
-        $this->assertFalse($arm->ruleExists(1, 'B', 'E'));
+        self::assertFalse($arm->ruleExists(1, 'B', 'A'));
+        self::assertFalse($arm->ruleExists(1, 'B', 'B'));
+        self::assertTrue($arm->ruleExists(1, 'B', 'C'));
+        self::assertFalse($arm->ruleExists(1, 'B', 'D'));
+        self::assertFalse($arm->ruleExists(1, 'B', 'E'));
 
-        $this->assertFalse($arm->ruleExists(1, 'C', 'A'));
-        $this->assertFalse($arm->ruleExists(1, 'C', 'B'));
-        $this->assertFalse($arm->ruleExists(1, 'C', 'C'));
-        $this->assertFalse($arm->ruleExists(1, 'C', 'D'));
-        $this->assertFalse($arm->ruleExists(1, 'C', 'E'));
+        self::assertFalse($arm->ruleExists(1, 'C', 'A'));
+        self::assertFalse($arm->ruleExists(1, 'C', 'B'));
+        self::assertFalse($arm->ruleExists(1, 'C', 'C'));
+        self::assertFalse($arm->ruleExists(1, 'C', 'D'));
+        self::assertFalse($arm->ruleExists(1, 'C', 'E'));
 
-        $this->assertFalse($arm->ruleExists(1, 'D', 'A'));
-        $this->assertFalse($arm->ruleExists(1, 'D', 'B'));
-        $this->assertFalse($arm->ruleExists(1, 'D', 'C'));
-        $this->assertFalse($arm->ruleExists(1, 'D', 'D'));
-        $this->assertTrue($arm->ruleExists(1, 'D', 'E'));
+        self::assertFalse($arm->ruleExists(1, 'D', 'A'));
+        self::assertFalse($arm->ruleExists(1, 'D', 'B'));
+        self::assertFalse($arm->ruleExists(1, 'D', 'C'));
+        self::assertFalse($arm->ruleExists(1, 'D', 'D'));
+        self::assertTrue($arm->ruleExists(1, 'D', 'E'));
 
-        $this->assertFalse($arm->ruleExists(1, 'E', 'A'));
-        $this->assertFalse($arm->ruleExists(1, 'E', 'B'));
-        $this->assertFalse($arm->ruleExists(1, 'E', 'C'));
-        $this->assertFalse($arm->ruleExists(1, 'E', 'D'));
-        $this->assertFalse($arm->ruleExists(1, 'E', 'E'));
+        self::assertFalse($arm->ruleExists(1, 'E', 'A'));
+        self::assertFalse($arm->ruleExists(1, 'E', 'B'));
+        self::assertFalse($arm->ruleExists(1, 'E', 'C'));
+        self::assertFalse($arm->ruleExists(1, 'E', 'D'));
+        self::assertFalse($arm->ruleExists(1, 'E', 'E'));
     }
 
     public function testValueHasSourceTarget(): void
@@ -376,18 +434,21 @@ final class ArtifactRulesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $r2 = new ArtifactRuleValue(2, 1, 'B', '3', 'C', '4');
         $r3 = new ArtifactRuleValue(3, 1, 'D', '5', 'E', '6');
 
-        $arf = \Mockery::spy(\ArtifactRuleFactory::class);
-        $arf->shouldReceive('getAllRulesByArtifactTypeWithOrder')->andReturns([$r1, $r2, $r3]);
+        $arf = $this->createMock(\ArtifactRuleFactory::class);
+        $arf->method('getAllRulesByArtifactTypeWithOrder')->willReturn([$r1, $r2, $r3]);
 
-        $arm = \Mockery::mock(\ArtifactRulesManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $arm->shouldReceive('_getArtifactRuleFactory')->andReturns($arf);
+        $arm = $this->getMockBuilder(\ArtifactRulesManager::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['_getArtifactRuleFactory'])
+            ->getMock();
+        $arm->method('_getArtifactRuleFactory')->willReturn($arf);
 
         //value has source or target
-        $this->assertTrue($arm->valueHasSource(1, 'B', 2, 'A'));
-        $this->assertFalse($arm->valueHasSource(1, 'B', 2, 'C'));
-        $this->assertFalse($arm->valueHasSource(1, 'B', 3, 'C'));
-        $this->assertTrue($arm->valueHasTarget(1, 'B', 3, 'C'));
-        $this->assertFalse($arm->valueHasTarget(1, 'B', 3, 'A'));
-        $this->assertFalse($arm->valueHasTarget(1, 'B', 2, 'A'));
+        self::assertTrue($arm->valueHasSource(1, 'B', 2, 'A'));
+        self::assertFalse($arm->valueHasSource(1, 'B', 2, 'C'));
+        self::assertFalse($arm->valueHasSource(1, 'B', 3, 'C'));
+        self::assertTrue($arm->valueHasTarget(1, 'B', 3, 'C'));
+        self::assertFalse($arm->valueHasTarget(1, 'B', 3, 'A'));
+        self::assertFalse($arm->valueHasTarget(1, 'B', 2, 'A'));
     }
 }

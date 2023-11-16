@@ -24,19 +24,18 @@ declare(strict_types=1);
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 final class ArtifactRuleValueViewTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testFetch(): void
     {
-        $rule                    = \Mockery::spy(\ArtifactRuleValue::class);
-        $rule->id                = 'id';
-        $rule->group_artifact_id = 'group_artifact_id';
-        $rule->source_field      = 'source_field';
-        $rule->target_field      = 'target_field';
-        $rule->source_value      = 'source_value_1';
-        $rule->target_value      = 'target_value_2';
+        $rule = new ArtifactRuleValue(
+            'id',
+            'group_artifact_id',
+            'source_field',
+            'source_value_1',
+            'target_field',
+            'target_value_2',
+        );
 
         $view = new ArtifactRuleValueView($rule);
-        $this->assertEquals('#id@group_artifact_id source_field(source_value_1) => target_field(target_value_2)', $view->fetch());
+        self::assertEquals('#id@group_artifact_id source_field(source_value_1) => target_field(target_value_2)', $view->fetch());
     }
 }

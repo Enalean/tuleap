@@ -24,60 +24,71 @@ declare(strict_types=1);
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 final class ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalResponseMock;
     use \Tuleap\GlobalLanguageMock;
 
     public function testAddDependenciesSimple(): void
     {
-        $a             = \Mockery::mock(\Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $a = $this->getMockBuilder(\Artifact::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['insertDependency', 'validArtifact', 'existDependency'])
+            ->getMock();
+
         $a->data_array = ['artifact_id' => 147];
-        $a->shouldReceive('insertDependency')->andReturns(true);
-        $a->shouldReceive('validArtifact')->andReturns(true);
-        $a->shouldReceive('existDependency')->andReturns(false);
+        $a->method('insertDependency')->willReturn(true);
+        $a->method('validArtifact')->willReturn(true);
+        $a->method('existDependency')->willReturn(false);
         $changes = null;
-        $this->assertTrue($a->addDependencies("171", $changes, false), "It should be possible to add a dependency like 171");
+        self::assertTrue($a->addDependencies("171", $changes, false), "It should be possible to add a dependency like 171");
     }
 
     public function testAddWrongDependency(): void
     {
-        $a             = \Mockery::mock(\Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $a = $this->getMockBuilder(\Artifact::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['insertDependency', 'validArtifact'])
+            ->getMock();
+
         $a->data_array = ['artifact_id' => 147];
-        $a->shouldReceive('insertDependency')->andReturns(true);
-        $a->shouldReceive('validArtifact')->andReturns(false);
+        $a->method('insertDependency')->willReturn(true);
+        $a->method('validArtifact')->willReturn(false);
         //$a->setReturnValue('existDependency', false);
         $changes = null;
         $GLOBALS['Response']->expects(self::exactly(2))->method('addFeedback');
-        $this->assertFalse($a->addDependencies("99999", $changes, false), "It should be possible to add a dependency like 99999 because it is not a valid artifact");
+        self::assertFalse($a->addDependencies("99999", $changes, false), "It should be possible to add a dependency like 99999 because it is not a valid artifact");
     }
 
     public function testAddDependenciesDouble(): void
     {
-        $a             = \Mockery::mock(\Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $a = $this->getMockBuilder(\Artifact::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['insertDependency', 'validArtifact', 'existDependency'])
+            ->getMock();
+
         $a->data_array = ['artifact_id' => 147];
-        $a->shouldReceive('insertDependency')->andReturns(true);
-        $a->shouldReceive('validArtifact')->andReturns(true);
-        $a->shouldReceive('existDependency')->times(2)->andReturns(false, true);
+        $a->method('insertDependency')->willReturn(true);
+        $a->method('validArtifact')->willReturn(true);
+        $a->method('existDependency')->willReturnOnConsecutiveCalls(false, true);
         $changes = null;
-        $this->assertTrue($a->addDependencies("171, 171", $changes, false), "It should be possible to add two identical dependencies in the same time, without getting an exception");
+        self::assertTrue($a->addDependencies("171, 171", $changes, false), "It should be possible to add two identical dependencies in the same time, without getting an exception");
     }
 
     public function testFormatFollowUp(): void
     {
-        $art = \Mockery::mock(\Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $art = $this->getMockBuilder(\Artifact::class)->disableOriginalConstructor()->onlyMethods([])->getMock();
 
         $txtContent  = 'testing the feature';
         $htmlContent = '&lt;pre&gt;   function processEvent($event, $params) {&lt;br /&gt;       foreach(parent::processEvent($event, $params) as $key =&amp;gt; $value) {&lt;br /&gt;           $params[$key] = $value;&lt;br /&gt;       }&lt;br /&gt;   }&lt;br /&gt;&lt;/pre&gt; ';
         //the output will be delivered in a mail
-        $this->assertEquals('   function processEvent($event, $params) {       foreach(parent::processEvent($event, $params) as $key => $value) {           $params[$key] = $value;       }   } ', $art->formatFollowUp(102, 1, $htmlContent, 2));
-        $this->assertEquals($txtContent, $art->formatFollowUp(102, 0, $txtContent, 2));
+        self::assertEquals('   function processEvent($event, $params) {       foreach(parent::processEvent($event, $params) as $key => $value) {           $params[$key] = $value;       }   } ', $art->formatFollowUp(102, 1, $htmlContent, 2));
+        self::assertEquals($txtContent, $art->formatFollowUp(102, 0, $txtContent, 2));
 
         //the output is destinated to be exported
-        $this->assertEquals('<pre>   function processEvent($event, $params) {<br />       foreach(parent::processEvent($event, $params) as $key =&gt; $value) {<br />           $params[$key] = $value;<br />       }<br />   }<br /></pre> ', $art->formatFollowUp(102, 1, $htmlContent, 1));
-        $this->assertEquals($txtContent, $art->formatFollowUp(102, 0, $txtContent, 1));
+        self::assertEquals('<pre>   function processEvent($event, $params) {<br />       foreach(parent::processEvent($event, $params) as $key =&gt; $value) {<br />           $params[$key] = $value;<br />       }<br />   }<br /></pre> ', $art->formatFollowUp(102, 1, $htmlContent, 1));
+        self::assertEquals($txtContent, $art->formatFollowUp(102, 0, $txtContent, 1));
 
         //The output will be displayed on browser
-        $this->assertEquals('<pre>   function processEvent($event, $params) {<br />       foreach(parent::processEvent($event, $params) as $key =&gt; $value) {<br />           $params[$key] = $value;<br />       }<br />   }<br /></pre> ', $art->formatFollowUp(102, 1, $htmlContent, 0));
-        $this->assertEquals($txtContent, $art->formatFollowUp(102, 0, $txtContent, 0));
+        self::assertEquals('<pre>   function processEvent($event, $params) {<br />       foreach(parent::processEvent($event, $params) as $key =&gt; $value) {<br />           $params[$key] = $value;<br />       }<br />   }<br /></pre> ', $art->formatFollowUp(102, 1, $htmlContent, 0));
+        self::assertEquals($txtContent, $art->formatFollowUp(102, 0, $txtContent, 0));
     }
 }
