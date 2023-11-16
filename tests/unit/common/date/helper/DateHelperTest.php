@@ -25,8 +25,6 @@ declare(strict_types=1);
 namespace Tuleap\common\date\helper;
 
 use DateHelper;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\date\DefaultRelativeDatesDisplayPreferenceRetriever;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
@@ -34,74 +32,73 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
     use ForgeConfigSandbox;
 
     public function testDistanceOfTimeInWords(): void
     {
         $expected = [
-            0        => [ //'less than a minute', 'less than 5 seconds'),     // 0 second
+            0 => [ //'less than a minute', 'less than 5 seconds'),     // 0 second
                 ['include_utils', 'less_1_minute'],
                 ['include_utils', 'less_than_one_second', '*'],
             ],
-            2        => [ //'less than a minute', 'less than 5 seconds'),     // 2 seconds
+            2 => [ //'less than a minute', 'less than 5 seconds'),     // 2 seconds
                 ['include_utils', 'less_1_minute'],
                 ['include_utils', 'less_than_X_seconds', '*'],
             ],
-            7        => [ //'less than a minute', 'less than 10 seconds'),    // 7 seconds
+            7 => [ //'less than a minute', 'less than 10 seconds'),    // 7 seconds
                 ['include_utils', 'less_1_minute'],
                 ['include_utils', 'less_than_X_seconds', '*'],
             ],
-            12       => [ //'less than a minute', 'less than 20 seconds'),    // 12 seconds
+            12 => [ //'less than a minute', 'less than 20 seconds'),    // 12 seconds
                 ['include_utils', 'less_1_minute'],
                 ['include_utils', 'less_than_X_seconds', '*'],
             ],
-            21       => [ //'less than a minute', 'half a minute'),           // 21 seconds
+            21 => [ //'less than a minute', 'half a minute'),           // 21 seconds
                 ['include_utils', 'less_1_minute'],
                 ['include_utils', 'half_a_minute'],
             ],
-            30       => [ //'1 minute',           'half a minute'),           // 30 seconds
+            30 => [ //'1 minute',           'half a minute'),           // 30 seconds
                 ['include_utils', '1_minute'],
                 ['include_utils', 'half_a_minute'],
             ],
-            50       => [ //'1 minute',           'less than a minute'),      // 50 seconds
+            50 => [ //'1 minute',           'less than a minute'),      // 50 seconds
                 ['include_utils', '1_minute'],
                 ['include_utils', 'less_1_minute'],
             ],
-            60       => [ //'1 minute',           '1 minute'),                // 60 seconds
+            60 => [ //'1 minute',           '1 minute'),                // 60 seconds
                 ['include_utils', '1_minute'],
                 ['include_utils', '1_minute'],
             ],
-            90       => [ //'2 minutes',          '2 minutes'),               // 90 seconds
+            90 => [ //'2 minutes',          '2 minutes'),               // 90 seconds
                 ['include_utils', 'X_minutes', '*'],
                 ['include_utils', 'X_minutes', '*'],
             ],
-            130      => [ //'2 minutes',          '2 minutes'),               // 130 seconds
+            130 => [ //'2 minutes',          '2 minutes'),               // 130 seconds
                 ['include_utils', 'X_minutes', '*'],
                 ['include_utils', 'X_minutes', '*'],
             ],
-            3000     => [ //'about 1 hour',       'about 1 hour'),            // 50*60 seconds
+            3000 => [ //'about 1 hour',       'about 1 hour'),            // 50*60 seconds
                 ['include_utils', 'about_1_hour'],
                 ['include_utils', 'about_1_hour'],
             ],
-            6000     => [ //'about 2 hours',      'about 2 hours'),           // 100*60 seconds
+            6000 => [ //'about 2 hours',      'about 2 hours'),           // 100*60 seconds
                 ['include_utils', 'about_X_hours', '*'],
                 ['include_utils', 'about_X_hours', '*'],
             ],
-            87000    => [ //'1 day',              '1 day'),                   // 1450*60 seconds
+            87000 => [ //'1 day',              '1 day'),                   // 1450*60 seconds
                 ['include_utils', 'about_1_day'],
                 ['include_utils', 'about_1_day'],
             ],
-            172860   => [ //'2 days',             '2 days'),                  // 2881*60 seconds
+            172860 => [ //'2 days',             '2 days'),                  // 2881*60 seconds
                 ['include_utils', 'X_days', '*'],
                 ['include_utils', 'X_days', '*'],
             ],
-            2592060  => [ //'about 1 month',      'about 1 month'),           // 43201*60 seconds
+            2592060 => [ //'about 1 month',      'about 1 month'),           // 43201*60 seconds
                 ['include_utils', 'about_1_month'],
                 ['include_utils', 'about_1_month'],
             ],
-            5184060  => [ //'2 months',           '2 months'),                // 86401*60 seconds
+            5184060 => [ //'2 months',           '2 months'),                // 86401*60 seconds
                 ['include_utils', 'X_months', '*'],
                 ['include_utils', 'X_months', '*'],
             ],
@@ -123,28 +120,26 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testFormatDateFormatsTheDateAccordingToLanguage(): void
     {
-        $dayOnly = true;
-        $this->assertMatchesRegularExpression('/2011-\d+-\d+/', $this->formatDate($dayOnly, 'Y-m-d'));
-        $this->assertMatchesRegularExpression('/2011\/\d+\/\d+/', $this->formatDate($dayOnly, "Y/d/m"));
+        self::assertMatchesRegularExpression('/2011-\d+-\d+/', $this->formatDate(true, 'Y-m-d'));
+        self::assertMatchesRegularExpression('/2011\/\d+\/\d+/', $this->formatDate(true, "Y/d/m"));
     }
 
     public function testFormatDateCanReturnTheTimeAsWell(): void
     {
-        $dayOnly = false;
-        $this->assertMatchesRegularExpression('/2011-\d+-\d+ \d+:\d+/', $this->formatDate($dayOnly, "Y-m-d h:i"));
+        self::assertMatchesRegularExpression('/2011-\d+-\d+ \d+:\d+/', $this->formatDate(false, "Y-m-d h:i"));
     }
 
     public function testFormatDateReturnsEmptyStringWhenDateIsZero(): void
     {
-        $lang = \Mockery::mock(\BaseLanguage::class);
-        $lang->shouldReceive('getText')->andReturn('Y-m-d');
-        $this->assertEquals("", DateHelper::formatForLanguage($lang, 0, false));
+        $lang = $this->createMock(\BaseLanguage::class);
+        $lang->method('getText')->willReturn('Y-m-d');
+        self::assertEquals("", DateHelper::formatForLanguage($lang, 0, false));
     }
 
-    private function formatDate($dayOnly, $format)
+    private function formatDate(bool $dayOnly, string $format): string
     {
-        $lang = \Mockery::mock(\BaseLanguage::class);
-        $lang->shouldReceive('getText')->andReturn($format);
+        $lang = $this->createMock(\BaseLanguage::class);
+        $lang->method('getText')->willReturn($format);
         $firstOfDecember2011_12_01 = 1322752769;
 
         return DateHelper::formatForLanguage($lang, $firstOfDecember2011_12_01, $dayOnly);
@@ -162,13 +157,13 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
             )
             ->willReturn('8 minutes');
 
-        $this->assertEquals(
+        self::assertEquals(
             '8 minutes ago',
             DateHelper::timeAgoInWords($_SERVER['REQUEST_TIME'] - 500)
         );
     }
 
-    public function testDateInFuture()
+    public function testDateInFuture(): void
     {
         $GLOBALS['Language']
             ->expects(self::once())
@@ -180,7 +175,7 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
             )
             ->willReturn('8 minutes');
 
-        $this->assertEquals(
+        self::assertEquals(
             'in 8 minutes',
             DateHelper::timeAgoInWords($_SERVER['REQUEST_TIME'] + 500)
         );
@@ -198,7 +193,7 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $user = UserTestBuilder::aUser()->withLocale('en_US')->build();
 
-        $this->assertEquals(
+        self::assertEquals(
             '<tlp-relative-date
             date="2009-02-14T00:31:30+01:00"
             absolute-date="2009-02-14 00:31"
@@ -219,16 +214,12 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
             )
             ->willReturn('Y-m-d H:i');
 
-        $user = Mockery::mock(\PFUser::class)
-            ->shouldReceive(
-                [
-                    'getLocale'     => 'en_US',
-                    'getPreference' => 'relative_first-absolute_shown',
-                ]
-            )
-            ->getMock();
+        $user = UserTestBuilder::anActiveUser()
+            ->withLocale('en_US')
+            ->build();
+        $user->setPreference(\DateHelper::PREFERENCE_NAME, \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN);
 
-        $this->assertEquals(
+        self::assertEquals(
             '<tlp-relative-date
             date="2009-02-14T00:31:30+01:00"
             absolute-date="2009-02-14 00:31"
@@ -249,16 +240,12 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
             )
             ->willReturn('Y-m-d');
 
-        $user = Mockery::mock(\PFUser::class)
-            ->shouldReceive(
-                [
-                    'getLocale'     => 'en_US',
-                    'getPreference' => 'relative_first-absolute_shown',
-                ]
-            )
-            ->getMock();
+        $user = UserTestBuilder::anActiveUser()
+            ->withLocale('en_US')
+            ->build();
+        $user->setPreference(\DateHelper::PREFERENCE_NAME, \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN);
 
-        $this->assertEquals(
+        self::assertEquals(
             '<tlp-relative-date
             date="2009-02-14T00:31:30+01:00"
             absolute-date="2009-02-14"
@@ -279,16 +266,12 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
             )
             ->willReturn('Y-m-d H:i');
 
-        $user = Mockery::mock(\PFUser::class)
-            ->shouldReceive(
-                [
-                    'getLocale'     => 'en_US',
-                    'getPreference' => 'relative_first-absolute_tooltip',
-                ]
-            )
-            ->getMock();
+        $user = UserTestBuilder::anActiveUser()
+            ->withLocale('en_US')
+            ->build();
+        $user->setPreference(\DateHelper::PREFERENCE_NAME, \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP);
 
-        $this->assertEquals(
+        self::assertEquals(
             '<tlp-relative-date
             date="2009-02-14T00:31:30+01:00"
             absolute-date="2009-02-14 00:31"
@@ -309,16 +292,12 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
             )
             ->willReturn('Y-m-d H:i');
 
-        $user = Mockery::mock(\PFUser::class)
-            ->shouldReceive(
-                [
-                    'getLocale'     => 'en_US',
-                    'getPreference' => 'absolute_first-relative_shown',
-                ]
-            )
-            ->getMock();
+        $user = UserTestBuilder::anActiveUser()
+            ->withLocale('en_US')
+            ->build();
+        $user->setPreference(\DateHelper::PREFERENCE_NAME, \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN);
 
-        $this->assertEquals(
+        self::assertEquals(
             '<tlp-relative-date
             date="2009-02-14T00:31:30+01:00"
             absolute-date="2009-02-14 00:31"
@@ -339,16 +318,12 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
             )
             ->willReturn('Y-m-d H:i');
 
-        $user = Mockery::mock(\PFUser::class)
-            ->shouldReceive(
-                [
-                    'getLocale'     => 'en_US',
-                    'getPreference' => 'absolute_first-relative_tooltip',
-                ]
-            )
-            ->getMock();
+        $user = UserTestBuilder::anActiveUser()
+            ->withLocale('en_US')
+            ->build();
+        $user->setPreference(\DateHelper::PREFERENCE_NAME, \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP);
 
-        $this->assertEquals(
+        self::assertEquals(
             '<tlp-relative-date
             date="2009-02-14T00:31:30+01:00"
             absolute-date="2009-02-14 00:31"
@@ -369,14 +344,9 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
             )
             ->willReturn('Y-m-d H:i');
 
-        $user = Mockery::mock(\PFUser::class)
-            ->shouldReceive(
-                [
-                    'getLocale'     => 'en_US',
-                    'getPreference' => false,
-                ]
-            )
-            ->getMock();
+        $user = UserTestBuilder::anActiveUser()
+            ->withLocale('en_US')
+            ->build();
 
         \ForgeConfig::set(
             DefaultRelativeDatesDisplayPreferenceRetriever::DEFAULT_RELATIVE_DATES_DISPLAY,
