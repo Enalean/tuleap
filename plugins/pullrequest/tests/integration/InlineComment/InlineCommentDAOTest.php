@@ -24,8 +24,9 @@ namespace Tuleap\PullRequest\InlineComment;
 
 use Tuleap\DB\DBFactory;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
-use Tuleap\PullRequest\Tests\Builders\InlineCommentTestBuilder;
+use Tuleap\PullRequest\Tests\Builders\NewInlineCommentTestBuilder;
 use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class InlineCommentDAOTest extends TestCase
@@ -45,41 +46,36 @@ final class InlineCommentDAOTest extends TestCase
 
     public function testItInsertsAndUpdatesContentAndLastEditionDate(): void
     {
-        $pull_request_id   = 92;
-        $user_id           = 105;
-        $file_path         = 'path/to/file.php';
-        $post_date         = 1402228583;
-        $unidiff_offset    = 72;
-        $content           = 'acceptive person';
-        $position          = 'left';
-        $parent_id         = 8;
-        $format            = TimelineComment::FORMAT_MARKDOWN;
-        $inline_comment_id = $this->dao->insert(
-            $pull_request_id,
-            $user_id,
-            $file_path,
-            $post_date,
-            $unidiff_offset,
-            $content,
-            $position,
-            $parent_id,
-            $format
+        $pull_request      = PullRequestTestBuilder::aPullRequestInReview()->withId(92)->build();
+        $author            = UserTestBuilder::buildWithId(105);
+        $new_comment       = new NewInlineComment(
+            $pull_request,
+            110,
+            'path/to/file.php',
+            72,
+            'acceptive person',
+            TimelineComment::FORMAT_MARKDOWN,
+            'left',
+            8,
+            $author,
+            new \DateTimeImmutable('@1402228583'),
         );
+        $inline_comment_id = $this->dao->insert($new_comment);
 
         $inline_comment_row = $this->dao->searchByCommentID($inline_comment_id);
         self::assertEquals([
             'id'                => $inline_comment_id,
-            'pull_request_id'   => $pull_request_id,
-            'user_id'           => $user_id,
-            'post_date'         => $post_date,
-            'file_path'         => $file_path,
-            'unidiff_offset'    => $unidiff_offset,
-            'content'           => $content,
+            'pull_request_id'   => $new_comment->pull_request->getId(),
+            'user_id'           => (int) $new_comment->author->getId(),
+            'post_date'         => $new_comment->post_date->getTimestamp(),
+            'file_path'         => $new_comment->file_path,
+            'unidiff_offset'    => $new_comment->unidiff_offset,
+            'content'           => $new_comment->content,
             'is_outdated'       => 0,
-            'parent_id'         => $parent_id,
-            'position'          => $position,
+            'parent_id'         => $new_comment->parent_id,
+            'position'          => $new_comment->position,
             'color'             => '',
-            'format'            => $format,
+            'format'            => $new_comment->format,
             'last_edition_date' => null,
         ], $inline_comment_row);
 
@@ -99,33 +95,33 @@ final class InlineCommentDAOTest extends TestCase
         $pull_request_id         = 338;
         $file_path               = 'undercutter/laudist/angulate.json';
         $pull_request            = PullRequestTestBuilder::aPullRequestInReview()->withId($pull_request_id)->build();
-        $first_comment           = InlineCommentTestBuilder::aMarkdownComment('excruciating crosshackle')
+        $first_comment           = NewInlineCommentTestBuilder::aMarkdownComment('excruciating crosshackle')
             ->onPullRequest($pull_request)
             ->onFile($file_path)
             ->build();
-        $second_comment          = InlineCommentTestBuilder::aMarkdownComment('galactic bullback')
+        $second_comment          = NewInlineCommentTestBuilder::aMarkdownComment('galactic bullback')
             ->onPullRequest($pull_request)
             ->onFile($file_path)
             ->build();
-        $comment_on_another_file = InlineCommentTestBuilder::aMarkdownComment('unexplorable')
+        $comment_on_another_file = NewInlineCommentTestBuilder::aMarkdownComment('unexplorable')
             ->onPullRequest($pull_request)
             ->onFile('coresign/unmicroscopic/electrophotometry.ts')
             ->build();
-        $comment_on_another_pr   = InlineCommentTestBuilder::aTextComment('kinesodic')
+        $comment_on_another_pr   = NewInlineCommentTestBuilder::aTextComment('kinesodic')
             ->onPullRequest(PullRequestTestBuilder::aPullRequestInReview()->withId(414)->build())
             ->onFile($file_path)
             ->build();
-        $outdated_comment        = InlineCommentTestBuilder::aMarkdownComment('tragical prostemmate')
+        $outdated_comment        = NewInlineCommentTestBuilder::aMarkdownComment('tragical prostemmate')
             ->onPullRequest($pull_request)
             ->onFile($file_path)
             ->build();
 
-        $first_comment_id           = $this->insert($first_comment);
-        $second_comment_id          = $this->insert($second_comment);
-        $comment_on_another_file_id = $this->insert($comment_on_another_file);
-        $comment_on_another_pr_id   = $this->insert($comment_on_another_pr);
-        $outdated_comment_id        = $this->insert($outdated_comment);
-        $this->markCommentAsOutdated($outdated_comment_id, $outdated_comment->getUnidiffOffset());
+        $first_comment_id           = $this->dao->insert($first_comment);
+        $second_comment_id          = $this->dao->insert($second_comment);
+        $comment_on_another_file_id = $this->dao->insert($comment_on_another_file);
+        $comment_on_another_pr_id   = $this->dao->insert($comment_on_another_pr);
+        $outdated_comment_id        = $this->dao->insert($outdated_comment);
+        $this->markCommentAsOutdated($outdated_comment_id, $outdated_comment->unidiff_offset);
 
         $all_rows  = $this->dao->searchAllByPullRequestId($pull_request_id);
         $found_ids = $this->mapRowsToIds($all_rows);
@@ -165,21 +161,6 @@ final class InlineCommentDAOTest extends TestCase
     private function mapCommentsToIds(array $comments): array
     {
         return array_map(static fn(InlineComment $comment) => $comment->getId(), $comments);
-    }
-
-    private function insert(InlineComment $comment): int
-    {
-        return $this->dao->insert(
-            $comment->getPullRequestId(),
-            $comment->getUserId(),
-            $comment->getFilePath(),
-            $comment->getPostDate(),
-            $comment->getUnidiffOffset(),
-            $comment->getContent(),
-            $comment->getPosition(),
-            $comment->getParentId(),
-            $comment->getFormat(),
-        );
     }
 
     private function markCommentAsOutdated(int $comment_id, int $unidiff_offset): void

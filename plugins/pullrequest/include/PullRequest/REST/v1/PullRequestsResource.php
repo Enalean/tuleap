@@ -701,7 +701,7 @@ class PullRequestsResource extends AuthenticatedResource
         $parent_id_validator = new ParentIdValidatorForInlineComment(new InlineCommentRetriever(new InlineCommentDao()));
         $parent_id_validator->checkParentValidity((int) $comment_data->parent_id, $id);
 
-        $post_date = time();
+        $post_date = new \DateTimeImmutable();
 
         $inserted_inline_comment = $this->inline_comment_creator->insert(
             $pull_request,
@@ -724,7 +724,7 @@ class PullRequestsResource extends AuthenticatedResource
             $content_interpretor,
             $comment_data->unidiff_offset,
             $user_representation,
-            $post_date,
+            $post_date->getTimestamp(),
             $comment_data->content,
             (int) $git_repository_source->getProjectId(),
             $comment_data->position,

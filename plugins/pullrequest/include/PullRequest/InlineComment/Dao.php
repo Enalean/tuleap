@@ -24,7 +24,7 @@ use Tuleap\DB\DataAccessObject;
 use Tuleap\PullRequest\Comment\ParentCommentSearcher;
 use Tuleap\PullRequest\Comment\ThreadColorUpdater;
 
-class Dao extends DataAccessObject implements ParentCommentSearcher, ThreadColorUpdater, InlineCommentSearcher, InlineCommentSaver, SearchInlineCommentsOnFile
+class Dao extends DataAccessObject implements ParentCommentSearcher, ThreadColorUpdater, InlineCommentSearcher, InlineCommentSaver, SearchInlineCommentsOnFile, CreateInlineComment
 {
     public function searchByCommentID(int $inline_comment_id): ?array
     {
@@ -67,20 +67,20 @@ class Dao extends DataAccessObject implements ParentCommentSearcher, ThreadColor
         return $this->getDB()->run($sql, $pull_request_id);
     }
 
-    public function insert(int $pull_request_id, int $user_id, string $file_path, int $post_date, int $unidiff_offset, string $content, string $position, int $parent_id, string $format): int
+    public function insert(NewInlineComment $comment): int
     {
         $this->getDB()->insert(
             'plugin_pullrequest_inline_comments',
             [
-                'pull_request_id' => $pull_request_id,
-                'user_id' => $user_id,
-                'file_path' => $file_path,
-                'post_date' => $post_date,
-                'unidiff_offset' => $unidiff_offset,
-                'content' => $content,
-                'position' => $position,
-                'parent_id' => $parent_id,
-                'format' => $format,
+                'pull_request_id' => $comment->pull_request->getId(),
+                'user_id'         => (int) $comment->author->getId(),
+                'file_path'       => $comment->file_path,
+                'post_date'       => $comment->post_date->getTimestamp(),
+                'unidiff_offset'  => $comment->unidiff_offset,
+                'content'         => $comment->content,
+                'position'        => $comment->position,
+                'parent_id'       => $comment->parent_id,
+                'format'          => $comment->format,
             ]
         );
 
