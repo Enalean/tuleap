@@ -85,6 +85,8 @@ use Tuleap\Tracker\Notifications\NotificationLevelExtractor;
 use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\NotificationsForceUsageUpdater;
 use Tuleap\Tracker\Notifications\RecipientsManager;
+use Tuleap\Tracker\Notifications\Settings\CalendarEventConfigDao;
+use Tuleap\Tracker\Notifications\Settings\CheckEventShouldBeSentInNotification;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsDAO;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
@@ -148,6 +150,8 @@ class Tracker implements Tracker_Dispatchable_Interface
     public const GLOBAL_ADMIN_URL = 'global-admin';
 
     private const TRACKER_NOT_USE_PRIVATE_COMMENTS_EXPORT_XML = "0";
+
+    private const TRACKER_SHOULD_SEND_EVENT_IN_NOTIFICATION_EXPORT_XML = '1';
 
     /**
      * Event emitted to check if a tracker can be deleted
@@ -2131,6 +2135,10 @@ class Tracker implements Tracker_Dispatchable_Interface
             $xmlElem->addAttribute('use_private_comments', self::TRACKER_NOT_USE_PRIVATE_COMMENTS_EXPORT_XML);
         }
 
+        if ($this->getCalendarEventConfig()->shouldSendEventInNotification($this->id)) {
+            $xmlElem->addAttribute('should_send_event_in_notification', self::TRACKER_SHOULD_SEND_EVENT_IN_NOTIFICATION_EXPORT_XML);
+        }
+
         if ($responses = $this->getCannedResponseFactory()->getCannedResponses($this)) {
             foreach ($responses as $response) {
                 $grandchild = $xmlElem->cannedResponses->addChild('cannedResponse');
@@ -3417,6 +3425,14 @@ class Tracker implements Tracker_Dispatchable_Interface
     protected function getPrivateCommentEnabledDao(): TrackerPrivateCommentUGroupEnabledDao
     {
         return new TrackerPrivateCommentUGroupEnabledDao();
+    }
+
+    /**
+     * protected is need for testing purpose
+     */
+    protected function getCalendarEventConfig(): CheckEventShouldBeSentInNotification
+    {
+        return new CalendarEventConfigDao();
     }
 
     protected function getInsecureCreationEmailAddress(): string

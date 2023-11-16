@@ -49,4 +49,28 @@ final class CalendarEventConfigDao extends DataAccessObject implements CheckEven
                 $tracker_id
             ) === 1;
     }
+
+    public function activateCalendarEvent(int $tracker_id): void
+    {
+        $this->getDB()
+            ->run(
+                <<<EOSQL
+                INSERT INTO plugin_tracker_calendar_event_config(tracker_id, should_send_event_in_notification)
+                SELECT ?, 1
+                EOSQL,
+                $tracker_id
+            );
+    }
+
+    public function deactivateCalendarEvent(int $tracker_id): void
+    {
+        $this->getDB()
+            ->run(
+                <<<EOSQL
+                INSERT INTO plugin_tracker_calendar_event_config(tracker_id, should_send_event_in_notification)
+                SELECT ?, 0
+                EOSQL,
+                $tracker_id
+            );
+    }
 }

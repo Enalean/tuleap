@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\XMLImport\MoveImportConfig;
+use Tuleap\Tracker\Creation\TrackerCreationNotificationsSettings;
 use Tuleap\XML\SimpleXMLElementBuilder;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
@@ -758,7 +759,13 @@ class TrackerXmlImport
 
             $settings = new TrackerCreationSettings($is_displayed_in_new_dropdown, $is_private_comment_used);
 
-            if ($tracker_id = $this->tracker_factory->saveObject($tracker, $settings)) {
+            $should_send_event_in_notification = isset($attributes['should_send_event_in_notification']) && $attributes['should_send_event_in_notification'] !== null
+                ? PHPCast::toBoolean($attributes['should_send_event_in_notification'])
+                : false;
+            $notifications_settings            = new TrackerCreationNotificationsSettings($should_send_event_in_notification);
+
+            $tracker_id = $this->tracker_factory->saveObject($tracker, $settings, $notifications_settings);
+            if ($tracker_id) {
                 $tracker->setId($tracker_id);
             } else {
                 throw new TrackerFromXmlException(

@@ -45,16 +45,8 @@ final class CalendarEventConfigDaoTest extends TestCase
 
     public function testShouldSendEventInNotification(): void
     {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->run(
-            <<<EOS
-            INSERT INTO plugin_tracker_calendar_event_config (tracker_id, should_send_event_in_notification)
-            VALUES (?, 0),
-                   (?, 1)
-            EOS,
-            self::BUG_TRACKER_ID,
-            self::TASK_TRACKER_ID,
-        );
+        $this->dao->deactivateCalendarEvent(self::BUG_TRACKER_ID);
+        $this->dao->activateCalendarEvent(self::TASK_TRACKER_ID);
 
         self::assertFalse($this->dao->shouldSendEventInNotification(self::BUG_TRACKER_ID));
         self::assertTrue($this->dao->shouldSendEventInNotification(self::TASK_TRACKER_ID));

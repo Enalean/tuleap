@@ -126,6 +126,11 @@
       </attribute>
     </optional>
     <optional>
+      <attribute name="should_send_event_in_notification">
+        <data type="boolean"/>
+      </attribute>
+    </optional>
+    <optional>
       <!-- these elements are not used, they are provided by the user during the import -->
       <element name="name">
         <ref name="non_empty_string"/>
