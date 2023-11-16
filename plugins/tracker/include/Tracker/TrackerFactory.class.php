@@ -25,6 +25,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\RetrieveTracker;
 use Tuleap\Tracker\Creation\PostCreationProcessor;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
+use Tuleap\Tracker\Creation\TrackerCreationNotificationsSettings;
 use Tuleap\Tracker\Creation\TrackerCreationSettings;
 use Tuleap\Tracker\Creation\TrackerCreationSettingsBuilder;
 use Tuleap\Tracker\DateReminder\DateReminderDao;
@@ -711,13 +712,16 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByProjectIdUser
         return true;
     }
 
-    public function saveObject(Tracker $tracker, TrackerCreationSettings $settings): int
-    {
+    public function saveObject(
+        Tracker $tracker,
+        TrackerCreationSettings $settings,
+        TrackerCreationNotificationsSettings $notifications_settings,
+    ): int {
         // create tracker
         $transaction_executor = $this->getTransactionExecutor();
 
         return $transaction_executor->execute(
-            function () use ($tracker, $settings) {
+            function () use ($tracker, $settings, $notifications_settings) {
                 $tracker_id = $this->getDao()->create(
                     $tracker->group_id,
                     $tracker->name,
@@ -771,6 +775,10 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByProjectIdUser
 
                     if (count($tracker->webhooks) > 0) {
                         $this->getWebhookFactory()->saveWebhooks($tracker->webhooks, $tracker_id);
+                    }
+
+                    if ($notifications_settings->should_send_event_in_notification) {
+                        (new CalendarEventConfigDao())->activateCalendarEvent($tracker_id);
                     }
 
                     //tracker permissions

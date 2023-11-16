@@ -34,6 +34,7 @@ tracker =
         attribute is_folder { xsd:boolean }?,
         attribute is_displayed_in_new_dropdown { xsd:boolean }?,
         attribute use_private_comments { xsd:boolean }?,
+        attribute should_send_event_in_notification { xsd:boolean }?,
 
         # these elements are not used, they are provided by the user during the import
         element name { non_empty_string }?,

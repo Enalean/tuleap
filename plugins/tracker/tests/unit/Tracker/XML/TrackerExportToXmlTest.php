@@ -35,6 +35,7 @@ use Tracker_RulesManager;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\PromotedTrackerDao;
+use Tuleap\Tracker\Test\Stub\Tracker\Notifications\Settings\CheckEventShouldBeSentInNotificationStub;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\Webhook\WebhookXMLExporter;
 use UserManager;
@@ -164,6 +165,10 @@ final class TrackerExportToXmlTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->formelement_factory->shouldReceive('getUsedFormElementForTracker')->andReturn([]);
 
+        $this->tracker
+            ->shouldReceive('getCalendarEventConfig')
+            ->andReturn(CheckEventShouldBeSentInNotificationStub::withoutEventInNotification());
+
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $xml = $this->tracker->exportToXML($xml);
 
@@ -188,6 +193,10 @@ final class TrackerExportToXmlTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->ugroup_retriever->shouldReceive('getProjectUgroupIds')->andReturn([]);
         $this->tracker->shouldReceive('getPermissionsByUgroupId')->andReturn([]);
 
+        $this->tracker
+            ->shouldReceive('getCalendarEventConfig')
+            ->andReturn(CheckEventShouldBeSentInNotificationStub::withoutEventInNotification());
+
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $xml = $this->tracker->exportToXML($xml);
 
@@ -201,6 +210,10 @@ final class TrackerExportToXmlTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->ugroup_retriever->shouldReceive('getProjectUgroupIds')->andReturn([]);
         $this->tracker->shouldReceive('getPermissionsByUgroupId')->andReturn([]);
+
+        $this->tracker
+            ->shouldReceive('getCalendarEventConfig')
+            ->andReturn(CheckEventShouldBeSentInNotificationStub::withoutEventInNotification());
 
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $xml = $this->tracker->exportToXML($xml);
@@ -217,6 +230,10 @@ final class TrackerExportToXmlTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->tracker->setParent(Mockery::mock(Tracker::class, ['getXMLId' => 'T9001']));
 
+        $this->tracker
+            ->shouldReceive('getCalendarEventConfig')
+            ->andReturn(CheckEventShouldBeSentInNotificationStub::withoutEventInNotification());
+
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $xml = $this->tracker->exportToXML($xml);
 
@@ -231,6 +248,10 @@ final class TrackerExportToXmlTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->ugroup_retriever->shouldReceive('getProjectUgroupIds')->andReturn([]);
         $this->tracker->shouldReceive('getPermissionsByUgroupId')->andReturn([]);
 
+        $this->tracker
+            ->shouldReceive('getCalendarEventConfig')
+            ->andReturn(CheckEventShouldBeSentInNotificationStub::withoutEventInNotification());
+
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $xml = $this->tracker->exportToXML($xml);
 
@@ -244,6 +265,10 @@ final class TrackerExportToXmlTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->ugroup_retriever->shouldReceive('getProjectUgroupIds')->andReturn([]);
         $this->tracker->shouldReceive('getPermissionsByUgroupId')->andReturn([]);
+
+        $this->tracker
+            ->shouldReceive('getCalendarEventConfig')
+            ->andReturn(CheckEventShouldBeSentInNotificationStub::withoutEventInNotification());
 
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $xml = $this->tracker->exportToXML($xml);
@@ -260,6 +285,10 @@ final class TrackerExportToXmlTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->ugroup_retriever->shouldReceive('getProjectUgroupIds')->andReturn([]);
         $this->tracker->shouldReceive('getPermissionsByUgroupId')->andReturn([]);
 
+        $this->tracker
+            ->shouldReceive('getCalendarEventConfig')
+            ->andReturn(CheckEventShouldBeSentInNotificationStub::withoutEventInNotification());
+
         $this->dropdown_dao->shouldReceive('isContaining')->andReturnFalse();
 
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
@@ -275,6 +304,10 @@ final class TrackerExportToXmlTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->ugroup_retriever->shouldReceive('getProjectUgroupIds')->andReturn([]);
         $this->tracker->shouldReceive('getPermissionsByUgroupId')->andReturn([]);
+
+        $this->tracker
+            ->shouldReceive('getCalendarEventConfig')
+            ->andReturn(CheckEventShouldBeSentInNotificationStub::withoutEventInNotification());
 
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $xml = $this->tracker->exportToXML($xml);
@@ -296,6 +329,10 @@ final class TrackerExportToXmlTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturnFalse()
             ->once();
 
+        $this->tracker
+            ->shouldReceive('getCalendarEventConfig')
+            ->andReturn(CheckEventShouldBeSentInNotificationStub::withoutEventInNotification());
+
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $xml = $this->tracker->exportToXML($xml);
 
@@ -303,5 +340,43 @@ final class TrackerExportToXmlTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertTrue(isset($attributes['use_private_comments']));
 
         $this->assertEquals(0, (string) $attributes['use_private_comments']);
+    }
+
+    public function testItDoesNotExportCalendarEventConfig(): void
+    {
+        $this->formelement_factory->shouldReceive('getUsedFormElementForTracker')->andReturn([]);
+
+        $this->ugroup_retriever->shouldReceive('getProjectUgroupIds')->andReturn([]);
+        $this->tracker->shouldReceive('getPermissionsByUgroupId')->andReturn([]);
+
+        $this->tracker
+            ->shouldReceive('getCalendarEventConfig')
+            ->andReturn(CheckEventShouldBeSentInNotificationStub::withoutEventInNotification());
+
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
+        $xml = $this->tracker->exportToXML($xml);
+
+        $attributes = $xml->attributes();
+        $this->assertFalse(isset($attributes['should_send_event_in_notification']));
+    }
+
+    public function testItExportCalendarEventConfig(): void
+    {
+        $this->formelement_factory->shouldReceive('getUsedFormElementForTracker')->andReturn([]);
+
+        $this->ugroup_retriever->shouldReceive('getProjectUgroupIds')->andReturn([]);
+        $this->tracker->shouldReceive('getPermissionsByUgroupId')->andReturn([]);
+
+        $this->tracker
+            ->shouldReceive('getCalendarEventConfig')
+            ->andReturn(CheckEventShouldBeSentInNotificationStub::withEventInNotification());
+
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
+        $xml = $this->tracker->exportToXML($xml);
+
+        $attributes = $xml->attributes();
+        $this->assertTrue(isset($attributes['should_send_event_in_notification']));
+
+        $this->assertSame("1", (string) $attributes['should_send_event_in_notification']);
     }
 }
