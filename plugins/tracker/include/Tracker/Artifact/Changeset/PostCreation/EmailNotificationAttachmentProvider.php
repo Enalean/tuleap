@@ -28,11 +28,14 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Notifications\Settings\CheckEventShouldBeSentInNotification;
+use Tuleap\Tracker\Semantic\Timeframe\BuildSemanticTimeframe;
 
 final class EmailNotificationAttachmentProvider implements ProvideEmailNotificationAttachment
 {
-    public function __construct(private readonly CheckEventShouldBeSentInNotification $config)
-    {
+    public function __construct(
+        private readonly CheckEventShouldBeSentInNotification $config,
+        private readonly BuildSemanticTimeframe $semantic_timeframe_builder,
+    ) {
     }
 
     /**
@@ -51,8 +54,8 @@ final class EmailNotificationAttachmentProvider implements ProvideEmailNotificat
         $logger->debug('Tracker is configured to send calendar events alongside notification');
 
         return $this->getEventSummary($changeset, $recipient, $should_check_permissions)
-            ->andThen(fn (string $summary) => $this->getCalendarEventAsAttachments($summary))
-            ->andThen(fn (array $attachments) => $this->logIfThereIsNoCalendarEvent($attachments, $logger))
+            ->andThen(fn (string $summary) => $this->getCalendarEventData($summary, $changeset, $recipient, $logger))
+            ->andThen(fn (CalendarEventData $event_data) => $this->getCalendarEventAsAttachments($event_data, $logger))
             ->match(
                 static fn (array $attachments) => $attachments,
                 static function (string $debug_message) use ($logger): array {
@@ -102,21 +105,46 @@ final class EmailNotificationAttachmentProvider implements ProvideEmailNotificat
     /**
      * @return Ok<MailAttachment[]>|Err<non-empty-string>
      */
-    private function getCalendarEventAsAttachments(string $summary): Ok|Err
+    private function getCalendarEventAsAttachments(CalendarEventData $event_data, \Psr\Log\LoggerInterface $logger): Ok|Err
     {
+        $logger->debug('Found a calendar event for this changeset');
+
         return Result::ok([]);
     }
 
     /**
-     * @param MailAttachment[] $attachments
-     * @return Ok<MailAttachment[]>|Err<non-empty-string>
+     * @return Ok<CalendarEventData>|Err<non-falsy-string>
      */
-    private function logIfThereIsNoCalendarEvent(array $attachments, \Psr\Log\LoggerInterface $logger): Ok|Err
-    {
-        if (empty($attachments)) {
-            $logger->debug('No calendar event for this changeset');
+    private function getCalendarEventData(
+        string $summary,
+        \Tracker_Artifact_Changeset $changeset,
+        \PFUser $recipient,
+        \Psr\Log\LoggerInterface $logger,
+    ): Ok|Err {
+        $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($changeset->getTracker());
+
+        $timeframe_calculator = $semantic_timeframe->getTimeframeCalculator();
+
+        $time_period   = $timeframe_calculator->buildDatePeriodWithoutWeekendForChangeset($changeset, $recipient, $logger);
+        $error_message = $time_period->getErrorMessage();
+        if ($error_message) {
+            return Result::err('Time period error: ' . $error_message);
         }
 
-        return Result::ok($attachments);
+        $start = $time_period->getStartDate();
+        if (! $start) {
+            return Result::err('No start date, we cannot build calendar event');
+        }
+
+        $end = $time_period->getEndDate();
+        if (! $end) {
+            return Result::err('No end date, we cannot build calendar event');
+        }
+
+        if ($end < $start) {
+            return Result::err('End date < start date, we cannot build calendar event');
+        }
+
+        return Result::ok(new CalendarEventData($summary, $start, $end));
     }
 }

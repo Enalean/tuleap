@@ -54,6 +54,7 @@ use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Notifications\UserNotificationOnlyStatusChangeDAO;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Webhook\ArtifactPayloadBuilder;
 use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookFactory;
@@ -123,7 +124,7 @@ class ActionsRunner
                 new MailSender(),
                 new ConfigNotificationAssignedTo(new ConfigNotificationAssignedToDao()),
                 new ConfigNotificationEmailCustomSender(new ConfigNotificationEmailCustomSenderDao()),
-                new EmailNotificationAttachmentProvider(new CalendarEventConfigDao()),
+                new EmailNotificationAttachmentProvider(new CalendarEventConfigDao(), SemanticTimeframeBuilder::build()),
             ),
             new WebhookNotificationTask(
                 $logger,

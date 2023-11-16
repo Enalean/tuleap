@@ -29,7 +29,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\Semantic\TimeframeConfigInvalid;
 
-class SemanticTimeframeBuilder
+class SemanticTimeframeBuilder implements BuildSemanticTimeframe
 {
     private SemanticTimeframeDao $dao;
 
@@ -64,9 +64,6 @@ class SemanticTimeframeBuilder
         );
     }
 
-    /**
-     * @throws TimeframeBrokenConfigurationException
-     */
     public function getSemantic(Tracker $tracker): SemanticTimeframe
     {
         $row = $this->dao->searchByTrackerId($tracker->getId());
