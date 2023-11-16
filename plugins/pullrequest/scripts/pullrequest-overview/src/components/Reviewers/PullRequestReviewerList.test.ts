@@ -158,6 +158,17 @@ describe("PullRequestReviewerList", () => {
             expect(wrapper.find("[data-test=edit-reviewers-button]").exists()).toBe(false);
         });
 
+        it("should not be displayed when the pull-request git reference is broken", async () => {
+            const wrapper = getWrapper({
+                user_can_merge: true,
+                status: PULL_REQUEST_STATUS_REVIEW,
+                is_git_reference_broken: true,
+            } as PullRequest);
+            await wrapper.vm.$nextTick();
+
+            expect(wrapper.find("[data-test=edit-reviewers-button]").exists()).toBe(false);
+        });
+
         it.each([[PULL_REQUEST_STATUS_MERGED], [PULL_REQUEST_STATUS_ABANDON]])(
             "should not be displayed when the pull-request is closed (%s)",
             async (pull_request_status) => {

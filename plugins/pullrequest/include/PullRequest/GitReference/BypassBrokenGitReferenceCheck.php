@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,21 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\Repository\View;
+declare(strict_types=1);
+
+namespace Tuleap\PullRequest\GitReference;
+
+use Tuleap\Option\Option;
 
 /**
+ * I allow bypassing broken git reference checks for certain contexts.
  * @psalm-immutable
  */
-class TabPresenter
+final class BypassBrokenGitReferenceCheck
 {
-    public function __construct(
-        public readonly bool $is_active,
-        public readonly string $url,
-        public readonly string $label,
-        public readonly string $html_id,
-        public readonly bool $has_count_to_display,
-        public readonly int $count,
-        public readonly string $warning_message,
-    ) {
+    private function __construct()
+    {
+    }
+
+    public static function check(): Option
+    {
+        return Option::fromValue(new self());
+    }
+
+    public static function skip(): Option
+    {
+        return Option::nothing(self::class);
     }
 }

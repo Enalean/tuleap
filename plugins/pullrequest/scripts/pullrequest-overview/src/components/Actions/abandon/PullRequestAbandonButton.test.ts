@@ -100,6 +100,30 @@ describe("PullRequestAbandonButton", () => {
         expect(wrapper.find("[data-test=abandon-button]").exists()).toBe(true);
     });
 
+    it("should be outlined when the git reference is not broken", () => {
+        const wrapper = getWrapper({
+            status: PULL_REQUEST_STATUS_REVIEW,
+            user_can_abandon: true,
+            is_git_reference_broken: false,
+        });
+
+        expect(wrapper.find("[data-test=abandon-button]").classes()).toContain(
+            "tlp-button-outline",
+        );
+    });
+
+    it("should not be outlined when the git reference is broken", () => {
+        const wrapper = getWrapper({
+            status: PULL_REQUEST_STATUS_REVIEW,
+            user_can_abandon: true,
+            is_git_reference_broken: true,
+        });
+
+        expect(wrapper.find("[data-test=abandon-button]").classes()).not.toContain(
+            "tlp-button-outline",
+        );
+    });
+
     describe("abandon", () => {
         it("When the user clicks the button, Then it should abandon the pull-request", async () => {
             const updated_pull_request = {

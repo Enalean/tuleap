@@ -26,7 +26,9 @@ use GitRepository;
 use Luracast\Restler\RestException;
 use PFUser;
 use Tuleap\Git\RetrieveGitRepository;
+use Tuleap\Option\Option;
 use Tuleap\PullRequest\GitExec;
+use Tuleap\PullRequest\GitReference\BypassBrokenGitReferenceCheck;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceNotFoundException;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceRetriever;
 use Tuleap\PullRequest\GitReference\UpdateGitPullRequestReference;
@@ -35,11 +37,15 @@ use Tuleap\PullRequest\PullRequestWithGitReference;
 
 final class PullRequestWithGitReferenceRetriever
 {
+    /**
+     * @param Option<BypassBrokenGitReferenceCheck> $check_for_broken_git_ref
+     */
     public function __construct(
         private readonly GitPullRequestReferenceRetriever $git_pull_request_reference_retriever,
         private readonly UpdateGitPullRequestReference $git_pull_request_reference_updater,
         private readonly RetrieveGitRepository $git_repository_factory,
         private readonly AccessiblePullRequestRESTRetriever $accessible_pull_request_REST_retriever,
+        private readonly Option $check_for_broken_git_ref,
     ) {
     }
 
@@ -56,12 +62,14 @@ final class PullRequestWithGitReferenceRetriever
             throw new RestException(404, $exception->getMessage());
         }
 
-        if ($git_reference->isGitReferenceBroken()) {
-            throw new RestException(
-                410,
-                dgettext('tuleap-pullrequest', 'The pull request is not accessible anymore')
-            );
-        }
+        $this->check_for_broken_git_ref->apply(function () use ($git_reference) {
+            if ($git_reference->isGitReferenceBroken()) {
+                throw new RestException(
+                    410,
+                    dgettext('tuleap-pullrequest', 'The pull request is not accessible anymore')
+                );
+            }
+        });
 
         if ($git_reference->isGitReferenceNeedToBeCreatedInRepository()) {
             $this->updateGitReference($pull_request);

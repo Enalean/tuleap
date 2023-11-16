@@ -204,7 +204,8 @@ class RepositoryHeaderPresenterBuilder
             dgettext("tuleap-git", "Files"),
             self::TAB_FILES,
             false,
-            0
+            0,
+            '',
         );
     }
 
@@ -218,7 +219,8 @@ class RepositoryHeaderPresenterBuilder
             dgettext("tuleap-git", "Commits"),
             self::TAB_COMMITS,
             false,
-            0
+            0,
+            '',
         );
     }
 

@@ -37,9 +37,14 @@
         </div>
     </div>
 
+    <span ng-if="::summary_controller.isPullRequestBroken() === true" class="tlp-badge-danger">
+        <i class="fa-solid fa-triangle-exclamation tlp-badge-icon" aria-hidden="true"></i>
+        <span translate>Error</span>
+    </span>
     <tuleap-pull-request-labels-list
-        class="pull-request-labels-list"
+        ng-else
         ce-one-way
+        class="pull-request-labels-list"
         pull-request-id="{{ ::summary_controller.pull_request.id }}"
         on-fetch-error="summary_controller.onFetchErrorCallback($event)"
     ></tuleap-pull-request-labels-list>

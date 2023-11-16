@@ -158,7 +158,7 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
         PullRequestShortStatRepresentation $pr_short_stat_representation,
         ?PullRequestStatusInfoRepresentation $status_info_representation,
     ) {
-        $this->buildMinimal($pull_request, $repository, $repository_dest);
+        $this->buildMinimal($pull_request, $repository, $repository_dest, $git_reference);
 
         $project_id                       = $repository->getProjectId();
         $this->description_format         = $pull_request->getDescriptionFormat();

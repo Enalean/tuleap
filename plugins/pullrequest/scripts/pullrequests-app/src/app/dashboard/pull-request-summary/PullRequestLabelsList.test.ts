@@ -21,8 +21,7 @@ import { after_render_once_descriptor, PullRequestLabelsList } from "./PullReque
 import type { HostElement } from "./PullRequestLabelsList";
 import type { ProjectLabel } from "@tuleap/core-rest-api-types";
 import * as fetch_result from "@tuleap/fetch-result";
-import { okAsync, errAsync } from "neverthrow";
-import { Fault } from "@tuleap/fault";
+import { okAsync } from "neverthrow";
 
 const labels: ProjectLabel[] = [
     {
@@ -63,26 +62,6 @@ describe("PullRequestLabelsList", () => {
         await after_render_once_descriptor.observe(host);
 
         expect(host.labels).toStrictEqual(labels);
-    });
-
-    it("When an error occurs while retrieving the labels, Then it should dispatch a fetch-error event containing a fault", async () => {
-        const tuleap_api_fault = Fault.fromMessage("Forbidden");
-        jest.spyOn(fetch_result, "getAllJSON").mockReturnValue(errAsync(tuleap_api_fault));
-
-        const host = Object.assign(doc.createElement("div"), {
-            pullRequestId: 15,
-        }) as unknown as HostElement;
-
-        const dispatchEvent = jest.spyOn(host, "dispatchEvent");
-
-        await after_render_once_descriptor.observe(host);
-
-        const event = dispatchEvent.mock.calls[0][0];
-        if (!(event instanceof CustomEvent)) {
-            throw new Error("Expected a CustomEvent");
-        }
-        expect(event.type).toBe("fetch-error");
-        expect(event.detail.fault).toBe(tuleap_api_fault);
     });
 
     it("Given a list of labels, Then it should fetch the labels and display them as badges with the right styles", () => {

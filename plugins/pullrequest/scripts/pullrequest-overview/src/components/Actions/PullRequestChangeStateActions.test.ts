@@ -140,6 +140,11 @@ describe("PullRequestChangeStateActions", () => {
             expect(wrapper.find("[data-test=merge-status-error]").exists()).toBe(true);
         });
 
+        it("displays an error when the git reference is broken", () => {
+            const wrapper = getWrapper({ is_git_reference_broken: true });
+            expect(wrapper.find("[data-test=merge-status-error]").exists()).toBe(true);
+        });
+
         it("does not display errors when the pull-request is not in review", () => {
             const wrapper = getWrapper({
                 status: PULL_REQUEST_STATUS_ABANDON,

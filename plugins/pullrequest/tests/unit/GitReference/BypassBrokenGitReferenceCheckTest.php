@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,21 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\Repository\View;
+declare(strict_types=1);
 
-/**
- * @psalm-immutable
- */
-class TabPresenter
+namespace Tuleap\PullRequest\GitReference;
+
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class BypassBrokenGitReferenceCheckTest extends TestCase
 {
-    public function __construct(
-        public readonly bool $is_active,
-        public readonly string $url,
-        public readonly string $label,
-        public readonly string $html_id,
-        public readonly bool $has_count_to_display,
-        public readonly int $count,
-        public readonly string $warning_message,
-    ) {
+    public function testItReturnsAnOptionObjectWithValueWhenCheckIsRequired(): void
+    {
+        self::assertTrue(BypassBrokenGitReferenceCheck::check()->isValue());
+    }
+
+    public function testItReturnsAnOptionObjectWithNoValueWhenCheckIsSkipped(): void
+    {
+        self::assertFalse(BypassBrokenGitReferenceCheck::skip()->isValue());
     }
 }

@@ -47,7 +47,8 @@ class NavigationTabPresenterBuilder
     {
         $is_selected = $selected_tab === self::TAB_PULLREQUEST;
 
-        $nb_pull_requests = $this->factory->getPullRequestCount($repository)->getNbOpen();
+        $nb_pull_requests         = $this->factory->getPullRequestCount($repository)->getNbOpen();
+        $has_broken_pull_requests = $this->factory->hasOpenBrokenPullRequests($repository);
 
         return new TabPresenter(
             $is_selected,
@@ -55,7 +56,8 @@ class NavigationTabPresenterBuilder
             dgettext('tuleap-pullrequest', "Pull requests"),
             self::TAB_PULLREQUEST,
             true,
-            $nb_pull_requests
+            $nb_pull_requests,
+            $has_broken_pull_requests ? dgettext('tuleap-pullrequest', 'There are broken pull-requests in this repository.') : '',
         );
     }
 }

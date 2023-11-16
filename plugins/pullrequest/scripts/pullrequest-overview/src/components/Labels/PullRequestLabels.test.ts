@@ -49,7 +49,9 @@ const labels: ProjectLabel[] = [
 vi.mock("@tuleap/vue-strict-inject");
 
 describe("PullRequestLabels", () => {
-    let display_error_callback: SpyInstance, user_can_update_labels: boolean;
+    let display_error_callback: SpyInstance,
+        user_can_update_labels: boolean,
+        is_git_reference_broken: boolean;
 
     const getWrapper = (): VueWrapper => {
         vi.spyOn(strict_inject, "strictInject").mockImplementation((key) => {
@@ -75,6 +77,7 @@ describe("PullRequestLabels", () => {
         wrapper.setProps({
             pull_request: {
                 user_can_update_labels,
+                is_git_reference_broken,
                 repository: {
                     project: {
                         id: 102,
@@ -89,6 +92,7 @@ describe("PullRequestLabels", () => {
     beforeEach(() => {
         display_error_callback = vi.fn();
         user_can_update_labels = true;
+        is_git_reference_broken = false;
     });
 
     it("should display a skeleton while the labels are loading, and display them when it is done loading", async () => {
@@ -150,6 +154,22 @@ describe("PullRequestLabels", () => {
             );
         },
     );
+
+    it("should not display the button when the pull-request git reference is broken", async () => {
+        vi.spyOn(tuleap_api, "fetchProjectLabels").mockReturnValue(okAsync(labels));
+        vi.spyOn(tuleap_api, "fetchPullRequestLabels").mockReturnValue(okAsync([]));
+
+        user_can_update_labels = true;
+        is_git_reference_broken = true;
+
+        const wrapper = getWrapper();
+
+        await wrapper.vm.$nextTick();
+        await wrapper.vm.$nextTick();
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.find("[data-test=manage-labels-button]").exists()).toBe(false);
+    });
 
     describe("Errors", () => {
         let tuleap_api_fault: Fault;

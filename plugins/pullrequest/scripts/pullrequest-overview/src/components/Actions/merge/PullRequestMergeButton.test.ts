@@ -106,13 +106,25 @@ describe("PullRequestMergeButton", () => {
     };
 
     describe("should not be displayed", () => {
-        it("When the user has not the right to merge", () => {
-            const wrapper = getWrapper({ user_can_merge: false });
+        it("When the pull-request is already merged", () => {
+            const wrapper = getWrapper({ status: PULL_REQUEST_STATUS_MERGED });
             expect(wrapper.element.children).toBeUndefined();
         });
 
-        it("When the pull-request is already merged", () => {
-            const wrapper = getWrapper({ status: PULL_REQUEST_STATUS_MERGED });
+        it("When the user has not the right to merge", () => {
+            const wrapper = getWrapper({
+                status: PULL_REQUEST_STATUS_MERGED,
+                user_can_merge: false,
+            });
+            expect(wrapper.element.children).toBeUndefined();
+        });
+
+        it("When the pull request git reference is broken", () => {
+            const wrapper = getWrapper({
+                status: PULL_REQUEST_STATUS_MERGED,
+                user_can_merge: true,
+                is_git_reference_broken: true,
+            });
             expect(wrapper.element.children).toBeUndefined();
         });
     });

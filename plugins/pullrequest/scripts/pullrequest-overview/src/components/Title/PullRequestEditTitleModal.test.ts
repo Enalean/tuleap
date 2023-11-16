@@ -116,6 +116,15 @@ describe("PullRequestEditTitleModal", () => {
         expect(wrapper.element.children).toBeUndefined();
     });
 
+    it("When the pull request git reference is broken, Then the component should not be rendered", () => {
+        const wrapper = getWrapper({
+            user_can_update_title_and_description: true,
+            is_git_reference_broken: true,
+        });
+
+        expect(wrapper.element.children).toBeUndefined();
+    });
+
     it("When the user clicks on the [Edit title] button, it shows the modal", async () => {
         const wrapper = getWrapper();
 

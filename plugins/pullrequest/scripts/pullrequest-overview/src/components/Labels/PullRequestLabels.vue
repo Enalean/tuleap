@@ -70,6 +70,7 @@ import type { ProjectLabel, PullRequest } from "@tuleap/plugin-pullrequest-rest-
 import { fetchProjectLabels, fetchPullRequestLabels } from "../../api/tuleap-rest-querier";
 import { DISPLAY_TULEAP_API_ERROR, PULL_REQUEST_ID_KEY } from "../../constants";
 import PropertySkeleton from "../ReadOnlyInfo/PropertySkeleton.vue";
+import { isPullRequestBroken } from "../Actions/merge-status-helper";
 import PullRequestManageLabelsModal from "./PullRequestManageLabelsModal.vue";
 
 const { $gettext } = useGettext();
@@ -95,7 +96,10 @@ const has_no_labels = computed(
     () => pull_request_labels.value.length === 0 && !are_pull_request_labels_loading.value,
 );
 const can_user_manage_labels = computed(
-    () => props.pull_request && props.pull_request.user_can_update_labels,
+    () =>
+        props.pull_request &&
+        props.pull_request.user_can_update_labels &&
+        !isPullRequestBroken(props.pull_request),
 );
 
 const getBadgeClasses = (label: ProjectLabel): string[] => {

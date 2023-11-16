@@ -25,24 +25,42 @@
             data-test="tab-overview"
             >{{ $gettext("Overview") }}</router-link
         >
-        <a class="tlp-tab" v-bind:href="buildUrlForView('commits')" data-test="tab-commits">{{
-            $gettext("Commits")
-        }}</a>
-        <a class="tlp-tab" v-bind:href="buildUrlForView('files')" data-test="tab-changes">{{
-            $gettext("Changes")
-        }}</a>
+        <a
+            v-if="is_tab_displayed"
+            class="tlp-tab"
+            v-bind:href="buildUrlForView('commits')"
+            data-test="tab-commits"
+            >{{ $gettext("Commits") }}</a
+        >
+        <a
+            v-if="is_tab_displayed"
+            class="tlp-tab"
+            v-bind:href="buildUrlForView('files')"
+            data-test="tab-changes"
+            >{{ $gettext("Changes") }}</a
+        >
     </nav>
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import { useGettext } from "vue3-gettext";
 import { OVERVIEW_APP_BASE_URL_KEY, PULL_REQUEST_ID_KEY, VIEW_OVERVIEW_NAME } from "../constants";
 import { strictInject } from "@tuleap/vue-strict-inject";
+import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 
 const { $gettext } = useGettext();
 
 const base_url: URL = strictInject(OVERVIEW_APP_BASE_URL_KEY);
 const pull_request_id: number = strictInject(PULL_REQUEST_ID_KEY);
+
+const props = defineProps<{
+    pull_request: PullRequest | null;
+}>();
+
+const is_tab_displayed = computed(
+    () => props.pull_request !== null && props.pull_request.is_git_reference_broken === false,
+);
 
 const buildUrlForView = (view_name: string) => {
     const view_url = new URL("", base_url.toString());

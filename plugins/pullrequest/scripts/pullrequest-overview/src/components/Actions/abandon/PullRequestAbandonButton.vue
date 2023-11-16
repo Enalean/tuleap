@@ -21,7 +21,8 @@
     <button
         v-if="is_button_displayed"
         type="button"
-        class="tlp-button-danger tlp-button-outline pull-request-abandon-button"
+        class="tlp-button-danger pull-request-abandon-button"
+        v-bind:class="{ 'tlp-button-outline': is_outlined }"
         data-test="abandon-button"
         v-bind:disabled="is_abandon_in_progress"
         v-on:click="proceedPullRequestAbandon()"
@@ -44,7 +45,7 @@
 import { ref, computed } from "vue";
 import { useGettext } from "vue3-gettext";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
-import { isPullRequestInReview } from "../merge-status-helper";
+import { isPullRequestBroken, isPullRequestInReview } from "../merge-status-helper";
 import { abandonPullRequest } from "../../../api/tuleap-rest-querier";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import {
@@ -66,6 +67,7 @@ const is_abandon_in_progress = ref(false);
 const is_button_displayed = computed(
     () => isPullRequestInReview(props.pull_request) && props.pull_request.user_can_abandon,
 );
+const is_outlined = computed(() => !isPullRequestBroken(props.pull_request));
 
 function proceedPullRequestAbandon(): void {
     if (!is_button_displayed.value) {

@@ -81,6 +81,9 @@ msgstr "Échec le"
 msgid "HTTP"
 msgstr "HTTP"
 
+msgid "It seems your pull-request has failed."
+msgstr "Il semblerait que votre pull-request ait échoué."
+
 msgid "Labels"
 msgstr "Labels"
 
@@ -139,6 +142,9 @@ msgstr "OK"
 
 msgid "Oh snap!"
 msgstr "Oh mince !"
+
+msgid "Oops!"
+msgstr "Oups !"
 
 msgid "Overview"
 msgstr "Résumé"
@@ -217,6 +223,13 @@ msgstr "Succès"
 
 msgid "Success on"
 msgstr "Succès le"
+
+msgid ""
+"The git reference associated to this pull-request is broken. You can only "
+"abandon it."
+msgstr ""
+"La référence git associée à cette pull-request est cassée. Vous pouvez "
+"seulement l'abandonner."
 
 msgid "The last CI status is"
 msgstr "Le dernier statut de l'intégration continue est"

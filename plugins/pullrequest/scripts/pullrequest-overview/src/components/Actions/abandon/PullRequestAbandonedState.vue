@@ -73,7 +73,7 @@ import {
     USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
 } from "../../../constants";
 
-import { isPullRequestAbandoned } from "../merge-status-helper";
+import { isPullRequestAbandoned, isPullRequestBroken } from "../merge-status-helper";
 import { isPreferenceAbsoluteDateFirst } from "../../../helpers/relative-dates-preference-helper";
 import { reopenPullRequest } from "../../../api/tuleap-rest-querier";
 
@@ -96,7 +96,10 @@ const status_info = computed(() =>
 );
 
 const can_user_reopen_pull_request = computed(
-    () => props.pull_request && props.pull_request.user_can_reopen,
+    () =>
+        props.pull_request &&
+        props.pull_request.user_can_reopen &&
+        !isPullRequestBroken(props.pull_request),
 );
 
 const getAbandonedText = (): string => {
