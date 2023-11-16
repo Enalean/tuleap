@@ -19,19 +19,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class ValidTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ValidTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testArgPropagate(): void
     {
         $v = new Valid();
         $v->disableFeedback();
-        $r = \Mockery::spy(\Rule::class);
-        $r->shouldReceive('isValid')->with('value')->once();
+        $r = $this->createMock(\Rule::class);
+        $r->expects(self::once())->method('isValid')->with('value');
+        $r->expects(self::once())->method('getErrorMessage')->willReturn('error');
         $v->addRule($r);
         $v->validate('value');
     }
@@ -40,10 +37,10 @@ class ValidTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $v = new Valid();
         $v->disableFeedback();
-        $r = \Mockery::spy(\Rule::class);
-        $r->shouldReceive('isValid')->andReturns(true);
+        $r = $this->createMock(\Rule::class);
+        $r->method('isValid')->willReturn(true);
         $v->addRule($r);
-        $this->assertTrue($v->validate('value'));
+        self::assertTrue($v->validate('value'));
     }
 
     // If one fails, all test fails
@@ -52,19 +49,20 @@ class ValidTest extends \Tuleap\Test\PHPUnit\TestCase
         $v = new Valid();
         $v->disableFeedback();
 
-        $r1 = \Mockery::spy(\Rule::class);
-        $r1->shouldReceive('isValid')->andReturns(true);
+        $r1 = $this->createMock(\Rule::class);
+        $r1->method('isValid')->willReturn(true);
         $v->addRule($r1);
 
-        $r2 = \Mockery::spy(\Rule::class);
-        $r2->shouldReceive('isValid')->andReturns(false);
+        $r2 = $this->createMock(\Rule::class);
+        $r2->method('isValid')->willReturn(false);
+        $r2->method('getErrorMessage')->willReturn('error');
         $v->addRule($r2);
 
-        $r3 = \Mockery::spy(\Rule::class);
-        $r3->shouldReceive('isValid')->andReturns(true);
+        $r3 = $this->createMock(\Rule::class);
+        $r3->method('isValid')->willReturn(true);
         $v->addRule($r3);
 
-        $this->assertFalse($v->validate('value'));
+        self::assertFalse($v->validate('value'));
     }
 
     // All conditions are tested
@@ -73,16 +71,17 @@ class ValidTest extends \Tuleap\Test\PHPUnit\TestCase
         $v = new Valid();
         $v->disableFeedback();
 
-        $r1 = \Mockery::spy(\Rule::class);
-        $r1->shouldReceive('isValid')->once()->andReturns(true);
+        $r1 = $this->createMock(\Rule::class);
+        $r1->expects(self::once())->method('isValid')->willReturn(true);
         $v->addRule($r1);
 
-        $r2 = \Mockery::spy(\Rule::class);
-        $r2->shouldReceive('isValid')->once()->andReturns(false);
+        $r2 = $this->createMock(\Rule::class);
+        $r2->expects(self::once())->method('isValid')->willReturn(false);
+        $r2->method('getErrorMessage')->willReturn('error');
         $v->addRule($r2);
 
-        $r3 = \Mockery::spy(\Rule::class);
-        $r3->shouldReceive('isValid')->once()->andReturns(true);
+        $r3 = $this->createMock(\Rule::class);
+        $r3->expects(self::once())->method('isValid')->willReturn(true);
         $v->addRule($r3);
 
         $v->validate('value');
@@ -93,9 +92,9 @@ class ValidTest extends \Tuleap\Test\PHPUnit\TestCase
         $v = new Valid();
         $v->disableFeedback();
 
-        $r = \Mockery::spy(\Rule::class);
-        $r->shouldReceive('isValid')->andReturns(false);
-        $r->shouldReceive('getErrorMessage')->once();
+        $r = $this->createMock(\Rule::class);
+        $r->method('isValid')->willReturn(false);
+        $r->expects(self::once())->method('getErrorMessage');
         $v->addRule($r);
 
         $v->validate('value');
@@ -106,9 +105,9 @@ class ValidTest extends \Tuleap\Test\PHPUnit\TestCase
         $v = new Valid();
         $v->disableFeedback();
 
-        $r = \Mockery::spy(\Rule::class);
-        $r->shouldReceive('isValid')->andReturns(false);
-        $r->shouldReceive('getErrorMessage')->never();
+        $r = $this->createMock(\Rule::class);
+        $r->method('isValid')->willReturn(false);
+        $r->expects(self::never())->method('getErrorMessage');
         $v->addRule($r, 'warning', 'test');
 
         $v->validate('value');
@@ -116,46 +115,49 @@ class ValidTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testNotRequiredEmptyCall(): void
     {
-        $r1 = \Mockery::spy(\Rule::class);
-        $r1->shouldReceive('isValid')->never();
+        $r1 = $this->createMock(\Rule::class);
+        $r1->expects(self::never())->method('isValid');
         $v1 = new Valid();
         $v1->disableFeedback();
         $v1->addRule($r1);
         $v1->validate('');
 
-        $r2 = \Mockery::spy(\Rule::class);
-        $r2->shouldReceive('isValid')->never();
+        $r2 = $this->createMock(\Rule::class);
+        $r2->expects(self::never())->method('isValid');
         $v2 = new Valid();
         $v2->addRule($r2);
         $v2->validate(false);
 
-        $r3 = \Mockery::spy(\Rule::class);
+        $r3 = $this->createMock(\Rule::class);
         $v3 = new Valid();
-        $r3->shouldReceive('isValid')->never();
+        $r3->expects(self::never())->method('isValid');
         $v3->addRule($r3);
         $v3->validate(null);
     }
 
     public function testRequiredEmptyCall(): void
     {
-        $r1 = \Mockery::spy(\Rule::class);
-        $r1->shouldReceive('isValid')->once();
+        $r1 = $this->createMock(\Rule::class);
+        $r1->expects(self::once())->method('isValid');
+        $r1->method('getErrorMessage')->willReturn('error');
         $v1 = new Valid();
         $v1->disableFeedback();
         $v1->required();
         $v1->addRule($r1);
         $v1->validate('');
 
-        $r2 = \Mockery::spy(\Rule::class);
-        $r2->shouldReceive('isValid')->once();
+        $r2 = $this->createMock(\Rule::class);
+        $r2->expects(self::once())->method('isValid');
+        $r2->method('getErrorMessage')->willReturn('error');
         $v2 = new Valid();
         $v2->disableFeedback();
         $v2->required();
         $v2->addRule($r2);
         $v2->validate(false);
 
-        $r3 = \Mockery::spy(\Rule::class);
-        $r3->shouldReceive('isValid')->once();
+        $r3 = $this->createMock(\Rule::class);
+        $r3->expects(self::once())->method('isValid');
+        $r3->method('getErrorMessage')->willReturn('error');
         $v3 = new Valid();
         $v3->disableFeedback();
         $v3->required();
@@ -169,33 +171,34 @@ class ValidTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testRequiredAndPermissive(): void
     {
-        $r = \Mockery::spy(\Rule::class);
-        $r->shouldReceive('isValid')->andReturns(true);
+        $r = $this->createMock(\Rule::class);
+        $r->method('isValid')->willReturn(true);
 
         $v = new Valid();
         $v->disableFeedback();
         $v->required();
         $v->addRule($r);
-        $this->assertFalse($v->validate(''));
+        self::assertFalse($v->validate(''));
     }
 
     public function testValueEmpty(): void
     {
         $v = new Valid();
-        $this->assertTrue($v->isValueEmpty(''));
-        $this->assertTrue($v->isValueEmpty(false));
-        $this->assertTrue($v->isValueEmpty(null));
-        $this->assertFalse($v->isValueEmpty(' '));
+        self::assertTrue($v->isValueEmpty(''));
+        self::assertTrue($v->isValueEmpty(false));
+        self::assertTrue($v->isValueEmpty(null));
+        self::assertFalse($v->isValueEmpty(' '));
     }
 
     public function testNoFeedback(): void
     {
-        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $v = $this->getMockBuilder(\Valid::class)->onlyMethods(['addFeedback'])->getMock();
         $v->disableFeedback();
-        $v->shouldReceive('addFeedback')->never();
+        $v->expects(self::never())->method('addFeedback');
 
-        $r = \Mockery::spy(\Rule::class);
-        $r->shouldReceive('isValid')->andReturns(false);
+        $r = $this->createMock(\Rule::class);
+        $r->method('isValid')->willReturn(false);
+        $r->method('getErrorMessage')->willReturn('error');
         $v->addRule($r);
 
         $v->validate('value');
@@ -203,14 +206,12 @@ class ValidTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testFeedback(): void
     {
-        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        // Need to call the constructore manually
-        $v->__construct();
-        $v->shouldReceive('addFeedback')->once();
+        $v = $this->getMockBuilder(\Valid::class)->onlyMethods(['addFeedback'])->getMock();
+        $v->expects(self::once())->method('addFeedback');
 
-        $r = \Mockery::spy(\Rule::class);
-        $r->shouldReceive('isValid')->andReturns(false);
-        $r->shouldReceive('getErrorMessage')->andReturns('error');
+        $r = $this->createMock(\Rule::class);
+        $r->method('isValid')->willReturn(false);
+        $r->method('getErrorMessage')->willReturn('error');
         $v->addRule($r);
 
         $v->validate('value');
@@ -218,15 +219,14 @@ class ValidTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testFeedbackErrorWhenRequired(): void
     {
-        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $v = $this->getMockBuilder(\Valid::class)->onlyMethods(['addFeedback'])->getMock();
         // Need to call the constructore manually
-        $v->__construct();
         $v->required();
-        $v->shouldReceive('addFeedback')->with('error', 'error message')->once();
+        $v->expects(self::once())->method('addFeedback')->with('error', 'error message');
 
-        $r = \Mockery::spy(\Rule::class);
-        $r->shouldReceive('isValid')->andReturns(false);
-        $r->shouldReceive('getErrorMessage')->andReturns('error message');
+        $r = $this->createMock(\Rule::class);
+        $r->method('isValid')->willReturn(false);
+        $r->method('getErrorMessage')->willReturn('error message');
         $v->addRule($r);
 
         $v->validate('value');
@@ -234,14 +234,12 @@ class ValidTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testFeedbackWarning(): void
     {
-        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        // Need to call the constructore manually
-        $v->__construct();
-        $v->shouldReceive('addFeedback')->with('warning', 'error message')->once();
+        $v = $this->getMockBuilder(\Valid::class)->onlyMethods(['addFeedback'])->getMock();
+        $v->expects(self::once())->method('addFeedback')->with('warning', 'error message');
 
-        $r = \Mockery::spy(\Rule::class);
-        $r->shouldReceive('isValid')->andReturns(false);
-        $r->shouldReceive('getErrorMessage')->andReturns('error message');
+        $r = $this->createMock(\Rule::class);
+        $r->method('isValid')->willReturn(false);
+        $r->method('getErrorMessage')->willReturn('error message');
         $v->addRule($r);
 
         $v->validate('value');
@@ -249,22 +247,20 @@ class ValidTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testFeedbackGlobal(): void
     {
-        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        // Need to call the constructore manually
-        $v->__construct();
-        $v->shouldReceive('addFeedback')->with('warning', 'custom message')->once();
+        $v = $this->getMockBuilder(\Valid::class)->onlyMethods(['addFeedback'])->getMock();
+        $v->expects(self::once())->method('addFeedback')->with('warning', 'custom message');
 
         $v->setErrorMessage('custom message');
 
         // Built-in message
-        $r1 = \Mockery::spy(\Rule::class);
-        $r1->shouldReceive('isValid')->andReturns(false);
-        $r1->shouldReceive('getErrorMessage')->andReturns('built-in error message');
+        $r1 = $this->createMock(\Rule::class);
+        $r1->method('isValid')->willReturn(false);
+        $r1->method('getErrorMessage')->willReturn('built-in error message');
         $v->addRule($r1);
 
         // Developer message
-        $r2 = \Mockery::spy(\Rule::class);
-        $r2->shouldReceive('isValid')->andReturns(false);
+        $r2 = $this->createMock(\Rule::class);
+        $r2->method('isValid')->willReturn(false);
         $v->addRule($r2, 'Just in time message');
 
         $v->validate('value');
@@ -272,15 +268,15 @@ class ValidTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testFeedbackGlobalWithoutErrors(): void
     {
-        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $v->shouldReceive('addFeedback')->never();
+        $v = $this->getMockBuilder(\Valid::class)->onlyMethods(['addFeedback'])->getMock();
+        $v->expects(self::never())->method('addFeedback');
 
         $v->setErrorMessage('custom message');
 
         // Built-in message
-        $r1 = \Mockery::spy(\Rule::class);
-        $r1->shouldReceive('isValid')->andReturns(true);
-        $r1->shouldReceive('getErrorMessage')->andReturns('built-in error message');
+        $r1 = $this->createMock(\Rule::class);
+        $r1->method('isValid')->willReturn(true);
+        $r1->method('getErrorMessage')->willReturn('built-in error message');
         $v->addRule($r1);
 
         $v->validate('value');

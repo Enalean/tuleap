@@ -23,83 +23,77 @@ declare(strict_types=1);
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testStatus(): void
     {
-        $u1 = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $u1->shouldReceive('getStatus')->andReturns('A');
-        $u2 = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $u2->shouldReceive('getStatus')->andReturns('S');
-        $u3 = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $u3->shouldReceive('getStatus')->andReturns('D');
-        $u4 = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $u4->shouldReceive('isAnonymous')->andReturns(false);
-        $u4->shouldReceive('getStatus')->andReturns('R');
-        $u4 = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $u4->shouldReceive('isAnonymous')->andReturns(true);
-        $u4->shouldReceive('getStatus')->andReturns('R');
+        $u1 = \Tuleap\Test\Builders\UserTestBuilder::anActiveUser()->build();
+        $u2 = \Tuleap\Test\Builders\UserTestBuilder::aUser()->withStatus('S')->build();
+        $u3 = \Tuleap\Test\Builders\UserTestBuilder::aUser()->withStatus('D')->build();
+        $u4 = \Tuleap\Test\Builders\UserTestBuilder::aRestrictedUser()->build();
 
-        $this->assertTrue($u1->isActive());
-        $this->assertFalse($u1->isSuspended());
-        $this->assertFalse($u1->isDeleted());
-        $this->assertFalse($u1->isRestricted());
+        self::assertTrue($u1->isActive());
+        self::assertFalse($u1->isSuspended());
+        self::assertFalse($u1->isDeleted());
+        self::assertFalse($u1->isRestricted());
 
-        $this->assertFalse($u2->isActive());
-        $this->assertTrue($u2->isSuspended());
-        $this->assertFalse($u2->isDeleted());
-        $this->assertFalse($u2->isRestricted());
+        self::assertFalse($u2->isActive());
+        self::assertTrue($u2->isSuspended());
+        self::assertFalse($u2->isDeleted());
+        self::assertFalse($u2->isRestricted());
 
-        $this->assertFalse($u3->isActive());
-        $this->assertFalse($u3->isSuspended());
-        $this->assertTrue($u3->isDeleted());
-        $this->assertFalse($u3->isRestricted());
+        self::assertFalse($u3->isActive());
+        self::assertFalse($u3->isSuspended());
+        self::assertTrue($u3->isDeleted());
+        self::assertFalse($u3->isRestricted());
 
-        $this->assertFalse($u4->isActive());
-        $this->assertFalse($u4->isSuspended());
-        $this->assertFalse($u4->isDeleted());
-        $this->assertFalse($u4->isRestricted());
+        self::assertFalse($u4->isActive());
+        self::assertFalse($u4->isSuspended());
+        self::assertFalse($u4->isDeleted());
+        self::assertTrue($u4->isRestricted());
     }
 
     public function testPreferences(): void
     {
-        $dao = \Mockery::spy(\UserPreferencesDao::class);
+        $dao = $this->createMock(\UserPreferencesDao::class);
 
         $empty_dar = [];
         $dar       = ['preference_value' => '123'];
 
-        $dao->shouldReceive('search')->with(666, 'unexisting_preference')->andReturns($empty_dar);
-        $dao->shouldReceive('search')->with(666, 'existing_preference')->andReturns($dar);
-        $dao->shouldReceive('set')->with(666, 'existing_preference', '456')->once()->andReturns(true);
-        $dao->shouldReceive('delete')->with(666, 'existing_preference')->once()->andReturns(true);
+        $dao->method('search')->willReturnMap([
+            [666, 'unexisting_preference', $empty_dar],
+            [666, 'existing_preference', $dar],
+        ]);
+        $dao->expects(self::once())->method('set')->with(666, 'existing_preference', '456');
+        $dao->expects(self::once())->method('delete')->with(666, 'existing_preference');
 
-        $user = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $user->shouldReceive('getPreferencesDao')->andReturns($dao);
-        $user->shouldReceive('getId')->andReturns(666);
+        $user = $this->getMockBuilder(PFUser::class)->disableOriginalConstructor()->onlyMethods(['getPreferencesDao', 'getId'])->getMock();
+        $user->method('getPreferencesDao')->willReturn($dao);
+        $user->method('getId')->willReturn(666);
 
-        $this->assertFalse($user->getPreference('unexisting_preference'), 'Unexisting preference, should return false');
-        $this->assertEquals('123', $user->getPreference('existing_preference'), 'Existing preference should return 123');
-        $this->assertEquals('123', $user->getPreference('existing_preference'), 'Existing preference should return 123, should be cached');
+        self::assertFalse($user->getPreference('unexisting_preference'), 'Unexisting preference, should return false');
+        self::assertEquals('123', $user->getPreference('existing_preference'), 'Existing preference should return 123');
+        self::assertEquals('123', $user->getPreference('existing_preference'), 'Existing preference should return 123, should be cached');
         $user->setPreference('existing_preference', '456');
-        $this->assertEquals('456', $user->getPreference('existing_preference'), 'Existing preference has been updated, should now return 456. No call to dao since cached during update');
+        self::assertEquals('456', $user->getPreference('existing_preference'), 'Existing preference has been updated, should now return 456. No call to dao since cached during update');
         $user->delPreference('existing_preference');
-        $this->assertFalse($user->getPreference('existing_preference'), 'Preferences has been deleted. No call to dao since cached during delete');
+        self::assertFalse($user->getPreference('existing_preference'), 'Preferences has been deleted. No call to dao since cached during delete');
     }
 
     public function testNone(): void
     {
-        $user_none = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $user_none->shouldReceive('getId')->andReturns(100);
-        $this->assertTrue($user_none->isNone());
+        $user_none = \Tuleap\Test\Builders\UserTestBuilder::aUser()->withId(100)->build();
+        self::assertTrue($user_none->isNone());
 
-        $user = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $user->shouldReceive('getId')->andReturns(666);
-        $this->assertFalse($user->isNone());
+        $user = \Tuleap\Test\Builders\UserTestBuilder::aUser()->withId(666)->build();
+        self::assertFalse($user->isNone());
     }
 
     public function testIsMemberSiteAdmin(): void
     {
-        $siteadmin    = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $siteadmin = $this->getMockBuilder(PFUser::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getUserGroupData'])
+            ->getMock();
+
         $ug_siteadmin = [
             '1' => [
                 'user_group_id' => '1',
@@ -117,18 +111,22 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
                 'news_flags' => '2',
             ],
         ];
-        $siteadmin->shouldReceive('getUserGroupData')->andReturns($ug_siteadmin);
+        $siteadmin->method('getUserGroupData')->willReturn($ug_siteadmin);
 
-        $this->assertTrue($siteadmin->isMember(1));
-        $this->assertTrue($siteadmin->isMember(1, 'A'));
+        self::assertTrue($siteadmin->isMember(1));
+        self::assertTrue($siteadmin->isMember(1, 'A'));
         // Site admin is member and admin of any project
-        $this->assertTrue($siteadmin->isMember(123));
-        $this->assertTrue($siteadmin->isMember(123, 'A'));
+        self::assertTrue($siteadmin->isMember(123));
+        self::assertTrue($siteadmin->isMember(123, 'A'));
     }
 
     public function testIsMemberProjectAdmin(): void
     {
-        $projectadmin     = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $projectadmin = $this->getMockBuilder(PFUser::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getUserGroupData', 'getPermissionManager', 'doesUserHaveSuperUserPermissionDelegation'])
+            ->getMock();
+
         $ug_project_admin = [
             '123' => [
                 'user_group_id' => '1',
@@ -146,17 +144,18 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
                 'news_flags'    => '2',
             ],
         ];
-        $projectadmin->shouldReceive('getUserGroupData')->andReturns($ug_project_admin);
-        $permission_manager = \Mockery::spy(\User_ForgeUserGroupPermissionsManager::class);
-        $projectadmin->shouldReceive('getPermissionManager')->andReturns($permission_manager);
+        $projectadmin->method('getUserGroupData')->willReturn($ug_project_admin);
+        $permission_manager = $this->createMock(\User_ForgeUserGroupPermissionsManager::class);
+        $projectadmin->method('getPermissionManager')->willReturn($permission_manager);
+        $projectadmin->method('doesUserHaveSuperUserPermissionDelegation')->willReturn(false);
 
         // Project admin is member and admin of only her projects
-        $this->assertTrue($projectadmin->isMember(123));
-        $this->assertTrue($projectadmin->isMember(123, 'A'));
-        $this->assertFalse($projectadmin->isMember(456));
-        $this->assertFalse($projectadmin->isMember(456, 'A'));
-        $this->assertFalse($projectadmin->isMember(1));
-        $this->assertFalse($projectadmin->isMember(1, 'A'));
+        self::assertTrue($projectadmin->isMember(123));
+        self::assertTrue($projectadmin->isMember(123, 'A'));
+        self::assertFalse($projectadmin->isMember(456));
+        self::assertFalse($projectadmin->isMember(456, 'A'));
+        self::assertFalse($projectadmin->isMember(1));
+        self::assertFalse($projectadmin->isMember(1, 'A'));
     }
 
     /**
@@ -164,7 +163,11 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testIsMemberProjectMember(): void
     {
-        $projectmember     = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $projectmember = $this->getMockBuilder(PFUser::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getUserGroupData', 'getPermissionManager', 'doesUserHaveSuperUserPermissionDelegation'])
+            ->getMock();
+
         $ug_project_member = [
             '789' => [
                 'user_group_id' => '1',
@@ -182,17 +185,18 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
                 'news_flags'    => '2',
             ],
         ];
-        $projectmember->shouldReceive('getUserGroupData')->andReturns($ug_project_member);
-        $permission_manager = \Mockery::spy(\User_ForgeUserGroupPermissionsManager::class);
-        $projectmember->shouldReceive('getPermissionManager')->andReturns($permission_manager);
+        $projectmember->method('getUserGroupData')->willReturn($ug_project_member);
+        $permission_manager = $this->createMock(\User_ForgeUserGroupPermissionsManager::class);
+        $projectmember->method('getPermissionManager')->willReturn($permission_manager);
+        $projectmember->method('doesUserHaveSuperUserPermissionDelegation')->willReturn(false);
 
         // Project member is member of only her project
-        $this->assertTrue($projectmember->isMember(789));
-        $this->assertFalse($projectmember->isMember(789, 'A'));
-        $this->assertFalse($projectmember->isMember(456));
-        $this->assertFalse($projectmember->isMember(456, 'A'));
-        $this->assertFalse($projectmember->isMember(1));
-        $this->assertFalse($projectmember->isMember(1, 'A'));
+        self::assertTrue($projectmember->isMember(789));
+        self::assertFalse($projectmember->isMember(789, 'A'));
+        self::assertFalse($projectmember->isMember(456));
+        self::assertFalse($projectmember->isMember(456, 'A'));
+        self::assertFalse($projectmember->isMember(1));
+        self::assertFalse($projectmember->isMember(1, 'A'));
     }
 
     public function testGetAuthorizedKeysSplitedWith1Key(): void
@@ -206,9 +210,9 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = new PFUser(['language_id'     => 'en_US',
             'authorized_keys' => $k1,
         ]);
-        $this->assertEquals($user->getAuthorizedKeysRaw(), $k1);
+        self::assertEquals($user->getAuthorizedKeysRaw(), $k1);
         $res = $user->getAuthorizedKeysArray();
-        $this->assertEquals($res[0], $k1);
+        self::assertEquals($res[0], $k1);
     }
 
     public function testGetAuthorizedKeysSplitedWith2Keys(): void
@@ -229,10 +233,10 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = new PFUser(['language_id'     => 'en_US',
             'authorized_keys' => $ssh,
         ]);
-        $this->assertEquals($user->getAuthorizedKeysRaw(), $ssh);
+        self::assertEquals($user->getAuthorizedKeysRaw(), $ssh);
         $res = $user->getAuthorizedKeysArray();
-        $this->assertEquals($k1, $res[0]);
-        $this->assertEquals($k2, $res[1]);
+        self::assertEquals($k1, $res[0]);
+        self::assertEquals($k2, $res[1]);
     }
 
     public function testGetAuthorizedKeysSplitedWithEmptyKey(): void
@@ -253,9 +257,9 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
             'authorized_keys' => $k1 . PFUser::SSH_KEY_SEPARATOR . PFUser::SSH_KEY_SEPARATOR . $k2,
         ]);
         $res  = $user->getAuthorizedKeysArray();
-        $this->assertEquals($k1, $res[0]);
-        $this->assertFalse(isset($res[1]));
-        $this->assertEquals($k2, $res[2]);
+        self::assertEquals($k1, $res[0]);
+        self::assertFalse(isset($res[1]));
+        self::assertEquals($k2, $res[2]);
     }
 
     public function testGetAuthorizedKeysSplitedWithoutKey(): void
@@ -264,27 +268,30 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
             'authorized_keys' => '',
         ]);
         $res  = $user->getAuthorizedKeysArray();
-        $this->assertCount(0, $res);
+        self::assertCount(0, $res);
     }
 
     public function testGetAllProjectShouldListOnlyOneOccurenceOfEachProject(): void
     {
-        $user = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $user = $this->getMockBuilder(PFUser::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getProjects', 'getUGroupDao'])
+            ->getMock();
 
-        $user->shouldReceive('getProjects')->andReturns([101, 103]);
+        $user->method('getProjects')->willReturn([101, 103]);
 
         $dar = TestHelper::arrayToDar(['group_id' => 102], ['group_id' => 103], ['group_id' => 104]);
-        $dao = \Mockery::spy(\UGroupDao::class);
-        $dao->shouldReceive('searchGroupByUserId')->andReturns($dar);
-        $user->shouldReceive('getUGroupDao')->andReturns($dao);
+        $dao = $this->createMock(\UGroupDao::class);
+        $dao->method('searchGroupByUserId')->willReturn($dar);
+        $user->method('getUGroupDao')->willReturn($dao);
 
-        $this->assertEquals([102, 103, 104, 101], $user->getAllProjects());
+        self::assertEquals([102, 103, 104, 101], $user->getAllProjects());
     }
 
     public function testGetLanguageShouldUserLanguageFactoryIfNotDefined(): void
     {
-        $langFactory = \Mockery::spy(\BaseLanguageFactory::class);
-        $langFactory->shouldReceive('getBaseLanguage')->with('fr_BE')->once();
+        $langFactory = $this->createMock(\BaseLanguageFactory::class);
+        $langFactory->expects(self::once())->method('getBaseLanguage')->with('fr_BE');
 
         $user = new PFUser(['language_id' => 'fr_BE']);
         $user->setLanguageFactory($langFactory);
@@ -294,50 +301,62 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItStringifiesTheUser(): void
     {
         $user = new PFUser(['user_id' => 123, 'language_id' => 'en_US']);
-        $this->assertEquals("User #123", (string) $user);
+        self::assertEquals("User #123", (string) $user);
     }
 
     public function testItReturnsTrueWhenUserIsAdminOfProjectAdministration(): void
     {
-        $user = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $user->shouldReceive('getUserGroupData')->andReturns([1 => ['admin_flags' => 'A']]);
-        $user->shouldReceive('doesUserHaveSuperUserPermissionDelegation')->andReturns(false);
+        $user = $this->getMockBuilder(PFUser::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getUserGroupData', 'doesUserHaveSuperUserPermissionDelegation'])
+            ->getMock();
+        $user->method('getUserGroupData')->willReturn([1 => ['admin_flags' => 'A']]);
+        $user->method('doesUserHaveSuperUserPermissionDelegation')->willReturn(false);
 
-        $this->assertTrue($user->isSuperUser());
+        self::assertTrue($user->isSuperUser());
     }
 
     public function testItReturnsTrueWhenUserHasSiteAdministrationPermissionDelegation(): void
     {
-        $user = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $user->shouldReceive('getUserGroupData')->andReturns([]);
-        $user->shouldReceive('doesUserHaveSuperUserPermissionDelegation')->andReturns(true);
+        $user = $this->getMockBuilder(PFUser::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getUserGroupData', 'doesUserHaveSuperUserPermissionDelegation'])
+            ->getMock();
+        $user->method('getUserGroupData')->willReturn([]);
+        $user->method('doesUserHaveSuperUserPermissionDelegation')->willReturn(true);
 
-        $this->assertTrue($user->isSuperUser());
+        self::assertTrue($user->isSuperUser());
     }
 
     public function testItReturnsFalseWhenUserIsNotSiteAdministrator(): void
     {
-        $user = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $user->shouldReceive('getUserGroupData')->andReturns([]);
-        $user->shouldReceive('doesUserHaveSuperUserPermissionDelegation')->andReturns(false);
+        $user = $this->getMockBuilder(PFUser::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getUserGroupData', 'doesUserHaveSuperUserPermissionDelegation'])
+            ->getMock();
+        $user->method('getUserGroupData')->willReturn([]);
+        $user->method('doesUserHaveSuperUserPermissionDelegation')->willReturn(false);
 
-        $this->assertFalse($user->isSuperUser());
+        self::assertFalse($user->isSuperUser());
     }
 
     public function testItSetTheAlternateValueWhenPreferenceIsTheDefaultOne(): void
     {
         $user_id = 101;
-        $user    = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $dao     = \Mockery::mock(\UserPreferencesDao::class);
-        $user->shouldReceive('getPreferencesDao')->andReturns($dao);
+        $user    = $this->getMockBuilder(PFUser::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getPreferencesDao'])
+            ->getMock();
+        $dao     = $this->createMock(\UserPreferencesDao::class);
+        $user->method('getPreferencesDao')->willReturn($dao);
 
         $this->expectNotToPerformAssertions();
 
-        $dao->shouldReceive('search')->with($user_id, 'pref_name')->andReturns(\TestHelper::arrayToDar([
+        $dao->method('search')->with($user_id, 'pref_name')->willReturn([
             'user_id'          => $user_id,
             'preference_name'  => 'pref_name',
             'preference_value' => 'default_value',
-        ]));
+        ]);
 
         $user->togglePreference('pref_name', 'default_value', 'alternate_value');
     }
@@ -345,30 +364,36 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItSetTheDefaultValueWhenPreferenceIsTheAlternateOne(): void
     {
         $user_id = 101;
-        $user    = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $dao     = \Mockery::mock(\UserPreferencesDao::class);
-        $user->shouldReceive('getPreferencesDao')->andReturns($dao);
+        $user    = $this->getMockBuilder(PFUser::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getPreferencesDao'])
+            ->getMock();
+        $dao     = $this->createMock(\UserPreferencesDao::class);
+        $user->method('getPreferencesDao')->willReturn($dao);
 
         $this->expectNotToPerformAssertions();
 
-        $dao->shouldReceive('search')->with($user_id, 'pref_name')->andReturns(\TestHelper::arrayToDar([
+        $dao->method('search')->with($user_id, 'pref_name')->willReturn([
             'user_id'          => $user_id,
             'preference_name'  => 'pref_name',
             'preference_value' => 'alt_value',
-        ]));
+        ]);
 
         $user->togglePreference('pref_name', 'default_value', 'alt_value');
     }
 
     public function testItSetTheDefaultValueWhenNoPreference(): void
     {
-        $user = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $dao  = \Mockery::mock(\UserPreferencesDao::class);
-        $user->shouldReceive('getPreferencesDao')->andReturns($dao);
+        $user = $this->getMockBuilder(PFUser::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getPreferencesDao'])
+            ->getMock();
+        $dao  = $this->createMock(\UserPreferencesDao::class);
+        $user->method('getPreferencesDao')->willReturn($dao);
 
         $this->expectNotToPerformAssertions();
 
-        $dao->shouldReceive('search')->with(101, 'pref_name')->andReturns(\TestHelper::emptyDar());
+        $dao->method('search')->with(101, 'pref_name')->willReturn([]);
 
         $user->togglePreference('pref_name', 'default_value', 'alt_value');
     }
