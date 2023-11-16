@@ -60,6 +60,7 @@ final class ArtifactTestBuilder
     private ?Artifact $parent          = null;
     private bool $has_parent           = false;
     private bool|null $is_open         = null;
+    private string|null $status        = null;
     /**
      * @var Artifact[]|null
      */
@@ -150,6 +151,13 @@ final class ArtifactTestBuilder
         return $this;
     }
 
+    public function withStatus(string $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
     /**
      * @param Artifact[] $ancestors
      */
@@ -203,6 +211,9 @@ final class ArtifactTestBuilder
         }
         if ($this->ancestors !== null) {
             $artifact->setAllAncestors($this->ancestors);
+        }
+        if ($this->status !== null) {
+            $artifact->setStatus($this->status);
         }
 
         return $artifact;

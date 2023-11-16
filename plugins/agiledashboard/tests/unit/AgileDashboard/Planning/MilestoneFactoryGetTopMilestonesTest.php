@@ -33,18 +33,21 @@ use Planning_MilestoneFactory;
 use Planning_VirtualTopMilestone;
 use PlanningFactory;
 use PlanningPermissionsManager;
-use Project;
 use Psr\Log\NullLogger;
 use Tracker;
-use Tracker_Artifact_Changeset;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class MilestoneFactoryGetTopMilestonesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -62,18 +65,9 @@ final class MilestoneFactoryGetTopMilestonesTest extends \Tuleap\Test\PHPUnit\Te
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Planning_VirtualTopMilestone
      */
     private $top_milestone;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
-     */
-    private $tracker;
-    /**
-     * @var NullLogger
-     */
-    private $logger;
+    private PFUser $user;
+    private Tracker $tracker;
+    private NullLogger $logger;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|IComputeTimeframes
      */
@@ -104,14 +98,9 @@ final class MilestoneFactoryGetTopMilestonesTest extends \Tuleap\Test\PHPUnit\Te
         $planning = Mockery::mock(Planning::class);
         $planning->shouldReceive('getPlanningTrackerId')->andReturn(45);
 
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturn(3233);
-
-        $this->tracker = Mockery::mock(Tracker::class);
-        $this->tracker->shouldReceive('getId')->andReturn(12);
-        $this->tracker->shouldReceive('getName')->andReturn('tracker');
-
-        $this->user = Mockery::mock(PFUser::class);
+        $project       = ProjectTestBuilder::aProject()->withId(3233)->build();
+        $this->tracker = TrackerTestBuilder::aTracker()->withId(12)->withName('tracker')->build();
+        $this->user    = UserTestBuilder::anActiveUser()->build();
 
         $this->top_milestone = Mockery::mock(Planning_VirtualTopMilestone::class);
         $this->top_milestone->shouldReceive('getPlanning')->andReturn($planning);
@@ -131,8 +120,22 @@ final class MilestoneFactoryGetTopMilestonesTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItReturnsMilestonePerArtifact(): void
     {
-        $artifact_1 = $this->mockAnArtifactWithoutAncestor();
-        $artifact_2 = $this->mockAnArtifactWithoutAncestor();
+        $artifact_1 = ArtifactTestBuilder::anArtifact(1)
+            ->inTracker($this->tracker)
+            ->withChangesets(ChangesetTestBuilder::aChangeset('1')->build())
+            ->userCanView(true)
+            ->withParent(null)
+            ->isOpen(true)
+            ->withAncestors([])
+            ->build();
+        $artifact_2 = ArtifactTestBuilder::anArtifact(2)
+            ->inTracker($this->tracker)
+            ->withChangesets(ChangesetTestBuilder::aChangeset('2')->build())
+            ->userCanView(true)
+            ->withParent(null)
+            ->isOpen(true)
+            ->withAncestors([])
+            ->build();
 
         $my_artifacts = [
             $artifact_1,
@@ -172,7 +175,14 @@ final class MilestoneFactoryGetTopMilestonesTest extends \Tuleap\Test\PHPUnit\Te
         $artifact_1->shouldReceive('getLastChangeset')->andReturn(null);
         $artifact_1->shouldReceive('getTracker')->andReturn($this->tracker);
 
-        $artifact_2 = $this->mockAnArtifactWithoutAncestor();
+        $artifact_2 = ArtifactTestBuilder::anArtifact(2)
+            ->inTracker($this->tracker)
+            ->withChangesets(ChangesetTestBuilder::aChangeset('1')->build())
+            ->userCanView(true)
+            ->withParent(null)
+            ->isOpen(true)
+            ->withAncestors([])
+            ->build();
 
         $my_artifacts = [
             $artifact_1,
@@ -193,19 +203,5 @@ final class MilestoneFactoryGetTopMilestonesTest extends \Tuleap\Test\PHPUnit\Te
         $milestone_1 = $milestones[0];
 
         $this->assertEquals($artifact_2, $milestone_1->getArtifact());
-    }
-
-    /**
-     * @return Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
-     */
-    protected function mockAnArtifactWithoutAncestor()
-    {
-        $artifact_1 = Mockery::mock(Artifact::class);
-        $artifact_1->shouldReceive('getLastChangeset')->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
-        $artifact_1->shouldReceive('userCanView')->andReturn(true);
-        $artifact_1->shouldReceive('getTracker')->andReturn($this->tracker);
-        $artifact_1->shouldReceive('getAllAncestors')->andReturn([]);
-
-        return $artifact_1;
     }
 }

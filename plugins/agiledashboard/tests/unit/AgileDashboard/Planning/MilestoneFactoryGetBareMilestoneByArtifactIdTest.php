@@ -38,10 +38,13 @@ use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 
 final class MilestoneFactoryGetBareMilestoneByArtifactIdTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -63,18 +66,12 @@ final class MilestoneFactoryGetBareMilestoneByArtifactIdTest extends \Tuleap\Tes
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_ArtifactFactory
      */
     private $artifact_factory;
-    /**
-     * @var PFUser
-     */
-    private $user;
+    private PFUser $user;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|IComputeTimeframes
      */
     private $timeframe_calculator;
-    /**
-     * @var NullLogger
-     */
-    private $logger;
+    private NullLogger $logger;
 
     protected function setUp(): void
     {
@@ -97,7 +94,7 @@ final class MilestoneFactoryGetBareMilestoneByArtifactIdTest extends \Tuleap\Tes
             $this->logger,
             Mockery::spy(MilestoneBurndownFieldChecker::class)
         );
-        $this->user              = Mockery::mock(PFUser::class);
+        $this->user              = UserTestBuilder::anActiveUser()->build();
         $this->artifact_id       = 112;
     }
 
@@ -116,11 +113,19 @@ final class MilestoneFactoryGetBareMilestoneByArtifactIdTest extends \Tuleap\Tes
 
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($planning_tracker)->andReturn(Mockery::mock(Planning::class));
 
-        $artifact = Mockery::spy(Artifact::class);
-        $artifact->shouldReceive('getTracker')->andReturn($planning_tracker);
-        $artifact->shouldReceive('userCanView')->with($this->user)->once()->andReturn($planning_tracker);
-        $artifact->shouldReceive('getAllAncestors')->with($this->user)->once()->andReturn([]);
-        $artifact->shouldReceive('getLastChangeset')->andReturn(Mockery::mock(\Tracker_Artifact_Changeset::class));
+
+        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+
+        $artifact = ArtifactTestBuilder::anArtifact($this->artifact_id)
+            ->withTitle('title')
+            ->inTracker($planning_tracker)
+            ->withChangesets($changeset)
+            ->userCanView(true)
+            ->withParent(null)
+            ->isOpen(true)
+            ->withAncestors([])
+            ->build();
+
         $this->artifact_factory->shouldReceive('getArtifactById')->with($this->artifact_id)->andReturn($artifact);
 
         $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')

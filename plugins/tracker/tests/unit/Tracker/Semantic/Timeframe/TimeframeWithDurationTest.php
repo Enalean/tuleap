@@ -20,7 +20,6 @@
 
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 use Tracker;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -30,13 +29,11 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueDateTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueIntegerTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var TimeframeWithEndDate
-     */
-    private $timeframe;
+    private TimeframeWithDuration $timeframe;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\Tracker_FormElement_Field_Date
      */
@@ -46,17 +43,15 @@ class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $duration_field;
     private \PFUser $user;
-    private Tracker&MockObject $tracker;
+    private Tracker $tracker;
 
     protected function setUp(): void
     {
         $this->start_date_field = $this->getMockedDateField(1001);
         $this->duration_field   = $this->getMockedDurationField(1002);
 
-        $this->tracker = $this->createMock(Tracker::class);
-        $this->tracker->method('getId')->willReturn(1);
-
-        $this->user = UserTestBuilder::anActiveUser()->build();
+        $this->tracker = TrackerTestBuilder::aTracker()->withId(1)->build();
+        $this->user    = UserTestBuilder::anActiveUser()->build();
 
         $this->timeframe = new TimeframeWithDuration(
             $this->start_date_field,

@@ -20,23 +20,19 @@
 
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use Tracker;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\SemanticTimeframeWithEndDateRepresentation;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueDateTestBuilder;
-use Tuleap\Tracker\TrackerColor;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var TimeframeWithEndDate
-     */
-    private $timeframe;
+    private TimeframeWithEndDate $timeframe;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\Tracker_FormElement_Field_Date
      */
@@ -45,17 +41,14 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject|\Tracker_FormElement_Field_Date
      */
     private $end_date_field;
-    /**
-     * @var \PFUser|\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $user;
+    private \PFUser $user;
 
     protected function setUp(): void
     {
         $this->start_date_field = $this->getMockedDateField(1001);
         $this->end_date_field   = $this->getMockedDateField(1003);
 
-        $this->user = $this->getMockBuilder(\PFUser::class)->disableOriginalConstructor()->getMock();
+        $this->user = UserTestBuilder::anActiveUser()->build();
 
         $this->timeframe = new TimeframeWithEndDate(
             $this->start_date_field,
@@ -132,16 +125,14 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testItDoesNotExportToRESTWhenUserCanReadFields(bool $can_read_start_date, bool $can_read_end_date): void
     {
-        $user = $this->getMockBuilder(\PFUser::class)->disableOriginalConstructor()->getMock();
         $this->start_date_field->expects(self::any())->method('userCanRead')->will(self::returnValue($can_read_start_date));
         $this->end_date_field->expects(self::any())->method('userCanRead')->will(self::returnValue($can_read_end_date));
 
-        $this->assertNull($this->timeframe->exportToREST($user));
+        $this->assertNull($this->timeframe->exportToREST($this->user));
     }
 
     public function testItExportsToREST(): void
     {
-        $user = $this->getMockBuilder(\PFUser::class)->disableOriginalConstructor()->getMock();
         $this->start_date_field->expects(self::any())->method('userCanRead')->will(self::returnValue(true));
         $this->end_date_field->expects(self::any())->method('userCanRead')->will(self::returnValue(true));
 
@@ -150,17 +141,16 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
                 1001,
                 1003
             ),
-            $this->timeframe->exportToREST($user)
+            $this->timeframe->exportToREST($this->user)
         );
     }
 
     public function testItSaves(): void
     {
         $dao     = $this->getMockBuilder(SemanticTimeframeDao::class)->disableOriginalConstructor()->getMock();
-        $tracker = $this->getMockBuilder(\Tracker::class)->disableOriginalConstructor()->getMock();
+        $tracker = TrackerTestBuilder::aTracker()->withId(113)->build();
 
         $dao->expects(self::once())->method('save')->with(113, 1001, null, 1003, null)->will(self::returnValue(true));
-        $tracker->expects(self::once())->method('getId')->will(self::returnValue(113));
 
         self::assertTrue(
             $this->timeframe->save($tracker, $dao)
@@ -418,7 +408,7 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
 
         return ArtifactTestBuilder::anArtifact('4')
             ->withTitle('title')
-            ->inTracker($this->getTracker())
+            ->inTracker(TrackerTestBuilder::aTracker()->build())
             ->withChangesets($changeset)
             ->userCanView(true)
             ->withParent(null)
@@ -439,24 +429,11 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
 
         return ArtifactTestBuilder::anArtifact('4')
             ->withTitle('title')
-            ->inTracker($this->getTracker())
+            ->inTracker(TrackerTestBuilder::aTracker()->build())
             ->withChangesets($changeset)
             ->userCanView(true)
             ->withParent(null)
             ->isOpen(true)
             ->build();
-    }
-
-    private function getTracker(): Tracker&MockObject
-    {
-        $tracker = $this->createMock(Tracker::class);
-        $tracker->method('getId')->willReturn(1);
-        $tracker->method('isActive')->willReturn(true);
-        $tracker->method('userCanView')->willReturn(true);
-        $tracker->method('getTitleField')->willReturn($this->createMock(\Tracker_FormElement_Field_String::class));
-        $tracker->method('getColor')->willReturn(TrackerColor::fromName('acid-green'));
-        $tracker->method('getItemName')->willReturn('task');
-
-        return $tracker;
     }
 }

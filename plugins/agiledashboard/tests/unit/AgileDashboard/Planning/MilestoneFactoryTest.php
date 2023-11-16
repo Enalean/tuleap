@@ -33,32 +33,30 @@ use PlanningFactory;
 use PlanningPermissionsManager;
 use Project;
 use Psr\Log\NullLogger;
-use Tracker;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 class MilestoneFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var Mockery\MockInterface|Project
-     */
-    private $project;
+    private Project $project;
     /**
      * @var Planning_MilestoneFactory
      */
     private $milestone;
-    /**
-     * @var Mockery\MockInterface|PFUser
-     */
-    private $user;
+    private PFUser $user;
     /**
      * @var Mockery\MockInterface|Planning
      */
@@ -91,22 +89,19 @@ class MilestoneFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->planning = Mockery::mock(Planning::class);
         $this->planning->shouldReceive('getPlanningTrackerId')->andReturn(20);
 
-        $this->user = Mockery::mock(PFUser::class);
-
-        $this->project = Mockery::mock(Project::class);
+        $this->user    = UserTestBuilder::anActiveUser()->build();
+        $this->project = ProjectTestBuilder::aProject()->build();
 
         $planning_factory = Mockery::mock(PlanningFactory::class);
         $planning_factory->shouldReceive('getPlanningByPlanningTracker')->andReturn($this->planning);
 
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getProject')->andReturn($this->project);
-        $tracker->shouldReceive('getId')->andReturn(100);
+        $tracker = TrackerTestBuilder::aTracker()->withId(100)->withProject($this->project)->build();
 
-        $this->artifact_open_current_with_start_date    = $this->mockAnArtifact(1, true, 'open', $tracker);
-        $this->artifact_open_current_without_start_date = $this->mockAnArtifact(2, true, 'open', $tracker);
-        $this->artifact_open_future_with_start_date     = $this->mockAnArtifact(3, true, 'open', $tracker);
-        $this->artifact_open_future_without_start_date  = $this->mockAnArtifact(4, true, 'open', $tracker);
-        $this->artifact_closed_passed                   = $this->mockAnArtifact(5, false, 'closed', $tracker);
+        $this->artifact_open_current_with_start_date    = $this->getAnArtifact(1, true, 'open', $tracker);
+        $this->artifact_open_current_without_start_date = $this->getAnArtifact(2, true, 'open', $tracker);
+        $this->artifact_open_future_with_start_date     = $this->getAnArtifact(3, true, 'open', $tracker);
+        $this->artifact_open_future_without_start_date  = $this->getAnArtifact(4, true, 'open', $tracker);
+        $this->artifact_closed_passed                   = $this->getAnArtifact(5, false, 'closed', $tracker);
 
         $artifact_factory = Mockery::mock(Tracker_ArtifactFactory::class);
         $artifact_factory
@@ -223,14 +218,16 @@ class MilestoneFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($this->artifact_closed_passed, $milestones[0]->getArtifact());
     }
 
-    private function mockAnArtifact(int $id, bool $is_open, string $status, \Tracker $tracker): Artifact
+    private function getAnArtifact(int $id, bool $is_open, string $status, \Tracker $tracker): Artifact
     {
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn($id);
-        $artifact->shouldReceive('isOpen')->andReturn($is_open);
-        $artifact->shouldReceive('getStatus')->andReturn($status);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
-        $artifact->shouldReceive('getLastChangeset')->andReturn(Mockery::mock(\Tracker_Artifact_Changeset::class));
-        return $artifact;
+        return ArtifactTestBuilder::anArtifact($id)
+            ->inTracker($tracker)
+            ->withChangesets(ChangesetTestBuilder::aChangeset('1')->build())
+            ->userCanView(true)
+            ->withParent(null)
+            ->withStatus($status)
+            ->isOpen($is_open)
+            ->withAncestors([])
+            ->build();
     }
 }
