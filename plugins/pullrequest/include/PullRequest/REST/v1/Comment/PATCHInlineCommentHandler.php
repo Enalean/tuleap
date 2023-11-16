@@ -84,15 +84,15 @@ final class PATCHInlineCommentHandler
                         $updated_comment = InlineComment::buildWithNewContent($comment, $comment_data->content, $comment_edition_date);
                         $this->comment_saver->saveUpdatedComment($updated_comment);
 
-                        $destination_repository = $this->repository_retriever->getRepositoryById($pull_request->getRepoDestId());
-                        if ($destination_repository === null) {
+                        $source_repository = $this->repository_retriever->getRepositoryById($pull_request->getRepositoryId());
+                        if ($source_repository === null) {
                             throw new \LogicException('Could not retrieve the destination repository of the pull request, but it should have already been checked');
                         }
                         $this->cross_references_saver->extractCrossRef(
                             $updated_comment->getContent(),
                             $pull_request->getId(),
                             \pullrequestPlugin::REFERENCE_NATURE,
-                            (int) $destination_repository->getProjectId(),
+                            (int) $source_repository->getProjectId(),
                             $user->getId(),
                             \pullrequestPlugin::PULLREQUEST_REFERENCE_KEYWORD
                         );
