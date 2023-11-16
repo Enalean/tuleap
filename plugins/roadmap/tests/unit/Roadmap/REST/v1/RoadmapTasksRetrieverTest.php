@@ -48,6 +48,10 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeNotConfigured;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithDuration;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueDateTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 use Tuleap\Tracker\TrackerColor;
 
@@ -66,6 +70,21 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private \Tracker_ArtifactFactory&MockObject $artifact_factory;
     private RoadmapTasksOutOfDateFilter&MockObject $tasks_filter;
     private SemanticProgressBuilder&MockObject $progress_builder;
+
+    private function getTracker(int $tracker_id, \Tracker_FormElement_Field_String $title_field, string $color, string $name): Tracker&MockObject
+    {
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getId')->willReturn($tracker_id);
+        $tracker->method('isActive')->willReturn(true);
+        $tracker->method('userCanView')->willReturn(true);
+        $tracker->method('getTitleField')->willReturn($title_field);
+        $tracker->method('getId')->willReturn($tracker_id);
+        $tracker->method('getColor')->willReturn(TrackerColor::fromName($color));
+        $tracker->method('getProject')->willReturn($this->project);
+        $tracker->method('getItemName')->willReturn($name);
+
+        return $tracker;
+    }
 
     protected function setUp(): void
     {
@@ -137,13 +156,12 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(self::ROADMAP_ID)
             ->willReturn(
                 [
-                    'id'         => self::ROADMAP_ID,
-                    'owner_id'   => self::PROJECT_ID,
+                    'id' => self::ROADMAP_ID,
+                    'owner_id' => self::PROJECT_ID,
                     'owner_type' => 'g',
-                    'title'      => 'My Roadmap',
+                    'title' => 'My Roadmap',
                 ]
             );
-
 
 
         $this->url_verification
@@ -165,13 +183,12 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(self::ROADMAP_ID)
             ->willReturn(
                 [
-                    'id'         => self::ROADMAP_ID,
-                    'owner_id'   => self::PROJECT_ID,
+                    'id' => self::ROADMAP_ID,
+                    'owner_id' => self::PROJECT_ID,
                     'owner_type' => 'g',
-                    'title'      => 'My Roadmap',
+                    'title' => 'My Roadmap',
                 ]
             );
-
 
 
         $this->url_verification
@@ -193,10 +210,10 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(self::ROADMAP_ID)
             ->willReturn(
                 [
-                    'id'         => self::ROADMAP_ID,
-                    'owner_id'   => self::PROJECT_ID,
+                    'id' => self::ROADMAP_ID,
+                    'owner_id' => self::PROJECT_ID,
                     'owner_type' => 'g',
-                    'title'      => 'My Roadmap',
+                    'title' => 'My Roadmap',
                 ]
             );
         $this->dao
@@ -222,10 +239,10 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(self::ROADMAP_ID)
             ->willReturn(
                 [
-                    'id'         => self::ROADMAP_ID,
-                    'owner_id'   => self::PROJECT_ID,
+                    'id' => self::ROADMAP_ID,
+                    'owner_id' => self::PROJECT_ID,
                     'owner_type' => 'g',
-                    'title'      => 'My Roadmap',
+                    'title' => 'My Roadmap',
                 ]
             );
         $this->dao
@@ -256,10 +273,10 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(self::ROADMAP_ID)
             ->willReturn(
                 [
-                    'id'         => self::ROADMAP_ID,
-                    'owner_id'   => self::PROJECT_ID,
+                    'id' => self::ROADMAP_ID,
+                    'owner_id' => self::PROJECT_ID,
                     'owner_type' => 'g',
-                    'title'      => 'My Roadmap',
+                    'title' => 'My Roadmap',
                 ]
             );
         $this->dao
@@ -292,10 +309,10 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(self::ROADMAP_ID)
             ->willReturn(
                 [
-                    'id'         => self::ROADMAP_ID,
-                    'owner_id'   => self::PROJECT_ID,
+                    'id' => self::ROADMAP_ID,
+                    'owner_id' => self::PROJECT_ID,
                     'owner_type' => 'g',
-                    'title'      => 'My Roadmap',
+                    'title' => 'My Roadmap',
                 ]
             );
         $this->dao
@@ -329,10 +346,10 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(self::ROADMAP_ID)
             ->willReturn(
                 [
-                    'id'         => self::ROADMAP_ID,
-                    'owner_id'   => self::PROJECT_ID,
+                    'id' => self::ROADMAP_ID,
+                    'owner_id' => self::PROJECT_ID,
                     'owner_type' => 'g',
-                    'title'      => 'My Roadmap',
+                    'title' => 'My Roadmap',
                 ]
             );
         $this->dao
@@ -368,10 +385,10 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(self::ROADMAP_ID)
             ->willReturn(
                 [
-                    'id'         => self::ROADMAP_ID,
-                    'owner_id'   => self::PROJECT_ID,
+                    'id' => self::ROADMAP_ID,
+                    'owner_id' => self::PROJECT_ID,
                     'owner_type' => 'g',
-                    'title'      => 'My Roadmap',
+                    'title' => 'My Roadmap',
                 ]
             );
         $this->dao
@@ -414,10 +431,10 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(self::ROADMAP_ID)
             ->willReturn(
                 [
-                    'id'         => self::ROADMAP_ID,
-                    'owner_id'   => self::PROJECT_ID,
+                    'id' => self::ROADMAP_ID,
+                    'owner_id' => self::PROJECT_ID,
                     'owner_type' => 'g',
-                    'title'      => 'My Roadmap',
+                    'title' => 'My Roadmap',
                 ]
             );
         $this->dao
@@ -474,10 +491,10 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(self::ROADMAP_ID)
             ->willReturn(
                 [
-                    'id'         => self::ROADMAP_ID,
-                    'owner_id'   => self::PROJECT_ID,
+                    'id' => self::ROADMAP_ID,
+                    'owner_id' => self::PROJECT_ID,
                     'owner_type' => 'g',
-                    'title'      => 'My Roadmap',
+                    'title' => 'My Roadmap',
                 ]
             );
         $this->dao
@@ -534,10 +551,10 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(self::ROADMAP_ID)
             ->willReturn(
                 [
-                    'id'         => self::ROADMAP_ID,
-                    'owner_id'   => self::PROJECT_ID,
+                    'id' => self::ROADMAP_ID,
+                    'owner_id' => self::PROJECT_ID,
                     'owner_type' => 'g',
-                    'title'      => 'My Roadmap',
+                    'title' => 'My Roadmap',
                 ]
             );
         $this->dao
@@ -594,10 +611,10 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(self::ROADMAP_ID)
             ->willReturn(
                 [
-                    'id'         => self::ROADMAP_ID,
-                    'owner_id'   => self::PROJECT_ID,
+                    'id' => self::ROADMAP_ID,
+                    'owner_id' => self::PROJECT_ID,
                     'owner_type' => 'g',
-                    'title'      => 'My Roadmap',
+                    'title' => 'My Roadmap',
                 ]
             );
         $this->dao
@@ -612,22 +629,14 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
         $title_field->method('userCanRead')->willReturn(true);
+        $tracker = $this->getTracker(self::TRACKER_ID, $title_field, 'acid-green', 'task');
 
-        $tracker = $this->createMock(Tracker::class);
-        $tracker->method('getId')->willReturn(self::TRACKER_ID);
-        $tracker->method('isActive')->willReturn(true);
-        $tracker->method('userCanView')->willReturn(true);
-        $tracker->method('getTitleField')->willReturn($title_field);
-        $tracker->method('getId')->willReturn(self::TRACKER_ID);
-        $tracker->method('getColor')->willReturn(TrackerColor::fromName('acid-green'));
-        $tracker->method('getProject')->willReturn($this->project);
-        $tracker->method('getItemName')->willReturn('task');
-
-        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
-        $start_date_field->method('userCanRead')->willReturn(true);
-
-        $end_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
-        $end_date_field->method('userCanRead')->willReturn(true);
+        $start_date_field = TrackerFormElementDateFieldBuilder::aDateField(1)
+            ->withUserCanRead($this->user)
+            ->build();
+        $end_date_field   = TrackerFormElementDateFieldBuilder::aDateField(2)
+            ->withUserCanRead($this->user)
+            ->build();
 
         $total_effort_field = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
         $total_effort_field->method('userCanRead')->willReturn(true);
@@ -635,10 +644,11 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $remaining_effort_field = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
         $remaining_effort_field->method('userCanRead')->willReturn(true);
 
+        $semantic_timeframe = new SemanticTimeframe($tracker, new TimeframeWithEndDate($start_date_field, $end_date_field));
         $this->semantic_timeframe_builder
             ->method('getSemantic')
             ->with($tracker)
-            ->willReturn(new SemanticTimeframe($tracker, new TimeframeWithEndDate($start_date_field, $end_date_field)));
+            ->willReturn($semantic_timeframe);
 
         $this->progress_builder
             ->method('getSemantic')
@@ -654,13 +664,10 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 )
             );
 
-        $task_201 = $this->anArtifact(201, 'Do this', $tracker, true);
-        $task_202 = $this->anArtifact(202, 'Do that', $tracker, false);
-        $task_203 = $this->anArtifact(203, 'Do those', $tracker, true);
-        $task_204 = $this->anArtifact(204, 'Done more than 1 year ago', $tracker, true);
-
-        $this->mockDate($start_date_field, [201 => 1234567890]);
-        $this->mockDate($end_date_field, [201 => 1234567890, 203 => 1234567890]);
+        $task_201 = $this->anArtifact(201, 'Do this', $tracker, true, $semantic_timeframe);
+        $task_202 = $this->anArtifact(202, 'Do that', $tracker, false, $semantic_timeframe);
+        $task_203 = $this->anArtifactWithoutStartDate(203, 'Do those', $tracker, true, $semantic_timeframe);
+        $task_204 = $this->anArtifact(204, 'Done more than 1 year ago', $tracker, true, $semantic_timeframe);
 
         $this->mockEffort($total_effort_field, [201 => 8, 203 => 3]);
         $this->mockEffort($remaining_effort_field, [201 => 5, 203 => 0.75]);
@@ -701,7 +708,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 new TaskRepresentation(
                     201,
                     'task #201',
-                    '/plugins/tracker?aid=201',
+                    '/plugins/tracker/?aid=201',
                     'Do this',
                     'acid-green',
                     0.375,
@@ -717,7 +724,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 new TaskRepresentation(
                     203,
                     'task #203',
-                    '/plugins/tracker?aid=203',
+                    '/plugins/tracker/?aid=203',
                     'Do those',
                     'acid-green',
                     0.75,
@@ -743,10 +750,10 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(self::ROADMAP_ID)
             ->willReturn(
                 [
-                    'id'         => self::ROADMAP_ID,
-                    'owner_id'   => self::PROJECT_ID,
+                    'id' => self::ROADMAP_ID,
+                    'owner_id' => self::PROJECT_ID,
                     'owner_type' => 'g',
-                    'title'      => 'My Roadmap',
+                    'title' => 'My Roadmap',
                 ]
             );
         $this->dao
@@ -763,28 +770,25 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
         $title_field->method('userCanRead')->willReturn(true);
 
-        $tracker = $this->createMock(Tracker::class);
-        $tracker->method('isActive')->willReturn(true);
-        $tracker->method('userCanView')->willReturn(true);
-        $tracker->method('getTitleField')->willReturn($title_field);
-        $tracker->method('getId')->willReturn(self::TRACKER_ID);
-        $tracker->method('getColor')->willReturn(TrackerColor::fromName('acid-green'));
-        $tracker->method('getProject')->willReturn($this->project);
-        $tracker->method('getItemName')->willReturn('task');
+        $tracker = $this->getTracker(self::TRACKER_ID, $title_field, 'acid-green', 'task');
 
-        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
-        $start_date_field->method('userCanRead')->willReturn(true);
-        $end_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
-        $end_date_field->method('userCanRead')->willReturn(true);
+        $start_date_field = TrackerFormElementDateFieldBuilder::aDateField(1)
+            ->withUserCanRead($this->user)
+            ->build();
+        $end_date_field   = TrackerFormElementDateFieldBuilder::aDateField(2)
+            ->withUserCanRead($this->user)
+            ->build();
+
         $total_effort_field = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
         $total_effort_field->method('userCanRead')->willReturn(true);
         $remaining_effort_field = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
         $remaining_effort_field->method('userCanRead')->willReturn(true);
 
+        $semantic_timeframe = new SemanticTimeframe($tracker, new TimeframeWithEndDate($start_date_field, $end_date_field));
         $this->semantic_timeframe_builder
             ->method('getSemantic')
             ->with($tracker)
-            ->willReturn(new SemanticTimeframe($tracker, new TimeframeWithEndDate($start_date_field, $end_date_field)));
+            ->willReturn($semantic_timeframe);
 
         $this->progress_builder
             ->method('getSemantic')
@@ -800,13 +804,10 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 )
             );
 
-        $task_201 = $this->anArtifact(201, 'Do this', $tracker, true);
-        $task_202 = $this->anArtifact(202, 'Do that', $tracker, false);
-        $task_203 = $this->anArtifact(203, 'Do those', $tracker, true);
-        $task_204 = $this->anArtifact(204, 'Done more than 1 year ago', $tracker, true);
-
-        $this->mockDate($start_date_field, [201 => 1234567890]);
-        $this->mockDate($end_date_field, [201 => 1234567890, 203 => 1234567890]);
+        $task_201 = $this->anArtifact(201, 'Do this', $tracker, true, $semantic_timeframe);
+        $task_202 = $this->anArtifact(202, 'Do that', $tracker, false, $semantic_timeframe);
+        $task_203 = $this->anArtifactWithoutStartDate(203, 'Do those', $tracker, true, $semantic_timeframe);
+        $task_204 = $this->anArtifact(204, 'Done more than 1 year ago', $tracker, true, $semantic_timeframe);
 
         $this->mockEffort($total_effort_field, [201 => 8, 203 => 3]);
         $this->mockEffort($remaining_effort_field, [201 => 5, 203 => 0.75]);
@@ -854,7 +855,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 new TaskRepresentation(
                     201,
                     'task #201',
-                    '/plugins/tracker?aid=201',
+                    '/plugins/tracker/?aid=201',
                     'Do this',
                     'acid-green',
                     0.375,
@@ -870,7 +871,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 new TaskRepresentation(
                     203,
                     'task #203',
-                    '/plugins/tracker?aid=203',
+                    '/plugins/tracker/?aid=203',
                     'Do those',
                     'acid-green',
                     0.75,
@@ -896,10 +897,10 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(self::ROADMAP_ID)
             ->willReturn(
                 [
-                    'id'         => self::ROADMAP_ID,
-                    'owner_id'   => self::PROJECT_ID,
+                    'id' => self::ROADMAP_ID,
+                    'owner_id' => self::PROJECT_ID,
                     'owner_type' => 'g',
-                    'title'      => 'My Roadmap',
+                    'title' => 'My Roadmap',
                 ]
             );
         $this->dao
@@ -916,28 +917,24 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
         $title_field->method('userCanRead')->willReturn(true);
 
-        $tracker = $this->createMock(Tracker::class);
-        $tracker->method('isActive')->willReturn(true);
-        $tracker->method('userCanView')->willReturn(true);
-        $tracker->method('getTitleField')->willReturn($title_field);
-        $tracker->method('getId')->willReturn(self::TRACKER_ID);
-        $tracker->method('getColor')->willReturn(TrackerColor::fromName('acid-green'));
-        $tracker->method('getProject')->willReturn($this->project);
-        $tracker->method('getItemName')->willReturn('task');
+        $tracker = $this->getTracker(self::TRACKER_ID, $title_field, 'acid-green', 'task');
 
-        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
-        $start_date_field->method('userCanRead')->willReturn(true);
-        $end_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
-        $end_date_field->method('userCanRead')->willReturn(true);
+        $start_date_field   = TrackerFormElementDateFieldBuilder::aDateField(1)
+            ->withUserCanRead($this->user)
+            ->build();
+        $end_date_field     = TrackerFormElementDateFieldBuilder::aDateField(2)
+            ->withUserCanRead($this->user)
+            ->build();
         $total_effort_field = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
         $total_effort_field->method('userCanRead')->willReturn(true);
         $remaining_effort_field = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
         $remaining_effort_field->method('userCanRead')->willReturn(true);
 
+        $semantic_timeframe = new SemanticTimeframe($tracker, new TimeframeWithEndDate($start_date_field, $end_date_field));
         $this->semantic_timeframe_builder
             ->method('getSemantic')
             ->with($tracker)
-            ->willReturn(new SemanticTimeframe($tracker, new TimeframeWithEndDate($start_date_field, $end_date_field)));
+            ->willReturn($semantic_timeframe);
 
         $this->progress_builder
             ->method('getSemantic')
@@ -953,11 +950,8 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 )
             );
 
-        $task_201 = $this->anArtifact(201, 'Do this', $tracker, true);
-        $task_202 = $this->anArtifact(202, 'Do that', $tracker, false);
-
-        $this->mockDate($start_date_field, [201 => 1234567890]);
-        $this->mockDate($end_date_field, [201 => 1234567890, 202 => 1234567890]);
+        $task_201 = $this->anArtifact(201, 'Do this', $tracker, true, $semantic_timeframe);
+        $task_202 = $this->anArtifact(202, 'Do that', $tracker, false, $semantic_timeframe);
 
         $this->mockEffort($total_effort_field, [201 => 8, 202 => 3]);
         $this->mockEffort($remaining_effort_field, [201 => 5, 202 => 0.75]);
@@ -994,7 +988,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 new TaskRepresentation(
                     201,
                     'task #201',
-                    '/plugins/tracker?aid=201',
+                    '/plugins/tracker/?aid=201',
                     'Do this',
                     'acid-green',
                     0.375,
@@ -1020,10 +1014,10 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(self::ROADMAP_ID)
             ->willReturn(
                 [
-                    'id'         => self::ROADMAP_ID,
-                    'owner_id'   => self::PROJECT_ID,
+                    'id' => self::ROADMAP_ID,
+                    'owner_id' => self::PROJECT_ID,
                     'owner_type' => 'g',
-                    'title'      => 'My Roadmap',
+                    'title' => 'My Roadmap',
                 ]
             );
         $this->dao
@@ -1045,61 +1039,47 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $another_title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
         $another_title_field->method('userCanRead')->willReturn(true);
 
-        $tracker = $this->createMock(Tracker::class);
-        $tracker->method('isActive')->willReturn(true);
-        $tracker->method('userCanView')->willReturn(true);
-        $tracker->method('getTitleField')->willReturn($title_field);
-        $tracker->method('getId')->willReturn(self::TRACKER_ID);
-        $tracker->method('getColor')->willReturn(TrackerColor::fromName('acid-green'));
-        $tracker->method('getProject')->willReturn($this->project);
-        $tracker->method('getItemName')->willReturn('task');
+        $tracker         = $this->getTracker(self::TRACKER_ID, $title_field, 'acid-green', 'task');
+        $another_tracker = $this->getTracker(self::ANOTHER_TRACKER_ID, $another_title_field, 'red-wine', 'bug');
 
-        $another_tracker = $this->createMock(Tracker::class);
-        $another_tracker->method('isActive')->willReturn(true);
-        $another_tracker->method('userCanView')->willReturn(true);
-        $another_tracker->method('getTitleField')->willReturn($another_title_field);
-        $another_tracker->method('getId')->willReturn(self::ANOTHER_TRACKER_ID);
-        $another_tracker->method('getColor')->willReturn(TrackerColor::fromName('red-wine'));
-        $another_tracker->method('getProject')->willReturn($this->project);
-        $another_tracker->method('getItemName')->willReturn('bug');
+        $start_date_field = TrackerFormElementDateFieldBuilder::aDateField(1)
+            ->withUserCanRead($this->user)
+            ->build();
+        $end_date_field   = TrackerFormElementDateFieldBuilder::aDateField(2)
+            ->withUserCanRead($this->user)
+            ->build();
 
-        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
-        $start_date_field->method('userCanRead')->willReturn(true);
-        $end_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
-        $end_date_field->method('userCanRead')->willReturn(true);
+        $another_start_date_field = TrackerFormElementDateFieldBuilder::aDateField(3)
+            ->withUserCanRead($this->user)
+            ->build();
+        $another_end_date_field   = TrackerFormElementDateFieldBuilder::aDateField(4)
+            ->withUserCanRead($this->user)
+            ->build();
 
-        $another_start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
-        $another_start_date_field->method('userCanRead')->willReturn(true);
-        $another_end_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
-        $another_end_date_field->method('userCanRead')->willReturn(true);
-
+        $semantic_timeframe_tracker         = new SemanticTimeframe(
+            $tracker,
+            new TimeframeWithEndDate($start_date_field, $end_date_field)
+        );
+        $semantic_timeframe_another_tracker = new SemanticTimeframe(
+            $another_tracker,
+            new TimeframeWithEndDate($another_start_date_field, $another_end_date_field)
+        );
         $this->semantic_timeframe_builder
             ->method('getSemantic')
-            ->willReturnCallback(static fn (Tracker $arg) => match ($arg) {
-                $tracker => new SemanticTimeframe(
-                    $tracker,
-                    new TimeframeWithEndDate($start_date_field, $end_date_field)
-                ),
-                $another_tracker => new SemanticTimeframe(
-                    $another_tracker,
-                    new TimeframeWithEndDate($another_start_date_field, $another_end_date_field)
-                )
+            ->willReturnCallback(static fn(Tracker $arg) => match ($arg) {
+                $tracker         => $semantic_timeframe_tracker,
+                $another_tracker => $semantic_timeframe_another_tracker
             });
 
         $this->progress_builder
             ->method('getSemantic')
-            ->willReturnCallback(static fn (Tracker $arg) => match ($arg) {
-                $tracker => new SemanticProgress($tracker, new MethodNotConfigured()),
+            ->willReturnCallback(static fn(Tracker $arg) => match ($arg) {
+                $tracker         => new SemanticProgress($tracker, new MethodNotConfigured()),
                 $another_tracker => new SemanticProgress($another_tracker, new MethodNotConfigured()),
             });
 
-        $task_201 = $this->anArtifact(201, 'Do this', $tracker, true);
-        $task_203 = $this->anArtifact(203, 'Do those', $another_tracker, true);
-
-        $this->mockDate($start_date_field, [201 => 1234567890]);
-        $this->mockDate($end_date_field, [201 => 1234567890]);
-        $this->mockDate($another_start_date_field, []);
-        $this->mockDate($another_end_date_field, [203 => 1234567890]);
+        $task_201 = $this->anArtifact(201, 'Do this', $tracker, true, $semantic_timeframe_tracker);
+        $task_203 = $this->anArtifactWithoutStartDate(203, 'Do those', $another_tracker, true, $semantic_timeframe_another_tracker);
 
 
         $artifacts = [$task_201, $task_203];
@@ -1138,7 +1118,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 new TaskRepresentation(
                     201,
                     'task #201',
-                    '/plugins/tracker?aid=201',
+                    '/plugins/tracker/?aid=201',
                     'Do this',
                     'acid-green',
                     null,
@@ -1154,7 +1134,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 new TaskRepresentation(
                     203,
                     'bug #203',
-                    '/plugins/tracker?aid=203',
+                    '/plugins/tracker/?aid=203',
                     'Do those',
                     'red-wine',
                     null,
@@ -1177,7 +1157,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $date_field
             ->method('getLastChangesetValue')
             ->willReturnCallback(
-                fn (Artifact $artifact) => $this->getChangesetValueDate($artifact, $date_field, $values)
+                fn(Artifact $artifact) => $this->getChangesetValueDate($artifact, $date_field, $values)
             );
     }
 
@@ -1186,7 +1166,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $effort_field
             ->method('getLastChangesetValue')
             ->willReturnCallback(
-                fn (Artifact $artifact) => $this->getChangesetValueFloat($artifact, $effort_field, $values)
+                fn(Artifact $artifact) => $this->getChangesetValueFloat($artifact, $effort_field, $values)
             );
     }
 
@@ -1220,18 +1200,61 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    private function anArtifact(int $id, string $title, Tracker $tracker, bool $readable): Artifact
+    private function anArtifact(int $id, string $title, Tracker $tracker, bool $readable, SemanticTimeframe $semantic_timeframe): Artifact
     {
-        $artifact = $this->createMock(Artifact::class);
-        $artifact->method('getId')->willReturn($id);
-        $artifact->method('getTitle')->willReturn($title);
-        $artifact->method('getXRef')->willReturn($tracker->getItemName() . ' #' . $id);
-        $artifact->method('getUri')->willReturn('/plugins/tracker?aid=' . $id);
-        $artifact->method('userCanView')->willReturn($readable);
-        $artifact->method('getParent')->willReturn(null);
-        $artifact->method('isOpen')->willReturn(true);
-        $artifact->method('getTracker')->willReturn($tracker);
+        $changeset   = ChangesetTestBuilder::aChangeset('1')->build();
+        $start_field = $semantic_timeframe->getStartDateField();
+        if ($start_field !== null) {
+            $changeset->setFieldValue(
+                $start_field,
+                ChangesetValueDateTestBuilder::aValue(1, $changeset, $start_field)
+                    ->withTimestamp(1234567890)
+                    ->build()
+            );
+        }
+        $end_field = $semantic_timeframe->getEndDateField();
+        if ($end_field !== null) {
+            $changeset->setFieldValue(
+                $end_field,
+                ChangesetValueDateTestBuilder::aValue(2, $changeset, $end_field)
+                    ->withTimestamp(1234567890)
+                    ->build()
+            );
+        }
 
-        return $artifact;
+        return ArtifactTestBuilder::anArtifact($id)
+            ->withTitle($title)
+            ->inTracker($tracker)
+            ->withChangesets($changeset)
+            ->userCanView($readable)
+            ->withParent(null)
+            ->isOpen(true)
+            ->build();
+    }
+
+    private function anArtifactWithoutStartDate(int $id, string $title, Tracker $tracker, bool $readable, SemanticTimeframe $semantic_timeframe): Artifact
+    {
+        $changeset   = ChangesetTestBuilder::aChangeset('1')->build();
+        $start_field = $semantic_timeframe->getStartDateField();
+        if ($start_field !== null) {
+            $changeset->setFieldValue($start_field, null);
+        }
+        $end_field = $semantic_timeframe->getEndDateField();
+        if ($end_field !== null) {
+            $changeset->setFieldValue(
+                $end_field,
+                ChangesetValueDateTestBuilder::aValue(2, $changeset, $end_field)
+                    ->withTimestamp(1234567890)
+                    ->build()
+            );
+        }
+        return ArtifactTestBuilder::anArtifact($id)
+            ->withTitle($title)
+            ->inTracker($tracker)
+            ->withChangesets($changeset)
+            ->userCanView($readable)
+            ->withParent(null)
+            ->isOpen(true)
+            ->build();
     }
 }

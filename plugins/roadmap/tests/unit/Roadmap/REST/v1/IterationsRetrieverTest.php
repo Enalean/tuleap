@@ -39,6 +39,7 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeNotConfigured;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithDuration;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -69,6 +70,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->user    = UserTestBuilder::anActiveUser()->build();
         $this->tracker = $this->createMock(Tracker::class);
+        $this->tracker->method('getId');
 
         $this->retriever = new IterationsRetriever(
             $this->dao,
@@ -96,10 +98,10 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mockRoadmapConfig(
             [
-                'id'         => self::ROADMAP_ID,
-                'owner_id'   => self::PROJECT_ID,
+                'id' => self::ROADMAP_ID,
+                'owner_id' => self::PROJECT_ID,
                 'owner_type' => 'g',
-                'title'      => 'My Roadmap',
+                'title' => 'My Roadmap',
             ]
         );
 
@@ -129,10 +131,10 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mockRoadmapConfig(
             [
-                'id'         => self::ROADMAP_ID,
-                'owner_id'   => self::PROJECT_ID,
+                'id' => self::ROADMAP_ID,
+                'owner_id' => self::PROJECT_ID,
                 'owner_type' => 'g',
-                'title'      => 'My Roadmap',
+                'title' => 'My Roadmap',
             ]
         );
 
@@ -169,10 +171,10 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mockRoadmapConfig(
             [
-                'id'                        => self::ROADMAP_ID,
-                'owner_id'                  => self::PROJECT_ID,
-                'owner_type'                => 'g',
-                'title'                     => 'My Roadmap',
+                'id' => self::ROADMAP_ID,
+                'owner_id' => self::PROJECT_ID,
+                'owner_type' => 'g',
+                'title' => 'My Roadmap',
                 'lvl1_iteration_tracker_id' => null,
                 'lvl2_iteration_tracker_id' => null,
             ]
@@ -207,10 +209,10 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mockRoadmapConfig(
             [
-                'id'                        => self::ROADMAP_ID,
-                'owner_id'                  => self::PROJECT_ID,
-                'owner_type'                => 'g',
-                'title'                     => 'My Roadmap',
+                'id' => self::ROADMAP_ID,
+                'owner_id' => self::PROJECT_ID,
+                'owner_type' => 'g',
+                'title' => 'My Roadmap',
                 'lvl1_iteration_tracker_id' => ($level === 1 ? self::ITERATION_TRACKER_ID : null),
                 'lvl2_iteration_tracker_id' => ($level === 2 ? self::ITERATION_TRACKER_ID : null),
             ]
@@ -251,10 +253,10 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mockRoadmapConfig(
             [
-                'id'                        => self::ROADMAP_ID,
-                'owner_id'                  => self::PROJECT_ID,
-                'owner_type'                => 'g',
-                'title'                     => 'My Roadmap',
+                'id' => self::ROADMAP_ID,
+                'owner_id' => self::PROJECT_ID,
+                'owner_type' => 'g',
+                'title' => 'My Roadmap',
                 'lvl1_iteration_tracker_id' => ($level === 1 ? self::ITERATION_TRACKER_ID : null),
                 'lvl2_iteration_tracker_id' => ($level === 2 ? self::ITERATION_TRACKER_ID : null),
             ]
@@ -299,10 +301,10 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mockRoadmapConfig(
             [
-                'id'                        => self::ROADMAP_ID,
-                'owner_id'                  => self::PROJECT_ID,
-                'owner_type'                => 'g',
-                'title'                     => 'My Roadmap',
+                'id' => self::ROADMAP_ID,
+                'owner_id' => self::PROJECT_ID,
+                'owner_type' => 'g',
+                'title' => 'My Roadmap',
                 'lvl1_iteration_tracker_id' => ($level === 1 ? self::ITERATION_TRACKER_ID : null),
                 'lvl2_iteration_tracker_id' => ($level === 2 ? self::ITERATION_TRACKER_ID : null),
             ]
@@ -351,10 +353,10 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mockRoadmapConfig(
             [
-                'id'                        => self::ROADMAP_ID,
-                'owner_id'                  => self::PROJECT_ID,
-                'owner_type'                => 'g',
-                'title'                     => 'My Roadmap',
+                'id' => self::ROADMAP_ID,
+                'owner_id' => self::PROJECT_ID,
+                'owner_type' => 'g',
+                'title' => 'My Roadmap',
                 'lvl1_iteration_tracker_id' => ($level === 1 ? self::ITERATION_TRACKER_ID : null),
                 'lvl2_iteration_tracker_id' => ($level === 2 ? self::ITERATION_TRACKER_ID : null),
             ]
@@ -406,10 +408,10 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mockRoadmapConfig(
             [
-                'id'                        => self::ROADMAP_ID,
-                'owner_id'                  => self::PROJECT_ID,
-                'owner_type'                => 'g',
-                'title'                     => 'My Roadmap',
+                'id' => self::ROADMAP_ID,
+                'owner_id' => self::PROJECT_ID,
+                'owner_type' => 'g',
+                'title' => 'My Roadmap',
                 'lvl1_iteration_tracker_id' => ($level === 1 ? self::ITERATION_TRACKER_ID : null),
                 'lvl2_iteration_tracker_id' => ($level === 2 ? self::ITERATION_TRACKER_ID : null),
             ]
@@ -465,10 +467,10 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mockRoadmapConfig(
             [
-                'id'                        => self::ROADMAP_ID,
-                'owner_id'                  => self::PROJECT_ID,
-                'owner_type'                => 'g',
-                'title'                     => 'My Roadmap',
+                'id' => self::ROADMAP_ID,
+                'owner_id' => self::PROJECT_ID,
+                'owner_type' => 'g',
+                'title' => 'My Roadmap',
                 'lvl1_iteration_tracker_id' => ($level === 1 ? self::ITERATION_TRACKER_ID : null),
                 'lvl2_iteration_tracker_id' => ($level === 2 ? self::ITERATION_TRACKER_ID : null),
             ]
@@ -530,10 +532,10 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mockRoadmapConfig(
             [
-                'id'                        => self::ROADMAP_ID,
-                'owner_id'                  => self::PROJECT_ID,
-                'owner_type'                => 'g',
-                'title'                     => 'My Roadmap',
+                'id' => self::ROADMAP_ID,
+                'owner_id' => self::PROJECT_ID,
+                'owner_type' => 'g',
+                'title' => 'My Roadmap',
                 'lvl1_iteration_tracker_id' => ($level === 1 ? self::ITERATION_TRACKER_ID : null),
                 'lvl2_iteration_tracker_id' => ($level === 2 ? self::ITERATION_TRACKER_ID : null),
             ]
@@ -609,10 +611,10 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mockRoadmapConfig(
             [
-                'id'                        => self::ROADMAP_ID,
-                'owner_id'                  => self::PROJECT_ID,
-                'owner_type'                => 'g',
-                'title'                     => 'My Roadmap',
+                'id' => self::ROADMAP_ID,
+                'owner_id' => self::PROJECT_ID,
+                'owner_type' => 'g',
+                'title' => 'My Roadmap',
                 'lvl1_iteration_tracker_id' => ($level === 1 ? self::ITERATION_TRACKER_ID : null),
                 'lvl2_iteration_tracker_id' => ($level === 2 ? self::ITERATION_TRACKER_ID : null),
             ]
@@ -688,10 +690,10 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mockRoadmapConfig(
             [
-                'id'                        => self::ROADMAP_ID,
-                'owner_id'                  => self::PROJECT_ID,
-                'owner_type'                => 'g',
-                'title'                     => 'My Roadmap',
+                'id' => self::ROADMAP_ID,
+                'owner_id' => self::PROJECT_ID,
+                'owner_type' => 'g',
+                'title' => 'My Roadmap',
                 'lvl1_iteration_tracker_id' => ($level === 1 ? self::ITERATION_TRACKER_ID : null),
                 'lvl2_iteration_tracker_id' => ($level === 2 ? self::ITERATION_TRACKER_ID : null),
             ]
@@ -767,10 +769,10 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mockRoadmapConfig(
             [
-                'id'                        => self::ROADMAP_ID,
-                'owner_id'                  => self::PROJECT_ID,
-                'owner_type'                => 'g',
-                'title'                     => 'My Roadmap',
+                'id' => self::ROADMAP_ID,
+                'owner_id' => self::PROJECT_ID,
+                'owner_type' => 'g',
+                'title' => 'My Roadmap',
                 'lvl1_iteration_tracker_id' => ($level === 1 ? self::ITERATION_TRACKER_ID : null),
                 'lvl2_iteration_tracker_id' => ($level === 2 ? self::ITERATION_TRACKER_ID : null),
             ]
@@ -856,10 +858,10 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mockRoadmapConfig(
             [
-                'id'                        => self::ROADMAP_ID,
-                'owner_id'                  => self::PROJECT_ID,
-                'owner_type'                => 'g',
-                'title'                     => 'My Roadmap',
+                'id' => self::ROADMAP_ID,
+                'owner_id' => self::PROJECT_ID,
+                'owner_type' => 'g',
+                'title' => 'My Roadmap',
                 'lvl1_iteration_tracker_id' => ($level === 1 ? self::ITERATION_TRACKER_ID : null),
                 'lvl2_iteration_tracker_id' => ($level === 2 ? self::ITERATION_TRACKER_ID : null),
             ]
@@ -920,11 +922,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 )
             );
 
-        $iteration = $this->createMock(Artifact::class);
-        $iteration->method('userCanView')->willReturn(true);
-        $iteration->method('getTracker')->willReturn($this->tracker);
-        $this->mockDate($iteration, $start_date_field, null);
-        $this->mockDate($iteration, $end_date_field, null);
+        $iteration = $this->anArtifactWithoutChangeset(201, 'Title', $this->tracker, true);
 
         $this->artifact_factory
             ->expects(self::once())
@@ -947,10 +945,10 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mockRoadmapConfig(
             [
-                'id'                        => self::ROADMAP_ID,
-                'owner_id'                  => self::PROJECT_ID,
-                'owner_type'                => 'g',
-                'title'                     => 'My Roadmap',
+                'id' => self::ROADMAP_ID,
+                'owner_id' => self::PROJECT_ID,
+                'owner_type' => 'g',
+                'title' => 'My Roadmap',
                 'lvl1_iteration_tracker_id' => ($level === 1 ? self::ITERATION_TRACKER_ID : null),
                 'lvl2_iteration_tracker_id' => ($level === 2 ? self::ITERATION_TRACKER_ID : null),
             ]
@@ -1014,6 +1012,9 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $iteration = $this->createMock(Artifact::class);
         $iteration->method('userCanView')->willReturn(true);
         $iteration->method('getTracker')->willReturn($this->tracker);
+        $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
+        $changeset->method('getValue');
+        $iteration->method('getLastChangeset')->willReturn($changeset);
         $this->mockDate($iteration, $start_date_field, 1234567890);
         $this->mockDate($iteration, $end_date_field, null);
 
@@ -1038,10 +1039,10 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mockRoadmapConfig(
             [
-                'id'                        => self::ROADMAP_ID,
-                'owner_id'                  => self::PROJECT_ID,
-                'owner_type'                => 'g',
-                'title'                     => 'My Roadmap',
+                'id' => self::ROADMAP_ID,
+                'owner_id' => self::PROJECT_ID,
+                'owner_type' => 'g',
+                'title' => 'My Roadmap',
                 'lvl1_iteration_tracker_id' => ($level === 1 ? self::ITERATION_TRACKER_ID : null),
                 'lvl2_iteration_tracker_id' => ($level === 2 ? self::ITERATION_TRACKER_ID : null),
             ]
@@ -1106,6 +1107,9 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $iteration->method('userCanView')->willReturn(true);
         $iteration->method('getTracker')->willReturn($this->tracker);
         $iteration->method('getTitle')->willReturn("");
+        $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
+        $changeset->method('getValue');
+        $iteration->method('getLastChangeset')->willReturn($changeset);
         $this->mockDate($iteration, $start_date_field, 1234567890);
         $this->mockDate($iteration, $end_date_field, 1234567890);
 
@@ -1130,10 +1134,10 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mockRoadmapConfig(
             [
-                'id'                        => self::ROADMAP_ID,
-                'owner_id'                  => self::PROJECT_ID,
-                'owner_type'                => 'g',
-                'title'                     => 'My Roadmap',
+                'id' => self::ROADMAP_ID,
+                'owner_id' => self::PROJECT_ID,
+                'owner_type' => 'g',
+                'title' => 'My Roadmap',
                 'lvl1_iteration_tracker_id' => ($level === 1 ? self::ITERATION_TRACKER_ID : null),
                 'lvl2_iteration_tracker_id' => ($level === 2 ? self::ITERATION_TRACKER_ID : null),
             ]
@@ -1198,6 +1202,9 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $iteration->method('userCanView')->willReturn(true);
         $iteration->method('getTracker')->willReturn($this->tracker);
         $iteration->method('getTitle')->willReturn("");
+        $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
+        $changeset->method('getValue');
+        $iteration->method('getLastChangeset')->willReturn($changeset);
         $this->mockDate($iteration, $start_date_field, 1234567890);
         $this->mockDate($iteration, $end_date_field, 1123456789);
 
@@ -1222,10 +1229,10 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mockRoadmapConfig(
             [
-                'id'                        => self::ROADMAP_ID,
-                'owner_id'                  => self::PROJECT_ID,
-                'owner_type'                => 'g',
-                'title'                     => 'My Roadmap',
+                'id' => self::ROADMAP_ID,
+                'owner_id' => self::PROJECT_ID,
+                'owner_type' => 'g',
+                'title' => 'My Roadmap',
                 'lvl1_iteration_tracker_id' => ($level === 1 ? self::ITERATION_TRACKER_ID : null),
                 'lvl2_iteration_tracker_id' => ($level === 2 ? self::ITERATION_TRACKER_ID : null),
             ]
@@ -1286,14 +1293,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 )
             );
 
-        $iteration = $this->createMock(Artifact::class);
-        $iteration->method('userCanView')->willReturn(true);
-        $iteration->method('getTracker')->willReturn($this->tracker);
-        $iteration->method('getTitle')->willReturn("Sprint W42");
-        $iteration->method('getId')->willReturn(123);
-        $iteration->method('getUri')->willReturn("/path/to/123");
-        $this->mockDate($iteration, $start_date_field, 1234567890);
-        $this->mockDate($iteration, $end_date_field, 1234567890);
+        $iteration = $this->anArtifact(123, "Sprint W42", $this->tracker, true);
 
         $this->artifact_factory
             ->expects(self::once())
@@ -1309,7 +1309,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 new IterationRepresentation(
                     123,
-                    '/path/to/123',
+                    '/plugins/tracker/?aid=123',
                     "Sprint W42",
                     (new \DateTimeImmutable())->setTimestamp(1234567890),
                     (new \DateTimeImmutable())->setTimestamp(1234567890),
@@ -1351,5 +1351,39 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('searchById')
             ->with(self::ROADMAP_ID)
             ->willReturn($db_result);
+    }
+
+    private function anArtifact(int $id, string $title, Tracker $tracker, bool $readable): Artifact
+    {
+        $changeset       = $this->createMock(\Tracker_Artifact_Changeset::class);
+        $changeset_value = $this->createMock(\Tracker_Artifact_ChangesetValue_Date::class);
+        $changeset->method('getValue')->willReturn($changeset_value);
+        $changeset_value->method('getTimestamp')->willReturn(1234567890);
+
+        return ArtifactTestBuilder::anArtifact($id)
+            ->withTitle($title)
+            ->inTracker($tracker)
+            ->withChangesets($changeset)
+            ->userCanView($readable)
+            ->withParent(null)
+            ->isOpen(true)
+            ->build();
+    }
+
+    private function anArtifactWithoutChangeset(int $id, string $title, Tracker $tracker, bool $readable): Artifact
+    {
+        $changeset       = $this->createMock(\Tracker_Artifact_Changeset::class);
+        $changeset_value = $this->createMock(\Tracker_Artifact_ChangesetValue_Date::class);
+        $changeset->method('getValue')->willReturn($changeset_value);
+        $changeset_value->method('getTimestamp')->willReturn(null);
+
+        return ArtifactTestBuilder::anArtifact($id)
+            ->withTitle($title)
+            ->inTracker($tracker)
+            ->withChangesets($changeset)
+            ->userCanView($readable)
+            ->withParent(null)
+            ->isOpen(true)
+            ->build();
     }
 }

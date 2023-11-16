@@ -161,24 +161,24 @@ class MilestoneFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn($semantic_timeframe);
 
         $timeframe_calculator
-            ->shouldReceive('buildDatePeriodWithoutWeekendForArtifact')
-            ->withArgs([$this->artifact_open_current_without_start_date, $this->user, $logger])
+            ->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
+            ->withArgs([$this->artifact_open_current_without_start_date->getLastChangeset(), $this->user, $logger])
             ->andReturn($date_period_open_current_without_start_date);
         $timeframe_calculator
-            ->shouldReceive('buildDatePeriodWithoutWeekendForArtifact')
-            ->withArgs([$this->artifact_open_current_with_start_date, $this->user, $logger])
+            ->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
+            ->withArgs([$this->artifact_open_current_with_start_date->getLastChangeset(), $this->user, $logger])
             ->andReturn($date_period_open_current_with_start_date);
         $timeframe_calculator
-            ->shouldReceive('buildDatePeriodWithoutWeekendForArtifact')
-            ->withArgs([$this->artifact_closed_passed, $this->user, $logger])
+            ->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
+            ->withArgs([$this->artifact_closed_passed->getLastChangeset(), $this->user, $logger])
             ->andReturn($date_period_closed_passed);
         $timeframe_calculator
-            ->shouldReceive('buildDatePeriodWithoutWeekendForArtifact')
-            ->withArgs([$this->artifact_open_future_with_start_date, $this->user, $logger])
+            ->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
+            ->withArgs([$this->artifact_open_future_with_start_date->getLastChangeset(), $this->user, $logger])
             ->andReturn($date_period_open_future_with_start_date);
         $timeframe_calculator
-            ->shouldReceive('buildDatePeriodWithoutWeekendForArtifact')
-            ->withArgs([$this->artifact_open_future_without_start_date, $this->user, $logger])
+            ->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
+            ->withArgs([$this->artifact_open_future_without_start_date->getLastChangeset(), $this->user, $logger])
             ->andReturn($date_period_open_future_without_start_date);
 
         $milestone_burndown_field_checker = Mockery::mock(MilestoneBurndownFieldChecker::class);
@@ -230,6 +230,7 @@ class MilestoneFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact->shouldReceive('isOpen')->andReturn($is_open);
         $artifact->shouldReceive('getStatus')->andReturn($status);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $artifact->shouldReceive('getLastChangeset')->andReturn(Mockery::mock(\Tracker_Artifact_Changeset::class));
         return $artifact;
     }
 }

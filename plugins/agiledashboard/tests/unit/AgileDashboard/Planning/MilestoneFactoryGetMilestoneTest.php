@@ -157,8 +157,11 @@ final class MilestoneFactoryGetMilestoneTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $release_1_0->shouldReceive('getAllAncestors')->andReturn([]);
         $sprint_1->shouldReceive('getAllAncestors')->andReturn([]);
+        $sprint_1->shouldReceive('getLastChangeset')->andReturn(Mockery::mock(\Tracker_Artifact_Changeset::class));
         $sprint_2->shouldReceive('getAllAncestors')->andReturn([]);
+        $sprint_2->shouldReceive('getLastChangeset')->andReturn(Mockery::mock(\Tracker_Artifact_Changeset::class));
         $hackfest_2012->shouldReceive('getAllAncestors')->andReturn([]);
+        $hackfest_2012->shouldReceive('getLastChangeset')->andReturn(Mockery::mock(\Tracker_Artifact_Changeset::class));
 
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($sprints_tracker)->andReturn(
             $sprint_planning
@@ -167,18 +170,18 @@ final class MilestoneFactoryGetMilestoneTest extends \Tuleap\Test\PHPUnit\TestCa
             $hackfest_planning
         );
 
-        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForArtifact')
-            ->with($sprint_1, $this->user, $this->logger)
+        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
+            ->with($sprint_1->getLastChangeset(), $this->user, $this->logger)
             ->once()
             ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
-        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForArtifact')
-            ->with($sprint_2, $this->user, $this->logger)
+        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
+            ->with($sprint_2->getLastChangeset(), $this->user, $this->logger)
             ->once()
             ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
-        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForArtifact')
-            ->with($hackfest_2012, $this->user, $this->logger)
+        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
+            ->with($hackfest_2012->getLastChangeset(), $this->user, $this->logger)
             ->once()
             ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
@@ -206,14 +209,15 @@ final class MilestoneFactoryGetMilestoneTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $artifact = $this->getArtifactAllUserConViewForTracker($tracker, 100);
         $artifact->shouldReceive('getAllAncestors')->andReturn([]);
+        $artifact->shouldReceive('getLastChangeset')->andReturn(Mockery::mock(\Tracker_Artifact_Changeset::class));
 
         $this->artifact_factory->shouldReceive('getArtifactById')
             ->with($artifact->getId())
             ->andReturn($artifact)
             ->once();
 
-        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForArtifact')
-            ->with($artifact, $this->user, $this->logger)
+        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
+            ->with($artifact->getLastChangeset(), $this->user, $this->logger)
             ->once()
             ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 

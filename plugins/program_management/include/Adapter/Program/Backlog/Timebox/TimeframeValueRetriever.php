@@ -61,8 +61,8 @@ final class TimeframeValueRetriever implements RetrieveTimeframeValueUserCanSee
 
         $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($artifact->getTracker());
 
-        return $semantic_timeframe->getTimeframeCalculator()->buildDatePeriodWithoutWeekendForArtifact(
-            $artifact,
+        return $semantic_timeframe->getTimeframeCalculator()->buildDatePeriodWithoutWeekendForChangeset(
+            $artifact->getLastChangeset(),
             $user,
             $this->logger
         );

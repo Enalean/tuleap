@@ -37,6 +37,7 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class TimeframeValueRetrieverTest extends TestCase
@@ -54,7 +55,11 @@ final class TimeframeValueRetrieverTest extends TestCase
         $this->semantic_timeframe_builder = $this->createStub(SemanticTimeframeBuilder::class);
 
         $tracker        = TrackerTestBuilder::aTracker()->build();
-        $this->artifact = ArtifactTestBuilder::anArtifact(100)->inTracker($tracker)->build();
+        $changeset      = ChangesetTestBuilder::aChangeset('1')->build();
+        $this->artifact = ArtifactTestBuilder::anArtifact(100)
+            ->inTracker($tracker)
+            ->withChangesets($changeset)
+            ->build();
 
         $this->artifact_identifier = TimeboxIdentifierStub::withId(1);
         $this->user_identifier     = UserIdentifierStub::buildGenericUser();
@@ -74,7 +79,7 @@ final class TimeframeValueRetrieverTest extends TestCase
     {
         $timeframe_semantic   = $this->createStub(SemanticTimeframe::class);
         $timeframe_calculator = $this->createStub(TimeframeWithEndDate::class);
-        $timeframe_calculator->method('buildDatePeriodWithoutWeekendForArtifact')->willReturn(
+        $timeframe_calculator->method('buildDatePeriodWithoutWeekendForChangeset')->willReturn(
             DatePeriodWithoutWeekEnd::buildFromDuration(1635412289, 20)
         );
         $timeframe_semantic->method('getTimeframeCalculator')->willReturn($timeframe_calculator);

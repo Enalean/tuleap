@@ -44,7 +44,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
     public $submitted_on;
     public $email;
 
-    protected $values;
+    protected $values = [];
 
     /**
      * @var Tracker_Artifact_Changeset_Comment
@@ -77,7 +77,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
      */
     public function getValue(Tracker_FormElement_Field $field)
     {
-        if (! isset($this->values[$field->getId()])) {
+        if (! array_key_exists($field->getId(), $this->values)) {
             $this->values[$field->getId()] = $this->getChangesetValueFromDB($field);
         }
         return $this->values[$field->getId()];

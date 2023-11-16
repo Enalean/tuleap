@@ -22,8 +22,14 @@ namespace Tuleap\Tracker\Semantic\Timeframe;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
+use Tracker;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\SemanticTimeframeWithDurationRepresentation;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueDateTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueIntegerTestBuilder;
 
 class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -39,24 +45,18 @@ class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject|\Tracker_FormElement_Field_Integer
      */
     private $duration_field;
-    /**
-     * @var MockObject|Artifact
-     */
-    private $artifact;
-    /**
-     * @var \PFUser|MockObject
-     */
-    private $user;
+    private \PFUser $user;
+    private Tracker&MockObject $tracker;
 
     protected function setUp(): void
     {
         $this->start_date_field = $this->getMockedDateField(1001);
         $this->duration_field   = $this->getMockedDurationField(1002);
-        $this->artifact         = $this->getMockBuilder(Artifact::class)
-            ->disableOriginalConstructor()
-            ->getMock();
 
-        $this->user = $this->getMockBuilder(\PFUser::class)->disableOriginalConstructor()->getMock();
+        $this->tracker = $this->createMock(Tracker::class);
+        $this->tracker->method('getId')->willReturn(1);
+
+        $this->user = UserTestBuilder::anActiveUser()->build();
 
         $this->timeframe = new TimeframeWithDuration(
             $this->start_date_field,
@@ -176,11 +176,10 @@ class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
         $this->duration_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
 
-        $this->mockStartDateFieldWithValue($start_date);
-        $this->mockDurationFieldWithValue($duration);
+        $artifact = $this->anArtifact($start_date, $duration);
 
-        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifactForREST(
-            $this->artifact,
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForChangesetForREST(
+            $artifact->getLastChangeset(),
             $this->user,
             new NullLogger()
         );
@@ -197,14 +196,10 @@ class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
         $this->duration_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
 
-        $this->start_date_field->expects(self::once())->method('getLastChangesetValue')
-            ->with($this->artifact)
-            ->will(self::returnValue(null));
+        $artifact = $this->anArtifactWithoutStartDate($duration);
 
-        $this->mockDurationFieldWithValue($duration);
-
-        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifactForREST(
-            $this->artifact,
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForChangesetForREST(
+            $artifact->getLastChangeset(),
             $this->user,
             new NullLogger()
         );
@@ -221,13 +216,10 @@ class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
         $this->duration_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
 
-        $this->mockStartDateFieldWithValue($start_date);
-        $this->duration_field->expects(self::once())->method('getLastChangesetValue')
-            ->with($this->artifact)
-            ->will(self::returnValue(null));
+        $artifact = $this->anArtifactWithoutDuration($start_date);
 
-        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifactForREST(
-            $this->artifact,
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForChangesetForREST(
+            $artifact->getLastChangeset(),
             $this->user,
             new NullLogger()
         );
@@ -247,11 +239,10 @@ class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
         $this->duration_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
 
-        $this->mockStartDateFieldWithValue($start_date);
-        $this->mockDurationFieldWithValue($duration);
+        $artifact = $this->anArtifact($start_date, $duration);
 
-        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifact(
-            $this->artifact,
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForChangeset(
+            $artifact->getLastChangeset(),
             $this->user,
             new NullLogger()
         );
@@ -268,13 +259,10 @@ class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
         $this->duration_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
 
-        $this->start_date_field->expects(self::once())->method('getLastChangesetValue')
-            ->with($this->artifact)
-            ->will(self::returnValue(null));
-        $this->mockDurationFieldWithValue($duration);
+        $artifact = $this->anArtifactWithoutStartDate($duration);
 
-        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifact(
-            $this->artifact,
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForChangeset(
+            $artifact->getLastChangeset(),
             $this->user,
             new NullLogger()
         );
@@ -291,13 +279,10 @@ class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
         $this->duration_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
 
-        $this->mockStartDateFieldWithValue($start_date);
-        $this->duration_field->expects(self::once())->method('getLastChangesetValue')
-            ->with($this->artifact)
-            ->will(self::returnValue(null));
+        $artifact = $this->anArtifactWithoutDuration($start_date);
 
-        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifact(
-            $this->artifact,
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForChangeset(
+            $artifact->getLastChangeset(),
             $this->user,
             new NullLogger()
         );
@@ -317,11 +302,10 @@ class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
         $this->duration_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
 
-        $this->mockStartDateFieldWithValue($start_date);
-        $this->mockDurationFieldWithValue($duration);
+        $artifact = $this->anArtifact($start_date, $duration);
 
-        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifactChartRendering(
-            $this->artifact,
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForChangesetChartRendering(
+            $artifact->getLastChangeset(),
             $this->user,
             new NullLogger()
         );
@@ -335,20 +319,12 @@ class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
 
-        $start_date_changeset = self::getMockBuilder(\Tracker_Artifact_ChangesetValue_Date::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $start_date_changeset->expects(self::once())->method('getTimestamp')->will(self::returnValue(null));
-
-        $this->start_date_field->expects(self::once())->method('getLastChangesetValue')
-            ->with($this->artifact)
-            ->will(self::returnValue($start_date_changeset));
+        $artifact = $this->anArtifactWithoutStartDate(1);
 
         self::expectException(\Tracker_FormElement_Chart_Field_Exception::class);
 
-        $this->timeframe->buildDatePeriodWithoutWeekendForArtifactChartRendering(
-            $this->artifact,
+        $this->timeframe->buildDatePeriodWithoutWeekendForChangesetChartRendering(
+            $artifact->getLastChangeset(),
             $this->user,
             new NullLogger()
         );
@@ -367,13 +343,16 @@ class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
         $this->duration_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
 
-        $this->mockStartDateFieldWithValue($start_date);
-        $this->mockDurationFieldWithValue($duration);
+        if ($duration) {
+            $artifact = $this->anArtifact($start_date, $duration);
+        } else {
+            $artifact = $this->anArtifactWithoutDuration($start_date);
+        }
 
         $this->expectException(\Tracker_FormElement_Chart_Field_Exception::class);
 
-        $this->timeframe->buildDatePeriodWithoutWeekendForArtifactChartRendering(
-            $this->artifact,
+        $this->timeframe->buildDatePeriodWithoutWeekendForChangesetChartRendering(
+            $artifact->getLastChangeset(),
             $this->user,
             new NullLogger()
         );
@@ -386,15 +365,12 @@ class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
         $this->duration_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
 
-        $this->mockStartDateFieldWithValue($start_date);
-        $this->duration_field->expects(self::once())->method('getLastChangesetValue')
-            ->with($this->artifact)
-            ->will(self::returnValue(null));
+        $artifact = $this->anArtifactWithoutDuration($start_date);
 
         $this->expectException(\Tracker_FormElement_Chart_Field_Exception::class);
 
-        $this->timeframe->buildDatePeriodWithoutWeekendForArtifactChartRendering(
-            $this->artifact,
+        $this->timeframe->buildDatePeriodWithoutWeekendForChangesetChartRendering(
+            $artifact->getLastChangeset(),
             $this->user,
             new NullLogger()
         );
@@ -422,30 +398,71 @@ class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
         return $mock;
     }
 
-    private function mockStartDateFieldWithValue(?string $string_date): void
+    private function anArtifact(string $start_date, int $duration): Artifact
     {
-        $timestamp            = $string_date !== null ? strtotime($string_date) : null;
-        $date_changeset_value = self::getMockBuilder(\Tracker_Artifact_ChangesetValue_Date::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $changeset->setFieldValue(
+            $this->start_date_field,
+            ChangesetValueDateTestBuilder::aValue(1, $changeset, $this->start_date_field)
+                ->withTimestamp(strtotime($start_date))
+                ->build()
+        );
+        $changeset->setFieldValue(
+            $this->duration_field,
+            ChangesetValueIntegerTestBuilder::aValue(2, $changeset, $this->duration_field)
+                ->withValue($duration)
+                ->build()
+        );
 
-        $date_changeset_value->expects(self::any())->method('getTimestamp')->will(self::returnValue($timestamp));
-
-        $this->start_date_field->expects(self::any())->method('getLastChangesetValue')
-            ->with($this->artifact)
-            ->will(self::returnValue($date_changeset_value));
+        return ArtifactTestBuilder::anArtifact('1')
+            ->withTitle('title')
+            ->inTracker($this->tracker)
+            ->withChangesets($changeset)
+            ->userCanView(true)
+            ->withParent(null)
+            ->isOpen(true)
+            ->build();
     }
 
-    private function mockDurationFieldWithValue(?int $duration): void
+    private function anArtifactWithoutStartDate(int $duration): Artifact
     {
-        $duration_changeset_value = self::getMockBuilder(\Tracker_Artifact_ChangesetValue_Integer::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $changeset->setFieldValue($this->start_date_field, null);
+        $changeset->setFieldValue(
+            $this->duration_field,
+            ChangesetValueIntegerTestBuilder::aValue(2, $changeset, $this->duration_field)
+                ->withValue($duration)
+                ->build()
+        );
 
-        $duration_changeset_value->expects(self::any())->method('getNumeric')->will(self::returnValue($duration));
+        return ArtifactTestBuilder::anArtifact('1')
+            ->withTitle('title')
+            ->inTracker($this->tracker)
+            ->withChangesets($changeset)
+            ->userCanView(true)
+            ->withParent(null)
+            ->isOpen(true)
+            ->build();
+    }
 
-        $this->duration_field->expects(self::any())->method('getLastChangesetValue')
-            ->with($this->artifact)
-            ->will(self::returnValue($duration_changeset_value));
+    private function anArtifactWithoutDuration(string $start_date): Artifact
+    {
+        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $changeset->setFieldValue(
+            $this->start_date_field,
+            ChangesetValueDateTestBuilder::aValue(1, $changeset, $this->start_date_field)
+                ->withTimestamp(strtotime($start_date))
+                ->build()
+        );
+        $changeset->setFieldValue($this->duration_field, null);
+
+        return ArtifactTestBuilder::anArtifact('1')
+            ->withTitle('title')
+            ->inTracker($this->tracker)
+            ->withChangesets($changeset)
+            ->userCanView(true)
+            ->withParent(null)
+            ->isOpen(true)
+            ->build();
     }
 }

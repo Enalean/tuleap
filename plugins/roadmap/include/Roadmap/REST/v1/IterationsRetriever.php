@@ -153,7 +153,7 @@ class IterationsRetriever
                 continue;
             }
 
-            $date_period = $timeframes_calculator->buildDatePeriodWithoutWeekendForArtifactForREST($artifact, $user, $this->logger);
+            $date_period = $timeframes_calculator->buildDatePeriodWithoutWeekendForChangesetForREST($artifact->getLastChangeset(), $user, $this->logger);
             $start_date  = $date_period->getStartDate();
             if (! $start_date) {
                 continue;

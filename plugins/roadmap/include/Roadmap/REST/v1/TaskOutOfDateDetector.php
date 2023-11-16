@@ -145,7 +145,7 @@ final class TaskOutOfDateDetector implements IDetectIfArtifactIsOutOfDate
         DateTimeImmutable $now,
     ): bool {
         $timeframe_calculator = $semantic_timeframe->getTimeframeCalculator();
-        $date_period          = $timeframe_calculator->buildDatePeriodWithoutWeekendForArtifactForREST($artifact, $user, $this->logger);
+        $date_period          = $timeframe_calculator->buildDatePeriodWithoutWeekendForChangesetForREST($artifact->getLastChangeset(), $user, $this->logger);
         $task_end_date        = $this->getDateTheTaskEnds($date_period);
 
         if ($task_end_date === null) {

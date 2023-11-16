@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Semantic\Timeframe;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Date\DatePeriodWithoutWeekEnd;
-use Tuleap\Tracker\Artifact\Artifact;
 
 class TimeframeNotConfigured implements IComputeTimeframes
 {
@@ -79,35 +78,47 @@ class TimeframeNotConfigured implements IComputeTimeframes
         return null;
     }
 
-    public function buildDatePeriodWithoutWeekendForArtifactForREST(Artifact $artifact, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForChangesetForREST(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
     {
+        if ($changeset === null) {
+            return DatePeriodWithoutWeekEnd::buildWithoutAnyDates();
+        }
+
         return DatePeriodWithoutWeekEnd::buildFromNothingWithErrorMessage(
-            $this->getErrorMessage($artifact)
+            $this->getErrorMessage($changeset)
         );
     }
 
-    public function buildDatePeriodWithoutWeekendForArtifact(Artifact $artifact, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForChangeset(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
     {
+        if ($changeset === null) {
+            return DatePeriodWithoutWeekEnd::buildWithoutAnyDates();
+        }
+
         return DatePeriodWithoutWeekEnd::buildFromNothingWithErrorMessage(
-            $this->getErrorMessage($artifact)
+            $this->getErrorMessage($changeset)
         );
     }
 
     /**
      * @throws \Tracker_FormElement_Chart_Field_Exception
      */
-    public function buildDatePeriodWithoutWeekendForArtifactChartRendering(Artifact $artifact, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForChangesetChartRendering(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
     {
+        if ($changeset === null) {
+            return DatePeriodWithoutWeekEnd::buildWithoutAnyDates();
+        }
+
         throw new \Tracker_FormElement_Chart_Field_Exception(
-            $this->getErrorMessage($artifact)
+            $this->getErrorMessage($changeset)
         );
     }
 
-    private function getErrorMessage(Artifact $artifact): string
+    private function getErrorMessage(\Tracker_Artifact_Changeset $changeset): string
     {
         return sprintf(
             dgettext('tuleap-tracker', 'Semantic Timeframe is not configured for tracker %s.'),
-            $artifact->getTracker()->getName()
+            $changeset->getTracker()->getName()
         );
     }
 

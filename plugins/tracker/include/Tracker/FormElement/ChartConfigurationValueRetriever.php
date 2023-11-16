@@ -77,8 +77,8 @@ class ChartConfigurationValueRetriever
      */
     public function getDatePeriod(Artifact $artifact, PFUser $user): DatePeriodWithoutWeekEnd
     {
-        return $this->timeframe_calculator->buildDatePeriodWithoutWeekendForArtifactChartRendering(
-            $artifact,
+        return $this->timeframe_calculator->buildDatePeriodWithoutWeekendForChangesetChartRendering(
+            $artifact->getLastChangeset(),
             $user,
             $this->logger
         );

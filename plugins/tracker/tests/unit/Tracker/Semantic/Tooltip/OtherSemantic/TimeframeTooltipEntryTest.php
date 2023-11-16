@@ -33,6 +33,8 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeNotConfigured;
 use Tuleap\Tracker\Semantic\TimeframeConfigInvalid;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Semantic\Timeframe\IComputeTimeframesStub;
 
@@ -82,10 +84,13 @@ final class TimeframeTooltipEntryTest extends TestCase
 
     public function testTimeframe(): void
     {
-        $start = $this->createMock(\Tracker_FormElement_Field_Date::class);
-        $start->method('userCanRead')->willReturn(true);
-        $end = $this->createMock(\Tracker_FormElement_Field_Date::class);
-        $end->method('userCanRead')->willReturn(true);
+        $user  = UserTestBuilder::buildWithDefaults();
+        $start = TrackerFormElementDateFieldBuilder::aDateField(1)
+            ->withUserCanRead($user)
+            ->build();
+        $end   = TrackerFormElementDateFieldBuilder::aDateField(2)
+            ->withUserCanRead($user)
+            ->build();
 
         $semantic_timeframe_builder = $this->createMock(SemanticTimeframeBuilder::class);
         $semantic_timeframe_builder->method('getSemantic')->willReturn(new SemanticTimeframe(
@@ -104,8 +109,10 @@ final class TimeframeTooltipEntryTest extends TestCase
 
         $entry = new TimeframeTooltipEntry($semantic_timeframe_builder, $template_factory, new NullLogger());
 
-        $artifact = ArtifactTestBuilder::anArtifact(101)->build();
-        $user     = UserTestBuilder::buildWithDefaults();
+        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $artifact  = ArtifactTestBuilder::anArtifact(101)
+            ->withChangesets($changeset)
+            ->build();
 
         $tooltip_entry = $entry->fetchTooltipEntry($artifact, $user);
         self::assertStringContainsString('Start date', $tooltip_entry);
@@ -206,10 +213,13 @@ final class TimeframeTooltipEntryTest extends TestCase
 
     public function testUndefinedStart(): void
     {
-        $start = $this->createMock(\Tracker_FormElement_Field_Date::class);
-        $start->method('userCanRead')->willReturn(true);
-        $end = $this->createMock(\Tracker_FormElement_Field_Date::class);
-        $end->method('userCanRead')->willReturn(true);
+        $user  = UserTestBuilder::buildWithDefaults();
+        $start = TrackerFormElementDateFieldBuilder::aDateField(1)
+            ->withUserCanRead($user)
+            ->build();
+        $end   = TrackerFormElementDateFieldBuilder::aDateField(2)
+            ->withUserCanRead($user)
+            ->build();
 
         $semantic_timeframe_builder = $this->createMock(SemanticTimeframeBuilder::class);
         $semantic_timeframe_builder->method('getSemantic')->willReturn(new SemanticTimeframe(
@@ -228,8 +238,10 @@ final class TimeframeTooltipEntryTest extends TestCase
 
         $entry = new TimeframeTooltipEntry($semantic_timeframe_builder, $template_factory, new NullLogger());
 
-        $artifact = ArtifactTestBuilder::anArtifact(101)->build();
-        $user     = UserTestBuilder::buildWithDefaults();
+        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $artifact  = ArtifactTestBuilder::anArtifact(101)
+            ->withChangesets($changeset)
+            ->build();
 
         $tooltip_entry = $entry->fetchTooltipEntry($artifact, $user);
         self::assertStringContainsString('Start date', $tooltip_entry);
@@ -240,10 +252,13 @@ final class TimeframeTooltipEntryTest extends TestCase
 
     public function testUndefinedEnd(): void
     {
-        $start = $this->createMock(\Tracker_FormElement_Field_Date::class);
-        $start->method('userCanRead')->willReturn(true);
-        $end = $this->createMock(\Tracker_FormElement_Field_Date::class);
-        $end->method('userCanRead')->willReturn(true);
+        $user  = UserTestBuilder::buildWithDefaults();
+        $start = TrackerFormElementDateFieldBuilder::aDateField(1)
+            ->withUserCanRead($user)
+            ->build();
+        $end   = TrackerFormElementDateFieldBuilder::aDateField(2)
+            ->withUserCanRead($user)
+            ->build();
 
         $semantic_timeframe_builder = $this->createMock(SemanticTimeframeBuilder::class);
         $semantic_timeframe_builder->method('getSemantic')->willReturn(new SemanticTimeframe(
@@ -262,8 +277,10 @@ final class TimeframeTooltipEntryTest extends TestCase
 
         $entry = new TimeframeTooltipEntry($semantic_timeframe_builder, $template_factory, new NullLogger());
 
-        $artifact = ArtifactTestBuilder::anArtifact(101)->build();
-        $user     = UserTestBuilder::buildWithDefaults();
+        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $artifact  = ArtifactTestBuilder::anArtifact(101)
+            ->withChangesets($changeset)
+            ->build();
 
         $tooltip_entry = $entry->fetchTooltipEntry($artifact, $user);
         self::assertStringContainsString('Start date', $tooltip_entry);
@@ -274,10 +291,13 @@ final class TimeframeTooltipEntryTest extends TestCase
 
     public function testNoTimeframeWhenNoStartAndNoEnd(): void
     {
-        $start = $this->createMock(\Tracker_FormElement_Field_Date::class);
-        $start->method('userCanRead')->willReturn(true);
-        $end = $this->createMock(\Tracker_FormElement_Field_Date::class);
-        $end->method('userCanRead')->willReturn(true);
+        $user  = UserTestBuilder::buildWithDefaults();
+        $start = TrackerFormElementDateFieldBuilder::aDateField(1)
+            ->withUserCanRead($user)
+            ->build();
+        $end   = TrackerFormElementDateFieldBuilder::aDateField(2)
+            ->withUserCanRead($user)
+            ->build();
 
         $semantic_timeframe_builder = $this->createMock(SemanticTimeframeBuilder::class);
         $semantic_timeframe_builder->method('getSemantic')->willReturn(new SemanticTimeframe(
@@ -296,18 +316,23 @@ final class TimeframeTooltipEntryTest extends TestCase
 
         $entry = new TimeframeTooltipEntry($semantic_timeframe_builder, $template_factory, new NullLogger());
 
-        $artifact = ArtifactTestBuilder::anArtifact(101)->build();
-        $user     = UserTestBuilder::buildWithDefaults();
+        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $artifact  = ArtifactTestBuilder::anArtifact(101)
+            ->withChangesets($changeset)
+            ->build();
 
         self::assertEmpty($entry->fetchTooltipEntry($artifact, $user));
     }
 
     public function testWarningWhenEndDateIsBeforeStartDate(): void
     {
-        $start = $this->createMock(\Tracker_FormElement_Field_Date::class);
-        $start->method('userCanRead')->willReturn(true);
-        $end = $this->createMock(\Tracker_FormElement_Field_Date::class);
-        $end->method('userCanRead')->willReturn(true);
+        $user  = UserTestBuilder::buildWithDefaults();
+        $start = TrackerFormElementDateFieldBuilder::aDateField(1)
+            ->withUserCanRead($user)
+            ->build();
+        $end   = TrackerFormElementDateFieldBuilder::aDateField(2)
+            ->withUserCanRead($user)
+            ->build();
 
         $semantic_timeframe_builder = $this->createMock(SemanticTimeframeBuilder::class);
         $semantic_timeframe_builder->method('getSemantic')->willReturn(new SemanticTimeframe(
@@ -326,8 +351,10 @@ final class TimeframeTooltipEntryTest extends TestCase
 
         $entry = new TimeframeTooltipEntry($semantic_timeframe_builder, $template_factory, new NullLogger());
 
-        $artifact = ArtifactTestBuilder::anArtifact(101)->build();
-        $user     = UserTestBuilder::buildWithDefaults();
+        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $artifact  = ArtifactTestBuilder::anArtifact(101)
+            ->withChangesets($changeset)
+            ->build();
 
         $tooltip_entry = $entry->fetchTooltipEntry($artifact, $user);
         self::assertStringContainsString('Start date', $tooltip_entry);

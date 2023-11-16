@@ -77,13 +77,17 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
         return null;
     }
 
-    public function buildDatePeriodWithoutWeekendForArtifactForREST(Artifact $artifact, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForChangesetForREST(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
     {
+        if ($changeset === null) {
+            return DatePeriodWithoutWeekEnd::buildWithoutAnyDates();
+        }
+
         try {
-            $artifact_from_target_tracker = $this->getReverselyLinkedArtifactFromTracker($artifact, $user);
+            $artifact_from_target_tracker = $this->getReverselyLinkedArtifactFromTracker($changeset->getArtifact(), $user);
             return $this->semantic_timeframe_implied_from_tracker->getTimeframeCalculator()
-                ->buildDatePeriodWithoutWeekendForArtifactForREST(
-                    $artifact_from_target_tracker,
+                ->buildDatePeriodWithoutWeekendForChangesetForREST(
+                    $artifact_from_target_tracker->getLastChangeset(),
                     $user,
                     $logger
                 );
@@ -94,13 +98,17 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
         }
     }
 
-    public function buildDatePeriodWithoutWeekendForArtifact(Artifact $artifact, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForChangeset(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
     {
+        if ($changeset === null) {
+            return DatePeriodWithoutWeekEnd::buildWithoutAnyDates();
+        }
+
         try {
-            $artifact_from_target_tracker = $this->getReverselyLinkedArtifactFromTracker($artifact, $user);
+            $artifact_from_target_tracker = $this->getReverselyLinkedArtifactFromTracker($changeset->getArtifact(), $user);
             return $this->semantic_timeframe_implied_from_tracker->getTimeframeCalculator()
-                ->buildDatePeriodWithoutWeekendForArtifact(
-                    $artifact_from_target_tracker,
+                ->buildDatePeriodWithoutWeekendForChangeset(
+                    $artifact_from_target_tracker->getLastChangeset(),
                     $user,
                     $logger
                 );
@@ -114,13 +122,17 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
     /**
      * @throws \Tracker_FormElement_Chart_Field_Exception
      */
-    public function buildDatePeriodWithoutWeekendForArtifactChartRendering(Artifact $artifact, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForChangesetChartRendering(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
     {
+        if ($changeset === null) {
+            return DatePeriodWithoutWeekEnd::buildWithoutAnyDates();
+        }
+
         try {
-            $artifact_from_target_tracker = $this->getReverselyLinkedArtifactFromTracker($artifact, $user);
+            $artifact_from_target_tracker = $this->getReverselyLinkedArtifactFromTracker($changeset->getArtifact(), $user);
             return $this->semantic_timeframe_implied_from_tracker->getTimeframeCalculator()
-                ->buildDatePeriodWithoutWeekendForArtifactChartRendering(
-                    $artifact_from_target_tracker,
+                ->buildDatePeriodWithoutWeekendForChangesetChartRendering(
+                    $artifact_from_target_tracker->getLastChangeset(),
                     $user,
                     $logger
                 );

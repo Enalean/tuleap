@@ -233,6 +233,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     /** @var Artifact */
     private $parent_without_permission_checking;
 
+
     /** @var PFUser */
     private $submitted_by_user;
 
@@ -242,6 +243,10 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      * @var DBTransactionExecutor
      */
     private $transaction_executor;
+    private bool | null $user_permission_cache = null;
+    private ?Artifact $parent                  = null;
+    private bool $has_set_parent               = false;
+    private bool | null $is_open               = null;
 
     /**
      * Constructor
@@ -305,6 +310,11 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         return $this->use_artifact_permissions;
     }
 
+    public function setUserCanView(bool $user_can_view): void
+    {
+        $this->user_permission_cache = $user_can_view;
+    }
+
     /**
      * userCanView - determine if the user can view this artifact.
      *
@@ -314,6 +324,10 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      */
     public function userCanView(?PFUser $user = null)
     {
+        if ($this->user_permission_cache !== null) {
+            return $this->user_permission_cache;
+        }
+
         $user_manager       = $this->getUserManager();
         $permission_checker = new Tracker_Permission_PermissionChecker(
             $user_manager,
@@ -330,7 +344,9 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
             $user = $user_manager->getCurrentUser();
         }
 
-        return PermissionsCache::userCanView($this, $user, $permission_checker);
+        $this->user_permission_cache = PermissionsCache::userCanView($this, $user, $permission_checker);
+
+        return $this->user_permission_cache;
     }
 
     public function userCanUpdate(PFUser $user): bool
@@ -771,9 +787,17 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         return $this->isOpen() ? self::STATUS_OPEN : self::STATUS_CLOSED;
     }
 
-    public function isOpen()
+    public function isOpen(): bool
     {
-        return Tracker_Semantic_Status::load($this->getTracker())->isOpen($this);
+        if ($this->is_open === null) {
+            $this->is_open = Tracker_Semantic_Status::load($this->getTracker())->isOpen($this);
+        }
+        return $this->is_open;
+    }
+
+    public function setIsOpen(bool $is_open): void
+    {
+        $this->is_open = $is_open;
     }
 
     public function isOpenAtGivenChangeset(Tracker_Artifact_Changeset $changeset)
@@ -1497,6 +1521,14 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         $this->last_changeset = null;
     }
 
+    /**
+     * for testing purpose
+     */
+    public function setLastChangeset(Tracker_Artifact_Changeset $changeset): void
+    {
+        $this->last_changeset = $changeset;
+    }
+
     public function clearChangesets()
     {
         $this->changesets     = null;
@@ -1928,12 +1960,22 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     /**
      * Return the parent artifact of current artifact if any
      *
-     *
-     * @return Artifact
+     * @return ?Artifact
      */
     public function getParent(PFUser $user)
     {
-        return $this->getHierarchyFactory()->getParentArtifact($user, $this);
+        if ($this->has_set_parent) {
+            return $this->parent;
+        }
+        $this->parent         = $this->getHierarchyFactory()->getParentArtifact($user, $this);
+        $this->has_set_parent = true;
+        return $this->parent;
+    }
+
+    public function setParent(?Artifact $artifact): void
+    {
+        $this->parent         = $artifact;
+        $this->has_set_parent = true;
     }
 
     /**

@@ -47,7 +47,7 @@ final class TimeframeTooltipEntry implements OtherSemanticTooltipEntryFetcher
 
         $date_period = $semantic_timeframe
             ->getTimeframeCalculator()
-            ->buildDatePeriodWithoutWeekendForArtifactForREST($artifact, $user, $this->logger);
+            ->buildDatePeriodWithoutWeekendForChangesetForREST($artifact->getLastChangeset(), $user, $this->logger);
 
         $start_date = $date_period->getStartDate();
         $end_date   = $date_period->getEndDate();

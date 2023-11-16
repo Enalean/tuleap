@@ -41,9 +41,15 @@ final class ArtifactTestBuilder
      */
     private $title = '';
     /**
+     * @var \Tracker_Artifact_Changeset[]
+     */
+    private array $changesets                                = [];
+    private \Tracker_Artifact_Changeset|null $last_changeset = null;
+    /**
      * @var \Tracker_ArtifactFactory | null
      */
     private $artifact_factory;
+    private bool|null $user_can_view = null;
 
     /**
      * @var \Project|null
@@ -51,6 +57,13 @@ final class ArtifactTestBuilder
     private $project;
     private int $submission_timestamp  = 1234567890;
     private ?PFUser $submitted_by_user = null;
+    private ?Artifact $parent          = null;
+    private bool $has_parent           = false;
+    private bool|null $is_open         = null;
+    /**
+     * @var Artifact[]|null
+     */
+    private ?array $ancestors = null;
 
     private function __construct(int $id)
     {
@@ -108,6 +121,45 @@ final class ArtifactTestBuilder
         return $this;
     }
 
+    /** @no-named-arguments */
+    public function withChangesets(\Tracker_Artifact_Changeset $last_changeset, \Tracker_Artifact_Changeset ...$previous_changesets): self
+    {
+        $this->changesets     = [...$previous_changesets, $last_changeset];
+        $this->last_changeset = $last_changeset;
+
+        return $this;
+    }
+
+    public function userCanView(bool $user_can_view): self
+    {
+        $this->user_can_view = $user_can_view;
+        return $this;
+    }
+
+    public function withParent(?Artifact $artifact): self
+    {
+        $this->parent     = $artifact;
+        $this->has_parent = true;
+        return $this;
+    }
+
+    public function isOpen(bool $is_open): self
+    {
+        $this->is_open = $is_open;
+
+        return $this;
+    }
+
+    /**
+     * @param Artifact[] $ancestors
+     */
+    public function withAncestors(array $ancestors): self
+    {
+        $this->ancestors = $ancestors;
+
+        return $this;
+    }
+
     public function build(): Artifact
     {
         $artifact = new Artifact(
@@ -131,6 +183,26 @@ final class ArtifactTestBuilder
 
         if ($this->project) {
             $artifact->getTracker()->setProject($this->project);
+        }
+
+        if ($this->changesets) {
+            $artifact->setChangesets($this->changesets);
+        }
+
+        if ($this->last_changeset) {
+            $artifact->setLastChangeset($this->last_changeset);
+        }
+        if ($this->user_can_view !== null) {
+            $artifact->setUserCanView($this->user_can_view);
+        }
+        if ($this->has_parent) {
+            $artifact->setParent($this->parent);
+        }
+        if ($this->is_open !== null) {
+            $artifact->setIsOpen($this->is_open);
+        }
+        if ($this->ancestors !== null) {
+            $artifact->setAllAncestors($this->ancestors);
         }
 
         return $artifact;

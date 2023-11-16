@@ -1180,6 +1180,10 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     }
 
     private $user_can_read = [];
+    public function setUserCanRead(PFUser $user, bool $can_read): void
+    {
+        $this->user_can_read[$user->getId()] = $can_read;
+    }
 
     /**
      * return true if user has Read or Update permission on this field
