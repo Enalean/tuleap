@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ReleaseDescription from "./ReleaseDescription.vue";
 import type {
@@ -30,22 +30,17 @@ import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test
 import ChartDisplayer from "./Chart/ChartDisplayer.vue";
 import TestManagementDisplayer from "./TestManagement/TestManagementDisplayer.vue";
 import ReleaseDescriptionBadgesTracker from "./ReleaseDescriptionBadgesTracker.vue";
-import { createTestingPinia } from "@pinia/testing";
-import { defineStore } from "pinia";
 
 let release_data: MilestoneData;
-const component_options: ShallowMountOptions<ReleaseDescription> = {};
 
 describe("ReleaseDescription", () => {
-    async function getPersonalWidgetInstance(): Promise<Wrapper<ReleaseDescription>> {
-        const useStore = defineStore("root", {
-            state: () => ({
-                label_tracker_planning: "Releases",
-            }),
-        });
-        const pinia = createTestingPinia();
-        useStore(pinia);
-        component_options.localVue = await createReleaseWidgetLocalVue();
+    async function getPersonalWidgetInstance(): Promise<Wrapper<Vue, Element>> {
+        const component_options = {
+            localVue: await createReleaseWidgetLocalVue(),
+            propsData: {
+                release_data,
+            },
+        };
 
         return shallowMount(ReleaseDescription, component_options);
     }
@@ -86,10 +81,6 @@ describe("ReleaseDescription", () => {
             },
             number_of_artifact_by_trackers: [] as TrackerNumberArtifacts[],
         } as MilestoneData;
-
-        component_options.propsData = {
-            release_data,
-        };
     });
 
     it("When there is a burndown, Then the ChartDisplayer is rendered", async () => {
@@ -103,10 +94,6 @@ describe("ReleaseDescription", () => {
             },
             number_of_artifact_by_trackers: [] as TrackerNumberArtifacts[],
         } as MilestoneData;
-
-        component_options.propsData = {
-            release_data,
-        };
 
         const wrapper = await getPersonalWidgetInstance();
         expect(wrapper.findComponent(ChartDisplayer).exists()).toBe(true);
@@ -133,10 +120,6 @@ describe("ReleaseDescription", () => {
             },
             number_of_artifact_by_trackers: [] as TrackerNumberArtifacts[],
         } as MilestoneData;
-
-        component_options.propsData = {
-            release_data,
-        };
 
         const wrapper = await getPersonalWidgetInstance();
         expect(wrapper.findComponent(TestManagementDisplayer).exists()).toBe(false);
@@ -165,10 +148,6 @@ describe("ReleaseDescription", () => {
                 },
             ] as TrackerNumberArtifacts[],
         } as MilestoneData;
-
-        component_options.propsData = {
-            release_data,
-        };
 
         const wrapper = await getPersonalWidgetInstance();
         expect(wrapper.findComponent(ReleaseDescriptionBadgesTracker).exists()).toBe(false);

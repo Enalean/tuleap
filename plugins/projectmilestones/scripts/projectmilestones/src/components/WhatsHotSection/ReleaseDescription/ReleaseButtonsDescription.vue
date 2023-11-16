@@ -59,51 +59,46 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
 import type { MilestoneData, Pane } from "../../../type";
 import { useStore } from "../../../stores/root";
 
-@Component
-export default class ReleaseButtonsDescription extends Vue {
-    @Prop()
-    readonly release_data!: MilestoneData;
+const props = defineProps<{ release_data: MilestoneData }>();
 
-    public root_store = useStore();
+const root_store = useStore();
 
-    get get_overview_link(): string | null {
-        return (
-            "/plugins/agiledashboard/?group_id=" +
-            encodeURIComponent(this.root_store.project_id) +
-            "&planning_id=" +
-            encodeURIComponent(this.release_data.planning.id) +
-            "&action=show&aid=" +
-            encodeURIComponent(this.release_data.id) +
-            "&pane=details"
-        );
+const get_overview_link = computed((): string | null => {
+    return (
+        "/plugins/agiledashboard/?group_id=" +
+        encodeURIComponent(root_store.project_id) +
+        "&planning_id=" +
+        encodeURIComponent(props.release_data.planning.id) +
+        "&action=show&aid=" +
+        encodeURIComponent(props.release_data.id) +
+        "&pane=details"
+    );
+});
+
+const get_cardwall_link = computed((): string | null => {
+    if (!props.release_data.resources.cardwall) {
+        return null;
     }
 
-    get get_cardwall_link(): string | null {
-        if (!this.release_data.resources.cardwall) {
-            return null;
-        }
+    return (
+        "/plugins/agiledashboard/?group_id=" +
+        encodeURIComponent(root_store.project_id) +
+        "&planning_id=" +
+        encodeURIComponent(props.release_data.planning.id) +
+        "&action=show&aid=" +
+        encodeURIComponent(props.release_data.id) +
+        "&pane=cardwall"
+    );
+});
 
-        return (
-            "/plugins/agiledashboard/?group_id=" +
-            encodeURIComponent(this.root_store.project_id) +
-            "&planning_id=" +
-            encodeURIComponent(this.release_data.planning.id) +
-            "&action=show&aid=" +
-            encodeURIComponent(this.release_data.id) +
-            "&pane=cardwall"
-        );
-    }
-
-    get get_additional_panes(): undefined | Pane[] {
-        return this.release_data.resources.additional_panes.filter((pane) =>
-            ["taskboard", "testplan"].includes(pane.identifier),
-        );
-    }
-}
+const get_additional_panes = computed((): undefined | Pane[] => {
+    return props.release_data.resources.additional_panes.filter((pane) =>
+        ["taskboard", "testplan"].includes(pane.identifier),
+    );
+});
 </script>

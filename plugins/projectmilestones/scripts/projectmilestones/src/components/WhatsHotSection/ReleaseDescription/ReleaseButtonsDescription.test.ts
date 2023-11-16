@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ReleaseButtonsDescription from "./ReleaseButtonsDescription.vue";
 import type { MilestoneData, Pane } from "../../../type";
@@ -26,11 +26,10 @@ import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
 
 let release_data: MilestoneData & Required<Pick<MilestoneData, "planning">>;
-const component_options: ShallowMountOptions<ReleaseButtonsDescription> = {};
 const project_id = 102;
 
 describe("ReleaseButtonsDescription", () => {
-    async function getPersonalWidgetInstance(): Promise<Wrapper<ReleaseButtonsDescription>> {
+    async function getPersonalWidgetInstance(): Promise<Wrapper<Vue, Element>> {
         const useStore = defineStore("root", {
             state: () => ({
                 project_id,
@@ -38,9 +37,14 @@ describe("ReleaseButtonsDescription", () => {
         });
         const pinia = createTestingPinia();
         useStore(pinia);
-        component_options.localVue = await createReleaseWidgetLocalVue();
 
-        return shallowMount(ReleaseButtonsDescription, component_options);
+        return shallowMount(ReleaseButtonsDescription, {
+            localVue: await createReleaseWidgetLocalVue(),
+            propsData: {
+                release_data,
+            },
+            pinia,
+        });
     }
 
     beforeEach(() => {
@@ -78,10 +82,6 @@ describe("ReleaseButtonsDescription", () => {
                 },
             },
         } as MilestoneData;
-
-        component_options.propsData = {
-            release_data,
-        };
     });
 
     it("Given user display widget, Then a good link to TestPlan is renderer", async () => {
@@ -156,10 +156,6 @@ describe("ReleaseButtonsDescription", () => {
             },
         } as MilestoneData;
 
-        component_options.propsData = {
-            release_data,
-        };
-
         const wrapper = await getPersonalWidgetInstance();
         expect(wrapper.find("[data-test=taskboard-link]").exists()).toBe(false);
     });
@@ -184,10 +180,6 @@ describe("ReleaseButtonsDescription", () => {
                 cardwall: null,
             },
         } as MilestoneData;
-
-        component_options.propsData = {
-            release_data,
-        };
 
         const wrapper = await getPersonalWidgetInstance();
         expect(wrapper.find("[data-test=cardwall-link]").exists()).toBe(false);
