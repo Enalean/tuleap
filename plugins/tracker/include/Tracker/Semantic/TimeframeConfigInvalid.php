@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Semantic;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Date\DatePeriodWithoutWeekEnd;
-use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 use Tuleap\Tracker\Semantic\Timeframe\IRepresentSemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
@@ -82,14 +81,14 @@ class TimeframeConfigInvalid implements IComputeTimeframes
         return null;
     }
 
-    public function buildDatePeriodWithoutWeekendForArtifactForREST(Artifact $artifact, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForChangesetForREST(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
     {
         return DatePeriodWithoutWeekEnd::buildFromNothingWithErrorMessage(
             $this->getInvalidConfigDifferentProjectsMessage()
         );
     }
 
-    public function buildDatePeriodWithoutWeekendForArtifact(Artifact $artifact, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForChangeset(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
     {
         return DatePeriodWithoutWeekEnd::buildFromNothingWithErrorMessage(
             $this->getInvalidConfigDifferentProjectsMessage()
@@ -99,7 +98,7 @@ class TimeframeConfigInvalid implements IComputeTimeframes
     /**
      * @throws \Tracker_FormElement_Chart_Field_Exception
      */
-    public function buildDatePeriodWithoutWeekendForArtifactChartRendering(Artifact $artifact, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForChangesetChartRendering(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
     {
         throw new \Tracker_FormElement_Chart_Field_Exception(
             $this->getInvalidConfigDifferentProjectsMessage()

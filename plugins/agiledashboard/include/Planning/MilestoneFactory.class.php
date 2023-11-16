@@ -964,8 +964,8 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     private function getMilestoneDatePeriod(Artifact $milestone_artifact, PFUser $user)
     {
         $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($milestone_artifact->getTracker());
-        return $semantic_timeframe->getTimeframeCalculator()->buildDatePeriodWithoutWeekendForArtifact(
-            $milestone_artifact,
+        return $semantic_timeframe->getTimeframeCalculator()->buildDatePeriodWithoutWeekendForChangeset(
+            $milestone_artifact->getLastChangeset(),
             $user,
             $this->logger
         );

@@ -120,10 +120,11 @@ final class MilestoneFactoryGetBareMilestoneByArtifactIdTest extends \Tuleap\Tes
         $artifact->shouldReceive('getTracker')->andReturn($planning_tracker);
         $artifact->shouldReceive('userCanView')->with($this->user)->once()->andReturn($planning_tracker);
         $artifact->shouldReceive('getAllAncestors')->with($this->user)->once()->andReturn([]);
+        $artifact->shouldReceive('getLastChangeset')->andReturn(Mockery::mock(\Tracker_Artifact_Changeset::class));
         $this->artifact_factory->shouldReceive('getArtifactById')->with($this->artifact_id)->andReturn($artifact);
 
-        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForArtifact')
-            ->with($artifact, $this->user, $this->logger)
+        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
+            ->with($artifact->getLastChangeset(), $this->user, $this->logger)
             ->once()
             ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 

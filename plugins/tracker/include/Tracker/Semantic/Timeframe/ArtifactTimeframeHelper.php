@@ -77,8 +77,8 @@ class ArtifactTimeframeHelper
         $timeframe_semantic = $this->semantic_builder->getSemantic($artifact->getTracker());
         $date_period        = $timeframe_semantic
             ->getTimeframeCalculator()
-            ->buildDatePeriodWithoutWeekendForArtifact(
-                $artifact,
+            ->buildDatePeriodWithoutWeekendForChangeset(
+                $artifact->getLastChangeset(),
                 $user,
                 $this->logger
             );
@@ -94,7 +94,7 @@ class ArtifactTimeframeHelper
         $timeframe_semantic = $this->semantic_builder->getSemantic($artifact->getTracker());
         $duration           = (int) $timeframe_semantic
             ->getTimeframeCalculator()
-            ->buildDatePeriodWithoutWeekendForArtifact($artifact, $user, $this->logger)
+            ->buildDatePeriodWithoutWeekendForChangeset($artifact->getLastChangeset(), $user, $this->logger)
             ->getDuration();
 
         return sprintf(dngettext('tuleap-tracker', '%s working day', '%s working days', $duration), $duration);

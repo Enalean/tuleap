@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Semantic\Timeframe;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Date\DatePeriodWithoutWeekEnd;
-use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\SemanticTimeframeWithEndDateRepresentation;
 
 class TimeframeWithEndDate implements IComputeTimeframes
@@ -133,32 +132,40 @@ class TimeframeWithEndDate implements IComputeTimeframes
         return null;
     }
 
-    public function buildDatePeriodWithoutWeekendForArtifactForREST(Artifact $artifact, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForChangesetForREST(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
     {
+        if ($changeset === null) {
+            return DatePeriodWithoutWeekEnd::buildWithoutAnyDates();
+        }
+
         try {
-            $start_date = TimeframeArtifactFieldsValueRetriever::getTimestamp($this->start_date_field, $user, $artifact);
+            $start_date = TimeframeChangesetFieldsValueRetriever::getTimestamp($this->start_date_field, $user, $changeset);
         } catch (TimeframeFieldNotFoundException | TimeframeFieldNoValueException $exception) {
             $start_date = null;
         }
 
         try {
-            $end_date = TimeframeArtifactFieldsValueRetriever::getTimestamp($this->end_date_field, $user, $artifact);
+            $end_date = TimeframeChangesetFieldsValueRetriever::getTimestamp($this->end_date_field, $user, $changeset);
         } catch (TimeframeFieldNotFoundException | TimeframeFieldNoValueException $exception) {
             $end_date = null;
         }
         return DatePeriodWithoutWeekEnd::buildFromEndDate($start_date, $end_date, $logger);
     }
 
-    public function buildDatePeriodWithoutWeekendForArtifact(Artifact $artifact, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForChangeset(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
     {
+        if ($changeset === null) {
+            return DatePeriodWithoutWeekEnd::buildWithoutAnyDates();
+        }
+
         try {
-            $start_date = TimeframeArtifactFieldsValueRetriever::getTimestamp($this->start_date_field, $user, $artifact);
+            $start_date = TimeframeChangesetFieldsValueRetriever::getTimestamp($this->start_date_field, $user, $changeset);
         } catch (TimeframeFieldNotFoundException | TimeframeFieldNoValueException $exception) {
             $start_date = 0;
         }
 
         try {
-            $end_date = TimeframeArtifactFieldsValueRetriever::getTimestamp($this->end_date_field, $user, $artifact);
+            $end_date = TimeframeChangesetFieldsValueRetriever::getTimestamp($this->end_date_field, $user, $changeset);
         } catch (TimeframeFieldNotFoundException | TimeframeFieldNoValueException $exception) {
             $end_date = 0;
         }
@@ -168,11 +175,15 @@ class TimeframeWithEndDate implements IComputeTimeframes
     /**
      * @throws \Tracker_FormElement_Chart_Field_Exception
      */
-    public function buildDatePeriodWithoutWeekendForArtifactChartRendering(Artifact $artifact, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
+    public function buildDatePeriodWithoutWeekendForChangesetChartRendering(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithoutWeekEnd
     {
+        if ($changeset === null) {
+            return DatePeriodWithoutWeekEnd::buildWithoutAnyDates();
+        }
+
         try {
             try {
-                $start_date = TimeframeArtifactFieldsValueRetriever::getTimestamp($this->start_date_field, $user, $artifact);
+                $start_date = TimeframeChangesetFieldsValueRetriever::getTimestamp($this->start_date_field, $user, $changeset);
             } catch (TimeframeFieldNoValueException $exception) {
                 $start_date = null;
             }
@@ -189,7 +200,7 @@ class TimeframeWithEndDate implements IComputeTimeframes
         }
 
         try {
-            $end_date = TimeframeArtifactFieldsValueRetriever::getTimestamp($this->end_date_field, $user, $artifact);
+            $end_date = TimeframeChangesetFieldsValueRetriever::getTimestamp($this->end_date_field, $user, $changeset);
 
             if (! $end_date) {
                 throw new \Tracker_FormElement_Chart_Field_Exception(

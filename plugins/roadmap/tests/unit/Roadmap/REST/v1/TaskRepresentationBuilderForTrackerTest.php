@@ -31,6 +31,7 @@ use Tuleap\Tracker\Semantic\Progress\SemanticProgress;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeImpliedFromAnotherTracker;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\TrackerColor;
 
@@ -53,7 +54,7 @@ final class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit
         $this->dependencies_retriever = $this->createMock(IRetrieveDependencies::class);
         $this->timeframe_calculator   = $this->getMockBuilder(TimeframeImpliedFromAnotherTracker::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(['buildDatePeriodWithoutWeekendForArtifactForREST'])
+            ->onlyMethods(['buildDatePeriodWithoutWeekendForChangesetForREST'])
             ->getMock();
 
         $this->user = UserTestBuilder::aUser()->build();
@@ -76,12 +77,14 @@ final class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit
 
     public function testBuildRepresentation(): void
     {
-        $artifact = ArtifactTestBuilder::anArtifact(42)
+        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $artifact  = ArtifactTestBuilder::anArtifact(42)
             ->withTitle('There is a bug')
             ->inTracker($this->tracker)
             ->inProject(ProjectTestBuilder::aProject()->withPublicName('ACME Corp')->build())
+            ->withChangesets($changeset)
             ->build();
-        $builder  = new TaskRepresentationBuilderForTracker(
+        $builder   = new TaskRepresentationBuilderForTracker(
             $artifact->getTracker(),
             $this->timeframe_calculator,
             $this->dependencies_retriever,
@@ -89,7 +92,7 @@ final class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit
             new NullLogger()
         );
 
-        $this->timeframe_calculator->method('buildDatePeriodWithoutWeekendForArtifactForREST')->willReturn(
+        $this->timeframe_calculator->method('buildDatePeriodWithoutWeekendForChangesetForREST')->willReturn(
             DatePeriodWithoutWeekEnd::buildFromEndDate(
                 (new \DateTimeImmutable('@1234567890'))->getTimestamp(),
                 1234567891,

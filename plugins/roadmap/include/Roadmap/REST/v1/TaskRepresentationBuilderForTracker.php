@@ -73,7 +73,7 @@ final class TaskRepresentationBuilderForTracker implements IBuildATaskRepresenta
             throw new \RuntimeException("Given artifact is not part of the tracker");
         }
 
-        $date_period = $this->timeframe_calculator->buildDatePeriodWithoutWeekendForArtifactForREST($artifact, $user, $this->logger);
+        $date_period = $this->timeframe_calculator->buildDatePeriodWithoutWeekendForChangesetForREST($artifact->getLastChangeset(), $user, $this->logger);
         $start_date  = $date_period->getStartDate();
         $start       = $start_date ? (new \DateTimeImmutable())->setTimestamp($start_date) : null;
         $end_date    = $date_period->getEndDate();

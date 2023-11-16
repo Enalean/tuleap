@@ -36,10 +36,12 @@ use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -198,14 +200,14 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
             ->once()
             ->andReturn(2);
 
-        $first_artifact  = $this->mockArtifact(24, $milestone_tracker);
-        $second_artifact = $this->mockArtifact(25, $milestone_tracker);
+        $first_artifact  = $this->anArtifact(24, $milestone_tracker);
+        $second_artifact = $this->anArtifact(25, $milestone_tracker);
 
         $this->artifact_factory->shouldReceive('getInstanceFromRow')
             ->andReturn($first_artifact, $second_artifact);
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')
             ->andReturn($this->top_planning);
-        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForArtifact')
+        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
             ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
         $milestones = $this->getTopMilestones();
@@ -248,15 +250,15 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
             ->once()
             ->andReturn(2);
 
-        $first_artifact  = $this->mockArtifact(138, $this->sub_milestone_tracker);
-        $second_artifact = $this->mockArtifact(139, $this->sub_milestone_tracker);
+        $first_artifact  = $this->anArtifact(138, $this->sub_milestone_tracker);
+        $second_artifact = $this->anArtifact(139, $this->sub_milestone_tracker);
 
         $this->artifact_factory->shouldReceive('getInstanceFromRow')
             ->andReturn($first_artifact, $second_artifact);
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')
             ->with($this->sub_milestone_tracker)
             ->andReturn($this->sub_planning);
-        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForArtifact')
+        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
             ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
         $sub_milestones = $this->getSubMilestones();
@@ -318,15 +320,15 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
             ->once()
             ->andReturn(2);
 
-        $first_artifact  = $this->mockArtifact(138, $top_milestone_tracker);
-        $second_artifact = $this->mockArtifact(139, $top_milestone_tracker);
+        $first_artifact  = $this->anArtifact(138, $top_milestone_tracker);
+        $second_artifact = $this->anArtifact(139, $top_milestone_tracker);
 
         $this->artifact_factory->shouldReceive('getInstanceFromRow')
             ->andReturn($first_artifact, $second_artifact);
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')
             ->with($top_milestone_tracker)
             ->andReturn($this->top_planning);
-        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForArtifact')
+        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
             ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
         $sibling_milestones = $this->getSiblingMilestones();
@@ -380,15 +382,15 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
             ->once()
             ->andReturn(2);
 
-        $first_artifact  = $this->mockArtifact(138, $this->sub_milestone_tracker);
-        $second_artifact = $this->mockArtifact(139, $this->sub_milestone_tracker);
+        $first_artifact  = $this->anArtifact(138, $this->sub_milestone_tracker);
+        $second_artifact = $this->anArtifact(139, $this->sub_milestone_tracker);
 
         $this->artifact_factory->shouldReceive('getInstanceFromRow')
             ->andReturn($first_artifact, $second_artifact);
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')
             ->with($this->sub_milestone_tracker)
             ->andReturn($this->sub_planning);
-        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForArtifact')
+        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
             ->andReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
         $sibling_milestones = $this->getSiblingMilestones();
@@ -400,16 +402,18 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
         $this->assertSame(139, $second_milestone->getArtifactId());
     }
 
-    /**
-     * @return M\LegacyMockInterface|M\MockInterface|\Tuleap\Tracker\Artifact\Artifact
-     */
-    private function mockArtifact(int $artifact_id, \Tracker $milestone_tracker)
+    private function anArtifact(int $artifact_id, \Tracker $milestone_tracker): Artifact
     {
-        $first_artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $first_artifact->shouldReceive('getId')->andReturn($artifact_id);
-        $first_artifact->shouldReceive('userCanView')->andReturnTrue();
-        $first_artifact->shouldReceive('getTracker')->andReturn($milestone_tracker);
-        $first_artifact->shouldReceive('getAllAncestors')->andReturn([]);
-        return $first_artifact;
+        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+
+        return ArtifactTestBuilder::anArtifact($artifact_id)
+            ->withTitle('title')
+            ->inTracker($milestone_tracker)
+            ->withChangesets($changeset)
+            ->userCanView(true)
+            ->withParent(null)
+            ->isOpen(true)
+            ->withAncestors([])
+            ->build();
     }
 }

@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Test\Stub\Semantic\Timeframe;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Date\DatePeriodWithoutWeekEnd;
-use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 use Tuleap\Tracker\Semantic\Timeframe\IRepresentSemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
@@ -85,24 +84,24 @@ final class IComputeTimeframesStub implements IComputeTimeframes
         return null;
     }
 
-    public function buildDatePeriodWithoutWeekendForArtifactForREST(
-        Artifact $artifact,
+    public function buildDatePeriodWithoutWeekendForChangesetForREST(
+        ?\Tracker_Artifact_Changeset $changeset,
         \PFUser $user,
         LoggerInterface $logger,
     ): DatePeriodWithoutWeekEnd {
         return $this->date_period;
     }
 
-    public function buildDatePeriodWithoutWeekendForArtifact(
-        Artifact $artifact,
+    public function buildDatePeriodWithoutWeekendForChangeset(
+        ?\Tracker_Artifact_Changeset $changeset,
         \PFUser $user,
         LoggerInterface $logger,
     ): DatePeriodWithoutWeekEnd {
         return $this->date_period;
     }
 
-    public function buildDatePeriodWithoutWeekendForArtifactChartRendering(
-        Artifact $artifact,
+    public function buildDatePeriodWithoutWeekendForChangesetChartRendering(
+        ?\Tracker_Artifact_Changeset $changeset,
         \PFUser $user,
         LoggerInterface $logger,
     ): DatePeriodWithoutWeekEnd {

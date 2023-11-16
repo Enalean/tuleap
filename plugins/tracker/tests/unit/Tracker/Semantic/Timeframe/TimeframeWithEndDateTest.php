@@ -23,8 +23,13 @@ namespace Tuleap\Tracker\Semantic\Timeframe;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+use Tracker;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\SemanticTimeframeWithEndDateRepresentation;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueDateTestBuilder;
+use Tuleap\Tracker\TrackerColor;
 
 class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -41,10 +46,6 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $end_date_field;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|Artifact
-     */
-    private $artifact;
-    /**
      * @var \PFUser|\PHPUnit\Framework\MockObject\MockObject
      */
     private $user;
@@ -53,9 +54,6 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->start_date_field = $this->getMockedDateField(1001);
         $this->end_date_field   = $this->getMockedDateField(1003);
-        $this->artifact         = $this->getMockBuilder(Artifact::class)
-            ->disableOriginalConstructor()
-            ->getMock();
 
         $this->user = $this->getMockBuilder(\PFUser::class)->disableOriginalConstructor()->getMock();
 
@@ -176,11 +174,10 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
         $this->end_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
 
-        $this->mockDateFieldWithValue($this->start_date_field, $start_date);
-        $this->mockDateFieldWithValue($this->end_date_field, null);
+        $artifact = $this->anArtifactWithoutEndDate($start_date);
 
-        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifactForREST(
-            $this->artifact,
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForChangesetForREST(
+            $artifact->getLastChangeset(),
             $this->user,
             new NullLogger()
         );
@@ -198,11 +195,10 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
         $this->end_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
 
-        $this->mockDateFieldWithValue($this->start_date_field, $start_date);
-        $this->mockDateFieldWithValue($this->end_date_field, $end_date);
+        $artifact = $this->anArtifact($start_date, $end_date);
 
-        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifactForREST(
-            $this->artifact,
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForChangesetForREST(
+            $artifact->getLastChangeset(),
             $this->user,
             new NullLogger()
         );
@@ -219,10 +215,10 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
         $this->end_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(false));
 
-        $this->mockDateFieldWithValue($this->start_date_field, $start_date);
+        $artifact = $this->anArtifactWithoutEndDate($start_date);
 
-        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifactForREST(
-            $this->artifact,
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForChangesetForREST(
+            $artifact->getLastChangeset(),
             $this->user,
             new NullLogger()
         );
@@ -239,14 +235,10 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
         $this->end_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
 
-        $this->mockDateFieldWithValue($this->start_date_field, $start_date);
-        $this->end_date_field->expects(self::once())
-            ->method('getLastChangesetValue')
-            ->with($this->artifact)
-            ->will(self::returnValue(null));
+        $artifact = $this->anArtifactWithoutEndDate($start_date);
 
-        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifactForREST(
-            $this->artifact,
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForChangesetForREST(
+            $artifact->getLastChangeset(),
             $this->user,
             new NullLogger()
         );
@@ -264,11 +256,10 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
         $this->end_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
 
-        $this->mockDateFieldWithValue($this->start_date_field, $start_date);
-        $this->mockDateFieldWithValue($this->end_date_field, $end_date);
+        $artifact = $this->anArtifact($start_date, $end_date);
 
-        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifact(
-            $this->artifact,
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForChangeset(
+            $artifact->getLastChangeset(),
             $this->user,
             new NullLogger()
         );
@@ -287,10 +278,10 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
         $this->end_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(false));
 
-        $this->mockDateFieldWithValue($this->start_date_field, $start_date);
+        $artifact = $this->anArtifactWithoutEndDate($start_date);
 
-        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifact(
-            $this->artifact,
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForChangeset(
+            $artifact->getLastChangeset(),
             $this->user,
             $logger
         );
@@ -311,11 +302,10 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
         $this->end_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
 
-        $this->mockDateFieldWithValue($this->start_date_field, $start_date);
-        $this->mockDateFieldWithValue($this->end_date_field, null);
+        $artifact = $this->anArtifactWithoutEndDate($start_date);
 
-        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifact(
-            $this->artifact,
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForChangeset(
+            $artifact->getLastChangeset(),
             $this->user,
             $logger
         );
@@ -334,15 +324,11 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
         $this->end_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
 
-        $this->mockDateFieldWithValue($this->start_date_field, $start_date);
-        $this->end_date_field->expects(self::once())
-            ->method('getLastChangesetValue')
-            ->with($this->artifact)
-            ->will(self::returnValue(null));
+        $artifact = $this->anArtifactWithoutEndDate($start_date);
 
         $this->expectException(\Tracker_FormElement_Chart_Field_Exception::class);
-        $this->timeframe->buildDatePeriodWithoutWeekendForArtifactChartRendering(
-            $this->artifact,
+        $this->timeframe->buildDatePeriodWithoutWeekendForChangesetChartRendering(
+            $artifact->getLastChangeset(),
             $this->user,
             new NullLogger()
         );
@@ -355,11 +341,11 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
         $this->end_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(false));
 
-        $this->mockDateFieldWithValue($this->start_date_field, $start_date);
+        $artifact = $this->anArtifactWithoutEndDate($start_date);
 
         $this->expectException(\Tracker_FormElement_Chart_Field_Exception::class);
-        $this->timeframe->buildDatePeriodWithoutWeekendForArtifactChartRendering(
-            $this->artifact,
+        $this->timeframe->buildDatePeriodWithoutWeekendForChangesetChartRendering(
+            $artifact->getLastChangeset(),
             $this->user,
             new NullLogger()
         );
@@ -372,12 +358,11 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
         $this->end_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
 
-        $this->mockDateFieldWithValue($this->start_date_field, $start_date);
-        $this->mockDateFieldWithValue($this->end_date_field, null);
+        $artifact = $this->anArtifactWithoutEndDate($start_date);
 
         $this->expectException(\Tracker_FormElement_Chart_Field_Exception::class);
-        $this->timeframe->buildDatePeriodWithoutWeekendForArtifactChartRendering(
-            $this->artifact,
+        $this->timeframe->buildDatePeriodWithoutWeekendForChangesetChartRendering(
+            $artifact->getLastChangeset(),
             $this->user,
             new NullLogger()
         );
@@ -391,11 +376,10 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
         $this->end_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
 
-        $this->mockDateFieldWithValue($this->start_date_field, $start_date);
-        $this->mockDateFieldWithValue($this->end_date_field, $end_date);
+        $artifact = $this->anArtifact($start_date, $end_date);
 
-        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifactChartRendering(
-            $this->artifact,
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForChangesetChartRendering(
+            $artifact->getLastChangeset(),
             $this->user,
             new NullLogger()
         );
@@ -416,17 +400,63 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
         return $mock;
     }
 
-    private function mockDateFieldWithValue(MockObject $date_field, ?string $string_date): void
+    private function anArtifact(string $start_date, string $end_date): Artifact
     {
-        $date                 = $string_date !== null ? strtotime($string_date) : null;
-        $date_changeset_value = self::getMockBuilder(\Tracker_Artifact_ChangesetValue_Date::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $changeset->setFieldValue(
+            $this->start_date_field,
+            ChangesetValueDateTestBuilder::aValue(1, $changeset, $this->start_date_field)
+                ->withTimestamp(strtotime($start_date))
+                ->build()
+        );
+        $changeset->setFieldValue(
+            $this->end_date_field,
+            ChangesetValueDateTestBuilder::aValue(2, $changeset, $this->end_date_field)
+                ->withTimestamp(strtotime($end_date))
+                ->build()
+        );
 
-        $date_changeset_value->expects(self::once())->method('getTimestamp')->will(self::returnValue($date));
+        return ArtifactTestBuilder::anArtifact('4')
+            ->withTitle('title')
+            ->inTracker($this->getTracker())
+            ->withChangesets($changeset)
+            ->userCanView(true)
+            ->withParent(null)
+            ->isOpen(true)
+            ->build();
+    }
 
-        $date_field->expects(self::once())->method('getLastChangesetValue')
-            ->with($this->artifact)
-            ->will(self::returnValue($date_changeset_value));
+    private function anArtifactWithoutEndDate(string $start_date): Artifact
+    {
+        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $changeset->setFieldValue(
+            $this->start_date_field,
+            ChangesetValueDateTestBuilder::aValue(1, $changeset, $this->start_date_field)
+                ->withTimestamp(strtotime($start_date))
+                ->build()
+        );
+        $changeset->setFieldValue($this->end_date_field, null);
+
+        return ArtifactTestBuilder::anArtifact('4')
+            ->withTitle('title')
+            ->inTracker($this->getTracker())
+            ->withChangesets($changeset)
+            ->userCanView(true)
+            ->withParent(null)
+            ->isOpen(true)
+            ->build();
+    }
+
+    private function getTracker(): Tracker&MockObject
+    {
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getId')->willReturn(1);
+        $tracker->method('isActive')->willReturn(true);
+        $tracker->method('userCanView')->willReturn(true);
+        $tracker->method('getTitleField')->willReturn($this->createMock(\Tracker_FormElement_Field_String::class));
+        $tracker->method('getColor')->willReturn(TrackerColor::fromName('acid-green'));
+        $tracker->method('getItemName')->willReturn('task');
+
+        return $tracker;
     }
 }

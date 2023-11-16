@@ -26,7 +26,8 @@ use Tracker_FormElement_Field_Date;
 
 final class TrackerFormElementDateFieldBuilder
 {
-    private string $name = "date";
+    private string $name         = "date";
+    private array $user_can_read = [];
 
     private function __construct(private readonly int $id)
     {
@@ -43,14 +44,21 @@ final class TrackerFormElementDateFieldBuilder
         return $this;
     }
 
+    public function withUserCanRead(\PFUser $user): self
+    {
+        $this->user_can_read[] = $user;
+
+        return $this;
+    }
+
     public function build(): Tracker_FormElement_Field_Date
     {
-        return new Tracker_FormElement_Field_Date(
+        $tracker_element = new Tracker_FormElement_Field_Date(
             $this->id,
             10,
             15,
             $this->name,
-            "",
+            $this->name,
             "",
             true,
             "",
@@ -59,5 +67,11 @@ final class TrackerFormElementDateFieldBuilder
             10,
             null
         );
+
+        foreach ($this->user_can_read as $item) {
+            $tracker_element->setUserCanRead($item, true);
+        }
+
+        return $tracker_element;
     }
 }

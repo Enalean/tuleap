@@ -22,21 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
-use Tuleap\Tracker\Artifact\Artifact;
-
-class TimeframeArtifactFieldsValueRetriever
+class TimeframeChangesetFieldsValueRetriever
 {
     /**
      * @throws TimeframeFieldNotFoundException
      * @throws TimeframeFieldNoValueException
      */
-    public static function getTimestamp(\Tracker_FormElement_Field_Date $date_field, \PFUser $user, Artifact $artifact): int
+    public static function getTimestamp(\Tracker_FormElement_Field_Date $date_field, \PFUser $user, \Tracker_Artifact_Changeset $changeset): int
     {
         if (! $date_field->userCanRead($user)) {
             throw new TimeframeFieldNotFoundException();
         }
 
-        $value = $date_field->getLastChangesetValue($artifact);
+        $value = $changeset->getValue($date_field);
         if ($value === null) {
             throw new TimeframeFieldNoValueException();
         }
@@ -56,13 +54,13 @@ class TimeframeArtifactFieldsValueRetriever
      * @throws TimeframeFieldNotFoundException
      * @throws TimeframeFieldNoValueException
      */
-    public static function getDurationFieldValue(\Tracker_FormElement_Field_Numeric $duration_field, \PFUser $user, Artifact $artifact): ?float
+    public static function getDurationFieldValue(\Tracker_FormElement_Field_Numeric $duration_field, \PFUser $user, \Tracker_Artifact_Changeset $changeset): ?float
     {
         if (! $duration_field->userCanRead($user)) {
             throw new TimeframeFieldNotFoundException();
         }
 
-        $last_changeset_value = $duration_field->getLastChangesetValue($artifact);
+        $last_changeset_value = $changeset->getValue($duration_field);
         if ($last_changeset_value === null) {
             throw new TimeframeFieldNoValueException();
         }

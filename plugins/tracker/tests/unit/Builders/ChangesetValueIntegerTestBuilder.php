@@ -22,40 +22,40 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders;
 
-final class TrackerFormElementIntFieldBuilder
+use Tracker_Artifact_Changeset;
+use Tracker_FormElement_Field;
+
+final class ChangesetValueIntegerTestBuilder
 {
-    private string $name = 'initial_effort';
+    private int $value = 0;
 
-    private function __construct(private readonly int $id)
-    {
+    private function __construct(
+        private readonly int $id,
+        private readonly Tracker_Artifact_Changeset $changeset,
+        private readonly Tracker_FormElement_Field $field,
+    ) {
     }
 
-    public static function anIntField(int $id): self
+    public static function aValue(int $id, Tracker_Artifact_Changeset $changeset, Tracker_FormElement_Field $field): self
     {
-        return new self($id);
+        return new self($id, $changeset, $field);
     }
 
-    public function withName(string $name): self
+    public function withValue(int $value): self
     {
-        $this->name = $name;
+        $this->value = $value;
+
         return $this;
     }
 
-    public function build(): \Tracker_FormElement_Field_Integer
+    public function build(): \Tracker_Artifact_ChangesetValue_Integer
     {
-        return new \Tracker_FormElement_Field_Integer(
+        return new \Tracker_Artifact_ChangesetValue_Integer(
             $this->id,
-            10,
-            15,
-            $this->name,
-            $this->name,
-            '',
+            $this->changeset,
+            $this->field,
             true,
-            'P',
-            false,
-            '',
-            10,
-            null
+            $this->value
         );
     }
 }

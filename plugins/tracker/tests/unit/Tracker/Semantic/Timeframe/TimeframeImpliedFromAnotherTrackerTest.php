@@ -176,13 +176,17 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
         $user     = $this->createMock(\PFUser::class);
         $artifact = $this->getMockedArtifact(73);
 
+        $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
+        $artifact->method('getLastChangeset')->willReturn($changeset);
+        $changeset->method('getArtifact')->willReturn($artifact);
+
         $this->links_retriever->expects(self::once())
             ->method('retrieveReverseLinksFromTracker')
             ->with($artifact, $user, $this->implied_from_tracker)
             ->will(self::returnValue([]));
 
-        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifact(
-            $artifact,
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForChangeset(
+            $artifact->getLastChangeset(),
             $user,
             $this->logger
         );
@@ -208,8 +212,12 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
                 $this->getMockedArtifact(60),
             ]));
 
-        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifact(
-            $artifact,
+        $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
+        $artifact->method('getLastChangeset')->willReturn($changeset);
+        $changeset->method('getArtifact')->willReturn($artifact);
+
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForChangeset(
+            $artifact->getLastChangeset(),
             $user,
             $this->logger
         );
@@ -229,9 +237,17 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
         $artifact         = $this->getMockedArtifact(73);
         $linking_artifact = $this->getMockedArtifact(59);
 
+        $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
+        $artifact->method('getLastChangeset')->willReturn($changeset);
+        $changeset->method('getArtifact')->willReturn($artifact);
+
+        $changeset2 = $this->createMock(\Tracker_Artifact_Changeset::class);
+        $linking_artifact->method('getLastChangeset')->willReturn($changeset2);
+        $changeset2->method('getArtifact')->willReturn($linking_artifact);
+
         $this->timeframe_calculator->expects(self::once())
-            ->method('buildDatePeriodWithoutWeekendForArtifact')
-            ->with($linking_artifact, $user, $this->logger)
+            ->method('buildDatePeriodWithoutWeekendForChangeset')
+            ->with($linking_artifact->getLastChangeset(), $user, $this->logger)
             ->willReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1622557210, 10));
 
         $this->links_retriever->expects(self::once())
@@ -241,8 +257,8 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
                 $linking_artifact,
             ]));
 
-        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifact(
-            $artifact,
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForChangeset(
+            $artifact->getLastChangeset(),
             $user,
             $this->logger
         );
@@ -261,8 +277,12 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
             ->with($artifact, $user, $this->implied_from_tracker)
             ->will(self::returnValue([]));
 
-        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifactForREST(
-            $artifact,
+        $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
+        $artifact->method('getLastChangeset')->willReturn($changeset);
+        $changeset->method('getArtifact')->willReturn($artifact);
+
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForChangesetForREST(
+            $artifact->getLastChangeset(),
             $user,
             $this->logger
         );
@@ -288,8 +308,12 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
                 $this->getMockedArtifact(60),
             ]));
 
-        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifactForREST(
-            $artifact,
+        $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
+        $artifact->method('getLastChangeset')->willReturn($changeset);
+        $changeset->method('getArtifact')->willReturn($artifact);
+
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForChangesetForREST(
+            $artifact->getLastChangeset(),
             $user,
             $this->logger
         );
@@ -309,9 +333,17 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
         $artifact         = $this->getMockedArtifact(73);
         $linking_artifact = $this->getMockedArtifact(59);
 
+        $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
+        $artifact->method('getLastChangeset')->willReturn($changeset);
+        $changeset->method('getArtifact')->willReturn($artifact);
+
+        $changeset2 = $this->createMock(\Tracker_Artifact_Changeset::class);
+        $linking_artifact->method('getLastChangeset')->willReturn($changeset2);
+        $changeset2->method('getArtifact')->willReturn($linking_artifact);
+
         $this->timeframe_calculator->expects(self::once())
-            ->method('buildDatePeriodWithoutWeekendForArtifactForREST')
-            ->with($linking_artifact, $user, $this->logger)
+            ->method('buildDatePeriodWithoutWeekendForChangesetForREST')
+            ->with($linking_artifact->getLastChangeset(), $user, $this->logger)
             ->willReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1622557210, 10));
 
         $this->links_retriever->expects(self::once())
@@ -321,8 +353,8 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
                 $linking_artifact,
             ]));
 
-        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifactForREST(
-            $artifact,
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForChangesetForREST(
+            $artifact->getLastChangeset(),
             $user,
             $this->logger
         );
@@ -341,10 +373,14 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
             ->with($artifact, $user, $this->implied_from_tracker)
             ->will(self::returnValue([]));
 
+        $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
+        $artifact->method('getLastChangeset')->willReturn($changeset);
+        $changeset->method('getArtifact')->willReturn($artifact);
+
         $this->expectException(\Tracker_FormElement_Chart_Field_Exception::class);
 
-        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifactChartRendering(
-            $artifact,
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForChangesetChartRendering(
+            $artifact->getLastChangeset(),
             $user,
             $this->logger
         );
@@ -366,11 +402,15 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
                 $this->getMockedArtifact(60),
             ]));
 
+        $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
+        $artifact->method('getLastChangeset')->willReturn($changeset);
+        $changeset->method('getArtifact')->willReturn($artifact);
+
         $this->expectException(\Tracker_FormElement_Chart_Field_Exception::class);
         $this->expectExceptionMessage('Unable to retrieve the time period: Too many artifacts from tracker Releases are linking artifact #73. There should only be one.');
 
-        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifactChartRendering(
-            $artifact,
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForChangesetChartRendering(
+            $artifact->getLastChangeset(),
             $user,
             $this->logger
         );
@@ -386,9 +426,17 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
         $artifact         = $this->getMockedArtifact(73);
         $linking_artifact = $this->getMockedArtifact(59);
 
+        $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
+        $artifact->method('getLastChangeset')->willReturn($changeset);
+        $changeset->method('getArtifact')->willReturn($artifact);
+
+        $changeset2 = $this->createMock(\Tracker_Artifact_Changeset::class);
+        $linking_artifact->method('getLastChangeset')->willReturn($changeset2);
+        $changeset2->method('getArtifact')->willReturn($linking_artifact);
+
         $this->timeframe_calculator->expects(self::once())
-            ->method('buildDatePeriodWithoutWeekendForArtifactChartRendering')
-            ->with($linking_artifact, $user, $this->logger)
+            ->method('buildDatePeriodWithoutWeekendForChangesetChartRendering')
+            ->with($linking_artifact->getLastChangeset(), $user, $this->logger)
             ->willReturn(DatePeriodWithoutWeekEnd::buildFromDuration(1622557210, 10));
 
         $this->links_retriever->expects(self::once())
@@ -398,8 +446,8 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
                 $linking_artifact,
             ]));
 
-        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForArtifactChartRendering(
-            $artifact,
+        $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForChangesetChartRendering(
+            $artifact->getLastChangeset(),
             $user,
             $this->logger
         );

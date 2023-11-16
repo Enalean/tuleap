@@ -335,7 +335,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     {
         $calculator = $this->getTimeframeCalculator();
 
-        return $calculator->buildDatePeriodWithoutWeekendForArtifactForREST($artifact, $user, $this->getLogger());
+        return $calculator->buildDatePeriodWithoutWeekendForChangesetForREST($artifact->getLastChangeset(), $user, $this->getLogger());
     }
 
     protected function getLogger(): \Psr\Log\LoggerInterface
