@@ -55,7 +55,7 @@ final class InlineCommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->thread_color_updater    = ThreadColorUpdaterStub::withCallCount();
     }
 
-    private function create(): InsertedInlineComment
+    private function create(): InlineComment
     {
         $pull_request = PullRequestTestBuilder::aPullRequestInReview()->build();
         $new_comment  = NewInlineCommentTestBuilder::aTextComment('beheadlined craver')
@@ -83,8 +83,8 @@ final class InlineCommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $inline_comment = $this->create();
-        self::assertSame(self::INSERTED_ID, $inline_comment->id);
-        self::assertSame(ThreadColors::TLP_COLORS[0], $inline_comment->color);
+        self::assertSame(self::INSERTED_ID, $inline_comment->getId());
+        self::assertSame(ThreadColors::TLP_COLORS[0], $inline_comment->getColor());
         self::assertSame(1, $this->reference_manager->getCallCount());
         self::assertSame(1, $this->thread_color_updater->getCallCount());
     }

@@ -110,7 +110,7 @@ use Tuleap\PullRequest\REST\v1\Comment\ParentIdValidatorForInlineComment;
 use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorAssigner;
 use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorRetriever;
 use Tuleap\PullRequest\REST\v1\Info\PullRequestInfoUpdater;
-use Tuleap\PullRequest\REST\v1\InlineComment\InlineCommentRepresentationBuilder;
+use Tuleap\PullRequest\REST\v1\InlineComment\InlineCommentRepresentationsBuilder;
 use Tuleap\PullRequest\REST\v1\InlineComment\POSTHandler;
 use Tuleap\PullRequest\REST\v1\Permissions\PullRequestIsMergeableChecker;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewerRepresentationInformationExtractor;
@@ -615,7 +615,7 @@ class PullRequestsResource extends AuthenticatedResource
                 new EnhancedCodeBlockExtension(new CodeBlockFeatures())
             );
 
-            $inline_comment_builder = new InlineCommentRepresentationBuilder(
+            $inline_comment_builder = new InlineCommentRepresentationsBuilder(
                 new \Tuleap\PullRequest\InlineComment\Dao(),
                 $this->user_manager,
                 $purifier,

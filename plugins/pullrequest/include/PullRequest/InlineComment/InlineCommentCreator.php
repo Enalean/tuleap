@@ -39,11 +39,11 @@ final class InlineCommentCreator
     ) {
     }
 
-    public function insert(NewInlineComment $new_comment): InsertedInlineComment
+    public function insert(NewInlineComment $new_comment): InlineComment
     {
         $pull_request_id = $new_comment->pull_request->getId();
 
-        $inserted = $this->comment_saver->insert($new_comment);
+        $inline_comment_id = $this->comment_saver->insert($new_comment);
 
         $color = $this->color_retriever->retrieveColor($pull_request_id, $new_comment->parent_id);
         $this->color_assigner->assignColor($new_comment->parent_id, $color);
@@ -57,8 +57,8 @@ final class InlineCommentCreator
             \pullrequestPlugin::PULLREQUEST_REFERENCE_KEYWORD
         );
 
-        $this->event_dispatcher->dispatch(PullRequestNewInlineCommentEvent::fromInlineCommentID($inserted));
+        $this->event_dispatcher->dispatch(PullRequestNewInlineCommentEvent::fromInlineCommentID($inline_comment_id));
 
-        return InsertedInlineComment::build($inserted, $color);
+        return InlineComment::fromNewInlineComment($new_comment, $inline_comment_id, $color);
     }
 }

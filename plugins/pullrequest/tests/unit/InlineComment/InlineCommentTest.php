@@ -23,8 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\Tests\InlineComment;
 
 use Tuleap\PullRequest\InlineComment\InlineComment;
+use Tuleap\PullRequest\InlineComment\NewInlineComment;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
+use Tuleap\PullRequest\REST\v1\Comment\ThreadColors;
 use Tuleap\PullRequest\Tests\Builders\InlineCommentTestBuilder;
+use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class InlineCommentTest extends TestCase
@@ -40,7 +44,7 @@ final class InlineCommentTest extends TestCase
         $content           = 'Seshat asphyxiation';
         $parent_id         = 426;
         $position          = 'right';
-        $color             = 'army-green';
+        $color             = ThreadColors::TLP_COLORS[1];
         $format            = TimelineComment::FORMAT_MARKDOWN;
         $last_edition_date = new \DateTimeImmutable('@1439105675');
 
@@ -78,20 +82,67 @@ final class InlineCommentTest extends TestCase
     public function testItBuildsFromDatabaseRowWithoutLastEditionDate(): void
     {
         $comment = InlineComment::buildFromRow([
-            'id' => 40,
-            'pull_request_id' => 53,
-            'user_id' => 126,
-            'post_date' => 1885725284,
-            'file_path' => 'path/to/file.php',
-            'unidiff_offset' => 3,
-            'content' => 'sphaerite',
-            'is_outdated' => 0,
-            'parent_id' => 0,
-            'position' => 'left',
-            'color' => 'inca-silver',
-            'format' => TimelineComment::FORMAT_MARKDOWN,
+            'id'                => 40,
+            'pull_request_id'   => 53,
+            'user_id'           => 126,
+            'post_date'         => 1885725284,
+            'file_path'         => 'path/to/file.php',
+            'unidiff_offset'    => 3,
+            'content'           => 'sphaerite',
+            'is_outdated'       => 0,
+            'parent_id'         => 0,
+            'position'          => 'left',
+            'color'             => 'inca-silver',
+            'format'            => TimelineComment::FORMAT_MARKDOWN,
             'last_edition_date' => null,
         ]);
+        self::assertTrue($comment->getLastEditionDate()->isNothing());
+    }
+
+    public function testItBuildsFromNewInlineComment(): void
+    {
+        $pull_request_id = 78;
+        $author_id       = 144;
+        $post_timestamp  = 1700000000;
+        $file_path       = 'putatively/reconstrue/unapproximate.php';
+        $unidiff_offset  = 71;
+        $position        = 'left';
+        $content         = 'expansile reask';
+        $format          = TimelineComment::FORMAT_TEXT;
+        $parent_id       = 470;
+        $id              = 549;
+        $color           = ThreadColors::TLP_COLORS[2];
+
+        $pull_request       = PullRequestTestBuilder::aPullRequestInReview()->withId($pull_request_id)->build();
+        $author             = UserTestBuilder::buildWithId($author_id);
+        $post_date          = new \DateTimeImmutable('@' . $post_timestamp);
+        $new_inline_comment = new NewInlineComment(
+            $pull_request,
+            192,
+            $file_path,
+            $unidiff_offset,
+            $content,
+            $format,
+            $position,
+            $parent_id,
+            $author,
+            $post_date
+        );
+
+        $comment = InlineComment::fromNewInlineComment($new_inline_comment, $id, $color);
+
+        self::assertSame($id, $comment->getId());
+        self::assertSame($pull_request_id, $comment->getPullRequestId());
+        self::assertSame($author_id, $comment->getUserId());
+        self::assertSame($post_timestamp, $comment->getPostDate());
+        self::assertSame($file_path, $comment->getFilePath());
+        self::assertSame($unidiff_offset, $comment->getUnidiffOffset());
+        self::assertSame($content, $comment->getContent());
+        self::assertFalse($comment->isOutdated());
+        self::assertSame($parent_id, $comment->getParentId());
+        self::assertSame($position, $comment->getPosition());
+        self::assertSame($color, $comment->getColor());
+        self::assertSame($format, $comment->getFormat());
         self::assertTrue($comment->getLastEditionDate()->isNothing());
     }
 

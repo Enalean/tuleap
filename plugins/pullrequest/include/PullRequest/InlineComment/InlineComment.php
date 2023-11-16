@@ -67,7 +67,7 @@ final class InlineComment implements TimelineEvent, TimelineComment
 
     public static function buildFromRow($row): InlineComment
     {
-        return new InlineComment(
+        return new self(
             (int) $row['id'],
             (int) $row['pull_request_id'],
             (int) $row['user_id'],
@@ -81,6 +81,25 @@ final class InlineComment implements TimelineEvent, TimelineComment
             $row['color'],
             $row['format'],
             Option::fromNullable($row['last_edition_date'])
+        );
+    }
+
+    public static function fromNewInlineComment(NewInlineComment $comment, int $id, string $color): self
+    {
+        return new self(
+            $id,
+            $comment->pull_request->getId(),
+            (int) $comment->author->getId(),
+            $comment->post_date->getTimestamp(),
+            $comment->file_path,
+            $comment->unidiff_offset,
+            $comment->content,
+            false,
+            $comment->parent_id,
+            $comment->position,
+            $color,
+            $comment->format,
+            Option::nothing(\Psl\Type\int())
         );
     }
 

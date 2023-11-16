@@ -31,7 +31,7 @@ use Tuleap\PullRequest\REST\v1\PullRequestInlineCommentRepresentation;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use Tuleap\User\RetrieveUserById;
 
-final class InlineCommentRepresentationBuilder
+final class InlineCommentRepresentationsBuilder
 {
     public function __construct(
         private readonly SearchInlineCommentsOnFile $comments_searcher,
