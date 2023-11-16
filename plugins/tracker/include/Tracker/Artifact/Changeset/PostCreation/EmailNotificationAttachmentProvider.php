@@ -45,17 +45,29 @@ final class EmailNotificationAttachmentProvider implements ProvideEmailNotificat
             $logger->debug('Tracker is configured to send calendar events alongside notification');
             $title_field = Tracker_Semantic_Title::load($changeset->getTracker())->getField();
             if (! $title_field) {
-                $logger->debug('The tracker does not have title semantic, we cannot build calendar events');
+                $logger->debug('The tracker does not have title semantic, we cannot build calendar event');
                 return [];
             }
             if ($should_check_permissions && ! $title_field->userCanRead($recipient)) {
                 $logger->debug(
                     sprintf(
-                        'The user #%s (%s) cannot read the title, we cannot build calendar events',
+                        'The user #%s (%s) cannot read the title, we cannot build calendar event',
                         $recipient->getId(),
                         $recipient->getEmail(),
                     )
                 );
+                return [];
+            }
+
+            $title_field_value = $changeset->getValue($title_field);
+            if (! $title_field_value instanceof \Tracker_Artifact_ChangesetValue_Text) {
+                $logger->debug('Title has no value, we cannot build calendar event');
+                return [];
+            }
+
+            $title = trim($title_field_value->getContentAsText());
+            if (! $title) {
+                $logger->debug('Title is empty, we cannot build calendar event');
                 return [];
             }
 
