@@ -38,7 +38,7 @@
                 class="project-release-infos-badges-all-sprint-badges"
             >
                 <release-badges-all-sprints
-                    v-if="!open_sprints_details && !only_one_open_sprint_and_no_closed_sprints"
+                    v-if="should_display_all_sprints_badge"
                     v-bind:release_data="release_data"
                     v-bind:is-past-release="isPastRelease"
                     v-on:on-click-open-sprints-details="on_click_open_sprints_details()"
@@ -76,9 +76,8 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed, onMounted, ref } from "vue";
 import type { MilestoneData } from "../../../type";
 import ReleaseBadgesAllSprints from "./ReleaseBadgesAllSprints.vue";
 import ReleaseOthersBadges from "./ReleaseOthersBadges.vue";
@@ -87,63 +86,56 @@ import { getTrackerSubmilestoneLabel } from "../../../helpers/tracker-label-help
 import { openSprintsExist, closedSprintsExists } from "../../../helpers/milestones-sprints-helper";
 import ReleaseBadgesOpenSprint from "./ReleaseBadgesOpenSprint.vue";
 import { useStore } from "../../../stores/root";
-@Component({
-    components: {
-        ReleaseBadgesOpenSprint,
-        ReleaseBadgesClosedSprints,
-        ReleaseOthersBadges,
-        ReleaseBadgesAllSprints,
-    },
-})
-export default class ReleaseBadgesDisplayerIfOpenSprints extends Vue {
-    public root_store = useStore();
 
-    @Prop()
-    readonly release_data!: MilestoneData;
-    @Prop()
-    readonly isOpen!: boolean;
-    @Prop()
-    readonly isPastRelease!: boolean;
+const root_store = useStore();
 
-    open_sprints_details = false;
+const props = defineProps<{
+    release_data: MilestoneData;
+    isOpen: boolean;
+    isPastRelease: boolean;
+}>();
 
-    mounted(): void {
-        this.open_sprints_details = this.isOpen;
+const open_sprints_details = ref(false);
+
+onMounted((): void => {
+    open_sprints_details.value = props.isOpen;
+});
+
+const display_badge_all_sprint = computed((): boolean => {
+    return (
+        openSprintsExist(props.release_data) &&
+        getTrackerSubmilestoneLabel(props.release_data) !== "" &&
+        root_store.user_can_view_sub_milestones_planning
+    );
+});
+
+const closed_sprints_exist = computed((): boolean => {
+    return (
+        closedSprintsExists(props.release_data) &&
+        getTrackerSubmilestoneLabel(props.release_data) !== ""
+    );
+});
+
+const only_one_open_sprint_and_no_closed_sprints = computed((): boolean => {
+    return (
+        !closed_sprints_exist.value &&
+        props.release_data.open_sprints !== null &&
+        props.release_data.open_sprints.length === 1
+    );
+});
+const should_display_all_sprints_badge = computed((): boolean => {
+    return !open_sprints_details.value && !only_one_open_sprint_and_no_closed_sprints.value;
+});
+
+function on_click_close_sprints_details(): void {
+    if (!only_one_open_sprint_and_no_closed_sprints.value) {
+        open_sprints_details.value = false;
     }
+}
 
-    on_click_open_sprints_details(): void {
-        if (!this.only_one_open_sprint_and_no_closed_sprints) {
-            this.open_sprints_details = true;
-        }
-    }
-
-    on_click_close_sprints_details(): void {
-        if (!this.only_one_open_sprint_and_no_closed_sprints) {
-            this.open_sprints_details = false;
-        }
-    }
-
-    get display_badge_all_sprint(): boolean {
-        return (
-            openSprintsExist(this.release_data) &&
-            getTrackerSubmilestoneLabel(this.release_data) !== "" &&
-            this.root_store.user_can_view_sub_milestones_planning
-        );
-    }
-
-    get closed_sprints_exist(): boolean {
-        return (
-            closedSprintsExists(this.release_data) &&
-            getTrackerSubmilestoneLabel(this.release_data) !== ""
-        );
-    }
-
-    get only_one_open_sprint_and_no_closed_sprints(): boolean {
-        return (
-            !this.closed_sprints_exist &&
-            this.release_data.open_sprints !== null &&
-            this.release_data.open_sprints.length === 1
-        );
+function on_click_open_sprints_details(): void {
+    if (!only_one_open_sprint_and_no_closed_sprints.value) {
+        open_sprints_details.value = true;
     }
 }
 </script>

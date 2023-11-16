@@ -27,20 +27,13 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
 import ReleaseOthersBadges from "./ReleaseOthersBadges.vue";
 import ReleaseBadgesClosedSprints from "./ReleaseBadgesClosedSprints.vue";
 import type { MilestoneData } from "../../../type";
 import { useStore } from "../../../stores/root";
-@Component({
-    components: { ReleaseBadgesClosedSprints, ReleaseOthersBadges },
-})
-export default class ReleaseBadgesDisplayerIfOnlyClosedSprints extends Vue {
-    public root_store = useStore();
 
-    @Prop()
-    readonly release_data!: MilestoneData;
-}
+const root_store = useStore();
+
+defineProps<{ release_data: MilestoneData }>();
 </script>

@@ -23,7 +23,7 @@
             <i class="project-release-open-sprint-badge-icon-toggle fa" />
             <div
                 class="project-release-info-badge project-release-info-badge-open-sprint tlp-badge-primary"
-                v-bind:class="{ 'tlp-badge-outline': isPastRelease || not_in_progress() }"
+                v-bind:class="{ 'tlp-badge-outline': isPastRelease || not_in_progress }"
                 data-test="sprint-label"
             >
                 <i class="fa fa-map-signs tlp-badge-icon" />
@@ -37,34 +37,26 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
 import type { MilestoneData } from "../../../type";
 import ReleaseButtonsDescription from "../ReleaseDescription/ReleaseButtonsDescription.vue";
-@Component({
-    components: { ReleaseButtonsDescription },
-})
-export default class ReleaseBadgesOpenSprint extends Vue {
-    @Prop()
-    readonly sprint_data!: MilestoneData;
-    @Prop()
-    readonly isPastRelease!: boolean;
 
-    not_in_progress(): boolean {
-        if (this.sprint_data.start_date === null) {
-            return true;
-        }
+const props = defineProps<{ sprint_data: MilestoneData; isPastRelease: boolean }>();
 
-        if (this.sprint_data.end_date === null) {
-            return true;
-        }
-
-        const start_date = new Date(this.sprint_data.start_date);
-        const end_date = new Date(this.sprint_data.end_date);
-        const now = new Date();
-
-        return !(start_date.getTime() <= now.getTime() && now.getTime() <= end_date.getTime());
+const not_in_progress = computed((): boolean => {
+    if (props.sprint_data.start_date === null) {
+        return true;
     }
-}
+
+    if (props.sprint_data.end_date === null) {
+        return true;
+    }
+
+    const start_date = new Date(props.sprint_data.start_date);
+    const end_date = new Date(props.sprint_data.end_date);
+    const now = new Date();
+
+    return !(start_date.getTime() <= now.getTime() && now.getTime() <= end_date.getTime());
+});
 </script>

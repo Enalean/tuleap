@@ -28,51 +28,49 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
 import type { MilestoneData } from "../../../type";
 import { getTrackerSubmilestoneLabel } from "../../../helpers/tracker-label-helper";
 import { useStore } from "../../../stores/root";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-@Component
-export default class ReleaseBadgesClosedSprints extends Vue {
-    public root_store = useStore();
+const root_store = useStore();
 
-    @Prop()
-    readonly release_data!: MilestoneData;
+const props = defineProps<{
+    release_data: MilestoneData;
+}>();
 
-    get tracker_submilestone_label(): string {
-        return getTrackerSubmilestoneLabel(this.release_data);
+const { $ngettext, interpolate } = useGettext();
+
+const tracker_submilestone_label = computed((): string => {
+    return getTrackerSubmilestoneLabel(props.release_data);
+});
+const display_closed_badge = computed((): boolean => {
+    if (
+        typeof props.release_data.total_sprint !== "number" ||
+        tracker_submilestone_label.value === ""
+    ) {
+        return false;
     }
 
-    get display_closed_badge(): boolean {
-        if (
-            typeof this.release_data.total_sprint !== "number" ||
-            this.tracker_submilestone_label === ""
-        ) {
-            return false;
-        }
+    return (
+        props.release_data.total_sprint > 0 &&
+        typeof props.release_data.total_closed_sprint === "number" &&
+        root_store.user_can_view_sub_milestones_planning
+    );
+});
+const closed_sprints_label = computed((): string => {
+    const closed_sprints = props.release_data.total_closed_sprint ?? 0;
+    const translated = $ngettext(
+        "%{total_closed_sprint} closed %{tracker_label}",
+        "%{total_closed_sprint} closed %{tracker_label}",
+        closed_sprints,
+    );
 
-        return (
-            this.release_data.total_sprint > 0 &&
-            typeof this.release_data.total_closed_sprint === "number" &&
-            this.root_store.user_can_view_sub_milestones_planning
-        );
-    }
-
-    get closed_sprints_label(): string {
-        const closed_sprints = this.release_data.total_closed_sprint ?? 0;
-        const translated = this.$ngettext(
-            "%{total_closed_sprint} closed %{tracker_label}",
-            "%{total_closed_sprint} closed %{tracker_label}",
-            closed_sprints,
-        );
-
-        return this.$gettextInterpolate(translated, {
-            total_closed_sprint: this.release_data.total_closed_sprint,
-            tracker_label: this.tracker_submilestone_label,
-        });
-    }
-}
+    return interpolate(translated, {
+        total_closed_sprint: props.release_data.total_closed_sprint,
+        tracker_label: tracker_submilestone_label.value,
+    });
+});
 </script>

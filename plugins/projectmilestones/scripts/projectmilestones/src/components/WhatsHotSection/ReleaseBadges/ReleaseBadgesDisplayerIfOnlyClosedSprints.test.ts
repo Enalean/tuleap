@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ReleaseBadgesDisplayerIfOnlyClosedSprints from "./ReleaseBadgesDisplayerIfOnlyClosedSprints.vue";
 import type { MilestoneData } from "../../../type";
@@ -27,35 +27,28 @@ import ReleaseBadgesClosedSprints from "./ReleaseBadgesClosedSprints.vue";
 import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
 
-let release_data: MilestoneData;
-const component_options: ShallowMountOptions<ReleaseBadgesDisplayerIfOnlyClosedSprints> = {};
-
-const project_id = 102;
-
 describe("ReleaseBadgesDisplayerIfOnlyClosedSprints", () => {
     async function getPersonalWidgetInstance(
         user_can_view_sub_milestones_planning: boolean,
-    ): Promise<Wrapper<ReleaseBadgesDisplayerIfOnlyClosedSprints>> {
+    ): Promise<Wrapper<Vue, Element>> {
         const useStore = defineStore("root", {
             state: () => ({
-                project_id: project_id,
                 user_can_view_sub_milestones_planning,
             }),
         });
         const pinia = createTestingPinia();
         useStore(pinia);
-        component_options.localVue = await createReleaseWidgetLocalVue();
 
-        return shallowMount(ReleaseBadgesDisplayerIfOnlyClosedSprints, component_options);
+        return shallowMount(ReleaseBadgesDisplayerIfOnlyClosedSprints, {
+            localVue: await createReleaseWidgetLocalVue(),
+            propsData: {
+                release_data: {
+                    id: 2,
+                } as MilestoneData,
+            },
+            pinia,
+        });
     }
-
-    beforeEach(() => {
-        release_data = {
-            id: 2,
-        } as MilestoneData;
-
-        component_options.propsData = { release_data };
-    });
 
     describe("Display closed sprints and others badges", () => {
         it("When the component is rendered, Then ReleaseBadgesClosedSprints and ReleaseOthersBadges are rendered", async () => {
