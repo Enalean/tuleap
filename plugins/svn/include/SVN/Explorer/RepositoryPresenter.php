@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\SVN\Explorer;
 
-use DateHelper;
+use Tuleap\Date\DateHelper;
 use Tuleap\SVN\Repository\CoreRepository;
 use Tuleap\SVN\Repository\RepositoryWithLastCommitDate;
 

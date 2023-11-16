@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy;
 
+use Tuleap\Date\DateHelper;
 use Tuleap\Language\LocaleSwitcher;
 use Tuleap\Mail\TemplateWithoutFooter;
 use Tuleap\Project\ProjectByIDFactory;
@@ -134,7 +135,7 @@ final class InvitationCleaner
                             return [
                                 'to'         => $invitation->to_email,
                                 'to_project' => $to_project,
-                                'created_on' => \DateHelper::formatForLanguage($GLOBALS['Language'], $invitation->created_on, true),
+                                'created_on' => DateHelper::formatForLanguage($GLOBALS['Language'], $invitation->created_on, true),
                             ];
                         },
                         $obsolete_invitations,

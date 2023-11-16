@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Tooltip;
 
-use DateHelper;
+use Tuleap\Date\DateHelper;
 
 /**
  * @psalm-immutable

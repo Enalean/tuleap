@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\User\Account;
 
 use PFUser;
+use Tuleap\Date\DateHelper;
 use Tuleap\Event\Dispatchable;
 
 class AccountInformationCollection implements Dispatchable
@@ -52,7 +53,7 @@ class AccountInformationCollection implements Dispatchable
         $this->extra_information = [
             new AccountInformationPresenter(
                 _('Member since'),
-                \DateHelper::formatForLanguage($user->getLanguage(), (int) $user->getAddDate(), true),
+                DateHelper::formatForLanguage($user->getLanguage(), (int) $user->getAddDate(), true),
             ),
         ];
     }

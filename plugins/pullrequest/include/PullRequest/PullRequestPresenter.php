@@ -20,7 +20,8 @@
 
 namespace Tuleap\PullRequest;
 
-use Tuleap\date\DefaultRelativeDatesDisplayPreferenceRetriever;
+use Tuleap\Date\DateHelper;
+use Tuleap\Date\DefaultRelativeDatesDisplayPreferenceRetriever;
 use Tuleap\PullRequest\MergeSetting\MergeSetting;
 
 final class PullRequestPresenter
@@ -44,7 +45,7 @@ final class PullRequestPresenter
         $this->user_id                            = (int) $user->getId();
         $this->user_avatar_url                    = $user->getAvatarUrl();
         $this->language                           = $user->getShortLocale();
-        $this->relative_date_display              = $user->getPreference(\DateHelper::PREFERENCE_NAME) ?: DefaultRelativeDatesDisplayPreferenceRetriever::retrieveDefaultValue();
+        $this->relative_date_display              = $user->getPreference(DateHelper::PREFERENCE_NAME) ?: DefaultRelativeDatesDisplayPreferenceRetriever::retrieveDefaultValue();
         $this->is_comment_edition_enabled         = FeatureFlagEditComments::isCommentEditionEnabled();
     }
 

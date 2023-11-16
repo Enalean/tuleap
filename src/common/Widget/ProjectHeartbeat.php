@@ -23,7 +23,7 @@ namespace Tuleap\Widget;
 use ForgeConfig;
 use HTTPRequest;
 use TemplateRendererFactory;
-use Tuleap\date\RelativeDatesAssetsRetriever;
+use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Widget;
 
 class ProjectHeartbeat extends Widget

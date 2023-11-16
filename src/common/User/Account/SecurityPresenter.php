@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\User\Account;
 
 use CSRFSynchronizerToken;
+use Tuleap\Date\DateHelper;
 use Tuleap\User\Password\PasswordValidatorPresenter;
 
 final class SecurityPresenter
@@ -100,19 +101,19 @@ final class SecurityPresenter
         }
         $this->json_password_strategy_keys = json_encode($password_strategy_keys, JSON_THROW_ON_ERROR);
         if ($user_access['last_auth_success']) {
-            $this->last_successful_login = \DateHelper::formatForLanguage(
+            $this->last_successful_login = DateHelper::formatForLanguage(
                 $user->getLanguage(),
                 (int) $user_access['last_auth_success']
             );
         }
         if ($user_access['last_auth_failure']) {
-            $this->last_login_failure = \DateHelper::formatForLanguage(
+            $this->last_login_failure = DateHelper::formatForLanguage(
                 $user->getLanguage(),
                 (int) $user_access['last_auth_failure']
             );
         }
         if ($user_access['prev_auth_success']) {
-            $this->previous_successful_login = \DateHelper::formatForLanguage(
+            $this->previous_successful_login = DateHelper::formatForLanguage(
                 $user->getLanguage(),
                 (int) $user_access['prev_auth_success']
             );

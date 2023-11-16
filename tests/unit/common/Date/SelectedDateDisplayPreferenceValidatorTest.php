@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\date;
+namespace Tuleap\Date;
 
 
 class SelectedDateDisplayPreferenceValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -52,19 +52,19 @@ class SelectedDateDisplayPreferenceValidatorTest extends \Tuleap\Test\PHPUnit\Te
     {
         return [
             'PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP is valid' => [
-                \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP,
+                DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP,
                 true,
             ],
             'PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP is valid' => [
-                \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP,
+                DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP,
                 true,
             ],
             'PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN is valid' => [
-                \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN,
+                DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN,
                 true,
             ],
             'PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN is valid' => [
-                \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,
+                DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,
                 true,
             ],
             'yolo is not valid' => [

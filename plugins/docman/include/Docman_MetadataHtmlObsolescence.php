@@ -20,6 +20,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Date\DateHelper;
+
 /**
  * HTML rendering for special 'obsolescence_date' metadata
  */
@@ -33,11 +35,11 @@ class Docman_MetadataHtmlObsolescence extends \Docman_MetadataHtml
             case \PLUGIN_DOCMAN_ITEM_VALIDITY_PERMANENT:
                 return \dgettext('tuleap-docman', 'Permanent');
             default:
-                return \DateHelper::formatForLanguage($GLOBALS['Language'], $v, \true);
+                return DateHelper::formatForLanguage($GLOBALS['Language'], $v, \true);
         }
     }
 
-    public function _getField()
+    public function _getField() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $labels        = [\PLUGIN_DOCMAN_ITEM_VALIDITY_PERMANENT => \dgettext('tuleap-docman', 'Permanent'), 3 => \dgettext('tuleap-docman', '3 Months from today'), 6 => \dgettext('tuleap-docman', '6 Months from today'), 12 => \dgettext('tuleap-docman', '12 Months from today'), 100 => \dgettext('tuleap-docman', 'Fixed date'), 200 => \dgettext('tuleap-docman', 'Obsolete today')];
         $selected      = $this->md->getValue();

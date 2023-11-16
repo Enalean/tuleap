@@ -20,9 +20,9 @@
 
 namespace Tuleap\User\Admin;
 
-use DateHelper;
 use Project;
 use ProjectManager;
+use Tuleap\Date\DateHelper;
 use Tuleap\Project\Admin\DescriptionFields\ProjectDescriptionFieldBuilder;
 use Tuleap\Project\ProjectAccessPresenter;
 use Tuleap\Trove\TroveCatCollectionRetriever;

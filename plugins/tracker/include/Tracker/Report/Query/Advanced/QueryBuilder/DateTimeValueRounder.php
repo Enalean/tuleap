@@ -20,7 +20,7 @@
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
 use DateTime;
-use DateHelper;
+use Tuleap\Date\DateHelper;
 use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 
 final class DateTimeValueRounder

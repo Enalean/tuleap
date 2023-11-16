@@ -27,7 +27,8 @@ use DocmanPlugin;
 use Tuleap\Config\ConfigKeyHidden;
 use Tuleap\Config\ConfigKeyInt;
 use Tuleap\Config\FeatureFlagConfigKey;
-use Tuleap\date\DefaultRelativeDatesDisplayPreferenceRetriever;
+use Tuleap\Date\DateHelper;
+use Tuleap\Date\DefaultRelativeDatesDisplayPreferenceRetriever;
 use Tuleap\Docman\FilenamePattern\FilenamePattern;
 use Tuleap\Document\Config\FileDownloadLimits;
 use Tuleap\Document\Tree\Create\NewItemAlternativeSection;
@@ -198,7 +199,7 @@ class DocumentTreePresenter
         $this->csrf_token                         = $csrf->getToken();
         $this->max_archive_size                   = $file_download_limits->getMaxArchiveSize();
         $this->warning_threshold                  = $file_download_limits->getWarningThreshold();
-        $this->relative_dates_display             = $user->getPreference(\DateHelper::PREFERENCE_NAME) ?: DefaultRelativeDatesDisplayPreferenceRetriever::retrieveDefaultValue();
+        $this->relative_dates_display             = $user->getPreference(DateHelper::PREFERENCE_NAME) ?: DefaultRelativeDatesDisplayPreferenceRetriever::retrieveDefaultValue();
 
         $this->privacy       = json_encode(ProjectPrivacyPresenter::fromProject($project), JSON_THROW_ON_ERROR);
         $this->project_flags = json_encode($project_flags, JSON_THROW_ON_ERROR);

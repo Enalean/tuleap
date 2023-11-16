@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier;
 
 use Tracker;
+use Tuleap\Date\DateHelper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImport;
 
@@ -93,7 +94,7 @@ class JiraSuccessImportNotificationPresenter
         $this->link                 = $link;
         $this->tracker_name         = $tracker->getName();
         $this->title                = $subject;
-        $this->localized_created_on = \DateHelper::formatForLanguage(
+        $this->localized_created_on = DateHelper::formatForLanguage(
             $pending_jira_import->getUser()->getLanguage(),
             $pending_jira_import->getCreatedOn()->getTimestamp()
         );

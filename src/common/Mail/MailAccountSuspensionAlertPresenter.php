@@ -25,8 +25,8 @@ namespace Tuleap\Mail;
 use BaseLanguage;
 use DateTimeImmutable;
 use MailOutlinePresenter;
-use DateHelper;
 use ForgeConfig;
+use Tuleap\Date\DateHelper;
 
 class MailAccountSuspensionAlertPresenter extends MailOutlinePresenter
 {

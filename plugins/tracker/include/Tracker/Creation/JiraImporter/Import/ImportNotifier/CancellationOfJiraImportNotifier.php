@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier;
 
+use Tuleap\Date\DateHelper;
 use Tuleap\Language\LocaleSwitcher;
 use Tuleap\ServerHostname;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImport;
@@ -61,7 +62,7 @@ class CancellationOfJiraImportNotifier
                 $subject = dgettext('tuleap-tracker', 'Cancellation of your Jira import');
 
                 $presenter = [
-                    'localized_created_on' => \DateHelper::formatForLanguage(
+                    'localized_created_on' => DateHelper::formatForLanguage(
                         $pending_jira_import->getUser()->getLanguage(),
                         $pending_jira_import->getCreatedOn()->getTimestamp()
                     ),

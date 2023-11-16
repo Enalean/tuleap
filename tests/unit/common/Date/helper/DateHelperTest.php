@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2010. All rights reserved
- * Copyright (c) Enalean, 2017-present. All rights reserved
+ * Copyright (c) Enalean 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,16 +15,15 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see http://www.gnu.org/licenses/.
- *
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\common\date\helper;
+namespace Tuleap\Date\helper;
 
-use DateHelper;
-use Tuleap\date\DefaultRelativeDatesDisplayPreferenceRetriever;
+use Tuleap\Date\DateHelper;
+use Tuleap\Date\DefaultRelativeDatesDisplayPreferenceRetriever;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -217,7 +215,7 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = UserTestBuilder::anActiveUser()
             ->withLocale('en_US')
             ->build();
-        $user->setPreference(\DateHelper::PREFERENCE_NAME, \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN);
+        $user->setPreference(DateHelper::PREFERENCE_NAME, DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN);
 
         self::assertEquals(
             '<tlp-relative-date
@@ -243,7 +241,7 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = UserTestBuilder::anActiveUser()
             ->withLocale('en_US')
             ->build();
-        $user->setPreference(\DateHelper::PREFERENCE_NAME, \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN);
+        $user->setPreference(DateHelper::PREFERENCE_NAME, DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN);
 
         self::assertEquals(
             '<tlp-relative-date
@@ -269,7 +267,7 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = UserTestBuilder::anActiveUser()
             ->withLocale('en_US')
             ->build();
-        $user->setPreference(\DateHelper::PREFERENCE_NAME, \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP);
+        $user->setPreference(DateHelper::PREFERENCE_NAME, DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP);
 
         self::assertEquals(
             '<tlp-relative-date
@@ -295,7 +293,7 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = UserTestBuilder::anActiveUser()
             ->withLocale('en_US')
             ->build();
-        $user->setPreference(\DateHelper::PREFERENCE_NAME, \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN);
+        $user->setPreference(DateHelper::PREFERENCE_NAME, DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN);
 
         self::assertEquals(
             '<tlp-relative-date
@@ -321,7 +319,7 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = UserTestBuilder::anActiveUser()
             ->withLocale('en_US')
             ->build();
-        $user->setPreference(\DateHelper::PREFERENCE_NAME, \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP);
+        $user->setPreference(DateHelper::PREFERENCE_NAME, DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP);
 
         self::assertEquals(
             '<tlp-relative-date
@@ -350,7 +348,7 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 
         \ForgeConfig::set(
             DefaultRelativeDatesDisplayPreferenceRetriever::DEFAULT_RELATIVE_DATES_DISPLAY,
-            \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN
+            DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN
         );
 
         $this->assertEquals(

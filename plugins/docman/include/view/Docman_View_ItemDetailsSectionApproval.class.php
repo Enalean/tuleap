@@ -21,6 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Date\DateHelper;
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSection

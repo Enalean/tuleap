@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Date\DateHelper;
 use Tuleap\Docman\Log\LogRetriever;
 
 /**
@@ -127,7 +128,7 @@ class Docman_Log
 
             foreach ($log as $entry) {
                 $html   .= '<tr>';
-                $html   .= '<td>' . \DateHelper::relativeDateBlockContext($entry->when->getTimestamp(), $current_user) . '</td>';
+                $html   .= '<td>' . DateHelper::relativeDateBlockContext($entry->when->getTimestamp(), $current_user) . '</td>';
                 $html   .= '<td>' . $hp->purify($uh->getDisplayNameFromUser($entry->who)) . '</td>';
                 $html   .= '<td>' . $hp->purify($entry->what) . '</td>';
                 $colspan = ($entry->old_value === null || $entry->new_value === null) ? 2 : 1;

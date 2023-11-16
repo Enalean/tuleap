@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\date;
+namespace Tuleap\Date;
 
 /**
  * @psalm-immutable

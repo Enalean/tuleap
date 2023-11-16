@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\date\RelativeDatesAssetsRetriever;
+use Tuleap\Date\DateHelper;
+use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssViteAsset;
 use Tuleap\Layout\IncludeViteAssets;

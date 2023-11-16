@@ -20,30 +20,24 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\date;
+namespace Tuleap\Date;
 
-use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\JavascriptAsset;
-
-final class RelativeDatesAssetsRetriever
+/**
+ * @psalm-immutable
+ */
+final class DefaultRelativeDatesDisplayPreference
 {
-    private const SCRIPT_NAME = 'tlp-relative-date.js';
-
-    public static function retrieveAssetsUrl(): string
+    public function __construct(private readonly string $preference, private readonly string $placement)
     {
-        return self::getCoreAssets()->getFileURL(self::SCRIPT_NAME);
     }
 
-    public static function getAsJavascriptAssets(): JavascriptAsset
+    public function getPreference(): string
     {
-        return new JavascriptAsset(
-            self::getCoreAssets(),
-            self::SCRIPT_NAME
-        );
+        return $this->preference;
     }
 
-    private static function getCoreAssets(): IncludeAssets
+    public function getPlacement(): string
     {
-        return new \Tuleap\Layout\IncludeCoreAssets();
+        return $this->placement;
     }
 }

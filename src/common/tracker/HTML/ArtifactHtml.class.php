@@ -20,6 +20,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Date\DateHelper;
+
 class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
         /**
@@ -1062,7 +1064,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
 
         echo '<H2>' . $link . ' - ' . $GLOBALS['Language']->getText('tracker_edit_comment', 'upd_followup') . ' #' . $comment_id . '</H2>';
 
-        echo '<p>' . $GLOBALS['Language']->getText('tracker_edit_comment', 'upd_followup_details', [\DateHelper::timeAgoInWords($followUp['date'], false, true), UserHelper::instance()->getLinkOnUserFromUserId($followUp['mod_by'])]) . '</p>';
+        echo '<p>' . $GLOBALS['Language']->getText('tracker_edit_comment', 'upd_followup_details', [DateHelper::timeAgoInWords($followUp['date'], false, true), UserHelper::instance()->getLinkOnUserFromUserId($followUp['mod_by'])]) . '</p>';
 
         echo '<FORM ACTION="/tracker/?group_id=' . (int) $group_id . '&atid=' . (int) $group_artifact_id . '&func=updatecomment" METHOD="post">
         <INPUT TYPE="hidden" NAME="artifact_history_id" VALUE="' . (int) $comment_id . '">

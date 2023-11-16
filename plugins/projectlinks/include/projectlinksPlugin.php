@@ -22,6 +22,7 @@
  */
 
 use FastRoute\RouteCollector;
+use Tuleap\Date\DateHelper;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;

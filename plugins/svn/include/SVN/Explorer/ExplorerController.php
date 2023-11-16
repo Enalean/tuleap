@@ -24,7 +24,7 @@ use CSRFSynchronizerToken;
 use Feedback;
 use HTTPRequest;
 use Project;
-use Tuleap\date\RelativeDatesAssetsRetriever;
+use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\SVN\Repository\Exception\CannotCreateRepositoryException;

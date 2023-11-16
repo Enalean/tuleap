@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2010. All rights reserved
- * Copyright (c) Enalean, 2017-present. All rights reserved
+ * Copyright (c) Enalean 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,15 +15,14 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see http://www.gnu.org/licenses/.
- *
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\common\date;
+namespace Tuleap\Date\helper;
 
-use DateHelper;
+use Tuleap\Date\DateHelper;
 
 final class DateHelperDistanceTest extends \Tuleap\Test\PHPUnit\TestCase
 {

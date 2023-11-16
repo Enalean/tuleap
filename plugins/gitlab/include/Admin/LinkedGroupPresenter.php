@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Admin;
 
 use Psr\Http\Message\UriInterface;
+use Tuleap\Date\DateHelper;
 use Tuleap\Gitlab\Group\GroupLink;
 
 /**
@@ -66,7 +67,7 @@ final class LinkedGroupPresenter
         $this->avatar_url                 = $group_link->avatar_url;
         $this->current_project_label      = $project->getPublicName();
 
-        $this->last_sync_time = \DateHelper::timeAgoInWords(
+        $this->last_sync_time = DateHelper::timeAgoInWords(
             $group_link->last_synchronization_date->getTimestamp(),
             true
         );

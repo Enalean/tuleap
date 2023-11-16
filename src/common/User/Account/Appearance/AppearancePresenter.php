@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\User\Account\Appearance;
 
 use CSRFSynchronizerToken;
-use Tuleap\date\RelativeDatesDisplayPreferencesSelectboxPresenter;
-use Tuleap\date\RelativeDatesDisplayPreferencesSelectboxPresenterBuilder;
+use Tuleap\Date\RelativeDatesDisplayPreferencesSelectboxPresenter;
+use Tuleap\Date\RelativeDatesDisplayPreferencesSelectboxPresenterBuilder;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 
 final class AppearancePresenter

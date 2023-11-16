@@ -20,17 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\date;
+namespace Tuleap\Date;
 
 class SelectedDateDisplayPreferenceValidator
 {
     public function validateSelectedUserPreference(string $new_relative_dates_display): bool
     {
         $allowed = [
-            \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP,
-            \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP,
-            \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN,
-            \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,
+            DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP,
+            DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP,
+            DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN,
+            DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,
         ];
 
         return in_array($new_relative_dates_display, $allowed, true);

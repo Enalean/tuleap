@@ -20,12 +20,13 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\date\Admin;
+namespace Tuleap\Date\Admin;
 
 use Feedback;
 use HTTPRequest;
-use Tuleap\date\DefaultRelativeDatesDisplayPreferenceRetriever;
-use Tuleap\date\SelectedDateDisplayPreferenceValidator;
+use Tuleap\Date\DateHelper;
+use Tuleap\Date\DefaultRelativeDatesDisplayPreferenceRetriever;
+use Tuleap\Date\SelectedDateDisplayPreferenceValidator;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -93,7 +94,7 @@ class RelativeDatesDisplaySaveController implements DispatchableWithRequest
         $layout->addFeedback(Feedback::INFO, _("Default relative dates display preference saved successfully."));
 
         if ((bool) $request->get('relative-dates-force-preference') === true) {
-            $this->preferences_dao->deletePreferenceForAllUsers(\DateHelper::PREFERENCE_NAME);
+            $this->preferences_dao->deletePreferenceForAllUsers(DateHelper::PREFERENCE_NAME);
             $layout->addFeedback(
                 Feedback::INFO,
                 _('The display preference has been forced for each user successfully.')

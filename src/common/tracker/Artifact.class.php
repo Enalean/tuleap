@@ -23,6 +23,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Date\DateHelper;
+
 /**
  *
  * Artifact.class.php - Main Artifact class
@@ -3320,7 +3322,7 @@ class Artifact
 
                 $out .= ' </span>';
                 $out .= '<span class="followup_comment_title_date">';
-                $out .= \DateHelper::timeAgoInWords(db_result($orig_date, 0, 'date'), false, true);
+                $out .= DateHelper::timeAgoInWords(db_result($orig_date, 0, 'date'), false, true);
                 $out .= '</span>';
                 if ($field_name != "comment") {
                     $out .= "  (" . $GLOBALS['Language']->getText('tracker_include_artifact', 'last_edited') . " ";
@@ -3332,7 +3334,7 @@ class Artifact
                     }
                     $out .= ' </span>';
                     $out .= '<span class="followup_comment_title_date">';
-                    $out .= \DateHelper::timeAgoInWords(db_result($result, $i, 'date'), false, true);
+                    $out .= DateHelper::timeAgoInWords(db_result($result, $i, 'date'), false, true);
                     $out .= '</span>' . ")";
                 }
                 $out .= "\n</div><!-- followup_comment_title -->\n";

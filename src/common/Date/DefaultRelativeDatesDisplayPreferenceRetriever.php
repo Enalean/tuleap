@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\date;
+namespace Tuleap\Date;
 
 class DefaultRelativeDatesDisplayPreferenceRetriever
 {
@@ -31,7 +31,7 @@ class DefaultRelativeDatesDisplayPreferenceRetriever
         $preference_defined_by_site_administrator = \ForgeConfig::get(self::DEFAULT_RELATIVE_DATES_DISPLAY);
 
         if (! $preference_defined_by_site_administrator) {
-            return \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP;
+            return DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP;
         }
 
         return (string) $preference_defined_by_site_administrator;
@@ -42,13 +42,13 @@ class DefaultRelativeDatesDisplayPreferenceRetriever
         $value = self::retrieveDefaultValue();
 
         switch ($value) {
-            case \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN:
+            case DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN:
                 return new DefaultRelativeDatesDisplayPreference('absolute', $position_from_context);
-            case \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP:
+            case DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP:
                 return new DefaultRelativeDatesDisplayPreference('absolute', 'tooltip');
-            case \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN:
+            case DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN:
                 return new DefaultRelativeDatesDisplayPreference('relative', $position_from_context);
-            case \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP:
+            case DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP:
             default:
                 return new DefaultRelativeDatesDisplayPreference('relative', 'tooltip');
         }

@@ -20,12 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\date\Admin;
+namespace Tuleap\Date\Admin;
 
 use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
-use Tuleap\date\DefaultRelativeDatesDisplayPreferenceRetriever;
-use Tuleap\date\RelativeDatesAssetsRetriever;
+use Tuleap\Date\DefaultRelativeDatesDisplayPreferenceRetriever;
+use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;

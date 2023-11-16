@@ -20,8 +20,8 @@
 namespace Tuleap\News\Admin;
 
 use CSRFSynchronizerToken;
-use DateHelper;
 use ProjectManager;
+use Tuleap\Date\DateHelper;
 use UserManager;
 
 class AdminNewsBuilder

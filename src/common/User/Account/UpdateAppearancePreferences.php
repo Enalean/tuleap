@@ -29,7 +29,8 @@ use Feedback;
 use HTTPRequest;
 use PFUser;
 use ThemeVariant;
-use Tuleap\date\SelectedDateDisplayPreferenceValidator;
+use Tuleap\Date\DateHelper;
+use Tuleap\Date\SelectedDateDisplayPreferenceValidator;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\ThemeVariantColor;
 use Tuleap\Request\DispatchableWithRequest;
@@ -151,7 +152,7 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
 
     private function setNewRelativeDatesDisplay(HTTPRequest $request, BaseLayout $layout, PFUser $user): bool
     {
-        $current_relative_dates_display = (string) $user->getPreference(\DateHelper::PREFERENCE_NAME);
+        $current_relative_dates_display = (string) $user->getPreference(DateHelper::PREFERENCE_NAME);
         $new_relative_dates_display     = (string) $request->get('relative-dates-display');
 
         if ($current_relative_dates_display === $new_relative_dates_display) {
@@ -166,7 +167,7 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
             return false;
         }
 
-        $user->setPreference(\DateHelper::PREFERENCE_NAME, $new_relative_dates_display);
+        $user->setPreference(DateHelper::PREFERENCE_NAME, $new_relative_dates_display);
 
         return true;
     }

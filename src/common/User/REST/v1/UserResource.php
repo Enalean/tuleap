@@ -24,7 +24,7 @@ use PaginatedUserCollection;
 use PFUser;
 use Rule_UserName;
 use Tuleap\Authentication\Scope\AggregateAuthenticationScopeBuilder;
-use Tuleap\date\DefaultRelativeDatesDisplayPreferenceRetriever;
+use Tuleap\Date\DefaultRelativeDatesDisplayPreferenceRetriever;
 use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\Project\UGroupLiteralizer;

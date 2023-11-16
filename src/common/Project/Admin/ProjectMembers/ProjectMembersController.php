@@ -37,7 +37,7 @@ use ProjectManager;
 use ProjectUGroup;
 use TemplateRendererFactory;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
-use Tuleap\date\RelativeDatesAssetsRetriever;
+use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\InviteBuddy\InvitationDao;
