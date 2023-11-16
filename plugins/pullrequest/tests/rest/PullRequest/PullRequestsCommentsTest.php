@@ -39,7 +39,7 @@ final class PullRequestsCommentsTest extends RestBase
     {
         $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'pull_requests/1/comments'));
 
-        $this->assertEquals(['OPTIONS', 'GET', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
+        self::assertEqualsCanonicalizing(['OPTIONS', 'GET', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testOptionsWithReadOnlyAdmin(): void
@@ -49,7 +49,7 @@ final class PullRequestsCommentsTest extends RestBase
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'GET', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
+        self::assertEqualsCanonicalizing(['OPTIONS', 'GET', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testGetPullRequestComments(): void
@@ -73,13 +73,13 @@ final class PullRequestsCommentsTest extends RestBase
     {
         $pull_request_comments = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(3, count($pull_request_comments));
-        $this->assertEquals(1, $pull_request_comments[0]['id']);
-        $this->assertEquals('If the Easter Bunny and the Tooth Fairy had babies would they take your teeth and leave chocolate for you?', $pull_request_comments[0]['content']);
-        $this->assertEquals(2, $pull_request_comments[1]['id']);
-        $this->assertEquals('This is the last random sentence I will be writing and I am going to stop mid-sent', $pull_request_comments[1]['content']);
-        $this->assertEquals(3, $pull_request_comments[2]['id']);
-        $this->assertEquals('I am never at home on Sundays.', $pull_request_comments[2]['content']);
+        self::assertCount(3, $pull_request_comments);
+        self::assertEquals(1, $pull_request_comments[0]['id']);
+        self::assertEquals('If the Easter Bunny and the Tooth Fairy had babies would they take your teeth and leave chocolate for you?', $pull_request_comments[0]['content']);
+        self::assertEquals(2, $pull_request_comments[1]['id']);
+        self::assertEquals('This is the last random sentence I will be writing and I am going to stop mid-sent', $pull_request_comments[1]['content']);
+        self::assertEquals(3, $pull_request_comments[2]['id']);
+        self::assertEquals('I am never at home on Sundays.', $pull_request_comments[2]['content']);
     }
 
     public function testGetPullRequestCommentsThrows403IfUserCantSeeGitRepository(): void
@@ -89,7 +89,7 @@ final class PullRequestsCommentsTest extends RestBase
         $this->assertEquals($response->getStatusCode(), 403);
     }
 
-    public function testPostPullRequestComment(): void
+    public function testCreatesAndEditAPullRequestComment(): void
     {
         $response = $this->getResponse($this->request_factory->createRequest('POST', 'pull_requests/1/comments')->withBody($this->stream_factory->createStream(json_encode(
             [
@@ -97,10 +97,32 @@ final class PullRequestsCommentsTest extends RestBase
             ]
         ))));
 
-        $this->assertEquals($response->getStatusCode(), 201);
+        self::assertEquals($response->getStatusCode(), 201);
 
         $pull_request_comment = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-        $this->assertEquals('You should use Template&lt;T&gt;.', $pull_request_comment['content']);
+        self::assertEquals('You should use Template&lt;T&gt;.', $pull_request_comment['content']);
+        self::assertNull($pull_request_comment['last_edition_date']);
+
+        $pull_request_comment_id = $pull_request_comment['id'];
+
+        $patch_response = $this->getResponse(
+            $this->request_factory->createRequest('PATCH', 'pull_request_comments/' . $pull_request_comment_id)->withBody(
+                $this->stream_factory->createStream(
+                    json_encode(
+                        [
+                            'content' => 'I do not want to (hehe)',
+                        ]
+                    )
+                )
+            ),
+        );
+
+        self::assertSame(200, $patch_response->getStatusCode());
+
+        $patched_pull_request_comments = json_decode($patch_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        self::assertSame($pull_request_comment_id, $patched_pull_request_comments['id']);
+        self::assertSame("I do not want to (hehe)", $patched_pull_request_comments['content']);
+        self::assertNotNull($patched_pull_request_comments['last_edition_date']);
     }
 
     public function testPostPullRequestCommentWithReadOnlyAdmin(): void
@@ -115,5 +137,12 @@ final class PullRequestsCommentsTest extends RestBase
         );
 
         $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    public function testOptionsComment(): void
+    {
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'pull_request_comments/1'));
+
+        self::assertEqualsCanonicalizing(['OPTIONS', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
     }
 }
