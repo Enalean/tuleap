@@ -1,0 +1,21 @@
+lockfileVersion: '6.0'
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
+dependencies:
+  '@tuleap/core-constants':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/constants
+  '@tuleap/core-rest-api-types':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/rest-api-types
+  '@tuleap/plugin-tracker-rest-api-types':
+    specifier: workspace:*
+    version: link:../../../../tracker/scripts/lib/rest-api-types
+
+devDependencies:
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/build-system-configurator

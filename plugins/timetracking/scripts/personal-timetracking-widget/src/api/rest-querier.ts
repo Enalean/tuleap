@@ -1,9 +1,5 @@
-/*
- * Copyright Enalean (c) 2018 - Present. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+/**
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,14 +19,24 @@
 
 import { get, post, put, del } from "@tuleap/tlp-fetch";
 import { formatDatetimeToISO } from "@tuleap/plugin-timetracking-time-formatters";
-
-export { getTrackedTimes, addTime, updateTime, deleteTime };
+import type { PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
 
 const headers = {
     "content-type": "application/json",
 };
 
-async function getTrackedTimes(user_id, start_date, end_date, limit, offset) {
+export type TotalTimes = {
+    readonly times: PersonalTime[];
+    readonly total: number;
+};
+
+export async function getTrackedTimes(
+    user_id: number,
+    start_date: string,
+    end_date: string,
+    limit: number,
+    offset: number,
+): Promise<TotalTimes> {
     const query = JSON.stringify({
         start_date: formatDatetimeToISO(start_date),
         end_date: formatDatetimeToISO(end_date),
@@ -43,20 +49,28 @@ async function getTrackedTimes(user_id, start_date, end_date, limit, offset) {
             query,
         },
     });
-    const total = response.headers.get("X-PAGINATION-SIZE");
-    const times = await response.json();
+    const total: number =
+        response.headers.get("X-PAGINATION-SIZE") === null
+            ? 0
+            : Number(response.headers.get("X-PAGINATION-SIZE"));
+    const times: PersonalTime[] = await response.json();
 
     return {
         times,
         total,
     };
 }
-async function addTime(date, artifact_id, time_value, step) {
+export async function addTime(
+    date: string,
+    artifact_id: number,
+    time_value: string,
+    step: string,
+): Promise<PersonalTime> {
     const body = JSON.stringify({
         date_time: date,
         artifact_id: artifact_id,
         time_value: time_value,
-        step,
+        step: step,
     });
 
     const response = await post("/api/v1/timetracking", {
@@ -68,11 +82,16 @@ async function addTime(date, artifact_id, time_value, step) {
     return time;
 }
 
-async function updateTime(date_time, time_id, time_value, step) {
+export async function updateTime(
+    date_time: string,
+    time_id: number,
+    time_value: string,
+    step: string,
+): Promise<PersonalTime> {
     const body = JSON.stringify({
-        date_time,
-        time_value,
-        step,
+        date_time: date_time,
+        time_value: time_value,
+        step: step,
     });
     const response = await put("/api/v1/timetracking/" + time_id, {
         headers,
@@ -82,7 +101,7 @@ async function updateTime(date_time, time_id, time_value, step) {
     return time;
 }
 
-async function deleteTime(time_id) {
+export async function deleteTime(time_id: number): Promise<void> {
     await del("/api/v1/timetracking/" + time_id, {
         headers,
     });

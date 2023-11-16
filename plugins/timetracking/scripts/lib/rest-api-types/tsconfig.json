@@ -1,0 +1,4 @@
+{
+    "extends": "@tuleap/build-system-configurator/tsc/tsconfig-for-libraries.json",
+    "include": ["src/**/*"]
+}
