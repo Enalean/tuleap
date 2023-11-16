@@ -103,7 +103,7 @@ final class PATCHCommentHandler
     {
         $pull_request = $this->pull_request_permission_retriever->getAccessiblePullRequest($comment->getPullRequestId(), $user);
         try {
-            $repository = $this->git_repository_factory->getRepositoryByIdUserCanSee($user, $pull_request->getRepoDestId());
+            $repository = $this->git_repository_factory->getRepositoryByIdUserCanSee($user, $pull_request->getRepositoryId());
             return (int) $repository->getProject()->getID();
         } catch (GitRepoNotFoundException $exception) {
             throw new LogicException("Exception should already be caught by AccessiblePullRequestRESTRetriever::getAccessiblePullRequest");
