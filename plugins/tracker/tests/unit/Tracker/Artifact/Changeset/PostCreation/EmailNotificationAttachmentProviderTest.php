@@ -24,67 +24,59 @@ namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
 use ColinODell\PsrTestLogger\TestLogger;
 use PFUser;
-use PHPUnit\Framework\MockObject\MockObject;
-use Psr\Log\NullLogger;
 use Tracker_Artifact_Changeset;
-use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\CalendarEventData;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
-use Tuleap\Tracker\Test\Stub\Semantic\Timeframe\IComputeTimeframesStub;
+use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\BuildCalendarEventDataStub;
 use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\RetrieveEventSummaryStub;
 use Tuleap\Tracker\Test\Stub\Tracker\Notifications\Settings\CheckEventShouldBeSentInNotificationStub;
-use Tuleap\Tracker\Test\Stub\Tracker\Semantic\Timeframe\BuildSemanticTimeframeStub;
 
 final class EmailNotificationAttachmentProviderTest extends TestCase
 {
     private readonly Tracker_Artifact_Changeset $changeset;
     private readonly PFUser $recipient;
     private readonly TestLogger $logger;
-    private \Tracker_FormElement_Field_Date|MockObject $start_field;
-    private \Tracker_FormElement_Field_Date|MockObject $end_field;
 
     protected function setUp(): void
     {
         $this->changeset = ChangesetTestBuilder::aChangeset("1001")->build();
         $this->recipient = UserTestBuilder::buildWithDefaults();
         $this->logger    = new TestLogger();
-
-        $this->start_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
-        $this->end_field   = $this->createMock(\Tracker_FormElement_Field_Date::class);
     }
 
-    public function testNoAttachmentsWhenTrackerIsNotConfiguredTo(): void
+    /**
+     * @testWith [false]
+     *           [true]
+     */
+    public function testNoAttachmentsWhenTrackerIsNotConfiguredTo(bool $should_check_permissions): void
     {
         $provider = new EmailNotificationAttachmentProvider(
             CheckEventShouldBeSentInNotificationStub::withoutEventInNotification(),
-            BuildSemanticTimeframeStub::withTimeframeSemanticBasedOnEndDate(
-                $this->changeset->getTracker(),
-                $this->start_field,
-                $this->end_field,
-            ),
+            BuildCalendarEventDataStub::shouldNotBeCalled(),
             RetrieveEventSummaryStub::withSummary('Christmas Party'),
         );
 
-        $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, true);
+        $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, $should_check_permissions);
 
         self::assertEmpty($attachements);
         self::assertFalse($this->logger->hasDebugRecords());
     }
 
-    public function testNoAttachmentsWhenRetrievalOfSummaryIsInError(): void
+    /**
+     * @testWith [false]
+     *           [true]
+     */
+    public function testNoAttachmentsWhenRetrievalOfSummaryIsInError(bool $should_check_permissions): void
     {
         $provider = new EmailNotificationAttachmentProvider(
             CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
-            BuildSemanticTimeframeStub::withTimeframeSemanticBasedOnEndDate(
-                $this->changeset->getTracker(),
-                $this->start_field,
-                $this->end_field,
-            ),
+            BuildCalendarEventDataStub::shouldNotBeCalled(),
             RetrieveEventSummaryStub::withError('Error retrieving summary'),
         );
 
-        $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, true);
+        $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, $should_check_permissions);
 
         self::assertEmpty($attachements);
         $this->assertDebugLogEquals(
@@ -93,92 +85,36 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
         );
     }
 
-    public function testNoAttachmentsWhenTimeframeSemanticIsNotConfigured(): void
+    /**
+     * @testWith [false]
+     *           [true]
+     */
+    public function testNoAttachmentsWhenBuildOfCalendarDataIsInError(bool $should_check_permissions): void
     {
         $provider = new EmailNotificationAttachmentProvider(
             CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
-            BuildSemanticTimeframeStub::withTimeframeSemanticNotConfigured(
-                $this->changeset->getTracker(),
-            ),
+            BuildCalendarEventDataStub::withError('Error building calendar data'),
             RetrieveEventSummaryStub::withSummary('Christmas Party'),
         );
 
-        $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, false);
+        $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, $should_check_permissions);
 
         self::assertEmpty($attachements);
         $this->assertDebugLogEquals(
             'Tracker is configured to send calendar events alongside notification',
-            'Time period error: Semantic Timeframe is not configured for tracker bug.',
-        );
-    }
-
-    public function testNoAttachmentsWhenTimeframeSemanticIsInvalid(): void
-    {
-        $provider = new EmailNotificationAttachmentProvider(
-            CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
-            BuildSemanticTimeframeStub::withTimeframeSemanticConfigInvalid(
-                $this->changeset->getTracker(),
-            ),
-            RetrieveEventSummaryStub::withSummary('Christmas Party'),
-        );
-
-        $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, false);
-
-        self::assertEmpty($attachements);
-        $this->assertDebugLogEquals(
-            'Tracker is configured to send calendar events alongside notification',
-            'Time period error: It is inherited from a tracker of another project, this is not allowed',
+            'Error building calendar data',
         );
     }
 
     /**
-     * @testWith [null, 123,  "No start date, we cannot build calendar event"]
-     *           [0,    123,  "No start date, we cannot build calendar event"]
-     *           [123,  null, "No end date, we cannot build calendar event"]
-     *           [123,  0,    "No end date, we cannot build calendar event"]
-     *           [123,  120,  "End date < start date, we cannot build calendar event"]
+     * @testWith [false]
+     *           [true]
      */
-    public function testNoAttachmentsWhenDatesAreConsideredInvalid(?int $start, ?int $end, string $expected_message): void
+    public function testNoAttachmentsWhenEverythingIsAwesomeBecauseFeatureIsNotImplementedYet(bool $should_check_permissions): void
     {
         $provider = new EmailNotificationAttachmentProvider(
             CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
-            BuildSemanticTimeframeStub::withTimeframeCalculator(
-                $this->changeset->getTracker(),
-                IComputeTimeframesStub::fromStartAndEndDates(
-                    DatePeriodWithoutWeekEnd::buildFromEndDate($start, $end, new NullLogger()),
-                    $this->start_field,
-                    $this->end_field,
-                )
-            ),
-            RetrieveEventSummaryStub::withSummary('Christmas Party'),
-        );
-
-        $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, false);
-
-        self::assertEmpty($attachements);
-        $this->assertDebugLogEquals(
-            'Tracker is configured to send calendar events alongside notification',
-            $expected_message,
-        );
-    }
-
-    /**
-     * @testWith [false, false]
-     *           [true, false]
-     *           [true, true]
-     */
-    public function testNoAttachmentsWhenEverythingIsAwesomeBecauseFeatureIsNotImplementedYet(bool $user_can_read, bool $should_check_permissions): void
-    {
-        $provider = new EmailNotificationAttachmentProvider(
-            CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
-            BuildSemanticTimeframeStub::withTimeframeCalculator(
-                $this->changeset->getTracker(),
-                IComputeTimeframesStub::fromStartAndEndDates(
-                    DatePeriodWithoutWeekEnd::buildFromEndDate(1234567890, 1324567890, new NullLogger()),
-                    $this->start_field,
-                    $this->end_field,
-                )
-            ),
+            BuildCalendarEventDataStub::withCalendarEventData(new CalendarEventData('Christmas Party', 1234567890, 1324567890)),
             RetrieveEventSummaryStub::withSummary('Christmas Party'),
         );
 
