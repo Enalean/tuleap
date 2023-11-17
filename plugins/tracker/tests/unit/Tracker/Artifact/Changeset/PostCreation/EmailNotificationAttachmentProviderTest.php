@@ -27,24 +27,20 @@ use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 use Tracker_Artifact_Changeset;
-use Tracker_Artifact_ChangesetValue_Text;
-use Tracker_Semantic_Title;
 use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Stub\Semantic\Timeframe\IComputeTimeframesStub;
+use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\RetrieveEventSummaryStub;
 use Tuleap\Tracker\Test\Stub\Tracker\Notifications\Settings\CheckEventShouldBeSentInNotificationStub;
 use Tuleap\Tracker\Test\Stub\Tracker\Semantic\Timeframe\BuildSemanticTimeframeStub;
 
 final class EmailNotificationAttachmentProviderTest extends TestCase
 {
-    private const USER_CANNOT_READ = false;
-
     private readonly Tracker_Artifact_Changeset $changeset;
     private readonly PFUser $recipient;
     private readonly TestLogger $logger;
-    private Tracker_Semantic_Title|MockObject $semantic_title;
     private \Tracker_FormElement_Field_Date|MockObject $start_field;
     private \Tracker_FormElement_Field_Date|MockObject $end_field;
 
@@ -56,14 +52,6 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
 
         $this->start_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
         $this->end_field   = $this->createMock(\Tracker_FormElement_Field_Date::class);
-
-        $this->semantic_title = $this->createMock(Tracker_Semantic_Title::class);
-        Tracker_Semantic_Title::setInstance($this->semantic_title, $this->changeset->getTracker());
-    }
-
-    protected function tearDown(): void
-    {
-        Tracker_Semantic_Title::clearInstances();
     }
 
     public function testNoAttachmentsWhenTrackerIsNotConfiguredTo(): void
@@ -75,6 +63,7 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
                 $this->start_field,
                 $this->end_field,
             ),
+            RetrieveEventSummaryStub::withSummary('Christmas Party'),
         );
 
         $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, true);
@@ -83,7 +72,7 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
         self::assertFalse($this->logger->hasDebugRecords());
     }
 
-    public function testNoAttachmentsWhenTrackerDoesNotHaveTitleSemantic(): void
+    public function testNoAttachmentsWhenRetrievalOfSummaryIsInError(): void
     {
         $provider = new EmailNotificationAttachmentProvider(
             CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
@@ -92,66 +81,15 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
                 $this->start_field,
                 $this->end_field,
             ),
+            RetrieveEventSummaryStub::withError('Error retrieving summary'),
         );
-
-        $this->semantic_title->method('getField')->willReturn(null);
 
         $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, true);
 
         self::assertEmpty($attachements);
         $this->assertDebugLogEquals(
             'Tracker is configured to send calendar events alongside notification',
-            'The tracker does not have title semantic, we cannot build calendar event',
-        );
-    }
-
-    public function testNoAttachmentsWhenTitleIsNotReadable(): void
-    {
-        $provider = new EmailNotificationAttachmentProvider(
-            CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
-            BuildSemanticTimeframeStub::withTimeframeSemanticBasedOnEndDate(
-                $this->changeset->getTracker(),
-                $this->start_field,
-                $this->end_field,
-            ),
-        );
-
-        $this->setTitleValue('Christmas Party', self::USER_CANNOT_READ);
-
-        $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, true);
-
-        self::assertEmpty($attachements);
-        $this->assertDebugLogEquals(
-            'Tracker is configured to send calendar events alongside notification',
-            'The user #110 (john@example.com) cannot read the title, we cannot build calendar event',
-        );
-    }
-
-    /**
-     * @testWith [false, false, ""]
-     *           [true, false, ""]
-     *           [true, true, ""]
-     *           [true, true, " "]
-     */
-    public function testNoAttachmentsWhenTitleIsEmpty(bool $user_can_read, bool $should_check_permissions, string $empty_text): void
-    {
-        $provider = new EmailNotificationAttachmentProvider(
-            CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
-            BuildSemanticTimeframeStub::withTimeframeSemanticBasedOnEndDate(
-                $this->changeset->getTracker(),
-                $this->start_field,
-                $this->end_field,
-            ),
-        );
-
-        $this->setTitleValue($empty_text, $user_can_read);
-
-        $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, $should_check_permissions);
-
-        self::assertEmpty($attachements);
-        $this->assertDebugLogEquals(
-            'Tracker is configured to send calendar events alongside notification',
-            'Title is empty, we cannot build calendar event',
+            'Error retrieving summary',
         );
     }
 
@@ -162,9 +100,8 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
             BuildSemanticTimeframeStub::withTimeframeSemanticNotConfigured(
                 $this->changeset->getTracker(),
             ),
+            RetrieveEventSummaryStub::withSummary('Christmas Party'),
         );
-
-        $this->setTitleValue('Christmas Party', true);
 
         $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, false);
 
@@ -182,9 +119,8 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
             BuildSemanticTimeframeStub::withTimeframeSemanticConfigInvalid(
                 $this->changeset->getTracker(),
             ),
+            RetrieveEventSummaryStub::withSummary('Christmas Party'),
         );
-
-        $this->setTitleValue('Christmas Party', true);
 
         $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, false);
 
@@ -214,9 +150,8 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
                     $this->end_field,
                 )
             ),
+            RetrieveEventSummaryStub::withSummary('Christmas Party'),
         );
-
-        $this->setTitleValue('Christmas Party', true);
 
         $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, false);
 
@@ -244,9 +179,8 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
                     $this->end_field,
                 )
             ),
+            RetrieveEventSummaryStub::withSummary('Christmas Party'),
         );
-
-        $this->setTitleValue('Christmas Party', $user_can_read);
 
         $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, $should_check_permissions);
 
@@ -255,24 +189,6 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
             'Tracker is configured to send calendar events alongside notification',
             'Found a calendar event for this changeset',
         );
-    }
-
-    private function getTitleField(bool $user_can_read): \Tracker_FormElement_Field_Text
-    {
-        $title_field = $this->createMock(\Tracker_FormElement_Field_Text::class);
-        $title_field->method('userCanRead')->willReturn($user_can_read);
-        $title_field->method('getId')->willReturn(1);
-
-        return $title_field;
-    }
-
-    private function setTitleValue(string $title, bool $user_can_read): void
-    {
-        $title_field = $this->getTitleField($user_can_read);
-        $this->semantic_title->method('getField')->willReturn($title_field);
-
-        $title_field_value = new Tracker_Artifact_ChangesetValue_Text(1, $this->changeset, $title_field, false, $title, 'text');
-        $this->changeset->setFieldValue($title_field, $title_field_value);
     }
 
     private function assertDebugLogEquals(string $message, string ...$other_messages): void
