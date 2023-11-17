@@ -31,32 +31,29 @@ final class CommentRepresentation
 {
     public const TYPE = 'comment';
 
-    public int $id;
+    public readonly int $id;
 
-    public int $project_id;
+    public readonly string $post_date;
 
-    public string $post_date;
+    public readonly ?string $last_edition_date;
 
-    public ?string $last_edition_date;
+    public readonly string $content;
 
-    public string $content;
+    public readonly string $raw_content;
 
-    public string $raw_content;
+    public readonly string $post_processed_content;
 
-    public string $post_processed_content;
+    public readonly string $type;
 
-    public string $type;
+    public readonly int $parent_id;
 
-    public int $parent_id;
+    public readonly string $format;
 
-    public string $format;
-
-    public string $color;
+    public readonly string $color;
 
     public function __construct(
         Comment $comment,
         CommentContent $comment_content,
-        int $project_id,
         public MinimalUserRepresentation $user,
     ) {
         $this->id                     = $comment->getId();
@@ -65,7 +62,6 @@ final class CommentRepresentation
         $this->format                 = $comment->getFormat();
         $this->post_date              = JsonCast::toDate($comment->getPostDate());
         $this->last_edition_date      = JsonCast::toDate($comment->getLastEditionDate()->unwrapOr(null));
-        $this->project_id             = $project_id;
         $this->type                   = self::TYPE;
         $this->content                = $comment_content->purified_content;
         $this->raw_content            = $comment_content->raw_content;
