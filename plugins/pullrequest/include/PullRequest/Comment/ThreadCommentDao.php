@@ -24,9 +24,9 @@ namespace Tuleap\PullRequest\Comment;
 
 use Tuleap\DB\DataAccessObject;
 
-class ThreadCommentDao extends DataAccessObject
+final class ThreadCommentDao extends DataAccessObject implements CountThreads
 {
-    public function searchAllThreadByPullRequestId(int $id): array
+    public function countAllThreadsOfPullRequest(int $id): int
     {
         $sql = "SELECT global.id
                 FROM plugin_pullrequest_comments AS global
@@ -36,6 +36,7 @@ class ThreadCommentDao extends DataAccessObject
                 FROM plugin_pullrequest_inline_comments AS inline
                 WHERE inline.pull_request_id = ? AND inline.parent_id = 0 AND (inline.color != '')";
 
-        return $this->getDB()->run($sql, $id, $id);
+        $rows = $this->getDB()->run($sql, $id, $id);
+        return count($rows);
     }
 }

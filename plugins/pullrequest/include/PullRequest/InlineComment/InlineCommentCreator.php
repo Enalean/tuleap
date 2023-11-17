@@ -24,11 +24,8 @@ namespace Tuleap\PullRequest\InlineComment;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\PullRequest\InlineComment\Notification\PullRequestNewInlineCommentEvent;
-use Tuleap\PullRequest\PullRequest;
-use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorAssigner;
 use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorRetriever;
-use Tuleap\PullRequest\REST\v1\PullRequestInlineCommentPOSTRepresentation;
 use Tuleap\Reference\ExtractAndSaveCrossReferences;
 
 final class InlineCommentCreator
@@ -42,44 +39,21 @@ final class InlineCommentCreator
     ) {
     }
 
-    public function insert(
-        PullRequest $pull_request,
-        \PFUser $user,
-        PullRequestInlineCommentPOSTRepresentation $comment_data,
-        \DateTimeImmutable $post_date,
-        int $project_id,
-    ): InsertedInlineComment {
-        $pull_request_id = $pull_request->getId();
-
-        $format = $comment_data->format;
-        if (! $format) {
-            $format = TimelineComment::FORMAT_MARKDOWN;
-        }
-
-        $new_comment = new NewInlineComment(
-            $pull_request,
-            $project_id,
-            $comment_data->file_path,
-            $comment_data->unidiff_offset,
-            $comment_data->content,
-            $format,
-            $comment_data->position,
-            $comment_data->parent_id ?? 0,
-            $user,
-            $post_date
-        );
+    public function insert(NewInlineComment $new_comment): InsertedInlineComment
+    {
+        $pull_request_id = $new_comment->pull_request->getId();
 
         $inserted = $this->comment_saver->insert($new_comment);
 
-        $color = $this->color_retriever->retrieveColor($pull_request_id, (int) $comment_data->parent_id);
-        $this->color_assigner->assignColor((int) $comment_data->parent_id, $color);
+        $color = $this->color_retriever->retrieveColor($pull_request_id, $new_comment->parent_id);
+        $this->color_assigner->assignColor($new_comment->parent_id, $color);
 
         $this->reference_manager->extractCrossRef(
-            $comment_data->content,
+            $new_comment->content,
             $pull_request_id,
             \pullrequestPlugin::REFERENCE_NATURE,
-            $project_id,
-            (int) $user->getId(),
+            $new_comment->project_id,
+            (int) $new_comment->author->getId(),
             \pullrequestPlugin::PULLREQUEST_REFERENCE_KEYWORD
         );
 

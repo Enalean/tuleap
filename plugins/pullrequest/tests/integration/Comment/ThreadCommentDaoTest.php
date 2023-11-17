@@ -80,9 +80,9 @@ final class ThreadCommentDaoTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRetrievesThreads(): void
     {
-        $dao         = new ThreadCommentDao();
-        $all_threads = $dao->searchAllThreadByPullRequestId(self::PULL_REQUEST_1_ID);
-        $this->assertEmpty($all_threads);
+        $dao               = new ThreadCommentDao();
+        $number_of_threads = $dao->countAllThreadsOfPullRequest(self::PULL_REQUEST_1_ID);
+        self::assertSame(0, $number_of_threads);
 
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
 
@@ -112,8 +112,8 @@ final class ThreadCommentDaoTest extends \Tuleap\Test\PHPUnit\TestCase
         $db->update('plugin_pullrequest_comments', ['color' => "graffity-yellow"], ["id" => self::FIRST_COMMENT_ID]);
         $db->update('plugin_pullrequest_inline_comments', ['color' => "flamingo-pink"], ["id" => self::SECOND_COMMENT_ID]);
 
-        $dao         = new ThreadCommentDao();
-        $all_threads = $dao->searchAllThreadByPullRequestId(self::PULL_REQUEST_1_ID);
-        $this->assertSame([["id" => self::FIRST_COMMENT_ID], ["id" => self::SECOND_COMMENT_ID]], $all_threads);
+        $dao               = new ThreadCommentDao();
+        $number_of_threads = $dao->countAllThreadsOfPullRequest(self::PULL_REQUEST_1_ID);
+        self::assertSame(2, $number_of_threads);
     }
 }

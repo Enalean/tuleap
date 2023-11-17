@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2022 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Comment;
 
-interface ParentCommentSearcher
+interface CountThreads
 {
-    /** @psalm-return null|array{id: int, parent_id: int, color: string, ...} */
-    public function searchByCommentID(int $inline_comment_id): ?array;
+    /** @psalm-return int<0, max> */
+    public function countAllThreadsOfPullRequest(int $id): int;
 }

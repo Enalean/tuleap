@@ -28,45 +28,15 @@ use Codendi_HTMLPurifier;
 
 final class PullRequestInlineCommentRepresentation
 {
-    /**
-     * @var int {@type int}
-     */
-    public $unidiff_offset;
-
+    public int $unidiff_offset;
     public MinimalUserRepresentation $user;
-
-    /**
-     * @var string {@type string}
-     */
-    public $post_date;
-
-    /**
-     * @var string {@type string}
-     */
-    public $content;
-
+    public string $post_date;
+    public string $content;
     public string $raw_content;
-
-    /**
-     * @var string {@type string}
-     */
-    public $position;
-
-    /**
-     * @var int {@type int}
-     */
+    public string $position;
     public int $parent_id;
-    /**
-     * @var int {@type int}
-     */
     public int $id;
-    /**
-     * @var string {@type string}
-     */
     public string $file_path;
-    /**
-     * @var string {@type string}
-     */
     public string $color;
     public string $post_processed_content;
     public string $format;
