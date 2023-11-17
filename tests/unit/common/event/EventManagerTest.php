@@ -23,12 +23,10 @@ use Psr\EventDispatcher\StoppableEventInterface;
 
 class EventManagerTest extends TestCase // phpcs:ignore
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     /**
      * @test
      */
-    public function itCallsAClosure()
+    public function itCallsAClosure(): void
     {
         $event_manager = new EventManager();
 
@@ -36,33 +34,53 @@ class EventManagerTest extends TestCase // phpcs:ignore
         $event_manager->addClosureOnEvent(
             'foo',
             function ($event, $params) use ($test) {
-                $test->assertEquals($params['stuff'], 'bar');
+                $test->assertEquals('bar', $params['stuff']);
             }
         );
 
         $event_manager->processEvent('foo', ['stuff' => 'bar']);
     }
 
-    public function testSingleton()
+    public function testSingleton(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             EventManager::instance(),
             EventManager::instance()
         );
-        $this->assertInstanceOf(EventManager::class, EventManager::instance());
+        self::assertInstanceOf(EventManager::class, EventManager::instance());
     }
 
-    public function testProcessEvent1()
+    public function testProcessEvent1(): void
     {
         $params = ['foo' => 'bar'];
 
         //The listeners
-        $l1 = Mockery::mock();
-        $l1->shouldReceive('doSomething')->with($params)->once();
-        $l2 = Mockery::mock();
-        $l2->shouldReceive('doSomething')->with($params)->once();
-        $l3 = Mockery::mock();
-        $l3->shouldNotReceive('doSomethingElse');
+        $l1 = new class {
+            public ?array $params = null;
+
+            public function doSomething(array $params): void
+            {
+                $this->params = $params;
+            }
+        };
+        $l2 = new class {
+            public ?array $params = null;
+
+            public function doSomething(array $params): void
+            {
+                $this->params = $params;
+            }
+        };
+        $l3 = new class {
+            public ?string $event = null;
+            public ?array $params = null;
+
+            public function doSomethingElse(string $event, array $params): void
+            {
+                $this->event  = $event;
+                $this->params = $params;
+            }
+        };
 
         //The events
         $e1 = 'event1';
@@ -78,19 +96,43 @@ class EventManagerTest extends TestCase // phpcs:ignore
 
         //We process event
         $m->processEvent($e1, $params);
+        self::assertEqualsCanonicalizing($params, $l1->params);
+        self::assertEqualsCanonicalizing($params, $l2->params);
+        self::assertNull($l3->event);
+        self::assertNull($l3->params);
     }
 
-    public function testProcessEvent2()
+    public function testProcessEvent2(): void
     {
         $params = ['foo' => 'bar'];
 
         //The listeners
-        $l1 = Mockery::mock();
-        $l1->shouldNotReceive('doSomething');
-        $l2 = Mockery::mock();
-        $l2->shouldNotReceive('doSomething');
-        $l3 = Mockery::mock();
-        $l3->shouldReceive('doSomethingElse')->with('event2', $params)->once();
+        $l1 = new class {
+            public ?array $params = null;
+
+            public function doSomething(array $params): void
+            {
+                $this->params = $params;
+            }
+        };
+        $l2 = new class {
+            public ?array $params = null;
+
+            public function doSomething(array $params): void
+            {
+                $this->params = $params;
+            }
+        };
+        $l3 = new class {
+            public ?string $event = null;
+            public ?array $params = null;
+
+            public function doSomethingElse(string $event, array $params): void
+            {
+                $this->event  = $event;
+                $this->params = $params;
+            }
+        };
 
         //The events
         $e1 = 'event1';
@@ -106,37 +148,53 @@ class EventManagerTest extends TestCase // phpcs:ignore
 
         //We process event
         $m->processEvent($e2, $params);
+        self::assertNull($l1->params);
+        self::assertNull($l2->params);
+        self::assertSame($e2, $l3->event);
+        self::assertEqualsCanonicalizing($params, $l3->params);
     }
 
-    public function testItCanSendAnEventObjectWithNameInsteadOfStringPlusParams()
+    public function testItCanSendAnEventObjectWithNameInsteadOfStringPlusParams(): void
     {
-        $event = new class
-        {
+        $event = new class {
             public const NAME = 'doSomething';
         };
 
-        $listener = Mockery::mock();
-        $listener->shouldReceive('doSomething')->with($event)->once();
+        $listener = new class {
+            public ?object $event = null;
+
+            public function doSomething(object $event): void
+            {
+                $this->event = $event;
+            }
+        };
 
         $event_manager = new EventManager();
         $event_manager->addListener($event::NAME, $listener, 'doSomething', false);
 
         $event_manager->processEvent($event);
+        self::assertSame($event, $listener->event);
     }
 
-    public function testItCanSendAnEventObjectWithoutName()
+    public function testItCanSendAnEventObjectWithoutName(): void
     {
-        $event = new class
-        {
+        $event = new class {
         };
 
-        $listener = Mockery::mock();
-        $listener->shouldReceive('doSomething')->with($event)->once();
+        $listener = new class {
+            public ?object $event = null;
+
+            public function doSomething(object $event): void
+            {
+                $this->event = $event;
+            }
+        };
 
         $event_manager = new EventManager();
         $event_manager->addListener($event::class, $listener, 'doSomething', false);
 
         $event_manager->processEvent($event);
+        self::assertSame($event, $listener->event);
     }
 
     public function testItStopsEventPropagation(): void
@@ -144,7 +202,7 @@ class EventManagerTest extends TestCase // phpcs:ignore
         $stoppable_event = new class implements StoppableEventInterface {
             public const NAME = 'foo';
 
-            public $stop = false;
+            public bool $stop = false;
 
             public function isPropagationStopped(): bool
             {
@@ -153,18 +211,18 @@ class EventManagerTest extends TestCase // phpcs:ignore
         };
 
         $listener_1 = new class {
-            public $was_called = false;
+            public bool $was_called = false;
 
-            public function handleFoo(object $event)
+            public function handleFoo(object $event): void
             {
                 $this->was_called = true;
             }
         };
 
         $listener_2 = new class {
-            public $was_called = false;
+            public bool $was_called = false;
 
-            public function handleFoo(object $event)
+            public function handleFoo(object $event): void
             {
                 $this->was_called = true;
                 $event->stop      = true;
@@ -172,9 +230,9 @@ class EventManagerTest extends TestCase // phpcs:ignore
         };
 
         $listener_3 = new class {
-            public $was_called = false;
+            public bool $was_called = false;
 
-            public function handleFoo(object $event)
+            public function handleFoo(object $event): void
             {
                 $this->was_called = true;
             }
@@ -187,21 +245,21 @@ class EventManagerTest extends TestCase // phpcs:ignore
 
         $event_manager->dispatch($stoppable_event);
 
-        $this->assertEquals(true, $listener_1->was_called);
-        $this->assertEquals(true, $listener_2->was_called);
-        $this->assertEquals(false, $listener_3->was_called);
+        self::assertTrue($listener_1->was_called);
+        self::assertTrue($listener_2->was_called);
+        self::assertFalse($listener_3->was_called);
     }
 
-    public function testItDispatchWithoutName()
+    public function testItDispatchWithoutName(): void
     {
         $event_manager = new EventManager();
 
         $unnamed_event = new class {
-            public $id = 0;
+            public int $id = 0;
         };
 
         $listener = new class {
-            public function handleEvent(object $event)
+            public function handleEvent(object $event): void
             {
                 $event->id = 12;
             }
@@ -211,6 +269,6 @@ class EventManagerTest extends TestCase // phpcs:ignore
 
         $unnamed_event = $event_manager->dispatch($unnamed_event);
 
-        $this->assertEquals(12, $unnamed_event->id);
+        self::assertEquals(12, $unnamed_event->id);
     }
 }
