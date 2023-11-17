@@ -57,6 +57,7 @@ final class BuildCalendarEventDataStub implements BuildCalendarEventData
         \Tracker_Artifact_Changeset $changeset,
         \PFUser $recipient,
         \Psr\Log\LoggerInterface $logger,
+        bool $should_check_permissions,
     ): Ok|Err {
         if ($this->result === null) {
             throw new \Exception('Should not have been called');

@@ -33,5 +33,6 @@ interface BuildCalendarEventData
         \Tracker_Artifact_Changeset $changeset,
         \PFUser $recipient,
         \Psr\Log\LoggerInterface $logger,
+        bool $should_check_permissions,
     ): Ok|Err;
 }

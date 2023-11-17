@@ -29,7 +29,9 @@ use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueDateTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
 use Tuleap\Tracker\Test\Stub\Semantic\Timeframe\IComputeTimeframesStub;
 use Tuleap\Tracker\Test\Stub\Tracker\Semantic\Timeframe\BuildSemanticTimeframeStub;
@@ -60,7 +62,7 @@ final class CalendarEventDataBuilderTest extends TestCase
             ),
         );
 
-        $result = $builder->getCalendarEventData('Christmas Party', $this->changeset, $this->recipient, $this->logger);
+        $result = $builder->getCalendarEventData('Christmas Party', $this->changeset, $this->recipient, $this->logger, true);
 
         self::assertTrue(Result::isErr($result));
         self::assertEquals(
@@ -77,7 +79,7 @@ final class CalendarEventDataBuilderTest extends TestCase
             ),
         );
 
-        $result = $builder->getCalendarEventData('Christmas Party', $this->changeset, $this->recipient, $this->logger);
+        $result = $builder->getCalendarEventData('Christmas Party', $this->changeset, $this->recipient, $this->logger, true);
 
         self::assertTrue(Result::isErr($result));
         self::assertEquals(
@@ -106,11 +108,81 @@ final class CalendarEventDataBuilderTest extends TestCase
             ),
         );
 
-        $result = $builder->getCalendarEventData('Christmas Party', $this->changeset, $this->recipient, $this->logger);
+        $result = $builder->getCalendarEventData('Christmas Party', $this->changeset, $this->recipient, $this->logger, true);
 
         self::assertTrue(Result::isErr($result));
         self::assertEquals(
             $expected_message,
+            (string) $result->error,
+        );
+    }
+
+    public function testCalendarDataIsReturnedEvenIfUserCannotReadDateFields(): void
+    {
+        $builder = new CalendarEventDataBuilder(
+            BuildSemanticTimeframeStub::withTimeframeCalculator(
+                $this->changeset->getTracker(),
+                new TimeframeWithEndDate(
+                    $this->start_field,
+                    $this->end_field,
+                )
+            ),
+        );
+
+        $this->start_field->setUserCanRead($this->recipient, false);
+        $this->end_field->setUserCanRead($this->recipient, false);
+
+        $this->changeset->setFieldValue($this->start_field, ChangesetValueDateTestBuilder::aValue(
+            1,
+            $this->changeset,
+            $this->start_field
+        )->withTimestamp(1234567890)->build());
+        $this->changeset->setFieldValue($this->end_field, ChangesetValueDateTestBuilder::aValue(
+            1,
+            $this->changeset,
+            $this->end_field
+        )->withTimestamp(1324567890)->build());
+
+        $result = $builder->getCalendarEventData('Christmas Party', $this->changeset, $this->recipient, $this->logger, false);
+
+        self::assertTrue(Result::isOk($result));
+        self::assertEquals(
+            new CalendarEventData('Christmas Party', 1234567890, 1324567890),
+            $result->value,
+        );
+    }
+
+    public function testErrorWhenUserCannotReadFields(): void
+    {
+        $builder = new CalendarEventDataBuilder(
+            BuildSemanticTimeframeStub::withTimeframeCalculator(
+                $this->changeset->getTracker(),
+                new TimeframeWithEndDate(
+                    $this->start_field,
+                    $this->end_field,
+                )
+            ),
+        );
+
+        $this->start_field->setUserCanRead($this->recipient, false);
+        $this->end_field->setUserCanRead($this->recipient, false);
+
+        $this->changeset->setFieldValue($this->start_field, ChangesetValueDateTestBuilder::aValue(
+            1,
+            $this->changeset,
+            $this->start_field
+        )->withTimestamp(1234567890)->build());
+        $this->changeset->setFieldValue($this->end_field, ChangesetValueDateTestBuilder::aValue(
+            1,
+            $this->changeset,
+            $this->end_field
+        )->withTimestamp(1324567890)->build());
+
+        $result = $builder->getCalendarEventData('Christmas Party', $this->changeset, $this->recipient, $this->logger, true);
+
+        self::assertTrue(Result::isErr($result));
+        self::assertEquals(
+            'No start date, we cannot build calendar event',
             (string) $result->error,
         );
     }
@@ -128,7 +200,7 @@ final class CalendarEventDataBuilderTest extends TestCase
             ),
         );
 
-        $result = $builder->getCalendarEventData('Christmas Party', $this->changeset, $this->recipient, $this->logger);
+        $result = $builder->getCalendarEventData('Christmas Party', $this->changeset, $this->recipient, $this->logger, true);
 
         self::assertTrue(Result::isOk($result));
         self::assertEquals(
