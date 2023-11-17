@@ -24,13 +24,11 @@ namespace Tuleap\PullRequest\REST\v1\InlineComment;
 
 use Luracast\Restler\RestException;
 use Tuleap\Git\RetrieveGitRepository;
-use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\PullRequest\InlineComment\InlineCommentCreator;
 use Tuleap\PullRequest\InlineComment\NewInlineComment;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\REST\v1\PullRequestInlineCommentPOSTRepresentation;
-use Tuleap\PullRequest\REST\v1\PullRequestInlineCommentRepresentation;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 final class POSTHandler
@@ -38,8 +36,7 @@ final class POSTHandler
     public function __construct(
         private readonly RetrieveGitRepository $repository_retriever,
         private readonly InlineCommentCreator $inline_comment_creator,
-        private readonly \Codendi_HTMLPurifier $purifier,
-        private readonly ContentInterpretor $content_interpreter,
+        private readonly SingleRepresentationBuilder $builder,
     ) {
     }
 
@@ -51,7 +48,7 @@ final class POSTHandler
         \PFUser $user,
         \DateTimeImmutable $post_date,
         PullRequest $pull_request,
-    ): PullRequestInlineCommentRepresentation {
+    ): InlineCommentRepresentation {
         $git_repository_source = $this->getRepository($pull_request->getRepositoryId());
 
         $format = $comment_data->format;
@@ -73,21 +70,10 @@ final class POSTHandler
         );
         $inserted_inline_comment = $this->inline_comment_creator->insert($new_comment);
 
-        $user_representation = MinimalUserRepresentation::build($user);
-        return PullRequestInlineCommentRepresentation::build(
-            $this->purifier,
-            $this->content_interpreter,
-            $inserted_inline_comment->getUnidiffOffset(),
-            $user_representation,
-            $inserted_inline_comment->getPostDate(),
-            $inserted_inline_comment->getContent(),
+        return $this->builder->build(
             $new_comment->project_id,
-            $inserted_inline_comment->getPosition(),
-            $inserted_inline_comment->getParentId(),
-            $inserted_inline_comment->getId(),
-            $inserted_inline_comment->getFilePath(),
-            $inserted_inline_comment->getColor(),
-            $inserted_inline_comment->getFormat()
+            MinimalUserRepresentation::build($user),
+            $inserted_inline_comment
         );
     }
 

@@ -21,6 +21,7 @@
 namespace Tuleap\PullRequest\REST\v1;
 
 use Tuleap\PullRequest\FileUniDiff;
+use Tuleap\PullRequest\REST\v1\InlineComment\InlineCommentRepresentation;
 
 /**
  * @psalm-immutable
@@ -33,9 +34,9 @@ class PullRequestFileUniDiffRepresentation
     public $lines;
 
     /**
-     * @var PullRequestInlineCommentRepresentation[] {@type PullRequestInlineCommentRepresentation[]}
+     * @var InlineCommentRepresentation[] $inline_comments {@type InlineCommentRepresentation}
      */
-    public $inline_comments;
+    public array $inline_comments;
 
     /**
      * @var string {@type string}

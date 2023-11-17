@@ -112,6 +112,7 @@ use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorRetriever;
 use Tuleap\PullRequest\REST\v1\Info\PullRequestInfoUpdater;
 use Tuleap\PullRequest\REST\v1\InlineComment\InlineCommentRepresentationsBuilder;
 use Tuleap\PullRequest\REST\v1\InlineComment\POSTHandler;
+use Tuleap\PullRequest\REST\v1\InlineComment\SingleRepresentationBuilder;
 use Tuleap\PullRequest\REST\v1\Permissions\PullRequestIsMergeableChecker;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewerRepresentationInformationExtractor;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewersPUTRepresentation;
@@ -618,8 +619,7 @@ class PullRequestsResource extends AuthenticatedResource
             $inline_comment_builder = new InlineCommentRepresentationsBuilder(
                 new \Tuleap\PullRequest\InlineComment\Dao(),
                 $this->user_manager,
-                $purifier,
-                $content_interpretor
+                new SingleRepresentationBuilder($purifier, $content_interpretor)
             );
             $git_repository_source  = $this->getRepository($pull_request->getRepositoryId());
             $inline_comments        = $inline_comment_builder->getForFile($pull_request, $path, $git_repository_source->getProjectId());
@@ -697,8 +697,7 @@ class PullRequestsResource extends AuthenticatedResource
         $handler = new POSTHandler(
             $this->git_repository_factory,
             $comment_creator,
-            $purifier,
-            $content_interpreter,
+            new SingleRepresentationBuilder($purifier, $content_interpreter)
         );
         return $handler->handle($comment_data, $user, $post_date, $pull_request);
     }
