@@ -22,10 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
+use Spatie\IcalendarGenerator\Components\Calendar;
+use Spatie\IcalendarGenerator\Components\Event;
+use Spatie\IcalendarGenerator\Properties\TextProperty;
 use Tuleap\Mail\MailAttachment;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\ServerHostname;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\BuildCalendarEventData;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\CalendarEventData;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\RetrieveEventSummary;
@@ -57,7 +61,7 @@ final class EmailNotificationAttachmentProvider implements ProvideEmailNotificat
 
         return $this->event_summary_retriever->getEventSummary($changeset, $recipient, $should_check_permissions)
             ->andThen(fn (string $summary) => $this->event_data_builder->getCalendarEventData($summary, $changeset, $recipient, $logger, $should_check_permissions))
-            ->andThen(fn (CalendarEventData $event_data) => $this->getCalendarEventAsAttachments($event_data, $logger))
+            ->andThen(fn (CalendarEventData $event_data) => $this->getCalendarEventAsAttachments($event_data, $changeset, $logger))
             ->match(
                 static fn (array $attachments) => $attachments,
                 static function (string $debug_message) use ($logger): array {
@@ -69,12 +73,34 @@ final class EmailNotificationAttachmentProvider implements ProvideEmailNotificat
     }
 
     /**
-     * @return Ok<MailAttachment[]>|Err<non-empty-string>
+     * @return Ok<list{MailAttachment}>|Err<non-empty-string>
      */
-    private function getCalendarEventAsAttachments(CalendarEventData $event_data, \Psr\Log\LoggerInterface $logger): Ok|Err
-    {
+    private function getCalendarEventAsAttachments(
+        CalendarEventData $event_data,
+        \Tracker_Artifact_Changeset $changeset,
+        \Psr\Log\LoggerInterface $logger,
+    ): Ok|Err {
         $logger->debug('Found a calendar event for this changeset');
 
-        return Result::ok([]);
+        $event = Event::create($event_data->summary)
+            ->uniqueIdentifier('tracker-artifact-' . $changeset->getArtifact()->getId() . '@' . ServerHostname::rawHostname())
+            ->startsAt((new \DateTimeImmutable())->setTimestamp($event_data->start))
+            ->endsAt((new \DateTimeImmutable())->setTimestamp($event_data->end))
+            ->fullDay()
+            ->appendProperty(TextProperty::create('SEQUENCE', (string) $changeset->getId()));
+
+        $calendar = Calendar::create()
+            ->event($event);
+
+        $calendar->appendProperty(TextProperty::create('METHOD', 'REQUEST'));
+
+
+        return Result::ok([
+            new MailAttachment(
+                'text/calendar',
+                'event.ics',
+                $calendar->get(),
+            ),
+        ]);
     }
 }

@@ -15,7 +15,8 @@
     }
   },
   "require": {
-    "php-mime-mail-parser/php-mime-mail-parser": "^8.0.0"
+    "php-mime-mail-parser/php-mime-mail-parser": "^8.0.0",
+    "spatie/icalendar-generator": "^2.5"
   },
   "config": {
     "sort-packages": true

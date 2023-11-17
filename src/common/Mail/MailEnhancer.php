@@ -18,8 +18,10 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Tuleap\Mail\MailAttachment;
+
 // I am responsible for additional decorations to add to a mail
-class MailEnhancer
+class MailEnhancer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /** @var Array */
     private $additional_headers = [];
@@ -31,12 +33,22 @@ class MailEnhancer
     private $message_id;
 
     /**
+     * @var MailAttachment[]
+     */
+    private array $attachments = [];
+
+    /**
      * @param string $header_name
      * @param string $header_value
      */
     public function addHeader($header_name, $header_value)
     {
         $this->additional_headers[strtolower($header_name)] = $header_value;
+    }
+
+    public function addAttachment(MailAttachment $attachment): void
+    {
+        $this->attachments[] = $attachment;
     }
 
     /**
@@ -96,6 +108,10 @@ class MailEnhancer
         }
         foreach ($headers as $name => $value) {
             $mail->addAdditionalHeader($name, $value);
+        }
+
+        foreach ($this->attachments as $attachment) {
+            $mail->addAttachment($attachment->content, $attachment->filename, $attachment->mime_type);
         }
 
         foreach ($this->getAdditionalPropertiesForLookAndFeel() as $property => $value) {
