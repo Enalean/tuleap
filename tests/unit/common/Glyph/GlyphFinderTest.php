@@ -23,33 +23,33 @@ declare(strict_types=1);
 namespace Tuleap\Glyph;
 
 use EventManager;
-use Mockery;
 use org\bovigo\vfs\vfsStream;
 use Tuleap\ForgeConfigSandbox;
 
 class GlyphFinderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     public function testItThrowsAnExceptionWhenTheGlyphCanNotBeFound(): void
     {
-        $glyph_finder = new GlyphFinder(Mockery::spy(EventManager::class));
+        $event_manager = $this->createMock(EventManager::class);
+        $event_manager->method('processEvent');
+        $glyph_finder = new GlyphFinder($event_manager);
 
-        $this->expectException(GlyphNotFoundException::class);
+        self::expectException(GlyphNotFoundException::class);
 
         $glyph_finder->get('does-not-exist');
     }
 
     public function testItFindsAGlyphInCore(): void
     {
-        $event_manager = Mockery::mock(EventManager::class);
-        $event_manager->shouldNotReceive('processEvent');
+        $event_manager = $this->createMock(EventManager::class);
+        $event_manager->expects(self::never())->method('processEvent');
 
         $glyph_finder = new GlyphFinder($event_manager);
         $glyph        = $glyph_finder->get('scrum');
 
-        $this->assertStringStartsWith('<svg', $glyph->getInlineString());
+        self::assertStringStartsWith('<svg', $glyph->getInlineString());
     }
 
     public function testItFindsGlyphsInCustomImagesDirectory(): void
@@ -59,12 +59,12 @@ class GlyphFinderTest extends \Tuleap\Test\PHPUnit\TestCase
         mkdir($images_path . '/images');
         file_put_contents($images_path . '/images/organization_logo.svg', '<svg></svg>');
 
-        $event_manager = Mockery::mock(EventManager::class);
-        $event_manager->shouldNotReceive('processEvent');
+        $event_manager = $this->createMock(EventManager::class);
+        $event_manager->expects(self::never())->method('processEvent');
 
         $glyph_finder = new GlyphFinder($event_manager);
         $glyph        = $glyph_finder->get('organization_logo');
 
-        $this->assertStringStartsWith('<svg', $glyph->getInlineString());
+        self::assertStringStartsWith('<svg', $glyph->getInlineString());
     }
 }
