@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\PullRequest\REST\v1\Comment;
+namespace Tuleap\PullRequest\REST\v1\InlineComment;
 
 /**
  * @psalm-immutable

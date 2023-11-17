@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\PullRequest\REST\v1\Comment;
+namespace Tuleap\PullRequest\REST\v1\InlineComment;
 
 use Tuleap\Git\RetrieveGitRepository;
 use Tuleap\NeverThrow\Err;
@@ -40,8 +40,9 @@ use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\PullRequestRetriever;
 use Tuleap\Reference\ExtractAndSaveCrossReferences;
+use Tuleap\User\REST\MinimalUserRepresentation;
 
-final class PATCHInlineCommentHandler
+final class PATCHHandler
 {
     public function __construct(
         private readonly InlineCommentRetriever $comment_retriever,
@@ -50,11 +51,12 @@ final class PATCHInlineCommentHandler
         private readonly InlineCommentSaver $comment_saver,
         private readonly RetrieveGitRepository $repository_retriever,
         private readonly ExtractAndSaveCrossReferences $cross_references_saver,
+        private readonly SingleRepresentationBuilder $representation_builder,
     ) {
     }
 
     /**
-     * @return Ok<null> | Err<Fault>
+     * @return Ok<InlineCommentRepresentation> | Err<Fault>
      */
     public function handle(
         \PFUser $user,
@@ -86,17 +88,23 @@ final class PATCHInlineCommentHandler
 
                         $source_repository = $this->repository_retriever->getRepositoryById($pull_request->getRepositoryId());
                         if ($source_repository === null) {
-                            throw new \LogicException('Could not retrieve the destination repository of the pull request, but it should have already been checked');
+                            throw new \LogicException('Could not retrieve the source repository of the pull request, but it should have already been checked');
                         }
+                        $source_project_id = (int) $source_repository->getProjectId();
                         $this->cross_references_saver->extractCrossRef(
                             $updated_comment->getContent(),
                             $pull_request->getId(),
                             \pullrequestPlugin::REFERENCE_NATURE,
-                            (int) $source_repository->getProjectId(),
+                            $source_project_id,
                             $user->getId(),
                             \pullrequestPlugin::PULLREQUEST_REFERENCE_KEYWORD
                         );
-                        return Result::ok(null);
+                        $representation = $this->representation_builder->build(
+                            $source_project_id,
+                            MinimalUserRepresentation::build($user),
+                            $updated_comment
+                        );
+                        return Result::ok($representation);
                     });
             });
     }

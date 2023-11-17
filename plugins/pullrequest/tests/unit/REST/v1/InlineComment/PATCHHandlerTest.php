@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\PullRequest\Tests\PullRequest\REST\v1\Comment;
+namespace Tuleap\PullRequest\REST\v1\InlineComment;
 
 use Tuleap\Git\Tests\Stub\RetrieveGitRepositoryStub;
 use Tuleap\NeverThrow\Err;
@@ -35,8 +35,6 @@ use Tuleap\PullRequest\InlineComment\InlineCommentNotFoundFault;
 use Tuleap\PullRequest\InlineComment\InlineCommentRetriever;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequestRetriever;
-use Tuleap\PullRequest\REST\v1\Comment\InlineCommentPATCHRepresentation;
-use Tuleap\PullRequest\REST\v1\Comment\PATCHInlineCommentHandler;
 use Tuleap\PullRequest\Tests\Builders\InlineCommentTestBuilder;
 use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
 use Tuleap\PullRequest\Tests\Stub\CheckUserCanAccessPullRequestStub;
@@ -45,9 +43,10 @@ use Tuleap\PullRequest\Tests\Stub\InlineCommentSearcherStub;
 use Tuleap\PullRequest\Tests\Stub\SearchPullRequestStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\ContentInterpretorStub;
 use Tuleap\Test\Stubs\ExtractAndSaveCrossReferencesStub;
 
-final class PATCHInlineCommentHandlerTest extends TestCase
+final class PATCHHandlerTest extends TestCase
 {
     private const INLINE_COMMENT_ID = 49;
     private string $updated_content;
@@ -78,17 +77,18 @@ final class PATCHInlineCommentHandlerTest extends TestCase
     }
 
     /**
-     * @return Ok<null> | Err<Fault>
+     * @return Ok<InlineCommentRepresentation> | Err<Fault>
      */
     private function handle(): Ok|Err
     {
-        $handler = new PATCHInlineCommentHandler(
+        $handler = new PATCHHandler(
             new InlineCommentRetriever($this->comment_searcher),
             new PullRequestRetriever(SearchPullRequestStub::withPullRequest($this->pull_request)),
             $this->permission_checker,
             $this->comment_saver,
             RetrieveGitRepositoryStub::withGitRepository(new \GitRepository()),
-            $this->cross_references_saver
+            $this->cross_references_saver,
+            new SingleRepresentationBuilder(\Codendi_HTMLPurifier::instance(), ContentInterpretorStub::build())
         );
         return $handler->handle(
             $this->comment_author,
@@ -98,11 +98,16 @@ final class PATCHInlineCommentHandlerTest extends TestCase
         );
     }
 
-    public function testItUpdatesTheComment(): void
+    public function testItReturnsARepresentationOfTheUpdatedComment(): void
     {
         $result = $this->handle();
         self::assertTrue(Result::isOk($result));
-        self::assertNull($result->value);
+        $representation = $result->value;
+        assert($representation instanceof InlineCommentRepresentation);
+        self::assertSame(self::INLINE_COMMENT_ID, $representation->id);
+        self::assertSame($this->updated_content, $representation->raw_content);
+        self::assertNotNull($representation->last_edition_date);
+
         self::assertSame(1, $this->comment_saver->getCallCount());
         $updated_comment = $this->comment_saver->getLastArgument();
         self::assertSame($this->updated_content, $updated_comment?->getContent());

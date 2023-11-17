@@ -49,10 +49,13 @@ final class SingleRepresentationBuilderTest extends TestCase
 
     public function testItBuildsRepresentationForMarkdownComment(): void
     {
-        $comment        = InlineCommentTestBuilder::aMarkdownComment('preparoxysmal bibliognostic')->build();
+        $comment        = InlineCommentTestBuilder::aMarkdownComment('preparoxysmal bibliognostic')
+            ->editedOn(new \DateTimeImmutable('@1700000000'))
+            ->build();
         $representation = $this->build($comment);
         self::assertSame(1, $this->interpreter->getInterpretedContentWithReferencesCount());
         self::assertSame(TimelineComment::FORMAT_MARKDOWN, $representation->format);
+        self::assertNotNull($representation->last_edition_date);
     }
 
     public function testItBuildsRepresentationForTextComment(): void
@@ -60,5 +63,6 @@ final class SingleRepresentationBuilderTest extends TestCase
         $comment        = InlineCommentTestBuilder::aTextComment('waybread subinflammation')->build();
         $representation = $this->build($comment);
         self::assertSame(0, $this->interpreter->getInterpretedContentWithReferencesCount());
+        self::assertNull($representation->last_edition_date);
     }
 }

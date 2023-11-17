@@ -26,14 +26,19 @@ use Luracast\Restler\RestException;
 use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Markdown\CodeBlockFeatures;
+use Tuleap\Markdown\CommonMarkInterpreter;
+use Tuleap\Markdown\EnhancedCodeBlockExtension;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\FeatureFlagEditComments;
 use Tuleap\PullRequest\InlineComment\InlineCommentRetriever;
 use Tuleap\PullRequest\PullRequestRetriever;
-use Tuleap\PullRequest\REST\v1\Comment\InlineCommentPATCHRepresentation;
-use Tuleap\PullRequest\REST\v1\Comment\PATCHInlineCommentHandler;
+use Tuleap\PullRequest\REST\v1\InlineComment\InlineCommentPATCHRepresentation;
+use Tuleap\PullRequest\REST\v1\InlineComment\InlineCommentRepresentation;
+use Tuleap\PullRequest\REST\v1\InlineComment\PATCHHandler;
+use Tuleap\PullRequest\REST\v1\InlineComment\SingleRepresentationBuilder;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 
@@ -61,7 +66,7 @@ final class PullRequestInlineCommentsResource extends AuthenticatedResource
      * @throws RestException 403
      * @throws RestException 404
      */
-    public function patchCommentId(int $id, InlineCommentPATCHRepresentation $comment_data): void
+    public function patchCommentId(int $id, InlineCommentPATCHRepresentation $comment_data): InlineCommentRepresentation
     {
         Header::allowOptionsPatch();
         $this->checkAccess();
@@ -74,7 +79,12 @@ final class PullRequestInlineCommentsResource extends AuthenticatedResource
         $pull_request_dao       = new \Tuleap\PullRequest\Dao();
         $inline_comment_dao     = new \Tuleap\PullRequest\InlineComment\Dao();
         $git_repository_factory = new \GitRepositoryFactory(new \GitDao(), \ProjectManager::instance());
-        $handler                = new PATCHInlineCommentHandler(
+        $purifier               = \Codendi_HTMLPurifier::instance();
+        $markdown_interpreter   = CommonMarkInterpreter::build(
+            $purifier,
+            new EnhancedCodeBlockExtension(new CodeBlockFeatures())
+        );
+        $handler                = new PATCHHandler(
             new InlineCommentRetriever($inline_comment_dao),
             new PullRequestRetriever($pull_request_dao),
             new PullRequestPermissionChecker(
@@ -90,9 +100,13 @@ final class PullRequestInlineCommentsResource extends AuthenticatedResource
             ),
             $inline_comment_dao,
             $git_repository_factory,
-            new \ReferenceManager()
+            new \ReferenceManager(),
+            new SingleRepresentationBuilder($purifier, $markdown_interpreter)
         );
-        $handler->handle($current_user, $id, $comment_data, new \DateTimeImmutable())
-            ->mapErr(FaultMapper::mapToRestException(...));
+        return $handler->handle($current_user, $id, $comment_data, new \DateTimeImmutable())
+            ->match(
+                static fn(InlineCommentRepresentation $representation) => $representation,
+                FaultMapper::mapToRestException(...)
+            );
     }
 }
