@@ -23,7 +23,6 @@ declare(strict_types=1);
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 final class ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\ForgeConfigSandbox;
     use \Tuleap\TemporaryTestDirectory;
 
@@ -45,18 +44,20 @@ final class ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dao     = \Mockery::spy(\ArtifactXMLExporterDao::class);
+        $this->dao     = $this->createMock(\ArtifactXMLExporterDao::class);
         $this->dom     = new DOMDocument("1.0", "UTF8");
         $this->archive = new ZipArchive();
         $this->archive->open($this->getTmpDir() . '/a', ZipArchive::CREATE);
         $node_helper              = new ArtifactXMLNodeHelper($this->dom);
         $attachment_exporter      = new ArtifactAttachmentXMLZipper($node_helper, $this->dao, $this->archive, true);
-        $this->logger             = \Mockery::spy(\Psr\Log\LoggerInterface::class);
+        $this->logger             = $this->createMock(\Psr\Log\LoggerInterface::class);
         $this->exporter           = new ArtifactXMLExporter($this->dao, $attachment_exporter, $node_helper, $this->logger);
         $this->fixtures_dir       = __DIR__ . '/_fixtures/';
         $this->expected_open_date = $this->toExpectedDate($this->open_date);
         ForgeConfig::store();
         ForgeConfig::set('sys_data_dir', dirname($this->fixtures_dir));
+
+        $this->logger->method('info');
     }
 
     protected function tearDown(): void
@@ -85,90 +86,140 @@ final class ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         }
         $json = json_decode($fixture_content, true, 512, JSON_THROW_ON_ERROR);
 
+        $expected_results_map = [];
         foreach ($json['artifact'] as $tracker_id => $artifact_rows) {
-            $this->dao->shouldReceive('searchArtifacts')->with($tracker_id)->andReturns(\TestHelper::argListToDar($artifact_rows));
+            $expected_results_map[] = [$tracker_id, \TestHelper::argListToDar($artifact_rows)];
         }
+        $this->dao->method('searchArtifacts')->willReturnMap($expected_results_map);
+
+        $expected_results_map = [];
         foreach ($json['artifact_history'] as $artifact_id => $history_rows) {
-            $this->dao->shouldReceive('searchHistory')->with($artifact_id)->andReturns(\TestHelper::argListToDar($history_rows));
+            $expected_results_map[] = [$artifact_id, \TestHelper::argListToDar($history_rows)];
         }
+        $this->dao->method('searchHistory')->willReturnMap($expected_results_map);
+
         if (isset($json['artifact_file']) && $json['artifact_file'] !== null) {
+            $expected_results_map = [];
             foreach ($json['artifact_file'] as $artifact_id => $file_rows) {
-                $this->dao->shouldReceive('searchFilesForArtifact')->with($artifact_id)->andReturns(\TestHelper::argListToDar($file_rows));
+                $expected_results_map[] = [$artifact_id, \TestHelper::argListToDar($file_rows)];
             }
+            $this->dao->method('searchFilesForArtifact')->willReturnMap($expected_results_map);
         } else {
-            $this->dao->shouldReceive('searchFilesForArtifact')->with($artifact_id)->andReturns(\TestHelper::emptyDar());
+            $this->dao->method('searchFilesForArtifact')->with($artifact_id)->willReturn(\TestHelper::emptyDar());
         }
         if (isset($json['artifact_file_search']) && $json['artifact_file_search'] !== null) {
+            $expected_results_map = [];
             foreach ($json['artifact_file_search'] as $artifact_file) {
-                $params = $artifact_file['parameters'];
-                $this->dao->shouldReceive('searchFile')->with($params['artifact_id'], $params['filename'], $params['submitted_by'], $params['date'])->andReturns(\TestHelper::argListToDar($artifact_file['rows']));
+                $params                 = $artifact_file['parameters'];
+                $expected_results_map[] = [
+                    $params['artifact_id'],
+                    $params['filename'],
+                    $params['submitted_by'],
+                    $params['date'],
+                    \TestHelper::argListToDar($artifact_file['rows']),
+                ];
             }
+            $this->dao->method('searchFile')->willReturnMap($expected_results_map);
         } else {
+            $expected_results_map = [];
             foreach ($json['artifact'] as $artifact_data) {
-                $this->dao->shouldReceive('searchFile')->with($artifact_data[0]['artifact_id'])->andReturns(\TestHelper::emptyDar());
+                $expected_results_map[] = [$artifact_data[0]['artifact_id'], \TestHelper::emptyDar()];
             }
+            $this->dao->method('searchFile')->willReturnMap($expected_results_map);
         }
         if (isset($json['search_file_before']) && $json['search_file_before'] !== null) {
+            $expected_results_map = [];
             foreach ($json['search_file_before'] as $artifact_file) {
-                $params = $artifact_file['parameters'];
-                $this->dao->shouldReceive('searchFileBefore')->with($params['artifact_id'], $params['filename'], $params['date'])->andReturns(\TestHelper::argListToDar($artifact_file['rows']));
+                $params                 = $artifact_file['parameters'];
+                $expected_results_map[] = [
+                    $params['artifact_id'],
+                    $params['filename'],
+                    $params['date'],
+                    \TestHelper::argListToDar($artifact_file['rows']),
+                ];
             }
+            $this->dao->method('searchFileBefore')->willReturnMap($expected_results_map);
         } else {
+            $expected_results_map = [];
             foreach ($json['artifact'] as $artifact_data) {
-                $this->dao->shouldReceive('searchFileBefore')->with($artifact_data[0]['artifact_id'])->andReturns(\TestHelper::emptyDar());
+                $expected_results_map[] = [$artifact_data[0]['artifact_id'], \TestHelper::emptyDar()];
             }
+            $this->dao->method('searchFileBefore')->willReturnMap($expected_results_map);
         }
         if (isset($json['search_cc_at']) && $json['search_cc_at'] !== null) {
+            $expected_results_map = [];
             foreach ($json['search_cc_at'] as $artifact_cc) {
-                $params = $artifact_cc['parameters'];
-                $this->dao->shouldReceive('searchCCAt')->with($params['artifact_id'], $params['submitted_by'], $params['date'])->andReturns(\TestHelper::argListToDar($artifact_cc['rows']));
+                $params                 = $artifact_cc['parameters'];
+                $expected_results_map[] = [
+                    $params['artifact_id'],
+                    $params['submitted_by'],
+                    $params['date'],
+                    \TestHelper::argListToDar($artifact_cc['rows']),
+                ];
             }
+            $this->dao->method('searchCCAt')->willReturnMap($expected_results_map);
         } else {
+            $expected_results_map = [];
             foreach ($json['artifact'] as $artifact_data) {
-                $this->dao->shouldReceive('searchCCAt')->with($artifact_data[0]['artifact_id'])->andReturns(\TestHelper::emptyDar());
+                $expected_results_map[] = [$artifact_data[0]['artifact_id'], \TestHelper::emptyDar()];
             }
+            $this->dao->method('searchCCAt')->willReturnMap($expected_results_map);
         }
 
         if (isset($json['permissions']) && $json['permissions'] !== null) {
+            $expected_results_map = [];
             foreach ($json['permissions'] as $artifact_id => $perms) {
-                $this->dao->shouldReceive('searchPermsForArtifact')->with($artifact_id)->andReturns(\TestHelper::argListToDar($perms));
+                $expected_results_map[] = [$artifact_id, \TestHelper::argListToDar($perms)];
             }
+            $this->dao->method('searchPermsForArtifact')->with($artifact_id)->willReturnMap($expected_results_map);
         } else {
-            $this->dao->shouldReceive('searchPermsForArtifact')->andReturns(\TestHelper::emptyDar());
+            $this->dao->method('searchPermsForArtifact')->willReturn(\TestHelper::emptyDar());
         }
 
         if (isset($json['artifact_field_value']) && $json['artifact_field_value'] !== null) {
+            $expected_results_map = [];
             foreach ($json['artifact_field_value'] as $artifact_id => $history_rows) {
-                $this->dao->shouldReceive('searchFieldValues')->with($artifact_id)->andReturns(\TestHelper::argListToDar($history_rows));
+                $expected_results_map[] = [$artifact_id, \TestHelper::argListToDar($history_rows)];
             }
+            $this->dao->method('searchFieldValues')->willReturnMap($expected_results_map);
         } else {
-            $this->dao->shouldReceive('searchFieldValues')->andReturns(\TestHelper::emptyDar());
+            $this->dao->method('searchFieldValues')->willReturn(\TestHelper::emptyDar());
         }
 
         if (isset($json['artifact_field_value_list']) && $json['artifact_field_value_list'] !== null) {
+            $expected_results_map = [];
             foreach ($json['artifact_field_value_list'] as $artifact_field_value_list) {
-                $params = $artifact_field_value_list['parameters'];
-                $this->dao->shouldReceive('searchFieldValuesList')->with($params['group_artifact_id'], $params['field_name'])->andReturns(\TestHelper::argListToDar($artifact_field_value_list['rows']));
+                $params                 = $artifact_field_value_list['parameters'];
+                $expected_results_map[] = [
+                    $params['group_artifact_id'],
+                    $params['field_name'],
+                    \TestHelper::argListToDar($artifact_field_value_list['rows']),
+                ];
             }
+            $this->dao->method('searchFieldValuesList')->willReturnMap($expected_results_map);
         } else {
+            $expected_results_map = [];
             foreach ($json['artifact'] as $artifact_data) {
-                $this->dao->shouldReceive('searchFieldValuesList')->with($artifact_data[0]['artifact_id'])->andReturns(\TestHelper::emptyDar());
+                $expected_results_map[] = [$artifact_data[0]['artifact_id'], \TestHelper::emptyDar()];
             }
+            $this->dao->method('searchFieldValuesList')->willReturnMap($expected_results_map);
         }
 
         if (isset($json['user']) && $json['user'] !== null) {
-            $all_users = [];
+            $all_users            = [];
+            $expected_results_map = [];
             foreach ($json['user'] as $user_id => $user_rows) {
-                $this->dao->shouldReceive('searchUser')->with("$user_id")->andReturns(\TestHelper::argListToDar($user_rows));
-                $all_users[] =  [
+                $expected_results_map[] = ["$user_id", \TestHelper::argListToDar($user_rows)];
+                $all_users[]            =  [
                     'user_id'   => $user_id,
                     'user_name' => $user_rows[0]['user_name'],
                 ];
             }
-            $this->dao->shouldReceive('getAllUsers')->andReturns(\TestHelper::argListToDar($all_users));
+            $this->dao->method('searchUser')->willReturnMap($expected_results_map);
+            $this->dao->method('getAllUsers')->willReturn(\TestHelper::argListToDar($all_users));
         } else {
-            $this->dao->shouldReceive('searchUser')->andReturns(\TestHelper::emptyDar());
-            $this->dao->shouldReceive('getAllUsers')->andReturns(\TestHelper::emptyDar());
+            $this->dao->method('searchUser')->willReturn(\TestHelper::emptyDar());
+            $this->dao->method('getAllUsers')->willReturn(\TestHelper::emptyDar());
         }
     }
 
@@ -186,116 +237,116 @@ final class ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->exportTrackerDataFromFixture('artifact_without_any_history');
 
-        $this->assertEquals('Le artifact without history', (string) $this->xml->artifact->changeset[0]->field_change[0]->value);
-        $this->assertEquals('string', (string) $this->xml->artifact->changeset[0]->field_change[0]['type']);
-        $this->assertEquals('summary', (string) $this->xml->artifact->changeset[0]->field_change[0]['field_name']);
-        $this->assertEquals('Le original submission', (string) $this->xml->artifact->changeset[0]->field_change[1]->value);
-        $this->assertEquals('text', (string) $this->xml->artifact->changeset[0]->field_change[1]['type']);
-        $this->assertEquals('details', (string) $this->xml->artifact->changeset[0]->field_change[1]['field_name']);
-        $this->assertEquals('1 - Ordinary', (string) $this->xml->artifact->changeset[0]->field_change[2]->value);
-        $this->assertEquals('list', (string) $this->xml->artifact->changeset[0]->field_change[2]['type']);
-        $this->assertEquals('static', (string) $this->xml->artifact->changeset[0]->field_change[2]['bind']);
-        $this->assertEquals('severity', (string) $this->xml->artifact->changeset[0]->field_change[2]['field_name']);
-        $this->assertEquals($this->expected_open_date, (string) $this->xml->artifact->changeset[0]->submitted_on);
+        self::assertEquals('Le artifact without history', (string) $this->xml->artifact->changeset[0]->field_change[0]->value);
+        self::assertEquals('string', (string) $this->xml->artifact->changeset[0]->field_change[0]['type']);
+        self::assertEquals('summary', (string) $this->xml->artifact->changeset[0]->field_change[0]['field_name']);
+        self::assertEquals('Le original submission', (string) $this->xml->artifact->changeset[0]->field_change[1]->value);
+        self::assertEquals('text', (string) $this->xml->artifact->changeset[0]->field_change[1]['type']);
+        self::assertEquals('details', (string) $this->xml->artifact->changeset[0]->field_change[1]['field_name']);
+        self::assertEquals('1 - Ordinary', (string) $this->xml->artifact->changeset[0]->field_change[2]->value);
+        self::assertEquals('list', (string) $this->xml->artifact->changeset[0]->field_change[2]['type']);
+        self::assertEquals('static', (string) $this->xml->artifact->changeset[0]->field_change[2]['bind']);
+        self::assertEquals('severity', (string) $this->xml->artifact->changeset[0]->field_change[2]['field_name']);
+        self::assertEquals($this->expected_open_date, (string) $this->xml->artifact->changeset[0]->submitted_on);
     }
 
     public function testItCreatesAnInitialChangesetBasedOnTheOldestValueKnownWhenThereIsHistory(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_full_history');
 
-        $this->assertEquals('Le artifact', (string) $this->xml->artifact->changeset[0]->field_change[0]->value);
-        $this->assertEquals('Le original submission that will be updated', (string) $this->xml->artifact->changeset[0]->field_change[1]->value);
-        $this->assertEquals('Le original submission', (string) $this->xml->artifact->changeset[2]->field_change[1]->value);
-        $this->assertEquals($this->expected_open_date, (string) $this->xml->artifact->changeset[0]->submitted_on);
+        self::assertEquals('Le artifact', (string) $this->xml->artifact->changeset[0]->field_change[0]->value);
+        self::assertEquals('Le original submission that will be updated', (string) $this->xml->artifact->changeset[0]->field_change[1]->value);
+        self::assertEquals('Le original submission', (string) $this->xml->artifact->changeset[2]->field_change[1]->value);
+        self::assertEquals($this->expected_open_date, (string) $this->xml->artifact->changeset[0]->submitted_on);
     }
 
     public function testItCreatesAChangesetForEachHistoryEntry(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_full_history');
 
-        $this->assertEquals('Le artifact with history', (string) $this->xml->artifact->changeset[1]->field_change->value);
-        $this->assertEquals($this->toExpectedDate(2234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
-        $this->assertEquals('Le artifact with full history', (string) $this->xml->artifact->changeset[2]->field_change->value);
-        $this->assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[2]->submitted_on);
+        self::assertEquals('Le artifact with history', (string) $this->xml->artifact->changeset[1]->field_change->value);
+        self::assertEquals($this->toExpectedDate(2234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
+        self::assertEquals('Le artifact with full history', (string) $this->xml->artifact->changeset[2]->field_change->value);
+        self::assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[2]->submitted_on);
     }
 
     public function testItCreatesALastChangesetAtImportTimeWhenHistoryDiffersFromCurrentState(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_half_history');
 
-        $this->assertEquals('Le artifact with half history', (string) $this->xml->artifact->changeset[3]->field_change->value);
-        $this->assertEquals($this->toExpectedDate($_SERVER['REQUEST_TIME']), (string) $this->xml->artifact->changeset[3]->submitted_on);
+        self::assertEquals('Le artifact with half history', (string) $this->xml->artifact->changeset[3]->field_change->value);
+        self::assertEquals($this->toExpectedDate($_SERVER['REQUEST_TIME']), (string) $this->xml->artifact->changeset[3]->submitted_on);
     }
 
     public function testItDoesntMessPreviousArtifactWhenTryingToUpdateInitialChangeset(): void
     {
         $this->exportTrackerDataFromFixture('two_artifacts');
 
-        $this->assertCount(2, $this->xml->artifact);
+        self::assertCount(2, $this->xml->artifact);
 
-        $this->assertEquals('Le artifact with full history', (string) $this->xml->artifact[0]->changeset[0]->field_change->value);
-        $this->assertEquals('Le artifact', (string) $this->xml->artifact[1]->changeset[0]->field_change->value);
-        $this->assertEquals('The second one', (string) $this->xml->artifact[1]->changeset[1]->field_change->value);
+        self::assertEquals('Le artifact with full history', (string) $this->xml->artifact[0]->changeset[0]->field_change->value);
+        self::assertEquals('Le artifact', (string) $this->xml->artifact[1]->changeset[0]->field_change->value);
+        self::assertEquals('The second one', (string) $this->xml->artifact[1]->changeset[1]->field_change->value);
     }
 
     public function testItHasChangesetPerComment(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_comment');
 
-        $this->assertCount(3, $this->xml->artifact->changeset);
+        self::assertCount(3, $this->xml->artifact->changeset);
 
-        $this->assertEquals($this->toExpectedDate(1234568000), (string) $this->xml->artifact->changeset[1]->submitted_on);
-        $this->assertEquals('This is my comment', (string) $this->xml->artifact->changeset[1]->comments->comment->body);
-        $this->assertEquals('text', (string) $this->xml->artifact->changeset[1]->comments->comment->body['format']);
+        self::assertEquals($this->toExpectedDate(1234568000), (string) $this->xml->artifact->changeset[1]->submitted_on);
+        self::assertEquals('This is my comment', (string) $this->xml->artifact->changeset[1]->comments->comment->body);
+        self::assertEquals('text', (string) $this->xml->artifact->changeset[1]->comments->comment->body['format']);
 
-        $this->assertEquals($this->toExpectedDate(1234569000), (string) $this->xml->artifact->changeset[2]->submitted_on);
-        $this->assertEquals('<p>With<strong> CHTEUMEULEU</strong></p>', (string) $this->xml->artifact->changeset[2]->comments->comment->body);
-        $this->assertEquals('html', (string) $this->xml->artifact->changeset[2]->comments->comment->body['format']);
+        self::assertEquals($this->toExpectedDate(1234569000), (string) $this->xml->artifact->changeset[2]->submitted_on);
+        self::assertEquals('<p>With<strong> CHTEUMEULEU</strong></p>', (string) $this->xml->artifact->changeset[2]->comments->comment->body);
+        self::assertEquals('html', (string) $this->xml->artifact->changeset[2]->comments->comment->body['format']);
     }
 
     public function testItHasACommentVersions(): void
     {
-        $this->logger->shouldReceive('warn')->never();
+        $this->logger->expects(self::never())->method('warning');
         $this->exportTrackerDataFromFixture('artifact_with_comment_updates');
-        $this->assertCount(2, $this->xml->artifact->changeset);
-        $this->assertCount(3, $this->xml->artifact->changeset[1]->comments->comment);
+        self::assertCount(2, $this->xml->artifact->changeset);
+        self::assertCount(3, $this->xml->artifact->changeset[1]->comments->comment);
 
-        $this->assertEquals($this->toExpectedDate(1234568000), (string) $this->xml->artifact->changeset[1]->submitted_on);
+        self::assertEquals($this->toExpectedDate(1234568000), (string) $this->xml->artifact->changeset[1]->submitted_on);
 
         $comments = $this->xml->artifact->changeset[1]->comments;
 
-        $this->assertEquals($this->toExpectedDate(1234568000), (string) $comments->comment[0]->submitted_on);
+        self::assertEquals($this->toExpectedDate(1234568000), (string) $comments->comment[0]->submitted_on);
 
-        $this->assertEquals('This is my comment', (string) $comments->comment[0]->body);
-        $this->assertEquals('text', (string) $comments->comment[0]->body['format']);
+        self::assertEquals('This is my comment', (string) $comments->comment[0]->body);
+        self::assertEquals('text', (string) $comments->comment[0]->body['format']);
 
-        $this->assertEquals($this->toExpectedDate(1234569000), (string) $comments->comment[1]->submitted_on);
-        $this->assertEquals('goofy', (string) $comments->comment[1]->submitted_by);
-        $this->assertEquals('<p>With<strong> CHTEUMEULEU</strong></p>', (string) $comments->comment[1]->body);
-        $this->assertEquals('html', (string) $comments->comment[1]->body['format']);
+        self::assertEquals($this->toExpectedDate(1234569000), (string) $comments->comment[1]->submitted_on);
+        self::assertEquals('goofy', (string) $comments->comment[1]->submitted_by);
+        self::assertEquals('<p>With<strong> CHTEUMEULEU</strong></p>', (string) $comments->comment[1]->body);
+        self::assertEquals('html', (string) $comments->comment[1]->body['format']);
 
-        $this->assertEquals($this->toExpectedDate(1234569500), (string) $comments->comment[2]->submitted_on);
-        $this->assertEquals('goofy', (string) $comments->comment[2]->submitted_by);
-        $this->assertEquals('<p>With<strong> HTML</strong></p>', (string) $comments->comment[2]->body);
-        $this->assertEquals('html', (string) $comments->comment[2]->body['format']);
+        self::assertEquals($this->toExpectedDate(1234569500), (string) $comments->comment[2]->submitted_on);
+        self::assertEquals('goofy', (string) $comments->comment[2]->submitted_by);
+        self::assertEquals('<p>With<strong> HTML</strong></p>', (string) $comments->comment[2]->body);
+        self::assertEquals('html', (string) $comments->comment[2]->body['format']);
     }
 
     public function testItCreatesAChangesetWithOneAttachment(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_one_attachment');
-        $this->assertCount(2, $this->xml->artifact->changeset);
+        self::assertCount(2, $this->xml->artifact->changeset);
 
-        $this->assertEquals('attachment', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('file', (string) $this->xml->artifact->changeset[1]->field_change['type']);
-        $this->assertEquals('File30', (string) $this->xml->artifact->changeset[1]->field_change->value[0]['ref']);
-        $this->assertEquals($this->toExpectedDate(3234567900), (string) $this->xml->artifact->changeset[1]->submitted_on);
+        self::assertEquals('attachment', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        self::assertEquals('file', (string) $this->xml->artifact->changeset[1]->field_change['type']);
+        self::assertEquals('File30', (string) $this->xml->artifact->changeset[1]->field_change->value[0]['ref']);
+        self::assertEquals($this->toExpectedDate(3234567900), (string) $this->xml->artifact->changeset[1]->submitted_on);
 
-        $this->assertCount(1, $this->xml->artifact->file);
-        $this->assertEquals('File30', (string) $this->xml->artifact->file[0]['id']);
-        $this->assertEquals('A.png', (string) $this->xml->artifact->file[0]->filename);
-        $this->assertEquals(12323, (int) $this->xml->artifact->file[0]->filesize);
-        $this->assertEquals('image/png', (string) $this->xml->artifact->file[0]->filetype);
-        $this->assertEquals('The screenshot', (string) $this->xml->artifact->file[0]->description);
+        self::assertCount(1, $this->xml->artifact->file);
+        self::assertEquals('File30', (string) $this->xml->artifact->file[0]['id']);
+        self::assertEquals('A.png', (string) $this->xml->artifact->file[0]->filename);
+        self::assertEquals(12323, (int) $this->xml->artifact->file[0]->filesize);
+        self::assertEquals('image/png', (string) $this->xml->artifact->file[0]->filetype);
+        self::assertEquals('The screenshot', (string) $this->xml->artifact->file[0]->description);
         self::assertEquals(2, $this->archive->numFiles);
     }
 
@@ -303,54 +354,56 @@ final class ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->exportTrackerDataFromFixture('artifact_with_two_attachments_same_name');
 
-        $this->assertCount(3, $this->xml->artifact->changeset);
+        self::assertCount(3, $this->xml->artifact->changeset);
 
-        $this->assertEquals('attachment', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('File30', (string) $this->xml->artifact->changeset[1]->field_change->value[0]['ref']);
+        self::assertEquals('attachment', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        self::assertEquals('File30', (string) $this->xml->artifact->changeset[1]->field_change->value[0]['ref']);
 
-        $this->assertEquals('attachment', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
-        $this->assertCount(2, $this->xml->artifact->changeset[2]->field_change->value);
-        $this->assertEquals('File31', (string) $this->xml->artifact->changeset[2]->field_change->value[0]['ref']);
-        $this->assertEquals('File30', (string) $this->xml->artifact->changeset[2]->field_change->value[1]['ref']);
-        $this->assertEquals($this->toExpectedDate(3234568000), (string) $this->xml->artifact->changeset[2]->submitted_on);
+        self::assertEquals('attachment', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
+        self::assertCount(2, $this->xml->artifact->changeset[2]->field_change->value);
+        self::assertEquals('File31', (string) $this->xml->artifact->changeset[2]->field_change->value[0]['ref']);
+        self::assertEquals('File30', (string) $this->xml->artifact->changeset[2]->field_change->value[1]['ref']);
+        self::assertEquals($this->toExpectedDate(3234568000), (string) $this->xml->artifact->changeset[2]->submitted_on);
 
-        $this->assertCount(2, $this->xml->artifact->file);
-        $this->assertEquals('File30', (string) $this->xml->artifact->file[0]['id']);
-        $this->assertEquals('A.png', (string) $this->xml->artifact->file[0]->filename);
-        $this->assertEquals(12323, (int) $this->xml->artifact->file[0]->filesize);
-        $this->assertEquals('image/png', (string) $this->xml->artifact->file[0]->filetype);
-        $this->assertEquals('The screenshot', (string) $this->xml->artifact->file[0]->description);
+        self::assertCount(2, $this->xml->artifact->file);
+        self::assertEquals('File30', (string) $this->xml->artifact->file[0]['id']);
+        self::assertEquals('A.png', (string) $this->xml->artifact->file[0]->filename);
+        self::assertEquals(12323, (int) $this->xml->artifact->file[0]->filesize);
+        self::assertEquals('image/png', (string) $this->xml->artifact->file[0]->filetype);
+        self::assertEquals('The screenshot', (string) $this->xml->artifact->file[0]->description);
 
-        $this->assertEquals('File31', (string) $this->xml->artifact->file[1]['id']);
-        $this->assertEquals('A.png', (string) $this->xml->artifact->file[1]->filename);
-        $this->assertEquals(50, (int) $this->xml->artifact->file[1]->filesize);
-        $this->assertEquals('image/png', (string) $this->xml->artifact->file[1]->filetype);
-        $this->assertEquals('The screenshot v2', (string) $this->xml->artifact->file[1]->description);
+        self::assertEquals('File31', (string) $this->xml->artifact->file[1]['id']);
+        self::assertEquals('A.png', (string) $this->xml->artifact->file[1]->filename);
+        self::assertEquals(50, (int) $this->xml->artifact->file[1]->filesize);
+        self::assertEquals('image/png', (string) $this->xml->artifact->file[1]->filetype);
+        self::assertEquals('The screenshot v2', (string) $this->xml->artifact->file[1]->description);
     }
 
     public function testItCreatesAChangesetWithDeletedAttachments(): void
     {
+        $this->logger->method('warning');
+
         $this->exportTrackerDataFromFixture('artifact_with_deleted_attachment');
 
-        $this->assertCount(2, $this->xml->artifact->changeset);
+        self::assertCount(2, $this->xml->artifact->changeset);
 
-        $this->assertEquals('attachment', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertCount(1, $this->xml->artifact->changeset[1]->field_change->value);
-        $this->assertEquals('File31', (string) $this->xml->artifact->changeset[1]->field_change->value[0]['ref']);
-        $this->assertEquals($this->toExpectedDate(3234568000), (string) $this->xml->artifact->changeset[1]->submitted_on);
+        self::assertEquals('attachment', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        self::assertCount(1, $this->xml->artifact->changeset[1]->field_change->value);
+        self::assertEquals('File31', (string) $this->xml->artifact->changeset[1]->field_change->value[0]['ref']);
+        self::assertEquals($this->toExpectedDate(3234568000), (string) $this->xml->artifact->changeset[1]->submitted_on);
 
-        $this->assertCount(1, $this->xml->artifact->file);
-        $this->assertEquals('File31', (string) $this->xml->artifact->file[0]['id']);
-        $this->assertEquals('zzz.pdf', (string) $this->xml->artifact->file[0]->filename);
+        self::assertCount(1, $this->xml->artifact->file);
+        self::assertEquals('File31', (string) $this->xml->artifact->file[0]['id']);
+        self::assertEquals('zzz.pdf', (string) $this->xml->artifact->file[0]->filename);
     }
 
     public function testItCreatesAChangesetWithNullAttachments(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_null_attachment');
 
-        $this->assertCount(1, $this->xml->artifact->changeset);
+        self::assertCount(1, $this->xml->artifact->changeset);
         foreach ($this->xml->artifact->changeset->field_change as $change) {
-            $this->assertNotEquals('attachment', (string) $change['field_name']);
+            self::assertNotEquals('attachment', (string) $change['field_name']);
         }
     }
 
@@ -358,22 +411,22 @@ final class ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->exportTrackerDataFromFixture('artifact_cc_no_changes');
 
-        $this->assertCount(2, $this->xml->artifact->changeset[0]->field_change);
-        $this->assertChangesItCreatesAnInitialChangesetATheTimeOfOpenDateWhenThereIsNoHistory($this->xml->artifact->changeset[0]->field_change[0]);
-        $this->assertChangesItCreatesAnInitialChangesetATheTimeOfOpenDateWhenThereIsNoHistory($this->xml->artifact->changeset[0]->field_change[1]);
+        self::assertCount(2, $this->xml->artifact->changeset[0]->field_change);
+        self::assertChangesItCreatesAnInitialChangesetATheTimeOfOpenDateWhenThereIsNoHistory($this->xml->artifact->changeset[0]->field_change[0]);
+        self::assertChangesItCreatesAnInitialChangesetATheTimeOfOpenDateWhenThereIsNoHistory($this->xml->artifact->changeset[0]->field_change[1]);
     }
 
     private function assertChangesItCreatesAnInitialChangesetATheTimeOfOpenDateWhenThereIsNoHistory(SimpleXMLElement $field_change): void
     {
         switch ($field_change['field_name']) {
             case 'cc':
-                $this->assertEquals('open_list', (string) $field_change['type']);
-                $this->assertEquals('users', (string) $field_change['bind']);
-                $this->assertEquals('john@doe.org', (string) $field_change->value[0]);
-                $this->assertEquals('jeanjean', (string) $field_change->value[1]);
+                self::assertEquals('open_list', (string) $field_change['type']);
+                self::assertEquals('users', (string) $field_change['bind']);
+                self::assertEquals('john@doe.org', (string) $field_change->value[0]);
+                self::assertEquals('jeanjean', (string) $field_change->value[1]);
 
-                $this->assertFalse(isset($field_change->value[0]['format']));
-                $this->assertFalse(isset($field_change->value[1]['format']));
+                self::assertFalse(isset($field_change->value[0]['format']));
+                self::assertFalse(isset($field_change->value[1]['format']));
                 break;
             case 'summary':
                 // Ok but we don't care
@@ -388,61 +441,61 @@ final class ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->exportTrackerDataFromFixture('artifact_cc_add_new');
 
-        $this->assertCount(3, $this->xml->artifact->changeset);
+        self::assertCount(3, $this->xml->artifact->changeset);
 
-        $this->assertEquals('john@doe.org', (string) $this->xml->artifact->changeset[1]->field_change->value);
-        $this->assertEquals('john@doe.org', (string) $this->xml->artifact->changeset[2]->field_change->value[0]);
-        $this->assertEquals('jeanjean', (string) $this->xml->artifact->changeset[2]->field_change->value[1]);
+        self::assertEquals('john@doe.org', (string) $this->xml->artifact->changeset[1]->field_change->value);
+        self::assertEquals('john@doe.org', (string) $this->xml->artifact->changeset[2]->field_change->value[0]);
+        self::assertEquals('jeanjean', (string) $this->xml->artifact->changeset[2]->field_change->value[1]);
     }
 
     public function testItCreatesChangesWithDeletedCC(): void
     {
         $this->exportTrackerDataFromFixture('artifact_cc_remove');
 
-        $this->assertCount(2, $this->xml->artifact->changeset);
+        self::assertCount(2, $this->xml->artifact->changeset);
 
-        $this->assertCount(3, $this->xml->artifact->changeset[0]->field_change->value);
-        $this->assertEquals('john@doe.org', (string) $this->xml->artifact->changeset[0]->field_change->value[0]);
-        $this->assertEquals('jeanjean', (string) $this->xml->artifact->changeset[0]->field_change->value[1]);
-        $this->assertEquals('bla@bla.org', (string) $this->xml->artifact->changeset[0]->field_change->value[2]);
+        self::assertCount(3, $this->xml->artifact->changeset[0]->field_change->value);
+        self::assertEquals('john@doe.org', (string) $this->xml->artifact->changeset[0]->field_change->value[0]);
+        self::assertEquals('jeanjean', (string) $this->xml->artifact->changeset[0]->field_change->value[1]);
+        self::assertEquals('bla@bla.org', (string) $this->xml->artifact->changeset[0]->field_change->value[2]);
 
-        $this->assertCount(1, $this->xml->artifact->changeset[1]->field_change->value);
-        $this->assertEquals('john@doe.org', (string) $this->xml->artifact->changeset[1]->field_change->value);
+        self::assertCount(1, $this->xml->artifact->changeset[1]->field_change->value);
+        self::assertEquals('john@doe.org', (string) $this->xml->artifact->changeset[1]->field_change->value);
     }
 
     public function testItSetNoneAsOriginalSeverityValue(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_severity_history');
 
-        $this->assertEquals('1 - Ordinary', (string) $this->xml->artifact->changeset[1]->field_change->value);
-        $this->assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
-        $this->assertEquals('static', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
-        $this->assertEquals('severity', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        self::assertEquals('1 - Ordinary', (string) $this->xml->artifact->changeset[1]->field_change->value);
+        self::assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
+        self::assertEquals('static', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
+        self::assertEquals('severity', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
     }
 
     public function testItCreatesASingleChangesetWithSummaryAndAttachment(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_summary_and_attachment');
-        $this->assertCount(1, $this->xml->artifact->changeset);
+        self::assertCount(1, $this->xml->artifact->changeset);
 
-        $this->assertEquals($this->toExpectedDate(1234567890), (string) $this->xml->artifact->changeset[0]->submitted_on);
+        self::assertEquals($this->toExpectedDate(1234567890), (string) $this->xml->artifact->changeset[0]->submitted_on);
 
         // cannot guarranty the order of execution therefore specific assertion in dedicated method
-        $this->assertCount(2, $this->xml->artifact->changeset[0]->field_change);
-        $this->assertChangesItCreatesASingleChangesetWithSummaryAndAttachment($this->xml->artifact->changeset[0]->field_change[0]);
-        $this->assertChangesItCreatesASingleChangesetWithSummaryAndAttachment($this->xml->artifact->changeset[0]->field_change[1]);
+        self::assertCount(2, $this->xml->artifact->changeset[0]->field_change);
+        self::assertChangesItCreatesASingleChangesetWithSummaryAndAttachment($this->xml->artifact->changeset[0]->field_change[0]);
+        self::assertChangesItCreatesASingleChangesetWithSummaryAndAttachment($this->xml->artifact->changeset[0]->field_change[1]);
 
-        $this->assertCount(1, $this->xml->artifact->file);
+        self::assertCount(1, $this->xml->artifact->file);
     }
 
     private function assertChangesItCreatesASingleChangesetWithSummaryAndAttachment(SimpleXMLElement $field_change)
     {
         switch ($field_change['field_name']) {
             case 'attachment':
-                $this->assertEquals('File30', $field_change->value[0]['ref']);
+                self::assertEquals('File30', $field_change->value[0]['ref']);
                 break;
             case 'summary':
-                $this->assertEquals('Le artifact with full history', $field_change->value);
+                self::assertEquals('Le artifact with full history', $field_change->value);
                 break;
             default:
                 throw new Exception('Unexpected field type: ' . $field_change['field_name']);
@@ -454,60 +507,60 @@ final class ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->exportTrackerDataFromFixture('artifact_with_summary_and_attachment_change');
 
-        $this->assertCount(3, $this->xml->artifact->changeset);
+        self::assertCount(3, $this->xml->artifact->changeset);
 
         // Changeset1: original summary
-        $this->assertEquals($this->toExpectedDate(1234567890), (string) $this->xml->artifact->changeset[0]->submitted_on);
-        $this->assertEquals('summary', (string) $this->xml->artifact->changeset[0]->field_change['field_name']);
-        $this->assertEquals('Le artifact with full history', (string) $this->xml->artifact->changeset[0]->field_change->value);
+        self::assertEquals($this->toExpectedDate(1234567890), (string) $this->xml->artifact->changeset[0]->submitted_on);
+        self::assertEquals('summary', (string) $this->xml->artifact->changeset[0]->field_change['field_name']);
+        self::assertEquals('Le artifact with full history', (string) $this->xml->artifact->changeset[0]->field_change->value);
 
         // Changeset2: attachment
-        $this->assertEquals($this->toExpectedDate(1234568000), (string) $this->xml->artifact->changeset[1]->submitted_on);
-        $this->assertEquals('attachment', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('File30', (string) $this->xml->artifact->changeset[1]->field_change->value[0]['ref']);
+        self::assertEquals($this->toExpectedDate(1234568000), (string) $this->xml->artifact->changeset[1]->submitted_on);
+        self::assertEquals('attachment', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        self::assertEquals('File30', (string) $this->xml->artifact->changeset[1]->field_change->value[0]['ref']);
 
         // Changeset3: new summary
-        $this->assertEquals($this->toExpectedDate(1234569000), (string) $this->xml->artifact->changeset[2]->submitted_on);
-        $this->assertEquals('summary', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
-        $this->assertEquals('Le artifact with updated summary', (string) $this->xml->artifact->changeset[2]->field_change->value);
+        self::assertEquals($this->toExpectedDate(1234569000), (string) $this->xml->artifact->changeset[2]->submitted_on);
+        self::assertEquals('summary', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
+        self::assertEquals('Le artifact with updated summary', (string) $this->xml->artifact->changeset[2]->field_change->value);
 
-        $this->assertCount(1, $this->xml->artifact->file);
+        self::assertCount(1, $this->xml->artifact->file);
     }
 
     public function testItCreatesChangesetWithAttachmentAndSummaryWhenHistoryDiffersFromCurrentState(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_summary_attachment_half_history');
 
-        $this->assertCount(4, $this->xml->artifact->changeset);
+        self::assertCount(4, $this->xml->artifact->changeset);
 
         // Changeset1: original summary
-        $this->assertEquals($this->toExpectedDate(1234567890), (string) $this->xml->artifact->changeset[0]->submitted_on);
-        $this->assertEquals('summary', (string) $this->xml->artifact->changeset[0]->field_change['field_name']);
-        $this->assertEquals('Le artifact with full history', (string) $this->xml->artifact->changeset[0]->field_change->value);
+        self::assertEquals($this->toExpectedDate(1234567890), (string) $this->xml->artifact->changeset[0]->submitted_on);
+        self::assertEquals('summary', (string) $this->xml->artifact->changeset[0]->field_change['field_name']);
+        self::assertEquals('Le artifact with full history', (string) $this->xml->artifact->changeset[0]->field_change->value);
 
         // Changeset2: new summary
-        $this->assertEquals($this->toExpectedDate(1234568000), (string) $this->xml->artifact->changeset[1]->submitted_on);
-        $this->assertEquals('summary', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('Le artifact with updated summary', (string) $this->xml->artifact->changeset[1]->field_change->value);
+        self::assertEquals($this->toExpectedDate(1234568000), (string) $this->xml->artifact->changeset[1]->submitted_on);
+        self::assertEquals('summary', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        self::assertEquals('Le artifact with updated summary', (string) $this->xml->artifact->changeset[1]->field_change->value);
 
         // Changeset3: attachment
-        $this->assertEquals($this->toExpectedDate(1234569000), (string) $this->xml->artifact->changeset[2]->submitted_on);
-        $this->assertEquals('attachment', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
-        $this->assertEquals('File30', (string) $this->xml->artifact->changeset[2]->field_change->value[0]['ref']);
+        self::assertEquals($this->toExpectedDate(1234569000), (string) $this->xml->artifact->changeset[2]->submitted_on);
+        self::assertEquals('attachment', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
+        self::assertEquals('File30', (string) $this->xml->artifact->changeset[2]->field_change->value[0]['ref']);
 
         // Changeset4: last summary update
-        $this->assertEquals($this->toExpectedDate($_SERVER['REQUEST_TIME']), (string) $this->xml->artifact->changeset[3]->submitted_on);
-        $this->assertEquals('summary', (string) $this->xml->artifact->changeset[3]->field_change['field_name']);
-        $this->assertEquals('Le artifact with half history', (string) $this->xml->artifact->changeset[3]->field_change->value);
+        self::assertEquals($this->toExpectedDate($_SERVER['REQUEST_TIME']), (string) $this->xml->artifact->changeset[3]->submitted_on);
+        self::assertEquals('summary', (string) $this->xml->artifact->changeset[3]->field_change['field_name']);
+        self::assertEquals('Le artifact with half history', (string) $this->xml->artifact->changeset[3]->field_change->value);
 
-        $this->assertCount(1, $this->xml->artifact->file);
+        self::assertCount(1, $this->xml->artifact->file);
     }
 
     public function testItDoesNotExportPermsIfThereIsNoPerms(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_full_history');
         foreach ($this->xml->artifact->xpath('changeset') as $changeset) {
-            $this->assertThereIsNoPermissionsFieldChange($changeset);
+            self::assertThereIsNoPermissionsFieldChange($changeset);
         }
     }
 
@@ -523,15 +576,15 @@ final class ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             if ((string) $field_change['field_name'] !== 'permissions_on_artifact') {
                 continue;
             }
-            $this->assertEquals('permissions_on_artifact', (string) $field_change['type']);
-            $this->assertEquals('1', (string) $field_change['use_perm']);
-            $this->assertCount(2, $field_change->ugroup);
-            $this->assertEquals('15', (string) $field_change->ugroup[0]['ugroup_id']);
-            $this->assertEquals('101', (string) $field_change->ugroup[1]['ugroup_id']);
+            self::assertEquals('permissions_on_artifact', (string) $field_change['type']);
+            self::assertEquals('1', (string) $field_change['use_perm']);
+            self::assertCount(2, $field_change->ugroup);
+            self::assertEquals('15', (string) $field_change->ugroup[0]['ugroup_id']);
+            self::assertEquals('101', (string) $field_change->ugroup[1]['ugroup_id']);
             $permissions_are_exported = true;
         }
 
-        $this->assertTrue($permissions_are_exported);
+        self::assertTrue($permissions_are_exported);
     }
 
     public function testItTransformsNobodyIntoProjectAdministrators(): void
@@ -546,14 +599,14 @@ final class ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             if ((string) $field_change['field_name'] !== 'permissions_on_artifact') {
                 continue;
             }
-            $this->assertEquals('permissions_on_artifact', (string) $field_change['type']);
-            $this->assertEquals('1', (string) $field_change['use_perm']);
-            $this->assertCount(1, $field_change->ugroup);
-            $this->assertEquals('4', (string) $field_change->ugroup[0]['ugroup_id']);
+            self::assertEquals('permissions_on_artifact', (string) $field_change['type']);
+            self::assertEquals('1', (string) $field_change['use_perm']);
+            self::assertCount(1, $field_change->ugroup);
+            self::assertEquals('4', (string) $field_change->ugroup[0]['ugroup_id']);
             $permissions_are_exported = true;
         }
 
-        $this->assertTrue($permissions_are_exported);
+        self::assertTrue($permissions_are_exported);
     }
 
     public function testItDoesNotExportPermissionsInFirstChangesets(): void
@@ -562,14 +615,14 @@ final class ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $first_changesets = array_slice($this->xml->artifact->xpath('changeset'), 0, -1);
         foreach ($first_changesets as $changeset) {
-            $this->assertThereIsNoPermissionsFieldChange($changeset);
+            self::assertThereIsNoPermissionsFieldChange($changeset);
         }
     }
 
     private function assertThereIsNoPermissionsFieldChange(SimpleXMLElement $changeset): void
     {
         foreach ($changeset->field_change as $field_change) {
-            $this->assertNotEquals('permissions_on_artifact', (string) $field_change['field_name']);
+            self::assertNotEquals('permissions_on_artifact', (string) $field_change['field_name']);
         }
     }
 
@@ -577,38 +630,38 @@ final class ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->exportTrackerDataFromFixture('artifact_with_string_history');
 
-        $this->assertCount(3, $this->xml->artifact->changeset);
+        self::assertCount(3, $this->xml->artifact->changeset);
 
-        $this->assertEquals('The error code is 23232', (string) $this->xml->artifact->changeset[1]->field_change->value);
-        $this->assertEquals('field_14', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('string', (string) $this->xml->artifact->changeset[1]->field_change['type']);
-        $this->assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
+        self::assertEquals('The error code is 23232', (string) $this->xml->artifact->changeset[1]->field_change->value);
+        self::assertEquals('field_14', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        self::assertEquals('string', (string) $this->xml->artifact->changeset[1]->field_change['type']);
+        self::assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
 
-        $this->assertEquals('The error code is not returned', (string) $this->xml->artifact->changeset[2]->field_change->value);
-        $this->assertEquals('field_14', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
-        $this->assertEquals('string', (string) $this->xml->artifact->changeset[2]->field_change['type']);
-        $this->assertEquals($this->toExpectedDate(3234570000), (string) $this->xml->artifact->changeset[2]->submitted_on);
+        self::assertEquals('The error code is not returned', (string) $this->xml->artifact->changeset[2]->field_change->value);
+        self::assertEquals('field_14', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
+        self::assertEquals('string', (string) $this->xml->artifact->changeset[2]->field_change['type']);
+        self::assertEquals($this->toExpectedDate(3234570000), (string) $this->xml->artifact->changeset[2]->submitted_on);
     }
 
     public function testItCreatesAnInitialChangesetATheTimeOfOpenDateWhenThereIsNoHistoryWithString(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_string_no_history');
 
-        $this->assertCount(1, $this->xml->artifact->changeset);
+        self::assertCount(1, $this->xml->artifact->changeset);
 
-        $this->assertCount(2, $this->xml->artifact->changeset[0]->field_change);
-        $this->assertChangesItCreatesASingleChangesetWithSummaryAndString($this->xml->artifact->changeset[0]->field_change[0]);
-        $this->assertChangesItCreatesASingleChangesetWithSummaryAndString($this->xml->artifact->changeset[0]->field_change[1]);
+        self::assertCount(2, $this->xml->artifact->changeset[0]->field_change);
+        self::assertChangesItCreatesASingleChangesetWithSummaryAndString($this->xml->artifact->changeset[0]->field_change[0]);
+        self::assertChangesItCreatesASingleChangesetWithSummaryAndString($this->xml->artifact->changeset[0]->field_change[1]);
     }
 
     private function assertChangesItCreatesASingleChangesetWithSummaryAndString(SimpleXMLElement $field_change): void
     {
         switch ($field_change['field_name']) {
             case 'field_14':
-                $this->assertEquals('The error code is not returned', $field_change->value);
+                self::assertEquals('The error code is not returned', $field_change->value);
                 break;
             case 'summary':
-                $this->assertEquals('Le artifact with full history', $field_change->value);
+                self::assertEquals('Le artifact with full history', $field_change->value);
                 break;
             default:
                 throw new Exception('Unexpected field type: ' . $field_change['field_name']);
@@ -620,259 +673,260 @@ final class ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->exportTrackerDataFromFixture('artifact_with_float_history');
 
-        $this->assertCount(3, $this->xml->artifact->changeset);
+        self::assertCount(3, $this->xml->artifact->changeset);
 
-        $this->assertEquals('66.98', (string) $this->xml->artifact->changeset[1]->field_change->value);
+        self::assertEquals('66.98', (string) $this->xml->artifact->changeset[1]->field_change->value);
 
-        $this->assertEquals('2048', (string) $this->xml->artifact->changeset[2]->field_change->value);
+        self::assertEquals('2048', (string) $this->xml->artifact->changeset[2]->field_change->value);
     }
 
     public function testItReturnsZeroIfNoNewValue(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_float_history_with_no_value');
 
-        $this->assertCount(3, $this->xml->artifact->changeset);
+        self::assertCount(3, $this->xml->artifact->changeset);
 
-        $this->assertEquals('66.98', (string) $this->xml->artifact->changeset[1]->field_change->value);
+        self::assertEquals('66.98', (string) $this->xml->artifact->changeset[1]->field_change->value);
 
-        $this->assertEquals('0', (string) $this->xml->artifact->changeset[2]->field_change->value);
+        self::assertEquals('0', (string) $this->xml->artifact->changeset[2]->field_change->value);
     }
 
     public function testItConvertsHistoricalValuesWhenFieldTypeChanged(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_float_history_with_string_value');
-        $this->assertCount(4, $this->xml->artifact->changeset);
+        self::assertCount(4, $this->xml->artifact->changeset);
 
-        $this->assertEquals('0', (string) $this->xml->artifact->changeset[1]->field_change->value);
-        $this->assertEquals('2048', (string) $this->xml->artifact->changeset[2]->field_change->value);
-        $this->assertEquals('43.0', (string) $this->xml->artifact->changeset[3]->field_change->value);
+        self::assertEquals('0', (string) $this->xml->artifact->changeset[1]->field_change->value);
+        self::assertEquals('2048', (string) $this->xml->artifact->changeset[2]->field_change->value);
+        self::assertEquals('43.0', (string) $this->xml->artifact->changeset[3]->field_change->value);
     }
 
     public function testItDoesntCreateAnExtraChangesetWhenThereIsAnIntToStringConversionWithTrailingZero(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_integer_history');
 
-        $this->assertCount(3, $this->xml->artifact->changeset);
+        self::assertCount(3, $this->xml->artifact->changeset);
 
-        $this->assertEquals('66', (string) $this->xml->artifact->changeset[1]->field_change->value);
+        self::assertEquals('66', (string) $this->xml->artifact->changeset[1]->field_change->value);
 
-        $this->assertEquals('2048', (string) $this->xml->artifact->changeset[2]->field_change->value);
+        self::assertEquals('2048', (string) $this->xml->artifact->changeset[2]->field_change->value);
     }
 
     public function testItReturnsZeroIfNoNewValueWithIntegerHistory(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_integer_history_with_no_value');
 
-        $this->assertCount(3, $this->xml->artifact->changeset);
+        self::assertCount(3, $this->xml->artifact->changeset);
 
-        $this->assertEquals('66', (string) $this->xml->artifact->changeset[1]->field_change->value);
+        self::assertEquals('66', (string) $this->xml->artifact->changeset[1]->field_change->value);
 
-        $this->assertEquals('0', (string) $this->xml->artifact->changeset[2]->field_change->value);
+        self::assertEquals('0', (string) $this->xml->artifact->changeset[2]->field_change->value);
     }
 
     public function testItConvertsHistoricalValuesWhenFieldTypeChangedWithIntegerAndStringHistory(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_integer_history_with_string_value');
-        $this->assertCount(5, $this->xml->artifact->changeset);
+        self::assertCount(5, $this->xml->artifact->changeset);
 
-        $this->assertEquals('0', (string) $this->xml->artifact->changeset[1]->field_change->value);
-        $this->assertEquals('0', (string) $this->xml->artifact->changeset[2]->field_change->value);
-        $this->assertEquals('4', (string) $this->xml->artifact->changeset[3]->field_change->value);
-        $this->assertEquals('43', (string) $this->xml->artifact->changeset[4]->field_change->value);
+        self::assertEquals('0', (string) $this->xml->artifact->changeset[1]->field_change->value);
+        self::assertEquals('0', (string) $this->xml->artifact->changeset[2]->field_change->value);
+        self::assertEquals('4', (string) $this->xml->artifact->changeset[3]->field_change->value);
+        self::assertEquals('43', (string) $this->xml->artifact->changeset[4]->field_change->value);
     }
 
     public function testItCreatesAChangesetForEachHistoryEntryWithScalarHistory(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_scalar_history');
 
-        $this->assertCount(6, $this->xml->artifact->changeset);
+        self::assertCount(6, $this->xml->artifact->changeset);
 
-        $this->assertCount(6, $this->xml->artifact->changeset[0]->field_change);
-        $this->assertEquals('', (string) $this->findValue($this->xml->artifact->changeset[0]->field_change, 'field_18')->value);
+        self::assertCount(6, $this->xml->artifact->changeset[0]->field_change);
+        self::assertEquals('', (string) $this->findValue($this->xml->artifact->changeset[0]->field_change, 'field_18')->value);
 
-        $this->assertEquals('The error code is 23232', (string) $this->xml->artifact->changeset[1]->field_change->value);
-        $this->assertEquals('field_14', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('string', (string) $this->xml->artifact->changeset[1]->field_change['type']);
-        $this->assertEquals($this->toExpectedDate(3234567100), (string) $this->xml->artifact->changeset[1]->submitted_on);
+        self::assertEquals('The error code is 23232', (string) $this->xml->artifact->changeset[1]->field_change->value);
+        self::assertEquals('field_14', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        self::assertEquals('string', (string) $this->xml->artifact->changeset[1]->field_change['type']);
+        self::assertEquals($this->toExpectedDate(3234567100), (string) $this->xml->artifact->changeset[1]->submitted_on);
 
-        $this->assertEquals("some text", (string) $this->xml->artifact->changeset[2]->field_change->value);
-        $this->assertEquals('field_15', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
-        $this->assertEquals('text', (string) $this->xml->artifact->changeset[2]->field_change['type']);
-        $this->assertEquals($this->toExpectedDate(3234567200), (string) $this->xml->artifact->changeset[2]->submitted_on);
+        self::assertEquals("some text", (string) $this->xml->artifact->changeset[2]->field_change->value);
+        self::assertEquals('field_15', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
+        self::assertEquals('text', (string) $this->xml->artifact->changeset[2]->field_change['type']);
+        self::assertEquals($this->toExpectedDate(3234567200), (string) $this->xml->artifact->changeset[2]->submitted_on);
 
-        $this->assertEquals("9001", (string) $this->xml->artifact->changeset[3]->field_change->value);
-        $this->assertEquals('field_16', (string) $this->xml->artifact->changeset[3]->field_change['field_name']);
-        $this->assertEquals('int', (string) $this->xml->artifact->changeset[3]->field_change['type']);
-        $this->assertEquals($this->toExpectedDate(3234567300), (string) $this->xml->artifact->changeset[3]->submitted_on);
+        self::assertEquals("9001", (string) $this->xml->artifact->changeset[3]->field_change->value);
+        self::assertEquals('field_16', (string) $this->xml->artifact->changeset[3]->field_change['field_name']);
+        self::assertEquals('int', (string) $this->xml->artifact->changeset[3]->field_change['type']);
+        self::assertEquals($this->toExpectedDate(3234567300), (string) $this->xml->artifact->changeset[3]->submitted_on);
 
-        $this->assertEquals("66.98", (string) $this->xml->artifact->changeset[4]->field_change->value);
-        $this->assertEquals('field_17', (string) $this->xml->artifact->changeset[4]->field_change['field_name']);
-        $this->assertEquals('float', (string) $this->xml->artifact->changeset[4]->field_change['type']);
-        $this->assertEquals($this->toExpectedDate(3234567400), (string) $this->xml->artifact->changeset[4]->submitted_on);
+        self::assertEquals("66.98", (string) $this->xml->artifact->changeset[4]->field_change->value);
+        self::assertEquals('field_17', (string) $this->xml->artifact->changeset[4]->field_change['field_name']);
+        self::assertEquals('float', (string) $this->xml->artifact->changeset[4]->field_change['type']);
+        self::assertEquals($this->toExpectedDate(3234567400), (string) $this->xml->artifact->changeset[4]->submitted_on);
 
-        $this->assertEquals($this->toExpectedDate(1234543210), (string) $this->xml->artifact->changeset[5]->field_change->value);
-        $this->assertEquals('ISO8601', (string) $this->xml->artifact->changeset[5]->field_change->value['format']);
-        $this->assertEquals('field_18', (string) $this->xml->artifact->changeset[5]->field_change['field_name']);
-        $this->assertEquals('date', (string) $this->xml->artifact->changeset[5]->field_change['type']);
-        $this->assertEquals($this->toExpectedDate(3234567500), (string) $this->xml->artifact->changeset[5]->submitted_on);
+        self::assertEquals($this->toExpectedDate(1234543210), (string) $this->xml->artifact->changeset[5]->field_change->value);
+        self::assertEquals('ISO8601', (string) $this->xml->artifact->changeset[5]->field_change->value['format']);
+        self::assertEquals('field_18', (string) $this->xml->artifact->changeset[5]->field_change['field_name']);
+        self::assertEquals('date', (string) $this->xml->artifact->changeset[5]->field_change['type']);
+        self::assertEquals($this->toExpectedDate(3234567500), (string) $this->xml->artifact->changeset[5]->submitted_on);
     }
 
     public function testItCreatesAnInitialChangesetATheTimeOfOpenDateWhenThereIsScalarNoHistory(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_scalar_no_history');
 
-        $this->assertCount(1, $this->xml->artifact->changeset);
+        self::assertCount(1, $this->xml->artifact->changeset);
 
         $change = $this->xml->artifact->changeset[0]->field_change;
-        $this->assertCount(6, $change);
+        self::assertCount(6, $change);
 
         $string = $this->findValue($change, 'field_14');
-        $this->assertEquals('The error code is 23232', (string) $string->value);
+        self::assertEquals('The error code is 23232', (string) $string->value);
         $text = $this->findValue($change, 'field_15');
-        $this->assertEquals('some text', (string) $text->value);
+        self::assertEquals('some text', (string) $text->value);
         $int = $this->findValue($change, 'field_16');
-        $this->assertEquals('9001', (string) $int->value);
+        self::assertEquals('9001', (string) $int->value);
         $float = $this->findValue($change, 'field_17');
-        $this->assertEquals('66.98', (string) $float->value);
+        self::assertEquals('66.98', (string) $float->value);
         $date = $this->findValue($change, 'field_18');
-        $this->assertEquals($this->toExpectedDate(1234543210), (string) $date->value);
+        self::assertEquals($this->toExpectedDate(1234543210), (string) $date->value);
     }
 
     public function testItCreatesALastChangesetAtImportTimeWhenHistoryDiffersFromCurrentStateWithScalarHalfHistory(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_scalar_half_history');
 
-        $this->assertCount(7, $this->xml->artifact->changeset);
+        self::assertCount(7, $this->xml->artifact->changeset);
 
         $change = $this->xml->artifact->changeset[6]->field_change;
-        $this->assertCount(5, $change);
+        self::assertCount(5, $change);
 
         $string = $this->findValue($change, 'field_14');
-        $this->assertEquals('The error code is wrong', (string) $string->value);
+        self::assertEquals('The error code is wrong', (string) $string->value);
         $text = $this->findValue($change, 'field_15');
-        $this->assertEquals('some rant', (string) $text->value);
+        self::assertEquals('some rant', (string) $text->value);
         $int = $this->findValue($change, 'field_16');
-        $this->assertEquals('987', (string) $int->value);
+        self::assertEquals('987', (string) $int->value);
         $float = $this->findValue($change, 'field_17');
-        $this->assertEquals('3.14', (string) $float->value);
+        self::assertEquals('3.14', (string) $float->value);
         $date = $this->findValue($change, 'field_18');
-        $this->assertEquals($this->toExpectedDate(1234555555), (string) $date->value);
+        self::assertEquals($this->toExpectedDate(1234555555), (string) $date->value);
     }
 
     public function testItCreatesTheChangesetWithValueStoredOnArtifactTable(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_close_date_no_history');
 
-        $this->assertCount(2, $this->xml->artifact->changeset);
+        self::assertCount(2, $this->xml->artifact->changeset);
 
-        $this->assertEquals($this->toExpectedDate(1234800000), (string) $this->xml->artifact->changeset[1]->field_change->value);
-        $this->assertEquals('close_date', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('date', (string) $this->xml->artifact->changeset[1]->field_change['type']);
-        $this->assertEquals($this->toExpectedDate(1234800000), (string) $this->xml->artifact->changeset[1]->submitted_on);
+        self::assertEquals($this->toExpectedDate(1234800000), (string) $this->xml->artifact->changeset[1]->field_change->value);
+        self::assertEquals('close_date', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        self::assertEquals('date', (string) $this->xml->artifact->changeset[1]->field_change['type']);
+        self::assertEquals($this->toExpectedDate(1234800000), (string) $this->xml->artifact->changeset[1]->submitted_on);
     }
 
     public function testItCreatesTheChangesetWhenArtifactIsKeptReopen(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_close_date_kept_reopen');
-        $this->assertCount(3, $this->xml->artifact->changeset);
+        self::assertCount(3, $this->xml->artifact->changeset);
 
         // 1. Create artifact
         // 2. Close artifact
-        $this->assertEquals($this->toExpectedDate(1234800000), (string) $this->xml->artifact->changeset[1]->field_change->value);
-        $this->assertEquals($this->toExpectedDate(1234800000), (string) $this->xml->artifact->changeset[1]->submitted_on);
+        self::assertEquals($this->toExpectedDate(1234800000), (string) $this->xml->artifact->changeset[1]->field_change->value);
+        self::assertEquals($this->toExpectedDate(1234800000), (string) $this->xml->artifact->changeset[1]->submitted_on);
         // 3. Reopen artifact
-        $this->assertEquals('', (string) $this->xml->artifact->changeset[2]->field_change->value);
-        $this->assertEquals($this->toExpectedDate(1234900000), (string) $this->xml->artifact->changeset[2]->submitted_on);
+        self::assertEquals('', (string) $this->xml->artifact->changeset[2]->field_change->value);
+        self::assertEquals($this->toExpectedDate(1234900000), (string) $this->xml->artifact->changeset[2]->submitted_on);
     }
 
     public function testItCreatesTheChangesetWhenOneOpenAndCloseArtifact(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_close_date_history');
 
-        $this->assertCount(5, $this->xml->artifact->changeset);
+        self::assertCount(5, $this->xml->artifact->changeset);
 
         // 1. Create artifact
         // 2. Close artifact
-        $this->assertEquals($this->toExpectedDate(1234800000), (string) $this->xml->artifact->changeset[1]->field_change->value);
-        $this->assertEquals($this->toExpectedDate(1234800000), (string) $this->xml->artifact->changeset[1]->submitted_on);
+        self::assertEquals($this->toExpectedDate(1234800000), (string) $this->xml->artifact->changeset[1]->field_change->value);
+        self::assertEquals($this->toExpectedDate(1234800000), (string) $this->xml->artifact->changeset[1]->submitted_on);
         // 3. Reopen artifact
-        $this->assertEquals('', (string) $this->xml->artifact->changeset[2]->field_change->value);
-        $this->assertEquals($this->toExpectedDate(1234810000), (string) $this->xml->artifact->changeset[2]->submitted_on);
+        self::assertEquals('', (string) $this->xml->artifact->changeset[2]->field_change->value);
+        self::assertEquals($this->toExpectedDate(1234810000), (string) $this->xml->artifact->changeset[2]->submitted_on);
         // 4. Close again artifact
-        $this->assertEquals($this->toExpectedDate(1234820000), (string) $this->xml->artifact->changeset[3]->field_change->value);
-        $this->assertEquals($this->toExpectedDate(1234820000), (string) $this->xml->artifact->changeset[3]->submitted_on);
+        self::assertEquals($this->toExpectedDate(1234820000), (string) $this->xml->artifact->changeset[3]->field_change->value);
+        self::assertEquals($this->toExpectedDate(1234820000), (string) $this->xml->artifact->changeset[3]->submitted_on);
         // 5. Change close date
-        $this->assertEquals($this->toExpectedDate(1234830000), (string) $this->xml->artifact->changeset[4]->field_change->value);
-        $this->assertEquals($this->toExpectedDate(1234840000), (string) $this->xml->artifact->changeset[4]->submitted_on);
+        self::assertEquals($this->toExpectedDate(1234830000), (string) $this->xml->artifact->changeset[4]->field_change->value);
+        self::assertEquals($this->toExpectedDate(1234840000), (string) $this->xml->artifact->changeset[4]->submitted_on);
     }
 
     public function testItCreatesTheInitialChangesetWithRecordedValue(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_status_no_history');
 
-        $this->assertCount(1, $this->xml->artifact->changeset);
+        self::assertCount(1, $this->xml->artifact->changeset);
 
         $field_change = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'status_id');
 
-        $this->assertEquals('status_id', $field_change['field_name']);
-        $this->assertEquals('list', $field_change['type']);
-        $this->assertEquals('static', $field_change['bind']);
-        $this->assertEquals('Closed', $field_change->value);
+        self::assertEquals('status_id', $field_change['field_name']);
+        self::assertEquals('list', $field_change['type']);
+        self::assertEquals('static', $field_change['bind']);
+        self::assertEquals('Closed', $field_change->value);
     }
 
     public function testItAlwaysTrustValueInArtifactTableEvenIfThereIsAValueInValueList(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_status_history');
 
-        $this->assertCount(2, $this->xml->artifact->changeset);
+        self::assertCount(2, $this->xml->artifact->changeset);
 
         $field_change = $this->findValue($this->xml->artifact->changeset[1]->field_change, 'status_id');
 
-        $this->assertEquals('status_id', $field_change['field_name']);
-        $this->assertEquals('list', $field_change['type']);
-        $this->assertEquals('static', $field_change['bind']);
-        $this->assertEquals('Closed', $field_change->value);
+        self::assertEquals('status_id', $field_change['field_name']);
+        self::assertEquals('list', $field_change['type']);
+        self::assertEquals('static', $field_change['bind']);
+        self::assertEquals('Closed', $field_change->value);
     }
 
     public function testItCreatesAChangesetForEachHistoryEntryWithStaticList(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_static_list_history');
-        $this->assertCount(3, $this->xml->artifact->changeset);
+        self::assertCount(3, $this->xml->artifact->changeset);
 
         $initial_change = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'category_id');
-        $this->assertEquals('UI', (string) $initial_change->value);
-        $this->assertEquals('category_id', (string) $initial_change['field_name']);
-        $this->assertEquals('list', (string) $initial_change['type']);
-        $this->assertEquals('static', (string) $initial_change['bind']);
+        self::assertEquals('UI', (string) $initial_change->value);
+        self::assertEquals('category_id', (string) $initial_change['field_name']);
+        self::assertEquals('list', (string) $initial_change['type']);
+        self::assertEquals('static', (string) $initial_change['bind']);
 
-        $this->assertEquals('Database', (string) $this->xml->artifact->changeset[1]->field_change->value);
-        $this->assertEquals('category_id', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
-        $this->assertEquals('static', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
+        self::assertEquals('Database', (string) $this->xml->artifact->changeset[1]->field_change->value);
+        self::assertEquals('category_id', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        self::assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
+        self::assertEquals('static', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
+        self::assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
 
-        $this->assertEquals('', (string) $this->xml->artifact->changeset[2]->field_change->value);
-        $this->assertEquals('category_id', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
-        $this->assertEquals('list', (string) $this->xml->artifact->changeset[2]->field_change['type']);
-        $this->assertEquals('static', (string) $this->xml->artifact->changeset[2]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234570000), (string) $this->xml->artifact->changeset[2]->submitted_on);
+        self::assertEquals('', (string) $this->xml->artifact->changeset[2]->field_change->value);
+        self::assertEquals('category_id', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
+        self::assertEquals('list', (string) $this->xml->artifact->changeset[2]->field_change['type']);
+        self::assertEquals('static', (string) $this->xml->artifact->changeset[2]->field_change['bind']);
+        self::assertEquals($this->toExpectedDate(3234570000), (string) $this->xml->artifact->changeset[2]->submitted_on);
     }
 
     public function testItCreatesALastChangesetWhenHistoryWasNotRecorded(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_static_list_half_history');
 
-        $this->assertCount(3, $this->xml->artifact->changeset);
+        self::assertCount(3, $this->xml->artifact->changeset);
 
-        $this->assertEquals('UI', (string) $this->xml->artifact->changeset[2]->field_change->value);
-        $this->assertEquals('category_id', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
-        $this->assertEquals('list', (string) $this->xml->artifact->changeset[2]->field_change['type']);
-        $this->assertEquals('static', (string) $this->xml->artifact->changeset[2]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate($_SERVER['REQUEST_TIME']), (string) $this->xml->artifact->changeset[2]->submitted_on);
+        self::assertEquals('UI', (string) $this->xml->artifact->changeset[2]->field_change->value);
+        self::assertEquals('category_id', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
+        self::assertEquals('list', (string) $this->xml->artifact->changeset[2]->field_change['type']);
+        self::assertEquals('static', (string) $this->xml->artifact->changeset[2]->field_change['bind']);
+        self::assertEquals($this->toExpectedDate($_SERVER['REQUEST_TIME']), (string) $this->xml->artifact->changeset[2]->submitted_on);
     }
 
     public function testItDoesntGetBlockedWhenThereIsNoDataStatusFieldValueList(): void
     {
+        $this->logger->method('warning');
         $this->expectNotToPerformAssertions();
         $this->exportTrackerDataFromFixture('artifact_with_no_value_list_for_status_field');
     }
@@ -881,20 +935,20 @@ final class ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->exportTrackerDataFromFixture('artifact_with_user_list_history');
 
-        $this->assertCount(2, $this->xml->artifact->changeset);
+        self::assertCount(2, $this->xml->artifact->changeset);
 
         $initial_change = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'assigned_to');
-        $this->assertEquals('None', (string) $initial_change->value);
-        $this->assertEquals('assigned_to', (string) $initial_change['field_name']);
-        $this->assertEquals('list', (string) $initial_change['type']);
-        $this->assertEquals('users', (string) $initial_change['bind']);
+        self::assertEquals('None', (string) $initial_change->value);
+        self::assertEquals('assigned_to', (string) $initial_change['field_name']);
+        self::assertEquals('list', (string) $initial_change['type']);
+        self::assertEquals('users', (string) $initial_change['bind']);
 
-        $this->assertEquals('jeanjean', (string) $this->xml->artifact->changeset[1]->field_change->value);
-        $this->assertEquals('username', (string) $this->xml->artifact->changeset[1]->field_change->value['format']);
-        $this->assertEquals('assigned_to', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
-        $this->assertEquals('users', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
+        self::assertEquals('jeanjean', (string) $this->xml->artifact->changeset[1]->field_change->value);
+        self::assertEquals('username', (string) $this->xml->artifact->changeset[1]->field_change->value['format']);
+        self::assertEquals('assigned_to', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        self::assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
+        self::assertEquals('users', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
+        self::assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
     }
 
     /**
@@ -904,299 +958,299 @@ final class ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->exportTrackerDataFromFixture('artifact_with_user_list_and_type_change');
 
-        $this->assertCount(1, $this->xml->artifact->changeset);
+        self::assertCount(1, $this->xml->artifact->changeset);
 
         $field_change = $this->findValue($this->xml->artifact->changeset[0], 'assigned_to');
-        $this->assertEquals('jeanjean', (string) $field_change->value);
-        $this->assertEquals('list', (string) $field_change['type']);
-        $this->assertEquals('users', (string) $field_change['bind']);
+        self::assertEquals('jeanjean', (string) $field_change->value);
+        self::assertEquals('list', (string) $field_change['type']);
+        self::assertEquals('users', (string) $field_change['bind']);
     }
 
     public function testItCreatesAChangesetForEachHistoryEntryInHappyPath(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_static_multi_list_history');
-        $this->assertCount(3, $this->xml->artifact->changeset);
+        self::assertCount(3, $this->xml->artifact->changeset);
 
         $initial_change = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'multiselect');
 
-        $this->assertEquals('', (string) $initial_change->value[0]);
-        $this->assertEquals('multiselect', (string) $initial_change['field_name']);
-        $this->assertEquals('list', (string) $initial_change['type']);
-        $this->assertEquals('static', (string) $initial_change['bind']);
+        self::assertEquals('', (string) $initial_change->value[0]);
+        self::assertEquals('multiselect', (string) $initial_change['field_name']);
+        self::assertEquals('list', (string) $initial_change['type']);
+        self::assertEquals('static', (string) $initial_change['bind']);
 
-        $this->assertEquals('UI', (string) $this->xml->artifact->changeset[1]->field_change->value[0]);
-        $this->assertEquals('multiselect', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
-        $this->assertEquals('static', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
+        self::assertEquals('UI', (string) $this->xml->artifact->changeset[1]->field_change->value[0]);
+        self::assertEquals('multiselect', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        self::assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
+        self::assertEquals('static', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
+        self::assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
 
-        $this->assertEquals('Database', (string) $this->xml->artifact->changeset[2]->field_change->value[0]);
-        $this->assertEquals('Stuff', (string) $this->xml->artifact->changeset[2]->field_change->value[1]);
-        $this->assertEquals('multiselect', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
-        $this->assertEquals('list', (string) $this->xml->artifact->changeset[2]->field_change['type']);
-        $this->assertEquals('static', (string) $this->xml->artifact->changeset[2]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234570000), (string) $this->xml->artifact->changeset[2]->submitted_on);
+        self::assertEquals('Database', (string) $this->xml->artifact->changeset[2]->field_change->value[0]);
+        self::assertEquals('Stuff', (string) $this->xml->artifact->changeset[2]->field_change->value[1]);
+        self::assertEquals('multiselect', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
+        self::assertEquals('list', (string) $this->xml->artifact->changeset[2]->field_change['type']);
+        self::assertEquals('static', (string) $this->xml->artifact->changeset[2]->field_change['bind']);
+        self::assertEquals($this->toExpectedDate(3234570000), (string) $this->xml->artifact->changeset[2]->submitted_on);
     }
 
     public function testItCreatesAChangesetForEachHistoryEntryWithMultipleStaticMultiSelectBoxesInHappyPath(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_static_multiple_multi_list_history');
-        $this->assertCount(5, $this->xml->artifact->changeset);
+        self::assertCount(5, $this->xml->artifact->changeset);
 
         $initial_change_msb   = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'multiselect');
         $initial_change_msb_2 = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'multiselect_2');
 
-        $this->assertEquals('', (string) $initial_change_msb->value[0]);
-        $this->assertEquals('multiselect', (string) $initial_change_msb['field_name']);
-        $this->assertEquals('list', (string) $initial_change_msb['type']);
-        $this->assertEquals('static', (string) $initial_change_msb['bind']);
+        self::assertEquals('', (string) $initial_change_msb->value[0]);
+        self::assertEquals('multiselect', (string) $initial_change_msb['field_name']);
+        self::assertEquals('list', (string) $initial_change_msb['type']);
+        self::assertEquals('static', (string) $initial_change_msb['bind']);
 
-        $this->assertEquals('', (string) $initial_change_msb_2->value[0]);
-        $this->assertEquals('multiselect_2', (string) $initial_change_msb_2['field_name']);
-        $this->assertEquals('list', (string) $initial_change_msb_2['type']);
-        $this->assertEquals('static', (string) $initial_change_msb_2['bind']);
+        self::assertEquals('', (string) $initial_change_msb_2->value[0]);
+        self::assertEquals('multiselect_2', (string) $initial_change_msb_2['field_name']);
+        self::assertEquals('list', (string) $initial_change_msb_2['type']);
+        self::assertEquals('static', (string) $initial_change_msb_2['bind']);
 
-        $this->assertEquals('UI', (string) $this->xml->artifact->changeset[1]->field_change->value[0]);
-        $this->assertEquals('multiselect', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
-        $this->assertEquals('static', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
+        self::assertEquals('UI', (string) $this->xml->artifact->changeset[1]->field_change->value[0]);
+        self::assertEquals('multiselect', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        self::assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
+        self::assertEquals('static', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
+        self::assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
 
-        $this->assertEquals('TV3', (string) $this->xml->artifact->changeset[2]->field_change->value[0]);
-        $this->assertEquals('multiselect_2', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
-        $this->assertEquals('list', (string) $this->xml->artifact->changeset[2]->field_change['type']);
-        $this->assertEquals('static', (string) $this->xml->artifact->changeset[2]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234570000), (string) $this->xml->artifact->changeset[2]->submitted_on);
+        self::assertEquals('TV3', (string) $this->xml->artifact->changeset[2]->field_change->value[0]);
+        self::assertEquals('multiselect_2', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
+        self::assertEquals('list', (string) $this->xml->artifact->changeset[2]->field_change['type']);
+        self::assertEquals('static', (string) $this->xml->artifact->changeset[2]->field_change['bind']);
+        self::assertEquals($this->toExpectedDate(3234570000), (string) $this->xml->artifact->changeset[2]->submitted_on);
 
-        $this->assertEquals('Database', (string) $this->xml->artifact->changeset[3]->field_change->value[0]);
-        $this->assertEquals('Stuff', (string) $this->xml->artifact->changeset[3]->field_change->value[1]);
-        $this->assertEquals('multiselect', (string) $this->xml->artifact->changeset[3]->field_change['field_name']);
-        $this->assertEquals('list', (string) $this->xml->artifact->changeset[3]->field_change['type']);
-        $this->assertEquals('static', (string) $this->xml->artifact->changeset[3]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234580000), (string) $this->xml->artifact->changeset[3]->submitted_on);
+        self::assertEquals('Database', (string) $this->xml->artifact->changeset[3]->field_change->value[0]);
+        self::assertEquals('Stuff', (string) $this->xml->artifact->changeset[3]->field_change->value[1]);
+        self::assertEquals('multiselect', (string) $this->xml->artifact->changeset[3]->field_change['field_name']);
+        self::assertEquals('list', (string) $this->xml->artifact->changeset[3]->field_change['type']);
+        self::assertEquals('static', (string) $this->xml->artifact->changeset[3]->field_change['bind']);
+        self::assertEquals($this->toExpectedDate(3234580000), (string) $this->xml->artifact->changeset[3]->submitted_on);
 
-        $this->assertEquals('TV5', (string) $this->xml->artifact->changeset[4]->field_change->value[0]);
-        $this->assertEquals('TV8_mont_blanc', (string) $this->xml->artifact->changeset[4]->field_change->value[1]);
-        $this->assertEquals('multiselect_2', (string) $this->xml->artifact->changeset[4]->field_change['field_name']);
-        $this->assertEquals('list', (string) $this->xml->artifact->changeset[4]->field_change['type']);
-        $this->assertEquals('static', (string) $this->xml->artifact->changeset[4]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234590000), (string) $this->xml->artifact->changeset[4]->submitted_on);
+        self::assertEquals('TV5', (string) $this->xml->artifact->changeset[4]->field_change->value[0]);
+        self::assertEquals('TV8_mont_blanc', (string) $this->xml->artifact->changeset[4]->field_change->value[1]);
+        self::assertEquals('multiselect_2', (string) $this->xml->artifact->changeset[4]->field_change['field_name']);
+        self::assertEquals('list', (string) $this->xml->artifact->changeset[4]->field_change['type']);
+        self::assertEquals('static', (string) $this->xml->artifact->changeset[4]->field_change['bind']);
+        self::assertEquals($this->toExpectedDate(3234590000), (string) $this->xml->artifact->changeset[4]->submitted_on);
     }
 
     public function testItDoesNotCreateAChangesetForAnHistoryEntryIfItHasAZeroValue(): void
     {
-        $this->logger->shouldReceive('warning')->once();
+        $this->logger->expects(self::once())->method('warning');
 
         $this->exportTrackerDataFromFixture('artifact_with_static_multi_list_history_with_0');
-        $this->assertCount(3, $this->xml->artifact->changeset);
+        self::assertCount(3, $this->xml->artifact->changeset);
 
         $initial_change = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'multiselect');
 
-        $this->assertEquals('', (string) $initial_change->value[0]);
-        $this->assertEquals('multiselect', (string) $initial_change['field_name']);
-        $this->assertEquals('list', (string) $initial_change['type']);
-        $this->assertEquals('static', (string) $initial_change['bind']);
+        self::assertEquals('', (string) $initial_change->value[0]);
+        self::assertEquals('multiselect', (string) $initial_change['field_name']);
+        self::assertEquals('list', (string) $initial_change['type']);
+        self::assertEquals('static', (string) $initial_change['bind']);
 
-        $this->assertEquals('UI', (string) $this->xml->artifact->changeset[1]->field_change->value[0]);
-        $this->assertEquals('multiselect', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
-        $this->assertEquals('static', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
+        self::assertEquals('UI', (string) $this->xml->artifact->changeset[1]->field_change->value[0]);
+        self::assertEquals('multiselect', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        self::assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
+        self::assertEquals('static', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
+        self::assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
 
-        $this->assertEquals('Database', (string) $this->xml->artifact->changeset[2]->field_change->value[0]);
-        $this->assertEquals('Stuff', (string) $this->xml->artifact->changeset[2]->field_change->value[1]);
-        $this->assertEquals('multiselect', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
-        $this->assertEquals('list', (string) $this->xml->artifact->changeset[2]->field_change['type']);
-        $this->assertEquals('static', (string) $this->xml->artifact->changeset[2]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234580000), (string) $this->xml->artifact->changeset[2]->submitted_on);
+        self::assertEquals('Database', (string) $this->xml->artifact->changeset[2]->field_change->value[0]);
+        self::assertEquals('Stuff', (string) $this->xml->artifact->changeset[2]->field_change->value[1]);
+        self::assertEquals('multiselect', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
+        self::assertEquals('list', (string) $this->xml->artifact->changeset[2]->field_change['type']);
+        self::assertEquals('static', (string) $this->xml->artifact->changeset[2]->field_change['bind']);
+        self::assertEquals($this->toExpectedDate(3234580000), (string) $this->xml->artifact->changeset[2]->submitted_on);
     }
 
     public function testItCreatesAChangesetForAnHistoryEntryIfItHasAZeroValueInASetOfValues(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_static_multi_list_history_with_0_in_set_of_values');
-        $this->assertCount(4, $this->xml->artifact->changeset);
+        self::assertCount(4, $this->xml->artifact->changeset);
 
         $initial_change = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'multiselect');
 
-        $this->assertEquals('', (string) $initial_change->value[0]);
-        $this->assertEquals('multiselect', (string) $initial_change['field_name']);
-        $this->assertEquals('list', (string) $initial_change['type']);
-        $this->assertEquals('static', (string) $initial_change['bind']);
+        self::assertEquals('', (string) $initial_change->value[0]);
+        self::assertEquals('multiselect', (string) $initial_change['field_name']);
+        self::assertEquals('list', (string) $initial_change['type']);
+        self::assertEquals('static', (string) $initial_change['bind']);
 
-        $this->assertEquals('UI', (string) $this->xml->artifact->changeset[1]->field_change->value[0]);
-        $this->assertEquals('multiselect', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
-        $this->assertEquals('static', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
+        self::assertEquals('UI', (string) $this->xml->artifact->changeset[1]->field_change->value[0]);
+        self::assertEquals('multiselect', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        self::assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
+        self::assertEquals('static', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
+        self::assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
 
-        $this->assertEquals('Database', (string) $this->xml->artifact->changeset[2]->field_change->value[0]);
-        $this->assertEquals('0', (string) $this->xml->artifact->changeset[2]->field_change->value[1]);
-        $this->assertEquals('multiselect', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
-        $this->assertEquals('list', (string) $this->xml->artifact->changeset[2]->field_change['type']);
-        $this->assertEquals('static', (string) $this->xml->artifact->changeset[2]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234570000), (string) $this->xml->artifact->changeset[2]->submitted_on);
+        self::assertEquals('Database', (string) $this->xml->artifact->changeset[2]->field_change->value[0]);
+        self::assertEquals('0', (string) $this->xml->artifact->changeset[2]->field_change->value[1]);
+        self::assertEquals('multiselect', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
+        self::assertEquals('list', (string) $this->xml->artifact->changeset[2]->field_change['type']);
+        self::assertEquals('static', (string) $this->xml->artifact->changeset[2]->field_change['bind']);
+        self::assertEquals($this->toExpectedDate(3234570000), (string) $this->xml->artifact->changeset[2]->submitted_on);
 
-        $this->assertEquals('Database', (string) $this->xml->artifact->changeset[3]->field_change->value[0]);
-        $this->assertEquals('Stuff', (string) $this->xml->artifact->changeset[3]->field_change->value[1]);
-        $this->assertEquals('multiselect', (string) $this->xml->artifact->changeset[3]->field_change['field_name']);
-        $this->assertEquals('list', (string) $this->xml->artifact->changeset[3]->field_change['type']);
-        $this->assertEquals('static', (string) $this->xml->artifact->changeset[3]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234580000), (string) $this->xml->artifact->changeset[3]->submitted_on);
+        self::assertEquals('Database', (string) $this->xml->artifact->changeset[3]->field_change->value[0]);
+        self::assertEquals('Stuff', (string) $this->xml->artifact->changeset[3]->field_change->value[1]);
+        self::assertEquals('multiselect', (string) $this->xml->artifact->changeset[3]->field_change['field_name']);
+        self::assertEquals('list', (string) $this->xml->artifact->changeset[3]->field_change['type']);
+        self::assertEquals('static', (string) $this->xml->artifact->changeset[3]->field_change['bind']);
+        self::assertEquals($this->toExpectedDate(3234580000), (string) $this->xml->artifact->changeset[3]->submitted_on);
     }
 
     public function testItDoesNotCreateAChangesetForAnHistoryEntryIfItHasALabelWithAComma(): void
     {
-        $this->logger->shouldReceive('warning')->once();
+        $this->logger->expects(self::once())->method('warning');
 
         $this->exportTrackerDataFromFixture('artifact_with_static_multi_list_history_with_a_comma_in_a_label');
-        $this->assertCount(3, $this->xml->artifact->changeset);
+        self::assertCount(3, $this->xml->artifact->changeset);
 
         $initial_change = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'multiselect');
 
-        $this->assertEquals('', (string) $initial_change->value[0]);
-        $this->assertEquals('multiselect', (string) $initial_change['field_name']);
-        $this->assertEquals('list', (string) $initial_change['type']);
-        $this->assertEquals('static', (string) $initial_change['bind']);
+        self::assertEquals('', (string) $initial_change->value[0]);
+        self::assertEquals('multiselect', (string) $initial_change['field_name']);
+        self::assertEquals('list', (string) $initial_change['type']);
+        self::assertEquals('static', (string) $initial_change['bind']);
 
-        $this->assertEquals('UI', (string) $this->xml->artifact->changeset[1]->field_change->value[0]);
-        $this->assertEquals('multiselect', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
-        $this->assertEquals('static', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
+        self::assertEquals('UI', (string) $this->xml->artifact->changeset[1]->field_change->value[0]);
+        self::assertEquals('multiselect', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        self::assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
+        self::assertEquals('static', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
+        self::assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
 
-        $this->assertEquals('PHP', (string) $this->xml->artifact->changeset[2]->field_change->value[0]);
-        $this->assertEquals('multiselect', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
-        $this->assertEquals('list', (string) $this->xml->artifact->changeset[2]->field_change['type']);
-        $this->assertEquals('static', (string) $this->xml->artifact->changeset[2]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234580000), (string) $this->xml->artifact->changeset[2]->submitted_on);
+        self::assertEquals('PHP', (string) $this->xml->artifact->changeset[2]->field_change->value[0]);
+        self::assertEquals('multiselect', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
+        self::assertEquals('list', (string) $this->xml->artifact->changeset[2]->field_change['type']);
+        self::assertEquals('static', (string) $this->xml->artifact->changeset[2]->field_change['bind']);
+        self::assertEquals($this->toExpectedDate(3234580000), (string) $this->xml->artifact->changeset[2]->submitted_on);
     }
 
     public function testItCreatesAChangesetForEachHistoryEntryInHappyPathWithUserMultiList(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_user_multi_list_history');
-        $this->assertCount(3, $this->xml->artifact->changeset);
+        self::assertCount(3, $this->xml->artifact->changeset);
 
         $initial_change = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'multiselect_user');
 
-        $this->assertEquals('', (string) $initial_change->value[0]);
-        $this->assertEquals('multiselect_user', (string) $initial_change['field_name']);
-        $this->assertEquals('list', (string) $initial_change['type']);
-        $this->assertEquals('users', (string) $initial_change['bind']);
+        self::assertEquals('', (string) $initial_change->value[0]);
+        self::assertEquals('multiselect_user', (string) $initial_change['field_name']);
+        self::assertEquals('list', (string) $initial_change['type']);
+        self::assertEquals('users', (string) $initial_change['bind']);
 
-        $this->assertEquals('yannis', (string) $this->xml->artifact->changeset[1]->field_change->value[0]);
-        $this->assertEquals('multiselect_user', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
-        $this->assertEquals('users', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
+        self::assertEquals('yannis', (string) $this->xml->artifact->changeset[1]->field_change->value[0]);
+        self::assertEquals('multiselect_user', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        self::assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
+        self::assertEquals('users', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
+        self::assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
 
-        $this->assertEquals('nicolas', (string) $this->xml->artifact->changeset[2]->field_change->value[0]);
-        $this->assertEquals('sandra', (string) $this->xml->artifact->changeset[2]->field_change->value[1]);
-        $this->assertEquals('multiselect_user', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
-        $this->assertEquals('list', (string) $this->xml->artifact->changeset[2]->field_change['type']);
-        $this->assertEquals('users', (string) $this->xml->artifact->changeset[2]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234570000), (string) $this->xml->artifact->changeset[2]->submitted_on);
+        self::assertEquals('nicolas', (string) $this->xml->artifact->changeset[2]->field_change->value[0]);
+        self::assertEquals('sandra', (string) $this->xml->artifact->changeset[2]->field_change->value[1]);
+        self::assertEquals('multiselect_user', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
+        self::assertEquals('list', (string) $this->xml->artifact->changeset[2]->field_change['type']);
+        self::assertEquals('users', (string) $this->xml->artifact->changeset[2]->field_change['bind']);
+        self::assertEquals($this->toExpectedDate(3234570000), (string) $this->xml->artifact->changeset[2]->submitted_on);
     }
 
     public function testItCreatesAChangesetForEachHistoryEntryWithMultipleUserMultiSelectBoxesInHappyPath(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_user_multiple_multi_list_history');
-        $this->assertCount(5, $this->xml->artifact->changeset);
+        self::assertCount(5, $this->xml->artifact->changeset);
 
         $initial_change_msb   = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'multiselect_user');
         $initial_change_msb_2 = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'multiselect_user2');
 
-        $this->assertEquals('', (string) $initial_change_msb->value[0]);
-        $this->assertEquals('multiselect_user', (string) $initial_change_msb['field_name']);
-        $this->assertEquals('list', (string) $initial_change_msb['type']);
-        $this->assertEquals('users', (string) $initial_change_msb['bind']);
+        self::assertEquals('', (string) $initial_change_msb->value[0]);
+        self::assertEquals('multiselect_user', (string) $initial_change_msb['field_name']);
+        self::assertEquals('list', (string) $initial_change_msb['type']);
+        self::assertEquals('users', (string) $initial_change_msb['bind']);
 
-        $this->assertEquals('', (string) $initial_change_msb_2->value[0]);
-        $this->assertEquals('multiselect_user2', (string) $initial_change_msb_2['field_name']);
-        $this->assertEquals('list', (string) $initial_change_msb_2['type']);
-        $this->assertEquals('users', (string) $initial_change_msb_2['bind']);
+        self::assertEquals('', (string) $initial_change_msb_2->value[0]);
+        self::assertEquals('multiselect_user2', (string) $initial_change_msb_2['field_name']);
+        self::assertEquals('list', (string) $initial_change_msb_2['type']);
+        self::assertEquals('users', (string) $initial_change_msb_2['bind']);
 
-        $this->assertEquals('yannis', (string) $this->xml->artifact->changeset[1]->field_change->value[0]);
-        $this->assertEquals('multiselect_user', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
-        $this->assertEquals('users', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
+        self::assertEquals('yannis', (string) $this->xml->artifact->changeset[1]->field_change->value[0]);
+        self::assertEquals('multiselect_user', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        self::assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
+        self::assertEquals('users', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
+        self::assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
 
-        $this->assertEquals('nicolas', (string) $this->xml->artifact->changeset[2]->field_change->value[0]);
-        $this->assertEquals('multiselect_user2', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
-        $this->assertEquals('list', (string) $this->xml->artifact->changeset[2]->field_change['type']);
-        $this->assertEquals('users', (string) $this->xml->artifact->changeset[2]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234570000), (string) $this->xml->artifact->changeset[2]->submitted_on);
+        self::assertEquals('nicolas', (string) $this->xml->artifact->changeset[2]->field_change->value[0]);
+        self::assertEquals('multiselect_user2', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
+        self::assertEquals('list', (string) $this->xml->artifact->changeset[2]->field_change['type']);
+        self::assertEquals('users', (string) $this->xml->artifact->changeset[2]->field_change['bind']);
+        self::assertEquals($this->toExpectedDate(3234570000), (string) $this->xml->artifact->changeset[2]->submitted_on);
 
-        $this->assertEquals('nicolas', (string) $this->xml->artifact->changeset[3]->field_change->value[0]);
-        $this->assertEquals('sandra', (string) $this->xml->artifact->changeset[3]->field_change->value[1]);
-        $this->assertEquals('multiselect_user', (string) $this->xml->artifact->changeset[3]->field_change['field_name']);
-        $this->assertEquals('list', (string) $this->xml->artifact->changeset[3]->field_change['type']);
-        $this->assertEquals('users', (string) $this->xml->artifact->changeset[3]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234580000), (string) $this->xml->artifact->changeset[3]->submitted_on);
+        self::assertEquals('nicolas', (string) $this->xml->artifact->changeset[3]->field_change->value[0]);
+        self::assertEquals('sandra', (string) $this->xml->artifact->changeset[3]->field_change->value[1]);
+        self::assertEquals('multiselect_user', (string) $this->xml->artifact->changeset[3]->field_change['field_name']);
+        self::assertEquals('list', (string) $this->xml->artifact->changeset[3]->field_change['type']);
+        self::assertEquals('users', (string) $this->xml->artifact->changeset[3]->field_change['bind']);
+        self::assertEquals($this->toExpectedDate(3234580000), (string) $this->xml->artifact->changeset[3]->submitted_on);
 
-        $this->assertEquals('yannis', (string) $this->xml->artifact->changeset[4]->field_change->value[0]);
-        $this->assertEquals('sandra', (string) $this->xml->artifact->changeset[4]->field_change->value[1]);
-        $this->assertEquals('multiselect_user2', (string) $this->xml->artifact->changeset[4]->field_change['field_name']);
-        $this->assertEquals('list', (string) $this->xml->artifact->changeset[4]->field_change['type']);
-        $this->assertEquals('users', (string) $this->xml->artifact->changeset[4]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234590000), (string) $this->xml->artifact->changeset[4]->submitted_on);
+        self::assertEquals('yannis', (string) $this->xml->artifact->changeset[4]->field_change->value[0]);
+        self::assertEquals('sandra', (string) $this->xml->artifact->changeset[4]->field_change->value[1]);
+        self::assertEquals('multiselect_user2', (string) $this->xml->artifact->changeset[4]->field_change['field_name']);
+        self::assertEquals('list', (string) $this->xml->artifact->changeset[4]->field_change['type']);
+        self::assertEquals('users', (string) $this->xml->artifact->changeset[4]->field_change['bind']);
+        self::assertEquals($this->toExpectedDate(3234590000), (string) $this->xml->artifact->changeset[4]->submitted_on);
     }
 
     public function testItDoesNotCreateAnExtraChangesetIfUsersAreNotInTheSameOrder(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_user_multi_list_history_with_user_in_wrong_order');
-        $this->assertCount(4, $this->xml->artifact->changeset);
+        self::assertCount(4, $this->xml->artifact->changeset);
 
         $initial_change_msb = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'multiselect_user');
 
-        $this->assertEquals('', (string) $initial_change_msb->value[0]);
-        $this->assertEquals('multiselect_user', (string) $initial_change_msb['field_name']);
-        $this->assertEquals('list', (string) $initial_change_msb['type']);
-        $this->assertEquals('users', (string) $initial_change_msb['bind']);
+        self::assertEquals('', (string) $initial_change_msb->value[0]);
+        self::assertEquals('multiselect_user', (string) $initial_change_msb['field_name']);
+        self::assertEquals('list', (string) $initial_change_msb['type']);
+        self::assertEquals('users', (string) $initial_change_msb['bind']);
 
-        $this->assertEquals('yannis', (string) $this->xml->artifact->changeset[1]->field_change->value[0]);
-        $this->assertEquals('multiselect_user', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
-        $this->assertEquals('users', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
+        self::assertEquals('yannis', (string) $this->xml->artifact->changeset[1]->field_change->value[0]);
+        self::assertEquals('multiselect_user', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        self::assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
+        self::assertEquals('users', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
+        self::assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
 
-        $this->assertEquals('', (string) $this->xml->artifact->changeset[2]->field_change->value[0]);
-        $this->assertEquals('multiselect_user', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
-        $this->assertEquals('list', (string) $this->xml->artifact->changeset[2]->field_change['type']);
-        $this->assertEquals('users', (string) $this->xml->artifact->changeset[2]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234570000), (string) $this->xml->artifact->changeset[2]->submitted_on);
+        self::assertEquals('', (string) $this->xml->artifact->changeset[2]->field_change->value[0]);
+        self::assertEquals('multiselect_user', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
+        self::assertEquals('list', (string) $this->xml->artifact->changeset[2]->field_change['type']);
+        self::assertEquals('users', (string) $this->xml->artifact->changeset[2]->field_change['bind']);
+        self::assertEquals($this->toExpectedDate(3234570000), (string) $this->xml->artifact->changeset[2]->submitted_on);
 
-        $this->assertEquals('sandra', (string) $this->xml->artifact->changeset[3]->field_change->value[0]);
-        $this->assertEquals('nicolas', (string) $this->xml->artifact->changeset[3]->field_change->value[1]);
-        $this->assertEquals('multiselect_user', (string) $this->xml->artifact->changeset[3]->field_change['field_name']);
-        $this->assertEquals('list', (string) $this->xml->artifact->changeset[3]->field_change['type']);
-        $this->assertEquals('users', (string) $this->xml->artifact->changeset[3]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234580000), (string) $this->xml->artifact->changeset[3]->submitted_on);
+        self::assertEquals('sandra', (string) $this->xml->artifact->changeset[3]->field_change->value[0]);
+        self::assertEquals('nicolas', (string) $this->xml->artifact->changeset[3]->field_change->value[1]);
+        self::assertEquals('multiselect_user', (string) $this->xml->artifact->changeset[3]->field_change['field_name']);
+        self::assertEquals('list', (string) $this->xml->artifact->changeset[3]->field_change['type']);
+        self::assertEquals('users', (string) $this->xml->artifact->changeset[3]->field_change['bind']);
+        self::assertEquals($this->toExpectedDate(3234580000), (string) $this->xml->artifact->changeset[3]->submitted_on);
     }
 
     public function testItDoesNotCreateAnExtraChangesetIfUsersLastValueIsNone(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_user_multi_list_history_finishing_by_none');
-        $this->assertCount(3, $this->xml->artifact->changeset);
+        self::assertCount(3, $this->xml->artifact->changeset);
 
         $initial_change_msb = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'multiselect_user');
 
-        $this->assertEquals('', (string) $initial_change_msb->value[0]);
-        $this->assertEquals('multiselect_user', (string) $initial_change_msb['field_name']);
-        $this->assertEquals('list', (string) $initial_change_msb['type']);
-        $this->assertEquals('users', (string) $initial_change_msb['bind']);
+        self::assertEquals('', (string) $initial_change_msb->value[0]);
+        self::assertEquals('multiselect_user', (string) $initial_change_msb['field_name']);
+        self::assertEquals('list', (string) $initial_change_msb['type']);
+        self::assertEquals('users', (string) $initial_change_msb['bind']);
 
-        $this->assertEquals('yannis', (string) $this->xml->artifact->changeset[1]->field_change->value[0]);
-        $this->assertEquals('multiselect_user', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
-        $this->assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
-        $this->assertEquals('users', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
+        self::assertEquals('yannis', (string) $this->xml->artifact->changeset[1]->field_change->value[0]);
+        self::assertEquals('multiselect_user', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
+        self::assertEquals('list', (string) $this->xml->artifact->changeset[1]->field_change['type']);
+        self::assertEquals('users', (string) $this->xml->artifact->changeset[1]->field_change['bind']);
+        self::assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[1]->submitted_on);
 
-        $this->assertEquals('', (string) $this->xml->artifact->changeset[2]->field_change->value[0]);
-        $this->assertEquals('multiselect_user', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
-        $this->assertEquals('list', (string) $this->xml->artifact->changeset[2]->field_change['type']);
-        $this->assertEquals('users', (string) $this->xml->artifact->changeset[2]->field_change['bind']);
-        $this->assertEquals($this->toExpectedDate(3234570000), (string) $this->xml->artifact->changeset[2]->submitted_on);
+        self::assertEquals('', (string) $this->xml->artifact->changeset[2]->field_change->value[0]);
+        self::assertEquals('multiselect_user', (string) $this->xml->artifact->changeset[2]->field_change['field_name']);
+        self::assertEquals('list', (string) $this->xml->artifact->changeset[2]->field_change['type']);
+        self::assertEquals('users', (string) $this->xml->artifact->changeset[2]->field_change['bind']);
+        self::assertEquals($this->toExpectedDate(3234570000), (string) $this->xml->artifact->changeset[2]->submitted_on);
     }
 
     /**
@@ -1206,22 +1260,22 @@ final class ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->exportTrackerDataFromFixture('artifact_with_user_multi_list_history_with_data_change');
 
-        $this->assertCount(1, $this->xml->artifact->changeset);
+        self::assertCount(1, $this->xml->artifact->changeset);
 
         $field_change = $this->findValue($this->xml->artifact->changeset[0], 'multiselect_user');
-        $this->assertEquals('nicolas', (string) $field_change->value[0]);
-        $this->assertEquals('sandra', (string) $field_change->value[1]);
-        $this->assertEquals('list', (string) $field_change['type']);
-        $this->assertEquals('users', (string) $field_change['bind']);
+        self::assertEquals('nicolas', (string) $field_change->value[0]);
+        self::assertEquals('sandra', (string) $field_change->value[1]);
+        self::assertEquals('list', (string) $field_change['type']);
+        self::assertEquals('users', (string) $field_change['bind']);
     }
 
     public function testItIgnoresMissingUser(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_user_multi_list_and_missing_user');
-        $this->assertCount(1, $this->xml->artifact->changeset);
+        self::assertCount(1, $this->xml->artifact->changeset);
         $field_change = $this->findValue($this->xml->artifact->changeset[0], 'assigned_to');
-        $this->assertEquals('', (string) $field_change->value);
-        $this->assertEquals('list', (string) $field_change['type']);
-        $this->assertEquals('users', (string) $field_change['bind']);
+        self::assertEquals('', (string) $field_change->value);
+        self::assertEquals('list', (string) $field_change['type']);
+        self::assertEquals('users', (string) $field_change['bind']);
     }
 }
