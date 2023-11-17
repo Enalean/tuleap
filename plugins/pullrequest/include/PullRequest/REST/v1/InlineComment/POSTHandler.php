@@ -77,17 +77,17 @@ final class POSTHandler
         return PullRequestInlineCommentRepresentation::build(
             $this->purifier,
             $this->content_interpreter,
-            $new_comment->unidiff_offset,
+            $inserted_inline_comment->getUnidiffOffset(),
             $user_representation,
-            $new_comment->post_date->getTimestamp(),
-            $new_comment->content,
+            $inserted_inline_comment->getPostDate(),
+            $inserted_inline_comment->getContent(),
             $new_comment->project_id,
-            $new_comment->position,
-            $new_comment->parent_id,
-            $inserted_inline_comment->id,
-            $new_comment->file_path,
-            $inserted_inline_comment->color,
-            $new_comment->format
+            $inserted_inline_comment->getPosition(),
+            $inserted_inline_comment->getParentId(),
+            $inserted_inline_comment->getId(),
+            $inserted_inline_comment->getFilePath(),
+            $inserted_inline_comment->getColor(),
+            $inserted_inline_comment->getFormat()
         );
     }
 

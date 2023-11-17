@@ -32,7 +32,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ContentInterpretorStub;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 
-final class InlineCommentRepresentationBuilderTest extends TestCase
+final class InlineCommentRepresentationsBuilderTest extends TestCase
 {
     private const COMMENTS_AUTHOR_ID = 190;
     private const FILE_PATH          = 'path/to/file.php';
@@ -69,7 +69,7 @@ final class InlineCommentRepresentationBuilderTest extends TestCase
     {
         $project_id = 147;
 
-        $builder = new InlineCommentRepresentationBuilder(
+        $builder = new InlineCommentRepresentationsBuilder(
             $this->comments_searcher,
             $this->user_retriever,
             \Codendi_HTMLPurifier::instance(),
