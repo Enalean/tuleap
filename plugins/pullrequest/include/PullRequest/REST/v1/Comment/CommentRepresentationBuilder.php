@@ -44,7 +44,6 @@ final class CommentRepresentationBuilder
         return new CommentRepresentation(
             $comment,
             $comment_content,
-            $project_id,
             $user_representation,
         );
     }
