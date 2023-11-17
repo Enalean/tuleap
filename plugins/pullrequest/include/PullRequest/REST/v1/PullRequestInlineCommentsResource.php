@@ -46,6 +46,10 @@ final class PullRequestInlineCommentsResource extends AuthenticatedResource
 {
     public const ROUTE = 'pull_request_inline_comments';
 
+    /**
+     * @url OPTIONS {id}
+     * @param int $id Inline comment ID
+     */
     public function optionsCommentId(int $id): void
     {
         Header::allowOptionsPatch();
