@@ -22,26 +22,22 @@ declare(strict_types=1);
 
 namespace Tuleap\Glyph;
 
-use Mockery;
-
 class GlyphLocationsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testItFindsDeclaredLocation(): void
     {
         $glyph_location_collector = new GlyphLocationsCollector();
-        $glyph_location_collector->addLocation('tuleap-git', Mockery::mock(GlyphLocation::class));
-        $glyph_location = Mockery::mock(GlyphLocation::class);
+        $glyph_location           = $this->createMock(GlyphLocation::class);
+        $glyph_location_collector->addLocation('tuleap-git', $glyph_location);
         $glyph_location_collector->addLocation('tuleap-tracker', $glyph_location);
 
         $found_glyph_location = $glyph_location_collector->getLocation('tuleap-tracker-test');
-        $this->assertSame($glyph_location, $found_glyph_location);
+        self::assertSame($glyph_location, $found_glyph_location);
     }
 
     public function testItReturnsNullWhenLocationIsNotFound(): void
     {
         $glyph_location_collector = new GlyphLocationsCollector();
-        $this->assertEquals(null, $glyph_location_collector->getLocation('do-not-exist'));
+        self::assertEquals(null, $glyph_location_collector->getLocation('do-not-exist'));
     }
 }

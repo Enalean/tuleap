@@ -28,6 +28,6 @@ class GlyphLocationTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItGetsTheSimplifiedPath(): void
     {
         $glyph_location = new GlyphLocation('/a//b/../c//');
-        $this->assertEquals($glyph_location->getPath(), '/a/c/');
+        self::assertEquals($glyph_location->getPath(), '/a/c/');
     }
 }
