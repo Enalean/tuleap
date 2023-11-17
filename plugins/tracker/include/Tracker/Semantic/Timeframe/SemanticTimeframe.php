@@ -46,9 +46,6 @@ class SemanticTimeframe extends Tracker_Semantic
      */
     private $timeframe;
 
-    /**
-     * @throws TimeframeBrokenConfigurationException
-     */
     public function __construct(
         Tracker $tracker,
         IComputeTimeframes $timeframe,

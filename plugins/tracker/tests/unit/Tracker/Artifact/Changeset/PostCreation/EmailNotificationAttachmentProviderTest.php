@@ -25,13 +25,17 @@ namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 use ColinODell\PsrTestLogger\TestLogger;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\NullLogger;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_Semantic_Title;
+use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Stub\Semantic\Timeframe\IComputeTimeframesStub;
 use Tuleap\Tracker\Test\Stub\Tracker\Notifications\Settings\CheckEventShouldBeSentInNotificationStub;
+use Tuleap\Tracker\Test\Stub\Tracker\Semantic\Timeframe\BuildSemanticTimeframeStub;
 
 final class EmailNotificationAttachmentProviderTest extends TestCase
 {
@@ -41,12 +45,17 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
     private readonly PFUser $recipient;
     private readonly TestLogger $logger;
     private Tracker_Semantic_Title|MockObject $semantic_title;
+    private \Tracker_FormElement_Field_Date|MockObject $start_field;
+    private \Tracker_FormElement_Field_Date|MockObject $end_field;
 
     protected function setUp(): void
     {
         $this->changeset = ChangesetTestBuilder::aChangeset("1001")->build();
         $this->recipient = UserTestBuilder::buildWithDefaults();
         $this->logger    = new TestLogger();
+
+        $this->start_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $this->end_field   = $this->createMock(\Tracker_FormElement_Field_Date::class);
 
         $this->semantic_title = $this->createMock(Tracker_Semantic_Title::class);
         Tracker_Semantic_Title::setInstance($this->semantic_title, $this->changeset->getTracker());
@@ -61,6 +70,11 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
     {
         $provider = new EmailNotificationAttachmentProvider(
             CheckEventShouldBeSentInNotificationStub::withoutEventInNotification(),
+            BuildSemanticTimeframeStub::withTimeframeSemanticBasedOnEndDate(
+                $this->changeset->getTracker(),
+                $this->start_field,
+                $this->end_field,
+            ),
         );
 
         $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, true);
@@ -73,6 +87,11 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
     {
         $provider = new EmailNotificationAttachmentProvider(
             CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
+            BuildSemanticTimeframeStub::withTimeframeSemanticBasedOnEndDate(
+                $this->changeset->getTracker(),
+                $this->start_field,
+                $this->end_field,
+            ),
         );
 
         $this->semantic_title->method('getField')->willReturn(null);
@@ -90,6 +109,11 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
     {
         $provider = new EmailNotificationAttachmentProvider(
             CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
+            BuildSemanticTimeframeStub::withTimeframeSemanticBasedOnEndDate(
+                $this->changeset->getTracker(),
+                $this->start_field,
+                $this->end_field,
+            ),
         );
 
         $this->setTitleValue('Christmas Party', self::USER_CANNOT_READ);
@@ -113,6 +137,11 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
     {
         $provider = new EmailNotificationAttachmentProvider(
             CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
+            BuildSemanticTimeframeStub::withTimeframeSemanticBasedOnEndDate(
+                $this->changeset->getTracker(),
+                $this->start_field,
+                $this->end_field,
+            ),
         );
 
         $this->setTitleValue($empty_text, $user_can_read);
@@ -126,6 +155,78 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
         );
     }
 
+    public function testNoAttachmentsWhenTimeframeSemanticIsNotConfigured(): void
+    {
+        $provider = new EmailNotificationAttachmentProvider(
+            CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
+            BuildSemanticTimeframeStub::withTimeframeSemanticNotConfigured(
+                $this->changeset->getTracker(),
+            ),
+        );
+
+        $this->setTitleValue('Christmas Party', true);
+
+        $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, false);
+
+        self::assertEmpty($attachements);
+        $this->assertDebugLogEquals(
+            'Tracker is configured to send calendar events alongside notification',
+            'Time period error: Semantic Timeframe is not configured for tracker bug.',
+        );
+    }
+
+    public function testNoAttachmentsWhenTimeframeSemanticIsInvalid(): void
+    {
+        $provider = new EmailNotificationAttachmentProvider(
+            CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
+            BuildSemanticTimeframeStub::withTimeframeSemanticConfigInvalid(
+                $this->changeset->getTracker(),
+            ),
+        );
+
+        $this->setTitleValue('Christmas Party', true);
+
+        $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, false);
+
+        self::assertEmpty($attachements);
+        $this->assertDebugLogEquals(
+            'Tracker is configured to send calendar events alongside notification',
+            'Time period error: It is inherited from a tracker of another project, this is not allowed',
+        );
+    }
+
+    /**
+     * @testWith [null, 123,  "No start date, we cannot build calendar event"]
+     *           [0,    123,  "No start date, we cannot build calendar event"]
+     *           [123,  null, "No end date, we cannot build calendar event"]
+     *           [123,  0,    "No end date, we cannot build calendar event"]
+     *           [123,  120,  "End date < start date, we cannot build calendar event"]
+     */
+    public function testNoAttachmentsWhenDatesAreConsideredInvalid(?int $start, ?int $end, string $expected_message): void
+    {
+        $provider = new EmailNotificationAttachmentProvider(
+            CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
+            BuildSemanticTimeframeStub::withTimeframeCalculator(
+                $this->changeset->getTracker(),
+                IComputeTimeframesStub::fromStartAndEndDates(
+                    DatePeriodWithoutWeekEnd::buildFromEndDate($start, $end, new NullLogger()),
+                    $this->start_field,
+                    $this->end_field,
+                )
+            ),
+        );
+
+        $this->setTitleValue('Christmas Party', true);
+
+        $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, false);
+
+        self::assertEmpty($attachements);
+        $this->assertDebugLogEquals(
+            'Tracker is configured to send calendar events alongside notification',
+            $expected_message,
+        );
+    }
+
     /**
      * @testWith [false, false]
      *           [true, false]
@@ -135,6 +236,14 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
     {
         $provider = new EmailNotificationAttachmentProvider(
             CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
+            BuildSemanticTimeframeStub::withTimeframeCalculator(
+                $this->changeset->getTracker(),
+                IComputeTimeframesStub::fromStartAndEndDates(
+                    DatePeriodWithoutWeekEnd::buildFromEndDate(1234567890, 1324567890, new NullLogger()),
+                    $this->start_field,
+                    $this->end_field,
+                )
+            ),
         );
 
         $this->setTitleValue('Christmas Party', $user_can_read);
@@ -144,7 +253,7 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
         self::assertEmpty($attachements);
         $this->assertDebugLogEquals(
             'Tracker is configured to send calendar events alongside notification',
-            'No calendar event for this changeset',
+            'Found a calendar event for this changeset',
         );
     }
 
