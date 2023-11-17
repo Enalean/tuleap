@@ -28,7 +28,7 @@ use DateHelper;
 
 final class DateHelperDistanceTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private $today_at_midnight;
+    private int $today_at_midnight;
 
     protected function setUp(): void
     {
@@ -39,12 +39,12 @@ final class DateHelperDistanceTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItComputesTheTimestamp2DaysAgoAtMidnight(): void
     {
         $expected_time = strtotime('-2 days', $this->today_at_midnight);
-        $this->assertEquals($expected_time, DateHelper::getTimestampAtMidnight("-2 days"));
+        self::assertEquals($expected_time, DateHelper::getTimestampAtMidnight("-2 days"));
     }
 
     public function testItComputesTheTimestamp3DaysInTheFutureAtMidnight(): void
     {
         $expected_time = strtotime('+3 days', $this->today_at_midnight);
-        $this->assertEquals($expected_time, DateHelper::getTimestampAtMidnight("+3 days"));
+        self::assertEquals($expected_time, DateHelper::getTimestampAtMidnight("+3 days"));
     }
 }

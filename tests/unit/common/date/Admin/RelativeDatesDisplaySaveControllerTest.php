@@ -22,37 +22,37 @@ declare(strict_types=1);
 
 namespace Tuleap\date\Admin;
 
-use Mockery;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\date\SelectedDateDisplayPreferenceValidator;
+use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspectorRedirection;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class RelativeDatesDisplaySaveControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     /**
      * @var RelativeDatesDisplaySaveController
      */
     private $controller;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\UserPreferencesDao
+     * @var \UserPreferencesDao&MockObject
      */
     private $preferences_dao;
 
     /**
-     * @var \Tuleap\Config\ConfigDao|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var \Tuleap\Config\ConfigDao&MockObject
      */
     private $config_dao;
 
     protected function setUp(): void
     {
-        $csrf_token = Mockery::mock(\CSRFSynchronizerToken::class);
-        $csrf_token->shouldReceive('check');
+        $csrf_token = $this->createMock(\CSRFSynchronizerToken::class);
+        $csrf_token->method('check');
         $date_display_preference_validator = new SelectedDateDisplayPreferenceValidator();
-        $this->config_dao                  = Mockery::mock(\Tuleap\Config\ConfigDao::class);
-        $this->preferences_dao             = Mockery::mock(\UserPreferencesDao::class);
+        $this->config_dao                  = $this->createMock(\Tuleap\Config\ConfigDao::class);
+        $this->preferences_dao             = $this->createMock(\UserPreferencesDao::class);
 
         $this->controller = new RelativeDatesDisplaySaveController(
             $csrf_token,
@@ -64,39 +64,34 @@ final class RelativeDatesDisplaySaveControllerTest extends \Tuleap\Test\PHPUnit\
 
     public function testItSaveConfiguration(): void
     {
-        $layout = LayoutBuilder::build();
-        $user   = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isSuperUser')->andReturnTrue();
-        $request = Mockery::mock(\HTTPRequest::class);
-        $request->shouldReceive('getCurrentUser')->andReturn($user);
-        $request->shouldReceive('get')->with('relative-dates-display')->andReturn(
-            \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP
-        );
-        $request->shouldReceive('get')->with('relative-dates-force-preference');
+        $layout  = LayoutBuilder::build();
+        $user    = UserTestBuilder::buildSiteAdministrator();
+        $request = HTTPRequestBuilder::get()
+            ->withUser($user)
+            ->withParam('relative-dates-display', \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP)
+            ->build();
 
-        $this->config_dao->shouldReceive('save')->once();
-        $this->preferences_dao->shouldReceive('deletePreferenceForAllUsers')->never();
+        $this->config_dao->expects(self::once())->method('save');
+        $this->preferences_dao->expects(self::never())->method('deletePreferenceForAllUsers');
 
-        $this->expectException(LayoutInspectorRedirection::class);
+        self::expectException(LayoutInspectorRedirection::class);
         $this->controller->process($request, $layout, []);
     }
 
     public function testItSaveConfigurationAndOverrideAllUserPreferences(): void
     {
-        $layout = LayoutBuilder::build();
-        $user   = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isSuperUser')->andReturnTrue();
-        $request = Mockery::mock(\HTTPRequest::class);
-        $request->shouldReceive('getCurrentUser')->andReturn($user);
-        $request->shouldReceive('get')->with('relative-dates-display')->andReturn(
-            \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP
-        );
-        $request->shouldReceive('get')->with('relative-dates-force-preference')->andReturnTrue();
+        $layout  = LayoutBuilder::build();
+        $user    = UserTestBuilder::buildSiteAdministrator();
+        $request = HTTPRequestBuilder::get()
+            ->withUser($user)
+            ->withParam('relative-dates-display', \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP)
+            ->withParam('relative-dates-force-preference', 'true')
+            ->build();
 
-        $this->config_dao->shouldReceive('save')->once();
-        $this->preferences_dao->shouldReceive('deletePreferenceForAllUsers')->once();
+        $this->config_dao->expects(self::once())->method('save');
+        $this->preferences_dao->expects(self::once())->method('deletePreferenceForAllUsers');
 
-        $this->expectException(LayoutInspectorRedirection::class);
+        self::expectException(LayoutInspectorRedirection::class);
         $this->controller->process($request, $layout, []);
     }
 }
