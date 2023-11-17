@@ -22,11 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
-use Tracker_Semantic_Title;
 use Tuleap\Mail\MailAttachment;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\RetrieveEventSummary;
 use Tuleap\Tracker\Notifications\Settings\CheckEventShouldBeSentInNotification;
 use Tuleap\Tracker\Semantic\Timeframe\BuildSemanticTimeframe;
 
@@ -35,6 +35,7 @@ final class EmailNotificationAttachmentProvider implements ProvideEmailNotificat
     public function __construct(
         private readonly CheckEventShouldBeSentInNotification $config,
         private readonly BuildSemanticTimeframe $semantic_timeframe_builder,
+        private readonly RetrieveEventSummary $event_summary_retriever,
     ) {
     }
 
@@ -53,7 +54,7 @@ final class EmailNotificationAttachmentProvider implements ProvideEmailNotificat
 
         $logger->debug('Tracker is configured to send calendar events alongside notification');
 
-        return $this->getEventSummary($changeset, $recipient, $should_check_permissions)
+        return $this->event_summary_retriever->getEventSummary($changeset, $recipient, $should_check_permissions)
             ->andThen(fn (string $summary) => $this->getCalendarEventData($summary, $changeset, $recipient, $logger))
             ->andThen(fn (CalendarEventData $event_data) => $this->getCalendarEventAsAttachments($event_data, $logger))
             ->match(
@@ -64,42 +65,6 @@ final class EmailNotificationAttachmentProvider implements ProvideEmailNotificat
                     return [];
                 }
             );
-    }
-
-    /**
-     * @return Ok<non-falsy-string>|Err<non-empty-string>
-     */
-    private function getEventSummary(
-        \Tracker_Artifact_Changeset $changeset,
-        \PFUser $recipient,
-        bool $should_check_permissions,
-    ): Ok|Err {
-        $title_field = Tracker_Semantic_Title::load($changeset->getTracker())->getField();
-        if (! $title_field) {
-            return Result::err('The tracker does not have title semantic, we cannot build calendar event');
-        }
-
-        if ($should_check_permissions && ! $title_field->userCanRead($recipient)) {
-            return Result::err(
-                sprintf(
-                    'The user #%s (%s) cannot read the title, we cannot build calendar event',
-                    $recipient->getId(),
-                    $recipient->getEmail(),
-                )
-            );
-        }
-
-        $title_field_value = $changeset->getValue($title_field);
-        if (! $title_field_value instanceof \Tracker_Artifact_ChangesetValue_Text) {
-            return Result::err('Title has no value, we cannot build calendar event');
-        }
-
-        $title = trim($title_field_value->getContentAsText());
-        if (! $title) {
-            return Result::err('Title is empty, we cannot build calendar event');
-        }
-
-        return Result::ok($title);
     }
 
     /**

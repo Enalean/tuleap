@@ -22,6 +22,7 @@
 namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
 use ConfigNotificationAssignedTo;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\EventSummaryRetriever;
 use Tuleap\Tracker\Notifications\ConfigNotificationAssignedToDao;
 use Exception;
 use Psr\Log\LoggerInterface;
@@ -124,7 +125,11 @@ class ActionsRunner
                 new MailSender(),
                 new ConfigNotificationAssignedTo(new ConfigNotificationAssignedToDao()),
                 new ConfigNotificationEmailCustomSender(new ConfigNotificationEmailCustomSenderDao()),
-                new EmailNotificationAttachmentProvider(new CalendarEventConfigDao(), SemanticTimeframeBuilder::build()),
+                new EmailNotificationAttachmentProvider(
+                    new CalendarEventConfigDao(),
+                    SemanticTimeframeBuilder::build(),
+                    new EventSummaryRetriever(),
+                ),
             ),
             new WebhookNotificationTask(
                 $logger,
