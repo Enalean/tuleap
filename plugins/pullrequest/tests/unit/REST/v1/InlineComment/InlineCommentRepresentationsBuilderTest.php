@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\REST\v1\InlineComment;
 
 use Tuleap\PullRequest\PullRequest;
-use Tuleap\PullRequest\REST\v1\PullRequestInlineCommentRepresentation;
 use Tuleap\PullRequest\Tests\Builders\InlineCommentTestBuilder;
 use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
 use Tuleap\PullRequest\Tests\Stub\SearchInlineCommentsOnFileStub;
@@ -64,7 +63,7 @@ final class InlineCommentRepresentationsBuilderTest extends TestCase
         $this->user_retriever    = RetrieveUserByIdStub::withUser($comments_author);
     }
 
-    /** @return PullRequestInlineCommentRepresentation[] */
+    /** @return InlineCommentRepresentation[] */
     private function build(): array
     {
         $project_id = 147;
@@ -72,8 +71,7 @@ final class InlineCommentRepresentationsBuilderTest extends TestCase
         $builder = new InlineCommentRepresentationsBuilder(
             $this->comments_searcher,
             $this->user_retriever,
-            \Codendi_HTMLPurifier::instance(),
-            ContentInterpretorStub::build(),
+            new SingleRepresentationBuilder(\Codendi_HTMLPurifier::instance(), ContentInterpretorStub::build()),
         );
         return $builder->getForFile($this->pull_request, self::FILE_PATH, $project_id);
     }

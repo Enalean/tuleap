@@ -30,7 +30,6 @@ use Tuleap\PullRequest\REST\v1\Comment\ThreadColors;
 use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorAssigner;
 use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorRetriever;
 use Tuleap\PullRequest\REST\v1\PullRequestInlineCommentPOSTRepresentation;
-use Tuleap\PullRequest\REST\v1\PullRequestInlineCommentRepresentation;
 use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
 use Tuleap\PullRequest\Tests\Stub\CreateInlineCommentStub;
 use Tuleap\PullRequest\Tests\Stub\ParentCommentSearcherStub;
@@ -74,7 +73,7 @@ final class POSTHandlerTest extends TestCase
     /**
      * @throws RestException
      */
-    private function handle(): PullRequestInlineCommentRepresentation
+    private function handle(): InlineCommentRepresentation
     {
         $user         = UserTestBuilder::buildWithId(self::AUTHOR_ID);
         $post_date    = new \DateTimeImmutable('@' . self::POST_TIMESTAMP);
@@ -101,8 +100,7 @@ final class POSTHandlerTest extends TestCase
                 ),
                 new ThreadCommentColorAssigner($this->parent_comment_searcher, ThreadColorUpdaterStub::withCallCount())
             ),
-            \Codendi_HTMLPurifier::instance(),
-            ContentInterpretorStub::build()
+            new SingleRepresentationBuilder(\Codendi_HTMLPurifier::instance(), ContentInterpretorStub::build())
         );
         return $handler->handle($comment_data, $user, $post_date, $pull_request);
     }

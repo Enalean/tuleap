@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\REST\v1\Comment;
 
-use Codendi_HTMLPurifier;
 use DateTimeImmutable;
 use Tuleap\PullRequest\Comment\Comment;
+use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\Tests\Builders\CommentTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -33,37 +33,37 @@ use Tuleap\User\REST\MinimalUserRepresentation;
 
 final class CommentRepresentationBuilderTest extends TestCase
 {
-    private Codendi_HTMLPurifier $purifier;
     private ContentInterpretorStub $interpreter;
-    private MinimalUserRepresentation $user;
 
     protected function setUp(): void
     {
-        $this->purifier    = Codendi_HTMLPurifier::instance();
         $this->interpreter = ContentInterpretorStub::build();
-        $this->user        = MinimalUserRepresentation::build(UserTestBuilder::anActiveUser()->build());
     }
 
     private function build(Comment $comment): CommentRepresentation
     {
-        $builder = new CommentRepresentationBuilder($this->purifier, $this->interpreter);
-        return $builder->buildRepresentation(101, $this->user, $comment);
+        $purifier = \Codendi_HTMLPurifier::instance();
+        $user     = MinimalUserRepresentation::build(UserTestBuilder::anActiveUser()->build());
+        $builder  = new CommentRepresentationBuilder($purifier, $this->interpreter);
+        return $builder->buildRepresentation(101, $user, $comment);
     }
 
     public function testItBuildsRepresentationForText(): void
     {
-        $comment        = CommentTestBuilder::aTextComment("Galant AMG")->editedOn(new DateTimeImmutable())->build();
+        $comment        = CommentTestBuilder::aTextComment('Galant AMG')->build();
         $representation = $this->build($comment);
-        self::assertSame($this->interpreter->getInterpretedContentWithReferencesCount(), 0);
-        self::assertNotNull($representation->last_edition_date);
+        self::assertSame(0, $this->interpreter->getInterpretedContentWithReferencesCount());
+        self::assertNull($representation->last_edition_date);
     }
 
     public function testItBuildsRepresentationForMarkdown(): void
     {
-        $comment        = CommentTestBuilder::aMarkdownComment("Galant AMG")->build();
+        $comment        = CommentTestBuilder::aMarkdownComment('Galant AMG')
+            ->editedOn(new DateTimeImmutable())
+            ->build();
         $representation = $this->build($comment);
-        self::assertSame($this->interpreter->getInterpretedContentWithReferencesCount(), 1);
-        self::assertSame('commonmark', $representation->format);
-        self::assertNull($representation->last_edition_date);
+        self::assertSame(1, $this->interpreter->getInterpretedContentWithReferencesCount());
+        self::assertSame(TimelineComment::FORMAT_MARKDOWN, $representation->format);
+        self::assertNotNull($representation->last_edition_date);
     }
 }

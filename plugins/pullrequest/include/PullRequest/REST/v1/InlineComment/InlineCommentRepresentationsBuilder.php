@@ -22,12 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\REST\v1\InlineComment;
 
-use Codendi_HTMLPurifier;
-use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\PullRequest\InlineComment\InlineComment;
 use Tuleap\PullRequest\InlineComment\SearchInlineCommentsOnFile;
 use Tuleap\PullRequest\PullRequest;
-use Tuleap\PullRequest\REST\v1\PullRequestInlineCommentRepresentation;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use Tuleap\User\RetrieveUserById;
 
@@ -36,13 +33,12 @@ final class InlineCommentRepresentationsBuilder
     public function __construct(
         private readonly SearchInlineCommentsOnFile $comments_searcher,
         private readonly RetrieveUserById $user_retriever,
-        private readonly Codendi_HTMLPurifier $purifier,
-        private readonly ContentInterpretor $common_mark_interpreter,
+        private readonly SingleRepresentationBuilder $single_builder,
     ) {
     }
 
     /**
-     * @return PullRequestInlineCommentRepresentation[]
+     * @return InlineCommentRepresentation[]
      */
     public function getForFile(PullRequest $pull_request, string $file_path, int $project_id): array
     {
@@ -55,26 +51,16 @@ final class InlineCommentRepresentationsBuilder
     private function buildForOneComment(
         InlineComment $inline_comment,
         int $project_id,
-    ): PullRequestInlineCommentRepresentation {
+    ): InlineCommentRepresentation {
         $comment_author = $this->user_retriever->getUserById($inline_comment->getUserId());
         if ($comment_author === null) {
             // User ID from comment is supposed to match an existing user. DB is corrupt ?
             throw new \RuntimeException(sprintf('Could not find user with id #%s', $inline_comment->getUserId()));
         }
-        return PullRequestInlineCommentRepresentation::build(
-            $this->purifier,
-            $this->common_mark_interpreter,
-            $inline_comment->getUnidiffOffset(),
-            MinimalUserRepresentation::build($comment_author),
-            $inline_comment->getPostDate(),
-            $inline_comment->getContent(),
+        return $this->single_builder->build(
             $project_id,
-            $inline_comment->getPosition(),
-            $inline_comment->getParentId(),
-            $inline_comment->getId(),
-            $inline_comment->getFilePath(),
-            $inline_comment->getColor(),
-            $inline_comment->getFormat(),
+            MinimalUserRepresentation::build($comment_author),
+            $inline_comment
         );
     }
 }
