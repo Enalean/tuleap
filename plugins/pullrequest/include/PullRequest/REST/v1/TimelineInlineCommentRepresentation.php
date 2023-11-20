@@ -20,11 +20,11 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
+use Codendi_HTMLPurifier;
 use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
-use Tuleap\User\REST\MinimalUserRepresentation;
 use Tuleap\REST\JsonCast;
-use Codendi_HTMLPurifier;
+use Tuleap\User\REST\MinimalUserRepresentation;
 
 final class TimelineInlineCommentRepresentation
 {
@@ -86,6 +86,7 @@ final class TimelineInlineCommentRepresentation
     public $color;
     public string $post_processed_content;
     public string $format;
+    public ?string $last_edition_date;
 
     private function __construct(
         private readonly Codendi_HTMLPurifier $purifier,
@@ -102,6 +103,7 @@ final class TimelineInlineCommentRepresentation
         string $position,
         string $color,
         string $format,
+        ?int $last_edition_date,
     ) {
         $this->file_path              = $file_path;
         $this->unidiff_offset         = $unidiff_offset;
@@ -116,6 +118,7 @@ final class TimelineInlineCommentRepresentation
         $this->position               = $position;
         $this->color                  = $color;
         $this->format                 = $format;
+        $this->last_edition_date      = JsonCast::toDate($last_edition_date);
         $this->post_processed_content = $this->getPurifiedContentFromHTML($format, $project_id, $content);
     }
 
@@ -134,6 +137,7 @@ final class TimelineInlineCommentRepresentation
         string $position,
         string $color,
         string $format,
+        ?int $last_edition_date,
     ): self {
         return new self(
             $purifier,
@@ -149,7 +153,8 @@ final class TimelineInlineCommentRepresentation
             $id,
             $position,
             $color,
-            $format
+            $format,
+            $last_edition_date
         );
     }
 

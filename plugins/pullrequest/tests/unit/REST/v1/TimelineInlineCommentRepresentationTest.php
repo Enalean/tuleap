@@ -24,6 +24,7 @@ namespace Tuleap\PullRequest\REST\v1;
 
 use Codendi_HTMLPurifier;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
+use Tuleap\REST\JsonCast;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ContentInterpretorStub;
@@ -44,7 +45,7 @@ final class TimelineInlineCommentRepresentationTest extends TestCase
 
     public function testItBuildsRepresentationForText(): void
     {
-        TimelineInlineCommentRepresentation::build(
+        $representation = TimelineInlineCommentRepresentation::build(
             $this->purifier,
             $this->interpreter,
             "/file/path",
@@ -58,14 +59,16 @@ final class TimelineInlineCommentRepresentationTest extends TestCase
             213,
             "left",
             "placid-blue",
-            TimelineComment::FORMAT_TEXT
+            TimelineComment::FORMAT_TEXT,
+            null
         );
         self::assertSame($this->interpreter->getInterpretedContentWithReferencesCount(), 0);
+        self::assertNull($representation->last_edition_date);
     }
 
     public function testItBuildsRepresentationForMarkdown(): void
     {
-        TimelineInlineCommentRepresentation::build(
+        $representation = TimelineInlineCommentRepresentation::build(
             $this->purifier,
             $this->interpreter,
             "/file/path",
@@ -79,8 +82,10 @@ final class TimelineInlineCommentRepresentationTest extends TestCase
             213,
             "right",
             "placid-blue",
-            TimelineComment::FORMAT_MARKDOWN
+            TimelineComment::FORMAT_MARKDOWN,
+            1700489651
         );
         self::assertSame($this->interpreter->getInterpretedContentWithReferencesCount(), 1);
+        self::assertSame(JsonCast::toDate(1700489651), $representation->last_edition_date);
     }
 }
