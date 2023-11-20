@@ -30,6 +30,8 @@ use Tuleap\User\REST\MinimalUserRepresentation;
  */
 final class InlineCommentRepresentation
 {
+    public const TYPE = 'inline-comment';
+
     public readonly int $id;
     public readonly string $file_path;
     public readonly int $unidiff_offset;
@@ -39,6 +41,8 @@ final class InlineCommentRepresentation
     public readonly string $content;
     public readonly string $raw_content;
     public readonly string $post_processed_content;
+    public readonly bool $is_outdated;
+    public readonly string $type;
     public readonly int $parent_id;
     public readonly string $format;
     public readonly string $color;
@@ -61,6 +65,8 @@ final class InlineCommentRepresentation
         $this->parent_id              = $comment->getParentId();
         $this->format                 = $comment->getFormat();
         $this->color                  = $comment->getColor();
+        $this->is_outdated            = $comment->isOutdated();
+        $this->type                   = self::TYPE;
         $this->user                   = $user;
     }
 }
