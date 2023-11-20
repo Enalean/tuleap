@@ -56,7 +56,7 @@ final class EmailNotificationAttachmentProvider implements ProvideEmailNotificat
         $logger->debug('Tracker is configured to send calendar events alongside notification');
 
         return $this->event_summary_retriever->getEventSummary($changeset, $recipient, $should_check_permissions)
-            ->andThen(fn (string $summary) => $this->event_data_builder->getCalendarEventData($summary, $changeset, $recipient, $logger))
+            ->andThen(fn (string $summary) => $this->event_data_builder->getCalendarEventData($summary, $changeset, $recipient, $logger, $should_check_permissions))
             ->andThen(fn (CalendarEventData $event_data) => $this->getCalendarEventAsAttachments($event_data, $logger))
             ->match(
                 static fn (array $attachments) => $attachments,

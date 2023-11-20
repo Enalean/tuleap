@@ -30,7 +30,7 @@ class TimeframeChangesetFieldsValueRetriever
      */
     public static function getTimestamp(\Tracker_FormElement_Field_Date $date_field, \PFUser $user, \Tracker_Artifact_Changeset $changeset): int
     {
-        if (! $date_field->userCanRead($user)) {
+        if (! $user instanceof \Tracker_UserWithReadAllPermission && ! $date_field->userCanRead($user)) {
             throw new TimeframeFieldNotFoundException();
         }
 
@@ -56,7 +56,7 @@ class TimeframeChangesetFieldsValueRetriever
      */
     public static function getDurationFieldValue(\Tracker_FormElement_Field_Numeric $duration_field, \PFUser $user, \Tracker_Artifact_Changeset $changeset): ?float
     {
-        if (! $duration_field->userCanRead($user)) {
+        if (! $user instanceof \Tracker_UserWithReadAllPermission && ! $duration_field->userCanRead($user)) {
             throw new TimeframeFieldNotFoundException();
         }
 

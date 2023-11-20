@@ -42,12 +42,17 @@ final class CalendarEventDataBuilder implements BuildCalendarEventData
         \Tracker_Artifact_Changeset $changeset,
         \PFUser $recipient,
         \Psr\Log\LoggerInterface $logger,
+        bool $should_check_permissions,
     ): Ok|Err {
         $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($changeset->getTracker());
 
         $timeframe_calculator = $semantic_timeframe->getTimeframeCalculator();
 
-        $time_period   = $timeframe_calculator->buildDatePeriodWithoutWeekendForChangeset($changeset, $recipient, $logger);
+        $time_period   = $timeframe_calculator->buildDatePeriodWithoutWeekendForChangeset(
+            $changeset,
+            $should_check_permissions ? $recipient : new \Tracker_UserWithReadAllPermission($recipient),
+            $logger
+        );
         $error_message = $time_period->getErrorMessage();
         if ($error_message) {
             return Result::err('Time period error: ' . $error_message);
