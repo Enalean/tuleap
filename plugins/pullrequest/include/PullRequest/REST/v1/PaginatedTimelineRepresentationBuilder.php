@@ -86,7 +86,8 @@ class PaginatedTimelineRepresentationBuilder
                     $event->getId(),
                     $event->getPosition(),
                     $event->getColor(),
-                    $event->getFormat()
+                    $event->getFormat(),
+                    $event->getLastEditionDate()->unwrapOr(null)
                 );
             case TimelineGlobalEvent::class:
                 assert($event instanceof TimelineGlobalEvent);
