@@ -22,17 +22,17 @@ declare(strict_types=1);
 namespace Tuleap\HelpDropdown;
 
 use ForgeConfig;
-use Mockery;
 use PFUser;
-use Tuleap\ForgeConfigSandbox;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\REST\ExplorerEndpointAvailableEvent;
 use Tuleap\Sanitizer\URISanitizer;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 class HelpDropdownPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
     use ForgeConfigSandbox;
 
@@ -41,44 +41,27 @@ class HelpDropdownPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $help_dropdown_builder;
 
+    private PFUser $user;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ReleaseNoteManager
+     * @var ReleaseNoteManager&MockObject
      */
     private $release_note_manager;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|URISanitizer
+     * @var URISanitizer
      */
     private $uri_sanitizer;
 
     protected function setUp(): void
     {
-        $this->user = Mockery::mock(PFUser::class);
-        $this->user->shouldReceive("getShortLocale")->andReturn('en');
-        $this->user->shouldReceive("getPreference")->andReturn(true);
+        //$this->user->shouldReceive("getPreference")->andReturn(true);
 
-        $event_dispatcher = Mockery::mock(EventDispatcherInterface::class);
-        $event_dispatcher->shouldReceive('dispatch')->andReturn(
-            new ExplorerEndpointAvailableEvent()
-        );
+        $event_dispatcher = $this->createMock(EventDispatcherInterface::class);
+        $event_dispatcher->method('dispatch')->willReturn(new ExplorerEndpointAvailableEvent());
 
-        $this->release_note_manager = Mockery::mock(ReleaseNoteManager::class);
-        $this->uri_sanitizer        = Mockery::mock(URISanitizer::class);
+        $this->release_note_manager = $this->createMock(ReleaseNoteManager::class);
+        $this->uri_sanitizer        = new URISanitizer(new \Valid_LocalURI(), new \Valid_HTTPSURI());
 
         ForgeConfig::set('display_tuleap_review_link', "1");
-
-        $this->uri_sanitizer
-            ->shouldReceive('sanitizeForHTMLAttribute')
-            ->withArgs(["/help/"])
-            ->andReturn("/help/");
-
-        $this->uri_sanitizer
-            ->shouldReceive('sanitizeForHTMLAttribute')
-            ->withArgs(["/doc/en/"])
-            ->andReturn("/doc/en/");
 
         $this->help_dropdown_builder = new HelpDropdownPresenterBuilder(
             $this->release_note_manager,
@@ -89,25 +72,21 @@ class HelpDropdownPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testBuildPresenter(): void
     {
-        $this->user->shouldReceive('isAnonymous')->andReturn(false);
-
-        $this->uri_sanitizer
-            ->shouldReceive('sanitizeForHTMLAttribute')
-            ->withArgs(["https://www.tuleap.org/resources/release-notes/tuleap-11-17"])
-            ->andReturn("https://www.tuleap.org/resources/release-notes/tuleap-11-17");
+        $user = UserTestBuilder::anActiveUser()->build();
+        $user->setPreference('has_release_note_been_seen', 'true');
 
         $expected_result = new HelpDropdownPresenter(
             [
                 HelpLinkPresenter::build(
                     'Get help',
-                    "/help/",
-                    "fa-life-saver",
+                    '/help/',
+                    'fa-life-saver',
                     $this->uri_sanitizer,
                 ),
                 HelpLinkPresenter::build(
                     'Documentation',
-                    "/doc/en/",
-                    "fa-book",
+                    '/doc/en/',
+                    'fa-book',
                     $this->uri_sanitizer
                 ),
             ],
@@ -115,7 +94,7 @@ class HelpDropdownPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             HelpLinkPresenter::build(
                 'Release Note',
                 'https://www.tuleap.org/resources/release-notes/tuleap-11-17',
-                "fa-star",
+                'fa-star',
                 $this->uri_sanitizer
             ),
             true,
@@ -123,33 +102,29 @@ class HelpDropdownPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->release_note_manager
-            ->shouldReceive('getReleaseNoteLink')
-            ->andReturn("https://www.tuleap.org/resources/release-notes/tuleap-11-17");
+            ->method('getReleaseNoteLink')
+            ->willReturn('https://www.tuleap.org/resources/release-notes/tuleap-11-17');
 
-        $this->assertEquals($expected_result, $this->help_dropdown_builder->build($this->user, "11.17"));
+        self::assertEquals($expected_result, $this->help_dropdown_builder->build($user, '11.17'));
     }
 
     public function testBuildPresenterWithAnonymousUser(): void
     {
-        $this->user->shouldReceive('isAnonymous')->andReturn(true);
-
-        $this->uri_sanitizer
-            ->shouldReceive('sanitizeForHTMLAttribute')
-            ->withArgs(["https://www.tuleap.org/resources/release-notes/tuleap-11-17"])
-            ->andReturn("https://www.tuleap.org/resources/release-notes/tuleap-11-17");
+        $user = UserTestBuilder::anAnonymousUser()->build();
+        $user->setPreference('has_release_note_been_seen', 'true');
 
         $expected_result = new HelpDropdownPresenter(
             [
                 HelpLinkPresenter::build(
                     'Get help',
-                    "/help/",
-                    "fa-life-saver",
+                    '/help/',
+                    'fa-life-saver',
                     $this->uri_sanitizer
                 ),
                 HelpLinkPresenter::build(
                     'Documentation',
-                    "/doc/en/",
-                    "fa-book",
+                    '/doc/en/',
+                    'fa-book',
                     $this->uri_sanitizer
                 ),
             ],
@@ -157,16 +132,15 @@ class HelpDropdownPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             HelpLinkPresenter::build(
                 'Release Note',
                 'https://www.tuleap.org/resources/release-notes/tuleap-11-17',
-                "fa-star",
+                'fa-star',
                 $this->uri_sanitizer
             ),
             true,
             []
         );
 
-        $this->release_note_manager->shouldReceive('getReleaseNoteLink')->andReturn(
-            "https://www.tuleap.org/resources/release-notes/tuleap-11-17"
-        );
-        $this->assertEquals($expected_result, $this->help_dropdown_builder->build($this->user, "11.17"));
+        $this->release_note_manager->method('getReleaseNoteLink')
+            ->willReturn('https://www.tuleap.org/resources/release-notes/tuleap-11-17');
+        self::assertEquals($expected_result, $this->help_dropdown_builder->build($user, '11.17'));
     }
 }
