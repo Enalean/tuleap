@@ -18,7 +18,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\GlobalSVNPollution;
 use Tuleap\SVNCore\SVNAuthenticationCacheInvalidator;
 
@@ -26,9 +25,8 @@ use Tuleap\SVNCore\SVNAuthenticationCacheInvalidator;
  * Test for project delete system event
  */
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
+final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalSVNPollution;
 
     /**
@@ -40,70 +38,87 @@ class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
     {
         $now = (new DateTimeImmutable())->getTimestamp();
 
-        $evt = \Mockery::mock(
-            \SystemEvent_PROJECT_DELETE::class,
-            [
-                '1',
-                SystemEvent::TYPE_PROJECT_DELETE,
-                SystemEvent::OWNER_ROOT,
-                '142',
-                SystemEvent::PRIORITY_HIGH,
-                SystemEvent::STATUS_RUNNING,
-                $now,
-                $now,
-                $now,
-                '',
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $evt = $this->getMockBuilder(\SystemEvent_PROJECT_DELETE::class)
+            ->setConstructorArgs(
+                [
+                    '1',
+                    SystemEvent::TYPE_PROJECT_DELETE,
+                    SystemEvent::OWNER_ROOT,
+                    '142',
+                    SystemEvent::PRIORITY_HIGH,
+                    SystemEvent::STATUS_RUNNING,
+                    $now,
+                    $now,
+                    $now,
+                    '',
+                ]
+            )
+            ->onlyMethods([
+                'getProject',
+                'removeProjectMembers',
+                'deleteMembershipRequestNotificationEntries',
+                'cleanupProjectUgroupsBinding',
+                'cleanupProjectFRS',
+                'getArtifactTypeFactory',
+                'getBackend',
+                'getWikiAttachment',
+                'done',
+                'error',
+                'getEventManager',
+            ])
+            ->getMock();
 
-        $evt->injectDependencies(\Mockery::spy(SVNAuthenticationCacheInvalidator::class));
+        $svn_authentication_cache_invalidator = $this->createMock(SVNAuthenticationCacheInvalidator::class);
+        $svn_authentication_cache_invalidator->method('invalidateProjectCache');
+        $evt->injectDependencies($svn_authentication_cache_invalidator);
 
         // The project
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('usesSVN')->andReturns(true);
-        $evt->shouldReceive('getProject')->with('142')->andReturns($project);
+        $project = $this->createMock(\Project::class);
+        $project->method('usesSVN')->willReturn(true);
+        $evt->method('getProject')->with('142')->willReturn($project);
 
         //Remove users from project
-        $evt->shouldReceive('removeProjectMembers')->andReturns(false);
+        $evt->method('removeProjectMembers')->willReturn(false);
 
-        $evt->shouldReceive('deleteMembershipRequestNotificationEntries')->andReturns(true);
+        $evt->method('deleteMembershipRequestNotificationEntries')->willReturn(true);
 
         //Cleanup ProjectUGroup binding
-        $evt->shouldReceive('cleanupProjectUgroupsBinding')->andReturns(true);
+        $evt->method('cleanupProjectUgroupsBinding')->willReturn(true);
 
         //Cleanup FRS
-        $evt->shouldReceive('cleanupProjectFRS')->andReturns(true);
+        $evt->method('cleanupProjectFRS')->willReturn(true);
 
         //Delete all trackers
-        $atf = \Mockery::spy(\ArtifactTypeFactory::class);
-        $atf->shouldReceive('preDeleteAllProjectArtifactTypes')->andReturns(true);
-        $evt->shouldReceive('getArtifactTypeFactory')->with($project)->andReturns($atf);
+        $atf = $this->createMock(\ArtifactTypeFactory::class);
+        $atf->method('preDeleteAllProjectArtifactTypes')->willReturn(true);
+        $evt->method('getArtifactTypeFactory')->with($project)->willReturn($atf);
 
         // System
-        $backendSystem = \Mockery::spy(\BackendSystem::class);
-        $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
+        $backendSystem = $this->createMock(\BackendSystem::class);
 
         // Wiki attachments
-        $wa = \Mockery::spy(\WikiAttachment::class);
-        $wa->shouldReceive('deleteProjectAttachments')->once()->andReturns(true);
-        $evt->shouldReceive('getWikiAttachment')->andReturns($wa);
+        $wa = $this->createMock(\WikiAttachment::class);
+        $wa->expects(self::once())->method('deleteProjectAttachments')->willReturn(true);
+        $evt->method('getWikiAttachment')->willReturn($wa);
 
         // SVN
-        $backendSVN = \Mockery::spy(\BackendSVN::class);
-        $backendSVN->shouldReceive('repositoryExists')->andReturns(true);
-        $backendSVN->shouldReceive('archiveProjectSVN')->andReturns(true);
-        $backendSVN->shouldReceive('setSVNApacheConfNeedUpdate')->once();
-        $evt->shouldReceive('getBackend')->with('SVN')->andReturns($backendSVN);
+        $backendSVN = $this->createMock(\BackendSVN::class);
+        $backendSVN->method('repositoryExists')->willReturn(true);
+        $backendSVN->method('archiveProjectSVN')->willReturn(true);
+        $backendSVN->expects(self::once())->method('setSVNApacheConfNeedUpdate');
 
-        $evt->shouldReceive('done')->never();
-        $evt->shouldReceive('error')->with("Could not remove project users")->once();
+        $evt->method('getBackend')->willReturnMap([
+            ['SVN', $backendSVN],
+            ['System', $backendSystem],
+        ]);
 
-        $evt->shouldReceive('getEventManager')->andReturns(\Mockery::spy(EventManager::class));
+        $evt->expects(self::never())->method('done');
+        $evt->expects(self::once())->method('error')->with("Could not remove project users");
+
+        $evt->method('getEventManager')->willReturn($this->createMock(EventManager::class));
 
         // Launch the event
-        $this->assertFalse($evt->process());
+        self::assertFalse($evt->process());
     }
 
     /**
@@ -115,70 +130,87 @@ class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
     {
         $now = (new DateTimeImmutable())->getTimestamp();
 
-        $evt = \Mockery::mock(
-            \SystemEvent_PROJECT_DELETE::class,
-            [
-                '1',
-                SystemEvent::TYPE_PROJECT_DELETE,
-                SystemEvent::OWNER_ROOT,
-                '142',
-                SystemEvent::PRIORITY_HIGH,
-                SystemEvent::STATUS_RUNNING,
-                $now,
-                $now,
-                $now,
-                '',
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $evt = $this->getMockBuilder(\SystemEvent_PROJECT_DELETE::class)
+            ->setConstructorArgs(
+                [
+                    '1',
+                    SystemEvent::TYPE_PROJECT_DELETE,
+                    SystemEvent::OWNER_ROOT,
+                    '142',
+                    SystemEvent::PRIORITY_HIGH,
+                    SystemEvent::STATUS_RUNNING,
+                    $now,
+                    $now,
+                    $now,
+                    '',
+                ]
+            )
+            ->onlyMethods([
+                'getProject',
+                'removeProjectMembers',
+                'deleteMembershipRequestNotificationEntries',
+                'cleanupProjectUgroupsBinding',
+                'cleanupProjectFRS',
+                'getArtifactTypeFactory',
+                'getBackend',
+                'getWikiAttachment',
+                'done',
+                'error',
+                'getEventManager',
+            ])
+            ->getMock();
 
-        $evt->injectDependencies(\Mockery::spy(SVNAuthenticationCacheInvalidator::class));
+        $svn_authentication_cache_invalidator = $this->createMock(SVNAuthenticationCacheInvalidator::class);
+        $svn_authentication_cache_invalidator->method('invalidateProjectCache');
+        $evt->injectDependencies($svn_authentication_cache_invalidator);
 
         // The project
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('usesSVN')->andReturns(true);
-        $evt->shouldReceive('getProject')->with('142')->andReturns($project);
+        $project = $this->createMock(\Project::class);
+        $project->method('usesSVN')->willReturn(true);
+        $evt->method('getProject')->with('142')->willReturn($project);
 
         //Remove users from project
-        $evt->shouldReceive('removeProjectMembers')->andReturns(true);
+        $evt->method('removeProjectMembers')->willReturn(true);
 
-        $evt->shouldReceive('deleteMembershipRequestNotificationEntries')->andReturns(false);
+        $evt->method('deleteMembershipRequestNotificationEntries')->willReturn(false);
 
         //Cleanup ProjectUGroup binding
-        $evt->shouldReceive('cleanupProjectUgroupsBinding')->andReturns(true);
+        $evt->method('cleanupProjectUgroupsBinding')->willReturn(true);
 
         //Cleanup FRS
-        $evt->shouldReceive('cleanupProjectFRS')->andReturns(true);
+        $evt->method('cleanupProjectFRS')->willReturn(true);
 
         //Delete all trackers
-        $atf = \Mockery::spy(\ArtifactTypeFactory::class);
-        $atf->shouldReceive('preDeleteAllProjectArtifactTypes')->andReturns(true);
-        $evt->shouldReceive('getArtifactTypeFactory')->with($project)->andReturns($atf);
+        $atf = $this->createMock(\ArtifactTypeFactory::class);
+        $atf->method('preDeleteAllProjectArtifactTypes')->willReturn(true);
+        $evt->method('getArtifactTypeFactory')->with($project)->willReturn($atf);
 
         // System
-        $backendSystem = \Mockery::spy(\BackendSystem::class);
-        $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
+        $backendSystem = $this->createMock(\BackendSystem::class);
 
         // Wiki attachments
-        $wa = \Mockery::spy(\WikiAttachment::class);
-        $wa->shouldReceive('deleteProjectAttachments')->once()->andReturns(true);
-        $evt->shouldReceive('getWikiAttachment')->andReturns($wa);
+        $wa = $this->createMock(\WikiAttachment::class);
+        $wa->expects(self::once())->method('deleteProjectAttachments')->willReturn(true);
+        $evt->method('getWikiAttachment')->willReturn($wa);
 
         // SVN
-        $backendSVN = \Mockery::spy(\BackendSVN::class);
-        $backendSVN->shouldReceive('repositoryExists')->andReturns(true);
-        $backendSVN->shouldReceive('archiveProjectSVN')->andReturns(true);
-        $backendSVN->shouldReceive('setSVNApacheConfNeedUpdate')->once();
-        $evt->shouldReceive('getBackend')->with('SVN')->andReturns($backendSVN);
+        $backendSVN = $this->createMock(\BackendSVN::class);
+        $backendSVN->method('repositoryExists')->willReturn(true);
+        $backendSVN->method('archiveProjectSVN')->willReturn(true);
+        $backendSVN->expects(self::once())->method('setSVNApacheConfNeedUpdate');
 
-        $evt->shouldReceive('done')->never();
-        $evt->shouldReceive('error')->with("Could not remove membership request notification ugroups or message")->once();
+        $evt->method('getBackend')->willReturnMap([
+            ['SVN', $backendSVN],
+            ['System', $backendSystem],
+        ]);
 
-        $evt->shouldReceive('getEventManager')->andReturns(\Mockery::spy(EventManager::class));
+        $evt->expects(self::never())->method('done');
+        $evt->expects(self::once())->method('error')->with("Could not remove membership request notification ugroups or message");
+
+        $evt->method('getEventManager')->willReturn($this->createMock(EventManager::class));
 
         // Launch the event
-        $this->assertFalse($evt->process());
+        self::assertFalse($evt->process());
     }
 
     /**
@@ -190,69 +222,87 @@ class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
     {
         $now = (new DateTimeImmutable())->getTimestamp();
 
-        $evt = \Mockery::mock(
-            \SystemEvent_PROJECT_DELETE::class,
-            [
-                '1',
-                SystemEvent::TYPE_PROJECT_DELETE,
-                SystemEvent::OWNER_ROOT,
-                '142',
-                SystemEvent::PRIORITY_HIGH,
-                SystemEvent::STATUS_RUNNING,
-                $now,
-                $now,
-                $now,
-                '',
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $evt = $this->getMockBuilder(\SystemEvent_PROJECT_DELETE::class)
+            ->setConstructorArgs(
+                [
+                    '1',
+                    SystemEvent::TYPE_PROJECT_DELETE,
+                    SystemEvent::OWNER_ROOT,
+                    '142',
+                    SystemEvent::PRIORITY_HIGH,
+                    SystemEvent::STATUS_RUNNING,
+                    $now,
+                    $now,
+                    $now,
+                    '',
+                ]
+            )
+            ->onlyMethods([
+                'getProject',
+                'removeProjectMembers',
+                'deleteMembershipRequestNotificationEntries',
+                'cleanupProjectUgroupsBinding',
+                'cleanupProjectFRS',
+                'getArtifactTypeFactory',
+                'getBackend',
+                'getWikiAttachment',
+                'done',
+                'error',
+                'getEventManager',
+            ])
+            ->getMock();
 
-        $evt->injectDependencies(\Mockery::spy(SVNAuthenticationCacheInvalidator::class));
+        $svn_authentication_cache_invalidator = $this->createMock(SVNAuthenticationCacheInvalidator::class);
+        $svn_authentication_cache_invalidator->method('invalidateProjectCache');
+        $evt->injectDependencies($svn_authentication_cache_invalidator);
+
         // The project
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('usesSVN')->andReturns(true);
-        $evt->shouldReceive('getProject')->with('142')->andReturns($project);
+        $project = $this->createMock(\Project::class);
+        $project->method('usesSVN')->willReturn(true);
+        $evt->method('getProject')->with('142')->willReturn($project);
 
         //Remove users from project
-        $evt->shouldReceive('removeProjectMembers')->andReturns(true);
+        $evt->method('removeProjectMembers')->willReturn(true);
 
-        $evt->shouldReceive('deleteMembershipRequestNotificationEntries')->andReturns(true);
+        $evt->method('deleteMembershipRequestNotificationEntries')->willReturn(true);
 
         //Cleanup ProjectUGroup binding
-        $evt->shouldReceive('cleanupProjectUgroupsBinding')->andReturns(true);
+        $evt->method('cleanupProjectUgroupsBinding')->willReturn(true);
 
         //Cleanup FRS
-        $evt->shouldReceive('cleanupProjectFRS')->andReturns(false);
+        $evt->method('cleanupProjectFRS')->willReturn(false);
 
         //Delete all trackers
-        $atf = \Mockery::spy(\ArtifactTypeFactory::class);
-        $atf->shouldReceive('preDeleteAllProjectArtifactTypes')->andReturns(true);
-        $evt->shouldReceive('getArtifactTypeFactory')->with($project)->andReturns($atf);
+        $atf = $this->createMock(\ArtifactTypeFactory::class);
+        $atf->method('preDeleteAllProjectArtifactTypes')->willReturn(true);
+        $evt->method('getArtifactTypeFactory')->with($project)->willReturn($atf);
 
         // System
-        $backendSystem = \Mockery::spy(\BackendSystem::class);
-        $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
+        $backendSystem = $this->createMock(\BackendSystem::class);
 
         // Wiki attachments
-        $wa = \Mockery::spy(\WikiAttachment::class);
-        $wa->shouldReceive('deleteProjectAttachments')->once()->andReturns(true);
-        $evt->shouldReceive('getWikiAttachment')->andReturns($wa);
+        $wa = $this->createMock(\WikiAttachment::class);
+        $wa->expects(self::once())->method('deleteProjectAttachments')->willReturn(true);
+        $evt->method('getWikiAttachment')->willReturn($wa);
 
         // SVN
-        $backendSVN = \Mockery::spy(\BackendSVN::class);
-        $backendSVN->shouldReceive('repositoryExists')->andReturns(true);
-        $backendSVN->shouldReceive('archiveProjectSVN')->andReturns(true);
-        $backendSVN->shouldReceive('setSVNApacheConfNeedUpdate')->once();
-        $evt->shouldReceive('getBackend')->with('SVN')->andReturns($backendSVN);
+        $backendSVN = $this->createMock(\BackendSVN::class);
+        $backendSVN->method('repositoryExists')->willReturn(true);
+        $backendSVN->method('archiveProjectSVN')->willReturn(true);
+        $backendSVN->expects(self::once())->method('setSVNApacheConfNeedUpdate');
 
-        $evt->shouldReceive('done')->never();
-        $evt->shouldReceive('error')->with("Could not remove FRS items")->once();
+        $evt->method('getBackend')->willReturnMap([
+            ['SVN', $backendSVN],
+            ['System', $backendSystem],
+        ]);
 
-        $evt->shouldReceive('getEventManager')->andReturns(\Mockery::spy(EventManager::class));
+        $evt->expects(self::never())->method('done');
+        $evt->expects(self::once())->method('error')->with("Could not remove FRS items");
+
+        $evt->method('getEventManager')->willReturn($this->createMock(EventManager::class));
 
         // Launch the event
-        $this->assertFalse($evt->process());
+        self::assertFalse($evt->process());
     }
 
     /**
@@ -264,70 +314,87 @@ class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
     {
         $now = (new DateTimeImmutable())->getTimestamp();
 
-        $evt = \Mockery::mock(
-            \SystemEvent_PROJECT_DELETE::class,
-            [
-                '1',
-                SystemEvent::TYPE_PROJECT_DELETE,
-                SystemEvent::OWNER_ROOT,
-                '142',
-                SystemEvent::PRIORITY_HIGH,
-                SystemEvent::STATUS_RUNNING,
-                $now,
-                $now,
-                $now,
-                '',
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $evt = $this->getMockBuilder(\SystemEvent_PROJECT_DELETE::class)
+            ->setConstructorArgs(
+                [
+                    '1',
+                    SystemEvent::TYPE_PROJECT_DELETE,
+                    SystemEvent::OWNER_ROOT,
+                    '142',
+                    SystemEvent::PRIORITY_HIGH,
+                    SystemEvent::STATUS_RUNNING,
+                    $now,
+                    $now,
+                    $now,
+                    '',
+                ]
+            )
+            ->onlyMethods([
+                'getProject',
+                'removeProjectMembers',
+                'deleteMembershipRequestNotificationEntries',
+                'cleanupProjectUgroupsBinding',
+                'cleanupProjectFRS',
+                'getArtifactTypeFactory',
+                'getBackend',
+                'getWikiAttachment',
+                'done',
+                'error',
+                'getEventManager',
+            ])
+            ->getMock();
 
-        $evt->injectDependencies(\Mockery::spy(SVNAuthenticationCacheInvalidator::class));
+        $svn_authentication_cache_invalidator = $this->createMock(SVNAuthenticationCacheInvalidator::class);
+        $svn_authentication_cache_invalidator->method('invalidateProjectCache');
+        $evt->injectDependencies($svn_authentication_cache_invalidator);
 
         // The project
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('usesSVN')->andReturns(true);
-        $evt->shouldReceive('getProject')->with('142')->andReturns($project);
+        $project = $this->createMock(\Project::class);
+        $project->method('usesSVN')->willReturn(true);
+        $evt->method('getProject')->with('142')->willReturn($project);
 
         //Remove users from project
-        $evt->shouldReceive('removeProjectMembers')->andReturns(true);
+        $evt->method('removeProjectMembers')->willReturn(true);
 
-        $evt->shouldReceive('deleteMembershipRequestNotificationEntries')->andReturns(true);
+        $evt->method('deleteMembershipRequestNotificationEntries')->willReturn(true);
 
         //Cleanup ProjectUGroup binding
-        $evt->shouldReceive('cleanupProjectUgroupsBinding')->andReturns(true);
+        $evt->method('cleanupProjectUgroupsBinding')->willReturn(true);
 
         //Cleanup FRS
-        $evt->shouldReceive('cleanupProjectFRS')->andReturns(true);
+        $evt->method('cleanupProjectFRS')->willReturn(true);
 
         //Delete all trackers
-        $atf = \Mockery::spy(\ArtifactTypeFactory::class);
-        $atf->shouldReceive('preDeleteAllProjectArtifactTypes')->andReturns(false);
-        $evt->shouldReceive('getArtifactTypeFactory')->with($project)->andReturns($atf);
+        $atf = $this->createMock(\ArtifactTypeFactory::class);
+        $atf->method('preDeleteAllProjectArtifactTypes')->willReturn(false);
+        $evt->method('getArtifactTypeFactory')->with($project)->willReturn($atf);
 
         // System
-        $backendSystem = \Mockery::spy(\BackendSystem::class);
-        $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
+        $backendSystem = $this->createMock(\BackendSystem::class);
 
         // Wiki attachments
-        $wa = \Mockery::spy(\WikiAttachment::class);
-        $wa->shouldReceive('deleteProjectAttachments')->once()->andReturns(true);
-        $evt->shouldReceive('getWikiAttachment')->andReturns($wa);
+        $wa = $this->createMock(\WikiAttachment::class);
+        $wa->expects(self::once())->method('deleteProjectAttachments')->willReturn(true);
+        $evt->method('getWikiAttachment')->willReturn($wa);
 
         // SVN
-        $backendSVN = \Mockery::spy(\BackendSVN::class);
-        $backendSVN->shouldReceive('repositoryExists')->andReturns(true);
-        $backendSVN->shouldReceive('archiveProjectSVN')->andReturns(true);
-        $backendSVN->shouldReceive('setSVNApacheConfNeedUpdate')->once();
-        $evt->shouldReceive('getBackend')->with('SVN')->andReturns($backendSVN);
+        $backendSVN = $this->createMock(\BackendSVN::class);
+        $backendSVN->method('repositoryExists')->willReturn(true);
+        $backendSVN->method('archiveProjectSVN')->willReturn(true);
+        $backendSVN->expects(self::once())->method('setSVNApacheConfNeedUpdate');
 
-        $evt->shouldReceive('done')->never();
-        $evt->shouldReceive('error')->with("Could not mark all trackers as deleted")->once();
+        $evt->method('getBackend')->willReturnMap([
+            ['SVN', $backendSVN],
+            ['System', $backendSystem],
+        ]);
 
-        $evt->shouldReceive('getEventManager')->andReturns(\Mockery::spy(EventManager::class));
+        $evt->expects(self::never())->method('done');
+        $evt->expects(self::once())->method('error')->with("Could not mark all trackers as deleted");
+
+        $evt->method('getEventManager')->willReturn($this->createMock(EventManager::class));
 
         // Launch the event
-        $this->assertFalse($evt->process());
+        self::assertFalse($evt->process());
     }
 
     /**
@@ -339,70 +406,87 @@ class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
     {
         $now = (new DateTimeImmutable())->getTimestamp();
 
-        $evt = \Mockery::mock(
-            \SystemEvent_PROJECT_DELETE::class,
-            [
-                '1',
-                SystemEvent::TYPE_PROJECT_DELETE,
-                SystemEvent::OWNER_ROOT,
-                '142',
-                SystemEvent::PRIORITY_HIGH,
-                SystemEvent::STATUS_RUNNING,
-                $now,
-                $now,
-                $now,
-                '',
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $evt = $this->getMockBuilder(\SystemEvent_PROJECT_DELETE::class)
+            ->setConstructorArgs(
+                [
+                    '1',
+                    SystemEvent::TYPE_PROJECT_DELETE,
+                    SystemEvent::OWNER_ROOT,
+                    '142',
+                    SystemEvent::PRIORITY_HIGH,
+                    SystemEvent::STATUS_RUNNING,
+                    $now,
+                    $now,
+                    $now,
+                    '',
+                ]
+            )
+            ->onlyMethods([
+                'getProject',
+                'removeProjectMembers',
+                'deleteMembershipRequestNotificationEntries',
+                'cleanupProjectUgroupsBinding',
+                'cleanupProjectFRS',
+                'getArtifactTypeFactory',
+                'getBackend',
+                'getWikiAttachment',
+                'done',
+                'error',
+                'getEventManager',
+            ])
+            ->getMock();
 
-        $evt->injectDependencies(\Mockery::spy(SVNAuthenticationCacheInvalidator::class));
+        $svn_authentication_cache_invalidator = $this->createMock(SVNAuthenticationCacheInvalidator::class);
+        $svn_authentication_cache_invalidator->method('invalidateProjectCache');
+        $evt->injectDependencies($svn_authentication_cache_invalidator);
 
         // The project
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('usesSVN')->andReturns(true);
-        $evt->shouldReceive('getProject')->with('142')->andReturns($project);
+        $project = $this->createMock(\Project::class);
+        $project->method('usesSVN')->willReturn(true);
+        $evt->method('getProject')->with('142')->willReturn($project);
 
         //Remove users from project
-        $evt->shouldReceive('removeProjectMembers')->andReturns(true);
+        $evt->method('removeProjectMembers')->willReturn(true);
 
-        $evt->shouldReceive('deleteMembershipRequestNotificationEntries')->andReturns(true);
+        $evt->method('deleteMembershipRequestNotificationEntries')->willReturn(true);
 
         //Cleanup ProjectUGroup binding
-        $evt->shouldReceive('cleanupProjectUgroupsBinding')->andReturns(true);
+        $evt->method('cleanupProjectUgroupsBinding')->willReturn(true);
 
         //Cleanup FRS
-        $evt->shouldReceive('cleanupProjectFRS')->andReturns(true);
+        $evt->method('cleanupProjectFRS')->willReturn(true);
 
         //Delete all trackers
-        $atf = \Mockery::spy(\ArtifactTypeFactory::class);
-        $atf->shouldReceive('preDeleteAllProjectArtifactTypes')->andReturns(true);
-        $evt->shouldReceive('getArtifactTypeFactory')->with($project)->andReturns($atf);
+        $atf = $this->createMock(\ArtifactTypeFactory::class);
+        $atf->method('preDeleteAllProjectArtifactTypes')->willReturn(true);
+        $evt->method('getArtifactTypeFactory')->with($project)->willReturn($atf);
 
         // System
-        $backendSystem = \Mockery::spy(\BackendSystem::class);
-        $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
+        $backendSystem = $this->createMock(\BackendSystem::class);
 
         // Wiki attachments
-        $wa = \Mockery::spy(\WikiAttachment::class);
-        $wa->shouldReceive('deleteProjectAttachments')->once()->andReturns(false);
-        $evt->shouldReceive('getWikiAttachment')->andReturns($wa);
+        $wa = $this->createMock(\WikiAttachment::class);
+        $wa->expects(self::once())->method('deleteProjectAttachments')->willReturn(false);
+        $evt->method('getWikiAttachment')->willReturn($wa);
 
         // SVN
-        $backendSVN = \Mockery::spy(\BackendSVN::class);
-        $backendSVN->shouldReceive('repositoryExists')->andReturns(true);
-        $backendSVN->shouldReceive('archiveProjectSVN')->andReturns(true);
-        $backendSVN->shouldReceive('setSVNApacheConfNeedUpdate')->once();
-        $evt->shouldReceive('getBackend')->with('SVN')->andReturns($backendSVN);
+        $backendSVN = $this->createMock(\BackendSVN::class);
+        $backendSVN->method('repositoryExists')->willReturn(true);
+        $backendSVN->method('archiveProjectSVN')->willReturn(true);
+        $backendSVN->expects(self::once())->method('setSVNApacheConfNeedUpdate');
 
-        $evt->shouldReceive('done')->never();
-        $evt->shouldReceive('error')->with("Could not mark all wiki attachments as deleted")->once();
+        $evt->method('getBackend')->willReturnMap([
+            ['SVN', $backendSVN],
+            ['System', $backendSystem],
+        ]);
 
-        $evt->shouldReceive('getEventManager')->andReturns(\Mockery::spy(EventManager::class));
+        $evt->expects(self::never())->method('done');
+        $evt->expects(self::once())->method('error')->with("Could not mark all wiki attachments as deleted");
+
+        $evt->method('getEventManager')->willReturn($this->createMock(EventManager::class));
 
         // Launch the event
-        $this->assertFalse($evt->process());
+        self::assertFalse($evt->process());
     }
 
     /**
@@ -414,70 +498,87 @@ class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
     {
         $now = (new DateTimeImmutable())->getTimestamp();
 
-        $evt = \Mockery::mock(
-            \SystemEvent_PROJECT_DELETE::class,
-            [
-                '1',
-                SystemEvent::TYPE_PROJECT_DELETE,
-                SystemEvent::OWNER_ROOT,
-                '142',
-                SystemEvent::PRIORITY_HIGH,
-                SystemEvent::STATUS_RUNNING,
-                $now,
-                $now,
-                $now,
-                '',
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $evt = $this->getMockBuilder(\SystemEvent_PROJECT_DELETE::class)
+            ->setConstructorArgs(
+                [
+                    '1',
+                    SystemEvent::TYPE_PROJECT_DELETE,
+                    SystemEvent::OWNER_ROOT,
+                    '142',
+                    SystemEvent::PRIORITY_HIGH,
+                    SystemEvent::STATUS_RUNNING,
+                    $now,
+                    $now,
+                    $now,
+                    '',
+                ]
+            )
+            ->onlyMethods([
+                'getProject',
+                'removeProjectMembers',
+                'deleteMembershipRequestNotificationEntries',
+                'cleanupProjectUgroupsBinding',
+                'cleanupProjectFRS',
+                'getArtifactTypeFactory',
+                'getBackend',
+                'getWikiAttachment',
+                'done',
+                'error',
+                'getEventManager',
+            ])
+            ->getMock();
 
-        $evt->injectDependencies(\Mockery::spy(SVNAuthenticationCacheInvalidator::class));
+        $svn_authentication_cache_invalidator = $this->createMock(SVNAuthenticationCacheInvalidator::class);
+        $svn_authentication_cache_invalidator->method('invalidateProjectCache');
+        $evt->injectDependencies($svn_authentication_cache_invalidator);
 
         // The project
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('usesSVN')->andReturns(true);
-        $evt->shouldReceive('getProject')->with('142')->andReturns($project);
+        $project = $this->createMock(\Project::class);
+        $project->method('usesSVN')->willReturn(true);
+        $evt->method('getProject')->with('142')->willReturn($project);
 
         //Remove users from project
-        $evt->shouldReceive('removeProjectMembers')->andReturns(true);
+        $evt->method('removeProjectMembers')->willReturn(true);
 
-        $evt->shouldReceive('deleteMembershipRequestNotificationEntries')->andReturns(true);
+        $evt->method('deleteMembershipRequestNotificationEntries')->willReturn(true);
 
         //Cleanup ProjectUGroup binding
-        $evt->shouldReceive('cleanupProjectUgroupsBinding')->andReturns(true);
+        $evt->method('cleanupProjectUgroupsBinding')->willReturn(true);
 
         //Cleanup FRS
-        $evt->shouldReceive('cleanupProjectFRS')->andReturns(true);
+        $evt->method('cleanupProjectFRS')->willReturn(true);
 
         //Delete all trackers
-        $atf = \Mockery::spy(\ArtifactTypeFactory::class);
-        $atf->shouldReceive('preDeleteAllProjectArtifactTypes')->andReturns(true);
-        $evt->shouldReceive('getArtifactTypeFactory')->with($project)->andReturns($atf);
+        $atf = $this->createMock(\ArtifactTypeFactory::class);
+        $atf->method('preDeleteAllProjectArtifactTypes')->willReturn(true);
+        $evt->method('getArtifactTypeFactory')->with($project)->willReturn($atf);
 
         // System
-        $backendSystem = \Mockery::spy(\BackendSystem::class);
-        $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
+        $backendSystem = $this->createMock(\BackendSystem::class);
 
         // Wiki attachments
-        $wa = \Mockery::spy(\WikiAttachment::class);
-        $wa->shouldReceive('deleteProjectAttachments')->once()->andReturns(true);
-        $evt->shouldReceive('getWikiAttachment')->andReturns($wa);
+        $wa = $this->createMock(\WikiAttachment::class);
+        $wa->expects(self::once())->method('deleteProjectAttachments')->willReturn(true);
+        $evt->method('getWikiAttachment')->willReturn($wa);
 
         // SVN
-        $backendSVN = \Mockery::spy(\BackendSVN::class);
-        $backendSVN->shouldReceive('repositoryExists')->andReturns(true);
-        $backendSVN->shouldReceive('archiveProjectSVN')->andReturns(false);
-        $backendSVN->shouldReceive('setSVNApacheConfNeedUpdate')->never();
-        $evt->shouldReceive('getBackend')->with('SVN')->andReturns($backendSVN);
+        $backendSVN = $this->createMock(\BackendSVN::class);
+        $backendSVN->method('repositoryExists')->willReturn(true);
+        $backendSVN->method('archiveProjectSVN')->willReturn(false);
+        $backendSVN->expects(self::never())->method('setSVNApacheConfNeedUpdate');
 
-        $evt->shouldReceive('done')->never();
-        $evt->shouldReceive('error')->with("Could not archive project SVN repository")->once();
+        $evt->method('getBackend')->willReturnMap([
+            ['SVN', $backendSVN],
+            ['System', $backendSystem],
+        ]);
 
-        $evt->shouldReceive('getEventManager')->andReturns(\Mockery::spy(EventManager::class));
+        $evt->expects(self::never())->method('done');
+        $evt->expects(self::once())->method('error')->with("Could not archive project SVN repository");
+
+        $evt->method('getEventManager')->willReturn($this->createMock(EventManager::class));
 
         // Launch the event
-        $this->assertFalse($evt->process());
+        self::assertFalse($evt->process());
     }
 
     /**
@@ -489,70 +590,87 @@ class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
     {
         $now = (new DateTimeImmutable())->getTimestamp();
 
-        $evt = \Mockery::mock(
-            \SystemEvent_PROJECT_DELETE::class,
-            [
-                '1',
-                SystemEvent::TYPE_PROJECT_DELETE,
-                SystemEvent::OWNER_ROOT,
-                '142',
-                SystemEvent::PRIORITY_HIGH,
-                SystemEvent::STATUS_RUNNING,
-                $now,
-                $now,
-                $now,
-                '',
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $evt = $this->getMockBuilder(\SystemEvent_PROJECT_DELETE::class)
+            ->setConstructorArgs(
+                [
+                    '1',
+                    SystemEvent::TYPE_PROJECT_DELETE,
+                    SystemEvent::OWNER_ROOT,
+                    '142',
+                    SystemEvent::PRIORITY_HIGH,
+                    SystemEvent::STATUS_RUNNING,
+                    $now,
+                    $now,
+                    $now,
+                    '',
+                ]
+            )
+            ->onlyMethods([
+                'getProject',
+                'removeProjectMembers',
+                'deleteMembershipRequestNotificationEntries',
+                'cleanupProjectUgroupsBinding',
+                'cleanupProjectFRS',
+                'getArtifactTypeFactory',
+                'getBackend',
+                'getWikiAttachment',
+                'done',
+                'error',
+                'getEventManager',
+            ])
+            ->getMock();
 
-        $evt->injectDependencies(\Mockery::spy(SVNAuthenticationCacheInvalidator::class));
+        $svn_authentication_cache_invalidator = $this->createMock(SVNAuthenticationCacheInvalidator::class);
+        $svn_authentication_cache_invalidator->method('invalidateProjectCache');
+        $evt->injectDependencies($svn_authentication_cache_invalidator);
 
         // The project
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('usesSVN')->andReturns(true);
-        $evt->shouldReceive('getProject')->with('142')->andReturns($project);
+        $project = $this->createMock(\Project::class);
+        $project->method('usesSVN')->willReturn(true);
+        $evt->method('getProject')->with('142')->willReturn($project);
 
         //Remove users from project
-        $evt->shouldReceive('removeProjectMembers')->andReturns(true);
+        $evt->method('removeProjectMembers')->willReturn(true);
 
-        $evt->shouldReceive('deleteMembershipRequestNotificationEntries')->andReturns(true);
+        $evt->method('deleteMembershipRequestNotificationEntries')->willReturn(true);
 
         //Cleanup ProjectUGroup binding
-        $evt->shouldReceive('cleanupProjectUgroupsBinding')->andReturns(false);
+        $evt->method('cleanupProjectUgroupsBinding')->willReturn(false);
 
         //Cleanup FRS
-        $evt->shouldReceive('cleanupProjectFRS')->andReturns(true);
+        $evt->method('cleanupProjectFRS')->willReturn(true);
 
         //Delete all trackers
-        $atf = \Mockery::spy(\ArtifactTypeFactory::class);
-        $atf->shouldReceive('preDeleteAllProjectArtifactTypes')->andReturns(true);
-        $evt->shouldReceive('getArtifactTypeFactory')->with($project)->andReturns($atf);
+        $atf = $this->createMock(\ArtifactTypeFactory::class);
+        $atf->method('preDeleteAllProjectArtifactTypes')->willReturn(true);
+        $evt->method('getArtifactTypeFactory')->with($project)->willReturn($atf);
 
         // System
-        $backendSystem = \Mockery::spy(\BackendSystem::class);
-        $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
+        $backendSystem = $this->createMock(\BackendSystem::class);
 
         // Wiki attachments
-        $wa = \Mockery::spy(\WikiAttachment::class);
-        $wa->shouldReceive('deleteProjectAttachments')->once()->andReturns(true);
-        $evt->shouldReceive('getWikiAttachment')->andReturns($wa);
+        $wa = $this->createMock(\WikiAttachment::class);
+        $wa->expects(self::once())->method('deleteProjectAttachments')->willReturn(true);
+        $evt->method('getWikiAttachment')->willReturn($wa);
 
         // SVN
-        $backendSVN = \Mockery::spy(\BackendSVN::class);
-        $backendSVN->shouldReceive('repositoryExists')->andReturns(true);
-        $backendSVN->shouldReceive('archiveProjectSVN')->andReturns(true);
-        $backendSVN->shouldReceive('setSVNApacheConfNeedUpdate')->once();
-        $evt->shouldReceive('getBackend')->with('SVN')->andReturns($backendSVN);
+        $backendSVN = $this->createMock(\BackendSVN::class);
+        $backendSVN->method('repositoryExists')->willReturn(true);
+        $backendSVN->method('archiveProjectSVN')->willReturn(true);
+        $backendSVN->expects(self::once())->method('setSVNApacheConfNeedUpdate');
 
-        $evt->shouldReceive('done')->never();
-        $evt->shouldReceive('error')->with("Could not remove ugroups binding")->once();
+        $evt->method('getBackend')->willReturnMap([
+            ['SVN', $backendSVN],
+            ['System', $backendSystem],
+        ]);
 
-        $evt->shouldReceive('getEventManager')->andReturns(\Mockery::spy(EventManager::class));
+        $evt->expects(self::never())->method('done');
+        $evt->expects(self::once())->method('error')->with("Could not remove ugroups binding");
+
+        $evt->method('getEventManager')->willReturn($this->createMock(EventManager::class));
 
         // Launch the event
-        $this->assertFalse($evt->process());
+        self::assertFalse($evt->process());
     }
 
     /**
@@ -564,70 +682,87 @@ class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
     {
         $now = (new DateTimeImmutable())->getTimestamp();
 
-        $evt = \Mockery::mock(
-            \SystemEvent_PROJECT_DELETE::class,
-            [
-                '1',
-                SystemEvent::TYPE_PROJECT_DELETE,
-                SystemEvent::OWNER_ROOT,
-                '142',
-                SystemEvent::PRIORITY_HIGH,
-                SystemEvent::STATUS_RUNNING,
-                $now,
-                $now,
-                $now,
-                '',
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $evt = $this->getMockBuilder(\SystemEvent_PROJECT_DELETE::class)
+            ->setConstructorArgs(
+                [
+                    '1',
+                    SystemEvent::TYPE_PROJECT_DELETE,
+                    SystemEvent::OWNER_ROOT,
+                    '142',
+                    SystemEvent::PRIORITY_HIGH,
+                    SystemEvent::STATUS_RUNNING,
+                    $now,
+                    $now,
+                    $now,
+                    '',
+                ]
+            )
+            ->onlyMethods([
+                'getProject',
+                'removeProjectMembers',
+                'deleteMembershipRequestNotificationEntries',
+                'cleanupProjectUgroupsBinding',
+                'cleanupProjectFRS',
+                'getArtifactTypeFactory',
+                'getBackend',
+                'getWikiAttachment',
+                'done',
+                'error',
+                'getEventManager',
+            ])
+            ->getMock();
 
-        $evt->injectDependencies(\Mockery::spy(SVNAuthenticationCacheInvalidator::class));
+        $svn_authentication_cache_invalidator = $this->createMock(SVNAuthenticationCacheInvalidator::class);
+        $svn_authentication_cache_invalidator->method('invalidateProjectCache');
+        $evt->injectDependencies($svn_authentication_cache_invalidator);
 
         // The project
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('usesSVN')->andReturns(true);
-        $evt->shouldReceive('getProject')->with('142')->andReturns($project);
+        $project = $this->createMock(\Project::class);
+        $project->method('usesSVN')->willReturn(true);
+        $evt->method('getProject')->with('142')->willReturn($project);
 
         //Remove users from project
-        $evt->shouldReceive('removeProjectMembers')->andReturns(true);
+        $evt->method('removeProjectMembers')->willReturn(true);
 
-        $evt->shouldReceive('deleteMembershipRequestNotificationEntries')->andReturns(true);
+        $evt->method('deleteMembershipRequestNotificationEntries')->willReturn(true);
 
         //Cleanup ProjectUGroup binding
-        $evt->shouldReceive('cleanupProjectUgroupsBinding')->andReturns(true);
+        $evt->method('cleanupProjectUgroupsBinding')->willReturn(true);
 
         //Cleanup FRS
-        $evt->shouldReceive('cleanupProjectFRS')->andReturns(true);
+        $evt->method('cleanupProjectFRS')->willReturn(true);
 
         //Delete all trackers
-        $atf = \Mockery::spy(\ArtifactTypeFactory::class);
-        $atf->shouldReceive('preDeleteAllProjectArtifactTypes')->andReturns(true);
-        $evt->shouldReceive('getArtifactTypeFactory')->with($project)->andReturns($atf);
+        $atf = $this->createMock(\ArtifactTypeFactory::class);
+        $atf->method('preDeleteAllProjectArtifactTypes')->willReturn(true);
+        $evt->method('getArtifactTypeFactory')->with($project)->willReturn($atf);
 
         // System
-        $backendSystem = \Mockery::spy(\BackendSystem::class);
-        $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
+        $backendSystem = $this->createMock(\BackendSystem::class);
 
         // Wiki attachments
-        $wa = \Mockery::spy(\WikiAttachment::class);
-        $wa->shouldReceive('deleteProjectAttachments')->once()->andReturns(true);
-        $evt->shouldReceive('getWikiAttachment')->andReturns($wa);
+        $wa = $this->createMock(\WikiAttachment::class);
+        $wa->expects(self::once())->method('deleteProjectAttachments')->willReturn(true);
+        $evt->method('getWikiAttachment')->willReturn($wa);
 
         // SVN
-        $backendSVN = \Mockery::spy(\BackendSVN::class);
-        $backendSVN->shouldReceive('repositoryExists')->andReturns(true);
-        $backendSVN->shouldReceive('archiveProjectSVN')->andReturns(true);
-        $backendSVN->shouldReceive('setSVNApacheConfNeedUpdate')->once();
-        $evt->shouldReceive('getBackend')->with('SVN')->andReturns($backendSVN);
+        $backendSVN = $this->createMock(\BackendSVN::class);
+        $backendSVN->method('repositoryExists')->willReturn(true);
+        $backendSVN->method('archiveProjectSVN')->willReturn(true);
+        $backendSVN->expects(self::once())->method('setSVNApacheConfNeedUpdate');
+
+        $evt->method('getBackend')->willReturnMap([
+            ['SVN', $backendSVN],
+            ['System', $backendSystem],
+        ]);
 
         // Expect everything went OK
-        $evt->shouldReceive('done')->once();
-        $evt->shouldReceive('error')->never();
+        $evt->expects(self::once())->method('done');
+        $evt->expects(self::never())->method('error');
 
-        $evt->shouldReceive('getEventManager')->andReturns(\Mockery::spy(EventManager::class));
+        $evt->method('getEventManager')->willReturn($this->createMock(EventManager::class));
 
         // Launch the event
-        $this->assertTrue($evt->process());
+        self::assertTrue($evt->process());
     }
 }

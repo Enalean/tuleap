@@ -22,13 +22,14 @@ namespace Tuleap\Templating\Mustache;
 
 final class MustacheEngineTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testItContainsGettextHelpersToDoI18nDirectlyInTemplates(): void
     {
+        $template_cache = $this->createMock(\Tuleap\Templating\TemplateCache::class);
+        $template_cache->method('getPath')->willReturn('path');
+
         $engine = new MustacheEngine(
-            \Mockery::mock(\Mustache_Loader::class),
-            \Mockery::spy(\Tuleap\Templating\TemplateCache::class)
+            $this->createMock(\Mustache_Loader::class),
+            $template_cache,
         );
 
         $engine->getHelper('gettext');
