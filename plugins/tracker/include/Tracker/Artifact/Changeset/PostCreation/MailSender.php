@@ -65,6 +65,10 @@ class MailSender
         $tracker_name      = $tracker->getItemName();
         $mail_enhancer     = new MailEnhancer();
 
+        foreach ($attachments as $attachment) {
+            $mail_enhancer->addAttachment($attachment);
+        }
+
         if ($message_id) {
             $mail_enhancer->setMessageId($message_id);
         }

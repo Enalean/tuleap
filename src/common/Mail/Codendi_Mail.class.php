@@ -579,6 +579,15 @@ class Codendi_Mail implements Codendi_Mail_Interface
         $this->inline_attachments[] = $mime_part;
     }
 
+    public function addAttachment(string $data, string $filename, string $mime_type): void
+    {
+        $mime_part              = $this->getMimePartAttachment($data, $mime_type);
+        $mime_part->disposition = Laminas\Mime\Mime::DISPOSITION_ATTACHMENT;
+        $mime_part->filename    = $filename;
+
+        $this->attachments[] = $mime_part;
+    }
+
     private function getMimePartAttachment($data, $mime_type)
     {
         $mime_part           = new MimePart($data);

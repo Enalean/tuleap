@@ -120,7 +120,10 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
 
         $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, $should_check_permissions);
 
-        self::assertEmpty($attachements);
+        self::assertCount(1, $attachements);
+        self::assertSame('event.ics', $attachements[0]->filename);
+        self::assertSame('text/calendar', $attachements[0]->mime_type);
+        self::assertStringContainsString('SUMMARY:Christmas Party', $attachements[0]->content);
         $this->assertDebugLogEquals(
             'Tracker is configured to send calendar events alongside notification',
             'Found a calendar event for this changeset',
