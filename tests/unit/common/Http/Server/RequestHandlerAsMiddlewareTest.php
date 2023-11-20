@@ -22,29 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\Http\Server;
 
-use Mockery;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 
 final class RequestHandlerAsMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testARequestHandlerIsTransformedAsAMiddleware(): void
     {
         $expected_response = HTTPFactoryBuilder::responseFactory()->createResponse();
-        $request_handler   = Mockery::mock(RequestHandlerInterface::class);
-        $request_handler->shouldReceive('handle')->andReturn(
-            $expected_response
-        )->once();
+        $request_handler   = $this->createMock(RequestHandlerInterface::class);
+        $request_handler->expects(self::once())->method('handle')->willReturn($expected_response);
 
         $middleware = new RequestHandlerAsMiddleware($request_handler);
         $response   = $middleware->process(
-            Mockery::mock(ServerRequestInterface::class),
-            Mockery::mock(RequestHandlerInterface::class)
+            new NullServerRequest(),
+            $this->createMock(RequestHandlerInterface::class)
         );
 
-        $this->assertSame($expected_response, $response);
+        self::assertSame($expected_response, $response);
     }
 }

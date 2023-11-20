@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Http\Server;
 
-use Mockery;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -31,8 +30,6 @@ use Tuleap\Http\HTTPFactoryBuilder;
 
 final class MiddlewareDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testRequestIsDispatched(): void
     {
         $passthrough_middleware        = new class implements MiddlewareInterface {
@@ -44,23 +41,23 @@ final class MiddlewareDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         };
         $expected_response             = HTTPFactoryBuilder::responseFactory()->createResponse();
-        $response_generator_middleware = Mockery::mock(MiddlewareInterface::class);
-        $response_generator_middleware->shouldReceive('process')->andReturn($expected_response)->once();
-        $never_called_middleware = Mockery::mock(MiddlewareInterface::class);
-        $never_called_middleware->shouldNotReceive('process');
+        $response_generator_middleware = $this->createMock(MiddlewareInterface::class);
+        $response_generator_middleware->expects(self::once())->method('process')->willReturn($expected_response);
+        $never_called_middleware = $this->createMock(MiddlewareInterface::class);
+        $never_called_middleware->expects(self::never())->method('process');
 
         $dispatcher = new MiddlewareDispatcher(
             $passthrough_middleware,
             $response_generator_middleware,
             $never_called_middleware
         );
-        $response   = $dispatcher->handle(Mockery::mock(ServerRequestInterface::class));
-        $this->assertSame($expected_response, $response);
+        $response   = $dispatcher->handle(new NullServerRequest());
+        self::assertSame($expected_response, $response);
     }
 
     public function testMiddlewareStackCannotBeEmpty(): void
     {
-        $this->expectException(EmptyMiddlewareStackException::class);
+        self::expectException(EmptyMiddlewareStackException::class);
         new MiddlewareDispatcher();
     }
 
@@ -76,7 +73,7 @@ final class MiddlewareDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         };
 
         $dispatcher = new MiddlewareDispatcher($passthrough_middleware);
-        $this->expectException(MissingMiddlewareResponseException::class);
-        $dispatcher->handle(Mockery::mock(ServerRequestInterface::class));
+        self::expectException(MissingMiddlewareResponseException::class);
+        $dispatcher->handle(new NullServerRequest());
     }
 }
