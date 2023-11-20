@@ -22,22 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\Http\Server;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Project\ServiceAccessEvent;
 
 final class ServiceInstrumentationMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \EventManager|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     * @var \EventManager&MockObject
      */
     private $event_manager;
 
     protected function setUp(): void
     {
-        $this->event_manager = \Mockery::mock(\EventManager::class);
+        $this->event_manager = $this->createMock(\EventManager::class);
         \EventManager::setInstance($this->event_manager);
     }
 
@@ -50,7 +48,10 @@ final class ServiceInstrumentationMiddlewareTest extends \Tuleap\Test\PHPUnit\Te
     {
         $middleware = new ServiceInstrumentationMiddleware('service');
 
-        $this->event_manager->shouldReceive('processEvent')->with(\Mockery::type(ServiceAccessEvent::class))->atLeast()->once();
+        $this->event_manager
+            ->expects(self::atLeastOnce())
+            ->method('processEvent')
+            ->with(self::isInstanceOf(ServiceAccessEvent::class));
 
         $middleware->process(new NullServerRequest(), new AlwaysSuccessfulRequestHandler(HTTPFactoryBuilder::responseFactory()));
     }

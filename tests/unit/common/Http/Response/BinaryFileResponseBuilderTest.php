@@ -22,17 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Http\Response;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
-use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 
 final class BinaryFileResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testFileResponseCanBeBuiltFromFilepath(): void
     {
         $builder = new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory());
@@ -41,18 +36,18 @@ final class BinaryFileResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $file      = $directory . '/my_file';
         file_put_contents($file, 'ABCD');
 
-        $request = Mockery::mock(ServerRequestInterface::class);
-        $request->shouldReceive('getHeaderLine')->with('Range')->andReturn('');
+        $request = (new NullServerRequest())
+            ->withHeader('Range', '');
 
         $response = $builder->fromFilePath($request, $file);
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('ABCD', $response->getBody()->getContents());
-        $this->assertEquals(filesize($file), (int) $response->getHeaderLine('Content-Length'));
-        $this->assertEquals('bytes', $response->getHeaderLine('Accept-Ranges'));
-        $this->assertTrue($response->hasHeader('Content-Type'));
-        $this->assertEquals('private', $response->getHeaderLine('Cache-Control'));
-        $this->assertEquals('no-cache', $response->getHeaderLine('Pragma'));
+        self::assertEquals(200, $response->getStatusCode());
+        self::assertEquals('ABCD', $response->getBody()->getContents());
+        self::assertEquals(filesize($file), (int) $response->getHeaderLine('Content-Length'));
+        self::assertEquals('bytes', $response->getHeaderLine('Accept-Ranges'));
+        self::assertTrue($response->hasHeader('Content-Type'));
+        self::assertEquals('private', $response->getHeaderLine('Cache-Control'));
+        self::assertEquals('no-cache', $response->getHeaderLine('Pragma'));
     }
 
     /**
@@ -72,7 +67,7 @@ final class BinaryFileResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             echo 'Foo';
         };
 
-        $response = $builder->fromCallback(Mockery::mock(ServerRequestInterface::class), $callback, $name, 'application/zip');
+        $response = $builder->fromCallback(new NullServerRequest(), $callback, $name, 'application/zip');
 
         self::assertEquals($expected, $response->getHeaderLine('Content-Disposition'));
     }
@@ -85,14 +80,14 @@ final class BinaryFileResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             echo 'Foo';
         };
 
-        $response = $builder->fromCallback(Mockery::mock(ServerRequestInterface::class), $callback, 'archive.zip', 'application/zip');
+        $response = $builder->fromCallback(new NullServerRequest(), $callback, 'archive.zip', 'application/zip');
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertFalse($response->hasHeader('Content-Length'));
-        $this->assertFalse($response->hasHeader('Accept-Ranges'));
-        $this->assertEquals('application/zip', $response->getHeaderLine('Content-Type'));
-        $this->assertEquals('private', $response->getHeaderLine('Cache-Control'));
-        $this->assertEquals('no-cache', $response->getHeaderLine('Pragma'));
+        self::assertEquals(200, $response->getStatusCode());
+        self::assertFalse($response->hasHeader('Content-Length'));
+        self::assertFalse($response->hasHeader('Accept-Ranges'));
+        self::assertEquals('application/zip', $response->getHeaderLine('Content-Type'));
+        self::assertEquals('private', $response->getHeaderLine('Cache-Control'));
+        self::assertEquals('no-cache', $response->getHeaderLine('Pragma'));
     }
 
     public function testResponseInstructsToNotCachePubliclyTheAnswer(): void
@@ -104,8 +99,8 @@ final class BinaryFileResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $response = $builder->fromFilePath(new NullServerRequest(), $file);
 
-        $this->assertEquals('private', $response->getHeaderLine('Cache-Control'));
-        $this->assertEquals('no-cache', $response->getHeaderLine('Pragma'));
+        self::assertEquals('private', $response->getHeaderLine('Cache-Control'));
+        self::assertEquals('no-cache', $response->getHeaderLine('Pragma'));
     }
 
     /**
@@ -126,14 +121,14 @@ final class BinaryFileResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $file      = $directory . '/my_file';
         file_put_contents($file, str_repeat('A', $total_content_size));
 
-        $request = Mockery::mock(ServerRequestInterface::class);
-        $request->shouldReceive('getHeaderLine')->with('Range')->andReturn($range_header);
+        $request = (new NullServerRequest())
+            ->withHeader('Range', $range_header);
 
         $response = $builder->fromFilePath($request, $file);
 
-        $this->assertEquals(206, $response->getStatusCode());
-        $this->assertEquals($expected_content_range_header, $response->getHeaderLine('Content-Range'));
-        $this->assertEquals($expected_content_length_header, $response->getHeaderLine('Content-Length'));
+        self::assertEquals(206, $response->getStatusCode());
+        self::assertEquals($expected_content_range_header, $response->getHeaderLine('Content-Range'));
+        self::assertEquals($expected_content_length_header, $response->getHeaderLine('Content-Length'));
     }
 
     /**
@@ -149,12 +144,12 @@ final class BinaryFileResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $file      = $directory . '/my_file';
         file_put_contents($file, 'AAA');
 
-        $request = Mockery::mock(ServerRequestInterface::class);
-        $request->shouldReceive('getHeaderLine')->with('Range')->andReturn($range_header);
+        $request = (new NullServerRequest())
+            ->withHeader('Range', $range_header);
 
         $response = $builder->fromFilePath($request, $file);
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertFalse($response->hasHeader('Content-Range'));
+        self::assertEquals(200, $response->getStatusCode());
+        self::assertFalse($response->hasHeader('Content-Range'));
     }
 }

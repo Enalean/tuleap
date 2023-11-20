@@ -22,15 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Http\Server;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 
 final class RejectNonHTTPSRequestMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var RejectNonHTTPSRequestMiddleware
      */
@@ -46,28 +42,28 @@ final class RejectNonHTTPSRequestMiddlewareTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testRequestUsingHTTPSCanGoThrough(): void
     {
-        $server_request = \Mockery::mock(ServerRequestInterface::class);
         $uri            = HTTPFactoryBuilder::URIFactory()->createUri('https://example.com');
-        $server_request->shouldReceive('getUri')->andReturn($uri);
+        $server_request = (new NullServerRequest())
+            ->withUri($uri);
 
-        $handler           = \Mockery::mock(RequestHandlerInterface::class);
+        $handler           = $this->createMock(RequestHandlerInterface::class);
         $expected_response = HTTPFactoryBuilder::responseFactory()->createResponse();
-        $handler->shouldReceive('handle')->with($server_request)->andReturn($expected_response);
+        $handler->method('handle')->with($server_request)->willReturn($expected_response);
 
         $response = $this->middleware->process($server_request, $handler);
-        $this->assertEquals($expected_response, $response);
+        self::assertEquals($expected_response, $response);
     }
 
     public function testRequestNotUsingHTTPSIsBlocked(): void
     {
-        $server_request = \Mockery::mock(ServerRequestInterface::class);
         $uri            = HTTPFactoryBuilder::URIFactory()->createUri('http://insecure.example.com');
-        $server_request->shouldReceive('getUri')->andReturn($uri);
+        $server_request = (new NullServerRequest())
+            ->withUri($uri);
 
-        $handler = \Mockery::mock(RequestHandlerInterface::class);
-        $handler->shouldNotReceive('handle');
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $handler->expects(self::never())->method('handle');
 
         $response = $this->middleware->process($server_request, $handler);
-        $this->assertEquals(400, $response->getStatusCode());
+        self::assertEquals(400, $response->getStatusCode());
     }
 }
