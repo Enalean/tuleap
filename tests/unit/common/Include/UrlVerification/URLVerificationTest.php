@@ -26,24 +26,23 @@ namespace Tuleap;
 
 use EventManager;
 use ForgeConfig;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use URLVerification;
 
 final class URLVerificationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
     use ForgeConfigSandbox;
 
     public function testIsScriptAllowedForAnonymous(): void
     {
-        $urlVerification = \Mockery::mock(\URLVerification::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $urlVerification = $this->createPartialMock(\URLVerification::class, [
+            'getEventManager',
+        ]);
 
-        $em = Mockery::mock(EventManager::class);
-        $em->shouldReceive('processEvent')->with(
-            Mockery::any(),
-            Mockery::on(
+        $em = $this->createMock(EventManager::class);
+        $em->method('processEvent')->with(
+            self::anything(),
+            self::callback(
                 function (array $params) {
                     $params['anonymous_allowed'] = false;
                     return true;
@@ -51,30 +50,30 @@ final class URLVerificationTest extends \Tuleap\Test\PHPUnit\TestCase
             )
         );
 
-        $urlVerification->shouldReceive('getEventManager')->andReturns($em);
+        $urlVerification->method('getEventManager')->willReturn($em);
 
-        $this->assertTrue(
+        self::assertTrue(
             $urlVerification->isScriptAllowedForAnonymous(
                 ['REQUEST_URI' => '/account/login.php', 'SCRIPT_NAME' => '/account/login.php']
             )
         );
-        $this->assertTrue(
+        self::assertTrue(
             $urlVerification->isScriptAllowedForAnonymous(
                 ['REQUEST_URI' => '/account/register.php', 'SCRIPT_NAME' => '/account/register.php']
             )
         );
-        $this->assertTrue(
+        self::assertTrue(
             $urlVerification->isScriptAllowedForAnonymous(
                 ['REQUEST_URI' => '/include/check_pw.php', 'SCRIPT_NAME' => '/include/check_pw.php']
             )
         );
-        $this->assertTrue(
+        self::assertTrue(
             $urlVerification->isScriptAllowedForAnonymous(
                 ['REQUEST_URI' => '/account/lostlogin.php', 'SCRIPT_NAME' => '/account/lostlogin.php']
             )
         );
 
-        $this->assertFalse(
+        self::assertFalse(
             $urlVerification->isScriptAllowedForAnonymous(['REQUEST_URI' => '/foobar', 'SCRIPT_NAME' => '/foobar'])
         );
     }
@@ -82,14 +81,14 @@ final class URLVerificationTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNotTreatRegularUrlsAsExceptions(): void
     {
         $urlVerification = new URLVerification();
-        $this->assertFalse((bool) $urlVerification->isException(['SCRIPT_NAME' => '/projects/foobar']));
+        self::assertFalse($urlVerification->isException(['SCRIPT_NAME' => '/projects/foobar']));
     }
 
     public function testItDoesNotTreatRegularUrlsWhichContainsAPIAsExceptions(): void
     {
         $urlVerification = new URLVerification();
-        $this->assertFalse(
-            (bool) $urlVerification->isException(
+        self::assertFalse(
+            $urlVerification->isException(
                 ['SCRIPT_NAME' => '/projects/foobar/?p=/api/reference/extractCross']
             )
         );
@@ -98,25 +97,27 @@ final class URLVerificationTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItTreatsExtractionOfCrossReferencesApiAsException(): void
     {
         $urlVerification = new URLVerification();
-        $this->assertTrue((bool) $urlVerification->isException(['SCRIPT_NAME' => '/api/reference/extractCross']));
+        self::assertTrue($urlVerification->isException(['SCRIPT_NAME' => '/api/reference/extractCross']));
     }
 
     public function testIsScriptAllowedForAnonymousFromHook(): void
     {
-        $urlVerification = \Mockery::mock(\URLVerification::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $em              = Mockery::mock(EventManager::class);
-        $em->shouldReceive('processEvent')->with(
-            Mockery::any(),
-            Mockery::on(
+        $urlVerification = $this->createPartialMock(\URLVerification::class, [
+            'getEventManager',
+        ]);
+        $em              = $this->createMock(EventManager::class);
+        $em->method('processEvent')->with(
+            self::anything(),
+            self::callback(
                 function (array $params) {
                     $params['anonymous_allowed'] = true;
                     return true;
                 }
             )
         );
-        $urlVerification->shouldReceive('getEventManager')->andReturns($em);
+        $urlVerification->method('getEventManager')->willReturn($em);
 
-        $this->assertTrue(
+        self::assertTrue(
             $urlVerification->isScriptAllowedForAnonymous(['REQUEST_URI' => '/foobar', 'SCRIPT_NAME' => '/foobar'])
         );
     }
@@ -126,21 +127,21 @@ final class URLVerificationTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set('sys_default_domain', 'default.example.test');
         $url_verification = new URLVerification();
 
-        $this->assertFalse($url_verification->isInternal('http://evil.example.com/'));
-        $this->assertFalse($url_verification->isInternal('https://evil.example.com/'));
-        $this->assertFalse($url_verification->isInternal('javascript:alert(1)'));
-        $this->assertTrue($url_verification->isInternal('/path/to/feature'));
-        $this->assertTrue($url_verification->isInternal('?report=111'));
-        $this->assertFalse(
+        self::assertFalse($url_verification->isInternal('http://evil.example.com/'));
+        self::assertFalse($url_verification->isInternal('https://evil.example.com/'));
+        self::assertFalse($url_verification->isInternal('javascript:alert(1)'));
+        self::assertTrue($url_verification->isInternal('/path/to/feature'));
+        self::assertTrue($url_verification->isInternal('?report=111'));
+        self::assertFalse(
             $url_verification->isInternal('http://' . ForgeConfig::get('sys_default_domain') . '/smthing')
         );
-        $this->assertTrue(
+        self::assertTrue(
             $url_verification->isInternal('https://' . ForgeConfig::get('sys_default_domain') . '/smthing')
         );
 
-        $this->assertFalse($url_verification->isInternal('//example.com'));
-        $this->assertFalse($url_verification->isInternal('/\example.com'));
-        $this->assertFalse($url_verification->isInternal(
+        self::assertFalse($url_verification->isInternal('//example.com'));
+        self::assertFalse($url_verification->isInternal('/\example.com'));
+        self::assertFalse($url_verification->isInternal(
             'https://' . ForgeConfig::get('sys_default_domain') . '@evil.example.com'
         ));
     }

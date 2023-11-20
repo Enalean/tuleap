@@ -26,14 +26,12 @@ namespace Tuleap;
 
 use ForgeAccess;
 use ForgeConfig;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\AnonymousUserTestProvider;
 use Tuleap\User\CurrentUserWithLoggedInInformation;
 
 final class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
     use ForgeConfigSandbox;
 
@@ -43,23 +41,26 @@ final class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCa
     {
         parent::setUp();
 
-        $em = \Mockery::spy(\EventManager::class);
+        $em = $this->createMock(\EventManager::class);
+        $em->method('processEvent');
 
-        $this->urlVerification = \Mockery::mock(\URLVerification::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
-        $this->urlVerification->shouldReceive('getEventManager')->andReturns($em);
+        $this->urlVerification = $this->createPartialMock(\URLVerification::class, [
+            'getEventManager',
+            'getCurrentUser',
+        ]);
+        $this->urlVerification->method('getEventManager')->willReturn($em);
     }
 
     private function currentUserIsNotLoggedIn(): void
     {
-        $this->urlVerification->shouldReceive('getCurrentUser')->andReturns(
+        $this->urlVerification->method('getCurrentUser')->willReturn(
             CurrentUserWithLoggedInInformation::fromAnonymous(new AnonymousUserTestProvider())
         );
     }
 
     private function currentUserIsLoggedIn(): void
     {
-        $this->urlVerification->shouldReceive('getCurrentUser')->andReturns(
+        $this->urlVerification->method('getCurrentUser')->willReturn(
             CurrentUserWithLoggedInInformation::fromLoggedInUser(UserTestBuilder::anActiveUser()->build())
         );
     }
@@ -75,7 +76,7 @@ final class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->urlVerification->verifyRequest($server);
         $chunks = $this->urlVerification->getUrlChunks();
 
-        $this->assertFalse(isset($chunks['script']));
+        self::assertFalse(isset($chunks['script']));
     }
 
     public function testVerifyRequestAnonymousWhenAllowed(): void
@@ -91,7 +92,7 @@ final class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->urlVerification->verifyRequest($server);
         $chunks = $this->urlVerification->getUrlChunks();
 
-        $this->assertFalse(isset($chunks['script']));
+        self::assertFalse(isset($chunks['script']));
     }
 
     public function testVerifyRequestAuthenticatedWhenAnonymousAllowed(): void
@@ -106,7 +107,7 @@ final class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->urlVerification->verifyRequest($server);
         $chunks = $this->urlVerification->getUrlChunks();
 
-        $this->assertFalse(isset($chunks['script']));
+        self::assertFalse(isset($chunks['script']));
     }
 
     public function testVerifyRequestAnonymousWhenNotAllowedAtRoot(): void
@@ -124,7 +125,7 @@ final class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->urlVerification->verifyRequest($server);
         $chunks = $this->urlVerification->getUrlChunks();
 
-        $this->assertEquals('/account/login.php?return_to=%2Fmy%2F', $chunks['script']);
+        self::assertEquals('/account/login.php?return_to=%2Fmy%2F', $chunks['script']);
     }
 
     public function testVerifyRequestAnonymousWhenNotAllowedWithScript(): void
@@ -142,7 +143,7 @@ final class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->urlVerification->verifyRequest($server);
         $chunks = $this->urlVerification->getUrlChunks();
 
-        $this->assertEquals('/account/login.php?return_to=%2Fscript%2F', $chunks['script']);
+        self::assertEquals('/account/login.php?return_to=%2Fscript%2F', $chunks['script']);
     }
 
     public function testVerifyRequestAnonymousWhenNotAllowedWithLightView(): void
@@ -160,7 +161,7 @@ final class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->urlVerification->verifyRequest($server);
         $chunks = $this->urlVerification->getUrlChunks();
 
-        $this->assertEquals('/account/login.php?return_to=%2Fscript%3Fpv%3D2&pv=2', $chunks['script']);
+        self::assertEquals('/account/login.php?return_to=%2Fscript%3Fpv%3D2&pv=2', $chunks['script']);
     }
 
     public function testVerifyRequestAuthenticatedWhenAnonymousNotAllowed(): void
@@ -176,6 +177,6 @@ final class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->urlVerification->verifyRequest($server);
         $chunks = $this->urlVerification->getUrlChunks();
 
-        $this->assertFalse(isset($chunks['script']));
+        self::assertFalse(isset($chunks['script']));
     }
 }

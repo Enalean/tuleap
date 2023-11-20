@@ -25,14 +25,12 @@ namespace Tuleap;
 
 use ForgeAccess;
 use ForgeConfig;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\AnonymousUserTestProvider;
 use Tuleap\User\CurrentUserWithLoggedInInformation;
 
 final class URLVerificationPermissionsOverriderAnonymousPlatformTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
     use ForgeConfigSandbox;
 
@@ -44,10 +42,13 @@ final class URLVerificationPermissionsOverriderAnonymousPlatformTest extends \Tu
         parent::setUp();
 
 
-        $event_manager = \Mockery::spy(\EventManager::class);
+        $event_manager = $this->createMock(\EventManager::class);
 
-        $this->url_verification = \Mockery::mock(\URLVerification::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->url_verification->shouldReceive('getEventManager')->andReturns($event_manager);
+        $this->url_verification = $this->createPartialMock(\URLVerification::class, [
+            'getEventManager',
+            'getCurrentUser',
+        ]);
+        $this->url_verification->method('getEventManager')->willReturn($event_manager);
         $fixtures = dirname(__FILE__) . '/_fixtures';
         $GLOBALS['Language']->method('getContent')->willReturn($fixtures . '/empty.txt');
 
@@ -66,16 +67,16 @@ final class URLVerificationPermissionsOverriderAnonymousPlatformTest extends \Tu
     public function testItLetAnonymousAccessLogin(): void
     {
         $this->server['SCRIPT_NAME'] = '/account/login.php';
-        $this->url_verification->shouldReceive('getCurrentUser')->andReturns(CurrentUserWithLoggedInInformation::fromAnonymous(new AnonymousUserTestProvider()));
+        $this->url_verification->method('getCurrentUser')->willReturn(CurrentUserWithLoggedInInformation::fromAnonymous(new AnonymousUserTestProvider()));
 
-        $this->assertEquals(null, $this->getScriptChunk());
+        self::assertEquals(null, $this->getScriptChunk());
     }
 
     public function testItLetAuthenticatedAccessPages(): void
     {
         $this->server['SCRIPT_NAME'] = '';
-        $this->url_verification->shouldReceive('getCurrentUser')->andReturns(CurrentUserWithLoggedInInformation::fromLoggedInUser(UserTestBuilder::anActiveUser()->build()));
+        $this->url_verification->method('getCurrentUser')->willReturn(CurrentUserWithLoggedInInformation::fromLoggedInUser(UserTestBuilder::anActiveUser()->build()));
 
-        $this->assertEquals(null, $this->getScriptChunk());
+        self::assertEquals(null, $this->getScriptChunk());
     }
 }
