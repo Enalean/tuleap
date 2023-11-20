@@ -10,6 +10,7 @@
     "@tuleap/date-helper": "workspace:*",
     "@tuleap/fault": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",
+    "@tuleap/option": "workspace:*",
     "@tuleap/plugin-pullrequest-comments": "workspace:*",
     "@tuleap/plugin-pullrequest-constants": "workspace:*",
     "@tuleap/plugin-pullrequest-rest-api-types": "workspace:*",

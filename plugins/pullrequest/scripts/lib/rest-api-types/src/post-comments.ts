@@ -27,6 +27,7 @@ import type {
 interface CommonNewComment {
     readonly id: number;
     readonly post_date: string;
+    readonly last_edition_date: null;
     readonly content: string;
     readonly raw_content: string;
     readonly user: User;

@@ -36,6 +36,9 @@ msgstr "A rouvert la pull request."
 msgid "Has updated the pull request."
 msgstr "A mis à jour la pull request."
 
+msgid "Last edited"
+msgstr "Dernière édition"
+
 msgid "No commit description has been provided yet."
 msgstr "Aucune description de commit n'a encore été fournie."
 

@@ -16,6 +16,7 @@
     "@tuleap/fault": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",
     "@tuleap/gettext": "workspace:*",
+    "@tuleap/option": "workspace:*",
     "@tuleap/plugin-pullrequest-constants": "workspace:*",
     "@tuleap/plugin-pullrequest-rest-api-types": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",

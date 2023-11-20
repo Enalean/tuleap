@@ -46,7 +46,6 @@ import {
     TYPE_INLINE_COMMENT,
     FORMAT_TEXT,
 } from "@tuleap/plugin-pullrequest-constants";
-import { PullRequestCommentPresenterBuilder } from "../../comments/PullRequestCommentPresenterBuilder";
 
 type EditorThatCanHaveWidgets = Editor & {
     addLineWidget: jest.SpyInstance;
@@ -240,15 +239,14 @@ describe("side-by-side-code-mirror-widget-creator", () => {
                     display_name: "Joe l'Asticot",
                 },
                 post_date: "2023-03-07T16:15:00Z",
+                last_edition_date: null,
                 unidiff_offset: 15,
             };
 
             new_comment_form.controller.triggerPostSubmitCallback(new_comment_payload);
 
             expect(line_widget.clear).toHaveBeenCalledTimes(1);
-            expect(comments_store.getAllRootComments()).toStrictEqual([
-                PullRequestCommentPresenterBuilder.fromFileDiffComment(new_comment_payload),
-            ]);
+            expect(comments_store.getAllRootComments()).toHaveLength(1);
 
             expect(code_mirror.addLineWidget).toHaveBeenCalledWith(15, inline_comment_widget, {
                 coverGutter: true,

@@ -107,7 +107,9 @@ export const getCommentBody = (
             ${getHeaderTemplate(
                 host.comment.user,
                 host.relative_date_helper,
+                gettext_provider,
                 host.comment.post_date,
+                host.comment.last_edition_date,
             )}
             ${displayOutdatedBadgeIfNeeded(host.comment, gettext_provider)}
         </div>

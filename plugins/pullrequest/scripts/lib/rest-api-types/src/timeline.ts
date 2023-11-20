@@ -34,6 +34,7 @@ import type { User } from "@tuleap/core-rest-api-types";
 interface CommonComment {
     readonly id: number;
     readonly post_date: string;
+    readonly last_edition_date: string | null;
     readonly content: string;
     readonly raw_content: string;
     readonly type: CommentType;

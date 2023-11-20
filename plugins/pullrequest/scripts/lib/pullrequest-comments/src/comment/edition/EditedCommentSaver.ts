@@ -21,23 +21,21 @@ import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import { patchJSON, uri } from "@tuleap/fetch-result";
 import type {
-    CommentOnFile,
-    GlobalComment,
-    PullRequestComment,
+    EditedComment,
+    EditedCommentOnFile,
+    EditedGlobalComment,
 } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { TYPE_GLOBAL_COMMENT } from "@tuleap/plugin-pullrequest-constants";
 import type { EditionFormPresenter } from "./EditionFormPresenter";
 
 export type SaveEditedComment = {
-    saveEditedComment(form_presenter: EditionFormPresenter): ResultAsync<PullRequestComment, Fault>;
+    saveEditedComment(form_presenter: EditionFormPresenter): ResultAsync<EditedComment, Fault>;
 };
 
 export const EditedCommentSaver = (): SaveEditedComment => ({
-    saveEditedComment: (
-        presenter: EditionFormPresenter,
-    ): ResultAsync<PullRequestComment, Fault> => {
+    saveEditedComment: (presenter: EditionFormPresenter): ResultAsync<EditedComment, Fault> => {
         if (presenter.comment_type === TYPE_GLOBAL_COMMENT) {
-            return patchJSON<GlobalComment>(
+            return patchJSON<EditedGlobalComment>(
                 uri`/api/v1/pull_request_comments/${presenter.comment_id}`,
                 {
                     content: presenter.edited_content,
@@ -45,7 +43,7 @@ export const EditedCommentSaver = (): SaveEditedComment => ({
             );
         }
 
-        return patchJSON<CommentOnFile>(
+        return patchJSON<EditedCommentOnFile>(
             uri`/api/v1/pull_request_inline_comments/${presenter.comment_id}`,
             {
                 content: presenter.edited_content,

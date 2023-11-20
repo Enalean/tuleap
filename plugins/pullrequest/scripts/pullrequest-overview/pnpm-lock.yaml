@@ -23,6 +23,9 @@ dependencies:
   '@tuleap/lazybox':
     specifier: workspace:*
     version: link:../../../../lib/frontend/lazybox
+  '@tuleap/option':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/option
   '@tuleap/plugin-pullrequest-comments':
     specifier: workspace:*
     version: link:../lib/pullrequest-comments

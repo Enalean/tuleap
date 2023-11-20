@@ -20,22 +20,22 @@
 import { okAsync, errAsync } from "neverthrow";
 import type { ResultAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
-import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-types";
+import type { EditedComment } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { SaveEditedComment } from "../../src/comment/edition/EditedCommentSaver";
 
 export const SaveEditedCommentStub = {
-    withSuccessPayload: (payload: PullRequestComment): SaveEditedComment => ({
-        saveEditedComment: (): ResultAsync<PullRequestComment, Fault> => {
+    withSuccessPayload: (payload: EditedComment): SaveEditedComment => ({
+        saveEditedComment: (): ResultAsync<EditedComment, Fault> => {
             return okAsync(payload);
         },
     }),
     withFault: (fault: Fault): SaveEditedComment => ({
-        saveEditedComment: (): ResultAsync<PullRequestComment, Fault> => {
+        saveEditedComment: (): ResultAsync<EditedComment, Fault> => {
             return errAsync(fault);
         },
     }),
     withDefault: (): SaveEditedComment => ({
-        saveEditedComment: (): ResultAsync<PullRequestComment, Fault> => {
+        saveEditedComment: (): ResultAsync<EditedComment, Fault> => {
             return errAsync(
                 Fault.fromMessage(
                     "SaveEditedCommentStub::saveEditedComment called while it wasn't expected",

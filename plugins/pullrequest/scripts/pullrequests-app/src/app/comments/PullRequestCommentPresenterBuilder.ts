@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { Option } from "@tuleap/option";
 import { TYPE_INLINE_COMMENT } from "@tuleap/plugin-pullrequest-constants";
 import type { CommentOnFile } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { PullRequestInlineCommentPresenter } from "@tuleap/plugin-pullrequest-comments";
@@ -26,6 +27,9 @@ export const PullRequestCommentPresenterBuilder = {
         id: comment.id,
         user: comment.user,
         post_date: comment.post_date,
+        last_edition_date: comment.last_edition_date
+            ? Option.fromValue(comment.last_edition_date)
+            : Option.nothing(),
         content: replaceLineReturns(comment.content),
         raw_content: comment.raw_content,
         post_processed_content: comment.post_processed_content,

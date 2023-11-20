@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { Option } from "@tuleap/option";
 import type {
     GlobalCommentType,
     InlineCommentPosition,
@@ -24,7 +25,11 @@ import type {
     CommentTextFormat,
 } from "@tuleap/plugin-pullrequest-constants";
 import { TYPE_GLOBAL_COMMENT, TYPE_INLINE_COMMENT } from "@tuleap/plugin-pullrequest-constants";
-import type { PullRequestComment, User } from "@tuleap/plugin-pullrequest-rest-api-types";
+import type {
+    PullRequestComment,
+    User,
+    EditedComment,
+} from "@tuleap/plugin-pullrequest-rest-api-types";
 
 export interface PullRequestCommentFile {
     readonly file_path: string;
@@ -42,6 +47,7 @@ export interface CommonComment {
     readonly post_processed_content: string;
     readonly format: CommentTextFormat | "";
     readonly post_date: string;
+    readonly last_edition_date: Option<string>;
     readonly parent_id: number;
     color: string;
 }
@@ -69,6 +75,7 @@ export const PullRequestCommentPresenter = {
             id: reply.id,
             user: reply.user,
             post_date: reply.post_date,
+            last_edition_date: getLastEditionDateAsOption(reply),
             content: replaceLineReturns(reply.content),
             raw_content: reply.raw_content,
             post_processed_content: reply.post_processed_content,
@@ -97,10 +104,11 @@ export const PullRequestCommentPresenter = {
     },
     fromEditedComment: (
         original_comment: PullRequestCommentPresenter,
-        edited_comment: PullRequestComment,
+        edited_comment: EditedComment,
     ): PullRequestCommentPresenter => {
         return {
             ...original_comment,
+            last_edition_date: Option.fromValue(edited_comment.last_edition_date),
             content: replaceLineReturns(edited_comment.content),
             raw_content: edited_comment.raw_content,
             post_processed_content: edited_comment.post_processed_content,
@@ -110,4 +118,12 @@ export const PullRequestCommentPresenter = {
 
 function replaceLineReturns(content: string): string {
     return content.replace(/(?:\r\n|\r|\n)/g, "<br/>");
+}
+
+function getLastEditionDateAsOption(comment: PullRequestComment): Option<string> {
+    if (!comment.last_edition_date) {
+        return Option.nothing();
+    }
+
+    return Option.fromValue(comment.last_edition_date);
 }
