@@ -93,6 +93,10 @@ msgid "Fast-forward only"
 msgstr ""
 
 #, php-format
+msgid "Git repository #%d not found"
+msgstr ""
+
+#, php-format
 msgid "Inline comment #%d not found"
 msgstr ""
 

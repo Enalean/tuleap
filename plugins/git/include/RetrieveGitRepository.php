@@ -24,10 +24,20 @@ namespace Tuleap\Git;
 
 use GitRepository;
 use PFUser;
+use Tuleap\Project\ProjectAccessSuspendedException;
 
 interface RetrieveGitRepository
 {
     public function getRepositoryById(int $id): ?GitRepository;
 
+    /**
+     * @throws \GitRepoNotFoundException
+     * @throws \GitRepoNotReadableException
+     * @throws \Project_AccessProjectNotFoundException
+     * @throws \Project_AccessDeletedException
+     * @throws \Project_AccessRestrictedException
+     * @throws \Project_AccessPrivateException
+     * @throws ProjectAccessSuspendedException
+     */
     public function getRepositoryByIdUserCanSee(PFUser $user, int $id): GitRepository;
 }

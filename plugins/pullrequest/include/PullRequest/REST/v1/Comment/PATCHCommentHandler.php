@@ -23,15 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\REST\v1\Comment;
 
 use DateTimeImmutable;
-use GitRepoNotFoundException;
-use LogicException;
-use Luracast\Restler\RestException;
 use PFUser;
 use Tuleap\Git\RetrieveGitRepository;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\PullRequest\Authorization\GitRepositoryNotFoundFault;
 use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Comment\CommentFormatNotAllowedFault;
 use Tuleap\PullRequest\Comment\CommentIsNotFromCurrentUserFault;
@@ -74,39 +72,34 @@ final class PATCHCommentHandler
                             return Result::err(CommentIsNotFromCurrentUserFault::fromComment());
                         }
 
+                        $pull_request         = $this->pull_request_permission_retriever->getAccessiblePullRequest($comment_to_update->getPullRequestId(), $user);
+                        $source_repository_id = $pull_request->getRepositoryId();
+                        $source_repository    = $this->git_repository_factory->getRepositoryById($source_repository_id);
+                        if (! $source_repository) {
+                            return Result::err(GitRepositoryNotFoundFault::fromRepositoryId($source_repository_id));
+                        }
+
+                        $source_project_id = (int) $source_repository->getProject()->getID();
+
                         $new_comment = Comment::buildWithNewContent($comment_to_update, $comment_data->content, $comment_edition_time);
                         $this->comment_dao->updateComment($new_comment);
-
-                        $project_id = $this->getProjectIdFromPullRequest($new_comment, $user);
-
                         $this->cross_references_saver->extractCrossRef(
                             $new_comment->getContent(),
                             $new_comment->getPullRequestId(),
                             \pullrequestPlugin::REFERENCE_NATURE,
-                            $project_id,
+                            $source_project_id,
                             $user->getId(),
                             \pullrequestPlugin::PULLREQUEST_REFERENCE_KEYWORD
                         );
 
                         return Result::ok(
                             $this->comment_representation_builder->buildRepresentation(
-                                $project_id,
+                                $source_project_id,
                                 MinimalUserRepresentation::build($user),
                                 $new_comment
                             )
                         );
                     }
                 );
-    }
-
-    private function getProjectIdFromPullRequest(Comment $comment, PFUser $user): int
-    {
-        $pull_request = $this->pull_request_permission_retriever->getAccessiblePullRequest($comment->getPullRequestId(), $user);
-        try {
-            $repository = $this->git_repository_factory->getRepositoryByIdUserCanSee($user, $pull_request->getRepositoryId());
-            return (int) $repository->getProject()->getID();
-        } catch (GitRepoNotFoundException $exception) {
-            throw new LogicException("Exception should already be caught by AccessiblePullRequestRESTRetriever::getAccessiblePullRequest");
-        }
     }
 }

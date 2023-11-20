@@ -29,6 +29,7 @@ use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\PullRequest\Authorization\CannotAccessToPullRequestFault;
 use Tuleap\PullRequest\Authorization\CheckUserCanAccessPullRequest;
+use Tuleap\PullRequest\Authorization\GitRepositoryNotFoundFault;
 use Tuleap\PullRequest\Comment\CommentFormatNotAllowedFault;
 use Tuleap\PullRequest\Comment\CommentIsNotFromCurrentUserFault;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
@@ -83,14 +84,15 @@ final class PATCHHandler
                         } catch (\GitRepoNotFoundException | UserCannotReadGitRepositoryException | \Project_AccessException $e) {
                             return Result::err(CannotAccessToPullRequestFault::fromUpdatingComment($e));
                         }
-                        $updated_comment = InlineComment::buildWithNewContent($comment, $comment_data->content, $comment_edition_date);
-                        $this->comment_saver->saveUpdatedComment($updated_comment);
-
-                        $source_repository = $this->repository_retriever->getRepositoryById($pull_request->getRepositoryId());
-                        if ($source_repository === null) {
-                            throw new \LogicException('Could not retrieve the source repository of the pull request, but it should have already been checked');
+                        $source_repository_id = $pull_request->getRepositoryId();
+                        $source_repository    = $this->repository_retriever->getRepositoryById($source_repository_id);
+                        if (! $source_repository) {
+                            return Result::err(GitRepositoryNotFoundFault::fromRepositoryId($source_repository_id));
                         }
                         $source_project_id = (int) $source_repository->getProjectId();
+
+                        $updated_comment = InlineComment::buildWithNewContent($comment, $comment_data->content, $comment_edition_date);
+                        $this->comment_saver->saveUpdatedComment($updated_comment);
                         $this->cross_references_saver->extractCrossRef(
                             $updated_comment->getContent(),
                             $pull_request->getId(),
