@@ -32,7 +32,7 @@ EOT;
 
     public function up()
     {
-        $sql = "ALTER TABLE groups ADD COLUMN svn_can_change_log TINYINT(1) NOT NULL default '0' AFTER svn_mandatory_ref";
+        $sql = "ALTER TABLE `groups` ADD COLUMN svn_can_change_log TINYINT(1) NOT NULL default '0' AFTER svn_mandatory_ref";
         if ($this->db->tableNameExists('groups')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {

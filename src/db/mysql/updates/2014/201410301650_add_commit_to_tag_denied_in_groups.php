@@ -32,7 +32,7 @@ EOT;
 
     public function up()
     {
-        $sql = "ALTER TABLE groups ADD COLUMN svn_commit_to_tag_denied TINYINT(1) NOT NULL default '0' AFTER svn_accessfile_version_id";
+        $sql = "ALTER TABLE `groups` ADD COLUMN svn_commit_to_tag_denied TINYINT(1) NOT NULL default '0' AFTER svn_accessfile_version_id";
         if ($this->db->tableNameExists('groups')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {

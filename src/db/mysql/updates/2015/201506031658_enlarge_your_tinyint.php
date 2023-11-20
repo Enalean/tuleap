@@ -30,7 +30,7 @@ class b201506031658_enlarge_your_tinyint extends \Tuleap\ForgeUpgrade\Bucket
 
     public function up()
     {
-        $sql = "ALTER TABLE groups
+        $sql = "ALTER TABLE `groups`
                 MODIFY svn_commit_to_tag_denied INT(1) NOT NULL DEFAULT 0";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

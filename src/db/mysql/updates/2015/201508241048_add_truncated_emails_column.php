@@ -30,7 +30,7 @@ class b201508241048_add_truncated_emails_column extends \Tuleap\ForgeUpgrade\Buc
 
     public function up()
     {
-        $sql = 'ALTER TABLE groups ADD COLUMN truncated_emails TINYINT(1) NOT NULL DEFAULT 0';
+        $sql = 'ALTER TABLE `groups` ADD COLUMN truncated_emails TINYINT(1) NOT NULL DEFAULT 0';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while modifying the groups table.');
