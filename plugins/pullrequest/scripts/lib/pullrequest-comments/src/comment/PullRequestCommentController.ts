@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Fault } from "@tuleap/fault";
+import { loadTooltips } from "@tuleap/tooltip";
 import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { CurrentPullRequestUserPresenter, PullRequestCommentErrorCallback } from "../types";
 import { RelativeDatesHelper } from "../helpers/relative-dates-helper";
@@ -31,6 +33,9 @@ import type { StorePullRequestCommentReplies } from "./PullRequestCommentReplies
 import { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 import type { PullRequestPresenter } from "./PullRequestPresenter";
 import { ReplyContext } from "./ReplyContext";
+import type { ControlEditionForm } from "./edition/EditionFormController";
+import { EditionFormController } from "./edition/EditionFormController";
+import { EditedCommentSaver } from "./edition/EditedCommentSaver";
 
 export type ControlPullRequestComment = {
     showReplyForm(host: PullRequestCommentComponentType): void;
@@ -41,8 +46,10 @@ export type ControlPullRequestComment = {
     getRelativeDateHelper(): HelpRelativeDatesDisplay;
     buildReplyController(): ControlPullRequestCommentReply;
     buildReplyCreationController(host: PullRequestCommentComponentType): ControlNewCommentForm;
+    buildCommentEditionController(host: PullRequestCommentComponentType): ControlEditionForm;
     getProjectId(): number;
     getCurrentUserId(): number;
+    getErrorCallback(): PullRequestCommentErrorCallback;
 };
 
 export const PullRequestCommentController = (
@@ -51,70 +58,96 @@ export const PullRequestCommentController = (
     current_user: CurrentPullRequestUserPresenter,
     current_pull_request: PullRequestPresenter,
     on_error_callback?: PullRequestCommentErrorCallback,
-): ControlPullRequestComment => ({
-    showReplyForm: (host: PullRequestCommentComponentType): void => {
-        host.is_reply_form_shown = true;
-    },
-    hideReplyForm: (host: PullRequestCommentComponentType): void => {
-        host.is_reply_form_shown = false;
-    },
-    showEditionForm: (host: PullRequestCommentComponentType): void => {
-        host.is_edition_form_shown = true;
-    },
-    hideEditionForm: (host: PullRequestCommentComponentType): void => {
-        host.is_edition_form_shown = false;
-    },
-    displayReplies: (host: PullRequestCommentComponentType): void => {
-        host.replies = replies_store.getCommentReplies(host.comment);
-    },
-    getRelativeDateHelper: (): HelpRelativeDatesDisplay =>
-        RelativeDatesHelper(
-            current_user.preferred_date_format,
-            current_user.preferred_relative_date_display,
-            current_user.user_locale,
-        ),
-
-    buildReplyController: (): ControlPullRequestCommentReply =>
-        PullRequestCommentReplyController(current_user, current_pull_request),
-
-    buildReplyCreationController: (
-        host: PullRequestCommentComponentType,
-    ): ControlNewCommentForm => {
-        return NewCommentFormController(
-            save_reply,
-            current_user,
-            {
-                is_cancel_allowed: true,
-                project_id: current_pull_request.project_id,
-                is_autofocus_enabled: true,
-            },
-            ReplyContext.fromComment(host.comment, current_user, current_pull_request),
-            (comment_payload: PullRequestComment) => {
-                host.is_reply_form_shown = false;
-
-                replies_store.addReplyToComment(
-                    host.comment,
-                    PullRequestCommentPresenter.fromCommentReply(host.comment, comment_payload),
-                );
-
-                host.replies = replies_store.getCommentReplies(host.comment);
-                host.comment.color = comment_payload.color;
-            },
-            (fault) => {
-                if (on_error_callback) {
-                    on_error_callback(fault);
-                    return;
-                }
+): ControlPullRequestComment => {
+    const getErrorCallback = (): PullRequestCommentErrorCallback => {
+        if (!on_error_callback) {
+            return (fault: Fault) => {
                 // eslint-disable-next-line no-console
                 console.error(String(fault));
-            },
-            () => {
-                host.is_reply_form_shown = false;
-            },
-        );
-    },
+            };
+        }
 
-    getProjectId: () => current_pull_request.project_id,
+        return on_error_callback;
+    };
 
-    getCurrentUserId: (): number => current_user.user_id,
-});
+    return {
+        showReplyForm: (host: PullRequestCommentComponentType): void => {
+            host.is_reply_form_shown = true;
+        },
+        hideReplyForm: (host: PullRequestCommentComponentType): void => {
+            host.is_reply_form_shown = false;
+        },
+        showEditionForm: (host: PullRequestCommentComponentType): void => {
+            host.is_edition_form_shown = true;
+        },
+        hideEditionForm: (host: PullRequestCommentComponentType): void => {
+            host.is_edition_form_shown = false;
+        },
+        displayReplies: (host: PullRequestCommentComponentType): void => {
+            host.replies = replies_store.getCommentReplies(host.comment);
+        },
+        getRelativeDateHelper: (): HelpRelativeDatesDisplay =>
+            RelativeDatesHelper(
+                current_user.preferred_date_format,
+                current_user.preferred_relative_date_display,
+                current_user.user_locale,
+            ),
+
+        buildReplyController: (): ControlPullRequestCommentReply =>
+            PullRequestCommentReplyController(current_user, current_pull_request),
+
+        buildReplyCreationController: (
+            host: PullRequestCommentComponentType,
+        ): ControlNewCommentForm => {
+            return NewCommentFormController(
+                save_reply,
+                current_user,
+                {
+                    is_cancel_allowed: true,
+                    project_id: current_pull_request.project_id,
+                    is_autofocus_enabled: true,
+                },
+                ReplyContext.fromComment(host.comment, current_user, current_pull_request),
+                (comment_payload: PullRequestComment) => {
+                    host.is_reply_form_shown = false;
+
+                    replies_store.addReplyToComment(
+                        host.comment,
+                        PullRequestCommentPresenter.fromCommentReply(host.comment, comment_payload),
+                    );
+
+                    host.replies = replies_store.getCommentReplies(host.comment);
+                    host.comment.color = comment_payload.color;
+                },
+                getErrorCallback(),
+                () => {
+                    host.is_reply_form_shown = false;
+                },
+            );
+        },
+
+        buildCommentEditionController: (
+            host: PullRequestCommentComponentType,
+        ): ControlEditionForm => {
+            return EditionFormController(
+                EditedCommentSaver(),
+                (updated_comment) => {
+                    host.comment = updated_comment;
+                    host.is_edition_form_shown = false;
+                    loadTooltips(host.content(), false);
+                },
+                () => {
+                    host.is_edition_form_shown = false;
+                    loadTooltips(host.content(), false);
+                },
+                getErrorCallback(),
+            );
+        },
+
+        getProjectId: () => current_pull_request.project_id,
+
+        getCurrentUserId: (): number => current_user.user_id,
+
+        getErrorCallback,
+    };
+};

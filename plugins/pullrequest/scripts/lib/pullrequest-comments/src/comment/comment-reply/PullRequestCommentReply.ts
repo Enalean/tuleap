@@ -30,7 +30,6 @@ import { getCommentReplyTemplate } from "./PullRequestCommentReplyTemplate";
 export const TAG = "tuleap-pullrequest-comment-reply";
 
 type PullRequestCommentReply = {
-    readonly comment: PullRequestCommentPresenter;
     readonly controller: ControlPullRequestCommentReply;
     readonly is_comment_edition_enabled: boolean;
     readonly is_last_reply: boolean;
@@ -38,6 +37,7 @@ type PullRequestCommentReply = {
 
 export type InternalPullRequestCommentReply = Readonly<PullRequestCommentReply> & {
     content: () => HTMLElement;
+    comment: PullRequestCommentPresenter;
     relative_date_helper: HelpRelativeDatesDisplay;
     parent_element: PullRequestCommentComponentType;
     after_render_once: unknown;

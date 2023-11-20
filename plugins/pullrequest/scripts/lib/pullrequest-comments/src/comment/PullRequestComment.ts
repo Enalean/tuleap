@@ -38,13 +38,13 @@ export type HostElement = PullRequestCommentComponentType &
 type MapOfClasses = Record<string, boolean>;
 
 export type PullRequestCommentComponentType = {
-    readonly comment: PullRequestCommentPresenter;
     readonly content: () => HTMLElement;
     readonly after_render_once: unknown;
     readonly element_height: number;
     readonly post_rendering_callback: (() => void) | undefined;
     readonly controller: ControlPullRequestComment;
     readonly is_comment_edition_enabled: boolean;
+    comment: PullRequestCommentPresenter;
     relative_date_helper: HelpRelativeDatesDisplay;
     replies: PullRequestCommentRepliesCollectionPresenter;
     is_reply_form_shown: boolean;
@@ -119,9 +119,9 @@ const getCommentContent = (
     if (host.is_edition_form_shown) {
         return html` <tuleap-pullrequest-comment-edition-form
             class="pull-request-comment-content"
+            controller="${host.controller.buildCommentEditionController(host)}"
             comment="${host.comment}"
             project_id="${host.controller.getProjectId()}"
-            oncancel-edition="${(): void => host.controller.hideEditionForm(host)}"
         ></tuleap-pullrequest-comment-edition-form>`;
     }
 

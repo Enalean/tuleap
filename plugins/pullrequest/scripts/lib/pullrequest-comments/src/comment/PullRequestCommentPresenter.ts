@@ -23,8 +23,8 @@ import type {
     InlineCommentType,
     CommentTextFormat,
 } from "@tuleap/plugin-pullrequest-constants";
-import type { PullRequestComment, User } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { TYPE_GLOBAL_COMMENT, TYPE_INLINE_COMMENT } from "@tuleap/plugin-pullrequest-constants";
+import type { PullRequestComment, User } from "@tuleap/plugin-pullrequest-rest-api-types";
 
 export interface PullRequestCommentFile {
     readonly file_path: string;
@@ -94,6 +94,17 @@ export const PullRequestCommentPresenter = {
         }
 
         throw new Error("Expected the root comment and the reply to have the same type.");
+    },
+    fromEditedComment: (
+        original_comment: PullRequestCommentPresenter,
+        edited_comment: PullRequestComment,
+    ): PullRequestCommentPresenter => {
+        return {
+            ...original_comment,
+            content: replaceLineReturns(edited_comment.content),
+            raw_content: edited_comment.raw_content,
+            post_processed_content: edited_comment.post_processed_content,
+        };
     },
 };
 
