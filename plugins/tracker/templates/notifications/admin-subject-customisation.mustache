@@ -1,4 +1,27 @@
 <h2 class="almost-tlp-title">{{# dgettext }} tuleap-tracker | Mail configuration {{/ dgettext }}</h2>
+
+<h3>{{# dgettext }}tuleap-tracker | Calendar events{{/ dgettext }}</h3>
+
+<p>
+    {{# dgettext }}tuleap-tracker | When there is a timeframe associated with a tracker, email notifications for artifacts include the necessary information for adding the event to a calendar (Outlook, Google Calendar, etc.).{{/ dgettext }}
+</p>
+
+<div class="checkbox disabled">
+    <input type="checkbox"
+           id="enable-calendar-events"
+           name="enable-calendar-events"
+           disabled
+           {{# should_send_event_in_notification }}checked{{/ should_send_event_in_notification }}
+    >
+    <label for="enable-calendar-events">
+        {{# dgettext }}tuleap-tracker | Include calendar event in the artifact email notification{{/ dgettext }}
+    </label>
+    <p class="muted">
+        <i class="fa-solid fa-person-digging" aria-hidden="true"></i>
+        The feature is under development, you cannot change the setting yet.
+    </p>
+</div>
+
 <h3>{{ notification_customisation_title }}</h3>
 
 <div class="checkbox">
@@ -15,5 +38,7 @@
     These will be replaced by the full name and username of the user who updated the artifact. {{/ dgettext }}
     </p>
 </div>
+
+<br>
 
 <input class="btn" type="submit" value="{{ submit_changes }}">

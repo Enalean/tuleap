@@ -664,6 +664,9 @@ msgid ""
 "\">change the CSV import/export separator</a>"
 msgstr ""
 
+msgid "Calendar events"
+msgstr ""
+
 msgid "Can make the transition"
 msgstr ""
 
@@ -1492,6 +1495,9 @@ msgstr ""
 msgid ""
 "Include [Assigned to me] flag in subject for people who are assigned to the "
 "artifact"
+msgstr ""
+
+msgid "Include calendar event in the artifact email notification"
 msgstr ""
 
 msgid "Include week-ends"
@@ -3850,6 +3856,12 @@ msgid "When"
 msgstr ""
 
 msgid "When more than one parent, we cannot display rest of hierarchy."
+msgstr ""
+
+msgid ""
+"When there is a timeframe associated with a tracker, email notifications for "
+"artifacts include the necessary information for adding the event to a "
+"calendar (Outlook, Google Calendar, etc.)."
 msgstr ""
 
 msgid "Workflow"

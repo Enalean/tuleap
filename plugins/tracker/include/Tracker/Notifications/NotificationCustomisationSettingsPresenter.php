@@ -29,7 +29,7 @@ class NotificationCustomisationSettingsPresenter
     public $custom_email_enabled;
     public $custom_email_content;
 
-    public function __construct($assign_to_me_enabled, $custom_email)
+    public function __construct($assign_to_me_enabled, $custom_email, public readonly bool $should_send_event_in_notification)
     {
         $this->notification_customisation_title = dgettext('tuleap-tracker', 'Email subject customisation');
         $this->assign_to_me_enabled             = $assign_to_me_enabled;
