@@ -629,6 +629,15 @@ class PullRequestsResource extends AuthenticatedResource
     }
 
     /**
+     * @url OPTIONS {id}/inline-comments
+     * @param int $id Pull request ID
+     */
+    public function optionsInlineComments(int $id): void
+    {
+        $this->sendAllowHeadersForInlineComments();
+    }
+
+    /**
      * Post a new inline comment
      *
      * Post a new inline comment for a given pull request file and a position (left | right)<br>
@@ -938,10 +947,11 @@ class PullRequestsResource extends AuthenticatedResource
 
     /**
      * @url OPTIONS {id}/timeline
+     * @param int $id Pull request ID
      */
-    public function optionsTimeline($id)
+    public function optionsTimeline(int $id): void
     {
-        return $this->sendAllowHeadersForTimeline();
+        $this->sendAllowHeadersForTimeline();
     }
 
     /**
@@ -1019,10 +1029,11 @@ class PullRequestsResource extends AuthenticatedResource
 
     /**
      * @url OPTIONS {id}/comments
+     * @param int $id Pull request ID
      */
-    public function optionsComments($id)
+    public function optionsComments(int $id): void
     {
-        return $this->sendAllowHeadersForComments();
+        $this->sendAllowHeadersForComments();
     }
 
     /**
@@ -1295,9 +1306,9 @@ class PullRequestsResource extends AuthenticatedResource
         Header::allowOptionsGetPost();
     }
 
-    private function sendAllowHeadersForInlineComments()
+    private function sendAllowHeadersForInlineComments(): void
     {
-        Header::allowOptionsGetPost();
+        Header::allowOptionsPost();
     }
 
     /**

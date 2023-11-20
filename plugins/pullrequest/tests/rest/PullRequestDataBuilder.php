@@ -18,18 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once __DIR__ . '/DatabaseInitialization.class.php';
+declare(strict_types=1);
+
+require_once __DIR__ . '/DatabaseInitialization.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class PullRequestDataBuilder extends REST_TestDataBuilder
+final class PullRequestDataBuilder extends REST_TestDataBuilder
 {
-    public function setUp()
+    public function setUp(): void
     {
         PluginManager::instance()->installAndEnable('pullrequest');
-        $this->insertPullRequest();
+        $this->initDatabase();
     }
 
-    private function insertPullRequest()
+    private function initDatabase(): void
     {
         $initializer = new Tuleap\PullRequest\REST\DatabaseInitialization();
         $initializer->setUp();
