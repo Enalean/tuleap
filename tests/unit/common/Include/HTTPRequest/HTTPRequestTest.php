@@ -21,7 +21,6 @@
 
 final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\ForgeConfigSandbox;
 
     protected function setUp(): void
@@ -60,291 +59,353 @@ final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
         unset($_FILES['file1']);
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         $r = new HTTPRequest();
-        $this->assertEquals('1', $r->get('exists'));
-        $this->assertFalse($r->get('does_not_exist'));
+        self::assertEquals('1', $r->get('exists'));
+        self::assertFalse($r->get('does_not_exist'));
     }
 
-    public function testExist()
+    public function testExist(): void
     {
         $r = new HTTPRequest();
-        $this->assertTrue($r->exist('exists'));
-        $this->assertFalse($r->exist('does_not_exist'));
+        self::assertTrue($r->exist('exists'));
+        self::assertFalse($r->exist('does_not_exist'));
     }
 
-    public function testExistAndNonEmpty()
+    public function testExistAndNonEmpty(): void
     {
         $r = new HTTPRequest();
-        $this->assertTrue($r->existAndNonEmpty('exists'));
-        $this->assertFalse($r->existAndNonEmpty('exists_empty'));
-        $this->assertFalse($r->existAndNonEmpty('does_not_exist'));
+        self::assertTrue($r->existAndNonEmpty('exists'));
+        self::assertFalse($r->existAndNonEmpty('exists_empty'));
+        self::assertFalse($r->existAndNonEmpty('does_not_exist'));
     }
 
-    public function testQuotes()
+    public function testQuotes(): void
     {
         $r = new HTTPRequest();
-        $this->assertSame($r->get('quote'), "l'avion");
+        self::assertSame($r->get('quote'), "l'avion");
     }
 
-    public function testServerGet()
+    public function testServerGet(): void
     {
         $r = new HTTPRequest();
-        $this->assertEquals('1', $r->getFromServer('server_exists'));
-        $this->assertFalse($r->getFromServer('does_not_exist'));
+        self::assertEquals('1', $r->getFromServer('server_exists'));
+        self::assertFalse($r->getFromServer('does_not_exist'));
     }
 
-    public function testServerQuotes()
+    public function testServerQuotes(): void
     {
         $r = new HTTPRequest();
-        $this->assertSame($r->getFromServer('server_quote'), "l'avion du server");
+        self::assertSame($r->getFromServer('server_quote'), "l'avion du server");
     }
 
-    public function testSingleton()
+    public function testSingleton(): void
     {
         $this->assertSame(
             HTTPRequest::instance(),
             HTTPRequest::instance()
         );
-        $this->assertInstanceOf(HTTPRequest::class, HTTPRequest::instance());
+        self::assertInstanceOf(HTTPRequest::class, HTTPRequest::instance());
     }
 
-    public function testArray()
+    public function testArray(): void
     {
         $r = new HTTPRequest();
-        $this->assertSame($r->get('array'), ['quote_1' => "l'avion", 'quote_2' => ['quote_3' => "l'oiseau"]]);
+        self::assertSame($r->get('array'), ['quote_1' => "l'avion", 'quote_2' => ['quote_3' => "l'oiseau"]]);
     }
 
-    public function testValidKeyTrue()
+    public function testValidKeyTrue(): void
     {
-        $v = \Mockery::spy(\Rule::class);
-        $v->shouldReceive('isValid')->andReturns(true);
+        $v = $this->createMock(\Rule::class);
+        $v->method('isValid')->willReturn(true);
         $r = new HTTPRequest();
-        $this->assertTrue($r->validKey('testkey', $v));
+        self::assertTrue($r->validKey('testkey', $v));
     }
 
-    public function testValidKeyFalse()
+    public function testValidKeyFalse(): void
     {
-        $v = \Mockery::spy(\Rule::class);
-        $v->shouldReceive('isValid')->andReturns(false);
+        $v = $this->createMock(\Rule::class);
+        $v->method('isValid')->willReturn(false);
         $r = new HTTPRequest();
-        $this->assertFalse($r->validKey('testkey', $v));
+        self::assertFalse($r->validKey('testkey', $v));
     }
 
-    public function testValidKeyScalar()
+    public function testValidKeyScalar(): void
     {
-        $v = \Mockery::spy(\Rule::class);
-        $v->shouldReceive('isValid')->with('testvalue')->once();
+        $v = $this->createMock(\Rule::class);
+        $v->expects(self::once())->method('isValid')->with('testvalue');
         $r = new HTTPRequest();
         $r->validKey('testkey', $v);
     }
 
-    public function testValid()
+    public function testValid(): void
     {
-        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $v->shouldReceive('validate')->andReturns(true);
-        $v->shouldReceive('getKey')->once()->andReturns('testkey');
+        $v = $this->createPartialMock(\Valid::class, [
+            'validate',
+            'getKey',
+        ]);
+        $v->method('validate')->willReturn(true);
+        $v->expects(self::once())->method('getKey')->willReturn('testkey');
         $r = new HTTPRequest();
         $r->valid($v);
     }
 
-    public function testValidTrue()
+    public function testValidTrue(): void
     {
-        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $v->shouldReceive('getKey')->andReturns('testkey');
-        $v->shouldReceive('validate')->andReturns(true);
+        $v = $this->createPartialMock(\Valid::class, [
+            'getKey',
+            'validate',
+        ]);
+        $v->method('getKey')->willReturn('testkey');
+        $v->method('validate')->willReturn(true);
         $r = new HTTPRequest();
-        $this->assertTrue($r->valid($v));
+        self::assertTrue($r->valid($v));
     }
 
-    public function testValidFalse()
+    public function testValidFalse(): void
     {
-        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $v->shouldReceive('getKey')->andReturns('testkey');
-        $v->shouldReceive('validate')->andReturns(false);
+        $v = $this->createPartialMock(\Valid::class, [
+            'getKey',
+            'validate',
+        ]);
+        $v->method('getKey')->willReturn('testkey');
+        $v->method('validate')->willReturn(false);
         $r = new HTTPRequest();
-        $this->assertFalse($r->valid($v));
+        self::assertFalse($r->valid($v));
     }
 
-    public function testValidScalar()
+    public function testValidScalar(): void
     {
-        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $v->shouldReceive('getKey')->once()->andReturns('testkey');
-        $v->shouldReceive('validate')->with('testvalue')->once();
+        $v = $this->createPartialMock(\Valid::class, [
+            'getKey',
+            'validate',
+        ]);
+        $v->expects(self::once())->method('getKey')->willReturn('testkey');
+        $v->expects(self::once())->method('validate')->with('testvalue');
         $r = new HTTPRequest();
         $r->valid($v);
     }
 
-    public function testValidArray()
+    public function testValidArray(): void
     {
-        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $v->shouldReceive('validate')->andReturns(true);
-        $v->shouldReceive('getKey')->once()->andReturns('testkey_array');
+        $v = $this->createPartialMock(\Valid::class, [
+            'validate',
+            'getKey',
+        ]);
+        $v->method('validate')->willReturn(true);
+        $v->expects(self::once())->method('getKey')->willReturn('testkey_array');
         $r = new HTTPRequest();
         $r->validArray($v);
     }
 
-    public function testValidArrayTrue()
+    public function testValidArrayTrue(): void
     {
-        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $v->shouldReceive('getKey')->andReturns('testkey_array');
-        $v->shouldReceive('validate')->andReturns(true);
+        $v = $this->createPartialMock(\Valid::class, [
+            'getKey',
+            'validate',
+        ]);
+        $v->method('getKey')->willReturn('testkey_array');
+        $v->method('validate')->willReturn(true);
         $r = new HTTPRequest();
-        $this->assertTrue($r->validArray($v));
+        self::assertTrue($r->validArray($v));
     }
 
-    public function testValidArrayFalse()
+    public function testValidArrayFalse(): void
     {
-        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $v->shouldReceive('getKey')->andReturns('testkey_array');
-        $v->shouldReceive('validate')->andReturns(false);
+        $v = $this->createPartialMock(\Valid::class, [
+            'getKey',
+            'validate',
+        ]);
+        $v->method('getKey')->willReturn('testkey_array');
+        $v->method('validate')->willReturn(false);
         $r = new HTTPRequest();
-        $this->assertFalse($r->validArray($v));
+        self::assertFalse($r->validArray($v));
     }
 
-    public function testValidArrayScalar()
+    public function testValidArrayScalar(): void
     {
-        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $v->shouldReceive('getKey')->once()->andReturns('testkey_array');
-        $v->shouldReceive('validate')->with('testvalue1')->ordered();
-        $v->shouldReceive('validate')->with('testvalue2')->ordered();
-        $v->shouldReceive('validate')->with('testvalue3')->ordered();
+        $v = $this->createPartialMock(\Valid::class, [
+            'getKey',
+            'validate',
+        ]);
+        $v->expects(self::once())->method('getKey')->willReturn('testkey_array');
+        $v->method('validate')->withConsecutive(
+            ['testvalue1'],
+            ['testvalue2'],
+            ['testvalue3']
+        );
         $r = new HTTPRequest();
         $r->validArray($v);
     }
 
-    public function testValidArrayArgNotArray()
+    public function testValidArrayArgNotArray(): void
     {
-        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $v->shouldReceive('getKey')->once()->andReturns('testkey');
+        $v = $this->createPartialMock(\Valid::class, [
+            'getKey',
+        ]);
+        $v->expects(self::once())->method('getKey')->willReturn('testkey');
         $r = new HTTPRequest();
-        $this->assertFalse($r->validArray($v));
+        self::assertFalse($r->validArray($v));
     }
 
-    public function testValidArrayArgEmptyArrayRequired()
+    public function testValidArrayArgEmptyArrayRequired(): void
     {
-        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $v = $this->createPartialMock(\Valid::class, [
+            'getKey',
+            'validate',
+        ]);
         $v->required();
-        $v->shouldReceive('getKey')->once()->andReturns('testkey_array_empty');
-        $v->shouldReceive('validate')->with(null)->andReturns(false)->once();
+        $v->expects(self::once())->method('getKey')->willReturn('testkey_array_empty');
+        $v->expects(self::once())->method('validate')->with(null)->willReturn(false);
         $r = new HTTPRequest();
-        $this->assertFalse($r->validArray($v));
+        self::assertFalse($r->validArray($v));
     }
 
-    public function testValidArrayArgEmptyArrayNotRequired()
+    public function testValidArrayArgEmptyArrayNotRequired(): void
     {
-        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $v->shouldReceive('required')->never();
-        $v->shouldReceive('getKey')->once()->andReturns('testkey_array_empty');
-        $v->shouldReceive('validate')->with(null)->andReturns(true)->once();
+        $v = $this->createPartialMock(\Valid::class, [
+            'required',
+            'getKey',
+            'validate',
+        ]);
+        $v->expects(self::never())->method('required');
+        $v->expects(self::once())->method('getKey')->willReturn('testkey_array_empty');
+        $v->expects(self::once())->method('validate')->with(null)->willReturn(true);
         $r = new HTTPRequest();
-        $this->assertTrue($r->validArray($v));
+        self::assertTrue($r->validArray($v));
     }
 
-    public function testValidArrayArgNotEmptyArrayRequired()
+    public function testValidArrayArgNotEmptyArrayRequired(): void
     {
-        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $v->shouldReceive('getKey')->once()->andReturns('testkey_array');
-        $v->shouldReceive('validate');
+        $v = $this->createPartialMock(\Valid::class, [
+            'getKey',
+            'validate',
+        ]);
+        $v->expects(self::once())->method('getKey')->willReturn('testkey_array');
+        $v->method('validate');
         $v->required();
         $r = new HTTPRequest();
-        $this->assertFalse($r->validArray($v));
+        self::assertFalse($r->validArray($v));
     }
 
-    public function testValidArrayFirstArgFalse()
+    public function testValidArrayFirstArgFalse(): void
     {
-        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $v = $this->createPartialMock(\Valid::class, [
+            'getKey',
+        ]);
         $v->addRule(new Rule_Int());
         $v->addRule(new Rule_GreaterOrEqual(0));
         $v->required();
-        $v->shouldReceive('getKey')->once()->andReturns('testkey_array_mixed1');
+        $v->expects(self::once())->method('getKey')->willReturn('testkey_array_mixed1');
         $r = new HTTPRequest();
-        $this->assertFalse($r->validArray($v));
+        self::assertFalse($r->validArray($v));
     }
 
-    public function testValidArrayMiddleArgFalse()
+    public function testValidArrayMiddleArgFalse(): void
     {
-        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $v = $this->createPartialMock(\Valid::class, [
+            'getKey',
+        ]);
         $v->addRule(new Rule_Int());
         $v->addRule(new Rule_GreaterOrEqual(0));
         $v->required();
-        $v->shouldReceive('getKey')->once()->andReturns('testkey_array_mixed2');
+        $v->expects(self::once())->method('getKey')->willReturn('testkey_array_mixed2');
         $r = new HTTPRequest();
-        $this->assertFalse($r->validArray($v));
+        self::assertFalse($r->validArray($v));
     }
 
-    public function testValidArrayLastArgFalse()
+    public function testValidArrayLastArgFalse(): void
     {
-        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $v = $this->createPartialMock(\Valid::class, [
+            'getKey',
+        ]);
         $v->addRule(new Rule_Int());
         $v->addRule(new Rule_GreaterOrEqual(0));
         $v->required();
-        $v->shouldReceive('getKey')->once()->andReturns('testkey_array_mixed3');
+        $v->expects(self::once())->method('getKey')->willReturn('testkey_array_mixed3');
         $r = new HTTPRequest();
-        $this->assertFalse($r->validArray($v));
+        self::assertFalse($r->validArray($v));
     }
 
-    public function testValidInArray()
+    public function testValidInArray(): void
     {
-        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $v->shouldReceive('getKey')->once()->andReturns('key1');
-        $v->shouldReceive('validate')->with('valuekey1')->once();
+        $v = $this->createPartialMock(\Valid::class, [
+            'getKey',
+            'validate',
+        ]);
+        $v->expects(self::once())->method('getKey')->willReturn('key1');
+        $v->expects(self::once())->method('validate')->with('valuekey1');
         $r = new HTTPRequest();
         $r->validInArray('testarray', $v);
     }
 
-    public function testValidFileNoFileValidator()
+    public function testValidFileNoFileValidator(): void
     {
-        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $v = $this->createPartialMock(\Valid::class, []);
         $r = new HTTPRequest();
-        $this->assertFalse($r->validFile($v));
+        self::assertFalse($r->validFile($v));
     }
 
-    public function testValidFileOk()
+    public function testValidFileOk(): void
     {
-        $v = \Mockery::mock(\Valid_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $v->shouldReceive('getKey')->times(1)->andReturns('file1');
-        $v->shouldReceive('validate')->with(['file1' => ['name' => 'Test file 1']], 'file1')->once();
+        $v = $this->createPartialMock(\Valid_File::class, [
+            'getKey',
+            'validate',
+        ]);
+        $v->expects(self::once())->method('getKey')->willReturn('file1');
+        $v->expects(self::once())->method('validate')->with(['file1' => ['name' => 'Test file 1']], 'file1');
         $r = new HTTPRequest();
         $r->validFile($v);
     }
 
-    public function testGetValidated()
+    public function testGetValidated(): void
     {
-        $v1 = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $v1->shouldReceive('getKey')->andReturns('testkey');
-        $v1->shouldReceive('validate')->andReturns(true);
+        $v1 = $this->createPartialMock(\Valid::class, [
+            'getKey',
+            'validate',
+        ]);
+        $v1->method('getKey')->willReturn('testkey');
+        $v1->method('validate')->willReturn(true);
 
-        $v2 = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $v2->shouldReceive('getKey')->andReturns('testkey');
-        $v2->shouldReceive('validate')->andReturns(false);
+        $v2 = $this->createPartialMock(\Valid::class, [
+            'getKey',
+            'validate',
+        ]);
+        $v2->method('getKey')->willReturn('testkey');
+        $v2->method('validate')->willReturn(false);
 
-        $v3 = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $v3->shouldReceive('getKey')->andReturns('does_not_exist');
-        $v3->shouldReceive('validate')->andReturns(false);
+        $v3 = $this->createPartialMock(\Valid::class, [
+            'getKey',
+            'validate',
+        ]);
+        $v3->method('getKey')->willReturn('does_not_exist');
+        $v3->method('validate')->willReturn(false);
 
-        $v4 = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $v4->shouldReceive('getKey')->andReturns('does_not_exist');
-        $v4->shouldReceive('validate')->andReturns(true);
+        $v4 = $this->createPartialMock(\Valid::class, [
+            'getKey',
+            'validate',
+        ]);
+        $v4->method('getKey')->willReturn('does_not_exist');
+        $v4->method('validate')->willReturn(true);
 
         $r = new HTTPRequest();
         //If valid, should return the submitted value...
-        $this->assertEquals('testvalue', $r->getValidated('testkey', $v1));
+        self::assertEquals('testvalue', $r->getValidated('testkey', $v1));
         //...even if there is a defult value!
-        $this->assertEquals('testvalue', $r->getValidated('testkey', $v1, 'default value'));
+        self::assertEquals('testvalue', $r->getValidated('testkey', $v1, 'default value'));
         //If not valid, should return the default value...
-        $this->assertEquals('default value', $r->getValidated('testkey', $v2, 'default value'));
+        self::assertEquals('default value', $r->getValidated('testkey', $v2, 'default value'));
         //...or null if there is no default value!
-        $this->assertNull($r->getValidated('testkey', $v2));
+        self::assertNull($r->getValidated('testkey', $v2));
         //If the variable is not submitted, there is no incidence, the result depends on the validator...
-        $this->assertEquals('default value', $r->getValidated('does_not_exist', $v3, 'default value'));
-        $this->assertFalse($r->getValidated('does_not_exist', $v4, 'default value'));
+        self::assertEquals('default value', $r->getValidated('does_not_exist', $v3, 'default value'));
+        self::assertFalse($r->getValidated('does_not_exist', $v4, 'default value'));
 
         //Not really in the "unit" test spirit
         //(create dynamically a new instance of a validator inside the function. Should be mocked)
-        $this->assertEquals('testvalue', $r->getValidated('testkey', 'string', 'default value'));
-        $this->assertEquals('default value', $r->getValidated('testkey', 'uint', 'default value'));
+        self::assertEquals('testvalue', $r->getValidated('testkey', 'string', 'default value'));
+        self::assertEquals('default value', $r->getValidated('testkey', 'uint', 'default value'));
     }
 
     public function testGetServerUrl(): void
