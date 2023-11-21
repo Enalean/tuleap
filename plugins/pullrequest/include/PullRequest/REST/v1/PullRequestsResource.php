@@ -1014,13 +1014,11 @@ class PullRequestsResource extends AuthenticatedResource
             new EnhancedCodeBlockExtension(new CodeBlockFeatures())
         );
 
-
         $paginated_timeline_representation_builder = new PaginatedTimelineRepresentationBuilder(
             $timeline_factory,
             UserManager::instance(),
-            $purifier,
-            $content_interpreter,
-            new CommentRepresentationBuilder($purifier, $content_interpreter)
+            new CommentRepresentationBuilder($purifier, $content_interpreter),
+            new SingleRepresentationBuilder($purifier, $content_interpreter)
         );
 
         $paginated_timeline_representation = $paginated_timeline_representation_builder->getPaginatedTimelineRepresentation(

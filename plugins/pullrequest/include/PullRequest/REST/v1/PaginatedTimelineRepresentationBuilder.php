@@ -20,12 +20,11 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
-use Codendi_HTMLPurifier;
-use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\InlineComment\InlineComment;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\REST\v1\Comment\CommentRepresentationBuilder;
+use Tuleap\PullRequest\REST\v1\InlineComment\SingleRepresentationBuilder;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewerChangeTimelineEventRepresentation;
 use Tuleap\PullRequest\Reviewer\Change\ReviewerChange;
 use Tuleap\PullRequest\Timeline\Factory;
@@ -39,9 +38,8 @@ class PaginatedTimelineRepresentationBuilder
     public function __construct(
         private readonly Factory $timeline_factory,
         private readonly UserManager $user_manager,
-        private readonly Codendi_HTMLPurifier $purifier,
-        private readonly CommonMarkInterpreter $common_mark_interpreter,
         private readonly CommentRepresentationBuilder $comment_representation_builder,
+        private readonly SingleRepresentationBuilder $timeline_inline_comment_representation_builder,
     ) {
     }
 
@@ -72,22 +70,10 @@ class PaginatedTimelineRepresentationBuilder
                 );
             case InlineComment::class:
                 assert($event instanceof InlineComment);
-                return TimelineInlineCommentRepresentation::build(
-                    $this->purifier,
-                    $this->common_mark_interpreter,
-                    $event->getFilePath(),
-                    $event->getUnidiffOffset(),
-                    $this->buildMinimalUserRepresentation($event->getUserId()),
-                    $event->getPostDate(),
-                    $event->getContent(),
-                    $event->isOutdated(),
+                return $this->timeline_inline_comment_representation_builder->build(
                     (int) $project_id,
-                    $event->getParentId(),
-                    $event->getId(),
-                    $event->getPosition(),
-                    $event->getColor(),
-                    $event->getFormat(),
-                    $event->getLastEditionDate()->unwrapOr(null)
+                    $this->buildMinimalUserRepresentation($event->getUserId()),
+                    $event
                 );
             case TimelineGlobalEvent::class:
                 assert($event instanceof TimelineGlobalEvent);
