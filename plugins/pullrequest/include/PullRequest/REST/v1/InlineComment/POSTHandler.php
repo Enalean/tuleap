@@ -22,8 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\REST\v1\InlineComment;
 
-use Luracast\Restler\RestException;
 use Tuleap\Git\RetrieveGitRepository;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
+use Tuleap\PullRequest\Authorization\GitRepositoryNotFoundFault;
 use Tuleap\PullRequest\InlineComment\InlineCommentCreator;
 use Tuleap\PullRequest\InlineComment\NewInlineComment;
 use Tuleap\PullRequest\PullRequest;
@@ -41,15 +45,19 @@ final class POSTHandler
     }
 
     /**
-     * @throws RestException
+     * @return Ok<InlineCommentRepresentation> | Err<Fault>
      */
     public function handle(
         PullRequestInlineCommentPOSTRepresentation $comment_data,
         \PFUser $user,
         \DateTimeImmutable $post_date,
         PullRequest $pull_request,
-    ): InlineCommentRepresentation {
-        $git_repository_source = $this->getRepository($pull_request->getRepositoryId());
+    ): Ok|Err {
+        $source_repository_id = $pull_request->getRepositoryId();
+        $source_repository    = $this->repository_retriever->getRepositoryById($source_repository_id);
+        if (! $source_repository) {
+            return Result::err(GitRepositoryNotFoundFault::fromRepositoryId($source_repository_id));
+        }
 
         $format = $comment_data->format;
         if (! $format) {
@@ -58,7 +66,7 @@ final class POSTHandler
 
         $new_comment             = new NewInlineComment(
             $pull_request,
-            (int) $git_repository_source->getProjectId(),
+            (int) $source_repository->getProjectId(),
             $comment_data->file_path,
             $comment_data->unidiff_offset,
             $comment_data->content,
@@ -70,24 +78,11 @@ final class POSTHandler
         );
         $inserted_inline_comment = $this->inline_comment_creator->insert($new_comment);
 
-        return $this->builder->build(
+        $representation = $this->builder->build(
             $new_comment->project_id,
             MinimalUserRepresentation::build($user),
             $inserted_inline_comment
         );
-    }
-
-    /**
-     * @throws RestException
-     */
-    private function getRepository(int $repository_id): \GitRepository
-    {
-        $repository = $this->repository_retriever->getRepositoryById($repository_id);
-
-        if (! $repository) {
-            throw new RestException(404, 'Git repository not found');
-        }
-
-        return $repository;
+        return Result::ok($representation);
     }
 }

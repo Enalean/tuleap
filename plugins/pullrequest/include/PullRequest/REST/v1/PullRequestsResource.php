@@ -104,12 +104,14 @@ use Tuleap\PullRequest\PullRequestReopener;
 use Tuleap\PullRequest\PullRequestRetriever;
 use Tuleap\PullRequest\PullRequestUpdater;
 use Tuleap\PullRequest\PullRequestWithGitReference;
+use Tuleap\PullRequest\REST\v1\Comment\CommentRepresentation;
 use Tuleap\PullRequest\REST\v1\Comment\CommentRepresentationBuilder;
 use Tuleap\PullRequest\REST\v1\Comment\ParentIdValidatorForComment;
 use Tuleap\PullRequest\REST\v1\Comment\ParentIdValidatorForInlineComment;
 use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorAssigner;
 use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorRetriever;
 use Tuleap\PullRequest\REST\v1\Info\PullRequestInfoUpdater;
+use Tuleap\PullRequest\REST\v1\InlineComment\InlineCommentRepresentation;
 use Tuleap\PullRequest\REST\v1\InlineComment\InlineCommentRepresentationsBuilder;
 use Tuleap\PullRequest\REST\v1\InlineComment\POSTHandler;
 use Tuleap\PullRequest\REST\v1\InlineComment\SingleRepresentationBuilder;
@@ -648,12 +650,14 @@ class PullRequestsResource extends AuthenticatedResource
      * @access protected
      *
      * @param int $id Pull request id
-     * @param PullRequestInlineCommentPOSTRepresentation $comment_data Comment {@from body} {@type Tuleap\PullRequest\REST\v1\PullRequestInlineCommentPOSTRepresentation}
+     * @param PullRequestInlineCommentPOSTRepresentation $comment_data Comment {@from body}
      *
      * @status 201
      * @throws RestException 403
+     * @throws RestException 404
+     * @throws RestException 410
      */
-    protected function postInline($id, PullRequestInlineCommentPOSTRepresentation $comment_data)
+    protected function postInline(int $id, PullRequestInlineCommentPOSTRepresentation $comment_data): InlineCommentRepresentation
     {
         $this->checkAccess();
         $this->sendAllowHeadersForInlineComments();
@@ -708,7 +712,11 @@ class PullRequestsResource extends AuthenticatedResource
             $comment_creator,
             new SingleRepresentationBuilder($purifier, $content_interpreter)
         );
-        return $handler->handle($comment_data, $user, $post_date, $pull_request);
+        return $handler->handle($comment_data, $user, $post_date, $pull_request)
+            ->match(
+                static fn(InlineCommentRepresentation $representation) => $representation,
+                FaultMapper::mapToRestException(...)
+            );
     }
 
     /**
@@ -1048,7 +1056,7 @@ class PullRequestsResource extends AuthenticatedResource
      * @param int    $offset Position of the first comment to fetch {@from path} {@min 0}
      * @param string $order  In which order comments are fetched. Default is asc. {@from path}{@choice asc,desc}
      *
-     * @return array {@type Tuleap\PullRequest\REST\v1\CommentRepresentation}
+     * @return array {@type \Tuleap\PullRequest\REST\v1\Comment\CommentRepresentation}
      *
      * @throws RestException 403
      * @throws RestException 404
@@ -1104,13 +1112,14 @@ class PullRequestsResource extends AuthenticatedResource
      * @access protected
      *
      * @param int $id Pull request id
-     * @param CommentPOSTRepresentation $comment_data Comment {@from body} {@type Tuleap\PullRequest\REST\v1\CommentPOSTRepresentation}
+     * @param CommentPOSTRepresentation $comment_data Comment {@from body}
      *
      * @status 201
-     * @throws RestException 401
      * @throws RestException 403
+     * @throws RestException 404
+     * @throws RestException 410
      */
-    protected function postComments($id, CommentPOSTRepresentation $comment_data)
+    protected function postComments(int $id, CommentPOSTRepresentation $comment_data): CommentRepresentation
     {
         $this->checkAccess();
         $this->sendAllowHeadersForComments();
@@ -1118,12 +1127,9 @@ class PullRequestsResource extends AuthenticatedResource
         $user                            = $this->user_manager->getCurrentUser();
         $pull_request_with_git_reference = $this->getPullRequestWithGitReferenceRetriever()->getAccessiblePullRequestWithGitReferenceForCurrentUser($id, $user);
         $pull_request                    = $pull_request_with_git_reference->getPullRequest();
-        $git_repository                  = $this->getRepository($pull_request->getRepositoryId());
-        $project_id                      = $git_repository->getProjectId();
+        $source_repository               = $this->getRepository($pull_request->getRepositoryId());
+        $source_project_id               = $source_repository->getProjectId();
 
-        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
-            $git_repository->getProject()
-        );
         $dao                 = new CommentDao();
         $comment_retriever   = new CommentRetriever($dao);
         $color_retriever     = new ThreadCommentColorRetriever(new ThreadCommentDao(), $dao);
@@ -1140,7 +1146,7 @@ class PullRequestsResource extends AuthenticatedResource
         $comment = new Comment(0, $id, (int) $user->getId(), $current_time, $comment_data->content, (int) $comment_data->parent_id, $color, $format, Option::nothing(int()));
 
         $parent_id_validator->checkParentValidity((int) $comment_data->parent_id, $id);
-        $new_comment_id = $this->comment_factory->save($comment, $user, $project_id);
+        $new_comment_id = $this->comment_factory->save($comment, $user, $source_project_id);
         $new_comment    = Comment::buildWithNewId($new_comment_id, $comment);
 
         $user_representation = MinimalUserRepresentation::build($user);
@@ -1151,7 +1157,7 @@ class PullRequestsResource extends AuthenticatedResource
             new EnhancedCodeBlockExtension(new CodeBlockFeatures())
         );
 
-        return (new CommentRepresentationBuilder($purifier, $content_interpretor))->buildRepresentation($project_id, $user_representation, $new_comment);
+        return (new CommentRepresentationBuilder($purifier, $content_interpretor))->buildRepresentation($source_project_id, $user_representation, $new_comment);
     }
 
     /**
@@ -1254,14 +1260,18 @@ class PullRequestsResource extends AuthenticatedResource
         return $pull_request_with_git_reference;
     }
 
-    private function getRepository($repository_id)
+    /**
+     * @throws RestException 404
+     */
+    private function getRepository(int $repository_id): \GitRepository
     {
         $repository = $this->git_repository_factory->getRepositoryById($repository_id);
-
         if (! $repository) {
-            throw new RestException(404, "Git repository not found");
+            throw new RestException(
+                404,
+                sprintf(dgettext('tuleap-pullrequest', 'Git repository #%d not found'), $repository_id)
+            );
         }
-
         return $repository;
     }
 
