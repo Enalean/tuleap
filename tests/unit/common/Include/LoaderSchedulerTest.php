@@ -18,22 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Tuleap\CookieManager;
 use Tuleap\Plugin\PluginLoader;
 
 final class LoaderSchedulerTest extends TestCase // phpcs:ignore
 {
-    use MockeryPHPUnitIntegration;
     use \Tuleap\TemporaryTestDirectory;
 
     /**
-     * @var Mockery\MockInterface
+     * @var CookieManager&MockObject
      */
     private $cookie_manager;
     /**
-     * @var Mockery\MockInterface|PluginLoader
+     * @var PluginLoader&MockObject
      */
     private $plugin_loader;
     /**
@@ -43,8 +42,8 @@ final class LoaderSchedulerTest extends TestCase // phpcs:ignore
 
     protected function setUp(): void
     {
-        $this->cookie_manager = Mockery::mock(CookieManager::class);
-        $this->plugin_loader  = Mockery::mock(PluginLoader::class);
+        $this->cookie_manager = $this->createMock(CookieManager::class);
+        $this->plugin_loader  = $this->createMock(PluginLoader::class);
 
         $this->loader_scheduler = new LoaderScheduler($this->cookie_manager, $this->plugin_loader);
     }
@@ -56,27 +55,27 @@ final class LoaderSchedulerTest extends TestCase // phpcs:ignore
     {
         session_save_path($this->getTmpDir());
 
-        $this->cookie_manager->shouldReceive('isCookie')->once()->andReturn(true);
-        $this->cookie_manager->shouldReceive('getCookie')->once()->andReturn('test_value');
-        $this->plugin_loader->shouldReceive('loadPlugins')->once();
+        $this->cookie_manager->expects(self::once())->method('isCookie')->willReturn(true);
+        $this->cookie_manager->expects(self::once())->method('getCookie')->willReturn('test_value');
+        $this->plugin_loader->expects(self::once())->method('loadPlugins');
 
         $this->loader_scheduler->loadPluginsThenStartSession(false, []);
 
-        $this->assertSame('test_value', $GLOBALS['session_hash']);
+        self::assertSame('test_value', $GLOBALS['session_hash']);
     }
 
     public function testSessionIsNotLoadedWhenItsAScript(): void
     {
-        $this->cookie_manager->shouldNotReceive('isCookie');
-        $this->plugin_loader->shouldReceive('loadPlugins')->once();
+        $this->cookie_manager->expects(self::never())->method('isCookie');
+        $this->plugin_loader->expects(self::once())->method('loadPlugins');
 
         $this->loader_scheduler->loadPluginsThenStartSession(true, []);
     }
 
     public function testSessionIsNotLoadedWhenAFastCgiParamIsSetToDisableIt(): void
     {
-        $this->cookie_manager->shouldNotReceive('isCookie');
-        $this->plugin_loader->shouldReceive('loadPlugins')->once();
+        $this->cookie_manager->expects(self::never())->method('isCookie');
+        $this->plugin_loader->expects(self::once())->method('loadPlugins');
 
         $this->loader_scheduler->loadPluginsThenStartSession(false, ['TULEAP_DISABLE_AUTO_SESSION_START' => 'true']);
     }

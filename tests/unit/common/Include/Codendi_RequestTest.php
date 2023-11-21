@@ -21,26 +21,27 @@
 
 class Codendi_RequestTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     private $project_manager;
     private $project;
 
     public function setUp(): void
     {
-        $this->project         = \Mockery::spy(\Project::class);
-        $this->project_manager = \Mockery::spy(\ProjectManager::class)->shouldReceive('getProject')->with(123)->andReturns($this->project)->getMock();
+        $this->project         = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()
+            ->withId(123)
+            ->build();
+        $this->project_manager = $this->createMock(\ProjectManager::class);
     }
 
-    public function testItReturnsTheProject()
+    public function testItReturnsTheProject(): void
     {
+        $this->project_manager->method('getProject')->with(123)->willReturn($this->project);
         $request = new Codendi_Request(['group_id' => '123'], $this->project_manager);
-        $this->assertEquals($this->project, $request->getProject());
+        self::assertEquals($this->project, $request->getProject());
     }
 
-    public function testItReturnsNullIfInvalidRequestedGroupId()
+    public function testItReturnsNullIfInvalidRequestedGroupId(): void
     {
         $request = new Codendi_Request(['group_id' => 'stuff'], $this->project_manager);
-        $this->assertNull($request->getProject());
+        self::assertNull($request->getProject());
     }
 }

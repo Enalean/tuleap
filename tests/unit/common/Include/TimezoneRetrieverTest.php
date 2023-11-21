@@ -22,28 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap;
 
+use Tuleap\Test\Builders\UserTestBuilder;
 
 class TimezoneRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testItGetsUserTimezone(): void
     {
-        $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('isLoggedIn')->andReturns(true);
-        $user->shouldReceive('getTimezone')->andReturns('America/Montreal');
+        $user = UserTestBuilder::anActiveUser()->build();
+        $user->setTimezone('America/Montreal');
 
         $timezone = TimezoneRetriever::getUserTimezone($user);
-        $this->assertEquals('America/Montreal', $timezone);
+        self::assertEquals('America/Montreal', $timezone);
     }
 
     public function testItGetsServerTimezoneWhenUserTimezoneIsNotValid(): void
     {
-        $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('isLoggedIn')->andReturns(true);
-        $user->shouldReceive('getTimezone')->andReturns('this_is_not_a_valid_timezone');
+        $user = UserTestBuilder::anActiveUser()->build();
+        $user->setTimezone('this_is_not_a_valid_timezone');
 
         $timezone = TimezoneRetriever::getUserTimezone($user);
-        $this->assertEquals(TimezoneRetriever::getServerTimezone(), $timezone);
+        self::assertEquals(TimezoneRetriever::getServerTimezone(), $timezone);
     }
 }
