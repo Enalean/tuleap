@@ -126,4 +126,9 @@ class TimeframeNotConfigured implements IComputeTimeframes
     {
         return null;
     }
+
+    public function userCanReadTimeframeFields(\PFUser $user): bool
+    {
+        return false;
+    }
 }

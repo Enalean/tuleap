@@ -59,13 +59,18 @@ final class CalendarEventDataBuilder implements BuildCalendarEventData
         }
 
         $start = $time_period->getStartDate();
-        if (! $start) {
-            return Result::err('No start date, we cannot build calendar event');
-        }
+        $end   = $time_period->getEndDate();
+        if (
+            ($start !== 0 || $end !== 0) ||
+            ($should_check_permissions && ! $timeframe_calculator->userCanReadTimeframeFields($recipient))
+        ) {
+            if (! $start) {
+                return Result::err('No start date, we cannot build calendar event');
+            }
 
-        $end = $time_period->getEndDate();
-        if (! $end) {
-            return Result::err('No end date, we cannot build calendar event');
+            if (! $end) {
+                return Result::err('No end date, we cannot build calendar event');
+            }
         }
 
         if ($end < $start) {

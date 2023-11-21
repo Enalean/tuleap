@@ -130,6 +130,24 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
         );
     }
 
+    /**
+     * @testWith [false]
+     *           [true]
+     */
+    public function testAttachmentsMethodCancelWhenStartDateAndEndDateAreZero(bool $should_check_permissions): void
+    {
+        $provider = new EmailNotificationAttachmentProvider(
+            CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
+            BuildCalendarEventDataStub::withCalendarEventData(new CalendarEventData('Christmas Party', 0, 0)),
+            RetrieveEventSummaryStub::withSummary('Christmas Party'),
+        );
+
+        $attachments = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, $should_check_permissions);
+
+        self::assertCount(1, $attachments);
+        self::assertStringContainsString('METHOD:CANCEL', $attachments[0]->content);
+    }
+
     private function assertDebugLogEquals(string $message, string ...$other_messages): void
     {
         self::assertEquals(

@@ -220,4 +220,11 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
     {
         return $this->semantic_timeframe_implied_from_tracker->getTracker();
     }
+
+    public function userCanReadTimeframeFields(\PFUser $user): bool
+    {
+        return $this->semantic_timeframe_implied_from_tracker
+            ->getTimeframeCalculator()
+            ->userCanReadTimeframeFields($user);
+    }
 }
