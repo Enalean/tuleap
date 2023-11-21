@@ -28,6 +28,7 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\PullRequest\Authorization\CannotAccessToPullRequestFault;
+use Tuleap\PullRequest\Authorization\GitRepositoryNotFoundFault;
 use Tuleap\PullRequest\Comment\CommentFormatNotAllowedFault;
 use Tuleap\PullRequest\Comment\CommentIsNotFromCurrentUserFault;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
@@ -41,6 +42,7 @@ use Tuleap\PullRequest\Tests\Stub\CheckUserCanAccessPullRequestStub;
 use Tuleap\PullRequest\Tests\Stub\InlineCommentSaverStub;
 use Tuleap\PullRequest\Tests\Stub\InlineCommentSearcherStub;
 use Tuleap\PullRequest\Tests\Stub\SearchPullRequestStub;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ContentInterpretorStub;
@@ -49,18 +51,18 @@ use Tuleap\Test\Stubs\ExtractAndSaveCrossReferencesStub;
 final class PATCHHandlerTest extends TestCase
 {
     private const INLINE_COMMENT_ID = 49;
-    private string $updated_content;
+    private const UPDATED_CONTENT   = 'animastical zebrawood';
     private InlineCommentSearcherStub $comment_searcher;
     private PullRequest $pull_request;
     private \PFUser $comment_author;
+    private \DateTimeImmutable $comment_edition_date;
     private CheckUserCanAccessPullRequestStub $permission_checker;
+    private RetrieveGitRepositoryStub $repository_retriever;
     private InlineCommentSaverStub $comment_saver;
     private ExtractAndSaveCrossReferencesStub $cross_references_saver;
-    private \DateTimeImmutable $comment_edition_date;
 
     protected function setUp(): void
     {
-        $this->updated_content      = 'animastical zebrawood';
         $this->comment_author       = UserTestBuilder::buildWithId(150);
         $this->pull_request         = PullRequestTestBuilder::aPullRequestInReview()->build();
         $inline_comment             = InlineCommentTestBuilder::aMarkdownComment('initial content')
@@ -74,6 +76,10 @@ final class PATCHHandlerTest extends TestCase
         $this->permission_checker     = CheckUserCanAccessPullRequestStub::withAllowed();
         $this->comment_saver          = InlineCommentSaverStub::withCallCount();
         $this->cross_references_saver = ExtractAndSaveCrossReferencesStub::withCallCount();
+
+        $git_repository = new \GitRepository();
+        $git_repository->setProject(ProjectTestBuilder::aProject()->withId(140)->build());
+        $this->repository_retriever = RetrieveGitRepositoryStub::withGitRepository($git_repository);
     }
 
     /**
@@ -86,14 +92,14 @@ final class PATCHHandlerTest extends TestCase
             new PullRequestRetriever(SearchPullRequestStub::withPullRequest($this->pull_request)),
             $this->permission_checker,
             $this->comment_saver,
-            RetrieveGitRepositoryStub::withGitRepository(new \GitRepository()),
+            $this->repository_retriever,
             $this->cross_references_saver,
             new SingleRepresentationBuilder(\Codendi_HTMLPurifier::instance(), ContentInterpretorStub::build())
         );
         return $handler->handle(
             $this->comment_author,
             self::INLINE_COMMENT_ID,
-            new InlineCommentPATCHRepresentation($this->updated_content),
+            new InlineCommentPATCHRepresentation(self::UPDATED_CONTENT),
             $this->comment_edition_date
         );
     }
@@ -105,12 +111,12 @@ final class PATCHHandlerTest extends TestCase
         $representation = $result->value;
         assert($representation instanceof InlineCommentRepresentation);
         self::assertSame(self::INLINE_COMMENT_ID, $representation->id);
-        self::assertSame($this->updated_content, $representation->raw_content);
+        self::assertSame(self::UPDATED_CONTENT, $representation->raw_content);
         self::assertNotNull($representation->last_edition_date);
 
         self::assertSame(1, $this->comment_saver->getCallCount());
         $updated_comment = $this->comment_saver->getLastArgument();
-        self::assertSame($this->updated_content, $updated_comment?->getContent());
+        self::assertSame(self::UPDATED_CONTENT, $updated_comment?->getContent());
         self::assertSame(
             $this->comment_edition_date->getTimestamp(),
             $updated_comment?->getLastEditionDate()->unwrapOr(0)
@@ -155,7 +161,7 @@ final class PATCHHandlerTest extends TestCase
         self::assertSame(0, $this->comment_saver->getCallCount());
     }
 
-    public static function generateExceptions(): iterable
+    public static function generateDestinationGitExceptions(): iterable
     {
         yield 'The destination Git repository of the pull request of the comment is not found' => [
             new \GitRepoNotFoundException(),
@@ -169,7 +175,7 @@ final class PATCHHandlerTest extends TestCase
     }
 
     /**
-     * @dataProvider generateExceptions
+     * @dataProvider generateDestinationGitExceptions
      */
     public function testItReturnsAnErrWhenUserIsNotAllowedToSeeThePullRequest(\Throwable $throwable): void
     {
@@ -178,6 +184,16 @@ final class PATCHHandlerTest extends TestCase
         $result = $this->handle();
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(CannotAccessToPullRequestFault::class, $result->error);
+        self::assertSame(0, $this->comment_saver->getCallCount());
+    }
+
+    public function testItReturnsAnErrWhenSourceGitRepositoryIsNotFound(): void
+    {
+        $this->repository_retriever = RetrieveGitRepositoryStub::withoutGitRepository();
+
+        $result = $this->handle();
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(GitRepositoryNotFoundFault::class, $result->error);
         self::assertSame(0, $this->comment_saver->getCallCount());
     }
 }

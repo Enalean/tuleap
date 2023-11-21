@@ -38,9 +38,6 @@ final class RetrieveGitRepositoryStub implements RetrieveGitRepository
         return $this->git_repository;
     }
 
-    /**
-     * @throws GitRepoNotFoundException
-     */
     public function getRepositoryByIdUserCanSee(PFUser $user, int $id): GitRepository
     {
         if (! $this->git_repository) {

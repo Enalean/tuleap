@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.4\n"
+"X-Generator: Poedit 3.4.1\n"
 
 #, php-format
 msgid ""
@@ -94,11 +94,11 @@ msgstr "Abandonnée"
 
 #, php-format
 msgid "Comment #%d not found"
-msgstr "Commentaire #%d non trouvé"
+msgstr "Commentaire #%d introuvable"
 
 #, php-format
 msgid "Comment not found: %s"
-msgstr "Commentaire non trouvé : %s"
+msgstr "Commentaire introuvable : %s"
 
 msgid ""
 "Default (Will fast-forward when possible, fallback to merge when not "
@@ -118,8 +118,12 @@ msgid "Fast-forward only"
 msgstr "Avance rapide uniquement"
 
 #, php-format
+msgid "Git repository #%d not found"
+msgstr "Dépôt Git #%d introuvable"
+
+#, php-format
 msgid "Inline comment #%d not found"
-msgstr "Commentaire en ligne #%d non trouvé"
+msgstr "Commentaire en ligne #%d introuvable"
 
 msgid "Merge"
 msgstr "Fusion"

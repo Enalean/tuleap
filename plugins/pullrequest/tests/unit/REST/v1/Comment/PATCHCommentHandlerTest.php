@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\PullRequest\Tests\REST\v1\Comment;
+namespace Tuleap\PullRequest\REST\v1\Comment;
 
 use DateTimeImmutable;
 use GitRepository;
@@ -33,7 +33,7 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
-use Tuleap\PullRequest\Authorization\CannotAccessToPullRequestFault;
+use Tuleap\PullRequest\Authorization\GitRepositoryNotFoundFault;
 use Tuleap\PullRequest\Comment\CommentFormatNotAllowedFault;
 use Tuleap\PullRequest\Comment\CommentIsNotFromCurrentUserFault;
 use Tuleap\PullRequest\Comment\CommentNotFoundFault;
@@ -41,9 +41,6 @@ use Tuleap\PullRequest\Comment\CommentRetriever;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 use Tuleap\PullRequest\PullRequest\REST\v1\AccessiblePullRequestRESTRetriever;
 use Tuleap\PullRequest\PullRequestRetriever;
-use Tuleap\PullRequest\REST\v1\Comment\CommentRepresentation;
-use Tuleap\PullRequest\REST\v1\Comment\CommentRepresentationBuilder;
-use Tuleap\PullRequest\REST\v1\Comment\PATCHCommentHandler;
 use Tuleap\PullRequest\REST\v1\CommentPATCHRepresentation;
 use Tuleap\PullRequest\Tests\Builders\CommentTestBuilder;
 use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
@@ -90,7 +87,7 @@ final class PATCHCommentHandlerTest extends TestCase
         $this->cross_references_saver          = ExtractAndSaveCrossReferencesStub::withCallCount();
 
         $git_repository = new GitRepository();
-        $git_repository->setProject(ProjectTestBuilder::aProject()->withId(15)->build());
+        $git_repository->setProject(ProjectTestBuilder::aProject()->withId(156)->build());
         $this->git_factory = RetrieveGitRepositoryStub::withGitRepository($git_repository);
 
         $this->last_edition_date = new DateTimeImmutable();
@@ -147,16 +144,40 @@ final class PATCHCommentHandlerTest extends TestCase
         self::assertSame(0, $this->cross_references_saver->getCallCount());
     }
 
-    public function testUserCannotSeeThePullRequest(): void
+    public static function generateDestinationGitExceptions(): iterable
     {
+        yield 'The destination Git repository of the pull request of the comment is not found' => [
+            new \GitRepoNotFoundException(),
+        ];
+        yield 'User does not have access to the project that hosts the destination Git repository of the pull request of the comment' => [
+            new \Project_AccessPrivateException(),
+        ];
+        yield 'User does not have access to the destination Git repository of the pull request of the comment' => [
+            new UserCannotReadGitRepositoryException(),
+        ];
+    }
+
+    /**
+     * @dataProvider generateDestinationGitExceptions
+     */
+    public function testUserCannotSeeThePullRequest(\Throwable $throwable): void
+    {
+        $this->pull_request_permission_checker = CheckUserCanAccessPullRequestStub::withException($throwable);
+
         $this->expectException(RestException::class);
-        $this->expectExceptionMessage("User is not able to READ the git repository");
-        $this->pull_request_permission_checker = CheckUserCanAccessPullRequestStub::withException(new UserCannotReadGitRepositoryException());
+        $this->handle();
+
+        self::assertSame(0, $this->comment_updater_dao->getUpdateCommentMethodCount());
+        self::assertSame(0, $this->cross_references_saver->getCallCount());
+    }
+
+    public function testItReturnsAnErrWhenSourceGitRepositoryIsNotFound(): void
+    {
+        $this->git_factory = RetrieveGitRepositoryStub::withoutGitRepository();
 
         $result = $this->handle();
-
         self::assertTrue(Result::isErr($result));
-        self::assertInstanceOf(CannotAccessToPullRequestFault::class, $result->error);
+        self::assertInstanceOf(GitRepositoryNotFoundFault::class, $result->error);
         self::assertSame(0, $this->comment_updater_dao->getUpdateCommentMethodCount());
         self::assertSame(0, $this->cross_references_saver->getCallCount());
     }

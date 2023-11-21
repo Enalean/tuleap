@@ -25,6 +25,7 @@ namespace Tuleap\PullRequest\REST\v1;
 use Luracast\Restler\RestException;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\PullRequest\Authorization\CannotAccessToPullRequestFault;
+use Tuleap\PullRequest\Authorization\GitRepositoryNotFoundFault;
 use Tuleap\PullRequest\Comment\CommentFormatNotAllowedFault;
 use Tuleap\PullRequest\Comment\CommentIsNotFromCurrentUserFault;
 use Tuleap\PullRequest\Comment\CommentNotFoundFault;
@@ -40,7 +41,7 @@ final class FaultMapper
     {
         $status_code = match ($fault::class) {
             CommentIsNotFromCurrentUserFault::class, CommentFormatNotAllowedFault::class => 403,
-            CommentNotFoundFault::class, CannotAccessToPullRequestFault::class, PullRequestNotFoundFault::class, InlineCommentNotFoundFault::class => 404,
+            CommentNotFoundFault::class, CannotAccessToPullRequestFault::class, PullRequestNotFoundFault::class, InlineCommentNotFoundFault::class, GitRepositoryNotFoundFault::class => 404,
             default => 500,
         };
         throw new RestException($status_code, (string) $fault);

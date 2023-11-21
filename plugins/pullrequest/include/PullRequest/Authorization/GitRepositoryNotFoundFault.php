@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2023-present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,26 +15,22 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Authorization;
 
-use Throwable;
 use Tuleap\NeverThrow\Fault;
 
 /**
  * @psalm-immutable
  */
-final class CannotAccessToPullRequestFault extends Fault
+final class GitRepositoryNotFoundFault extends Fault
 {
-    public static function fromUpdatingComment(Throwable $exception): Fault
+    public static function fromRepositoryId(int $repository_id): Fault
     {
-        return new self(
-            sprintf(dgettext('tuleap-pullrequest', 'Comment not found: %s'), $exception->getMessage()),
-            $exception
-        );
+        return new self(sprintf(dgettext('tuleap-pullrequest', 'Git repository #%d not found'), $repository_id));
     }
 }
