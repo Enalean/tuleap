@@ -33,6 +33,7 @@ describe("TimeframeAdminSubmitButtons", () => {
                 implied_from_tracker_id: "",
                 has_other_trackers_implying_their_timeframes: false,
                 has_tracker_charts: false,
+                should_send_event_in_notification: false,
             },
         });
 
@@ -49,6 +50,7 @@ describe("TimeframeAdminSubmitButtons", () => {
                 implied_from_tracker_id: "",
                 has_other_trackers_implying_their_timeframes: true,
                 has_tracker_charts: false,
+                should_send_event_in_notification: false,
             },
         });
 
@@ -73,6 +75,7 @@ describe("TimeframeAdminSubmitButtons", () => {
                 implied_from_tracker_id: "",
                 has_other_trackers_implying_their_timeframes: false,
                 has_tracker_charts: true,
+                should_send_event_in_notification: false,
             },
         });
 
@@ -84,6 +87,31 @@ describe("TimeframeAdminSubmitButtons", () => {
         }
         expect(reset_button.title).toBe(
             "You cannot reset this semantic because this tracker has a burnup, burndown or another chart rendered by an external plugin",
+        );
+    });
+
+    it("should disable the reset button when calendar events are sent in notifications", () => {
+        const wrapper = shallowMount(TimeframeAdminSubmitButtons, {
+            global: { plugins: [createGettext({ silent: true })] },
+            propsData: {
+                start_date_field_id: 1001,
+                end_date_field_id: 1002,
+                duration_field_id: "",
+                implied_from_tracker_id: "",
+                has_other_trackers_implying_their_timeframes: false,
+                has_tracker_charts: false,
+                should_send_event_in_notification: true,
+            },
+        });
+
+        const reset_button = wrapper.find("[data-test=reset-button]").element;
+
+        expect(reset_button.hasAttribute("disabled")).toBe(true);
+        if (!(reset_button instanceof HTMLButtonElement)) {
+            throw new Error("Reset button is not a button");
+        }
+        expect(reset_button.title).toBe(
+            "You cannot reset this semantic because it is used to send calendar events in notification",
         );
     });
 });

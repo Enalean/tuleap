@@ -47,6 +47,7 @@ describe("App", () => {
                 has_tracker_charts: false,
                 has_artifact_link_field: true,
                 semantic_presentation: "",
+                should_send_event_in_notification: false,
             },
         });
     }

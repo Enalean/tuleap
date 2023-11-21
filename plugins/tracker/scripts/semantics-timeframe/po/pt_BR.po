@@ -59,6 +59,11 @@ msgid ""
 msgstr ""
 
 msgid ""
+"You cannot reset this semantic because it is used to send calendar events in "
+"notification"
+msgstr ""
+
+msgid ""
 "You cannot reset this semantic because some trackers inherit their own "
 "semantics timeframe from this one."
 msgstr ""

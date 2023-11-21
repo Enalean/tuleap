@@ -34,6 +34,7 @@ use Tracker_SemanticManager;
 use TrackerManager;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
+use Tuleap\Tracker\Notifications\Settings\CalendarEventConfigDao;
 use Tuleap\Tracker\Semantic\Timeframe\Administration\SemanticTimeframeAdministrationPresenterBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\Administration\SemanticTimeframeCurrentConfigurationPresenterBuilder;
 
@@ -103,7 +104,8 @@ class SemanticTimeframe extends Tracker_Semantic
                 \TrackerFactory::instance(),
                 \Tracker_FormElementFactory::instance(),
             ),
-            \EventManager::instance()
+            \EventManager::instance(),
+            new CalendarEventConfigDao(),
         );
 
         $presenter = $builder->build(

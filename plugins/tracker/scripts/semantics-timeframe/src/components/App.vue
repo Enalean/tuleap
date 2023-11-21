@@ -57,6 +57,7 @@
                 "
                 v-bind:has_tracker_charts="has_tracker_charts"
                 v-bind:implied_from_tracker_id="implied_from_tracker_id"
+                v-bind:should_send_event_in_notification="should_send_event_in_notification"
             />
         </form>
     </div>
@@ -86,6 +87,7 @@ defineProps<{
     has_tracker_charts: boolean;
     has_artifact_link_field: boolean;
     semantic_presentation: string;
+    should_send_event_in_notification: boolean;
 }>();
 
 const is_based_on_tracker_fields_mode_enabled = ref(true);

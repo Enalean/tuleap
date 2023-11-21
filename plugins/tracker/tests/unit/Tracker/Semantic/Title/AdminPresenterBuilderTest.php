@@ -25,6 +25,7 @@ use CSRFSynchronizerToken;
 use Tracker_FormElementFactory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Tracker\Notifications\Settings\CheckEventShouldBeSentInNotificationStub;
 
 final class AdminPresenterBuilderTest extends TestCase
 {
@@ -41,7 +42,10 @@ final class AdminPresenterBuilderTest extends TestCase
 
         $this->csrf_token = $this->createMock(CSRFSynchronizerToken::class);
 
-        $this->presenter_builder = new AdminPresenterBuilder($this->form_element_factory);
+        $this->presenter_builder = new AdminPresenterBuilder(
+            $this->form_element_factory,
+            CheckEventShouldBeSentInNotificationStub::withoutEventInNotification(),
+        );
     }
 
     public function testItBuildsAPresenterWhenNoFieldsArePossible(): void
@@ -58,7 +62,8 @@ final class AdminPresenterBuilderTest extends TestCase
                 false,
                 [],
                 false,
-                TRACKER_BASE_URL . '/?tracker=20&func=admin-semantic'
+                TRACKER_BASE_URL . '/?tracker=20&func=admin-semantic',
+                false,
             ),
             $presenter
         );
@@ -80,7 +85,8 @@ final class AdminPresenterBuilderTest extends TestCase
                 false,
                 [new PossibleFieldsForTitlePresenter(1, 'field A', false), new PossibleFieldsForTitlePresenter(2, 'field B', false)],
                 true,
-                TRACKER_BASE_URL . '/?tracker=20&func=admin-semantic'
+                TRACKER_BASE_URL . '/?tracker=20&func=admin-semantic',
+                false,
             ),
             $presenter
         );
@@ -102,7 +108,8 @@ final class AdminPresenterBuilderTest extends TestCase
                 true,
                 [new PossibleFieldsForTitlePresenter(1, 'field A', false), new PossibleFieldsForTitlePresenter(2, 'field B', true)],
                 true,
-                TRACKER_BASE_URL . '/?tracker=20&func=admin-semantic'
+                TRACKER_BASE_URL . '/?tracker=20&func=admin-semantic',
+                false,
             ),
             $presenter
         );

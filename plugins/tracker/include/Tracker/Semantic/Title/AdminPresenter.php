@@ -39,6 +39,7 @@ final class AdminPresenter
         public array $possible_titles,
         public bool $has_possible_titles,
         public string $tracker_admin_semantic_url,
+        public readonly bool $should_send_event_in_notification,
     ) {
     }
 }

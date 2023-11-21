@@ -52,7 +52,15 @@
                                 <button type="submit" class="tlp-button-primary" name="update">
                                     {{# dgettext }} tuleap-tracker | Update semantic {{/ dgettext }}
                                 </button>
-                                <button type="submit" class="tlp-button-danger tlp-button-outline" name="delete">
+                                <button
+                                    type="submit"
+                                    class="tlp-button-danger tlp-button-outline"
+                                    name="delete"
+                                    {{# should_send_event_in_notification }}
+                                        disabled
+                                        title="{{# dgettext }} tuleap-tracker | You cannot reset this semantic because it is used to send calendar events in notification{{/ dgettext }}"
+                                    {{/ should_send_event_in_notification }}
+                                >
                                     {{# dgettext }} tuleap-tracker | Unset this semantic {{/ dgettext }}
                                 </button>
                             {{/ has_selected_title }}
