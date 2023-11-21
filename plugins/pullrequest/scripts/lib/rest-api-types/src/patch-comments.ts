@@ -17,10 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type { User, ProjectLabel, ProjectLabelsCollection } from "@tuleap/core-rest-api-types";
+import type { CommentOnFile, GlobalComment } from "./timeline";
 
-export * from "./pull-request";
-export * from "./timeline";
-export * from "./post-comments";
-export * from "./patch-comments";
-export * from "./labels";
+export type EditedGlobalComment = GlobalComment & {
+    readonly last_edition_date: string;
+};
+
+export type EditedCommentOnFile = CommentOnFile & {
+    readonly last_edition_date: string;
+};
+
+export type EditedComment = EditedGlobalComment | EditedCommentOnFile;

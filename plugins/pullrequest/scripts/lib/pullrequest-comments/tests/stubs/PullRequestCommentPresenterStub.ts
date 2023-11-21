@@ -17,16 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type {
-    PullRequestInlineCommentPresenter,
-    PullRequestGlobalCommentPresenter,
-} from "../../src/comment/PullRequestCommentPresenter";
+import { Option } from "@tuleap/option";
 import {
     TYPE_GLOBAL_COMMENT,
     TYPE_INLINE_COMMENT,
     INLINE_COMMENT_POSITION_RIGHT,
     FORMAT_COMMONMARK,
 } from "@tuleap/plugin-pullrequest-constants";
+import type {
+    PullRequestInlineCommentPresenter,
+    PullRequestGlobalCommentPresenter,
+} from "../../src/comment/PullRequestCommentPresenter";
 
 const comment_presenter_base: PullRequestGlobalCommentPresenter = {
     id: 12,
@@ -37,6 +38,7 @@ const comment_presenter_base: PullRequestGlobalCommentPresenter = {
         user_url: "https://example.com/John/Doe/profile.html",
     },
     post_date: "a moment ago",
+    last_edition_date: Option.fromValue("not that long ago"),
     content: "** Please rebase **",
     raw_content: "** Please rebase **",
     post_processed_content: "<b>Please rebase</b>",

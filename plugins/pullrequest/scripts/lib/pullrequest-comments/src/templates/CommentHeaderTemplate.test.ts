@@ -17,40 +17,107 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, beforeEach, it, expect } from "vitest";
+import { Option } from "@tuleap/option";
 import { PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN } from "@tuleap/tlp-relative-date";
 import { selectOrThrow } from "@tuleap/dom";
 import { getHeaderTemplate } from "./CommentHeaderTemplate";
+import type { HelpRelativeDatesDisplay } from "../helpers/relative-dates-helper";
 import { RelativeDatesHelper } from "../helpers/relative-dates-helper";
+import { GettextProviderStub } from "../../tests/stubs/GettextProviderStub";
+
+const comment_author = {
+    display_name: "Joe l'Asticot",
+    user_url: "url/to/user_profile.html",
+};
 
 describe("CommentHeaderTemplate", () => {
-    it("should display a tlp-relative-date taking into account the user preferences", () => {
+    let relative_date_helper: HelpRelativeDatesDisplay;
+
+    beforeEach(() => {
+        relative_date_helper = RelativeDatesHelper(
+            "Y-m-d H:i",
+            PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN,
+            "en_US",
+        );
+    });
+
+    const renderHeader = (post_date: string, last_edition_date: Option<string>): ShadowRoot => {
         const doc = document.implementation.createHTMLDocument();
         const host = doc.createElement("div");
         const target = doc.createElement("div") as unknown as ShadowRoot;
         const render = getHeaderTemplate(
-            {
-                display_name: "Joe l'Asticot",
-                user_url: "url/to/user_profile.html",
-            },
-            RelativeDatesHelper("Y-m-d H:i", PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN, "en_US"),
-            "2023-03-13T16:30:00Z",
+            comment_author,
+            relative_date_helper,
+            GettextProviderStub,
+            post_date,
+            last_edition_date,
         );
 
         render(host, target);
 
-        const author_info = selectOrThrow(target, "[data-test=comment-header-author]");
-        expect(author_info.getAttribute("href")).toBe("url/to/user_profile.html");
-        expect(author_info.textContent?.trim()).toBe("Joe l'Asticot");
+        return target;
+    };
 
-        const relative_date = selectOrThrow(target, "[data-test=comment-header-date]");
-        expect(relative_date.getAttribute("date")).toBe("2023-03-13T16:30:00Z");
-        expect(relative_date.getAttribute("preference")).toBe("absolute");
-        expect(relative_date.getAttribute("locale")).toBe("en_US");
-        expect(relative_date.getAttribute("placement")).toBe("right");
+    it("should display a tlp-relative-date taking into account the user preferences", () => {
+        const comment_post_date = "2023-03-13T16:30:00Z";
+        const header = renderHeader(comment_post_date, Option.nothing());
 
-        const absolute_date = relative_date.getAttribute("absolute-date");
+        const author_info = selectOrThrow(header, "[data-test=comment-header-author]");
+        expect(author_info.getAttribute("href")).toBe(comment_author.user_url);
+        expect(author_info.textContent?.trim()).toBe(comment_author.display_name);
+
+        const post_date = selectOrThrow(
+            header,
+            "[data-test=comment-header-date] > tlp-relative-date",
+        );
+        expect(post_date.getAttribute("date")).toBe(comment_post_date);
+        expect(post_date.getAttribute("preference")).toBe(
+            relative_date_helper.getRelativeDatePreference(),
+        );
+        expect(post_date.getAttribute("locale")).toBe(relative_date_helper.getUserLocale());
+        expect(post_date.getAttribute("placement")).toBe(
+            relative_date_helper.getRelativeDatePlacement(),
+        );
+
+        const absolute_date = post_date.getAttribute("absolute-date");
         expect(absolute_date).toBeDefined();
-        expect(relative_date.textContent?.trim()).toStrictEqual(absolute_date);
+        expect(post_date.textContent?.trim()).toStrictEqual(absolute_date);
+    });
+
+    it("should display the last_edition_date when there is one", () => {
+        const comment_last_edition_date = "2023-03-13T17:00:00Z";
+        const header = renderHeader(
+            "2023-03-13T16:30:00Z",
+            Option.fromValue(comment_last_edition_date),
+        );
+
+        const author_info = selectOrThrow(header, "[data-test=comment-header-author]");
+        expect(author_info.getAttribute("href")).toBe(comment_author.user_url);
+        expect(author_info.textContent?.trim()).toBe(comment_author.display_name);
+
+        const post_date = selectOrThrow(
+            header,
+            "[data-test=comment-header-date] > tlp-relative-date",
+        );
+        expect(post_date).toBeDefined();
+
+        const last_edition_date = selectOrThrow(
+            header,
+            "[data-test=comment-header-last-edition-date] > tlp-relative-date",
+        );
+
+        expect(last_edition_date.getAttribute("date")).toBe(comment_last_edition_date);
+        expect(post_date.getAttribute("preference")).toBe(
+            relative_date_helper.getRelativeDatePreference(),
+        );
+        expect(post_date.getAttribute("locale")).toBe(relative_date_helper.getUserLocale());
+        expect(post_date.getAttribute("placement")).toBe(
+            relative_date_helper.getRelativeDatePlacement(),
+        );
+
+        const absolute_date = last_edition_date.getAttribute("absolute-date");
+        expect(absolute_date).toBeDefined();
+        expect(last_edition_date.textContent?.trim()).toStrictEqual(absolute_date);
     });
 });

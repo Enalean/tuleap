@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { Option } from "@tuleap/option";
 import {
     TYPE_INLINE_COMMENT,
     INLINE_COMMENT_POSITION_RIGHT,
     FORMAT_TEXT,
 } from "@tuleap/plugin-pullrequest-constants";
-
 import type {
     PullRequestCommentPresenter,
     PullRequestInlineCommentPresenter,
@@ -46,6 +46,7 @@ const comment_presenter_base: PullRequestInlineCommentPresenter = {
         user_url: "https://example.com/John/Doe/profile.html",
     },
     post_date: "a moment ago",
+    last_edition_date: Option.fromValue("not that long ago"),
     content: "Please rebase",
     raw_content: "Please rebase",
     post_processed_content: "Please rebase",

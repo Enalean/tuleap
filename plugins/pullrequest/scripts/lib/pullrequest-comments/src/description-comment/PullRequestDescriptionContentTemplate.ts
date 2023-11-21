@@ -20,6 +20,7 @@
 import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import DOMPurify from "dompurify";
+import { Option } from "@tuleap/option";
 import type { GettextProvider } from "@tuleap/gettext";
 import { FORMAT_COMMONMARK } from "@tuleap/plugin-pullrequest-constants";
 import type { PullRequestDescriptionComment } from "./PullRequestDescriptionComment";
@@ -110,7 +111,9 @@ export const getDescriptionContentTemplate = (
                 ${getHeaderTemplate(
                     host.description.author,
                     host.controller.getRelativeDateHelper(),
+                    gettext_provider,
                     host.description.post_date,
+                    Option.nothing(),
                 )}
             </div>
             ${getContent(host, gettext_provider)} ${getFooter(host, gettext_provider)}

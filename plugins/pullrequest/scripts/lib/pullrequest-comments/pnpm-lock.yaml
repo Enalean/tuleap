@@ -23,6 +23,9 @@ dependencies:
   '@tuleap/gettext':
     specifier: workspace:*
     version: link:../../../../../lib/frontend/gettext
+  '@tuleap/option':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/option
   '@tuleap/plugin-pullrequest-constants':
     specifier: workspace:*
     version: link:../constants

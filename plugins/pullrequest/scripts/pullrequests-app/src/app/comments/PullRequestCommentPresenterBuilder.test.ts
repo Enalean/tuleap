@@ -41,7 +41,8 @@ describe("PullRequestCommentPresenterBuilder", () => {
     it("Builds a presenter from a file-diff comment payload", () => {
         const file_diff_comment: CommentOnFile = {
             id: 12,
-            post_date: "2020/07/13 16:16",
+            post_date: "2020-07-13T16:16:00Z",
+            last_edition_date: "2020-07-13T16:20:00Z",
             content: "my comment",
             raw_content: "my comment",
             post_processed_content: "<p>my comment</p>",
@@ -58,6 +59,7 @@ describe("PullRequestCommentPresenterBuilder", () => {
         const result = PullRequestCommentPresenterBuilder.fromFileDiffComment(file_diff_comment);
         expect(result.type).toBe(TYPE_INLINE_COMMENT);
         expect(result.is_outdated).toBe(false);
+        expect(result.last_edition_date.unwrapOr(null)).toBe(file_diff_comment.last_edition_date);
         expect(result.file).toStrictEqual({
             file_url: "",
             position: file_diff_comment.position,

@@ -18,8 +18,14 @@
  */
 
 import { describe, expect, it } from "vitest";
-import type { User, CommentOnFile, GlobalComment } from "@tuleap/plugin-pullrequest-rest-api-types";
+import type {
+    User,
+    CommentOnFile,
+    GlobalComment,
+    EditedComment,
+} from "@tuleap/plugin-pullrequest-rest-api-types";
 import { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
+import type { PullRequestInlineCommentPresenter } from "./PullRequestCommentPresenter";
 import { PullRequestCommentPresenterStub } from "../../tests/stubs/PullRequestCommentPresenterStub";
 import {
     TYPE_GLOBAL_COMMENT,
@@ -27,13 +33,18 @@ import {
     FORMAT_COMMONMARK,
 } from "@tuleap/plugin-pullrequest-constants";
 
+const isPullRequestInlineCommentPresenter = (
+    presenter: PullRequestCommentPresenter,
+): presenter is PullRequestInlineCommentPresenter => presenter.type === TYPE_INLINE_COMMENT;
+
 describe("PullRequestCommentPresenterBuilder", () => {
     it("should build a CommentReplyPresenter from a GlobalComment", () => {
         const parent_comment = PullRequestCommentPresenterStub.buildGlobalComment();
         const new_comment_payload: GlobalComment = {
             id: 13,
             type: TYPE_GLOBAL_COMMENT,
-            post_date: "2020/07/13 16:16",
+            post_date: "2020-07-13T16:16:00Z",
+            last_edition_date: "2020-07-13T17:00:00Z",
             content: "",
             raw_content: "",
             post_processed_content: "",
@@ -48,9 +59,21 @@ describe("PullRequestCommentPresenterBuilder", () => {
             new_comment_payload,
         );
 
-        expect(presenter).toStrictEqual({
-            ...new_comment_payload,
-        });
+        expect(presenter.id).toStrictEqual(new_comment_payload.id);
+        expect(presenter.type).toStrictEqual(new_comment_payload.type);
+        expect(presenter.post_date).toStrictEqual(new_comment_payload.post_date);
+        expect(presenter.last_edition_date.unwrapOr(null)).toStrictEqual(
+            new_comment_payload.last_edition_date,
+        );
+        expect(presenter.content).toStrictEqual(new_comment_payload.content);
+        expect(presenter.raw_content).toStrictEqual(new_comment_payload.raw_content);
+        expect(presenter.post_processed_content).toStrictEqual(
+            new_comment_payload.post_processed_content,
+        );
+        expect(presenter.format).toStrictEqual(new_comment_payload.format);
+        expect(presenter.user).toStrictEqual(new_comment_payload.user);
+        expect(presenter.parent_id).toStrictEqual(new_comment_payload.parent_id);
+        expect(presenter.color).toStrictEqual(new_comment_payload.color);
     });
 
     it("should build a CommentReplyPresenter from a CommentOnFile", () => {
@@ -58,7 +81,8 @@ describe("PullRequestCommentPresenterBuilder", () => {
         const base_comment = {
             id: 13,
             type: TYPE_INLINE_COMMENT,
-            post_date: "2020/07/13 16:16",
+            post_date: "2020-07-13T16:16:00Z",
+            last_edition_date: "2020-07-13T17:00:00Z",
             content: "",
             raw_content: "",
             post_processed_content: "",
@@ -80,18 +104,33 @@ describe("PullRequestCommentPresenterBuilder", () => {
             new_comment_on_file_payload,
         );
 
-        expect(presenter).toStrictEqual({
-            ...base_comment,
-            file: parent_comment.file,
-        });
+        if (!isPullRequestInlineCommentPresenter(presenter)) {
+            throw new Error("Expected a PullRequestInlineCommentPresenter");
+        }
+
+        expect(presenter.id).toStrictEqual(base_comment.id);
+        expect(presenter.type).toStrictEqual(base_comment.type);
+        expect(presenter.post_date).toStrictEqual(base_comment.post_date);
+        expect(presenter.last_edition_date.unwrapOr(null)).toStrictEqual(
+            base_comment.last_edition_date,
+        );
+        expect(presenter.content).toStrictEqual(base_comment.content);
+        expect(presenter.raw_content).toStrictEqual(base_comment.raw_content);
+        expect(presenter.post_processed_content).toStrictEqual(base_comment.post_processed_content);
+        expect(presenter.format).toStrictEqual(base_comment.format);
+        expect(presenter.user).toStrictEqual(base_comment.user);
+        expect(presenter.parent_id).toStrictEqual(base_comment.parent_id);
+        expect(presenter.color).toStrictEqual(base_comment.color);
+        expect(presenter.file).toStrictEqual(parent_comment.file);
     });
 
     describe("fromEditedComment()", () => {
         it("Given the original comment and the edit comment, Then it should return a new presenter containing the edited content", () => {
-            const edited_comment_payload: GlobalComment = {
+            const edited_comment_payload: EditedComment = {
                 id: 13,
                 type: TYPE_GLOBAL_COMMENT,
-                post_date: "2020/07/13 16:16",
+                post_date: "2020-07-13T16:16:00Z",
+                last_edition_date: "2020-07-13T17:00:00Z",
                 content: "Please rebase on top of the **master** branch",
                 post_processed_content: `Please rebase on top of the <em>master</em> branch`,
                 raw_content: "Please rebase on top of the **master** branch",
@@ -111,12 +150,21 @@ describe("PullRequestCommentPresenterBuilder", () => {
                 edited_comment_payload,
             );
 
-            expect(new_presenter).toStrictEqual({
-                ...original_comment,
-                content: edited_comment_payload.content,
-                post_processed_content: edited_comment_payload.post_processed_content,
-                raw_content: edited_comment_payload.raw_content,
-            });
+            expect(new_presenter.id).toStrictEqual(original_comment.id);
+            expect(new_presenter.type).toStrictEqual(original_comment.type);
+            expect(new_presenter.post_date).toStrictEqual(original_comment.post_date);
+            expect(new_presenter.last_edition_date.unwrapOr(null)).toStrictEqual(
+                edited_comment_payload.last_edition_date,
+            );
+            expect(new_presenter.content).toStrictEqual(edited_comment_payload.content);
+            expect(new_presenter.raw_content).toStrictEqual(edited_comment_payload.raw_content);
+            expect(new_presenter.post_processed_content).toStrictEqual(
+                edited_comment_payload.post_processed_content,
+            );
+            expect(new_presenter.format).toStrictEqual(original_comment.format);
+            expect(new_presenter.user).toStrictEqual(original_comment.user);
+            expect(new_presenter.parent_id).toStrictEqual(original_comment.parent_id);
+            expect(new_presenter.color).toStrictEqual(original_comment.color);
         });
     });
 });

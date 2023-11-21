@@ -19,6 +19,7 @@
 
 import { define, html } from "hybrids";
 import DOMPurify from "dompurify";
+import { Option } from "@tuleap/option";
 import type { ActionOnPullRequestEvent } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { getHeaderTemplate } from "../templates/CommentHeaderTemplate";
 import { getCommentAvatarTemplate } from "../templates/CommentAvatarTemplate";
@@ -68,7 +69,9 @@ export const TimelineEvent = define<InternalTimelineEvent>({
                     ${getHeaderTemplate(
                         host.presenter.user,
                         host.relative_date_helper,
+                        gettext_provider,
                         host.presenter.post_date,
+                        Option.nothing(),
                     )}
                 </div>
                 <p

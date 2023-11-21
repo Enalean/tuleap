@@ -19,12 +19,11 @@
 
 import { describe, beforeEach, it, expect, vi } from "vitest";
 import { Fault } from "@tuleap/fault";
-import type { GlobalComment } from "@tuleap/plugin-pullrequest-rest-api-types";
+import type { EditedComment } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { SaveEditedCommentStub } from "../../../tests/stubs/SaveEditedCommentStub";
 import { PullRequestCommentPresenterStub } from "../../../tests/stubs/PullRequestCommentPresenterStub";
 import { EditionFormPresenterStub } from "../../../tests/stubs/EditionFormPresenterStub";
 import type { ControlWritingZone } from "../../writing-zone/WritingZoneController";
-import { PullRequestCommentPresenter } from "../PullRequestCommentPresenter";
 import type { ControlEditionForm } from "./EditionFormController";
 import { EditionFormController } from "./EditionFormController";
 import type { HostElement, InternalEditionForm } from "./EditionForm";
@@ -109,22 +108,31 @@ describe("EditionFormController", () => {
 
         it("should call the post_submit_callback with a presenter when the comment has been saved successfully", async () => {
             const updated_comment_payload = {
+                last_edition_date: "2023-11-21T14:45:00Z",
                 content: "Please rebase on top of the **master** branch",
                 post_processed_content: `Please rebase on top of the <em>master</em> branch`,
                 raw_content: "Please rebase on top of the **master** branch",
-            } as GlobalComment;
+            } as EditedComment;
 
             await getController(
                 SaveEditedCommentStub.withSuccessPayload(updated_comment_payload),
             ).saveEditedContent(host);
 
             expect(post_submit_callback).toHaveBeenCalledOnce();
-            expect(post_submit_callback).toHaveBeenCalledWith(
-                PullRequestCommentPresenter.fromEditedComment(
-                    host.comment,
-                    updated_comment_payload,
-                ),
+
+            if (!vi.isMockFunction(post_submit_callback)) {
+                throw new Error("Unable to get post_submit_callback arguments");
+            }
+            const presenter = post_submit_callback.mock.calls[0][0];
+
+            expect(presenter.last_edition_date.unwrapOr(null)).toBe(
+                updated_comment_payload.last_edition_date,
             );
+            expect(presenter.content).toBe(updated_comment_payload.content);
+            expect(presenter.post_processed_content).toBe(
+                updated_comment_payload.post_processed_content,
+            );
+            expect(presenter.raw_content).toBe(updated_comment_payload.raw_content);
         });
 
         it("should call the on_error_callback when the comment has NOT been saved successfully", async () => {

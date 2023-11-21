@@ -123,6 +123,13 @@ $thread-border-width: 2px;
     color: var(--tlp-dimmed-color);
 }
 
+.pull-request-comment-last-edition-date {
+    margin: var(--tlp-small-spacing) 0 0;
+    color: var(--tlp-dark-color);
+    font-size: 0.75rem;
+    font-style: italic;
+}
+
 .pull-request-comment-text {
     margin: 0;
     padding: var(--tlp-small-spacing) var(--tlp-medium-spacing) var(--tlp-medium-spacing);

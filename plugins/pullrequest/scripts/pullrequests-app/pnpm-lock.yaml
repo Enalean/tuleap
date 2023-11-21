@@ -20,6 +20,9 @@ dependencies:
   '@tuleap/fetch-result':
     specifier: workspace:*
     version: link:../../../../lib/frontend/fetch-result
+  '@tuleap/option':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/option
   '@tuleap/plugin-pullrequest-comments':
     specifier: workspace:*
     version: link:../lib/pullrequest-comments

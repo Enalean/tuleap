@@ -66,6 +66,7 @@ describe("NewReplySaver", () => {
             id: 50,
             type: TYPE_GLOBAL_COMMENT,
             post_date: "2023-03-07T18:30:00Z",
+            last_edition_date: null,
             content: comment_content,
             raw_content: "This is fine",
             user: root_comment.user,
@@ -101,6 +102,7 @@ describe("NewReplySaver", () => {
         const new_inline_comment: NewCommentOnFile = {
             id: 50,
             post_date: "2023-03-07T18:30:00Z",
+            last_edition_date: null,
             content: comment_content,
             raw_content: "This is fine",
             user: root_comment.user,
