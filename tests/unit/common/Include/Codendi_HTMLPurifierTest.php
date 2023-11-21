@@ -23,9 +23,7 @@
 
 final class Codendi_HTMLPurifierTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    private function getHTMLPurifier()
+    private function getHTMLPurifier(): Codendi_HTMLPurifier
     {
         return new class extends Codendi_HTMLPurifier {
             public function __construct()
@@ -34,67 +32,69 @@ final class Codendi_HTMLPurifierTest extends \PHPUnit\Framework\TestCase // phpc
         };
     }
 
-    public function testPurifySimple()
+    public function testPurifySimple(): void
     {
         $p = $this->getHTMLPurifier();
-        $this->assertEquals('&lt;script&gt;alert(1);&lt;/script&gt;', $p->purify('<script>alert(1);</script>'));
+        self::assertEquals('&lt;script&gt;alert(1);&lt;/script&gt;', $p->purify('<script>alert(1);</script>'));
     }
 
     public function testStripLightForbidden(): void
     {
-        $p   = \Mockery::mock(\Codendi_HTMLPurifier::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $p   = $this->createPartialMock(\Codendi_HTMLPurifier::class, [
+            'getReferenceManager',
+        ]);
         $rm  = $this->createMock(\ReferenceManager::class);
         $val = 'bugtest #123';
         $rm->expects(self::once())->method('insertReferences')->willReturn($val);
-        $p->shouldReceive('getReferenceManager')->andReturns($rm);
+        $p->method('getReferenceManager')->willReturn($rm);
 
-        $this->assertEquals('', $p->purify('<script>alert(1);</script>', CODENDI_PURIFIER_LIGHT));
-        $this->assertEquals('Bolded', $p->purify('<s>Bolded</s>', CODENDI_PURIFIER_LIGHT));
-        $this->assertEquals($val, $p->purify('bugtest #123', CODENDI_PURIFIER_LIGHT, 102));
-        $this->assertEquals('', $p->purify('<form name="test" method="post" action="?"><input type="submit" /></form>', CODENDI_PURIFIER_LIGHT));
-        $this->assertEquals('<a href="ftp://test.com">ftp://test.com</a>', $p->purify('ftp://test.com', CODENDI_PURIFIER_LIGHT));
+        self::assertEquals('', $p->purify('<script>alert(1);</script>', CODENDI_PURIFIER_LIGHT));
+        self::assertEquals('Bolded', $p->purify('<s>Bolded</s>', CODENDI_PURIFIER_LIGHT));
+        self::assertEquals($val, $p->purify('bugtest #123', CODENDI_PURIFIER_LIGHT, 102));
+        self::assertEquals('', $p->purify('<form name="test" method="post" action="?"><input type="submit" /></form>', CODENDI_PURIFIER_LIGHT));
+        self::assertEquals('<a href="ftp://test.com">ftp://test.com</a>', $p->purify('ftp://test.com', CODENDI_PURIFIER_LIGHT));
         $this->anchorJsInjection(CODENDI_PURIFIER_LIGHT);
     }
 
-    private function anchorJsInjection($level)
+    private function anchorJsInjection(int $level): void
     {
         $p = $this->getHTMLPurifier();
-        $this->assertEquals('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onblur="evil">Text</a>', $level));
-        $this->assertEquals('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onclick="evil">Text</a>', $level));
-        $this->assertEquals('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" ondbclick="evil">Text</a>', $level));
-        $this->assertEquals('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onfocus="evil">Text</a>', $level));
-        $this->assertEquals('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onkeydown="evil">Text</a>', $level));
-        $this->assertEquals('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onkeypress="evil">Text</a>', $level));
-        $this->assertEquals('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onkeyup="evil">Text</a>', $level));
-        $this->assertEquals('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onmousedown="evil">Text</a>', $level));
-        $this->assertEquals('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onmousemove="evil">Text</a>', $level));
-        $this->assertEquals('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onmouseout="evil">Text</a>', $level));
-        $this->assertEquals('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onmouseover="evil">Text</a>', $level));
-        $this->assertEquals('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onmouseup="evil">Text</a>', $level));
+        self::assertEquals('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onblur="evil">Text</a>', $level));
+        self::assertEquals('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onclick="evil">Text</a>', $level));
+        self::assertEquals('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" ondbclick="evil">Text</a>', $level));
+        self::assertEquals('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onfocus="evil">Text</a>', $level));
+        self::assertEquals('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onkeydown="evil">Text</a>', $level));
+        self::assertEquals('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onkeypress="evil">Text</a>', $level));
+        self::assertEquals('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onkeyup="evil">Text</a>', $level));
+        self::assertEquals('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onmousedown="evil">Text</a>', $level));
+        self::assertEquals('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onmousemove="evil">Text</a>', $level));
+        self::assertEquals('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onmouseout="evil">Text</a>', $level));
+        self::assertEquals('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onmouseover="evil">Text</a>', $level));
+        self::assertEquals('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onmouseup="evil">Text</a>', $level));
     }
 
-    public function testStripLightAllowed()
+    public function testStripLightAllowed(): void
     {
         $p = $this->getHTMLPurifier();
 
-        $this->assertEquals('<p>Text</p>', $p->purify('<p>Text</p>', CODENDI_PURIFIER_LIGHT));
-        $this->assertEquals('Text<br />', $p->purify('Text<br />', CODENDI_PURIFIER_LIGHT));
+        self::assertEquals('<p>Text</p>', $p->purify('<p>Text</p>', CODENDI_PURIFIER_LIGHT));
+        self::assertEquals('Text<br />', $p->purify('Text<br />', CODENDI_PURIFIER_LIGHT));
 
-        $this->assertEquals('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net">Text</a>', CODENDI_PURIFIER_LIGHT));
+        self::assertEquals('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net">Text</a>', CODENDI_PURIFIER_LIGHT));
 
-        $this->assertEquals('<strong>Text</strong>', $p->purify('<strong>Text</strong>', CODENDI_PURIFIER_LIGHT));
+        self::assertEquals('<strong>Text</strong>', $p->purify('<strong>Text</strong>', CODENDI_PURIFIER_LIGHT));
     }
 
-    public function testStripLightTidy()
+    public function testStripLightTidy(): void
     {
         $p = $this->getHTMLPurifier();
-        $this->assertEquals('<p>Text</p>', $p->purify('<p>Text', CODENDI_PURIFIER_LIGHT));
-        $this->assertEquals('Text<br />', $p->purify('Text<br>', CODENDI_PURIFIER_LIGHT));
+        self::assertEquals('<p>Text</p>', $p->purify('<p>Text', CODENDI_PURIFIER_LIGHT));
+        self::assertEquals('Text<br />', $p->purify('Text<br>', CODENDI_PURIFIER_LIGHT));
 
-        $this->assertEquals('<a href="http://php.net">Text</a>', $p->purify('<a href=\'http://php.net\'>Text', CODENDI_PURIFIER_LIGHT));
+        self::assertEquals('<a href="http://php.net">Text</a>', $p->purify('<a href=\'http://php.net\'>Text', CODENDI_PURIFIER_LIGHT));
     }
 
-    public function testPurifyArraySimple()
+    public function testPurifyArraySimple(): void
     {
         $p = $this->getHTMLPurifier();
 
@@ -108,85 +108,87 @@ final class Codendi_HTMLPurifierTest extends \PHPUnit\Framework\TestCase // phpc
             '&lt;h1&gt;title&lt;/h1&gt;',
             '&lt;b&gt;bold&lt;/b&gt;',
         ];
-        $this->assertSame($vExpect, $p->purifyMap($vRef));
+        self::assertSame($vExpect, $p->purifyMap($vRef));
     }
 
-    public function testSingleton()
+    public function testSingleton(): void
     {
         $p1 = Codendi_HTMLPurifier::instance();
         $p2 = Codendi_HTMLPurifier::instance();
-        $this->assertSame($p1, $p2);
-        $this->assertInstanceOf(Codendi_HTMLPurifier::class, $p1);
+        self::assertSame($p1, $p2);
+        self::assertInstanceOf(Codendi_HTMLPurifier::class, $p1);
     }
 
-    public function testPurifyJsQuoteAndDQuote()
+    public function testPurifyJsQuoteAndDQuote(): void
     {
         $p = Codendi_HTMLPurifier::instance();
-        $this->assertEquals('\u003C\/script\u003E', $p->purify('</script>', CODENDI_PURIFIER_JS_DQUOTE));
-        $this->assertEquals('a\u0022a', $p->purify('a"a', CODENDI_PURIFIER_JS_DQUOTE));
-        $this->assertEquals('\u0022a', $p->purify('"a', CODENDI_PURIFIER_JS_DQUOTE));
-        $this->assertEquals('a\u0022', $p->purify('a"', CODENDI_PURIFIER_JS_DQUOTE));
-        $this->assertEquals('\u0022', $p->purify('"', CODENDI_PURIFIER_JS_DQUOTE));
-        $this->assertEquals('\"', $p->purify('"', CODENDI_PURIFIER_JS_QUOTE));
-        $this->assertEquals(
+        self::assertEquals('\u003C\/script\u003E', $p->purify('</script>', CODENDI_PURIFIER_JS_DQUOTE));
+        self::assertEquals('a\u0022a', $p->purify('a"a', CODENDI_PURIFIER_JS_DQUOTE));
+        self::assertEquals('\u0022a', $p->purify('"a', CODENDI_PURIFIER_JS_DQUOTE));
+        self::assertEquals('a\u0022', $p->purify('a"', CODENDI_PURIFIER_JS_DQUOTE));
+        self::assertEquals('\u0022', $p->purify('"', CODENDI_PURIFIER_JS_DQUOTE));
+        self::assertEquals('\"', $p->purify('"', CODENDI_PURIFIER_JS_QUOTE));
+        self::assertEquals(
             '\u003C\/script\u003E\\\nbla bla\\\n\u003C\/script\u003E\\\nbla bla\\\n\u003C\/script\u003E',
             $p->purify('</script>\nbla bla\n</script>\nbla bla\n</script>', CODENDI_PURIFIER_JS_DQUOTE)
         );
-        $this->assertEquals('\u003C\/script\u003E', $p->purify('</script>', CODENDI_PURIFIER_JS_QUOTE));
-        $this->assertEquals('100', $p->purify(100, CODENDI_PURIFIER_JS_QUOTE));
+        self::assertEquals('\u003C\/script\u003E', $p->purify('</script>', CODENDI_PURIFIER_JS_QUOTE));
+        self::assertEquals('100', $p->purify(100, CODENDI_PURIFIER_JS_QUOTE));
     }
 
-    public function testBasicNobr()
+    public function testBasicNobr(): void
     {
         $p = $this->getHTMLPurifier();
-        $this->assertEquals("a<br />\nb", $p->purify("a\nb", CODENDI_PURIFIER_BASIC));
-        $this->assertEquals("a\nb", $p->purify("a\nb", CODENDI_PURIFIER_BASIC_NOBR));
+        self::assertEquals("a<br />\nb", $p->purify("a\nb", CODENDI_PURIFIER_BASIC));
+        self::assertEquals("a\nb", $p->purify("a\nb", CODENDI_PURIFIER_BASIC_NOBR));
     }
 
-    public function testMakeLinks()
+    public function testMakeLinks(): void
     {
-        $p = \Mockery::mock(\Codendi_HTMLPurifier::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->assertEquals('', $p->purify('', CODENDI_PURIFIER_BASIC));
-        $this->assertEquals('<a href="https://www.example.com">https://www.example.com</a>', $p->purify('https://www.example.com', CODENDI_PURIFIER_BASIC));
-        $this->assertEquals('"<a href="https://www.example.com">https://www.example.com</a>"', $p->purify('"https://www.example.com"', CODENDI_PURIFIER_BASIC));
-        $this->assertEquals('\'<a href="https://www.example.com">https://www.example.com</a>\'', $p->purify('\'https://www.example.com\'', CODENDI_PURIFIER_BASIC));
-        $this->assertEquals('&lt;<a href="https://www.example.com">https://www.example.com</a>&gt;', $p->purify('<https://www.example.com>', CODENDI_PURIFIER_BASIC));
-        $this->assertEquals('<a href="mailto:john.doe@example.com">john.doe@example.com</a>', $p->purify('john.doe@example.com', CODENDI_PURIFIER_BASIC));
-        $this->assertEquals('"<a href="mailto:john.doe@example.com">john.doe@example.com</a>"', $p->purify('"john.doe@example.com"', CODENDI_PURIFIER_BASIC));
-        $this->assertEquals('\'<a href="mailto:john.doe@example.com">john.doe@example.com</a>\'', $p->purify('\'john.doe@example.com\'', CODENDI_PURIFIER_BASIC));
-        $this->assertEquals('&lt;<a href="mailto:john.doe@example.com">john.doe@example.com</a>&gt;', $p->purify('<john.doe@example.com>', CODENDI_PURIFIER_BASIC));
-        $this->assertEquals('<a href="ssh://gitolite@example.com/tuleap/stable.git">ssh://gitolite@example.com/tuleap/stable.git</a>', $p->purify('ssh://gitolite@example.com/tuleap/stable.git', CODENDI_PURIFIER_BASIC));
+        $p = $this->createPartialMock(\Codendi_HTMLPurifier::class, [
+            'getReferenceManager',
+        ]);
+        self::assertEquals('', $p->purify('', CODENDI_PURIFIER_BASIC));
+        self::assertEquals('<a href="https://www.example.com">https://www.example.com</a>', $p->purify('https://www.example.com', CODENDI_PURIFIER_BASIC));
+        self::assertEquals('"<a href="https://www.example.com">https://www.example.com</a>"', $p->purify('"https://www.example.com"', CODENDI_PURIFIER_BASIC));
+        self::assertEquals('\'<a href="https://www.example.com">https://www.example.com</a>\'', $p->purify('\'https://www.example.com\'', CODENDI_PURIFIER_BASIC));
+        self::assertEquals('&lt;<a href="https://www.example.com">https://www.example.com</a>&gt;', $p->purify('<https://www.example.com>', CODENDI_PURIFIER_BASIC));
+        self::assertEquals('<a href="mailto:john.doe@example.com">john.doe@example.com</a>', $p->purify('john.doe@example.com', CODENDI_PURIFIER_BASIC));
+        self::assertEquals('"<a href="mailto:john.doe@example.com">john.doe@example.com</a>"', $p->purify('"john.doe@example.com"', CODENDI_PURIFIER_BASIC));
+        self::assertEquals('\'<a href="mailto:john.doe@example.com">john.doe@example.com</a>\'', $p->purify('\'john.doe@example.com\'', CODENDI_PURIFIER_BASIC));
+        self::assertEquals('&lt;<a href="mailto:john.doe@example.com">john.doe@example.com</a>&gt;', $p->purify('<john.doe@example.com>', CODENDI_PURIFIER_BASIC));
+        self::assertEquals('<a href="ssh://gitolite@example.com/tuleap/stable.git">ssh://gitolite@example.com/tuleap/stable.git</a>', $p->purify('ssh://gitolite@example.com/tuleap/stable.git', CODENDI_PURIFIER_BASIC));
         self::assertEquals('<a href="https://sub_domain.example.com">https://sub_domain.example.com</a>', $p->purify('https://sub_domain.example.com', CODENDI_PURIFIER_BASIC));
-        $reference_manager = Mockery::mock(ReferenceManager::class);
-        $reference_manager->shouldReceive('insertReferences')->withArgs(function (&$data, $group_id) {
+        $reference_manager = $this->createMock(ReferenceManager::class);
+        $reference_manager->method('insertReferences')->willReturnCallback(function (string &$data, int $group_id) {
             $data = preg_replace('/art #1/', '<a href="link-to-art-1">art #1</a>', $data);
-            return true;
         });
-        $p->shouldReceive('getReferenceManager')->andReturns($reference_manager);
-        $this->assertStringContainsString('link-to-art-1', $p->purify('art #1', CODENDI_PURIFIER_BASIC, 1));
+        $p->method('getReferenceManager')->willReturn($reference_manager);
+        self::assertStringContainsString('link-to-art-1', $p->purify('art #1', CODENDI_PURIFIER_BASIC, 1));
     }
 
-    public function testPurifierLight()
+    public function testPurifierLight(): void
     {
         $p = Codendi_HTMLPurifier::instance();
-        $this->assertEquals("foo\nbar", $p->purify("foo\nbar", CODENDI_PURIFIER_LIGHT));
-        $this->assertEquals("foo\nbar", $p->purify("foo\r\nbar", CODENDI_PURIFIER_LIGHT));
+        self::assertEquals("foo\nbar", $p->purify("foo\nbar", CODENDI_PURIFIER_LIGHT));
+        self::assertEquals("foo\nbar", $p->purify("foo\r\nbar", CODENDI_PURIFIER_LIGHT));
     }
 
-    public function testItDoesNotDoubleEscapeLinks()
+    public function testItDoesNotDoubleEscapeLinks(): void
     {
-        $reference_manager = Mockery::mock(ReferenceManager::class);
-        $reference_manager->shouldReceive('insertReferences')->withArgs(function (&$data, $group_id) {
+        $reference_manager = $this->createMock(ReferenceManager::class);
+        $reference_manager->method('insertReferences')->willReturnCallback(function (string &$data, int $group_id) {
             $data = preg_replace('/art #1/', '<a href="link-to-art-1">art #1</a>', $data);
-            return true;
         });
-        $p = \Mockery::mock(\Codendi_HTMLPurifier::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $p->shouldReceive('getReferenceManager')->andReturns($reference_manager);
+        $p = $this->createPartialMock(\Codendi_HTMLPurifier::class, [
+            'getReferenceManager',
+        ]);
+        $p->method('getReferenceManager')->willReturn($reference_manager);
 
         $html     = 'Text with <a href="http://tuleap.net/">link</a> and a reference to art #1';
         $expected = 'Text with <a href="http://tuleap.net/">link</a> and a reference to <a href="link-to-art-1">art #1</a>';
 
-        $this->assertEquals($expected, $p->purifyHTMLWithReferences($html, 123));
+        self::assertEquals($expected, $p->purifyHTMLWithReferences($html, 123));
     }
 
     public function testItAllowsMermaidCustomElementOnlyForFullConfig(): void

@@ -19,9 +19,8 @@
  *
  */
 
-class SiteCacheTest extends \Tuleap\Test\PHPUnit\TestCase
+class SiteCacheTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\ForgeConfigSandbox;
     use \Tuleap\GlobalLanguageMock;
     use \Tuleap\TemporaryTestDirectory;
@@ -31,20 +30,21 @@ class SiteCacheTest extends \Tuleap\Test\PHPUnit\TestCase
         unset($GLOBALS['HTML']);
     }
 
-    public function testItCreatesCacheDirectories()
+    public function testItCreatesCacheDirectories(): void
     {
         $cache_dir = $this->getTmpDir() . DIRECTORY_SEPARATOR . 'tuleap_cache_dir';
         $lang_dir  = $this->getTmpDir() . DIRECTORY_SEPARATOR . 'tuleap_lang_dir';
 
         ForgeConfig::set('codendi_cache_dir', $cache_dir);
-        $logger              = \Mockery::spy(\Psr\Log\LoggerInterface::class);
-        $GLOBALS['Language'] = \Mockery::spy(\BaseLanguage::class)->shouldReceive('getCacheDirectory')->andReturns($lang_dir)->getMock();
-        $GLOBALS['HTML']     = \Mockery::spy(\Layout::class);
+        $logger              = new \Psr\Log\NullLogger();
+        $GLOBALS['Language'] = $this->createMock(\BaseLanguage::class);
+        $GLOBALS['Language']->method('getCacheDirectory')->willReturn($lang_dir);
+        $GLOBALS['HTML'] = $this->createMock(\Layout::class);
 
         $site_cache = new SiteCache($logger);
         $site_cache->restoreCacheDirectories();
 
-        $this->assertDirectoryExists($cache_dir);
-        $this->assertDirectoryExists($lang_dir);
+        self::assertDirectoryExists($cache_dir);
+        self::assertDirectoryExists($lang_dir);
     }
 }
