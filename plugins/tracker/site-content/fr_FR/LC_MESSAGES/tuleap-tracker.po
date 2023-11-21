@@ -778,6 +778,9 @@ msgstr ""
 "soit vous utilisez le mauvais séparateur.<br />Si c'est le cas, vous pouvez "
 "<a href=\"/account/\">changer le séparateur CSV pour l'import/export</a>"
 
+msgid "Calendar events"
+msgstr "Évènements du calendrier"
+
 msgid "Can make the transition"
 msgstr "Peut effectuer la transition"
 
@@ -1683,6 +1686,10 @@ msgid ""
 msgstr ""
 "Inclure un marqueur [Assigné à moi même] dans le sujet pour les personnes "
 "étant assignées à l'artéfact"
+
+msgid "Include calendar event in the artifact email notification"
+msgstr ""
+"Inclure l'évènement de calendrier dans la notification email de l'artéfact"
 
 msgid "Include week-ends"
 msgstr "Inclure les week-ends"
@@ -4372,6 +4379,15 @@ msgid "When more than one parent, we cannot display rest of hierarchy."
 msgstr ""
 "Quand il y a plus d'un parent, nous ne pouvons afficher le reste de la "
 "hiérarchie."
+
+msgid ""
+"When there is a timeframe associated with a tracker, email notifications for "
+"artifacts include the necessary information for adding the event to a "
+"calendar (Outlook, Google Calendar, etc.)."
+msgstr ""
+"Lorsqu'il y a une plage de temps associée à un tracker, les notifications "
+"email pour les artifacts comprennent les informations nécessaires pour "
+"ajouter l’évènement à un calendrier (Outlook, Google Calendar, etc.)."
 
 msgid "Workflow"
 msgstr "Workflow"

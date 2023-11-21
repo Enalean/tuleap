@@ -274,7 +274,7 @@ class Tracker_NotificationsManager
             $this->displayAdminNotifications_Global();
             $this->displayAdminNotificationUnsubcribers();
         }
-        $this->displayAdminNotificationAssignedToMeFlag();
+        $this->displayAdminMailConfiguration();
 
         echo '</form></fieldset>';
     }
@@ -297,7 +297,7 @@ class Tracker_NotificationsManager
         );
     }
 
-    private function displayAdminNotificationAssignedToMeFlag()
+    private function displayAdminMailConfiguration(): void
     {
         $config_notification_assigned_to   = new ConfigNotificationAssignedTo(new ConfigNotificationAssignedToDao());
         $config_notification_custom_sender
@@ -306,10 +306,12 @@ class Tracker_NotificationsManager
 
         $custom_email_sender = $config_notification_custom_sender->getCustomSender($this->tracker);
 
+        $should_send_event_in_notification = (new \Tuleap\Tracker\Notifications\Settings\CalendarEventConfigDao())->shouldSendEventInNotification($this->tracker->getId());
+
         $renderer = $this->getNotificationsRenderer();
         $renderer->renderToPage(
             'admin-subject-customisation',
-            new NotificationCustomisationSettingsPresenter($is_assigned_to_enabled, $custom_email_sender)
+            new NotificationCustomisationSettingsPresenter($is_assigned_to_enabled, $custom_email_sender, $should_send_event_in_notification)
         );
     }
 
