@@ -33,6 +33,7 @@ use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderDao;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\User\InvalidEntryInAutocompleterCollection;
 use Tuleap\User\RequestFromAutocompleter;
 
@@ -315,11 +316,25 @@ class Tracker_NotificationsManager
         $custom_email_sender = $config_notification_custom_sender->getCustomSender($this->tracker);
 
         $should_send_event_in_notification = (new CalendarEventConfigDao())->shouldSendEventInNotification($this->tracker->getId());
+        $semantic_timeframe_builder        = SemanticTimeframeBuilder::build();
+        $semantic_timeframe                = $semantic_timeframe_builder->getSemantic($this->tracker);
+        $is_semantic_timeframe_defined     = $semantic_timeframe->isDefined();
+
+        $semantic_title            = Tracker_Semantic_Title::load($this->tracker);
+        $is_semantic_title_defined = $semantic_title->getField() !== null;
 
         $renderer = $this->getNotificationsRenderer();
         $renderer->renderToPage(
             'admin-subject-customisation',
-            new NotificationCustomisationSettingsPresenter($is_assigned_to_enabled, $custom_email_sender, $should_send_event_in_notification)
+            new NotificationCustomisationSettingsPresenter(
+                $is_assigned_to_enabled,
+                $custom_email_sender,
+                $should_send_event_in_notification,
+                $is_semantic_timeframe_defined,
+                $semantic_timeframe->getUrl(),
+                $is_semantic_title_defined,
+                $semantic_title->getUrl(),
+            )
         );
     }
 

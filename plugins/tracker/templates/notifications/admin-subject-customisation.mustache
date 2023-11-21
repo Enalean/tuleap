@@ -27,6 +27,39 @@
             The feature is under development, you cannot change the setting yet.
         </p>
     {{/ should_send_event_in_notification }}
+    {{# is_semantic_timeframe_defined }}
+        {{^ is_semantic_title_defined }}
+            <p class="muted">
+                {{# dgettext }}tuleap-tracker
+                    | The semantic %stitle%s is requested to activate this setting.
+                    | <a href="{{ semantic_title_admin_url }}">
+                        | </a>
+                {{/ dgettext }}
+            </p>
+        {{/ is_semantic_title_defined }}
+    {{/ is_semantic_timeframe_defined }}
+    {{^ is_semantic_timeframe_defined }}
+        {{# is_semantic_title_defined }}
+            <p class="muted">
+                {{# dgettext }}tuleap-tracker
+                    | The semantic %stimeframe%s is requested to activate this setting.
+                    | <a href="{{ semantic_timeframe_admin_url }}">
+                    | </a>
+                {{/ dgettext }}
+            </p>
+        {{/ is_semantic_title_defined }}
+        {{^ is_semantic_title_defined }}
+            <p class="muted">
+                {{# dgettext }}tuleap-tracker
+                    | The semantic %stimeframe%s and %stitle%s are requested to activate this setting.
+                    | <a href="{{ semantic_timeframe_admin_url }}">
+                    | </a>
+                    | <a href="{{ semantic_title_admin_url }}">
+                    | </a>
+                {{/ dgettext }}
+            </p>
+        {{/ is_semantic_title_defined }}
+    {{/ is_semantic_timeframe_defined }}
 </div>
 
 <h3>{{ notification_customisation_title }}</h3>
