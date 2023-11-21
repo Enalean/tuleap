@@ -41,7 +41,7 @@ EOT;
 
     private function addCardField($name, $rank)
     {
-        $sql = "INSERT INTO plugin_cardwall_semantic_cardfields(tracker_id, field_id, rank)
+        $sql = "INSERT INTO plugin_cardwall_semantic_cardfields(tracker_id, field_id, `rank`)
                 SELECT tracker_id, id, $rank
                 FROM tracker_field
                 WHERE use_it = 1

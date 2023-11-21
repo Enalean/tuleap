@@ -33,7 +33,7 @@ class b201405071410_replace_svn_accessfile_column_name_in_groups extends \Tuleap
 
     public function up()
     {
-        $sql = "ALTER TABLE groups
+        $sql = "ALTER TABLE `groups`
                 CHANGE svn_accessfile svn_accessfile_version_id INT(11)";
 
         $res = $this->db->dbh->exec($sql);

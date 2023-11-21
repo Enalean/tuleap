@@ -38,7 +38,7 @@ EOT;
         $sql = "CREATE TABLE tracker_artifact_priority(
                     curr_id int(11) NULL,
                     succ_id int(11) NULL,
-                    rank    int(11) NOT NULL,
+                    `rank`  int(11) NOT NULL,
                     UNIQUE idx(curr_id, succ_id)
                 ) ENGINE=InnoDB";
         $this->db->createTable('tracker_artifact_priority', $sql);
