@@ -131,4 +131,11 @@ final class IComputeTimeframesStub implements IComputeTimeframes
     {
         return true;
     }
+
+    public function userCanReadTimeframeFields(\PFUser $user): bool
+    {
+        return (! $this->start || $this->start->userCanRead($user)) &&
+               (! $this->end || $this->end->userCanRead($user)) &&
+               (! $this->duration || $this->duration->userCanRead($user));
+    }
 }

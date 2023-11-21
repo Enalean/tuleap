@@ -55,4 +55,6 @@ interface IComputeTimeframes
     public function isFieldUsed(\Tracker_FormElement_Field $field): bool;
 
     public function isDefined(): bool;
+
+    public function userCanReadTimeframeFields(\PFUser $user): bool;
 }

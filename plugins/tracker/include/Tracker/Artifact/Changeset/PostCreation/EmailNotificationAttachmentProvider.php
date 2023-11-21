@@ -92,8 +92,11 @@ final class EmailNotificationAttachmentProvider implements ProvideEmailNotificat
         $calendar = Calendar::create()
             ->event($event);
 
-        $calendar->appendProperty(TextProperty::create('METHOD', 'REQUEST'));
-
+        if ($event_data->start === 0 && $event_data->end === 0) {
+            $calendar->appendProperty(TextProperty::create('METHOD', 'CANCEL'));
+        } else {
+            $calendar->appendProperty(TextProperty::create('METHOD', 'REQUEST'));
+        }
 
         return Result::ok([
             new MailAttachment(

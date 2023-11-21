@@ -152,6 +152,51 @@ final class CalendarEventDataBuilderTest extends TestCase
         );
     }
 
+    /**
+     * @testWith [false, false, false, "end"]
+     *           [false, false, true, "start"]
+     *           [false, true, false, "end"]
+     *           [false, true, true, "end"]
+     *           [true, false, false, "start"]
+     *           [true, false, true, "start"]
+     *           [true, true, false, "start"]
+     *           [true, true, true, "start"]
+     */
+    public function testItReturnsErrWhenDateFieldIsZeroAndCheckPerms(bool $start_date, bool $can_read, bool $check_permissions, string $error_message): void
+    {
+        $builder = new CalendarEventDataBuilder(
+            BuildSemanticTimeframeStub::withTimeframeCalculator(
+                $this->changeset->getTracker(),
+                new TimeframeWithEndDate(
+                    $this->start_field,
+                    $this->end_field,
+                )
+            ),
+        );
+
+        $this->start_field->setUserCanRead($this->recipient, $can_read);
+        $this->end_field->setUserCanRead($this->recipient, $can_read);
+
+        $this->changeset->setFieldValue($this->start_field, ChangesetValueDateTestBuilder::aValue(
+            1,
+            $this->changeset,
+            $this->start_field
+        )->withTimestamp($start_date ? 0 : 1234567890)->build());
+        $this->changeset->setFieldValue($this->end_field, ChangesetValueDateTestBuilder::aValue(
+            1,
+            $this->changeset,
+            $this->end_field
+        )->withTimestamp($start_date ? 1324567890 : 0)->build());
+
+        $result = $builder->getCalendarEventData('Christmas Party', $this->changeset, $this->recipient, $this->logger, $check_permissions);
+
+        self::assertTrue(Result::isErr($result));
+        self::assertEquals(
+            "No $error_message date, we cannot build calendar event",
+            (string) $result->error
+        );
+    }
+
     public function testErrorWhenUserCannotReadFields(): void
     {
         $builder = new CalendarEventDataBuilder(

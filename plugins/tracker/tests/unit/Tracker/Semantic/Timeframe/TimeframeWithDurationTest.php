@@ -371,6 +371,22 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
+    public function testItReturnsTrueWhenUserCanReadFields(): void
+    {
+        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+        $this->duration_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+
+        self::assertTrue($this->timeframe->userCanReadTimeframeFields($this->user));
+    }
+
+    public function testItReturnsFalseWhenUserCannotReadFields(): void
+    {
+        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(false));
+        // duration_field->userCanRead is not called cause of && operator
+
+        self::assertFalse($this->timeframe->userCanReadTimeframeFields($this->user));
+    }
+
     private function getMockedDateField(int $field_id): \Tracker_FormElement_Field_Date
     {
         $mock = $this->getMockBuilder(\Tracker_FormElement_Field_Date::class)

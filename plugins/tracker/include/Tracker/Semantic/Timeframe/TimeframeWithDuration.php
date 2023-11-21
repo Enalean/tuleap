@@ -238,4 +238,9 @@ class TimeframeWithDuration implements IComputeTimeframes
     {
         return null;
     }
+
+    public function userCanReadTimeframeFields(\PFUser $user): bool
+    {
+        return $this->start_date_field->userCanRead($user) && $this->duration_field->userCanRead($user);
+    }
 }
