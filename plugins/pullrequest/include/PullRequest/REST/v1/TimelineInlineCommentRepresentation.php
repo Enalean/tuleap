@@ -23,13 +23,12 @@ namespace Tuleap\PullRequest\REST\v1;
 use Codendi_HTMLPurifier;
 use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
-use Tuleap\REST\JsonCast;
+use Tuleap\PullRequest\REST\v1\InlineComment\InlineCommentRepresentation;
 use Tuleap\User\REST\MinimalUserRepresentation;
+use Tuleap\REST\JsonCast;
 
 final class TimelineInlineCommentRepresentation
 {
-    public const TYPE = 'inline-comment';
-
     /**
      * @var string {@type string}
      */
@@ -112,7 +111,7 @@ final class TimelineInlineCommentRepresentation
         $this->content                = $this->getPurifiedContent($project_id, $content);
         $this->raw_content            = $content;
         $this->is_outdated            = $is_outdated;
-        $this->type                   = self::TYPE;
+        $this->type                   = InlineCommentRepresentation::TYPE;
         $this->parent_id              = $parent_id;
         $this->id                     = $id;
         $this->position               = $position;
