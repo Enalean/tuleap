@@ -44,11 +44,11 @@ use User_LoginManager;
 final class OAuth2ResourceServerMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|SplitTokenIdentifierTranslator
+     * @var \PHPUnit\Framework\MockObject\MockObject&SplitTokenIdentifierTranslator
      */
     private $access_token_unserializer;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AuthenticationScope
+     * @var \PHPUnit\Framework\MockObject\MockObject&AuthenticationScope
      */
     private $required_scope;
     /**
@@ -56,7 +56,7 @@ final class OAuth2ResourceServerMiddlewareTest extends \Tuleap\Test\PHPUnit\Test
      */
     private $access_token_verifier;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|User_LoginManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&User_LoginManager
      */
     private $login_manager;
 

@@ -19,16 +19,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\GlobalSVNPollution;
 
 /**
  * Test for project delete system event
  */
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class SystemEvent_UGROUP_MODIFY_Test extends \Tuleap\Test\PHPUnit\TestCase
+final class SystemEvent_UGROUP_MODIFY_Test extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalSVNPollution;
 
     /**
@@ -40,130 +38,152 @@ class SystemEvent_UGROUP_MODIFY_Test extends \Tuleap\Test\PHPUnit\TestCase
     {
         $now = (new DateTimeImmutable())->getTimestamp();
 
-        $evt = \Mockery::mock(
-            \SystemEvent_UGROUP_MODIFY::class,
-            [
-                '1',
-                SystemEvent::TYPE_UGROUP_MODIFY,
-                SystemEvent::OWNER_ROOT,
-                '1',
-                SystemEvent::PRIORITY_HIGH,
-                SystemEvent::STATUS_RUNNING,
-                $now,
-                $now,
-                $now,
-                '',
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $evt = $this->getMockBuilder(\SystemEvent_UGROUP_MODIFY::class)
+            ->setConstructorArgs(
+                [
+                    '1',
+                    SystemEvent::TYPE_UGROUP_MODIFY,
+                    SystemEvent::OWNER_ROOT,
+                    '1',
+                    SystemEvent::PRIORITY_HIGH,
+                    SystemEvent::STATUS_RUNNING,
+                    $now,
+                    $now,
+                    $now,
+                    '',
+                ]
+            )
+            ->onlyMethods([
+                'getParametersAsArray',
+                'processUgroupBinding',
+                'getProject',
+                'getBackend',
+                'done',
+                'error',
+            ])
+            ->getMock();
 
-        $evt->shouldReceive('getParametersAsArray')->andReturns([1, 2]);
+        $evt->method('getParametersAsArray')->willReturn([1, 2]);
 
-        $evt->shouldReceive('processUgroupBinding')->andReturns(false);
+        $evt->method('processUgroupBinding')->willReturn(false);
 
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('usesSVN')->andReturns(true);
+        $project = $this->createMock(\Project::class);
+        $project->method('usesSVN')->willReturn(true);
 
-        $backendSVN = \Mockery::spy(\BackendSVN::class);
-        $backendSVN->shouldReceive('updateSVNAccess')->never();
+        $backendSVN = $this->createMock(\BackendSVN::class);
+        $backendSVN->expects(self::never())->method('updateSVNAccess');
 
-        $evt->shouldReceive('getProject')->with('1')->never()->andReturns($project);
-        $evt->shouldReceive('getBackend')->with('SVN')->never()->andReturns($backendSVN);
-        $evt->shouldReceive('done')->never();
-        $evt->shouldReceive('error')->with("Could not process binding to this user group (2)")->once();
+        $evt->expects(self::never())->method('getProject')->with('1')->willReturn($project);
+        $evt->expects(self::never())->method('getBackend')->with('SVN')->willReturn($backendSVN);
+        $evt->expects(self::never())->method('done');
+        $evt->expects(self::once())->method('error')->with("Could not process binding to this user group (2)");
 
         // Launch the event
-        $this->assertFalse($evt->process());
+        self::assertFalse($evt->process());
     }
 
     public function testUgroupModifyProcessSuccess(): void
     {
         $now = (new DateTimeImmutable())->getTimestamp();
 
-        $evt = \Mockery::mock(
-            \SystemEvent_UGROUP_MODIFY::class,
-            [
-                '1',
-                SystemEvent::TYPE_UGROUP_MODIFY,
-                SystemEvent::OWNER_ROOT,
-                '1',
-                SystemEvent::PRIORITY_HIGH,
-                SystemEvent::STATUS_RUNNING,
-                $now,
-                $now,
-                $now,
-                '',
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $evt = $this->getMockBuilder(\SystemEvent_UGROUP_MODIFY::class)
+            ->setConstructorArgs(
+                [
+                    '1',
+                    SystemEvent::TYPE_UGROUP_MODIFY,
+                    SystemEvent::OWNER_ROOT,
+                    '1',
+                    SystemEvent::PRIORITY_HIGH,
+                    SystemEvent::STATUS_RUNNING,
+                    $now,
+                    $now,
+                    $now,
+                    '',
+                ]
+            )
+            ->onlyMethods([
+                'getParametersAsArray',
+                'processUgroupBinding',
+                'getProject',
+                'getBackend',
+                'done',
+                'error',
+            ])
+            ->getMock();
 
-        $evt->shouldReceive('getParametersAsArray')->andReturns([1, 2]);
+        $evt->method('getParametersAsArray')->willReturn([1, 2]);
 
-        $evt->shouldReceive('processUgroupBinding')->andReturns(true);
+        $evt->method('processUgroupBinding')->willReturn(true);
 
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('usesSVN')->andReturns(true);
-        $evt->shouldReceive('getProject')->with(1)->andReturns($project);
+        $project = $this->createMock(\Project::class);
+        $project->method('usesSVN')->willReturn(true);
+        $evt->method('getProject')->with(1)->willReturn($project);
 
-        $scheduler = Mockery::mock(\Tuleap\SVNCore\Event\UpdateProjectAccessFilesScheduler::class);
-        $scheduler->shouldReceive('scheduleUpdateOfProjectAccessFiles')->once();
+        $scheduler = $this->createMock(\Tuleap\SVNCore\Event\UpdateProjectAccessFilesScheduler::class);
+        $scheduler->expects(self::once())->method('scheduleUpdateOfProjectAccessFiles');
         $evt->injectDependencies($scheduler);
 
-        $evt->shouldReceive('done')->once();
-        $evt->shouldReceive('error')->never();
+        $evt->expects(self::once())->method('done');
+        $evt->expects(self::never())->method('error');
 
         // Launch the event
-        $this->assertTrue($evt->process());
+        self::assertTrue($evt->process());
     }
 
     public function testUpdateSVNOfBindedUgroups(): void
     {
         $now = (new DateTimeImmutable())->getTimestamp();
 
-        $evt = \Mockery::mock(
-            \SystemEvent_UGROUP_MODIFY::class,
-            [
-                '1',
-                SystemEvent::TYPE_UGROUP_MODIFY,
-                SystemEvent::OWNER_ROOT,
-                '1',
-                SystemEvent::PRIORITY_HIGH,
-                SystemEvent::STATUS_RUNNING,
-                $now,
-                $now,
-                $now,
-                '',
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $evt = $this->getMockBuilder(\SystemEvent_UGROUP_MODIFY::class)
+            ->setConstructorArgs(
+                [
+                    '1',
+                    SystemEvent::TYPE_UGROUP_MODIFY,
+                    SystemEvent::OWNER_ROOT,
+                    '1',
+                    SystemEvent::PRIORITY_HIGH,
+                    SystemEvent::STATUS_RUNNING,
+                    $now,
+                    $now,
+                    $now,
+                    '',
+                ]
+            )
+            ->onlyMethods([
+                'getParametersAsArray',
+                'getProject',
+                'getBackend',
+                'done',
+                'error',
+                'getUgroupBinding',
+            ])
+            ->getMock();
 
-        $evt->shouldReceive('getParametersAsArray')->andReturns([1, 2]);
+        $evt->method('getParametersAsArray')->willReturn([1, 2]);
 
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('usesSVN')->andReturns(true);
-        $evt->shouldReceive('getProject')->andReturns($project);
+        $project = $this->createMock(\Project::class);
+        $project->method('usesSVN')->willReturn(true);
+        $evt->method('getProject')->willReturn($project);
 
-        $ugroupbinding = \Mockery::spy(\UGroupBinding::class);
-        $ugroupbinding->shouldReceive('updateBindedUGroups')->andReturns(true);
-        $ugroupbinding->shouldReceive('removeAllUGroupsBinding')->andReturns(true);
+        $ugroupbinding = $this->createMock(\UGroupBinding::class);
+        $ugroupbinding->method('updateBindedUGroups')->willReturn(true);
+        $ugroupbinding->method('removeAllUGroupsBinding')->willReturn(true);
+        $ugroupbinding->method('checkUGroupValidity')->willReturn(true);
         $projects = [
             1 => ['group_id' => 101],
             2 => ['group_id' => 102],
         ];
-        $ugroupbinding->shouldReceive('getUGroupsByBindingSource')->andReturns($projects);
-        $evt->shouldReceive('getUgroupBinding')->andReturns($ugroupbinding);
+        $ugroupbinding->method('getUGroupsByBindingSource')->willReturn($projects);
+        $evt->method('getUgroupBinding')->willReturn($ugroupbinding);
 
-        $scheduler = Mockery::mock(\Tuleap\SVNCore\Event\UpdateProjectAccessFilesScheduler::class);
-        $scheduler->shouldReceive('scheduleUpdateOfProjectAccessFiles')->times(3);
+        $scheduler = $this->createMock(\Tuleap\SVNCore\Event\UpdateProjectAccessFilesScheduler::class);
+        $scheduler->expects(self::exactly(3))->method('scheduleUpdateOfProjectAccessFiles');
         $evt->injectDependencies($scheduler);
 
-        $evt->shouldReceive('done')->once();
-        $evt->shouldReceive('error')->never();
+        $evt->expects(self::once())->method('done');
+        $evt->expects(self::never())->method('error');
 
         // Launch the event
-        $this->assertTrue($evt->process());
+        self::assertTrue($evt->process());
     }
 }

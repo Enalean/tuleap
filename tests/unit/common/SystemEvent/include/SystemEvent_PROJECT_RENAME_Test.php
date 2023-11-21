@@ -20,13 +20,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\GlobalSVNPollution;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
+final class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalSVNPollution;
 
     /**
@@ -36,345 +34,386 @@ class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
     {
         $now = (new DateTimeImmutable())->getTimestamp();
 
-        $evt = \Mockery::mock(
-            \SystemEvent_PROJECT_RENAME::class,
-            [
-                '1',
-                SystemEvent::TYPE_PROJECT_RENAME,
-                SystemEvent::OWNER_ROOT,
-                '142' . SystemEvent::PARAMETER_SEPARATOR . 'FooBar',
-                SystemEvent::PRIORITY_HIGH,
-                SystemEvent::STATUS_RUNNING,
-                $now,
-                $now,
-                $now,
-                '',
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $evt = $this->getMockBuilder(\SystemEvent_PROJECT_RENAME::class)
+            ->setConstructorArgs(
+                [
+                    '1',
+                    SystemEvent::TYPE_PROJECT_RENAME,
+                    SystemEvent::OWNER_ROOT,
+                    '142' . SystemEvent::PARAMETER_SEPARATOR . 'FooBar',
+                    SystemEvent::PRIORITY_HIGH,
+                    SystemEvent::STATUS_RUNNING,
+                    $now,
+                    $now,
+                    $now,
+                    '',
+                ]
+            )
+            ->onlyMethods([
+                'getProject',
+                'getBackend',
+                'updateDB',
+                'getEventManager',
+                'addProjectHistory',
+                'done',
+            ])
+            ->getMock();
 
         // The project
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('getUnixName')->with(false)->andReturns('TestProj');
-        $project->shouldReceive('getUnixName')->with(true)->andReturns('testproj');
-        $evt->shouldReceive('getProject')->with('142')->andReturns($project);
+        $project = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->withUnixName('TestProj')->withId(142)->build();
+        $evt->method('getProject')->with('142')->willReturn($project);
 
         // SVN
-        $backendSVN = \Mockery::spy(\BackendSVN::class);
-        $backendSVN->shouldReceive('repositoryExists')->andReturns(true);
-        $backendSVN->shouldReceive('isNameAvailable')->andReturns(true);
-        $backendSVN->shouldReceive('renameSVNRepository')->with($project, 'FooBar')->once()->andReturns(true);
-        $backendSVN->shouldReceive('setSVNApacheConfNeedUpdate')->once();
-        $evt->shouldReceive('getBackend')->with('SVN')->andReturns($backendSVN);
+        $backendSVN = $this->createMock(\BackendSVN::class);
+        $backendSVN->method('repositoryExists')->willReturn(true);
+        $backendSVN->method('isNameAvailable')->willReturn(true);
+        $backendSVN->expects(self::once())->method('renameSVNRepository')->with($project, 'FooBar')->willReturn(true);
+        $backendSVN->expects(self::once())->method('setSVNApacheConfNeedUpdate');
 
         // System
-        $backendSystem = \Mockery::spy(\BackendSystem::class);
-        $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
-        $backendSystem->shouldReceive('renameFileReleasedDirectory')->with($project, 'FooBar')->once()->andReturns(true);
-        $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
-        $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
+        $backendSystem = $this->createMock(\BackendSystem::class);
+        $backendSystem->expects(self::once())->method('renameFileReleasedDirectory')->with($project, 'FooBar')->willReturn(true);
+
+        $evt->method('getBackend')->willReturnMap([
+            ['SVN', $backendSVN],
+            ['System', $backendSystem],
+        ]);
 
         //DB
-        $evt->shouldReceive('updateDB')->andReturns(true);
+        $evt->method('updateDB')->willReturn(true);
 
         // Event
-        $em = \Mockery::mock(EventManager::class);
-        $em->shouldReceive('processEvent')->with('SystemEvent_PROJECT_RENAME', ['project' => $project, 'new_name' => 'FooBar']);
-        $evt->shouldReceive('getEventManager')->andReturns($em);
-        $evt->shouldReceive('addProjectHistory')->with('rename_done', 'TestProj :: FooBar', $project->getId())->once();
+        $em = $this->createMock(EventManager::class);
+        $em->method('processEvent')->with('SystemEvent_PROJECT_RENAME', ['project' => $project, 'new_name' => 'FooBar']);
+        $evt->method('getEventManager')->willReturn($em);
+        $evt->expects(self::once())->method('addProjectHistory')->with('rename_done', 'TestProj :: FooBar', $project->getId());
         // Expect everything went OK
-        $evt->shouldReceive('done')->once();
+        $evt->expects(self::once())->method('done');
 
         // Launch the event
-        $this->assertTrue($evt->process());
+        self::assertTrue($evt->process());
     }
 
     public function testRenameSvnRepositoryFailure(): void
     {
         $now = (new DateTimeImmutable())->getTimestamp();
 
-        $evt = \Mockery::mock(
-            \SystemEvent_PROJECT_RENAME::class,
-            [
-                '1',
-                SystemEvent::TYPE_PROJECT_RENAME,
-                SystemEvent::OWNER_ROOT,
-                '142' . SystemEvent::PARAMETER_SEPARATOR . 'FooBar',
-                SystemEvent::PRIORITY_HIGH,
-                SystemEvent::STATUS_RUNNING,
-                $now,
-                $now,
-                $now,
-                '',
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $evt = $this->getMockBuilder(\SystemEvent_PROJECT_RENAME::class)
+            ->setConstructorArgs(
+                [
+                    '1',
+                    SystemEvent::TYPE_PROJECT_RENAME,
+                    SystemEvent::OWNER_ROOT,
+                    '142' . SystemEvent::PARAMETER_SEPARATOR . 'FooBar',
+                    SystemEvent::PRIORITY_HIGH,
+                    SystemEvent::STATUS_RUNNING,
+                    $now,
+                    $now,
+                    $now,
+                    '',
+                ]
+            )
+            ->onlyMethods([
+                'getProject',
+                'getBackend',
+                'updateDB',
+                'getEventManager',
+                'addProjectHistory',
+                'done',
+            ])
+            ->getMock();
 
         // The project
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('getUnixName')->with(false)->andReturns('TestProj');
-        $project->shouldReceive('getUnixName')->with(true)->andReturns('testproj');
-        $evt->shouldReceive('getProject')->with('142')->andReturns($project);
+        $project = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->withUnixName('TestProj')->withId(142)->build();
+        $evt->method('getProject')->with('142')->willReturn($project);
 
         // SVN
-        $backendSVN = \Mockery::spy(\BackendSVN::class);
-        $backendSVN->shouldReceive('repositoryExists')->andReturns(true);
-        $backendSVN->shouldReceive('isNameAvailable')->andReturns(true);
-        $backendSVN->shouldReceive('renameSVNRepository')->with($project, 'FooBar')->once();
-        $backendSVN->shouldReceive('renameSVNRepository')->with(false)->andReturns([$project, 'FooBar']);
-        $backendSVN->shouldReceive('setSVNApacheConfNeedUpdate')->never();
-        $evt->shouldReceive('getBackend')->with('SVN')->andReturns($backendSVN);
+        $backendSVN = $this->createMock(\BackendSVN::class);
+        $backendSVN->method('repositoryExists')->willReturn(true);
+        $backendSVN->method('isNameAvailable')->willReturn(true);
+        $backendSVN->expects(self::once())->method('renameSVNRepository')->with($project, 'FooBar')->willReturn(false);
+        $backendSVN->expects(self::never())->method('setSVNApacheConfNeedUpdate');
 
-        $backendSystem = \Mockery::spy(\BackendSystem::class);
-        $backendSystem->shouldReceive('renameFileReleasedDirectory')->with($project, 'FooBar')->once()->andReturns(true);
+        $backendSystem = $this->createMock(\BackendSystem::class);
+        $backendSystem->expects(self::once())->method('renameFileReleasedDirectory')->with($project, 'FooBar')->willReturn(true);
 
-        $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
+        $evt->method('getBackend')->willReturnMap([
+            ['SVN', $backendSVN],
+            ['System', $backendSystem],
+        ]);
 
         // DB
-        $evt->shouldReceive('updateDB')->andReturns(true);
+        $evt->method('updateDB')->willReturn(true);
 
         // Event
-        $em = \Mockery::mock(EventManager::class);
-        $em->shouldReceive('processEvent')->with('SystemEvent_PROJECT_RENAME', ['project' => $project, 'new_name' => 'FooBar']);
-        $evt->shouldReceive('getEventManager')->andReturns($em);
+        $em = $this->createMock(EventManager::class);
+        $em->method('processEvent')->with('SystemEvent_PROJECT_RENAME', ['project' => $project, 'new_name' => 'FooBar']);
+        $evt->method('getEventManager')->willReturn($em);
 
-        $evt->shouldReceive('addProjectHistory')->with('rename_with_error', 'TestProj :: FooBar (event n°1)', $project->getId())->once();
+        $evt->expects(self::once())->method('addProjectHistory')->with('rename_with_error', 'TestProj :: FooBar (event n°1)', $project->getId());
 
         // There is an error, the rename in not "done"
-        $evt->shouldReceive('done')->never();
+        $evt->expects(self::never())->method('done');
 
-        $this->assertFalse($evt->process());
+        self::assertFalse($evt->process());
     }
 
     public function testRenameSvnRepositoryNotAvailable(): void
     {
         $now = (new DateTimeImmutable())->getTimestamp();
 
-        $evt = \Mockery::mock(
-            \SystemEvent_PROJECT_RENAME::class,
-            [
-                '1',
-                SystemEvent::TYPE_PROJECT_RENAME,
-                SystemEvent::OWNER_ROOT,
-                '142' . SystemEvent::PARAMETER_SEPARATOR . 'FooBar',
-                SystemEvent::PRIORITY_HIGH,
-                SystemEvent::STATUS_RUNNING,
-                $now,
-                $now,
-                $now,
-                '',
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $evt = $this->getMockBuilder(\SystemEvent_PROJECT_RENAME::class)
+            ->setConstructorArgs(
+                [
+                    '1',
+                    SystemEvent::TYPE_PROJECT_RENAME,
+                    SystemEvent::OWNER_ROOT,
+                    '142' . SystemEvent::PARAMETER_SEPARATOR . 'FooBar',
+                    SystemEvent::PRIORITY_HIGH,
+                    SystemEvent::STATUS_RUNNING,
+                    $now,
+                    $now,
+                    $now,
+                    '',
+                ]
+            )
+            ->onlyMethods([
+                'getProject',
+                'getBackend',
+                'updateDB',
+                'getEventManager',
+                'addProjectHistory',
+                'done',
+            ])
+            ->getMock();
 
         // The project
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('getUnixName')->with(false)->andReturns('TestProj');
-        $project->shouldReceive('getUnixName')->with(true)->andReturns('testproj');
-        $evt->shouldReceive('getProject')->with('142')->andReturns($project);
+        $project = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->withUnixName('TestProj')->withId(142)->build();
+        $evt->method('getProject')->with('142')->willReturn($project);
 
         // SVN
-        $backendSVN = \Mockery::spy(\BackendSVN::class);
-        $backendSVN->shouldReceive('repositoryExists')->andReturns(true);
-        $backendSVN->shouldReceive('isNameAvailable')->andReturns(false);
-        $backendSVN->shouldReceive('renameSVNRepository')->never();
-        $backendSVN->shouldReceive('setSVNApacheConfNeedUpdate')->never();
-        $evt->shouldReceive('getBackend')->with('SVN')->andReturns($backendSVN);
+        $backendSVN = $this->createMock(\BackendSVN::class);
+        $backendSVN->method('repositoryExists')->willReturn(true);
+        $backendSVN->method('isNameAvailable')->willReturn(false);
+        $backendSVN->expects(self::never())->method('renameSVNRepository');
+        $backendSVN->expects(self::never())->method('setSVNApacheConfNeedUpdate');
 
         // Project Home
-        $backendSystem = \Mockery::spy(\BackendSystem::class);
-        $backendSystem->shouldReceive('renameFileReleasedDirectory')->with($project, 'FooBar')->once()->andReturns(true);
+        $backendSystem = $this->createMock(\BackendSystem::class);
+        $backendSystem->expects(self::once())->method('renameFileReleasedDirectory')->with($project, 'FooBar')->willReturn(true);
 
-        $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
+        $evt->method('getBackend')->willReturnMap([
+            ['SVN', $backendSVN],
+            ['System', $backendSystem],
+        ]);
 
         // DB
-        $evt->shouldReceive('updateDB')->andReturns(true);
+        $evt->method('updateDB')->willReturn(true);
 
         // Event
-        $em = \Mockery::mock(EventManager::class);
-        $em->shouldReceive('processEvent')->with('SystemEvent_PROJECT_RENAME', ['project' => $project, 'new_name' => 'FooBar']);
-        $evt->shouldReceive('getEventManager')->andReturns($em);
+        $em = $this->createMock(EventManager::class);
+        $em->method('processEvent')->with('SystemEvent_PROJECT_RENAME', ['project' => $project, 'new_name' => 'FooBar']);
+        $evt->method('getEventManager')->willReturn($em);
 
-        $evt->shouldReceive('addProjectHistory')->with('rename_with_error', 'TestProj :: FooBar (event n°1)', $project->getId())->once();
+        $evt->expects(self::once())->method('addProjectHistory')->with('rename_with_error', 'TestProj :: FooBar (event n°1)', $project->getId());
 
         // There is an error, the rename in not "done"
-        $evt->shouldReceive('done')->never();
+        $evt->expects(self::never())->method('done');
 
-        $this->assertFalse($evt->process());
+        self::assertFalse($evt->process());
     }
 
     public function testRenameFRSRepositoryFailure(): void
     {
         $now = (new DateTimeImmutable())->getTimestamp();
 
-        $evt = \Mockery::mock(
-            \SystemEvent_PROJECT_RENAME::class,
-            [
-                '1',
-                SystemEvent::TYPE_PROJECT_RENAME,
-                SystemEvent::OWNER_ROOT,
-                '142' . SystemEvent::PARAMETER_SEPARATOR . 'FooBar',
-                SystemEvent::PRIORITY_HIGH,
-                SystemEvent::STATUS_RUNNING,
-                $now,
-                $now,
-                $now,
-                '',
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $evt = $this->getMockBuilder(\SystemEvent_PROJECT_RENAME::class)
+            ->setConstructorArgs(
+                [
+                    '1',
+                    SystemEvent::TYPE_PROJECT_RENAME,
+                    SystemEvent::OWNER_ROOT,
+                    '142' . SystemEvent::PARAMETER_SEPARATOR . 'FooBar',
+                    SystemEvent::PRIORITY_HIGH,
+                    SystemEvent::STATUS_RUNNING,
+                    $now,
+                    $now,
+                    $now,
+                    '',
+                ]
+            )
+            ->onlyMethods([
+                'getProject',
+                'getBackend',
+                'updateDB',
+                'getEventManager',
+                'addProjectHistory',
+                'done',
+            ])
+            ->getMock();
 
         // The project
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('getUnixName')->with(false)->andReturns('TestProj');
-        $project->shouldReceive('getUnixName')->with(true)->andReturns('testproj');
-        $evt->shouldReceive('getProject')->with('142')->andReturns($project);
+        $project = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->withUnixName('TestProj')->withId(142)->build();
+        $evt->method('getProject')->with('142')->willReturn($project);
 
         // SVN
-        $backendSVN = \Mockery::spy(\BackendSVN::class);
-        $backendSVN->shouldReceive('repositoryExists')->andReturns(false);
-        $evt->shouldReceive('getBackend')->with('SVN')->andReturns($backendSVN);
+        $backendSVN = $this->createMock(\BackendSVN::class);
+        $backendSVN->method('repositoryExists')->willReturn(false);
 
         // System
-        $backendSystem = \Mockery::spy(\BackendSystem::class);
-        $backendSystem->shouldReceive('renameFileReleasedDirectory')->with($project, 'FooBar')->once()->andReturns(false);
-        $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
+        $backendSystem = $this->createMock(\BackendSystem::class);
+        $backendSystem->expects(self::once())->method('renameFileReleasedDirectory')->with($project, 'FooBar')->willReturn(false);
 
-        $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
+        $evt->method('getBackend')->willReturnMap([
+            ['SVN', $backendSVN],
+            ['System', $backendSystem],
+        ]);
 
         // DB
-        $evt->shouldReceive('updateDB')->andReturns(true);
+        $evt->method('updateDB')->willReturn(true);
 
         // Event
-        $em = \Mockery::mock(EventManager::class);
-        $em->shouldReceive('processEvent')->with('SystemEvent_PROJECT_RENAME', ['project' => $project, 'new_name' => 'FooBar']);
-        $evt->shouldReceive('getEventManager')->andReturns($em);
+        $em = $this->createMock(EventManager::class);
+        $em->method('processEvent')->with('SystemEvent_PROJECT_RENAME', ['project' => $project, 'new_name' => 'FooBar']);
+        $evt->method('getEventManager')->willReturn($em);
 
-        $evt->shouldReceive('addProjectHistory')->with('rename_with_error', 'TestProj :: FooBar (event n°1)', $project->getId())->once();
+        $evt->expects(self::once())->method('addProjectHistory')->with('rename_with_error', 'TestProj :: FooBar (event n°1)', $project->getId());
 
         // There is an error, the rename in not "done"
-        $evt->shouldReceive('done')->never();
+        $evt->expects(self::never())->method('done');
 
-        $this->assertFalse($evt->process());
+        self::assertFalse($evt->process());
 
         // Check errors
-        $this->assertEquals(SystemEvent::STATUS_ERROR, $evt->getStatus());
-        $this->assertMatchesRegularExpression('/Could not rename FRS repository/i', $evt->getLog());
+        self::assertEquals(SystemEvent::STATUS_ERROR, $evt->getStatus());
+        self::assertMatchesRegularExpression('/Could not rename FRS repository/i', $evt->getLog());
     }
 
     public function testRenameDBUpdateFailure(): void
     {
         $now = (new DateTimeImmutable())->getTimestamp();
 
-        $evt = \Mockery::mock(
-            \SystemEvent_PROJECT_RENAME::class,
-            [
-                '1',
-                SystemEvent::TYPE_PROJECT_RENAME,
-                SystemEvent::OWNER_ROOT,
-                '142' . SystemEvent::PARAMETER_SEPARATOR . 'FooBar',
-                SystemEvent::PRIORITY_HIGH,
-                SystemEvent::STATUS_RUNNING,
-                $now,
-                $now,
-                $now,
-                '',
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $evt = $this->getMockBuilder(\SystemEvent_PROJECT_RENAME::class)
+            ->setConstructorArgs(
+                [
+                    '1',
+                    SystemEvent::TYPE_PROJECT_RENAME,
+                    SystemEvent::OWNER_ROOT,
+                    '142' . SystemEvent::PARAMETER_SEPARATOR . 'FooBar',
+                    SystemEvent::PRIORITY_HIGH,
+                    SystemEvent::STATUS_RUNNING,
+                    $now,
+                    $now,
+                    $now,
+                    '',
+                ]
+            )
+            ->onlyMethods([
+                'getProject',
+                'getBackend',
+                'updateDB',
+                'getEventManager',
+                'addProjectHistory',
+                'done',
+            ])
+            ->getMock();
 
         // The project
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('getUnixName')->with(false)->andReturns('TestProj');
-        $project->shouldReceive('getUnixName')->with(true)->andReturns('testproj');
-        $evt->shouldReceive('getProject')->with('142')->andReturns($project);
+        $project = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->withUnixName('TestProj')->withId(142)->build();
+        $evt->method('getProject')->with('142')->willReturn($project);
 
         // SVN
-        $backendSVN = \Mockery::spy(\BackendSVN::class);
-        $backendSVN->shouldReceive('repositoryExists')->andReturns(false);
-        $evt->shouldReceive('getBackend')->with('SVN')->andReturns($backendSVN);
+        $backendSVN = $this->createMock(\BackendSVN::class);
+        $backendSVN->method('repositoryExists')->willReturn(false);
 
         // System
-        $backendSystem = \Mockery::spy(\BackendSystem::class);
+        $backendSystem = $this->createMock(\BackendSystem::class);
 
         //FRS
-        $backendSystem->shouldReceive('renameFileReleasedDirectory')->andReturns(true);
+        $backendSystem->method('renameFileReleasedDirectory')->willReturn(true);
 
-        $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
+        $evt->method('getBackend')->willReturnMap([
+            ['SVN', $backendSVN],
+            ['System', $backendSystem],
+        ]);
 
         // DB
-        $evt->shouldReceive('updateDB')->andReturns(false);
+        $evt->method('updateDB')->willReturn(false);
 
         // Event
-        $em = \Mockery::mock(EventManager::class);
-        $em->shouldReceive('processEvent')->with('SystemEvent_PROJECT_RENAME', ['project' => $project, 'new_name' => 'FooBar']);
-        $evt->shouldReceive('getEventManager')->andReturns($em);
+        $em = $this->createMock(EventManager::class);
+        $em->method('processEvent')->with('SystemEvent_PROJECT_RENAME', ['project' => $project, 'new_name' => 'FooBar']);
+        $evt->method('getEventManager')->willReturn($em);
 
-        $evt->shouldReceive('addProjectHistory')->with('rename_with_error', 'TestProj :: FooBar (event n°1)', $project->getId())->once();
+        $evt->expects(self::once())->method('addProjectHistory')->with('rename_with_error', 'TestProj :: FooBar (event n°1)', $project->getId());
 
         // There is an error, the rename in not "done"
-        $evt->shouldReceive('done')->never();
+        $evt->expects(self::never())->method('done');
 
-        $this->assertFalse($evt->process());
+        self::assertFalse($evt->process());
     }
 
     public function testMultipleErrorLogs(): void
     {
         $now = (new DateTimeImmutable())->getTimestamp();
 
-        $evt = \Mockery::mock(
-            \SystemEvent_PROJECT_RENAME::class,
-            [
-                '1',
-                SystemEvent::TYPE_PROJECT_RENAME,
-                SystemEvent::OWNER_ROOT,
-                '142' . SystemEvent::PARAMETER_SEPARATOR . 'FooBar',
-                SystemEvent::PRIORITY_HIGH,
-                SystemEvent::STATUS_RUNNING,
-                $now,
-                $now,
-                $now,
-                '',
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $evt = $this->getMockBuilder(\SystemEvent_PROJECT_RENAME::class)
+            ->setConstructorArgs(
+                [
+                    '1',
+                    SystemEvent::TYPE_PROJECT_RENAME,
+                    SystemEvent::OWNER_ROOT,
+                    '142' . SystemEvent::PARAMETER_SEPARATOR . 'FooBar',
+                    SystemEvent::PRIORITY_HIGH,
+                    SystemEvent::STATUS_RUNNING,
+                    $now,
+                    $now,
+                    $now,
+                    '',
+                ]
+            )
+            ->onlyMethods([
+                'getProject',
+                'getBackend',
+                'updateDB',
+                'getEventManager',
+                'addProjectHistory',
+                'done',
+            ])
+            ->getMock();
 
         // The project
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('getUnixName')->with(false)->andReturns('TestProj');
-        $project->shouldReceive('getUnixName')->with(true)->andReturns('testproj');
-        $evt->shouldReceive('getProject')->with('142')->andReturns($project);
+        $project = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->withUnixName('TestProj')->withId(142)->build();
+        $evt->method('getProject')->with('142')->willReturn($project);
 
         // Error in SVN
-        $backendSVN = \Mockery::spy(\BackendSVN::class);
-        $backendSVN->shouldReceive('repositoryExists')->andReturns(true);
-        $backendSVN->shouldReceive('isNameAvailable')->andReturns(false);
-        $evt->shouldReceive('getBackend')->with('SVN')->andReturns($backendSVN);
+        $backendSVN = $this->createMock(\BackendSVN::class);
+        $backendSVN->method('repositoryExists')->willReturn(true);
+        $backendSVN->method('isNameAvailable')->willReturn(false);
 
         // System
-        $backendSystem = \Mockery::spy(\BackendSystem::class);
+        $backendSystem = $this->createMock(\BackendSystem::class);
 
         //FRS
-        $backendSystem->shouldReceive('renameFileReleasedDirectory')->andReturns(true);
+        $backendSystem->method('renameFileReleasedDirectory')->willReturn(true);
 
-        $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
+        $evt->method('getBackend')->willReturnMap([
+            ['SVN', $backendSVN],
+            ['System', $backendSystem],
+        ]);
 
         // DB
-        $evt->shouldReceive('updateDB')->andReturns(true);
+        $evt->method('updateDB')->willReturn(true);
 
         // Event
-        $evt->shouldReceive('getEventManager')->andReturns(\Mockery::spy(EventManager::class));
-        $evt->shouldReceive('addProjectHistory')->once();
+        $event_manager = $this->createMock(EventManager::class);
+        $event_manager->method('processEvent');
+        $evt->method('getEventManager')->willReturn($event_manager);
+        $evt->expects(self::once())->method('addProjectHistory');
 
         $evt->process();
 
-        $this->assertEquals(SystemEvent::STATUS_ERROR, $evt->getStatus());
-        $this->assertMatchesRegularExpression('/.*SVN repository.*not available/', $evt->getLog());
+        self::assertEquals(SystemEvent::STATUS_ERROR, $evt->getStatus());
+        self::assertMatchesRegularExpression('/.*SVN repository.*not available/', $evt->getLog());
     }
 }
