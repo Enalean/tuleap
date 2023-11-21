@@ -28,6 +28,7 @@ class NotificationCustomisationSettingsPresenter
     public $submit_changes;
     public $custom_email_enabled;
     public $custom_email_content;
+    public readonly bool $are_calendar_events_allowed;
 
     public function __construct(
         $assign_to_me_enabled,
@@ -45,5 +46,7 @@ class NotificationCustomisationSettingsPresenter
         $this->custom_sender_description        = dgettext('tuleap-tracker', 'Enable custom sender fields for email notifications');
         $this->custom_email_enabled             = $custom_email['enabled'];
         $this->custom_email_content             = $custom_email['format'];
+
+        $this->are_calendar_events_allowed = $is_semantic_timeframe_defined && $is_semantic_title_defined;
     }
 }

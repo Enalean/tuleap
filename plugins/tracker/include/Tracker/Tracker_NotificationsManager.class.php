@@ -27,6 +27,7 @@ use Tuleap\Tracker\Notifications\NotificationLevelExtractor;
 use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\NotificationsForceUsageUpdater;
 use Tuleap\Tracker\Notifications\PaneNotificationListPresenter;
+use Tuleap\Tracker\Notifications\Settings\Administration\CalendarConfigUpdater;
 use Tuleap\Tracker\Notifications\Settings\CalendarEventConfigDao;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsDAO;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender;
@@ -142,12 +143,37 @@ class Tracker_NotificationsManager
             $config_notification_assigned_to->disableAssignedToInSubject($this->tracker);
         }
 
-        if ($request->exist('enable-calendar-events')) {
-            $calendar_event_config = new CalendarEventConfigDao();
-            if (! $request->get('enable-calendar-events')) {
-                $calendar_event_config->deactivateCalendarEvent($this->tracker->getId());
-            }
-        }
+        $calendar_event_config_dao = new CalendarEventConfigDao();
+        $calendar_config_updater   = new CalendarConfigUpdater(
+            $calendar_event_config_dao,
+            $calendar_event_config_dao,
+            SemanticTimeframeBuilder::build(),
+        );
+        $calendar_config_updater
+            ->updateConfigAccordingToRequest($this->tracker, $request)
+            ->match(
+                static function (bool $is_updated) {
+                    $GLOBALS['Response']->addFeedback(
+                        Feedback::SUCCESS,
+                        dgettext(
+                            'tuleap-tracker',
+                            'Calendar events configuration updated'
+                        )
+                    );
+                },
+                static function (string $error) {
+                    $GLOBALS['Response']->addFeedback(
+                        Feedback::ERROR,
+                        sprintf(
+                            dgettext(
+                                'tuleap-tracker',
+                                'Unable to update calendar events configuration: %s',
+                            ),
+                            $error,
+                        )
+                    );
+                }
+            );
 
         $config_notification_custom_email_from = new ConfigNotificationEmailCustomSender(new ConfigNotificationEmailCustomSenderDao());
 
@@ -325,7 +351,7 @@ class Tracker_NotificationsManager
 
         $renderer = $this->getNotificationsRenderer();
         $renderer->renderToPage(
-            'admin-subject-customisation',
+            'admin-mail-configuration',
             new NotificationCustomisationSettingsPresenter(
                 $is_assigned_to_enabled,
                 $custom_email_sender,

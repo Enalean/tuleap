@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Notifications\Settings;
 
 use Tuleap\DB\DataAccessObject;
 
-final class CalendarEventConfigDao extends DataAccessObject implements CheckEventShouldBeSentInNotification
+final class CalendarEventConfigDao extends DataAccessObject implements CheckEventShouldBeSentInNotification, UpdateCalendarConfig
 {
     public function duplicate(int $source_tracker_id, int $target_tracker_id): void
     {
