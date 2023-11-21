@@ -19,7 +19,7 @@
 
 import { define, html, dispatch } from "hybrids";
 import type { ColorVariant } from "@tuleap/core-constants";
-import badge_style from "./selection-badge.scss";
+import badge_style from "./selection-badge.scss?inline";
 
 export const TAG = "tuleap-lazybox-selection-badge";
 
