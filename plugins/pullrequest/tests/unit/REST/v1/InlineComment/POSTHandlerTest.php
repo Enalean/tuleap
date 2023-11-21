@@ -22,8 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\REST\v1\InlineComment;
 
-use Luracast\Restler\RestException;
 use Tuleap\Git\Tests\Stub\RetrieveGitRepositoryStub;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
+use Tuleap\PullRequest\Authorization\GitRepositoryNotFoundFault;
 use Tuleap\PullRequest\InlineComment\InlineCommentCreator;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\REST\v1\Comment\ThreadColors;
@@ -71,9 +75,9 @@ final class POSTHandlerTest extends TestCase
     }
 
     /**
-     * @throws RestException
+     * @return Ok<InlineCommentRepresentation> | Err<Fault>
      */
-    private function handle(): InlineCommentRepresentation
+    private function handle(): Ok|Err
     {
         $user         = UserTestBuilder::buildWithId(self::AUTHOR_ID);
         $post_date    = new \DateTimeImmutable('@' . self::POST_TIMESTAMP);
@@ -110,8 +114,10 @@ final class POSTHandlerTest extends TestCase
         $thread_color                  = ThreadColors::TLP_COLORS[0];
         $this->parent_comment_searcher = ParentCommentSearcherStub::withParent(self::PARENT_ID, 0, $thread_color);
 
-        $representation = $this->handle();
+        $result = $this->handle();
 
+        self::assertTrue(Result::isOk($result));
+        $representation = $result->value;
         self::assertSame(self::INSERTED_ID, $representation->id);
         self::assertSame(self::FILE_PATH, $representation->file_path);
         self::assertSame(self::UNIDIFF_OFFSET, $representation->unidiff_offset);
@@ -129,26 +135,28 @@ final class POSTHandlerTest extends TestCase
         $this->format    = '';
         $this->parent_id = 0;
 
-        $representation = $this->handle();
+        $result = $this->handle();
 
-        self::assertSame(TimelineComment::FORMAT_MARKDOWN, $representation->format);
+        self::assertTrue(Result::isOk($result));
+        self::assertSame(TimelineComment::FORMAT_MARKDOWN, $result->value->format);
     }
 
     public function testWhenGivenNullParentIdItDefaultsToZero(): void
     {
         $this->parent_id = null;
 
-        $representation = $this->handle();
+        $result = $this->handle();
 
-        self::assertSame(0, $representation->parent_id);
+        self::assertTrue(Result::isOk($result));
+        self::assertSame(0, $result->value->parent_id);
     }
 
-    public function testItThrowsWhenSourceGitRepositoryIsNotFound(): void
+    public function testItReturnsErrWhenSourceGitRepositoryIsNotFound(): void
     {
         $this->repository_retriever = RetrieveGitRepositoryStub::withoutGitRepository();
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(404);
-        $this->handle();
+        $result = $this->handle();
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(GitRepositoryNotFoundFault::class, $result->error);
     }
 }
