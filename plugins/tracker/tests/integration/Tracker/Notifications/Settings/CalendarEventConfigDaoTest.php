@@ -52,4 +52,13 @@ final class CalendarEventConfigDaoTest extends TestCase
         self::assertTrue($this->dao->shouldSendEventInNotification(self::TASK_TRACKER_ID));
         self::assertFalse($this->dao->shouldSendEventInNotification(self::STORY_TRACKER_ID));
     }
+
+    public function testShouldActivateOrDeactivateAnExistingEntry(): void
+    {
+        $this->dao->activateCalendarEvent(self::TASK_TRACKER_ID);
+        $this->dao->deactivateCalendarEvent(self::TASK_TRACKER_ID);
+        $this->dao->activateCalendarEvent(self::TASK_TRACKER_ID);
+
+        self::assertTrue($this->dao->shouldSendEventInNotification(self::TASK_TRACKER_ID));
+    }
 }

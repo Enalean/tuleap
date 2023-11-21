@@ -7,19 +7,26 @@
 </p>
 
 <div class="checkbox disabled">
+    <input type="hidden"
+           name="enable-calendar-events"
+           value="0"
+    >
     <input type="checkbox"
            id="enable-calendar-events"
            name="enable-calendar-events"
-           disabled
+           {{^ should_send_event_in_notification }}disabled{{/ should_send_event_in_notification }}
+           value="1"
            {{# should_send_event_in_notification }}checked{{/ should_send_event_in_notification }}
     >
     <label for="enable-calendar-events">
         {{# dgettext }}tuleap-tracker | Include calendar event in the artifact email notification{{/ dgettext }}
     </label>
-    <p class="muted">
-        <i class="fa-solid fa-person-digging" aria-hidden="true"></i>
-        The feature is under development, you cannot change the setting yet.
-    </p>
+    {{^ should_send_event_in_notification }}
+        <p class="muted">
+            <i class="fa-solid fa-person-digging" aria-hidden="true"></i>
+            The feature is under development, you cannot change the setting yet.
+        </p>
+    {{/ should_send_event_in_notification }}
 </div>
 
 <h3>{{ notification_customisation_title }}</h3>

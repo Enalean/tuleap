@@ -27,6 +27,7 @@ use Tuleap\Tracker\Notifications\NotificationLevelExtractor;
 use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\NotificationsForceUsageUpdater;
 use Tuleap\Tracker\Notifications\PaneNotificationListPresenter;
+use Tuleap\Tracker\Notifications\Settings\CalendarEventConfigDao;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsDAO;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderDao;
@@ -138,6 +139,13 @@ class Tracker_NotificationsManager
             $config_notification_assigned_to->enableAssignedToInSubject($this->tracker);
         } else {
             $config_notification_assigned_to->disableAssignedToInSubject($this->tracker);
+        }
+
+        if ($request->exist('enable-calendar-events')) {
+            $calendar_event_config = new CalendarEventConfigDao();
+            if (! $request->get('enable-calendar-events')) {
+                $calendar_event_config->deactivateCalendarEvent($this->tracker->getId());
+            }
         }
 
         $config_notification_custom_email_from = new ConfigNotificationEmailCustomSender(new ConfigNotificationEmailCustomSenderDao());
@@ -306,7 +314,7 @@ class Tracker_NotificationsManager
 
         $custom_email_sender = $config_notification_custom_sender->getCustomSender($this->tracker);
 
-        $should_send_event_in_notification = (new \Tuleap\Tracker\Notifications\Settings\CalendarEventConfigDao())->shouldSendEventInNotification($this->tracker->getId());
+        $should_send_event_in_notification = (new CalendarEventConfigDao())->shouldSendEventInNotification($this->tracker->getId());
 
         $renderer = $this->getNotificationsRenderer();
         $renderer->renderToPage(

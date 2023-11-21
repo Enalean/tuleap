@@ -57,6 +57,7 @@ final class CalendarEventConfigDao extends DataAccessObject implements CheckEven
                 <<<EOSQL
                 INSERT INTO plugin_tracker_calendar_event_config(tracker_id, should_send_event_in_notification)
                 SELECT ?, 1
+                ON DUPLICATE KEY UPDATE should_send_event_in_notification = 1
                 EOSQL,
                 $tracker_id
             );
@@ -69,6 +70,7 @@ final class CalendarEventConfigDao extends DataAccessObject implements CheckEven
                 <<<EOSQL
                 INSERT INTO plugin_tracker_calendar_event_config(tracker_id, should_send_event_in_notification)
                 SELECT ?, 0
+                ON DUPLICATE KEY UPDATE should_send_event_in_notification = 0
                 EOSQL,
                 $tracker_id
             );
