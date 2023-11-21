@@ -23,17 +23,18 @@ declare(strict_types=1);
 namespace unit\Tracker\Semantic\Timeframe;
 
 use Psr\Log\NullLogger;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeNotConfigured;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class TimeframeNotConfiguredTest extends TestCase
+final class TimeframeNotConfiguredTest extends TestCase
 {
-    /**
-     * @var TimeframeNotConfigured
-     */
-    private $timeframe;
+    private TimeframeNotConfigured $timeframe;
 
     protected function setUp(): void
     {
@@ -60,7 +61,7 @@ class TimeframeNotConfiguredTest extends TestCase
 
     public function testItDoesNotExportToREST(): void
     {
-        $user = $this->getMockBuilder(\PFUser::class)->disableOriginalConstructor()->getMock();
+        $user = UserTestBuilder::anActiveUser()->build();
         self::assertNull(
             $this->timeframe->exportToREST($user)
         );
@@ -68,9 +69,7 @@ class TimeframeNotConfiguredTest extends TestCase
 
     public function testItFieldsAreAlwaysUnused(): void
     {
-        $a_field = $this->getMockBuilder(\Tracker_FormElement_Field_Date::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $a_field = TrackerFormElementDateFieldBuilder::aDateField(1)->build();
 
         self::assertFalse($this->timeframe->isFieldUsed($a_field));
     }
@@ -83,7 +82,7 @@ class TimeframeNotConfiguredTest extends TestCase
     public function testItDoesNotSave(): void
     {
         $dao     = $this->getMockBuilder(SemanticTimeframeDao::class)->disableOriginalConstructor()->getMock();
-        $tracker = $this->getMockBuilder(\Tracker::class)->disableOriginalConstructor()->getMock();
+        $tracker = TrackerTestBuilder::aTracker()->build();
 
         $dao->expects(self::never())->method('save');
 
@@ -95,16 +94,15 @@ class TimeframeNotConfiguredTest extends TestCase
     public function testItReturnsAnEmptyDatePeriodWithAnErrorMessageForArtifact(): void
     {
         $artifact  = $this->createMock(Artifact::class);
-        $tracker   = $this->createMock(\Tracker::class);
+        $tracker   = TrackerTestBuilder::aTracker()->withName('User story')->build();
         $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
 
         $artifact->expects(self::once())->method('getLastChangeset')->willReturn($changeset);
         $changeset->expects(self::once())->method('getTracker')->willReturn($tracker);
-        $tracker->expects(self::once())->method('getName')->will(self::returnValue('User story'));
 
         $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForChangesetForREST(
             $artifact->getLastChangeset(),
-            $this->createMock(\PFUser::class),
+            UserTestBuilder::anActiveUser()->build(),
             new NullLogger()
         );
 
@@ -119,17 +117,18 @@ class TimeframeNotConfiguredTest extends TestCase
 
     public function testItReturnsAnEmptyDatePeriodWithAnErrorMessageForArtifactREST(): void
     {
-        $artifact  = $this->createMock(Artifact::class);
-        $tracker   = $this->createMock(\Tracker::class);
         $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
-
-        $artifact->expects(self::once())->method('getLastChangeset')->willReturn($changeset);
+        $artifact  = ArtifactTestBuilder::anArtifact(1)
+            ->withTitle('release_1_0')
+            ->withChangesets($changeset)
+            ->userCanView(true)
+            ->build();
+        $tracker   = TrackerTestBuilder::aTracker()->withName('User story')->build();
         $changeset->expects(self::once())->method('getTracker')->willReturn($tracker);
-        $tracker->expects(self::once())->method('getName')->will(self::returnValue('User story'));
 
         $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForChangesetForREST(
             $artifact->getLastChangeset(),
-            $this->createMock(\PFUser::class),
+            UserTestBuilder::anActiveUser()->build(),
             new NullLogger()
         );
 
@@ -144,19 +143,21 @@ class TimeframeNotConfiguredTest extends TestCase
 
     public function testItThrowsAnExceptionWhenInChartContext(): void
     {
-        $artifact  = $this->createMock(Artifact::class);
-        $tracker   = $this->createMock(\Tracker::class);
         $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
+        $artifact  = ArtifactTestBuilder::anArtifact(1)
+            ->withTitle('release_1_0')
+            ->withChangesets($changeset)
+            ->userCanView(true)
+            ->build();
+        $tracker   = TrackerTestBuilder::aTracker()->withName('User story')->build();
 
-        $artifact->expects(self::once())->method('getLastChangeset')->willReturn($changeset);
         $changeset->expects(self::once())->method('getTracker')->willReturn($tracker);
-        $tracker->expects(self::once())->method('getName')->will(self::returnValue('User story'));
 
         self::expectException(\Tracker_FormElement_Chart_Field_Exception::class);
 
         $this->timeframe->buildDatePeriodWithoutWeekendForChangesetChartRendering(
             $artifact->getLastChangeset(),
-            $this->createMock(\PFUser::class),
+            UserTestBuilder::anActiveUser()->build(),
             new NullLogger()
         );
     }

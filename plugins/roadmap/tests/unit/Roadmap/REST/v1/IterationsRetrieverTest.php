@@ -922,7 +922,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 )
             );
 
-        $iteration = $this->anArtifactWithoutChangeset(201, 'Title', $this->tracker, true);
+        $iteration = $this->anArtifactWithoutChangesetValue(201, 'Title', $this->tracker, true);
 
         $this->artifact_factory
             ->expects(self::once())
@@ -1370,7 +1370,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
     }
 
-    private function anArtifactWithoutChangeset(int $id, string $title, Tracker $tracker, bool $readable): Artifact
+    private function anArtifactWithoutChangesetValue(int $id, string $title, Tracker $tracker, bool $readable): Artifact
     {
         $changeset       = $this->createMock(\Tracker_Artifact_Changeset::class);
         $changeset_value = $this->createMock(\Tracker_Artifact_ChangesetValue_Date::class);

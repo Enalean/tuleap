@@ -41,10 +41,13 @@ use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\Date\DatePeriodWithoutWeekEnd;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 
 final class MilestoneFactoryGetMilestoneTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -58,10 +61,7 @@ final class MilestoneFactoryGetMilestoneTest extends \Tuleap\Test\PHPUnit\TestCa
      * @var \AgileDashboard_Milestone_MilestoneDao|Mockery\LegacyMockInterface|Mockery\MockInterface
      */
     private $dao;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
+    private PFUser $user;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningFactory
      */
@@ -74,14 +74,11 @@ final class MilestoneFactoryGetMilestoneTest extends \Tuleap\Test\PHPUnit\TestCa
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|IComputeTimeframes
      */
     private $timeframe_calculator;
-    /**
-     * @var NullLogger
-     */
-    private $logger;
+    private NullLogger $logger;
 
     protected function setUp(): void
     {
-        $this->user                   = Mockery::spy(PFUser::class);
+        $this->user                   = UserTestBuilder::anActiveUser()->build();
         $this->planning_factory       = Mockery::spy(PlanningFactory::class);
         $this->artifact_factory       = Mockery::spy(Tracker_ArtifactFactory::class);
         $formelement_factory          = Mockery::spy(Tracker_FormElementFactory::class);
@@ -117,12 +114,6 @@ final class MilestoneFactoryGetMilestoneTest extends \Tuleap\Test\PHPUnit\TestCa
         $sprint_planning   = Mockery::mock(Planning::class);
         $hackfest_planning = Mockery::mock(Planning::class);
 
-        $release_1_0 = Mockery::mock(Artifact::class);
-        $release_1_0->shouldReceive('getId')->andReturn(1);
-        $sprint_1      = $this->getArtifactAllUserConViewForTracker($sprints_tracker, 101);
-        $sprint_2      = $this->getArtifactAllUserConViewForTracker($sprints_tracker, 102);
-        $hackfest_2012 = $this->getArtifactAllUserConViewForTracker($hackfests_tracker, 103);
-
         $row_sprint_1      = [
             'id'                       => 1,
             'tracker_id'               => 1,
@@ -145,23 +136,52 @@ final class MilestoneFactoryGetMilestoneTest extends \Tuleap\Test\PHPUnit\TestCa
             'use_artifact_permissions' => true,
         ];
 
+        $this->dao->shouldReceive('searchSubMilestones')->andReturn(
+            TestHelper::arrayToDar($row_sprint_1, $row_sprint_2, $row_hackfest_2012)
+        );
+
+        $release_1_0   = ArtifactTestBuilder::anArtifact(1)
+            ->withTitle('release_1_0')
+            ->withChangesets(ChangesetTestBuilder::aChangeset('1')->build())
+            ->userCanView(true)
+            ->withParent(null)
+            ->isOpen(true)
+            ->withAncestors([])
+            ->build();
+        $sprint_1      = ArtifactTestBuilder::anArtifact(101)
+            ->withTitle('sprint_1')
+            ->withChangesets(ChangesetTestBuilder::aChangeset('2')->build())
+            ->inTracker($sprints_tracker)
+            ->userCanView(true)
+            ->withParent(null)
+            ->isOpen(true)
+            ->withAncestors([])
+            ->build();
+        $sprint_2      = ArtifactTestBuilder::anArtifact(102)
+            ->withTitle('sprint_2')
+            ->withChangesets(ChangesetTestBuilder::aChangeset('3')->build())
+            ->inTracker($sprints_tracker)
+            ->userCanView(true)
+            ->withParent(null)
+            ->isOpen(true)
+            ->withAncestors([])
+            ->build();
+        $hackfest_2012 = ArtifactTestBuilder::anArtifact(102)
+            ->withTitle('hackfest_2012')
+            ->withChangesets(ChangesetTestBuilder::aChangeset('4')->build())
+            ->inTracker($hackfests_tracker)
+            ->userCanView(true)
+            ->withParent(null)
+            ->isOpen(true)
+            ->withAncestors([])
+            ->build();
+
         $this->artifact_factory->shouldReceive('getInstanceFromRow')->with($row_sprint_1)->andReturn($sprint_1);
         $this->artifact_factory->shouldReceive('getInstanceFromRow')->with($row_sprint_2)->andReturn($sprint_2);
         $this->artifact_factory->shouldReceive('getInstanceFromRow')->with($row_hackfest_2012)->andReturn(
             $hackfest_2012
         );
 
-        $this->dao->shouldReceive('searchSubMilestones')->andReturn(
-            TestHelper::arrayToDar($row_sprint_1, $row_sprint_2, $row_hackfest_2012)
-        );
-
-        $release_1_0->shouldReceive('getAllAncestors')->andReturn([]);
-        $sprint_1->shouldReceive('getAllAncestors')->andReturn([]);
-        $sprint_1->shouldReceive('getLastChangeset')->andReturn(Mockery::mock(\Tracker_Artifact_Changeset::class));
-        $sprint_2->shouldReceive('getAllAncestors')->andReturn([]);
-        $sprint_2->shouldReceive('getLastChangeset')->andReturn(Mockery::mock(\Tracker_Artifact_Changeset::class));
-        $hackfest_2012->shouldReceive('getAllAncestors')->andReturn([]);
-        $hackfest_2012->shouldReceive('getLastChangeset')->andReturn(Mockery::mock(\Tracker_Artifact_Changeset::class));
 
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($sprints_tracker)->andReturn(
             $sprint_planning
@@ -207,9 +227,15 @@ final class MilestoneFactoryGetMilestoneTest extends \Tuleap\Test\PHPUnit\TestCa
         $tracker->shouldReceive('getProject')->andReturn($project);
         $tracker->shouldReceive('getId')->andReturn(1);
 
-        $artifact = $this->getArtifactAllUserConViewForTracker($tracker, 100);
-        $artifact->shouldReceive('getAllAncestors')->andReturn([]);
-        $artifact->shouldReceive('getLastChangeset')->andReturn(Mockery::mock(\Tracker_Artifact_Changeset::class));
+        $artifact = ArtifactTestBuilder::anArtifact(100)
+            ->withTitle('release_1_0')
+            ->withChangesets(ChangesetTestBuilder::aChangeset('1')->build())
+            ->inTracker($tracker)
+            ->userCanView(true)
+            ->withParent(null)
+            ->isOpen(true)
+            ->withAncestors([])
+            ->build();
 
         $this->artifact_factory->shouldReceive('getArtifactById')
             ->with($artifact->getId())
@@ -310,18 +336,5 @@ final class MilestoneFactoryGetMilestoneTest extends \Tuleap\Test\PHPUnit\TestCa
         $child_node_data = $child_node->getObject();
         $this->assertEquals(9999, $child_node->getId());
         $this->assertEquals($depth1_artifact, $child_node_data);
-    }
-
-    /**
-     * @return Mockery\MockInterface|Artifact
-     */
-    private function getArtifactAllUserConViewForTracker(Tracker $tracker, int $id)
-    {
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('userCanView')->andReturnTrue();
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
-        $artifact->shouldReceive('getId')->andReturn($id);
-
-        return $artifact;
     }
 }
