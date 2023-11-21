@@ -20,13 +20,10 @@
 
 declare(strict_types=1);
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
 class URLVerificationRestrictedUserTest extends TestCase //phpcs:ignore
 {
-    use MockeryPHPUnitIntegration;
-
     public function tearDown(): void
     {
         unset($_SERVER['REQUEST_URI']);
@@ -39,9 +36,13 @@ class URLVerificationRestrictedUserTest extends TestCase //phpcs:ignore
     public function itAllowsRestrictedUserToAccessProjectDashboard(): void
     {
         $_SERVER['REQUEST_URI'] = '/projects/demo-pr';
-        $user                   = \Mockery::mock(PFUser::class, ['isSuperUser' => false, 'isMember' => false, 'isRestricted' => true, 'isAnonymous' => false]);
-        $project                = \Mockery::mock(Project::class, ['isError' => false, 'isActive' => true, 'getID' => 101, 'allowsRestricted' => true]);
+        $user                   = \Tuleap\Test\Builders\UserTestBuilder::aRestrictedUser()->build();
+        $project                = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()
+            ->withId(101)
+            ->withAccessPublicIncludingRestricted()
+            ->withStatusActive()
+            ->build();
         $url_verification       = new URLVerification();
-        $this->assertTrue($url_verification->userCanAccessProject($user, $project));
+        self::assertTrue($url_verification->userCanAccessProject($user, $project));
     }
 }

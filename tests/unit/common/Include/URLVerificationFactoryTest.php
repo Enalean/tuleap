@@ -19,21 +19,18 @@
  *
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 final class URLVerificationFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testGetUrlVerifictionNoPluginResponse(): void
+    public function testGetUrlVerificationNoPluginResponse(): void
     {
-        $event_manager = \Mockery::mock(EventManager::class);
-        $event_manager->shouldReceive('processEvent')->with('url_verification_instance', \Mockery::any())->once();
+        $event_manager = $this->createMock(EventManager::class);
+        $event_manager->expects(self::once())->method('processEvent')->with('url_verification_instance', self::anything());
 
         $urlVerif = new URLVerificationFactory($event_manager);
 
-        $this->assertInstanceOf(URLVerification::class, $urlVerif->getURLVerification([]));
+        self::assertInstanceOf(URLVerification::class, $urlVerif->getURLVerification([]));
     }
 
     public function testGetUrlVerificationWithPluginResponse(): void
@@ -41,14 +38,15 @@ final class URLVerificationFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $url_verification_instance =  new class extends URLVerification {
         };
 
-        $event_manager = \Mockery::mock(EventManager::class);
-        $event_manager->shouldReceive('processEvent')->with('url_verification_instance', \Mockery::on(function (array &$args) use ($url_verification_instance) {
-            $args['url_verification'] = $url_verification_instance;
-            return true;
-        }))->once();
+        $event_manager = $this->createMock(EventManager::class);
+        $event_manager->expects(self::once())->method('processEvent')
+            ->with('url_verification_instance', self::callback(function (array &$args) use ($url_verification_instance) {
+                $args['url_verification'] = $url_verification_instance;
+                return true;
+            }));
 
         $urlVerif = new URLVerificationFactory($event_manager);
 
-        $this->assertSame($url_verification_instance, $urlVerif->getURLVerification([]));
+        self::assertSame($url_verification_instance, $urlVerif->getURLVerification([]));
     }
 }

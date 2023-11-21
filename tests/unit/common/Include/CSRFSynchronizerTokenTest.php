@@ -20,7 +20,6 @@
 
 class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\ForgeConfigSandbox;
     use \Tuleap\GlobalResponseMock;
     use \Tuleap\GlobalLanguageMock;
@@ -41,7 +40,7 @@ class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // phpcs:ign
         unset($GLOBALS['_SESSION']);
     }
 
-    public function testItVerifiesIfATokenIsValid()
+    public function testItVerifiesIfATokenIsValid(): void
     {
         $csrf_token = new CSRFSynchronizerToken(
             '/path/to/uri',
@@ -50,10 +49,10 @@ class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // phpcs:ign
         );
         $token      = $csrf_token->getToken();
 
-        $this->assertTrue($csrf_token->isValid($token));
+        self::assertTrue($csrf_token->isValid($token));
     }
 
-    public function testItVerifiesIfATokenIsValidForASpecificUrl()
+    public function testItVerifiesIfATokenIsValidForASpecificUrl(): void
     {
         $csrf_token_creator = new CSRFSynchronizerToken(
             '/path/to/uri',
@@ -67,10 +66,10 @@ class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // phpcs:ign
             CSRFSynchronizerToken::DEFAULT_TOKEN_NAME,
             $this->storage
         );
-        $this->assertTrue($csrf_token_verifier->isValid($token));
+        self::assertTrue($csrf_token_verifier->isValid($token));
     }
 
-    public function testItValidatesTheSameTokenMultipleTimes()
+    public function testItValidatesTheSameTokenMultipleTimes(): void
     {
         $csrf_token_1 = new CSRFSynchronizerToken(
             '/path/to/uri',
@@ -79,27 +78,27 @@ class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // phpcs:ign
         );
         $token        = $csrf_token_1->getToken();
 
-        $this->assertTrue($csrf_token_1->isValid($token));
+        self::assertTrue($csrf_token_1->isValid($token));
 
         $csrf_token_2 = new CSRFSynchronizerToken(
             '/path/to/uri',
             CSRFSynchronizerToken::DEFAULT_TOKEN_NAME,
             $this->storage
         );
-        $this->assertTrue($csrf_token_2->isValid($token));
+        self::assertTrue($csrf_token_2->isValid($token));
     }
 
-    public function testItDoesNotValidateInvalidToken()
+    public function testItDoesNotValidateInvalidToken(): void
     {
         $csrf_token = new CSRFSynchronizerToken(
             '/path/to/uri',
             CSRFSynchronizerToken::DEFAULT_TOKEN_NAME,
             $this->storage
         );
-        $this->assertFalse($csrf_token->isValid('invalid_token'));
+        self::assertFalse($csrf_token->isValid('invalid_token'));
     }
 
-    public function testItDoesNothingWhenAValidTokenIsChecked()
+    public function testItDoesNothingWhenAValidTokenIsChecked(): void
     {
         $GLOBALS['Response']->expects(self::never())->method('redirect');
 
@@ -109,13 +108,13 @@ class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // phpcs:ign
             $this->storage
         );
 
-        $request = \Mockery::spy(\Codendi_Request::class);
-        $request->shouldReceive('get')->with(CSRFSynchronizerToken::DEFAULT_TOKEN_NAME)->andReturns($csrf_token->getToken());
+        $request = $this->createMock(\Codendi_Request::class);
+        $request->method('get')->with(CSRFSynchronizerToken::DEFAULT_TOKEN_NAME)->willReturn($csrf_token->getToken());
 
         $csrf_token->check('/path/to/url', $request);
     }
 
-    public function testItRedirectsWhenAnInvalidTokenIsChecked()
+    public function testItRedirectsWhenAnInvalidTokenIsChecked(): void
     {
         $uri = '/path/to/uri';
         $GLOBALS['Response']->expects(self::once())->method('redirect')->with($uri);
@@ -126,13 +125,13 @@ class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // phpcs:ign
             $this->storage
         );
 
-        $request = \Mockery::spy(\Codendi_Request::class);
-        $request->shouldReceive('get')->with(CSRFSynchronizerToken::DEFAULT_TOKEN_NAME)->andReturns('invalid_token');
+        $request = $this->createMock(\Codendi_Request::class);
+        $request->method('get')->with(CSRFSynchronizerToken::DEFAULT_TOKEN_NAME)->willReturn('invalid_token');
 
         $csrf_token->check($uri, $request);
     }
 
-    public function testItRedirectsWhenNoTokenIsProvidedInTheRequest()
+    public function testItRedirectsWhenNoTokenIsProvidedInTheRequest(): void
     {
         $uri = '/path/to/uri';
         $GLOBALS['Response']->expects(self::once())->method('redirect')->with($uri);
@@ -143,13 +142,13 @@ class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // phpcs:ign
             $this->storage
         );
 
-        $request = \Mockery::spy(\Codendi_Request::class);
-        $request->shouldReceive('get')->with(CSRFSynchronizerToken::DEFAULT_TOKEN_NAME)->andReturns(false);
+        $request = $this->createMock(\Codendi_Request::class);
+        $request->method('get')->with(CSRFSynchronizerToken::DEFAULT_TOKEN_NAME)->willReturn(false);
 
         $csrf_token->check($uri, $request);
     }
 
-    public function testItGeneratesHTMLInput()
+    public function testItGeneratesHTMLInput(): void
     {
         ForgeConfig::set('codendi_dir', __DIR__ . '/../../../../');
         ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
@@ -160,13 +159,13 @@ class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // phpcs:ign
             $this->storage
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             '<input type="hidden" name="' . CSRFSynchronizerToken::DEFAULT_TOKEN_NAME . '" value="' . $token1->getToken() . '" />',
             $token1->fetchHTMLInput()
         );
     }
 
-    public function testItLimitsTheNumberOfStoredCSRFTokens()
+    public function testItLimitsTheNumberOfStoredCSRFTokens(): void
     {
         $first_token           = new CSRFSynchronizerToken(
             'first_token_created',
@@ -179,7 +178,7 @@ class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // phpcs:ign
             new CSRFSynchronizerToken('/' . $i, CSRFSynchronizerToken::DEFAULT_TOKEN_NAME, $this->storage);
         }
 
-        $this->assertCount(
+        self::assertCount(
             CSRFSynchronizerToken::MAX_TOKEN_PER_STORAGE,
             $this->storage[CSRFSynchronizerToken::STORAGE_PREFIX],
         );
@@ -189,6 +188,6 @@ class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // phpcs:ign
             CSRFSynchronizerToken::DEFAULT_TOKEN_NAME,
             $this->storage
         );
-        $this->assertFalse($token->isValid($first_token_challenge));
+        self::assertFalse($token->isValid($first_token_challenge));
     }
 }

@@ -22,7 +22,6 @@
 class URLRedirectTest extends \PHPUnit\Framework\TestCase //phpcs:ignore
 {
     use \Tuleap\ForgeConfigSandbox;
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     private $url_redirect;
 
@@ -30,50 +29,50 @@ class URLRedirectTest extends \PHPUnit\Framework\TestCase //phpcs:ignore
     {
         ForgeConfig::set('sys_default_domain', 'example.com');
 
-        $this->url_redirect = new URLRedirect(\Mockery::spy(\EventManager::class));
+        $this->url_redirect = new URLRedirect($this->createMock(\EventManager::class));
     }
 
-    public function testItCreatesALoginURLReturningToTheCurrentPage()
+    public function testItCreatesALoginURLReturningToTheCurrentPage(): void
     {
         $login_url = $this->url_redirect->buildReturnToLogin(['REQUEST_URI' => '/some_tuleap_page']);
-        $this->assertEquals('/account/login.php?return_to=%2Fsome_tuleap_page', $login_url);
+        self::assertEquals('/account/login.php?return_to=%2Fsome_tuleap_page', $login_url);
     }
 
-    public function testItCreatesALoginURLToTheUserProfileIfHomepageOrLoginOrRegisterPage()
+    public function testItCreatesALoginURLToTheUserProfileIfHomepageOrLoginOrRegisterPage(): void
     {
         $login_url_from_homepage = $this->url_redirect->buildReturnToLogin(['REQUEST_URI' => '/']);
-        $this->assertEquals('/account/login.php?return_to=%2Fmy%2F', $login_url_from_homepage);
+        self::assertEquals('/account/login.php?return_to=%2Fmy%2F', $login_url_from_homepage);
 
         $login_url_from_login_page = $this->url_redirect->buildReturnToLogin(
             ['REQUEST_URI' => '/account/login.php?return_to=some_page']
         );
-        $this->assertEquals('/account/login.php?return_to=%2Fmy%2F', $login_url_from_login_page);
+        self::assertEquals('/account/login.php?return_to=%2Fmy%2F', $login_url_from_login_page);
 
         $login_url_from_register_page = $this->url_redirect->buildReturnToLogin(
             ['REQUEST_URI' => '/account/register.php']
         );
-        $this->assertEquals('/account/login.php?return_to=%2Fmy%2F', $login_url_from_register_page);
+        self::assertEquals('/account/login.php?return_to=%2Fmy%2F', $login_url_from_register_page);
     }
 
-    public function testItNotRedirectToUntrustedWebsite()
+    public function testItNotRedirectToUntrustedWebsite(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             '/my/redirect.php?return_to=/',
             $this->url_redirect->makeReturnToUrl('/my/redirect.php', 'http://evil.example.com/')
         );
-        $this->assertEquals(
+        self::assertEquals(
             '/my/redirect.php?return_to=/',
             $this->url_redirect->makeReturnToUrl('/my/redirect.php', 'https://evil.example.com/')
         );
     }
 
-    public function testItNotRedirectToUntrustedCode()
+    public function testItNotRedirectToUntrustedCode(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             '/my/redirect.php?return_to=/',
             $this->url_redirect->makeReturnToUrl('/my/redirect.php', 'javascript:alert(1)')
         );
-        $this->assertEquals(
+        self::assertEquals(
             '/my/redirect.php?return_to=/',
             $this->url_redirect->makeReturnToUrl('/my/redirect.php', 'vbscript:msgbox(1)')
         );

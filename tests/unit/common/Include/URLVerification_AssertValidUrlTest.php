@@ -18,14 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Project\ProjectAccessSuspendedException;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private $request;
     private $url_verification;
 
@@ -33,13 +30,27 @@ class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->request       = Mockery::mock(HTTPRequest::class);
-        $GLOBALS['Language'] = Mockery::spy(BaseLanguage::class);
+        $this->request       = $this->createMock(HTTPRequest::class);
+        $GLOBALS['Language'] = $this->createMock(BaseLanguage::class);
+        $GLOBALS['Language']->method('getText');
 
-        $this->url_verification = Mockery::mock(URLVerification::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->url_verification->shouldReceive('verifyProtocol')->andReturn(false);
-        $this->url_verification->shouldReceive('verifyRequest')->andReturn(false);
-        $this->url_verification->shouldReceive('getCurrentUser')->andReturn(
+        $this->url_verification = $this->createPartialMock(URLVerification::class, [
+            'verifyRequest',
+            'getCurrentUser',
+            'isException',
+            'header',
+            'getUrl',
+            'getUrlChunks',
+            'exitError',
+            'displayRestrictedUserProjectError',
+            'displayPrivateProjectError',
+            'getProjectManager',
+            'userCanAccessProject',
+            'displaySuspendedProjectError',
+            'checkRestrictedAccess',
+        ]);
+        $this->url_verification->method('verifyRequest')->willReturn(false);
+        $this->url_verification->method('getCurrentUser')->willReturn(
             \Tuleap\User\CurrentUserWithLoggedInInformation::fromLoggedInUser(\Tuleap\Test\Builders\UserTestBuilder::anActiveUser()->build())
         );
     }
@@ -52,21 +63,24 @@ class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase
         unset($GLOBALS['Language']);
     }
 
-    public function testAssertValidUrlWithException()
+    public function testAssertValidUrlWithException(): void
     {
-        $this->url_verification->shouldReceive('isException')->andReturn(true);
+        $this->url_verification->method('isException')->willReturn(true);
 
-        $this->url_verification->shouldReceive('header')->never();
+        $this->url_verification->expects(self::never())->method('header');
 
         $this->url_verification->assertValidUrl([], $this->request);
     }
 
-    public function testAssertValidUrlWithNoRedirection()
+    public function testAssertValidUrlWithNoRedirection(): void
     {
-        $this->url_verification->shouldReceive('getUrl')->andReturn(Mockery::spy(URL::class));
-        $this->url_verification->shouldReceive('isException')->andReturn(false);
-        $this->url_verification->shouldReceive('getUrlChunks')->andReturn(null);
-        $this->url_verification->shouldReceive('header')->never();
+        $url = $this->createMock(URL::class);
+        $url->method('getGroupIdFromUrl');
+        $this->url_verification->method('getUrl')->willReturn($url);
+        $this->url_verification->method('isException')->willReturn(false);
+        $this->url_verification->method('getUrlChunks')->willReturn(null);
+        $this->url_verification->expects(self::never())->method('header');
+        $this->url_verification->method('checkRestrictedAccess');
 
         $server = [
             'REQUEST_URI' => '/',
@@ -74,13 +88,16 @@ class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->url_verification->assertValidUrl($server, $this->request);
     }
 
-    public function testAssertValidUrlWithRedirection()
+    public function testAssertValidUrlWithRedirection(): void
     {
-        $this->url_verification->shouldReceive('getUrl')->andReturn(Mockery::spy(URL::class));
+        $url = $this->createMock(URL::class);
+        $url->method('getGroupIdFromUrl');
+        $this->url_verification->method('getUrl')->willReturn($url);
 
-        $this->url_verification->shouldReceive('isException')->andReturn(false);
-        $this->url_verification->shouldReceive('getUrlChunks')->andReturn(['protocol' => 'https', 'host' => 'secure.example.com']);
-        $this->url_verification->shouldReceive('header')->once();
+        $this->url_verification->method('isException')->willReturn(false);
+        $this->url_verification->method('getUrlChunks')->willReturn(['protocol' => 'https', 'host' => 'secure.example.com']);
+        $this->url_verification->expects(self::once())->method('header');
+        $this->url_verification->method('checkRestrictedAccess');
 
         $server = [
             'REQUEST_URI' => '/',
@@ -88,86 +105,124 @@ class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->url_verification->assertValidUrl($server, $this->request);
     }
 
-    public function testCheckNotActiveProjectApi()
+    public function testCheckNotActiveProjectApi(): void
     {
-        $this->url_verification->shouldReceive('exitError')->never();
-        $this->url_verification->shouldReceive('displayRestrictedUserProjectError')->never();
-        $this->url_verification->shouldReceive('displayPrivateProjectError')->never();
+        $this->url_verification->expects(self::never())->method('exitError');
+        $this->url_verification->expects(self::never())->method('displayRestrictedUserProjectError');
+        $this->url_verification->expects(self::never())->method('displayPrivateProjectError');
+        $this->url_verification->method('isException');
+        $this->url_verification->method('getUrlChunks');
+        $url = $this->createMock(URL::class);
+        $url->method('getGroupIdFromUrl');
+        $this->url_verification->method('getUrl')->willReturn($url);
+        $this->url_verification->method('checkRestrictedAccess');
+        $this->url_verification->method('checkRestrictedAccess');
 
-        $this->url_verification->assertValidUrl(['SCRIPT_NAME' => '/api/'], $this->request);
+        $this->url_verification->assertValidUrl(['SCRIPT_NAME' => '/api/', 'REQUEST_URI' => ''], $this->request);
     }
 
-    public function testCheckNotActiveAndNotSuspendedProjectError()
+    public function testCheckNotActiveAndNotSuspendedProjectError(): void
     {
         $GLOBALS['group_id'] = 1;
-        $project             = Mockery::mock(Project::class, ['getStatus' => 'S']);
-        $project_manager     = Mockery::mock(ProjectManager::class);
-        $project_manager->shouldReceive('getProject')->andReturn($project);
-        $this->url_verification->shouldReceive('getProjectManager')->andReturn($project_manager);
-        $this->url_verification->shouldReceive('userCanAccessProject')->andThrow(new Project_AccessDeletedException());
+        $project             = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->withStatusSuspended()->build();
+        $project_manager     = $this->createMock(ProjectManager::class);
+        $project_manager->method('getProject')->willReturn($project);
+        $this->url_verification->method('getProjectManager')->willReturn($project_manager);
+        $this->url_verification->method('userCanAccessProject')->willThrowException(new Project_AccessDeletedException());
 
-        $this->url_verification->shouldReceive('exitError')->once();
-        $this->url_verification->shouldReceive('displayRestrictedUserProjectError')->never();
-        $this->url_verification->shouldReceive('displayPrivateProjectError')->never();
+        $this->url_verification->expects(self::once())->method('exitError');
+        $this->url_verification->expects(self::never())->method('displayRestrictedUserProjectError');
+        $this->url_verification->expects(self::never())->method('displayPrivateProjectError');
+        $this->url_verification->method('isException');
+        $this->url_verification->method('getUrlChunks');
+        $url = $this->createMock(URL::class);
+        $url->method('getGroupIdFromUrl');
+        $this->url_verification->method('getUrl')->willReturn($url);
 
         $this->url_verification->assertValidUrl(['SCRIPT_NAME' => '/some_service/?group_id=1', 'REQUEST_URI' => '/some_service/?group_id=1'], $this->request);
     }
 
-    public function testCheckNotActiveBecauseSuspendedProjectError()
+    public function testCheckNotActiveBecauseSuspendedProjectError(): void
     {
         $GLOBALS['group_id'] = 1;
-        $project             = Mockery::mock(Project::class, ['isActive' => false, 'isSuspended' => true, 'isPublic' => true, 'isError' => false, 'getStatus' => 'H']);
-        $project_manager     = Mockery::mock(ProjectManager::class);
-        $project_manager->shouldReceive('getProject')->andReturn($project);
-        $this->url_verification->shouldReceive('getProjectManager')->andReturn($project_manager);
-        $this->url_verification->shouldReceive('userCanAccessProject')->andThrow(new ProjectAccessSuspendedException($project));
+        $project             = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()
+            ->withStatusSuspended()
+            ->build();
+        $project_manager     = $this->createMock(ProjectManager::class);
+        $project_manager->method('getProject')->willReturn($project);
+        $this->url_verification->method('getProjectManager')->willReturn($project_manager);
+        $this->url_verification->method('userCanAccessProject')->willThrowException(new ProjectAccessSuspendedException($project));
 
-        $this->url_verification->shouldReceive('displaySuspendedProjectError')->once();
+        $this->url_verification->expects(self::once())->method('displaySuspendedProjectError');
+        $this->url_verification->method('isException');
+        $this->url_verification->method('getUrlChunks');
+        $url = $this->createMock(URL::class);
+        $url->method('getGroupIdFromUrl');
+        $this->url_verification->method('getUrl')->willReturn($url);
 
         $this->url_verification->assertValidUrl(['SCRIPT_NAME' => '/some_service/?group_id=1', 'REQUEST_URI' => '/some_service/?group_id=1'], $this->request);
     }
 
-    public function testCheckActiveProjectNoError()
+    public function testCheckActiveProjectNoError(): void
     {
         $GLOBALS['group_id'] = 1;
-        $project             = Mockery::mock(Project::class, ['isActive' => true, 'isPublic' => true, 'isError' => false, 'getID' => 101]);
-        $project_manager     = Mockery::mock(ProjectManager::class);
-        $project_manager->shouldReceive('getProject')->andReturn($project);
-        $this->url_verification->shouldReceive('getProjectManager')->andReturn($project_manager);
-        $this->url_verification->shouldReceive('userCanAccessProject');
+        $project             = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->withId(101)->build();
+        $project_manager     = $this->createMock(ProjectManager::class);
+        $project_manager->method('getProject')->willReturn($project);
+        $this->url_verification->method('getProjectManager')->willReturn($project_manager);
+        $this->url_verification->method('userCanAccessProject');
 
-        $this->url_verification->shouldReceive('exitError')->never();
-        $this->url_verification->shouldReceive('displayRestrictedUserProjectError')->never();
-        $this->url_verification->shouldReceive('displayPrivateProjectError')->never();
+        $this->url_verification->expects(self::never())->method('exitError');
+        $this->url_verification->expects(self::never())->method('displayRestrictedUserProjectError');
+        $this->url_verification->expects(self::never())->method('displayPrivateProjectError');
+        $this->url_verification->method('isException');
+        $this->url_verification->method('getUrlChunks');
+        $url = $this->createMock(URL::class);
+        $url->method('getGroupIdFromUrl');
+        $this->url_verification->method('getUrl')->willReturn($url);
 
         $this->url_verification->assertValidUrl(['SCRIPT_NAME' => '/some_service/?group_id=1', 'REQUEST_URI' => '/some_service/?group_id=1'], $this->request);
     }
 
-    public function testUserCanAccessPrivateShouldLetUserPassWhenNotInAProject()
+    public function testUserCanAccessPrivateShouldLetUserPassWhenNotInAProject(): void
     {
-        $this->url_verification->shouldReceive('getUrl')->andReturn(Mockery::spy(URL::class));
+        $url = $this->createMock(URL::class);
+        $url->method('getGroupIdFromUrl');
+        $this->url_verification->method('getUrl')->willReturn($url);
 
-        $this->url_verification->shouldReceive('exitError')->never();
-        $this->url_verification->shouldReceive('displayRestrictedUserProjectError')->never();
-        $this->url_verification->shouldReceive('displayPrivateProjectError')->never();
+        $this->url_verification->expects(self::never())->method('exitError');
+        $this->url_verification->expects(self::never())->method('displayRestrictedUserProjectError');
+        $this->url_verification->expects(self::never())->method('displayPrivateProjectError');
+        $this->url_verification->method('isException');
+        $this->url_verification->method('getUrlChunks');
+        $this->url_verification->method('checkRestrictedAccess');
 
         $this->url_verification->assertValidUrl(['SCRIPT_NAME' => '/stuff', 'REQUEST_URI' => '/stuff'], $this->request);
     }
 
-    public function testNoGroupIdFallsbackOnUserAccessCheck()
+    public function testNoGroupIdFallsbackOnUserAccessCheck(): void
     {
-        $this->url_verification->shouldReceive('getUrl')->andReturn(Mockery::mock(URL::class, ['getGroupIdFromUrl' => false]));
+        $url = $this->createMock(URL::class);
+        $url->method('getGroupIdFromUrl')->willReturn(false);
+        $this->url_verification->method('getUrl')->willReturn($url);
 
-        $this->url_verification->shouldReceive('checkRestrictedAccess')->once();
+        $this->url_verification->expects(self::once())->method('checkRestrictedAccess');
+        $this->url_verification->method('isException');
+        $this->url_verification->method('getUrlChunks');
 
         $this->url_verification->assertValidUrl(['SCRIPT_NAME' => '/stuff', 'REQUEST_URI' => '/stuff'], $this->request);
     }
 
-    public function testGiveAProjectByPassUrlAnalyis()
+    public function testGiveAProjectByPassUrlAnalysis(): void
     {
-        $project = Mockery::mock(Project::class);
+        $project = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->build();
 
-        $this->url_verification->shouldReceive('userCanAccessProject')->with(Mockery::any(), $project)->once();
+        $this->url_verification->expects(self::once())->method('userCanAccessProject')->with(self::anything(), $project);
+        $this->url_verification->method('isException');
+        $this->url_verification->method('getUrlChunks');
+        $url = $this->createMock(URL::class);
+        $url->method('getGroupIdFromUrl');
+        $this->url_verification->method('getUrl')->willReturn($url);
 
         $this->url_verification->assertValidUrl(['SCRIPT_NAME' => '/stuff', 'REQUEST_URI' => '/stuff'], $this->request, $project);
     }

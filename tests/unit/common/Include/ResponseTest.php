@@ -21,16 +21,16 @@
 
 class ResponseTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    public function testItSendsJSON()
+    public function testItSendsJSON(): void
     {
-        $response = \Mockery::mock(\Response::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $response->shouldReceive('setContentType')->with('application/json')->once();
+        $response = $this->createPartialMock(\Response::class, [
+            'setContentType',
+        ]);
+        $response->expects(self::once())->method('setContentType')->with('application/json');
 
         ob_start();
         $response->sendJSON(["toto"]);
         $output = ob_get_clean();
-        $this->assertEquals('["toto"]', $output);
+        self::assertEquals('["toto"]', $output);
     }
 }

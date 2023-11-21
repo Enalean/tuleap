@@ -19,9 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class URLTest extends \Tuleap\Test\PHPUnit\TestCase
+class URLTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\ForgeConfigSandbox;
 
     protected function setUp(): void
@@ -34,219 +33,239 @@ class URLTest extends \Tuleap\Test\PHPUnit\TestCase
         unset($_REQUEST['forum_id'], $_REQUEST['artifact_id']);
     }
 
-    public function testProjectsSvnExist()
+    public function testProjectsSvnExist(): void
     {
         $url = new URL();
-        $this->assertEquals('group_name', $url->getGroupNameFromSVNUrl('/viewvc.php/?roottype=svn&root=group_name'));
-        $this->assertEquals('group.name', $url->getGroupNameFromSVNUrl('/viewvc.php/?roottype=svn&root=group.name'));
-        $this->assertEquals('group_name', $url->getGroupNameFromSVNUrl('/viewvc.php/?root=group_name&roottype=svn'));
-        $this->assertEquals(
+        self::assertEquals('group_name', $url->getGroupNameFromSVNUrl('/viewvc.php/?roottype=svn&root=group_name'));
+        self::assertEquals('group.name', $url->getGroupNameFromSVNUrl('/viewvc.php/?roottype=svn&root=group.name'));
+        self::assertEquals('group_name', $url->getGroupNameFromSVNUrl('/viewvc.php/?root=group_name&roottype=svn'));
+        self::assertEquals(
             'group_name',
             $url->getGroupNamefromSVNUrl('/viewvc.php/?root=group_name&action=co&roottype=svn'),
         );
-        $this->assertFalse($url->getGroupNameFromSVNUrl('/viewvc.php/?roo=group_name&roottype=svn'));
+        self::assertFalse($url->getGroupNameFromSVNUrl('/viewvc.php/?roo=group_name&roottype=svn'));
     }
 
-    public function testProjectsDontExist()
+    public function testProjectsDontExist(): void
     {
-        $url    = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $dao    = \Mockery::spy(\ProjectDao::class);
-        $exists = \Mockery::spy(\DataAccessResult::class);
-        $exists->shouldReceive('rowCount')->andReturns(0);
-        $exists->shouldReceive('getRow')->andReturns(false);
-        $dao->shouldReceive('searchByUnixGroupName')->andReturns($exists);
+        $url    = $this->createPartialMock(\URL::class, [
+            'getProjectNameRule',
+            'getProjectDao',
+        ]);
+        $dao    = $this->createMock(\ProjectDao::class);
+        $exists = $this->createMock(\DataAccessResult::class);
+        $exists->method('rowCount')->willReturn(0);
+        $exists->method('getRow')->willReturn(false);
+        $dao->method('searchByUnixGroupName')->willReturn($exists);
 
-        $rule = \Mockery::spy(\Rule_ProjectName::class);
-        $url->shouldReceive('getProjectNameRule')->andReturns($rule);
-        $url->shouldReceive('getProjectDao')->andReturns($dao);
-        $this->assertFalse($url->getGroupIdFromURL('/projects/dontexist/'));
+        $rule = $this->createMock(\Rule_ProjectName::class);
+        $rule->method('containsIllegalChars');
+        $url->method('getProjectNameRule')->willReturn($rule);
+        $url->method('getProjectDao')->willReturn($dao);
+        self::assertFalse($url->getGroupIdFromURL('/projects/dontexist/'));
     }
 
-    public function testProjectsExist()
+    public function testProjectsExist(): void
     {
-        $url = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $url->shouldReceive('getForumDao');
-        $url->shouldReceive('getNewsBytesDao');
-        $url->shouldReceive('getArtifactDao');
+        $url = $this->createPartialMock(\URL::class, [
+            'getForumDao',
+            'getNewsBytesDao',
+            'getArtifactDao',
+            'getProjectNameRule',
+            'getProjectDao',
+        ]);
+        $url->method('getForumDao');
+        $url->method('getNewsBytesDao');
+        $url->method('getArtifactDao');
 
-        $exists = \Mockery::spy(\DataAccessResult::class);
-        $exists->shouldReceive('rowCount')->andReturns(1);
-        $exists->shouldReceive('getRow')->andReturns(['group_id' => '1'])->ordered();
-        $exists->shouldReceive('getRow')->andReturns(false)->ordered();
+        $exists = $this->createMock(\DataAccessResult::class);
+        $exists->method('rowCount')->willReturn(1);
+        $exists->method('getRow')->willReturnOnConsecutiveCalls(['group_id' => '1'], false);
 
-        $exists1 = \Mockery::spy(\DataAccessResult::class);
-        $exists1->shouldReceive('rowCount')->andReturns(1);
-        $exists1->shouldReceive('getRow')->andReturns(['group_id' => '1'])->ordered();
-        $exists1->shouldReceive('getRow')->andReturns(false)->ordered();
+        $exists1 = $this->createMock(\DataAccessResult::class);
+        $exists1->method('rowCount')->willReturn(1);
+        $exists1->method('getRow')->willReturnOnConsecutiveCalls(['group_id' => '1'], false);
 
-        $rule = \Mockery::spy(\Rule_ProjectName::class);
-        $rule->shouldReceive('containsIllegalChars')->andReturns(false);
-        $url->shouldReceive('getProjectNameRule')->andReturns($rule);
+        $rule = $this->createMock(\Rule_ProjectName::class);
+        $rule->method('containsIllegalChars')->willReturn(false);
+        $url->method('getProjectNameRule')->willReturn($rule);
 
-        $dao = \Mockery::spy(\ProjectDao::class);
-        $dao->shouldReceive('searchByUnixGroupName')->andReturns($exists)->ordered();
-        $dao->shouldReceive('searchByUnixGroupName')->andReturns($exists1)->ordered();
+        $dao = $this->createMock(\ProjectDao::class);
+        $dao->method('searchByUnixGroupName')->willReturnOnConsecutiveCalls($exists, $exists1);
 
-        $url->shouldReceive('getProjectDao')->andReturns($dao);
-        $this->assertEquals(1, $url->getGroupIdFromURL('/projects/exist/'));
-        $this->assertNotEquals(1, $url->getGroupIdFromURL('/toto/projects/exist/'));
+        $url->method('getProjectDao')->willReturn($dao);
+        self::assertEquals(1, $url->getGroupIdFromURL('/projects/exist/'));
+        self::assertNotEquals(1, $url->getGroupIdFromURL('/toto/projects/exist/'));
     }
 
-    public function testViewVcDontExist()
+    public function testViewVcDontExist(): void
     {
-        $url    = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $dao    = \Mockery::spy(\ProjectDao::class);
-        $exists = \Mockery::spy(\DataAccessResult::class);
-        $exists->shouldReceive('rowCount')->andReturns(0);
-        $exists->shouldReceive('getRow')->andReturns(false);
-        $rule = \Mockery::spy(\Rule_ProjectName::class);
-        $url->shouldReceive('getProjectNameRule')->andReturns($rule);
-        $rule->shouldReceive('containsIllegalChars')->andReturns(false);
+        $url    = $this->createPartialMock(\URL::class, [
+            'getProjectNameRule',
+            'getProjectDao',
+        ]);
+        $dao    = $this->createMock(\ProjectDao::class);
+        $exists = $this->createMock(\DataAccessResult::class);
+        $exists->method('rowCount')->willReturn(0);
+        $exists->method('getRow')->willReturn(false);
+        $rule = $this->createMock(\Rule_ProjectName::class);
+        $url->method('getProjectNameRule')->willReturn($rule);
+        $rule->method('containsIllegalChars')->willReturn(false);
 
-        $dao->shouldReceive('searchByUnixGroupName')->andReturns($exists);
+        $dao->method('searchByUnixGroupName')->willReturn($exists);
 
-        $url->shouldReceive('getProjectDao')->andReturns($dao);
-        $this->assertFalse($url->getGroupIdFromURL('/viewvc.php/?roottype=svn&root=dontexist'));
+        $url->method('getProjectDao')->willReturn($dao);
+        self::assertFalse($url->getGroupIdFromURL('/viewvc.php/?roottype=svn&root=dontexist'));
     }
 
-    public function testViewVcExist()
+    public function testViewVcExist(): void
     {
-        $url    = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $dao    = \Mockery::spy(\ProjectDao::class);
-        $exists = \Mockery::spy(\DataAccessResult::class);
-        $exists->shouldReceive('rowCount')->andReturns(1);
-        $exists->shouldReceive('getRow')->andReturns(['group_id' => '1'])->ordered();
-        $exists->shouldReceive('getRow')->andReturns(false)->ordered();
-        $dao->shouldReceive('searchByUnixGroupName')->andReturns($exists);
-        $rule = \Mockery::spy(\Rule_ProjectName::class);
-        $url->shouldReceive('getProjectNameRule')->andReturns($rule);
-        $rule->shouldReceive('containsIllegalChars')->andReturns(false);
+        $url    = $this->createPartialMock(\URL::class, [
+            'getProjectNameRule',
+            'getProjectDao',
+        ]);
+        $dao    = $this->createMock(\ProjectDao::class);
+        $exists = $this->createMock(\DataAccessResult::class);
+        $exists->method('rowCount')->willReturn(1);
+        $exists->method('getRow')->willReturnOnConsecutiveCalls(['group_id' => '1'], false);
+        $dao->method('searchByUnixGroupName')->willReturn($exists);
+        $rule = $this->createMock(\Rule_ProjectName::class);
+        $url->method('getProjectNameRule')->willReturn($rule);
+        $rule->method('containsIllegalChars')->willReturn(false);
 
-        $url->shouldReceive('getProjectDao')->andReturns($dao);
-        $this->assertEquals($url->getGroupIdFromURL('/viewvc.php/?roottype=svn&root=exist'), 1);
+        $url->method('getProjectDao')->willReturn($dao);
+        self::assertEquals(1, $url->getGroupIdFromURL('/viewvc.php/?roottype=svn&root=exist'));
     }
 
-    public function testViewVcNotValidProjectName()
+    public function testViewVcNotValidProjectName(): void
     {
-        $url  = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $rule = \Mockery::spy(\Rule_ProjectName::class);
-        $url->shouldReceive('getProjectNameRule')->andReturns($rule);
-        $rule->shouldReceive('containsIllegalChars')->andReturns(true);
+        $url  = $this->createPartialMock(\URL::class, [
+            'getProjectNameRule',
+        ]);
+        $rule = $this->createMock(\Rule_ProjectName::class);
+        $url->method('getProjectNameRule')->willReturn($rule);
+        $rule->method('containsIllegalChars')->willReturn(true);
 
-        $this->assertEquals($url->getGroupIdFromURL('/viewvc.php/?roottype=svn&root=ex(ist'), false);
+        self::assertFalse($url->getGroupIdFromURL('/viewvc.php/?roottype=svn&root=ex(ist'));
     }
 
-    public function testViewVcExistForProjectWithPoint()
+    public function testViewVcExistForProjectWithPoint(): void
     {
-        $url    = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $dao    = \Mockery::spy(\ProjectDao::class);
-        $exists = \Mockery::spy(\DataAccessResult::class);
-        $exists->shouldReceive('rowCount')->andReturns(1);
-        $exists->shouldReceive('getRow')->andReturns(['group_id' => '1'])->ordered();
-        $exists->shouldReceive('getRow')->andReturns(false)->ordered();
-        $rule = \Mockery::spy(\Rule_ProjectName::class);
-        $url->shouldReceive('getProjectNameRule')->andReturns($rule);
-        $rule->shouldReceive('containsIllegalChars')->andReturns(false);
-        $dao->shouldReceive('searchByUnixGroupName')->with('test.svn')->once()->andReturns($exists);
+        $url    = $this->createPartialMock(\URL::class, [
+            'getProjectNameRule',
+            'getProjectDao',
+        ]);
+        $dao    = $this->createMock(\ProjectDao::class);
+        $exists = $this->createMock(\DataAccessResult::class);
+        $exists->method('rowCount')->willReturn(1);
+        $exists->method('getRow')->willReturnOnConsecutiveCalls(['group_id' => '1'], false);
+        $rule = $this->createMock(\Rule_ProjectName::class);
+        $url->method('getProjectNameRule')->willReturn($rule);
+        $rule->method('containsIllegalChars')->willReturn(false);
+        $dao->expects(self::once())->method('searchByUnixGroupName')->with('test.svn')->willReturn($exists);
 
-        $url->shouldReceive('getProjectDao')->andReturns($dao);
-        $this->assertEquals($url->getGroupIdFromURL('/viewvc.php/?roottype=svn&root=test.svn'), 1);
+        $url->method('getProjectDao')->willReturn($dao);
+        self::assertEquals(1, $url->getGroupIdFromURL('/viewvc.php/?roottype=svn&root=test.svn'));
     }
 
-    public function testForumDontExist()
+    public function testForumDontExist(): void
     {
-        $url    = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $dao    = \Mockery::spy(\ForumDao::class);
-        $exists = \Mockery::spy(\DataAccessResult::class);
-        $exists->shouldReceive('getRow')->andReturns(false);
-        $dao->shouldReceive('searchByGroupForumId')->andReturns($exists);
+        $url    = $this->createPartialMock(\URL::class, [
+            'getForumDao',
+        ]);
+        $dao    = $this->createMock(\ForumDao::class);
+        $exists = $this->createMock(\DataAccessResult::class);
+        $exists->method('getRow')->willReturn(false);
+        $dao->method('searchByGroupForumId')->willReturn($exists);
 
-        $url->shouldReceive('getForumDao')->andReturns($dao);
-        $this->assertNull($url->getGroupIdFromURL('/forum/forum.php?forum_id=dontexist'));
+        $url->method('getForumDao')->willReturn($dao);
+        self::assertNull($url->getGroupIdFromURL('/forum/forum.php?forum_id=dontexist'));
     }
 
-    public function testForumExist()
+    public function testForumExist(): void
     {
-        $url    = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $dao    = \Mockery::spy(\ForumDao::class);
-        $exists = \Mockery::spy(\DataAccessResult::class);
-        $exists->shouldReceive('getRow')->andReturns(['group_id' => '1'])->ordered();
-        $exists->shouldReceive('getRow')->andReturns(false)->ordered();
-        $exists1 = \Mockery::spy(\DataAccessResult::class);
-        $exists1->shouldReceive('getRow')->andReturns(['group_id' => '1'])->ordered();
-        $exists1->shouldReceive('getRow')->andReturns(false)->ordered();
-        $dao->shouldReceive('searchByGroupForumId')->andReturns($exists)->ordered();
-        $dao->shouldReceive('searchByGroupForumId')->andReturns($exists1)->ordered();
+        $url    = $this->createPartialMock(\URL::class, [
+            'getForumDao',
+        ]);
+        $dao    = $this->createMock(\ForumDao::class);
+        $exists = $this->createMock(\DataAccessResult::class);
+        $exists->method('getRow')->willReturnOnConsecutiveCalls(['group_id' => '1'], false);
+        $exists1 = $this->createMock(\DataAccessResult::class);
+        $exists1->method('getRow')->willReturnOnConsecutiveCalls(['group_id' => '1'], false);
+        $dao->method('searchByGroupForumId')->willReturnOnConsecutiveCalls($exists, $exists1);
         $_REQUEST['forum_id'] = 1;
-        $url->shouldReceive('getForumDao')->andReturns($dao);
-        $this->assertEquals(1, $url->getGroupIdFromURL('/forum/forum.php?forum_id=exist'));
-        $this->assertNotEquals(1, $url->getGroupIdFromURL('/toto/forum/forum.php?forum_id=exist'));
+        $url->method('getForumDao')->willReturn($dao);
+        self::assertEquals(1, $url->getGroupIdFromURL('/forum/forum.php?forum_id=exist'));
+        self::assertNotEquals(1, $url->getGroupIdFromURL('/toto/forum/forum.php?forum_id=exist'));
     }
 
-    public function testNewsBytesDontExist()
+    public function testNewsBytesDontExist(): void
     {
-        $url    = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $dao    = \Mockery::spy(\ForumDao::class);
-        $exists = \Mockery::spy(\DataAccessResult::class);
+        $url    = $this->createPartialMock(\URL::class, [
+            'getForumDao',
+        ]);
+        $dao    = $this->createMock(\ForumDao::class);
+        $exists = $this->createMock(\DataAccessResult::class);
 
-        $exists->shouldReceive('getRow')->andReturns(['group_id' => '42'])->ordered();
-        $exists->shouldReceive('getRow')->andReturns(false)->ordered();
-        $dao->shouldReceive('searchByGroupForumId')->andReturns($exists);
+        $exists->method('getRow')->willReturn(['group_id' => '42'], false);
+        $dao->method('searchByGroupForumId')->willReturn($exists);
         $_REQUEST['forum_id'] = 1;
-        $url->shouldReceive('getForumDao')->andReturns($dao);
-        $this->assertNotEquals(ForgeConfig::get('sys_news_group'), $url->getGroupIdFromURL('/forum/forum.php?forum_id=exist'));
+        $url->method('getForumDao')->willReturn($dao);
+        self::assertNotEquals(ForgeConfig::get('sys_news_group'), $url->getGroupIdFromURL('/forum/forum.php?forum_id=exist'));
     }
 
-    public function testNewsBytesExist()
+    public function testNewsBytesExist(): void
     {
-        $url    = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $dao    = \Mockery::spy(\ForumDao::class);
-        $exists = \Mockery::spy(\DataAccessResult::class);
+        $url    = $this->createPartialMock(\URL::class, [
+            'getForumDao',
+            'getNewsBytesDao',
+        ]);
+        $dao    = $this->createMock(\ForumDao::class);
+        $exists = $this->createMock(\DataAccessResult::class);
 
-        $exists->shouldReceive('getRow')->andReturns(['group_id' => ForgeConfig::get('sys_news_group')])->ordered();
-        $exists->shouldReceive('getRow')->andReturns(false)->ordered();
-        $dao->shouldReceive('searchByGroupForumId')->andReturns($exists)->ordered();
+        $exists->method('getRow')->willReturnOnConsecutiveCalls(['group_id' => ForgeConfig::get('sys_news_group')], false);
+        $dao->method('searchByGroupForumId')->willReturn($exists);
         $_REQUEST['forum_id'] = 1;
-        $group_id             = $url->shouldReceive('getForumDao')->andReturns($dao);
+        $url->method('getForumDao')->willReturn($dao);
 
-        $dao2    = \Mockery::spy(\NewsBytesDao::class);
-        $exists2 = \Mockery::spy(\DataAccessResult::class);
-        $exists2->shouldReceive('getRow')->andReturns(['group_id' => ForgeConfig::get('sys_news_group')])->ordered();
-        $exists2->shouldReceive('getRow')->andReturns(false)->ordered();
-        $dao2->shouldReceive('searchByForumId')->andReturns($exists2)->ordered();
-        $url->shouldReceive('getNewsBytesDao')->andReturns($dao2);
-        $this->assertEquals($url->getGroupIdFromURL('/forum/forum.php?forum_id=exist'), ForgeConfig::get('sys_news_group'));
+        $dao2    = $this->createMock(\NewsBytesDao::class);
+        $exists2 = $this->createMock(\DataAccessResult::class);
+        $exists2->method('getRow')->willReturnOnConsecutiveCalls(['group_id' => ForgeConfig::get('sys_news_group')], false);
+        $dao2->method('searchByForumId')->willReturn($exists2);
+        $url->method('getNewsBytesDao')->willReturn($dao2);
+        self::assertEquals($url->getGroupIdFromURL('/forum/forum.php?forum_id=exist'), ForgeConfig::get('sys_news_group'));
     }
 
-    public function testArtifactDontExist()
+    public function testArtifactDontExist(): void
     {
-        $url    = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $dao    = \Mockery::spy(\ArtifactDao::class);
-        $exists = \Mockery::spy(\DataAccessResult::class);
-        $exists->shouldReceive('getRow')->andReturns(false);
-        $dao->shouldReceive('searchArtifactId')->andReturns($exists);
+        $url    = $this->createPartialMock(\URL::class, [
+            'getArtifactDao',
+        ]);
+        $dao    = $this->createMock(\ArtifactDao::class);
+        $exists = $this->createMock(\DataAccessResult::class);
+        $exists->method('getRow')->willReturn(false);
+        $dao->method('searchArtifactId')->willReturn($exists);
 
-        $url->shouldReceive('getArtifactDao')->andReturns($dao);
-        $this->assertNull($url->getGroupIdFromURL('/tracker/download.php?artifact_id=dontexist'));
+        $url->method('getArtifactDao')->willReturn($dao);
+        self::assertNull($url->getGroupIdFromURL('/tracker/download.php?artifact_id=dontexist'));
     }
 
-    public function testArtifactExist()
+    public function testArtifactExist(): void
     {
-        $url    = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $dao    = \Mockery::spy(\ArtifactDao::class);
-        $exists = \Mockery::spy(\DataAccessResult::class);
-        $exists->shouldReceive('getRow')->andReturns(['group_id' => '1'])->ordered();
-        $exists->shouldReceive('getRow')->andReturns(false)->ordered();
+        $url    = $this->createPartialMock(\URL::class, [
+            'getArtifactDao',
+        ]);
+        $dao    = $this->createMock(\ArtifactDao::class);
+        $exists = $this->createMock(\DataAccessResult::class);
+        $exists->method('getRow')->willReturnOnConsecutiveCalls(['group_id' => '1'], false);
 
-        $exists1 = \Mockery::spy(\DataAccessResult::class);
-        $exists1->shouldReceive('getRow')->andReturns(['group_id' => '1'])->ordered();
-        $exists1->shouldReceive('getRow')->andReturns(false)->ordered();
+        $exists1 = $this->createMock(\DataAccessResult::class);
+        $exists1->method('getRow')->willReturnOnConsecutiveCalls(['group_id' => '1'], false);
 
-        $dao->shouldReceive('searchArtifactId')->andReturns($exists)->ordered();
-        $dao->shouldReceive('searchArtifactId')->andReturns($exists1)->ordered();
+        $dao->method('searchArtifactId')->willReturnOnConsecutiveCalls($exists, $exists1);
         $_REQUEST['artifact_id'] = 1;
-        $url->shouldReceive('getArtifactDao')->andReturns($dao);
-        $this->assertEquals(1, $url->getGroupIdFromURL('/tracker/download.php?artifact_id=exist'));
-        $this->assertNotEquals(1, $url->getGroupIdFromURL('/toto/tracker/download.php?artifact_id=exist'));
+        $url->method('getArtifactDao')->willReturn($dao);
+        self::assertEquals(1, $url->getGroupIdFromURL('/tracker/download.php?artifact_id=exist'));
+        self::assertNotEquals(1, $url->getGroupIdFromURL('/toto/tracker/download.php?artifact_id=exist'));
     }
 }
