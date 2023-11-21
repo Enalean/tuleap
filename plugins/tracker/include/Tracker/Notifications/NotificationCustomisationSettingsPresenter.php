@@ -29,8 +29,15 @@ class NotificationCustomisationSettingsPresenter
     public $custom_email_enabled;
     public $custom_email_content;
 
-    public function __construct($assign_to_me_enabled, $custom_email, public readonly bool $should_send_event_in_notification)
-    {
+    public function __construct(
+        $assign_to_me_enabled,
+        $custom_email,
+        public readonly bool $should_send_event_in_notification,
+        public readonly bool $is_semantic_timeframe_defined,
+        public readonly string $semantic_timeframe_admin_url,
+        public readonly bool $is_semantic_title_defined,
+        public readonly string $semantic_title_admin_url,
+    ) {
         $this->notification_customisation_title = dgettext('tuleap-tracker', 'Email subject customisation');
         $this->assign_to_me_enabled             = $assign_to_me_enabled;
         $this->assign_to_me_description         = dgettext('tuleap-tracker', 'Include [Assigned to me] flag in subject for people who are assigned to the artifact');

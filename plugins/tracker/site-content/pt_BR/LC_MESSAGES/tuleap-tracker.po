@@ -3124,6 +3124,17 @@ msgid "The selected values will define the artifact as done:"
 msgstr ""
 
 msgid ""
+"The semantic %stimeframe%s and %stitle%s are requested to activate this "
+"setting."
+msgstr ""
+
+msgid "The semantic %stimeframe%s is requested to activate this setting."
+msgstr ""
+
+msgid "The semantic %stitle%s is requested to activate this setting."
+msgstr ""
+
+msgid ""
 "The semantic done cannot be defined because the semantic status is not "
 "defined."
 msgstr ""
