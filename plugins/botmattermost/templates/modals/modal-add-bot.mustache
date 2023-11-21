@@ -19,14 +19,14 @@
             <label class="tlp-label" for="bot-mattermost-name">
                 {{# dgettext }} tuleap-botmattermost | Bot name {{/ dgettext }} <i class="fa fa-asterisk"></i>
             </label>
-            <input id="bot-mattermost-name" type="text" class="tlp-input" name="bot_name"
+            <input id="bot-mattermost-name" data-test="bot-mattermost-name" type="text" class="tlp-input" name="bot_name"
                    placeholder="{{# dgettext }} tuleap-botmattermost | Bot name... {{/ dgettext }}" required>
         </div>
         <div class="tlp-form-element">
             <label class="tlp-label" for="bot-mattermost-webhook-url">
                 {{# dgettext }} tuleap-botmattermost | Webhook URL {{/ dgettext }} <i class="fa fa-asterisk"></i>
             </label>
-            <input id="bot-mattermost-webhook-url" type="url" class="tlp-input" name="webhook_url"
+            <input id="bot-mattermost-webhook-url" data-test="bot-mattermost-webhook-url" type="url" class="tlp-input" name="webhook_url"
                    placeholder="{{# dgettext }} tuleap-botmattermost | https://... {{/ dgettext }}" required pattern="https?://.+">
         </div>
         <div class="tlp-form-element">
@@ -41,7 +41,7 @@
         <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
             {{# dgettext }} tuleap-botmattermost | Cancel {{/ dgettext }}
         </button>
-        <button type="submit" class="tlp-button-primary tlp-modal-action">
+        <button type="submit" data-test="add-bot-button" class="tlp-button-primary tlp-modal-action">
             <i class="fa fa-plus tlp-button-icon"></i> {{# dgettext }} tuleap-botmattermost | Add bot {{/ dgettext }}
         </button>
     </div>

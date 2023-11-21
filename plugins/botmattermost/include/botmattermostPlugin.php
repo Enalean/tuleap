@@ -49,6 +49,7 @@ use Tuleap\Request\DispatchableWithRequest;
 require_once 'constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class BotMattermostPlugin extends Plugin
 {
     public function __construct($id)
@@ -80,14 +81,15 @@ class BotMattermostPlugin extends Plugin
     public function siteAdministrationAddOption(SiteAdministrationAddOption $site_administration_add_option): void
     {
         $site_administration_add_option->addPluginOption(
-            SiteAdministrationPluginOption::build(
+            SiteAdministrationPluginOption::withShortname(
                 dgettext('tuleap-botmattermost', 'Bot Mattermost'),
-                $this->getPluginPath() . '/admin/'
+                $this->getPluginPath() . '/admin/',
+                'botmattermost'
             )
         );
     }
 
-    public function burning_parrot_get_javascript_files($params)
+    public function burning_parrot_get_javascript_files($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/admin/') === 0) {
             $asset                        = $this->getIncludeAssets();
@@ -95,7 +97,7 @@ class BotMattermostPlugin extends Plugin
         }
     }
 
-    public function burning_parrot_get_stylesheets(array $params)
+    public function burning_parrot_get_stylesheets(array $params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/admin/') === 0) {
             $asset                   = $this->getIncludeAssets();

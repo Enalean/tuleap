@@ -6,7 +6,7 @@
             </h1>
         </div>
             {{# bot_assigned }}
-                <section class="tlp-pane-section">
+                <section class="tlp-pane-section" data-test="configured-bot-mattermost">
                     <div class="tlp-property">
                         <label class="tlp-label">{{ label_bot_name }}</label>
                         {{# avatar }}<img class="tlp-avatar-small" src="{{ avatar }}">{{/ avatar }} {{ name }}
@@ -46,7 +46,7 @@
                     <p class="tlp-text-muted">{{ any_configured_notification }}</p>
                     {{# has_bots }}
                         <p class="tlp-text-muted">{{ any_configured_notification_tips }}</p>
-                        <button id="admin-config-bot-add-trigger" class="tlp-button-primary tlp-button-outline">
+                        <button id="admin-config-bot-add-trigger" data-test="add-mattermost-notification" class="tlp-button-primary tlp-button-outline">
                             <i class="fa fa-plus tlp-button-icon"></i> {{ button_config }}
                         </button>
                         {{> modal-add-bot }}

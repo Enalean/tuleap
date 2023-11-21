@@ -6,12 +6,12 @@
         </div>
         <section class="tlp-pane-section">
             <div class="tlp-table-actions">
-                <button id="button-modal-add-bot" type="button" data-target="modal-add-bot" class="tlp-button-primary">
+                <button id="button-modal-add-bot" type="button" data-target="modal-add-bot" data-test="add-bot" class="tlp-button-primary">
                     <i class="fa fa-plus tlp-button-icon"></i> {{# dgettext }} tuleap-botmattermost | Add bot {{/ dgettext }}
                 </button>
                 {{> modals/modal-add-bot }}
             </div>
-            <table id="bot_list" class="tlp-table">
+            <table id="bot_list" data-test="bot-list" class="tlp-table">
                 <thead>
                 <tr>
                     <th>{{# dgettext }} tuleap-botmattermost | Name {{/ dgettext }}</th>
@@ -36,6 +36,7 @@
                                 </button>
                                 {{> modals/modal-edit-bot }}
                                 <button id="button-modal-delete-bot-{{ bot_id }}" type="submit"
+                                        data-test="delete-bot"
                                         class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline"
                                         data-modal-id="modal-delete-bot-{{ bot_id }}">
                                     <i class="fa fa-trash-o tlp-button-icon"></i> {{# dgettext }} tuleap-botmattermost | Delete {{/ dgettext }}
