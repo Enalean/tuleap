@@ -667,6 +667,9 @@ msgstr ""
 msgid "Calendar events"
 msgstr ""
 
+msgid "Calendar events configuration updated"
+msgstr ""
+
 msgid "Can make the transition"
 msgstr ""
 
@@ -2412,6 +2415,9 @@ msgstr ""
 msgid "Semantic status is not defined."
 msgstr ""
 
+msgid "Semantic timeframe is required for calendar events"
+msgstr ""
+
 msgid "Semantic timeframe reset successfully"
 msgstr ""
 
@@ -2424,6 +2430,9 @@ msgid ""
 msgstr ""
 
 msgid "Semantic title and/or description are not configured"
+msgstr ""
+
+msgid "Semantic title is required for calendar events"
 msgstr ""
 
 msgid "Semantic title unset"
@@ -3687,6 +3696,10 @@ msgstr ""
 
 #, php-format
 msgid "Unable to update artifact %1$s"
+msgstr ""
+
+#, php-format
+msgid "Unable to update calendar events configuration: %s"
 msgstr ""
 
 msgid "Unable to update the artifact"

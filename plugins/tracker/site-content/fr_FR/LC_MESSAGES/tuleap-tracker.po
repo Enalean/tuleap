@@ -781,6 +781,9 @@ msgstr ""
 msgid "Calendar events"
 msgstr "Évènements du calendrier"
 
+msgid "Calendar events configuration updated"
+msgstr "La configuration des événements de calendrier a été mise à jour"
+
 msgid "Can make the transition"
 msgstr "Peut effectuer la transition"
 
@@ -2697,6 +2700,10 @@ msgstr "La sémantique est correctement configurée"
 msgid "Semantic status is not defined."
 msgstr "La sémantique status n'est pas définie."
 
+msgid "Semantic timeframe is required for calendar events"
+msgstr ""
+"La sémantique plage de temps est requise pour les événements de calendrier"
+
 msgid "Semantic timeframe reset successfully"
 msgstr "La sémantique plage de temps a été réinitialisée avec succès"
 
@@ -2712,6 +2719,9 @@ msgstr ""
 
 msgid "Semantic title and/or description are not configured"
 msgstr "La sémantique titre et/ou description ne sont pas configurées"
+
+msgid "Semantic title is required for calendar events"
+msgstr "La sémantique titre est requise pour les événements du calendrier"
 
 msgid "Semantic title unset"
 msgstr "La sémantique title a été retirée"
@@ -4188,6 +4198,11 @@ msgstr "Impossible de sauvegarder le titre"
 #, php-format
 msgid "Unable to update artifact %1$s"
 msgstr "Impossible de mettre à jour l'artéfact %1$s"
+
+#, php-format
+msgid "Unable to update calendar events configuration: %s"
+msgstr ""
+"Impossible de mettre à jour la configuration des événement de calendrier : %s"
 
 msgid "Unable to update the artifact"
 msgstr "Impossible de mettre à jour l'artéfact"
