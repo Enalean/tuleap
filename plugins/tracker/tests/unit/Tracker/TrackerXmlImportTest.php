@@ -45,11 +45,11 @@ use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
+use Tuleap\Tracker\Creation\TrackerCreationNotificationsSettingsFromXmlBuilder;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
 use Tuleap\Tracker\XML\Importer\TrackerExtraConfiguration;
-use Tuleap\Tracker\XML\Importer\TrackerXmlSaver;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use Tuleap\XML\MappingsRegistry;
 use User\XML\Import\IFindUserFromXMLReference;
@@ -64,11 +64,6 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface
      */
     private $user;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerXmlSaver
-     */
-    private $tracker_xml_saver;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerXmlImportFeedbackCollector
@@ -170,7 +165,6 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->event_manager                 = Mockery::spy(EventManager::class);
         $this->artifact_links_usage_dao      = Mockery::spy(ArtifactLinksUsageDao::class);
         $this->feedback_collector            = Mockery::mock(TrackerXmlImportFeedbackCollector::class);
-        $this->tracker_xml_saver             = Mockery::mock(TrackerXmlSaver::class);
         $this->tracker_creation_data_checker = Mockery::mock(TrackerCreationDataChecker::class);
         $this->tracker_xml_importer          = Mockery::mock(
             TrackerXmlImport::class,
@@ -197,7 +191,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->external_validator,
                 $this->feedback_collector,
                 $this->tracker_creation_data_checker,
-                $this->tracker_xml_saver,
+                new TrackerCreationNotificationsSettingsFromXmlBuilder(),
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
 

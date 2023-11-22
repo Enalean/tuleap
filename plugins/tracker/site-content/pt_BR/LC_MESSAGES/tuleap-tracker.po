@@ -701,6 +701,12 @@ msgstr ""
 msgid "Canned responses"
 msgstr ""
 
+msgid "Cannot activate calendar event for tracker without timeframe semantic"
+msgstr ""
+
+msgid "Cannot activate calendar event for tracker without title semantic"
+msgstr ""
+
 #, php-format
 msgid "Cannot add new date reminder on the field %1$s for the tracker %2$s"
 msgstr ""

@@ -18,8 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Artifact\XMLImport\MoveImportConfig;
 use Tuleap\Tracker\Creation\TrackerCreationNotificationsSettings;
+use Tuleap\Tracker\Creation\TrackerCreationNotificationsSettingsFromXmlBuilder;
 use Tuleap\XML\SimpleXMLElementBuilder;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
@@ -163,6 +167,7 @@ class TrackerXmlImport
         ExternalFieldsExtractor $external_fields_extractor,
         TrackerXmlImportFeedbackCollector $feedback_collector,
         TrackerCreationDataChecker $creation_data_checker,
+        private readonly TrackerCreationNotificationsSettingsFromXmlBuilder $notifications_settings_from_xml_builder,
     ) {
         $this->tracker_factory                = $tracker_factory;
         $this->event_manager                  = $event_manager;
@@ -232,7 +237,8 @@ class TrackerXmlImport
             new TrackerXMLFieldMappingFromExistingTracker(),
             new ExternalFieldsExtractor($event_manager),
             new TrackerXmlImportFeedbackCollector(),
-            TrackerCreationDataChecker::build()
+            TrackerCreationDataChecker::build(),
+            new TrackerCreationNotificationsSettingsFromXmlBuilder(),
         );
     }
 
@@ -759,22 +765,15 @@ class TrackerXmlImport
 
             $settings = new TrackerCreationSettings($is_displayed_in_new_dropdown, $is_private_comment_used);
 
-            $should_send_event_in_notification = isset($attributes['should_send_event_in_notification']) && $attributes['should_send_event_in_notification'] !== null
-                ? PHPCast::toBoolean($attributes['should_send_event_in_notification'])
-                : false;
-            $notifications_settings            = new TrackerCreationNotificationsSettings($should_send_event_in_notification);
-
-            $tracker_id = $this->tracker_factory->saveObject($tracker, $settings, $notifications_settings);
-            if ($tracker_id) {
-                $tracker->setId($tracker_id);
-            } else {
-                throw new TrackerFromXmlException(
-                    dgettext(
-                        'tuleap-tracker',
-                        'Oops. Something weird occured. Unable to create the tracker. Please try again.'
-                    )
+            $this->notifications_settings_from_xml_builder
+                ->getCreationNotificationsSettings($attributes, $tracker)
+                ->andThen(fn (TrackerCreationNotificationsSettings $notifications_settings) => $this->saveTracker($tracker, $settings, $notifications_settings))
+                ->match(
+                    static fn (int $tracker_id)  => $tracker->setId($tracker_id),
+                    function (string $error): void {
+                        throw new TrackerFromXmlException($error);
+                    }
                 );
-            }
         } else {
             throw new TrackerFromXmlException('XML file cannot be imported');
         }
@@ -786,6 +785,24 @@ class TrackerXmlImport
         $this->tracker_factory->clearCaches();
 
         return $tracker;
+    }
+
+    /**
+     * @return Ok<int>|Err<string>
+     */
+    private function saveTracker(Tracker $tracker, TrackerCreationSettings $settings, TrackerCreationNotificationsSettings $notifications_settings): Ok|Err
+    {
+        $tracker_id = $this->tracker_factory->saveObject($tracker, $settings, $notifications_settings);
+        if (! $tracker_id) {
+            return Result::err(
+                dgettext(
+                    'tuleap-tracker',
+                    'Oops. Something weird occured. Unable to create the tracker. Please try again.'
+                )
+            );
+        }
+
+        return Result::ok($tracker_id);
     }
 
     /**

@@ -819,6 +819,16 @@ msgstr "Annulation de votre import Jira"
 msgid "Canned responses"
 msgstr "Réponses types"
 
+msgid "Cannot activate calendar event for tracker without timeframe semantic"
+msgstr ""
+"Impossible d'activer les événements de calendrier pour un tracker sans "
+"sémantique plage de temps"
+
+msgid "Cannot activate calendar event for tracker without title semantic"
+msgstr ""
+"Impossible d'activer les événements de calendrier pour un tracker sans "
+"sémantique titre"
+
 #, php-format
 msgid "Cannot add new date reminder on the field %1$s for the tracker %2$s"
 msgstr "Impossible d'ajouter un rappel sur le champ date %1$s du tracker %2$s"
