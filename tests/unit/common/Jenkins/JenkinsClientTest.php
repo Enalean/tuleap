@@ -26,23 +26,21 @@ use Exception;
 use Http\Mock\Client;
 use Jenkins_Client;
 use Jenkins_ClientUnableToLaunchBuildException;
-use Mockery;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 
 final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     /**
-     * @var Mockery\MockInterface|JenkinsCSRFCrumbRetriever
+     * @var JenkinsCSRFCrumbRetriever&MockObject
      */
     private $jenkins_csrf_crumb_retriever;
 
     protected function setUp(): void
     {
-        $this->jenkins_csrf_crumb_retriever = Mockery::mock(JenkinsCSRFCrumbRetriever::class);
+        $this->jenkins_csrf_crumb_retriever = $this->createMock(JenkinsCSRFCrumbRetriever::class);
     }
 
     public function testLaunchJobBuildThrowsAnExceptionOnFailedRequest(): void
@@ -50,7 +48,7 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
         $http_client = new Client();
         $http_client->addResponse(HTTPFactoryBuilder::responseFactory()->createResponse(500));
 
-        $this->jenkins_csrf_crumb_retriever->shouldReceive('getCSRFCrumbHeader')->andReturn('');
+        $this->jenkins_csrf_crumb_retriever->method('getCSRFCrumbHeader')->willReturn('');
 
         $jenkins_client = new Jenkins_Client(
             $http_client,
@@ -59,19 +57,19 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->jenkins_csrf_crumb_retriever
         );
 
-        $this->expectException(Jenkins_ClientUnableToLaunchBuildException::class);
+        self::expectException(Jenkins_ClientUnableToLaunchBuildException::class);
         $jenkins_client->launchJobBuild('https://some.url.example.com/job/my_job');
     }
 
     public function testLaunchJobBuildThrowsAnExceptionOnNetworkFailure(): void
     {
-        $http_client = Mockery::mock(ClientInterface::class);
-        $http_client->shouldReceive('sendRequest')->andThrow(
+        $http_client = $this->createMock(ClientInterface::class);
+        $http_client->method('sendRequest')->willThrowException(
             new class extends Exception implements ClientExceptionInterface {
             }
         );
 
-        $this->jenkins_csrf_crumb_retriever->shouldReceive('getCSRFCrumbHeader')->andReturn('');
+        $this->jenkins_csrf_crumb_retriever->method('getCSRFCrumbHeader')->willReturn('');
 
         $jenkins_client = new Jenkins_Client(
             $http_client,
@@ -80,7 +78,7 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->jenkins_csrf_crumb_retriever
         );
 
-        $this->expectException(Jenkins_ClientUnableToLaunchBuildException::class);
+        self::expectException(Jenkins_ClientUnableToLaunchBuildException::class);
         $jenkins_client->launchJobBuild('https://some.url.example.com/job/my_job');
     }
 
@@ -98,7 +96,7 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->jenkins_csrf_crumb_retriever
         );
 
-        $this->jenkins_csrf_crumb_retriever->shouldReceive('getCSRFCrumbHeader')->andReturn('');
+        $this->jenkins_csrf_crumb_retriever->method('getCSRFCrumbHeader')->willReturn('');
 
         $http_client->addResponse(HTTPFactoryBuilder::responseFactory()->createResponse($http_response_status_code));
 
@@ -110,11 +108,11 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
         $jenkins_client->launchJobBuild($job_url, $build_parameters);
 
         $requests = $http_client->getRequests();
-        $this->assertCount(1, $requests);
+        self::assertCount(1, $requests);
         $request = $requests[0];
-        $this->assertEquals('POST', $request->getMethod());
+        self::assertEquals('POST', $request->getMethod());
         $expected_body = 'json={"parameter":[{"name":"my_param","value":"mickey mooouse"}]}';
-        $this->assertEquals($expected_body, $request->getBody()->getContents());
+        self::assertEquals($expected_body, $request->getBody()->getContents());
     }
 
     public function testTokenAsParameter(): void
@@ -128,7 +126,7 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->jenkins_csrf_crumb_retriever
         );
 
-        $this->jenkins_csrf_crumb_retriever->shouldReceive('getCSRFCrumbHeader')->andReturn('');
+        $this->jenkins_csrf_crumb_retriever->method('getCSRFCrumbHeader')->willReturn('');
 
         $job_url = 'https://ci.example.com/job/dylanJob';
 
@@ -136,16 +134,16 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
         $jenkins_client->launchJobBuild($job_url);
 
         $requests = $http_client->getRequests();
-        $this->assertCount(1, $requests);
+        self::assertCount(1, $requests);
         $request = $requests[0];
-        $this->assertEquals('token=thou+shall+not+pass', $request->getUri()->getQuery());
+        self::assertEquals('token=thou+shall+not+pass', $request->getUri()->getQuery());
     }
 
     public function testLaunchJobWithParametersGivenByUser(): void
     {
         $http_client = new Client();
 
-        $this->jenkins_csrf_crumb_retriever->shouldReceive('getCSRFCrumbHeader')->andReturn('');
+        $this->jenkins_csrf_crumb_retriever->method('getCSRFCrumbHeader')->willReturn('');
 
         $jenkins_client = new Jenkins_Client(
             $http_client,
@@ -159,16 +157,16 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
         $jenkins_client->launchJobBuild($job_url);
 
         $requests = $http_client->getRequests();
-        $this->assertCount(1, $requests);
+        self::assertCount(1, $requests);
         $request = $requests[0];
-        $this->assertEquals($job_url, (string) $request->getUri());
+        self::assertEquals($job_url, (string) $request->getUri());
     }
 
     public function testLaunchJobWithParametersGivenByUserAndToken(): void
     {
         $http_client = new Client();
 
-        $this->jenkins_csrf_crumb_retriever->shouldReceive('getCSRFCrumbHeader')->andReturn('');
+        $this->jenkins_csrf_crumb_retriever->method('getCSRFCrumbHeader')->willReturn('');
 
         $jenkins_client = new Jenkins_Client(
             $http_client,
@@ -183,9 +181,9 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
         $jenkins_client->launchJobBuild($job_url);
 
         $requests = $http_client->getRequests();
-        $this->assertCount(1, $requests);
+        self::assertCount(1, $requests);
         $request = $requests[0];
-        $this->assertEquals($job_url . '&token=thou+shall+not+pass', (string) $request->getUri());
+        self::assertEquals($job_url . '&token=thou+shall+not+pass', (string) $request->getUri());
     }
 
     public function testLaunchJobWithACSRFCrumbHeader(): void
@@ -194,8 +192,8 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $csrf_crumb_header_name  = 'CsrfCrumb';
         $csrf_crumb_header_value = 'aaaaaaaaaa';
-        $this->jenkins_csrf_crumb_retriever->shouldReceive('getCSRFCrumbHeader')
-            ->andReturn($csrf_crumb_header_name . ':' . $csrf_crumb_header_value);
+        $this->jenkins_csrf_crumb_retriever->method('getCSRFCrumbHeader')
+            ->willReturn($csrf_crumb_header_name . ':' . $csrf_crumb_header_value);
 
         $jenkins_client = new Jenkins_Client(
             $http_client,
@@ -209,9 +207,9 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
         $jenkins_client->launchJobBuild($job_url);
 
         $requests = $http_client->getRequests();
-        $this->assertCount(1, $requests);
+        self::assertCount(1, $requests);
         $request = $requests[0];
-        $this->assertEquals($csrf_crumb_header_value, $request->getHeaderLine($csrf_crumb_header_name));
+        self::assertEquals($csrf_crumb_header_value, $request->getHeaderLine($csrf_crumb_header_name));
     }
 
     public function testLaunchJobBuildWithInvalidURL(): void
@@ -225,7 +223,7 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->jenkins_csrf_crumb_retriever
         );
 
-        $this->expectException(Jenkins_ClientUnableToLaunchBuildException::class);
+        self::expectException(Jenkins_ClientUnableToLaunchBuildException::class);
         $jenkins_client->launchJobBuild('https://some.url.example.com/not_a_job_url');
     }
 }
