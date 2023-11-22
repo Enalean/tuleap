@@ -23499,28 +23499,6 @@
       <code>open_ldap_value</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/ldap/include/LDAP_BackendSVN.class.php">
-    <DeprecatedMethod>
-      <code>$dar</code>
-      <code>$dar</code>
-      <code>$dar</code>
-      <code>$dar</code>
-    </DeprecatedMethod>
-    <MissingPropertyType>
-      <code>$ldap</code>
-      <code>$ldapProjectManager</code>
-      <code>$ldapUserManager</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>setUp</code>
-    </MissingReturnType>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$project->getID()]]></code>
-      <code><![CDATA[$project->getID()]]></code>
-      <code><![CDATA[$project->getID()]]></code>
-      <code><![CDATA[$project->getId()]]></code>
-    </PossiblyInvalidArgument>
-  </file>
   <file src="plugins/ldap/include/LDAP_CleanUpManager.class.php">
     <DeprecatedMethod>
       <code>$suspendedUsersList</code>
@@ -24056,6 +24034,12 @@
     <MissingReturnType>
       <code>account_login_login_with_tuleap</code>
     </MissingReturnType>
+  </file>
+  <file src="plugins/ldap/include/SVN/SVNUserGroupsProvider.php">
+    <DeprecatedMethod>
+      <code>$dar</code>
+      <code>$dar</code>
+    </DeprecatedMethod>
   </file>
   <file src="plugins/ldap/include/WelcomeDisplayController.php">
     <PossiblyInvalidArgument>
@@ -46406,11 +46390,6 @@
       <code><![CDATA[isset($current_semantic_xml->start_date_field)]]></code>
     </TypeDoesNotContainType>
   </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Timeframe/SemanticTimeframeUpdator.php">
-    <RedundantCast>
-      <code><![CDATA[(int) $tracker->getId()]]></code>
-    </RedundantCast>
-  </file>
   <file src="plugins/tracker/include/Tracker/Semantic/Timeframe/TimeframeImpliedFromAnotherTracker.php">
     <PossiblyNullReference>
       <code>addAttribute</code>
@@ -57974,7 +57953,6 @@
       <code>getTruncatedEmailsUsage</code>
       <code>getUGroupManager</code>
       <code>isSVNMandatoryRef</code>
-      <code>isSVNPrivate</code>
       <code>isSVNTracked</code>
       <code>isSuperPublic</code>
       <code>isSuspended</code>
@@ -58321,7 +58299,6 @@
     </MissingPropertyType>
     <MissingReturnType>
       <code>getDescription</code>
-      <code>getMembersIncludingSuspendedAndDeleted</code>
       <code>getProject</code>
       <code>getProjectId</code>
       <code>getSourceGroup</code>
@@ -64438,10 +64415,6 @@
     </MissingReturnType>
   </file>
   <file src="src/common/backend/BackendSVN.class.php">
-    <DeprecatedMethod>
-      <code>$dar</code>
-      <code>$dar</code>
-    </DeprecatedMethod>
     <InvalidArgument>
       <code>$perms</code>
       <code>true</code>
@@ -64526,7 +64499,6 @@
       <code>forceUpdateApacheConf</code>
       <code>getCustomPermission</code>
       <code>getDefaultBlocEnd</code>
-      <code>getDefaultBlock</code>
       <code>getHookPath</code>
       <code>getSvnAccessFile</code>
       <code>getSvnDao</code>
@@ -64544,7 +64516,6 @@
     </PossiblyFalseArgument>
     <PossiblyInvalidArgument>
       <code><![CDATA[$project->getID()]]></code>
-      <code><![CDATA[$project->getId()]]></code>
       <code><![CDATA[$project->getId()]]></code>
       <code><![CDATA[$project->getId()]]></code>
     </PossiblyInvalidArgument>

@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,27 +16,24 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Project;
+namespace Tuleap\SVNCore;
 
-use Project;
-use ProjectUGroup;
-
-interface UGroupRetriever
+/**
+ * @psalm-immutable
+ */
+final class SVNUser
 {
-    /**
-     * @param string|int $ugroup_id
-     */
-    public function getUGroup(Project $project, $ugroup_id): ?ProjectUGroup;
+    public function __construct(public readonly \PFUser $user, public readonly string $svn_username)
+    {
+    }
 
-    public function getUGroupByName(Project $project, string $name): ?ProjectUGroup;
-
-    /**
-     * @param int[] $excluded_ugroups_id
-     * @return ProjectUGroup[]
-     */
-    public function getUGroups(Project $project, array $excluded_ugroups_id = []): array;
+    public static function fromUser(\PFUser $user): self
+    {
+        return new self($user, strtolower($user->getUserName()));
+    }
 }

@@ -72,22 +72,4 @@ class BackendFactory
         }
         return $backend;
     }
-
-    /**
-     * Return a BackendSVN instance
-     *
-     * Let plugins propose their own backend. If none provided, use the default one.
-     *
-     * @return BackendSVN
-     */
-    public static function getSVN()
-    {
-        $backend = null;
-        $params  = ['backend' => &$backend];
-        EventManager::instance()->processEvent('backend_factory_get_svn', $params);
-        if ($backend === null) {
-            $backend = BackendSVN::instance();
-        }
-        return $backend;
-    }
 }
