@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Timeframe\Administration;
 
 use Tracker;
+use Tuleap\Tracker\Notifications\Settings\CheckEventShouldBeSentInNotification;
 use Tuleap\Tracker\Semantic\Timeframe\Events\DoesAPluginRenderAChartBasedOnSemanticTimeframeForTrackerEvent;
 use Tuleap\Tracker\Semantic\Timeframe\Events\GetSemanticTimeframeUsageEvent;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
@@ -34,6 +35,7 @@ class SemanticTimeframeAdministrationPresenterBuilder
         private \Tracker_FormElementFactory $tracker_formelement_factory,
         private SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetriever $suitable_trackers_retriever,
         private \EventManager $event_manager,
+        private readonly CheckEventShouldBeSentInNotification $calendar_event_config,
     ) {
     }
 
@@ -57,7 +59,8 @@ class SemanticTimeframeAdministrationPresenterBuilder
             $timeframe,
             $configuration_presenter,
             $this->getSuitableTrackersSelectBoxEntries($tracker),
-            $event->getSemanticUsage()
+            $event->getSemanticUsage(),
+            $this->calendar_event_config->shouldSendEventInNotification($tracker->getId()),
         );
     }
 

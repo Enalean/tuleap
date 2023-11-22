@@ -23,11 +23,14 @@ namespace Tuleap\Tracker\Semantic\Title;
 
 use CSRFSynchronizerToken;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Notifications\Settings\CheckEventShouldBeSentInNotification;
 
 final class AdminPresenterBuilder
 {
-    public function __construct(private Tracker_FormElementFactory $tracker_form_element_factory)
-    {
+    public function __construct(
+        private readonly Tracker_FormElementFactory $tracker_form_element_factory,
+        private readonly CheckEventShouldBeSentInNotification $calendar_event_config,
+    ) {
     }
 
     public function build(\Tracker_Semantic_Title $semantic_title, \Tracker $tracker, CSRFSynchronizerToken $csrf_token): AdminPresenter
@@ -50,7 +53,8 @@ final class AdminPresenterBuilder
             $semantic_title->getFieldId() !== 0,
             $possible_titles,
             count($text_fields) > 0,
-            TRACKER_BASE_URL . '/?tracker=' . urlencode((string) $tracker->getId()) . '&func=admin-semantic'
+            TRACKER_BASE_URL . '/?tracker=' . urlencode((string) $tracker->getId()) . '&func=admin-semantic',
+            $this->calendar_event_config->shouldSendEventInNotification($tracker->getId()),
         );
     }
 }

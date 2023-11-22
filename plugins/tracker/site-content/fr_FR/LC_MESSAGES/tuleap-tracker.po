@@ -4635,6 +4635,13 @@ msgstr ""
 "mettre le déclencheur à jour avant de supprimer le champ."
 
 msgid ""
+"You cannot reset this semantic because it is used to send calendar events in "
+"notification"
+msgstr ""
+"Vous ne pouvez pas réinitialiser cette sémantique car elle est utilisée pour "
+"les événements de calendrier dans les notifications"
+
+msgid ""
 "You cannot reset this semantic because some trackers inherit their own "
 "semantic timeframe from this one."
 msgstr ""

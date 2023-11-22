@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Notifications\Settings\CalendarEventConfigDao;
+
 class Tracker_Semantic_Title extends Tracker_Semantic
 {
     public const NAME = 'title';
@@ -122,7 +124,10 @@ class Tracker_Semantic_Title extends Tracker_Semantic
         );
 
         $template_rendreder      = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
-        $admin_presenter_builder = new \Tuleap\Tracker\Semantic\Title\AdminPresenterBuilder(Tracker_FormElementFactory::instance());
+        $admin_presenter_builder = new \Tuleap\Tracker\Semantic\Title\AdminPresenterBuilder(
+            Tracker_FormElementFactory::instance(),
+            new CalendarEventConfigDao(),
+        );
 
         echo $template_rendreder->renderToString(
             'semantics/admin-title',

@@ -50,6 +50,7 @@ const props = defineProps<{
     has_other_trackers_implying_their_timeframes: boolean;
     has_tracker_charts: boolean;
     implied_from_tracker_id: number | "";
+    should_send_event_in_notification: boolean;
 }>();
 
 const gettext_provider = useGettext();
@@ -63,7 +64,11 @@ const is_semantic_configured = computed((): boolean => {
 });
 
 const is_reset_disabled = computed((): boolean => {
-    return props.has_other_trackers_implying_their_timeframes || props.has_tracker_charts;
+    return (
+        props.has_other_trackers_implying_their_timeframes ||
+        props.has_tracker_charts ||
+        props.should_send_event_in_notification
+    );
 });
 
 const cannot_reset_message = computed((): string => {
@@ -76,6 +81,12 @@ const cannot_reset_message = computed((): string => {
     if (props.has_tracker_charts) {
         return gettext_provider.$gettext(
             "You cannot reset this semantic because this tracker has a burnup, burndown or another chart rendered by an external plugin",
+        );
+    }
+
+    if (props.should_send_event_in_notification) {
+        return gettext_provider.$gettext(
+            "You cannot reset this semantic because it is used to send calendar events in notification",
         );
     }
 

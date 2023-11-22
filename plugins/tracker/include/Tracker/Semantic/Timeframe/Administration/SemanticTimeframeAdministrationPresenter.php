@@ -57,6 +57,7 @@ class SemanticTimeframeAdministrationPresenter
         SemanticTimeframeCurrentConfigurationPresenter $configuration_presenter,
         array $suitable_trackers,
         public string $semantic_presentation,
+        public readonly bool $should_send_event_in_notification,
     ) {
         $start_date_field     = $timeframe->getStartDateField();
         $end_date_field       = $timeframe->getEndDateField();
