@@ -25,46 +25,39 @@ namespace Tuleap\JWT\Generators;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Signer\Hmac\Sha512;
-use Lcobucci\JWT\Token\Parser;
 use Lcobucci\JWT\Signer\Key;
+use Lcobucci\JWT\Token\Parser;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Project\UGroupLiteralizer;
+use Tuleap\Test\Builders\UserTestBuilder;
 use UserManager;
 
 final class JWTGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private UserManager&MockObject $user_manager;
 
-    /** @var UserManager */
-    private $user_manager;
+    private UGroupLiteralizer&MockObject $ugroup_literalizer;
 
-    /** @var UGroupLiteralizer */
-    private $ugroup_literalizer;
+    private JWTGenerator $jwt_generator;
 
-    /** @var  JWTGenerator */
-    private $jwt_generator;
-
-    /**
-     * @var Configuration
-     */
-    private $jwt_configuration;
+    private Configuration $jwt_configuration;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturn(9);
+        $user = UserTestBuilder::anActiveUser()
+            ->withId(9)
+            ->build();
 
-        $this->user_manager = Mockery::mock(UserManager::class);
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
+        $this->user_manager = $this->createMock(UserManager::class);
+        $this->user_manager->method('getCurrentUser')->willReturn($user);
 
         $u_groups = ['@site_active'];
 
-        $this->ugroup_literalizer = \Mockery::mock(UGroupLiteralizer::class);
-        $this->ugroup_literalizer->shouldReceive('getUserGroupsForUserWithArobase')->andReturn($u_groups);
+        $this->ugroup_literalizer = $this->createMock(UGroupLiteralizer::class);
+        $this->ugroup_literalizer->method('getUserGroupsForUserWithArobase')->willReturn($u_groups);
 
         $this->jwt_configuration = Configuration::forSymmetricSigner(new Sha512(), Key\InMemory::plainText(str_repeat('a', 64)));
         $this->jwt_generator     = new JWTGenerator($this->jwt_configuration, $this->user_manager, $this->ugroup_literalizer);
