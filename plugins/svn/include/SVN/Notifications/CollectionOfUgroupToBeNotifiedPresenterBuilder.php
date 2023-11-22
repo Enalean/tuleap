@@ -21,7 +21,7 @@
 namespace Tuleap\SVN\Notifications;
 
 use ProjectUGroup;
-use Tuleap\Notifications\UgroupToBeNotifiedPresenter;
+use Tuleap\Notification\UgroupToBeNotifiedPresenter;
 use Tuleap\SVN\Admin\MailNotification;
 
 class CollectionOfUgroupToBeNotifiedPresenterBuilder

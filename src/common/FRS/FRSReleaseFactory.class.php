@@ -25,10 +25,11 @@ use Tuleap\FRS\UploadedLinkDeletor;
 use Tuleap\FRS\UploadedLinksDao;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
+use Tuleap\Notification\Notification;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 
-class FRSReleaseFactory
+class FRSReleaseFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     // Kept for legacy
     public $STATUS_ACTIVE  = FRSRelease::STATUS_ACTIVE;
@@ -81,7 +82,7 @@ class FRSReleaseFactory
     public function getFRSReleaseFromDb($release_id, $group_id = null, $package_id = null, $extraFlags = 0)
     {
         $_id = (int) $release_id;
-        $dao = $this->_getFRSReleaseDao();
+        $dao = $this->getFRSReleaseDao();
         if ($group_id && $package_id) {
             $_group_id   = (int) $group_id;
             $_package_id = (int) $package_id;
@@ -111,7 +112,7 @@ class FRSReleaseFactory
      */
     public function getFRSReleasesFromDb($package_id)
     {
-        $dao = $this->_getFRSReleaseDao();
+        $dao = $this->getFRSReleaseDao();
 
         $releases =  [];
         foreach ($dao->searchByPackageId($package_id) as $data_array) {
@@ -126,7 +127,7 @@ class FRSReleaseFactory
      */
     public function getActiveFRSReleases($package_id, $group_id)
     {
-        $dao  = $this->_getFRSReleaseDao();
+        $dao  = $this->getFRSReleaseDao();
         $dar  = $dao->searchActiveReleasesByPackageId($package_id, $this->STATUS_ACTIVE);
         $user = UserManager::instance()->getCurrentUser();
 
@@ -153,7 +154,7 @@ class FRSReleaseFactory
      */
     public function getPaginatedActiveFRSReleasesForUser(FRSPackage $package, PFUser $user, $limit, $offset)
     {
-        $dao        = $this->_getFRSReleaseDao();
+        $dao        = $this->getFRSReleaseDao();
         $dar        = $dao->searchPaginatedActiveReleasesByPackageId($package->getPackageID(), $limit, $offset);
         $total_size = $dao->foundRows();
 
@@ -174,7 +175,7 @@ class FRSReleaseFactory
     public function getFRSReleasesInfoListFromDb($group_id, $package_id = null)
     {
         $_id = (int) $group_id;
-        $dao = $this->_getFRSReleaseDao();
+        $dao = $this->getFRSReleaseDao();
         if ($package_id) {
             $_package_id = (int) $package_id;
             $dar         = $dao->searchByGroupPackageID($_id, $_package_id);
@@ -195,7 +196,7 @@ class FRSReleaseFactory
     public function isActiveReleases($package_id)
     {
         $_id = (int) $package_id;
-        $dao = $this->_getFRSReleaseDao();
+        $dao = $this->getFRSReleaseDao();
         $dar = $dao->searchActiveReleasesByPackageId($_id, $this->STATUS_ACTIVE);
 
         if ($dar->isError()) {
@@ -211,7 +212,7 @@ class FRSReleaseFactory
     public function getReleaseIdByName($release_name, $package_id)
     {
         $_id = (int) $package_id;
-        $dao = $this->_getFRSReleaseDao();
+        $dao = $this->getFRSReleaseDao();
         $dar = $dao->searchReleaseByName($release_name, $_id);
 
         if ($dar->isError()) {
@@ -240,7 +241,7 @@ class FRSReleaseFactory
 
     public $dao;
 
-    public function _getFRSReleaseDao()
+    private function getFRSReleaseDao(): FRSReleaseDao
     {
         if (! $this->dao) {
             $this->dao =  new FRSReleaseDao(CodendiDataAccess::instance(), $this->STATUS_DELETED);
@@ -250,7 +251,7 @@ class FRSReleaseFactory
 
     public function update($data_array)
     {
-        $dao =  $this->_getFRSReleaseDao();
+        $dao =  $this->getFRSReleaseDao();
         if ($dao->updateFromArray($data_array)) {
             $release = $this->getFRSReleaseFromDb($data_array['release_id']);
             $this->getEventManager()->processEvent(
@@ -266,7 +267,7 @@ class FRSReleaseFactory
 
     public function create($data_array)
     {
-        $dao = $this->_getFRSReleaseDao();
+        $dao = $this->getFRSReleaseDao();
         if ($id = $dao->createFromArray($data_array)) {
             $release = $this->getFRSReleaseFromDb($id);
             $this->getEventManager()->processEvent(
@@ -280,11 +281,11 @@ class FRSReleaseFactory
         return false;
     }
 
-    public function _delete($release_id)
+    private function delete($release_id): void
     {
         $_id     = (int) $release_id;
         $release = $this->getFRSReleaseFromDb($_id);
-        $dao     = $this->_getFRSReleaseDao();
+        $dao     = $this->getFRSReleaseDao();
         if ($dao->delete($_id, $this->STATUS_DELETED)) {
             $this->getEventManager()->processEvent(
                 'frs_delete_release',
@@ -292,9 +293,7 @@ class FRSReleaseFactory
                     'item_id' => $_id,
                 ]
             );
-            return true;
         }
-        return false;
     }
 
     /**
@@ -310,7 +309,7 @@ class FRSReleaseFactory
      *
      * @return bool
      */
-    public function delete_release($group_id, $release_id)
+    public function delete_release($group_id, $release_id) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $release = $this->getFRSReleaseFromDb($release_id, $group_id);
 
@@ -329,7 +328,7 @@ class FRSReleaseFactory
             $uploaded_link_deletor->deleteByRelease($release, UserManager::instance()->getCurrentUser());
 
             //delete the release from the database
-            $this->_delete($release_id);
+            $this->delete($release_id);
             return true;
         }
     }
@@ -629,7 +628,7 @@ class FRSReleaseFactory
      *
      * @return FRSPackageFactory
      */
-    public function _getFRSPackageFactory()
+    public function _getFRSPackageFactory() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if (empty($this->package_factory)) {
             $this->package_factory = new FRSPackageFactory();
@@ -642,7 +641,7 @@ class FRSReleaseFactory
      *
      * @return FRSFileFactory
      */
-    public function _getFRSFileFactory()
+    public function _getFRSFileFactory() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if (empty($this->file_factory)) {
             $this->file_factory = new FRSFileFactory();

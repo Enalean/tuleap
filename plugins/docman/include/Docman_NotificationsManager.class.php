@@ -27,6 +27,7 @@ use Tuleap\Docman\Notifications\UgroupsUpdater;
 use Tuleap\Docman\Notifications\UsersRetriever;
 use Tuleap\Docman\Notifications\UsersToNotifyDao;
 use Tuleap\Docman\Notifications\UsersUpdater;
+use Tuleap\Notification\Notification;
 
 class Docman_NotificationsManager
 {

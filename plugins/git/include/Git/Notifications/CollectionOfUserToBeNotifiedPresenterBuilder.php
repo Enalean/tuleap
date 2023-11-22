@@ -21,7 +21,7 @@
 namespace Tuleap\Git\Notifications;
 
 use GitRepository;
-use Tuleap\Notifications\UserInvolvedInNotificationPresenter;
+use Tuleap\Notification\UserInvolvedInNotificationPresenter;
 
 class CollectionOfUserToBeNotifiedPresenterBuilder
 {

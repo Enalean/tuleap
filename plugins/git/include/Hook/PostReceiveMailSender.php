@@ -26,7 +26,7 @@ use Git_GitRepositoryUrlManager;
 use GitRepository;
 use MailBuilder;
 use MailEnhancer;
-use Notification;
+use Tuleap\Notification\Notification;
 use Tuleap\ServerHostname;
 
 class PostReceiveMailSender

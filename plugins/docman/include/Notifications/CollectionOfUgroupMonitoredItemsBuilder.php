@@ -23,7 +23,7 @@ namespace Tuleap\Docman\Notifications;
 use Docman_NotificationsManager;
 use EventManager;
 use ProjectUGroup;
-use Tuleap\Notifications\UgroupToBeNotifiedPresenter;
+use Tuleap\Notification\UgroupToBeNotifiedPresenter;
 use UGroupDao;
 use UGroupManager;
 

@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook\Bot;
 
-use Notification;
+use Tuleap\Notification\Notification;
 use PFUser;
 use Project;
 use Psr\Log\LoggerInterface;

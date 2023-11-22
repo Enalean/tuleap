@@ -26,7 +26,7 @@ use GitRepository;
 use GitRepositoryFactory;
 use MailBuilder;
 use MailEnhancer;
-use Notification;
+use Tuleap\Notification\Notification;
 use Project_AccessException;
 use Tuleap\Language\LocaleSwitcher;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;

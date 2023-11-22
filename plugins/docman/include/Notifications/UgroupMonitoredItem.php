@@ -21,7 +21,7 @@
 namespace Tuleap\Docman\Notifications;
 
 use Docman_Item;
-use Tuleap\Notifications\UgroupToBeNotifiedPresenter;
+use Tuleap\Notification\UgroupToBeNotifiedPresenter;
 
 class UgroupMonitoredItem
 {

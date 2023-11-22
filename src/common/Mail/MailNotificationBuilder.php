@@ -18,7 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class MailNotificationBuilder
+use Tuleap\Notification\Notification;
+
+class MailNotificationBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
      * @var MailBuilder

@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook\Bot;
 
 use MailBuilder;
-use Notification;
+use Tuleap\Notification\Notification;
 use Psr\Log\LoggerInterface;
 use Tuleap\Git\GitService;
 use Tuleap\Gitlab\API\Credentials;

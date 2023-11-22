@@ -53576,12 +53576,18 @@
   </file>
   <file src="src/common/FRS/FRSReleaseFactory.class.php">
     <DeprecatedMethod>
+      <code><![CDATA[$dao->searchByPackageId($package_id)]]></code>
+      <code><![CDATA[$dao->searchByPackageId($package_id)]]></code>
       <code>$dar</code>
       <code>$dar</code>
       <code>$dar</code>
       <code>$dar</code>
+      <code>current</code>
+      <code>foundRows</code>
+      <code>isError</code>
       <code>isError</code>
       <code>rowCount</code>
+      <code>valid</code>
     </DeprecatedMethod>
     <FalsableReturnStatement>
       <code>false</code>
@@ -53637,8 +53643,6 @@
       <code>$instance</code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code>_delete</code>
-      <code>_getFRSReleaseDao</code>
       <code>clearInstance</code>
       <code>create</code>
       <code>getEmailBody</code>
@@ -53779,6 +53783,10 @@
       <code>groupAddHistory</code>
       <code>groupAddHistory</code>
       <code>groupAddHistory</code>
+      <code>isError</code>
+      <code>isError</code>
+      <code>rowCount</code>
+      <code>valid</code>
     </DeprecatedMethod>
     <InvalidArgument>
       <code>$fileModuleId</code>
@@ -53786,10 +53794,14 @@
     <InvalidNullableReturnType>
       <code>bool</code>
     </InvalidNullableReturnType>
+    <InvalidReturnStatement>
+      <code>$res</code>
+    </InvalidReturnStatement>
     <InvalidReturnType>
       <code>String</code>
       <code>String</code>
       <code>String</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidReturnType>
     <InvalidScalarArgument>
       <code>$groupId</code>
@@ -53802,7 +53814,6 @@
       <code>$text_body</code>
     </MissingParamType>
     <MissingReturnType>
-      <code>_getFileModuleMonitorDao</code>
       <code>getFilesModuleMonitorFromDb</code>
       <code>whoIsMonitoringPackageById</code>
     </MissingReturnType>
@@ -55696,6 +55707,46 @@
     <PossiblyInvalidArgument>
       <code><![CDATA[$request->getProject()->getID()]]></code>
     </PossiblyInvalidArgument>
+  </file>
+  <file src="src/common/Notification/Notification.php">
+    <MissingParamType>
+      <code>$body_html</code>
+      <code>$body_text</code>
+      <code>$email</code>
+      <code>$goto_link</code>
+      <code>$service_name</code>
+      <code>$subject</code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code>addEmail</code>
+      <code>getEmails</code>
+      <code>getGotoLink</code>
+      <code>getHTMLBody</code>
+      <code>getServiceName</code>
+      <code>getSubject</code>
+      <code>getTextBody</code>
+      <code>hasHTMLBody</code>
+      <code>hasTextBody</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/Notification/UgroupToBeNotifiedPresenter.php">
+    <MissingPropertyType>
+      <code>$label</code>
+      <code>$ugroup_id</code>
+    </MissingPropertyType>
+  </file>
+  <file src="src/common/Notification/UserInvolvedInNotificationPresenter.php">
+    <MissingParamType>
+      <code>$avatar_url</code>
+      <code>$real_name</code>
+      <code>$user_id</code>
+      <code>$user_name</code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code>$avatar_url</code>
+      <code>$label</code>
+      <code>$user_id</code>
+    </MissingPropertyType>
   </file>
   <file src="src/common/OAuth2ServerCore/App/AppDao.php">
     <ImplementedReturnTypeMismatch>
@@ -68591,46 +68642,6 @@
     <PossiblyInvalidArgument>
       <code><![CDATA[$project->getID()]]></code>
     </PossiblyInvalidArgument>
-  </file>
-  <file src="src/common/notification/Notification.php">
-    <MissingParamType>
-      <code>$body_html</code>
-      <code>$body_text</code>
-      <code>$email</code>
-      <code>$goto_link</code>
-      <code>$service_name</code>
-      <code>$subject</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>addEmail</code>
-      <code>getEmails</code>
-      <code>getGotoLink</code>
-      <code>getHTMLBody</code>
-      <code>getServiceName</code>
-      <code>getSubject</code>
-      <code>getTextBody</code>
-      <code>hasHTMLBody</code>
-      <code>hasTextBody</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/notifications/UgroupToBeNotifiedPresenter.php">
-    <MissingPropertyType>
-      <code>$label</code>
-      <code>$ugroup_id</code>
-    </MissingPropertyType>
-  </file>
-  <file src="src/common/notifications/UserInvolvedInNotificationPresenter.php">
-    <MissingParamType>
-      <code>$avatar_url</code>
-      <code>$real_name</code>
-      <code>$user_id</code>
-      <code>$user_name</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$avatar_url</code>
-      <code>$label</code>
-      <code>$user_id</code>
-    </MissingPropertyType>
   </file>
   <file src="src/common/permission/IPermissionsManagerNG.php">
     <MissingParamType>

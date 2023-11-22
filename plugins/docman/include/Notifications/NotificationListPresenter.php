@@ -21,7 +21,7 @@
 namespace Tuleap\Docman\Notifications;
 
 use Docman_Item;
-use Tuleap\Notifications\UserInvolvedInNotificationPresenter;
+use Tuleap\Notification\UserInvolvedInNotificationPresenter;
 use UserManager;
 
 class NotificationListPresenter
