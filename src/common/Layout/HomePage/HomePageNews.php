@@ -23,9 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Layout\HomePage;
 
-use DateHelper;
 use PFUser;
 use Project;
+use Tuleap\Date\DateHelper;
 
 class HomePageNews
 {

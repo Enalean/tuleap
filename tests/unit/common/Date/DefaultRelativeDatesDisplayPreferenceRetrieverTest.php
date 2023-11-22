@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\date;
+namespace Tuleap\Date;
 
 use Tuleap\ForgeConfigSandbox;
 
@@ -32,11 +32,11 @@ class DefaultRelativeDatesDisplayPreferenceRetrieverTest extends \Tuleap\Test\PH
     {
         \ForgeConfig::set(
             DefaultRelativeDatesDisplayPreferenceRetriever::DEFAULT_RELATIVE_DATES_DISPLAY,
-            \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN
+            DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN
         );
 
         $this->assertEquals(
-            \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN,
+            DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN,
             DefaultRelativeDatesDisplayPreferenceRetriever::retrieveDefaultValue()
         );
     }
@@ -44,7 +44,7 @@ class DefaultRelativeDatesDisplayPreferenceRetrieverTest extends \Tuleap\Test\PH
     public function testItReturnsADefaultDisplayIfSiteAdminHasNotSetThePreference(): void
     {
         $this->assertEquals(
-            \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP,
+            DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP,
             DefaultRelativeDatesDisplayPreferenceRetriever::retrieveDefaultValue()
         );
     }
@@ -74,37 +74,37 @@ class DefaultRelativeDatesDisplayPreferenceRetrieverTest extends \Tuleap\Test\PH
     {
         return [
             'absolute right' => [
-                \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN,
+                DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN,
                 'right',
                 'absolute',
                 'right',
             ],
             'absolute top' => [
-                \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN,
+                DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN,
                 'top',
                 'absolute',
                 'top',
             ],
             'absolute tooltip' => [
-                \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP,
+                DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP,
                 'right',
                 'absolute',
                 'tooltip',
             ],
             'relative right' => [
-                \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,
+                DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,
                 'right',
                 'relative',
                 'right',
             ],
             'relative top' => [
-                \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,
+                DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,
                 'top',
                 'relative',
                 'top',
             ],
             'relative tooltip' => [
-                \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP,
+                DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP,
                 'right',
                 'relative',
                 'tooltip',

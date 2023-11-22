@@ -20,11 +20,11 @@
 
 namespace Tuleap\Git\Repository\View;
 
-use DateHelper;
 use Git_Driver_Gerrit_GerritDriverFactory;
 use Git_Driver_Gerrit_ProjectCreatorStatus;
 use GitRepository;
-use Tuleap\date\RelativeDatesAssetsRetriever;
+use Tuleap\Date\DateHelper;
+use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Tuleap\Git\Driver\Gerrit\GerritUnsupportedVersionDriver;
 
 class GerritStatusPresenter

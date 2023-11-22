@@ -25,6 +25,7 @@ use ForgeConfig;
 use Psr\Log\LoggerInterface;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_MailGateway_RecipientFactory;
+use Tuleap\Date\DateHelper;
 use Tuleap\Date\TimezoneSwitcher;
 use Tuleap\ServerHostname;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
@@ -347,7 +348,7 @@ final class EmailNotificationTask implements PostCreationTask
         $output .= PHP_EOL;
         $output .= dgettext('tuleap-tracker', 'last edited by:');
         $output .= ' ' . $this->user_helper->getDisplayNameFromUserId($changeset->getSubmittedBy());
-        $output .= ' on ' . \DateHelper::formatForLanguage($language, (int) $changeset->getSubmittedOn());
+        $output .= ' on ' . DateHelper::formatForLanguage($language, (int) $changeset->getSubmittedOn());
         if ($comment = $changeset->getComment()) {
             $output .= PHP_EOL;
             $output .= $comment->fetchMailFollowUp($format);

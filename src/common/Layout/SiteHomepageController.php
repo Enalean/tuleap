@@ -30,7 +30,7 @@ use Event;
 use ProjectManager;
 use SVN_LogDao;
 use TemplateRendererFactory;
-use Tuleap\date\RelativeDatesAssetsRetriever;
+use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Tuleap\Layout\HomePage\NewsCollection;
 use Tuleap\Layout\HomePage\NewsCollectionBuilder;
 use Tuleap\Layout\HomePage\StatisticsCollectionBuilder;

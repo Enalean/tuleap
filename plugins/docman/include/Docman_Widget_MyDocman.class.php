@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Date\DateHelper;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
 

@@ -22,7 +22,8 @@
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\admin\PendingElements\PendingDocumentsRetriever;
 use Tuleap\BrowserDetection\DetectedBrowser;
-use Tuleap\date\RelativeDatesAssetsRetriever;
+use Tuleap\Date\DateHelper;
+use Tuleap\Date\RelativeDatesAssetsRetriever;
 
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/admin_utils.php';

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,21 +20,19 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\date\Admin;
+namespace Tuleap\Date\Admin;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tuleap\date\SelectedDateDisplayPreferenceValidator;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Date\DateHelper;
+use Tuleap\Date\SelectedDateDisplayPreferenceValidator;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class RelativeDatesDisplaySaveControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var RelativeDatesDisplaySaveController
-     */
-    private $controller;
+    private RelativeDatesDisplaySaveController $controller;
 
     /**
      * @var \UserPreferencesDao&MockObject
@@ -68,7 +66,7 @@ final class RelativeDatesDisplaySaveControllerTest extends \Tuleap\Test\PHPUnit\
         $user    = UserTestBuilder::buildSiteAdministrator();
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
-            ->withParam('relative-dates-display', \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP)
+            ->withParam('relative-dates-display', DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP)
             ->build();
 
         $this->config_dao->expects(self::once())->method('save');
@@ -84,7 +82,7 @@ final class RelativeDatesDisplaySaveControllerTest extends \Tuleap\Test\PHPUnit\
         $user    = UserTestBuilder::buildSiteAdministrator();
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
-            ->withParam('relative-dates-display', \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP)
+            ->withParam('relative-dates-display', DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP)
             ->withParam('relative-dates-force-preference', 'true')
             ->build();
 

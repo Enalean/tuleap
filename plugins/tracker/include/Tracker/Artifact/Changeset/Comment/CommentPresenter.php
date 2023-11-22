@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Changeset\Comment;
 
+use Tuleap\Date\DateHelper;
+
 final class CommentPresenter
 {
     /**
@@ -77,7 +79,7 @@ final class CommentPresenter
         $this->is_empty      = $comment->hasEmptyBody();
         $this->was_cleared   = ($this->has_parent && ! trim($comment->body));
         $this->user_link     = $user_helper->getLinkOnUserFromUserId((int) $comment->submitted_by);
-        $this->relative_date = \DateHelper::relativeDateInlineContext((int) $comment->submitted_on, $current_user);
+        $this->relative_date = DateHelper::relativeDateInlineContext((int) $comment->submitted_on, $current_user);
 
         if ($this->format === \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT) {
             $this->is_commonmark     = true;

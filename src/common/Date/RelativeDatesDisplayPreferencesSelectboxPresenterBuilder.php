@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\date;
+namespace Tuleap\Date;
 
 class RelativeDatesDisplayPreferencesSelectboxPresenterBuilder
 {
@@ -32,16 +32,16 @@ class RelativeDatesDisplayPreferencesSelectboxPresenterBuilder
         $is_relative_first_absolute_tooltip = false;
 
         switch ($relative_dates_display) {
-            case \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN:
+            case DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN:
                 $is_relative_first_absolute_shown = true;
                 break;
-            case \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN:
+            case DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN:
                 $is_absolute_first_relative_shown = true;
                 break;
-            case \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP:
+            case DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP:
                 $is_absolute_first_relative_tooltip = true;
                 break;
-            case \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP:
+            case DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP:
             default:
                 $is_relative_first_absolute_tooltip = true;
                 break;

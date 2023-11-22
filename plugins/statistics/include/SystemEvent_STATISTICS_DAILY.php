@@ -18,6 +18,8 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
+use Tuleap\Date\DateHelper;
+
 class SystemEvent_STATISTICS_DAILY extends SystemEvent
 {
     /**

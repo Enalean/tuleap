@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Date\DateHelper;
+
 class Tracker_Artifact_ChangesetJsonPresenter
 {
     /**

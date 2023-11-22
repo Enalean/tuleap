@@ -25,7 +25,8 @@ namespace Tuleap\User\Account\Appearance;
 
 use CSRFSynchronizerToken;
 use PFUser;
-use Tuleap\date\DefaultRelativeDatesDisplayPreferenceRetriever;
+use Tuleap\Date\DateHelper;
+use Tuleap\Date\DefaultRelativeDatesDisplayPreferenceRetriever;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 use UserHelper;
 
@@ -63,7 +64,7 @@ class AppearancePresenterBuilder
         $is_login          = $preference === UserHelper::PREFERENCES_LOGIN;
         $is_realname       = $preference === UserHelper::PREFERENCES_REAL_NAME;
 
-        $display_relative_dates_preference = $user->getPreference(\DateHelper::PREFERENCE_NAME);
+        $display_relative_dates_preference = $user->getPreference(DateHelper::PREFERENCE_NAME);
 
         return new AppearancePresenter(
             $csrf_token,

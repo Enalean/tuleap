@@ -20,7 +20,7 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
-use Tuleap\date\RelativeDatesAssetsRetriever;
+use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Event\Events\ProjectProviderEvent;
 use Tuleap\Layout\HeaderConfiguration;

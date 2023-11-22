@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\date\RelativeDatesAssetsRetriever;
+use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Artifact\MyArtifactsCollection;

@@ -19,8 +19,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-use Tuleap\Date\TlpRelativeDatePresenter;
-use Tuleap\Date\TlpRelativeDatePresenterBuilder;
+namespace Tuleap\Date;
+
+use BaseLanguage;
+use Codendi_HTMLPurifier;
+use DateTimeImmutable;
+use PFUser;
 
 class DateHelper
 {
@@ -34,7 +38,7 @@ class DateHelper
     public const PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP = "absolute_first-relative_tooltip";
 
     /**
-     * @deprecated Use \DateHelper::relativeDate() instead
+     * @deprecated Use DateHelper::relativeDate() instead
      */
     public static function timeAgoInWords($time, $include_seconds = false, $with_title = false): string
     {
@@ -101,10 +105,8 @@ class DateHelper
 
     /**
      * Calculate the approximate distance between two times
-     *
-     * @return string
      */
-    public static function distanceOfTimeInWords($from_time, $to_time, $include_seconds = false)
+    public static function distanceOfTimeInWords($from_time, $to_time, $include_seconds = false): string|null
     {
         $distance_in_minutes = round((abs($to_time - $from_time)) / 60);
         $distance_in_seconds = round(abs($to_time - $from_time));
@@ -112,7 +114,7 @@ class DateHelper
         return self::getFormattedDistance($distance_in_minutes, $distance_in_seconds, $include_seconds);
     }
 
-    public static function getFormattedDistance($distance_in_minutes, $distance_in_seconds, $include_seconds)
+    public static function getFormattedDistance($distance_in_minutes, $distance_in_seconds, $include_seconds): string|null
     {
         if ($distance_in_minutes <= 1) {
             if (! $include_seconds) {
@@ -166,7 +168,7 @@ class DateHelper
      * @param int          $date The timestamp to transform
      * @param bool         $day_only True if display only the date, false if you want the time also
      */
-    public static function formatForLanguage(BaseLanguage $lang, $date, $day_only = false): string
+    public static function formatForLanguage(BaseLanguage $lang, int $date, bool $day_only = false): string
     {
         if ($day_only) {
             $user_date = format_date($lang->getText('system', 'datefmt_short'), $date, '');

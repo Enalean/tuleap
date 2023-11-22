@@ -25,6 +25,7 @@ namespace Tuleap\User\Account;
 use CSRFSynchronizerToken;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\Date\DateHelper;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\TemporaryTestDirectory;
@@ -96,7 +97,7 @@ final class DisplayAppearanceControllerTest extends \Tuleap\Test\PHPUnit\TestCas
                     true,
                     true,
                     true,
-                    \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN
+                    DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN
                 )
             );
 

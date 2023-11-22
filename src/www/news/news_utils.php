@@ -36,6 +36,8 @@
  *
  */
 
+use Tuleap\Date\DateHelper;
+
 require_once __DIR__ . '/../project/admin/permissions.php';
 require_once __DIR__ . '/../project/admin/ugroup_utils.php';
 require_once __DIR__ . '/../forum/forum_utils.php';

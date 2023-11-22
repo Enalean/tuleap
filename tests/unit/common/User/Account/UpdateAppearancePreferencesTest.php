@@ -24,7 +24,7 @@ namespace Tuleap\User\Account;
 
 use CSRFSynchronizerToken;
 use ThemeVariant;
-use Tuleap\date\SelectedDateDisplayPreferenceValidator;
+use Tuleap\Date\SelectedDateDisplayPreferenceValidator;
 use Tuleap\Layout\ThemeVariantColor;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;

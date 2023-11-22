@@ -22,7 +22,6 @@ namespace Tuleap\Git\GitViews\RepoManagement\Pane;
 
 use Codendi_HTMLPurifier;
 use Codendi_Request;
-use DateHelper;
 use Git_Driver_Gerrit_Exception;
 use Git_Driver_Gerrit_GerritDriverFactory;
 use Git_Driver_Gerrit_ProjectCreatorStatus;
@@ -30,7 +29,8 @@ use Git_Driver_Gerrit_ProjectCreatorStatusDao;
 use Git_RemoteServer_Gerrit_ProjectNameBuilder;
 use Git_RemoteServer_GerritServer;
 use GitRepository;
-use Tuleap\date\RelativeDatesAssetsRetriever;
+use Tuleap\Date\DateHelper;
+use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Tuleap\Git\Driver\Gerrit\UnsupportedGerritVersionException;
 use Tuleap\Git\RemoteServer\GerritCanMigrateChecker;
 

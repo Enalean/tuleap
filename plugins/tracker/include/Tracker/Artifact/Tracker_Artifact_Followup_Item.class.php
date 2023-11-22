@@ -16,6 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Date\DateHelper;
+
 abstract class Tracker_Artifact_Followup_Item
 {
     abstract public function getId();
@@ -89,7 +91,7 @@ abstract class Tracker_Artifact_Followup_Item
         return '<span class="tracker_artifact_followup_title_user">' . $this->getSubmitterUrl() . '</span>';
     }
 
-    public function getTimeAgo(PFUser $current_user)
+    public function getTimeAgo(PFUser $current_user): string
     {
         return DateHelper::relativeDateInlineContext($this->getFollowUpDate(), $current_user);
     }

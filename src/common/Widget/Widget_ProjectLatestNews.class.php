@@ -24,7 +24,7 @@ namespace Tuleap\Widget;
 use HTTPRequest;
 use Project;
 use ProjectManager;
-use Tuleap\date\RelativeDatesAssetsRetriever;
+use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Widget;
 
 /**

@@ -20,10 +20,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\date\Admin;
+namespace Tuleap\Date\Admin;
 
-use Tuleap\date\RelativeDatesDisplayPreferencesSelectboxPresenter;
-use Tuleap\date\RelativeDatesDisplayPreferencesSelectboxPresenterBuilder;
+use Tuleap\Date\DateHelper;
+use Tuleap\Date\RelativeDatesDisplayPreferencesSelectboxPresenter;
+use Tuleap\Date\RelativeDatesDisplayPreferencesSelectboxPresenterBuilder;
 
 class RelativeDatesDisplayAdminPresenter
 {
@@ -51,7 +52,7 @@ class RelativeDatesDisplayAdminPresenter
             new \DateInterval($period_one_week)
         )->getTimestamp();
 
-        $this->tlp_relative_date_component_purified = \DateHelper::relativeDateInlineContext($last_week_timestamp, $user);
+        $this->tlp_relative_date_component_purified = DateHelper::relativeDateInlineContext($last_week_timestamp, $user);
         $this->csrf_token                           = $csrf_token;
 
         $presenter_builder                                    = new RelativeDatesDisplayPreferencesSelectboxPresenterBuilder();

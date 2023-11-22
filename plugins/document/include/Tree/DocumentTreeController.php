@@ -27,7 +27,7 @@ use HTTPRequest;
 use Project;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRendererFactory;
-use Tuleap\date\RelativeDatesAssetsRetriever;
+use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Tuleap\Docman\FilenamePattern\FilenamePatternRetriever;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\Settings\ITellIfWritersAreAllowedToUpdatePropertiesOrDelete;

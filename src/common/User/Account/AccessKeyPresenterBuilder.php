@@ -23,13 +23,13 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account;
 
-use DateHelper;
 use ForgeConfig;
 use Tuleap\Authentication\Scope\AggregateAuthenticationScopeBuilder;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
+use Tuleap\Date\DateHelper;
 use Tuleap\User\AccessKey\AccessKeyDAO;
 use Tuleap\User\AccessKey\AccessKeyMetadataPresenter;
 use Tuleap\User\AccessKey\AccessKeyMetadataRetriever;
