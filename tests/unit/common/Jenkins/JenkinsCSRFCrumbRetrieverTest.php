@@ -22,16 +22,12 @@ namespace Tuleap\Jenkins;
 
 use Exception;
 use Http\Mock\Client;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 
 class JenkinsCSRFCrumbRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @testWith ["https://example.com"]
      *           ["https://example.com/"]
@@ -48,14 +44,14 @@ class JenkinsCSRFCrumbRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $csrf_crumb_retriever = new JenkinsCSRFCrumbRetriever($http_client, HTTPFactoryBuilder::requestFactory());
 
-        $this->assertEquals(
+        self::assertEquals(
             $csrf_crumb_retriever->getCSRFCrumbHeader($test_url),
             $csrf_crumb_header
         );
         $requests = $http_client->getRequests();
-        $this->assertCount(1, $requests);
+        self::assertCount(1, $requests);
         $expected_request_url = 'https://example.com/crumbIssuer/api/xml?xpath=concat%28%2F%2FcrumbRequestField%2C%22%3A%22%2C%2F%2Fcrumb%29';
-        $this->assertEquals($expected_request_url, (string) $requests[0]->getUri());
+        self::assertEquals($expected_request_url, (string) $requests[0]->getUri());
     }
 
     public function testItDoesNotFailOnHTTPError(): void
@@ -67,7 +63,7 @@ class JenkinsCSRFCrumbRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $csrf_crumb_retriever = new JenkinsCSRFCrumbRetriever($http_client, HTTPFactoryBuilder::requestFactory());
 
-        $this->assertEquals(
+        self::assertEquals(
             $csrf_crumb_retriever->getCSRFCrumbHeader('https://example.com'),
             ''
         );
@@ -75,15 +71,15 @@ class JenkinsCSRFCrumbRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotFailOnNetworkError(): void
     {
-        $http_client = Mockery::mock(ClientInterface::class);
-        $http_client->shouldReceive('sendRequest')->andThrow(
+        $http_client = $this->createMock(ClientInterface::class);
+        $http_client->method('sendRequest')->willThrowException(
             new class extends Exception implements ClientExceptionInterface {
             }
         );
 
         $csrf_crumb_retriever = new JenkinsCSRFCrumbRetriever($http_client, HTTPFactoryBuilder::requestFactory());
 
-        $this->assertEquals(
+        self::assertEquals(
             $csrf_crumb_retriever->getCSRFCrumbHeader('https://example.com'),
             ''
         );
