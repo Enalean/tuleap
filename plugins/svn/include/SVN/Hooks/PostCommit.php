@@ -27,7 +27,7 @@ namespace Tuleap\SVN\Hooks;
 use EventManager;
 use MailBuilder;
 use MailEnhancer;
-use Notification;
+use Tuleap\Notification\Notification;
 use PFUser;
 use ReferenceManager;
 use SvnPlugin;

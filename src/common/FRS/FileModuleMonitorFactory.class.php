@@ -21,10 +21,11 @@
 
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
+use Tuleap\Notification\Notification;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 
-class FileModuleMonitorFactory
+class FileModuleMonitorFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public FileModuleMonitorDao|null $dao = null;
 
@@ -33,7 +34,7 @@ class FileModuleMonitorFactory
         $_group_id   = (int) $group_id;
         $_package_id = (int) $package_id;
 
-        $dao = $this->_getFileModuleMonitorDao();
+        $dao = $this->getFileModuleMonitorDao();
         $dar = $dao->whoIsMonitoringPackageByID($group_id, $package_id);
         if ($dar->isError()) {
             return;
@@ -60,7 +61,7 @@ class FileModuleMonitorFactory
      */
     public function whoIsPubliclyMonitoringPackage($packageId)
     {
-        $dao    = $this->_getFileModuleMonitorDao();
+        $dao    = $this->getFileModuleMonitorDao();
         $dar    = $dao->whoIsPubliclyMonitoringPackage($packageId);
         $result = [];
         if ($dar && ! $dar->isError()) {
@@ -72,7 +73,7 @@ class FileModuleMonitorFactory
     public function getFilesModuleMonitorFromDb($id)
     {
         $_id = (int) $id;
-        $dao = $this->_getFileModuleMonitorDao();
+        $dao = $this->getFileModuleMonitorDao();
         $dar = $dao->searchById($_id);
 
         $data_array = [];
@@ -97,7 +98,7 @@ class FileModuleMonitorFactory
     public function isMonitoring($filemodule_id, PFUser $user, $publicly)
     {
         $_filemodule_id = (int) $filemodule_id;
-        $dao            = $this->_getFileModuleMonitorDao();
+        $dao            = $this->getFileModuleMonitorDao();
         $dar            = $dao->searchMonitoringFileByUserAndPackageId($_filemodule_id, $user, $publicly);
 
         if ($dar->isError()) {
@@ -111,7 +112,7 @@ class FileModuleMonitorFactory
         }
     }
 
-    public function _getFileModuleMonitorDao()
+    private function getFileModuleMonitorDao(): FileModuleMonitorDao
     {
         if (! $this->dao) {
             $this->dao = new FileModuleMonitorDao(CodendiDataAccess::instance());
@@ -130,7 +131,7 @@ class FileModuleMonitorFactory
      */
     public function setMonitor($filemodule_id, PFUser $user, $anonymous = true)
     {
-        $dao = $this->_getFileModuleMonitorDao();
+        $dao = $this->getFileModuleMonitorDao();
         $res = $dao->create($filemodule_id, $user, $anonymous);
         return $res;
     }
@@ -186,7 +187,7 @@ class FileModuleMonitorFactory
     public function stopMonitor($filemodule_id, PFUser $user, $onlyPublic = false)
     {
         $_id = (int) $filemodule_id;
-        $dao = $this->_getFileModuleMonitorDao();
+        $dao = $this->getFileModuleMonitorDao();
         return $dao->delete($_id, $user, $onlyPublic);
     }
 

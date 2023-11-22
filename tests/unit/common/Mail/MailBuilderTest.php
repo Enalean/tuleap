@@ -20,6 +20,8 @@
 
 declare(strict_types=1);
 
+use Tuleap\Notification\Notification;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 final class MailBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {

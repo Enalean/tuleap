@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2017 - Present. All rights reserved.
+ * Copyright Enalean (c) 2017-Present. All rights reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,18 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Notifications;
+namespace Tuleap\Notification;
 
-use ProjectUGroup;
+use UserHelper;
 
-class UgroupToBeNotifiedPresenter
+class UserInvolvedInNotificationPresenter
 {
+    public $avatar_url;
     public $label;
-    public $ugroup_id;
+    public $user_id;
 
-    public function __construct(ProjectUGroup $ugroup)
-    {
-        $this->label     = $ugroup->getTranslatedName();
-        $this->ugroup_id = $ugroup->getId();
+    public function __construct(
+        $user_id,
+        $user_name,
+        $real_name,
+        $avatar_url,
+    ) {
+        $this->user_id    = $user_id;
+        $this->avatar_url = $avatar_url;
+        $this->label      = UserHelper::instance()->getDisplayName($user_name, $real_name);
     }
 }

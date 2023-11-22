@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\Notifications;
 
 use ProjectUGroup;
 use Tracker_GlobalNotification;
-use Tuleap\Notifications\UgroupToBeNotifiedPresenter;
+use Tuleap\Notification\UgroupToBeNotifiedPresenter;
 
 class CollectionOfUgroupToBeNotifiedPresenterBuilder
 {

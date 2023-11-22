@@ -20,7 +20,7 @@
 
 namespace Tuleap\SVN\Notifications;
 
-use Tuleap\Notifications\UserInvolvedInNotificationPresenter;
+use Tuleap\Notification\UserInvolvedInNotificationPresenter;
 use Tuleap\SVN\Admin\MailNotification;
 
 class CollectionOfUserToBeNotifiedPresenterBuilder

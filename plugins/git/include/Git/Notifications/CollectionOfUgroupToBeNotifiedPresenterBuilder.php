@@ -22,7 +22,7 @@ namespace Tuleap\Git\Notifications;
 
 use GitRepository;
 use ProjectUGroup;
-use Tuleap\Notifications\UgroupToBeNotifiedPresenter;
+use Tuleap\Notification\UgroupToBeNotifiedPresenter;
 
 class CollectionOfUgroupToBeNotifiedPresenterBuilder
 {

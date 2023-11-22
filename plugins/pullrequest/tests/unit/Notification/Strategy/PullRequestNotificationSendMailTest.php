@@ -129,7 +129,7 @@ final class PullRequestNotificationSendMailTest extends \Tuleap\Test\PHPUnit\Tes
             ->with(
                 self::anything(),
                 self::callback(
-                    static function (\Notification $notification) use ($recipient_with_access): bool {
+                    static function (\Tuleap\Notification\Notification $notification) use ($recipient_with_access): bool {
                         $emails = $notification->getEmails();
                         return count($emails) === 1 && $emails[0] === $recipient_with_access->getEmail();
                     }
