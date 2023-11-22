@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ArtifactCreationPayload } from "./trackers";
+import type { ArtifactCreationPayload, ArtifactWithFieldCreationPayload } from "./trackers";
 export { WEB_UI_SESSION } from "./commands";
 
 export type ReloadCallback = () => void;
@@ -97,6 +97,8 @@ declare global {
 
             createArtifact(payload: ArtifactCreationPayload): Chainable<number>;
 
+            createArtifactWithFields(payload: ArtifactWithFieldCreationPayload): Chainable<number>;
+
             createFRSPackage(project_id: number, package_name: string): void;
 
             getContains(selector: string, label: string): Chainable<JQuery<HTMLElement>>;
@@ -113,6 +115,11 @@ declare global {
             assertEmailWithContentReceived(
                 email_address: string,
                 specific_content_of_email: string,
+            ): void;
+
+            assertEmailReceivedWithAttachment(
+                from_email_address: string,
+                attachment_type: string,
             ): void;
 
             assertNotEmailWithContentReceived(
