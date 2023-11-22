@@ -227,4 +227,11 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
             ->getTimeframeCalculator()
             ->userCanReadTimeframeFields($user);
     }
+
+    public function isAllSetToZero(\Tracker_Artifact_Changeset $changeset, \PFUser $user): bool
+    {
+        return $this->semantic_timeframe_implied_from_tracker
+            ->getTimeframeCalculator()
+            ->isAllSetToZero($changeset, $user);
+    }
 }

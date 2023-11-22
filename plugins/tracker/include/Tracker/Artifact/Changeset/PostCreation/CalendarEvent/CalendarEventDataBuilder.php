@@ -48,12 +48,13 @@ final class CalendarEventDataBuilder implements BuildCalendarEventData
 
         $timeframe_calculator = $semantic_timeframe->getTimeframeCalculator();
 
-        $time_period   = $timeframe_calculator->buildDatePeriodWithoutWeekendForChangeset(
+        $permission_user = $should_check_permissions ? $recipient : new \Tracker_UserWithReadAllPermission($recipient);
+        $time_period     = $timeframe_calculator->buildDatePeriodWithoutWeekendForChangeset(
             $changeset,
-            $should_check_permissions ? $recipient : new \Tracker_UserWithReadAllPermission($recipient),
+            $permission_user,
             $logger
         );
-        $error_message = $time_period->getErrorMessage();
+        $error_message   = $time_period->getErrorMessage();
         if ($error_message) {
             return Result::err('Time period error: ' . $error_message);
         }
@@ -61,7 +62,7 @@ final class CalendarEventDataBuilder implements BuildCalendarEventData
         $start = $time_period->getStartDate();
         $end   = $time_period->getEndDate();
         if (
-            ($start !== 0 || $end !== 0) ||
+            (! $timeframe_calculator->isAllSetToZero($changeset, $permission_user)) ||
             ($should_check_permissions && ! $timeframe_calculator->userCanReadTimeframeFields($recipient))
         ) {
             if (! $start) {
@@ -77,6 +78,6 @@ final class CalendarEventDataBuilder implements BuildCalendarEventData
             return Result::err('End date < start date, we cannot build calendar event');
         }
 
-        return Result::ok(new CalendarEventData($summary, $start, $end));
+        return Result::ok(new CalendarEventData($summary, $start ?? 0, $end ?? 0));
     }
 }

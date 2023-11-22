@@ -229,4 +229,21 @@ class TimeframeWithEndDate implements IComputeTimeframes
     {
         return $this->start_date_field->userCanRead($user) && $this->end_date_field->userCanRead($user);
     }
+
+    public function isAllSetToZero(\Tracker_Artifact_Changeset $changeset, \PFUser $user): bool
+    {
+        try {
+            $start_date = TimeframeChangesetFieldsValueRetriever::getTimestamp($this->start_date_field, $user, $changeset);
+        } catch (TimeframeFieldNotFoundException | TimeframeFieldNoValueException) {
+            $start_date = 0;
+        }
+
+        try {
+            $end_date = TimeframeChangesetFieldsValueRetriever::getTimestamp($this->end_date_field, $user, $changeset);
+        } catch (TimeframeFieldNotFoundException | TimeframeFieldNoValueException) {
+            $end_date = 0;
+        }
+
+        return $start_date === 0 && $end_date === 0;
+    }
 }

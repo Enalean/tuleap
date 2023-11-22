@@ -29,10 +29,13 @@ use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithDuration;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueDateTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueIntegerTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
 use Tuleap\Tracker\Test\Stub\Semantic\Timeframe\IComputeTimeframesStub;
 use Tuleap\Tracker\Test\Stub\Tracker\Semantic\Timeframe\BuildSemanticTimeframeStub;
 
@@ -229,6 +232,39 @@ final class CalendarEventDataBuilderTest extends TestCase
         self::assertEquals(
             'No start date, we cannot build calendar event',
             (string) $result->error,
+        );
+    }
+
+    public function testCalendarDataIsReturnedEvenIfTimeframeIsZero(): void
+    {
+        $duration_field = TrackerFormElementIntFieldBuilder::anIntField(3)->build();
+        $builder        = new CalendarEventDataBuilder(
+            BuildSemanticTimeframeStub::withTimeframeCalculator(
+                $this->changeset->getTracker(),
+                new TimeframeWithDuration(
+                    $this->start_field,
+                    $duration_field,
+                )
+            ),
+        );
+
+        $this->changeset->setFieldValue($this->start_field, ChangesetValueDateTestBuilder::aValue(
+            1,
+            $this->changeset,
+            $this->start_field
+        )->withTimestamp(0)->build());
+        $this->changeset->setFieldValue($duration_field, ChangesetValueIntegerTestBuilder::aValue(
+            1,
+            $this->changeset,
+            $this->end_field
+        )->withValue(0)->build());
+
+        $result = $builder->getCalendarEventData('Christmas Party', $this->changeset, $this->recipient, $this->logger, false);
+
+        self::assertTrue(Result::isOk($result));
+        self::assertEquals(
+            new CalendarEventData('Christmas Party', 0, 0),
+            $result->value,
         );
     }
 
