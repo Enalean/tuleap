@@ -28,8 +28,6 @@ use PFUser;
 
 final class CustomizableContentLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     private CustomizableContentLoader $loader;
     private PFUser $us_user;
     private PFUser $fr_user;
@@ -61,40 +59,40 @@ final class CustomizableContentLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItLoadsBarInEnglishForEnglishUsers(): void
     {
-        $this->assertEquals('hello', $this->loader->getContent($this->us_user, 'foo/bar'));
+        self::assertEquals('hello', $this->loader->getContent($this->us_user, 'foo/bar'));
     }
 
     public function testItLoadsBarInFrenchForFrenchUsers(): void
     {
-        $this->assertEquals('bonjour', $this->loader->getContent($this->fr_user, 'foo/bar'));
+        self::assertEquals('bonjour', $this->loader->getContent($this->fr_user, 'foo/bar'));
     }
 
     public function testItLoadsBarFromLocalEnUSWhenExists(): void
     {
         ForgeConfig::set('sys_custom_incdir', __DIR__ . '/_fixtures/customizable_loader/etc/site-content');
-        $this->assertEquals('local hello', $this->loader->getContent($this->us_user, 'foo/bar'));
+        self::assertEquals('local hello', $this->loader->getContent($this->us_user, 'foo/bar'));
     }
 
     public function testItLoadsBarFromLocalFrFRWhenExists(): void
     {
         ForgeConfig::set('sys_custom_incdir', __DIR__ . '/_fixtures/customizable_loader/etc/site-content');
-        $this->assertEquals('bonjour local', $this->loader->getContent($this->fr_user, 'foo/bar'));
+        self::assertEquals('bonjour local', $this->loader->getContent($this->fr_user, 'foo/bar'));
     }
 
     public function testItFallsBackToDefaultEnglishWhenLocaleDoesntExist(): void
     {
-        $this->assertEquals('hello', $this->loader->getContent($this->br_user, 'foo/bar'));
+        self::assertEquals('hello', $this->loader->getContent($this->br_user, 'foo/bar'));
     }
 
     public function testItFallsBackToLocalEnglishWhenLocaleDoesntExist(): void
     {
         ForgeConfig::set('sys_custom_incdir', __DIR__ . '/_fixtures/customizable_loader/etc/site-content');
-        $this->assertEquals('local hello', $this->loader->getContent($this->br_user, 'foo/bar'));
+        self::assertEquals('local hello', $this->loader->getContent($this->br_user, 'foo/bar'));
     }
 
     public function testItThrowsAnExceptionWhenNoContentIsFound(): void
     {
-        $this->expectException(CustomContentNotFoundException::class);
+        self::expectException(CustomContentNotFoundException::class);
         $this->loader->getContent($this->br_user, 'bar/foo');
     }
 }

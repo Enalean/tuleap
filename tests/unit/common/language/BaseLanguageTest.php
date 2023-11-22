@@ -19,9 +19,12 @@
  *
  */
 
+declare(strict_types=1);
+
+use Tuleap\Test\Builders\UserTestBuilder;
+
 class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\TemporaryTestDirectory;
     use \Tuleap\ForgeConfigSandbox;
 
@@ -51,29 +54,29 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         parent::tearDown();
     }
 
-    public function testConstructorIsOkWhenLanguagesAreKnown()
+    public function testConstructorIsOkWhenLanguagesAreKnown(): void
     {
         $l1 = new BaseLanguage(',lang1,lang2, lang3 ,lang4 , lang5,', 'lang1');
-        $this->assertEquals(['lang1', 'lang2', 'lang3', 'lang4', 'lang5'], $l1->allLanguages);
+        self::assertEquals(['lang1', 'lang2', 'lang3', 'lang4', 'lang5'], $l1->allLanguages);
     }
 
-    public function testConstructorThrowExceptionWhenLanguageNotSupported()
+    public function testConstructorThrowExceptionWhenLanguageNotSupported(): void
     {
-        $this->expectExceptionMessage('The default language must be part of supported languages');
+        self::expectExceptionMessage('The default language must be part of supported languages');
         new BaseLanguage('lang1,lang2', 'do-not-exist');
     }
 
-    public function testConstructorThrowExceptionWhenNoLanguageProvided()
+    public function testConstructorThrowExceptionWhenNoLanguageProvided(): void
     {
-        $this->expectExceptionMessage('You must provide supported languages (see local.inc)');
+        self::expectExceptionMessage('You must provide supported languages (see local.inc)');
         new BaseLanguage('', '');
     }
 
-    public function testParseAcceptLanguage()
+    public function testParseAcceptLanguage(): void
     {
         $l = new BaseLanguage('en_US,fr_FR', 'en_US');
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 'en-ca' => 1,
                 'en'    => 0.8,
@@ -84,7 +87,7 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
             $l->parseAcceptLanguage('en-ca,en;q=0.8,en-us;q=0.6,de-de;q=0.4,de;q=0.2')
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 'en-us' => 1,
                 'en'    => 0.8,
@@ -94,36 +97,36 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
             $l->parseAcceptLanguage('en-us,en;q=0.8,fr;q=0.5,fr-fr;q=0.3')
         );
 
-        $this->assertEquals([], $l->parseAcceptLanguage(''));
+        self::assertEquals([], $l->parseAcceptLanguage(''));
     }
 
-    public function testGetLanguageFromAcceptLanguage()
+    public function testGetLanguageFromAcceptLanguage(): void
     {
         $l = new BaseLanguage('en_US,fr_FR', 'en_US');
 
-        $this->assertEquals('en_US', $l->getLanguageFromAcceptLanguage(''));
-        $this->assertEquals('en_US', $l->getLanguageFromAcceptLanguage('en'));
-        $this->assertEquals('en_US', $l->getLanguageFromAcceptLanguage('en-us'));
-        $this->assertEquals('en_US', $l->getLanguageFromAcceptLanguage('en-ca'));
-        $this->assertEquals('en_US', $l->getLanguageFromAcceptLanguage('en-us,en;q=0.8,fr;q=0.5,fr-fr;q=0.3'));
-        $this->assertEquals('en_US', $l->getLanguageFromAcceptLanguage('de-de'));
-        $this->assertEquals('fr_FR', $l->getLanguageFromAcceptLanguage('fr'));
-        $this->assertEquals('fr_FR', $l->getLanguageFromAcceptLanguage('fr-fr'));
-        $this->assertEquals('fr_FR', $l->getLanguageFromAcceptLanguage('fr-ca'));
-        $this->assertEquals('fr_FR', $l->getLanguageFromAcceptLanguage('fr-fr,fr;q=0.8,en-us;q=0.5,en;q=0.3'));
+        self::assertEquals('en_US', $l->getLanguageFromAcceptLanguage(''));
+        self::assertEquals('en_US', $l->getLanguageFromAcceptLanguage('en'));
+        self::assertEquals('en_US', $l->getLanguageFromAcceptLanguage('en-us'));
+        self::assertEquals('en_US', $l->getLanguageFromAcceptLanguage('en-ca'));
+        self::assertEquals('en_US', $l->getLanguageFromAcceptLanguage('en-us,en;q=0.8,fr;q=0.5,fr-fr;q=0.3'));
+        self::assertEquals('en_US', $l->getLanguageFromAcceptLanguage('de-de'));
+        self::assertEquals('fr_FR', $l->getLanguageFromAcceptLanguage('fr'));
+        self::assertEquals('fr_FR', $l->getLanguageFromAcceptLanguage('fr-fr'));
+        self::assertEquals('fr_FR', $l->getLanguageFromAcceptLanguage('fr-ca'));
+        self::assertEquals('fr_FR', $l->getLanguageFromAcceptLanguage('fr-fr,fr;q=0.8,en-us;q=0.5,en;q=0.3'));
 
         $l2 = new BaseLanguage('en_US,fr_FR', 'fr_FR');
-        $this->assertEquals('fr_FR', $l2->getLanguageFromAcceptLanguage(''));
-        $this->assertEquals('fr_FR', $l2->getLanguageFromAcceptLanguage('de-de'));
+        self::assertEquals('fr_FR', $l2->getLanguageFromAcceptLanguage(''));
+        self::assertEquals('fr_FR', $l2->getLanguageFromAcceptLanguage('de-de'));
     }
 
-    public function testParseLanguageFile()
+    public function testParseLanguageFile(): void
     {
         $l = new BaseLanguage('en_US,fr_FR', 'en_US');
 
         $result = [];
         $l->parseLanguageFile(ForgeConfig::get('sys_incdir') . '/en_US/only-comments.tab', $result);
-        $this->assertEquals(
+        self::assertEquals(
             [
             ],
             $result,
@@ -132,7 +135,7 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 
         $result = [];
         $l->parseLanguageFile(ForgeConfig::get('sys_incdir') . '/en_US/empty-lines.tab', $result);
-        $this->assertEquals(
+        self::assertEquals(
             [
             ],
             $result,
@@ -143,7 +146,7 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
             'file' => ['key1' => 'old-value'],
         ];
         $l->parseLanguageFile(ForgeConfig::get('sys_incdir') . '/en_US/file.tab', $result);
-        $this->assertEquals(
+        self::assertEquals(
             [
                 'file' => [
                     'key1' => 'value',
@@ -155,13 +158,13 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         );
     }
 
-    public function testLoadAllTabFiles()
+    public function testLoadAllTabFiles(): void
     {
         $l = new BaseLanguage('en_US,fr_FR', 'en_US');
 
         $result = [];
         $l->loadAllTabFiles(ForgeConfig::get('sys_incdir') . '/en_US/', $result);
-        $this->assertEquals(
+        self::assertEquals(
             [
                 'file'   => [
                     'key1' => 'value',
@@ -175,59 +178,72 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         );
     }
 
-    public function testDirectories()
+    public function testDirectories(): void
     {
         $result = [];
 
-        $l1 = Mockery::mock(BaseLanguage::class)->makePartial();
-        $l1->shouldReceive('loadAllTabFiles')->with(ForgeConfig::get('sys_incdir') . '/en_US', Mockery::any())->once();
+        $l1 = $this->createPartialMock(BaseLanguage::class, [
+            'loadAllTabFiles',
+        ]);
+        $l1->expects(self::once())->method('loadAllTabFiles')->with(ForgeConfig::get('sys_incdir') . '/en_US', self::anything());
         $l1->loadCoreSiteContent('en_US', $result);
 
-        $l2 = Mockery::mock(BaseLanguage::class)->makePartial();
-        $l2->shouldReceive('loadAllTabFiles')->with(ForgeConfig::get('sys_custom_incdir') . '/en_US', Mockery::any())->once();
+        $l2 = $this->createPartialMock(BaseLanguage::class, [
+            'loadAllTabFiles',
+        ]);
+        $l2->expects(self::once())->method('loadAllTabFiles')->with(ForgeConfig::get('sys_custom_incdir') . '/en_US', self::anything());
         $l2->loadCustomSiteContent('en_US', $result);
 
-        $l3 = Mockery::mock(BaseLanguage::class)->makePartial();
-        $l3->shouldReceive('loadAllTabFiles')->with(
+        $l3 = $this->createPartialMock(BaseLanguage::class, [
+            'loadAllTabFiles',
+        ]);
+        $l3->expects(self::once())->method('loadAllTabFiles')->with(
             ForgeConfig::get('sys_pluginsroot') . '/toto/site-content/en_US',
-            Mockery::any()
-        )->once();
+            self::anything()
+        );
         $l3->loadPluginsSiteContent('en_US', $result);
 
-        $l4 = Mockery::mock(BaseLanguage::class)->makePartial();
-        $l4->shouldReceive('loadAllTabFiles')->with(
+        $l4 = $this->createPartialMock(BaseLanguage::class, [
+            'loadAllTabFiles',
+        ]);
+        $l4->expects(self::once())->method('loadAllTabFiles')->with(
             ForgeConfig::get('sys_custompluginsroot') . '/toto/site-content/en_US',
-            Mockery::any()
-        )->once();
+            self::anything()
+        );
         $l4->loadPluginsCustomSiteContent('en_US', $result);
     }
 
-    public function testLoadOrder()
+    public function testLoadOrder(): void
     {
         $result = [];
 
-        $l = Mockery::mock(BaseLanguage::class)->makePartial();
-        $l->shouldReceive('loadAllTabFiles')->with(ForgeConfig::get('sys_incdir') . '/en_US', Mockery::any())->once()->ordered();
-        $l->shouldReceive('loadAllTabFiles')->with(ForgeConfig::get('sys_custom_incdir') . '/en_US', Mockery::any())->once()->ordered();
-        $l->shouldReceive('loadAllTabFiles')->with(ForgeConfig::get('sys_pluginsroot') . '/toto/site-content/en_US', Mockery::any())->once()->ordered();
-        $l->shouldReceive('loadAllTabFiles')->with(ForgeConfig::get('sys_custompluginsroot') . '/toto/site-content/en_US', Mockery::any())->once()->ordered();
+        $l = $this->createPartialMock(BaseLanguage::class, [
+            'loadAllTabFiles',
+        ]);
+        $l->expects(self::exactly(4))->method('loadAllTabFiles')
+            ->withConsecutive(
+                [ForgeConfig::get('sys_incdir') . '/en_US', self::anything()],
+                [ForgeConfig::get('sys_custom_incdir') . '/en_US', self::anything()],
+                [ForgeConfig::get('sys_pluginsroot') . '/toto/site-content/en_US', self::anything()],
+                [ForgeConfig::get('sys_custompluginsroot') . '/toto/site-content/en_US', self::anything()]
+            );
 
         $l->loadAllLanguageFiles('en_US', $result);
     }
 
-    public function testDumpLanguageFile()
+    public function testDumpLanguageFile(): void
     {
         $l = new BaseLanguage('en_US', 'en_US');
         $l->dumpLanguageFile('my_lang', ['module' => ['key' => 'value']]);
         $stuff = require $this->cache_dir . '/lang/my_lang.php';
-        $this->assertEquals('value', $stuff['module']['key']);
+        self::assertEquals('value', $stuff['module']['key']);
     }
 
-    public function testItReturnsLocalisedLanguages()
+    public function testItReturnsLocalisedLanguages(): void
     {
         $language = new BaseLanguage('en_US,fr_FR,ja_JP', 'en_US');
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 'en_US' => 'English',
                 'fr_FR' => 'Français',
@@ -237,35 +253,43 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         );
     }
 
-    public function testItReturnsTrueWhenTheKeyIsPresent()
+    public function testItReturnsTrueWhenTheKeyIsPresent(): void
     {
-        $user         = \Mockery::mock(PFUser::class, ['getLocale' => 'en_US']);
-        $user_manager = \Mockery::mock(UserManager::class, ['getCurrentUser' => $user]);
+        $user         = UserTestBuilder::anActiveUser()->withLocale('en_US')->build();
+        $user_manager = $this->createMock(UserManager::class);
+        $user_manager->method('getCurrentUser')->willReturn($user);
         UserManager::setInstance($user_manager);
 
         $l = new BaseLanguage('en_US,fr_FR', 'en_US');
-        $this->assertTrue($l->hasText('common', 'key1'));
+        self::assertTrue($l->hasText('common', 'key1'));
     }
 
-    public function testItReturnsFalseWhenTheKeyIsNotPresent()
+    public function testItReturnsFalseWhenTheKeyIsNotPresent(): void
     {
-        $user         = \Mockery::mock(PFUser::class, ['getLocale' => 'en_US']);
-        $user_manager = \Mockery::mock(UserManager::class, ['getCurrentUser' => $user]);
+        $user         = UserTestBuilder::anActiveUser()->withLocale('en_US')->build();
+        $user_manager = $this->createMock(UserManager::class);
+        $user_manager->method('getCurrentUser')->willReturn($user);
         UserManager::setInstance($user_manager);
 
         $l = new BaseLanguage('en_US,fr_FR', 'en_US');
-        $this->assertFalse($l->hasText('common', 'missing_key'));
+        self::assertFalse($l->hasText('common', 'missing_key'));
     }
 
-    public function itLoadLangFromExtraPath()
+    public function testItLoadLangFromExtraPath(): void
     {
         $extra_path = __DIR__ . '/_fixtures/extra_path';
         ForgeConfig::set('sys_extra_plugin_path', $extra_path);
 
-        $language = \Mockery::mock(BaseLanguage::class)->makePartial();
+        $language = $this->createPartialMock(BaseLanguage::class, [
+            'loadAllTabFiles',
+        ]);
 
-        $language->shouldReceive('loadAllTabFiles')->with($extra_path . '/bla/site-content/en_US', \Mockery::any())->once()->ordered();
-        $language->shouldReceive('loadAllTabFiles')->with(ForgeConfig::get('sys_pluginsroot') . '/toto/site-content/en_US', \Mockery::any())->once()->ordered();
-        $language->loadPluginsSiteContent('en_US', []);
+        $language->expects(self::exactly(2))->method('loadAllTabFiles')
+            ->withConsecutive(
+                [$extra_path . '/bla/site-content/en_US', self::anything()],
+                [ForgeConfig::get('sys_pluginsroot') . '/toto/site-content/en_US', self::anything()]
+            );
+        $array = [];
+        $language->loadPluginsSiteContent('en_US', $array);
     }
 }
