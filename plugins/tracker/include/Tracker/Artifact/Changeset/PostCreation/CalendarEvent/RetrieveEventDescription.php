@@ -20,17 +20,19 @@
 
 namespace Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent;
 
-use Tuleap\NeverThrow\Err;
+use Psr\Log\LoggerInterface;
 use Tuleap\NeverThrow\Ok;
 
-interface RetrieveEventSummary
+interface RetrieveEventDescription
 {
     /**
-     * @return Ok<CalendarEventData>|Err<non-empty-string>
+     * @return Ok<CalendarEventData>
      */
-    public function retrieveEventSummary(
+    public function retrieveEventDescription(
+        CalendarEventData $calendar_event_data,
         \Tracker_Artifact_Changeset $changeset,
         \PFUser $recipient,
+        LoggerInterface $logger,
         bool $should_check_permissions,
-    ): Ok|Err;
+    ): Ok;
 }

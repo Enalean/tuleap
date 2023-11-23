@@ -27,7 +27,7 @@ use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Semantic\Timeframe\BuildSemanticTimeframe;
 
-final class CalendarEventDataBuilder implements BuildCalendarEventData
+final class EventDatesRetriever implements RetrieveEventDates
 {
     public function __construct(
         private readonly BuildSemanticTimeframe $semantic_timeframe_builder,
@@ -37,8 +37,8 @@ final class CalendarEventDataBuilder implements BuildCalendarEventData
     /**
      * @return Ok<CalendarEventData>|Err<non-falsy-string>
      */
-    public function getCalendarEventData(
-        string $summary,
+    public function retrieveEventDates(
+        CalendarEventData $calendar_event_data,
         \Tracker_Artifact_Changeset $changeset,
         \PFUser $recipient,
         \Psr\Log\LoggerInterface $logger,
@@ -78,6 +78,6 @@ final class CalendarEventDataBuilder implements BuildCalendarEventData
             return Result::err('End date < start date, we cannot build calendar event');
         }
 
-        return Result::ok(new CalendarEventData($summary, $start ?? 0, $end ?? 0));
+        return Result::ok($calendar_event_data->withDates($start ?? 0, $end ?? 0));
     }
 }

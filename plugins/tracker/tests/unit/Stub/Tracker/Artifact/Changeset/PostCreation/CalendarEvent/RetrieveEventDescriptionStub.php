@@ -22,15 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation\CalendarEvent;
 
-use Tuleap\NeverThrow\Err;
+use Psr\Log\LoggerInterface;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\BuildCalendarEventData;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\CalendarEventData;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\RetrieveEventDescription;
 
-final class BuildCalendarEventDataStub implements BuildCalendarEventData
+final class RetrieveEventDescriptionStub implements RetrieveEventDescription
 {
-    private function __construct(private readonly Ok|Err|null $result)
+    private function __construct(private readonly string|null $description)
     {
     }
 
@@ -39,30 +39,22 @@ final class BuildCalendarEventDataStub implements BuildCalendarEventData
         return new self(null);
     }
 
-    public static function withCalendarEventData(CalendarEventData $event_data): self
+    public static function withDescription(string $description): self
     {
-        return new self(Result::ok($event_data));
+        return new self($description);
     }
 
-    public static function withError(string $message): self
-    {
-        return new self(Result::err($message));
-    }
-
-    /**
-     * @return Ok<CalendarEventData>|Err<non-falsy-string>
-     */
-    public function getCalendarEventData(
-        string $summary,
+    public function retrieveEventDescription(
+        CalendarEventData $calendar_event_data,
         \Tracker_Artifact_Changeset $changeset,
         \PFUser $recipient,
-        \Psr\Log\LoggerInterface $logger,
+        LoggerInterface $logger,
         bool $should_check_permissions,
-    ): Ok|Err {
-        if ($this->result === null) {
+    ): Ok {
+        if ($this->description === null) {
             throw new \Exception('Should not have been called');
         }
 
-        return $this->result;
+        return Result::ok($calendar_event_data->withDescription($this->description));
     }
 }

@@ -30,8 +30,9 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\ServerHostname;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\BuildCalendarEventData;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\RetrieveEventDates;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\CalendarEventData;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\RetrieveEventDescription;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\RetrieveEventSummary;
 use Tuleap\Tracker\Notifications\Settings\CheckEventShouldBeSentInNotification;
 
@@ -39,8 +40,9 @@ final class EmailNotificationAttachmentProvider implements ProvideEmailNotificat
 {
     public function __construct(
         private readonly CheckEventShouldBeSentInNotification $config,
-        private readonly BuildCalendarEventData $event_data_builder,
         private readonly RetrieveEventSummary $event_summary_retriever,
+        private readonly RetrieveEventDescription $event_description_retriever,
+        private readonly RetrieveEventDates $event_dates_retriever,
     ) {
     }
 
@@ -59,8 +61,9 @@ final class EmailNotificationAttachmentProvider implements ProvideEmailNotificat
 
         $logger->debug('Tracker is configured to send calendar events alongside notification');
 
-        return $this->event_summary_retriever->getEventSummary($changeset, $recipient, $should_check_permissions)
-            ->andThen(fn (string $summary) => $this->event_data_builder->getCalendarEventData($summary, $changeset, $recipient, $logger, $should_check_permissions))
+        return $this->event_summary_retriever->retrieveEventSummary($changeset, $recipient, $should_check_permissions)
+            ->andThen(fn (CalendarEventData $calendar_event_data) => $this->event_description_retriever->retrieveEventDescription($calendar_event_data, $changeset, $recipient, $logger, $should_check_permissions))
+            ->andThen(fn (CalendarEventData $calendar_event_data) => $this->event_dates_retriever->retrieveEventDates($calendar_event_data, $changeset, $recipient, $logger, $should_check_permissions))
             ->andThen(fn (CalendarEventData $event_data) => $this->getCalendarEventAsAttachments($event_data, $changeset, $logger))
             ->match(
                 static fn (array $attachments) => $attachments,
@@ -83,14 +86,14 @@ final class EmailNotificationAttachmentProvider implements ProvideEmailNotificat
         $logger->debug('Found a calendar event for this changeset');
 
         $event = Event::create($event_data->summary)
+            ->description($event_data->description)
             ->uniqueIdentifier('tracker-artifact-' . $changeset->getArtifact()->getId() . '@' . ServerHostname::rawHostname())
             ->startsAt((new \DateTimeImmutable())->setTimestamp($event_data->start))
             ->endsAt((new \DateTimeImmutable())->setTimestamp($event_data->end))
             ->fullDay()
             ->appendProperty(TextProperty::create('SEQUENCE', (string) $changeset->getId()));
 
-        $calendar = Calendar::create()
-            ->event($event);
+        $calendar = Calendar::create()->event($event);
 
         if ($event_data->start === 0 && $event_data->end === 0) {
             $calendar->appendProperty(TextProperty::create('METHOD', 'CANCEL'));

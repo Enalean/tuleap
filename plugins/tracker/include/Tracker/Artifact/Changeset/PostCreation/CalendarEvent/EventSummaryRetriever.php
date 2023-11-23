@@ -30,9 +30,9 @@ use Tuleap\NeverThrow\Result;
 final class EventSummaryRetriever implements RetrieveEventSummary
 {
     /**
-     * @return Ok<non-falsy-string>|Err<non-empty-string>
+     * @return Ok<CalendarEventData>|Err<non-empty-string>
      */
-    public function getEventSummary(
+    public function retrieveEventSummary(
         \Tracker_Artifact_Changeset $changeset,
         \PFUser $recipient,
         bool $should_check_permissions,
@@ -62,6 +62,6 @@ final class EventSummaryRetriever implements RetrieveEventSummary
             return Result::err('Title is empty, we cannot build calendar event');
         }
 
-        return Result::ok($title);
+        return Result::ok(CalendarEventData::fromSummary($title));
     }
 }

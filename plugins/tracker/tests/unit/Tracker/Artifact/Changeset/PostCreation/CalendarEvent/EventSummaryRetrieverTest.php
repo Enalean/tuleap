@@ -64,7 +64,7 @@ final class EventSummaryRetrieverTest extends TestCase
 
         $retriever = new EventSummaryRetriever();
 
-        $result = $retriever->getEventSummary($this->changeset, $this->recipient, $should_check_permissions);
+        $result = $retriever->retrieveEventSummary($this->changeset, $this->recipient, $should_check_permissions);
         self::assertTrue(Result::isErr($result));
         self::assertEquals(
             'The tracker does not have title semantic, we cannot build calendar event',
@@ -80,7 +80,7 @@ final class EventSummaryRetrieverTest extends TestCase
 
         $should_check_permissions = true;
 
-        $result = $retriever->getEventSummary($this->changeset, $this->recipient, $should_check_permissions);
+        $result = $retriever->retrieveEventSummary($this->changeset, $this->recipient, $should_check_permissions);
         self::assertTrue(Result::isErr($result));
         self::assertEquals(
             'The user #110 (john@example.com) cannot read the title, we cannot build calendar event',
@@ -100,7 +100,7 @@ final class EventSummaryRetrieverTest extends TestCase
 
         $retriever = new EventSummaryRetriever();
 
-        $result = $retriever->getEventSummary($this->changeset, $this->recipient, $should_check_permissions);
+        $result = $retriever->retrieveEventSummary($this->changeset, $this->recipient, $should_check_permissions);
         self::assertTrue(Result::isErr($result));
         self::assertEquals(
             'Title is empty, we cannot build calendar event',
@@ -119,11 +119,12 @@ final class EventSummaryRetrieverTest extends TestCase
 
         $retriever = new EventSummaryRetriever();
 
-        $result = $retriever->getEventSummary($this->changeset, $this->recipient, $should_check_permissions);
+        $result = $retriever->retrieveEventSummary($this->changeset, $this->recipient, $should_check_permissions);
         self::assertTrue(Result::isOk($result));
+        assert($result->value instanceof CalendarEventData);
         self::assertEquals(
             'Christmas Party',
-            (string) $result->value,
+            $result->value->summary,
         );
     }
 

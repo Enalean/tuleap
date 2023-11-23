@@ -24,7 +24,55 @@ namespace Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent;
 
 final class CalendarEventData
 {
-    public function __construct(public readonly string $summary, public readonly int $start, public readonly int $end)
+    /**
+     * @param non-empty-string $summary
+     */
+    public function __construct(
+        public readonly string $summary,
+        public readonly string $description,
+        public readonly int $start,
+        public readonly int $end,
+    ) {
+    }
+
+    /**
+     * @param non-empty-string $summary
+     */
+    public static function fromSummary(string $summary): self
     {
+        return new self($summary, '', 0, 0);
+    }
+
+    /**
+     * @param non-empty-string $summary
+     */
+    public function withSummary(string $summary): self
+    {
+        return new self(
+            $summary,
+            $this->description,
+            $this->start,
+            $this->end,
+        );
+    }
+
+    public function withDescription(string $description): self
+    {
+        return new self(
+            $this->summary,
+            $description,
+            $this->start,
+            $this->end,
+        );
+    }
+
+    public function withDates(int $start, int $end): self
+    {
+        return new self(
+            $this->summary,
+            $this->description,
+            $start,
+            $end
+        );
     }
 }
