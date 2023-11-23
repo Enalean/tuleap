@@ -28,7 +28,6 @@ use ForgeConfig;
 
 final class BaseLanguageFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\ForgeConfigSandbox;
     use \Tuleap\TemporaryTestDirectory;
 
@@ -64,9 +63,9 @@ final class BaseLanguageFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $factory->cacheBaseLanguage($us);
         $factory->cacheBaseLanguage($fr);
 
-        $this->assertEquals($us, $factory->getBaseLanguage('en_US'));
-        $this->assertEquals($fr, $factory->getBaseLanguage('fr_FR'));
-        $this->assertNotEquals($factory->getBaseLanguage('en_US'), $factory->getBaseLanguage('fr_FR'));
+        self::assertEquals($us, $factory->getBaseLanguage('en_US'));
+        self::assertEquals($fr, $factory->getBaseLanguage('fr_FR'));
+        self::assertNotEquals($factory->getBaseLanguage('en_US'), $factory->getBaseLanguage('fr_FR'));
     }
 
     public function testItInstantiatesMissingLanguages(): void
@@ -77,10 +76,10 @@ final class BaseLanguageFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $fr->loadLanguage('fr_FR');
         $factory = new BaseLanguageFactory();
 
-        $this->assertEquals($us, $factory->getBaseLanguage('en_US'));
-        $this->assertEquals($fr, $factory->getBaseLanguage('fr_FR'));
-        $this->assertNotEquals($factory->getBaseLanguage('en_US'), $factory->getBaseLanguage('fr_FR'));
-        $this->assertSame(
+        self::assertEquals($us, $factory->getBaseLanguage('en_US'));
+        self::assertEquals($fr, $factory->getBaseLanguage('fr_FR'));
+        self::assertNotEquals($factory->getBaseLanguage('en_US'), $factory->getBaseLanguage('fr_FR'));
+        self::assertSame(
             $factory->getBaseLanguage('en_US'),
             $factory->getBaseLanguage('en_US'),
             'the language should be cached'
@@ -93,7 +92,7 @@ final class BaseLanguageFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $default_language->loadLanguage(ForgeConfig::get('sys_lang'));
         $factory = new BaseLanguageFactory();
 
-        $this->assertEquals($default_language, $factory->getBaseLanguage('unknown_locale'));
+        self::assertEquals($default_language, $factory->getBaseLanguage('unknown_locale'));
     }
 
     public function testBecauseOfTheLazyLoadingOfLangTheLangDependedOnTheCurrentUser(): void
@@ -101,10 +100,10 @@ final class BaseLanguageFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $factory = new BaseLanguageFactory();
 
         $fr = $factory->getBaseLanguage('fr_FR');
-        $this->assertEquals('fr_FR', $fr->lang);
+        self::assertEquals('fr_FR', $fr->lang);
 
         $us = $factory->getBaseLanguage('en_US');
-        $this->assertEquals('en_US', $us->lang);
+        self::assertEquals('en_US', $us->lang);
     }
 
     public function testDoesntMessUpGlobalState(): void
@@ -113,8 +112,8 @@ final class BaseLanguageFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $currentlocale = setlocale(LC_ALL, '0');
         $factory->getBaseLanguage('fr_FR');
-        $this->assertEquals($currentlocale, setlocale(LC_ALL, '0'));
+        self::assertEquals($currentlocale, setlocale(LC_ALL, '0'));
         $factory->getBaseLanguage('en_US');
-        $this->assertEquals($currentlocale, setlocale(LC_ALL, '0'));
+        self::assertEquals($currentlocale, setlocale(LC_ALL, '0'));
     }
 }
