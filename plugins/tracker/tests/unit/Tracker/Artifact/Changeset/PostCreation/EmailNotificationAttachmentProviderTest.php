@@ -110,7 +110,7 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
      * @testWith [false]
      *           [true]
      */
-    public function testNoAttachmentsWhenEverythingIsAwesomeBecauseFeatureIsNotImplementedYet(bool $should_check_permissions): void
+    public function testAttachmentWhenEverythingIsAwesome(bool $should_check_permissions): void
     {
         $provider = new EmailNotificationAttachmentProvider(
             CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
@@ -123,11 +123,68 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
         self::assertCount(1, $attachements);
         self::assertSame('event.ics', $attachements[0]->filename);
         self::assertSame('text/calendar', $attachements[0]->mime_type);
-        self::assertStringContainsString('SUMMARY:Christmas Party', $attachements[0]->content);
         $this->assertDebugLogEquals(
             'Tracker is configured to send calendar events alongside notification',
             'Found a calendar event for this changeset',
         );
+    }
+
+    /**
+     * @testWith [false]
+     *           [true]
+     */
+    public function testAttachmentContainsAnEventSummary(bool $should_check_permissions): void
+    {
+        $provider = new EmailNotificationAttachmentProvider(
+            CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
+            BuildCalendarEventDataStub::withCalendarEventData(new CalendarEventData('Christmas Party', 1234567890, 1324567890)),
+            RetrieveEventSummaryStub::withSummary('Christmas Party'),
+        );
+
+        $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, $should_check_permissions);
+
+        self::assertCount(1, $attachements);
+        self::assertStringContainsString('SUMMARY:Christmas Party', $attachements[0]->content);
+    }
+
+    /**
+     * @testWith [false]
+     *           [true]
+     */
+    public function testAttachmentContainsAnEventStartAndEndDateIgnoringTimezoneForNow(bool $should_check_permissions): void
+    {
+        $provider = new EmailNotificationAttachmentProvider(
+            CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
+            BuildCalendarEventDataStub::withCalendarEventData(new CalendarEventData('Christmas Party', 1234567890, 1324567890)),
+            RetrieveEventSummaryStub::withSummary('Christmas Party'),
+        );
+
+        $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, $should_check_permissions);
+
+        self::assertCount(1, $attachements);
+        $begining_of_file = '%a';
+        $end_of_file      = '%a';
+        $timezone         = '%S';
+        self::assertStringMatchesFormat("${begining_of_file}DTSTART;${timezone}VALUE=DATE:20090214${end_of_file}", $attachements[0]->content);
+        self::assertStringMatchesFormat("${begining_of_file}DTEND;${timezone}VALUE=DATE:20111222${end_of_file}", $attachements[0]->content);
+    }
+
+    /**
+     * @testWith [false]
+     *           [true]
+     */
+    public function testAttachmentContainsMethodRequestSoThatRecipientCanAddOrNotTheEventInTheirCalendar(bool $should_check_permissions): void
+    {
+        $provider = new EmailNotificationAttachmentProvider(
+            CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
+            BuildCalendarEventDataStub::withCalendarEventData(new CalendarEventData('Christmas Party', 1234567890, 1324567890)),
+            RetrieveEventSummaryStub::withSummary('Christmas Party'),
+        );
+
+        $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, $should_check_permissions);
+
+        self::assertCount(1, $attachements);
+        self::assertStringContainsString('METHOD:REQUEST', $attachements[0]->content);
     }
 
     /**
