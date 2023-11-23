@@ -119,4 +119,9 @@ class TimeframeConfigInvalid implements IComputeTimeframes
     {
         return false;
     }
+
+    public function isAllSetToZero(\Tracker_Artifact_Changeset $changeset, \PFUser $user): bool
+    {
+        return false;
+    }
 }

@@ -395,6 +395,44 @@ final class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertFalse($this->timeframe->userCanReadTimeframeFields($this->user));
     }
 
+    public function testItReturnsTrueWhenAllFieldsAreZero(): void
+    {
+        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+        $this->end_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+
+        $artifact = $this->anArtifactWithoutAnyValue();
+
+        self::assertTrue($this->timeframe->isAllSetToZero(
+            $artifact->getLastChangeset(),
+            $this->user
+        ));
+    }
+
+    public function testItReturnsFalseWhenAtLeastOneFieldIsNotZero(): void
+    {
+        $this->start_date_field->expects(self::exactly(3))->method('userCanRead')->will(self::returnValue(true));
+        $this->end_date_field->expects(self::exactly(3))->method('userCanRead')->will(self::returnValue(true));
+
+        $start_date = '07/01/2013';
+        $end_date   = '07/15/2013';
+        $artifact1  = $this->anArtifact($start_date, $end_date);
+        $artifact2  = $this->anArtifactWithoutEndDate($start_date);
+        $artifact3  = $this->anArtifactWithoutStartDate($end_date);
+
+        self::assertFalse($this->timeframe->isAllSetToZero(
+            $artifact1->getLastChangeset(),
+            $this->user
+        ));
+        self::assertFalse($this->timeframe->isAllSetToZero(
+            $artifact2->getLastChangeset(),
+            $this->user
+        ));
+        self::assertFalse($this->timeframe->isAllSetToZero(
+            $artifact3->getLastChangeset(),
+            $this->user
+        ));
+    }
+
     private function getMockedDateField(int $field_id): \Tracker_FormElement_Field_Date
     {
         $mock = $this->getMockBuilder(\Tracker_FormElement_Field_Date::class)
@@ -441,6 +479,43 @@ final class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
                 ->withTimestamp(strtotime($start_date))
                 ->build()
         );
+        $changeset->setFieldValue($this->end_date_field, null);
+
+        return ArtifactTestBuilder::anArtifact('4')
+            ->withTitle('title')
+            ->inTracker(TrackerTestBuilder::aTracker()->build())
+            ->withChangesets($changeset)
+            ->userCanView(true)
+            ->withParent(null)
+            ->isOpen(true)
+            ->build();
+    }
+
+    private function anArtifactWithoutStartDate(string $end_date): Artifact
+    {
+        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $changeset->setFieldValue($this->start_date_field, null);
+        $changeset->setFieldValue(
+            $this->end_date_field,
+            ChangesetValueDateTestBuilder::aValue(2, $changeset, $this->end_date_field)
+                ->withTimestamp(strtotime($end_date))
+                ->build()
+        );
+
+        return ArtifactTestBuilder::anArtifact('4')
+            ->withTitle('title')
+            ->inTracker(TrackerTestBuilder::aTracker()->build())
+            ->withChangesets($changeset)
+            ->userCanView(true)
+            ->withParent(null)
+            ->isOpen(true)
+            ->build();
+    }
+
+    private function anArtifactWithoutAnyValue(): Artifact
+    {
+        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $changeset->setFieldValue($this->start_date_field, null);
         $changeset->setFieldValue($this->end_date_field, null);
 
         return ArtifactTestBuilder::anArtifact('4')

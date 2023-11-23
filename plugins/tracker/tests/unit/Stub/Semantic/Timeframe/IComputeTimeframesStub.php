@@ -138,4 +138,11 @@ final class IComputeTimeframesStub implements IComputeTimeframes
                (! $this->end || $this->end->userCanRead($user)) &&
                (! $this->duration || $this->duration->userCanRead($user));
     }
+
+    public function isAllSetToZero(\Tracker_Artifact_Changeset $changeset, \PFUser $user): bool
+    {
+        return $this->date_period->getDuration() === 0 &&
+               $this->date_period->getStartDate() === 0 &&
+               $this->date_period->getEndDate() === 0;
+    }
 }

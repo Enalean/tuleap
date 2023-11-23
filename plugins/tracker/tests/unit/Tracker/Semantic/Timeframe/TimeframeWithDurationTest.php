@@ -387,6 +387,44 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertFalse($this->timeframe->userCanReadTimeframeFields($this->user));
     }
 
+    public function testItReturnsTrueWhenAllFieldsAreZero(): void
+    {
+        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+        $this->duration_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+
+        $artifact = $this->anArtifactWithoutAnyValue();
+
+        self::assertTrue($this->timeframe->isAllSetToZero(
+            $artifact->getLastChangeset(),
+            $this->user
+        ));
+    }
+
+    public function testItReturnsFalseWhenAtLeastOneFieldIsNotZero(): void
+    {
+        $this->start_date_field->expects(self::exactly(3))->method('userCanRead')->will(self::returnValue(true));
+        $this->duration_field->expects(self::exactly(3))->method('userCanRead')->will(self::returnValue(true));
+
+        $start_date = '07/01/2013';
+        $duration   = 10;
+        $artifact1  = $this->anArtifact($start_date, $duration);
+        $artifact2  = $this->anArtifactWithoutDuration($start_date);
+        $artifact3  = $this->anArtifactWithoutStartDate($duration);
+
+        self::assertFalse($this->timeframe->isAllSetToZero(
+            $artifact1->getLastChangeset(),
+            $this->user
+        ));
+        self::assertFalse($this->timeframe->isAllSetToZero(
+            $artifact2->getLastChangeset(),
+            $this->user
+        ));
+        self::assertFalse($this->timeframe->isAllSetToZero(
+            $artifact3->getLastChangeset(),
+            $this->user
+        ));
+    }
+
     private function getMockedDateField(int $field_id): \Tracker_FormElement_Field_Date
     {
         $mock = $this->getMockBuilder(\Tracker_FormElement_Field_Date::class)
@@ -465,6 +503,22 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
                 ->withTimestamp(strtotime($start_date))
                 ->build()
         );
+        $changeset->setFieldValue($this->duration_field, null);
+
+        return ArtifactTestBuilder::anArtifact('1')
+            ->withTitle('title')
+            ->inTracker($this->tracker)
+            ->withChangesets($changeset)
+            ->userCanView(true)
+            ->withParent(null)
+            ->isOpen(true)
+            ->build();
+    }
+
+    private function anArtifactWithoutAnyValue(): Artifact
+    {
+        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $changeset->setFieldValue($this->start_date_field, null);
         $changeset->setFieldValue($this->duration_field, null);
 
         return ArtifactTestBuilder::anArtifact('1')
