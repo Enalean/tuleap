@@ -1,17 +1,14 @@
 { pkgs ? (import ../../../tools/utils/nix/pinned-nixpkgs.nix) {} }:
 let
-  mediawiki = pkgs.stdenvNoCC.mkDerivation rec {
+  buildMediawikiTarball = { version, tuleapUsage, srcHash }: pkgs.stdenvNoCC.mkDerivation rec {
     pname = "mediawiki";
-    version = "1.35.13";
+
+    inherit version tuleapUsage;
 
     src = pkgs.fetchurl {
       url = "https://releases.wikimedia.org/mediawiki/${pkgs.lib.versions.majorMinor version}/${pname}-${version}.tar.gz";
-      hash = "sha256-KpcAzhk9sZMtt74+G/3fE11iLUOZumvW0FcORR22O2E=";
+      hash = srcHash;
     };
-
-    patches = [
-      ./mediawiki/drop-myisam.patch
-    ];
 
     dontPatchShebangs = true;
 
@@ -23,10 +20,12 @@ let
       runHook postInstall
     '';
   };
-  mediawikiSkinsAndExtensions = pkgs.stdenvNoCC.mkDerivation {
-    name = "mediawiki-tuleap-skins-extensions";
+  mediawikiCurrent = buildMediawikiTarball { version = "1.39.5"; tuleapUsage = "current"; srcHash = "sha256-eFsJxBhRRPmvRnjFi1nzEv3zhyyveC/n2IFkkth+05w="; };
+  mediawiki135 = buildMediawikiTarball { version = "1.35.13"; tuleapUsage = "1.35"; srcHash = "sha256-KpcAzhk9sZMtt74+G/3fE11iLUOZumvW0FcORR22O2E="; };
+  buildMediawikiSkinsAndExtensions = mediawiki: pkgs.stdenvNoCC.mkDerivation rec {
+    name = "mediawiki-tuleap-skins-extensions-${mediawiki.tuleapUsage}";
 
-    src = ./mediawiki-extensions;
+    src = ./. + "/mediawiki-extensions-${mediawiki.tuleapUsage}";
 
     dontPatchShebangs = true;
 
@@ -60,10 +59,10 @@ let
       runHook postInstall
     '';
   };
-  mediawikiTuleapConfigSuspended = pkgs.stdenvNoCC.mkDerivation {
-      name = "mediawiki-tuleap-config-suspended";
+  buildMediawikiTuleapConfigSuspended = mediawiki: pkgs.stdenvNoCC.mkDerivation {
+      name = "mediawiki-tuleap-config-suspended-${mediawiki.tuleapUsage}";
 
-      src = ./mediawiki-extensions/extensions/TuleapWikiFarm/docs;
+      src = ./. + "/mediawiki-extensions-${mediawiki.tuleapUsage}/extensions/TuleapWikiFarm/docs";
 
       installPhase = ''
         runHook preInstall
@@ -72,16 +71,16 @@ let
         runHook postInstall
       '';
     };
-  mediawikiTuleapFlavorTarball = pkgs.stdenvNoCC.mkDerivation {
-    name = "mediawiki-tuleap-flavor.tar";
+  buildMediawikiTuleapFlavorTarball = mediawiki: pkgs.stdenvNoCC.mkDerivation {
+    name = "mediawiki-tuleap-flavor-${mediawiki.tuleapUsage}.tar";
 
     src = pkgs.buildEnv {
-      name = "tuleap-mediawiki-flavor-src";
-      paths = [ mediawiki mediawikiSkinsAndExtensions mediawikiTuleapConfig mediawikiTuleapConfigSuspended ];
+      name = "tuleap-mediawiki-flavor-${mediawiki.tuleapUsage}-src";
+      paths = [ mediawiki (buildMediawikiSkinsAndExtensions mediawiki) mediawikiTuleapConfig (buildMediawikiTuleapConfigSuspended mediawiki) ];
     };
 
     patches = [
-      ./mediawiki-extensions/mpdf-extension-mpdf-8.patch
+      (./. + "/mediawiki-extensions-${mediawiki.tuleapUsage}/mpdf-extension-mpdf-8.patch")
     ];
 
     unpackPhase = ''
@@ -112,45 +111,53 @@ let
     '';
   };
   tuleapVersion = builtins.readFile ../../../VERSION;
-in pkgs.stdenvNoCC.mkDerivation {
-  name = "mediawiki-tuleap-flavor";
+  buildMediawikiTuleapFlavorRPM = mediawiki: pkgs.stdenvNoCC.mkDerivation {
+    name = "mediawiki-tuleap-flavor";
 
-  srcs = [ mediawikiTuleapFlavorTarball ./mediawiki-tuleap-flavor.spec ];
+    srcs = [ (buildMediawikiTuleapFlavorTarball mediawiki) ./mediawiki-tuleap-flavor.spec ];
 
-  nativeBuildInputs = [ pkgs.rpm pkgs.file ];
+    nativeBuildInputs = [ pkgs.rpm pkgs.file ];
 
-  unpackPhase = ''
-    runHook preUnpack
-    for srcFile in $srcs; do
-      cp -a $srcFile $(stripHash $srcFile)
-    done
-    runHook postUnpack
-  '';
+    unpackPhase = ''
+     runHook preUnpack
+     for srcFile in $srcs; do
+       cp -a $srcFile $(stripHash $srcFile)
+     done
+     runHook postUnpack
+    '';
 
-  dontConfigure = true;
+    dontConfigure = true;
 
-  buildPhase = ''
-    runHook preBuild
-    rpmbuild \
-      --define "tuleap_version ${tuleapVersion}" \
-      --define "mw_version ${mediawiki.version}" \
-      --define "_sourcedir $(pwd)" \
-      --define "_rpmdir $(pwd)" \
-      --dbpath="$(pwd)"/rpmdb \
-      --define "%_topdir $(pwd)" \
-      --define "%_tmppath %{_topdir}/TMP" \
-      --define "_rpmdir $(pwd)/RPMS" \
-      --define "%_datadir /usr/share" \
-      -bb mediawiki-tuleap-flavor.spec
-      runHook postBuild
-  '';
+    buildPhase = ''
+     runHook preBuild
+     rpmbuild \
+       --define "tuleap_version ${tuleapVersion}" \
+       --define "mw_version ${mediawiki.version}" \
+       --define "mw_tuleap_usage ${mediawiki.tuleapUsage}" \
+       --define "_sourcedir $(pwd)" \
+       --define "_rpmdir $(pwd)" \
+       --dbpath="$(pwd)"/rpmdb \
+       --define "%_topdir $(pwd)" \
+       --define "%_tmppath %{_topdir}/TMP" \
+       --define "_rpmdir $(pwd)/RPMS" \
+       --define "%_datadir /usr/share" \
+       -bb mediawiki-tuleap-flavor.spec
+       runHook postBuild
+    '';
 
-  installPhase = ''
-    runHook preInstall
-    mkdir $out/
-    mv RPMS/noarch/*.rpm $out/
-    runHook postInstall
-  '';
+    installPhase = ''
+     runHook preInstall
+     mkdir $out/
+     mv RPMS/noarch/*.rpm $out/
+     runHook postInstall
+    '';
 
-  dontFixUp = true;
+    dontFixUp = true;
+  };
+in pkgs.symlinkJoin {
+  name = "all-mediawiki-tuleap-flavor-rpm";
+  paths = [
+    (buildMediawikiTuleapFlavorRPM mediawikiCurrent)
+    (buildMediawikiTuleapFlavorRPM mediawiki135)
+  ];
 }
