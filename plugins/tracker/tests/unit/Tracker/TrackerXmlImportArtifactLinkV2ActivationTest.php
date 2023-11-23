@@ -25,6 +25,7 @@ use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
+use Tuleap\Tracker\Creation\TrackerCreationNotificationsSettingsFromXmlBuilder;
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
@@ -123,6 +124,7 @@ class TrackerXmlImportArtifactLinkV2ActivationTest extends \Tuleap\Test\PHPUnit\
             $this->external_validator,
             \Mockery::spy(TrackerXmlImportFeedbackCollector::class),
             \Mockery::spy(TrackerCreationDataChecker::class),
+            new TrackerCreationNotificationsSettingsFromXmlBuilder(),
         );
 
         $this->external_validator->shouldReceive('extractExternalFieldFromProjectElement');
