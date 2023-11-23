@@ -126,29 +126,6 @@ function frs_show_processor_popup($group_id, $name = 'processor_id', $checked_va
 
 */
 
-
-function frs_show_release_popup($group_id, $name = 'release_id', $checked_val = "xzxz")
-{
-    /*
-        return a pop-up select box of releases for the project
-    */
-    global $FRS_RELEASE_ID_RES,$FRS_RELEASE_NAME_RES,$Language;
-    $release_factory = new FRSReleaseFactory();
-    if (! $group_id) {
-        return $Language->getText('file_file_utils', 'g_id_err');
-    } else {
-        if (! isset($FRS_RELEASE_ID_RES)) {
-            $res                  = $release_factory->getFRSReleasesInfoListFromDb($group_id);
-            $FRS_RELEASE_ID_RES   = [];
-            $FRS_RELEASE_NAME_RES = [];
-            foreach ($res as $release) {
-                $FRS_RELEASE_ID_RES[]   = $release['release_id'];
-                $FRS_RELEASE_NAME_RES[] = $release['package_name'] . ':' . $release['release_name'];
-            }
-        }
-        return html_build_select_box_from_arrays($FRS_RELEASE_ID_RES, $FRS_RELEASE_NAME_RES, $name, $checked_val, false);
-    }
-}
 function frs_show_release_popup2($group_id, $name = 'release_id', $checked_val = "xzxz")
 {
     /*
@@ -165,11 +142,11 @@ function frs_show_release_popup2($group_id, $name = 'release_id', $checked_val =
             $p[$release['package_name']][$release['release_id']] = $release['release_name'];
         }
 
-        $select = '<select name="' . $name . '">';
+        $select = '<select name="' . $hp->purify($name) . '">';
         foreach ($p as $package_name => $releases) {
-            $select .= '<optgroup label="' . $package_name . '">';
+            $select .= '<optgroup label="' . $hp->purify($package_name) . '">';
             foreach ($releases as $id => $name) {
-                $select .= '<option value="' . $id . '" ' . ($id == $checked_val ? 'selected="selected"' : '') . '>' . $hp->purify($name) . '</option>';
+                $select .= '<option value="' . $hp->purify($id) . '" ' . ($id == $checked_val ? 'selected="selected"' : '') . '>' . $hp->purify($name) . '</option>';
             }
             $select .= '</optgroup>';
         }
