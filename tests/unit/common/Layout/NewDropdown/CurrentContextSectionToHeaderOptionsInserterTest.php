@@ -22,17 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Layout\NewDropdown;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Option\Option;
 
 class CurrentContextSectionToHeaderOptionsInserterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItCreatesANewSection(): void
     {
-        $link = Mockery::mock(NewDropdownLinkPresenter::class);
+        $link = $this->createMock(NewDropdownLinkPresenter::class);
 
         $section = (new CurrentContextSectionToHeaderOptionsInserter())
             ->addLinkToCurrentContextSection('Section label', $link, Option::nothing(NewDropdownLinkSectionPresenter::class))
@@ -44,8 +40,8 @@ class CurrentContextSectionToHeaderOptionsInserterTest extends \Tuleap\Test\PHPU
 
     public function testItAddsLinkToAlreadyExistingSection(): void
     {
-        $link          = Mockery::mock(NewDropdownLinkPresenter::class);
-        $existing_link = Mockery::mock(NewDropdownLinkPresenter::class);
+        $link          = $this->createMock(NewDropdownLinkPresenter::class);
+        $existing_link = $this->createMock(NewDropdownLinkPresenter::class);
 
         $existing = Option::fromValue(
             new NewDropdownLinkSectionPresenter(

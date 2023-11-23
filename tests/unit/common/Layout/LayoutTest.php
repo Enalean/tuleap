@@ -18,15 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+namespace Tuleap\Layout;
+
+use ForgeConfig;
+use Tuleap\Test\Builders\UserTestBuilder;
+use UserManager;
 
 /**
  * For all tests we have to use partial mock because there are sessions related stuff in Response class.
  */
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class LayoutTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use \Tuleap\ForgeConfigSandbox;
 
     protected function setUp(): void
@@ -34,10 +36,10 @@ class LayoutTest extends \Tuleap\Test\PHPUnit\TestCase
         parent::setUp();
         ForgeConfig::set('sys_user_theme', 'stuff');
 
-        $user = Mockery::spy(PFUser::class);
+        $user = UserTestBuilder::anActiveUser()->build();
 
-        $user_manager = \Mockery::mock(UserManager::class);
-        $user_manager->shouldReceive(['getCurrentUser' => $user]);
+        $user_manager = $this->createMock(UserManager::class);
+        $user_manager->method('getCurrentUser')->willReturn($user);
 
         UserManager::setInstance($user_manager);
     }
@@ -49,24 +51,42 @@ class LayoutTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testAddStyleSheet(): void
     {
-        $l = \Mockery::mock(\Layout::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $l->addStylesheet('/theme/css/style.css');
-        $this->assertEquals(['/theme/css/style.css'], $l->getAllStyleSheets());
-    }
-
-    public function testAddedStyleSheetShouldBeRenderedInPageHeaders(): void
-    {
         $l = new class extends \Layout {
             public function __construct()
             {
                 parent::__construct('');
             }
 
-            public function header($params): void
+            public function header(array|HeaderConfiguration $params): void
             {
             }
 
-            public function footer($params): void
+            protected function hasHeaderBeenWritten(): bool
+            {
+                return false;
+            }
+
+            public function footer(FooterConfiguration|array $params): void
+            {
+            }
+        };
+        $l->addStylesheet('/theme/css/style.css');
+        self::assertEquals(['/theme/css/style.css'], $l->getAllStyleSheets());
+    }
+
+    public function testAddedStyleSheetShouldBeRenderedInPageHeaders(): void
+    {
+        $l             = new class extends \Layout {
+            public function __construct()
+            {
+                parent::__construct('');
+            }
+
+            public function header(array|HeaderConfiguration $params): void
+            {
+            }
+
+            public function footer(FooterConfiguration|array $params): void
             {
             }
 
@@ -75,11 +95,21 @@ class LayoutTest extends \Tuleap\Test\PHPUnit\TestCase
                 return false;
             }
 
-            protected function getEventManager()
+            private \EventManager $event_manager;
+
+            protected function getEventManager(): \EventManager
             {
-                return \Mockery::spy(EventManager::class);
+                return $this->event_manager;
+            }
+
+            public function setEventManager(\EventManager $event_manager): void
+            {
+                $this->event_manager = $event_manager;
             }
         };
+        $event_manager = $this->createMock(\EventManager::class);
+        $l->setEventManager($event_manager);
+        $event_manager->method('processEvent');
 
         $css = '/vendor-css/styles.css';
 
@@ -103,7 +133,7 @@ class LayoutTest extends \Tuleap\Test\PHPUnit\TestCase
         $content = ob_get_contents();
         ob_end_clean();
 
-        $this->assertStringContainsString('<link rel="stylesheet" type="text/css" href="' . $css . '" />', $content);
-        $this->assertStringContainsString('<link rel="stylesheet" type="text/css" href="css-assets.css" />', $content);
+        self::assertStringContainsString('<link rel="stylesheet" type="text/css" href="' . $css . '" />', $content);
+        self::assertStringContainsString('<link rel="stylesheet" type="text/css" href="css-assets.css" />', $content);
     }
 }
