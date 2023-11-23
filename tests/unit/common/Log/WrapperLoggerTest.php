@@ -18,26 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+namespace Tuleap\Log;
+
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+use WrapperLogger;
 
 class WrapperLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $logger;
+    private LoggerInterface&MockObject $logger;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->logger = \Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $this->logger = $this->createMock(\Psr\Log\LoggerInterface::class);
     }
 
     public function testItAppendAPrefix(): void
     {
         $wrapper = new WrapperLogger($this->logger, 'stuff');
 
-        $this->logger->shouldReceive('log')->with(LogLevel::INFO, '[stuff] bla', [])->once();
+        $this->logger->expects(self::once())->method('log')->with(LogLevel::INFO, '[stuff] bla', []);
 
         $wrapper->info('bla');
     }
@@ -48,7 +50,7 @@ class WrapperLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $wrapper2 = new WrapperLogger($wrapper1, 'artifact');
 
-        $this->logger->shouldReceive('log')->with(LogLevel::INFO, '[tracker] [artifact] bla', [])->once();
+        $this->logger->expects(self::once())->method('log')->with(LogLevel::INFO, '[tracker] [artifact] bla', []);
 
         $wrapper2->info('bla');
     }
@@ -57,7 +59,7 @@ class WrapperLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $wrapper = new WrapperLogger($this->logger, 'tracker');
 
-        $this->logger->shouldReceive('log')->with(LogLevel::INFO, '[tracker][53] bla', [])->once();
+        $this->logger->expects(self::once())->method('log')->with(LogLevel::INFO, '[tracker][53] bla', []);
 
         $wrapper->push('53');
         $wrapper->info('bla');
@@ -67,8 +69,10 @@ class WrapperLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $wrapper = new WrapperLogger($this->logger, 'tracker');
 
-        $this->logger->shouldReceive('log')->with(LogLevel::INFO, '[tracker][53] bla', [])->once();
-        $this->logger->shouldReceive('log')->with(LogLevel::INFO, '[tracker][53] coin', [])->once();
+        $this->logger->expects(self::exactly(2))->method('log')->withConsecutive(
+            [LogLevel::INFO, '[tracker][53] bla', []],
+            [LogLevel::INFO, '[tracker][53] coin', []]
+        );
 
         $wrapper->push('53');
         $wrapper->info('bla');
@@ -79,8 +83,10 @@ class WrapperLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $wrapper = new WrapperLogger($this->logger, 'tracker');
 
-        $this->logger->shouldReceive('log')->with(LogLevel::INFO, '[tracker][53] bla', [])->once();
-        $this->logger->shouldReceive('log')->with(LogLevel::INFO, '[tracker][53][field] coin', [])->once();
+        $this->logger->expects(self::exactly(2))->method('log')->withConsecutive(
+            [LogLevel::INFO, '[tracker][53] bla', []],
+            [LogLevel::INFO, '[tracker][53][field] coin', []]
+        );
 
         $wrapper->push('53');
         $wrapper->info('bla');
@@ -92,8 +98,10 @@ class WrapperLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $wrapper = new WrapperLogger($this->logger, 'tracker');
 
-        $this->logger->shouldReceive('log')->with(LogLevel::INFO, '[tracker][53] bla', [])->once();
-        $this->logger->shouldReceive('log')->with(LogLevel::INFO, '[tracker] coin', [])->once();
+        $this->logger->expects(self::exactly(2))->method('log')->withConsecutive(
+            [LogLevel::INFO, '[tracker][53] bla', []],
+            [LogLevel::INFO, '[tracker] coin', []]
+        );
 
         $wrapper->push('53');
         $wrapper->info('bla');
@@ -105,9 +113,11 @@ class WrapperLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $wrapper = new WrapperLogger($this->logger, 'tracker');
 
-        $this->logger->shouldReceive('log')->with(LogLevel::INFO, '[tracker] stuff', [])->once();
-        $this->logger->shouldReceive('log')->with(LogLevel::INFO, '[tracker][53] bla', [])->once();
-        $this->logger->shouldReceive('log')->with(LogLevel::INFO, '[tracker][54] coin', [])->once();
+        $this->logger->expects(self::exactly(3))->method('log')->withConsecutive(
+            [LogLevel::INFO, '[tracker] stuff', []],
+            [LogLevel::INFO, '[tracker][53] bla', []],
+            [LogLevel::INFO, '[tracker][54] coin', []]
+        );
 
         $wrapper->info('stuff');
         $wrapper->push('53');
