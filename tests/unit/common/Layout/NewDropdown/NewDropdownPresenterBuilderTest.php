@@ -22,43 +22,37 @@ declare(strict_types=1);
 
 namespace Tuleap\Layout\NewDropdown;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use ProjectCreationData;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Project\Registration\ProjectRegistrationChecker;
 use Tuleap\Project\Registration\ProjectRegistrationErrorsCollection;
 use Tuleap\Project\Registration\RegistrationForbiddenException;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 class NewDropdownPresenterBuilderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|EventDispatcherInterface
+     * @var EventDispatcherInterface&MockObject
      */
     private $event_dispatcher;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
-     */
-    private $user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Project
-     */
-    private $project;
+    private PFUser $user;
+    private \Project $project;
 
-    private ProjectRegistrationChecker $project_registraton_checker_with_errors;
-    private ProjectRegistrationChecker $project_registraton_checker_without_errors;
+    private ProjectRegistrationChecker $project_registration_checker_with_errors;
+    private ProjectRegistrationChecker $project_registration_checker_without_errors;
 
     protected function setUp(): void
     {
-        $this->event_dispatcher = Mockery::mock(EventDispatcherInterface::class);
+        $this->event_dispatcher = $this->createMock(EventDispatcherInterface::class);
 
-        $this->project_registraton_checker_with_errors = new class implements ProjectRegistrationChecker
+        $this->project_registration_checker_with_errors = new class implements ProjectRegistrationChecker
         {
             public function collectAllErrorsForProjectRegistration(PFUser $user, ProjectCreationData $project_creation_data): ProjectRegistrationErrorsCollection
             {
@@ -77,7 +71,7 @@ class NewDropdownPresenterBuilderTest extends TestCase
             }
         };
 
-        $this->project_registraton_checker_without_errors = new class implements ProjectRegistrationChecker
+        $this->project_registration_checker_without_errors = new class implements ProjectRegistrationChecker
         {
             public function collectAllErrorsForProjectRegistration(PFUser $user, ProjectCreationData $project_creation_data): ProjectRegistrationErrorsCollection
             {
@@ -86,8 +80,8 @@ class NewDropdownPresenterBuilderTest extends TestCase
             }
         };
 
-        $this->user    = Mockery::mock(\PFUser::class);
-        $this->project = Mockery::mock(\Project::class)->shouldReceive(['getPublicName' => 'Smartoid'])->getMock();
+        $this->user    = UserTestBuilder::anActiveUser()->build();
+        $this->project = ProjectTestBuilder::aProject()->withPublicName('Smartoid')->build();
 
         \ForgeConfig::set(\Tuleap\Config\ConfigurationVariables::NAME, 'ACME');
     }
@@ -96,7 +90,7 @@ class NewDropdownPresenterBuilderTest extends TestCase
     {
         $builder = new NewDropdownPresenterBuilder(
             $this->event_dispatcher,
-            $this->project_registraton_checker_with_errors
+            $this->project_registration_checker_with_errors
         );
 
         $presenter = $builder->getPresenter($this->user, null, null);
@@ -108,7 +102,7 @@ class NewDropdownPresenterBuilderTest extends TestCase
     {
         $builder = new NewDropdownPresenterBuilder(
             $this->event_dispatcher,
-            $this->project_registraton_checker_without_errors
+            $this->project_registration_checker_without_errors
         );
 
         $presenter = $builder->getPresenter($this->user, null, null);
@@ -123,12 +117,12 @@ class NewDropdownPresenterBuilderTest extends TestCase
     {
         $builder = new NewDropdownPresenterBuilder(
             $this->event_dispatcher,
-            $this->project_registraton_checker_with_errors
+            $this->project_registration_checker_with_errors
         );
 
         $this->event_dispatcher
-            ->shouldReceive('dispatch')
-            ->andReturn(new NewDropdownProjectLinksCollector($this->user, $this->project, null));
+            ->method('dispatch')
+            ->willReturn(new NewDropdownProjectLinksCollector($this->user, $this->project, null));
 
         $presenter = $builder->getPresenter($this->user, $this->project, null);
 
@@ -139,15 +133,15 @@ class NewDropdownPresenterBuilderTest extends TestCase
     {
         $builder = new NewDropdownPresenterBuilder(
             $this->event_dispatcher,
-            $this->project_registraton_checker_with_errors
+            $this->project_registration_checker_with_errors
         );
 
         $collector = new NewDropdownProjectLinksCollector($this->user, $this->project, null);
         $collector->addCurrentProjectLink(new NewDropdownLinkPresenter('/url', 'label', 'icon', []));
 
         $this->event_dispatcher
-            ->shouldReceive('dispatch')
-            ->andReturn($collector);
+            ->method('dispatch')
+            ->willReturn($collector);
 
         $presenter = $builder->getPresenter($this->user, $this->project, null);
 
@@ -161,15 +155,15 @@ class NewDropdownPresenterBuilderTest extends TestCase
     {
         $builder = new NewDropdownPresenterBuilder(
             $this->event_dispatcher,
-            $this->project_registraton_checker_without_errors
+            $this->project_registration_checker_without_errors
         );
 
         $collector = new NewDropdownProjectLinksCollector($this->user, $this->project, null);
         $collector->addCurrentProjectLink(new NewDropdownLinkPresenter('/url', 'label', 'icon', []));
 
         $this->event_dispatcher
-            ->shouldReceive('dispatch')
-            ->andReturn($collector);
+            ->method('dispatch')
+            ->willReturn($collector);
 
         $presenter = $builder->getPresenter($this->user, $this->project, null);
 
@@ -185,15 +179,15 @@ class NewDropdownPresenterBuilderTest extends TestCase
     {
         $builder = new NewDropdownPresenterBuilder(
             $this->event_dispatcher,
-            $this->project_registraton_checker_without_errors
+            $this->project_registration_checker_without_errors
         );
 
         $collector = new NewDropdownProjectLinksCollector($this->user, $this->project, null);
         $collector->addCurrentProjectLink(new NewDropdownLinkPresenter('/url', 'label', 'icon', []));
 
         $this->event_dispatcher
-            ->shouldReceive('dispatch')
-            ->andReturn($collector);
+            ->method('dispatch')
+            ->willReturn($collector);
 
         $current_context_section = new NewDropdownLinkSectionPresenter("Current context", [
             new \Tuleap\Layout\NewDropdown\NewDropdownLinkPresenter('/path/to/submit/story', 'New story', 'fa-plus', []),

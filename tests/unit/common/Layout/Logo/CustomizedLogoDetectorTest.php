@@ -22,13 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Layout\Logo;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use Tuleap\ForgeConfigSandbox;
 
 class CustomizedLogoDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     private $data_dir_path;

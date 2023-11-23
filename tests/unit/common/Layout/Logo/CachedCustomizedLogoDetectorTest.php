@@ -22,20 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Layout\Logo;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Tuleap\ForgeConfigSandbox;
 
 class CachedCustomizedLogoDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
     use \Tuleap\TemporaryTestDirectory;
 
-    /**
-     * @var string
-     */
-    private $cache_file;
+    private string $cache_file;
 
     protected function setUp(): void
     {
@@ -47,39 +42,37 @@ class CachedCustomizedLogoDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesRealComputationIfInformationIsNotInCache(): void
     {
-        $logger   = \Mockery::mock(LoggerInterface::class);
-        $detector = \Mockery::mock(CustomizedLogoDetector::class);
+        $logger   = new NullLogger();
+        $detector = $this->createMock(CustomizedLogoDetector::class);
 
         $cache = new CachedCustomizedLogoDetector($detector, $logger);
 
-        $detector
-            ->shouldReceive('isLegacyOrganizationLogoCustomized')
-            ->once();
+        $detector->expects(self::once())
+            ->method('isLegacyOrganizationLogoCustomized');
 
         $cache->isLegacyOrganizationLogoCustomized();
     }
 
     public function testItUsesOnlyInformationAlreadyInCache(): void
     {
-        $logger   = \Mockery::mock(LoggerInterface::class);
-        $detector = \Mockery::mock(CustomizedLogoDetector::class);
+        $logger   = new NullLogger();
+        $detector = $this->createMock(CustomizedLogoDetector::class);
 
         $content = json_encode(["is_legacy_organization_logo_customized" => true], JSON_THROW_ON_ERROR);
         file_put_contents($this->cache_file, $content);
 
         $cache = new CachedCustomizedLogoDetector($detector, $logger);
 
-        $detector
-            ->shouldReceive('isLegacyOrganizationLogoCustomized')
-            ->never();
+        $detector->expects(self::never())
+            ->method('isLegacyOrganizationLogoCustomized');
 
         self::assertTrue($cache->isLegacyOrganizationLogoCustomized());
     }
 
     public function testItReturnsFalseIfItIsFalseInCache(): void
     {
-        $logger   = \Mockery::mock(LoggerInterface::class);
-        $detector = \Mockery::mock(CustomizedLogoDetector::class);
+        $logger   = new NullLogger();
+        $detector = $this->createMock(CustomizedLogoDetector::class);
 
         $content = json_encode(["is_legacy_organization_logo_customized" => false], JSON_THROW_ON_ERROR);
         file_put_contents($this->cache_file, $content);
@@ -91,12 +84,11 @@ class CachedCustomizedLogoDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItStoresTheInformationInCache(): void
     {
-        $logger   = \Mockery::mock(LoggerInterface::class);
-        $detector = \Mockery::mock(CustomizedLogoDetector::class);
-        $detector
-            ->shouldReceive('isLegacyOrganizationLogoCustomized')
-            ->once()
-            ->andReturn(false);
+        $logger   = new NullLogger();
+        $detector = $this->createMock(CustomizedLogoDetector::class);
+        $detector->expects(self::once())
+            ->method('isLegacyOrganizationLogoCustomized')
+            ->willReturn(false);
 
         $cache = new CachedCustomizedLogoDetector($detector, $logger);
         self::assertFalse($cache->isLegacyOrganizationLogoCustomized());
@@ -106,12 +98,11 @@ class CachedCustomizedLogoDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItStoresTrueInTheCacheIfLogoIsCustomized(): void
     {
-        $logger   = \Mockery::mock(LoggerInterface::class);
-        $detector = \Mockery::mock(CustomizedLogoDetector::class);
-        $detector
-            ->shouldReceive('isLegacyOrganizationLogoCustomized')
-            ->once()
-            ->andReturn(true);
+        $logger   = new NullLogger();
+        $detector = $this->createMock(CustomizedLogoDetector::class);
+        $detector->expects(self::once())
+            ->method('isLegacyOrganizationLogoCustomized')
+            ->willReturn(true);
 
         $cache = new CachedCustomizedLogoDetector($detector, $logger);
         self::assertTrue($cache->isLegacyOrganizationLogoCustomized());
@@ -121,19 +112,14 @@ class CachedCustomizedLogoDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRegeneratesTheCacheIfItDoesNotContainsAnArray(): void
     {
-        $logger   = \Mockery::mock(LoggerInterface::class);
-        $detector = \Mockery::mock(CustomizedLogoDetector::class);
-        $detector
-            ->shouldReceive('isLegacyOrganizationLogoCustomized')
-            ->once()
-            ->andReturn(true);
+        $logger   = new NullLogger();
+        $detector = $this->createMock(CustomizedLogoDetector::class);
+        $detector->expects(self::once())
+            ->method('isLegacyOrganizationLogoCustomized')
+            ->willReturn(true);
 
         $content = 'whatever';
         file_put_contents($this->cache_file, $content);
-
-        $logger
-            ->shouldReceive('error')
-            ->once();
 
         $cache = new CachedCustomizedLogoDetector($detector, $logger);
         self::assertTrue($cache->isLegacyOrganizationLogoCustomized());
@@ -153,12 +139,11 @@ class CachedCustomizedLogoDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItStoresTrueInTheCacheIfSvgLogoIsCustomized(): void
     {
-        $logger   = \Mockery::mock(LoggerInterface::class);
-        $detector = \Mockery::mock(CustomizedLogoDetector::class);
-        $detector
-            ->shouldReceive('isSvgOrganizationLogoCustomized')
-            ->once()
-            ->andReturn(true);
+        $logger   = new NullLogger();
+        $detector = $this->createMock(CustomizedLogoDetector::class);
+        $detector->expects(self::once())
+            ->method('isSvgOrganizationLogoCustomized')
+            ->willReturn(true);
 
         $cache = new CachedCustomizedLogoDetector($detector, $logger);
         self::assertTrue($cache->isSvgOrganizationLogoCustomized());
@@ -171,11 +156,10 @@ class CachedCustomizedLogoDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $content = json_encode(["is_svg_organization_logo_customized" => true], JSON_THROW_ON_ERROR);
         file_put_contents($this->cache_file, $content);
 
-        $logger   = \Mockery::mock(LoggerInterface::class);
-        $detector = \Mockery::mock(CustomizedLogoDetector::class);
-        $detector
-            ->shouldReceive('isSvgOrganizationLogoCustomized')
-            ->never();
+        $logger   = new NullLogger();
+        $detector = $this->createMock(CustomizedLogoDetector::class);
+        $detector->expects(self::never())
+            ->method('isSvgOrganizationLogoCustomized');
 
         $cache = new CachedCustomizedLogoDetector($detector, $logger);
         self::assertTrue($cache->isSvgOrganizationLogoCustomized());

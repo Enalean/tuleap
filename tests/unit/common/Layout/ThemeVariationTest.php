@@ -20,17 +20,15 @@
 
 namespace Tuleap\Layout;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ThemeVariationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testCondensedModeThemeVariation(): void
     {
         $color = ThemeVariantColor::buildFromName('orange');
-        $user  = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getPreference')->with(\PFUser::PREFERENCE_DISPLAY_DENSITY)->andReturn(\PFUser::DISPLAY_DENSITY_CONDENSED);
+        $user  = UserTestBuilder::anActiveUser()->build();
+        $user->setPreference(\PFUser::PREFERENCE_DISPLAY_DENSITY, \PFUser::DISPLAY_DENSITY_CONDENSED);
 
         $theme_variation = new ThemeVariation($color, $user);
         self::assertEquals('-orange', $theme_variation->getFileColorSuffix());
@@ -40,8 +38,8 @@ final class ThemeVariationTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testComfortableModeThemeVariation(): void
     {
         $color = ThemeVariantColor::buildFromName('orange');
-        $user  = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getPreference')->with(\PFUser::PREFERENCE_DISPLAY_DENSITY)->andReturn(false);
+        $user  = UserTestBuilder::aUser()->build();
+        $user->setPreference(\PFUser::PREFERENCE_DISPLAY_DENSITY, false);
 
         $theme_variation = new ThemeVariation($color, $user);
         self::assertEquals('-orange', $theme_variation->getFileColorSuffix());

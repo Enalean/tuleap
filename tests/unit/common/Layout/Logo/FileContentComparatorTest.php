@@ -22,12 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Layout\Logo;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
 class FileContentComparatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testDoesFilesHaveTheSameContent(): void
     {
         $comparator = new FileContentComparator();
@@ -51,7 +47,7 @@ class FileContentComparatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $comparator = new FileContentComparator();
 
-        $this->expectException(\RuntimeException::class);
+        self::expectException(\RuntimeException::class);
 
         $comparator->doesFilesHaveTheSameContent([], "does not exists");
     }
