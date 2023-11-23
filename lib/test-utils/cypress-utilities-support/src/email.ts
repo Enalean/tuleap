@@ -49,6 +49,40 @@ Cypress.Commands.add(
 );
 
 Cypress.Commands.add(
+    "assertEmailReceivedWithAttachment",
+    (from_email_address: string, attachment_type: string): void => {
+        const reloadCallback = (): void => {
+            cy.log("Checking emails again...");
+        };
+        const conditionCallback: ConditionPredicate = (number_of_attempts, max_attempts) => {
+            cy.log(
+                `Check that email address "${from_email_address}" has sent an attachment (attempt ${number_of_attempts}/${max_attempts})`,
+            );
+            return getEmailsSentBy(from_email_address).then((response) => {
+                if (response.body.items.length === 0) {
+                    return false;
+                }
+                const last_received_email = response.body.items[0];
+
+                if (last_received_email.MIME.Parts.length < 3) {
+                    return false;
+                }
+                const contains_attachment: boolean = quotedPrintable
+                    .decode(last_received_email.MIME.Parts[2].Headers["Content-Type"][0])
+                    .includes(attachment_type);
+
+                return contains_attachment;
+            });
+        };
+        cy.reloadUntilCondition(
+            reloadCallback,
+            conditionCallback,
+            `Email address "${from_email_address}" did not sent an email with an attachment`,
+        );
+    },
+);
+
+Cypress.Commands.add(
     "assertNotEmailWithContentReceived",
     (email_address: string, specific_content_of_email: string): void => {
         const reloadCallback = (): void => {
@@ -92,9 +126,18 @@ Cypress.Commands.add("deleteAllMessagesInMailbox", (): void => {
     });
 });
 
+interface Parts {
+    Body: string;
+    Headers: {
+        "Content-Type": Array<string>;
+    };
+}
 interface EmailItem {
     readonly Content: {
         readonly Body: string;
+    };
+    readonly MIME: {
+        Parts: Array<Parts>;
     };
 }
 
@@ -108,6 +151,18 @@ function getEmailsReceivedBy(
     return cy.request({
         method: "GET",
         url: "http://mailhog:8025/api/v2/search?kind=to&query=" + encodeURIComponent(email_address),
+        headers: {
+            accept: "application/json",
+        },
+    });
+}
+
+function getEmailsSentBy(email_address: string): Cypress.Chainable<Cypress.Response<MailResponse>> {
+    return cy.request({
+        method: "GET",
+        url:
+            "http://mailhog:8025/api/v2/search?kind=from&query=" +
+            encodeURIComponent(email_address),
         headers: {
             accept: "application/json",
         },

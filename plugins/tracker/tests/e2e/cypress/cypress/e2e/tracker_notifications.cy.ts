@@ -21,6 +21,53 @@ const PROJECT_NAME = "conditional-notifications";
 const TRACKER_SHORTNAME = "cond_notif";
 
 describe("Tracker notifications", () => {
+    let now: number;
+    it("Sends calendar events", function () {
+        cy.projectAdministratorSession();
+        now = Date.now();
+        const project_name = `calendar-${now}`;
+        cy.createNewPublicProject(project_name, "scrum").then((project_id) => {
+            cy.addProjectMember(project_name, "projectMember");
+            cy.projectAdministratorSession();
+
+            cy.log("Add project and configure calendar option");
+            cy.visitProjectService(project_name, "Trackers");
+            cy.get("[data-test=tracker-link-rel]").click();
+            cy.get("[data-test=link-to-current-tracker-administration]").click({ force: true });
+            cy.get("[data-test=notifications]").click();
+            cy.get("[data-test=enable-calendar-events]").click();
+            cy.get("[data-test=submit-changes]").click();
+
+            cy.get("[data-test=feedback]").contains("Calendar events configuration updated");
+
+            cy.log("Enable tracker notifications");
+            cy.get("[data-test=enable-notifications]").click();
+
+            cy.log("Add artifact");
+            cy.projectMemberSession();
+            cy.getTrackerIdFromREST(project_id, "rel").then((tracker_id) => {
+                const date = new Date();
+                cy.createArtifactWithFields({
+                    tracker_id,
+                    fields: [
+                        {
+                            shortname: "release_number",
+                            value: "My created release",
+                        },
+                        {
+                            shortname: "start_date",
+                            value: date.toDateString(),
+                        },
+                        {
+                            shortname: "end_date",
+                            value: new Date(date.setMonth(date.getMonth() + 8)).toDateString(),
+                        },
+                    ],
+                });
+            });
+            cy.assertEmailReceivedWithAttachment("forge__artifacts@tuleap", "text/calendar");
+        });
+    });
     it("Conditional notifications", function () {
         cy.projectAdministratorSession();
 

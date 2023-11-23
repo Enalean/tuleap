@@ -15,6 +15,7 @@
         type="checkbox"
         id="enable-calendar-events"
         name="enable-calendar-events"
+        data-test="enable-calendar-events"
         {{^ should_send_event_in_notification }}
             {{^ are_calendar_events_allowed }}
                 disabled
@@ -80,4 +81,4 @@
 
 <br>
 
-<input class="btn" type="submit" value="{{ submit_changes }}">
+<input class="btn" type="submit" data-test="submit-changes" value="{{ submit_changes }}">

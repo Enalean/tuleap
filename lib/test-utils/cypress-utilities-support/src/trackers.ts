@@ -96,3 +96,44 @@ Cypress.Commands.add(
                 .then((response) => response.body.id);
         }),
 );
+
+interface ArtifactFieldToCreate {
+    field_id: number;
+    value: string;
+}
+
+interface TrackerField {
+    shortname: string;
+    value: string;
+}
+
+export interface ArtifactWithFieldCreationPayload {
+    tracker_id: number;
+    fields: Array<TrackerField>;
+}
+
+Cypress.Commands.add(
+    "createArtifactWithFields",
+    (payload: ArtifactWithFieldCreationPayload): Cypress.Chainable<number> =>
+        cy.getFromTuleapAPI(`/api/trackers/${payload.tracker_id}`).then((response) => {
+            const result = response.body;
+
+            const fields_to_create: Array<ArtifactFieldToCreate> = [];
+            payload.fields.forEach((field_to_add: TrackerField) => {
+                const tracker_field_id = result.fields.find(
+                    (field: StructureFields) => field.name === field_to_add.shortname,
+                ).field_id;
+
+                fields_to_create.push({ field_id: tracker_field_id, value: field_to_add.value });
+            });
+
+            const artifact_payload = {
+                tracker: { id: payload.tracker_id },
+                values: fields_to_create,
+            };
+
+            return cy
+                .postFromTuleapApi("/api/artifacts/", artifact_payload)
+                .then((response) => response.body.id);
+        }),
+);

@@ -73,7 +73,7 @@
         </ul>
     </li>
     <li {{# is_notification_tab_active }}class="active"{{/ is_notification_tab_active }}>
-        <a href="/plugins/tracker/notifications/{{ tracker_id }}/">
+        <a href="/plugins/tracker/notifications/{{ tracker_id }}/" data-test="notifications">
             {{# dgettext }}tuleap-tracker | Notifications{{/ dgettext }}
         </a>
     </li>
