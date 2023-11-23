@@ -18,32 +18,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+namespace Tuleap\Log;
+
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+use TruncateLevelLogger;
 
-class TruncateLevelLoggerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class TruncateLevelLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Psr\Log\LoggerInterface
-     */
-    private $logger;
+    private LoggerInterface&MockObject $logger;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->logger = \Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $this->logger = $this->createMock(LoggerInterface::class);
     }
 
     public function testItLogEverythingByDefault(): void
     {
         $truncate_logger = new TruncateLevelLogger($this->logger, LogLevel::DEBUG);
 
-        $this->logger->shouldReceive('debug')->with("debug message", [])->once();
-        $this->logger->shouldReceive('info')->with("info message", [])->once();
-        $this->logger->shouldReceive('warning')->with("warn message", [])->once();
-        $this->logger->shouldReceive('error')->with("error message", [])->once();
+        $this->logger->expects(self::once())->method('debug')->with("debug message", []);
+        $this->logger->expects(self::once())->method('info')->with("info message", []);
+        $this->logger->expects(self::once())->method('warning')->with("warn message", []);
+        $this->logger->expects(self::once())->method('error')->with("error message", []);
 
         $truncate_logger->debug("debug message");
         $truncate_logger->info("info message");
@@ -55,10 +54,10 @@ class TruncateLevelLoggerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ign
     {
         $truncate_logger = new TruncateLevelLogger($this->logger, LogLevel::INFO);
 
-        $this->logger->shouldReceive('debug')->never();
-        $this->logger->shouldReceive('info')->with("info message", [])->once();
-        $this->logger->shouldReceive('warning')->with("warn message", [])->once();
-        $this->logger->shouldReceive('error')->with("error message", [])->once();
+        $this->logger->expects(self::never())->method('debug');
+        $this->logger->expects(self::once())->method('info')->with("info message", []);
+        $this->logger->expects(self::once())->method('warning')->with("warn message", []);
+        $this->logger->expects(self::once())->method('error')->with("error message", []);
 
         $truncate_logger->debug("debug message");
         $truncate_logger->info("info message");
@@ -70,10 +69,10 @@ class TruncateLevelLoggerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ign
     {
         $truncate_logger = new TruncateLevelLogger($this->logger, LogLevel::WARNING);
 
-        $this->logger->shouldReceive('debug')->never();
-        $this->logger->shouldReceive('info')->never();
-        $this->logger->shouldReceive('warning')->with("warn message", [])->once();
-        $this->logger->shouldReceive('error')->with("error message", [])->once();
+        $this->logger->expects(self::never())->method('debug');
+        $this->logger->expects(self::never())->method('info');
+        $this->logger->expects(self::once())->method('warning')->with("warn message", []);
+        $this->logger->expects(self::once())->method('error')->with("error message", []);
 
         $truncate_logger->debug("debug message");
         $truncate_logger->info("info message");
@@ -85,10 +84,10 @@ class TruncateLevelLoggerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ign
     {
         $truncate_logger = new TruncateLevelLogger($this->logger, LogLevel::ERROR);
 
-        $this->logger->shouldReceive('debug')->never();
-        $this->logger->shouldReceive('info')->never();
-        $this->logger->shouldReceive('warn')->never();
-        $this->logger->shouldReceive('error')->with("error message", [])->once();
+        $this->logger->expects(self::never())->method('debug');
+        $this->logger->expects(self::never())->method('info');
+        $this->logger->expects(self::never())->method('warning');
+        $this->logger->expects(self::once())->method('error')->with("error message", []);
 
         $truncate_logger->debug("debug message");
         $truncate_logger->info("info message");
@@ -100,10 +99,10 @@ class TruncateLevelLoggerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ign
     {
         $truncate_logger = new TruncateLevelLogger($this->logger, 'warn');
 
-        $this->logger->shouldReceive('debug')->never();
-        $this->logger->shouldReceive('info')->never();
-        $this->logger->shouldReceive('warning')->with('warn message', [])->once();
-        $this->logger->shouldReceive('error')->with('error message', [])->once();
+        $this->logger->expects(self::never())->method('debug');
+        $this->logger->expects(self::never())->method('info');
+        $this->logger->expects(self::once())->method('warning')->with('warn message', []);
+        $this->logger->expects(self::once())->method('error')->with('error message', []);
 
         $truncate_logger->debug('debug message');
         $truncate_logger->info('info message');
