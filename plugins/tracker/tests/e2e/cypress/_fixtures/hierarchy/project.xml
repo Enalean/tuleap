@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project unix-name="hierarchy" full-name="Hierarchy" description="" access="public">
+  <long-description/>
+  <services>
+    <service shortname="summary" enabled="1"/>
+    <service shortname="admin" enabled="1"/>
+    <service shortname="plugin_tracker" enabled="1"/>
+  </services>
+  <ugroups>
+    <ugroup name="project_members" description="">
+      <members>
+        <member format="username">ProjectAdministrator</member>
+        <member format="username">ProjectMember</member>
+      </members>
+    </ugroup>
+    <ugroup name="project_admins" description="">
+      <members>
+        <member format="username">ProjectAdministrator</member>
+      </members>
+    </ugroup>
+  </ugroups>
+  <trackers use-natures="true">
+    <tracker id="T233" parent_id="0" instantiate_for_new_projects="1">
+      <name><![CDATA[Bugs]]></name>
+      <item_name><![CDATA[bugs]]></item_name>
+      <description><![CDATA[]]></description>
+      <color><![CDATA[fiesta-red]]></color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="string" ID="F5148" rank="0" id="5148" tracker_id="233" parent_id="0" required="1">
+          <name><![CDATA[summary]]></name>
+          <label><![CDATA[Summary]]></label>
+          <description><![CDATA[One line description of the artifact]]></description>
+          <properties maxchars="150" size="60"/>
+        </formElement>
+        <formElement type="art_link" ID="F5165" rank="1" id="5165" tracker_id="233" parent_id="0">
+          <name><![CDATA[links]]></name>
+          <label><![CDATA[Links]]></label>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="title">
+          <shortname><![CDATA[title]]></shortname>
+          <label><![CDATA[Title]]></label>
+          <description><![CDATA[Define the title of an artifact]]></description>
+          <field REF="F5148"/>
+        </semantic>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports>
+        <report id="REPORT_517" is_default="0">
+          <name><![CDATA[All Bugs]]></name>
+          <description><![CDATA[Bugs Report]]></description>
+          <criterias>
+            <criteria rank="0">
+              <field REF="F5148"/>
+            </criteria>
+          </criterias>
+          <renderers>
+            <renderer ID="R777" type="table" rank="0" chunksz="15">
+              <name><![CDATA[All Bugs]]></name>
+              <columns>
+                <field REF="F5148"/>
+              </columns>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F5148" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F5148" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F5148" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F5165" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F5165" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+      </permissions>
+      <artifacts>
+        <artifact id="173">
+          <changeset id="CHANGESET_541">
+            <submitted_by format="username">ProjectMember</submitted_by>
+            <submitted_on format="ISO8601">2023-11-24T10:25:11+01:00</submitted_on>
+            <comments/>
+            <field_change type="string" field_name="summary">
+              <value><![CDATA[test]]></value>
+            </field_change>
+            <field_change field_name="links" type="art_link"/>
+          </changeset>
+        </artifact>
+      </artifacts>
+    </tracker>
+    <tracker id="T232" parent_id="0" is_displayed_in_new_dropdown="1">
+      <name><![CDATA[Issues]]></name>
+      <item_name><![CDATA[issue]]></item_name>
+      <description><![CDATA[requests, bugs, tasks, activities]]></description>
+      <color><![CDATA[lake-placid-blue]]></color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="string" ID="F5123" rank="1" id="5123" tracker_id="232" parent_id="0">
+          <name><![CDATA[title]]></name>
+          <label><![CDATA[Title]]></label>
+          <properties size="30"/>
+        </formElement>
+        <formElement type="art_link" ID="F5134" rank="3" id="5134" tracker_id="232" parent_id="0">
+          <name><![CDATA[linked_issues]]></name>
+          <label><![CDATA[Linked Issues]]></label>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="title">
+          <shortname><![CDATA[title]]></shortname>
+          <label><![CDATA[Title]]></label>
+          <description><![CDATA[Define the title of an artifact]]></description>
+          <field REF="F5123"/>
+        </semantic>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports>
+        <report id="REPORT_513" is_default="0" is_query_displayed="0">
+          <name><![CDATA[All issues]]></name>
+          <description><![CDATA[Bugs Report]]></description>
+          <criterias>
+            <criteria rank="0">
+              <field REF="F5123"/>
+            </criteria>
+          </criterias>
+          <renderers>
+            <renderer ID="R766" type="table" rank="0" chunksz="15">
+              <name><![CDATA[All Issues]]></name>
+              <columns>
+                <field REF="F5123"/>
+              </columns>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F5123" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F5123" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F5123" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F5134" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F5134" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+      </permissions>
+      <artifacts>
+        <artifact id="174">
+          <changeset id="CHANGESET_542">
+            <submitted_by format="username">ProjectMember</submitted_by>
+            <submitted_on format="ISO8601">2023-11-24T10:27:30+01:00</submitted_on>
+            <comments/>
+            <field_change type="string" field_name="title">
+              <value><![CDATA[issue]]></value>
+            </field_change>
+            <field_change field_name="linked_issues" type="art_link"/>
+          </changeset>
+        </artifact>
+      </artifacts>
+    </tracker>
+    <triggers/>
+  </trackers>
+</project>

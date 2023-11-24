@@ -253,7 +253,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         $hierarchy = $this->getParentHierarchy();
         $tab_level = 0;
         $html      = '';
-        $html     .= '<ul class="tracker-hierarchy">';
+        $html     .= '<ul class="tracker-hierarchy" data-test="tracker-hierarchy">';
         $parents   = array_reverse($hierarchy->getArtifacts());
 
         foreach ($parents as $parent) {
@@ -267,7 +267,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
             $tab_level++;
         }
         $html .= '</ul>';
-        $html .= '<div class="tracker_artifact_title">';
+        $html .= '<div class="tracker_artifact_title" data-test="tracker-artifact-title">';
         $html .= '<ul class="tracker-hierarchy">';
         $html .= '<li>';
         $html .= $this->displayANumberOfBlankTab($tab_level);
