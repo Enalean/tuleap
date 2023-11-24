@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 use ConfigNotificationAssignedTo;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\EventDatesRetriever;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\EventDescriptionRetriever;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\EventOrganizerRetriever;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\EventSummaryRetriever;
 use Tuleap\Tracker\Notifications\ConfigNotificationAssignedToDao;
 use Exception;
@@ -132,6 +133,7 @@ class ActionsRunner
                     new EventSummaryRetriever(),
                     new EventDescriptionRetriever(),
                     new EventDatesRetriever(SemanticTimeframeBuilder::build()),
+                    new EventOrganizerRetriever(),
                 ),
             ),
             new WebhookNotificationTask(
