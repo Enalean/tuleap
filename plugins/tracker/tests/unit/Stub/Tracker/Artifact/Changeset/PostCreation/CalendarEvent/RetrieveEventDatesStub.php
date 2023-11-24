@@ -25,39 +25,48 @@ namespace Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation\Calen
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\RetrieveEventDates;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\CalendarEventData;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\RetrieveEventSummary;
 
-final class RetrieveEventSummaryStub implements RetrieveEventSummary
+final class RetrieveEventDatesStub implements RetrieveEventDates
 {
-    private function __construct(private readonly Ok|Err|null $result)
+    private function __construct(private readonly int|null $start, private readonly int $end, private readonly string|null $error)
     {
     }
 
     public static function shouldNotBeCalled(): self
     {
-        return new self(null);
+        return new self(null, 0, null);
     }
 
-    public static function withSummary(string $summary): self
+    public static function withDates(int $start, int $end): self
     {
-        return new self(Result::ok(CalendarEventData::fromSummary($summary)));
+        return new self($start, $end, null);
     }
 
     public static function withError(string $message): self
     {
-        return new self(Result::err($message));
+        return new self(0, 0, $message);
     }
 
-    public function retrieveEventSummary(
+    /**
+     * @return Ok<CalendarEventData>|Err<non-falsy-string>
+     */
+    public function retrieveEventDates(
+        CalendarEventData $calendar_event_data,
         \Tracker_Artifact_Changeset $changeset,
         \PFUser $recipient,
+        \Psr\Log\LoggerInterface $logger,
         bool $should_check_permissions,
     ): Ok|Err {
-        if ($this->result === null) {
+        if ($this->start === null) {
             throw new \Exception('Should not have been called');
         }
 
-        return $this->result;
+        if ($this->error !== null) {
+            return Result::err($this->error);
+        }
+
+        return Result::ok($calendar_event_data->withDates($this->start, $this->end));
     }
 }

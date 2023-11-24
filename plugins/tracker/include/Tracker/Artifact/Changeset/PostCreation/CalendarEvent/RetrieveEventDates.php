@@ -23,13 +23,13 @@ namespace Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
 
-interface BuildCalendarEventData
+interface RetrieveEventDates
 {
     /**
      * @return Ok<CalendarEventData>|Err<non-falsy-string>
      */
-    public function getCalendarEventData(
-        string $summary,
+    public function retrieveEventDates(
+        CalendarEventData $calendar_event_data,
         \Tracker_Artifact_Changeset $changeset,
         \PFUser $recipient,
         \Psr\Log\LoggerInterface $logger,

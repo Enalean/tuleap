@@ -39,7 +39,7 @@ use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
 use Tuleap\Tracker\Test\Stub\Semantic\Timeframe\IComputeTimeframesStub;
 use Tuleap\Tracker\Test\Stub\Tracker\Semantic\Timeframe\BuildSemanticTimeframeStub;
 
-final class CalendarEventDataBuilderTest extends TestCase
+final class EventDatesRetrieverTest extends TestCase
 {
     private readonly Tracker_Artifact_Changeset $changeset;
     private readonly PFUser $recipient;
@@ -59,13 +59,19 @@ final class CalendarEventDataBuilderTest extends TestCase
 
     public function testErrorWhenTimeframeSemanticIsNotConfigured(): void
     {
-        $builder = new CalendarEventDataBuilder(
+        $builder = new EventDatesRetriever(
             BuildSemanticTimeframeStub::withTimeframeSemanticNotConfigured(
                 $this->changeset->getTracker(),
             ),
         );
 
-        $result = $builder->getCalendarEventData('Christmas Party', $this->changeset, $this->recipient, $this->logger, true);
+        $result = $builder->retrieveEventDates(
+            CalendarEventData::fromSummary('Christmas Party'),
+            $this->changeset,
+            $this->recipient,
+            $this->logger,
+            true,
+        );
 
         self::assertTrue(Result::isErr($result));
         self::assertEquals(
@@ -76,13 +82,19 @@ final class CalendarEventDataBuilderTest extends TestCase
 
     public function testErrorWhenTimeframeSemanticIsInvalid(): void
     {
-        $builder = new CalendarEventDataBuilder(
+        $builder = new EventDatesRetriever(
             BuildSemanticTimeframeStub::withTimeframeSemanticConfigInvalid(
                 $this->changeset->getTracker(),
             ),
         );
 
-        $result = $builder->getCalendarEventData('Christmas Party', $this->changeset, $this->recipient, $this->logger, true);
+        $result = $builder->retrieveEventDates(
+            CalendarEventData::fromSummary('Christmas Party'),
+            $this->changeset,
+            $this->recipient,
+            $this->logger,
+            true,
+        );
 
         self::assertTrue(Result::isErr($result));
         self::assertEquals(
@@ -100,7 +112,7 @@ final class CalendarEventDataBuilderTest extends TestCase
      */
     public function testErrorWhenDatesAreConsideredInvalid(?int $start, ?int $end, string $expected_message): void
     {
-        $builder = new CalendarEventDataBuilder(
+        $builder = new EventDatesRetriever(
             BuildSemanticTimeframeStub::withTimeframeCalculator(
                 $this->changeset->getTracker(),
                 IComputeTimeframesStub::fromStartAndEndDates(
@@ -111,7 +123,13 @@ final class CalendarEventDataBuilderTest extends TestCase
             ),
         );
 
-        $result = $builder->getCalendarEventData('Christmas Party', $this->changeset, $this->recipient, $this->logger, true);
+        $result = $builder->retrieveEventDates(
+            CalendarEventData::fromSummary('Christmas Party'),
+            $this->changeset,
+            $this->recipient,
+            $this->logger,
+            true,
+        );
 
         self::assertTrue(Result::isErr($result));
         self::assertEquals(
@@ -120,9 +138,9 @@ final class CalendarEventDataBuilderTest extends TestCase
         );
     }
 
-    public function testCalendarDataIsReturnedEvenIfUserCannotReadDateFields(): void
+    public function testDatesAreReturnedEvenIfUserCannotReadDateFields(): void
     {
-        $builder = new CalendarEventDataBuilder(
+        $builder = new EventDatesRetriever(
             BuildSemanticTimeframeStub::withTimeframeCalculator(
                 $this->changeset->getTracker(),
                 new TimeframeWithEndDate(
@@ -146,11 +164,17 @@ final class CalendarEventDataBuilderTest extends TestCase
             $this->end_field
         )->withTimestamp(1324567890)->build());
 
-        $result = $builder->getCalendarEventData('Christmas Party', $this->changeset, $this->recipient, $this->logger, false);
+        $result = $builder->retrieveEventDates(
+            CalendarEventData::fromSummary('Christmas Party'),
+            $this->changeset,
+            $this->recipient,
+            $this->logger,
+            false,
+        );
 
         self::assertTrue(Result::isOk($result));
         self::assertEquals(
-            new CalendarEventData('Christmas Party', 1234567890, 1324567890),
+            new CalendarEventData('Christmas Party', '', 1234567890, 1324567890),
             $result->value,
         );
     }
@@ -167,7 +191,7 @@ final class CalendarEventDataBuilderTest extends TestCase
      */
     public function testItReturnsErrWhenDateFieldIsZeroAndCheckPerms(bool $start_date, bool $can_read, bool $check_permissions, string $error_message): void
     {
-        $builder = new CalendarEventDataBuilder(
+        $builder = new EventDatesRetriever(
             BuildSemanticTimeframeStub::withTimeframeCalculator(
                 $this->changeset->getTracker(),
                 new TimeframeWithEndDate(
@@ -191,7 +215,13 @@ final class CalendarEventDataBuilderTest extends TestCase
             $this->end_field
         )->withTimestamp($start_date ? 1324567890 : 0)->build());
 
-        $result = $builder->getCalendarEventData('Christmas Party', $this->changeset, $this->recipient, $this->logger, $check_permissions);
+        $result = $builder->retrieveEventDates(
+            CalendarEventData::fromSummary('Christmas Party'),
+            $this->changeset,
+            $this->recipient,
+            $this->logger,
+            $check_permissions,
+        );
 
         self::assertTrue(Result::isErr($result));
         self::assertEquals(
@@ -202,7 +232,7 @@ final class CalendarEventDataBuilderTest extends TestCase
 
     public function testErrorWhenUserCannotReadFields(): void
     {
-        $builder = new CalendarEventDataBuilder(
+        $builder = new EventDatesRetriever(
             BuildSemanticTimeframeStub::withTimeframeCalculator(
                 $this->changeset->getTracker(),
                 new TimeframeWithEndDate(
@@ -226,7 +256,13 @@ final class CalendarEventDataBuilderTest extends TestCase
             $this->end_field
         )->withTimestamp(1324567890)->build());
 
-        $result = $builder->getCalendarEventData('Christmas Party', $this->changeset, $this->recipient, $this->logger, true);
+        $result = $builder->retrieveEventDates(
+            CalendarEventData::fromSummary('Christmas Party'),
+            $this->changeset,
+            $this->recipient,
+            $this->logger,
+            true,
+        );
 
         self::assertTrue(Result::isErr($result));
         self::assertEquals(
@@ -235,10 +271,10 @@ final class CalendarEventDataBuilderTest extends TestCase
         );
     }
 
-    public function testCalendarDataIsReturnedEvenIfTimeframeIsZero(): void
+    public function testDatesAreReturnedEvenIfTimeframeIsZero(): void
     {
         $duration_field = TrackerFormElementIntFieldBuilder::anIntField(3)->build();
-        $builder        = new CalendarEventDataBuilder(
+        $builder        = new EventDatesRetriever(
             BuildSemanticTimeframeStub::withTimeframeCalculator(
                 $this->changeset->getTracker(),
                 new TimeframeWithDuration(
@@ -259,18 +295,24 @@ final class CalendarEventDataBuilderTest extends TestCase
             $this->end_field
         )->withValue(0)->build());
 
-        $result = $builder->getCalendarEventData('Christmas Party', $this->changeset, $this->recipient, $this->logger, false);
+        $result = $builder->retrieveEventDates(
+            CalendarEventData::fromSummary('Christmas Party'),
+            $this->changeset,
+            $this->recipient,
+            $this->logger,
+            false,
+        );
 
         self::assertTrue(Result::isOk($result));
         self::assertEquals(
-            new CalendarEventData('Christmas Party', 0, 0),
+            new CalendarEventData('Christmas Party', '', 0, 0),
             $result->value,
         );
     }
 
-    public function testCalendarDataIsReturnedWhenEverythingIsFine(): void
+    public function testDatesAreReturnedWhenEverythingIsFine(): void
     {
-        $builder = new CalendarEventDataBuilder(
+        $builder = new EventDatesRetriever(
             BuildSemanticTimeframeStub::withTimeframeCalculator(
                 $this->changeset->getTracker(),
                 IComputeTimeframesStub::fromStartAndEndDates(
@@ -281,11 +323,18 @@ final class CalendarEventDataBuilderTest extends TestCase
             ),
         );
 
-        $result = $builder->getCalendarEventData('Christmas Party', $this->changeset, $this->recipient, $this->logger, true);
+        $result = $builder->retrieveEventDates(
+            CalendarEventData::fromSummary('Christmas Party')
+                ->withDescription('Ho ho ho, Merry Christmas!'),
+            $this->changeset,
+            $this->recipient,
+            $this->logger,
+            true,
+        );
 
         self::assertTrue(Result::isOk($result));
         self::assertEquals(
-            new CalendarEventData('Christmas Party', 1234567890, 1324567890),
+            new CalendarEventData('Christmas Party', 'Ho ho ho, Merry Christmas!', 1234567890, 1324567890),
             $result->value,
         );
     }

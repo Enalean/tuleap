@@ -27,9 +27,9 @@ use PFUser;
 use Tracker_Artifact_Changeset;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\CalendarEventData;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
-use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\BuildCalendarEventDataStub;
+use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\RetrieveEventDatesStub;
+use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\RetrieveEventDescriptionStub;
 use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\RetrieveEventSummaryStub;
 use Tuleap\Tracker\Test\Stub\Tracker\Notifications\Settings\CheckEventShouldBeSentInNotificationStub;
 
@@ -54,8 +54,9 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
     {
         $provider = new EmailNotificationAttachmentProvider(
             CheckEventShouldBeSentInNotificationStub::withoutEventInNotification(),
-            BuildCalendarEventDataStub::shouldNotBeCalled(),
-            RetrieveEventSummaryStub::withSummary('Christmas Party'),
+            RetrieveEventSummaryStub::shouldNotBeCalled(),
+            RetrieveEventDescriptionStub::shouldNotBeCalled(),
+            RetrieveEventDatesStub::shouldNotBeCalled(),
         );
 
         $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, $should_check_permissions);
@@ -72,8 +73,9 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
     {
         $provider = new EmailNotificationAttachmentProvider(
             CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
-            BuildCalendarEventDataStub::shouldNotBeCalled(),
             RetrieveEventSummaryStub::withError('Error retrieving summary'),
+            RetrieveEventDescriptionStub::shouldNotBeCalled(),
+            RetrieveEventDatesStub::shouldNotBeCalled(),
         );
 
         $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, $should_check_permissions);
@@ -89,12 +91,13 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
      * @testWith [false]
      *           [true]
      */
-    public function testNoAttachmentsWhenBuildOfCalendarDataIsInError(bool $should_check_permissions): void
+    public function testNoAttachmentsWhenRetrievalOfDatesIsInError(bool $should_check_permissions): void
     {
         $provider = new EmailNotificationAttachmentProvider(
             CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
-            BuildCalendarEventDataStub::withError('Error building calendar data'),
             RetrieveEventSummaryStub::withSummary('Christmas Party'),
+            RetrieveEventDescriptionStub::withDescription('Ho ho ho, Merry Christmas!'),
+            RetrieveEventDatesStub::withError('Error building calendar data'),
         );
 
         $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, $should_check_permissions);
@@ -114,8 +117,9 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
     {
         $provider = new EmailNotificationAttachmentProvider(
             CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
-            BuildCalendarEventDataStub::withCalendarEventData(new CalendarEventData('Christmas Party', 1234567890, 1324567890)),
             RetrieveEventSummaryStub::withSummary('Christmas Party'),
+            RetrieveEventDescriptionStub::withDescription('Ho ho ho, Merry Christmas!'),
+            RetrieveEventDatesStub::withDates(1234567890, 1324567890),
         );
 
         $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, $should_check_permissions);
@@ -137,8 +141,9 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
     {
         $provider = new EmailNotificationAttachmentProvider(
             CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
-            BuildCalendarEventDataStub::withCalendarEventData(new CalendarEventData('Christmas Party', 1234567890, 1324567890)),
             RetrieveEventSummaryStub::withSummary('Christmas Party'),
+            RetrieveEventDescriptionStub::withDescription('Ho ho ho, Merry Christmas!'),
+            RetrieveEventDatesStub::withDates(1234567890, 1324567890),
         );
 
         $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, $should_check_permissions);
@@ -155,8 +160,9 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
     {
         $provider = new EmailNotificationAttachmentProvider(
             CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
-            BuildCalendarEventDataStub::withCalendarEventData(new CalendarEventData('Christmas Party', 1234567890, 1324567890)),
             RetrieveEventSummaryStub::withSummary('Christmas Party'),
+            RetrieveEventDescriptionStub::withDescription('Ho ho ho, Merry Christmas!'),
+            RetrieveEventDatesStub::withDates(1234567890, 1324567890),
         );
 
         $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, $should_check_permissions);
@@ -177,8 +183,9 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
     {
         $provider = new EmailNotificationAttachmentProvider(
             CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
-            BuildCalendarEventDataStub::withCalendarEventData(new CalendarEventData('Christmas Party', 1234567890, 1324567890)),
             RetrieveEventSummaryStub::withSummary('Christmas Party'),
+            RetrieveEventDescriptionStub::withDescription('Ho ho ho, Merry Christmas!'),
+            RetrieveEventDatesStub::withDates(1234567890, 1324567890),
         );
 
         $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, $should_check_permissions);
@@ -195,8 +202,9 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
     {
         $provider = new EmailNotificationAttachmentProvider(
             CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
-            BuildCalendarEventDataStub::withCalendarEventData(new CalendarEventData('Christmas Party', 0, 0)),
             RetrieveEventSummaryStub::withSummary('Christmas Party'),
+            RetrieveEventDescriptionStub::withDescription('Ho ho ho, Merry Christmas!'),
+            RetrieveEventDatesStub::withDates(0, 0),
         );
 
         $attachments = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, $should_check_permissions);
