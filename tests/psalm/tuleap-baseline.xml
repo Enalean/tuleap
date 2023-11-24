@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.15.0@5c774aca4746caf3d239d9c8cadb9f882ca29352">
+<files psalm-version="5.16.0@2897ba636551a8cb61601cc26f6ccfbba6c36591">
   <file src="plugins/agiledashboard/include/AgileDashboard/AdminChartsPresenter.php">
     <PossiblyInvalidPropertyAssignmentValue>
       <code><![CDATA[$project->getID()]]></code>
@@ -7464,6 +7464,9 @@
       <code>validateUpdateMetadata</code>
       <code>viewsManagement</code>
     </MissingReturnType>
+    <NoValue>
+      <code>$validatorList</code>
+    </NoValue>
     <PossiblyNullReference>
       <code>setDescription</code>
       <code>setName</code>
@@ -27632,7 +27635,6 @@
   <file src="plugins/pullrequest/include/PullRequest/REST/v1/PullRequestFileUniDiffRepresentation.php">
     <InvalidDocblock>
       <code>public $charset;</code>
-      <code>public $inline_comments;</code>
       <code>public $lines;</code>
       <code>public $mime_type;</code>
       <code><![CDATA[public $special_format = '';]]></code>
@@ -27644,7 +27646,6 @@
     </MissingParamType>
     <MissingPropertyType>
       <code>$charset</code>
-      <code>$inline_comments</code>
       <code>$lines</code>
       <code>$mime_type</code>
       <code>$special_format</code>
@@ -27664,24 +27665,6 @@
       <code>public $unidiff_offset;</code>
       <code>public int|null $parent_id = 0;</code>
     </InvalidDocblock>
-  </file>
-  <file src="plugins/pullrequest/include/PullRequest/REST/v1/PullRequestInlineCommentRepresentation.php">
-    <InvalidDocblock>
-      <code>public $content;</code>
-      <code>public $position;</code>
-      <code>public $post_date;</code>
-      <code>public $unidiff_offset;</code>
-      <code>public int $id;</code>
-      <code>public int $parent_id;</code>
-      <code>public string $color;</code>
-      <code>public string $file_path;</code>
-    </InvalidDocblock>
-    <MissingPropertyType>
-      <code>$content</code>
-      <code>$position</code>
-      <code>$post_date</code>
-      <code>$unidiff_offset</code>
-    </MissingPropertyType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/REST/v1/PullRequestLineUniDiffRepresentation.php">
     <InvalidDocblock>
@@ -27845,9 +27828,6 @@
       <code>$id</code>
       <code>$id</code>
       <code>$id</code>
-      <code>$id</code>
-      <code>$id</code>
-      <code>$repository_id</code>
       <code>$status</code>
       <code>$uri</code>
     </MissingParamType>
@@ -27866,29 +27846,19 @@
       <code>getCommits</code>
       <code>getFileDiff</code>
       <code>getFiles</code>
-      <code>getRepository</code>
       <code>getTimeline</code>
-      <code>options</code>
-      <code>optionsComments</code>
       <code>optionsCommits</code>
       <code>optionsLabels</code>
-      <code>optionsTimeline</code>
       <code>patch</code>
       <code>patchLabels</code>
       <code>patchStatus</code>
-      <code>postComments</code>
-      <code>postInline</code>
       <code>sendAllowHeadersForComments</code>
       <code>sendAllowHeadersForCommits</code>
-      <code>sendAllowHeadersForInlineComments</code>
       <code>sendAllowHeadersForLabels</code>
       <code>sendAllowHeadersForPullRequests</code>
       <code>sendAllowHeadersForTimeline</code>
       <code>sendLocationHeader</code>
     </MissingReturnType>
-    <PossiblyNullArgument>
-      <code><![CDATA[$this->user_manager->getUserById($user->getId())]]></code>
-    </PossiblyNullArgument>
     <PossiblyNullReference>
       <code>PathToHash</code>
       <code>PathToHash</code>
@@ -27967,32 +27937,6 @@
       <code>$event_type</code>
       <code>$post_date</code>
       <code>$type</code>
-      <code>$user</code>
-    </MissingPropertyType>
-  </file>
-  <file src="plugins/pullrequest/include/PullRequest/REST/v1/TimelineInlineCommentRepresentation.php">
-    <InvalidDocblock>
-      <code>public $color;</code>
-      <code>public $content;</code>
-      <code>public $file_path;</code>
-      <code>public $is_outdated;</code>
-      <code>public $parent_id;</code>
-      <code>public $post_date;</code>
-      <code>public $type;</code>
-      <code>public $unidiff_offset;</code>
-      <code>public $user;</code>
-      <code>public int $id;</code>
-      <code>public string $position;</code>
-    </InvalidDocblock>
-    <MissingPropertyType>
-      <code>$color</code>
-      <code>$content</code>
-      <code>$file_path</code>
-      <code>$is_outdated</code>
-      <code>$parent_id</code>
-      <code>$post_date</code>
-      <code>$type</code>
-      <code>$unidiff_offset</code>
       <code>$user</code>
     </MissingPropertyType>
   </file>
@@ -47119,6 +47063,11 @@
       <code>getFieldDataFromCSVValue</code>
     </UndefinedMethod>
   </file>
+  <file src="plugins/tracker/include/Tracker/TrackerCrumbInContext.php">
+    <NullArgument>
+      <code>$link_collection</code>
+    </NullArgument>
+  </file>
   <file src="plugins/tracker/include/Tracker/TrackerFactory.class.php">
     <DeprecatedMethod>
       <code>$pending_trackers</code>
@@ -47346,7 +47295,6 @@
       <code>createNewGlobalNotification</code>
       <code>deleteGlobalNotification</code>
       <code>deleteUnsubscribers</code>
-      <code>displayAdminNotificationAssignedToMeFlag</code>
       <code>displayAdminNotificationUnsubcribers</code>
       <code>displayAdminNotifications</code>
       <code>displayAdminNotifications_Global</code>
@@ -75845,7 +75793,6 @@
       <code><![CDATA[db_result($result, $j, 'name')]]></code>
       <code><![CDATA[db_result($result, $j, 'processor_id')]]></code>
       <code><![CDATA[db_result($result, $j, 'rank')]]></code>
-      <code>html_build_select_box_from_arrays($FRS_RELEASE_ID_RES, $FRS_RELEASE_NAME_RES, $name, $checked_val, false)</code>
       <code>html_build_select_box_from_arrays($arr_id, $arr_status, $name, $checked_val, false)</code>
     </DeprecatedFunction>
     <DeprecatedMethod>
@@ -75872,15 +75819,12 @@
       <code>$checked_val</code>
       <code>$checked_val</code>
       <code>$checked_val</code>
-      <code>$checked_val</code>
-      <code>$group_id</code>
       <code>$group_id</code>
       <code>$group_id</code>
       <code>$group_id</code>
       <code>$group_id</code>
       <code>$is_update</code>
       <code>$is_update</code>
-      <code>$name</code>
       <code>$name</code>
       <code>$name</code>
       <code>$name</code>
@@ -75923,7 +75867,6 @@
       <code>frs_process_release_form</code>
       <code>frs_show_filetype_popup</code>
       <code>frs_show_processor_popup</code>
-      <code>frs_show_release_popup</code>
       <code>frs_show_release_popup2</code>
       <code>frs_show_status_popup</code>
     </MissingReturnType>

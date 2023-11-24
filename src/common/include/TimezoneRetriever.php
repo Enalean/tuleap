@@ -24,16 +24,25 @@ use PFUser;
 
 class TimezoneRetriever
 {
+    /**
+     * @psalm-return non-empty-string
+     */
     public static function getServerTimezone(): string
     {
         return ini_get('date.timezone') ? : 'Europe/Paris';
     }
 
+    /**
+     * @psalm-return non-empty-string
+     */
     public static function getUserTimezone(PFUser $user): string
     {
         $timezone = '';
         if (! $user->isAnonymous()) {
             $timezone = $user->getTimezone() ?? '';
+        }
+        if ($timezone === '') {
+            return self::getServerTimezone();
         }
         try {
             new \DateTimeZone($timezone);
