@@ -174,7 +174,7 @@ final class EventDatesRetrieverTest extends TestCase
 
         self::assertTrue(Result::isOk($result));
         self::assertEquals(
-            new CalendarEventData('Christmas Party', '', 1234567890, 1324567890),
+            new CalendarEventData('Christmas Party', '', 1234567890, 1324567890, null),
             $result->value,
         );
     }
@@ -305,7 +305,7 @@ final class EventDatesRetrieverTest extends TestCase
 
         self::assertTrue(Result::isOk($result));
         self::assertEquals(
-            new CalendarEventData('Christmas Party', '', 0, 0),
+            new CalendarEventData('Christmas Party', '', 0, 0, null),
             $result->value,
         );
     }
@@ -334,7 +334,7 @@ final class EventDatesRetrieverTest extends TestCase
 
         self::assertTrue(Result::isOk($result));
         self::assertEquals(
-            new CalendarEventData('Christmas Party', 'Ho ho ho, Merry Christmas!', 1234567890, 1324567890),
+            new CalendarEventData('Christmas Party', 'Ho ho ho, Merry Christmas!', 1234567890, 1324567890, null),
             $result->value,
         );
     }

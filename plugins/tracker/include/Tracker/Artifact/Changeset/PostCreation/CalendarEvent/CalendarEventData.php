@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent;
 
+
 final class CalendarEventData
 {
     /**
@@ -32,6 +33,7 @@ final class CalendarEventData
         public readonly string $description,
         public readonly int $start,
         public readonly int $end,
+        public readonly ?EventOrganizer $organizer,
     ) {
     }
 
@@ -40,7 +42,7 @@ final class CalendarEventData
      */
     public static function fromSummary(string $summary): self
     {
-        return new self($summary, '', 0, 0);
+        return new self($summary, '', 0, 0, null);
     }
 
     /**
@@ -53,6 +55,7 @@ final class CalendarEventData
             $this->description,
             $this->start,
             $this->end,
+            $this->organizer,
         );
     }
 
@@ -63,6 +66,7 @@ final class CalendarEventData
             $description,
             $this->start,
             $this->end,
+            $this->organizer,
         );
     }
 
@@ -72,7 +76,19 @@ final class CalendarEventData
             $this->summary,
             $this->description,
             $start,
-            $end
+            $end,
+            $this->organizer,
+        );
+    }
+
+    public function withOrganizer(EventOrganizer $organizer): self
+    {
+        return new self(
+            $this->summary,
+            $this->description,
+            $this->start,
+            $this->end,
+            $organizer,
         );
     }
 }
