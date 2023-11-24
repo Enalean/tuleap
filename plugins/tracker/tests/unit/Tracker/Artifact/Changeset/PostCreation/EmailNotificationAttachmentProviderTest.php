@@ -179,7 +179,7 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
      * @testWith [false]
      *           [true]
      */
-    public function testAttachmentContainsMethodRequestSoThatRecipientCanAddOrNotTheEventInTheirCalendar(bool $should_check_permissions): void
+    public function testAttachmentDoesNotContainMethodRequestBecauseYesMaybeNoActionsWillSendAnEmailToTheNoreplyOrganizerWhichCanEndUpInErrorInSomeEnvironment(bool $should_check_permissions): void
     {
         $provider = new EmailNotificationAttachmentProvider(
             CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
@@ -191,7 +191,7 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
         $attachements = $provider->getAttachments($this->changeset, $this->recipient, $this->logger, $should_check_permissions);
 
         self::assertCount(1, $attachements);
-        self::assertStringContainsString('METHOD:REQUEST', $attachements[0]->content);
+        self::assertStringNotContainsString('METHOD:REQUEST', $attachements[0]->content);
     }
 
     /**
