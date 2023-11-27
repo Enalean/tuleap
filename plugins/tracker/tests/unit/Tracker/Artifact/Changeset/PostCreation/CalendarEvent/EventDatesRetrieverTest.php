@@ -29,6 +29,7 @@ use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeImpliedFromAnotherTracker;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithDuration;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
@@ -99,6 +100,30 @@ final class EventDatesRetrieverTest extends TestCase
         self::assertTrue(Result::isErr($result));
         self::assertEquals(
             'Time period error: It is inherited from a tracker of another project, this is not allowed',
+            (string) $result->error,
+        );
+    }
+
+    public function testErrorWhenTimeframeSemanticIsImpliedFromAnotherTracker(): void
+    {
+        $builder = new EventDatesRetriever(
+            BuildSemanticTimeframeStub::withTimeframeCalculator(
+                $this->changeset->getTracker(),
+                $this->createMock(TimeframeImpliedFromAnotherTracker::class),
+            ),
+        );
+
+        $result = $builder->retrieveEventDates(
+            CalendarEventData::fromSummary('Christmas Party'),
+            $this->changeset,
+            $this->recipient,
+            $this->logger,
+            true,
+        );
+
+        self::assertTrue(Result::isErr($result));
+        self::assertEquals(
+            'Timeframe semantic is inherited from another tracker, we cannot build calendar event to be sent by email',
             (string) $result->error,
         );
     }

@@ -26,6 +26,7 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Semantic\Timeframe\BuildSemanticTimeframe;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeImpliedFromAnotherTracker;
 
 final class EventDatesRetriever implements RetrieveEventDates
 {
@@ -47,6 +48,10 @@ final class EventDatesRetriever implements RetrieveEventDates
         $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($changeset->getTracker());
 
         $timeframe_calculator = $semantic_timeframe->getTimeframeCalculator();
+
+        if ($timeframe_calculator instanceof TimeframeImpliedFromAnotherTracker) {
+            return Result::err('Timeframe semantic is inherited from another tracker, we cannot build calendar event to be sent by email');
+        }
 
         $permission_user = $should_check_permissions ? $recipient : new \Tracker_UserWithReadAllPermission($recipient);
         $time_period     = $timeframe_calculator->buildDatePeriodWithoutWeekendForChangeset(
