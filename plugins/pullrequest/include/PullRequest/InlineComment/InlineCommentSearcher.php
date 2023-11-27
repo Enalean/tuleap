@@ -37,7 +37,8 @@ interface InlineCommentSearcher
      *     parent_id: int,
      *     position: string,
      *     color: string,
-     *     format: string
+     *     format: string,
+     *     last_edition_date: int|null
      * }|null
      */
     public function searchByCommentID(int $inline_comment_id): ?array;
