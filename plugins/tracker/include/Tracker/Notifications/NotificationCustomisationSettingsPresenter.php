@@ -35,6 +35,7 @@ class NotificationCustomisationSettingsPresenter
         $custom_email,
         public readonly bool $should_send_event_in_notification,
         public readonly bool $is_semantic_timeframe_defined,
+        public readonly bool $is_semantic_timeframe_inherited,
         public readonly string $semantic_timeframe_admin_url,
         public readonly bool $is_semantic_title_defined,
         public readonly string $semantic_title_admin_url,
@@ -47,6 +48,6 @@ class NotificationCustomisationSettingsPresenter
         $this->custom_email_enabled             = $custom_email['enabled'];
         $this->custom_email_content             = $custom_email['format'];
 
-        $this->are_calendar_events_allowed = $is_semantic_timeframe_defined && $is_semantic_title_defined;
+        $this->are_calendar_events_allowed = $is_semantic_timeframe_defined && ! $is_semantic_timeframe_inherited && $is_semantic_title_defined;
     }
 }

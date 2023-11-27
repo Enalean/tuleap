@@ -3558,6 +3558,13 @@ msgstr ""
 "Les sémantiques %splage de temps%s et %stitre%s sont requises pour activer "
 "la fonctionnalité."
 
+msgid ""
+"The semantic %stimeframe%s cannot be inherited from another tracker to "
+"activate this setting."
+msgstr ""
+"La sémantique %splage de temps%s ne peut pas être héritée d'un autre outil "
+"de suivi pour activer la fonctionnalité."
+
 msgid "The semantic %stimeframe%s is requested to activate this setting."
 msgstr ""
 "La sémantique %splage de temps%s est requise pour activer la fonctionnalité."

@@ -28,6 +28,15 @@
         {{# dgettext }}tuleap-tracker | Include calendar event in the artifact email notification{{/ dgettext }}
     </label>
     {{# is_semantic_timeframe_defined }}
+        {{# is_semantic_timeframe_inherited }}
+            <p class="muted">
+                {{# dgettext }}tuleap-tracker
+                    | The semantic %stimeframe%s cannot be inherited from another tracker to activate this setting.
+                    | <a href="{{ semantic_timeframe_admin_url }}">
+                        | </a>
+                {{/ dgettext }}
+            </p>
+        {{/ is_semantic_timeframe_inherited }}
         {{^ is_semantic_title_defined }}
             <p class="muted">
                 {{# dgettext }}tuleap-tracker

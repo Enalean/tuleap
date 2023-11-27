@@ -3143,6 +3143,11 @@ msgid ""
 "setting."
 msgstr ""
 
+msgid ""
+"The semantic %stimeframe%s cannot be inherited from another tracker to "
+"activate this setting."
+msgstr ""
+
 msgid "The semantic %stimeframe%s is requested to activate this setting."
 msgstr ""
 

@@ -35,6 +35,7 @@ use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderDao;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeImpliedFromAnotherTracker;
 use Tuleap\User\InvalidEntryInAutocompleterCollection;
 use Tuleap\User\RequestFromAutocompleter;
 
@@ -345,6 +346,7 @@ class Tracker_NotificationsManager
         $semantic_timeframe_builder        = SemanticTimeframeBuilder::build();
         $semantic_timeframe                = $semantic_timeframe_builder->getSemantic($this->tracker);
         $is_semantic_timeframe_defined     = $semantic_timeframe->isDefined();
+        $is_semantic_timeframe_inherited   = $semantic_timeframe->getTimeframeCalculator() instanceof TimeframeImpliedFromAnotherTracker;
 
         $semantic_title            = Tracker_Semantic_Title::load($this->tracker);
         $is_semantic_title_defined = $semantic_title->getField() !== null;
@@ -357,6 +359,7 @@ class Tracker_NotificationsManager
                 $custom_email_sender,
                 $should_send_event_in_notification,
                 $is_semantic_timeframe_defined,
+                $is_semantic_timeframe_inherited,
                 $semantic_timeframe->getUrl(),
                 $is_semantic_title_defined,
                 $semantic_title->getUrl(),
