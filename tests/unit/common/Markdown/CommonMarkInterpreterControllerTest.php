@@ -23,26 +23,16 @@ declare(strict_types=1);
 
 namespace Tuleap\Markdown;
 
-use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Project\Routing\ProjectRetrieverMiddleware;
 use Tuleap\Request\ProjectRetriever;
+use Tuleap\Test\Helpers\NoopSapiEmitter;
 
 final class CommonMarkInterpreterControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var CommonMarkInterpreterController
-     */
-    private $interpreter_controller;
-    /**
-     * @var CommonMarkInterpreter
-     */
-    private $interpreter;
+    private CommonMarkInterpreterController $interpreter_controller;
+    private CommonMarkInterpreter $interpreter;
 
     public function setUp(): void
     {
@@ -51,8 +41,8 @@ final class CommonMarkInterpreterControllerTest extends \Tuleap\Test\PHPUnit\Tes
             HTTPFactoryBuilder::responseFactory(),
             HTTPFactoryBuilder::streamFactory(),
             $this->interpreter,
-            Mockery::mock(SapiEmitter::class),
-            new ProjectRetrieverMiddleware(Mockery::mock(ProjectRetriever::class))
+            new NoopSapiEmitter(),
+            new ProjectRetrieverMiddleware($this->createMock(ProjectRetriever::class))
         );
     }
 

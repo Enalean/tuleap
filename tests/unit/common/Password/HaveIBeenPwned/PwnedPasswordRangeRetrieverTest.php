@@ -24,16 +24,11 @@ namespace Tuleap\Password\HaveIBeenPwned;
 
 use Http\Client\Exception;
 use Http\Mock\Client;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Log\NullLogger;
 use Tuleap\Http\HTTPFactoryBuilder;
 
 class PwnedPasswordRangeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testAPIResponseIsRetrieved(): void
     {
         $http_client   = new Client();
@@ -44,22 +39,22 @@ class PwnedPasswordRangeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $retriever     = new PwnedPasswordRangeRetriever(
             $http_client,
             HTTPFactoryBuilder::requestFactory(),
-            Mockery::mock(\Psr\Log\LoggerInterface::class)
+            new NullLogger()
         );
         $hash_suffixes = $retriever->getHashSuffixesMatchingPrefix('AAAAA');
 
-        $this->assertEquals('API_RESPONSE', $hash_suffixes);
+        self::assertEquals('API_RESPONSE', $hash_suffixes);
     }
 
     public function testTooLongPrefixIsRejected(): void
     {
         $retriever = new PwnedPasswordRangeRetriever(
-            Mockery::mock(ClientInterface::class),
-            Mockery::mock(RequestFactoryInterface::class),
-            Mockery::mock(\Psr\Log\LoggerInterface::class)
+            new Client(),
+            HTTPFactoryBuilder::requestFactory(),
+            new NullLogger()
         );
 
-        $this->expectException(\LengthException::class);
+        self::expectException(\LengthException::class);
 
         $retriever->getHashSuffixesMatchingPrefix(sha1('password'));
     }
@@ -69,37 +64,31 @@ class PwnedPasswordRangeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $http_client = new Client();
         $response    = HTTPFactoryBuilder::responseFactory()->createResponse(504);
         $http_client->addResponse($response);
-        $logger = Mockery::mock(\Psr\Log\LoggerInterface::class);
 
         $retriever = new PwnedPasswordRangeRetriever(
             $http_client,
             HTTPFactoryBuilder::requestFactory(),
-            $logger
+            new NullLogger()
         );
-
-        $logger->shouldReceive('info')->once();
 
         $hash_suffixes = $retriever->getHashSuffixesMatchingPrefix('AAAAA');
 
-        $this->assertEquals('', $hash_suffixes);
+        self::assertEquals('', $hash_suffixes);
     }
 
     public function testAPICallErrorGivesEmptyResult(): void
     {
         $http_client = new Client();
-        $http_client->addException(Mockery::mock(Exception\RequestException::class));
-        $logger = Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $http_client->addException($this->createMock(Exception\RequestException::class));
 
         $retriever = new PwnedPasswordRangeRetriever(
             $http_client,
             HTTPFactoryBuilder::requestFactory(),
-            $logger
+            new NullLogger()
         );
-
-        $logger->shouldReceive('info')->once();
 
         $hash_suffixes = $retriever->getHashSuffixesMatchingPrefix('AAAAA');
 
-        $this->assertEquals('', $hash_suffixes);
+        self::assertEquals('', $hash_suffixes);
     }
 }
