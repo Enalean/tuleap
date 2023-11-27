@@ -603,12 +603,14 @@ function permission_fetch_selection_form($permission_type, $object_id, $group_id
         $post_url = '?';
     }
 
+    $purifier = Codendi_HTMLPurifier::instance();
+
     // Display form
     $html .= '<FORM ACTION="' . $post_url . '" METHOD="POST" data-test="form-permissions">
         <INPUT TYPE="HIDDEN" NAME="func" VALUE="update_permissions">
-        <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $group_id . '">
-        <INPUT TYPE="HIDDEN" NAME="permission_type" VALUE="' . $permission_type . '">
-        <INPUT TYPE="HIDDEN" NAME="object_id" VALUE="' . $object_id . '">';
+        <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $purifier->purify($group_id) . '">
+        <INPUT TYPE="HIDDEN" NAME="permission_type" VALUE="' . $purifier->purify($permission_type) . '">
+        <INPUT TYPE="HIDDEN" NAME="object_id" VALUE="' . $purifier->purify($object_id) . '">';
 
     $html .= permission_fetch_selection_field($permission_type, $object_id, $group_id);
 

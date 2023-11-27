@@ -438,7 +438,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
             $id                 = (int) $this->user_id;
             //TODO: use a DAO (waiting for the next tracker api)
             $sql    = "SELECT group_artifact_id, perm_level
-                    FROM artifact_perm WHERE user_id = $id";
+                    FROM artifact_perm WHERE user_id = " . db_ei($id);
             $db_res = db_query($sql);
             if (db_numrows($db_res) > 0) {
                 while ($row = db_fetch_array($db_res)) {

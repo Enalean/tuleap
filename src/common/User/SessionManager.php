@@ -107,6 +107,9 @@ class SessionManager
             throw new SessionNotCreatedException($exception);
         }
 
+        /**
+         * @psalm-taint-escape cookie
+         */
         $session_identifier = $session_id . self::SESSION_IDENTIFIER_SEPARATOR . $token;
         $user->setSessionId($session_id);
         $user->setSessionHash($session_identifier);

@@ -46,7 +46,12 @@ class WikiServiceAdmin extends Controler
 
       // If Wiki for project doesn't exist, propose creation...
         if (! $this->wiki->exist()) {
-            header('Location: /wiki/index.php?group_id=' . $this->gid . '&view=install');
+            /**
+             * @psalm-taint-escape header
+             */
+            $header = 'Location: /wiki/index.php?group_id=' . urlencode($this->gid) . '&view=install';
+            header($header);
+            exit();
         }
 
       // Set language for phpWiki

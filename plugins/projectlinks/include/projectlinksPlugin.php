@@ -254,9 +254,9 @@ class ProjectLinksPlugin extends Plugin implements DispatchableWithRequest
                             "reverse_name" => $q_reverse_name,
                             "description" => $q_description,
                             "uri_plus" => $q_uri_plus,
-                            "group_id" => $group_id,
+                            "group_id" => db_ei($group_id),
                         ],
-                        ($link_type_id === null ? null : "link_type_id=$link_type_id")
+                        ($link_type_id === null ? null : "link_type_id=" . db_ei($link_type_id))
                     )
                 ) {
                     $feedback .= ' ' . dgettext('tuleap-projectlinks', 'update OK') . ' ';
@@ -312,7 +312,7 @@ class ProjectLinksPlugin extends Plugin implements DispatchableWithRequest
                         description,
                         uri_plus
                     ) VALUES (
-                    $group_id,
+                    " . db_ei($group_id) . ",
                         '" . db_es($row['name']) . "',
                         '" . db_es($row['reverse_name']) . "',
                         '" . db_es($row['description']) . "',
@@ -589,14 +589,15 @@ class ProjectLinksPlugin extends Plugin implements DispatchableWithRequest
         print "</td></tr></table>\n";
 
         if (isset($link_type_id)) {
+            $purifier = Codendi_HTMLPurifier::instance();
             // Display list of linked projects
             $HTML->box1_top('Projects linked');
             print $this->_admin_links_table($link_type_id);
 
             // Admin can add new link
             print '<form name="plugin_projectlinks_add_link" method="post" action="?func=pl_link_update">';
-            print '<input type="hidden" name="link_type_id" value="' . $link_type_id . '" />';
-            print '<input type="hidden" name="group_id" value="' . $group_id . '" />';
+            print '<input type="hidden" name="link_type_id" value="' . $purifier->purify($link_type_id) . '" />';
+            print '<input type="hidden" name="group_id" value="' . $purifier->purify($group_id) . '" />';
             print '<input type="hidden" name="disp" value="edit_link_type" />';
             print '<p><label for="plugin_projectlinks_link_project">' . dgettext('tuleap-projectlinks', 'Add new project:') . '</label>';
             print '<input type="text" name="target_group" value="' .
@@ -914,7 +915,7 @@ class ProjectLinksPlugin extends Plugin implements DispatchableWithRequest
                 $html .= '<td>' . $hp->purify($row['group_name']) . '</td>';
 
                 // Delete
-                $url   = "?func=pl_link_delete&amp;disp=edit_link_type&amp;link_type_id=" . $link_type_id . "&amp;group_id=" . $row['master_group_id'] . "&amp;link_id=" . $row['link_id'];
+                $url   = "?func=pl_link_delete&amp;disp=edit_link_type&amp;link_type_id=" . urlencode($link_type_id) . "&amp;group_id=" . urlencode($row['master_group_id']) . "&amp;link_id=" . urlencode($row['link_id']);
                 $warn  = dgettext('tuleap-projectlinks', 'Delete project link');
                 $alt   = dgettext('tuleap-projectlinks', 'Delete project link');
                 $html .= '<td>' . html_trash_link($url, $warn, $alt) . '</td>';
@@ -947,7 +948,7 @@ class ProjectLinksPlugin extends Plugin implements DispatchableWithRequest
                     description,
                     uri_plus
                 ) VALUES (
-                $group_id,
+                " . db_ei($group_id) . ",
                     '" . db_es($row['name']) . "',
                     '" . db_es($row['reverse_name']) . "',
                     '" . db_es($row['description']) . "',

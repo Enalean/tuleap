@@ -175,7 +175,7 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
                 $purifier = Codendi_HTMLPurifier::instance();
 
                 $icon_src = $this->params['docman_icons']->getIconForItem($item, $params);
-                $icon     = '<img src="' . $icon_src . '" id="docman_item_icon_' . $item->getId() . '" alt="' . $purifier->purify($type) . '" class="docman_item_icon" />';
+                $icon     = '<img src="' . $icon_src . '" id="docman_item_icon_' . $purifier->purify($item->getId()) . '" alt="' . $purifier->purify($type) . '" class="docman_item_icon" />';
 
                 $this->html .= '<div>';
                 $action      = isset($this->params['item_to_move']) ? false : $item->accept($this->get_action_on_icon, ['view' => &$this->view]);
@@ -190,7 +190,7 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
                         ['action' => $action, 'id' => $item->getId()]
                     );
 
-                    $this->html .= '<a href="' . $url . '" id="docman_item_link_' . $item->getId() . '" class="' . $class . '">';
+                    $this->html .= '<a href="' . $url . '" id="docman_item_link_' . $purifier->purify($item->getId()) . '" class="' . $class . '">';
                 }
                 $this->html .=  $icon;
 
@@ -210,7 +210,7 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
                         isset($params['popup_doc'])
                     );
                     $help_window = empty($params['pv']) ? '' : 'data-help-window';
-                    $this->html .= '<a ' . $help_window . ' href="' . $url . '" id="docman_item_title_link_' . $item->getId() . '">';
+                    $this->html .= '<a ' . $help_window . ' href="' . $url . '" id="docman_item_title_link_' . $purifier->purify($item->getId()) . '">';
                 }
 
                 $this->html .=   $this->hp->purify($item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML);
@@ -221,7 +221,7 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
 
                 if ($dpm->getLockFactory()->itemIsLocked($item)) {
                     $lockIconSrc = $this->params['docman_icons']->getIcon('lock_delete.png');
-                    $lockIcon    = '<i id="docman_item_icon_locked_' . $item->getId() . '"  title="' . dgettext('tuleap-docman', 'Locked document') . '" class="fa fa-lock"></i>';
+                    $lockIcon    = '<i id="docman_item_icon_locked_' . $purifier->purify($item->getId()) . '"  title="' . dgettext('tuleap-docman', 'Locked document') . '" class="fa fa-lock"></i>';
                     $this->html .=  $lockIcon;
                 }
                 $this->html .= $this->view->getItemMenu($item, $this->params);

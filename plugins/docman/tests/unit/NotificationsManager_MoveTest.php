@@ -172,17 +172,17 @@ class NotificationsManager_MoveTest extends \Tuleap\Test\PHPUnit\TestCase
         $msg = "[$dr, $br, $cr, $lb, $lc, $ld, $res] " . $msg;
 
         $a = \Mockery::spy(\Docman_Item::class);
-        $a->shouldReceive('getId')->andReturns('a');
+        $a->shouldReceive('getId')->andReturns(102);
         $a->shouldReceive('getParentId')->andReturns(0);
         $b = \Mockery::spy(\Docman_Item::class);
-        $b->shouldReceive('getId')->andReturns('b');
-        $b->shouldReceive('getParentId')->andReturns('a');
+        $b->shouldReceive('getId')->andReturns(103);
+        $b->shouldReceive('getParentId')->andReturns(102);
         $c = \Mockery::spy(\Docman_Item::class);
-        $c->shouldReceive('getId')->andReturns('c');
-        $c->shouldReceive('getParentId')->andReturns('a');
+        $c->shouldReceive('getId')->andReturns(104);
+        $c->shouldReceive('getParentId')->andReturns(102);
         $d = \Mockery::spy(\Docman_Item::class);
-        $d->shouldReceive('getId')->andReturns('d');
-        $d->shouldReceive('getParentId')->andReturns('b');
+        $d->shouldReceive('getId')->andReturns(105);
+        $d->shouldReceive('getParentId')->andReturns(103);
 
         $group_id = 101;
         $project  = \Mockery::spy(\Project::class, ['getID' => $group_id, 'getUserName' => false, 'isPublic' => false]);

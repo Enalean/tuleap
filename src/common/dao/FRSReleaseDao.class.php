@@ -142,7 +142,7 @@ class FRSReleaseDao extends DataAccessObject
     public function searchActiveReleasesByPackageId($id, $status_active)
     {
         $_id = (int) $id;
-        return $this->_search(' package_id=' . $_id . ' AND status_id = ' . $status_active, '', 'ORDER BY release_date DESC, release_id DESC');
+        return $this->_search(' package_id=' . $this->da->escapeInt($_id) . ' AND status_id = ' . $this->da->escapeInt($status_active), '', 'ORDER BY release_date DESC, release_id DESC');
     }
 
     public function searchPaginatedActiveReleasesByPackageId($package_id, $limit, $offset)
@@ -165,7 +165,7 @@ class FRSReleaseDao extends DataAccessObject
     public function searchReleaseByName($release_name, $package_id)
     {
         $_package_id = (int) $package_id;
-        return $this->_search(' package_id=' . $_package_id .
+        return $this->_search(' package_id=' . $this->da->escapeInt($_package_id) .
         ' AND name=' . $this->da->quoteSmart(htmlspecialchars($release_name), ['force_string' => true]), '', '');
     }
 

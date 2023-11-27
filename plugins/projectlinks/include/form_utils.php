@@ -996,7 +996,7 @@ function update_database($tableName, $items, $selectCriteria = "")
     if (stristr($selectCriteria, ";")) {
         exit_error(
             "update_database: Select criteria contains illegal character",
-            "$tableName: " . htmlentities(selectCriteria)
+            "$tableName: " . htmlentities($selectCriteria)
         );
     }
     $sql = "";

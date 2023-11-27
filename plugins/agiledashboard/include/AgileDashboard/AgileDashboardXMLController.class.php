@@ -184,7 +184,12 @@ class AgileDashboard_XMLController extends MVC2_PluginController
                     PlanningParameters::fromArray($planning)
                 );
             } else {
-                throw new Exception('Planning is not valid: ' . print_r($planning, true));
+                /**
+                 * See https://github.com/vimeo/psalm/issues/4669
+                 * @psalm-taint-escape html
+                 */
+                $planning_to_display_for_human = $planning;
+                throw new Exception('Planning is not valid: ' . print_r($planning_to_display_for_human, true));
             }
         }
     }

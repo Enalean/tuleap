@@ -37,7 +37,12 @@ class ProjectHistoryFormatter
     private function extractHookReadableValue($value, $index)
     {
         if (isset($value[$index])) {
-            return var_export($value[$index], true);
+            /**
+             * See https://github.com/vimeo/psalm/issues/4669
+             * @psalm-taint-escape html
+             */
+            $value_to_read = $value[$index];
+            return var_export($value_to_read, true);
         }
 
         return '-';
