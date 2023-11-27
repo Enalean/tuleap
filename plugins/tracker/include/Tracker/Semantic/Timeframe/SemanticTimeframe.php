@@ -235,7 +235,8 @@ class SemanticTimeframe extends Tracker_Semantic
                 new SemanticTimeframeDao(),
                 \TrackerFactory::instance(),
                 $form_element_factory
-            )
+            ),
+            new CalendarEventConfigDao(),
         );
     }
 

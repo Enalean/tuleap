@@ -49,6 +49,13 @@ msgstr "Sauvegarder vos modifications"
 msgid "Start date"
 msgstr "Date de début"
 
+msgid ""
+"The semantic cannot be inherited from another tracker because calendar "
+"events are activated in notification"
+msgstr ""
+"La sémantique ne peut pas être héritée d'un autre outil de suivi car les "
+"événements calendrier sont activés dans les notifications"
+
 msgid "The timeframe of an artifact will be"
 msgstr "La plage de temps d'un artéfact sera"
 
@@ -65,8 +72,7 @@ msgstr ""
 
 msgid ""
 "You cannot make this semantic inherit from another tracker because some "
-"other trackers\n"
-"        are inheriting their own semantics timeframe from this one."
+"other trackers are inheriting their own semantics timeframe from this one."
 msgstr ""
 "Vous ne pouvez pas faire hériter cette sémantique de celle d'un autre outil "
 "de suivi car d'autres outils de héritent eux même leurs propres sémantiques "

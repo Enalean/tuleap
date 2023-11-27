@@ -56,8 +56,9 @@
             data-test="error-message-other-trackers-implying-their-timeframe"
         >
             {{
-                $gettext(`You cannot make this semantic inherit from another tracker because some other trackers
-            are inheriting their own semantics timeframe from this one.`)
+                $gettext(
+                    "You cannot make this semantic inherit from another tracker because some other trackers are inheriting their own semantics timeframe from this one.",
+                )
             }}
         </div>
         <div

@@ -22,24 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Tracker\Notifications\Settings\CheckEventShouldBeSentInNotificationStub;
 
 class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalResponseMock;
 
     /**
      * @var SemanticTimeframeDao
      */
     private $semantic_timeframe_dao;
-
-    /**
-     * @var SemanticTimeframeUpdator
-     */
-    private $updator;
 
     /**
      * @var \Tracker
@@ -55,25 +50,17 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var int
      */
     private $tracker_id;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetriever
-     */
-    private $suitable_trackers_retriever;
+    private SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetriever&MockObject $suitable_trackers_retriever;
 
     protected function setUp(): void
     {
-        $this->semantic_timeframe_dao      = Mockery::mock(SemanticTimeframeDao::class);
-        $this->tracker                     = Mockery::mock(\Tracker::class);
-        $this->formelement_factory         = Mockery::mock(\Tracker_FormElementFactory::class);
-        $this->suitable_trackers_retriever = Mockery::mock(SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetriever::class);
-        $this->updator                     = new SemanticTimeframeUpdator(
-            $this->semantic_timeframe_dao,
-            $this->formelement_factory,
-            $this->suitable_trackers_retriever
-        );
+        $this->semantic_timeframe_dao      = $this->createMock(SemanticTimeframeDao::class);
+        $this->tracker                     = $this->createMock(\Tracker::class);
+        $this->formelement_factory         = $this->createMock(\Tracker_FormElementFactory::class);
+        $this->suitable_trackers_retriever = $this->createMock(SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetriever::class);
 
         $this->tracker_id = 123;
-        $this->tracker->shouldReceive('getId')->andReturn($this->tracker_id);
+        $this->tracker->method('getId')->willReturn($this->tracker_id);
     }
 
     public function testItDoesNotUpdateIfAFieldIdIsNotNumeric(): void
@@ -83,14 +70,22 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'duration-field-id'   => '1234',
         ]);
 
-        $this->semantic_timeframe_dao->shouldReceive("save")->never();
+        $this->semantic_timeframe_dao
+            ->expects(self::never())
+            ->method("save");
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
             \Feedback::ERROR,
             'An error occurred while updating the timeframe semantic'
         );
 
-        $this->updator->update($this->tracker, $request);
+        $updator = new SemanticTimeframeUpdator(
+            $this->semantic_timeframe_dao,
+            $this->formelement_factory,
+            $this->suitable_trackers_retriever,
+            CheckEventShouldBeSentInNotificationStub::withoutEventInNotification(),
+        );
+        $updator->update($this->tracker, $request);
     }
 
     public function testItDoesNotUpdateIfStartDateFieldIdIsMissing(): void
@@ -100,14 +95,22 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'duration-field-id'   => '5678',
         ]);
 
-        $this->semantic_timeframe_dao->shouldReceive("save")->never();
+        $this->semantic_timeframe_dao
+            ->expects(self::never())
+            ->method("save");
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
             \Feedback::ERROR,
             'An error occurred while updating the timeframe semantic'
         );
 
-        $this->updator->update($this->tracker, $request);
+        $updator = new SemanticTimeframeUpdator(
+            $this->semantic_timeframe_dao,
+            $this->formelement_factory,
+            $this->suitable_trackers_retriever,
+            CheckEventShouldBeSentInNotificationStub::withoutEventInNotification(),
+        );
+        $updator->update($this->tracker, $request);
     }
 
     public function testItDoesNotUpdateIfDurationFieldIdIsMissing(): void
@@ -117,14 +120,22 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'duration-field-id'   => '',
         ]);
 
-        $this->semantic_timeframe_dao->shouldReceive("save")->never();
+        $this->semantic_timeframe_dao
+            ->expects(self::never())
+            ->method("save");
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
             \Feedback::ERROR,
             'An error occurred while updating the timeframe semantic'
         );
 
-        $this->updator->update($this->tracker, $request);
+        $updator = new SemanticTimeframeUpdator(
+            $this->semantic_timeframe_dao,
+            $this->formelement_factory,
+            $this->suitable_trackers_retriever,
+            CheckEventShouldBeSentInNotificationStub::withoutEventInNotification(),
+        );
+        $updator->update($this->tracker, $request);
     }
 
     public function testItDoesNotUpdateIfAFieldCannotBeFoundInTheTracker(): void
@@ -134,15 +145,23 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'duration-field-id'   => '5678',
         ]);
 
-        $this->formelement_factory->shouldReceive("getUsedDateFieldById")->with($this->tracker, 1234)->andReturn(null);
-        $this->semantic_timeframe_dao->shouldReceive("save")->never();
+        $this->formelement_factory->method("getUsedDateFieldById")->with($this->tracker, 1234)->willReturn(null);
+        $this->semantic_timeframe_dao
+            ->expects(self::never())
+            ->method("save");
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
             \Feedback::ERROR,
             'An error occurred while updating the timeframe semantic'
         );
 
-        $this->updator->update($this->tracker, $request);
+        $updator = new SemanticTimeframeUpdator(
+            $this->semantic_timeframe_dao,
+            $this->formelement_factory,
+            $this->suitable_trackers_retriever,
+            CheckEventShouldBeSentInNotificationStub::withoutEventInNotification(),
+        );
+        $updator->update($this->tracker, $request);
     }
 
     public function testItUpdatesTheSemanticWithDuration(): void
@@ -154,33 +173,41 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'duration-field-id'   => $duration_field_id,
         ]);
 
-        $start_date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class);
-        $duration_field   = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
+        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $duration_field   = $this->createMock(\Tracker_FormElement_Field_Integer::class);
 
-        $start_date_field->shouldReceive('getTrackerId')->andReturn($this->tracker_id);
-        $duration_field->shouldReceive('getTrackerId')->andReturn($this->tracker_id);
+        $start_date_field->method('getTrackerId')->willReturn($this->tracker_id);
+        $duration_field->method('getTrackerId')->willReturn($this->tracker_id);
 
-        $this->formelement_factory->shouldReceive("getUsedDateFieldById")->with($this->tracker, $start_date_field_id)->andReturn($start_date_field);
-        $this->formelement_factory->shouldReceive("getUsedFieldByIdAndType")->with(
+        $this->formelement_factory->method("getUsedDateFieldById")->with($this->tracker, $start_date_field_id)->willReturn($start_date_field);
+        $this->formelement_factory->method("getUsedFieldByIdAndType")->with(
             $this->tracker,
             $duration_field_id,
             ['int', 'float', 'computed']
-        )->andReturn($duration_field);
+        )->willReturn($duration_field);
 
-        $this->semantic_timeframe_dao->shouldReceive("save")->with(
-            $this->tracker_id,
-            $start_date_field_id,
-            $duration_field_id,
-            null,
-            null
-        )->andReturn(true)->once();
+        $this->semantic_timeframe_dao
+            ->expects(self::once())
+            ->method("save")->with(
+                $this->tracker_id,
+                $start_date_field_id,
+                $duration_field_id,
+                null,
+                null
+            )->willReturn(true);
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
             \Feedback::INFO,
             'Semantic timeframe updated successfully'
         );
 
-        $this->updator->update($this->tracker, $request);
+        $updator = new SemanticTimeframeUpdator(
+            $this->semantic_timeframe_dao,
+            $this->formelement_factory,
+            $this->suitable_trackers_retriever,
+            CheckEventShouldBeSentInNotificationStub::withoutEventInNotification(),
+        );
+        $updator->update($this->tracker, $request);
     }
 
     public function testItUpdatesTheSemanticWithEndDate(): void
@@ -192,29 +219,43 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'end-date-field-id'   => $end_date_field_id,
         ]);
 
-        $start_date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class);
-        $end_date_field   = Mockery::mock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $end_date_field   = $this->createMock(\Tracker_FormElement_Field_Date::class);
 
-        $start_date_field->shouldReceive('getTrackerId')->andReturn($this->tracker_id);
-        $end_date_field->shouldReceive('getTrackerId')->andReturn($this->tracker_id);
+        $start_date_field->method('getTrackerId')->willReturn($this->tracker_id);
+        $end_date_field->method('getTrackerId')->willReturn($this->tracker_id);
 
-        $this->formelement_factory->shouldReceive("getUsedDateFieldById")->with($this->tracker, $start_date_field_id)->andReturn($start_date_field);
-        $this->formelement_factory->shouldReceive("getUsedDateFieldById")->with($this->tracker, $end_date_field_id)->andReturn($end_date_field);
+        $this->formelement_factory
+            ->method("getUsedDateFieldById")
+            ->willReturnCallback(
+                static fn ($tracker, $field_id) => match ($field_id) {
+                    $start_date_field_id => $start_date_field,
+                    $end_date_field_id => $end_date_field,
+                }
+            );
 
-        $this->semantic_timeframe_dao->shouldReceive("save")->with(
-            $this->tracker_id,
-            $start_date_field_id,
-            null,
-            $end_date_field_id,
-            null
-        )->andReturn(true)->once();
+        $this->semantic_timeframe_dao
+            ->expects(self::once())
+            ->method("save")->with(
+                $this->tracker_id,
+                $start_date_field_id,
+                null,
+                $end_date_field_id,
+                null
+            )->willReturn(true);
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
             \Feedback::INFO,
             'Semantic timeframe updated successfully'
         );
 
-        $this->updator->update($this->tracker, $request);
+        $updator = new SemanticTimeframeUpdator(
+            $this->semantic_timeframe_dao,
+            $this->formelement_factory,
+            $this->suitable_trackers_retriever,
+            CheckEventShouldBeSentInNotificationStub::withoutEventInNotification(),
+        );
+        $updator->update($this->tracker, $request);
     }
 
     public function testItUpdatesTheSemanticWhenItIsImpliedFromAnotherTracker(): void
@@ -226,26 +267,67 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->suitable_trackers_retriever->shouldReceive('getTrackersWeCanUseToImplyTheSemanticOfTheCurrentTrackerFrom')
+        $this->suitable_trackers_retriever->method('getTrackersWeCanUseToImplyTheSemanticOfTheCurrentTrackerFrom')
             ->with($this->tracker)
-            ->andReturn([
-                '150' => Mockery::mock(\Tracker::class),
+            ->willReturn([
+                '150' => $this->createMock(\Tracker::class),
             ]);
 
-        $this->semantic_timeframe_dao->shouldReceive("save")->with(
-            $this->tracker_id,
-            null,
-            null,
-            null,
-            $sprints_tracker_id
-        )->andReturn(true)->once();
+        $this->semantic_timeframe_dao
+            ->expects(self::once())
+            ->method("save")->with(
+                $this->tracker_id,
+                null,
+                null,
+                null,
+                $sprints_tracker_id
+            )->willReturn(true);
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
             \Feedback::INFO,
             'Semantic timeframe updated successfully'
         );
 
-        $this->updator->update($this->tracker, $request);
+        $updator = new SemanticTimeframeUpdator(
+            $this->semantic_timeframe_dao,
+            $this->formelement_factory,
+            $this->suitable_trackers_retriever,
+            CheckEventShouldBeSentInNotificationStub::withoutEventInNotification(),
+        );
+        $updator->update($this->tracker, $request);
+    }
+
+    public function testItRejectsTheSemanticWhenItIsImpliedFromAnotherTrackerAndCalendarEventsAreUsed(): void
+    {
+        $sprints_tracker_id = 150;
+        $request            = new \Codendi_Request(
+            [
+                'implied-from-tracker-id' => $sprints_tracker_id,
+            ]
+        );
+
+        $this->suitable_trackers_retriever->method('getTrackersWeCanUseToImplyTheSemanticOfTheCurrentTrackerFrom')
+            ->with($this->tracker)
+            ->willReturn([
+                '150' => $this->createMock(\Tracker::class),
+            ]);
+
+        $this->semantic_timeframe_dao
+            ->expects(self::never())
+            ->method("save");
+
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
+            \Feedback::ERROR,
+            dgettext('tuleap-tracker', 'An error occurred while updating the timeframe semantic')
+        );
+
+        $updator = new SemanticTimeframeUpdator(
+            $this->semantic_timeframe_dao,
+            $this->formelement_factory,
+            $this->suitable_trackers_retriever,
+            CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
+        );
+        $updator->update($this->tracker, $request);
     }
 
     public function testItRejectsIfBothDurationAndEndDateAreSent(): void
@@ -260,55 +342,78 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'end-date-field-id'   => $end_date_field_id,
         ]);
 
-        $start_date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class);
-        $end_date_field   = Mockery::mock(\Tracker_FormElement_Field_Date::class);
-        $duration_field   = Mockery::mock(\Tracker_FormElement_Field_Numeric::class);
+        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $end_date_field   = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $duration_field   = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
 
-        $start_date_field->shouldReceive('getTrackerId')->andReturn($this->tracker_id);
-        $end_date_field->shouldReceive('getTrackerId')->andReturn($this->tracker_id);
-        $duration_field->shouldReceive('getTrackerId')->andReturn($this->tracker_id);
+        $start_date_field->method('getTrackerId')->willReturn($this->tracker_id);
+        $end_date_field->method('getTrackerId')->willReturn($this->tracker_id);
+        $duration_field->method('getTrackerId')->willReturn($this->tracker_id);
 
-        $this->formelement_factory->shouldReceive("getUsedDateFieldById")->with($this->tracker, $start_date_field_id)->andReturn($start_date_field);
-        $this->formelement_factory->shouldReceive("getUsedDateFieldById")->with($this->tracker, $end_date_field_id)->andReturn($end_date_field);
-        $this->formelement_factory->shouldReceive("getUsedFieldByIdAndType")->with(
+        $this->formelement_factory
+            ->method("getUsedDateFieldById")
+            ->willReturnCallback(
+                static fn ($tracker, $field_id) => match ($field_id) {
+                    $start_date_field_id => $start_date_field,
+                    $end_date_field_id => $end_date_field,
+                }
+            );
+        $this->formelement_factory->method("getUsedFieldByIdAndType")->with(
             $this->tracker,
             $duration_field_id,
             ['int', 'float', 'computed']
-        )->andReturn($duration_field);
+        )->willReturn($duration_field);
 
-        $this->semantic_timeframe_dao->shouldReceive("save")->never();
+        $this->semantic_timeframe_dao
+            ->expects(self::never())
+            ->method("save");
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
             \Feedback::ERROR,
             dgettext('tuleap-tracker', 'An error occurred while updating the timeframe semantic')
         );
 
-        $this->updator->update($this->tracker, $request);
+        $updator = new SemanticTimeframeUpdator(
+            $this->semantic_timeframe_dao,
+            $this->formelement_factory,
+            $this->suitable_trackers_retriever,
+            CheckEventShouldBeSentInNotificationStub::withoutEventInNotification(),
+        );
+        $updator->update($this->tracker, $request);
     }
 
     public function testItDoesNotResetWhenSomeTimeframeConfigurationsRelyOnTheCurrentOne(): void
     {
         $sprint_tracker_id = 106;
-        $sprint_tracker    = Mockery::mock(\Tracker::class, ['getId' => $sprint_tracker_id]);
+        $sprint_tracker    = TrackerTestBuilder::aTracker()->withId($sprint_tracker_id)->build();
 
-        $this->semantic_timeframe_dao->shouldReceive('getSemanticsImpliedFromGivenTracker')
+        $this->semantic_timeframe_dao
+            ->expects(self::once())
+            ->method('getSemanticsImpliedFromGivenTracker')
             ->with($sprint_tracker_id)
-            ->andReturn([
+            ->willReturn([
                 [
                     'tracker_id' => 104,
                     'implied_from_tracker_id' => $sprint_tracker_id,
                 ],
-            ])
-            ->once();
+            ]);
 
-        $this->semantic_timeframe_dao->shouldReceive('deleteTimeframeSemantic')->never();
+        $this->semantic_timeframe_dao
+            ->expects(self::never())
+            ->method('deleteTimeframeSemantic');
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
             \Feedback::ERROR,
             'You cannot reset this semantic because some trackers inherit their own semantic timeframe from this one.'
         );
 
-        $this->updator->reset($sprint_tracker);
+        $updator = new SemanticTimeframeUpdator(
+            $this->semantic_timeframe_dao,
+            $this->formelement_factory,
+            $this->suitable_trackers_retriever,
+            CheckEventShouldBeSentInNotificationStub::withoutEventInNotification(),
+        );
+        $updator->reset($sprint_tracker);
     }
 
     /**
@@ -318,22 +423,29 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItResetsTheTimeframeSemanticOfAGivenTracker(?array $implied_semantics): void
     {
         $sprint_tracker_id = 106;
-        $sprint_tracker    = Mockery::mock(\Tracker::class, ['getId' => $sprint_tracker_id]);
+        $sprint_tracker    = TrackerTestBuilder::aTracker()->withId($sprint_tracker_id)->build();
 
-        $this->semantic_timeframe_dao->shouldReceive('getSemanticsImpliedFromGivenTracker')
+        $this->semantic_timeframe_dao
+            ->expects(self::once())
+            ->method('getSemanticsImpliedFromGivenTracker')
             ->with($sprint_tracker_id)
-            ->andReturn($implied_semantics)
-            ->once();
+            ->willReturn($implied_semantics);
 
-        $this->semantic_timeframe_dao->shouldReceive('deleteTimeframeSemantic')
-            ->with($sprint_tracker_id)
-            ->once();
+        $this->semantic_timeframe_dao
+            ->expects(self::once())
+            ->method('deleteTimeframeSemantic')
+            ->with($sprint_tracker_id);
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
             \Feedback::INFO,
             'Semantic timeframe reset successfully'
         );
-
-        $this->updator->reset($sprint_tracker);
+        $updator = new SemanticTimeframeUpdator(
+            $this->semantic_timeframe_dao,
+            $this->formelement_factory,
+            $this->suitable_trackers_retriever,
+            CheckEventShouldBeSentInNotificationStub::withoutEventInNotification(),
+        );
+        $updator->reset($sprint_tracker);
     }
 }
