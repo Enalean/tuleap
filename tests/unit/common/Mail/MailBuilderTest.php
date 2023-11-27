@@ -20,31 +20,38 @@
 
 declare(strict_types=1);
 
-use Tuleap\Notification\Notification;
+namespace Tuleap\Mail;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+use Codendi_Mail;
+use ForgeConfig;
+use MailBuilder;
+use MailEnhancer;
+use PHPUnit\Framework\MockObject\MockObject;
+use TemplateRenderer;
+use Tuleap\Notification\Notification;
+use UserManager;
+
 final class MailBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\ForgeConfigSandbox;
 
-    /** @var MailBuilder */
+    /** @var MailBuilder&MockObject */
     private $builder;
 
     /** @var Notification */
     private $notification;
 
-    /** @var TemplateRenderer */
+    /** @var TemplateRenderer&MockObject */
     private $renderer;
 
-    /** @var MailEnhancer */
+    /** @var MailEnhancer&MockObject */
     private $mail_enhancer;
 
-    /** @var Tuleap\Mail\MailFilter */
+    /** @var MailFilter&MockObject */
     private $mail_filter;
 
     /**
-     * @var Codendi_Mail|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     * @var Codendi_Mail&MockObject
      */
     private $codendi_mail;
 
@@ -52,18 +59,30 @@ final class MailBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $user_manager = \Mockery::spy(\UserManager::class)->shouldReceive('getAllUsersByEmail')->andReturns([])->getMock();
+        $user_manager = $this->createMock(\UserManager::class);
+        $user_manager->method('getAllUsersByEmail')->willReturn([]);
         UserManager::setInstance($user_manager);
 
-        $this->renderer   = \Mockery::spy(\TemplateRenderer::class);
-        $template_factory = \Mockery::spy(\TemplateRendererFactory::class)->shouldReceive('getRenderer')->andReturns($this->renderer)->getMock();
+        $this->renderer   = $this->createMock(\TemplateRenderer::class);
+        $template_factory = $this->createMock(\TemplateRendererFactory::class);
+        $template_factory->method('getRenderer')->willReturn($this->renderer);
 
-        $this->mail_enhancer = \Mockery::spy(\MailEnhancer::class);
-        $this->mail_filter   =  \Mockery::spy(\Tuleap\Mail\MailFilter::class);
+        $this->mail_enhancer = $this->createMock(\MailEnhancer::class);
+        $this->mail_enhancer->method('enhanceMail');
+        $this->mail_filter = $this->createMock(MailFilter::class);
 
-        $this->builder = \Mockery::mock(\MailBuilder::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->builder = $this->createPartialMock(\MailBuilder::class, [
+            'getMailSender',
+        ]);
         $this->builder->__construct($template_factory, $this->mail_filter);
-        $this->codendi_mail = \Mockery::spy(\Codendi_Mail::class);
+        $this->codendi_mail = $this->createMock(\Codendi_Mail::class);
+        $this->codendi_mail->method('setFrom');
+        $this->codendi_mail->method('setTo');
+        $this->codendi_mail->method('setSubject');
+        $this->codendi_mail->method('setBodyHtml');
+        $this->codendi_mail->method('setBodyText');
+        $this->codendi_mail->method('getCc');
+        $this->codendi_mail->method('getBcc');
 
         $emails         = ['a@example.com', 'b@example.com'];
         $subject        = 'This is an awesome subject';
@@ -80,10 +99,10 @@ final class MailBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $goto_link,
             $service_name
         );
-        $this->mail_filter->shouldReceive('filter')->andReturns($this->notification->getEmails());
+        $this->mail_filter->method('filter')->willReturn($this->notification->getEmails());
 
         ForgeConfig::set('sys_default_domain', '');
-        $GLOBALS['HTML'] = \Mockery::spy(\Layout::class);
+        $GLOBALS['HTML'] = $this->createMock(\Layout::class);
     }
 
     protected function tearDown(): void
@@ -96,43 +115,52 @@ final class MailBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsAndSendsATruncatedEmailIfProjectUsesTruncatedEmail(): void
     {
-        $project = \Mockery::spy(\Project::class)->shouldReceive('getTruncatedEmailsUsage')->andReturns(true)->getMock();
-        $this->codendi_mail->shouldReceive('send')->andReturns(true);
-        $this->builder->shouldReceive('getMailSender')->andReturns($this->codendi_mail);
+        $project = $this->createMock(\Project::class);
+        $project->method('getTruncatedEmailsUsage')->willReturn(true);
+        $this->codendi_mail->method('send')->willReturn(true);
+        $this->codendi_mail->method('getTo');
+        $this->builder->method('getMailSender')->willReturn($this->codendi_mail);
 
-
-        $this->renderer->shouldReceive('renderToString')->times(4);
-        $this->mail_enhancer->shouldReceive('enhanceMail')->times(0);
+        $this->renderer->expects(self::exactly(4))->method('renderToString');
+        $this->mail_enhancer->expects(self::never())->method('enhanceMail');
 
         $sent = $this->builder->buildAndSendEmail($project, $this->notification, $this->mail_enhancer);
 
-        $this->assertTrue($sent);
+        self::assertTrue($sent);
     }
 
     public function testItBuildsAndSendsAClassicEmailIfProjectDoesNotUseTruncatedEmail(): void
     {
-        $project = \Mockery::spy(\Project::class)->shouldReceive('getTruncatedEmailsUsage')->andReturns(false)->getMock();
-        $this->codendi_mail->shouldReceive('send')->andReturns(true);
-        $this->builder->shouldReceive('getMailSender')->andReturns($this->codendi_mail);
+        $project = $this->createMock(\Project::class);
+        $project->method('getTruncatedEmailsUsage')->willReturn(false);
+        $this->codendi_mail->method('send')->willReturn(true);
+        $this->codendi_mail->method('getTo');
+        $this->builder->method('getMailSender')->willReturn($this->codendi_mail);
 
-        $this->renderer->shouldReceive('renderToString')->never();
-        $this->mail_enhancer->shouldReceive('enhanceMail')->times(2);
+        $this->renderer->expects(self::never())->method('renderToString');
+        $this->mail_enhancer->expects(self::exactly(2))->method('enhanceMail');
 
         $sent = $this->builder->buildAndSendEmail($project, $this->notification, $this->mail_enhancer);
 
-        $this->assertTrue($sent);
+        self::assertTrue($sent);
     }
 
     public function testItDoesNotStopIfAMailIsNotSent(): void
     {
-        $project        = \Mockery::spy(\Project::class)->shouldReceive('getTruncatedEmailsUsage')->andReturns(false)->getMock();
-        $codendi_mail_2 = \Mockery::spy(\Codendi_Mail::class)->shouldReceive('send')->once()->andReturns(true)->getMock();
-        $this->codendi_mail->shouldReceive('send')->once()->andReturns(false);
-        $this->codendi_mail->shouldReceive('getTo')->andReturns('user1@example.com');
-        $codendi_mail_2->shouldReceive('getTo')->andReturns('user2@example.com');
+        $project = $this->createMock(\Project::class);
+        $project->method('getTruncatedEmailsUsage')->willReturn(false);
+        $codendi_mail_2 = $this->createMock(\Codendi_Mail::class);
+        $codendi_mail_2->expects(self::once())->method('send')->willReturn(true);
+        $this->codendi_mail->expects(self::once())->method('send')->willReturn(false);
+        $this->codendi_mail->method('getTo')->willReturn('user1@example.com');
+        $codendi_mail_2->method('getTo')->willReturn('user2@example.com');
+        $codendi_mail_2->method('setFrom');
+        $codendi_mail_2->method('setTo');
+        $codendi_mail_2->method('setBodyHtml');
+        $codendi_mail_2->method('setBodyText');
+        $codendi_mail_2->method('setSubject');
 
-        $this->builder->shouldReceive('getMailSender')->andReturns($this->codendi_mail)->once();
-        $this->builder->shouldReceive('getMailSender')->andReturns($codendi_mail_2)->once();
+        $this->builder->expects(self::exactly(2))->method('getMailSender')->willReturnOnConsecutiveCalls($this->codendi_mail, $codendi_mail_2);
 
         $sent = $this->builder->buildAndSendEmail(
             $project,
@@ -140,20 +168,22 @@ final class MailBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->mail_enhancer
         );
 
-        $this->assertFalse($sent);
+        self::assertFalse($sent);
     }
 
     public function testItDoesNotTryToSendAMailIfNotRecipientHasBeenSet(): void
     {
-        $project = \Mockery::spy(\Project::class)->shouldReceive('getTruncatedEmailsUsage')->andReturns(false)->getMock();
-        $this->builder->shouldReceive('getMailSender')->andReturns($this->codendi_mail);
-        $this->codendi_mail->shouldReceive('send')->never();
+        $project = $this->createMock(\Project::class);
+        $project->method('getTruncatedEmailsUsage')->willReturn(false);
+        $this->builder->method('getMailSender')->willReturn($this->codendi_mail);
+        $this->codendi_mail->expects(self::never())->method('send');
+        $this->codendi_mail->method('getTo');
 
         $sent = $this->builder->buildAndSendEmail(
             $project,
             $this->notification,
             $this->mail_enhancer
         );
-        $this->assertTrue($sent);
+        self::assertTrue($sent);
     }
 }

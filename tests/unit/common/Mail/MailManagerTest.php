@@ -20,158 +20,153 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+namespace Tuleap\Mail;
+
+use Codendi_Mail_Interface;
+use MailManager;
+use Tuleap\Test\Builders\UserTestBuilder;
+
 final class MailManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $user_manager = \Mockery::spy(\UserManager::class);
-        UserManager::setInstance($user_manager);
-    }
-
-    protected function tearDown(): void
-    {
-        UserManager::clearInstance();
-        parent::tearDown();
-    }
-
     public function testGetMailPrefsShouldReturnUsersAccordingToPreferences(): void
     {
-        $mm = \Mockery::mock(\MailManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $mm = $this->createPartialMock(\MailManager::class, [
+            'getUserManager',
+        ]);
 
-        $manuel = \Mockery::spy(\PFUser::class);
-        $manuel->shouldReceive('getPreference')->with('user_tracker_mailformat')->andReturns('html');
-        $manuel->shouldReceive('getStatus')->andReturns('A');
+        $manuel = UserTestBuilder::anActiveUser()->build();
+        $manuel->setPreference('user_tracker_mailformat', 'html');
 
-        $nicolas = \Mockery::spy(\PFUser::class);
-        $nicolas->shouldReceive('getPreference')->with('user_tracker_mailformat')->andReturns('text');
-        $nicolas->shouldReceive('getStatus')->andReturns('A');
+        $nicolas = UserTestBuilder::anActiveUser()->build();
+        $nicolas->setPreference('user_tracker_mailformat', 'text');
 
-        $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('getAllUsersByEmail')->with('manuel@enalean.com')->andReturns([$manuel]);
-        $um->shouldReceive('getAllUsersByEmail')->with('nicolas@enalean.com')->andReturns([$nicolas]);
-        $mm->shouldReceive('getUserManager')->andReturns($um);
+        $um = $this->createMock(\UserManager::class);
+        $um->method('getAllUsersByEmail')->withConsecutive(
+            ['manuel@enalean.com'],
+            ['nicolas@enalean.com']
+        )->willReturnOnConsecutiveCalls([$manuel], [$nicolas]);
+        $mm->method('getUserManager')->willReturn($um);
 
         $addresses = ['manuel@enalean.com', 'nicolas@enalean.com'];
 
         $prefs = $mm->getMailPreferencesByEmail($addresses);
-        $this->assertEquals([$manuel], $prefs['html']);
-        $this->assertEquals([$nicolas], $prefs['text']);
+        self::assertEquals([$manuel], $prefs['html']);
+        self::assertEquals([$nicolas], $prefs['text']);
     }
 
     public function testGetMailPrefsShouldReturnUserWithTextPref(): void
     {
-        $mm = \Mockery::mock(\MailManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $mm = $this->createPartialMock(\MailManager::class, [
+            'getUserManager',
+        ]);
 
-        $manuel = \Mockery::spy(\PFUser::class);
-        $manuel->shouldReceive('getPreference')->with('user_tracker_mailformat')->andReturns('text');
-        $manuel->shouldReceive('getStatus')->andReturns('A');
+        $manuel = UserTestBuilder::anActiveUser()->build();
+        $manuel->setPreference('user_tracker_mailformat', 'text');
 
-        $manuel2 = \Mockery::spy(\PFUser::class);
-        $manuel2->shouldReceive('getPreference')->with('user_tracker_mailformat')->andReturns('html');
-        $manuel2->shouldReceive('getStatus')->andReturns('A');
+        $manuel2 = UserTestBuilder::anActiveUser()->build();
+        $manuel2->setPreference('user_tracker_mailformat', 'html');
 
-        $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('getAllUsersByEmail')->with('manuel@enalean.com')->andReturns([$manuel, $manuel2]);
+        $um = $this->createMock(\UserManager::class);
+        $um->method('getAllUsersByEmail')->with('manuel@enalean.com')->willReturn([$manuel, $manuel2]);
 
-        $mm->shouldReceive('getUserManager')->andReturns($um);
+        $mm->method('getUserManager')->willReturn($um);
 
         $addresses = ['manuel@enalean.com'];
 
         $prefs = $mm->getMailPreferencesByEmail($addresses);
-        $this->assertEquals([$manuel], $prefs['text']);
-        $this->assertEquals([], $prefs['html']);
+        self::assertEquals([$manuel], $prefs['text']);
+        self::assertEquals([], $prefs['html']);
     }
 
     public function testGetMailPrefsShouldReturnUserWithHtmlPref(): void
     {
-        $mm = \Mockery::mock(\MailManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $mm = $this->createPartialMock(\MailManager::class, [
+            'getUserManager',
+        ]);
 
-        $manuel = \Mockery::spy(\PFUser::class);
-        $manuel->shouldReceive('getPreference')->andReturns(false);
-        $manuel->shouldReceive('getStatus')->andReturns('A');
+        $manuel = UserTestBuilder::anActiveUser()->build();
+        $manuel->setPreference('user_tracker_mailformat', '');
 
-        $manuel2 = \Mockery::spy(\PFUser::class);
-        $manuel2->shouldReceive('getPreference')->with('user_tracker_mailformat')->andReturns('html');
-        $manuel2->shouldReceive('getStatus')->andReturns('A');
+        $manuel2 = UserTestBuilder::anActiveUser()->build();
+        $manuel2->setPreference('user_tracker_mailformat', 'html');
 
-        $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('getAllUsersByEmail')->with('manuel@enalean.com')->andReturns([$manuel, $manuel2]);
+        $um = $this->createMock(\UserManager::class);
+        $um->method('getAllUsersByEmail')->with('manuel@enalean.com')->willReturn([$manuel, $manuel2]);
 
-        $mm->shouldReceive('getUserManager')->andReturns($um);
+        $mm->method('getUserManager')->willReturn($um);
 
         $addresses = ['manuel@enalean.com'];
 
         $prefs = $mm->getMailPreferencesByEmail($addresses);
-        $this->assertEquals([], $prefs['text']);
-        $this->assertEquals([$manuel2], $prefs['html']);
+        self::assertEquals([], $prefs['text']);
+        self::assertEquals([$manuel2], $prefs['html']);
     }
 
     public function testGetMailPrefsShouldReturnLastUser(): void
     {
-        $mm = \Mockery::mock(\MailManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $mm = $this->createPartialMock(\MailManager::class, [
+            'getUserManager',
+        ]);
 
-        $manuel = \Mockery::spy(\PFUser::class);
-        $manuel->shouldReceive('getPreference')->andReturns(false);
-        $manuel->shouldReceive('getStatus')->andReturns('A');
+        $manuel = UserTestBuilder::anActiveUser()->build();
+        $manuel->setPreference('user_tracker_mailformat', '');
 
-        $manuel2 = \Mockery::spy(\PFUser::class);
-        $manuel2->shouldReceive('getPreference')->andReturns(false);
-        $manuel2->shouldReceive('getStatus')->andReturns('A');
+        $manuel2 = UserTestBuilder::anActiveUser()->build();
+        $manuel2->setPreference('user_tracker_mailformat', '');
 
-        $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('getAllUsersByEmail')->with('manuel@enalean.com')->andReturns([$manuel, $manuel2]);
+        $um = $this->createMock(\UserManager::class);
+        $um->method('getAllUsersByEmail')->with('manuel@enalean.com')->willReturn([$manuel, $manuel2]);
 
-        $mm->shouldReceive('getUserManager')->andReturns($um);
+        $mm->method('getUserManager')->willReturn($um);
 
         $addresses = ['manuel@enalean.com'];
 
         $prefs = $mm->getMailPreferencesByEmail($addresses);
-        $this->assertEquals([], $prefs['text']);
-        $this->assertEquals([$manuel2], $prefs['html']);
+        self::assertEquals([], $prefs['text']);
+        self::assertEquals([$manuel2], $prefs['html']);
     }
 
     public function testGetMailPrefsShouldReturnHTMLUsersWithAnonymous(): void
     {
-        $mm = \Mockery::mock(\MailManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $mm = $this->createPartialMock(\MailManager::class, [
+            'getUserManager',
+            'getConfig',
+        ]);
 
-        $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('getAllUsersByEmail')->andReturns([]);
-        $mm->shouldReceive('getUserManager')->andReturns($um);
+        $um = $this->createMock(\UserManager::class);
+        $um->method('getAllUsersByEmail')->willReturn([]);
+        $mm->method('getUserManager')->willReturn($um);
 
-        $mm->shouldReceive('getConfig')->andReturns('fr_BE');
+        $mm->method('getConfig')->willReturn('fr_BE');
 
         $prefs = $mm->getMailPreferencesByEmail(['manuel@enalean.com']);
-        $this->assertEquals([], $prefs['text']);
-        $this->assertCount(1, $prefs['html']);
-        $this->assertEquals('manuel@enalean.com', $prefs['html'][0]->getEmail());
-        $this->assertTrue($prefs['html'][0]->isAnonymous());
-        $this->assertEquals('fr_BE', $prefs['html'][0]->getLanguageID());
+        self::assertEquals([], $prefs['text']);
+        self::assertCount(1, $prefs['html']);
+        self::assertEquals('manuel@enalean.com', $prefs['html'][0]->getEmail());
+        self::assertTrue($prefs['html'][0]->isAnonymous());
+        self::assertEquals('fr_BE', $prefs['html'][0]->getLanguageID());
     }
 
     public function testGetMailPrefsByUsersShouldReturnHTMLByDefault(): void
     {
         $mm   = new MailManager();
-        $user = new PFUser(['id' => 123, 'language_id' => 'en_US']);
-        $this->assertEquals(Codendi_Mail_Interface::FORMAT_HTML, $mm->getMailPreferencesByUser($user));
+        $user = UserTestBuilder::anActiveUser()->withId(123)->withLocale('en_US')->build();
+        self::assertEquals(Codendi_Mail_Interface::FORMAT_HTML, $mm->getMailPreferencesByUser($user));
     }
 
     public function testGetMailPrefsByUsersShouldReturnTextWhenUserRequestIt(): void
     {
         $mm   = new MailManager();
-        $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('getPreference')->with('user_tracker_mailformat')->once()->andReturns('text');
-        $this->assertEquals(Codendi_Mail_Interface::FORMAT_TEXT, $mm->getMailPreferencesByUser($user));
+        $user = UserTestBuilder::anActiveUser()->build();
+        $user->setPreference('user_tracker_mailformat', 'text');
+        self::assertEquals(Codendi_Mail_Interface::FORMAT_TEXT, $mm->getMailPreferencesByUser($user));
     }
 
     public function testGetMailPrefsByUsersShouldReturnHTMLWhenPreferenceReturnsFalse(): void
     {
         $mm   = new MailManager();
-        $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('getPreference')->with('user_tracker_mailformat')->once()->andReturns(false);
-        $this->assertEquals(Codendi_Mail_Interface::FORMAT_HTML, $mm->getMailPreferencesByUser($user));
+        $user = UserTestBuilder::anActiveUser()->build();
+        $user->setPreference('user_tracker_mailformat', '');
+        self::assertEquals(Codendi_Mail_Interface::FORMAT_HTML, $mm->getMailPreferencesByUser($user));
     }
 }

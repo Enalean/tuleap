@@ -19,48 +19,47 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
+declare(strict_types=1);
 
-final class Codendi_MailTest extends TestCase // phpcs:ignore
+namespace Tuleap\Mail;
+
+use Codendi_Mail;
+use ForgeConfig;
+use org\bovigo\vfs\vfsStream;
+use Tuleap\ForgeConfigSandbox;
+use Tuleap_Template_Mail;
+
+// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Codendi_MailTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     public function setUp(): void
     {
         parent::setUp();
-
-        ForgeConfig::store();
 
         ForgeConfig::set('sys_logger_level', 'debug');
         $tmp_dir = vfsStream::setup();
         ForgeConfig::set('codendi_log', $tmp_dir->url());
     }
 
-    public function tearDown(): void
-    {
-        ForgeConfig::restore();
-        parent::tearDown();
-    }
-
     public function testCleanupMailFormat(): void
     {
         $mail = new Codendi_Mail();
-        $this->assertEquals(['john.doe@example.com', 'Tuleap'], $mail->cleanupMailFormat('"Tuleap" <john.doe@example.com>'));
-        $this->assertEquals(['john.doe@example.com', 'Tuleap'], $mail->cleanupMailFormat('Tuleap <john.doe@example.com>'));
-        $this->assertEquals(['"Tuleap" john.doe@example.com', ''], $mail->cleanupMailFormat('"Tuleap" john.doe@example.com'));
-        $this->assertEquals(['"Tuleap" <john.doe@example.com', ''], $mail->cleanupMailFormat('"Tuleap" <john.doe@example.com'));
-        $this->assertEquals(['"Tuleap" john.doe@example.com>', ''], $mail->cleanupMailFormat('"Tuleap" john.doe@example.com>'));
+        self::assertEquals(['john.doe@example.com', 'Tuleap'], $mail->cleanupMailFormat('"Tuleap" <john.doe@example.com>'));
+        self::assertEquals(['john.doe@example.com', 'Tuleap'], $mail->cleanupMailFormat('Tuleap <john.doe@example.com>'));
+        self::assertEquals(['"Tuleap" john.doe@example.com', ''], $mail->cleanupMailFormat('"Tuleap" john.doe@example.com'));
+        self::assertEquals(['"Tuleap" <john.doe@example.com', ''], $mail->cleanupMailFormat('"Tuleap" <john.doe@example.com'));
+        self::assertEquals(['"Tuleap" john.doe@example.com>', ''], $mail->cleanupMailFormat('"Tuleap" john.doe@example.com>'));
     }
 
-    public function testTemplateLookAndFeel()
+    public function testTemplateLookAndFeel(): void
     {
         $body = 'body';
 
-        $tpl = Mockery::mock(Tuleap_Template_Mail::class);
-        $tpl->shouldReceive('set')->andReturn(['body', $body])->once();
-        $tpl->shouldReceive('fetch')->once();
+        $tpl = $this->createMock(Tuleap_Template_Mail::class);
+        $tpl->expects(self::once())->method('set')->willReturn(['body', $body]);
+        $tpl->expects(self::once())->method('fetch');
 
         $mail = new Codendi_Mail();
         $mail->setLookAndFeelTemplate($tpl);
@@ -68,13 +67,13 @@ final class Codendi_MailTest extends TestCase // phpcs:ignore
         $mail->setBodyHtml($body);
     }
 
-    public function testDiscardTemplateLookAndFeel()
+    public function testDiscardTemplateLookAndFeel(): void
     {
         $body = 'body';
 
-        $tpl = Mockery::mock(Tuleap_Template_Mail::class);
-        $tpl->shouldReceive('set')->never();
-        $tpl->shouldReceive('fetch')->never();
+        $tpl = $this->createMock(Tuleap_Template_Mail::class);
+        $tpl->expects(self::never())->method('set');
+        $tpl->expects(self::never())->method('fetch');
 
         $mail = new Codendi_Mail();
         $mail->setLookAndFeelTemplate($tpl);
@@ -82,27 +81,27 @@ final class Codendi_MailTest extends TestCase // phpcs:ignore
         $mail->setBodyHtml($body, Codendi_Mail::DISCARD_COMMON_LOOK_AND_FEEL);
     }
 
-    public function testEmptyEmailsAreIgnored()
+    public function testEmptyEmailsAreIgnored(): void
     {
         $mail = new Codendi_Mail();
         $mail->setTo('', true);
         $mail->setCc('', true);
         $mail->setBcc('', true);
 
-        $this->assertEmpty($mail->getTo());
-        $this->assertEmpty($mail->getCc());
-        $this->assertEmpty($mail->getBcc());
+        self::assertEmpty($mail->getTo());
+        self::assertEmpty($mail->getCc());
+        self::assertEmpty($mail->getBcc());
     }
 
-    public function testSpacesOfEmailsAreTrimmed()
+    public function testSpacesOfEmailsAreTrimmed(): void
     {
         $mail = new Codendi_Mail();
         $mail->setTo('    user@example.com  ', true);
         $mail->setCc('    user@example.com  ', true);
         $mail->setBcc('    user@example.com  ', true);
 
-        $this->assertSame('user@example.com', $mail->getTo());
-        $this->assertSame('user@example.com', $mail->getCc());
-        $this->assertSame('user@example.com', $mail->getBcc());
+        self::assertSame('user@example.com', $mail->getTo());
+        self::assertSame('user@example.com', $mail->getCc());
+        self::assertSame('user@example.com', $mail->getBcc());
     }
 }
