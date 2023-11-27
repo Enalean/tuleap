@@ -1,0 +1,72 @@
+{
+  "repositories": [
+    {
+      "type": "package",
+      "package": [
+        {
+          "name": "mediawiki/labeled-section-transclusion",
+          "type": "mediawiki-extension",
+          "version": "1.39.1",
+          "require": {
+            "composer/installers": "^1.0"
+          },
+          "source": {
+            "url": "https://gerrit.wikimedia.org/r/mediawiki/extensions/LabeledSectionTransclusion.git",
+            "type": "git",
+            "reference": "5181f579d20b807a975965b37cdd84c91645a2eb"
+          }
+        }
+      ]
+    },
+    {
+      "type": "package",
+      "package": [
+        {
+          "name": "mediawiki/mpdf",
+          "type": "mediawiki-extension",
+          "version": "1.39.1",
+          "require": {
+            "mpdf/mpdf": "^8.1.4"
+          },
+          "source": {
+            "url": "https://gerrit.wikimedia.org/r/mediawiki/extensions/Mpdf.git",
+            "type": "git",
+            "reference": "fb6ff534526f3b9a554cc4172db6e3715adfef36"
+          }
+        }
+      ]
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/wikimedia/mediawiki-extensions-TuleapWikiFarm"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin"
+    }
+  ],
+  "require": {
+    "mediawiki/labeled-section-transclusion": "^1.39.1",
+    "mediawiki/mpdf": "^1.0",
+    "mediawiki/tuleap-integration": "dev-REL1_39#b419b081a37ef022ad266b72722546649a2e79f8",
+    "mediawiki/tuleap-skin": "dev-REL1_39",
+    "mediawiki/tuleap-wiki-farm": "dev-REL1_39"
+  },
+  "replace": {
+    "guzzlehttp/guzzle": "^6.0 || ^7.0",
+    "psr/log": "^1.0",
+    "psr/http-message": "^1.0",
+    "symfony/polyfill-php80": "^1.25.5"
+  },
+  "config": {
+    "sort-packages": true,
+    "platform-check": false,
+    "allow-plugins": {
+      "composer/installers": true
+    }
+  }
+}

@@ -1,0 +1,35 @@
+From cbb930dc648e790314583c66decf73e646845b0b Mon Sep 17 00:00:00 2001
+From: Thomas Gerbet <thomas.gerbet@enalean.com>
+Date: Thu, 9 Mar 2023 10:17:55 +0100
+Subject: [PATCH] Compatibility with mPdf 8
+
+---
+ MpdfAction.php | 13 ++-----------
+ 1 file changed, 2 insertions(+), 11 deletions(-)
+
+diff --git a/extensions/Mpdf/MpdfAction.php b/extensions/Mpdf/MpdfAction.php
+index 74b17c8..ce6f576 100644
+--- a/extensions/Mpdf/MpdfAction.php
++++ b/extensions/Mpdf/MpdfAction.php
+@@ -94,17 +94,8 @@ class MpdfAction extends Action {
+ 				}
+ 			}
+
+-			$tempDir = wfTempDir();
+-			if ( !defined( '_MPDF_TEMP_PATH' ) ) {
+-				define( "_MPDF_TEMP_PATH", "$tempDir/mpdf/temp/" );
+-				wfMkdirParents( _MPDF_TEMP_PATH );
+-			}
+-			if ( !defined( '_MPDF_TTFONTDATAPATH' ) ) {
+-				define( '_MPDF_TTFONTDATAPATH', "$tempDir/mpdf/ttfontdata/" );
+-				wfMkdirParents( _MPDF_TTFONTDATAPATH );
+-			}
+-
+-			$mpdf = new mPDF( $mode, $format, 0, '', $marginLeft, $marginRight, $marginTop, $marginBottom, $marginHeader, $marginFooter, $orientation );
++			$orientation = in_array(strtoupper($orientation), ['P', 'L']) ? $orientation : 'P';
++			$mpdf = new \Mpdf\Mpdf( ['tempDir' => wfTempDir() . '/mdpf-extension', 'mode' => $mode, 'format' => "$format-$orientation", 'margin_left' => $marginLeft, 'margin_right' => $marginRight, 'margin_top' => $marginTop, 'margin_bottom' => $marginBottom, 'margin_header' => $marginHeader, 'margin_footer' => $marginFooter] );
+
+ 			// Suppress warning messages, because the mPDF library
+ 			// itself generates warnings (due to trying to add
+--
+2.39.2
