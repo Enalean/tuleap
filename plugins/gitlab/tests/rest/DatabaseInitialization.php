@@ -32,35 +32,33 @@ final class DatabaseInitialization extends \DatabaseInitialization
     public function setUp(Project $gitlab_integration_project): void
     {
         $this->mysqli->select_db(ForgeConfig::get('sys_dbname'));
+
+        echo "Setup GitLab REST tests configuration\n";
+
         $this->insertGitlabRepository($gitlab_integration_project);
         $this->insertGitlabGroup($gitlab_integration_project);
     }
 
     private function insertGitlabRepository(Project $gitlab_integration_project): void
     {
-        echo "Adding fake Gitlab repository \n";
-
         $project_id = (int) $gitlab_integration_project->getID();
 
-        $sql = "INSERT INTO plugin_gitlab_repository_integration (gitlab_repository_id, name, description, gitlab_repository_url, last_push_date, project_id, allow_artifact_closure)
-                VALUES (15412, 'path/repo01', 'desc', 'https://example.com/path/repo01', 1603371803, $project_id, 0)";
+        $sql = <<<EOSQL
+        INSERT INTO plugin_gitlab_repository_integration (gitlab_repository_id, name, description, gitlab_repository_url, last_push_date, project_id, allow_artifact_closure)
+        VALUES (15412, 'path/repo01', 'desc', 'https://example.com/path/repo01', 1603371803, $project_id, 0)
+        EOSQL;
 
         $this->mysqli->real_query($sql);
     }
 
     private function insertGitlabGroup(Project $gitlab_integration_project): void
     {
-        echo "Enable feature flag for Gitlab group \n";
-
-        $sql = "INSERT INTO forgeconfig VALUES ('feature_flag_gitlab_link_group', 1)";
-        $this->mysqli->real_query($sql);
-
-        echo "Adding fake Gitlab group \n";
-
         $project_id = (int) $gitlab_integration_project->getID();
 
-        $sql = "INSERT INTO plugin_gitlab_group (gitlab_group_id, project_id, name, full_path, web_url, last_synchronization_date, allow_artifact_closure, create_branch_prefix)
-                VALUES (965, $project_id, 'myGroup01', 'path/myGroup01', 'https://example.com/path/myGroup01', 1663662113, 1, 'dev/')";
+        $sql = <<<EOSQL
+        INSERT INTO plugin_gitlab_group (gitlab_group_id, project_id, name, full_path, web_url, last_synchronization_date, allow_artifact_closure, create_branch_prefix)
+        VALUES (965, $project_id, 'myGroup01', 'path/myGroup01', 'https://example.com/path/myGroup01', 1663662113, 1, 'dev/')
+        EOSQL;
 
         $this->mysqli->real_query($sql);
     }
