@@ -90,12 +90,11 @@ class Dao extends DataAccessObject implements ParentCommentSearcher, ThreadColor
         $this->getDB()->update(
             'plugin_pullrequest_comments',
             [
-                'content' => $new_comment->getContent(),
-                'last_edition_date' => $new_comment->getLastEditionDate()->unwrapOr(null),
+                'content'           => $new_comment->getContent(),
+                'last_edition_date' => $new_comment->getLastEditionDate()
+                    ->mapOr(static fn(\DateTimeImmutable $last_edition_date) => $last_edition_date->getTimestamp(), null),
             ],
-            [
-                'id' => $new_comment->getId(),
-            ]
+            ['id' => $new_comment->getId()]
         );
     }
 }

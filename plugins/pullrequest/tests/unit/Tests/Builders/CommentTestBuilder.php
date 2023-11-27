@@ -22,12 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Tests\Builders;
 
-use DateTimeImmutable;
 use Tuleap\Option\Option;
 use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
-use function Psl\Type\int;
 
 final class CommentTestBuilder
 {
@@ -37,16 +35,14 @@ final class CommentTestBuilder
     private int $post_date       = 1695212990;
     private int $parent_id       = 0;
     private string $color        = '';
-    /**
-     * @var Option<int>
-     */
+    /** @var Option<\DateTimeImmutable> */
     private Option $last_edition_date;
 
     private function __construct(
         private readonly string $content,
         private readonly string $format,
     ) {
-        $this->last_edition_date = Option::nothing(int());
+        $this->last_edition_date = Option::nothing(\DateTimeImmutable::class);
     }
 
     public static function aMarkdownComment(string $content): self
@@ -89,9 +85,9 @@ final class CommentTestBuilder
         return $this;
     }
 
-    public function editedOn(DateTimeImmutable $last_edition_date): self
+    public function editedOn(\DateTimeImmutable $last_edition_date): self
     {
-        $this->last_edition_date = Option::fromValue($last_edition_date->getTimestamp());
+        $this->last_edition_date = Option::fromValue($last_edition_date);
         return $this;
     }
 

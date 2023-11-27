@@ -72,7 +72,7 @@ option.mapOr(
 );
 ```
 
-In the case you have a special treatment to do when it is `nothing`, you can use `.match()`:
+If you need a separate treatment when the value is set or not, you can use `.match()`:
 
 ```typescript
 import { ok, err } from "neverthrow";

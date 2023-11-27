@@ -39,14 +39,14 @@ final class InlineCommentTestBuilder
     private int $unidiff_offset  = 37;
     private bool $is_outdated    = false;
     private string $position     = 'right';
-    /** @var Option<int> */
+    /** @var Option<\DateTimeImmutable> */
     private Option $last_edition_date;
 
     private function __construct(
         private readonly string $content,
         private readonly string $format,
     ) {
-        $this->last_edition_date = Option::nothing(\Psl\Type\int());
+        $this->last_edition_date = Option::nothing(\DateTimeImmutable::class);
     }
 
     public static function aMarkdownComment(string $content): self
@@ -109,7 +109,7 @@ final class InlineCommentTestBuilder
 
     public function editedOn(\DateTimeImmutable $last_edition_date): self
     {
-        $this->last_edition_date = Option::fromValue($last_edition_date->getTimestamp());
+        $this->last_edition_date = Option::fromValue($last_edition_date);
         return $this;
     }
 

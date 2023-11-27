@@ -73,6 +73,38 @@ final class OptionTest extends TestCase
         self::assertTrue($optional->isNothing());
     }
 
+    public function testValueMapReturnsDifferentValue(): void
+    {
+        $value             = 66;
+        $callback_argument = null;
+
+        $option     = Option::fromValue($value);
+        $new_option = $option->map(static function (mixed $received_value) use (&$callback_argument): string {
+            $callback_argument = $received_value;
+            return 'callback';
+        });
+
+        self::assertSame($value, $callback_argument);
+        self::assertNotSame($option, $new_option);
+        self::assertTrue($option->isValue());
+        self::assertSame('callback', $new_option->unwrapOr('default'));
+    }
+
+    public function testNothingMapReturnsNothing(): void
+    {
+        $has_called_map_function = false;
+
+        $option     = Option::nothing(\Psl\Type\string());
+        $new_option = $option->map(static function () use (&$has_called_map_function): \stdClass {
+            $has_called_map_function = true;
+            return new \stdClass();
+        });
+
+        self::assertFalse($has_called_map_function);
+        self::assertNotSame($option, $new_option);
+        self::assertTrue($new_option->isNothing());
+    }
+
     public function testValueMapOrToDifferentValue(): void
     {
         $callback_argument = null;
@@ -132,7 +164,7 @@ final class OptionTest extends TestCase
             return Option::fromValue('callback');
         });
 
-        self::assertSame($callback_argument, $value);
+        self::assertSame($value, $callback_argument);
         self::assertNotSame($option, $new_option);
         self::assertTrue($new_option->isValue());
         self::assertSame('callback', $new_option->unwrapOr('default'));

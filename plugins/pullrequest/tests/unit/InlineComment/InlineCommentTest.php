@@ -76,7 +76,7 @@ final class InlineCommentTest extends TestCase
         self::assertSame($position, $comment->getPosition());
         self::assertSame($color, $comment->getColor());
         self::assertSame($format, $comment->getFormat());
-        self::assertSame($last_edition_date->getTimestamp(), $comment->getLastEditionDate()->unwrapOr(0));
+        self::assertEquals($last_edition_date, $comment->getLastEditionDate()->unwrapOr(null));
     }
 
     public function testItBuildsFromDatabaseRowWithoutLastEditionDate(): void
@@ -178,6 +178,6 @@ final class InlineCommentTest extends TestCase
 
         self::assertNotSame($comment, $modified_comment);
         self::assertSame($new_content, $modified_comment->getContent());
-        self::assertSame($edition_date->getTimestamp(), $modified_comment->getLastEditionDate()->unwrapOr(0));
+        self::assertSame($edition_date, $modified_comment->getLastEditionDate()->unwrapOr(null));
     }
 }

@@ -59,6 +59,33 @@ final class TypeTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(54, $test->expectation->unwrapOr(0));
     }
 
+    public function testCanMapValueToADifferentTypeThanTheInitialOption(): void
+    {
+        $option = Option::fromValue(new CustomValueType(90, 'coparty'));
+
+        $test = new class {
+            /** @var Option<int> */
+            public Option $expectation;
+        };
+
+        $test->expectation = $option->map(static fn(CustomValueType $value) => 40);
+        self::assertTrue($test->expectation->isValue());
+        self::assertSame(40, $test->expectation->unwrapOr(null));
+    }
+
+    public function testCanMapNothingToADifferentTypeThanTheInitialOption(): void
+    {
+        $option = Option::nothing(\Psl\Type\int());
+
+        $test = new class {
+            /** @var Option<CustomValueType> */
+            public Option $expectation;
+        };
+
+        $test->expectation = $option->map(static fn(int $value) => new CustomValueType($value, 'conduction'));
+        self::assertTrue($test->expectation->isNothing());
+    }
+
     public function testAndThenCanMapValueToADifferentTypeThanTheInitialOption(): void
     {
         $option = Option::fromValue(10);
