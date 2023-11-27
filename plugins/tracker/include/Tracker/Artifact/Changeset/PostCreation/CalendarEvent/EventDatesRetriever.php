@@ -64,25 +64,24 @@ final class EventDatesRetriever implements RetrieveEventDates
             return Result::err('Time period error: ' . $error_message);
         }
 
+        if ($timeframe_calculator->isAllSetToZero($changeset, $permission_user, $logger)) {
+            return Result::ok($calendar_event_data->withDates(0, 0));
+        }
+
         $start = $time_period->getStartDate();
         $end   = $time_period->getEndDate();
-        if (
-            (! $timeframe_calculator->isAllSetToZero($changeset, $permission_user)) ||
-            ($should_check_permissions && ! $timeframe_calculator->userCanReadTimeframeFields($recipient))
-        ) {
-            if (! $start) {
-                return Result::err('No start date, we cannot build calendar event');
-            }
+        if (! $start) {
+            return Result::err('No start date, we cannot build calendar event');
+        }
 
-            if (! $end) {
-                return Result::err('No end date, we cannot build calendar event');
-            }
+        if (! $end) {
+            return Result::err('No end date, we cannot build calendar event');
         }
 
         if ($end < $start) {
             return Result::err('End date < start date, we cannot build calendar event');
         }
 
-        return Result::ok($calendar_event_data->withDates($start ?? 0, $end ?? 0));
+        return Result::ok($calendar_event_data->withDates($start, $end));
     }
 }

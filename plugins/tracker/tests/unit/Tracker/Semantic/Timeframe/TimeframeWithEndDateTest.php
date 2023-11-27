@@ -404,7 +404,8 @@ final class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::assertTrue($this->timeframe->isAllSetToZero(
             $artifact->getLastChangeset(),
-            $this->user
+            $this->user,
+            new NullLogger()
         ));
     }
 
@@ -421,15 +422,18 @@ final class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::assertFalse($this->timeframe->isAllSetToZero(
             $artifact1->getLastChangeset(),
-            $this->user
+            $this->user,
+            new NullLogger()
         ));
         self::assertFalse($this->timeframe->isAllSetToZero(
             $artifact2->getLastChangeset(),
-            $this->user
+            $this->user,
+            new NullLogger()
         ));
         self::assertFalse($this->timeframe->isAllSetToZero(
             $artifact3->getLastChangeset(),
-            $this->user
+            $this->user,
+            new NullLogger()
         ));
     }
 
