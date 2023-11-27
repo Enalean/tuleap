@@ -178,8 +178,8 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
         $begining_of_file = '%a';
         $end_of_file      = '%a';
         $timezone         = '%S';
-        self::assertStringMatchesFormat("${begining_of_file}DTSTART;${timezone}VALUE=DATE:20090214${end_of_file}", $attachements[0]->content);
-        self::assertStringMatchesFormat("${begining_of_file}DTEND;${timezone}VALUE=DATE:20111222${end_of_file}", $attachements[0]->content);
+        self::assertStringMatchesFormat("{$begining_of_file}DTSTART;{$timezone}VALUE=DATE:20090214{$end_of_file}", $attachements[0]->content);
+        self::assertStringMatchesFormat("{$begining_of_file}DTEND;{$timezone}VALUE=DATE:20111222{$end_of_file}", $attachements[0]->content);
     }
 
     /**
@@ -240,6 +240,34 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
 
         self::assertCount(1, $attachements);
         self::assertStringContainsString('ORGANIZER;CN=Noreply:MAILTO:noreply@example.com', $attachements[0]->content);
+    }
+
+    public function testNotFullDayWhenTimeDisplayed(): void
+    {
+        $provider1 = new EmailNotificationAttachmentProvider(
+            CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
+            RetrieveEventSummaryStub::withSummary('Christmas Party'),
+            RetrieveEventDescriptionStub::withDescription('Ho ho ho, Merry Christmas!'),
+            RetrieveEventDatesStub::withDates(1234567890, 1324567890)->withIsTimeDisplayed(false),
+            RetrieveEventOrganizerStub::withOrganizer('noreply@example.com', 'Noreply'),
+        );
+        $provider2 = new EmailNotificationAttachmentProvider(
+            CheckEventShouldBeSentInNotificationStub::withEventInNotification(),
+            RetrieveEventSummaryStub::withSummary('Christmas Party'),
+            RetrieveEventDescriptionStub::withDescription('Ho ho ho, Merry Christmas!'),
+            RetrieveEventDatesStub::withDates(1234567890, 1324567890)->withIsTimeDisplayed(true),
+            RetrieveEventOrganizerStub::withOrganizer('noreply@example.com', 'Noreply'),
+        );
+
+        $attachements1 = $provider1->getAttachments($this->changeset, $this->recipient, $this->logger, true);
+        $attachements2 = $provider2->getAttachments($this->changeset, $this->recipient, $this->logger, true);
+
+        self::assertCount(1, $attachements1);
+        self::assertCount(1, $attachements2);
+        self::assertStringContainsString('DTSTART;TZID=Europe/Paris;VALUE=DATE:20090214', $attachements1[0]->content);
+        self::assertStringContainsString('DTEND;TZID=Europe/Paris;VALUE=DATE:20111222', $attachements1[0]->content);
+        self::assertStringContainsString('DTSTART;TZID=Europe/Paris:20090214T003130', $attachements2[0]->content);
+        self::assertStringContainsString('DTEND;TZID=Europe/Paris:20111222T163130', $attachements2[0]->content);
     }
 
     private function assertDebugLogEquals(string $message, string ...$other_messages): void

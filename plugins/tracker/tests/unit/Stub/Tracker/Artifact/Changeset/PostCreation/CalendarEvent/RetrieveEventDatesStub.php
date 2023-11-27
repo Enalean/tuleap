@@ -30,6 +30,8 @@ use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\CalendarEventDa
 
 final class RetrieveEventDatesStub implements RetrieveEventDates
 {
+    private bool $time_displayed = false;
+
     private function __construct(private readonly int|null $start, private readonly int $end, private readonly string|null $error)
     {
     }
@@ -42,6 +44,13 @@ final class RetrieveEventDatesStub implements RetrieveEventDates
     public static function withDates(int $start, int $end): self
     {
         return new self($start, $end, null);
+    }
+
+    public function withIsTimeDisplayed(bool $time_displayed): self
+    {
+        $this->time_displayed = $time_displayed;
+
+        return $this;
     }
 
     public static function withError(string $message): self
@@ -67,6 +76,6 @@ final class RetrieveEventDatesStub implements RetrieveEventDates
             return Result::err($this->error);
         }
 
-        return Result::ok($calendar_event_data->withDates($this->start, $this->end));
+        return Result::ok($calendar_event_data->withDates($this->start, $this->end)->withTimeDisplayed($this->time_displayed));
     }
 }

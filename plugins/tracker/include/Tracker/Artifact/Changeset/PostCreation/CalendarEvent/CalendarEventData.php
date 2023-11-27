@@ -33,6 +33,7 @@ final class CalendarEventData
         public readonly string $description,
         public readonly int $start,
         public readonly int $end,
+        public readonly bool $is_time_displayed,
         public readonly ?EventOrganizer $organizer,
     ) {
     }
@@ -42,7 +43,7 @@ final class CalendarEventData
      */
     public static function fromSummary(string $summary): self
     {
-        return new self($summary, '', 0, 0, null);
+        return new self($summary, '', 0, 0, false, null);
     }
 
     /**
@@ -55,6 +56,7 @@ final class CalendarEventData
             $this->description,
             $this->start,
             $this->end,
+            $this->is_time_displayed,
             $this->organizer,
         );
     }
@@ -66,6 +68,7 @@ final class CalendarEventData
             $description,
             $this->start,
             $this->end,
+            $this->is_time_displayed,
             $this->organizer,
         );
     }
@@ -77,6 +80,7 @@ final class CalendarEventData
             $this->description,
             $start,
             $end,
+            $this->is_time_displayed,
             $this->organizer,
         );
     }
@@ -88,7 +92,20 @@ final class CalendarEventData
             $this->description,
             $this->start,
             $this->end,
+            $this->is_time_displayed,
             $organizer,
+        );
+    }
+
+    public function withTimeDisplayed(bool $is_time_displayed): self
+    {
+        return new self(
+            $this->summary,
+            $this->description,
+            $this->start,
+            $this->end,
+            $is_time_displayed,
+            $this->organizer,
         );
     }
 }

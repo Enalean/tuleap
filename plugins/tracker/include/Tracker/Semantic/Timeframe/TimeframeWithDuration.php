@@ -270,4 +270,9 @@ class TimeframeWithDuration implements IComputeTimeframes
 
         return $start_date === 0 && $duration === 0;
     }
+
+    public function isTimeDisplayedForEvent(): bool
+    {
+        return $this->start_date_field->isTimeDisplayed();
+    }
 }

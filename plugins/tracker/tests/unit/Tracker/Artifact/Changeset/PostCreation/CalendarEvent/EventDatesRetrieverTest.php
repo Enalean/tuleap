@@ -176,7 +176,13 @@ final class EventDatesRetrieverTest extends TestCase
         );
 
         $this->start_field->setUserCanRead($this->recipient, false);
+        $this->start_field->setCacheSpecificProperties([
+            'display_time' => ['value' => 0],
+        ]);
         $this->end_field->setUserCanRead($this->recipient, false);
+        $this->end_field->setCacheSpecificProperties([
+            'display_time' => ['value' => 0],
+        ]);
 
         $this->changeset->setFieldValue($this->start_field, ChangesetValueDateTestBuilder::aValue(
             1,
@@ -199,7 +205,7 @@ final class EventDatesRetrieverTest extends TestCase
 
         self::assertTrue(Result::isOk($result));
         self::assertEquals(
-            new CalendarEventData('Christmas Party', '', 1234567890, 1324567890, null),
+            new CalendarEventData('Christmas Party', '', 1234567890, 1324567890, false, null),
             $result->value,
         );
     }
@@ -317,7 +323,7 @@ final class EventDatesRetrieverTest extends TestCase
         $this->changeset->setFieldValue($duration_field, ChangesetValueIntegerTestBuilder::aValue(
             1,
             $this->changeset,
-            $this->end_field
+            $duration_field
         )->withValue(0)->build());
 
         $result = $builder->retrieveEventDates(
@@ -330,7 +336,95 @@ final class EventDatesRetrieverTest extends TestCase
 
         self::assertTrue(Result::isOk($result));
         self::assertEquals(
-            new CalendarEventData('Christmas Party', '', 0, 0, null),
+            new CalendarEventData('Christmas Party', '', 0, 0, false, null),
+            $result->value,
+        );
+    }
+
+    public function testItReturnsTrueForTimeDisplayTimeframeWithEndDate(): void
+    {
+        $builder = new EventDatesRetriever(
+            BuildSemanticTimeframeStub::withTimeframeCalculator(
+                $this->changeset->getTracker(),
+                new TimeframeWithEndDate(
+                    $this->start_field,
+                    $this->end_field
+                )
+            ),
+        );
+
+        $this->changeset->setFieldValue($this->start_field, ChangesetValueDateTestBuilder::aValue(
+            1,
+            $this->changeset,
+            $this->start_field
+        )->withTimestamp(1234567890)->build());
+        $this->changeset->setFieldValue($this->end_field, ChangesetValueDateTestBuilder::aValue(
+            1,
+            $this->changeset,
+            $this->end_field
+        )->withTimestamp(1324567890)->build());
+        $this->start_field->setCacheSpecificProperties([
+            'display_time' => ['value' => 1],
+        ]);
+        $this->end_field->setCacheSpecificProperties([
+            'display_time' => ['value' => 1],
+        ]);
+
+        $result = $builder->retrieveEventDates(
+            CalendarEventData::fromSummary('Christmas Party')
+                ->withDescription('Ho ho ho, Merry Christmas!'),
+            $this->changeset,
+            $this->recipient,
+            $this->logger,
+            false,
+        );
+
+        self::assertTrue(Result::isOk($result));
+        self::assertEquals(
+            new CalendarEventData('Christmas Party', 'Ho ho ho, Merry Christmas!', 1234567890, 1324567890, true, null),
+            $result->value,
+        );
+    }
+
+    public function testItReturnsTrueForTimeDisplayTimeframeWithDuration(): void
+    {
+        $duration_field = TrackerFormElementIntFieldBuilder::anIntField(3)->build();
+        $builder        = new EventDatesRetriever(
+            BuildSemanticTimeframeStub::withTimeframeCalculator(
+                $this->changeset->getTracker(),
+                new TimeframeWithDuration(
+                    $this->start_field,
+                    $duration_field
+                )
+            ),
+        );
+
+        $this->changeset->setFieldValue($this->start_field, ChangesetValueDateTestBuilder::aValue(
+            1,
+            $this->changeset,
+            $this->start_field
+        )->withTimestamp(1234567890)->build());
+        $this->changeset->setFieldValue($duration_field, ChangesetValueIntegerTestBuilder::aValue(
+            1,
+            $this->changeset,
+            $duration_field
+        )->withValue(10)->build());
+        $this->start_field->setCacheSpecificProperties([
+            'display_time' => ['value' => 1],
+        ]);
+
+        $result = $builder->retrieveEventDates(
+            CalendarEventData::fromSummary('Christmas Party')
+                ->withDescription('Ho ho ho, Merry Christmas!'),
+            $this->changeset,
+            $this->recipient,
+            $this->logger,
+            false,
+        );
+
+        self::assertTrue(Result::isOk($result));
+        self::assertEquals(
+            new CalendarEventData('Christmas Party', 'Ho ho ho, Merry Christmas!', 1234567890, 1235950290, true, null),
             $result->value,
         );
     }
@@ -348,6 +442,13 @@ final class EventDatesRetrieverTest extends TestCase
             ),
         );
 
+        $this->start_field->setCacheSpecificProperties([
+            'display_time' => ['value' => 0],
+        ]);
+        $this->end_field->setCacheSpecificProperties([
+            'display_time' => ['value' => 0],
+        ]);
+
         $result = $builder->retrieveEventDates(
             CalendarEventData::fromSummary('Christmas Party')
                 ->withDescription('Ho ho ho, Merry Christmas!'),
@@ -359,7 +460,7 @@ final class EventDatesRetrieverTest extends TestCase
 
         self::assertTrue(Result::isOk($result));
         self::assertEquals(
-            new CalendarEventData('Christmas Party', 'Ho ho ho, Merry Christmas!', 1234567890, 1324567890, null),
+            new CalendarEventData('Christmas Party', 'Ho ho ho, Merry Christmas!', 1234567890, 1324567890, false, null),
             $result->value,
         );
     }
