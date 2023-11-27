@@ -132,8 +132,9 @@ class TimeframeNotConfigured implements IComputeTimeframes
         return false;
     }
 
-    public function isAllSetToZero(\Tracker_Artifact_Changeset $changeset, \PFUser $user): bool
+    public function isAllSetToZero(\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): bool
     {
+        $logger->error('TimeframeNotConfigured::isAllSetToZero -> should not be called');
         return false;
     }
 }

@@ -244,19 +244,29 @@ class TimeframeWithDuration implements IComputeTimeframes
         return $this->start_date_field->userCanRead($user) && $this->duration_field->userCanRead($user);
     }
 
-    public function isAllSetToZero(\Tracker_Artifact_Changeset $changeset, \PFUser $user): bool
+    public function isAllSetToZero(\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): bool
     {
         try {
             $start_date = TimeframeChangesetFieldsValueRetriever::getTimestamp($this->start_date_field, $user, $changeset);
-        } catch (TimeframeFieldNotFoundException | TimeframeFieldNoValueException) {
+        } catch (TimeframeFieldNotFoundException) {
+            $start_date = null;
+            $logger->debug('TimeframeWithDuration::isAllSetToZero -> Override start_date to null');
+        } catch (TimeframeFieldNoValueException) {
             $start_date = 0;
+            $logger->debug('TimeframeWithDuration::isAllSetToZero -> Override start_date to 0');
         }
 
         try {
             $duration = (int) ceil(TimeframeChangesetFieldsValueRetriever::getDurationFieldValue($this->duration_field, $user, $changeset) ?? 0);
-        } catch (TimeframeFieldNotFoundException | TimeframeFieldNoValueException) {
+        } catch (TimeframeFieldNotFoundException) {
+            $duration = null;
+            $logger->debug('TimeframeWithDuration::isAllSetToZero -> Override duration to null');
+        } catch (TimeframeFieldNoValueException) {
             $duration = 0;
+            $logger->debug('TimeframeWithDuration::isAllSetToZero -> Override duration to 0');
         }
+
+        $logger->debug("TimeframeWithDuration::isAllSetToZero -> start = {$start_date}, duration = {$duration}");
 
         return $start_date === 0 && $duration === 0;
     }

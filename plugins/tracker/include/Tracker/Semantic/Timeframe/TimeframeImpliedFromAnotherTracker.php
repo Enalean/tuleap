@@ -228,10 +228,11 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
             ->userCanReadTimeframeFields($user);
     }
 
-    public function isAllSetToZero(\Tracker_Artifact_Changeset $changeset, \PFUser $user): bool
+    public function isAllSetToZero(\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): bool
     {
+        $logger->debug('TimeframeImpliedFromAnotherTracker::isAllSetToZero -> call implied isAllSetToZero');
         return $this->semantic_timeframe_implied_from_tracker
             ->getTimeframeCalculator()
-            ->isAllSetToZero($changeset, $user);
+            ->isAllSetToZero($changeset, $user, $logger);
     }
 }
