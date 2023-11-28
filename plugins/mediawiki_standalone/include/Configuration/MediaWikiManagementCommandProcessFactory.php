@@ -45,7 +45,7 @@ final class MediaWikiManagementCommandProcessFactory implements MediaWikiManagem
         return new MediaWikiManagementCommandProcess(
             $this->logger,
             LocalSettingsRepresentation::MEDIAWIKI_PHP_CLI
-                . ' /usr/share/mediawiki-tuleap-flavor/current/maintenance/install.php'
+                . ' /usr/share/mediawiki-tuleap-flavor/current-lts/maintenance/install.php'
                 . ' --confpath "${:CONFPATH}"'
                 . ' --dbserver "${:DBSERVER}"'
                 . ' --dbname plugin_mediawiki_standalone_farm'
@@ -67,7 +67,7 @@ final class MediaWikiManagementCommandProcessFactory implements MediaWikiManagem
     {
         return new MediaWikiManagementCommandProcess(
             $this->logger,
-            LocalSettingsRepresentation::MEDIAWIKI_PHP_CLI . ' /usr/share/mediawiki-tuleap-flavor/current/maintenance/update.php --quick'
+            LocalSettingsRepresentation::MEDIAWIKI_PHP_CLI . ' /usr/share/mediawiki-tuleap-flavor/current-lts/maintenance/update.php --quick'
         );
     }
 
@@ -76,7 +76,7 @@ final class MediaWikiManagementCommandProcessFactory implements MediaWikiManagem
         return new MediaWikiManagementCommandProcess(
             $this->logger,
             LocalSettingsRepresentation::MEDIAWIKI_PHP_CLI
-                . ' /usr/share/mediawiki-tuleap-flavor/current/maintenance/update.php --quick'
+                . ' /usr/share/mediawiki-tuleap-flavor/current-lts/maintenance/update.php --quick'
                 . ' --sfr "${:PROJECT}"',
             ['PROJECT' => $project_name],
         );
