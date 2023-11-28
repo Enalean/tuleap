@@ -567,7 +567,7 @@ msgstr "ID de l'artéfact"
 
 #, php-format
 msgid "Artifact Id %1$s does not exist"
-msgstr "L'artéfact Id %1$s n'existe  pas."
+msgstr "L'artéfact Id %1$s n'existe pas"
 
 msgid "Artifact Link"
 msgstr "Liens vers des artéfacts"
@@ -883,7 +883,7 @@ msgid "Check permissions?"
 msgstr "Vérifier les permissions ?"
 
 msgid "CheckBox"
-msgstr "cases à cocher"
+msgstr "Cases à cocher"
 
 msgid "Checkbox"
 msgstr "Case à cocher"
@@ -1374,8 +1374,8 @@ msgid ""
 "Enable notifications for this tracker, you will be able to choose the "
 "notifications level once enabled."
 msgstr ""
-"Activer les notifications pour ce tracker, vous pourrez choisir le modede "
-"notifications"
+"Activer les notifications pour ce tracker, vous pourrez choisir le mode de "
+"notifications."
 
 msgid "Enable to create/reply to artifacts by mail"
 msgstr "Autoriser la création/réponse à des artéfacts par courriel"
@@ -1530,7 +1530,7 @@ msgid "Fieldset"
 msgstr "Groupe de champs"
 
 msgid "File not found"
-msgstr "Fichier non trouvé."
+msgstr "Fichier non trouvé"
 
 msgid "File upload"
 msgstr "Fichier à transmettre"
@@ -1540,8 +1540,7 @@ msgstr "Fichier :"
 
 msgid "First, select a template you want to start from"
 msgstr ""
-"Tout d'abord, selectonnez le modèle à partir duquel vous voulez "
-"démarrer&nbsp;:"
+"Tout d'abord, sélectionnez le modèle à partir duquel vous voulez démarrer"
 
 msgid "Fixed"
 msgstr "Fixé"
@@ -1609,8 +1608,8 @@ msgstr ""
 #, php-format
 msgid "Group '%s' couldn't be added."
 msgid_plural "Groups '%s' couldn't be added."
-msgstr[0] "Le groupe '%s' n'a pas pu être ajouté"
-msgstr[1] "Les groupes '%s' n'ont pas pu être ajoutés"
+msgstr[0] "Le groupe '%s' n'a pas pu être ajouté."
+msgstr[1] "Les groupes '%s' n'ont pas pu être ajoutés."
 
 msgid "Group fields in a column"
 msgstr "Champs regroupés dans une colonne"
@@ -1682,7 +1681,7 @@ msgid ""
 "edit mode</a>."
 msgstr ""
 "Pour éditer les liens entre artéfacts, veuillez <a href=\"%1$s\">passer en "
-"mode édition complet</a>"
+"mode édition complet</a>."
 
 msgid ""
 "In order to have consistent rendering across the platform, information from "
@@ -1746,7 +1745,7 @@ msgstr ""
 "alphanumériques ou un nom court non réservé."
 
 msgid "Invalid tracker template."
-msgstr "Le modèle d'outil de suivi selectionné est invalide"
+msgstr "Le modèle d'outil de suivi sélectionné est invalide."
 
 #, php-format
 msgid "Invalid value %s for field %s."
@@ -1766,7 +1765,7 @@ msgstr "L'erreur suivante a été remontée :"
 msgid "It is inherited from a tracker of another project, this is not allowed"
 msgstr ""
 "Elle est héritée de celle d'un outil de suivi appartenant à un autre projet, "
-"ceci n'est pas autorisé."
+"ceci n'est pas autorisé"
 
 msgid "Items"
 msgstr "Items"
@@ -2053,7 +2052,7 @@ msgid "No comment"
 msgstr "Aucun commentaire"
 
 msgid "No data to import"
-msgstr "Aucune donnée à importer."
+msgstr "Aucune donnée à importer"
 
 msgid "No element selected."
 msgstr "Aucun élément sélectionné."
@@ -2140,7 +2139,7 @@ msgid "Notification settings"
 msgstr "Options de notification"
 
 msgid "Notification successfully deleted."
-msgstr "La notification a été supprimée"
+msgstr "La notification a été supprimée."
 
 msgid "Notification successfully saved."
 msgstr "Notification enregistrée avec succès."
@@ -2174,7 +2173,7 @@ msgid "Number of open artifacts"
 msgstr "Nombre d'artéfacts ouverts"
 
 msgid "OK, got it!"
-msgstr "OK, vu."
+msgstr "OK, vu!"
 
 msgid "On all updates?"
 msgstr "À chaque modification ?"
@@ -2490,7 +2489,7 @@ msgid "Referenced by {{ artifact_xref }}"
 msgstr "Référencé par {{ artifact_xref }}"
 
 msgid "References list is empty"
-msgstr "Cet artéfact n'est pas référencé, et n'est pas source de références."
+msgstr "Cet artéfact n'est pas référencé, et n'est pas source de références"
 
 msgid "Referencing {{ artifact_xref }}"
 msgstr "Référençant {{ artifact_xref }}"
@@ -2558,7 +2557,7 @@ msgstr ""
 "span>. Vous pouvez :"
 
 msgid "Report has been modified. You can either"
-msgstr "Le rapport a été modifié. Vous pouvez :"
+msgstr "Le rapport a été modifié. Vous pouvez"
 
 msgid "Report name:"
 msgstr "Nom du rapport :"
@@ -2659,7 +2658,7 @@ msgstr ""
 "{{ tracker_name_from_which_we_imply_the_semantic }}"
 
 msgid "Select Box"
-msgstr "boîte de sélection simple"
+msgstr "Boîte de sélection simple"
 
 msgid "Select a parent"
 msgstr "Sélectionner un parent"
@@ -2970,7 +2969,7 @@ msgid "The 'job_url' attribute must be a valid URL."
 msgstr "L'attribut 'job_url' doit être une URL valide."
 
 msgid "The <strong>%s</strong> tracker has been successfully created."
-msgstr "L'outil de suivi <strong>%s</strong> a été crée avec succès"
+msgstr "L'outil de suivi <strong>%s</strong> a été crée avec succès."
 
 msgid "The @comments metadata cannot be compared to MYSELF()."
 msgstr "@comments ne peut pas être comparé à MYSELF()."
@@ -3015,14 +3014,14 @@ msgstr "L'artifact n'est relié à aucun changeset."
 
 #, php-format
 msgid "The artifact link type \"%s\" cannot be disabled"
-msgstr "Le lien entre artéfacts typé \"%s\" ne peut être désactivé."
+msgstr "Le lien entre artéfacts typé \"%s\" ne peut être désactivé"
 
 #, php-format
 msgid ""
 "The artifact link type \"%s\" cannot be used to link artifact #%s manually"
 msgstr ""
 "Le lien entre artéfacts typé \"%s\" ne peut pas être utilisé pour "
-"manuellement lier l'artéfact #%s."
+"manuellement lier l'artéfact #%s"
 
 #, php-format
 msgid ""
@@ -3030,18 +3029,18 @@ msgid ""
 "artifact #%s"
 msgstr ""
 "Le lien entre artéfacts typé \"%s\" est désactivé et ne peut être utilisé "
-"pour lier l'artéfact #%s."
+"pour lier l'artéfact #%s"
 
 #, php-format
 msgid "The artifact link type \"%s\" is now disabled"
-msgstr "Le lien entre artéfacts typé \"%s\" a été désactivé."
+msgstr "Le lien entre artéfacts typé \"%s\" a été désactivé"
 
 #, php-format
 msgid "The artifact link type \"%s\" is now enabled"
-msgstr "Le lien entre artéfacts typé \"%s\" a été activé."
+msgstr "Le lien entre artéfacts typé \"%s\" a été activé"
 
 msgid "The artifact link type does not exist"
-msgstr "Le lien entre artéfacts typé n'existe pas."
+msgstr "Le lien entre artéfacts typé n'existe pas"
 
 msgid "The artifact was not created"
 msgstr "L'artéfact n'a pas été créé"
@@ -3244,7 +3243,7 @@ msgid "The field you submitted is not a text field"
 msgstr "Le champ soumis n'est pas un champ texte"
 
 msgid "The field you submitted is not a user list field"
-msgstr "Le champ soumis n'est pas un champ de type liste d'utilisateurs."
+msgstr "Le champ soumis n'est pas un champ de type liste d'utilisateurs"
 
 #, php-format
 msgid ""
@@ -3637,7 +3636,7 @@ msgid ""
 "widgets, artifact links, email notifications, …"
 msgstr ""
 "Le titre décrit un artéfact et sera utilisé dans de nombreux endrits : les "
-"widgets, les liens d'artéfacts, les notifications emails ..."
+"widgets, les liens d'artéfacts, les notifications emails …"
 
 msgid ""
 "The tracker %s is implicated in cross-tracker triggers. You will not be able "
@@ -3744,7 +3743,7 @@ msgstr ""
 
 msgid "The triggers will be applied on each creation/update of artifacts."
 msgstr ""
-"Ces déclencheurs s'appliqueront à chaque création/ modification d'artéfacts"
+"Ces déclencheurs s'appliqueront à chaque création/ modification d'artéfacts."
 
 msgid "The two fields must be different"
 msgstr "Les deux champs doivent être différents"
@@ -3946,7 +3945,7 @@ msgid "This tracker has no workflow."
 msgstr "Cet outil de suivi n'a pas de workflow."
 
 msgid "This tracker is deleted"
-msgstr "Ce tracker a été supprimé."
+msgstr "Ce tracker a été supprimé"
 
 msgid "This transition already exists."
 msgstr "Cette transition existe déjà."
@@ -4031,7 +4030,7 @@ msgid ""
 "refine your query"
 msgstr ""
 "L'outil de suivi %d contient trop d'artefacts (%d) alors que la limite a été "
-"fixée à %d. Merci de raffiner votre requête."
+"fixée à %d. Merci de raffiner votre requête"
 
 #, php-format
 msgid "Tracker %s : field %s (%s) has no permission"
@@ -4079,13 +4078,13 @@ msgid ""
 "Tracker configuration permission and artifacts permissions are not listed."
 msgstr ""
 "Les permissions des configurations de tracker et celles des artéfacts ne "
-"sont pas listées"
+"sont pas listées."
 
 msgid "Tracker deleted"
 msgstr "Outil de suivi supprimé"
 
 msgid "Tracker does not exist"
-msgstr "L'outil de suivi n'existe pas."
+msgstr "L'outil de suivi n'existe pas"
 
 msgid "Tracker global administration"
 msgstr "Administration globale des outils de suivi"
@@ -4310,8 +4309,8 @@ msgstr "Utiliser la mémoire cache"
 #, php-format
 msgid "User '%s' couldn't be added."
 msgid_plural "Users '%s' couldn't be added."
-msgstr[0] "L'utilisateur '%s' n'a pas pu être ajouté"
-msgstr[1] "Les utilisateurs '%s' n'ont pas pu être ajoutés"
+msgstr[0] "L'utilisateur '%s' n'a pas pu être ajouté."
+msgstr[1] "Les utilisateurs '%s' n'ont pas pu être ajoutés."
 
 msgid "User Group"
 msgstr "Groupes d'utilisateurs"
@@ -4495,7 +4494,7 @@ msgid "You are not logged in."
 msgstr "Vous n'êtes pas connecté."
 
 msgid "You are now receiving notifications for this artifact"
-msgstr "Vous avez réactivé les notifications pour cet artéfact."
+msgstr "Vous avez réactivé les notifications pour cet artéfact"
 
 #, php-format
 msgid "You are unsubscribed from notifications of artifacts %1$s"
@@ -4611,17 +4610,17 @@ msgid ""
 "required fields"
 msgstr ""
 "Vous ne pouvez pas soumettre d'artéfacts car vous devez avoir le droit de "
-"soumettre tous les champs requis."
+"soumettre tous les champs requis"
 
 msgid "You cannot access to this tracker"
-msgstr "Vous n'avez pas accès à ce tracker."
+msgstr "Vous n'avez pas accès à ce tracker"
 
 msgid ""
 "You cannot define the <em>title</em> semantic since there isn't any text "
 "field in the tracker"
 msgstr ""
 "Vous ne pouvez pas définir la sémantique <em>titre</em> car il n'y a aucun "
-"champ texte dans votre outil de suivi."
+"champ texte dans votre outil de suivi"
 
 msgid ""
 "You cannot define the contributor/assignee semantic since there isn't any "
@@ -4635,7 +4634,7 @@ msgid ""
 "in the tracker"
 msgstr ""
 "Vous ne pouvez pas définir la sémantique description car il n'y a aucun "
-"champ texte dans votre outil de suivi."
+"champ texte dans votre outil de suivi"
 
 msgid ""
 "You cannot define the status semantic since there isn't any list field in "
@@ -4729,7 +4728,7 @@ msgid ""
 "notifications\" notification level for this tracker."
 msgstr ""
 "Vous devez configurer la sémantique status si vous voulez utiliser le niveau "
-"de notification \"mise à jour du status\" pour ce tracker"
+"de notification \"mise à jour du status\" pour ce tracker."
 
 msgid "You must provide a valid Jira server, user email and token"
 msgstr "Vous devez fournir un serveur Jira, un email utilisateur et un jeton"
@@ -4743,7 +4742,7 @@ msgstr ""
 "definir la permission 'confiés au groupe'"
 
 msgid "You will no-longer receive notifications for this artifact"
-msgstr "Vous êtes désinscrit des notifications de cet artéfact."
+msgstr "Vous êtes désinscrit des notifications de cet artéfact"
 
 #, php-format
 msgid ""
@@ -4796,7 +4795,7 @@ msgid "and it's now placed before"
 msgstr "et il est maintenant placé avant"
 
 msgid "are admin of the tracker"
-msgstr "Administrateur de l'outil de suivi"
+msgstr "administrateur de l'outil de suivi"
 
 msgid "assigned to me [A]"
 msgstr "assigned to me [A]"
@@ -4824,7 +4823,7 @@ msgstr "modifié de"
 
 #, php-format
 msgid "changed from %s to %s"
-msgstr "modifié de %s à %s "
+msgstr "modifié de %s à %s"
 
 #, php-format
 msgid "changed from %s to autocomputed"
@@ -4862,28 +4861,28 @@ msgstr ""
 "votre expérience en envoyant un rapport d'erreur."
 
 msgid "field_ids attribute must not be empty."
-msgstr "L'attribut field_ids ne doit pas être vide."
+msgstr "l'attribut field_ids ne doit pas être vide."
 
 msgid "fieldset_ids attribute must not be empty."
-msgstr "L'attribut fieldset_ids ne doit pas être vide."
+msgstr "l'attribut fieldset_ids ne doit pas être vide."
 
 msgid "fixed_in"
 msgstr "fixed_in"
 
 msgid "have access to all artifacts"
-msgstr "Accès à tous les artéfacts"
+msgstr "accès à tous les artéfacts"
 
 msgid "have access to artifacts assigned to group"
-msgstr "Accès aux artéfacts confiés au groupe"
+msgstr "accès aux artéfacts confiés au groupe"
 
 msgid "have access to artifacts assigned to or submitted by group"
-msgstr "Accès aux artéfacts confiés au groupe ou soumis par le groupe"
+msgstr "accès aux artéfacts confiés au groupe ou soumis par le groupe"
 
 msgid "have access to artifacts submitted by group"
-msgstr "Accès aux artéfacts soumis par le groupe"
+msgstr "accès aux artéfacts soumis par le groupe"
 
 msgid "have access to artifacts they submitted"
-msgstr "Accès seulement aux artéfacts qu'ils ont soumis"
+msgstr "accès seulement aux artéfacts qu'ils ont soumis"
 
 msgid "in"
 msgstr "dans"
@@ -4895,7 +4894,7 @@ msgid "is not an integer."
 msgstr "n'est pas une valeur du type entier."
 
 msgid "last edited by:"
-msgstr "Dernière édition par:"
+msgstr "dernière édition par :"
 
 msgid "missing forward label"
 msgstr "label manquant"
