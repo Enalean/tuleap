@@ -256,4 +256,10 @@ class TimeframeWithEndDate implements IComputeTimeframes
 
         return $start_date === 0 && $end_date === 0;
     }
+
+    public function isTimeDisplayedForEvent(): bool
+    {
+        return $this->start_date_field->isTimeDisplayed() &&
+               $this->end_date_field->isTimeDisplayed();
+    }
 }

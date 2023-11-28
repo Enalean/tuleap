@@ -429,6 +429,17 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
         ));
     }
 
+    /**
+     * @testWith [true]
+     *           [false]
+     */
+    public function testIsTimeDisplayedIsCorrelatedToStartField(bool $display_time): void
+    {
+        $this->start_date_field->expects(self::once())->method('isTimeDisplayed')->willReturn($display_time);
+
+        self::assertEquals($display_time, $this->timeframe->isTimeDisplayedForEvent());
+    }
+
     private function getMockedDateField(int $field_id): \Tracker_FormElement_Field_Date
     {
         $mock = $this->getMockBuilder(\Tracker_FormElement_Field_Date::class)

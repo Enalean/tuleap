@@ -437,6 +437,20 @@ final class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
         ));
     }
 
+    /**
+     * @testWith [false, false]
+     *           [false, true]
+     *           [true, false]
+     *           [true, true]
+     */
+    public function testIsTimeDisplayedIsCorrelatedToStartAndEndField(bool $display_start, bool $display_end): void
+    {
+        $this->start_date_field->expects(self::once())->method('isTimeDisplayed')->willReturn($display_start);
+        $display_start && $this->end_date_field->expects(self::once())->method('isTimeDisplayed')->willReturn($display_end);
+
+        self::assertEquals($display_start && $display_end, $this->timeframe->isTimeDisplayedForEvent());
+    }
+
     private function getMockedDateField(int $field_id): \Tracker_FormElement_Field_Date
     {
         $mock = $this->getMockBuilder(\Tracker_FormElement_Field_Date::class)

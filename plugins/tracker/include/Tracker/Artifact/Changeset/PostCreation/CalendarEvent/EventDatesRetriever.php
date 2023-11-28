@@ -82,6 +82,8 @@ final class EventDatesRetriever implements RetrieveEventDates
             return Result::err('End date < start date, we cannot build calendar event');
         }
 
-        return Result::ok($calendar_event_data->withDates($start, $end));
+        $is_time_displayed = $timeframe_calculator->isTimeDisplayedForEvent();
+
+        return Result::ok($calendar_event_data->withDates($start, $end)->withTimeDisplayed($is_time_displayed));
     }
 }

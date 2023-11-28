@@ -92,9 +92,12 @@ final class EmailNotificationAttachmentProvider implements ProvideEmailNotificat
             ->description($event_data->description)
             ->uniqueIdentifier('tracker-artifact-' . $changeset->getArtifact()->getId() . '@' . ServerHostname::rawHostname())
             ->startsAt((new \DateTimeImmutable())->setTimestamp($event_data->start))
-            ->endsAt((new \DateTimeImmutable())->setTimestamp($event_data->end))
-            ->fullDay();
+            ->endsAt((new \DateTimeImmutable())->setTimestamp($event_data->end));
         $event->appendProperty(TextProperty::create('SEQUENCE', (string) $changeset->getId()));
+
+        if (! $event_data->is_time_displayed) {
+            $event->fullDay();
+        }
 
         if ($event_data->organizer !== null) {
             $event->organizer($event_data->organizer->email, $event_data->organizer->name);

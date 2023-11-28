@@ -137,4 +137,9 @@ class TimeframeNotConfigured implements IComputeTimeframes
         $logger->error('TimeframeNotConfigured::isAllSetToZero -> should not be called');
         return false;
     }
+
+    public function isTimeDisplayedForEvent(): bool
+    {
+        return false;
+    }
 }

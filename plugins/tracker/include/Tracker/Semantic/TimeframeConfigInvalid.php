@@ -124,4 +124,9 @@ class TimeframeConfigInvalid implements IComputeTimeframes
     {
         return false;
     }
+
+    public function isTimeDisplayedForEvent(): bool
+    {
+        return false;
+    }
 }

@@ -145,4 +145,9 @@ final class IComputeTimeframesStub implements IComputeTimeframes
                $this->date_period->getStartDate() === 0 &&
                $this->date_period->getEndDate() === 0;
     }
+
+    public function isTimeDisplayedForEvent(): bool
+    {
+        return false;
+    }
 }

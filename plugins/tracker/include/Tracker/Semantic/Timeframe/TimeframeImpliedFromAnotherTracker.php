@@ -235,4 +235,11 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
             ->getTimeframeCalculator()
             ->isAllSetToZero($changeset, $user, $logger);
     }
+
+    public function isTimeDisplayedForEvent(): bool
+    {
+        return $this->semantic_timeframe_implied_from_tracker
+            ->getTimeframeCalculator()
+            ->isTimeDisplayedForEvent();
+    }
 }
