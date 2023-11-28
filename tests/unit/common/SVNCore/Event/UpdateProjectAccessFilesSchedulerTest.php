@@ -22,15 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\SVNCore\Event;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use SystemEvent;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class UpdateProjectAccessFilesSchedulerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\SystemEventManager
+     * @var \SystemEventManager&MockObject
      */
     private $system_event_manager;
 
@@ -41,46 +40,49 @@ final class UpdateProjectAccessFilesSchedulerTest extends \Tuleap\Test\PHPUnit\T
 
     protected function setUp(): void
     {
-        $this->system_event_manager = \Mockery::mock(\SystemEventManager::class);
+        $this->system_event_manager = $this->createMock(\SystemEventManager::class);
 
         $this->scheduler = new UpdateProjectAccessFilesScheduler($this->system_event_manager);
     }
 
     public function testAnUpdateCanBeScheduled(): void
     {
-        $this->system_event_manager->shouldReceive('areThereMultipleEventsQueuedMatchingFirstParameter')->with(SystemEvent::TYPE_SVN_UPDATE_PROJECT_ACCESS_FILES, 102)->andReturn(false);
-        $this->system_event_manager->shouldReceive('areThereMultipleEventsQueuedMatchingFirstParameter')->with(SystemEvent::TYPE_UGROUP_MODIFY, 102)->andReturn(false);
+        $this->system_event_manager->method('areThereMultipleEventsQueuedMatchingFirstParameter')->willReturnMap([
+            [SystemEvent::TYPE_SVN_UPDATE_PROJECT_ACCESS_FILES, "102", false],
+            [SystemEvent::TYPE_UGROUP_MODIFY, "102", false],
+        ]);
 
-        $this->system_event_manager->shouldReceive('createEvent')->once();
+        $this->system_event_manager->expects(self::once())->method('createEvent');
 
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturn(102);
+        $project = ProjectTestBuilder::aProject()->withId(102)->build();
 
         $this->scheduler->scheduleUpdateOfProjectAccessFiles($project);
     }
 
     public function testAnUpdateIsNotScheduledWhenThereIsAlreadyOneWaitingToBeExecuted(): void
     {
-        $this->system_event_manager->shouldReceive('areThereMultipleEventsQueuedMatchingFirstParameter')->with(SystemEvent::TYPE_SVN_UPDATE_PROJECT_ACCESS_FILES, 103)->andReturn(true);
-        $this->system_event_manager->shouldReceive('areThereMultipleEventsQueuedMatchingFirstParameter')->with(SystemEvent::TYPE_UGROUP_MODIFY, 103)->andReturn(false);
+        $this->system_event_manager->method('areThereMultipleEventsQueuedMatchingFirstParameter')->willReturnMap([
+            [SystemEvent::TYPE_SVN_UPDATE_PROJECT_ACCESS_FILES, "103", true],
+            [SystemEvent::TYPE_UGROUP_MODIFY, "103", false],
+        ]);
 
-        $this->system_event_manager->shouldReceive('createEvent')->never();
+        $this->system_event_manager->expects(self::never())->method('createEvent');
 
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturn(103);
+        $project = ProjectTestBuilder::aProject()->withId(103)->build();
 
         $this->scheduler->scheduleUpdateOfProjectAccessFiles($project);
     }
 
     public function testNoUpdateScheduledWhenThereUGroupModifyAlreadyScheduledBecauseItWillAlsoQueueUpdateLaterOn(): void
     {
-        $this->system_event_manager->shouldReceive('areThereMultipleEventsQueuedMatchingFirstParameter')->with(SystemEvent::TYPE_SVN_UPDATE_PROJECT_ACCESS_FILES, 103)->andReturn(false);
-        $this->system_event_manager->shouldReceive('areThereMultipleEventsQueuedMatchingFirstParameter')->with(SystemEvent::TYPE_UGROUP_MODIFY, 103)->andReturn(true);
+        $this->system_event_manager->method('areThereMultipleEventsQueuedMatchingFirstParameter')->willReturnMap([
+            [SystemEvent::TYPE_SVN_UPDATE_PROJECT_ACCESS_FILES, "103", false],
+            [SystemEvent::TYPE_UGROUP_MODIFY, "103", true],
+        ]);
 
-        $this->system_event_manager->shouldReceive('createEvent')->never();
+        $this->system_event_manager->expects(self::never())->method('createEvent');
 
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturn(103);
+        $project = ProjectTestBuilder::aProject()->withId(103)->build();
 
         $this->scheduler->scheduleUpdateOfProjectAccessFiles($project);
     }
