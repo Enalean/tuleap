@@ -19,44 +19,51 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class PermissionsManagerSavePermissionsPlatformForRegularProjectPublicTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
     use GlobalResponseMock;
 
-    protected $permissions_manager;
-    protected $project;
-    protected $permission_type;
-    protected $object_id;
+    protected PermissionsManager $permissions_manager;
+    protected Project $project;
+    protected string $permission_type;
+    protected string $object_id;
+    /**
+     * @var PermissionsDao&MockObject
+     */
     protected $permissions_dao;
-    protected $project_id;
+    protected int $project_id;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->project_id          = 404;
-        $this->project             = \Mockery::spy(\Project::class)->shouldReceive('getId')->andReturns($this->project_id)->getMock();
-        $this->permissions_dao     = \Mockery::spy(\PermissionsDao::class);
+        $this->project             = ProjectTestBuilder::aProject()
+            ->withId($this->project_id)
+            ->withAccessPublic()
+            ->build();
+        $this->permissions_dao     = $this->createMock(\PermissionsDao::class);
         $this->permission_type     = 'FOO';
         $this->object_id           = 'BAR';
         $this->permissions_manager = new PermissionsManager($this->permissions_dao);
-        $this->permissions_dao->shouldReceive('clearPermission')->andReturns(true);
+        $this->permissions_dao->method('clearPermission')->willReturn(true);
+        $this->permissions_dao->method('addHistory');
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
-        $this->project->shouldReceive('isPublic')->andReturns(true);
     }
 
     protected function expectPermissionsOnce($ugroup): void
     {
-        $this->permissions_dao->shouldReceive('addPermission')
+        $this->permissions_dao
+            ->expects(self::once())
+            ->method('addPermission')
             ->with($this->permission_type, $this->object_id, $ugroup)
-            ->once()
-            ->andReturnTrue();
+            ->willReturn(true);
     }
 
     protected function savePermissions($ugroups): void
@@ -64,28 +71,28 @@ class PermissionsManagerSavePermissionsPlatformForRegularProjectPublicTest exten
         $this->permissions_manager->savePermissions($this->project, $this->object_id, $this->permission_type, $ugroups);
     }
 
-    public function testItSavesAnonymousSelectedAnonymous()
+    public function testItSavesAnonymousSelectedAnonymous(): void
     {
         $this->expectPermissionsOnce(ProjectUGroup::REGISTERED);
 
         $this->savePermissions([ProjectUGroup::ANONYMOUS]);
     }
 
-    public function testItSavesRegisteredWhenSelectedAuthenticated()
+    public function testItSavesRegisteredWhenSelectedAuthenticated(): void
     {
         $this->expectPermissionsOnce(ProjectUGroup::REGISTERED);
 
         $this->savePermissions([ProjectUGroup::AUTHENTICATED]);
     }
 
-    public function testItSavesRegisteredWhenSelectedRegistered()
+    public function testItSavesRegisteredWhenSelectedRegistered(): void
     {
         $this->expectPermissionsOnce(ProjectUGroup::REGISTERED);
 
         $this->savePermissions([ProjectUGroup::REGISTERED]);
     }
 
-    public function testItSavesProjectMembersWhenSelectedProjectMembers()
+    public function testItSavesProjectMembersWhenSelectedProjectMembers(): void
     {
         $this->expectPermissionsOnce(ProjectUGroup::PROJECT_MEMBERS);
 
