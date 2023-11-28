@@ -15,7 +15,7 @@
     <exclude-pattern>*/plugins/**/backend-assets/*</exclude-pattern>
     <exclude-pattern>*/tests/phpcs/tests/Sniffs/*/_fixtures/*</exclude-pattern>
     <exclude-pattern>*/plugins/mediawiki_standalone/additional-packages/mediawiki-extensions-1.35/*</exclude-pattern>
-    <exclude-pattern>*/plugins/mediawiki_standalone/additional-packages/mediawiki-extensions-current/*</exclude-pattern>
+    <exclude-pattern>*/plugins/mediawiki_standalone/additional-packages/mediawiki-extensions-current-lts/*</exclude-pattern>
 
     <!-- Forbid useless semicolon `;` -->
     <rule ref="SlevomatCodingStandard.PHP.UselessSemicolon"/>
