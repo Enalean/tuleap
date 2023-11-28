@@ -20,23 +20,20 @@
 
 namespace Tuleap\SVNCore\Cache;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use TestHelper;
 
 final class ParameterRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItReturnsDefaultParametersIfParameterDoesNotExist(): void
     {
-        $dao = \Mockery::spy(\Tuleap\SVNCore\Cache\ParameterDao::class);
-        $dao->shouldReceive('search')->andReturns(TestHelper::emptyDar());
+        $dao = $this->createMock(\Tuleap\SVNCore\Cache\ParameterDao::class);
+        $dao->method('search')->willReturn(TestHelper::emptyDar());
 
         $parameter_manager = new ParameterRetriever($dao);
 
         $parameter = $parameter_manager->getParameters();
 
-        $this->assertEquals(ParameterRetriever::LIFETIME_DEFAULT, $parameter->getLifetime());
+        self::assertEquals(ParameterRetriever::LIFETIME_DEFAULT, $parameter->getLifetime());
     }
 
     public function testItUsesDatabaseInformationsToCreateParameters(): void
@@ -47,20 +44,20 @@ final class ParameterRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'value' => 947,
             ]
         );
-        $dao             = \Mockery::spy(\Tuleap\SVNCore\Cache\ParameterDao::class);
-        $dao->shouldReceive('search')->andReturns($parameters_data);
+        $dao             = $this->createMock(\Tuleap\SVNCore\Cache\ParameterDao::class);
+        $dao->method('search')->willReturn($parameters_data);
 
         $parameter_manager = new ParameterRetriever($dao);
 
         $parameter = $parameter_manager->getParameters();
 
-        $this->assertEquals(947, $parameter->getLifetime());
+        self::assertEquals(947, $parameter->getLifetime());
     }
 
     public function testItThrowsAnExceptionIfDatabaseCanNotBeQueried(): void
     {
-        $dao = \Mockery::spy(\Tuleap\SVNCore\Cache\ParameterDao::class);
-        $dao->shouldReceive('search')->andReturns(false);
+        $dao = $this->createMock(\Tuleap\SVNCore\Cache\ParameterDao::class);
+        $dao->method('search')->willReturn(false);
 
         $parameter_manager = new ParameterRetriever($dao);
 

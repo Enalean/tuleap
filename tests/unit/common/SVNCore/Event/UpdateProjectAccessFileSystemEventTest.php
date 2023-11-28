@@ -22,13 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\SVNCore\Event;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\GlobalSVNPollution;
 
 final class UpdateProjectAccessFileSystemEventTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalSVNPollution;
 
     private const PROJECT_ID = 102;
@@ -53,10 +51,10 @@ final class UpdateProjectAccessFileSystemEventTest extends \Tuleap\Test\PHPUnit\
 
     protected function setUp(): void
     {
-        $this->backend_svn = \Mockery::mock(\BackendSVN::class);
+        $this->backend_svn = $this->createMock(\BackendSVN::class);
         \Backend::setInstance(\Backend::SVN, $this->backend_svn);
-        $this->project_manager  = \Mockery::mock(\ProjectManager::class);
-        $this->event_dispatcher = \Mockery::mock(EventDispatcherInterface::class);
+        $this->project_manager  = $this->createMock(\ProjectManager::class);
+        $this->event_dispatcher = $this->createMock(EventDispatcherInterface::class);
 
         $this->system_event = new UpdateProjectAccessFileSystemEvent(
             12,
@@ -68,7 +66,7 @@ final class UpdateProjectAccessFileSystemEventTest extends \Tuleap\Test\PHPUnit\
             10,
             0,
             0,
-            new \Psr\Log\NullLogger()
+            '',
         );
         $this->system_event->injectDependencies($this->project_manager, $this->event_dispatcher);
     }
@@ -80,15 +78,16 @@ final class UpdateProjectAccessFileSystemEventTest extends \Tuleap\Test\PHPUnit\
 
     public function testCanProcessAccessFilesChanges(): void
     {
-        $project = \Mockery::mock(\Project::class);
-        $this->project_manager->shouldReceive('getProject')->with(self::PROJECT_ID)->andReturn($project);
+        $project = $this->createMock(\Project::class);
+        $this->project_manager->method('getProject')->with(self::PROJECT_ID)->willReturn($project);
 
-        $project->shouldReceive('usesSVN')->andReturn(true);
-        $project->shouldReceive('getSVNRootPath')->andReturn('/some/path/to/svn/root');
-        $this->backend_svn->shouldReceive('updateSVNAccess')->once();
+        $project->method('usesSVN')->willReturn(true);
+        $project->method('getSVNRootPath')->willReturn('/some/path/to/svn/root');
+        $this->backend_svn->expects(self::once())->method('updateSVNAccess');
 
-        $this->event_dispatcher->shouldReceive('dispatch')
-            ->with(\Mockery::type(UpdateProjectAccessFilesEvent::class))->once();
+        $this->event_dispatcher->expects(self::once())
+            ->method('dispatch')
+            ->with(self::isInstanceOf(UpdateProjectAccessFilesEvent::class));
 
         $this->system_event->process();
     }

@@ -20,19 +20,15 @@
 
 namespace Tuleap\SVNCore\Cache;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-class ParameterSaverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ParameterSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItSavesParameters(): void
     {
-        $dao = \Mockery::spy(\Tuleap\SVNCore\Cache\ParameterDao::class);
-        $dao->shouldReceive('save')->once()->andReturns(true);
+        $dao = $this->createMock(\Tuleap\SVNCore\Cache\ParameterDao::class);
+        $dao->expects(self::once())->method('save')->willReturn(true);
 
-        $event_manager = \Mockery::mock(\EventManager::class);
-        $event_manager->shouldReceive('processEvent');
+        $event_manager = $this->createMock(\EventManager::class);
+        $event_manager->method('processEvent');
 
         $parameter_saver = new ParameterSaver($dao, $event_manager);
         $parameter_saver->save(5, 5);
@@ -40,30 +36,30 @@ class ParameterSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRejectsInvalidData(): void
     {
-        $dao = \Mockery::spy(\Tuleap\SVNCore\Cache\ParameterDao::class);
-        $dao->shouldReceive('save')->never();
+        $dao = $this->createMock(\Tuleap\SVNCore\Cache\ParameterDao::class);
+        $dao->expects(self::never())->method('save');
 
-        $event_manager = \Mockery::mock(\EventManager::class);
-        $event_manager->shouldNotReceive('processEvent');
+        $event_manager = $this->createMock(\EventManager::class);
+        $event_manager->expects(self::never())->method('processEvent');
 
         $this->expectException(\Tuleap\SVNCore\Cache\ParameterMalformedDataException::class);
 
         $parameter_saver = new ParameterSaver($dao, $event_manager);
-        $parameter_saver->save(-1, 5);
-        $parameter_saver->save(5, -1);
+        $parameter_saver->save(-1);
+        $parameter_saver->save(5);
     }
 
     public function testItDealsWithDatabaseError(): void
     {
-        $dao = \Mockery::spy(\Tuleap\SVNCore\Cache\ParameterDao::class);
-        $dao->shouldReceive('save')->andReturns(false);
+        $dao = $this->createMock(\Tuleap\SVNCore\Cache\ParameterDao::class);
+        $dao->method('save')->willReturn(false);
 
-        $event_manager = \Mockery::mock(\EventManager::class);
-        $event_manager->shouldNotReceive('processEvent');
+        $event_manager = $this->createMock(\EventManager::class);
+        $event_manager->expects(self::never())->method('processEvent');
 
         $this->expectException(\Tuleap\SVNCore\Cache\ParameterDataAccessException::class);
 
         $parameter_saver = new ParameterSaver($dao, $event_manager);
-        $parameter_saver->save(5, 5);
+        $parameter_saver->save(5);
     }
 }
