@@ -20,7 +20,7 @@
 
 namespace Tuleap\SVN\REST\v1;
 
-use SVN_AccessFile_Writer;
+use Tuleap\SVNCore\SVNAccessFileWriter;
 use Tuleap\SVN\AccessControl\AccessFileHistoryCreator;
 use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
 use Tuleap\SVN\Admin\ImmutableTag;
@@ -102,7 +102,7 @@ class RepositoryResourceUpdater
                 $repository,
                 $settings->getAccessFileContent(),
                 time(),
-                new SVN_AccessFile_Writer($repository->getSystemPath()),
+                new SVNAccessFileWriter($repository->getSystemPath()),
             );
         }
 

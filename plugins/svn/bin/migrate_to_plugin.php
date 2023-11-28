@@ -108,7 +108,8 @@ $access_file_history_creator = new AccessFileHistoryCreator(
     $access_file_factory,
     $project_history_dao,
     $project_history_formatter,
-    $backend_svn
+    $backend_svn,
+    \Tuleap\SVNCore\SvnAccessFileDefaultBlockGenerator::instance(),
 );
 
 $repository_creator = new RepositoryCreator(

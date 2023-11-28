@@ -25,7 +25,7 @@ use EventManager;
 use Psr\Log\LoggerInterface;
 use Project;
 use SimpleXMLElement;
-use SVN_AccessFile_Writer;
+use Tuleap\SVNCore\SVNAccessFileWriter;
 use System_Command_CommandException;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\SVN\AccessControl\AccessFileHistoryCreator;
@@ -284,8 +284,8 @@ class XMLRepositoryImporter
     /**
      * protected for testing purpose
      */
-    protected function getAccessFileWriter(Repository $repo): SVN_AccessFile_Writer
+    protected function getAccessFileWriter(Repository $repo): SVNAccessFileWriter
     {
-        return new SVN_AccessFile_Writer($repo->getSystemPath());
+        return new SVNAccessFileWriter($repo->getSystemPath());
     }
 }

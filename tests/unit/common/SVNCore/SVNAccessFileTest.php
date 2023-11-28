@@ -18,6 +18,7 @@
  */
 
 use Tuleap\SVNCore\SVNAccessFile;
+use Tuleap\SVNCore\SvnAccessFileDefaultBlock;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 final class SVNAccessFileTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -27,23 +28,25 @@ final class SVNAccessFileTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testRenameGroup(string $old_group, string $new_group, string $source_access_file, string $expected_access_file): void
     {
-        $saf = new SVNAccessFile();
-        $saf->setPlatformBlock(<<<EOT
-        [groups]
-        members = user1, user2
-        ugroup1 = user1
-        ugroup2 = user2
-        ugroup3 = user1, user2
+        $saf = new SVNAccessFile(
+            new SvnAccessFileDefaultBlock(
+                <<<EOT
+                    [groups]
+                    members = user1, user2
+                    ugroup1 = user1
+                    ugroup2 = user2
+                    ugroup3 = user1, user2
 
-        [/]
-        * =
-        @members = rw
-        EOT);
-
+                    [/]
+                    * =
+                    @members = rw
+                    EOT
+            )
+        );
 
         $saf->setRenamedGroup($new_group, $old_group);
 
-        $result = $saf->parseGroupLinesByRepositories('', $source_access_file);
+        $result = $saf->parseGroupLinesByRepositories($source_access_file);
         self::assertEquals($expected_access_file, $result->contents);
     }
 
@@ -98,20 +101,21 @@ final class SVNAccessFileTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testParseGroupLines(string $source, string $expected): void
     {
-        $project = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->build();
+        $saf = new SVNAccessFile(
+            new SvnAccessFileDefaultBlock(
+                <<<EOT
+                [groups]
+                members = user1, user2
+                uGroup1 = user3
 
-        $saf = new SVNAccessFile();
-        $saf->setPlatformBlock(<<<EOT
-        [groups]
-        members = user1, user2
-        uGroup1 = user3
+                [/]
+                *=
+                @members=rw
+                EOT
+            )
+        );
 
-        [/]
-        *=
-        @members=rw
-        EOT);
-
-        $this->assertEquals($expected, $saf->parseGroupLines($project, $source)->contents);
+        $this->assertEquals($expected, $saf->parseGroupLines($source)->contents);
     }
 
     public static function getSvnAccessFileSamples(): iterable
@@ -224,16 +228,5 @@ final class SVNAccessFileTest extends \Tuleap\Test\PHPUnit\TestCase
                 EOT,
             ],
         ];
-    }
-
-    public function testSvnAccessFileShouldCallSVNUtilsWithCaseSensitiveRepositoryName(): void
-    {
-        $project = $this->createMock(Project::class);
-        $project->method('getSVNRootPath')->willReturn('/svnroot/mytestproject');
-
-        $saf = $this->createPartialMock(SVNAccessFile::class, ['getPlatformBlock']);
-        $saf->expects($this->once())->method('getPlatformBlock')->with('/svnroot/mytestproject');
-
-        $saf->parseGroupLines($project, '');
     }
 }

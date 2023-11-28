@@ -23,12 +23,15 @@ namespace Tuleap\SVN\AccessControl;
 
 use ForgeConfig;
 use PHPUnit\Framework\MockObject\MockObject;
+use Project;
 use ProjectHistoryDao;
-use SVN_AccessFile_Writer;
+use Tuleap\SVNCore\SVNAccessFileWriter;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\SVN\Repository\SvnRepository;
 use Tuleap\SVN\Repository\ProjectHistoryFormatter;
 use Tuleap\SVNCore\Repository;
+use Tuleap\SVNCore\SvnAccessFileDefaultBlock;
+use Tuleap\SVNCore\SvnAccessFileDefaultBlockGeneratorInterface;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class AccessFileHistoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -36,7 +39,7 @@ final class AccessFileHistoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     use GlobalLanguageMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&SVN_AccessFile_Writer
+     * @var \PHPUnit\Framework\MockObject\MockObject&SVNAccessFileWriter
      */
     private $access_file_writer;
     /**
@@ -71,13 +74,20 @@ final class AccessFileHistoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_history_formatter = $this->createMock(ProjectHistoryFormatter::class);
         $this->project_history_dao       = $this->createMock(ProjectHistoryDao::class);
         $this->backend_svn               = $this->createMock(\BackendSVN::class);
+        $default_block_generator         = new class implements SvnAccessFileDefaultBlockGeneratorInterface {
+            public function getDefaultBlock(Project $project): SvnAccessFileDefaultBlock
+            {
+                return new SvnAccessFileDefaultBlock('');
+            }
+        };
 
         $this->creator = new AccessFileHistoryCreator(
             $this->access_file_dao,
             $this->access_file_factory,
             $this->project_history_dao,
             $this->project_history_formatter,
-            $this->backend_svn
+            $this->backend_svn,
+            $default_block_generator,
         );
 
         $project          = ProjectTestBuilder::aProject()->withId(100)->build();
@@ -86,7 +96,7 @@ final class AccessFileHistoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $access_file_history = new NullAccessFileHistory($this->repository);
         $this->access_file_factory->method('getLastVersion')->with($this->repository)->willReturn($access_file_history);
 
-        $this->access_file_writer = $this->createMock(SVN_AccessFile_Writer::class);
+        $this->access_file_writer = $this->createMock(SVNAccessFileWriter::class);
 
         ForgeConfig::set('svn_root_file', 'svn_root_file');
     }
@@ -118,7 +128,7 @@ final class AccessFileHistoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_history_formatter->expects(self::once())->method('getAccessFileHistory');
         $this->project_history_dao->expects(self::once())->method('groupAddHistory');
 
-        $this->access_file_writer->expects(self::once())->method('write_with_defaults')->willReturn(true);
+        $this->access_file_writer->expects(self::once())->method('writeWithDefaults')->willReturn(true);
 
         $this->creator->create($this->repository, $new_access_file, time(), $this->access_file_writer);
     }
@@ -141,7 +151,7 @@ final class AccessFileHistoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_history_formatter->expects(self::once())->method('getAccessFileHistory');
         $this->project_history_dao->expects(self::once())->method('groupAddHistory');
 
-        $this->access_file_writer->expects(self::once())->method('write_with_defaults')->willReturn(false);
+        $this->access_file_writer->expects(self::once())->method('writeWithDefaults')->willReturn(false);
         $this->access_file_writer->expects(self::once())->method('isErrorFile')->willReturn(true);
 
         $this->expectException(CannotCreateAccessFileHistoryException::class);
@@ -181,7 +191,7 @@ EOT;
         $this->project_history_formatter->expects(self::once())->method('getAccessFileHistory');
         $this->project_history_dao->expects(self::once())->method('groupAddHistory');
 
-        $this->access_file_writer->expects(self::once())->method('write_with_defaults')->willReturn(true);
+        $this->access_file_writer->expects(self::once())->method('writeWithDefaults')->willReturn(true);
 
         $this->creator->create($this->repository, $new_access_file, time(), $this->access_file_writer);
     }

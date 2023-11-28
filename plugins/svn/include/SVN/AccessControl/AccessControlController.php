@@ -20,7 +20,7 @@
 
 namespace Tuleap\SVN\AccessControl;
 
-use SVN_AccessFile_Writer;
+use Tuleap\SVNCore\SVNAccessFileWriter;
 use Tuleap\SVN\ServiceSvn;
 use HTTPRequest;
 use Tuleap\SVNCore\AccessFileReader;
@@ -28,6 +28,7 @@ use Tuleap\SVNCore\Repository;
 use Tuleap\SVN\Repository\RepositoryManager;
 use CSRFSynchronizerToken;
 use Tuleap\SVNCore\SvnAccessFileContent;
+use Tuleap\SVNCore\SvnAccessFileDefaultBlockGenerator;
 
 class AccessControlController
 {
@@ -82,7 +83,7 @@ class AccessControlController
 
         $title = $GLOBALS['Language']->getText('global', 'Administration');
 
-        $accessfile_reader       = new AccessFileReader();
+        $accessfile_reader       = new AccessFileReader(SvnAccessFileDefaultBlockGenerator::instance());
         $svn_access_file_content = $accessfile_reader->getAccessFileContent($repository);
         if ($request->exist('form_accessfile')) {
             $svn_access_file_content = SvnAccessFileContent::fromSubmittedContent($svn_access_file_content, $request->get('form_accessfile'));
@@ -139,7 +140,7 @@ class AccessControlController
                     $repository,
                     $request->get('form_accessfile'),
                     $_SERVER['REQUEST_TIME'],
-                    new SVN_AccessFile_Writer($repository->getSystemPath()),
+                    new SVNAccessFileWriter($repository->getSystemPath()),
                 );
                 foreach ($faults as $fault) {
                     $GLOBALS['Response']->addFeedback(\Feedback::WARN, (string) $fault);
