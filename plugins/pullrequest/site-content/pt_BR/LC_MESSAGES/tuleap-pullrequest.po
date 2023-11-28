@@ -37,6 +37,13 @@ msgstr[1] ""
 msgid "%s requested your review on #%d: %s"
 msgstr ""
 
+#, php-format
+msgid "%s updated their comment on #%d: %s."
+msgstr ""
+
+msgid "%s updated their comment on %s: %s."
+msgstr ""
+
 msgid "<a href=\"%s\">%s</a> commented on <a href=\"%s\">#%s</a>: %s in %s:"
 msgstr ""
 

@@ -52,6 +52,7 @@ use Tuleap\REST\JsonCast;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Test\Stubs\ExtractAndSaveCrossReferencesStub;
 
 final class PATCHCommentHandlerTest extends TestCase
@@ -111,7 +112,8 @@ final class PATCHCommentHandlerTest extends TestCase
                 )
             ),
             $this->git_factory,
-            $this->cross_references_saver
+            $this->cross_references_saver,
+            EventDispatcherStub::withIdentityCallback()
         );
         return $put_handler_comment->handle($this->comment_author, 1058, $this->comment_data, $this->last_edition_date);
     }
