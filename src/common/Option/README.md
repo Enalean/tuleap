@@ -38,6 +38,7 @@ function returnsANullable(): ?\PFUser
 }
 
 $option = Option::fromNullable($this->returnsANullable()); // \Tuleap\Option\Option<\PFUser>
+// Option will be Nothing if the function returns null
 ```
 
 You can then use the resulting value using `::apply()`:

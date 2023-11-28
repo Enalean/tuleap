@@ -75,7 +75,7 @@ export const PullRequestCommentPresenter = {
             id: reply.id,
             user: reply.user,
             post_date: reply.post_date,
-            last_edition_date: getLastEditionDateAsOption(reply),
+            last_edition_date: Option.fromNullable(reply.last_edition_date),
             content: replaceLineReturns(reply.content),
             raw_content: reply.raw_content,
             post_processed_content: reply.post_processed_content,
@@ -118,12 +118,4 @@ export const PullRequestCommentPresenter = {
 
 function replaceLineReturns(content: string): string {
     return content.replace(/(?:\r\n|\r|\n)/g, "<br/>");
-}
-
-function getLastEditionDateAsOption(comment: PullRequestComment): Option<string> {
-    if (!comment.last_edition_date) {
-        return Option.nothing();
-    }
-
-    return Option.fromValue(comment.last_edition_date);
 }

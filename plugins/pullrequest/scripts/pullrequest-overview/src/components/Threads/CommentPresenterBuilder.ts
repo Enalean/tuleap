@@ -32,15 +32,11 @@ export const CommentPresenterBuilder = {
         base_url: URL,
         pull_request_id: number,
     ): PullRequestCommentPresenter => {
-        const last_edition_date: Option<string> = payload.last_edition_date
-            ? Option.fromValue(payload.last_edition_date)
-            : Option.nothing();
-
         const common = {
             id: payload.id,
             user: payload.user,
             post_date: payload.post_date,
-            last_edition_date,
+            last_edition_date: Option.fromNullable(payload.last_edition_date),
             parent_id: payload.parent_id,
             color: payload.color,
             content: replaceLineReturns(payload.content),

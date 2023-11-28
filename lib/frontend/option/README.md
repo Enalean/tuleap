@@ -20,6 +20,16 @@ function getOptionalDataset(element: HTMLElement): Option<string> {
 }
 ```
 
+When working with existing code that returns `null|undefined|<ValueType>`, you can create an Option with `Option.fromNullable(...)`.
+
+```typescript
+function returnsANullishValue(): string | null | undefined {
+}
+
+const option = Option.fromNullable(returnsANullishValue()); // Option<string>
+// Option will be Nothing if the function returns null or undefined
+```
+
 You can then use the resulting option using `.apply()`:
 
 ```typescript

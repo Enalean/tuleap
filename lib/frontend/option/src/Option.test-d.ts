@@ -161,4 +161,21 @@ describe(`Option type`, () => {
             >();
         });
     });
+
+    describe(`fromNullable()`, () => {
+        type ReturnType = "null" | "undefined" | "value";
+        const getNullable = (return_type: ReturnType): string | null | undefined =>
+            return_type === "null" ? null : return_type === "undefined" ? undefined : "unkey";
+
+        it(`returns an Option with the generic type of its argument`, () => {
+            const option_from_null = Option.fromNullable(getNullable("null"));
+            expectTypeOf(option_from_null).toMatchTypeOf<Option<string>>();
+
+            const option_from_undefined = Option.fromNullable(getNullable("undefined"));
+            expectTypeOf(option_from_undefined).toMatchTypeOf<Option<string>>();
+
+            const option_from_value = Option.fromNullable(getNullable("value"));
+            expectTypeOf(option_from_value).toMatchTypeOf<Option<string>>();
+        });
+    });
 });
