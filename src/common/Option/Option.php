@@ -105,12 +105,22 @@ final class Option
 
     /**
      * @template T
+     * @psalm-param callable(Value): T $fn
+     * @psalm-return self<T>
+     */
+    public function map(callable $fn): self
+    {
+        $nothing = new self(null, false);
+        return $this->mapOr(fn() => new self($fn($this->value), true), $nothing);
+    }
+
+    /**
+     * @template T
      * @psalm-param callable(Value): self<T> $fn
      * @psalm-return self<T>
      */
     public function andThen(callable $fn): self
     {
-        /** @psalm-var self<T> $nothing */
         $nothing = new self(null, false);
         return $this->mapOr($fn(...), $nothing);
     }

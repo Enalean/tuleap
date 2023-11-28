@@ -27,7 +27,7 @@ use Tuleap\PullRequest\Timeline\TimelineEvent;
 final class InlineComment implements TimelineEvent, TimelineComment
 {
     /**
-     * @param Option<int> $last_edition_date
+     * @param Option<\DateTimeImmutable> $last_edition_date
      */
     public function __construct(
         private int $id,
@@ -61,12 +61,14 @@ final class InlineComment implements TimelineEvent, TimelineComment
             $comment->position,
             $comment->color,
             $comment->format,
-            Option::fromValue($last_edition_date->getTimestamp())
+            Option::fromValue($last_edition_date)
         );
     }
 
     public static function buildFromRow($row): InlineComment
     {
+        $last_edition_date = Option::fromNullable($row['last_edition_date'])
+            ->map(static fn(int $timestamp) => new \DateTimeImmutable('@' . $timestamp));
         return new self(
             (int) $row['id'],
             (int) $row['pull_request_id'],
@@ -80,7 +82,7 @@ final class InlineComment implements TimelineEvent, TimelineComment
             $row['position'],
             $row['color'],
             $row['format'],
-            Option::fromNullable($row['last_edition_date'])
+            $last_edition_date
         );
     }
 
@@ -99,7 +101,7 @@ final class InlineComment implements TimelineEvent, TimelineComment
             $comment->position,
             $color,
             $comment->format,
-            Option::nothing(\Psl\Type\int())
+            Option::nothing(\DateTimeImmutable::class)
         );
     }
 
@@ -173,7 +175,7 @@ final class InlineComment implements TimelineEvent, TimelineComment
         return $this->format;
     }
 
-    /** @return Option<int> */
+    /** @return Option<\DateTimeImmutable> */
     public function getLastEditionDate(): Option
     {
         return $this->last_edition_date;

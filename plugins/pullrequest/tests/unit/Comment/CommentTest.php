@@ -30,7 +30,7 @@ final class CommentTest extends TestCase
 {
     public function testItBuildsTheCommentFromDatabaseRowWithTheLastEditionDate(): void
     {
-        $last_edition_date = new DateTimeImmutable();
+        $last_edition_date = new DateTimeImmutable('@1520883863');
         $comment           = Comment::buildFromRow(
             [
                 'id'                => 1,
@@ -46,7 +46,7 @@ final class CommentTest extends TestCase
         );
 
         self::assertTrue($comment->getLastEditionDate()->isValue());
-        self::assertSame($last_edition_date->getTimestamp(), $comment->getLastEditionDate()->unwrapOr(null));
+        self::assertEquals($last_edition_date, $comment->getLastEditionDate()->unwrapOr(null));
     }
 
     public function testItBuildsTheCommentFromDatabaseRowWithNothingAsLastEditionDate(): void

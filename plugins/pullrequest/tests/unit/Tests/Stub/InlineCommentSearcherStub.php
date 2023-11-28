@@ -55,7 +55,8 @@ final class InlineCommentSearcherStub implements \Tuleap\PullRequest\InlineComme
             'position'          => $comment->getPosition(),
             'color'             => $comment->getColor(),
             'format'            => $comment->getFormat(),
-            'last_edition_date' => $comment->getLastEditionDate()->unwrapOr(null),
+            'last_edition_date' => $comment->getLastEditionDate()
+                ->mapOr(static fn(\DateTimeImmutable $last_edition_date) => $last_edition_date->getTimestamp(), null),
         ];
         return new self($row);
     }

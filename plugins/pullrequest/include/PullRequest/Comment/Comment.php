@@ -20,7 +20,6 @@
 
 namespace Tuleap\PullRequest\Comment;
 
-use DateTimeImmutable;
 use Tuleap\Option\Option;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\Timeline\TimelineEvent;
@@ -30,6 +29,9 @@ use Tuleap\PullRequest\Timeline\TimelineEvent;
  */
 final class Comment implements TimelineEvent, TimelineComment
 {
+    /**
+     * @param Option<\DateTimeImmutable> $last_edition_date
+     */
     public function __construct(
         private int $id,
         private int $pull_request_id,
@@ -84,14 +86,14 @@ final class Comment implements TimelineEvent, TimelineComment
     }
 
     /**
-     * @return Option<int>
+     * @return Option<\DateTimeImmutable>
      */
     public function getLastEditionDate(): Option
     {
         return $this->last_edition_date;
     }
 
-    public static function buildWithNewContent(Comment $comment, string $new_content, DateTimeImmutable $last_edition_date): self
+    public static function buildWithNewContent(Comment $comment, string $new_content, \DateTimeImmutable $last_edition_date): self
     {
         return new self(
             $comment->id,
@@ -102,12 +104,14 @@ final class Comment implements TimelineEvent, TimelineComment
             $comment->parent_id,
             $comment->color,
             $comment->format,
-            Option::fromValue($last_edition_date->getTimestamp())
+            Option::fromValue($last_edition_date)
         );
     }
 
     public static function buildFromRow(array $row): self
     {
+        $last_edition_date = Option::fromNullable($row['last_edition_date'])
+            ->map(static fn(int $timestamp) => new \DateTimeImmutable('@' . $timestamp));
         return new Comment(
             $row['id'],
             $row['pull_request_id'],
@@ -117,7 +121,7 @@ final class Comment implements TimelineEvent, TimelineComment
             (int) $row['parent_id'],
             $row['color'],
             $row['format'],
-            Option::fromNullable($row['last_edition_date']),
+            $last_edition_date,
         );
     }
 

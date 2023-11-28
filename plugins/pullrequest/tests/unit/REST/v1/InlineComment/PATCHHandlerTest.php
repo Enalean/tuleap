@@ -118,8 +118,8 @@ final class PATCHHandlerTest extends TestCase
         $updated_comment = $this->comment_saver->getLastArgument();
         self::assertSame(self::UPDATED_CONTENT, $updated_comment?->getContent());
         self::assertSame(
-            $this->comment_edition_date->getTimestamp(),
-            $updated_comment?->getLastEditionDate()->unwrapOr(0)
+            $this->comment_edition_date,
+            $updated_comment?->getLastEditionDate()->unwrapOr(null)
         );
         self::assertSame(1, $this->cross_references_saver->getCallCount());
     }

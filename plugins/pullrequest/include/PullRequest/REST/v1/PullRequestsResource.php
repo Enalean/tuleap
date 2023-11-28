@@ -136,7 +136,6 @@ use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use URLVerification;
 use UserManager;
-use function Psl\Type\int;
 
 class PullRequestsResource extends AuthenticatedResource
 {
@@ -1122,8 +1121,10 @@ class PullRequestsResource extends AuthenticatedResource
         $this->checkAccess();
         $this->sendAllowHeadersForComments();
 
+        $pull_request_id                 = $id;
         $user                            = $this->user_manager->getCurrentUser();
-        $pull_request_with_git_reference = $this->getPullRequestWithGitReferenceRetriever()->getAccessiblePullRequestWithGitReferenceForCurrentUser($id, $user);
+        $pull_request_with_git_reference = $this->getPullRequestWithGitReferenceRetriever()
+            ->getAccessiblePullRequestWithGitReferenceForCurrentUser($pull_request_id, $user);
         $pull_request                    = $pull_request_with_git_reference->getPullRequest();
         $source_repository               = $this->getRepository($pull_request->getRepositoryId());
         $source_project_id               = $source_repository->getProjectId();
@@ -1139,11 +1140,21 @@ class PullRequestsResource extends AuthenticatedResource
             $format = TimelineComment::FORMAT_MARKDOWN;
         }
 
-        $color = $color_retriever->retrieveColor($id, (int) $comment_data->parent_id);
+        $color = $color_retriever->retrieveColor($pull_request_id, (int) $comment_data->parent_id);
         $color_assigner->assignColor((int) $comment_data->parent_id, $color);
-        $comment = new Comment(0, $id, (int) $user->getId(), $current_time, $comment_data->content, (int) $comment_data->parent_id, $color, $format, Option::nothing(int()));
+        $comment = new Comment(
+            0,
+            $pull_request_id,
+            (int) $user->getId(),
+            $current_time,
+            $comment_data->content,
+            (int) $comment_data->parent_id,
+            $color,
+            $format,
+            Option::nothing(\DateTimeImmutable::class)
+        );
 
-        $parent_id_validator->checkParentValidity((int) $comment_data->parent_id, $id);
+        $parent_id_validator->checkParentValidity((int) $comment_data->parent_id, $pull_request_id);
         $new_comment_id = $this->comment_factory->save($comment, $user, $source_project_id);
         $new_comment    = Comment::buildWithNewId($new_comment_id, $comment);
 

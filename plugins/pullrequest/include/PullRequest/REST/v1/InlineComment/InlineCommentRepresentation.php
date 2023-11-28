@@ -58,7 +58,7 @@ final class InlineCommentRepresentation
         $this->unidiff_offset         = $comment->getUnidiffOffset();
         $this->position               = $comment->getPosition();
         $this->post_date              = JsonCast::toDate($comment->getPostDate());
-        $this->last_edition_date      = JsonCast::toDate($comment->getLastEditionDate()->unwrapOr(null));
+        $this->last_edition_date      = JsonCast::fromDateTimeToDate($comment->getLastEditionDate()->unwrapOr(null));
         $this->content                = $comment_content->purified_content;
         $this->raw_content            = $comment_content->raw_content;
         $this->post_processed_content = $comment_content->post_processed_content;

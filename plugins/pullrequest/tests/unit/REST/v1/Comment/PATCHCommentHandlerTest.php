@@ -215,8 +215,11 @@ final class PATCHCommentHandlerTest extends TestCase
         self::assertNotSame($old_content, $updated_comment->content);
         self::assertSame(self::NEW_CONTENT, $updated_comment->content);
 
-        self::assertNotSame($comment->getLastEditionDate()->unwrapOr(null), $updated_comment->last_edition_date);
-        self::assertSame(JsonCast::toDate($this->last_edition_date->getTimestamp()), $updated_comment->last_edition_date);
+        self::assertNotSame(
+            $comment->getLastEditionDate()->mapOr(static fn(\DateTimeImmutable $last_edition_date) => $last_edition_date->getTimestamp(), 0),
+            $updated_comment->last_edition_date
+        );
+        self::assertSame(JsonCast::fromDateTimeToDate($this->last_edition_date), $updated_comment->last_edition_date);
 
         self::assertSame(1, $this->comment_updater_dao->getUpdateCommentMethodCount());
         self::assertSame(1, $this->cross_references_saver->getCallCount());

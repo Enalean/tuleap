@@ -61,7 +61,7 @@ final class CommentRepresentation
         $this->parent_id              = $comment->getParentId();
         $this->format                 = $comment->getFormat();
         $this->post_date              = JsonCast::toDate($comment->getPostDate());
-        $this->last_edition_date      = JsonCast::toDate($comment->getLastEditionDate()->unwrapOr(null));
+        $this->last_edition_date      = JsonCast::fromDateTimeToDate($comment->getLastEditionDate()->unwrapOr(null));
         $this->type                   = self::TYPE;
         $this->content                = $comment_content->purified_content;
         $this->raw_content            = $comment_content->raw_content;

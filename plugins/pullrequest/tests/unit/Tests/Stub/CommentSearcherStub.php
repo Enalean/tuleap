@@ -44,15 +44,16 @@ final class CommentSearcherStub implements CommentSearcher
     public static function withComment(Comment $comment): self
     {
         $row = [
-            'id'              => $comment->getId(),
-            'pull_request_id' => $comment->getPullRequestId(),
-            'user_id'         => $comment->getUserId(),
-            'post_date'       => $comment->getPostDate(),
-            'content'         => $comment->getContent(),
-            'parent_id'       => $comment->getParentId(),
-            'color'           => $comment->getColor(),
-            'format'          => $comment->getFormat(),
-            'last_edition_date' => $comment->getLastEditionDate(),
+            'id'                => $comment->getId(),
+            'pull_request_id'   => $comment->getPullRequestId(),
+            'user_id'           => $comment->getUserId(),
+            'post_date'         => $comment->getPostDate(),
+            'content'           => $comment->getContent(),
+            'parent_id'         => $comment->getParentId(),
+            'color'             => $comment->getColor(),
+            'format'            => $comment->getFormat(),
+            'last_edition_date' => $comment->getLastEditionDate()
+                ->mapOr(static fn(\DateTimeImmutable $last_edition_date) => $last_edition_date->getTimestamp(), null),
         ];
         return new self($row);
     }
