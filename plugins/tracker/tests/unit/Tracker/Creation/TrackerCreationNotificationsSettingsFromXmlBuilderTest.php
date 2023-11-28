@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Creation;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeImpliedFromAnotherTracker;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
 use Tuleap\Tracker\Semantic\TimeframeConfigInvalid;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
@@ -158,6 +159,34 @@ final class TrackerCreationNotificationsSettingsFromXmlBuilderTest extends TestC
         self::assertTrue(Result::isErr($result));
         self::assertSame(
             'Cannot activate calendar event for tracker without timeframe semantic',
+            $result->error,
+        );
+    }
+
+    public function testErrorIfTimeframeSemanticIsInherited(): void
+    {
+        $xml_input = new \SimpleXMLElement(
+            '<?xml version="1.0" encoding="UTF-8"?>
+            <tracker id="T101" should_send_event_in_notification="1">
+            </tracker>'
+        );
+
+        $tracker              = TrackerTestBuilder::aTracker()->build();
+        $tracker->semantics[] = new \Tracker_Semantic_Title(
+            $tracker,
+            TrackerFormElementTextFieldBuilder::aTextField(1)->build(),
+        );
+        $tracker->semantics[] = new SemanticTimeframe(
+            $tracker,
+            $this->createMock(TimeframeImpliedFromAnotherTracker::class),
+        );
+
+        $result = (new TrackerCreationNotificationsSettingsFromXmlBuilder())
+            ->getCreationNotificationsSettings($xml_input->attributes(), $tracker);
+
+        self::assertTrue(Result::isErr($result));
+        self::assertSame(
+            'Cannot activate calendar event for tracker with timeframe semantic inherited from another tracker',
             $result->error,
         );
     }

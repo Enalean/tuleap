@@ -701,6 +701,11 @@ msgstr ""
 msgid "Canned responses"
 msgstr ""
 
+msgid ""
+"Cannot activate calendar event for tracker with timeframe semantic inherited "
+"from another tracker"
+msgstr ""
+
 msgid "Cannot activate calendar event for tracker without timeframe semantic"
 msgstr ""
 
