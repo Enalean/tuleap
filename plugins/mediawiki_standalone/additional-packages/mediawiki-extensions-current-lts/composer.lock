@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3d3f91670cef3cf3668ba2945cb207e5",
+    "content-hash": "9eec75fcc76d46b96eaa7dfd8d79bed0",
     "packages": [
         {
             "name": "composer/installers",
@@ -289,7 +289,7 @@
             "version": "1.39.1",
             "source": {
                 "type": "git",
-                "url": "https://gerrit.wikimedia.org/r/mediawiki/extensions/LabeledSectionTransclusion.git",
+                "url": "https://github.com/wikimedia/mediawiki-extensions-LabeledSectionTransclusion.git",
                 "reference": "5181f579d20b807a975965b37cdd84c91645a2eb"
             },
             "require": {
@@ -302,7 +302,7 @@
             "version": "1.39.1",
             "source": {
                 "type": "git",
-                "url": "https://gerrit.wikimedia.org/r/mediawiki/extensions/Mpdf.git",
+                "url": "https://github.com/wikimedia/mediawiki-extensions-Mpdf.git",
                 "reference": "fb6ff534526f3b9a554cc4172db6e3715adfef36"
             },
             "require": {
