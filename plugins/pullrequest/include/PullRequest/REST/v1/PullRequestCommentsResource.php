@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\REST\v1;
 
+use BackendLogger;
 use DateTimeImmutable;
 use EventManager;
 use GitDao;
@@ -42,6 +43,7 @@ use Tuleap\PullRequest\Comment\CommentRetriever;
 use Tuleap\PullRequest\Comment\Dao as CommentDao;
 use Tuleap\PullRequest\Dao as PullRequestDao;
 use Tuleap\PullRequest\FeatureFlagEditComments;
+use Tuleap\PullRequest\Notification\PullRequestNotificationSupport;
 use Tuleap\PullRequest\PullRequest\REST\v1\AccessiblePullRequestRESTRetriever;
 use Tuleap\PullRequest\PullRequestRetriever;
 use Tuleap\PullRequest\REST\v1\Comment\CommentRepresentation;
@@ -123,13 +125,15 @@ final class PullRequestCommentsResource extends AuthenticatedResource
                 $access_controller_verifier
             )
         );
+        $event_dispatcher                  = PullRequestNotificationSupport::buildDispatcher(new BackendLogger());
         $comment_patch_handler             = new PATCHCommentHandler(
             new CommentRetriever($comment_dao),
             $comment_dao,
             $accessible_pull_request_retriever,
             new CommentRepresentationBuilder($purifier, $content_interpreter),
             $git_repository_factory,
-            ReferenceManager::instance()
+            ReferenceManager::instance(),
+            $event_dispatcher
         );
 
         $current_user = UserManager::instance()->getCurrentUser();

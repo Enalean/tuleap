@@ -24,6 +24,7 @@ namespace Tuleap\PullRequest\REST\v1\Comment;
 
 use DateTimeImmutable;
 use PFUser;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Git\RetrieveGitRepository;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
@@ -36,6 +37,7 @@ use Tuleap\PullRequest\Comment\CommentIsNotFromCurrentUserFault;
 use Tuleap\PullRequest\Comment\CommentNotFoundFault;
 use Tuleap\PullRequest\Comment\CommentRetriever;
 use Tuleap\PullRequest\Comment\CommentUpdater;
+use Tuleap\PullRequest\Comment\Notification\UpdatedCommentEvent;
 use Tuleap\PullRequest\PullRequest\REST\v1\AccessiblePullRequestRESTRetriever;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\REST\v1\CommentPATCHRepresentation;
@@ -51,6 +53,7 @@ final class PATCHCommentHandler
         private readonly CommentRepresentationBuilder $comment_representation_builder,
         private readonly RetrieveGitRepository $git_repository_factory,
         private readonly ExtractAndSaveCrossReferences $cross_references_saver,
+        private readonly EventDispatcherInterface $event_manager,
     ) {
     }
 
@@ -83,6 +86,9 @@ final class PATCHCommentHandler
 
                         $new_comment = Comment::buildWithNewContent($comment_to_update, $comment_data->content, $comment_edition_time);
                         $this->comment_dao->updateComment($new_comment);
+
+                        $this->event_manager->dispatch(UpdatedCommentEvent::fromUpdatedComment($new_comment));
+
                         $this->cross_references_saver->extractCrossRef(
                             $new_comment->getContent(),
                             $new_comment->getPullRequestId(),

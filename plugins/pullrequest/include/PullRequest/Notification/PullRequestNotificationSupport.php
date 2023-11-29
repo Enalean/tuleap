@@ -44,6 +44,8 @@ use Tuleap\PullRequest\Comment\CommentRetriever;
 use Tuleap\PullRequest\Comment\Dao as CommentDao;
 use Tuleap\PullRequest\Comment\Notification\PullRequestNewCommentEvent;
 use Tuleap\PullRequest\Comment\Notification\PullRequestNewCommentNotificationToProcessBuilder;
+use Tuleap\PullRequest\Comment\Notification\UpdatedCommentEvent;
+use Tuleap\PullRequest\Comment\Notification\UpdatedCommentNotificationToProcessBuilder;
 use Tuleap\PullRequest\Dao;
 use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\FileUniDiffBuilder;
@@ -244,6 +246,53 @@ final class PullRequestNotificationSupport
                         return new EventSubjectToNotificationListener(
                             self::buildPullRequestNotificationSendMail($git_repository_factory, $html_url_builder),
                             new PullRequestNewCommentNotificationToProcessBuilder(
+                                $user_manager,
+                                new PullRequestRetriever(
+                                    new Dao(),
+                                ),
+                                new CommentRetriever(new CommentDao()),
+                                new OwnerRetriever(
+                                    $user_manager,
+                                    new ReviewerRetriever(
+                                        $user_manager,
+                                        new ReviewerDAO(),
+                                        new PullRequestPermissionChecker(
+                                            $git_repository_factory,
+                                            new \Tuleap\Project\ProjectAccessChecker(
+                                                new RestrictedUserCanAccessProjectVerifier(),
+                                                \EventManager::instance()
+                                            ),
+                                            new AccessControlVerifier(
+                                                new FineGrainedRetriever(new FineGrainedDao()),
+                                                new \System_Command()
+                                            )
+                                        )
+                                    ),
+                                    new TimelineDAO()
+                                ),
+                                new FilterUserFromCollection(),
+                                \UserHelper::instance(),
+                                $html_url_builder,
+                                new NotificationContentFormatter(
+                                    CommonMarkInterpreter::build(
+                                        $html_purifier,
+                                    ),
+                                    $git_repository_factory,
+                                    $html_purifier,
+                                ),
+                            )
+                        );
+                    },
+                ],
+                UpdatedCommentEvent::class => [
+                    static function (): EventSubjectToNotificationListener {
+                        $git_repository_factory = self::buildGitRepositoryFactory();
+                        $html_url_builder       = self::buildHTMLURLBuilder($git_repository_factory);
+                        $user_manager           = \UserManager::instance();
+                        $html_purifier          = \Codendi_HTMLPurifier::instance();
+                        return new EventSubjectToNotificationListener(
+                            self::buildPullRequestNotificationSendMail($git_repository_factory, $html_url_builder),
+                            new UpdatedCommentNotificationToProcessBuilder(
                                 $user_manager,
                                 new PullRequestRetriever(
                                     new Dao(),

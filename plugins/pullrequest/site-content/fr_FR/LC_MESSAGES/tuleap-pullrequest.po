@@ -48,6 +48,13 @@ msgstr[1] "%s a publié %d commits mettant à jour la pull request #%d: %s."
 msgid "%s requested your review on #%d: %s"
 msgstr "%s a demandé une revue de votre part sur #%d: %s"
 
+#, php-format
+msgid "%s updated their comment on #%d: %s."
+msgstr "%s a édité son commentaire sur #%d: %s"
+
+msgid "%s updated their comment on %s: %s."
+msgstr "%s a édité son commentaire sur %s: %s"
+
 msgid "<a href=\"%s\">%s</a> commented on <a href=\"%s\">#%s</a>: %s in %s:"
 msgstr ""
 "<a href=\"%s\">%s</a> a laissé un commentaire sur <a href=\"%s\">#%s</a>: %s "
