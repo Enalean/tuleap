@@ -11,7 +11,7 @@
             "composer/installers": "^1.0"
           },
           "source": {
-            "url": "https://gerrit.wikimedia.org/r/mediawiki/extensions/LabeledSectionTransclusion.git",
+            "url": "https://github.com/wikimedia/mediawiki-extensions-LabeledSectionTransclusion.git",
             "type": "git",
             "reference": "5181f579d20b807a975965b37cdd84c91645a2eb"
           }
@@ -29,7 +29,7 @@
             "mpdf/mpdf": "^8.1.4"
           },
           "source": {
-            "url": "https://gerrit.wikimedia.org/r/mediawiki/extensions/Mpdf.git",
+            "url": "https://github.com/wikimedia/mediawiki-extensions-Mpdf.git",
             "type": "git",
             "reference": "fb6ff534526f3b9a554cc4172db6e3715adfef36"
           }
