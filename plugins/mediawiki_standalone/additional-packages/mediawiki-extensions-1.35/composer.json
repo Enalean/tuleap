@@ -1,60 +1,6 @@
 {
   "repositories": [
     {
-      "type": "package",
-      "package": [
-        {
-          "name": "mediawiki/labeled-section-transclusion",
-          "type": "mediawiki-extension",
-          "version": "1.35.9",
-          "require": {
-            "composer/installers": "^1.0"
-          },
-          "source": {
-            "url": "https://gerrit.wikimedia.org/r/mediawiki/extensions/LabeledSectionTransclusion.git",
-            "type": "git",
-            "reference": "6667e70cbb19874fcfbf929df814802c415b1fe7"
-          }
-        }
-      ]
-    },
-    {
-      "type": "package",
-      "package": [
-        {
-          "name": "mediawiki/math",
-          "type": "mediawiki-extension",
-          "version": "1.35.10",
-          "require": {
-            "composer/installers": "^1.0"
-          },
-          "source": {
-            "url": "https://gerrit.wikimedia.org/r/mediawiki/extensions/Math.git",
-            "type": "git",
-            "reference": "3f42392dca992dfc062782c9b7796c5edccfa41a"
-          }
-        }
-      ]
-    },
-    {
-      "type": "package",
-      "package": [
-        {
-          "name": "mediawiki/mpdf",
-          "type": "mediawiki-extension",
-          "version": "1.0.0",
-          "require": {
-            "mpdf/mpdf": "^8.1.4"
-          },
-          "source": {
-            "url": "https://gerrit.wikimedia.org/r/mediawiki/extensions/Mpdf.git",
-            "type": "git",
-            "reference": "2a61ff84fbaa1e0e222389a1ffb05ce40cd4746c"
-          }
-        }
-      ]
-    },
-    {
       "type": "vcs",
       "url": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration"
     },
@@ -68,11 +14,8 @@
     }
   ],
   "require": {
-    "mediawiki/labeled-section-transclusion": "^1.35.9",
-    "mediawiki/math": "^1.35.10",
-    "mediawiki/mpdf": "^1.0",
     "mediawiki/tuleap-integration": "1.0.4",
-    "mediawiki/tuleap-skin": "^1.0.9",
+    "mediawiki/tuleap-skin": "^1.0",
     "mediawiki/tuleap-wiki-farm": "dev-REL1_35#2435d7c103b134c88ddfed9ec4fe15855eb768a3"
   },
   "replace": {

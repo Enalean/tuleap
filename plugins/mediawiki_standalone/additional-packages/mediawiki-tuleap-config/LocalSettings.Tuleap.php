@@ -54,12 +54,19 @@ wfLoadExtensions([
     'Cite',
     'ImageMap',
     'InputBox',
-    'LabeledSectionTransclusion',
     'ParserFunctions',
     'SyntaxHighlight_GeSHi',
     'WikiEditor',
-    'Mpdf',
 ]);
+
+// Load additional extensions only when not running 1.35 to avoid dealing with unnecessary code
+if (version_compare($GLOBALS['wgVersion'], '1.39', '>')) {
+    wfLoadExtensions([
+        'LabeledSectionTransclusion',
+        'Mpdf',
+    ]);
+}
+
 $GLOBALS['wgPFEnableStringFunctions'] = true;
 $GLOBALS['wgMpdfSimpleOutput']        = true;
 $GLOBALS['wgMpdfTab']                 = true;
@@ -84,7 +91,10 @@ wfLoadExtensions([
 ]);
 // Third Party Extensions - END ###
 
-wfLoadExtension('Math');
+// Load the Math extension only when not running 1.35 to avoid dealing with unnecessary code
+if (version_compare($GLOBALS['wgVersion'], '1.39', '>')) {
+    wfLoadExtension('Math');
+}
 $GLOBALS['wgMathValidModes']             = ['mathml'];
 $GLOBALS['wgDefaultUserOptions']['math'] = 'mathml';
 $GLOBALS['wgMaxShellMemory']             = 1228800;

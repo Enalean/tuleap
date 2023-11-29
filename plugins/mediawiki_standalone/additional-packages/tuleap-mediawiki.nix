@@ -33,7 +33,7 @@ let
       runHook preBuild
       rm composer.json
       rm composer.lock
-      rm *.patch
+      rm *.patch || true
       mv vendor/composer/ vendor/composer_tuleap-skins-extensions/
       substituteInPlace vendor/autoload.php --replace '/composer/' '/composer_tuleap-skins-extensions/'
       mv vendor/autoload.php vendor/autoload_tuleap-skins-extensions.php
@@ -71,7 +71,7 @@ let
         runHook postInstall
       '';
     };
-  buildMediawikiTuleapFlavorTarball = mediawiki: pkgs.stdenvNoCC.mkDerivation {
+  buildMediawikiTuleapFlavorTarball = mediawiki: patches: pkgs.stdenvNoCC.mkDerivation {
     name = "mediawiki-tuleap-flavor-${mediawiki.tuleapUsage}.tar";
 
     src = pkgs.buildEnv {
@@ -79,9 +79,7 @@ let
       paths = [ mediawiki (buildMediawikiSkinsAndExtensions mediawiki) mediawikiTuleapConfig (buildMediawikiTuleapConfigSuspended mediawiki) ];
     };
 
-    patches = [
-      (./. + "/mediawiki-extensions-${mediawiki.tuleapUsage}/mpdf-extension-mpdf-8.patch")
-    ];
+    inherit patches;
 
     unpackPhase = ''
       runHook preUnpack
@@ -111,10 +109,10 @@ let
     '';
   };
   tuleapVersion = builtins.readFile ../../../VERSION;
-  buildMediawikiTuleapFlavorRPM = mediawiki: pkgs.stdenvNoCC.mkDerivation {
+  buildMediawikiTuleapFlavorRPM = mediawiki: patches: pkgs.stdenvNoCC.mkDerivation {
     name = "mediawiki-tuleap-flavor";
 
-    srcs = [ (buildMediawikiTuleapFlavorTarball mediawiki) ./mediawiki-tuleap-flavor.spec ];
+    srcs = [ (buildMediawikiTuleapFlavorTarball mediawiki patches) ./mediawiki-tuleap-flavor.spec ];
 
     nativeBuildInputs = [ pkgs.rpm pkgs.file ];
 
@@ -157,7 +155,12 @@ let
 in pkgs.symlinkJoin {
   name = "all-mediawiki-tuleap-flavor-rpm";
   paths = [
-    (buildMediawikiTuleapFlavorRPM mediawikiCurrent)
-    (buildMediawikiTuleapFlavorRPM mediawiki135)
+    (buildMediawikiTuleapFlavorRPM
+      mediawikiCurrent
+      [
+        (./. + "/mediawiki-extensions-current-lts/mpdf-extension-mpdf-8.patch")
+      ]
+    )
+    (buildMediawikiTuleapFlavorRPM mediawiki135 [])
   ];
 }
