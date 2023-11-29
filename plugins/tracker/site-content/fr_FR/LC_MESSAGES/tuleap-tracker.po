@@ -819,6 +819,13 @@ msgstr "Annulation de votre import Jira"
 msgid "Canned responses"
 msgstr "Réponses types"
 
+msgid ""
+"Cannot activate calendar event for tracker with timeframe semantic inherited "
+"from another tracker"
+msgstr ""
+"Impossible d'activer les événements de calendrier pour un tracker avec une "
+"sémantique plage de temps héritée d'un autre tracker"
+
 msgid "Cannot activate calendar event for tracker without timeframe semantic"
 msgstr ""
 "Impossible d'activer les événements de calendrier pour un tracker sans "

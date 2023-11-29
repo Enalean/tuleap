@@ -27,6 +27,7 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeImpliedFromAnotherTracker;
 use Tuleap\XML\PHPCast;
 
 final class TrackerCreationNotificationsSettingsFromXmlBuilder
@@ -52,6 +53,12 @@ final class TrackerCreationNotificationsSettingsFromXmlBuilder
                 }
 
                 if ($semantic instanceof SemanticTimeframe) {
+                    if ($semantic->getTimeframeCalculator() instanceof TimeframeImpliedFromAnotherTracker) {
+                        return Result::err(
+                            dgettext('tuleap-tracker', 'Cannot activate calendar event for tracker with timeframe semantic inherited from another tracker')
+                        );
+                    }
+
                     $semantic_timeframe_found = $semantic->isDefined();
                     continue;
                 }
