@@ -33,8 +33,15 @@ use Project;
 use ProjectUGroup;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
+use Tuleap\Event\Events\ExportXmlProject;
+use Tuleap\Mediawiki\Tests\Stub\CheckXMLMediawikiExportabilityStub;
+use Tuleap\Mediawiki\XML\CheckXMLMediawikiExportability;
+use Tuleap\Project\XML\Export\ExportOptions;
 use Tuleap\Project\XML\Export\ZipArchive;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use UGroupManager;
+use UserXMLExporter;
 
 class XMLMediaWikiExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -65,10 +72,6 @@ class XMLMediaWikiExporterTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var MediawikiManager|Mockery\LegacyMockInterface|Mockery\MockInterface
      */
     private $mediawiki_manager;
-    /**
-     * @var XMLMediaWikiExporter
-     */
-    private $exporter;
 
     /**
      * @var SimpleXMLElement
@@ -77,10 +80,6 @@ class XMLMediaWikiExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private $zip;
     private $fixtures_dir;
-    /**
-     * @var string
-     */
-    private $file;
 
 
     protected function setUp(): void
@@ -88,36 +87,12 @@ class XMLMediaWikiExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         parent::setUp();
 
         $this->mediawiki_manager = Mockery::mock(MediawikiManager::class);
-
-        $this->project = Mockery::mock(Project::class);
-
-        $ugroup_manager = Mockery::mock(UGroupManager::class);
-        $custom_ugroup  = Mockery::mock(ProjectUGroup::class);
-        $custom_ugroup->shouldReceive('getName')->andReturn('custom');
-        $custom_ugroup->shouldReceive('getId');
-        $ugroup_manager->shouldReceive('getUGroup')->withArgs([$this->project, 5])->andReturn($custom_ugroup);
-
-        $project_admins_ugroups = Mockery::mock(ProjectUGroup::class);
-        $project_admins_ugroups->shouldReceive('getName')->andReturn('project-admins');
-        $project_admins_ugroups->shouldReceive('getId');
-        $ugroup_manager->shouldReceive('getUGroup')->withArgs([$this->project, 4])->andReturn($project_admins_ugroups);
-
-        $this->language_manager = Mockery::mock(MediawikiLanguageManager::class);
+        $this->project           = ProjectTestBuilder::aProject()->build();
+        $this->language_manager  = Mockery::mock(MediawikiLanguageManager::class);
         $this->language_manager->shouldReceive('getUsedLanguageForProject')->andReturn('fr_FR');
-
         $this->maintenance_wrapper = Mockery::mock(MediawikiMaintenanceWrapper::class);
-
-        $this->mediawiki_data_dir = Mockery::mock(MediawikiDataDir::class);
-        $this->logger             = Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $this->exporter           = new XMLMediaWikiExporter(
-            $this->project,
-            $this->mediawiki_manager,
-            $ugroup_manager,
-            $this->logger,
-            $this->maintenance_wrapper,
-            $this->language_manager,
-            $this->mediawiki_data_dir
-        );
+        $this->mediawiki_data_dir  = Mockery::mock(MediawikiDataDir::class);
+        $this->logger              = Mockery::mock(\Psr\Log\LoggerInterface::class);
 
         $data           = '<?xml version="1.0" encoding="UTF-8"?>
                  <projects />';
@@ -130,8 +105,6 @@ class XMLMediaWikiExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $base_dir           = vfsStream::setup();
         $this->fixtures_dir = vfsStream::create($structure, $base_dir);
         chmod($this->fixtures_dir->getChild('files')->url(), '0777');
-
-        $this->file = 'export_mw_101.xml';
 
         $this->zip = Mockery::mock(ZipArchive::class);
 
@@ -146,18 +119,12 @@ class XMLMediaWikiExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         parent::tearDown();
     }
 
-    public function testItDoesNotExportMediwikiWhenItNEverHaveBeenInstantiated(): void
+    public function testItDoesNotExportMediawikiWhenItCannotBeExported(): void
     {
-        $this->mediawiki_data_dir->shouldReceive('getMediawikiDir')->once()->andReturn('incorrectdir');
         $this->logger->shouldReceive('info')->once();
         $this->language_manager->shouldReceive('getUsedLanguageForProject')->never();
 
-        $this->exporter->exportToXml(
-            $this->xml_tree,
-            $this->zip,
-            $this->file,
-            $this->fixtures_dir
-        );
+        $this->exportToXML(CheckXMLMediawikiExportabilityStub::withoutExportableMediawiki());
     }
 
     public function testItExportsMediaWikiAttributes(): void
@@ -173,12 +140,7 @@ class XMLMediaWikiExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->zip->shouldReceive('addFile')->once();
 
-        $this->exporter->exportToXml(
-            $this->xml_tree,
-            $this->zip,
-            $this->file,
-            $this->fixtures_dir->url()
-        );
+        $this->exportToXML(CheckXMLMediawikiExportabilityStub::withExportableMediawiki());
 
         $mediawiki = $this->xml_tree->mediawiki;
         $attrs     = $mediawiki->attributes();
@@ -210,12 +172,7 @@ class XMLMediaWikiExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->zip->shouldReceive('addFile')->once();
 
-        $this->exporter->exportToXml(
-            $this->xml_tree,
-            $this->zip,
-            $this->file,
-            $this->fixtures_dir->url()
-        );
+        $this->exportToXML(CheckXMLMediawikiExportabilityStub::withExportableMediawiki());
 
         $readers = $this->xml_tree->mediawiki->{'read-access'}->ugroup;
         $this->assertEquals((string) $readers[0], 'project-admins');
@@ -244,12 +201,7 @@ class XMLMediaWikiExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->zip->shouldReceive('addFile')->once();
 
-        $this->exporter->exportToXml(
-            $this->xml_tree,
-            $this->zip,
-            $this->file,
-            $this->fixtures_dir->url()
-        );
+        $this->exportToXML(CheckXMLMediawikiExportabilityStub::withExportableMediawiki());
 
         $readers = $this->xml_tree->mediawiki->{'read-access'}->ugroup;
         $this->assertFalse(isset($readers[0]));
@@ -278,12 +230,7 @@ class XMLMediaWikiExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->zip->shouldReceive('addFile')->once();
 
-        $this->exporter->exportToXml(
-            $this->xml_tree,
-            $this->zip,
-            $this->file,
-            $this->fixtures_dir->url()
-        );
+        $this->exportToXML(CheckXMLMediawikiExportabilityStub::withExportableMediawiki());
 
         $readers = $this->xml_tree->mediawiki->{'read-access'}->ugroup;
         $this->assertEquals((string) $readers[0], 'project-admins');
@@ -291,5 +238,46 @@ class XMLMediaWikiExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $writers = $this->xml_tree->mediawiki->{'write-access'}->ugroup;
         $this->assertFalse(isset($writers[0]));
+    }
+
+    private function exportToXML(CheckXMLMediawikiExportability $check_xml_mediawiki_exportability): void
+    {
+        $ugroup_manager = Mockery::mock(UGroupManager::class);
+        $custom_ugroup  = Mockery::mock(ProjectUGroup::class);
+        $custom_ugroup->shouldReceive('getName')->andReturn('custom');
+        $custom_ugroup->shouldReceive('getId');
+
+        $project_admins_ugroups = Mockery::mock(ProjectUGroup::class);
+        $project_admins_ugroups->shouldReceive('getName')->andReturn('project-admins');
+        $project_admins_ugroups->shouldReceive('getId');
+
+        $ugroup_manager->shouldReceive('getUGroup')->withArgs([$this->project, 5])->andReturn($custom_ugroup);
+        $ugroup_manager->shouldReceive('getUGroup')->withArgs([$this->project, 4])->andReturn($project_admins_ugroups);
+
+        $exporter = new XMLMediaWikiExporter(
+            $this->mediawiki_manager,
+            $ugroup_manager,
+            $this->logger,
+            $this->maintenance_wrapper,
+            $this->language_manager,
+            $this->mediawiki_data_dir,
+            $check_xml_mediawiki_exportability
+        );
+
+        $exporter->exportToXml($this->getExportXMLProjectEvent());
+    }
+
+    private function getExportXMLProjectEvent(): ExportXmlProject
+    {
+        return new ExportXmlProject(
+            $this->project,
+            new ExportOptions(ExportOptions::MODE_ALL, false, []),
+            $this->xml_tree,
+            UserTestBuilder::anActiveUser()->build(),
+            $this->createStub(UserXMLExporter::class),
+            $this->zip,
+            $this->fixtures_dir->url(),
+            $this->logger
+        );
     }
 }
