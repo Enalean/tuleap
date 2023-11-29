@@ -25,23 +25,16 @@ namespace Tuleap\Tracker\Semantic\Timeframe;
 use Codendi_Request;
 use Exception;
 use Tracker;
+use Tuleap\Tracker\Notifications\Settings\CheckEventShouldBeSentInNotification;
 
 class SemanticTimeframeUpdator
 {
-    private SemanticTimeframeDao $dao;
-
-    private \Tracker_FormElementFactory $form_factory;
-
-    private SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetriever $suitable_trackers_retriever;
-
     public function __construct(
-        SemanticTimeframeDao $dao,
-        \Tracker_FormElementFactory $form_factory,
-        SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetriever $suitable_trackers,
+        private readonly SemanticTimeframeDao $dao,
+        private readonly \Tracker_FormElementFactory $form_factory,
+        private readonly SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetriever $suitable_trackers_retriever,
+        private readonly CheckEventShouldBeSentInNotification $calendar_event_config,
     ) {
-        $this->dao                         = $dao;
-        $this->form_factory                = $form_factory;
-        $this->suitable_trackers_retriever = $suitable_trackers;
     }
 
     public function update(Tracker $tracker, Codendi_Request $request): void
@@ -58,7 +51,7 @@ class SemanticTimeframeUpdator
             }
 
             $result = $this->dao->save(
-                (int) $tracker->getId(),
+                $tracker->getId(),
                 $start_date_field_id,
                 $duration_field_id,
                 $end_date_field_id,
@@ -169,7 +162,8 @@ class SemanticTimeframeUpdator
         ?int $implied_from_tracker_id,
     ): bool {
         if ($implied_from_tracker_id !== null && ! $start_date_field_id && ! $duration_field_id && ! $end_date_field_id) {
-            return $this->isTrackerSuitableToImplyTheCurrentSemanticFromIt($tracker, $implied_from_tracker_id);
+            return ! $this->calendar_event_config->shouldSendEventInNotification($tracker->getId()) &&
+                $this->isTrackerSuitableToImplyTheCurrentSemanticFromIt($tracker, $implied_from_tracker_id);
         }
 
         if ($start_date_field_id === null || ! $this->startDateFieldIdIsCorrect($tracker, $start_date_field_id)) {

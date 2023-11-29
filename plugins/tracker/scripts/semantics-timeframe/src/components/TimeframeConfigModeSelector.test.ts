@@ -28,11 +28,15 @@ import { createGettext } from "vue3-gettext";
 describe("TimeframeConfigModeSelector", () => {
     function getWrapper(
         is_implied: boolean,
+        should_send_event_in_notification: boolean,
+        has_other_trackers_implying_their_timeframes: boolean,
     ): VueWrapper<InstanceType<typeof TimeframeConfigModeSelector>> {
         return shallowMount(TimeframeConfigModeSelector, {
             global: { plugins: [createGettext({ silent: true })] },
             props: {
                 implied_from_tracker_id: is_implied ? 150 : "",
+                should_send_event_in_notification,
+                has_other_trackers_implying_their_timeframes,
             },
         });
     }
@@ -48,21 +52,51 @@ describe("TimeframeConfigModeSelector", () => {
     }
 
     it("should display the inherited mode when there is an implied_from_tracker_id", async () => {
-        const wrapper = await getWrapper(true);
+        const wrapper = await getWrapper(true, false, false);
         const select_box = getTimeframeModeSelectBox(wrapper);
 
         expect(select_box.value).toStrictEqual(MODE_IMPLIED_FROM_ANOTHER_TRACKER);
     });
 
     it("should display the based on tracker fields mode", async () => {
-        const wrapper = await getWrapper(false);
+        const wrapper = await getWrapper(false, false, false);
         const select_box = getTimeframeModeSelectBox(wrapper);
 
         expect(select_box.value).toStrictEqual(MODE_BASED_ON_TRACKER_FIELDS);
     });
 
+    it("should display the inherited mode as disabled when calendar events are used", async () => {
+        const wrapper = await getWrapper(false, true, false);
+
+        expect(
+            wrapper
+                .find("[data-test=timeframe-mode-implied-from-another-tracker]")
+                .attributes("disabled"),
+        ).toBeDefined();
+    });
+
+    it("should display the inherited mode as disabled when other trackers implying their timeframes", async () => {
+        const wrapper = await getWrapper(false, false, true);
+
+        expect(
+            wrapper
+                .find("[data-test=timeframe-mode-implied-from-another-tracker]")
+                .attributes("disabled"),
+        ).toBeDefined();
+    });
+
+    it("should not display the inherited mode as disabled when calendar events are not used", async () => {
+        const wrapper = await getWrapper(false, false, false);
+
+        expect(
+            wrapper
+                .find("[data-test=timeframe-mode-implied-from-another-tracker]")
+                .attributes("disabled"),
+        ).toBeUndefined();
+    });
+
     it("should emit an event each time a new mode is selected", async () => {
-        const wrapper = await getWrapper(false);
+        const wrapper = await getWrapper(false, false, false);
         expect(getEmittedEventValueAt(0)).toBe(MODE_BASED_ON_TRACKER_FIELDS);
 
         await wrapper

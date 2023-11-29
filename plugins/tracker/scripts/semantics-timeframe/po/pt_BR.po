@@ -41,6 +41,11 @@ msgstr ""
 msgid "Start date"
 msgstr ""
 
+msgid ""
+"The semantic cannot be inherited from another tracker because calendar "
+"events are activated in notification"
+msgstr ""
+
 msgid "The timeframe of an artifact will be"
 msgstr ""
 
@@ -54,8 +59,7 @@ msgstr ""
 
 msgid ""
 "You cannot make this semantic inherit from another tracker because some "
-"other trackers\n"
-"        are inheriting their own semantics timeframe from this one."
+"other trackers are inheriting their own semantics timeframe from this one."
 msgstr ""
 
 msgid ""

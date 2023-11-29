@@ -30,4 +30,6 @@ export interface Tracker {
 export interface TimeframeMode {
     id: string;
     name: string;
+    title: string;
+    disabled: boolean;
 }

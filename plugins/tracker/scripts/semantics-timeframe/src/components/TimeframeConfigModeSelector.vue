@@ -32,7 +32,14 @@
             required
         >
             <option value="" disabled>{{ $gettext("Choose a method...") }}</option>
-            <option v-for="mode in timeframe_modes" v-bind:value="mode.id" v-bind:key="mode.id">
+            <option
+                v-for="mode in timeframe_modes"
+                v-bind:value="mode.id"
+                v-bind:key="mode.id"
+                v-bind:disabled="mode.disabled"
+                v-bind:title="mode.title"
+                v-bind:data-test="'timeframe-mode-' + mode.id"
+            >
                 {{ mode.name }}
             </option>
         </select>
@@ -45,7 +52,11 @@ import { MODE_BASED_ON_TRACKER_FIELDS, MODE_IMPLIED_FROM_ANOTHER_TRACKER } from 
 import type { TimeframeMode } from "../type";
 import { useGettext } from "vue3-gettext";
 
-const props = defineProps<{ implied_from_tracker_id: number | "" }>();
+const props = defineProps<{
+    implied_from_tracker_id: number | "";
+    should_send_event_in_notification: boolean;
+    has_other_trackers_implying_their_timeframes: boolean;
+}>();
 
 const emit = defineEmits(["timeframe-mode-selected"]);
 
@@ -68,15 +79,39 @@ function dispatchSelection(): void {
 
 const gettext_provider = useGettext();
 
+const title_error_for_implied_option = computed((): string => {
+    if (props.should_send_event_in_notification) {
+        return gettext_provider.$gettext(
+            "The semantic cannot be inherited from another tracker because calendar events are activated in notification",
+        );
+    }
+
+    if (props.has_other_trackers_implying_their_timeframes) {
+        return gettext_provider.$gettext(
+            "You cannot make this semantic inherit from another tracker because some other trackers are inheriting their own semantics timeframe from this one.",
+        );
+    }
+
+    return "";
+});
+
+const disabled_for_implied_option = computed((): boolean => {
+    return title_error_for_implied_option.value !== "";
+});
+
 const timeframe_modes = computed((): TimeframeMode[] => {
     return [
         {
             id: MODE_BASED_ON_TRACKER_FIELDS,
             name: gettext_provider.$gettext("Based on tracker fields"),
+            disabled: false,
+            title: "",
         },
         {
             id: MODE_IMPLIED_FROM_ANOTHER_TRACKER,
             name: gettext_provider.$gettext("Inherited from another tracker"),
+            disabled: disabled_for_implied_option.value,
+            title: title_error_for_implied_option.value,
         },
     ];
 });

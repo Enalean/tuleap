@@ -23,6 +23,10 @@
         <timeframe-config-mode-selector
             v-on:timeframe-mode-selected="toggleTimeframeConfigs"
             v-bind:implied_from_tracker_id="implied_from_tracker_id"
+            v-bind:should_send_event_in_notification="should_send_event_in_notification"
+            v-bind:has_other_trackers_implying_their_timeframes="
+                has_other_trackers_implying_their_timeframes
+            "
         />
 
         <form v-bind:action="target_url" method="POST">
