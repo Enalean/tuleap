@@ -252,7 +252,7 @@ This plugin provides Mediawiki integration in Tuleap.
 Summary: MediaWiki Standalone plugin
 Group: Development/Tools
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
-Requires: mediawiki-%{name}-flavor-current = @@VERSION@@, mediawiki-%{name}-flavor-1.35 = @@VERSION@@
+Requires: mediawiki-%{name}-flavor-current-lts = @@VERSION@@, mediawiki-%{name}-flavor-1.35 = @@VERSION@@
 %description plugin-mediawiki-standalone
 %{summary}.
 
