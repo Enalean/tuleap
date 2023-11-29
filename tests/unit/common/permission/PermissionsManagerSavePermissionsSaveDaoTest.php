@@ -19,39 +19,37 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class PermissionsManagerSavePermissionsSaveDaoTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
     use GlobalResponseMock;
 
-    protected $permissions_manager;
-    protected $project;
-    protected $permission_type;
-    protected $object_id;
-    protected $permissions_dao;
-    protected $project_id;
+    protected PermissionsManager $permissions_manager;
+    protected Project $project;
+    protected string $permission_type;
+    protected string $object_id;
+    protected PermissionsDao&MockObject $permissions_dao;
+    protected int $project_id;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->project_id          = 404;
-        $this->project             = \Mockery::spy(\Project::class)->shouldReceive('getId')->andReturns($this->project_id)->getMock();
-        $this->permissions_dao     = \Mockery::spy(\PermissionsDao::class);
+        $this->project             = ProjectTestBuilder::aProject()->withId($this->project_id)->build();
+        $this->permissions_dao     = $this->createMock(\PermissionsDao::class);
         $this->permission_type     = 'FOO';
         $this->object_id           = 'BAR';
         $this->permissions_manager = new PermissionsManager($this->permissions_dao);
-        $this->permissions_dao->shouldReceive('getDa')->andReturns(\Mockery::spy(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class));
-    }
-
-    protected function expectPermissionsOnce($ugroup): void
-    {
-        $this->permissions_dao->shouldReceive('addPermission')->with($this->permission_type, $this->object_id, $ugroup)->once();
+        $ldai                      = $this->createMock(LegacyDataAccessInterface::class);
+        $this->permissions_dao->method('getDa')->willReturn($ldai);
+        $ldai->method('getErrorMessage');
     }
 
     protected function savePermissions($ugroups): void
@@ -61,19 +59,19 @@ class PermissionsManagerSavePermissionsSaveDaoTest extends \Tuleap\Test\PHPUnit\
 
     public function testItThrowsExceptionWhenClearFailed(): void
     {
-        $this->permissions_dao->shouldReceive('clearPermission')->andReturns(false);
+        $this->permissions_dao->method('clearPermission')->willReturn(false);
 
-        $this->expectException(\PermissionDaoException::class);
+        self::expectException(\PermissionDaoException::class);
 
         $this->savePermissions([ProjectUGroup::PROJECT_MEMBERS, 104]);
     }
 
     public function testItThrowsExceptionWhenAddFailed(): void
     {
-        $this->permissions_dao->shouldReceive('clearPermission')->andReturns(true);
-        $this->permissions_dao->shouldReceive('addPermission')->andReturns(false)->ordered();
+        $this->permissions_dao->method('clearPermission')->willReturn(true);
+        $this->permissions_dao->method('addPermission')->willReturn(false);
 
-        $this->expectException(\PermissionDaoException::class);
+        self::expectException(\PermissionDaoException::class);
 
         $this->savePermissions([ProjectUGroup::PROJECT_MEMBERS, 104]);
     }

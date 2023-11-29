@@ -19,171 +19,177 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class PermissionsManagerGetAuthorizedUGroupIdsForProjectTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
+    use GlobalLanguageMock;
 
+    /**
+     * @var PermissionsManager&MockObject
+     */
     private $permissions_manager;
-    private $project;
-    private $permission_type;
-    private $object_id;
+    private string $permission_type;
+    private string $object_id;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->project             = \Mockery::spy(\Project::class);
         $this->permission_type     = 'FOO';
         $this->object_id           = 'BAR';
-        $this->permissions_manager = \Mockery::mock(\PermissionsManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->permissions_manager = $this->createPartialMock(PermissionsManager::class, [
+            'getAuthorizedUgroups',
+        ]);
     }
 
-    public function testItReturnsTheListOfStaticGroups()
+    public function testItReturnsTheListOfStaticGroups(): void
     {
         $this->stubAuthorizedUgroups(['ugroup_id' => 102]);
+        $project = ProjectTestBuilder::aProject()->withAccessPrivate()->build();
 
-        $this->assertAuthorizedUGroupIdsForProjectEqual([102]);
+        $this->assertAuthorizedUGroupIdsForProjectEqual([102], $project);
     }
 
-    public function testItReturnsProjectMembersWhenProjectIsPrivateAndUGroupIsAnonymous()
+    public function testItReturnsProjectMembersWhenProjectIsPrivateAndUGroupIsAnonymous(): void
     {
-        $this->project->shouldReceive('isPublic')->andReturns(false);
+        $this->stubAuthorizedUgroups(['ugroup_id' => ProjectUGroup::ANONYMOUS]);
+        $project = ProjectTestBuilder::aProject()->withAccessPrivate()->build();
+
+        $this->assertAuthorizedUGroupIdsForProjectEqual([ProjectUGroup::PROJECT_MEMBERS], $project);
+    }
+
+    public function testItReturnsProjectMembersWhenProjectIsPrivateAndUGroupIsAuthenticated(): void
+    {
+        $this->stubAuthorizedUgroups(['ugroup_id' => ProjectUGroup::AUTHENTICATED]);
+        $project = ProjectTestBuilder::aProject()->withAccessPrivate()->build();
+
+        $this->assertAuthorizedUGroupIdsForProjectEqual([ProjectUGroup::PROJECT_MEMBERS], $project);
+    }
+
+    public function testItReturnsProjectMembersWhenProjectIsPrivateAndUGroupIsRegistered(): void
+    {
+        $this->stubAuthorizedUgroups(['ugroup_id' => ProjectUGroup::REGISTERED]);
+        $project = ProjectTestBuilder::aProject()->withAccessPrivate()->build();
+
+        $this->assertAuthorizedUGroupIdsForProjectEqual([ProjectUGroup::PROJECT_MEMBERS], $project);
+    }
+
+    public function testItReturnsRegisteredUsersWhenPlatformIsRegularProjectIsPublicAndUGroupIsAnonymous(): void
+    {
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
+        $project = ProjectTestBuilder::aProject()->withAccessPublic()->build();
         $this->stubAuthorizedUgroups(['ugroup_id' => ProjectUGroup::ANONYMOUS]);
 
-        $this->assertAuthorizedUGroupIdsForProjectEqual([ProjectUGroup::PROJECT_MEMBERS]);
+        $this->assertAuthorizedUGroupIdsForProjectEqual([ProjectUGroup::REGISTERED], $project);
     }
 
-    public function testItReturnsProjectMembersWhenProjectIsPrivateAndUGroupIsAuthenticated()
+    public function testItReturnsRegisteredUsersWhenPlatformIsRegularProjectIsPublicAndUGroupIsRegisteredUsers(): void
     {
-        $this->project->shouldReceive('isPublic')->andReturns(false);
-        $this->stubAuthorizedUgroups(['ugroup_id' => ProjectUGroup::AUTHENTICATED]);
-
-        $this->assertAuthorizedUGroupIdsForProjectEqual([ProjectUGroup::PROJECT_MEMBERS]);
-    }
-
-    public function testItReturnsProjectMembersWhenProjectIsPrivateAndUGroupIsRegistered()
-    {
-        $this->project->shouldReceive('isPublic')->andReturns(false);
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
+        $project = ProjectTestBuilder::aProject()->withAccessPublic()->build();
         $this->stubAuthorizedUgroups(['ugroup_id' => ProjectUGroup::REGISTERED]);
 
-        $this->assertAuthorizedUGroupIdsForProjectEqual([ProjectUGroup::PROJECT_MEMBERS]);
+        $this->assertAuthorizedUGroupIdsForProjectEqual([ProjectUGroup::REGISTERED], $project);
     }
 
-    public function testItReturnsRegisteredUsersWhenPlatformIsRegularProjectIsPublicAndUGroupIsAnonymous()
+    public function testItReturnsRegisteredUsersWhenPlatformIsRegularProjectIsPublicAndUGroupIsAuthenticatedUsers(): void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
-        $this->project->shouldReceive('isPublic')->andReturns(true);
-        $this->stubAuthorizedUgroups(['ugroup_id' => ProjectUGroup::ANONYMOUS]);
-
-        $this->assertAuthorizedUGroupIdsForProjectEqual([ProjectUGroup::REGISTERED]);
-    }
-
-    public function testItReturnsRegisteredUsersWhenPlatformIsRegularProjectIsPublicAndUGroupIsRegisteredUsers()
-    {
-        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
-        $this->project->shouldReceive('isPublic')->andReturns(true);
-        $this->stubAuthorizedUgroups(['ugroup_id' => ProjectUGroup::REGISTERED]);
-
-        $this->assertAuthorizedUGroupIdsForProjectEqual([ProjectUGroup::REGISTERED]);
-    }
-
-    public function testItReturnsRegisteredUsersWhenPlatformIsRegularProjectIsPublicAndUGroupIsAuthenticatedUsers()
-    {
-        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
-        $this->project->shouldReceive('isPublic')->andReturns(true);
+        $project = ProjectTestBuilder::aProject()->withAccessPublic()->build();
         $this->stubAuthorizedUgroups(['ugroup_id' => ProjectUGroup::AUTHENTICATED]);
 
-        $this->assertAuthorizedUGroupIdsForProjectEqual([ProjectUGroup::REGISTERED]);
+        $this->assertAuthorizedUGroupIdsForProjectEqual([ProjectUGroup::REGISTERED], $project);
     }
 
-    public function testItReturnsProjectMembersWhenPlatformIsRegularProjectIsPublicAndUGroupIsProjectMembers()
+    public function testItReturnsProjectMembersWhenPlatformIsRegularProjectIsPublicAndUGroupIsProjectMembers(): void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
-        $this->project->shouldReceive('isPublic')->andReturns(true);
+        $project = ProjectTestBuilder::aProject()->withAccessPublic()->build();
         $this->stubAuthorizedUgroups(['ugroup_id' => ProjectUGroup::PROJECT_MEMBERS]);
 
-        $this->assertAuthorizedUGroupIdsForProjectEqual([ProjectUGroup::PROJECT_MEMBERS]);
+        $this->assertAuthorizedUGroupIdsForProjectEqual([ProjectUGroup::PROJECT_MEMBERS], $project);
     }
 
-    public function testItReturnsAnonymousWhenPlatformIsAllowedToAnonymousProjectIsPublicAndUGroupIsAnonymous()
+    public function testItReturnsAnonymousWhenPlatformIsAllowedToAnonymousProjectIsPublicAndUGroupIsAnonymous(): void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
-        $this->project->shouldReceive('isPublic')->andReturns(true);
+        $project = ProjectTestBuilder::aProject()->withAccessPublic()->build();
         $this->stubAuthorizedUgroups(['ugroup_id' => ProjectUGroup::ANONYMOUS]);
 
-        $this->assertAuthorizedUGroupIdsForProjectEqual([ProjectUGroup::ANONYMOUS]);
+        $this->assertAuthorizedUGroupIdsForProjectEqual([ProjectUGroup::ANONYMOUS], $project);
     }
 
-    public function testItReturnsRegisteredWhenPlatformIsAllowedToAnonymousProjectIsPublicAndUGroupIsAuthenticated()
+    public function testItReturnsRegisteredWhenPlatformIsAllowedToAnonymousProjectIsPublicAndUGroupIsAuthenticated(): void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
-        $this->project->shouldReceive('isPublic')->andReturns(true);
+        $project = ProjectTestBuilder::aProject()->withAccessPublic()->build();
         $this->stubAuthorizedUgroups(['ugroup_id' => ProjectUGroup::AUTHENTICATED]);
 
-        $this->assertAuthorizedUGroupIdsForProjectEqual([ProjectUGroup::REGISTERED]);
+        $this->assertAuthorizedUGroupIdsForProjectEqual([ProjectUGroup::REGISTERED], $project);
     }
 
-    public function testItReturnsRegisteredWhenPlatformIsAllowedToAnonymousProjectIsPublicAndUGroupIsRegistered()
+    public function testItReturnsRegisteredWhenPlatformIsAllowedToAnonymousProjectIsPublicAndUGroupIsRegistered(): void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
-        $this->project->shouldReceive('isPublic')->andReturns(true);
+        $project = ProjectTestBuilder::aProject()->withAccessPublic()->build();
         $this->stubAuthorizedUgroups(['ugroup_id' => ProjectUGroup::REGISTERED]);
 
-        $this->assertAuthorizedUGroupIdsForProjectEqual([ProjectUGroup::REGISTERED]);
+        $this->assertAuthorizedUGroupIdsForProjectEqual([ProjectUGroup::REGISTERED], $project);
     }
 
-    public function testItReturnsRegisteredWhenPlatformIsRestrictedProjectIsPublicAndUGroupIsAnonymous()
+    public function testItReturnsRegisteredWhenPlatformIsRestrictedProjectIsPublicAndUGroupIsAnonymous(): void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
-        $this->project->shouldReceive('isPublic')->andReturns(true);
+        $project = ProjectTestBuilder::aProject()->withAccessPublic()->build();
         $this->stubAuthorizedUgroups(['ugroup_id' => ProjectUGroup::ANONYMOUS]);
 
-        $this->assertAuthorizedUGroupIdsForProjectEqual([ProjectUGroup::REGISTERED]);
+        $this->assertAuthorizedUGroupIdsForProjectEqual([ProjectUGroup::REGISTERED], $project);
     }
 
-    public function testItReturnsRegisteredWhenPlatformIsRestrictedProjectIsPublicAndUGroupIsRegistered()
+    public function testItReturnsRegisteredWhenPlatformIsRestrictedProjectIsPublicAndUGroupIsRegistered(): void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
-        $this->project->shouldReceive('isPublic')->andReturns(true);
+        $project = ProjectTestBuilder::aProject()->withAccessPublic()->build();
         $this->stubAuthorizedUgroups(['ugroup_id' => ProjectUGroup::REGISTERED]);
 
-        $this->assertAuthorizedUGroupIdsForProjectEqual([ProjectUGroup::REGISTERED]);
+        $this->assertAuthorizedUGroupIdsForProjectEqual([ProjectUGroup::REGISTERED], $project);
     }
 
-    public function testItReturnsAuthenticatedWhenPlatformIsRestrictedProjectIsPublicAndUGroupIsAnonymous()
+    public function testItReturnsAuthenticatedWhenPlatformIsRestrictedProjectIsPublicAndUGroupIsAnonymous(): void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
-        $this->project->shouldReceive('isPublic')->andReturns(true);
-        $this->project->shouldReceive('allowsRestricted')->andReturns(true);
+        $project = ProjectTestBuilder::aProject()->withAccessPublicIncludingRestricted()->build();
         $this->stubAuthorizedUgroups(['ugroup_id' => ProjectUGroup::ANONYMOUS]);
 
-        $this->assertAuthorizedUGroupIdsForProjectEqual([ProjectUGroup::AUTHENTICATED]);
+        $this->assertAuthorizedUGroupIdsForProjectEqual([ProjectUGroup::AUTHENTICATED], $project);
     }
 
-    public function testItReturnsAuthenticatedWhenPlatformIsRestrictedProjectIsPublicAndUGroupIsAuthenticated()
+    public function testItReturnsAuthenticatedWhenPlatformIsRestrictedProjectIsPublicAndUGroupIsAuthenticated(): void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
-        $this->project->shouldReceive('isPublic')->andReturns(true);
-        $this->project->shouldReceive('allowsRestricted')->andReturns(true);
+        $project = ProjectTestBuilder::aProject()->withAccessPublicIncludingRestricted()->build();
         $this->stubAuthorizedUgroups(['ugroup_id' => ProjectUGroup::AUTHENTICATED]);
 
-        $this->assertAuthorizedUGroupIdsForProjectEqual([ProjectUGroup::AUTHENTICATED]);
+        $this->assertAuthorizedUGroupIdsForProjectEqual([ProjectUGroup::AUTHENTICATED], $project);
     }
 
-    private function stubAuthorizedUgroups($groups)
+    private function stubAuthorizedUgroups(array $groups): void
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUgroups')->with($this->object_id, $this->permission_type, false)->andReturns(\TestHelper::arrayToDar($groups));
+        $this->permissions_manager->method('getAuthorizedUgroups')
+            ->with($this->object_id, $this->permission_type, false)
+            ->willReturn(TestHelper::arrayToDar($groups));
     }
 
-    private function assertAuthorizedUGroupIdsForProjectEqual($groups)
+    private function assertAuthorizedUGroupIdsForProjectEqual(array $groups, Project $project): void
     {
         $this->assertEquals(
             $groups,
-            $this->permissions_manager->getAuthorizedUGroupIdsForProject($this->project, $this->object_id, $this->permission_type)
+            $this->permissions_manager->getAuthorizedUGroupIdsForProject($project, $this->object_id, $this->permission_type)
         );
     }
 }
