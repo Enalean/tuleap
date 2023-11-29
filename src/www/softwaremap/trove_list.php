@@ -180,7 +180,7 @@ if ($special_cat === 'none') {
 
 $limit           = TroveCatFactory::BROWSELIMIT;
 $offset          = (int) $request->getValidated('offset', 'uint', 0);
-$query_projlist .= " LIMIT $limit OFFSET $offset ";
+$query_projlist .= " LIMIT " . db_ei($limit) . " OFFSET " . db_ei($offset) . " ";
 
 $res_grp = db_query($query_projlist);
 

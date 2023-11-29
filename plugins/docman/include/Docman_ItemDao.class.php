@@ -69,7 +69,7 @@ class Docman_ItemDao extends DataAccessObject
     public function searchById($id, $params = [])
     {
         $_id = (int) $id;
-        return $this->_searchWithCurrentVersion(' i.item_id = ' . $_id, '', '', [], $params);
+        return $this->_searchWithCurrentVersion(' i.item_id = ' . $this->da->escapeInt($_id), '', '', [], $params);
     }
 
     public function searchByIdList($idList)
@@ -165,7 +165,7 @@ class Docman_ItemDao extends DataAccessObject
         // Where clause
         // Select on group_id
         $_id       = (int) $id;
-        $sql_where = ' i.group_id = ' . $_id;
+        $sql_where = ' i.group_id = ' . $this->da->escapeInt($_id);
 
         // Order clause
         $sql_order = '';
@@ -375,14 +375,14 @@ class Docman_ItemDao extends DataAccessObject
      */
     public function searchExpandedUserPrefs($group_id, $user_id)
     {
-        $pref_base = PLUGIN_DOCMAN_EXPAND_FOLDER_PREF . '_' . ((int) $group_id);
+        $pref_base = PLUGIN_DOCMAN_EXPAND_FOLDER_PREF . '_' . $this->da->escapeInt((int) $group_id);
 
         $sql = sprintf(
             'SELECT preference_name, preference_value'
                        . ' FROM user_preferences'
                        . ' WHERE user_id=%d'
                        . ' AND preference_name LIKE "%s"',
-            $user_id,
+            $this->da->escapeInt($user_id),
             $pref_base . '_%'
         );
 
@@ -459,11 +459,11 @@ class Docman_ItemDao extends DataAccessObject
         $argArray = [];
 
         if ($parent_id !== null) {
-            $argArray[] = 'parent_id=' . ((int) $parent_id);
+            $argArray[] = 'parent_id=' . $this->da->escapeInt((int) $parent_id);
         }
 
         if ($group_id !== null) {
-            $argArray[] = 'group_id=' . ((int) $group_id);
+            $argArray[] = 'group_id=' . $this->da->escapeInt((int) $group_id);
         }
 
         if ($title !== null) {
@@ -475,23 +475,23 @@ class Docman_ItemDao extends DataAccessObject
         }
 
         if ($create_date !== null) {
-            $argArray[] = 'create_date=' . ((int) $create_date);
+            $argArray[] = 'create_date=' . $this->da->escapeInt((int) $create_date);
         }
 
         if ($update_date !== null) {
-            $argArray[] = 'update_date=' . ((int) $update_date);
+            $argArray[] = 'update_date=' . $this->da->escapeInt((int) $update_date);
         }
 
         if ($user_id !== null) {
-            $argArray[] = 'user_id=' . ((int) $user_id);
+            $argArray[] = 'user_id=' . $this->da->escapeInt((int) $user_id);
         }
 
         if ($rank !== null) {
-            $argArray[] = '`rank`=' . ((int) $rank);
+            $argArray[] = '`rank`=' . $this->da->escapeInt((int) $rank);
         }
 
         if ($item_type !== null) {
-            $argArray[] = 'item_type=' . ((int) $item_type);
+            $argArray[] = 'item_type=' . $this->da->escapeInt((int) $item_type);
         }
 
         if ($link_url !== null) {
@@ -503,12 +503,12 @@ class Docman_ItemDao extends DataAccessObject
         }
 
         if ($file_is_embedded !== null) {
-            $argArray[] = 'file_is_embedded=' . ((int) $file_is_embedded);
+            $argArray[] = 'file_is_embedded=' . $this->da->escapeInt((int) $file_is_embedded);
         }
 
         $sql = 'UPDATE plugin_docman_item'
             . ' SET ' . implode(', ', $argArray)
-            . ' WHERE item_id=' . ((int) $item_id);
+            . ' WHERE item_id=' . $this->da->escapeInt((int) $item_id);
 
         $inserted = $this->update($sql);
         if ($inserted) {
@@ -561,7 +561,7 @@ class Docman_ItemDao extends DataAccessObject
         $dar = $this->retrieve($sql);
         if ($dar && ! $dar->isError() && $dar->valid()) {
             $item = $dar->current();
-            $sql  = 'UPDATE plugin_docman_item SET update_date = ' . $item['update_date'] . ' WHERE item_id = ' . $item['parent_id'];
+            $sql  = 'UPDATE plugin_docman_item SET update_date = ' . $this->da->escapeInt($item['update_date']) . ' WHERE item_id = ' . $this->da->escapeInt($item['parent_id']);
             $this->update($sql);
         }
     }
@@ -589,7 +589,7 @@ class Docman_ItemDao extends DataAccessObject
     {
         $sql = sprintf(
             "DELETE FROM plugin_docman_item WHERE item_id=%d",
-            $item_id
+            $this->da->escapeInt($item_id)
         );
 
         $deleted = $this->update($sql);
@@ -617,7 +617,7 @@ class Docman_ItemDao extends DataAccessObject
                        ' AND r.group_id = %d' .
                        $cFilters .
                        ' LIMIT 2',
-            $groupId
+            $this->da->escapeInt($groupId)
         );
         $dar      = $this->retrieve($sql);
         return $dar;
@@ -643,7 +643,7 @@ class Docman_ItemDao extends DataAccessObject
                                ' FROM plugin_docman_item' .
                                ' WHERE parent_id = %d',
                     $_select,
-                    $parentId
+                    $this->da->escapeInt($parentId)
                 );
                 $dar     = $this->retrieve($sql);
                 if ($dar && $dar->valid()) {
@@ -669,7 +669,7 @@ class Docman_ItemDao extends DataAccessObject
                                    '  AND i1.`rank` %s i2.`rank`' .
                                    ' ORDER BY i1.`rank` %s' .
                                    ' LIMIT 1',
-                        $item_id,
+                        $this->da->escapeInt($item_id),
                         $op,
                         $order
                     );
@@ -682,9 +682,9 @@ class Docman_ItemDao extends DataAccessObject
                                        ' SET i1.`rank` = i2.`rank`, i2.`rank` = %d' .
                                        ' WHERE i1.item_id = %d ' .
                                        '  AND i2.item_id = %d',
-                            $row['rank'],
-                            $row['item_id'],
-                            $item_id
+                            $this->da->escapeInt($row['rank']),
+                            $this->da->escapeInt($row['item_id']),
+                            $this->da->escapeInt($item_id)
                         );
                         $res = $this->update($sql);
                         //$can_update = false;
@@ -700,8 +700,8 @@ class Docman_ItemDao extends DataAccessObject
                                ' SET `rank` = `rank` + 1 ' .
                                ' WHERE  parent_id = %d ' .
                                '  AND `rank` >= %d',
-                    $parentId,
-                    $rank
+                    $this->da->escapeInt($parentId),
+                    $this->da->escapeInt($rank)
                 );
                 $this->update($sql);
                 break;
@@ -800,7 +800,7 @@ class Docman_ItemDao extends DataAccessObject
                            . ' WHERE delete_date IS NULL'
                            . ' AND parent_id IN (%s)'
                            . ' AND item_type = %d',
-                implode(',', $parentIds),
+                $this->da->escapeIntImplode($parentIds),
                 PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
             );
             return $this->retrieve($sql);
@@ -818,7 +818,7 @@ class Docman_ItemDao extends DataAccessObject
      */
     public function searchChildren($parentIds, $params)
     {
-        $where = " i.parent_id in (" . implode(',', $parentIds) . ")";
+        $where = " i.parent_id in (" . $this->da->escapeIntImplode($parentIds) . ")";
         return $this->_searchWithCurrentVersion($where, '', '', [], $params);
     }
 
@@ -838,8 +838,8 @@ class Docman_ItemDao extends DataAccessObject
                        '   AND i.obsolescence_date <= %d)' .
                        ' AND g.group_id = i.group_id' .
                        ' AND g.status = "A"',
-            $tsStart,
-            $tsEnd
+            $this->da->escapeInt($tsStart),
+            $this->da->escapeInt($tsEnd)
         );
         return $this->retrieve($sql);
     }

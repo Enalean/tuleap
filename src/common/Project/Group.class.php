@@ -225,6 +225,9 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      *
      * @psalm-ignore-nullable-return
      * @psalm-mutation-free
+     *
+     * @psalm-taint-escape file
+     * @psalm-taint-escape ssrf
      */
     public function getID()
     {

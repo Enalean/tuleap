@@ -259,7 +259,7 @@ class WikiCloner
         }
 
         $ids    = [];
-        $result = db_query(sprintf("SELECT id, name FROM wiki_attachment WHERE group_id=%d", $this->template_id));
+        $result = db_query(sprintf("SELECT id, name FROM wiki_attachment WHERE group_id=%d", db_ei($this->template_id)));
         while ($row = db_fetch_array($result)) {
             $id       = $row['id'];
             $name     = $row['name'];

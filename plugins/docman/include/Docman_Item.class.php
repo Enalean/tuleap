@@ -68,7 +68,10 @@ class Docman_Item
         $this->id = (int) $id;
     }
 
-    public function getId()
+    /**
+     * @psalm-taint-escape file
+     */
+    public function getId(): ?int
     {
         return $this->id;
     }

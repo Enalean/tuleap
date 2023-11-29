@@ -231,7 +231,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
             }
 
             if ($id || $title) {
-                $sql  = "UPDATE plugin_graphontrackersv5_widget_chart SET " . $title . ", " . $id . " WHERE owner_id = " . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . (int) $request->get('content_id');
+                $sql  = "UPDATE plugin_graphontrackersv5_widget_chart SET " . $title . ", " . $id . " WHERE owner_id = " . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . db_ei((int) $request->get('content_id'));
                 $res  = db_query($sql);
                 $done = true;
             }

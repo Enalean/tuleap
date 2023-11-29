@@ -742,34 +742,6 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
     }
 
     /**
-     * loginAs allows the siteadmin to log as someone else
-     *
-     * @param string $name
-     *
-     * @return string a session hash
-     */
-    public function loginAs($name)
-    {
-        if (! $this->getCurrentUser()->isSuperUser()) {
-            throw new UserNotAuthorizedException();
-        }
-
-        $user_login_as = $this->findUser($name);
-        if (! $user_login_as) {
-            throw new UserNotExistException();
-        }
-        $status_manager = new User_UserStatusManager();
-        try {
-            $status_manager->checkStatus($user_login_as);
-            $request         = HTTPRequest::instance();
-            $session_manager = $this->getSessionManager();
-            return $session_manager->createSession($user_login_as, $request, $request->getFromServer('REQUEST_TIME'));
-        } catch (User_StatusInvalidException $exception) {
-            throw new UserNotActiveException();
-        }
-    }
-
-    /**
      * Open a session for user
      *
      * @throws UserNotExistException

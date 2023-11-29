@@ -108,7 +108,7 @@ function ugroup_db_get_members(
         $user_ids_sql = ' AND user.user_id IN (' . $data_access->escapeIntImplode($user_ids) . ')';
     }
 
-    $ugroup_id = (int) $ugroup_id;
+    $ugroup_id = $data_access->escapeInt((int) $ugroup_id);
     $sql       = "(SELECT user.user_id, $sqlname, user.realname, user.user_name, user.email, user.status
             FROM ugroup_user, user
             WHERE user.user_id = ugroup_user.user_id
@@ -343,6 +343,7 @@ function ugroup_db_get_dynamic_members(
         $user_status .= ' AND user.user_id IN (' . $data_access->escapeIntImplode($user_ids) . ')';
     }
     $group_id = $data_access->escapeInt($group_id);
+    $atid     = $data_access->escapeInt($atid);
     // Special Cases
     if ($ugroup_id == $GLOBALS['UGROUP_NONE']) {
         // Empty group

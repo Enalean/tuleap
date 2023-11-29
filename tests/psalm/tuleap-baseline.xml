@@ -7185,6 +7185,7 @@
       <code>update_monitoring</code>
     </MissingReturnType>
     <PossiblyNullArgument>
+      <code><![CDATA[$newParentItem->getId()]]></code>
       <code>$parentItem</code>
     </PossiblyNullArgument>
     <PossiblyUndefinedArrayOffset>
@@ -7345,6 +7346,9 @@
       <code>getItemMapping</code>
       <code>visitDocument</code>
     </MissingReturnType>
+    <PossiblyNullArgument>
+      <code><![CDATA[$original_item->getId()]]></code>
+    </PossiblyNullArgument>
   </file>
   <file src="plugins/docman/include/Docman_Controller.class.php">
     <DeprecatedFunction>
@@ -8106,7 +8110,6 @@
       <code>getEventManager</code>
       <code>getGroupId</code>
       <code>getHardCodedMetadataValue</code>
-      <code>getId</code>
       <code>getMetadataFromLabel</code>
       <code>getMetadataIterator</code>
       <code>getObsolescenceDate</code>
@@ -8186,6 +8189,34 @@
       <code>escapeInt</code>
       <code>escapeInt</code>
       <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeIntImplode</code>
+      <code>escapeIntImplode</code>
       <code>getRow</code>
       <code>isError</code>
       <code>isError</code>
@@ -8413,6 +8444,9 @@
       <code>$group_id</code>
       <code>new Docman_Version($version)</code>
     </InvalidArgument>
+    <InvalidArrayOffset>
+      <code><![CDATA[[$rootItem->getId() => &$rootItem]]]></code>
+    </InvalidArrayOffset>
     <InvalidNullableReturnType>
       <code>Docman_Item</code>
     </InvalidNullableReturnType>
@@ -8543,6 +8577,17 @@
     <PossiblyInvalidArgument>
       <code><![CDATA[$user->getId()]]></code>
     </PossiblyInvalidArgument>
+    <PossiblyNullArgument>
+      <code><![CDATA[$item->getId()]]></code>
+      <code><![CDATA[$item->getId()]]></code>
+      <code><![CDATA[$item->getId()]]></code>
+      <code><![CDATA[$item->getId()]]></code>
+    </PossiblyNullArgument>
+    <PossiblyNullArrayOffset>
+      <code>$itemList</code>
+      <code>$itemList</code>
+      <code>$orphans</code>
+    </PossiblyNullArrayOffset>
     <PossiblyNullReference>
       <code>addItem</code>
       <code>getGroupId</code>
@@ -8765,6 +8810,9 @@
     <MissingPropertyType>
       <code>$_cachedItem</code>
     </MissingPropertyType>
+    <PossiblyNullArgument>
+      <code><![CDATA[$item->getId()]]></code>
+    </PossiblyNullArgument>
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
     </PossiblyUndefinedArrayOffset>
@@ -11410,6 +11458,9 @@
     <MissingReturnType>
       <code>setPermission</code>
     </MissingReturnType>
+    <PossiblyNullArgument>
+      <code><![CDATA[$folder->getId()]]></code>
+    </PossiblyNullArgument>
     <RedundantCastGivenDocblockType>
       <code>(int) $ugroup_id</code>
     </RedundantCastGivenDocblockType>
@@ -11443,6 +11494,12 @@
     <MissingParamType>
       <code>$params</code>
     </MissingParamType>
+  </file>
+  <file src="plugins/docman/include/REST/v1/CopyItem/BeforeCopyVisitor.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$destination->getId()]]></code>
+      <code><![CDATA[$destination->getId()]]></code>
+    </PossiblyNullArgument>
   </file>
   <file src="plugins/docman/include/REST/v1/CreatedItemRepresentation.php">
     <InvalidDocblock>
@@ -11540,6 +11597,15 @@
     <MissingReturnType>
       <code>checkDocumentIsNotBeingUploaded</code>
     </MissingReturnType>
+    <PossiblyNullArgument>
+      <code><![CDATA[$item->getId()]]></code>
+      <code><![CDATA[$parent_item->getId()]]></code>
+      <code><![CDATA[$parent_item->getId()]]></code>
+      <code><![CDATA[$parent_item->getId()]]></code>
+      <code><![CDATA[$parent_item->getId()]]></code>
+      <code><![CDATA[$parent_item->getId()]]></code>
+      <code><![CDATA[$parent_item->getId()]]></code>
+    </PossiblyNullArgument>
   </file>
   <file src="plugins/docman/include/REST/v1/DocmanItemsRequestBuilder.php">
     <MissingReturnType>
@@ -11631,6 +11697,12 @@
       <code>$content</code>
     </MissingPropertyType>
   </file>
+  <file src="plugins/docman/include/REST/v1/EmbeddedFiles/VersionRepresentationCollectionBuilder.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$item->getId()]]></code>
+      <code><![CDATA[$item->getId()]]></code>
+    </PossiblyNullArgument>
+  </file>
   <file src="plugins/docman/include/REST/v1/Empties/DocmanEmptyPOSTRepresentation.php">
     <InvalidDocblock>
       <code>public $copy;</code>
@@ -11686,6 +11758,9 @@
     <MissingReturnType>
       <code>checkItemCanHaveSubitems</code>
     </MissingReturnType>
+    <PossiblyNullArgument>
+      <code><![CDATA[$item->getId()]]></code>
+    </PossiblyNullArgument>
   </file>
   <file src="plugins/docman/include/REST/v1/Folders/SearchRepresentation.php">
     <InvalidDocblock>
@@ -11814,6 +11889,12 @@
       <code>$link_url</code>
     </MissingPropertyType>
   </file>
+  <file src="plugins/docman/include/REST/v1/Links/VersionRepresentationCollectionBuilder.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$item->getId()]]></code>
+      <code><![CDATA[$item->getId()]]></code>
+    </PossiblyNullArgument>
+  </file>
   <file src="plugins/docman/include/REST/v1/Metadata/CustomMetadataRepresentationRetriever.php">
     <DeprecatedMethod>
       <code>getFromLabel</code>
@@ -11851,6 +11932,9 @@
       <code><![CDATA[$representation->metadata]]></code>
       <code><![CDATA[$representation->status]]></code>
     </MissingPropertyType>
+    <PossiblyNullArgument>
+      <code>$item_id</code>
+    </PossiblyNullArgument>
   </file>
   <file src="plugins/docman/include/REST/v1/Metadata/MetadataUpdatorBuilder.php">
     <PossiblyInvalidArgument>
@@ -11882,6 +11966,20 @@
     <MissingPropertyType>
       <code>$metadata</code>
     </MissingPropertyType>
+  </file>
+  <file src="plugins/docman/include/REST/v1/MoveItem/BeforeMoveVisitor.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$destination->getId()]]></code>
+      <code><![CDATA[$destination_folder->getId()]]></code>
+      <code><![CDATA[$destination_folder->getId()]]></code>
+      <code><![CDATA[$folder_to_move->getId()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="plugins/docman/include/REST/v1/MoveItem/DocmanItemMover.php">
+    <PossiblyNullArgument>
+      <code>$item_to_move_id</code>
+      <code>$item_to_move_id</code>
+    </PossiblyNullArgument>
   </file>
   <file src="plugins/docman/include/REST/v1/NullResponseFeedbackWrapper.php">
     <MissingParamType>
@@ -11989,6 +12087,12 @@
       <code>public $permissions_for_groups;</code>
       <code>public $root_item;</code>
     </InvalidDocblock>
+  </file>
+  <file src="plugins/docman/include/REST/v1/VersionRepresentationCollectionBuilder.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$item->getId()]]></code>
+      <code><![CDATA[$item->getId()]]></code>
+    </PossiblyNullArgument>
   </file>
   <file src="plugins/docman/include/REST/v1/Wiki/DocmanWikiPOSTRepresentation.php">
     <InvalidDocblock>
@@ -12109,6 +12213,9 @@
     <MissingReturnType>
       <code>create</code>
     </MissingReturnType>
+    <PossiblyNullArgument>
+      <code><![CDATA[$parent_item->getId()]]></code>
+    </PossiblyNullArgument>
   </file>
   <file src="plugins/docman/include/Upload/Document/DocumentUploadCleaner.php">
     <MissingReturnType>
@@ -12128,7 +12235,17 @@
       <code>searchVersionOngoingUploadItemIDs</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/docman/include/Upload/Version/VersionOngoingUploadRetriever.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$item->getId()]]></code>
+      <code><![CDATA[$item->getId()]]></code>
+    </PossiblyNullArgument>
+  </file>
   <file src="plugins/docman/include/Upload/Version/VersionToUploadCreator.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$item->getId()]]></code>
+      <code><![CDATA[$item->getId()]]></code>
+    </PossiblyNullArgument>
     <RedundantCast>
       <code>(int) $file_size</code>
       <code>(int) $file_size</code>
@@ -12157,6 +12274,8 @@
       <code>$value</code>
     </MissingParamType>
     <PossiblyNullArgument>
+      <code><![CDATA[$item->getId()]]></code>
+      <code><![CDATA[$item->getId()]]></code>
       <code>$node</code>
       <code>$node_for_versions</code>
       <code>$properties</code>
@@ -12591,6 +12710,9 @@
     <MissingTemplateParam>
       <code>ItemVisitor</code>
     </MissingTemplateParam>
+    <PossiblyNullArgument>
+      <code><![CDATA[$item->getId()]]></code>
+    </PossiblyNullArgument>
     <UndefinedThisPropertyAssignment>
       <code><![CDATA[$this->dPm]]></code>
       <code><![CDATA[$this->if]]></code>
@@ -12730,6 +12852,9 @@
       <code>visitLink</code>
       <code>visitWiki</code>
     </MissingReturnType>
+    <PossiblyNullArgument>
+      <code><![CDATA[$srcItem->getId()]]></code>
+    </PossiblyNullArgument>
   </file>
   <file src="plugins/docman/include/view/Docman_View_ItemDetailsSectionApproval.class.php">
     <ArgumentTypeCoercion>
@@ -13657,6 +13782,19 @@
     <MissingTemplateParam>
       <code>ItemVisitor</code>
     </MissingTemplateParam>
+  </file>
+  <file src="plugins/document/include/DownloadFolderAsZip/ZipStreamMailNotificationSender.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$folder->getId()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="plugins/document/include/DownloadFolderAsZip/ZipStreamerLoggingHelper.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$folder->getId()]]></code>
+      <code><![CDATA[$item->getId()]]></code>
+      <code><![CDATA[$item->getId()]]></code>
+      <code><![CDATA[$item->getId()]]></code>
+    </PossiblyNullArgument>
   </file>
   <file src="plugins/document/include/Tree/DocumentTreeController.php">
     <MissingReturnType>
@@ -20646,6 +20784,7 @@
       <code><![CDATA[db_ei($this->owner_id)]]></code>
       <code><![CDATA[db_ei($this->owner_id)]]></code>
       <code><![CDATA[db_ei($this->owner_id)]]></code>
+      <code><![CDATA[db_ei((int) $request->get('content_id'))]]></code>
       <code><![CDATA[db_es($this->owner_type)]]></code>
       <code><![CDATA[db_es($this->owner_type)]]></code>
       <code><![CDATA[db_es($this->owner_type)]]></code>
@@ -25396,10 +25535,34 @@
       <code>$requested_scopes</code>
     </ArgumentTypeCoercion>
   </file>
+  <file src="plugins/onlyoffice/include/Download/OnlyOfficeDownloadDocumentTokenGeneratorDBStore.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$document->item->getId()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="plugins/onlyoffice/include/Open/DocmanFileLastVersionToOnlyOfficeDocumentTransformer.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$file_last_version->item->getId()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="plugins/onlyoffice/include/Open/Editor/OnlyOfficeDocumentConfig.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$document->item->getId()]]></code>
+    </PossiblyNullArgument>
+  </file>
   <file src="plugins/onlyoffice/include/Save/OnlyOfficeCallbackDocumentSaver.php">
     <ArgumentTypeCoercion>
       <code>$co_authors</code>
     </ArgumentTypeCoercion>
+    <PossiblyNullArgument>
+      <code>$item_id</code>
+      <code>$item_id</code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="plugins/onlyoffice/include/Save/OnlyOfficeSaveDocumentTokenGeneratorDBStore.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$document->item->getId()]]></code>
+    </PossiblyNullArgument>
   </file>
   <file src="plugins/onlyoffice/tests/unit/Stubs/IRetrieveDocumentServersStub.php">
     <ArgumentTypeCoercion>
@@ -26645,7 +26808,6 @@
     <UndefinedConstant>
       <code>ImageFileHTMLPath</code>
       <code>SubmitLegend</code>
-      <code>selectCriteria</code>
     </UndefinedConstant>
   </file>
   <file src="plugins/projectlinks/include/projectlinksPlugin.php">
@@ -26667,9 +26829,13 @@
       <code>db_ei($group_id)</code>
       <code>db_ei($group_id)</code>
       <code>db_ei($group_id)</code>
+      <code>db_ei($group_id)</code>
+      <code>db_ei($group_id)</code>
+      <code>db_ei($group_id)</code>
       <code>db_ei($link_id)</code>
       <code>db_ei($link_id)</code>
       <code>db_ei($link_id)</code>
+      <code>db_ei($link_type_id)</code>
       <code>db_ei($link_type_id)</code>
       <code>db_ei($link_type_id)</code>
       <code>db_ei($link_type_id)</code>
@@ -26783,7 +26949,7 @@
                         description,
                         uri_plus
                     ) VALUES (
-                    $group_id,
+                    " . db_ei($group_id) . ",
                         '" . db_es($row['name']) . "',
                         '" . db_es($row['reverse_name']) . "',
                         '" . db_es($row['description']) . "',
@@ -26796,7 +26962,7 @@
                     description,
                     uri_plus
                 ) VALUES (
-                $group_id,
+                " . db_ei($group_id) . ",
                     '" . db_es($row['name']) . "',
                     '" . db_es($row['reverse_name']) . "',
                     '" . db_es($row['description']) . "',
@@ -62290,6 +62456,7 @@
   </file>
   <file src="src/common/User/User.class.php">
     <DeprecatedFunction>
+      <code>db_ei($id)</code>
       <code>db_fetch_array($db_res)</code>
       <code>db_fetch_array($res)</code>
       <code>db_numrows($db_res)</code>
@@ -65530,6 +65697,9 @@
     </DeprecatedFunction>
     <DeprecatedMethod>
       <code>current</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
       <code>escapeInt</code>
       <code>escapeInt</code>
       <code>escapeInt</code>
@@ -74328,6 +74498,9 @@
     </MissingReturnType>
   </file>
   <file src="src/common/wiki/WikiServiceAdmin.class.php">
+    <InvalidScalarArgument>
+      <code><![CDATA[$this->gid]]></code>
+    </InvalidScalarArgument>
     <MissingParamType>
       <code>$id</code>
     </MissingParamType>
@@ -74693,6 +74866,7 @@
       <code><![CDATA[db_ei($this->template_id)]]></code>
       <code><![CDATA[db_ei($this->template_id)]]></code>
       <code><![CDATA[db_ei($this->template_id)]]></code>
+      <code><![CDATA[db_ei($this->template_id)]]></code>
       <code>db_ei($tmpl_id)</code>
       <code>db_ei($ugid)</code>
       <code>db_ei($value)</code>
@@ -74797,7 +74971,7 @@
       <code><![CDATA[db_query(sprintf("SELECT id FROM wiki_attachment WHERE group_id=%d AND name='%s'", $this->group_id, $this->escapeString($name)))]]></code>
       <code><![CDATA[db_query(sprintf("SELECT id from wiki_attachment_revision WHERE attachment_id=%d AND revision=%d", db_ei($new_id), db_ei($row['revision'])))]]></code>
       <code><![CDATA[db_query(sprintf("SELECT id from wiki_page where pagename='%s' and group_id=%d", db_es($pagename), $this->group_id))]]></code>
-      <code><![CDATA[db_query(sprintf("SELECT id, name FROM wiki_attachment WHERE group_id=%d", $this->template_id))]]></code>
+      <code><![CDATA[db_query(sprintf("SELECT id, name FROM wiki_attachment WHERE group_id=%d", db_ei($this->template_id)))]]></code>
       <code><![CDATA[db_query(sprintf("SELECT id, pagename FROM wiki_page WHERE group_id=%d", $this->template_id))]]></code>
       <code><![CDATA[db_query(sprintf("SELECT id, wiki_name, wiki_link, description, rank, language_id FROM wiki_group_list WHERE group_id=%d", $this->template_id))]]></code>
       <code><![CDATA[db_query(sprintf("SELECT is_used FROM service WHERE group_id=%d AND short_name='%s'", $this->group_id, $this->escapeString("wiki")))]]></code>
@@ -75732,6 +75906,11 @@
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyUndefinedArrayOffset>
+  </file>
+  <file src="src/www/empty2.php">
+    <ForbiddenCode>
+      <code><![CDATA[var_dump(version_compare("1.39.5", "1.39", '>'))]]></code>
+    </ForbiddenCode>
   </file>
   <file src="src/www/file/admin/editproc.php">
     <DeprecatedFunction>
@@ -77594,6 +77773,8 @@
     </DeprecatedFunction>
     <DeprecatedMethod>
       <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
       <code>escapeIntImplode</code>
       <code>escapeIntImplode</code>
       <code>groupAddHistory</code>
@@ -77917,12 +78098,14 @@
   </file>
   <file src="src/www/service/index.php">
     <DeprecatedFunction>
+      <code><![CDATA[db_ei((int) $request->get('group_id'))]]></code>
+      <code><![CDATA[db_ei((int) $request->get('id'))]]></code>
       <code>db_fetch_array($db_res)</code>
       <code>db_numrows($db_res)</code>
       <code><![CDATA[db_query("SELECT *
         FROM service
-        WHERE group_id   = " . (int) $request->get('group_id') . "
-          AND service_id = " . (int) $request->get('id') . "
+        WHERE group_id   = " . db_ei((int) $request->get('group_id')) . "
+          AND service_id = " . db_ei((int) $request->get('id')) . "
           AND is_used    = 1")]]></code>
     </DeprecatedFunction>
   </file>
@@ -77933,6 +78116,8 @@
       <code>db_ei($form_cat)</code>
       <code>db_ei($form_cat)</code>
       <code>db_ei($form_cat)</code>
+      <code>db_ei($limit)</code>
+      <code>db_ei($offset)</code>
       <code>db_ei_implode($prj_list_categorized)</code>
       <code>db_fetch_array($res_count)</code>
       <code>db_fetch_array($res_grp)</code>
