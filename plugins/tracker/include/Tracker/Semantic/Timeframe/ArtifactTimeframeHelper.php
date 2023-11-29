@@ -86,7 +86,7 @@ class ArtifactTimeframeHelper
         $end_date = new DateTime();
         $end_date->setTimestamp((int) $date_period->getEndDate());
 
-        return $end_date->format($GLOBALS['Language']->getText('system', 'datefmt_short'));
+        return $end_date->format($GLOBALS['Language']->getText('system', 'datefmt'));
     }
 
     public function getDurationArtifactHelperForReadOnlyView(PFUser $user, Artifact $artifact): string
