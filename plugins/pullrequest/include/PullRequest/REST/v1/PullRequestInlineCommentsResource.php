@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\REST\v1;
 
+use BackendLogger;
 use Luracast\Restler\RestException;
 use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\Git\Permissions\FineGrainedDao;
@@ -34,6 +35,7 @@ use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\FeatureFlagEditComments;
 use Tuleap\PullRequest\InlineComment\InlineCommentRetriever;
+use Tuleap\PullRequest\Notification\PullRequestNotificationSupport;
 use Tuleap\PullRequest\PullRequestRetriever;
 use Tuleap\PullRequest\REST\v1\InlineComment\InlineCommentPATCHRepresentation;
 use Tuleap\PullRequest\REST\v1\InlineComment\InlineCommentRepresentation;
@@ -105,7 +107,8 @@ final class PullRequestInlineCommentsResource extends AuthenticatedResource
             $inline_comment_dao,
             $git_repository_factory,
             new \ReferenceManager(),
-            new SingleRepresentationBuilder($purifier, $markdown_interpreter)
+            new SingleRepresentationBuilder($purifier, $markdown_interpreter),
+            PullRequestNotificationSupport::buildDispatcher(new BackendLogger())
         );
         return $handler->handle($current_user, $id, $comment_data, new \DateTimeImmutable())
             ->match(

@@ -46,6 +46,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ContentInterpretorStub;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Test\Stubs\ExtractAndSaveCrossReferencesStub;
 
 final class PATCHHandlerTest extends TestCase
@@ -94,7 +95,8 @@ final class PATCHHandlerTest extends TestCase
             $this->comment_saver,
             $this->repository_retriever,
             $this->cross_references_saver,
-            new SingleRepresentationBuilder(\Codendi_HTMLPurifier::instance(), ContentInterpretorStub::build())
+            new SingleRepresentationBuilder(\Codendi_HTMLPurifier::instance(), ContentInterpretorStub::build()),
+            EventDispatcherStub::withIdentityCallback()
         );
         return $handler->handle(
             $this->comment_author,

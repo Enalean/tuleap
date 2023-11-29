@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\REST\v1\InlineComment;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Git\RetrieveGitRepository;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
@@ -37,6 +38,7 @@ use Tuleap\PullRequest\InlineComment\InlineComment;
 use Tuleap\PullRequest\InlineComment\InlineCommentNotFoundFault;
 use Tuleap\PullRequest\InlineComment\InlineCommentRetriever;
 use Tuleap\PullRequest\InlineComment\InlineCommentSaver;
+use Tuleap\PullRequest\InlineComment\Notification\UpdatedInlineCommentEvent;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\PullRequestRetriever;
@@ -53,6 +55,7 @@ final class PATCHHandler
         private readonly RetrieveGitRepository $repository_retriever,
         private readonly ExtractAndSaveCrossReferences $cross_references_saver,
         private readonly SingleRepresentationBuilder $representation_builder,
+        private readonly EventDispatcherInterface $event_dispatcher,
     ) {
     }
 
@@ -93,6 +96,9 @@ final class PATCHHandler
 
                         $updated_comment = InlineComment::buildWithNewContent($comment, $comment_data->content, $comment_edition_date);
                         $this->comment_saver->saveUpdatedComment($updated_comment);
+
+                        $this->event_dispatcher->dispatch(UpdatedInlineCommentEvent::fromInlineComment($updated_comment));
+
                         $this->cross_references_saver->extractCrossRef(
                             $updated_comment->getContent(),
                             $pull_request->getId(),

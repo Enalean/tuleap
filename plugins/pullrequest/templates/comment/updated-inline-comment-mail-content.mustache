@@ -1,0 +1,14 @@
+<p>
+    {{# dgettext }}
+        tuleap-pullrequest |
+        %s updated their comment on %s: %s in %s: |
+        <a href="{{ comment_author_profile_url }}">{{ comment_author_name }}</a>|
+        <a href="{{ pull_request_url }}">#{{ pull_request_id }}</a> |
+        {{ pull_request_title }} |
+        {{ file_path }}
+    {{/ dgettext }}
+</p>
+<pre style="color:#555"><code>{{ code_context }}</code></pre>
+<p>
+    {{{ purified_and_formatted_inline_comment }}}
+</p>

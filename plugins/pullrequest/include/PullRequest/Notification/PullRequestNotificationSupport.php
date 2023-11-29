@@ -53,6 +53,8 @@ use Tuleap\PullRequest\InlineComment\InlineCommentRetriever;
 use Tuleap\PullRequest\InlineComment\Notification\InlineCommentCodeContextExtractor;
 use Tuleap\PullRequest\InlineComment\Notification\PullRequestNewInlineCommentEvent;
 use Tuleap\PullRequest\InlineComment\Notification\PullRequestNewInlineCommentNotificationToProcessBuilder;
+use Tuleap\PullRequest\InlineComment\Notification\UpdatedInlineCommentEvent;
+use Tuleap\PullRequest\InlineComment\Notification\UpdatedInlineCommentNotificationToProcessBuilder;
 use Tuleap\PullRequest\Notification\Strategy\PullRequestNotificationSendMail;
 use Tuleap\PullRequest\PullRequestRetriever;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
@@ -340,6 +342,57 @@ final class PullRequestNotificationSupport
                         return new EventSubjectToNotificationListener(
                             self::buildPullRequestNotificationSendMail($git_repository_factory, $html_url_builder),
                             new PullRequestNewInlineCommentNotificationToProcessBuilder(
+                                $user_manager,
+                                new PullRequestRetriever(
+                                    new Dao(),
+                                ),
+                                new InlineCommentRetriever(new \Tuleap\PullRequest\InlineComment\Dao()),
+                                new OwnerRetriever(
+                                    $user_manager,
+                                    new ReviewerRetriever(
+                                        $user_manager,
+                                        new ReviewerDAO(),
+                                        new PullRequestPermissionChecker(
+                                            $git_repository_factory,
+                                            new \Tuleap\Project\ProjectAccessChecker(
+                                                new RestrictedUserCanAccessProjectVerifier(),
+                                                \EventManager::instance()
+                                            ),
+                                            new AccessControlVerifier(
+                                                new FineGrainedRetriever(new FineGrainedDao()),
+                                                new \System_Command()
+                                            )
+                                        )
+                                    ),
+                                    new TimelineDAO()
+                                ),
+                                new InlineCommentCodeContextExtractor(
+                                    new FileUniDiffBuilder(),
+                                    $git_repository_factory
+                                ),
+                                new FilterUserFromCollection(),
+                                \UserHelper::instance(),
+                                $html_url_builder,
+                                new NotificationContentFormatter(
+                                    CommonMarkInterpreter::build(
+                                        $html_purifier,
+                                    ),
+                                    $git_repository_factory,
+                                    $html_purifier,
+                                ),
+                            )
+                        );
+                    },
+                ],
+                UpdatedInlineCommentEvent::class => [
+                    static function (): EventSubjectToNotificationListener {
+                        $git_repository_factory = self::buildGitRepositoryFactory();
+                        $html_url_builder       = self::buildHTMLURLBuilder($git_repository_factory);
+                        $user_manager           = \UserManager::instance();
+                        $html_purifier          = \Codendi_HTMLPurifier::instance();
+                        return new EventSubjectToNotificationListener(
+                            self::buildPullRequestNotificationSendMail($git_repository_factory, $html_url_builder),
+                            new UpdatedInlineCommentNotificationToProcessBuilder(
                                 $user_manager,
                                 new PullRequestRetriever(
                                     new Dao(),
