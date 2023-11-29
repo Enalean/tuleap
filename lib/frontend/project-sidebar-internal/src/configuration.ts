@@ -25,12 +25,16 @@ export interface QuickLink {
     readonly label: string;
 }
 
-export interface PromotedItem {
+export interface Item {
     readonly href: string;
     readonly label: string;
     readonly description: string;
     readonly is_active: boolean;
     readonly quick_link_add?: QuickLink | null;
+}
+
+export interface PromotedItem extends Item {
+    readonly items?: ReadonlyArray<Item>;
 }
 
 export interface Tool {

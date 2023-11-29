@@ -99,8 +99,48 @@ export const example_config: Configuration = {
             description: "Description service A",
             icon: "fa-fw fa-solid fa-folder-open",
             open_in_new_tab: false,
-            is_active: false,
+            is_active: true,
             shortcut_id: "",
+            promoted_items: [
+                {
+                    href: "/service/a/release-a",
+                    label: "Release A",
+                    description: "Description of release A",
+                    is_active: true,
+                    quick_link_add: {
+                        href: "/service/a/release-a/add",
+                        label: "Add",
+                    },
+                    items: [
+                        {
+                            href: "/service/a/release-a/sprint-w12",
+                            label: "Sprint W12",
+                            description: "Description of sprint W12",
+                            is_active: true,
+                        },
+                        {
+                            href: "/service/a/release-a/sprint-w11",
+                            label: "Sprint W11",
+                            description: "Description of sprint W11",
+                            is_active: false,
+                            quick_link_add: {
+                                href: "/service/a/release-a/sprint-w11/add",
+                                label: "Add",
+                            },
+                        },
+                    ],
+                },
+                {
+                    href: "/service/a/release-b",
+                    label: "Release B",
+                    description: "Description of release B",
+                    is_active: false,
+                    quick_link_add: {
+                        href: "/service/a/release-b/add",
+                        label: "Add",
+                    },
+                },
+            ],
         },
         {
             label: "Git",
