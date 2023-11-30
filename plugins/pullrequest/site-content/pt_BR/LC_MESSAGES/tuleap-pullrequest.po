@@ -33,8 +33,16 @@ msgid_plural "%s pushed %d commits updating the pull request #%d: %s."
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "%s pushed %s commit updating the pull request %s: %s."
+msgid_plural "%s pushed %s commits updating the pull request %s: %s."
+msgstr[0] ""
+msgstr[1] ""
+
 #, php-format
 msgid "%s requested your review on #%d: %s"
+msgstr ""
+
+msgid "%s requested your review on %s: %s"
 msgstr ""
 
 #, php-format
@@ -70,19 +78,6 @@ msgstr ""
 msgid ""
 "<a href=\"%s\">%s</a> has merged the pull request <a href=\"%s\">#%s</a>: %s "
 "into %s"
-msgstr ""
-
-msgid ""
-"<a href=\"%s\">%s</a> pushed %s commit updating the pull request <a "
-"href=\"%s\">#%s</a>: %s."
-msgid_plural ""
-"<a href=\"%s\">%s</a> pushed %s commits updating the pull request <a "
-"href=\"%s\">#%s</a>: %s."
-msgstr[0] ""
-msgstr[1] ""
-
-msgid ""
-"<a href=\"%s\">%s</a> requested your review on <a href=\"%s\">#%s</a>: %s"
 msgstr ""
 
 msgid "Abandonned"
