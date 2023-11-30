@@ -44,7 +44,7 @@
             </span>
             <span class="timetracking-details-modal-artifact-infos-project-name">
                 <a v-bind:href="project_link">
-                    {{ current_project.label }}
+                    {{ personal_store.current_project.label }}
                 </a>
             </span>
         </div>
@@ -52,20 +52,29 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
 import { formatDateUsingPreferredUserFormat } from "@tuleap/plugin-timetracking-time-formatters";
+import { usePersonalTimetrackingWidgetStore } from "../../store";
+import { mapState } from "pinia";
 export default {
     name: "WidgetModalArtifactInfo",
+    setup() {
+        const personal_store = usePersonalTimetrackingWidgetStore();
+
+        return { personal_store };
+    },
     computed: {
-        ...mapGetters(["current_artifact", "current_project"]),
-        ...mapState(["user_locale"]),
+        ...mapState(usePersonalTimetrackingWidgetStore, [
+            "current_artifact",
+            "current_project",
+            "user_locale",
+        ]),
         project_link() {
             return "/projects/" + this.current_project.shortname;
         },
         submission_date() {
             return formatDateUsingPreferredUserFormat(
-                this.current_artifact.submission_date,
-                this.user_locale,
+                this.personal_store.current_artifact.submission_date,
+                this.personal_store.user_locale,
             );
         },
     },

@@ -20,7 +20,7 @@
 <template>
     <div class="tlp-modal-body timetracking-details-modal-content">
         <div class="tlp-pane-section timetracking-details-modal-artifact-title">
-            <widget-link-to-artifact v-bind:artifact="current_artifact" />
+            <widget-link-to-artifact v-bind:artifact="personal_store.current_artifact" />
         </div>
         <div class="timetracking-details-modal-artifact-details">
             <widget-modal-artifact-info />
@@ -28,13 +28,17 @@
                 <button
                     class="tlp-button-primary"
                     data-test="button-set-add-mode"
-                    v-on:click="setAddMode(!is_add_mode)"
+                    v-on:click="personal_store.setAddMode(!personal_store.is_add_mode)"
                 >
                     <i class="fa fa-plus tlp-button-icon"></i>
                     {{ $gettext("Add") }}
                 </button>
             </div>
-            <div v-if="rest_feedback.type" v-bind:class="feedback_class" data-test="feedback">
+            <div
+                v-if="personal_store.rest_feedback.type"
+                v-bind:class="feedback_class"
+                data-test="feedback"
+            >
                 {{ feedback_message }}
             </div>
             <widget-modal-table />
@@ -42,7 +46,6 @@
     </div>
 </template>
 <script>
-import { mapState, mapMutations, mapGetters } from "vuex";
 import {
     REST_FEEDBACK_ADD,
     REST_FEEDBACK_EDIT,
@@ -52,17 +55,25 @@ import {
 import WidgetModalArtifactInfo from "./WidgetModalArtifactInfo.vue";
 import WidgetModalTable from "./WidgetModalTable.vue";
 import WidgetLinkToArtifact from "../WidgetLinkToArtifact.vue";
+import { usePersonalTimetrackingWidgetStore } from "../../store";
+import { mapState, mapActions } from "pinia";
 export default {
     name: "WidgetModalContent",
     components: { WidgetLinkToArtifact, WidgetModalTable, WidgetModalArtifactInfo },
+    setup() {
+        const personal_store = usePersonalTimetrackingWidgetStore();
+
+        return { personal_store };
+    },
     computed: {
-        ...mapState(["is_add_mode", "rest_feedback", "current_times"]),
-        ...mapGetters(["current_artifact"]),
+        ...mapState(usePersonalTimetrackingWidgetStore, ["current_artifact", "is_add_mode"]),
+        ...mapActions(usePersonalTimetrackingWidgetStore, ["setAddMode"]),
+
         feedback_class() {
-            return "tlp-alert-" + this.rest_feedback.type;
+            return "tlp-alert-" + this.personal_store.rest_feedback.type;
         },
         feedback_message() {
-            switch (this.rest_feedback.message) {
+            switch (this.personal_store.rest_feedback.message) {
                 case REST_FEEDBACK_ADD:
                     return this.$gettext("Time successfully added");
                 case REST_FEEDBACK_EDIT:
@@ -72,12 +83,9 @@ export default {
                 case ERROR_OCCURRED:
                     return this.$gettext("An error occurred");
                 default:
-                    return this.rest_feedback.message;
+                    return this.personal_store.rest_feedback.message;
             }
         },
-    },
-    methods: {
-        ...mapMutations(["setAddMode"]),
     },
 };
 </script>

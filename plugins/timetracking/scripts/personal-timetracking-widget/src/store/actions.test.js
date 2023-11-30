@@ -17,40 +17,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as actions from "./actions.js";
 import * as rest_querier from "../api/rest-querier";
 import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import {
+    REST_FEEDBACK_DELETE,
     REST_FEEDBACK_ADD,
     REST_FEEDBACK_EDIT,
-    REST_FEEDBACK_DELETE,
     ERROR_OCCURRED,
+    SUCCESS_TYPE,
 } from "@tuleap/plugin-timetracking-constants";
+import { createPinia, setActivePinia } from "pinia";
+import { usePersonalTimetrackingWidgetStore } from "./index";
 
 describe("Store actions", () => {
-    let context;
+    let store;
     beforeEach(() => {
-        context = {
-            commit: jest.fn(),
-            state: {
-                start_date: "2015-09-14",
-                end_date: "2017-04-24",
-                pagination_limit: 50,
-                pagination_offset: 0,
-                times_length: 1,
-            },
-        };
+        setActivePinia(createPinia());
+        store = usePersonalTimetrackingWidgetStore();
     });
     it("Given new dates, Then dates must equal to the new dates and queryHasChanged must be true", () => {
-        actions.setDatesAndReload(context, ["2015-09-14", "2017-04-24"]);
-        expect(context.commit).toHaveBeenCalledWith("setParametersForNewQuery", [
-            "2015-09-14",
-            "2017-04-24",
-        ]);
+        store.setDatesAndReload(["2015-09-14", "2017-04-24"]);
+        expect(store.start_date).toBe("2015-09-14");
+        expect(store.end_date).toBe("2017-04-24");
     });
 
     describe("loadFirstBatchOfTimes - success", () => {
-        it("Given a success response, When times are received, Then no message error is reveived", async () => {
+        it("Given a success response, When times are received, Then no message error is received", async () => {
             const times = [
                 [
                     {
@@ -60,17 +52,15 @@ describe("Store actions", () => {
                     },
                 ],
             ];
-            context.state.times = times;
 
             jest.spyOn(rest_querier, "getTrackedTimes").mockReturnValue(
                 Promise.resolve({ times, total: 1 }),
             );
 
-            await actions.loadFirstBatchOfTimes(context);
-            expect(context.commit).toHaveBeenCalledWith("setIsLoading", true);
-            expect(context.commit).toHaveBeenCalledWith("resetErrorMessage");
-            expect(context.commit).toHaveBeenCalledWith("loadAChunkOfTimes", [times, 1]);
-            expect(context.commit).toHaveBeenCalledWith("setIsLoading", false);
+            await store.loadFirstBatchOfTimes();
+            expect(store.times).toStrictEqual(times);
+            expect(store.total_times).toBe(1);
+            expect(store.error_message).toBe("");
         });
 
         describe("getTimes - rest errors", () => {
@@ -84,17 +74,15 @@ describe("Store actions", () => {
                     },
                 });
 
-                await actions.getTimes(context);
-                expect(context.commit).toHaveBeenCalledWith("resetErrorMessage");
-                expect(context.commit).toHaveBeenCalledWith("setErrorMessage", "403 Forbidden");
+                await store.getTimes();
+                expect(store.error_message).toBe("403 Forbidden");
             });
 
             it("Given a rest error, When a json error message is received, Then the message is extracted by getTimes() into the error_message private property.", async () => {
                 jest.spyOn(rest_querier, "getTrackedTimes").mockReturnValue(Promise.reject());
 
-                await actions.getTimes(context);
-                expect(context.commit).toHaveBeenCalledWith("resetErrorMessage");
-                expect(context.commit).toHaveBeenCalledWith("setErrorMessage", ERROR_OCCURRED);
+                await store.getTimes();
+                expect(store.error_message).toBe(ERROR_OCCURRED);
             });
         });
 
@@ -108,22 +96,17 @@ describe("Store actions", () => {
                         },
                     },
                 });
-
-                await actions.addTime(context, ["2018-01-01", 1, "11:11", "oui"]);
-                expect(context.commit).toHaveBeenCalledWith("setRestFeedback", [
-                    "403 Forbidden",
-                    "danger",
-                ]);
+                await store.addTime(["2018-01-01", 1, "11:11", "oui"]);
+                expect(store.rest_feedback.message).toBe("403 Forbidden");
+                expect(store.rest_feedback.type).toBe("danger");
             });
 
             it("Given a rest error, When a json error message is received, Then the message is extracted by addTime() into the rest_feedback private property.", async () => {
                 jest.spyOn(rest_querier, "addTime").mockReturnValue(Promise.reject());
 
-                await actions.addTime(context, ["2018-01-01", 1, "11:11", "oui"]);
-                expect(context.commit).toHaveBeenCalledWith("setRestFeedback", [
-                    ERROR_OCCURRED,
-                    "danger",
-                ]);
+                await store.addTime(["2018-01-01", 1, "11:11", "oui"]);
+                expect(store.rest_feedback.message).toBe(ERROR_OCCURRED);
+                expect(store.rest_feedback.type).toBe("danger");
             });
         });
 
@@ -138,13 +121,11 @@ describe("Store actions", () => {
                 };
                 restAddTime.mockReturnValue(Promise.resolve(time));
 
-                await actions.addTime(context, ["2018-01-01", 1, "00:20", "oui"]);
-                expect(context.commit).toHaveBeenCalledWith("pushCurrentTimes", [
-                    [time],
-                    REST_FEEDBACK_ADD,
-                ]);
+                await store.addTime(["2018-01-01", 1, "00:20", "oui"]);
+                expect(store.current_times).toStrictEqual([time]);
                 expect(restAddTime).toHaveBeenCalledTimes(1);
-                expect(context.commit).not.toHaveBeenCalledWith("setRestFeedback");
+                expect(store.rest_feedback.message).toBe(REST_FEEDBACK_ADD);
+                expect(store.rest_feedback.type).toBe(SUCCESS_TYPE);
             });
         });
 
@@ -159,21 +140,17 @@ describe("Store actions", () => {
                     },
                 });
 
-                await actions.updateTime(context, ["2018-01-01", 1, "11:11", "oui"]);
-                expect(context.commit).toHaveBeenCalledWith("setRestFeedback", [
-                    "403 Forbidden",
-                    "danger",
-                ]);
+                await store.updateTime(["2018-01-01", 1, "11:11", "oui"]);
+                expect(store.rest_feedback.message).toBe("403 Forbidden");
+                expect(store.rest_feedback.type).toBe("danger");
             });
 
             it("Given a rest error ,When no error message is provided, Then it should add a generic error message on rest_feedback", async () => {
                 jest.spyOn(rest_querier, "updateTime").mockReturnValue(Promise.reject());
 
-                await actions.updateTime(context, ["2018-01-01", 1, "11:11", "oui"]);
-                expect(context.commit).toHaveBeenCalledWith("setRestFeedback", [
-                    ERROR_OCCURRED,
-                    "danger",
-                ]);
+                await store.updateTime(["2018-01-01", 1, "11:11", "oui"]);
+                expect(store.rest_feedback.message).toBe(ERROR_OCCURRED);
+                expect(store.rest_feedback.type).toBe("danger");
             });
         });
 
@@ -189,13 +166,10 @@ describe("Store actions", () => {
                 };
                 jest.spyOn(rest_querier, "updateTime").mockReturnValue(Promise.resolve(time));
 
-                await actions.updateTime(context, ["2018-01-01", 1, "00:20", "oui"]);
-                expect(context.commit).toHaveBeenCalledWith("replaceInCurrentTimes", [
-                    time,
-                    REST_FEEDBACK_EDIT,
-                ]);
+                await store.updateTime(["2018-01-01", 1, "00:20", "oui"]);
                 expect(getTrackedTimes).toHaveBeenCalled();
-                expect(context.commit).not.toHaveBeenCalledWith("setRestFeedback");
+                expect(store.rest_feedback.message).toBe(REST_FEEDBACK_EDIT);
+                expect(store.rest_feedback.type).toBe(SUCCESS_TYPE);
             });
         });
 
@@ -210,21 +184,17 @@ describe("Store actions", () => {
                     },
                 });
 
-                await actions.deleteTime(context, 1);
-                expect(context.commit).toHaveBeenCalledWith("setRestFeedback", [
-                    "403 Forbidden",
-                    "danger",
-                ]);
+                await store.deleteTime(1);
+                expect(store.rest_feedback.message).toBe("403 Forbidden");
+                expect(store.rest_feedback.type).toBe("danger");
             });
 
             it("Given a rest error ,When no error message is provided, Then it should add a generic error message on rest_feedback", async () => {
                 jest.spyOn(rest_querier, "deleteTime").mockReturnValue(Promise.reject());
 
-                await actions.deleteTime(context, 1);
-                expect(context.commit).toHaveBeenCalledWith("setRestFeedback", [
-                    ERROR_OCCURRED,
-                    "danger",
-                ]);
+                await store.deleteTime(1);
+                expect(store.rest_feedback.message).toBe(ERROR_OCCURRED);
+                expect(store.rest_feedback.type).toBe("danger");
             });
         });
 
@@ -235,18 +205,26 @@ describe("Store actions", () => {
                 jest.spyOn(rest_querier, "deleteTime").mockReturnValue(Promise.resolve());
 
                 const time_id = 1;
-                await actions.deleteTime(context, time_id);
-                expect(context.commit).toHaveBeenCalledWith("deleteInCurrentTimes", [
-                    time_id,
-                    REST_FEEDBACK_DELETE,
-                ]);
+                store.current_times = [
+                    [
+                        {
+                            date: "2028-01-01",
+                            minutes: 20,
+                            id: time_id,
+                        },
+                    ],
+                ];
+                await store.deleteTime(time_id);
+                let empty_time = { artifact: undefined, minutes: null, project: undefined };
+                expect(store.current_times).toStrictEqual([empty_time]);
                 expect(getTrackedTimes).toHaveBeenCalled();
-                expect(context.commit).not.toHaveBeenCalledWith("setRestFeedback");
+                expect(store.rest_feedback.message).toBe(REST_FEEDBACK_DELETE);
+                expect(store.rest_feedback.type).toBe(SUCCESS_TYPE);
             });
         });
 
         describe("reloadTimes", () => {
-            it("Given a success response, When times are received, Then no message error is reveived and reloadTimes' mutations are called", async () => {
+            it("Given a success response, When times are received, Then no message error is received and reloadTimes' mutations are called", async () => {
                 let times = [
                     [
                         {
@@ -256,13 +234,14 @@ describe("Store actions", () => {
                         },
                     ],
                 ];
-                context.state.times = times;
 
                 jest.spyOn(rest_querier, "getTrackedTimes").mockReturnValue(times);
 
-                await actions.reloadTimes(context);
-                expect(context.commit).toHaveBeenCalledWith("resetTimes");
-                expect(context.commit).toHaveBeenCalledWith("setIsLoading", false);
+                await store.reloadTimes();
+                expect(store.is_loading).toBe(false);
+                expect(store.pagination_offset).toBe(0);
+                expect(store.times).toStrictEqual([]);
+                expect(store.is_add_mode).toBe(false);
             });
         });
     });

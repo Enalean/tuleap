@@ -21,8 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import mutations from "./mutations.js";
-import initial_state from "./state.js";
+import { createPinia, setActivePinia } from "pinia";
 import {
     ERROR_OCCURRED,
     REST_FEEDBACK_ADD,
@@ -30,63 +29,65 @@ import {
     REST_FEEDBACK_EDIT,
     SUCCESS_TYPE,
 } from "@tuleap/plugin-timetracking-constants";
+import { usePersonalTimetrackingWidgetStore } from "./index";
 
 describe("Store mutations", () => {
-    let state;
+    let store;
     beforeEach(() => {
-        state = { ...initial_state };
+        setActivePinia(createPinia());
+        store = usePersonalTimetrackingWidgetStore();
     });
     describe("Mutations", () => {
         describe("Given a widget with state initialisation", () => {
             it("Then we change reading mode, state must change too", () => {
-                mutations.toggleReadingMode(state);
-                expect(state.reading_mode).toBe(false);
+                store.toggleReadingMode();
+                expect(store.reading_mode).toBe(false);
             });
 
             it("Then we put new dates, state must change too", () => {
-                mutations.toggleReadingMode(state);
-                mutations.setParametersForNewQuery(state, ["2018-01-01", "2018-02-02"]);
-                expect(state.start_date).toBe("2018-01-01");
-                expect(state.end_date).toBe("2018-02-02");
-                expect(state.reading_mode).toBe(true);
+                store.toggleReadingMode();
+                store.setParametersForNewQuery(["2018-01-01", "2018-02-02"]);
+                expect(store.start_date).toBe("2018-01-01");
+                expect(store.end_date).toBe("2018-02-02");
+                expect(store.reading_mode).toBe(true);
             });
 
             it("Then we change rest_error, state must change too", () => {
-                mutations.setErrorMessage(state, "oui");
-                expect(state.error_message).toBe("oui");
+                store.setErrorMessage("oui");
+                expect(store.error_message).toBe("oui");
             });
 
             it("Then we change isLoading, state must change too", () => {
-                mutations.setIsLoading(state, true);
-                expect(state.is_loading).toBe(true);
+                store.setIsLoading(true);
+                expect(store.is_loading).toBe(true);
             });
 
             it("Then we call setAddMode, states must change", () => {
-                mutations.setAddMode(state, true);
-                expect(state.is_add_mode).toBe(true);
-                expect(state.rest_feedback.message).toBeNull();
-                expect(state.rest_feedback.type).toBeNull();
+                store.setAddMode(true);
+                expect(store.is_add_mode).toBe(true);
+                expect(store.rest_feedback.message).toBeNull();
+                expect(store.rest_feedback.type).toBeNull();
             });
 
             it("When states updated with error message, Then we call setAddMode, states must change", () => {
-                state.rest_feedback.message = REST_FEEDBACK_ADD;
-                state.rest_feedback.type = SUCCESS_TYPE;
-                mutations.setAddMode(state, true);
+                store.rest_feedback.message = REST_FEEDBACK_ADD;
+                store.rest_feedback.type = SUCCESS_TYPE;
+                store.setAddMode(true);
 
-                expect(state.is_add_mode).toBe(true);
-                expect(state.rest_feedback.message).toBe("");
-                expect(state.rest_feedback.type).toBe("");
+                expect(store.is_add_mode).toBe(true);
+                expect(store.rest_feedback.message).toBe("");
+                expect(store.rest_feedback.type).toBe("");
             });
 
             it("When states updated with error message, Then we call setAddMode without being in add mode, states must change", () => {
-                state.is_add_mode = true;
-                state.rest_feedback.message = ERROR_OCCURRED;
-                state.rest_feedback.type = "danger";
-                mutations.setAddMode(state, false);
+                store.is_add_mode = true;
+                store.rest_feedback.message = ERROR_OCCURRED;
+                store.rest_feedback.type = "danger";
+                store.setAddMode(false);
 
-                expect(state.is_add_mode).toBe(false);
-                expect(state.rest_feedback.message).toBe("");
-                expect(state.rest_feedback.type).toBe("");
+                expect(store.is_add_mode).toBe(false);
+                expect(store.rest_feedback.message).toBe("");
+                expect(store.rest_feedback.type).toBe("");
             });
 
             it("When states updated with error message, Then we call replaceCurrentTime, states must change", () => {
@@ -113,7 +114,7 @@ describe("Store mutations", () => {
                         date: "2023-01-04",
                     },
                 ];
-                state.current_times = times;
+                store.current_times = times;
                 const updated_time = {
                     artifact: {},
                     project: {},
@@ -121,14 +122,14 @@ describe("Store mutations", () => {
                     minutes: 40,
                     date: "2023-01-03",
                 };
-                mutations.replaceInCurrentTimes(state, [updated_time, REST_FEEDBACK_EDIT]);
-                expect(state.current_times).toStrictEqual([times[0], updated_time, times[2]]);
-                expect(state.rest_feedback.message).toBe(REST_FEEDBACK_EDIT);
-                expect(state.rest_feedback.type).toBe(SUCCESS_TYPE);
+                store.replaceInCurrentTimes([updated_time, REST_FEEDBACK_EDIT]);
+                expect(store.current_times).toStrictEqual([times[0], updated_time, times[2]]);
+                expect(store.rest_feedback.message).toBe(REST_FEEDBACK_EDIT);
+                expect(store.rest_feedback.type).toBe(SUCCESS_TYPE);
             });
 
             it("When we call deleteCurrentTime, Then the deleted time should be removed from state.current_times anymore", () => {
-                state.current_times = [
+                store.current_times = [
                     {
                         artifact: {},
                         project: {},
@@ -137,16 +138,16 @@ describe("Store mutations", () => {
                     },
                 ];
                 const deleted_time_id = 1;
-                mutations.deleteInCurrentTimes(state, [deleted_time_id, REST_FEEDBACK_DELETE]);
-                expect(state.current_times).toEqual([
+                store.deleteInCurrentTimes([deleted_time_id, REST_FEEDBACK_DELETE]);
+                expect(store.current_times).toEqual([
                     {
                         artifact: {},
                         project: {},
                         minutes: null,
                     },
                 ]);
-                expect(state.rest_feedback.message).toBe(REST_FEEDBACK_DELETE);
-                expect(state.rest_feedback.type).toBe(SUCCESS_TYPE);
+                expect(store.rest_feedback.message).toBe(REST_FEEDBACK_DELETE);
+                expect(store.rest_feedback.type).toBe(SUCCESS_TYPE);
             });
         });
         describe("Given a new time", () => {
@@ -167,7 +168,7 @@ describe("Store mutations", () => {
                         date: "2023-01-03",
                     },
                 ];
-                state.current_times = times;
+                store.current_times = times;
                 const updated_time = {
                     artifact: {},
                     project: {},
@@ -175,39 +176,11 @@ describe("Store mutations", () => {
                     minutes: 20,
                     date: "2023-01-02",
                 };
-                mutations.pushCurrentTimes(state, [[updated_time], REST_FEEDBACK_EDIT]);
-                expect(state.current_times).toStrictEqual([times[1], updated_time, times[0]]);
-                expect(state.rest_feedback.message).toBe(REST_FEEDBACK_EDIT);
-                expect(state.rest_feedback.type).toBe(SUCCESS_TYPE);
+                store.pushCurrentTimes([[updated_time], REST_FEEDBACK_EDIT]);
+                expect(store.current_times).toStrictEqual([times[1], updated_time, times[0]]);
+                expect(store.rest_feedback.message).toBe(REST_FEEDBACK_EDIT);
+                expect(store.rest_feedback.type).toBe(SUCCESS_TYPE);
             });
-        });
-    });
-    describe("sortTimesChronologically", () => {
-        it("return times sorted on dates", () => {
-            const times = [
-                {
-                    artifact: {},
-                    project: {},
-                    minutes: 20,
-                    date: "2018-03-01",
-                },
-                {
-                    artifact: {},
-                    project: {},
-                    minutes: 20,
-                    date: "2018-02-01",
-                },
-                {
-                    artifact: {},
-                    project: {},
-                    minutes: 20,
-                    date: "2018-01-01",
-                },
-            ];
-            const sorted_times = [times[1], times[0], times[2]].sort((a, b) => {
-                return new Date(b.date) - new Date(a.date);
-            });
-            expect(sorted_times).toEqual(times);
         });
     });
 });

@@ -62,10 +62,10 @@ import {
     formatDateUsingPreferredUserFormat,
     formatMinutes,
 } from "@tuleap/plugin-timetracking-time-formatters";
-import { mapState } from "vuex";
 import WidgetModalEditTime from "./WidgetModalEditTime.vue";
 import { createPopover } from "tlp";
 import WidgetModalDeletePopover from "./WidgetModalDeletePopover.vue";
+import { usePersonalTimetrackingWidgetStore } from "../../store";
 
 export default {
     name: "WidgetModalRow",
@@ -73,13 +73,17 @@ export default {
     props: {
         timeData: Object,
     },
+    setup() {
+        const personal_store = usePersonalTimetrackingWidgetStore();
+
+        return { personal_store };
+    },
     data() {
         return {
             edit_mode: false,
         };
     },
     computed: {
-        ...mapState(["user_locale"]),
         minutes() {
             return formatMinutes(this.timeData.minutes);
         },
@@ -95,7 +99,7 @@ export default {
             this.edit_mode = !this.edit_mode;
         },
         editTime(date, time_id, time, step) {
-            this.$store.dispatch("updateTime", [date, time_id, time, step]);
+            this.personal_store.updateTime([date, time_id, time, step]);
             this.swapEditMode();
         },
     },

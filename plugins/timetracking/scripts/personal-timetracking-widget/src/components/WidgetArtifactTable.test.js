@@ -20,40 +20,53 @@
 import { shallowMount } from "@vue/test-utils";
 import WidgetArtifactTable from "./WidgetArtifactTable.vue";
 import localVue from "../helpers/local-vue.js";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-
-function getWidgetArtifactTableInstance(store_options) {
-    const store = createStoreMock(store_options);
-
-    const component_options = {
-        localVue,
-        mocks: { $store: store },
-    };
-    return shallowMount(WidgetArtifactTable, component_options);
-}
+import { createTestingPinia } from "@pinia/testing";
+import { defineStore } from "pinia";
 
 describe("Given a personal timetracking widget", () => {
-    let store_options;
-    beforeEach(() => {
-        store_options = {
-            state: {
+    let times;
+    let is_loading;
+    let has_rest_error;
+    let can_load_more;
+    let can_results_be_displayed;
+
+    function getWidgetArtifactTableInstance() {
+        const useStore = defineStore("root", {
+            state: () => ({
                 error_message: "",
-                times: [[{ time: "time" }]],
-                is_loading: false,
-            },
+                times,
+                is_loading,
+                is_loaded: true,
+            }),
             getters: {
-                get_formatted_total_sum: "00:00",
-                has_rest_error: false,
-                can_results_be_displayed: true,
-                can_load_more: false,
+                has_rest_error: () => has_rest_error,
+                can_load_more: () => can_load_more,
+                can_results_be_displayed: () => can_results_be_displayed,
+                get_formatted_total_sum: () => "00:00",
             },
+            actions: {
+                loadFirstBatchOfTimes() {},
+            },
+        });
+        const pinia = createTestingPinia();
+        useStore(pinia);
+
+        const component_options = {
+            localVue,
+            pinia,
         };
+        return shallowMount(WidgetArtifactTable, component_options);
+    }
 
-        getWidgetArtifactTableInstance(store_options);
+    beforeEach(() => {
+        times = [[{ time: "time" }]];
+        is_loading = false;
+        has_rest_error = false;
+        can_load_more = false;
+        can_results_be_displayed = true;
     });
-
     it("When no error and result can be displayed, then complete table should be displayed", () => {
-        const wrapper = getWidgetArtifactTableInstance(store_options);
+        const wrapper = getWidgetArtifactTableInstance();
         expect(wrapper.find("[data-test=alert-danger]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=timetracking-loader]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=artifact-table]").exists()).toBeTruthy();
@@ -62,24 +75,24 @@ describe("Given a personal timetracking widget", () => {
     });
 
     it("When rest error and more times can be load, then danger message and load more button should be displayed", () => {
-        store_options.getters.has_rest_error = true;
-        store_options.getters.can_load_more = true;
-        const wrapper = getWidgetArtifactTableInstance(store_options);
+        has_rest_error = true;
+        can_load_more = true;
+        const wrapper = getWidgetArtifactTableInstance();
         expect(wrapper.find("[data-test=alert-danger]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=load-more]").exists()).toBeTruthy();
     });
 
     it("When widget is loading and result can't be displayed, then loader should be displayed but not table", () => {
-        store_options.state.is_loading = true;
-        store_options.getters.can_results_be_displayed = false;
-        const wrapper = getWidgetArtifactTableInstance(store_options);
+        is_loading = true;
+        can_results_be_displayed = false;
+        const wrapper = getWidgetArtifactTableInstance();
         expect(wrapper.find("[data-test=timetracking-loader]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=artifact-table]").exists()).toBeFalsy();
     });
 
     it("When no times, then table with empty tab should be displayed", () => {
-        store_options.state.times = [];
-        const wrapper = getWidgetArtifactTableInstance(store_options);
+        times = [];
+        const wrapper = getWidgetArtifactTableInstance();
         expect(wrapper.find("[data-test=empty-tab]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=table-foot]").exists()).toBeFalsy();
     });

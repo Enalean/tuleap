@@ -69,7 +69,7 @@
                 class="tlp-button-primary tlp-button-outline tlp-button-small"
                 data-test="load-more"
                 type="button"
-                v-if="can_load_more"
+                v-if="personal_store.can_load_more"
                 v-on:click="loadMore"
                 v-bind:disabled="is_loading_more"
             >
@@ -80,25 +80,29 @@
     </div>
 </template>
 <script>
-import { mapState, mapGetters } from "vuex";
+import { mapState } from "pinia";
 import ArtifactTableRow from "./WidgetArtifactTableRow.vue";
+import { usePersonalTimetrackingWidgetStore } from "../store";
 
 export default {
     name: "WidgetArtifactTable",
     components: { ArtifactTableRow },
-    data() {
-        return {
-            is_loading_more: false,
-        };
+    setup() {
+        const personal_store = usePersonalTimetrackingWidgetStore();
+
+        return { personal_store };
     },
     computed: {
-        ...mapState(["error_message", "times", "is_loading"]),
-        ...mapGetters([
+        ...mapState(usePersonalTimetrackingWidgetStore, [
+            "error_message",
+            "times",
+            "is_loading",
             "get_formatted_total_sum",
             "has_rest_error",
             "can_results_be_displayed",
             "can_load_more",
         ]),
+
         has_data_to_display() {
             return this.times.length > 0;
         },
@@ -112,14 +116,19 @@ export default {
         },
     },
     mounted() {
-        this.$store.dispatch("loadFirstBatchOfTimes");
+        this.personal_store.loadFirstBatchOfTimes();
     },
     methods: {
         async loadMore() {
             this.is_loading_more = true;
-            await this.$store.dispatch("getTimes");
+            await this.getTimes();
             this.is_loading_more = false;
         },
+    },
+    data() {
+        return {
+            is_loading_more: false,
+        };
     },
 };
 </script>

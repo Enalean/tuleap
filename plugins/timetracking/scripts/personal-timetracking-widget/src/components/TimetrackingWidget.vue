@@ -19,17 +19,18 @@
 
 <template>
     <div class="timetracking-widget">
-        <widget-reading-mode v-if="reading_mode" />
+        <widget-reading-mode v-if="personal_store.reading_mode" />
         <widget-writing-mode v-else />
         <widget-artifact-table />
     </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "pinia";
+import { usePersonalTimetrackingWidgetStore } from "../store";
+import WidgetArtifactTable from "./WidgetArtifactTable.vue";
 import WidgetReadingMode from "./WidgetReadingMode.vue";
 import WidgetWritingMode from "./WidgetWritingMode.vue";
-import WidgetArtifactTable from "./WidgetArtifactTable.vue";
 
 export default {
     name: "TimetrackingWidget",
@@ -42,12 +43,17 @@ export default {
         userId: Number,
         userLocale: String,
     },
+    setup() {
+        const personal_store = usePersonalTimetrackingWidgetStore();
+
+        return { personal_store };
+    },
     computed: {
-        ...mapState(["reading_mode"]),
+        ...mapState(usePersonalTimetrackingWidgetStore, ["reading_mode"]),
     },
     created() {
-        this.$store.commit("initUserId", this.userId);
-        this.$store.commit("initUserLocale", this.userLocale);
+        this.personal_store.initUserId(this.userId);
+        this.personal_store.initUserLocale(this.userLocale);
     },
 };
 </script>
