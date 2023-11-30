@@ -86,6 +86,12 @@ final class PullRequestTestBuilder
         return $this;
     }
 
+    public function createdBy(int $user_id): self
+    {
+        $this->user_id = $user_id;
+        return $this;
+    }
+
     public function build(): PullRequest
     {
         return new PullRequest(

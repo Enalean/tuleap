@@ -85,6 +85,7 @@ use Tuleap\PullRequest\PluginInfo;
 use Tuleap\PullRequest\PullRequestCloser;
 use Tuleap\PullRequest\PullrequestDisplayer;
 use Tuleap\PullRequest\PullRequestMerger;
+use Tuleap\PullRequest\PullRequestRetriever;
 use Tuleap\PullRequest\PullRequestUpdater;
 use Tuleap\PullRequest\Reference\CrossReferencePullRequestOrganizer;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
@@ -499,7 +500,7 @@ class pullrequestPlugin extends Plugin implements PluginWithConfigKeys // phpcs:
 
         $labeled_item_collector = new LabeledItemCollector(
             new PullRequestLabelDao(),
-            $this->getPullRequestFactory(),
+            new PullRequestRetriever(new PullRequestDao()),
             $this->getPullRequestPermissionsChecker(),
             $this->getHTMLBuilder(),
             new GlyphFinder(
