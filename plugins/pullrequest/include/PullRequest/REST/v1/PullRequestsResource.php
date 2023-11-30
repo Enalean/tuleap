@@ -852,7 +852,7 @@ class PullRequestsResource extends AuthenticatedResource
      *
      * @param  int $id pull request ID
      * @param  PullRequestPATCHRepresentation $body new pull request status {@from body}
-     * @return array {@type Tuleap\PullRequest\REST\v1\PullRequestRepresentation}
+     * @return PullRequestRepresentation {@type Tuleap\PullRequest\REST\v1\PullRequestRepresentation}
      *
      * @throws RestException 400
      * @throws RestException 403
@@ -887,28 +887,31 @@ class PullRequestsResource extends AuthenticatedResource
                 $body
             );
         }
-        $updated_pull_request = $this->pull_request_factory->getPullRequestById($id);
+        return (new PullRequestRetriever($this->pull_request_dao))->getPullRequestById($id)->match(
+            function (PullRequest $updated_pull_request) use ($repository_src, $repository_dest, $pull_request_with_git_reference, $user): PullRequestRepresentation {
+                $purifier                  = \Codendi_HTMLPurifier::instance();
+                $content_interpretor       = CommonMarkInterpreter::build(
+                    $purifier,
+                    new EnhancedCodeBlockExtension(new CodeBlockFeatures())
+                );
+                $pr_representation_factory = new PullRequestRepresentationFactory(
+                    $this->access_control_verifier,
+                    new CommitStatusRetriever(new CommitStatusDAO()),
+                    $this->getGitoliteAccessURLGenerator(),
+                    new PullRequestStatusInfoRepresentationBuilder(new TimelineDao(), new TimelineDao(), UserManager::instance()),
+                    $purifier,
+                    $content_interpretor
+                );
 
-        $purifier                  = \Codendi_HTMLPurifier::instance();
-        $content_interpretor       = CommonMarkInterpreter::build(
-            $purifier,
-            new EnhancedCodeBlockExtension(new CodeBlockFeatures())
-        );
-        $pr_representation_factory = new PullRequestRepresentationFactory(
-            $this->access_control_verifier,
-            new CommitStatusRetriever(new CommitStatusDAO()),
-            $this->getGitoliteAccessURLGenerator(),
-            new PullRequestStatusInfoRepresentationBuilder(new TimelineDao(), new TimelineDao(), UserManager::instance()),
-            $purifier,
-            $content_interpretor
-        );
-
-        return $pr_representation_factory->getPullRequestRepresentation(
-            new PullRequestWithGitReference($updated_pull_request, $pull_request_with_git_reference->getGitReference()),
-            $repository_src,
-            $repository_dest,
-            GitExec::buildFromRepository($repository_dest),
-            $user
+                return $pr_representation_factory->getPullRequestRepresentation(
+                    new PullRequestWithGitReference($updated_pull_request, $pull_request_with_git_reference->getGitReference()),
+                    $repository_src,
+                    $repository_dest,
+                    GitExec::buildFromRepository($repository_dest),
+                    $user
+                );
+            },
+            FaultMapper::mapToRestException(...)
         );
     }
 
