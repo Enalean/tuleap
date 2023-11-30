@@ -22,21 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\Plugin;
 
-use Mockery;
 use Tuleap\Layout\BaseLayout;
 
 final class PluginLegacyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testLegacyPluginCanBeAccessed(): void
     {
-        $plugin = Mockery::mock(PluginWithLegacyInternalRouting::class);
-        $plugin->shouldReceive('getName')->andReturn('test');
+        $plugin = $this->createMock(PluginWithLegacyInternalRouting::class);
+        $plugin->method('getName')->willReturn('test');
         $controller = new PluginLegacyController($plugin);
 
-        $plugin->shouldReceive('process')->once();
+        $plugin->expects(self::once())->method('process');
 
-        $controller->process(Mockery::mock(\HTTPRequest::class), Mockery::mock(BaseLayout::class), []);
+        $controller->process($this->createMock(\HTTPRequest::class), $this->createMock(BaseLayout::class), []);
     }
 }
