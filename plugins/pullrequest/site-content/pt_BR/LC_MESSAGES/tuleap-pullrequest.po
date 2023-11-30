@@ -38,7 +38,19 @@ msgid "%s requested your review on #%d: %s"
 msgstr ""
 
 #, php-format
+msgid ""
+"%s updated their comment on #%d: %s in %s:\n"
+"\n"
+"%s\n"
+"\n"
+"%s"
+msgstr ""
+
+#, php-format
 msgid "%s updated their comment on #%d: %s."
+msgstr ""
+
+msgid "%s updated their comment on %s: %s in %s:"
 msgstr ""
 
 msgid "%s updated their comment on %s: %s."

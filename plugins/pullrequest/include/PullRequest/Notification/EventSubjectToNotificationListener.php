@@ -31,7 +31,8 @@ use Tuleap\PullRequest\Notification\Strategy\PullRequestNotificationStrategy;
  *                                                      \Tuleap\PullRequest\BranchUpdate\PullRequestUpdatedNotificationToProcessBuilder |
  *                                                      \Tuleap\PullRequest\Comment\Notification\PullRequestNewCommentNotificationToProcessBuilder |
  *                                                      \Tuleap\PullRequest\Comment\Notification\UpdatedCommentNotificationToProcessBuilder |
- *                                                      \Tuleap\PullRequest\InlineComment\Notification\PullRequestNewInlineCommentNotificationToProcessBuilder
+ *                                                      \Tuleap\PullRequest\InlineComment\Notification\PullRequestNewInlineCommentNotificationToProcessBuilder |
+ *                                                      \Tuleap\PullRequest\InlineComment\Notification\UpdatedInlineCommentNotificationToProcessBuilder
  */
 final class EventSubjectToNotificationListener
 {
