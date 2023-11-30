@@ -38,7 +38,7 @@ final class InlineCommentTest extends TestCase
         $id                = 949;
         $pull_request_id   = 44;
         $user_id           = 185;
-        $post_date         = 1491399127;
+        $post_date         = new \DateTimeImmutable('@1491399127');
         $file_path         = 'relative/path/to/file.txt';
         $unidiff_offset    = 66;
         $content           = 'Seshat asphyxiation';
@@ -52,7 +52,7 @@ final class InlineCommentTest extends TestCase
             'id'                => $id,
             'pull_request_id'   => $pull_request_id,
             'user_id'           => $user_id,
-            'post_date'         => $post_date,
+            'post_date'         => $post_date->getTimestamp(),
             'file_path'         => $file_path,
             'unidiff_offset'    => $unidiff_offset,
             'content'           => $content,
@@ -67,7 +67,7 @@ final class InlineCommentTest extends TestCase
         self::assertSame($id, $comment->getId());
         self::assertSame($pull_request_id, $comment->getPullRequestId());
         self::assertSame($user_id, $comment->getUserId());
-        self::assertSame($post_date, $comment->getPostDate());
+        self::assertEquals($post_date, $comment->getPostDate());
         self::assertSame($file_path, $comment->getFilePath());
         self::assertSame($unidiff_offset, $comment->getUnidiffOffset());
         self::assertSame($content, $comment->getContent());
@@ -103,7 +103,6 @@ final class InlineCommentTest extends TestCase
     {
         $pull_request_id = 78;
         $author_id       = 144;
-        $post_timestamp  = 1700000000;
         $file_path       = 'putatively/reconstrue/unapproximate.php';
         $unidiff_offset  = 71;
         $position        = 'left';
@@ -115,7 +114,7 @@ final class InlineCommentTest extends TestCase
 
         $pull_request       = PullRequestTestBuilder::aPullRequestInReview()->withId($pull_request_id)->build();
         $author             = UserTestBuilder::buildWithId($author_id);
-        $post_date          = new \DateTimeImmutable('@' . $post_timestamp);
+        $post_date          = new \DateTimeImmutable('@1700000000');
         $new_inline_comment = new NewInlineComment(
             $pull_request,
             192,
@@ -134,7 +133,7 @@ final class InlineCommentTest extends TestCase
         self::assertSame($id, $comment->getId());
         self::assertSame($pull_request_id, $comment->getPullRequestId());
         self::assertSame($author_id, $comment->getUserId());
-        self::assertSame($post_timestamp, $comment->getPostDate());
+        self::assertSame($post_date, $comment->getPostDate());
         self::assertSame($file_path, $comment->getFilePath());
         self::assertSame($unidiff_offset, $comment->getUnidiffOffset());
         self::assertSame($content, $comment->getContent());

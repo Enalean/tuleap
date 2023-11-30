@@ -79,7 +79,7 @@ class Factory
 
         $full_timeline = array_merge($comments, $inline_comments, $reviewer_changes, $timeline_events);
         usort($full_timeline, static function (TimelineEvent $event1, TimelineEvent $event2): int {
-            return $event1->getPostDate() - $event2->getPostDate();
+            return $event1->getPostDate()->getTimestamp() - $event2->getPostDate()->getTimestamp();
         });
         $timeline     = array_slice($full_timeline, $offset, $limit);
         $total_events = $total_comment_events + $total_inline_comment_events + count($reviewer_changes) + $total_timeline_events;

@@ -29,42 +29,32 @@ use Tuleap\User\REST\MinimalUserRepresentation;
 
 final class ReviewerChangeTimelineEventRepresentation
 {
+    public readonly MinimalUserRepresentation $user;
     /**
-     * @var MinimalUserRepresentation
+     * @var string $post_date {@type date}
+     */
+    public readonly string $post_date;
+    /**
      * @psalm-readonly
      */
-    public $user;
+    public string $type = 'reviewer-change';
     /**
-     * @var string {@type date}
-     * @psalm-readonly
-     */
-    public $post_date;
-    /**
-     * @var string
-     * @psalm-readonly
-     */
-    public $type = 'reviewer-change';
-    /**
-     * @var MinimalUserRepresentation[]
      * @psalm-var list<MinimalUserRepresentation>
-     * @psalm-readonly
      */
-    public $added_reviewers;
+    public readonly array $added_reviewers;
     /**
-     * @var MinimalUserRepresentation[]
      * @psalm-var list<MinimalUserRepresentation>
-     * @psalm-readonly
      */
-    public $removed_reviewers;
+    public readonly array $removed_reviewers;
 
     /**
      * @param PFUser[] $added_reviewers
      * @param PFUser[] $removed_reviewers
      */
-    private function __construct(PFUser $user, int $post_date, array $added_reviewers, array $removed_reviewers)
+    private function __construct(PFUser $user, \DateTimeImmutable $post_date, array $added_reviewers, array $removed_reviewers)
     {
         $this->user              = self::buildMinimalUserRepresentation($user);
-        $this->post_date         = JsonCast::toDate($post_date);
+        $this->post_date         = JsonCast::fromNotNullDateTimeToDate($post_date);
         $this->added_reviewers   = self::transformToMinimalUserRepresentations(...$added_reviewers);
         $this->removed_reviewers = self::transformToMinimalUserRepresentations(...$removed_reviewers);
     }
@@ -75,7 +65,7 @@ final class ReviewerChangeTimelineEventRepresentation
     }
 
     /**
-     * @return MinimalUserRepresentation[]
+     * @return list<MinimalUserRepresentation>
      */
     private static function transformToMinimalUserRepresentations(PFUser ...$users): array
     {

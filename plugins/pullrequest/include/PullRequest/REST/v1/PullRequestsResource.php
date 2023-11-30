@@ -1134,7 +1134,7 @@ class PullRequestsResource extends AuthenticatedResource
         $color_retriever     = new ThreadCommentColorRetriever(new ThreadCommentDao(), $dao);
         $color_assigner      = new ThreadCommentColorAssigner($dao, $dao);
         $parent_id_validator = new ParentIdValidatorForComment($comment_retriever);
-        $current_time        = time();
+        $post_date           = new \DateTimeImmutable();
         $format              = $comment_data->format;
         if (! $format) {
             $format = TimelineComment::FORMAT_MARKDOWN;
@@ -1146,7 +1146,7 @@ class PullRequestsResource extends AuthenticatedResource
             0,
             $pull_request_id,
             (int) $user->getId(),
-            $current_time,
+            $post_date,
             $comment_data->content,
             (int) $comment_data->parent_id,
             $color,

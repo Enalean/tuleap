@@ -46,7 +46,7 @@ final class InlineCommentSearcherStub implements \Tuleap\PullRequest\InlineComme
             'id'                => $comment->getId(),
             'pull_request_id'   => $comment->getPullRequestId(),
             'user_id'           => $comment->getUserId(),
-            'post_date'         => $comment->getPostDate(),
+            'post_date'         => $comment->getPostDate()->getTimestamp(),
             'file_path'         => $comment->getFilePath(),
             'unidiff_offset'    => $comment->getUnidiffOffset(),
             'content'           => $comment->getContent(),
