@@ -27,9 +27,10 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class MilestonesInSidebarDaoTest extends TestCase
 {
-    private const ACME_PROJECT_ID           = 1;
-    private const DUNDER_MIFFLIN_PROJECT_ID = 2;
-    private const SKYNET_PROJECT_ID         = 3;
+    private const ACME_PROJECT_ID                = 1;
+    private const DUNDER_MIFFLIN_PROJECT_ID      = 2;
+    private const SKYNET_PROJECT_ID              = 3;
+    private const LOS_POLLOS_HERMANOS_PROJECT_ID = 4;
 
     protected function setUp(): void
     {
@@ -58,6 +59,33 @@ final class MilestonesInSidebarDaoTest extends TestCase
         self::assertFalse($this->dao->shouldSidebarDisplayLastMilestones(self::ACME_PROJECT_ID));
         self::assertTrue($this->dao->shouldSidebarDisplayLastMilestones(self::DUNDER_MIFFLIN_PROJECT_ID));
         self::assertFalse($this->dao->shouldSidebarDisplayLastMilestones(self::SKYNET_PROJECT_ID));
+    }
+
+    public function testDuplicate(): void
+    {
+        $db = DBFactory::getMainTuleapDBConnection()->getDB();
+        $db->insert(
+            'plugin_agiledashboard_milestones_in_sidebar_config',
+            ['project_id' => self::ACME_PROJECT_ID, 'should_sidebar_display_last_milestones' => 0],
+        );
+        $db->insert(
+            'plugin_agiledashboard_milestones_in_sidebar_config',
+            ['project_id' => self::DUNDER_MIFFLIN_PROJECT_ID, 'should_sidebar_display_last_milestones' => 1],
+        );
+
+
+        $this->dao->duplicate(self::LOS_POLLOS_HERMANOS_PROJECT_ID, self::ACME_PROJECT_ID);
+        self::assertFalse($this->dao->shouldSidebarDisplayLastMilestones(self::ACME_PROJECT_ID));
+        self::assertFalse($this->dao->shouldSidebarDisplayLastMilestones(self::LOS_POLLOS_HERMANOS_PROJECT_ID));
+
+
+        $this->dao->duplicate(self::LOS_POLLOS_HERMANOS_PROJECT_ID, self::DUNDER_MIFFLIN_PROJECT_ID);
+        self::assertTrue($this->dao->shouldSidebarDisplayLastMilestones(self::DUNDER_MIFFLIN_PROJECT_ID));
+        self::assertTrue($this->dao->shouldSidebarDisplayLastMilestones(self::LOS_POLLOS_HERMANOS_PROJECT_ID));
+
+        $this->dao->duplicate(self::LOS_POLLOS_HERMANOS_PROJECT_ID, self::SKYNET_PROJECT_ID);
+        self::assertFalse($this->dao->shouldSidebarDisplayLastMilestones(self::SKYNET_PROJECT_ID));
+        self::assertFalse($this->dao->shouldSidebarDisplayLastMilestones(self::LOS_POLLOS_HERMANOS_PROJECT_ID));
     }
 
     public function testShouldSidebarDisplayLastMilestonesWhenFeatureFlagAllowsMilestonesInSidebar(): void

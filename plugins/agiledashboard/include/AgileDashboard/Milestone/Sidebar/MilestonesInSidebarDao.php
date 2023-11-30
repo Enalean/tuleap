@@ -27,7 +27,7 @@ use Tuleap\Config\ConfigKeyInt;
 use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\DB\DataAccessObject;
 
-final class MilestonesInSidebarDao extends DataAccessObject implements CheckMilestonesInSidebar
+final class MilestonesInSidebarDao extends DataAccessObject implements CheckMilestonesInSidebar, DuplicateMilestonesInSidebarConfig
 {
     #[FeatureFlagConfigKey('Allow milestones in sidebar. 0 to disallow, 1 to allow. By default they are allowed.')]
     #[ConfigKeyHidden]
@@ -50,5 +50,16 @@ final class MilestonesInSidebarDao extends DataAccessObject implements CheckMile
                 EOSQL,
                 $project_id
             ) === 1;
+    }
+
+    public function duplicate(int $target_project_id, int $source_project_id): void
+    {
+        $sql = <<<EOSQL
+        INSERT INTO plugin_agiledashboard_milestones_in_sidebar_config(project_id, should_sidebar_display_last_milestones)
+        SELECT ?, should_sidebar_display_last_milestones
+        FROM plugin_agiledashboard_milestones_in_sidebar_config
+        WHERE project_id = ?
+        EOSQL;
+        $this->getDB()->run($sql, $target_project_id, $source_project_id);
     }
 }

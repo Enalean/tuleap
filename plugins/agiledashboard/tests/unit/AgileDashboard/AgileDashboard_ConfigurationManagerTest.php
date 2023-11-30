@@ -20,6 +20,7 @@
 
 declare(strict_types=1);
 
+use Tuleap\AgileDashboard\Stub\Milestone\Sidebar\DuplicateMilestonesInSidebarConfigStub;
 use Tuleap\Kanban\Stubs\Legacy\LegacyKanbanRetrieverStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
@@ -43,6 +44,7 @@ final class AgileDashboard_ConfigurationManagerTest extends \Tuleap\Test\PHPUnit
             $config_dao,
             LegacyKanbanRetrieverStub::withoutActivatedKanban(),
             $event_dispatcher,
+            DuplicateMilestonesInSidebarConfigStub::build(),
         );
 
         self::assertTrue($configuration_manager->scrumIsActivatedForProject(ProjectTestBuilder::aProject()->build()));
@@ -65,8 +67,28 @@ final class AgileDashboard_ConfigurationManagerTest extends \Tuleap\Test\PHPUnit
             $config_dao,
             LegacyKanbanRetrieverStub::withoutActivatedKanban(),
             $event_dispatcher,
+            DuplicateMilestonesInSidebarConfigStub::build(),
         );
 
         self::assertFalse($configuration_manager->scrumIsActivatedForProject(ProjectTestBuilder::aProject()->build()));
+    }
+
+    public function testDuplicateProjectConfiguration(): void
+    {
+        $config_dao = $this->createMock(AgileDashboard_ConfigurationDao::class);
+        $config_dao->expects(self::once())->method('duplicate');
+
+        $milestones_in_sidebar_config_duplicator = DuplicateMilestonesInSidebarConfigStub::build();
+
+        $configuration_manager = new AgileDashboard_ConfigurationManager(
+            $config_dao,
+            LegacyKanbanRetrieverStub::withoutActivatedKanban(),
+            \Tuleap\Test\Stubs\EventDispatcherStub::withIdentityCallback(),
+            $milestones_in_sidebar_config_duplicator,
+        );
+
+        $configuration_manager->duplicate(1, 2);
+
+        self::assertTrue($milestones_in_sidebar_config_duplicator->hasBeenCalled());
     }
 }
