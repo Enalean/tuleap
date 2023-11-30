@@ -1,5 +1,9 @@
 # Changelog
 
+## In development
+
+* ✨ Now promoted items can have subitems. This allows for example to display Backlog » Releases » Sprint.
+
 ## 2.5.0
 
 * Collapse of the sidebar is no longer deprecated.

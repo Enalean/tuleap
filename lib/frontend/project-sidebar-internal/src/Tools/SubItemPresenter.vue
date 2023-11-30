@@ -22,16 +22,16 @@
 
 <template>
     <div
-        class="project-sidebar-nav-promoted-item"
+        class="project-sidebar-nav-subitem"
         v-bind:class="{
-            active: is_item_active,
+            active: is_active,
         }"
     >
         <a
             v-bind:href="sanitized_href"
             v-bind:aria-label="label"
             v-bind:title="description"
-            class="project-sidebar-nav-promoted-item-link project-sidebar-nav-promoted-item-label"
+            class="project-sidebar-nav-subitem-link project-sidebar-nav-subitem-label"
         >
             {{ label }}
         </a>
@@ -39,25 +39,17 @@
             v-if="quick_link_add"
             v-bind:href="sanitized_quick_link_add_href"
             v-bind:aria-label="quick_link_add.label"
-            class="project-sidebar-nav-promoted-item-quick-link"
+            class="project-sidebar-nav-subitem-quick-link"
         >
             <i role="img" class="fa-solid fa-plus"></i>
         </a>
     </div>
-    <nav v-if="has_items" class="project-sidebar-subitem-nav">
-        <sub-item-presenter
-            v-for="item in items"
-            v-bind="item"
-            v-bind:key="href + label + description + item.href + item.label + item.description"
-        />
-    </nav>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue";
 import { sanitizeURL } from "../url-sanitizer";
-import type { Item, QuickLink } from "../configuration";
-import SubItemPresenter from "./SubItemPresenter.vue";
+import type { QuickLink } from "../configuration";
 
 // We cannot directly import the Tool interface from the external file so we duplicate the content for now
 // See https://github.com/vuejs/vue-next/issues/4294
@@ -67,14 +59,9 @@ const props = defineProps<{
     description: string;
     is_active: boolean;
     quick_link_add?: QuickLink | null;
-    items?: ReadonlyArray<Item>;
 }>();
 const sanitized_href = computed(() => sanitizeURL(props.href));
 const sanitized_quick_link_add_href = computed(() =>
     props.quick_link_add ? sanitizeURL(props.quick_link_add.href) : "",
-);
-const has_items = computed(() => props.items && props.items.length > 0);
-const is_item_active = computed(
-    () => props.is_active && !props.items?.some((item) => item.is_active),
 );
 </script>
