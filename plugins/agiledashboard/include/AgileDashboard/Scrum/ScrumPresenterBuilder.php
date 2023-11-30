@@ -35,6 +35,7 @@ use Project;
 use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminPaneContent;
 use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminSection;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
+use Tuleap\AgileDashboard\Milestone\Sidebar\CheckMilestonesInSidebar;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
@@ -76,6 +77,7 @@ class ScrumPresenterBuilder
         ExplicitBacklogDao $explicit_backlog_dao,
         AddToTopBacklogPostActionDao $add_to_top_backlog_post_action_dao,
         private readonly SplitKanbanConfigurationChecker $split_kanban_configuration_checker,
+        private readonly CheckMilestonesInSidebar $milestones_in_sidebar_config,
     ) {
         $this->config_manager                     = $config_manager;
         $this->scrum_mono_milestone_checker       = $scrum_mono_milestone_checker;
@@ -110,6 +112,7 @@ class ScrumPresenterBuilder
         $is_split_feature_flag_enabled = $this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project);
         $is_legacy_agiledashboard      = ! $is_split_feature_flag_enabled;
 
+        $should_sidebar_display_last_milestones = $this->milestones_in_sidebar_config->shouldSidebarDisplayLastMilestones((int) $project->getID());
 
         return new AdminScrumPresenter(
             $this->getPlanningAdminPresenterList($user, $project, $root_planning),
@@ -127,6 +130,7 @@ class ScrumPresenterBuilder
             $additional_scrum_sections->getAdditionalSectionsControllers(),
             $planning_administration_delegation->isPlanningAdministrationDelegated(),
             $is_legacy_agiledashboard,
+            $should_sidebar_display_last_milestones,
         );
     }
 

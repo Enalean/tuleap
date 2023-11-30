@@ -195,6 +195,9 @@ msgid ""
 "program backlog."
 msgstr ""
 
+msgid "Display milestones in sidebar"
+msgstr ""
+
 msgid ""
 "Do you really want to force burnup cache regeneration? The burnup will be "
 "unavailable for a few minutes if you do."
@@ -523,6 +526,9 @@ msgstr ""
 msgid ""
 "The potential planning trackers are computed out of %1$s configuration and "
 "its hierarchy."
+msgstr ""
+
+msgid "The sidebar will display the last 5 open milestones"
 msgstr ""
 
 #, php-format
