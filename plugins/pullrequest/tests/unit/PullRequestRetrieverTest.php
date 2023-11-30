@@ -42,7 +42,7 @@ final class PullRequestRetrieverTest extends TestCase
             ->withId(self::PULL_REQUEST_ID)
             ->withTitle(self::TITLE)
             ->build();
-        $this->pull_request_dao = SearchPullRequestStub::withPullRequest($pull_request);
+        $this->pull_request_dao = SearchPullRequestStub::withAtLeastOnePullRequest($pull_request);
     }
 
     /**

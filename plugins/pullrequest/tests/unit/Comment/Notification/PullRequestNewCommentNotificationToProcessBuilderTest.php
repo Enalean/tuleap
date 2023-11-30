@@ -55,7 +55,7 @@ final class PullRequestNewCommentNotificationToProcessBuilderTest extends \Tulea
         $this->change_user  = UserTestBuilder::buildWithId(102);
 
         $this->user_retriever   = RetrieveUserByIdStub::withUser($this->change_user);
-        $this->pull_request_dao = SearchPullRequestStub::withPullRequest($this->pull_request);
+        $this->pull_request_dao = SearchPullRequestStub::withAtLeastOnePullRequest($this->pull_request);
         $this->comment_dao      = CommentSearcherStub::withNoComment();
         $this->owner_retriever  = $this->createMock(OwnerRetriever::class);
         $this->user_helper      = $this->createMock(UserHelper::class);
@@ -129,7 +129,7 @@ final class PullRequestNewCommentNotificationToProcessBuilderTest extends \Tulea
         $event = PullRequestNewCommentEvent::fromCommentID($comment->getId());
 
         $this->comment_dao      = CommentSearcherStub::withComment($comment);
-        $this->pull_request_dao = SearchPullRequestStub::withPullRequest($this->pull_request);
+        $this->pull_request_dao = SearchPullRequestStub::withAtLeastOnePullRequest($this->pull_request);
         $this->user_retriever   = RetrieveUserByIdStub::withNoUser();
 
         $this->assertEmpty($this->getNotificationsToProcess($event));

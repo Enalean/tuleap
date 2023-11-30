@@ -28,7 +28,9 @@ use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Label\LabeledItemCollection;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
-use Tuleap\PullRequest\Factory;
+use Tuleap\PullRequest\PullRequestRetriever;
+use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
+use Tuleap\PullRequest\Tests\Stub\SearchPullRequestStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -43,11 +45,11 @@ final class LabeledItemCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
     private PullRequestLabelDao&MockObject $label_dao;
     private PullRequestPermissionChecker&MockObject $pullrequest_permission_checker;
     private GlyphFinder&MockObject $glyph_finder;
-    private Factory&MockObject $pullrequest_factory;
     private int $project_id;
     private array $label_ids;
     private \UserHelper&MockObject $user_helper;
     private \TemplateRenderer&MockObject $template_renderer;
+    private SearchPullRequestStub $pull_request_dao;
 
     protected function setUp(): void
     {
@@ -55,7 +57,6 @@ final class LabeledItemCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->pullrequest_permission_checker = $this->createMock(\Tuleap\PullRequest\Authorization\PullRequestPermissionChecker::class);
         $this->label_dao                      = $this->createMock(\Tuleap\PullRequest\Label\PullRequestLabelDao::class);
         $this->glyph_finder                   = $this->createMock(\Tuleap\Glyph\GlyphFinder::class);
-        $this->pullrequest_factory            = $this->createMock(\Tuleap\PullRequest\Factory::class);
 
         $glyph = $this->createMock(\Tuleap\Glyph\Glyph::class);
         $this->glyph_finder->method('get')->willReturn($glyph);
@@ -66,21 +67,14 @@ final class LabeledItemCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->label_dao->method('foundRows')->willReturn(99);
 
-        $first_pullrequest = $this->createMock(\Tuleap\PullRequest\PullRequest::class);
-        $first_pullrequest->method('getTitle')->willReturn('First PR');
-        $first_pullrequest->method('getRepoDestId')->willReturn(2);
-        $first_pullrequest->method('getUserId')->willReturn(101);
-        $first_pullrequest->method('getCreationDate')->willReturn('');
-        $second_pullrequest = $this->createMock(\Tuleap\PullRequest\PullRequest::class);
-        $second_pullrequest->method('getTitle')->willReturn('Second PR');
-        $second_pullrequest->method('getRepoDestId')->willReturn(2);
-        $second_pullrequest->method('getUserId')->willReturn(101);
-        $second_pullrequest->method('getCreationDate')->willReturn('');
+        $first_pullrequest  = PullRequestTestBuilder::aPullRequestInReview()->withId(75)->withTitle('First PR')->withRepositoryDestinationId(2)->createdBy(101)->build();
+        $second_pullrequest = PullRequestTestBuilder::aPullRequestInReview()->withId(66)->withTitle('Second PR')->withRepositoryDestinationId(2)->createdBy(101)->build();
 
-        $this->pullrequest_factory->method('getPullRequestById')->willReturnMap([
-            [75, $first_pullrequest],
-            [66, $second_pullrequest],
-        ]);
+
+        $this->pull_request_dao = SearchPullRequestStub::withAtLeastOnePullRequest(
+            $first_pullrequest,
+            $second_pullrequest
+        );
 
         $this->html_url_builder = $this->createMock(\Tuleap\PullRequest\Reference\HTMLURLBuilder::class);
 
@@ -97,6 +91,21 @@ final class LabeledItemCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->template_renderer = $this->createMock(\TemplateRenderer::class);
 
         $GLOBALS['Language']->method('getText')->willReturn('');
+    }
+
+    public function testItThrowsExceptionIfThePullRequestIsNotFoundInDB(): void
+    {
+        $this->pull_request_dao = SearchPullRequestStub::withNoRow();
+        $this->label_dao->method('searchPullRequestsByLabels')->willReturn(\TestHelper::argListToDar([
+            ['id' => 75],
+            ['id' => 66],
+        ]));
+        $this->item_collection->expects(self::never())->method('add');
+
+        $this->expectException(\LogicException::class);
+
+        $collector = $this->instantiateCollector();
+        $collector->collect($this->item_collection);
     }
 
     public function testItCollectsPullRequestsWithTheGivenLabel(): void
@@ -207,7 +216,7 @@ final class LabeledItemCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return new LabeledItemCollector(
             $this->label_dao,
-            $this->pullrequest_factory,
+            new PullRequestRetriever($this->pull_request_dao),
             $this->pullrequest_permission_checker,
             $this->html_url_builder,
             $this->glyph_finder,

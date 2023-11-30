@@ -502,7 +502,7 @@ class pullrequestPlugin extends Plugin implements PluginWithConfigKeys // phpcs:
 
         $labeled_item_collector = new LabeledItemCollector(
             new PullRequestLabelDao(),
-            $this->getPullRequestFactory(),
+            new PullRequestRetriever(new PullRequestDao()),
             $this->getPullRequestPermissionsChecker(),
             $this->getHTMLBuilder(),
             new GlyphFinder(

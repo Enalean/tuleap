@@ -90,7 +90,7 @@ final class PATCHHandlerTest extends TestCase
     {
         $handler = new PATCHHandler(
             new InlineCommentRetriever($this->comment_searcher),
-            new PullRequestRetriever(SearchPullRequestStub::withPullRequest($this->pull_request)),
+            new PullRequestRetriever(SearchPullRequestStub::withAtLeastOnePullRequest($this->pull_request)),
             $this->permission_checker,
             $this->comment_saver,
             $this->repository_retriever,

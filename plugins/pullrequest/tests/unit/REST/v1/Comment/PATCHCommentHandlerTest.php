@@ -83,7 +83,7 @@ final class PATCHCommentHandlerTest extends TestCase
 
         $this->comment_dao_searcher            = CommentSearcherStub::withComment($comment);
         $this->comment_updater_dao             = CommentUpdaterStub::fromDefault();
-        $this->pull_request_dao                = SearchPullRequestStub::withPullRequest($pull_request);
+        $this->pull_request_dao                = SearchPullRequestStub::withAtLeastOnePullRequest($pull_request);
         $this->pull_request_permission_checker = CheckUserCanAccessPullRequestStub::withAllowed();
         $this->cross_references_saver          = ExtractAndSaveCrossReferencesStub::withCallCount();
 

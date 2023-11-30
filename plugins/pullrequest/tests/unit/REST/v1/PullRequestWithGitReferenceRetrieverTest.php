@@ -60,7 +60,7 @@ final class PullRequestWithGitReferenceRetrieverTest extends TestCase
             ->build();
         $reference          = GitPullRequestReferenceTestBuilder::aReference(self::REFERENCE_ID)->build();
 
-        $this->pull_request_dao               = SearchPullRequestStub::withPullRequest($this->pull_request);
+        $this->pull_request_dao               = SearchPullRequestStub::withAtLeastOnePullRequest($this->pull_request);
         $this->git_pull_request_reference_dao = GetReferenceByPullRequestIdStub::withPullRequestWithReference(
             new PullRequestWithGitReference($this->pull_request, $reference)
         );

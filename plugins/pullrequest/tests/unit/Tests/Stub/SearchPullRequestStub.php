@@ -27,13 +27,16 @@ use Tuleap\PullRequest\SearchPullRequest;
 
 final class SearchPullRequestStub implements SearchPullRequest
 {
-    private function __construct(private readonly array $pull_request_row)
+    private function __construct(private array $pull_request_rows)
     {
     }
 
     public function searchByPullRequestId(int $pull_request_id): array
     {
-        return $this->pull_request_row;
+        if (count($this->pull_request_rows) > 0) {
+            return array_shift($this->pull_request_rows);
+        }
+        return $this->pull_request_rows;
     }
 
     public static function withNoRow(): self
@@ -41,9 +44,21 @@ final class SearchPullRequestStub implements SearchPullRequest
         return new self([]);
     }
 
-    public static function withPullRequest(PullRequest $pull_request): self
+    public static function withAtLeastOnePullRequest(PullRequest $pull_request, PullRequest ...$other_pull_requests): self
     {
-        return new self([
+        $all_row = [];
+
+        $all_row[] = self::convertPullRequestToRow($pull_request);
+
+        foreach ($other_pull_requests as $other_pull_request) {
+            $all_row[] = self::convertPullRequestToRow($other_pull_request);
+        }
+        return new self($all_row);
+    }
+
+    private static function convertPullRequestToRow(PullRequest $pull_request): array
+    {
+        return [
             'id'                 => $pull_request->getId(),
             'title'              => $pull_request->getTitle(),
             'description'        => $pull_request->getDescription(),
@@ -58,6 +73,6 @@ final class SearchPullRequestStub implements SearchPullRequest
             'description_format' => $pull_request->getDescriptionFormat(),
             'status'             => $pull_request->getStatus(),
             'merge_status'       => $pull_request->getMergeStatus(),
-        ]);
+        ];
     }
 }

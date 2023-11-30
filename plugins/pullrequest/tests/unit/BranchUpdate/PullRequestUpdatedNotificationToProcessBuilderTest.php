@@ -57,7 +57,7 @@ final class PullRequestUpdatedNotificationToProcessBuilderTest extends \Tuleap\T
 
     protected function setUp(): void
     {
-        $this->pull_request_dao       = SearchPullRequestStub::withPullRequest(PullRequestTestBuilder::aPullRequestInReview()->build());
+        $this->pull_request_dao       = SearchPullRequestStub::withAtLeastOnePullRequest(PullRequestTestBuilder::aPullRequestInReview()->build());
         $this->git_repository_factory = $this->createMock(GitRepositoryFactory::class);
         $this->owner_retriever        = $this->createMock(OwnerRetriever::class);
         $this->user_helper            = $this->createMock(UserHelper::class);
@@ -143,7 +143,7 @@ final class PullRequestUpdatedNotificationToProcessBuilderTest extends \Tuleap\T
             '4682f1f1fb9ee3cf6ca518547ae5525c9768a319'
         );
 
-        $this->pull_request_dao = SearchPullRequestStub::withPullRequest($pull_request);
+        $this->pull_request_dao = SearchPullRequestStub::withAtLeastOnePullRequest($pull_request);
         $this->git_repository_factory->method('getRepositoryById')
             ->with($git_repository->getId())->willReturn($git_repository);
         $this->owner_retriever->method('getOwners')->willReturn($owners);
@@ -208,7 +208,7 @@ final class PullRequestUpdatedNotificationToProcessBuilderTest extends \Tuleap\T
             '4682f1f1fb9ee3cf6ca518547ae5525c9768a319'
         );
 
-        $this->pull_request_dao = SearchPullRequestStub::withPullRequest($pull_request);
+        $this->pull_request_dao = SearchPullRequestStub::withAtLeastOnePullRequest($pull_request);
 
         $this->git_repository_factory->method('getRepositoryById')
             ->with($git_repository->getId())->willReturn(null);
@@ -238,7 +238,7 @@ final class PullRequestUpdatedNotificationToProcessBuilderTest extends \Tuleap\T
             '4682f1f1fb9ee3cf6ca518547ae5525c9768a319'
         );
 
-        $this->pull_request_dao = SearchPullRequestStub::withPullRequest($pull_request);
+        $this->pull_request_dao = SearchPullRequestStub::withAtLeastOnePullRequest($pull_request);
         $this->git_repository_factory->method('getRepositoryById')
             ->with($git_repository->getId())->willReturn($git_repository);
 

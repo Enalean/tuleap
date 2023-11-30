@@ -56,7 +56,7 @@ final class PullRequestNewInlineCommentNotificationToProcessBuilderTest extends 
         $this->pull_request = PullRequestTestBuilder::aPullRequestInReview()->build();
 
         $this->user_retriever          = RetrieveUserByIdStub::withUser($this->change_user);
-        $this->pull_request_dao        = SearchPullRequestStub::withPullRequest($this->pull_request);
+        $this->pull_request_dao        = SearchPullRequestStub::withAtLeastOnePullRequest($this->pull_request);
         $this->code_context_extractor  = $this->createMock(InlineCommentCodeContextExtractor::class);
         $this->owner_retriever         = $this->createMock(OwnerRetriever::class);
         $this->user_helper             = $this->createMock(UserHelper::class);

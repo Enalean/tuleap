@@ -43,7 +43,7 @@ final class AccessiblePullRequestRESTRetrieverTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->pull_request_dao   = SearchPullRequestStub::withPullRequest(PullRequestTestBuilder::aPullRequestInReview()->build());
+        $this->pull_request_dao   = SearchPullRequestStub::withAtLeastOnePullRequest(PullRequestTestBuilder::aPullRequestInReview()->build());
         $this->permission_checker = CheckUserCanAccessPullRequestStub::withAllowed();
     }
 
@@ -103,7 +103,7 @@ final class AccessiblePullRequestRESTRetrieverTest extends TestCase
         $title         = 'Elan Sprint';
         $repository_id = 15;
 
-        $this->pull_request_dao = SearchPullRequestStub::withPullRequest(
+        $this->pull_request_dao = SearchPullRequestStub::withAtLeastOnePullRequest(
             PullRequestTestBuilder::aPullRequestInReview()->withId($id)->withTitle($title)->withRepositoryId($repository_id)->build()
         );
         $result                 = $this->getAccessiblePullRequest();
