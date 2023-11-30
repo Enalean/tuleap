@@ -20,30 +20,25 @@
 
 declare(strict_types=1);
 
-namespace ReviewerChangeTest;
+namespace Tuleap\PullRequest\Reviewer\Change;
 
-use Tuleap\PullRequest\Reviewer\Change\ReviewerChange;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ReviewerChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testReviewerChangeCanBeConstructed(): void
     {
         $change_date      = new \DateTimeImmutable('@10');
-        $change_user      = $this->buildUser();
-        $added_reviewer   = [$this->buildUser(), $this->buildUser()];
-        $removed_reviewer = [$this->buildUser()];
+        $change_user      = UserTestBuilder::buildWithId(142);
+        $added_reviewer   = [UserTestBuilder::buildWithId(152), UserTestBuilder::buildWithId(183)];
+        $removed_reviewer = [UserTestBuilder::buildWithId(204)];
 
         $change = new ReviewerChange($change_date, $change_user, $added_reviewer, $removed_reviewer);
 
         $this->assertEquals($change_date, $change->changedAt());
-        $this->assertEquals($change_date->getTimestamp(), $change->getPostDate());
+        $this->assertEquals($change_date, $change->getPostDate());
         $this->assertSame($change_user, $change->changedBy());
         $this->assertSame($added_reviewer, $change->getAddedReviewers());
         $this->assertSame($removed_reviewer, $change->getRemovedReviewers());
-    }
-
-    private function buildUser(): \PFUser
-    {
-        return new \PFUser(['language_id' => 'en_US']);
     }
 }

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Comment;
 
-use DateTimeImmutable;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -30,13 +29,14 @@ final class CommentTest extends TestCase
 {
     public function testItBuildsTheCommentFromDatabaseRowWithTheLastEditionDate(): void
     {
-        $last_edition_date = new DateTimeImmutable('@1520883863');
+        $post_date         = new \DateTimeImmutable('@123456789');
+        $last_edition_date = new \DateTimeImmutable('@1520883863');
         $comment           = Comment::buildFromRow(
             [
                 'id'                => 1,
                 'pull_request_id'   => 10,
                 'user_id'           => 102,
-                'post_date'         => 123456789,
+                'post_date'         => $post_date->getTimestamp(),
                 'content'           => "no",
                 'parent_id'         => 0,
                 'color'             => 'inca-silver',
@@ -45,6 +45,7 @@ final class CommentTest extends TestCase
             ]
         );
 
+        self::assertEquals($post_date, $comment->getPostDate());
         self::assertTrue($comment->getLastEditionDate()->isValue());
         self::assertEquals($last_edition_date, $comment->getLastEditionDate()->unwrapOr(null));
     }

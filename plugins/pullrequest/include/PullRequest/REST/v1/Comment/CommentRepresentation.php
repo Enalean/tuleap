@@ -60,7 +60,7 @@ final class CommentRepresentation
         $this->color                  = $comment->getColor();
         $this->parent_id              = $comment->getParentId();
         $this->format                 = $comment->getFormat();
-        $this->post_date              = JsonCast::toDate($comment->getPostDate());
+        $this->post_date              = JsonCast::fromNotNullDateTimeToDate($comment->getPostDate());
         $this->last_edition_date      = JsonCast::fromDateTimeToDate($comment->getLastEditionDate()->unwrapOr(null));
         $this->type                   = self::TYPE;
         $this->content                = $comment_content->purified_content;

@@ -40,7 +40,7 @@ class Factory
         $saved = $this->dao->save(
             $comment->getPullRequestId(),
             $comment->getUserId(),
-            $comment->getPostDate(),
+            $comment->getPostDate()->getTimestamp(),
             $comment->getContent(),
             $comment->getParentId(),
             $comment->getFormat()

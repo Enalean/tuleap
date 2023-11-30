@@ -22,5 +22,5 @@ namespace Tuleap\PullRequest\Timeline;
 
 interface TimelineEvent
 {
-    public function getPostDate(): int;
+    public function getPostDate(): \DateTimeImmutable;
 }

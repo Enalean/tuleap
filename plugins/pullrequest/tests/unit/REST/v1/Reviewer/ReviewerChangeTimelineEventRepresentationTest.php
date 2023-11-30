@@ -22,36 +22,28 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\REST\v1\Reviewer;
 
-use Tuleap\GlobalLanguageMock;
 use Tuleap\PullRequest\Reviewer\Change\ReviewerChange;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ReviewerChangeTimelineEventRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use GlobalLanguageMock;
-
     public function testCanBuildRepresentationFromAReviewerChange(): void
     {
         $reviewer_change = new ReviewerChange(
             new \DateTimeImmutable('@10'),
-            $this->buildUser(102),
-            [$this->buildUser(103)],
-            [$this->buildUser(104)]
+            UserTestBuilder::buildWithId(102),
+            [UserTestBuilder::buildWithId(103)],
+            [UserTestBuilder::buildWithId(104)]
         );
 
         $representation = ReviewerChangeTimelineEventRepresentation::fromReviewerChange($reviewer_change);
 
         $this->assertEquals('reviewer-change', $representation->type);
-        $this->assertEquals('1970-01-01T01:00:10+01:00', $representation->post_date);
+        $this->assertSame('1970-01-01T00:00:10+00:00', $representation->post_date);
         $this->assertEquals(102, $representation->user->id);
         $this->assertCount(1, $representation->added_reviewers);
         $this->assertEquals(103, $representation->added_reviewers[0]->id);
         $this->assertCount(1, $representation->removed_reviewers);
         $this->assertEquals(104, $representation->removed_reviewers[0]->id);
-    }
-
-    private function buildUser(int $user_id): \PFUser
-    {
-        return UserTestBuilder::aUser()->withId($user_id)->withUserName("user")->withRealName("real")->build();
     }
 }

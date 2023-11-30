@@ -20,7 +20,7 @@
 
 namespace Tuleap\PullRequest\Timeline;
 
-class TimelineGlobalEvent implements TimelineEvent
+final class TimelineGlobalEvent implements TimelineEvent
 {
     public const UPDATE  = 1;
     public const REBASE  = 2;
@@ -28,8 +28,13 @@ class TimelineGlobalEvent implements TimelineEvent
     public const ABANDON = 4;
     public const REOPEN  = 5;
 
-    private function __construct(private int $id, private int $pull_request_id, private int $user_id, private int $post_date, private int $type)
-    {
+    private function __construct(
+        private readonly int $id,
+        private readonly int $pull_request_id,
+        private readonly int $user_id,
+        private readonly \DateTimeImmutable $post_date,
+        private readonly int $type,
+    ) {
     }
 
     public static function buildFromRow(array $row): self
@@ -38,7 +43,7 @@ class TimelineGlobalEvent implements TimelineEvent
             $row['id'],
             $row['pull_request_id'],
             $row['user_id'],
-            $row['post_date'],
+            new \DateTimeImmutable('@' . $row['post_date']),
             $row['type'],
         );
     }
@@ -58,7 +63,7 @@ class TimelineGlobalEvent implements TimelineEvent
         return $this->user_id;
     }
 
-    public function getPostDate(): int
+    public function getPostDate(): \DateTimeImmutable
     {
         return $this->post_date;
     }

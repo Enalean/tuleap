@@ -33,7 +33,7 @@ final class InlineComment implements TimelineEvent, TimelineComment
         private int $id,
         private int $pull_request_id,
         private int $user_id,
-        private int $post_date,
+        private \DateTimeImmutable $post_date,
         private string $file_path,
         private int $unidiff_offset,
         private string $content,
@@ -73,7 +73,7 @@ final class InlineComment implements TimelineEvent, TimelineComment
             (int) $row['id'],
             (int) $row['pull_request_id'],
             (int) $row['user_id'],
-            $row['post_date'],
+            new \DateTimeImmutable('@' . $row['post_date']),
             $row['file_path'],
             (int) $row['unidiff_offset'],
             $row['content'],
@@ -92,7 +92,7 @@ final class InlineComment implements TimelineEvent, TimelineComment
             $id,
             $comment->pull_request->getId(),
             (int) $comment->author->getId(),
-            $comment->post_date->getTimestamp(),
+            $comment->post_date,
             $comment->file_path,
             $comment->unidiff_offset,
             $comment->content,
@@ -120,7 +120,7 @@ final class InlineComment implements TimelineEvent, TimelineComment
         return $this->user_id;
     }
 
-    public function getPostDate(): int
+    public function getPostDate(): \DateTimeImmutable
     {
         return $this->post_date;
     }

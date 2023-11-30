@@ -32,13 +32,13 @@ final class InlineCommentTestBuilder
     private int $id              = 13;
     private int $pull_request_id = 54;
     private int $user_id         = 105;
-    private int $post_date       = 1695212990;
-    private int $parent_id       = 0;
-    private string $color        = '';
-    private string $file_path    = 'plugins/pullrequests/tests/unit/Builder/InlineCommentTestBuilder.php';
-    private int $unidiff_offset  = 37;
-    private bool $is_outdated    = false;
-    private string $position     = 'right';
+    private \DateTimeImmutable $post_date;
+    private int $parent_id      = 0;
+    private string $color       = '';
+    private string $file_path   = 'plugins/pullrequests/tests/unit/Builder/InlineCommentTestBuilder.php';
+    private int $unidiff_offset = 37;
+    private bool $is_outdated   = false;
+    private string $position    = 'right';
     /** @var Option<\DateTimeImmutable> */
     private Option $last_edition_date;
 
@@ -46,6 +46,7 @@ final class InlineCommentTestBuilder
         private readonly string $content,
         private readonly string $format,
     ) {
+        $this->post_date         = new \DateTimeImmutable('@1695212990');
         $this->last_edition_date = Option::nothing(\DateTimeImmutable::class);
     }
 

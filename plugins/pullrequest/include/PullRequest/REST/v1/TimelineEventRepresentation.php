@@ -20,45 +20,32 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
-use Tuleap\User\REST\MinimalUserRepresentation;
 use Tuleap\REST\JsonCast;
+use Tuleap\User\REST\MinimalUserRepresentation;
 
 /**
  * @psalm-immutable
  */
-class TimelineEventRepresentation
+final class TimelineEventRepresentation
 {
+    public readonly MinimalUserRepresentation $user;
     /**
-     * @var MinimalUserRepresentation {@type MinimalUserRepresentation}
+     * @var string $post_date {@type date}
      */
-    public $user;
+    public readonly string $post_date;
+    public readonly string $event_type;
+    public string $type = 'timeline-event';
+    public readonly int $parent_id;
 
-    /**
-     * @var string {@type string}
-     */
-    public $post_date;
-
-    /**
-     * @var string {@type string}
-     */
-    public $event_type;
-
-    /**
-     * @var string {@type string}
-     */
-    public $type;
-    /**
-     * @var int {@type int}
-     */
-    public int $parent_id;
-
-
-    public function __construct(MinimalUserRepresentation $user, int $post_date, int $event_type, int $parent_id)
-    {
+    public function __construct(
+        MinimalUserRepresentation $user,
+        \DateTimeImmutable $post_date,
+        int $event_type,
+        int $parent_id,
+    ) {
         $this->user       = $user;
-        $this->post_date  = JsonCast::toDate($post_date);
+        $this->post_date  = JsonCast::fromNotNullDateTimeToDate($post_date);
         $this->event_type = PullRequestStatusTypeConverter::fromIntStatusToStringStatus($event_type);
-        $this->type       = 'timeline-event';
         $this->parent_id  = $parent_id;
     }
 }

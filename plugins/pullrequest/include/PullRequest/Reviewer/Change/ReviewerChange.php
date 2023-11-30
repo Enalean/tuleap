@@ -26,64 +26,33 @@ use DateTimeImmutable;
 use PFUser;
 use Tuleap\PullRequest\Timeline\TimelineEvent;
 
+/**
+ * @psalm-mutation-free
+ */
 final class ReviewerChange implements TimelineEvent
 {
-    /**
-     * @var DateTimeImmutable
-     * @psalm-readonly
-     */
-    private $date_of_the_change;
-    /**
-     * @var PFUser
-     * @psalm-readonly
-     */
-    private $user_doing_the_change;
-    /**
-     * @var array|PFUser[]
-     * @psalm-readonly
-     */
-    private $added_reviewers;
-    /**
-     * @var array|PFUser[]
-     * @psalm-readonly
-     */
-    private $removed_reviewers;
-
     /**
      * @param PFUser[] $added_reviewers
      * @param PFUser[] $removed_reviewers
      */
     public function __construct(
-        DateTimeImmutable $date_of_the_change,
-        PFUser $user_doing_the_change,
-        array $added_reviewers,
-        array $removed_reviewers,
+        private readonly \DateTimeImmutable $date_of_the_change,
+        private readonly PFUser $user_doing_the_change,
+        private readonly array $added_reviewers,
+        private readonly array $removed_reviewers,
     ) {
-        $this->date_of_the_change    = $date_of_the_change;
-        $this->user_doing_the_change = $user_doing_the_change;
-        $this->added_reviewers       = $added_reviewers;
-        $this->removed_reviewers     = $removed_reviewers;
     }
 
-    /**
-     * @psalm-mutation-free
-     */
     public function changedAt(): DateTimeImmutable
     {
         return $this->date_of_the_change;
     }
 
-    /**
-     * @psalm-mutation-free
-     */
-    public function getPostDate(): int
+    public function getPostDate(): \DateTimeImmutable
     {
-        return $this->date_of_the_change->getTimestamp();
+        return $this->date_of_the_change;
     }
 
-    /**
-     * @psalm-mutation-free
-     */
     public function changedBy(): PFUser
     {
         return $this->user_doing_the_change;
@@ -91,7 +60,6 @@ final class ReviewerChange implements TimelineEvent
 
     /**
      * @return PFUser[]
-     * @psalm-mutation-free
      */
     public function getAddedReviewers(): array
     {
@@ -100,7 +68,6 @@ final class ReviewerChange implements TimelineEvent
 
     /**
      * @return PFUser[]
-     * @psalm-mutation-free
      */
     public function getRemovedReviewers(): array
     {

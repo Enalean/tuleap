@@ -47,7 +47,7 @@ final class CommentSearcherStub implements CommentSearcher
             'id'                => $comment->getId(),
             'pull_request_id'   => $comment->getPullRequestId(),
             'user_id'           => $comment->getUserId(),
-            'post_date'         => $comment->getPostDate(),
+            'post_date'         => $comment->getPostDate()->getTimestamp(),
             'content'           => $comment->getContent(),
             'parent_id'         => $comment->getParentId(),
             'color'             => $comment->getColor(),
