@@ -2767,11 +2767,6 @@ msgid "The computation of the progression will be"
 msgstr ""
 
 msgid ""
-"The configured mail transport of the platform does not allow the usage of "
-"the tracker email gateway."
-msgstr ""
-
-msgid ""
 "The contributor(s)/assignee(s) are the person(s) who are responsible for the "
 "work needed to complete the artifact."
 msgstr ""

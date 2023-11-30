@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Mail\Transport\MailTransportBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
@@ -286,14 +285,10 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
         return $html;
     }
 
-    /**
-     * @return Tracker_ArtifactByEmailStatus
-     */
-    private function canUpdateArtifactByMail()
+    private function canUpdateArtifactByMail(): bool
     {
         $config = new MailGatewayConfig(
             new MailGatewayConfigDao(),
-            MailTransportBuilder::getPlatformMailConfiguration(),
         );
 
         $status = new Tracker_ArtifactByEmailStatus($config);

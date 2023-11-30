@@ -23,7 +23,6 @@
  */
 
 use Tuleap\Date\RelativeDatesAssetsRetriever;
-use Tuleap\Mail\Transport\MailTransportBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\CodeBlockFeaturesOnArtifact;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
@@ -183,7 +182,6 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         $status = new Tracker_ArtifactByEmailStatus(
             new MailGatewayConfig(
                 new MailGatewayConfigDao(),
-                MailTransportBuilder::getPlatformMailConfiguration(),
             )
         );
         if ($status->canUpdateArtifactInInsecureMode($this->tracker)) {

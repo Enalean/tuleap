@@ -36,7 +36,6 @@ use Tracker_GlobalNotificationDao;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Mail\MailLogger;
-use Tuleap\Mail\Transport\MailTransportBuilder;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Queue\IsAsyncTaskProcessingAvailable;
 use Tuleap\Queue\QueueFactory;
@@ -123,7 +122,6 @@ class ActionsRunner
                 Tracker_Artifact_MailGateway_RecipientFactory::build(),
                 new MailGatewayConfig(
                     new MailGatewayConfigDao(),
-                    MailTransportBuilder::getPlatformMailConfiguration(),
                 ),
                 new MailSender(),
                 new ConfigNotificationAssignedTo(new ConfigNotificationAssignedToDao()),

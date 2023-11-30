@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\MailGateway;
 
-use Tuleap\Mail\Transport\Configuration\PlatformMailConfiguration;
-
 class MailGatewayConfig
 {
     public const DISABLED = 'disabled';
@@ -35,7 +33,6 @@ class MailGatewayConfig
 
     public function __construct(
         private MailGatewayConfigDao $dao,
-        private PlatformMailConfiguration $mail_transport_configuration,
     ) {
     }
 
@@ -49,21 +46,12 @@ class MailGatewayConfig
 
     public function isInsecureEmailgatewayEnabled(): bool
     {
-        return $this->getEmailgatewayMode() === self::INSECURE;
+        return $this->getEmailgatewayRowMode() === self::INSECURE;
     }
 
     public function isTokenBasedEmailgatewayEnabled(): bool
     {
-        return $this->getEmailgatewayMode() === self::TOKEN;
-    }
-
-    private function getEmailgatewayMode(): string
-    {
-        if (! $this->mail_transport_configuration->mustGeneratesSelfHostedConfigurationAndFeatures()) {
-            return self::DISABLED;
-        }
-
-        return $this->getEmailgatewayRowMode();
+        return $this->getEmailgatewayRowMode() === self::TOKEN;
     }
 
     public function getEmailgatewayRowMode(): string

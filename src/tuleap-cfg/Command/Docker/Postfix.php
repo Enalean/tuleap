@@ -37,18 +37,6 @@ final class Postfix
 
     public function setup(OutputInterface $output, string $tuleap_fqdn): void
     {
-        $configuration = MailTransportBuilder::getPlatformMailConfiguration();
-
-        if (! $configuration->mustGeneratesSelfHostedConfigurationAndFeatures()) {
-            $output->writeln(
-                sprintf(
-                    "The mail relay platform is not configured to %s. No Postfix configuration needed.",
-                    MailTransportBuilder::EMAIL_TRANSPORT_SENDMAIL_VALUE,
-                )
-            );
-            return;
-        }
-
         $output->writeln('Setup Postfix');
 
         touch('/etc/aliases.codendi');
