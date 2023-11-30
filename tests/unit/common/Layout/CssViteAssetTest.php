@@ -24,15 +24,17 @@ declare(strict_types=1);
 namespace Tuleap\Layout;
 
 use org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStreamDirectory;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class CssViteAssetTest extends TestCase
 {
     public function testBuildsCssAssets(): void
     {
-        $manifest_dir = vfsStream::setup()->url();
+        $assets_dir = vfsStream::setup();
+        $assets_dir->addChild(new vfsStreamDirectory('.vite'));
         file_put_contents(
-            $manifest_dir . '/manifest.json',
+            $assets_dir->url() . '/.vite/manifest.json',
             <<<EOF
             {
               "main.ts": {
@@ -47,7 +49,7 @@ final class CssViteAssetTest extends TestCase
             }
             EOF
         );
-        $include_assets = new IncludeViteAssets($manifest_dir, '/');
+        $include_assets = new IncludeViteAssets($assets_dir->url(), '/');
 
         $collection = CssViteAsset::buildCollectionFromMainFileName($include_assets, 'main.ts');
         $css_assets = $collection->getDeduplicatedAssets();
@@ -65,9 +67,10 @@ final class CssViteAssetTest extends TestCase
 
     public function testBuildsNoCSSAssetsWhenNothingIsAssociatedToTheMainFile(): void
     {
-        $manifest_dir = vfsStream::setup()->url();
+        $assets_dir = vfsStream::setup();
+        $assets_dir->addChild(new vfsStreamDirectory('.vite'));
         file_put_contents(
-            $manifest_dir . '/manifest.json',
+            $assets_dir->url() . '/.vite/manifest.json',
             <<<EOF
             {
               "main.ts": {
@@ -78,7 +81,7 @@ final class CssViteAssetTest extends TestCase
             }
             EOF
         );
-        $include_assets = new IncludeViteAssets($manifest_dir, '/');
+        $include_assets = new IncludeViteAssets($assets_dir->url(), '/');
 
         $collection = CssViteAsset::buildCollectionFromMainFileName($include_assets, 'main.ts');
 
@@ -87,9 +90,10 @@ final class CssViteAssetTest extends TestCase
 
     public function testItBuildsFromACSSOnlyAssetInManifest(): void
     {
-        $manifest_dir = vfsStream::setup()->url();
+        $assets_dir = vfsStream::setup();
+        $assets_dir->addChild(new vfsStreamDirectory('.vite'));
         file_put_contents(
-            $manifest_dir . '/manifest.json',
+            $assets_dir->url() . '/.vite/manifest.json',
             <<<EOF
             {
               "style.scss": {
@@ -100,7 +104,7 @@ final class CssViteAssetTest extends TestCase
             }
             EOF
         );
-        $include_assets = new IncludeViteAssets($manifest_dir, '/');
+        $include_assets = new IncludeViteAssets($assets_dir->url(), '/');
 
         $css_asset = CssViteAsset::fromFileName($include_assets, 'style.scss');
 

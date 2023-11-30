@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare module "*.scss" {
+declare module "*.scss?inline" {
     const scss: string;
     export default scss;
 }

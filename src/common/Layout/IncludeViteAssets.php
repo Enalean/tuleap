@@ -24,12 +24,12 @@ namespace Tuleap\Layout;
 
 final class IncludeViteAssets implements IncludeAssetsGeneric
 {
-    private string $manifest_file;
+    private readonly string $manifest_file;
     private ?array $assets = null;
 
     public function __construct(string $base_directory, private string $base_url)
     {
-        $this->manifest_file = $base_directory . '/manifest.json';
+        $this->manifest_file = $base_directory . '/.vite/manifest.json';
     }
 
     public function getFileURL(string $file_name): string

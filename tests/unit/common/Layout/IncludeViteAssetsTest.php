@@ -23,29 +23,31 @@ declare(strict_types=1);
 namespace Tuleap\Layout;
 
 use org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStreamDirectory;
+use org\bovigo\vfs\vfsStreamFile;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class IncludeViteAssetsTest extends TestCase
 {
-    private string $assets_dir_path;
+    private vfsStreamDirectory $assets_dir;
 
     protected function setUp(): void
     {
-        $this->assets_dir_path = vfsStream::setup()->url() . '/assets';
-        mkdir($this->assets_dir_path);
+        $this->assets_dir = vfsStream::setup();
+        $this->assets_dir->addChild(new vfsStreamDirectory('.vite'));
     }
 
     public function testItReturnsFileURLWithHashedName(): void
     {
-        file_put_contents($this->assets_dir_path . '/manifest.json', '{"file.js": {"file": "file-hashed.js"}}');
-        $include_assets = new IncludeViteAssets($this->assets_dir_path, '/path/to');
+        $this->assets_dir->addChild((new vfsStreamFile('.vite/manifest.json'))->setContent('{"file.js": {"file": "file-hashed.js"}}'));
+        $include_assets = new IncludeViteAssets($this->assets_dir->url(), '/path/to');
 
-        $this->assertEquals('/path/to/file-hashed.js', $include_assets->getFileURL('file.js'));
+        $this->assertSame('/path/to/file-hashed.js', $include_assets->getFileURL('file.js'));
     }
 
     public function testItRaisesManifestExceptionIfThereIsNoManifestFile(): void
     {
-        $include_assets = new IncludeViteAssets($this->assets_dir_path, '/path/to');
+        $include_assets = new IncludeViteAssets($this->assets_dir->url(), '/path/to');
 
         $this->expectException(IncludeAssetsManifestException::class);
 
@@ -54,8 +56,8 @@ final class IncludeViteAssetsTest extends TestCase
 
     public function testItRaisesExceptionWhenTheRequestedFileDoesNotExist(): void
     {
-        file_put_contents($this->assets_dir_path . '/manifest.json', '{}');
-        $include_assets = new IncludeViteAssets($this->assets_dir_path, '/path/to');
+        $this->assets_dir->addChild((new vfsStreamFile('.vite/manifest.json'))->setContent('{}'));
+        $include_assets = new IncludeViteAssets($this->assets_dir->url(), '/path/to');
 
         $this->expectException(IncludeAssetsException::class);
 
@@ -64,9 +66,9 @@ final class IncludeViteAssetsTest extends TestCase
 
     public function testItDoesNotDoubleTrailingSlashInFileURL(): void
     {
-        file_put_contents($this->assets_dir_path . '/manifest.json', '{"file.js": {"file": "file-hashed.js"}}');
-        $include_assets = new IncludeViteAssets($this->assets_dir_path, '/path/to/');
+        $this->assets_dir->addChild((new vfsStreamFile('.vite/manifest.json'))->setContent('{"file.js": {"file": "file-hashed.js"}}'));
+        $include_assets = new IncludeViteAssets($this->assets_dir->url(), '/path/to/');
 
-        $this->assertEquals('/path/to/file-hashed.js', $include_assets->getFileURL('file.js'));
+        $this->assertSame('/path/to/file-hashed.js', $include_assets->getFileURL('file.js'));
     }
 }

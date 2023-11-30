@@ -21,7 +21,7 @@ import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import type { GettextProvider } from "@tuleap/gettext";
 import type { InternalCommonmarkPopover } from "./CommonmarkPopover";
-import popover_styles from "../themes/style.scss";
+import popover_styles from "../themes/style.scss?inline";
 
 export const POPOVER_TRIGGER_CLASSNAME = "commonmark-popover-trigger";
 export const POPOVER_CLASSNAME = "commonmark-popover-content";

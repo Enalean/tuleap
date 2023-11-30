@@ -19,7 +19,7 @@
 
 import { define, dispatch, html } from "hybrids";
 import { isBackspaceKey } from "./helpers/keys-helper";
-import input_style from "./search_input.scss";
+import input_style from "./search_input.scss?inline";
 
 export type SearchInput = {
     disabled: boolean;
