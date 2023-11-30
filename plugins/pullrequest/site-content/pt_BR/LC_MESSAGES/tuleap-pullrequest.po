@@ -19,6 +19,12 @@ msgstr ""
 msgid "%s commented on #%d: %s."
 msgstr ""
 
+msgid "%s commented on %s: %s in %s:"
+msgstr ""
+
+msgid "%s commented on %s: %s."
+msgstr ""
+
 #, php-format
 msgid "%s has abandoned the pull request #%d: %s"
 msgstr ""
@@ -54,12 +60,6 @@ msgid "%s updated their comment on %s: %s in %s:"
 msgstr ""
 
 msgid "%s updated their comment on %s: %s."
-msgstr ""
-
-msgid "<a href=\"%s\">%s</a> commented on <a href=\"%s\">#%s</a>: %s in %s:"
-msgstr ""
-
-msgid "<a href=\"%s\">%s</a> commented on <a href=\"%s\">#%s</a>: %s."
 msgstr ""
 
 msgid ""
