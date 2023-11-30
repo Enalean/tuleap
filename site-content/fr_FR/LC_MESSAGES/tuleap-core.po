@@ -3535,12 +3535,6 @@ msgstr ""
 "L'ancien modèle par défaut. Ne sera bientôt plus disponible. A recréer en "
 "tant que \"Modèle de projet personnalisé\""
 
-msgid "The list of global whitelist is too big."
-msgstr "La liste des exceptions est trop longue."
-
-msgid "The list of immutable tags paths is too big."
-msgstr "La liste des tags non modifiables est trop longue."
-
 msgid ""
 "The list of projects that were previously whitelisted will be permanently "
 "lost."

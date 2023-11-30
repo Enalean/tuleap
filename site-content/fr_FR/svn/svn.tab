@@ -3,63 +3,11 @@
 # This file is licensed under the GNU General Public License version 2. See the file COPYING.
 #
 
-svn_admin_immutable_tags	title	Tags non modifiables
-svn_admin_immutable_tags	configuration	Configuration des tags non modifiables
-svn_admin_immutable_tags	configuration_description	Spécifiez les répertoires dans lesquels se trouveront les tags non modifiables. Vous pouvez définir une liste de répertoires où les modifications seront tout de même autorisées.
-svn_admin_immutable_tags	layout_example	Exemple d'arborescence
-svn_admin_immutable_tags	impacted_svn	Exemple d'operations svn dans <span class="label" id="tag-name-example"></span>
-svn_admin_immutable_tags	impacted_svn_empty_state	Exemple d'operations svn
-svn_admin_immutable_tags	whitelist	Liste globale d'exceptions
-svn_admin_immutable_tags	path	Chemin des tags non modifiables
-svn_admin_immutable_tags	tree	Arborescence
-svn_admin_immutable_tags	preview	Prévisualisation de votre configuration
-svn_admin_immutable_tags	preview_description	Voici une prévisualisation des impacts de votre configuration. Cliquez sur les dossiers en surbrillance pour les détails.
-svn_admin_immutable_tags	save	Sauvegarder la configuration
-svn_admin_immutable_tags	my-tag	mon-tag
-svn_admin_immutable_tags	some/path	le/chemin
-svn_admin_immutable_tags	svn_status_style	Façon SVN status
-svn_admin_immutable_tags	loading	Chargement en cours...
-svn_admin_immutable_tags	select_tag	Veuillez sélectionner un tag dans l'arborescence à gauche
-svn_admin_immutable_tags	tree_empty_state	Votre dépôt SVN n'est pas impacté par les tags immutable car la configuration actuelle est vide ou ne correspond pas à l'arborescence du dépôt.
-svn_admin_immutable_tags	sooo_fat	Votre dépôt contient trop de dossiers (plus que $1), nous ne pouvons pas afficher la prévisualisation de la configuration pour des raisons de performances.
 
 svn_tokens	default_comment	Jeton généré le $1
 svn_tokens	default_last_used_on	Jamais
 svn_tokens	default_last_used_by	-
 
-#
-#-----------------------------------------------
-# Script: SF/www/svn/admin/index.php
-#
-svn_admin_index	admin	Administration Subversion
-svn_admin_index	welcome	Définition du message de bienvenue, suivi dans la base de données...
-svn_admin_index	email_sett	Options de notification e-mail
-svn_admin_index	email_comment	Définition des destinataires des notification e-mail des changements remontés dans le dépôt Subversion.
-svn_admin_index	immutable_tags	Tags non modifiables
-svn_admin_index	immutable_tags_description	Definition des dossiers considérés comme non modifiables.
-#
-#-----------------------------------------------
-# Script: SF/www/svn/admin/notification.php
-#
-svn_admin_notification	upd_email_success	Notification e-mail mise à jour avec succès
-svn_admin_notification	upd_email_fail	Le champ "Envoyer à" contient une adresse invalide.
-svn_admin_notification	upd_email_bad_adr	Adresses invalides "$1"
-svn_admin_notification	upd_header_success	Entête mise à jour avec succès
-svn_admin_notification	upd_header_fail	L'entête n'a pas été mise à jour.
-svn_admin_notification	email	Administration de Subversion  - Notification e-mail
-svn_admin_notification	mail_comment	<H3>Notification e-mail des commits</H3><p><I>Chaque évènement de commit peut être notifié par e-mail à certains destinataires ou listes de diffusion (séparés par des virgules). Une entête apparaissant dans le sujet du message peut aussi être spécifiée.</I></p>
-svn_admin_notification	star_operator	Vous pouvez utiliser l'opérateur étoile. Les chemins /dossier/a/notifier et /dossier/*/notifier seront tout deux notifiés de la même façon.
-svn_admin_notification	svn_tracking_comment	Pour pouvoir utiliser les notifications SVN, le suivi de Subversion doit être activé.
-svn_admin_notification	mail_to	Envoyer à
-svn_admin_notification	notification_path	Chemin
-svn_admin_notification	header	Entête du sujet
-svn_admin_notification	mailing_list_header	Liste de notification SVN
-svn_admin_notification	path_header	Chemin SVN monitoré
-svn_admin_notification	path_delete_ask	Supprimer?
-svn_admin_notification	existent_notifications	Notifications disponibles
-svn_admin_notification	delete_path_success	Notification e-mail supprimée avec succès pour $1
-svn_admin_notification	delete_path_fail	Notification e-mail non supprimée
-svn_admin_notification	retrieve_paths_fail	Aucun chemin spécifié
 #
 #-----------------------------------------------
 # Script: SF/www/svn/browse_revision.php

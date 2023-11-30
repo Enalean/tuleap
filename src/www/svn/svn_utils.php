@@ -47,18 +47,6 @@ function svn_header(Project $project, \Tuleap\Layout\HeaderConfiguration $params
         ];
     }
 
-    if (user_ismember($group_id, 'A') || user_ismember($group_id, 'SVN_ADMIN')) {
-        $toolbar[] = ['title' => $Language->getText('svn_utils', 'svn_admin'),
-            'url'   => '/svn/admin/?group_id=' . $group_id,
-        ];
-        if ($path) {
-            // TODO: Validate the path
-            $toolbar[] = ['title' => $Language->getText('svn_utils', 'notif'),
-                'url'   => '/svn/admin/?group_id=' . $group_id . '&func=notification&path=' . $path,
-            ];
-        }
-    }
-
     $service->displayHeader(
         $params->title,
         [
@@ -81,33 +69,6 @@ function svn_deprecation_notice(\Project $project): string
     }
     return "<p><div class='alert alert-danger'> " . sprintf(_('Subversion Core is deprecated, it will be removed on march 2022. Please <a href="/project/%d/admin/services">install and activate `SVN` plugin.</a>'), urlencode((string) $project->getID())) .  "</div></p>";
 }
-
-function svn_header_admin(string $title): void
-{
-    global $group_id,$Language;
-
-    $project = ProjectManager::instance()->getProject($group_id);
-    $service = $project->getService('svn');
-    if (! $service) {
-        exit_error($Language->getText('global', 'error'), $Language->getText('svn_utils', 'svn_off'));
-    }
-
-    $toolbar   = [];
-    $toolbar[] = ['title' => $Language->getText('svn_utils', 'admin'),
-        'url'   => '/svn/admin/?group_id=' . $group_id,
-    ];
-    $toolbar[] = ['title' => $Language->getText('svn_admin_index', 'immutable_tags'),
-        'url'   => '/svn/admin/?func=immutable_tags&group_id=' . $group_id,
-    ];
-    $toolbar[] = ['title' => $Language->getText('svn_utils', 'notif'),
-        'url'   => '/svn/admin/?func=notification&group_id=' . $group_id,
-    ];
-
-    $service->displayHeader($title, [['title' => $title, 'url' => '/svn/?group_id=' . $group_id]], $toolbar);
-
-    echo svn_deprecation_notice($project);
-}
-
 
 function svn_footer($params)
 {

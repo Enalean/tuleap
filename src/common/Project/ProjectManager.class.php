@@ -724,20 +724,6 @@ class ProjectManager implements ProjectByIDFactory, ProjectByUnixNameFactory // 
     }
 
     /**
-     * Set SVN header
-     *
-     * @param int $projectId
-     * @param String  $mailingHeader
-     *
-     * @return bool
-     */
-    public function setSvnHeader($projectId, $mailingHeader)
-    {
-        $dao = $this->_getDao();
-        return $dao->setSvnHeader($projectId, $mailingHeader);
-    }
-
-    /**
      * Wrapper for tests
      *
      * @return UserManager

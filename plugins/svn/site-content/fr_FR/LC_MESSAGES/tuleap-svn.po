@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2017-04-03 14:12+0200\n"
-"PO-Revision-Date: 2023-06-15 14:38+0200\n"
+"PO-Revision-Date: 2023-11-30 10:42+0100\n"
 "Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.3.1\n"
+"X-Generator: Poedit 3.4.1\n"
 "X-Poedit-Basepath: .\n"
 
 msgid "0 or no value means no limits."
@@ -139,11 +139,20 @@ msgstr "Notifications par email lors des commits"
 msgid "Error during new revision file creation"
 msgstr "Erreur lors de la création de la nouvelle révision"
 
+msgid "Example of impacted svn operations"
+msgstr "Exemple d'operations svn"
+
+msgid "Example of impacted svn operations in"
+msgstr "Exemple d'operations svn dans"
+
 msgid "Force every commit to include a reference."
 msgstr "Requiert une référence dans tous les messages de commit."
 
 msgid "Global permissions"
 msgstr "Permissions globales de SVN"
+
+msgid "Global whitelist"
+msgstr "Liste globale d'exceptions"
 
 msgid "Granted groups"
 msgstr "Groupes autorisés"
@@ -163,6 +172,13 @@ msgstr "L'entête n'a pas été mise à jour."
 msgid "Header updated successfully"
 msgstr "Entête mise à jour avec succès"
 
+msgid ""
+"Here is a preview of what your configuration does. Click on highlighted "
+"folders to get more information."
+msgstr ""
+"Voici une prévisualisation des impacts de votre configuration. Cliquez sur "
+"les dossiers en surbrillance pour les détails."
+
 msgid "However you will notice that:"
 msgstr "En revanche, vous constaterez que :"
 
@@ -178,6 +194,12 @@ msgstr ""
 msgid "Immutable tags"
 msgstr "Tags non modifiables"
 
+msgid "Immutable tags configuration"
+msgstr "Configuration des tags non modifiables"
+
+msgid "Immutable tags paths"
+msgstr "Chemin des tags non modifiables"
+
 msgid ""
 "It is recommended to always define permissions on a user group. Applying "
 "permissions to a manually defined group or to a specific user could cause "
@@ -190,6 +212,9 @@ msgstr ""
 
 msgid "Last commit"
 msgstr "Dernier commit"
+
+msgid "Loading..."
+msgstr "Chargement en cours..."
 
 msgid "Mail to specific recipients or mailing lists (comma separated)"
 msgstr ""
@@ -270,6 +295,12 @@ msgstr ""
 msgid "Permission"
 msgstr "Permission"
 
+msgid "Please select tag on the left"
+msgstr "Veuillez sélectionner un tag dans l'arborescence à gauche"
+
+msgid "Preview of your configuration"
+msgstr "Prévisualisation de votre configuration"
+
 msgid "Project SVN repositories"
 msgstr "Dépôts SVN du projet"
 
@@ -315,6 +346,9 @@ msgstr "Le dépôt n'a pas été trouvé"
 msgid "Repository not found."
 msgstr "Dépôt non trouvé."
 
+msgid "Repository tree structure"
+msgstr "Arborescence"
+
 msgid "Rules on commit"
 msgstr "Règles lors d'un commit"
 
@@ -349,6 +383,9 @@ msgstr "Le service SVN est inactif."
 msgid "SVN service is not activated in project %s"
 msgstr "Le service SVN n'est pas activé dans le projet %s"
 
+msgid "SVN status style"
+msgstr "Façon SVN status"
+
 msgid "SVN with multiple repositories"
 msgstr "SVN avec dépôt multiple"
 
@@ -360,6 +397,9 @@ msgstr "Sauvegarder"
 
 msgid "Save a new version"
 msgstr "Sauvegarder une nouvelle version"
+
+msgid "Save configuration"
+msgstr "Sauvegarder la configuration"
 
 msgid "Save settings"
 msgstr "Sauvegarder les paramètres"
@@ -395,6 +435,14 @@ msgid ""
 msgstr ""
 "L'administrateur site a définit une limite sur la taille des fichiers "
 "acceptés. Vous ne pourrez pas commiter un fichier de plus de %1$sMo"
+
+msgid ""
+"Specify folders where immutable tags will be located. You can specify a "
+"whitelist of folders where you will be able to do modifications."
+msgstr ""
+"Spécifiez les répertoires dans lesquels se trouveront les tags non "
+"modifiables. Vous pouvez définir une liste de répertoires où les "
+"modifications seront tout de même autorisées."
 
 msgid "Subject header"
 msgstr "Entête du sujet"
@@ -616,6 +664,22 @@ msgstr "Vous ne pouvez pas supprimer."
 msgid "You don't have permissions to see user groups."
 msgstr "Vous n'avez pas les droits de voir les groupes utilisateurs."
 
+msgid ""
+"Your SVN repository is not impacted by immutable tags because the "
+"configuration is empty or does not match the current repository layout"
+msgstr ""
+"Votre dépôt SVN n'est pas impacté par les tags immutable car la "
+"configuration actuelle est vide ou ne correspond pas à l'arborescence du "
+"dépôt."
+
+msgid ""
+"Your repository contains too many folders (more than %s), for performance "
+"reasons, we cannot display the preview of your configuration."
+msgstr ""
+"Votre dépôt contient trop de dossiers (plus que %s), nous ne pouvons pas "
+"afficher la prévisualisation de la configuration pour des raisons de "
+"performances."
+
 msgid "Your settings could not be saved."
 msgstr "Vos paramètres n'ont pas pu être sauvegardés."
 
@@ -642,8 +706,14 @@ msgstr ""
 msgid "my-new-repository"
 msgstr "mon-depot"
 
+msgid "my-tag"
+msgstr "mon-tag"
+
 msgid "saved on"
 msgstr "sauvegardée le"
+
+msgid "some/path"
+msgstr "le/chemin"
 
 msgid "the commit email format is different."
 msgstr "le format des emails de notification sur commit est différent."
