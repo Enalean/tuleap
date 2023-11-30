@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS plugin_agiledashboard_planning_artifacts_explicit_backlog;
 DROP TABLE IF EXISTS plugin_agiledashboard_burnup_projects_count_mode;
 DROP TABLE IF EXISTS plugin_agiledashboard_tracker_field_burnup_cache_subelements;
 DROP TABLE IF EXISTS plugin_agiledashboard_tracker_workflow_action_add_top_backlog;
+DROP TABLE IF EXISTS plugin_agiledashboard_milestones_in_sidebar_config;
 
 DELETE FROM permissions_values WHERE permission_type IN ('PLUGIN_AGILEDASHBOARD_PLANNING_PRIORITY_CHANGE');
 

@@ -142,6 +142,12 @@ CREATE TABLE plugin_agiledashboard_tracker_workflow_action_add_top_backlog (
     INDEX idx_wf_transition_id(transition_id)
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS plugin_agiledashboard_milestones_in_sidebar_config;
+CREATE TABLE plugin_agiledashboard_milestones_in_sidebar_config (
+    project_id INT(11) PRIMARY KEY,
+    should_sidebar_display_last_milestones BOOL NOT NULL
+) ENGINE=InnoDB;
+
 -- Enable service for project 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, `rank`)
        VALUES      ( 100, 'plugin_agiledashboard:service_lbl_key', 'plugin_agiledashboard:service_desc_key', 'plugin_agiledashboard', '/plugins/agiledashboard/?group_id=$group_id', 1, 0, 'system', 152);

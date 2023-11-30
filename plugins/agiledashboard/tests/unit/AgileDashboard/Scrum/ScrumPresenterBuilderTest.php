@@ -34,6 +34,7 @@ use PlanningFactory;
 use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminSection;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\Stub\Milestone\Sidebar\CheckMilestonesInSidebarStub;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Kanban\CheckSplitKanbanConfiguration;
@@ -95,6 +96,7 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->explicit_backlog_dao,
             $this->add_to_top_backlog_post_action_dao,
             new CheckSplitKanbanConfiguration(EventDispatcherStub::withIdentityCallback()),
+            CheckMilestonesInSidebarStub::withoutMilestonesInSidebar(),
         );
 
         $this->add_to_top_backlog_post_action_dao->shouldReceive('isAtLeastOnePostActionDefinedInProject')->andReturnTrue();

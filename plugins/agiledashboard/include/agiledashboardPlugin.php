@@ -53,6 +53,7 @@ use Tuleap\AgileDashboard\FormElement\BurnupFieldRetriever;
 use Tuleap\AgileDashboard\FormElement\MessageFetcher;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_DAILY;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_GENERATE;
+use Tuleap\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarDao;
 use Tuleap\AgileDashboard\Move\AgileDashboardMovableFieldsCollector;
 use Tuleap\AgileDashboard\SplitModalPresenter;
 use Tuleap\Cardwall\Cardwall\CardwallUseStandardJavascriptEvent;
@@ -640,6 +641,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     public function getConfigKeys(ConfigClassProvider $event): void
     {
         $event->addConfigClass(ScrumForMonoMilestoneChecker::class);
+        $event->addConfigClass(MilestonesInSidebarDao::class);
     }
 
     public function buildArtifactFormActionEvent(BuildArtifactFormActionEvent $event): void
