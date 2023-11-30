@@ -53,10 +53,10 @@ final class CommentDAOTest extends TestCase
         $comment_id = $this->dao->save(
             $pull_request_id,
             $author_user_id,
-            $post_date->getTimestamp(),
+            $post_date,
             $content,
-            $parent_id,
-            $format
+            $format,
+            $parent_id
         );
 
         $comment_row = $this->dao->searchByCommentID($comment_id);

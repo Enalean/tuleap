@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,31 +20,31 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\PullRequest\InlineComment;
+namespace Tuleap\PullRequest\Comment;
 
-use Tuleap\PullRequest\InlineComment\Notification\PullRequestNewInlineCommentEvent;
+use Tuleap\PullRequest\Comment\Notification\PullRequestNewCommentEvent;
 use Tuleap\PullRequest\Notification\EventSubjectToNotification;
-use Tuleap\PullRequest\REST\v1\Comment\ThreadColors;
 use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorAssigner;
 use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorRetriever;
-use Tuleap\PullRequest\Tests\Builders\NewInlineCommentTestBuilder;
+use Tuleap\PullRequest\Tests\Builders\CommentTestBuilder;
 use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
-use Tuleap\PullRequest\Tests\Stub\CreateInlineCommentStub;
-use Tuleap\PullRequest\Tests\Stub\ParentCommentSearcherStub;
 use Tuleap\PullRequest\Tests\Stub\CountThreadsStub;
+use Tuleap\PullRequest\Tests\Stub\CreateCommentStub;
+use Tuleap\PullRequest\Tests\Stub\ParentCommentSearcherStub;
 use Tuleap\PullRequest\Tests\Stub\ThreadColorUpdaterStub;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Test\Stubs\ExtractAndSaveCrossReferencesStub;
 
-final class InlineCommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CommentCreatorTest extends TestCase
 {
-    private const INSERTED_ID = 47;
-    private const PARENT_ID   = 34;
+    private const INSERTED_ID = 57;
+    private const PARENT_ID   = 46;
     private ExtractAndSaveCrossReferencesStub $reference_manager;
+    private EventDispatcherStub $event_dispatcher;
     private CountThreadsStub $thread_counter;
     private ParentCommentSearcherStub $parent_comment_searcher;
     private ThreadColorUpdaterStub $thread_color_updater;
-    private EventDispatcherStub $event_dispatcher;
 
     protected function setUp(): void
     {
@@ -55,25 +55,25 @@ final class InlineCommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->thread_color_updater    = ThreadColorUpdaterStub::withCallCount();
     }
 
-    private function create(): InlineComment
+    private function create(): Comment
     {
         $pull_request = PullRequestTestBuilder::aPullRequestInReview()->build();
-        $new_comment  = NewInlineCommentTestBuilder::aTextComment('beheadlined craver')
+        $new_comment  = CommentTestBuilder::aMarkdownComment('creatureless cladodontid')
             ->onPullRequest($pull_request)
             ->childOf(self::PARENT_ID)
             ->build();
 
-        $creator = new InlineCommentCreator(
-            CreateInlineCommentStub::withInsertedId(self::INSERTED_ID),
+        $creator = new CommentCreator(
+            CreateCommentStub::withInsertedId(self::INSERTED_ID),
             $this->reference_manager,
             $this->event_dispatcher,
             new ThreadCommentColorRetriever($this->thread_counter, $this->parent_comment_searcher),
             new ThreadCommentColorAssigner($this->parent_comment_searcher, $this->thread_color_updater)
         );
-        return $creator->insert($new_comment);
+        return $creator->create($new_comment, 111);
     }
 
-    public function testNewInlineCommentCanBeCreated(): void
+    public function testNewCommentCanBeCreated(): void
     {
         $dispatched_event       = null;
         $this->event_dispatcher = EventDispatcherStub::withCallback(
@@ -83,11 +83,10 @@ final class InlineCommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         );
 
-        $inline_comment = $this->create();
-        self::assertSame(self::INSERTED_ID, $inline_comment->getId());
-        self::assertSame(ThreadColors::TLP_COLORS[0], $inline_comment->getColor());
+        $comment = $this->create();
+        self::assertSame(self::INSERTED_ID, $comment->getId());
         self::assertSame(1, $this->reference_manager->getCallCount());
-        self::assertInstanceOf(PullRequestNewInlineCommentEvent::class, $dispatched_event);
+        self::assertInstanceOf(PullRequestNewCommentEvent::class, $dispatched_event);
         self::assertSame(1, $this->thread_color_updater->getCallCount());
     }
 }

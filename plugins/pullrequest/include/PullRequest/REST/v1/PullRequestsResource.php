@@ -61,6 +61,7 @@ use Tuleap\Project\REST\UserRESTReferenceRetriever;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Comment\Comment;
+use Tuleap\PullRequest\Comment\CommentCreator;
 use Tuleap\PullRequest\Comment\CommentRetriever;
 use Tuleap\PullRequest\Comment\Dao as CommentDao;
 use Tuleap\PullRequest\Comment\Factory as CommentFactory;
@@ -174,7 +175,7 @@ class PullRequestsResource extends AuthenticatedResource
         $event_dispatcher = PullRequestNotificationSupport::buildDispatcher($this->logger);
 
         $comment_dao           = new CommentDao();
-        $this->comment_factory = new CommentFactory($comment_dao, $reference_manager, $event_dispatcher);
+        $this->comment_factory = new CommentFactory($comment_dao);
 
         $this->user_manager = UserManager::instance();
 
@@ -1132,19 +1133,28 @@ class PullRequestsResource extends AuthenticatedResource
         $source_repository               = $this->getRepository($pull_request->getRepositoryId());
         $source_project_id               = $source_repository->getProjectId();
 
-        $dao                 = new CommentDao();
-        $comment_retriever   = new CommentRetriever($dao);
-        $color_retriever     = new ThreadCommentColorRetriever(new ThreadCommentDao(), $dao);
-        $color_assigner      = new ThreadCommentColorAssigner($dao, $dao);
+        $comment_dao         = new CommentDao();
+        $comment_retriever   = new CommentRetriever($comment_dao);
         $parent_id_validator = new ParentIdValidatorForComment($comment_retriever);
-        $post_date           = new \DateTimeImmutable();
-        $format              = $comment_data->format;
+        $creator             = new CommentCreator(
+            $comment_dao,
+            ReferenceManager::instance(),
+            PullRequestNotificationSupport::buildDispatcher($this->logger),
+            new ThreadCommentColorRetriever(new ThreadCommentDao(), $comment_dao),
+            new ThreadCommentColorAssigner($comment_dao, $comment_dao)
+        );
+        $purifier            = \Codendi_HTMLPurifier::instance();
+        $content_interpretor = CommonMarkInterpreter::build(
+            $purifier,
+            new EnhancedCodeBlockExtension(new CodeBlockFeatures())
+        );
+
+        $post_date = new \DateTimeImmutable();
+        $format    = $comment_data->format;
         if (! $format) {
             $format = TimelineComment::FORMAT_MARKDOWN;
         }
 
-        $color = $color_retriever->retrieveColor($pull_request_id, (int) $comment_data->parent_id);
-        $color_assigner->assignColor((int) $comment_data->parent_id, $color);
         $comment = new Comment(
             0,
             $pull_request_id,
@@ -1152,22 +1162,14 @@ class PullRequestsResource extends AuthenticatedResource
             $post_date,
             $comment_data->content,
             (int) $comment_data->parent_id,
-            $color,
+            '',
             $format,
             Option::nothing(\DateTimeImmutable::class)
         );
-
         $parent_id_validator->checkParentValidity((int) $comment_data->parent_id, $pull_request_id);
-        $new_comment_id = $this->comment_factory->save($comment, $user, $source_project_id);
-        $new_comment    = Comment::buildWithNewId($new_comment_id, $comment);
+        $new_comment = $creator->create($comment, $source_project_id);
 
         $user_representation = MinimalUserRepresentation::build($user);
-
-        $purifier            = \Codendi_HTMLPurifier::instance();
-        $content_interpretor = CommonMarkInterpreter::build(
-            $purifier,
-            new EnhancedCodeBlockExtension(new CodeBlockFeatures())
-        );
 
         return (new CommentRepresentationBuilder($purifier, $content_interpretor))->buildRepresentation($source_project_id, $user_representation, $new_comment);
     }

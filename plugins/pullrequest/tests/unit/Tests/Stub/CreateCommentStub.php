@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,23 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\PullRequest\Comment;
+declare(strict_types=1);
 
+namespace Tuleap\PullRequest\Tests\Stub;
 
-class Factory
+final class CreateCommentStub implements \Tuleap\PullRequest\Comment\CreateComment
 {
-    public function __construct(private Dao $dao)
+    private function __construct(private readonly int $inserted_id)
     {
     }
 
-    public function getPaginatedCommentsByPullRequestId($pull_request_id, $limit, $offset, $order)
+    public static function withInsertedId(int $inserted_id): self
     {
-        $comments = [];
+        return new self($inserted_id);
+    }
 
-        foreach ($this->dao->searchByPullRequestId($pull_request_id, $limit, $offset, $order) as $row) {
-            $comments[] = Comment::buildFromRow($row);
-        }
-
-        return new PaginatedComments($comments, $this->dao->foundRows());
+    public function save(
+        int $pull_request_id,
+        int $author_user_id,
+        \DateTimeImmutable $post_date,
+        string $content,
+        string $format,
+        int $parent_id,
+    ): int {
+        return $this->inserted_id;
     }
 }

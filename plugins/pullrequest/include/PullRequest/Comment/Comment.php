@@ -125,7 +125,7 @@ final class Comment implements TimelineEvent, TimelineComment
         );
     }
 
-    public static function buildWithNewId(int $new_comment_id, Comment $comment): self
+    public static function buildWithNewId(int $new_comment_id, Comment $comment, string $color): self
     {
         return new self(
             $new_comment_id,
@@ -134,7 +134,7 @@ final class Comment implements TimelineEvent, TimelineComment
             $comment->post_date,
             $comment->content,
             $comment->parent_id,
-            $comment->color,
+            $color,
             $comment->format,
             $comment->last_edition_date
         );
