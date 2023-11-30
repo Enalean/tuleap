@@ -85,6 +85,7 @@ use Tuleap\PullRequest\PluginInfo;
 use Tuleap\PullRequest\PullRequestCloser;
 use Tuleap\PullRequest\PullrequestDisplayer;
 use Tuleap\PullRequest\PullRequestMerger;
+use Tuleap\PullRequest\PullRequestRetriever;
 use Tuleap\PullRequest\PullRequestUpdater;
 use Tuleap\PullRequest\Reference\CrossReferencePullRequestOrganizer;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
@@ -451,23 +452,25 @@ class pullrequestPlugin extends Plugin implements PluginWithConfigKeys // phpcs:
     public function referenceGetTooltipContentEvent(Tuleap\Reference\ReferenceGetTooltipContentEvent $event)
     {
         if ($event->getReference()->getNature() === self::REFERENCE_NATURE) {
-            try {
-                $pull_request_id            = $event->getValue();
-                $pull_request               = $this->getPullRequestFactory()->getPullRequestById($pull_request_id);
-                $pull_request_title         = $pull_request->getTitle();
-                $pull_request_status        = $pull_request->getStatus();
-                $pull_request_creation_date = $pull_request->getCreationDate();
+                $pull_request_id = $event->getValue();
+            (new PullRequestRetriever(new PullRequestDao()))->getPullRequestById((int) $pull_request_id)->match(
+                function (\Tuleap\PullRequest\PullRequest $pull_request) use ($event) {
+                    $pull_request_title         = $pull_request->getTitle();
+                    $pull_request_status        = $pull_request->getStatus();
+                    $pull_request_creation_date = $pull_request->getCreationDate();
 
-                $renderer  = $this->getTemplateRenderer();
-                $presenter = new Presenter(
-                    $pull_request_title,
-                    $pull_request_status,
-                    $pull_request_creation_date
-                );
-                $event->setOutput($renderer->renderToString($presenter->getTemplateName(), $presenter));
-            } catch (\Tuleap\PullRequest\Exception\PullRequestNotFoundException $exception) {
-                // No tooltip
-            }
+                    $renderer  = $this->getTemplateRenderer();
+                    $presenter = new Presenter(
+                        $pull_request_title,
+                        $pull_request_status,
+                        $pull_request_creation_date
+                    );
+                    $event->setOutput($renderer->renderToString($presenter->getTemplateName(), $presenter));
+                },
+                function () {
+                    //do nothing No tooltip
+                }
+            );
         }
     }
 
