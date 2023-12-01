@@ -20,24 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\PullRequest\REST\v1\InlineComment;
+namespace Tuleap\PullRequest\REST\v1\Comment;
 
 use Tuleap\Git\Tests\Stub\RetrieveGitRepositoryStub;
 use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\PullRequest\Authorization\GitRepositoryNotFoundFault;
-use Tuleap\PullRequest\InlineComment\InlineCommentCreator;
+use Tuleap\PullRequest\Comment\CommentCreator;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
-use Tuleap\PullRequest\REST\v1\Comment\ThreadColors;
-use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorAssigner;
-use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorRetriever;
-use Tuleap\PullRequest\REST\v1\PullRequestInlineCommentPOSTRepresentation;
+use Tuleap\PullRequest\REST\v1\CommentPOSTRepresentation;
 use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
-use Tuleap\PullRequest\Tests\Stub\CreateInlineCommentStub;
-use Tuleap\PullRequest\Tests\Stub\ParentCommentSearcherStub;
 use Tuleap\PullRequest\Tests\Stub\CountThreadsStub;
+use Tuleap\PullRequest\Tests\Stub\CreateCommentStub;
+use Tuleap\PullRequest\Tests\Stub\ParentCommentSearcherStub;
 use Tuleap\PullRequest\Tests\Stub\ThreadColorUpdaterStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -46,16 +42,13 @@ use Tuleap\Test\Stubs\ContentInterpretorStub;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Test\Stubs\ExtractAndSaveCrossReferencesStub;
 
-final class POSTHandlerTest extends TestCase
+final class POSTCommentHandlerTest extends TestCase
 {
-    private const INSERTED_ID    = 57;
-    private const CONTENT        = 'caciocavallo';
-    private const FILE_PATH      = 'path/to/file.php';
-    private const UNIDIFF_OFFSET = 23;
-    private const POSITION       = 'right';
-    private const PARENT_ID      = 43;
-    private const POST_TIMESTAMP = 1509159123;
-    private const AUTHOR_ID      = 305;
+    private const INSERTED_ID    = 59;
+    private const CONTENT        = 'interinsurance';
+    private const PARENT_ID      = 58;
+    private const POST_TIMESTAMP = 1651725436;
+    private const AUTHOR_ID      = 658;
     private string $format;
     private ?int $parent_id;
     private ParentCommentSearcherStub $parent_comment_searcher;
@@ -74,61 +67,49 @@ final class POSTHandlerTest extends TestCase
         $this->repository_retriever    = RetrieveGitRepositoryStub::withGitRepository($git_repository);
     }
 
-    /**
-     * @return Ok<InlineCommentRepresentation> | Err<Fault>
-     */
     private function handle(): Ok|Err
     {
         $user         = UserTestBuilder::buildWithId(self::AUTHOR_ID);
         $post_date    = new \DateTimeImmutable('@' . self::POST_TIMESTAMP);
         $pull_request = PullRequestTestBuilder::aPullRequestInReview()->build();
 
-        $comment_data = PullRequestInlineCommentPOSTRepresentation::build(
-            self::CONTENT,
-            self::FILE_PATH,
-            self::UNIDIFF_OFFSET,
-            self::POSITION,
-            $this->parent_id,
-            $this->format
-        );
+        $comment_data = new CommentPOSTRepresentation(self::CONTENT, $this->format, $this->parent_id);
 
-        $handler = new POSTHandler(
+        $handler = new POSTCommentHandler(
             $this->repository_retriever,
-            new InlineCommentCreator(
-                CreateInlineCommentStub::withInsertedId(self::INSERTED_ID),
+            new CommentCreator(
+                CreateCommentStub::withInsertedId(self::INSERTED_ID),
                 ExtractAndSaveCrossReferencesStub::withCallCount(),
                 EventDispatcherStub::withIdentityCallback(),
                 new ThreadCommentColorRetriever(
-                    CountThreadsStub::withNumberOfThreads(0),
+                    CountThreadsStub::withNumberOfThreads(1),
                     $this->parent_comment_searcher
                 ),
                 new ThreadCommentColorAssigner($this->parent_comment_searcher, ThreadColorUpdaterStub::withCallCount())
             ),
-            new SingleRepresentationBuilder(\Codendi_HTMLPurifier::instance(), ContentInterpretorStub::build())
+            new CommentRepresentationBuilder(\Codendi_HTMLPurifier::instance(), ContentInterpretorStub::build())
         );
         return $handler->handle($comment_data, $user, $post_date, $pull_request);
     }
 
-    public function testItCreatesANewInlineCommentAndReturnsItsRepresentation(): void
+    public function testItCreatesANewCommentAndReturnsItsRepresentation(): void
     {
-        $thread_color                  = ThreadColors::TLP_COLORS[0];
+        $thread_color                  = ThreadColors::TLP_COLORS[1];
         $this->parent_comment_searcher = ParentCommentSearcherStub::withParent(self::PARENT_ID, 0, $thread_color);
 
         $result = $this->handle();
 
         self::assertTrue(Result::isOk($result));
         $representation = $result->value;
-        self::assertInstanceOf(InlineCommentRepresentation::class, $representation);
+        self::assertInstanceOf(CommentRepresentation::class, $representation);
         self::assertSame(self::INSERTED_ID, $representation->id);
-        self::assertSame(self::FILE_PATH, $representation->file_path);
-        self::assertSame(self::UNIDIFF_OFFSET, $representation->unidiff_offset);
-        self::assertSame(self::POSITION, $representation->position);
         self::assertSame(self::CONTENT, $representation->raw_content);
         self::assertNotEmpty($representation->content);
         self::assertSame(TimelineComment::FORMAT_TEXT, $representation->format);
         self::assertSame(self::PARENT_ID, $representation->parent_id);
         self::assertSame($thread_color, $representation->color);
         self::assertNotEmpty($representation->post_date);
+        self::assertNull($representation->last_edition_date);
     }
 
     public function testWhenGivenEmptyFormatItDefaultsToMarkdown(): void

@@ -23,8 +23,6 @@ namespace Tuleap\PullRequest;
 use REST_TestDataBuilder;
 use RestBase;
 
-require_once dirname(__FILE__) . '/../bootstrap.php';
-
 /**
  * @group PullRequest
  */
@@ -86,57 +84,52 @@ final class PullRequestsCommentsTest extends RestBase
     {
         $response = $this->getResponseForNonMember($this->request_factory->createRequest('GET', 'pull_requests/1/comments'));
 
-        $this->assertEquals($response->getStatusCode(), 403);
+        $this->assertSame(403, $response->getStatusCode());
     }
 
     public function testCreatesAndEditAPullRequestComment(): void
     {
-        $response = $this->getResponse($this->request_factory->createRequest('POST', 'pull_requests/1/comments')->withBody($this->stream_factory->createStream(json_encode(
-            [
-                'content' => 'You should use Template<T>.',
-            ]
-        ))));
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('POST', 'pull_requests/1/comments')
+                ->withBody($this->stream_factory->createStream(
+                    json_encode(['content' => 'You should use Template<T>.'])
+                ))
+        );
 
-        self::assertEquals($response->getStatusCode(), 201);
+        self::assertSame(201, $response->getStatusCode());
 
         $pull_request_comment = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-        self::assertEquals('You should use Template&lt;T&gt;.', $pull_request_comment['content']);
+        self::assertSame('You should use Template&lt;T&gt;.', $pull_request_comment['content']);
         self::assertNull($pull_request_comment['last_edition_date']);
 
         $pull_request_comment_id = $pull_request_comment['id'];
 
         $patch_response = $this->getResponse(
-            $this->request_factory->createRequest('PATCH', 'pull_request_comments/' . $pull_request_comment_id)->withBody(
-                $this->stream_factory->createStream(
-                    json_encode(
-                        [
-                            'content' => 'I do not want to (hehe)',
-                        ]
-                    )
-                )
-            ),
+            $this->request_factory->createRequest('PATCH', 'pull_request_comments/' . $pull_request_comment_id)
+                ->withBody($this->stream_factory->createStream(
+                    json_encode(['content' => 'I do not want to (hehe)'])
+                )),
         );
 
         self::assertSame(200, $patch_response->getStatusCode());
 
         $patched_pull_request_comments = json_decode($patch_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         self::assertSame($pull_request_comment_id, $patched_pull_request_comments['id']);
-        self::assertSame("I do not want to (hehe)", $patched_pull_request_comments['content']);
+        self::assertSame('I do not want to (hehe)', $patched_pull_request_comments['content']);
         self::assertNotNull($patched_pull_request_comments['last_edition_date']);
     }
 
     public function testPostPullRequestCommentWithReadOnlyAdmin(): void
     {
         $response = $this->getResponse(
-            $this->request_factory->createRequest('POST', 'pull_requests/1/comments')->withBody($this->stream_factory->createStream(json_encode(
-                [
-                    'content' => 'Shot down in flames',
-                ]
-            ))),
+            $this->request_factory->createRequest('POST', 'pull_requests/1/comments')
+                ->withBody($this->stream_factory->createStream(
+                    json_encode(['content' => 'Shot down in flames'])
+                )),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertSame(403, $response->getStatusCode());
     }
 
     public function testOptionsComment(): void

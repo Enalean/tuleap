@@ -60,7 +60,6 @@ use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\REST\UserRESTReferenceRetriever;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
-use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Comment\CommentCreator;
 use Tuleap\PullRequest\Comment\CommentRetriever;
 use Tuleap\PullRequest\Comment\Dao as CommentDao;
@@ -111,6 +110,7 @@ use Tuleap\PullRequest\REST\v1\Comment\CommentRepresentation;
 use Tuleap\PullRequest\REST\v1\Comment\CommentRepresentationBuilder;
 use Tuleap\PullRequest\REST\v1\Comment\ParentIdValidatorForComment;
 use Tuleap\PullRequest\REST\v1\Comment\ParentIdValidatorForInlineComment;
+use Tuleap\PullRequest\REST\v1\Comment\POSTCommentHandler;
 use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorAssigner;
 use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorRetriever;
 use Tuleap\PullRequest\REST\v1\Info\PullRequestInfoUpdater;
@@ -136,7 +136,6 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\ProjectStatusVerificator;
-use Tuleap\User\REST\MinimalUserRepresentation;
 use URLVerification;
 use UserManager;
 
@@ -1149,8 +1148,6 @@ class PullRequestsResource extends AuthenticatedResource
             BypassBrokenGitReferenceCheck::check()
         )->getAccessiblePullRequestWithGitReferenceForCurrentUser($pull_request_id, $user);
         $pull_request                    = $pull_request_with_git_reference->getPullRequest();
-        $source_repository               = $this->getRepository($pull_request->getRepositoryId());
-        $source_project_id               = $source_repository->getProjectId();
 
         $comment_dao         = new CommentDao();
         $comment_retriever   = new CommentRetriever($comment_dao);
@@ -1167,30 +1164,20 @@ class PullRequestsResource extends AuthenticatedResource
             $purifier,
             new EnhancedCodeBlockExtension(new CodeBlockFeatures())
         );
-
-        $post_date = new \DateTimeImmutable();
-        $format    = $comment_data->format;
-        if (! $format) {
-            $format = TimelineComment::FORMAT_MARKDOWN;
-        }
-
-        $comment = new Comment(
-            0,
-            $pull_request_id,
-            (int) $user->getId(),
-            $post_date,
-            $comment_data->content,
-            (int) $comment_data->parent_id,
-            '',
-            $format,
-            Option::nothing(\DateTimeImmutable::class)
+        $handler             = new POSTCommentHandler(
+            $this->git_repository_factory,
+            $creator,
+            new CommentRepresentationBuilder($purifier, $content_interpretor)
         );
+
         $parent_id_validator->checkParentValidity((int) $comment_data->parent_id, $pull_request_id);
-        $new_comment = $creator->create($comment, $source_project_id);
+        $post_date = new \DateTimeImmutable();
 
-        $user_representation = MinimalUserRepresentation::build($user);
-
-        return (new CommentRepresentationBuilder($purifier, $content_interpretor))->buildRepresentation($source_project_id, $user_representation, $new_comment);
+        return $handler->handle($comment_data, $user, $post_date, $pull_request)
+            ->match(
+                static fn(CommentRepresentation $representation) => $representation,
+                FaultMapper::mapToRestException(...)
+            );
     }
 
     /**
