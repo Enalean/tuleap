@@ -22,19 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Tests\Builders;
 
-use Tuleap\PullRequest\InlineComment\NewInlineComment;
+use Tuleap\PullRequest\Comment\NewComment;
 use Tuleap\PullRequest\PullRequest;
-use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class NewInlineCommentTestBuilder
+final class NewCommentTestBuilder
 {
     private PullRequest $pull_request;
-    private int $project_id     = 130;
-    private string $file_path   = 'file/to/path.php';
-    private int $unidiff_offset = 13;
-    private string $position    = 'right';
-    private int $parent_id      = 0;
+    private int $project_id = 117;
+    private int $parent_id  = 0;
     private \PFUser $author;
     private \DateTimeImmutable $post_date;
 
@@ -44,17 +40,12 @@ final class NewInlineCommentTestBuilder
     ) {
         $this->pull_request = PullRequestTestBuilder::aPullRequestInReview()->build();
         $this->author       = UserTestBuilder::buildWithDefaults();
-        $this->post_date    = new \DateTimeImmutable('@1374096518');
+        $this->post_date    = new \DateTimeImmutable('@1475084282');
     }
 
     public static function aMarkdownComment(string $content): self
     {
-        return new self($content, TimelineComment::FORMAT_MARKDOWN);
-    }
-
-    public static function aTextComment(string $content): self
-    {
-        return new self($content, TimelineComment::FORMAT_TEXT);
+        return new self($content, PullRequest\Timeline\TimelineComment::FORMAT_MARKDOWN);
     }
 
     public function onPullRequest(PullRequest $pull_request): self
@@ -63,28 +54,19 @@ final class NewInlineCommentTestBuilder
         return $this;
     }
 
-    public function onFile(string $file_path): self
+    public function childOf(int $parent_id): self
     {
-        $this->file_path = $file_path;
+        $this->parent_id = $parent_id;
         return $this;
     }
 
-    public function childOf(int $parent_comment_id): self
+    public function build(): NewComment
     {
-        $this->parent_id = $parent_comment_id;
-        return $this;
-    }
-
-    public function build(): NewInlineComment
-    {
-        return new NewInlineComment(
+        return new NewComment(
             $this->pull_request,
             $this->project_id,
-            $this->file_path,
-            $this->unidiff_offset,
             $this->content,
             $this->format,
-            $this->position,
             $this->parent_id,
             $this->author,
             $this->post_date

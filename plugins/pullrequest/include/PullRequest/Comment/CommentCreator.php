@@ -39,33 +39,26 @@ final class CommentCreator
     ) {
     }
 
-    public function create(Comment $new_comment, int $project_id): Comment
+    public function create(NewComment $new_comment): Comment
     {
-        $pull_request_id = $new_comment->getPullRequestId();
+        $pull_request_id = $new_comment->pull_request->getId();
 
-        $comment_id = $this->comment_saver->save(
-            $pull_request_id,
-            $new_comment->getUserId(),
-            $new_comment->getPostDate(),
-            $new_comment->getContent(),
-            $new_comment->getFormat(),
-            $new_comment->getParentId()
-        );
+        $comment_id = $this->comment_saver->create($new_comment);
 
-        $color = $this->color_retriever->retrieveColor($pull_request_id, $new_comment->getParentId());
-        $this->color_assigner->assignColor($new_comment->getParentId(), $color);
+        $color = $this->color_retriever->retrieveColor($pull_request_id, $new_comment->parent_id);
+        $this->color_assigner->assignColor($new_comment->parent_id, $color);
 
         $this->reference_manager->extractCrossRef(
-            $new_comment->getContent(),
+            $new_comment->content,
             $pull_request_id,
             \pullrequestPlugin::REFERENCE_NATURE,
-            $project_id,
-            $new_comment->getUserId(),
+            $new_comment->project_id,
+            (int) $new_comment->author->getId(),
             \pullrequestPlugin::PULLREQUEST_REFERENCE_KEYWORD
         );
 
         $this->event_dispatcher->dispatch(PullRequestNewCommentEvent::fromCommentID($comment_id));
 
-        return Comment::buildWithNewId($comment_id, $new_comment, $color);
+        return Comment::fromNewComment($new_comment, $comment_id, $color);
     }
 }

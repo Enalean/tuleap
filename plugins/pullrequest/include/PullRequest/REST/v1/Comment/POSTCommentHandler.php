@@ -28,10 +28,9 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
-use Tuleap\Option\Option;
 use Tuleap\PullRequest\Authorization\GitRepositoryNotFoundFault;
-use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Comment\CommentCreator;
+use Tuleap\PullRequest\Comment\NewComment;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\REST\v1\CommentPOSTRepresentation;
@@ -67,23 +66,21 @@ final class POSTCommentHandler
             $format = TimelineComment::FORMAT_MARKDOWN;
         }
 
-        $comment     = new Comment(
-            0,
-            $pull_request->getId(),
-            (int) $user->getId(),
-            $post_date,
+        $new_comment      = new NewComment(
+            $pull_request,
+            $source_project_id,
             $comment_data->content,
-            $comment_data->parent_id ?? 0,
-            '',
             $format,
-            Option::nothing(\DateTimeImmutable::class)
+            $comment_data->parent_id ?? 0,
+            $user,
+            $post_date
         );
-        $new_comment = $this->comment_creator->create($comment, $source_project_id);
+        $inserted_comment = $this->comment_creator->create($new_comment);
 
         $representation = $this->builder->buildRepresentation(
             $source_project_id,
             MinimalUserRepresentation::build($user),
-            $new_comment
+            $inserted_comment
         );
         return Result::ok($representation);
     }

@@ -24,6 +24,8 @@ namespace Tuleap\PullRequest\Comment;
 
 use Tuleap\DB\DBFactory;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
+use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class CommentDAOTest extends TestCase
@@ -43,32 +45,30 @@ final class CommentDAOTest extends TestCase
 
     public function testItInsertsAndUpdatesContentAndLastEditionDate(): void
     {
-        $pull_request_id = 36;
-        $author_user_id  = 150;
-        $post_date       = new \DateTimeImmutable('@1572860074');
-        $content         = 'Amphirhina Spirula';
-        $parent_id       = 81;
-        $format          = TimelineComment::FORMAT_MARKDOWN;
-
-        $comment_id = $this->dao->save(
-            $pull_request_id,
-            $author_user_id,
-            $post_date,
-            $content,
-            $format,
-            $parent_id
+        $pull_request = PullRequestTestBuilder::aPullRequestInReview()->withId(36)->build();
+        $author       = UserTestBuilder::buildWithId(150);
+        $new_comment  = new NewComment(
+            $pull_request,
+            156,
+            'Amphirhina Spirula',
+            TimelineComment::FORMAT_MARKDOWN,
+            81,
+            $author,
+            new \DateTimeImmutable('@1572860074')
         );
+
+        $comment_id = $this->dao->create($new_comment);
 
         $comment_row = $this->dao->searchByCommentID($comment_id);
         self::assertEquals([
             'id'                => $comment_id,
-            'pull_request_id'   => $pull_request_id,
-            'user_id'           => $author_user_id,
-            'post_date'         => $post_date->getTimestamp(),
-            'content'           => $content,
-            'parent_id'         => $parent_id,
+            'pull_request_id'   => $new_comment->pull_request->getId(),
+            'user_id'           => (int) $new_comment->author->getId(),
+            'post_date'         => $new_comment->post_date->getTimestamp(),
+            'content'           => $new_comment->content,
+            'parent_id'         => $new_comment->parent_id,
             'color'             => '',
-            'format'            => $format,
+            'format'            => $new_comment->format,
             'last_edition_date' => null,
         ], $comment_row);
 

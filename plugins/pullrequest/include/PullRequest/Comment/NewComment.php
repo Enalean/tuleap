@@ -20,23 +20,25 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\PullRequest\Tests\Stub;
+namespace Tuleap\PullRequest\Comment;
 
-use Tuleap\PullRequest\Comment\NewComment;
+use Tuleap\PullRequest\PullRequest;
 
-final class CreateCommentStub implements \Tuleap\PullRequest\Comment\CreateComment
+/**
+ * I hold the data necessary to create a new Comment. I do not have an ID yet.
+ * @see Comment
+ * @psalm-immutable
+ */
+final class NewComment
 {
-    private function __construct(private readonly int $inserted_id)
-    {
-    }
-
-    public static function withInsertedId(int $inserted_id): self
-    {
-        return new self($inserted_id);
-    }
-
-    public function create(NewComment $comment): int
-    {
-        return $this->inserted_id;
+    public function __construct(
+        public readonly PullRequest $pull_request,
+        public readonly int $project_id,
+        public readonly string $content,
+        public readonly string $format,
+        public readonly int $parent_id,
+        public readonly \PFUser $author,
+        public readonly \DateTimeImmutable $post_date,
+    ) {
     }
 }

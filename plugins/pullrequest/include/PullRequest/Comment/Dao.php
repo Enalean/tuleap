@@ -24,24 +24,18 @@ use Tuleap\DB\DataAccessObject;
 
 class Dao extends DataAccessObject implements ParentCommentSearcher, ThreadColorUpdater, CommentUpdater, CommentSearcher, CreateComment
 {
-    public function save(
-        int $pull_request_id,
-        int $author_user_id,
-        \DateTimeImmutable $post_date,
-        string $content,
-        string $format,
-        int $parent_id,
-    ): int {
-        $sql = 'INSERT INTO plugin_pullrequest_comments (pull_request_id, user_id, post_date, content, parent_id, format)
-                VALUES (?, ?, ?, ?, ?, ?)';
-        $this->getDB()->run(
-            $sql,
-            $pull_request_id,
-            $author_user_id,
-            $post_date->getTimestamp(),
-            $content,
-            $parent_id,
-            $format
+    public function create(NewComment $comment): int
+    {
+        $this->getDB()->insert(
+            'plugin_pullrequest_comments',
+            [
+                'pull_request_id' => $comment->pull_request->getId(),
+                'user_id'         => (int) $comment->author->getId(),
+                'post_date'       => $comment->post_date->getTimestamp(),
+                'content'         => $comment->content,
+                'parent_id'       => $comment->parent_id,
+                'format'          => $comment->format,
+            ]
         );
 
         return (int) $this->getDB()->lastInsertId();
