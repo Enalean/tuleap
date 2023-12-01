@@ -97,7 +97,7 @@ final class AgileDashboardPromotedMilestonesRetrieverTest extends TestCase
         $items = $retriever->getSidebarPromotedMilestones(UserTestBuilder::buildWithDefaults());
         self::assertCount(1, $items);
         $item = $items[0];
-        self::assertSame($artifact->getUri(), $item->href);
+        self::assertSame('/plugins/agiledashboard/?group_id=101&planning_id=105&action=show&aid=1&pane=planning-v2', $item->href);
         self::assertSame('Title', $item->label);
         self::assertSame('Description', $item->description);
         self::assertFalse($item->is_active);
@@ -123,10 +123,13 @@ final class AgileDashboardPromotedMilestonesRetrieverTest extends TestCase
 
     private function aPaginatedMilestoneWith1MilestoneDetails(\Project $project, Artifact $artifact): PaginatedMilestones
     {
+        $planning = $this->createMock(\Planning::class);
+        $planning->method('getId')->willReturn(105);
+
         return new PaginatedMilestones([
             new \Planning_ArtifactMilestone(
                 $project,
-                $this->createMock(\Planning::class),
+                $planning,
                 $artifact,
                 $this->createMock(ScrumForMonoMilestoneChecker::class)
             ),

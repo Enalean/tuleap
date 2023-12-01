@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Milestone;
 
 use PFUser;
+use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
 use Tuleap\AgileDashboard\Milestone\Request\FilteringQuery;
 use Tuleap\AgileDashboard\Milestone\Request\PeriodQuery;
 use Tuleap\AgileDashboard\Milestone\Request\TopMilestoneRequest;
@@ -72,8 +73,17 @@ final class AgileDashboardPromotedMilestonesRetriever
             }
             $description = $artifact->getValue($description_field);
 
+            $uri = '/plugins/agiledashboard/?' . http_build_query([
+                'group_id' => $this->project->getID(),
+                'planning_id' => $milestone->getPlanningId(),
+                'action' => 'show',
+                'aid' => $artifact->getId(),
+                'pane' => PlanningV2PaneInfo::IDENTIFIER,
+            ]);
+
+
             $items[] = new SidebarPromotedItemPresenter(
-                $artifact->getUri(),
+                $uri,
                 $title ? $title->getValue() : '',
                 $description ? $description->getValue() : '',
                 false,
