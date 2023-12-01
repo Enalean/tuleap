@@ -292,8 +292,11 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         ForgeConfig::set('feature_flag_list_picker', true);
 
-        $this->assertTrue(ForgeConfig::getFeatureFlag('list_picker'));
-        $this->assertFalse(ForgeConfig::getFeatureFlag('another_flag'));
+        self::assertTrue(ForgeConfig::getFeatureFlag('list_picker'));
+        self::assertFalse(ForgeConfig::getFeatureFlag('another_flag'));
+
+        ForgeConfig::clearFeatureFlag('list_picker');
+        self::assertFalse(ForgeConfig::getFeatureFlag('list_picker'));
     }
 
     public function testItReturnsEmptyArrayIfRestrictedUserFileIsTheDefaultOne(): void
