@@ -29,8 +29,14 @@ msgstr ""
 msgid "%s has abandoned the pull request #%d: %s"
 msgstr ""
 
+msgid "%s has abandoned the pull request %s: %s"
+msgstr ""
+
 #, php-format
 msgid "%s has merged the pull request #%d: %s into %s"
+msgstr ""
+
+msgid "%s has merged the pull request %s: %s into %s"
 msgstr ""
 
 #, php-format
@@ -68,16 +74,6 @@ msgid "%s updated their comment on %s: %s in %s:"
 msgstr ""
 
 msgid "%s updated their comment on %s: %s."
-msgstr ""
-
-msgid ""
-"<a href=\"%s\">%s</a> has abandoned the pull request <a href=\"%s\">#%s</a>: "
-"%s"
-msgstr ""
-
-msgid ""
-"<a href=\"%s\">%s</a> has merged the pull request <a href=\"%s\">#%s</a>: %s "
-"into %s"
 msgstr ""
 
 msgid "Abandonned"

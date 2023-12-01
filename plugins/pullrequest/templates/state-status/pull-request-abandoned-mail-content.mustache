@@ -1,9 +1,7 @@
 {{# dgettext }}
     tuleap-pullrequest |
-    <a href="%s">%s</a> has abandoned the pull request <a href="%s">#%s</a>: %s |
-    {{ change_user_profile_url }} |
-    {{ change_user_display_name }} |
-    {{ pull_request_url }} |
-    {{ pull_request_id }} |
+    %s has abandoned the pull request %s: %s |
+    <a href="{{ change_user_profile_url }}">{{ change_user_display_name }}</a> |
+    <a href="{{ pull_request_url }}">#{{ pull_request_id }}</a> |
     {{ pull_request_title }}
 {{/ dgettext }}

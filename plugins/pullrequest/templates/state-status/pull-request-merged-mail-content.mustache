@@ -1,10 +1,8 @@
 {{# dgettext }}
     tuleap-pullrequest |
-    <a href="%s">%s</a> has merged the pull request <a href="%s">#%s</a>: %s into %s|
-    {{ change_user_profile_url }} |
-    {{ change_user_display_name }} |
-    {{ pull_request_url }} |
-    {{ pull_request_id }} |
+    %s has merged the pull request %s: %s into %s|
+    <a href="{{ change_user_profile_url }}">{{ change_user_display_name }}</a> |
+    <a href="{{ pull_request_url }}">#{{ pull_request_id }}</a> |
     {{ pull_request_title }} |
     {{ branch_destination }}
 {{/ dgettext }}
