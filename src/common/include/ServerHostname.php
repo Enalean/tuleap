@@ -48,6 +48,9 @@ final class ServerHostname
         return \ForgeConfig::get(self::DEFAULT_DOMAIN, '');
     }
 
+    /**
+     * @psalm-return non-empty-string
+     */
     public static function HTTPSUrl(): string
     {
         return 'https://' . self::hostnameWithHTTPSPort();

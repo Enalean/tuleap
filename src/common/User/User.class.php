@@ -564,7 +564,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     }
 
     /**
-     * @return int|string the ID of the user
+     * @return int|non-empty-string the ID of the user
      */
     public function getId()
     {

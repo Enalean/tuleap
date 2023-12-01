@@ -29,7 +29,7 @@ use Tuleap\NeverThrow\Ok;
 interface ProvideOnlyOfficeGlobalEditorJWToken
 {
     /**
-     * @psalm-return Ok<string>|Err<Fault>
+     * @psalm-return Ok<non-empty-string>|Err<Fault>
      */
     public function getGlobalEditorJWToken(\PFUser $user, int $item_id, \DateTimeImmutable $now): Ok|Err;
 }

@@ -126,11 +126,11 @@ final class OnlyOfficeCallbackResponseJWTParser implements OnlyOfficeCallbackRes
     /**
      * @param array{json_content: array, server: DocumentServer} $content
      *
-     * @psalm-return Ok<array{jwt: string, server: DocumentServer}>|Err<Fault>
+     * @psalm-return Ok<array{jwt: non-empty-string, server: DocumentServer}>|Err<Fault>
      */
     private function extractTokenFromJSONContent(array $content): Ok|Err
     {
-        if (isset($content['json_content']['token']) && is_string($content['json_content']['token'])) {
+        if (isset($content['json_content']['token']) && is_string($content['json_content']['token']) && $content['json_content']['token'] !== '') {
             return Result::ok([
                 'jwt'    => $content['json_content']['token'],
                 'server' => $content['server'],
@@ -141,7 +141,7 @@ final class OnlyOfficeCallbackResponseJWTParser implements OnlyOfficeCallbackRes
     }
 
     /**
-     * @param array{jwt: string, server: DocumentServer} $jwt
+     * @param array{jwt: non-empty-string, server: DocumentServer} $jwt
      *
      * @psalm-return Ok<array{unencrypted_token: UnencryptedToken, server: DocumentServer}>|Err<Fault>
      */

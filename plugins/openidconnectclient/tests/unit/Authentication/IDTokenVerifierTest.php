@@ -188,11 +188,12 @@ final class IDTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $nonce = 'random_string';
 
         $id_token_builder = (new Builder(new JoseEncoder(), ChainedFormatter::default()));
-        $id_token_builder->issuedBy('example.com');
-        $id_token_builder->withClaim('nonce', $nonce);
-        $id_token_builder->permittedFor('client_id_2');
-        $id_token_builder->relatedTo('123');
-        $id_token = $id_token_builder->getToken(new \Lcobucci\JWT\Signer\Hmac\Sha256(), InMemory::plainText(str_repeat('a', 32)))->toString();
+        $id_token         = $id_token_builder
+            ->issuedBy('example.com')
+            ->withClaim('nonce', $nonce)
+            ->permittedFor('client_id_2')
+            ->relatedTo('123')
+            ->getToken(new \Lcobucci\JWT\Signer\Hmac\Sha256(), InMemory::plainText(str_repeat('a', 32)))->toString();
 
         $key_details = openssl_pkey_get_details(self::$rsa_key);
         $this->jwks_key_fetcher->method('fetchKey')->willReturn([$key_details['key']]);

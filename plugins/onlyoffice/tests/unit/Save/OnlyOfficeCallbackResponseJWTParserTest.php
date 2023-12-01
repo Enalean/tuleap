@@ -269,7 +269,7 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
     }
 
     /**
-     * @param array<string,mixed> $claims
+     * @param array<non-empty-string,mixed> $claims
      */
     private static function buildJWT(array $claims): string
     {

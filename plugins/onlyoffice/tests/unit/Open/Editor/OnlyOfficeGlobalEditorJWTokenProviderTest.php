@@ -79,7 +79,7 @@ final class OnlyOfficeGlobalEditorJWTokenProviderTest extends TestCase
 
         $result = $token_provider->getGlobalEditorJWToken(UserTestBuilder::buildWithDefaults(), 12, new \DateTimeImmutable('@20'));
 
-        $token = $result->unwrapOr('');
+        $token = $result->unwrapOr('invalid');
 
         $parsed_token = (new JwtFacade())->parse(
             $token,

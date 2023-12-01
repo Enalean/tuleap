@@ -72,6 +72,9 @@ final class ClientIdentifier
         return $this->identifier;
     }
 
+    /**
+     * @psalm-return non-empty-string
+     */
     public function toString(): string
     {
         return self::PREFIX . $this->identifier;

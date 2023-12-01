@@ -57,7 +57,7 @@
     "laminas/laminas-httphandlerrunner": "^2.0",
     "laminas/laminas-mail": "^2.10",
     "lasserafn/php-initial-avatar-generator": "^4.1",
-    "lcobucci/jwt": "^4.1",
+    "lcobucci/jwt": "^5.2",
     "league/commonmark": "^2.0",
     "luracast/restler": "dev-master-tuleap#20221209",
     "monolog/monolog": "^3.3",
