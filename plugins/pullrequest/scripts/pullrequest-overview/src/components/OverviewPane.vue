@@ -22,15 +22,20 @@
         <div class="tlp-pane pullrequest-overview-header">
             <div class="tlp-pane-container">
                 <pull-request-title v-bind:pull_request="pull_request_info" />
-                <overview-tabs />
+                <overview-tabs v-bind:pull_request="pull_request_info" />
             </div>
         </div>
 
         <div class="tlp-pane pullrequest-overview-content-pane">
             <div class="tlp-pane-container pullrequest-overview-section-left">
                 <overview-threads
+                    v-if="!is_git_reference_broken"
                     v-bind:pull_request_info="pull_request_info"
                     v-bind:pull_request_author="pull_request_author"
+                />
+                <pull-request-broken-git-ref-error-empty-state
+                    v-if="is_git_reference_broken"
+                    v-bind:pull_request="pull_request_info"
                 />
             </div>
 
@@ -60,10 +65,11 @@
 </template>
 
 <script setup lang="ts">
-import { provide, ref } from "vue";
+import { provide, ref, computed } from "vue";
 import { useRoute } from "vue-router";
 import { fetchPullRequestInfo, fetchUserInfo } from "../api/tuleap-rest-querier";
 import { extractPullRequestIdFromRouteParams } from "../helpers/pull-request-id-extractor";
+import { isPullRequestBroken } from "./Actions/merge-status-helper";
 import type { PullRequest, User } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { Fault } from "@tuleap/fault";
 import {
@@ -81,6 +87,7 @@ import PullRequestStats from "./ReadOnlyInfo/PullRequestStats.vue";
 import PullRequestCiStatus from "./ReadOnlyInfo/PullRequestCIStatus.vue";
 import PullRequestReferences from "./ReadOnlyInfo/PullRequestReferences.vue";
 import PullRequestErrorModal from "./Errors/PullRequestErrorModal.vue";
+import PullRequestBrokenGitRefErrorEmptyState from "./Errors/PullRequestBrokenGitRefErrorEmptyState.vue";
 import PullRequestCheckoutButton from "./ReadOnlyInfo/PullRequestCheckoutButton.vue";
 import PullRequestEditTitleModal from "./Title/PullRequestEditTitleModal.vue";
 import PullRequestReviewerList from "./Reviewers/PullRequestReviewerList.vue";
@@ -92,6 +99,9 @@ const pull_request_id = extractPullRequestIdFromRouteParams(route.params);
 const pull_request_info = ref<PullRequest | null>(null);
 const pull_request_author = ref<User | null>(null);
 const error = ref<Fault | null>(null);
+const is_git_reference_broken = computed(
+    () => pull_request_info.value && isPullRequestBroken(pull_request_info.value),
+);
 
 provide(PULL_REQUEST_ID_KEY, pull_request_id);
 provide(DISPLAY_TULEAP_API_ERROR, (fault: Fault) => handleAPIFault(fault));

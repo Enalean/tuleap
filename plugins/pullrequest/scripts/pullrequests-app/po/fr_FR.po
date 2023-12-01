@@ -44,6 +44,9 @@ msgstr "Status intégration continue : Échec le %s"
 msgid "Continuous integration status: Success on %s"
 msgstr "Status intégration continue : Succès le %s"
 
+msgid "Error"
+msgstr "Erreur"
+
 msgid "Error details"
 msgstr "Détails de l'erreur"
 

@@ -88,13 +88,14 @@
 
 <script setup lang="ts">
 import { ref, watch, onBeforeUnmount, computed } from "vue";
+import { useGettext } from "vue3-gettext";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal, EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
-import { useGettext } from "vue3-gettext";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { patchTitle } from "../../api/tuleap-rest-querier";
-import { strictInject } from "@tuleap/vue-strict-inject";
 import { DISPLAY_TULEAP_API_ERROR, POST_PULL_REQUEST_UPDATE_CALLBACK } from "../../constants";
+import { isPullRequestBroken } from "../Actions/merge-status-helper";
 
 const { $gettext } = useGettext();
 const props = defineProps<{
@@ -110,7 +111,8 @@ const postPullRequestUpdateCallback = strictInject(POST_PULL_REQUEST_UPDATE_CALL
 const can_user_edit_title = computed(
     (): boolean =>
         props.pull_request_info !== null &&
-        props.pull_request_info.user_can_update_title_and_description,
+        props.pull_request_info.user_can_update_title_and_description &&
+        !isPullRequestBroken(props.pull_request_info),
 );
 
 watch(

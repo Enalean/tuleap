@@ -9,6 +9,11 @@
                 {{# has_count_to_display }}
                     <span class="tlp-tab-badge-append tlp-badge-primary tlp-badge-outline">{{ count }}</span>
                 {{/ has_count_to_display }}
+                {{# warning_message }}
+                    <span class="git-navigation-tab-error-bubble" title="{{ warning_message }}">
+                        <i class="fa-solid fa-circle-exclamation fa-lg" aria-hidden="true"></i>
+                    </span>
+                {{/ warning_message }}
             </a>
         {{/ navigation_tabs_presenters }}
     </nav>

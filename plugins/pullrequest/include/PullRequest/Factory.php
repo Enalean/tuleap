@@ -80,6 +80,11 @@ class Factory
         return new PullRequestCount($nb_open, $nb_closed);
     }
 
+    public function hasOpenBrokenPullRequests(GitRepository $repository): bool
+    {
+        return $this->dao->hasRepositoryOpenPullRequestsWithBrokenGitReferences($repository->getId());
+    }
+
     public function getInstanceFromRow(array $row): PullRequest
     {
         return new PullRequest(

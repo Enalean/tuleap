@@ -63,11 +63,15 @@ export const hasUserPermissionToMerge = (pull_request: PullRequest): boolean =>
 export const isCIHappy = (pull_request: PullRequest): boolean =>
     pull_request.last_build_status === BUILD_STATUS_SUCCESS;
 
+export const isPullRequestBroken = (pull_request: PullRequest): boolean =>
+    pull_request.is_git_reference_broken;
+
 export const canPullRequestBeMerged = (
     pull_request: PullRequest,
     are_merge_commits_allowed_in_repository: boolean,
 ): boolean => {
     if (
+        isPullRequestBroken(pull_request) ||
         !isPullRequestInReview(pull_request) ||
         !hasUserPermissionToMerge(pull_request) ||
         isSameReferenceMerge(pull_request) ||

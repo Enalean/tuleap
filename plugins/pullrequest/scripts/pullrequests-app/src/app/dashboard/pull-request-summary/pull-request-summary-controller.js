@@ -10,7 +10,6 @@ PullRequestSummaryController.$inject = [
     "PullRequestService",
     "UserRestService",
     "SharedPropertiesService",
-    "ErrorModalService",
 ];
 
 function PullRequestSummaryController(
@@ -18,25 +17,21 @@ function PullRequestSummaryController(
     PullRequestService,
     UserRestService,
     SharedPropertiesService,
-    ErrorModalService,
 ) {
     const self = this;
 
     Object.assign(self, {
         author: {},
-
         $onInit: init,
         goToOverview,
         isAbandoned,
         isMerged,
+        isPullRequestBroken: () => PullRequestService.isPullRequestBroken(self.pull_request),
         relative_date_helper: RelativeDateHelper(
             SharedPropertiesService.getDateTimeFormat(),
             SharedPropertiesService.getRelativeDateDisplay(),
             SharedPropertiesService.getUserLocale(),
         ),
-        onFetchErrorCallback: (event) => {
-            ErrorModalService.showErrorMessage(event.detail.fault);
-        },
     });
 
     function init() {

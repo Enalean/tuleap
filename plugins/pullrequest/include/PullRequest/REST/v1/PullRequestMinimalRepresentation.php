@@ -23,6 +23,7 @@ namespace Tuleap\PullRequest\REST\v1;
 use Codendi_HTMLPurifier;
 use GitRepository;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
+use Tuleap\PullRequest\GitReference\GitPullRequestReference;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\REST\JsonCast;
 
@@ -88,6 +89,8 @@ class PullRequestMinimalRepresentation
      */
     public $head;
 
+    public bool $is_git_reference_broken;
+
     public function __construct(GitoliteAccessURLGenerator $gitolite_access_URL_generator)
     {
         $this->gitolite_access_URL_generator = $gitolite_access_URL_generator;
@@ -97,6 +100,7 @@ class PullRequestMinimalRepresentation
         PullRequest $pull_request,
         GitRepository $repository,
         GitRepository $repository_dest,
+        GitPullRequestReference $git_pull_request_reference,
     ) {
         $this->id = JsonCast::toInt($pull_request->getId());
 
@@ -112,12 +116,13 @@ class PullRequestMinimalRepresentation
         $this->repository_dest = new GitRepositoryReference($this->gitolite_access_URL_generator);
         $this->repository_dest->build($repository_dest);
 
-        $this->user_id       = JsonCast::toInt($pull_request->getUserId());
-        $this->creation_date = JsonCast::toDate($pull_request->getCreationDate());
-        $this->branch_src    = $pull_request->getBranchSrc();
-        $this->branch_dest   = $pull_request->getBranchDest();
-        $this->status        = $this->expandStatusName($pull_request->getStatus());
-        $this->head          = new PullRequestHEADRepresentation($pull_request);
+        $this->user_id                 = JsonCast::toInt($pull_request->getUserId());
+        $this->creation_date           = JsonCast::toDate($pull_request->getCreationDate());
+        $this->branch_src              = $pull_request->getBranchSrc();
+        $this->branch_dest             = $pull_request->getBranchDest();
+        $this->status                  = $this->expandStatusName($pull_request->getStatus());
+        $this->head                    = new PullRequestHEADRepresentation($pull_request);
+        $this->is_git_reference_broken = $git_pull_request_reference->isGitReferenceBroken();
     }
 
     private function expandStatusName($status_acronym)

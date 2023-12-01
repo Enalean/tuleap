@@ -14,6 +14,7 @@ function PullRequestService(PullRequestRestService) {
 
         abandon,
         isPullRequestClosed,
+        isPullRequestBroken,
         merge,
         updateTitleAndDescription,
         reopen,
@@ -62,5 +63,9 @@ function PullRequestService(PullRequestRestService) {
         var closed_status = [self.valid_status_keys.merge, self.valid_status_keys.abandon];
 
         return closed_status.includes(pull_request.status);
+    }
+
+    function isPullRequestBroken(pull_request) {
+        return pull_request.is_git_reference_broken;
     }
 }

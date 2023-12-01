@@ -69,6 +69,7 @@ import {
     isFastForwardMerge,
     isCIHappy,
     isPullRequestInReview,
+    isPullRequestBroken,
 } from "../merge-status-helper";
 
 const are_merge_commits_allowed_in_repository = strictInject(
@@ -93,7 +94,10 @@ const is_merge_button_disabled = computed(
 );
 
 const is_button_displayed = computed(
-    () => isPullRequestInReview(props.pull_request) && hasUserPermissionToMerge(props.pull_request),
+    () =>
+        isPullRequestInReview(props.pull_request) &&
+        hasUserPermissionToMerge(props.pull_request) &&
+        !isPullRequestBroken(props.pull_request),
 );
 
 const is_merge_confirmation_required = computed(

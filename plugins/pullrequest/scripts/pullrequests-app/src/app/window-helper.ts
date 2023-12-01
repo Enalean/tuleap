@@ -24,3 +24,7 @@ export function setInterval(callback: () => void, time_in_ms: number): number {
 export function clearInterval(timer: number): void {
     window.clearInterval(timer);
 }
+
+export function redirectToUrl(url: string): void {
+    window.location.assign(url);
+}

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { define, dispatch, html } from "hybrids";
+import { define, html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import { uri, getAllJSON } from "@tuleap/fetch-result";
 import type { ProjectLabelsCollection, ProjectLabel } from "@tuleap/core-rest-api-types";
@@ -50,8 +50,8 @@ export const after_render_once_descriptor = {
             (labels) => {
                 host.labels = [...labels];
             },
-            (fault) => {
-                dispatch(host, "fetch-error", { detail: { fault } });
+            () => {
+                // Do nothing
             },
         );
     },
@@ -78,5 +78,5 @@ export const PullRequestLabelsList = define<InternalPullRequestLabelsList>({
         set: (host, value) => value ?? [],
     },
     pullRequestId: 0,
-    content: (host) => html` ${host.labels.map(displayLabelsList)} `,
+    content: (host) => html`${host.labels.map(displayLabelsList)}`,
 });

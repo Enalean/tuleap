@@ -79,7 +79,7 @@ import { DISPLAY_TULEAP_API_ERROR, PULL_REQUEST_ID_KEY } from "../../constants";
 import PropertySkeleton from "../ReadOnlyInfo/PropertySkeleton.vue";
 import { fetchReviewersInfo } from "../../api/tuleap-rest-querier";
 import PullRequestManageReviewersModal from "./PullRequestManageReviewersModal.vue";
-import { isPullRequestInReview } from "../Actions/merge-status-helper";
+import { isPullRequestBroken, isPullRequestInReview } from "../Actions/merge-status-helper";
 
 const { $gettext } = useGettext();
 
@@ -96,7 +96,8 @@ const can_user_manage_reviewers = computed(
     () =>
         props.pull_request &&
         props.pull_request.user_can_merge &&
-        isPullRequestInReview(props.pull_request),
+        isPullRequestInReview(props.pull_request) &&
+        !isPullRequestBroken(props.pull_request),
 );
 
 fetchReviewersInfo(pull_request_id).match((reviewers: ReviewersCollection) => {

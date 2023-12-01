@@ -26,6 +26,8 @@ use GitRepository;
 use Luracast\Restler\RestException;
 use Tuleap\Git\RetrieveGitRepository;
 use Tuleap\Git\Tests\Stub\RetrieveGitRepositoryStub;
+use Tuleap\Option\Option;
+use Tuleap\PullRequest\GitReference\BypassBrokenGitReferenceCheck;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceRetriever;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequest\REST\v1\AccessiblePullRequestRESTRetriever;
@@ -71,9 +73,11 @@ final class PullRequestWithGitReferenceRetrieverTest extends TestCase
     }
 
     /**
+     * @param Option<BypassBrokenGitReferenceCheck> $bypass_broken_git_ref_check
+     *
      * @throws RestException
      */
-    private function getAccessiblePullRequestWithGitReferenceForCurrentUser(): PullRequestWithGitReference
+    private function getAccessiblePullRequestWithGitReferenceForCurrentUser(Option $bypass_broken_git_ref_check): PullRequestWithGitReference
     {
         $user = UserTestBuilder::buildWithDefaults();
 
@@ -84,7 +88,8 @@ final class PullRequestWithGitReferenceRetrieverTest extends TestCase
             new AccessiblePullRequestRESTRetriever(
                 new PullRequestRetriever($this->pull_request_dao),
                 $this->permission_checker
-            )
+            ),
+            $bypass_broken_git_ref_check,
         );
 
         return $pull_request_with_git_reference_retriever->getAccessiblePullRequestWithGitReferenceForCurrentUser(
@@ -101,11 +106,11 @@ final class PullRequestWithGitReferenceRetrieverTest extends TestCase
         $this->expectExceptionCode(404);
         $this->expectExceptionMessage('No Git reference is reserved for this pull request');
 
-        $this->getAccessiblePullRequestWithGitReferenceForCurrentUser();
+        $this->getAccessiblePullRequestWithGitReferenceForCurrentUser(BypassBrokenGitReferenceCheck::check());
         self::assertSame(0, $this->git_pull_request_reference_updater->getUpdatePullRequestReferenceCallCount());
     }
 
-    public function testItThrows410IfTheGitReferenceIsBroken(): void
+    public function testItThrows410IfTheGitReferenceIsBrokenWhenCheckIsActivated(): void
     {
         $reference = GitPullRequestReferenceTestBuilder::aReference(self::REFERENCE_ID)
             ->thatIsBroken()
@@ -119,13 +124,31 @@ final class PullRequestWithGitReferenceRetrieverTest extends TestCase
         $this->expectExceptionCode(410);
         $this->expectExceptionMessage('The pull request is not accessible anymore');
 
-        $this->getAccessiblePullRequestWithGitReferenceForCurrentUser();
+        $this->getAccessiblePullRequestWithGitReferenceForCurrentUser(BypassBrokenGitReferenceCheck::check());
+        self::assertSame(0, $this->git_pull_request_reference_updater->getUpdatePullRequestReferenceCallCount());
+    }
+
+    public function testItDoesNotThrows410IfTheGitReferenceIsBrokenWhenCheckIsSkipped(): void
+    {
+        $reference = GitPullRequestReferenceTestBuilder::aReference(self::REFERENCE_ID)
+            ->thatIsBroken()
+            ->build();
+
+        $this->git_pull_request_reference_dao = GetReferenceByPullRequestIdStub::withPullRequestWithReference(
+            new PullRequestWithGitReference($this->pull_request, $reference)
+        );
+
+        $result = $this->getAccessiblePullRequestWithGitReferenceForCurrentUser(BypassBrokenGitReferenceCheck::skip());
+
+        self::assertSame(self::REFERENCE_ID, $result->getGitReference()->getGitReferenceId());
+        self::assertSame(self::PULL_REQUEST_ID, $result->getPullRequest()->getId());
+        self::assertSame('CTR "Yellowbird"', $result->getPullRequest()->getTitle());
         self::assertSame(0, $this->git_pull_request_reference_updater->getUpdatePullRequestReferenceCallCount());
     }
 
     public function testItReturnsThePullRequestWithTheGitReference(): void
     {
-        $result = $this->getAccessiblePullRequestWithGitReferenceForCurrentUser();
+        $result = $this->getAccessiblePullRequestWithGitReferenceForCurrentUser(BypassBrokenGitReferenceCheck::check());
 
         self::assertSame(self::REFERENCE_ID, $result->getGitReference()->getGitReferenceId());
         self::assertSame(self::PULL_REQUEST_ID, $result->getPullRequest()->getId());
@@ -149,7 +172,7 @@ final class PullRequestWithGitReferenceRetrieverTest extends TestCase
         $this->expectExceptionCode(404);
         $this->expectExceptionMessage("Git repository not found");
 
-        $this->getAccessiblePullRequestWithGitReferenceForCurrentUser();
+        $this->getAccessiblePullRequestWithGitReferenceForCurrentUser(BypassBrokenGitReferenceCheck::check());
         self::assertSame(0, $this->git_pull_request_reference_updater->getUpdatePullRequestReferenceCallCount());
     }
 
@@ -169,7 +192,7 @@ final class PullRequestWithGitReferenceRetrieverTest extends TestCase
             new PullRequestWithGitReference($this->pull_request, $reference)
         );
 
-        $result = $this->getAccessiblePullRequestWithGitReferenceForCurrentUser();
+        $result = $this->getAccessiblePullRequestWithGitReferenceForCurrentUser(BypassBrokenGitReferenceCheck::check());
 
         self::assertSame(150, $result->getGitReference()->getGitReferenceId());
         self::assertSame(15, $result->getPullRequest()->getId());

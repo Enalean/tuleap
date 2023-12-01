@@ -57,6 +57,7 @@ import {
     isPullRequestInReview,
     isSameReferenceMerge,
     isUnknownMerge,
+    isPullRequestBroken,
 } from "./merge-status-helper";
 const { $gettext } = useGettext();
 const are_merge_commits_allowed_in_repository = strictInject(
@@ -92,6 +93,12 @@ const merge_status_error = computed(() => {
         return "";
     }
 
+    if (isPullRequestBroken(props.pull_request)) {
+        return $gettext(
+            "The git reference associated to this pull-request is broken. You can only abandon it.",
+        );
+    }
+
     if (!isFastForwardMerge(props.pull_request) && !are_merge_commits_allowed_in_repository) {
         return $gettext(
             "Merge commits are forbidden in the repository configuration (fast-forward only). Please rebase the commit and update the pull request.",
@@ -109,6 +116,7 @@ const merge_status_error = computed(() => {
 
 const is_section_displayed = computed(
     () =>
+        isPullRequestBroken(props.pull_request) ||
         isPullRequestAlreadyMerged(props.pull_request) ||
         isPullRequestAbandoned(props.pull_request) ||
         (isPullRequestInReview(props.pull_request) && props.pull_request.user_can_merge),

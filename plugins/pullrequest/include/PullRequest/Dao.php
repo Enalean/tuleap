@@ -23,6 +23,7 @@ namespace Tuleap\PullRequest;
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\PullRequest\Criterion\ISearchOnStatus;
+use Tuleap\PullRequest\GitReference\GitPullRequestReference;
 
 class Dao extends DataAccessObject implements SearchPullRequest
 {
@@ -113,6 +114,23 @@ class Dao extends DataAccessObject implements SearchPullRequest
                 GROUP BY status';
 
         return $this->getDB()->run($sql, $repository_id, $repository_id);
+    }
+
+    public function hasRepositoryOpenPullRequestsWithBrokenGitReferences(int $repository_id): bool
+    {
+        $sql = "
+            SELECT TRUE
+            FROM plugin_pullrequest_review as review
+            INNER JOIN plugin_pullrequest_git_reference as ref ON (review.id = ref.pr_id)
+            WHERE review.repo_dest_id = ? AND ref.status = ? AND review.status = ?
+        ";
+
+        return $this->getDB()->exists(
+            $sql,
+            $repository_id,
+            GitPullRequestReference::STATUS_BROKEN,
+            PullRequest::STATUS_REVIEW
+        );
     }
 
     public function create(

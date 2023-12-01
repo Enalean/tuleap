@@ -43,6 +43,7 @@ import {
     isPullRequestInReview,
     isSameReferenceMerge,
     isUnknownMerge,
+    isPullRequestBroken,
 } from "./merge-status-helper";
 
 describe("merge-status-helper", () => {
@@ -164,6 +165,18 @@ describe("merge-status-helper", () => {
         },
     );
 
+    it.each([
+        [false, false],
+        [true, true],
+    ])(
+        "isPullRequestBroken() should return %s when the is_git_reference_broken is %s",
+        (expected_result, is_git_reference_broken) => {
+            expect(isPullRequestBroken({ is_git_reference_broken } as PullRequest)).toBe(
+                expected_result,
+            );
+        },
+    );
+
     describe("canPullRequestBeMerged()", () => {
         it(`Given that the pull-request:
             - is open
@@ -212,5 +225,23 @@ describe("merge-status-helper", () => {
                 ).toBe(expected_result);
             },
         );
+
+        it("canPullRequestBeMerged() should return false when the git reference is broken", () => {
+            const are_merge_commits_allowed_in_repository = true;
+
+            expect(
+                canPullRequestBeMerged(
+                    {
+                        status: PULL_REQUEST_STATUS_REVIEW,
+                        merge_status: PULL_REQUEST_MERGE_STATUS_NOT_FF,
+                        user_can_merge: true,
+                        reference_src: "d592fa08f3604c6fc81c69c1a3b4426cff83a73b",
+                        reference_dest: "66728d6153adbd267f3b1b3a1250bab6bd2ee3d0",
+                        is_git_reference_broken: true,
+                    } as PullRequest,
+                    are_merge_commits_allowed_in_repository,
+                ),
+            ).toBe(false);
+        });
     });
 });

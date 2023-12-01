@@ -31,6 +31,8 @@ use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\PullRequest\Dao as PullRequestDao;
 use Tuleap\PullRequest\Exception\MalformedQueryParameterException;
 use Tuleap\PullRequest\Factory as PullRequestFactory;
+use Tuleap\PullRequest\GitReference\GitPullRequestReferenceDAO;
+use Tuleap\PullRequest\GitReference\GitPullRequestReferenceRetriever;
 
 class RepositoryResource
 {
@@ -56,6 +58,8 @@ class RepositoryResource
      */
     private $logger;
 
+    private GitPullRequestReferenceRetriever $git_pull_request_reference_retriever;
+
     public function __construct()
     {
         $this->pull_request_dao             = new PullRequestDao();
@@ -70,7 +74,8 @@ class RepositoryResource
         if (! $git_plugin) {
             throw new \Exception("Pullrequest plugin cannot find git plugin");
         }
-        $this->gitolite_access_URL_generator = new GitoliteAccessURLGenerator($git_plugin->getPluginInfo());
+        $this->gitolite_access_URL_generator        = new GitoliteAccessURLGenerator($git_plugin->getPluginInfo());
+        $this->git_pull_request_reference_retriever = new GitPullRequestReferenceRetriever(new GitPullRequestReferenceDAO());
 
         $this->logger = \pullrequestPlugin::getLogger();
     }
@@ -92,13 +97,17 @@ class RepositoryResource
 
             $repository_src  = $this->git_repository_factory->getRepositoryById($pull_request->getRepositoryId());
             $repository_dest = $this->git_repository_factory->getRepositoryById($pull_request->getRepoDestId());
+            $git_reference   = $this->git_pull_request_reference_retriever->getGitReferenceFromPullRequest(
+                $pull_request
+            );
 
             if ($repository_src && $repository_dest) {
                 $pull_request_representation = new PullRequestMinimalRepresentation($this->gitolite_access_URL_generator);
                 $pull_request_representation->buildMinimal(
                     $pull_request,
                     $repository_src,
-                    $repository_dest
+                    $repository_dest,
+                    $git_reference
                 );
                 $collection[] = $pull_request_representation;
             } else {
