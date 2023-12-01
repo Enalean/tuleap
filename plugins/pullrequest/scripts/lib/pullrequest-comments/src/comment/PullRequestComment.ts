@@ -43,7 +43,6 @@ export type PullRequestCommentComponentType = {
     readonly element_height: number;
     readonly post_rendering_callback: (() => void) | undefined;
     readonly controller: ControlPullRequestComment;
-    readonly is_comment_edition_enabled: boolean;
     comment: PullRequestCommentPresenter;
     relative_date_helper: HelpRelativeDatesDisplay;
     replies: PullRequestCommentRepliesCollectionPresenter;
@@ -134,7 +133,6 @@ const getCommentContent = (
 
 export const PullRequestCommentComponent = define<PullRequestCommentComponentType>({
     tag: PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME,
-    is_comment_edition_enabled: false,
     is_reply_form_shown: false,
     is_edition_form_shown: false,
     comment: undefined,
@@ -166,7 +164,6 @@ export const PullRequestCommentComponent = define<PullRequestCommentComponentTyp
                     (reply: PullRequestCommentPresenter) => html`
                         <tuleap-pullrequest-comment-reply
                             comment="${reply}"
-                            is_comment_edition_enabled="${host.is_comment_edition_enabled}"
                             controller="${host.controller.buildReplyController()}"
                             onshow-reply-form="${(): void => host.controller.showReplyForm(host)}"
                             onhide-reply-form="${(): void => host.controller.hideReplyForm(host)}"

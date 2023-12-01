@@ -42,7 +42,6 @@ use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Comment\CommentRetriever;
 use Tuleap\PullRequest\Comment\Dao as CommentDao;
 use Tuleap\PullRequest\Dao as PullRequestDao;
-use Tuleap\PullRequest\FeatureFlagEditComments;
 use Tuleap\PullRequest\Notification\PullRequestNotificationSupport;
 use Tuleap\PullRequest\PullRequest\REST\v1\AccessiblePullRequestRESTRetriever;
 use Tuleap\PullRequest\PullRequestRetriever;
@@ -87,10 +86,6 @@ final class PullRequestCommentsResource extends AuthenticatedResource
     {
         $this->checkAccess();
         Header::allowOptionsPatch();
-
-        if (! FeatureFlagEditComments::isCommentEditionEnabled()) {
-            throw new RestException(501, "This route is under construction");
-        }
 
         $comment_dao      = new CommentDao();
         $pull_request_dao = new PullRequestDao();

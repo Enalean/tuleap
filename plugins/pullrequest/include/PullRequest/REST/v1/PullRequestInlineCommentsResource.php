@@ -33,7 +33,6 @@ use Tuleap\Markdown\EnhancedCodeBlockExtension;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
-use Tuleap\PullRequest\FeatureFlagEditComments;
 use Tuleap\PullRequest\InlineComment\InlineCommentRetriever;
 use Tuleap\PullRequest\Notification\PullRequestNotificationSupport;
 use Tuleap\PullRequest\PullRequestRetriever;
@@ -76,10 +75,6 @@ final class PullRequestInlineCommentsResource extends AuthenticatedResource
     {
         Header::allowOptionsPatch();
         $this->checkAccess();
-
-        if (! FeatureFlagEditComments::isCommentEditionEnabled()) {
-            throw new RestException(501, 'This route is under construction');
-        }
 
         $current_user           = \UserManager::instance()->getCurrentUser();
         $pull_request_dao       = new \Tuleap\PullRequest\Dao();

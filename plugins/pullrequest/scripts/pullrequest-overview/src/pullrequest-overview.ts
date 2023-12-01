@@ -34,7 +34,6 @@ import {
     USER_LOCALE_KEY,
     USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
     PROJECT_ID,
-    IS_COMMENT_EDITION_ENABLED,
 } from "./constants";
 
 export async function init(mount_point: HTMLElement): Promise<void> {
@@ -62,10 +61,6 @@ export async function init(mount_point: HTMLElement): Promise<void> {
         .provide(
             ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY,
             Boolean(getDatasetItemOrThrow(mount_point, "areMergeCommitsAllowedInRepository")),
-        )
-        .provide(
-            IS_COMMENT_EDITION_ENABLED,
-            Boolean(getDatasetItemOrThrow(mount_point, "isCommentEditionEnabled")),
         )
         .use(createOverviewRouter(base_url))
         .use(

@@ -34,7 +34,6 @@ final class PullRequestPresenter
     public string $language;
     public int $repository_id;
     public int $project_id;
-    public bool $is_comment_edition_enabled;
 
     public function __construct(\GitRepository $repository, \PFUser $user, private PullRequestCount $nb_pull_requests, MergeSetting $merge_setting, public bool $is_vue_overview_shown)
     {
@@ -46,7 +45,6 @@ final class PullRequestPresenter
         $this->user_avatar_url                    = $user->getAvatarUrl();
         $this->language                           = $user->getShortLocale();
         $this->relative_date_display              = $user->getPreference(DateHelper::PREFERENCE_NAME) ?: DefaultRelativeDatesDisplayPreferenceRetriever::retrieveDefaultValue();
-        $this->is_comment_edition_enabled         = FeatureFlagEditComments::isCommentEditionEnabled();
     }
 
     public function getTemplateName(): string

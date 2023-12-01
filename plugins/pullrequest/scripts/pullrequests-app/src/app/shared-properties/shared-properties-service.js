@@ -13,7 +13,6 @@ function SharedPropertiesService() {
         nb_pull_request_badge: null,
         is_there_at_least_one_pull_request: null,
         is_merge_commit_allowed: null,
-        is_comment_edition_enabled: false,
         date_time_format: "",
         user_locale: "",
         relative_date_display: "",
@@ -44,8 +43,6 @@ function SharedPropertiesService() {
         setDateTimeFormat,
         setUserLocale,
         setRelativeDateDisplay,
-        setIsCommentEditionEnabled,
-        isCommentEditionEnabled,
     };
 
     function whenReady() {
@@ -142,13 +139,5 @@ function SharedPropertiesService() {
 
     function setUserAvatarUrl(user_avatar_url) {
         property.user_avatar_url = user_avatar_url;
-    }
-
-    function setIsCommentEditionEnabled(is_enabled) {
-        property.is_comment_edition_enabled = is_enabled;
-    }
-
-    function isCommentEditionEnabled() {
-        return property.is_comment_edition_enabled;
     }
 }

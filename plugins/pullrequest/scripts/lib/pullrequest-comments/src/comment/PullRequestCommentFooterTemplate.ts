@@ -24,7 +24,6 @@ import { FORMAT_COMMONMARK } from "@tuleap/plugin-pullrequest-constants";
 import type { PullRequestCommentComponentType } from "./PullRequestComment";
 
 const shouldDisplayEditButton = (host: PullRequestCommentComponentType): boolean =>
-    host.is_comment_edition_enabled &&
     host.comment.format === FORMAT_COMMONMARK &&
     host.comment.user.id === host.controller.getCurrentUserId();
 
