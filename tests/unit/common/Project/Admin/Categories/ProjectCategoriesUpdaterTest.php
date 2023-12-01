@@ -22,56 +22,37 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Admin\Categories;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use ProjectHistoryDao;
 use TroveCat;
 use TroveCatFactory;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 class ProjectCategoriesUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\MockInterface|Project
-     */
-    private $project;
-    /**
-     * @var Mockery\MockInterface|ProjectCategoriesUpdater
-     */
-    private $updater;
-    /**
-     * @var Mockery\MockInterface|TroveSetNodeFacade
-     */
-    private $set_node_facade;
-    /**
-     * @var Mockery\MockInterface|TroveCatFactory
-     */
-    private $factory;
-    /**
-     * @var Mockery\MockInterface|ProjectHistoryDao
-     */
-    private $history_dao;
+    private Project $project;
+    private ProjectCategoriesUpdater $updater;
+    private TroveSetNodeFacade&MockObject $set_node_facade;
+    private TroveCatFactory&MockObject $factory;
+    private ProjectHistoryDao&MockObject $history_dao;
 
     /** @before */
     public function instantiateMocks(): void
     {
-        $this->project         = Mockery::mock(Project::class);
-        $this->factory         = Mockery::mock(TroveCatFactory::class);
-        $this->history_dao     = Mockery::mock(ProjectHistoryDao::class);
-        $this->set_node_facade = Mockery::mock(TroveSetNodeFacade::class);
+        $this->project         = ProjectTestBuilder::aProject()->withId(42)->build();
+        $this->factory         = $this->createMock(TroveCatFactory::class);
+        $this->history_dao     = $this->createMock(ProjectHistoryDao::class);
+        $this->set_node_facade = $this->createMock(TroveSetNodeFacade::class);
 
-        $this->project->shouldReceive('getID')->andReturn(42);
-
-        $this->factory->shouldReceive('getTopCategoriesWithNbMaxCategories')->andReturn(
+        $this->factory->method('getTopCategoriesWithNbMaxCategories')->willReturn(
             [
                 ['trove_cat_id' => 1, 'nb_max_values' => 3],
                 ['trove_cat_id' => 2, 'nb_max_values' => 1],
                 ['trove_cat_id' => 4, 'nb_max_values' => 2],
             ]
         );
-        $this->factory->shouldReceive('getTree')->andReturn([
+        $this->factory->method('getTree')->willReturn([
             1 => $this->getTrove('1')
                 ->addChildren($this->getTrove('11'))
                 ->addChildren($this->getTrove('12')),
@@ -84,7 +65,7 @@ class ProjectCategoriesUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
                 ),
         ]);
 
-        $this->factory->shouldReceive('getMandatoryParentCategoriesUnderRootOnlyWhenCategoryHasChildren')->andReturn([])->byDefault();
+        $this->factory->method('getMandatoryParentCategoriesUnderRootOnlyWhenCategoryHasChildren')->willReturn([]);
 
         $this->updater = new ProjectCategoriesUpdater(
             $this->factory,
@@ -101,34 +82,44 @@ class ProjectCategoriesUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testAddEntryInProjectHistory(): void
     {
         $this->history_dao
-            ->shouldReceive('groupAddHistory')
-            ->once()
+            ->expects(self::once())
+            ->method('groupAddHistory')
             ->with('changed_trove', "", 42);
 
-        $this->factory->shouldReceive('removeProjectTopCategoryValue');
-        $this->set_node_facade->shouldReceive('setNode');
+        $this->factory->method('removeProjectTopCategoryValue');
+        $this->set_node_facade->method('setNode');
 
         $this->updater->update($this->project, CategoryCollection::buildFromWebPayload([1 => ['', '11']]));
     }
 
     public function testItUpdatesCategoriesValues(): void
     {
-        $this->history_dao->shouldReceive('groupAddHistory');
+        $this->history_dao->method('groupAddHistory');
 
-        $this->factory->shouldReceive('removeProjectTopCategoryValue')->with($this->project, 2)->once();
-        $this->factory->shouldReceive('removeProjectTopCategoryValue')->with($this->project, 1)->once();
-        $this->set_node_facade->shouldReceive('setNode')->with($this->project, 11, 1)->once();
-        $this->set_node_facade->shouldReceive('setNode')->with($this->project, 12, 1)->once();
-        $this->set_node_facade->shouldReceive('setNode')->with($this->project, 21, 2)->once();
+        $this->factory
+            ->expects(self::exactly(2))
+            ->method('removeProjectTopCategoryValue')
+            ->withConsecutive(
+                [$this->project, 1],
+                [$this->project, 2]
+            );
+        $this->set_node_facade
+            ->expects(self::exactly(3))
+            ->method('setNode')
+            ->withConsecutive(
+                [$this->project, 11, 1],
+                [$this->project, 12, 1],
+                [$this->project, 21, 2]
+            );
 
         $this->updater->update($this->project, CategoryCollection::buildFromWebPayload([1 => ['', '11', '12'], 2 => ['', '21']]));
     }
 
     public function testItIgnoresSubmittedCategoryIfValueIsNotAnArray(): void
     {
-        $this->history_dao->shouldNotReceive('groupAddHistory');
-        $this->factory->shouldNotReceive('removeProjectTopCategoryValue');
-        $this->set_node_facade->shouldNotReceive('setNode');
+        $this->history_dao->expects(self::never())->method('groupAddHistory');
+        $this->factory->expects(self::never())->method('removeProjectTopCategoryValue');
+        $this->set_node_facade->expects(self::never())->method('setNode');
 
         $this->updater->update($this->project, CategoryCollection::buildFromWebPayload([1 => '23']));
     }

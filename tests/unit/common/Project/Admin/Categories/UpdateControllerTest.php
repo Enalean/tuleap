@@ -24,71 +24,46 @@ namespace Tuleap\Project\Admin\Categories;
 
 use Feedback;
 use HTTPRequest;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Request\ProjectRetriever;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class UpdateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private HTTPRequest&MockObject $request;
+    private PFUser $project_admin;
+    private UpdateController $controller;
+    private ProjectRetriever&MockObject $project_retriever;
+    private ProjectAdministratorChecker&MockObject $administrator_checker;
+    private Project $project;
+    private BaseLayout&MockObject $layout;
 
-    /**
-     * @var Mockery\MockInterface|\HTTPRequest
-     */
-    private $request;
-    /**
-     * @var Mockery\MockInterface|\PFUser
-     */
-    private $project_admin;
-    /**
-     * @var UpdateController
-     */
-    private $controller;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectRetriever
-     */
-    private $project_retriever;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectAdministratorChecker
-     */
-    private $administrator_checker;
-    /**
-     * @var Mockery\MockInterface|Project
-     */
-    private $project;
-    /**
-     * @var Mockery\MockInterface|BaseLayout
-     */
-    private $layout;
-
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&UpdateCategoriesProcessor
-     */
-    private $update_processor;
+    private UpdateCategoriesProcessor&MockObject $update_processor;
 
     /** @before */
     public function instantiateMocks(): void
     {
-        $this->request               = Mockery::mock(HTTPRequest::class);
-        $this->layout                = Mockery::mock(BaseLayout::class);
-        $this->project_admin         = Mockery::mock(PFUser::class);
-        $this->project_retriever     = Mockery::mock(ProjectRetriever::class);
-        $this->administrator_checker = Mockery::mock(ProjectAdministratorChecker::class);
+        $this->request               = $this->createMock(HTTPRequest::class);
+        $this->layout                = $this->createMock(BaseLayout::class);
+        $this->project_retriever     = $this->createMock(ProjectRetriever::class);
+        $this->administrator_checker = $this->createMock(ProjectAdministratorChecker::class);
         $this->update_processor      = $this->createMock(UpdateCategoriesProcessor::class);
-        $this->project               = Mockery::mock(Project::class);
+        $this->project               = ProjectTestBuilder::aProject()->withId(42)->build();
+        $this->project_admin         = UserTestBuilder::aUser()
+            ->withAdministratorOf($this->project)
+            ->build();
 
-        $this->project->shouldReceive('getID')->andReturn(42);
-        $this->project->shouldReceive('isError')->andReturn(false);
-        $this->project_retriever->shouldReceive('getProjectFromId')
+        $this->project_retriever
+            ->expects(self::once())
+            ->method('getProjectFromId')
             ->with('42')
-            ->once()
-            ->andReturn($this->project);
-        $this->administrator_checker->shouldReceive('checkUserIsProjectAdministrator')->once();
-        $this->project_admin->shouldReceive('isAdmin')->with(42)->andReturn(true);
+            ->willReturn($this->project);
+        $this->administrator_checker->expects(self::once())->method('checkUserIsProjectAdministrator');
 
         $this->controller = new UpdateController(
             $this->project_retriever,
@@ -99,14 +74,14 @@ final class UpdateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDisplaysAnErrorIfCategoriesIsNotAnArray(): void
     {
-        $this->request->shouldReceive('getCurrentUser')->andReturn($this->project_admin);
-        $this->request->shouldReceive('get')->with('categories')->andReturn('string');
+        $this->request->method('getCurrentUser')->willReturn($this->project_admin);
+        $this->request->method('get')->with('categories')->willReturn('string');
 
-        $this->layout->shouldReceive('addFeedback')->with(Feedback::ERROR, Mockery::any());
+        $this->layout->method('addFeedback')->with(Feedback::ERROR, self::anything());
         $exception_stop_exec_redirect = new \Exception("Redirect");
-        $this->layout->shouldReceive('redirect')->with('/project/42/admin/categories')->andThrow($exception_stop_exec_redirect);
+        $this->layout->method('redirect')->with('/project/42/admin/categories')->willThrowException($exception_stop_exec_redirect);
 
-        $this->expectExceptionObject($exception_stop_exec_redirect);
+        self::expectExceptionObject($exception_stop_exec_redirect);
         $this->controller->process($this->request, $this->layout, ['project_id' => '42']);
     }
 }
