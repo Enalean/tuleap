@@ -169,22 +169,6 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
         return $this->getServiceLink(Service::FORUM);
     }
 
-    /*
-
-    Subversion settings
-
-    */
-
-    public function getSVNMailingHeader()
-    {
-        return $this->project_data_array['svn_events_mailing_header'];
-    }
-
-    public function isSVNTracked()
-    {
-        return $this->project_data_array['svn_tracker'];
-    }
-
     public function isSVNMandatoryRef()
     {
         return $this->project_data_array['svn_mandatory_ref'];

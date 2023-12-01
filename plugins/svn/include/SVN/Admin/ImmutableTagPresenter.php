@@ -33,33 +33,22 @@ class ImmutableTagPresenter extends BaseAdminPresenter
 
     public const MAX_NUMBER_OF_FOLDERS = 10000;
 
-    public $svn_allow_tag_immutable_title;
-    public $svn_allow_tag_immutable_comment;
+    public readonly int $max_number_of_folders;
+
     public $project_id;
-    public $immutable_tag_configuration;
     public $path;
     public $immutable_tags_path;
     public $preview;
     public $exceeds_max_number_of_folders;
-    public $sooo_fat;
-    public $preview_description;
     public $tree;
     public $existing_tree;
     public $loading;
-    public $impacted_svn;
-    public $select_tag;
-    public $my_tag;
     public $save;
-    public $tree_empty_state;
-    public $some_path;
-    public $svn_status_style;
     public $repository_id;
-    public $whitelist;
     public $immutable_tags_whitelist;
     public $repository_name;
     public $repository_full_name;
     public $title;
-    public $impacted_svn_empty_state;
     public $sections;
 
     public function __construct(
@@ -100,25 +89,9 @@ class ImmutableTagPresenter extends BaseAdminPresenter
 
         $this->existing_tree = json_encode($existing_tree);
 
-        $this->title                           = $title;
-        $this->whitelist                       = $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'whitelist');
-        $this->svn_allow_tag_immutable_comment = $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'configuration_description');
-        $this->immutable_tag_configuration     = $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'configuration');
-        $this->tree                            = $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'tree');
-        $this->tree_empty_state                = $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'tree_empty_state');
-        $this->preview                         = $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'preview');
-        $this->preview_description             = $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'preview_description');
-        $this->my_tag                          = $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'my-tag');
-        $this->some_path                       = $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'some/path');
-        $this->select_tag                      = $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'select_tag');
-        $this->loading                         = $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'loading');
-        $this->svn_status_style                = $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'svn_status_style');
-        $this->impacted_svn                    = $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'impacted_svn');
-        $this->impacted_svn_empty_state        = $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'impacted_svn_empty_state');
-        $this->path                            = $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'path');
-        $this->whitelist                       = $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'whitelist');
-        $this->sooo_fat                        = $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'sooo_fat', self::MAX_NUMBER_OF_FOLDERS);
-        $this->save                            = $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'save');
+        $this->max_number_of_folders = self::MAX_NUMBER_OF_FOLDERS;
+
+        $this->title = $title;
 
         $this->sections = new SectionsPresenter($repository);
     }

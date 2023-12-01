@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SVN_Immutable_Tags_DAO extends DataAccessObject
+class SVN_Immutable_Tags_DAO extends DataAccessObject // phpcs:ignore
 {
     public function getImmutableTagsWhitelistForProject($project_id)
     {
@@ -27,18 +27,6 @@ class SVN_Immutable_Tags_DAO extends DataAccessObject
                 WHERE group_id = $project_id";
 
         return $this->retrieve($sql);
-    }
-
-    public function saveImmutableTagsForProject($project_id, $whitelist, $path)
-    {
-        $project_id = $this->da->escapeInt($project_id);
-        $whitelist  = $this->da->quoteSmart($whitelist);
-        $path       = $this->da->quoteSmart($path);
-
-        $sql = "REPLACE INTO svn_immutable_tags (group_id, whitelist, paths)
-                VALUES ($project_id, $whitelist, $path)";
-
-        return $this->update($sql);
     }
 
     public function getImmutableTagsPathForProject($project_id)

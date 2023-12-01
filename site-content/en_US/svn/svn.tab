@@ -9,63 +9,10 @@
 #  *
 #  */
 
-svn_admin_immutable_tags	title	Immutable tags
-svn_admin_immutable_tags	configuration	Immutable tags configuration
-svn_admin_immutable_tags	configuration_description	Specify folders where immutable tags will be located. You can specify a whitelist of folders where you will be able to do modifications.
-svn_admin_immutable_tags	layout_example	Example layout
-svn_admin_immutable_tags	impacted_svn	Example of impacted svn operations in <span class="label" id="tag-name-example"></span>
-svn_admin_immutable_tags	impacted_svn_empty_state	Example of impacted svn operations
-svn_admin_immutable_tags	whitelist	Global whitelist
-svn_admin_immutable_tags	path	Immutable tags paths
-svn_admin_immutable_tags	tree	Repository tree structure
-svn_admin_immutable_tags	preview	Preview of your configuration
-svn_admin_immutable_tags	preview_description	Here is a preview of what your configuration does. Click on highlighted folders to get more information.
-svn_admin_immutable_tags	save	Save configuration
-svn_admin_immutable_tags	my-tag	my-tag
-svn_admin_immutable_tags	some/path	some/path
-svn_admin_immutable_tags	svn_status_style	SVN status style
-svn_admin_immutable_tags	loading	Loading...
-svn_admin_immutable_tags	select_tag	Please select tag on the left
-svn_admin_immutable_tags	tree_empty_state	Your SVN repository is not impacted by immutable tags because the configuration is empty or does not match the current repository layout
-svn_admin_immutable_tags	sooo_fat	Your repository contains too many folders (more than $1), for performance reasons, we cannot display the preview of your configuration.
-
 svn_tokens	default_comment	Token generated on $1
 svn_tokens	default_last_used_on	Never
 svn_tokens	default_last_used_by	-
 
-#
-#-----------------------------------------------
-# Script: SF/www/svn/admin/index.php
-#
-svn_admin_index	admin	Subversion Administration
-svn_admin_index	welcome	Define the welcome message, database tracing...
-svn_admin_index	email_sett	Email Notification Settings
-svn_admin_index	email_comment	Define who is going to receive email notification of the changes committed to the subversion repository.
-svn_admin_index	immutable_tags	Immutable Tags
-svn_admin_index	immutable_tags_description	Define which folder is considered as an immutable tag.
-#
-#-----------------------------------------------
-# Script: SF/www/svn/admin/notification.php
-#
-svn_admin_notification	upd_email_success	Email Notification updated successfully
-svn_admin_notification	upd_email_fail	"Mail to" contains an invalid email address.
-svn_admin_notification	upd_email_bad_adr	Invalid email addresses "$1"
-svn_admin_notification	upd_header_success	Header updated successfully
-svn_admin_notification	upd_header_fail	Header update failed.
-svn_admin_notification	email	Subversion Administration - Email Notification
-svn_admin_notification	mail_comment	<H3>E-Mail notification on Commits</H3><p><I>Each commit event can also be notified via email to specific recipients or mailing lists (comma separated). A specific subject header for the email message can also be specified.</I></p>
-svn_admin_notification	star_operator	Please note that you can use the star operator: /folder/to/notify and /folder/*/notify will be notified the same way.
-svn_admin_notification	svn_tracking_comment	To be able to use subversion notification, subversion tracking must be activated.
-svn_admin_notification	mail_to	Mail to
-svn_admin_notification	notification_path	Path
-svn_admin_notification	header	Subject header
-svn_admin_notification	mailing_list_header	SVN notification list
-svn_admin_notification	path_header	SVN monitored path
-svn_admin_notification	path_delete_ask	Delete?
-svn_admin_notification	existent_notifications	Available notifications
-svn_admin_notification	delete_path_success	Email notification removed for $1
-svn_admin_notification	delete_path_fail	Email notification not removed
-svn_admin_notification	retrieve_paths_fail	No path selected
 #
 #-----------------------------------------------
 # Script: SF/www/svn/browse_revision.php

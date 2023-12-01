@@ -567,22 +567,6 @@ class ProjectDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    /**
-     * Set SVN header
-     *
-     * @param int $groupId
-     * @param String  $mailingHeader
-     *
-     * @return bool
-     */
-    public function setSvnHeader($groupId, $mailingHeader)
-    {
-        $sql = ' UPDATE `groups`
-                 SET svn_events_mailing_header = ' . $this->da->quoteSmart($mailingHeader) . '
-                 WHERE group_id = ' . $this->da->escapeInt($groupId);
-        return $this->update($sql);
-    }
-
     public function searchGlobal($words, $offset, $exact)
     {
         return $this->searchGlobalPaginated($words, $offset, $exact, 26);

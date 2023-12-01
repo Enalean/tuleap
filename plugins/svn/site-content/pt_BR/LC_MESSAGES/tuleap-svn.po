@@ -122,10 +122,19 @@ msgstr ""
 msgid "Error during new revision file creation"
 msgstr ""
 
+msgid "Example of impacted svn operations"
+msgstr ""
+
+msgid "Example of impacted svn operations in"
+msgstr ""
+
 msgid "Force every commit to include a reference."
 msgstr ""
 
 msgid "Global permissions"
+msgstr ""
+
+msgid "Global whitelist"
 msgstr ""
 
 msgid "Granted groups"
@@ -146,6 +155,11 @@ msgstr ""
 msgid "Header updated successfully"
 msgstr ""
 
+msgid ""
+"Here is a preview of what your configuration does. Click on highlighted "
+"folders to get more information."
+msgstr ""
+
 msgid "However you will notice that:"
 msgstr ""
 
@@ -158,6 +172,12 @@ msgstr ""
 msgid "Immutable tags"
 msgstr ""
 
+msgid "Immutable tags configuration"
+msgstr ""
+
+msgid "Immutable tags paths"
+msgstr ""
+
 msgid ""
 "It is recommended to always define permissions on a user group. Applying "
 "permissions to a manually defined group or to a specific user could cause "
@@ -165,6 +185,9 @@ msgid ""
 msgstr ""
 
 msgid "Last commit"
+msgstr ""
+
+msgid "Loading..."
 msgstr ""
 
 msgid "Mail to specific recipients or mailing lists (comma separated)"
@@ -234,6 +257,12 @@ msgstr ""
 msgid "Permission"
 msgstr "Permissão"
 
+msgid "Please select tag on the left"
+msgstr ""
+
+msgid "Preview of your configuration"
+msgstr ""
+
 msgid "Project SVN repositories"
 msgstr ""
 
@@ -277,6 +306,9 @@ msgstr ""
 msgid "Repository not found."
 msgstr ""
 
+msgid "Repository tree structure"
+msgstr ""
+
 msgid "Rules on commit"
 msgstr ""
 
@@ -309,6 +341,9 @@ msgstr ""
 msgid "SVN service is not activated in project %s"
 msgstr ""
 
+msgid "SVN status style"
+msgstr ""
+
 msgid "SVN with multiple repositories"
 msgstr ""
 
@@ -319,6 +354,9 @@ msgid "Save"
 msgstr "Gravar"
 
 msgid "Save a new version"
+msgstr ""
+
+msgid "Save configuration"
 msgstr ""
 
 msgid "Save settings"
@@ -350,6 +388,11 @@ msgstr ""
 msgid ""
 "Site administrator defined a limit on allowed file size. One can no longer "
 "commit files bigger than %1$sMB"
+msgstr ""
+
+msgid ""
+"Specify folders where immutable tags will be located. You can specify a "
+"whitelist of folders where you will be able to do modifications."
 msgstr ""
 
 msgid "Subject header"
@@ -546,6 +589,16 @@ msgstr ""
 msgid "You don't have permissions to see user groups."
 msgstr "Você não tem permissão para visualizar os grupos de usuários."
 
+msgid ""
+"Your SVN repository is not impacted by immutable tags because the "
+"configuration is empty or does not match the current repository layout"
+msgstr ""
+
+msgid ""
+"Your repository contains too many folders (more than %s), for performance "
+"reasons, we cannot display the preview of your configuration."
+msgstr ""
+
 msgid "Your settings could not be saved."
 msgstr ""
 
@@ -566,7 +619,13 @@ msgstr ""
 msgid "my-new-repository"
 msgstr ""
 
+msgid "my-tag"
+msgstr ""
+
 msgid "saved on"
+msgstr ""
+
+msgid "some/path"
 msgstr ""
 
 msgid "the commit email format is different."
