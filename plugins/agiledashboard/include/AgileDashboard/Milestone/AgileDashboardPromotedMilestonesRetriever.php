@@ -53,7 +53,7 @@ final class AgileDashboardPromotedMilestonesRetriever
             $this->project,
             5,
             0,
-            'asc',
+            'desc',
             FilteringQuery::fromPeriodQuery(PeriodQuery::createCurrent())
         ));
 
