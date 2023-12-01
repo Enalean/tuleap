@@ -28,14 +28,15 @@ use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Event\Events\ExportXmlProject;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Mediawiki\Events\SystemEvent_MEDIAWIKI_TO_CENTRAL_DB;
-use Tuleap\MediawikiStandalone\Permissions\ForgeUserGroupPermission\MediawikiAdminAllProjects;
 use Tuleap\Mediawiki\Maintenance\CleanUnused;
 use Tuleap\Mediawiki\Maintenance\CleanUnusedDao;
 use Tuleap\Mediawiki\MediawikiDataDir;
 use Tuleap\Mediawiki\MediawikiMaintenanceWrapper;
 use Tuleap\Mediawiki\Migration\MoveToCentralDbDao;
 use Tuleap\Mediawiki\PermissionsPerGroup\PermissionPerGroupPaneBuilder;
+use Tuleap\Mediawiki\XML\XMLMediawikiExportabilityChecker;
 use Tuleap\Mediawiki\XMLMediaWikiExporter;
+use Tuleap\MediawikiStandalone\Permissions\ForgeUserGroupPermission\MediawikiAdminAllProjects;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
@@ -152,30 +153,17 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
 
     public function exportXmlProject(ExportXmlProject $event): void
     {
-        if (! $event->shouldExportAllData()) {
-            return;
-        }
-
-        $this->getMediaWikiExporter($event->getProject()->getID())->exportToXml(
-            $event->getIntoXml(),
-            $event->getArchive(),
-            'export_mw_' . $event->getProject()->getID() . time() . '.xml',
-            $event->getTemporaryDumpPathOnFilesystem()
-        );
-    }
-
-    private function getMediaWikiExporter($group_id)
-    {
-        $sys_command = new System_Command();
-        return new XMLMediaWikiExporter(
-            ProjectManager::instance()->getProject($group_id),
-            new MediawikiManager(new MediawikiDao()),
-            new UGroupManager(),
-            ProjectXMLExporter::getLogger(),
-            new MediawikiMaintenanceWrapper($sys_command),
-            new MediawikiLanguageManager(new MediawikiLanguageDao()),
-            new MediawikiDataDir()
-        );
+        (
+            new XMLMediaWikiExporter(
+                new MediawikiManager(new MediawikiDao()),
+                new UGroupManager(),
+                new WrapperLogger($event->getLogger(), 'MediaWiki Legacy'),
+                new MediawikiMaintenanceWrapper(new System_Command()),
+                new MediawikiLanguageManager(new MediawikiLanguageDao()),
+                new MediawikiDataDir(),
+                new XMLMediawikiExportabilityChecker(EventManager::instance()),
+            )
+        )->exportToXml($event);
     }
 
     public function layout_search_entry($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
