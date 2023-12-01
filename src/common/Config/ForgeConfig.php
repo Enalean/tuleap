@@ -353,6 +353,11 @@ class ForgeConfig
         self::set(self::FEATURE_FLAG_PREFIX . $name, $value);
     }
 
+    public static function clearFeatureFlag(string $name): void
+    {
+        unset(self::$conf_stack[0][self::FEATURE_FLAG_PREFIX . $name]);
+    }
+
     public static function encryptValue(ConcealedString $value): string
     {
         return \sodium_bin2base64(

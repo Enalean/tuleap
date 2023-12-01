@@ -28,26 +28,41 @@ use Tuleap\DB\DataAccessObject;
 
 final class MilestonesInSidebarDao extends DataAccessObject implements CheckMilestonesInSidebar, DuplicateMilestonesInSidebarConfig
 {
-    #[FeatureFlagConfigKey('Allow milestones in sidebar. 0 to disallow, 1 to allow. By default they are allowed.')]
+    #[FeatureFlagConfigKey('Allow milestones in sidebar. 0 to disallow, 1 to allow. By default they are allowed. Guarded by allow_milestones_in_sidebar_dev_mode feature flag.')]
     #[ConfigKeyInt(1)]
     public const FEATURE_FLAG = 'allow_milestones_in_sidebar';
 
+    #[FeatureFlagConfigKey('Allow access to feature under development: milestones in sidebar.')]
+    #[ConfigKeyInt(0)]
+    public const DEV_MODE = 'allow_milestones_in_sidebar_dev_mode';
+
+    private const SHOULD_SIDEBAR_DISPLAY_LAST_MILESTONES_WHEN_NO_CONFIG = true;
+
     public function shouldSidebarDisplayLastMilestones(int $project_id): bool
     {
+        $dev_mode = (int) \ForgeConfig::getFeatureFlag(self::DEV_MODE);
+        if ($dev_mode !== 1) {
+            return false;
+        }
+
         $feature_flag = \ForgeConfig::getFeatureFlag(self::FEATURE_FLAG);
         if ($feature_flag !== false && (int) $feature_flag === 0) {
             return false;
         }
 
-        return $this->getDB()
-            ->cell(
-                <<<EOSQL
-                SELECT should_sidebar_display_last_milestones
-                FROM plugin_agiledashboard_milestones_in_sidebar_config
-                WHERE project_id = ?
-                EOSQL,
-                $project_id
-            ) === 1;
+        $config = $this->getDB()->cell(
+            <<<EOSQL
+            SELECT should_sidebar_display_last_milestones
+            FROM plugin_agiledashboard_milestones_in_sidebar_config
+            WHERE project_id = ?
+            EOSQL,
+            $project_id
+        );
+        if ($config === false) {
+            return self::SHOULD_SIDEBAR_DISPLAY_LAST_MILESTONES_WHEN_NO_CONFIG;
+        }
+
+        return $config === 1;
     }
 
     public function duplicate(int $target_project_id, int $source_project_id): void
