@@ -22,41 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Admin\Categories;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Helpers\LayoutHelperPassthrough;
 
 final class IndexControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var IndexController */
-    private $controller;
-    /**
-     * @var LayoutHelperPassthrough
-     */
-    private $layout_helper;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|\TroveCatDao
-     */
-    private $dao;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|\TemplateRenderer
-     */
-    private $renderer;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|IncludeAssets
-     */
-    private $assets;
+    private IndexController $controller;
+    private LayoutHelperPassthrough $layout_helper;
+    private \TroveCatDao&MockObject $dao;
+    private \TemplateRenderer&MockObject $renderer;
+    private IncludeAssets&MockObject $assets;
 
     protected function setUp(): void
     {
         $this->layout_helper = new LayoutHelperPassthrough();
-        $this->assets        = M::mock(IncludeAssets::class);
-        $this->dao           = M::mock(\TroveCatDao::class);
-        $this->renderer      = M::mock(\TemplateRenderer::class);
+        $this->assets        = $this->createMock(IncludeAssets::class);
+        $this->dao           = $this->createMock(\TroveCatDao::class);
+        $this->renderer      = $this->createMock(\TemplateRenderer::class);
         $this->controller    = new IndexController(
             $this->layout_helper,
             $this->dao,
@@ -74,25 +60,26 @@ final class IndexControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testProcessRenders(): void
     {
-        $project      = M::mock(\Project::class)->shouldReceive('getID')
-            ->andReturn('102')
-            ->getMock();
-        $current_user = M::mock(\PFUser::class);
+        $project      = ProjectTestBuilder::aProject()->withId(102)->build();
+        $current_user = UserTestBuilder::aUser()->build();
         $this->layout_helper->setCallbackParams($project, $current_user);
 
-        $request = M::mock(\HTTPRequest::class);
-        $layout  = M::mock(BaseLayout::class);
+        $request = $this->createMock(\HTTPRequest::class);
+        $layout  = $this->createMock(BaseLayout::class);
 
-        $this->assets->shouldReceive('getFileURL')
-            ->once()
+        $this->assets
+            ->expects(self::once())
+            ->method('getFileURL')
             ->with('project-admin.js');
-        $layout->shouldReceive('includeFooterJavascriptFile')->once();
-        $this->renderer->shouldReceive('renderToPage')
-            ->once()
-            ->with('categories', M::type('array'));
-        $this->dao->shouldReceive('getTopCategories')
-            ->once()
-            ->andReturn([]);
+        $layout->expects(self::once())->method('includeFooterJavascriptFile');
+        $this->renderer
+            ->expects(self::once())
+            ->method('renderToPage')
+            ->with('categories', self::isType('array'));
+        $this->dao
+            ->expects(self::once())
+            ->method('getTopCategories')
+            ->willReturn([]);
 
         $this->controller->process($request, $layout, ['project_id' => '102']);
     }
