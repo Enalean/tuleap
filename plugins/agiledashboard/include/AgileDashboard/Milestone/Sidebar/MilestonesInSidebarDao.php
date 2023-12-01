@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Milestone\Sidebar;
 
-use Tuleap\Config\ConfigKeyHidden;
 use Tuleap\Config\ConfigKeyInt;
 use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\DB\DataAccessObject;
@@ -30,7 +29,6 @@ use Tuleap\DB\DataAccessObject;
 final class MilestonesInSidebarDao extends DataAccessObject implements CheckMilestonesInSidebar, DuplicateMilestonesInSidebarConfig
 {
     #[FeatureFlagConfigKey('Allow milestones in sidebar. 0 to disallow, 1 to allow. By default they are allowed.')]
-    #[ConfigKeyHidden]
     #[ConfigKeyInt(1)]
     public const FEATURE_FLAG = 'allow_milestones_in_sidebar';
 
