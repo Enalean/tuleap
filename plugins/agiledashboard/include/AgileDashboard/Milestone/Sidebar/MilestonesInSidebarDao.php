@@ -26,7 +26,7 @@ use Tuleap\Config\ConfigKeyInt;
 use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\DB\DataAccessObject;
 
-final class MilestonesInSidebarDao extends DataAccessObject implements CheckMilestonesInSidebar, DuplicateMilestonesInSidebarConfig
+final class MilestonesInSidebarDao extends DataAccessObject implements CheckMilestonesInSidebar, DuplicateMilestonesInSidebarConfig, UpdateMilestonesInSidebarConfig
 {
     #[FeatureFlagConfigKey('Allow milestones in sidebar. 0 to disallow, 1 to allow. By default they are allowed. Guarded by allow_milestones_in_sidebar_dev_mode feature flag.')]
     #[ConfigKeyInt(1)]
@@ -74,5 +74,31 @@ final class MilestonesInSidebarDao extends DataAccessObject implements CheckMile
         WHERE project_id = ?
         EOSQL;
         $this->getDB()->run($sql, $target_project_id, $source_project_id);
+    }
+
+    public function activateMilestonesInSidebar(int $project_id): void
+    {
+        $this->getDB()
+            ->run(
+                <<<EOSQL
+                INSERT INTO plugin_agiledashboard_milestones_in_sidebar_config(project_id, should_sidebar_display_last_milestones)
+                SELECT ?, 1
+                ON DUPLICATE KEY UPDATE should_sidebar_display_last_milestones = 1
+                EOSQL,
+                $project_id
+            );
+    }
+
+    public function deactivateMilestonesInSidebar(int $project_id): void
+    {
+        $this->getDB()
+            ->run(
+                <<<EOSQL
+                INSERT INTO plugin_agiledashboard_milestones_in_sidebar_config(project_id, should_sidebar_display_last_milestones)
+                SELECT ?, 0
+                ON DUPLICATE KEY UPDATE should_sidebar_display_last_milestones = 0
+                EOSQL,
+                $project_id
+            );
     }
 }

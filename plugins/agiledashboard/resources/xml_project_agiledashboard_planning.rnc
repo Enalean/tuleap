@@ -1,4 +1,5 @@
-agiledashboard = element admin {
+agiledashboard = attribute should_sidebar_display_last_milestones { xsd:boolean }? &
+element admin {
     element scrum {
         element explicit_backlog {
             attribute is_used { xsd:boolean }
