@@ -3,11 +3,11 @@ Description=The PHP FastCGI Process Manager for MediaWiki Tuleap
 Documentation=https://docs.tuleap.org
 After=tuleap.service
 PartOf=tuleap.service
-Conflicts=php74-php-fpm.service
+Conflicts=php81-php-fpm.service
 
 [Service]
 Type=notify
-ExecStart=/opt/remi/php74/root/usr/sbin/php-fpm --nodaemonize --fpm-config /usr/share/tuleap/plugins/mediawiki_standalone/etc/php-fpm/mediawiki-tuleap.conf
+ExecStart=/opt/remi/php81/root/usr/sbin/php-fpm --nodaemonize --fpm-config /usr/share/tuleap/plugins/mediawiki_standalone/etc/php-fpm/mediawiki-tuleap.conf
 ExecReload=/bin/kill -USR2 $MAINPID
 PrivateTmp=yes
 NoNewPrivileges=yes
