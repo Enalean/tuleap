@@ -19,7 +19,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
+
+namespace Tuleap\Plugin;
+
+use Event;
+use Exception;
+use ForgeConfig;
+use LogicException;
+use Plugin;
+use PluginInfo;
 use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\Layout\HomePage\LastMonthStatisticsCollectorSVN;
@@ -28,39 +37,39 @@ use Tuleap\Project\Service\AddMissingService;
 use Tuleap\Project\Service\PluginWithService;
 use Tuleap\Project\Service\ServiceClassnamesCollector;
 use Tuleap\Project\Service\ServiceDisabledCollector;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use \Tuleap\ForgeConfigSandbox;
 
     public function testId(): void
     {
         $p = new Plugin();
-        $this->assertEquals(-1, $p->getId());
+        self::assertEquals(-1, $p->getId());
         $p = new Plugin(123);
-        $this->assertEquals(123, $p->getId());
+        self::assertEquals(123, $p->getId());
     }
 
     public function testPluginInfo(): void
     {
         $p = new Plugin();
-        $this->assertInstanceOf(PluginInfo::class, $p->getPluginInfo());
+        self::assertInstanceOf(PluginInfo::class, $p->getPluginInfo());
     }
 
     public function testDefaultCallbackIsHookNameInCamelCase(): void
     {
         $p   = $this->getFakePluginToTestHooks();
         $col = $p->getHooksAndCallbacks();
-        $this->assertTrue($col->isEmpty());
+        self::assertTrue($col->isEmpty());
 
         $hook = 'an_event';
         $p->addHook($hook);
         $col          = $p->getHooksAndCallbacks();
         $it           = $col->iterator();
         $current_hook = $it->current();
-        $this->assertEquals($hook, $current_hook['hook']);
-        $this->assertEquals('anEvent', $current_hook['callback']);
+        self::assertEquals($hook, $current_hook['hook']);
+        self::assertEquals('anEvent', $current_hook['callback']);
     }
 
     public function testSpecialCallback(): void
@@ -73,8 +82,8 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
         $col          = $p->getHooksAndCallbacks();
         $it           = $col->iterator();
         $current_hook = $it->current();
-        $this->assertEquals($hook, $current_hook['hook']);
-        $this->assertEquals($callback, $current_hook['callback']);
+        self::assertEquals($hook, $current_hook['hook']);
+        self::assertEquals($callback, $current_hook['callback']);
     }
 
     public function testAnotherSpecialCallback(): void
@@ -87,15 +96,15 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
         $col          = $p->getHooksAndCallbacks();
         $it           = $col->iterator();
         $current_hook = $it->current();
-        $this->assertEquals($hook, $current_hook['hook']);
-        $this->assertEquals($callback, $current_hook['callback']);
+        self::assertEquals($hook, $current_hook['hook']);
+        self::assertEquals($callback, $current_hook['callback']);
     }
 
     public function testRaisesAnExceptionWhenThereIsAConflictInAvailableCallbacks(): void
     {
         $plugin = $this->getFakePluginToTestHooks();
 
-        $this->expectException(Exception::class);
+        self::expectException(Exception::class);
         $plugin->addHook('conflict_in_callbacks');
     }
 
@@ -103,15 +112,15 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
     {
         $plugin = $this->getFakePluginToTestHooks();
 
-        $this->expectException(Exception::class);
+        self::expectException(Exception::class);
         $plugin->addHook('no_callback_defined');
     }
 
     public function testScope(): void
     {
         $p = new Plugin();
-        $this->assertEquals(Plugin::SCOPE_SYSTEM, $p->getScope());
-        $this->assertNotEquals(Plugin::SCOPE_PROJECT, $p->getScope());
+        self::assertEquals(Plugin::SCOPE_SYSTEM, $p->getScope());
+        self::assertNotEquals(Plugin::SCOPE_PROJECT, $p->getScope());
     }
 
     public function testGetPluginEtcRoot(): void
@@ -120,26 +129,30 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
 
         ForgeConfig::set('sys_custompluginsroot', $root . '/test/custom/');
         $shortname = 'shortname';
-        $pm        = \Mockery::spy(\PluginManager::class);
-        $pm->shouldReceive('getNameForPlugin')->andReturns($shortname);
-        $p = \Mockery::mock(\Plugin::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $p->shouldReceive('_getPluginManager')->andReturns($pm);
+        $pm        = $this->createMock(\PluginManager::class);
+        $pm->method('getNameForPlugin')->willReturn($shortname);
+        $p = $this->createPartialMock(\Plugin::class, [
+            '_getPluginManager',
+        ]);
+        $p->method('_getPluginManager')->willReturn($pm);
 
-        $this->assertEquals(ForgeConfig::get('sys_custompluginsroot') . '/' . $shortname . '/etc', $p->getPluginEtcRoot());
+        self::assertEquals(ForgeConfig::get('sys_custompluginsroot') . '/' . $shortname . '/etc', $p->getPluginEtcRoot());
     }
 
     public function testGetPluginPath(): void
     {
         ForgeConfig::set('sys_pluginspath', '/plugins');
         $shortname = 'shortname';
-        $pm        = \Mockery::spy(\PluginManager::class);
+        $pm        = $this->createMock(\PluginManager::class);
 
-        $pm->shouldReceive('isACustomPlugin')->once()->andReturns(false);
-        $pm->shouldReceive('getNameForPlugin')->andReturns($shortname);
-        $p = \Mockery::mock(\Plugin::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $p->shouldReceive('_getPluginManager')->andReturns($pm);
+        $pm->expects(self::once())->method('isACustomPlugin')->willReturn(false);
+        $pm->method('getNameForPlugin')->willReturn($shortname);
+        $p = $this->createPartialMock(\Plugin::class, [
+            '_getPluginManager',
+        ]);
+        $p->method('_getPluginManager')->willReturn($pm);
 
-        $this->assertEquals(ForgeConfig::get('sys_pluginspath') . '/' . $shortname, $p->getPluginPath());
+        self::assertEquals(ForgeConfig::get('sys_pluginspath') . '/' . $shortname, $p->getPluginPath());
     }
 
     public function testGetThemePath(): void
@@ -153,11 +166,13 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
         mkdir(dirname(ForgeConfig::get('sys_pluginsroot')));
 
         $shortname = 'shortname';
-        $pm        = \Mockery::spy(\PluginManager::class);
-        $pm->shouldReceive('isACustomPlugin')->andReturns(false, true, true);
-        $pm->shouldReceive('getNameForPlugin')->andReturns($shortname);
-        $p = \Mockery::mock(\Plugin::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $p->shouldReceive('_getPluginManager')->andReturns($pm);
+        $pm        = $this->createMock(\PluginManager::class);
+        $pm->method('isACustomPlugin')->willReturn(false, true, true);
+        $pm->method('getNameForPlugin')->willReturn($shortname);
+        $p = $this->createPartialMock(\Plugin::class, [
+            '_getPluginManager',
+        ]);
+        $p->method('_getPluginManager')->willReturn($pm);
 
         //Plugin is official
         mkdir(ForgeConfig::get('sys_custompluginsroot'));
@@ -165,7 +180,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
         mkdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/');
         mkdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/themes/');
         mkdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/themes/' . ForgeConfig::get('sys_user_theme'));
-        $this->assertEquals(ForgeConfig::get('sys_custompluginspath') . '/' . $shortname . '/themes/' . ForgeConfig::get('sys_user_theme'), $p->getThemePath());
+        self::assertEquals(ForgeConfig::get('sys_custompluginspath') . '/' . $shortname . '/themes/' . ForgeConfig::get('sys_user_theme'), $p->getThemePath());
         rmdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/themes/' . ForgeConfig::get('sys_user_theme'));
         rmdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/themes/');
         rmdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/');
@@ -177,7 +192,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
         mkdir(ForgeConfig::get('sys_pluginsroot') . $shortname . '/www/');
         mkdir(ForgeConfig::get('sys_pluginsroot') . $shortname . '/www/themes/');
         mkdir(ForgeConfig::get('sys_pluginsroot') . $shortname . '/www/themes/' . ForgeConfig::get('sys_user_theme'));
-        $this->assertEquals(ForgeConfig::get('sys_pluginspath') . '/' . $shortname . '/themes/' . ForgeConfig::get('sys_user_theme'), $p->getThemePath());
+        self::assertEquals(ForgeConfig::get('sys_pluginspath') . '/' . $shortname . '/themes/' . ForgeConfig::get('sys_user_theme'), $p->getThemePath());
         rmdir(ForgeConfig::get('sys_pluginsroot') . $shortname . '/www/themes/' . ForgeConfig::get('sys_user_theme'));
         rmdir(ForgeConfig::get('sys_pluginsroot') . $shortname . '/www/themes/');
         rmdir(ForgeConfig::get('sys_pluginsroot') . $shortname . '/www/');
@@ -189,7 +204,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
         mkdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/');
         mkdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/themes/');
         mkdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/themes/default');
-        $this->assertEquals(ForgeConfig::get('sys_custompluginspath') . '/' . $shortname . '/themes/default', $p->getThemePath());
+        self::assertEquals(ForgeConfig::get('sys_custompluginspath') . '/' . $shortname . '/themes/default', $p->getThemePath());
         rmdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/themes/default');
         rmdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/themes/');
         rmdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/');
@@ -201,7 +216,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
         mkdir(ForgeConfig::get('sys_pluginsroot') . $shortname . '/www/');
         mkdir(ForgeConfig::get('sys_pluginsroot') . $shortname . '/www/themes/');
         mkdir(ForgeConfig::get('sys_pluginsroot') . $shortname . '/www/themes/default');
-        $this->assertEquals(ForgeConfig::get('sys_pluginspath') . '/' . $shortname . '/themes/default', $p->getThemePath());
+        self::assertEquals(ForgeConfig::get('sys_pluginspath') . '/' . $shortname . '/themes/default', $p->getThemePath());
         rmdir(ForgeConfig::get('sys_pluginsroot') . $shortname . '/www/themes/default');
         rmdir(ForgeConfig::get('sys_pluginsroot') . $shortname . '/www/themes/');
         rmdir(ForgeConfig::get('sys_pluginsroot') . $shortname . '/www/');
@@ -214,7 +229,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
         mkdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/');
         mkdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/themes/');
         mkdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/themes/' . ForgeConfig::get('sys_user_theme'));
-        $this->assertEquals(ForgeConfig::get('sys_custompluginspath') . '/' . $shortname . '/themes/' . ForgeConfig::get('sys_user_theme'), $p->getThemePath());
+        self::assertEquals(ForgeConfig::get('sys_custompluginspath') . '/' . $shortname . '/themes/' . ForgeConfig::get('sys_user_theme'), $p->getThemePath());
         rmdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/themes/' . ForgeConfig::get('sys_user_theme'));
         rmdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/themes/');
         rmdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/');
@@ -226,7 +241,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
         mkdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/');
         mkdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/themes/');
         mkdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/themes/default');
-        $this->assertEquals(ForgeConfig::get('sys_custompluginspath') . '/' . $shortname . '/themes/default', $p->getThemePath());
+        self::assertEquals(ForgeConfig::get('sys_custompluginspath') . '/' . $shortname . '/themes/default', $p->getThemePath());
         rmdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/themes/default');
         rmdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/themes/');
         rmdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/');
@@ -245,136 +260,155 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
         ForgeConfig::set('sys_custompluginsroot', $tmp_dir . '/test/custom/');
 
         $shortname = 'shortname';
-        $pm        = \Mockery::spy(\PluginManager::class);
-        $pm->shouldReceive('getNameForPlugin')->andReturns($shortname);
+        $pm        = $this->createMock(\PluginManager::class);
+        $pm->method('getNameForPlugin')->willReturn($shortname);
 
-        $p = \Mockery::mock(\Plugin::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $p->shouldReceive('_getPluginManager')->andReturns($pm);
+        $p = $this->createPartialMock(\Plugin::class, [
+            '_getPluginManager',
+        ]);
+        $p->method('_getPluginManager')->willReturn($pm);
 
-        $this->assertEquals('', $p->getThemePath());
+        self::assertEquals('', $p->getThemePath());
     }
 
     public function testGetFilesystemPath(): void
     {
         ForgeConfig::set('sys_pluginsroot', '/my/application');
 
-        $pm = \Mockery::spy(\PluginManager::class);
-        $pm->shouldReceive('getNameForPlugin')->andReturns('zataz');
-        $pm->shouldReceive('isACustomPlugin')->andReturns(false);
+        $pm = $this->createMock(\PluginManager::class);
+        $pm->method('getNameForPlugin')->willReturn('zataz');
+        $pm->method('isACustomPlugin')->willReturn(false);
 
-        $p = \Mockery::mock(\Plugin::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $p->shouldReceive('_getPluginManager')->andReturns($pm);
+        $p = $this->createPartialMock(\Plugin::class, [
+            '_getPluginManager',
+        ]);
+        $p->method('_getPluginManager')->willReturn($pm);
 
-        $this->assertEquals('/my/application/zataz', $p->getFilesystemPath());
+        self::assertEquals('/my/application/zataz', $p->getFilesystemPath());
     }
 
     public function testGetFilesystemPathCustom(): void
     {
         ForgeConfig::set('sys_custompluginsroot', '/my/custom/application');
 
-        $pm = \Mockery::spy(\PluginManager::class);
-        $pm->shouldReceive('getNameForPlugin')->andReturns('zataz');
-        $pm->shouldReceive('isACustomPlugin')->andReturns(true);
+        $pm = $this->createMock(\PluginManager::class);
+        $pm->method('getNameForPlugin')->willReturn('zataz');
+        $pm->method('isACustomPlugin')->willReturn(true);
 
-        $p = \Mockery::mock(\Plugin::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $p->shouldReceive('_getPluginManager')->andReturns($pm);
+        $p = $this->createPartialMock(\Plugin::class, [
+            '_getPluginManager',
+        ]);
+        $p->method('_getPluginManager')->willReturn($pm);
 
-        $this->assertEquals('/my/custom/application/zataz', $p->getFilesystemPath());
+        self::assertEquals('/my/custom/application/zataz', $p->getFilesystemPath());
     }
 
     public function testGetFilesystemPathWithSlashAtTheEnd(): void
     {
         ForgeConfig::set('sys_pluginsroot', '/my/application');
 
-        $pm = \Mockery::spy(\PluginManager::class);
-        $pm->shouldReceive('getNameForPlugin')->andReturns('zataz');
-        $pm->shouldReceive('isACustomPlugin')->andReturns(false);
+        $pm = $this->createMock(\PluginManager::class);
+        $pm->method('getNameForPlugin')->willReturn('zataz');
+        $pm->method('isACustomPlugin')->willReturn(false);
 
-        $p = \Mockery::mock(\Plugin::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $p->shouldReceive('_getPluginManager')->andReturns($pm);
+        $p = $this->createPartialMock(\Plugin::class, [
+            '_getPluginManager',
+        ]);
+        $p->method('_getPluginManager')->willReturn($pm);
 
-        $this->assertEquals('/my/application/zataz', $p->getFilesystemPath());
+        self::assertEquals('/my/application/zataz', $p->getFilesystemPath());
     }
 
     public function testHasNoDependenciesByDefault(): void
     {
         $plugin = new Plugin();
-        $this->assertEmpty($plugin->getDependencies());
+        self::assertEmpty($plugin->getDependencies());
     }
 
     public function testNotAllowedToListenSameHookSeveralTimes(): void
     {
-        $plugin = new class extends \Plugin
-        {
+        $plugin = new class extends \Plugin {
             public function bla(): void
             {
             }
         };
-        $this->expectException(Exception::class);
+        self::expectException(Exception::class);
         $plugin->addHook('bla');
         $plugin->addHook('bla');
     }
 
     public function testSettingIsRestrictedByPassDatabaseCall(): void
     {
-        $plugin = Mockery::mock(Plugin::class)->makePartial();
-        $plugin->shouldReceive('getServiceShortname')->andReturn('fooservice');
+        $plugin = $this->createPartialMock(\Plugin::class, [
+            'getServiceShortname',
+            'isAllowed',
+        ]);
+        $plugin->method('getServiceShortname')->willReturn('fooservice');
         $plugin->setIsRestricted(false);
-        $plugin->shouldReceive('isAllowed')->never();
+        $plugin->expects(self::never())->method('isAllowed');
         $services = [];
         $params   = [
-            'project'  => Mockery::mock(Project::class),
+            'project' => ProjectTestBuilder::aProject()->build(),
             'services' => &$services,
         ];
         $plugin->servicesAllowedForProject($params);
 
-        $this->assertEquals(['fooservice'], $services);
+        self::assertEquals(['fooservice'], $services);
     }
 
     public function testNoSettingIsRestrictedFallsbackOnDbCheck(): void
     {
-        $plugin = Mockery::mock(Plugin::class)->makePartial();
-        $plugin->shouldReceive('getServiceShortname')->andReturn('fooservice');
-        $plugin->shouldReceive('isAllowed')->once()->andReturn(true);
+        $plugin = $this->createPartialMock(Plugin::class, [
+            'getServiceShortname',
+            'isAllowed',
+        ]);
+        $plugin->method('getServiceShortname')->willReturn('fooservice');
+        $plugin->expects(self::once())->method('isAllowed')->willReturn(true);
         $services = [];
         $params   = [
-            'project'  => Mockery::mock(Project::class, ['getID' => 101]),
+            'project' => ProjectTestBuilder::aProject()->withId(101)->build(),
             'services' => &$services,
         ];
         $plugin->servicesAllowedForProject($params);
 
-        $this->assertEquals(['fooservice'], $services);
+        self::assertEquals(['fooservice'], $services);
     }
 
     public function testSettingIsRestrictedToTrueFallsbackOnDbCheck(): void
     {
-        $plugin = Mockery::mock(Plugin::class)->makePartial();
-        $plugin->shouldReceive('getServiceShortname')->andReturn('fooservice');
+        $plugin = $this->createPartialMock(Plugin::class, [
+            'getServiceShortname',
+            'isAllowed',
+        ]);
+        $plugin->method('getServiceShortname')->willReturn('fooservice');
         $plugin->setIsRestricted(true);
-        $plugin->shouldReceive('isAllowed')->once()->andReturn(true);
+        $plugin->expects(self::once())->method('isAllowed')->willReturn(true);
         $services = [];
         $params   = [
-            'project'  => Mockery::mock(Project::class, ['getID' => 101]),
+            'project' => ProjectTestBuilder::aProject()->withId(101)->build(),
             'services' => &$services,
         ];
         $plugin->servicesAllowedForProject($params);
 
-        $this->assertEquals(['fooservice'], $services);
+        self::assertEquals(['fooservice'], $services);
     }
 
     public function testPluginIsNotAllowedToProject(): void
     {
-        $plugin = Mockery::mock(Plugin::class)->makePartial();
-        $plugin->shouldReceive('getServiceShortname')->andReturn('fooservice');
-        $plugin->shouldReceive('isAllowed')->once()->andReturn(false);
+        $plugin = $this->createPartialMock(Plugin::class, [
+            'getServiceShortname',
+            'isAllowed',
+        ]);
+        $plugin->method('getServiceShortname')->willReturn('fooservice');
+        $plugin->expects(self::once())->method('isAllowed')->willReturn(false);
         $services = [];
         $params   = [
-            'project'  => Mockery::mock(Project::class, ['getID' => 101]),
+            'project' => ProjectTestBuilder::aProject()->withId(101)->build(),
             'services' => &$services,
         ];
         $plugin->servicesAllowedForProject($params);
 
-        $this->assertEquals([], $services);
+        self::assertEquals([], $services);
     }
 
     public function testImplementingPluginWithConfigKeysIsEnoughToListenToGetConfigKeysEvent(): void
@@ -483,7 +517,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
             }
         };
 
-        $this->expectException(LogicException::class);
+        self::expectException(LogicException::class);
 
         $plugin->getHooksAndCallbacks();
     }
@@ -516,8 +550,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
 
     private function getFakePluginToTestHooks(): Plugin
     {
-        return new class extends Plugin
-        {
+        return new class extends Plugin {
             public function hook1(): void
             {
             }
