@@ -24,6 +24,9 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard;
 
 use EventManager;
+use PFUser;
+use Tuleap\AgileDashboard\Milestone\AgileDashboardPromotedMilestonesRetriever;
+use Tuleap\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarDao;
 use Tuleap\Kanban\CheckSplitKanbanConfiguration;
 
 class AgileDashboardService extends \Service
@@ -77,5 +80,14 @@ class AgileDashboardService extends \Service
     public function getUrl(?string $url = null): string
     {
         return AgileDashboardServiceHomepageUrlBuilder::buildSelf()->getUrl($this->project);
+    }
+
+    public function getPromotedItemPresenters(PFUser $user, ?string $active_promoted_item_id): array
+    {
+        return (new AgileDashboardPromotedMilestonesRetriever(
+            \Planning_MilestoneFactory::build(),
+            $this->project,
+            new MilestonesInSidebarDao()
+        ))->getSidebarPromotedMilestones($user);
     }
 }
