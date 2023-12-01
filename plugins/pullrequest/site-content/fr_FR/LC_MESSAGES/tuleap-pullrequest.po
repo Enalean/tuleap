@@ -38,11 +38,17 @@ msgstr "%s a laissé un commentaire sur %s : %s."
 
 #, php-format
 msgid "%s has abandoned the pull request #%d: %s"
-msgstr "%s a abandonné la pull request #%d: %s"
+msgstr "%s a abandonné la pull request #%d : %s"
+
+msgid "%s has abandoned the pull request %s: %s"
+msgstr "%s a abandonné la pull request %s : %s"
 
 #, php-format
 msgid "%s has merged the pull request #%d: %s into %s"
-msgstr "%s a fusionné la pull request #%d: %s dans %s"
+msgstr "%s a fusionné la pull request #%d : %s dans %s"
+
+msgid "%s has merged the pull request %s: %s into %s"
+msgstr "%s a fusionné la pull request %s : %s dans %s"
 
 #, php-format
 msgid "%s pushed %d commit updating the pull request #%d: %s."
@@ -85,19 +91,6 @@ msgstr "%s a édité son commentaire sur %s : %s dans %s :  "
 
 msgid "%s updated their comment on %s: %s."
 msgstr "%s a édité son commentaire sur %s : %s."
-
-msgid ""
-"<a href=\"%s\">%s</a> has abandoned the pull request <a href=\"%s\">#%s</a>: "
-"%s"
-msgstr ""
-"<a href=\"%s\">%s</a> a abandonné la pull request <a href=\"%s\">#%s</a>: %s"
-
-msgid ""
-"<a href=\"%s\">%s</a> has merged the pull request <a href=\"%s\">#%s</a>: %s "
-"into %s"
-msgstr ""
-"<a href=\"%s\">%s</a> a fusionné la pull request <a href=\"%s\">#%s</a>: %s "
-"into %s"
 
 msgid "Abandonned"
 msgstr "Abandonnée"
