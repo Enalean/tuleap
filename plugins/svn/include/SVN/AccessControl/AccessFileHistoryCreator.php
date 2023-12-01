@@ -20,6 +20,7 @@
 
 namespace Tuleap\SVN\AccessControl;
 
+use Tuleap\SVNCore\SVNAccessFileWriteFault;
 use Tuleap\SVNCore\SVNAccessFileWriter;
 use Tuleap\SVNCore\SVNAccessFile;
 use Tuleap\SVN\Repository\ProjectHistoryFormatter;
@@ -35,7 +36,6 @@ class AccessFileHistoryCreator
         private readonly AccessFileHistoryFactory $access_file_factory,
         private readonly \ProjectHistoryDao $project_history_dao,
         private readonly ProjectHistoryFormatter $project_history_formatter,
-        private readonly \BackendSVN $backend_SVN,
         private readonly SvnAccessFileDefaultBlockGeneratorInterface $default_block_generator,
     ) {
     }
@@ -43,12 +43,12 @@ class AccessFileHistoryCreator
     /**
      * @throws CannotCreateAccessFileHistoryException
      */
-    public function create(Repository $repository, $content, $timestamp, SVNAccessFileWriter $access_file_writer): CollectionOfSVNAccessFileFaults
+    public function create(Repository $repository, $content, $timestamp): CollectionOfSVNAccessFileFaults
     {
         [$file_history, $faults] = $this->storeInDB($repository, $content, $timestamp);
         $this->logHistory($repository, $content);
 
-        $this->saveAccessFile($repository, $file_history, $access_file_writer);
+        $this->saveAccessFile($repository, $file_history);
 
         return $faults;
     }
@@ -80,8 +80,7 @@ class AccessFileHistoryCreator
 
         $current_version = $this->access_file_factory->getCurrentVersion($repository);
 
-        $accessfile = new SVNAccessFileWriter($repository->getSystemPath());
-        $this->saveAccessFile($repository, $current_version, $accessfile);
+        $this->saveAccessFile($repository, $current_version);
 
         if ($log_history) {
             $this->logUseAVersionHistory($repository, $current_version);
@@ -97,24 +96,16 @@ class AccessFileHistoryCreator
     /**
      * @throws CannotCreateAccessFileHistoryException
      */
-    private function saveAccessFile(Repository $repository, AccessFileHistory $history, SVNAccessFileWriter $access_file_writer)
+    public function saveAccessFile(Repository $repository, AccessFileHistory $history): void
     {
-        if (! $access_file_writer->writeWithDefaults($this->default_block_generator->getDefaultBlock($repository->getProject()), $history->getContent())) {
-            $this->checkAccessFileWriteError($repository, $access_file_writer);
-        }
-    }
-
-    /**
-     * @throws CannotCreateAccessFileHistoryException
-     */
-    public function saveAccessFileAndForceDefaultGeneration(Repository $repository, AccessFileHistory $history)
-    {
-        $accessfile          = new SVNAccessFileWriter($repository->getSystemPath());
-        $access_file_content = $this->backend_SVN->exportSVNAccessFileDefaultBloc($repository->getProject()) .
-            $history->getContent();
-        if (! $accessfile->write($access_file_content)) {
-            $this->checkAccessFileWriteError($repository, $accessfile);
-        }
+        $access_file_writer = new SVNAccessFileWriter();
+        $access_file_writer->writeWithDefaults(
+            $repository,
+            $this->default_block_generator->getDefaultBlock($repository->getProject()),
+            $history->getContent()
+        )->mapErr(fn (SVNAccessFileWriteFault $fault) => throw new CannotCreateAccessFileHistoryException(
+            sprintf(dgettext('tuleap-svn', 'Unable to write into file %1$s'), $fault->access_file)
+        ));
     }
 
     /**
@@ -191,21 +182,5 @@ class AccessFileHistoryCreator
                 dgettext('tuleap-svn', 'Unable to update Access Control File.')
             );
         }
-    }
-
-    /**
-     * @throws CannotCreateAccessFileHistoryException
-     */
-    private function checkAccessFileWriteError(Repository $repository, SVNAccessFileWriter $access_file)
-    {
-        if ($access_file->isErrorFile()) {
-            throw new CannotCreateAccessFileHistoryException(
-                sprintf(dgettext('tuleap-svn', 'Unable to read file %1$s'), $repository->getSystemPath())
-            );
-        }
-
-        throw new CannotCreateAccessFileHistoryException(
-            sprintf(dgettext('tuleap-svn', 'Unable to write into file %1$s'), $repository->getSystemPath())
-        );
     }
 }

@@ -41,4 +41,9 @@ final class SvnAccessFileContent
     {
         return $this->default . "\n" . $this->project_defined;
     }
+
+    public function formatForSave(): string
+    {
+        return AccessFileReader::BEGIN_MARKER . "\n" . $this->default . AccessFileReader::END_MARKER . "\n" . str_replace("\r", '', $this->project_defined) . "\n";
+    }
 }

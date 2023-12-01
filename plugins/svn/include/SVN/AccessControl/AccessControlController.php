@@ -20,7 +20,6 @@
 
 namespace Tuleap\SVN\AccessControl;
 
-use Tuleap\SVNCore\SVNAccessFileWriter;
 use Tuleap\SVN\ServiceSvn;
 use HTTPRequest;
 use Tuleap\SVNCore\AccessFileReader;
@@ -140,7 +139,6 @@ class AccessControlController
                     $repository,
                     $request->get('form_accessfile'),
                     $_SERVER['REQUEST_TIME'],
-                    new SVNAccessFileWriter($repository->getSystemPath()),
                 );
                 foreach ($faults as $fault) {
                     $GLOBALS['Response']->addFeedback(\Feedback::WARN, (string) $fault);
