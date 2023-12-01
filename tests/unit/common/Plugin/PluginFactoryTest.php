@@ -23,8 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Plugin;
 
 use ForgeConfig;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Plugin;
 use PluginDao;
 use PluginFactory;
@@ -33,30 +32,20 @@ use Tuleap\ForgeConfigSandbox;
 
 final class PluginFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PluginDao
-     */
-    private $dao;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PluginResourceRestrictor
-     */
-    private $restrictor;
+    private PluginDao&MockObject $dao;
+    private PluginResourceRestrictor&MockObject $restrictor;
 
-    /**
-     * @var PluginFactory
-     */
-    private $factory;
+    private PluginFactory $factory;
 
     protected function setUp(): void
     {
         ForgeConfig::set('sys_pluginsroot', __DIR__ . '/_fixtures/plugins');
         ForgeConfig::set('sys_custompluginsroot', __DIR__ . '/_fixtures/customplugins');
 
-        $this->dao        = Mockery::mock(PluginDao::class);
-        $this->restrictor = Mockery::mock(PluginResourceRestrictor::class);
+        $this->dao        = $this->createMock(PluginDao::class);
+        $this->restrictor = $this->createMock(PluginResourceRestrictor::class);
 
         $this->factory = new PluginFactory($this->dao, $this->restrictor);
 
@@ -65,108 +54,150 @@ final class PluginFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetPluginById(): void
     {
-        $this->dao->shouldReceive('searchById')->andReturns(\TestHelper::arrayToDar(['name' => 'plugin 123', 'available' => 1]));
-        $factory = \Mockery::mock(\PluginFactory::class . '[getClassNameForPluginName]', [$this->dao, $this->restrictor])->shouldAllowMockingProtectedMethods();
-        $factory->shouldReceive('getClassNameForPluginName')->andReturns(['class' => 'Plugin', 'custom' => false]);
+        $this->dao->method('searchById')->willReturn(\TestHelper::arrayToDar(['name' => 'plugin 123', 'available' => 1]));
+        $factory = $this->getMockBuilder(\PluginFactory::class)
+            ->setConstructorArgs([$this->dao, $this->restrictor])
+            ->onlyMethods(['getClassNameForPluginName'])
+            ->getMock();
+        $factory->method('getClassNameForPluginName')->willReturn(['class' => 'Plugin', 'custom' => false]);
         $plugin = $factory->getPluginById(123);
 
-        $this->assertInstanceOf(Plugin::class, $plugin);
-        $this->assertNull($factory->getPluginById(124));
+        self::assertInstanceOf(Plugin::class, $plugin);
+        self::assertNull($factory->getPluginById(124));
     }
 
     public function testGetPluginByName(): void
     {
-        $this->dao->shouldReceive('searchByName')->with('plugin 123')
-            ->andReturns(\TestHelper::arrayToDar(['id' => '123', 'name' => 'plugin 123', 'available' => 1]));
-        $this->dao->shouldReceive('searchByName')->andReturns(\TestHelper::emptyDar());
+        $this->dao->method('searchByName')
+            ->withConsecutive(
+                ['plugin 123'],
+                ['plugin 124']
+            )
+            ->willReturnOnConsecutiveCalls(
+                \TestHelper::arrayToDar(['id' => '123', 'name' => 'plugin 123', 'available' => 1]),
+                \TestHelper::emptyDar()
+            );
 
-        $factory = \Mockery::mock(\PluginFactory::class . '[getClassNameForPluginName]', [$this->dao, $this->restrictor])->shouldAllowMockingProtectedMethods();
-        $factory->shouldReceive('getClassNameForPluginName')->andReturns(['class' => 'Plugin', 'custom' => false]);
+        $factory = $this->getMockBuilder(\PluginFactory::class)
+            ->setConstructorArgs([$this->dao, $this->restrictor])
+            ->onlyMethods(['getClassNameForPluginName'])
+            ->getMock();
+        $factory->method('getClassNameForPluginName')->willReturn(['class' => 'Plugin', 'custom' => false]);
 
         $plugin_1 = $factory->getPluginByName('plugin 123');
-        $this->assertInstanceOf(Plugin::class, $plugin_1);
+        self::assertInstanceOf(Plugin::class, $plugin_1);
 
         $plugin_2 = $factory->getPluginByName('plugin 123');
-        $this->assertSame($plugin_1, $plugin_2);
+        self::assertSame($plugin_1, $plugin_2);
 
-        $this->assertNull($factory->getPluginByName('plugin 124'));
+        self::assertNull($factory->getPluginByName('plugin 124'));
     }
 
     public function testCreatePlugin(): void
     {
-        $this->dao->shouldReceive('searchByName')->with('existing plugin')
-            ->andReturns(\TestHelper::arrayToDar(['id' => 123, 'name' => 'plugin 123', 'available' => '1']));
-        $this->dao->shouldReceive('searchByName')->with('new plugin')->andReturns(\TestHelper::emptyDar());
-        $this->dao->shouldReceive('searchByName')->with('error plugin creation')->andReturns(\TestHelper::emptyDar());
-        $this->dao->shouldReceive('create')->with('new plugin')->once()->andReturns(125); //its id
-        $this->dao->shouldReceive('create')->with('error plugin creation')->once()->andReturns(false); //error
+        $this->dao->method('searchByName')
+            ->withConsecutive(
+                ['existing plugin'],
+                ['new plugin'],
+                ['error plugin creation']
+            )
+            ->willReturnOnConsecutiveCalls(
+                \TestHelper::arrayToDar(['id' => 123, 'name' => 'plugin 123', 'available' => '1']),
+                \TestHelper::emptyDar(),
+                \TestHelper::emptyDar()
+            );
+        $this->dao
+            ->expects(self::exactly(2))
+            ->method('create')
+            ->withConsecutive(
+                ['new plugin'],
+                ['error plugin creation']
+            )
+            ->willReturnOnConsecutiveCalls(
+                125, //its id
+                false //error
+            );
 
-        $factory = \Mockery::mock(\PluginFactory::class . '[getClassNameForPluginName]', [$this->dao, $this->restrictor])->shouldAllowMockingProtectedMethods();
-        $factory->shouldReceive('getClassNameForPluginName')->andReturns(['class' => 'Plugin', 'custom' => false]);
+        $factory = $this->getMockBuilder(\PluginFactory::class)
+            ->setConstructorArgs([$this->dao, $this->restrictor])
+            ->onlyMethods(['getClassNameForPluginName'])
+            ->getMock();
+        $factory->method('getClassNameForPluginName')->willReturn(['class' => 'Plugin', 'custom' => false]);
 
-        $this->assertNull($factory->createPlugin('existing plugin'));
+        self::assertNull($factory->createPlugin('existing plugin'));
         $plugin = $factory->createPlugin('new plugin');
-        $this->assertEquals(125, $plugin->getId());
-        $this->assertNull($factory->createPlugin('error plugin creation'));
+        self::assertEquals(125, $plugin->getId());
+        self::assertNull($factory->createPlugin('error plugin creation'));
     }
 
     public function testGetEnablePlugins(): void
     {
-        $this->dao->shouldReceive('searchEnabledPlugins')
-            ->andReturns(
+        $this->dao->method('searchEnabledPlugins')
+            ->willReturn(
                 \TestHelper::arrayToDar(
                     ['id' => '123', 'name' => 'plugin 123', 'available' => '1'],
                     ['id' => '124', 'name' => 'plugin 124', 'available' => '1']
                 )
             );
 
-        $factory = \Mockery::mock(\PluginFactory::class . '[getClassNameForPluginName]', [$this->dao, $this->restrictor])->shouldAllowMockingProtectedMethods();
-        $factory->shouldReceive('getClassNameForPluginName')->andReturns(['class' => 'Plugin', 'custom' => false]);
+        $factory = $this->getMockBuilder(\PluginFactory::class)
+            ->setConstructorArgs([$this->dao, $this->restrictor])
+            ->onlyMethods(['getClassNameForPluginName'])
+            ->getMock();
+        $factory->method('getClassNameForPluginName')->willReturn(['class' => 'Plugin', 'custom' => false]);
 
-        $this->assertCount(2, $factory->getEnabledPlugins());
+        self::assertCount(2, $factory->getEnabledPlugins());
     }
 
     public function testGetAllPlugins(): void
     {
-        $this->dao->shouldReceive('searchAll')
-            ->andReturns(
+        $this->dao->method('searchAll')
+            ->willReturn(
                 \TestHelper::arrayToDar(
                     ['id' => '123', 'name' => 'plugin 123', 'available' => '1'],
                     ['id' => '124', 'name' => 'plugin 124', 'available' => '0']
                 )
             );
 
-        $factory = \Mockery::mock(\PluginFactory::class . '[getClassNameForPluginName]', [$this->dao, $this->restrictor])->shouldAllowMockingProtectedMethods();
-        $factory->shouldReceive('getClassNameForPluginName')->andReturns(['class' => 'Plugin', 'custom' => false]);
+        $factory = $this->getMockBuilder(\PluginFactory::class)
+            ->setConstructorArgs([$this->dao, $this->restrictor])
+            ->onlyMethods(['getClassNameForPluginName'])
+            ->getMock();
+        $factory->method('getClassNameForPluginName')->willReturn(['class' => 'Plugin', 'custom' => false]);
 
-        $this->assertCount(2, $factory->getAllPlugins());
+        self::assertCount(2, $factory->getAllPlugins());
     }
 
     public function testIsPluginAvailable(): void
     {
-        $this->dao->shouldReceive('searchById')
-            ->with(123)
-            ->andReturns(\TestHelper::arrayToDar(['id' => '123', 'name' => 'plugin 123', 'available' => '1']));
-        $this->dao->shouldReceive('searchById')
-            ->with(124)
-            ->andReturns(\TestHelper::arrayToDar(['id' => '124', 'name' => 'plugin 124', 'available' => '0']));
+        $this->dao->method('searchById')
+            ->withConsecutive(
+                [123],
+                [124]
+            )
+            ->willReturnOnConsecutiveCalls(
+                \TestHelper::arrayToDar(['id' => '123', 'name' => 'plugin 123', 'available' => '1']),
+                \TestHelper::arrayToDar(['id' => '124', 'name' => 'plugin 124', 'available' => '0'])
+            );
 
-        $factory = \Mockery::mock(\PluginFactory::class . '[getClassNameForPluginName]', [$this->dao, $this->restrictor])->shouldAllowMockingProtectedMethods();
-        $factory->shouldReceive('getClassNameForPluginName')->andReturns(['class' => 'Plugin', 'custom' => false]);
+        $factory = $this->getMockBuilder(\PluginFactory::class)
+            ->setConstructorArgs([$this->dao, $this->restrictor])
+            ->onlyMethods(['getClassNameForPluginName'])
+            ->getMock();
+        $factory->method('getClassNameForPluginName')->willReturn(['class' => 'Plugin', 'custom' => false]);
 
         $plugin_123 = $factory->getPluginById(123);
-        $this->assertTrue($factory->isPluginEnabled($plugin_123));
+        self::assertTrue($factory->isPluginEnabled($plugin_123));
 
         $plugin_124 = $factory->getPluginById(124);
-        $this->assertFalse($factory->isPluginEnabled($plugin_124));
+        self::assertFalse($factory->isPluginEnabled($plugin_124));
     }
 
     public function testEnablePlugin(): void
     {
-        $this->dao->shouldReceive('enablePlugin')->with(123)->once();
+        $this->dao->expects(self::once())->method('enablePlugin')->with(123);
 
-        $plugin = new class (123) extends Plugin
-        {
+        $plugin = new class (123) extends Plugin {
             public bool $post_enable_called = false;
 
             public function postEnable(): void
@@ -182,8 +213,7 @@ final class PluginFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCannotEnablePluginWithAMissingInstallRequirement(): void
     {
-        $plugin = new class extends Plugin
-        {
+        $plugin = new class extends Plugin {
             public function getName(): string
             {
                 return 'test_plugin';
@@ -208,20 +238,23 @@ final class PluginFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         };
 
-        $this->expectException(MissingInstallRequirementException::class);
-        $this->expectExceptionMessageMatches('/test_plugin.+missing_requirement/');
+        self::expectException(MissingInstallRequirementException::class);
+        self::expectExceptionMessageMatches('/test_plugin.+missing_requirement/');
         $this->factory->enablePlugin($plugin);
     }
 
     public function testDisablePlugin(): void
     {
-        $this->dao->shouldReceive('searchById')
+        $this->dao->method('searchById')
             ->with(123)
-            ->andReturns(\TestHelper::arrayToDar(['id' => '123', 'name' => 'plugin 123', 'available' => '1']));
-        $this->dao->shouldReceive('disablePlugin')->with(123)->once();
+            ->willReturn(\TestHelper::arrayToDar(['id' => '123', 'name' => 'plugin 123', 'available' => '1']));
+        $this->dao->expects(self::once())->method('disablePlugin')->with(123);
 
-        $factory = \Mockery::mock(\PluginFactory::class . '[getClassNameForPluginName]', [$this->dao, $this->restrictor])->shouldAllowMockingProtectedMethods();
-        $factory->shouldReceive('getClassNameForPluginName')->andReturns(['class' => 'Plugin', 'custom' => false]);
+        $factory = $this->getMockBuilder(\PluginFactory::class)
+            ->setConstructorArgs([$this->dao, $this->restrictor])
+            ->onlyMethods(['getClassNameForPluginName'])
+            ->getMock();
+        $factory->method('getClassNameForPluginName')->willReturn(['class' => 'Plugin', 'custom' => false]);
 
         $plugin = $factory->getPluginById(123);
         $factory->disablePlugin($plugin);
@@ -229,35 +262,47 @@ final class PluginFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testPluginIsCustom(): void
     {
-        $this->dao->shouldReceive('searchByName')
-            ->with('custom')
-            ->andReturns(\TestHelper::arrayToDar(['id' => '123', 'name' => 'custom', 'available' => 1]));
-        $this->dao->shouldReceive('searchByName')
-            ->with('official')
-            ->andReturns(\TestHelper::arrayToDar(['id' => '124', 'name' => 'official', 'available' => 1]));
+        $this->dao->method('searchByName')
+            ->withConsecutive(
+                ['custom'],
+                ['official']
+            )
+            ->willReturnOnConsecutiveCalls(
+                \TestHelper::arrayToDar(['id' => '123', 'name' => 'custom', 'available' => 1]),
+                \TestHelper::arrayToDar(['id' => '124', 'name' => 'official', 'available' => 1])
+            );
 
-        $factory                 = \Mockery::mock(\PluginFactory::class . '[getClassNameForPluginName]', [$this->dao, $this->restrictor])->shouldAllowMockingProtectedMethods();
-        $custom_plugin           = new class extends Plugin {
+        $factory                   = $this->getMockBuilder(\PluginFactory::class)
+            ->setConstructorArgs([$this->dao, $this->restrictor])
+            ->onlyMethods(['getClassNameForPluginName'])
+            ->getMock();
+        $custom_plugin             = new class extends Plugin {
         };
-        $custom_plugin_classname = $custom_plugin::class;
-        $factory->shouldReceive('getClassNameForPluginName')->with('custom')->andReturns(['class' => $custom_plugin_classname, 'custom' => true]);
+        $custom_plugin_classname   = $custom_plugin::class;
         $official_plugin           = new class extends Plugin {
         };
         $official_plugin_classname = $official_plugin::class;
-        $factory->shouldReceive('getClassNameForPluginName')->with('official')->andReturns(['class' => $official_plugin_classname, 'custom' => false]);
+        $factory->method('getClassNameForPluginName')
+            ->withConsecutive(
+                ['custom'],
+                ['official']
+            )->willReturnOnConsecutiveCalls(
+                ['class' => $custom_plugin_classname, 'custom' => true],
+                ['class' => $official_plugin_classname, 'custom' => false]
+            );
 
         $plugin_custom = $factory->getPluginByName('custom');
-        $this->assertInstanceOf($custom_plugin_classname, $plugin_custom);
-        $this->assertTrue($factory->isACustomPlugin($plugin_custom));
+        self::assertInstanceOf($custom_plugin_classname, $plugin_custom);
+        self::assertTrue($factory->isACustomPlugin($plugin_custom));
 
         $plugin_official = $factory->getPluginByName('official');
-        $this->assertInstanceOf($official_plugin_classname, $plugin_official);
-        $this->assertFalse($factory->isACustomPlugin($plugin_official));
+        self::assertInstanceOf($official_plugin_classname, $plugin_official);
+        self::assertFalse($factory->isACustomPlugin($plugin_official));
     }
 
     public function testInstantiatePluginReturnsNullIfClassIsNotFound(): void
     {
-        $this->assertNull($this->factory->instantiatePlugin(1, 'does not exist'));
+        self::assertNull($this->factory->instantiatePlugin(1, 'does not exist'));
     }
 
     /**
@@ -270,7 +315,7 @@ final class PluginFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         bool $expected_is_custom,
     ): void {
         $plugin = $this->factory->instantiatePlugin(1, $plugin_name);
-        $this->assertInstanceOf($expected_class, $plugin);
-        $this->assertEquals($expected_is_custom, $plugin->isCustom());
+        self::assertInstanceOf($expected_class, $plugin);
+        self::assertEquals($expected_is_custom, $plugin->isCustom());
     }
 }

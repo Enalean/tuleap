@@ -24,36 +24,23 @@ namespace Tuleap\Plugin;
 
 use EventManager;
 use ForgeConfig;
-use Logger;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use PluginFactory;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\TemporaryTestDirectory;
 
 final class PluginLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
     use TemporaryTestDirectory;
 
-    /**
-     * @var string
-     */
-    private $hooks_cache_file_path;
-    /**
-     * @var EventManager|Mockery\MockInterface
-     */
-    private $event_manager;
-    /**
-     * @var Mockery\MockInterface|PluginFactory
-     */
-    private $plugin_factory;
+    private string $hooks_cache_file_path;
+    private EventManager&MockObject $event_manager;
+    private PluginFactory&MockObject $plugin_factory;
 
-    /**
-     * @var Logger|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $logger;
+    private LoggerInterface $logger;
 
     protected function setUp(): void
     {
@@ -61,42 +48,42 @@ final class PluginLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set('codendi_cache_dir', $tuleap_cache_directory);
         $this->hooks_cache_file_path = $tuleap_cache_directory . DIRECTORY_SEPARATOR . PluginLoader::HOOK_CACHE_KEY;
 
-        $this->event_manager  = Mockery::mock(EventManager::class);
-        $this->plugin_factory = Mockery::mock(PluginFactory::class);
-        $this->logger         = Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $this->event_manager  = $this->createMock(EventManager::class);
+        $this->plugin_factory = $this->createMock(PluginFactory::class);
+        $this->logger         = new NullLogger();
     }
 
     public function testMissingHooksFileCacheIsCreated(): void
     {
         $plugin_loader = new PluginLoader($this->event_manager, $this->plugin_factory, $this->logger);
 
-        $this->plugin_factory->shouldReceive('getEnabledPlugins')->andReturn([]);
+        $this->plugin_factory->method('getEnabledPlugins')->willReturn([]);
 
         $plugin_loader->loadPlugins();
 
         $unserialized_hooks_cache = include $this->hooks_cache_file_path;
-        $this->assertInstanceOf(EventPluginCache::class, $unserialized_hooks_cache);
+        self::assertInstanceOf(EventPluginCache::class, $unserialized_hooks_cache);
     }
 
     public function testEmptyHooksFileCacheIsPopulated(): void
     {
         $plugin_loader = new PluginLoader($this->event_manager, $this->plugin_factory, $this->logger);
 
-        $this->plugin_factory->shouldReceive('getEnabledPlugins')->andReturn([]);
+        $this->plugin_factory->method('getEnabledPlugins')->willReturn([]);
 
         touch($this->hooks_cache_file_path);
 
         $plugin_loader->loadPlugins();
 
         $unserialized_hooks_cache = include $this->hooks_cache_file_path;
-        $this->assertInstanceOf(EventPluginCache::class, $unserialized_hooks_cache);
+        self::assertInstanceOf(EventPluginCache::class, $unserialized_hooks_cache);
     }
 
     public function testReadOnlyEmptyHooksFileCacheIsPopulatedWithoutWarning(): void
     {
         $plugin_loader = new PluginLoader($this->event_manager, $this->plugin_factory, $this->logger);
 
-        $this->plugin_factory->shouldReceive('getEnabledPlugins')->andReturn([]);
+        $this->plugin_factory->method('getEnabledPlugins')->willReturn([]);
 
         touch($this->hooks_cache_file_path);
         chmod($this->hooks_cache_file_path, 0400);
@@ -104,20 +91,20 @@ final class PluginLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
         $plugin_loader->loadPlugins();
 
         $unserialized_hooks_cache = include $this->hooks_cache_file_path;
-        $this->assertInstanceOf(EventPluginCache::class, $unserialized_hooks_cache);
+        self::assertInstanceOf(EventPluginCache::class, $unserialized_hooks_cache);
     }
 
     public function testHooksFileCacheWithGarbageDataIsOverwritten(): void
     {
         $plugin_loader = new PluginLoader($this->event_manager, $this->plugin_factory, $this->logger);
 
-        $this->plugin_factory->shouldReceive('getEnabledPlugins')->andReturn([]);
+        $this->plugin_factory->method('getEnabledPlugins')->willReturn([]);
 
         file_put_contents($this->hooks_cache_file_path, 'InvalidData');
 
         $plugin_loader->loadPlugins();
 
         $unserialized_hooks_cache = include $this->hooks_cache_file_path;
-        $this->assertInstanceOf(EventPluginCache::class, $unserialized_hooks_cache);
+        self::assertInstanceOf(EventPluginCache::class, $unserialized_hooks_cache);
     }
 }
