@@ -41,7 +41,7 @@ class LDAP_UserDao extends DataAccessObject
     {
         $user_ids = $this->da->escapeIntImplode($user_ids);
 
-        $sql = "SELECT ldap_uid, user.status
+        $sql = "SELECT user_id, ldap_uid, user.status
                 FROM plugin_ldap_user
                     INNER JOIN user USING (user_id)
                 WHERE user_id IN ($user_ids)";

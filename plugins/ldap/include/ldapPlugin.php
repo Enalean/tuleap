@@ -26,6 +26,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/constants.php';
 
 use FastRoute\RouteCollector;
+use Tuleap\SVNCore\GetSVNUserGroups;
 use Tuleap\CLI\Command\ConfigDumpEvent;
 use Tuleap\Git\Git\RemoteServer\GerritCanMigrateEvent;
 use Tuleap\Layout\IncludeAssets;
@@ -37,6 +38,7 @@ use Tuleap\LDAP\LinkModalContentPresenter;
 use Tuleap\LDAP\NonUniqueUidDAO;
 use Tuleap\LDAP\Project\UGroup\Binding\AdditionalModalPresenterBuilder;
 use Tuleap\LDAP\ProjectGroupManagerRestrictedUserFilter;
+use Tuleap\LDAP\SVN\SVNUserGroupsProvider;
 use Tuleap\LDAP\User\AccountCreation;
 use Tuleap\LDAP\User\CreateUserFromEmail;
 use Tuleap\Project\Admin\ProjectMembers\MembersEditProcessAction;
@@ -790,19 +792,14 @@ class LdapPlugin extends Plugin
         }
     }
 
-    /**
-     * Hook
-     *
-     * @param Array $params
-     *
-     */
-    #[\Tuleap\Plugin\ListeningToEventName('backend_factory_get_svn')]
-    public function backendFactoryGetSvn(array $params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function getSVNUserGroups(GetSVNUserGroups $event): void
     {
-        if ($this->isLdapAuthType()) {
-            $params['base']  = 'LDAP_BackendSVN';
-            $params['setup'] = [$this->getLdap()];
+        if (! $this->isLdapAuthType()) {
+            return;
         }
+        $provider = new SVNUserGroupsProvider($this->getLdapUserManager(), new LDAP_ProjectManager());
+        $provider->handle($event);
     }
 
     #[\Tuleap\Plugin\ListeningToEventClass]

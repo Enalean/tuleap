@@ -42,7 +42,6 @@ class BackendSVN extends Backend
      * @var SvnCoreUsage
      */
     private $svn_core_usage;
-    private ?\Tuleap\Project\CachedProjectAccessChecker $project_access_checker = null;
 
     /**
      * For mocking (unit tests)
@@ -52,14 +51,6 @@ class BackendSVN extends Backend
     protected function getUGroupDao()
     {
         return new UGroupDao(CodendiDataAccess::instance());
-    }
-
-    /**
-     * @return UGroupManager
-     */
-    protected function getUGroupManager()
-    {
-        return new UGroupManager($this->getUGroupDao());
     }
 
      /**
@@ -72,16 +63,6 @@ class BackendSVN extends Backend
     protected function getUGroupFromRow($row)
     {
         return new ProjectUGroup($row);
-    }
-
-    /**
-     * For mocking (unit tests)
-     *
-     * @return ServiceDao
-     */
-    public function _getServiceDao()
-    {
-        return new ServiceDao(CodendiDataAccess::instance());
     }
 
     /**
@@ -478,15 +459,9 @@ class BackendSVN extends Backend
         return $contents;
     }
 
-    private array $project_default_blocks_cache = [];
-
-    private function getDefaultBlock(Project $project)
+    private function getDefaultBlock(Project $project): string
     {
-        if (! isset($this->project_default_blocks_cache[$project->getID()])) {
-            $this->project_default_blocks_cache[$project->getID()] = $this->getSVNAccessGroups($project) . $this->getSVNAccessRootPathDef($project);
-        }
-
-        return $this->project_default_blocks_cache[$project->getID()];
+        return \Tuleap\SVNCore\SvnAccessFileDefaultBlockGenerator::instance()->getDefaultBlock($project);
     }
 
     private function getCustomPermissionForProject(Project $project, SVNAccessFile $svn_access_file, $contents, $ugroup_name, $ugroup_old_name): string
@@ -569,110 +544,6 @@ class BackendSVN extends Backend
             return $this->updateSVNAccess($group_id, $project->getSVNRootPath());
         }
         return true;
-    }
-
-    /**
-     * SVNAccessFile groups definitions
-     *
-     * @param Project $project
-     * @return String
-     */
-    public function getSVNAccessGroups($project)
-    {
-        $conf  = "[groups]\n";
-        $conf .= $this->getSVNAccessProjectMembers($project);
-        $conf .= $this->getSVNAccessUserGroupMembers($project);
-        $conf .= "\n";
-        return $conf;
-    }
-
-    /**
-     * SVNAccessFile project members group definition
-     *
-     * User names must be in lowercase
-     *
-     * @param Project $project
-     *
-     * @return String
-     */
-    public function getSVNAccessProjectMembers($project)
-    {
-        $list  = "";
-        $first = true;
-        foreach ($project->getMembersUserNames($this->getProjectManager()) as $member) {
-            if (! $first) {
-                $list .= ', ';
-            }
-            $first = false;
-            $list .= strtolower($member['user_name']);
-        }
-        return "members = " . $list . "\n";
-    }
-
-    /**
-     * SVNAccessFile ugroups definitions
-     *
-     *
-     * @return String
-     */
-    public function getSVNAccessUserGroupMembers(Project $project)
-    {
-        $conf       = "";
-        $ugroup_dao = $this->getUGroupDao();
-        $dar        = $ugroup_dao->searchByGroupId($project->getId());
-
-        foreach ($dar as $row) {
-            $ugroup         = $this->getUGroupFromRow($row);
-            $ugroup_members = $ugroup->getMembers();
-            $valid_members  = [];
-            foreach ($ugroup_members as $ugroup_member) {
-                try {
-                    $this->getProjectAccessChecker()->checkUserCanAccessProject($ugroup_member, $project);
-                    $valid_members[] = $ugroup_member->getUserName();
-                } catch (Project_AccessException $exception) {
-                    //do not add user
-                }
-            }
-            // User names must be in lowercase
-            if ($ugroup->getName() && count($valid_members) > 0) {
-                $members_list = strtolower(implode(", ", $valid_members));
-                $conf        .= $ugroup->getName() . " = " . $members_list . "\n";
-            }
-        }
-        $conf .= "\n";
-        return $conf;
-    }
-
-    protected function getProjectAccessChecker(): \Tuleap\Project\CheckProjectAccess
-    {
-        if ($this->project_access_checker === null) {
-            $this->project_access_checker = new \Tuleap\Project\CachedProjectAccessChecker(
-                new \Tuleap\Project\ProjectAccessChecker(
-                    new \Tuleap\Project\RestrictedUserCanAccessProjectVerifier(),
-                    EventManager::instance()
-                )
-            );
-        }
-        return $this->project_access_checker;
-    }
-
-    /**
-     * SVNAccessFile definition for repository root
-     *
-     * @param Project $project
-     *
-     * @return String
-     */
-    public function getSVNAccessRootPathDef($project)
-    {
-        $conf = "[/]\n";
-        if (! $project->isPublic() || $project->isSVNPrivate()) {
-            $conf .= "* = \n";
-        } else {
-            $conf .= "* = r\n";
-        }
-        $conf .= "@members = rw\n";
-        return $conf;
     }
 
     /**
@@ -834,7 +705,7 @@ class BackendSVN extends Backend
     public function checkSVNMode(Project $project)
     {
         $svnroot    = $project->getSVNRootPath();
-        $is_private = ! $project->isPublic() || $project->isSVNPrivate();
+        $is_private = ! $project->isPublic();
         if ($is_private) {
             $perms = fileperms($svnroot);
             // 'others' should have no right on the repository
@@ -1003,7 +874,7 @@ class BackendSVN extends Backend
                     throw new RuntimeException('Could not create/initialize project SVN repository');
                 }
                 $this->updateSVNAccess($project->getId(), $project->getSVNRootPath());
-                $this->setSVNPrivacy($project, ! $project->isPublic() || $project->isSVNPrivate());
+                $this->setSVNPrivacy($project, ! $project->isPublic());
                 $this->setSVNApacheConfNeedUpdate();
             } else {
                 $this->checkSVNAccessPresence($project->getId());

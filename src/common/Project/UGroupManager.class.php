@@ -169,12 +169,10 @@ class UGroupManager implements \Tuleap\Project\UGroupRetriever // phpcs:ignore P
     }
 
     /**
-     * @see self::getUGroupsWithSystemUserGroups() returns same groups, except system user groups and Nobody.
-     *
-     * @param array $excluded_ugroups_id
+     * @param int[] $excluded_ugroups_id
      * @return ProjectUGroup[]
      */
-    public function getUGroups(Project $project, array $excluded_ugroups_id = [])
+    public function getUGroups(Project $project, array $excluded_ugroups_id = []): array
     {
         $ugroups = [];
         foreach ($this->getDao()->searchDynamicAndStaticByGroupId($project->getId()) as $row) {
@@ -216,9 +214,9 @@ class UGroupManager implements \Tuleap\Project\UGroupRetriever // phpcs:ignore P
     }
 
     /**
-     * @return array of projectUGroup indexed by their id
+     * @return array<int, ProjectUGroup>
      */
-    public function getUgroupsById(Project $project)
+    public function getUgroupsById(Project $project): array
     {
         $ugroups = [];
         foreach ($this->getDao()->searchDynamicAndStaticByGroupId($project->getId()) as $row) {

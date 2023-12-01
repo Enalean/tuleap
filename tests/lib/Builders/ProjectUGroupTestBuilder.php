@@ -27,6 +27,10 @@ use Tuleap\User\UserGroup\NameTranslator;
 final class ProjectUGroupTestBuilder
 {
     private string $name = 'My group';
+    /**
+     * @var ?\PFUser[]
+     */
+    private ?array $users = null;
 
     private function __construct(private int $id)
     {
@@ -65,12 +69,27 @@ final class ProjectUGroupTestBuilder
         ]);
     }
 
+    public static function buildNobody(): \ProjectUGroup
+    {
+        return new \ProjectUgroup([
+            'ugroup_id' => \ProjectUGroup::NONE,
+            'name'      => NameTranslator::NOBODY,
+        ]);
+    }
+
     public static function buildProjectMembers(): \ProjectUGroup
     {
         return new \ProjectUgroup([
             'ugroup_id' => \ProjectUGroup::PROJECT_MEMBERS,
             'name'      => NameTranslator::PROJECT_MEMBERS,
         ]);
+    }
+
+    public static function buildProjectMembersWith(\PFUser ...$users): \ProjectUGroup
+    {
+        $group = self::buildProjectMembers();
+        $group->setMembers(...$users);
+        return $group;
     }
 
     public static function buildProjectAdmins(): \ProjectUGroup
@@ -88,8 +107,19 @@ final class ProjectUGroupTestBuilder
         return $this;
     }
 
+    public function withUsers(\PFUser ...$users): self
+    {
+        $this->users = $users;
+
+        return $this;
+    }
+
     public function build(): \ProjectUGroup
     {
-        return new \ProjectUGroup(['ugroup_id' => $this->id, 'name' => $this->name]);
+        $ugroup = new \ProjectUGroup(['ugroup_id' => $this->id, 'name' => $this->name]);
+        if ($this->users !== null) {
+            $ugroup->setMembers(...$this->users);
+        }
+        return $ugroup;
     }
 }

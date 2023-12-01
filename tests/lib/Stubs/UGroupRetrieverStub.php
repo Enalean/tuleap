@@ -25,7 +25,11 @@ namespace Tuleap\Test\Stubs;
 
 use Project;
 use ProjectUGroup;
+use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 
+/**
+ * @see ProjectUGroupTestBuilder
+ */
 class UGroupRetrieverStub implements \Tuleap\Project\UGroupRetriever
 {
     private function __construct(private array $ugroups_by_id, private array $ugroups_by_name)
@@ -63,5 +67,10 @@ class UGroupRetrieverStub implements \Tuleap\Project\UGroupRetriever
         }
 
         return null;
+    }
+
+    public function getUGroups(Project $project, array $excluded_ugroups_id = []): array
+    {
+        return array_values($this->ugroups_by_id);
     }
 }

@@ -245,8 +245,6 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
     }
 
     /**
-     * Return array of users members of the ugroup
-     *
      * @return PFUser[]
      */
     public function getMembers()
@@ -257,12 +255,20 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
         return $this->members;
     }
 
+    /**
+     * @return PFUser[]
+     */
     public function getMembersIncludingSuspendedAndDeleted()
     {
         if (! $this->members) {
             $this->members = $this->getStaticOrDynamicMembersIncludingSuspendedAndDeleted($this->group_id);
         }
         return $this->members;
+    }
+
+    public function setMembers(PFUser ...$users): void
+    {
+        $this->members = $users;
     }
 
     /**

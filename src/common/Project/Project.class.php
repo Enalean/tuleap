@@ -200,12 +200,6 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
         return $this->project_data_array['svn_preamble'];
     }
 
-    public function isSVNPrivate()
-    {
-        // TODO XXXX not implemented yet.
-        return false;
-    }
-
     /**
      * @psalm-mutation-free
      */
