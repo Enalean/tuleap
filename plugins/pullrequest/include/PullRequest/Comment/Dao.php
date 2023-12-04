@@ -22,13 +22,27 @@ namespace Tuleap\PullRequest\Comment;
 
 use Tuleap\DB\DataAccessObject;
 
-class Dao extends DataAccessObject implements ParentCommentSearcher, ThreadColorUpdater, CommentUpdater, CommentSearcher
+class Dao extends DataAccessObject implements ParentCommentSearcher, ThreadColorUpdater, CommentUpdater, CommentSearcher, CreateComment
 {
-    public function save(int $pull_request_id, int $user_id, int $post_date, string $content, int $parent_id, string $format): int
-    {
+    public function save(
+        int $pull_request_id,
+        int $author_user_id,
+        \DateTimeImmutable $post_date,
+        string $content,
+        string $format,
+        int $parent_id,
+    ): int {
         $sql = 'INSERT INTO plugin_pullrequest_comments (pull_request_id, user_id, post_date, content, parent_id, format)
                 VALUES (?, ?, ?, ?, ?, ?)';
-        $this->getDB()->run($sql, $pull_request_id, $user_id, $post_date, $content, $parent_id, $format);
+        $this->getDB()->run(
+            $sql,
+            $pull_request_id,
+            $author_user_id,
+            $post_date->getTimestamp(),
+            $content,
+            $parent_id,
+            $format
+        );
 
         return (int) $this->getDB()->lastInsertId();
     }
