@@ -25,17 +25,23 @@ namespace Tuleap\PullRequest\REST\v1;
  */
 final class CommentPOSTRepresentation
 {
-    /**
-     * @var string {@type string}
-     */
     public string $content;
+    /**
+     * @var int | null $parent_id {@required false}
+     */
+    public ?int $parent_id = 0;
+    /**
+     * @var string | null $format {@required false} {@choice text,commonmark}
+     */
+    public ?string $format = null;
 
-    /**
-     * @var int | null {@type int} {@required false}
-     */
-    public $parent_id = 0;
-    /**
-     * @var string | null {@type string} {@required false} {@choice text,commonmark}
-     */
-    public $format;
+    public function __construct(
+        string $content,
+        ?string $format,
+        ?int $parent_id,
+    ) {
+        $this->content   = $content;
+        $this->format    = $format;
+        $this->parent_id = $parent_id;
+    }
 }
