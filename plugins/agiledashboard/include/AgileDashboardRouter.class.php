@@ -19,6 +19,7 @@
  */
 
 use Tuleap\AgileDashboard\AdminController;
+use Tuleap\AgileDashboard\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarXmlImport;
 use Tuleap\AgileDashboard\AgileDashboardServiceHomepageUrlBuilder;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
 use Tuleap\AgileDashboard\BaseController;
@@ -31,6 +32,7 @@ use Tuleap\AgileDashboard\ExplicitBacklog\XMLImporter;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheGenerator;
 use Tuleap\AgileDashboard\FormElement\FormElementController;
+use Tuleap\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarDao;
 use Tuleap\AgileDashboard\Planning\MilestoneControllerFactory;
 use Tuleap\Kanban\CheckSplitKanbanConfiguration;
 use Tuleap\Kanban\KanbanManager;
@@ -276,7 +278,8 @@ class AgileDashboardRouter
                 )
             ),
             $external_field_extractor,
-            $this->event_manager
+            $this->event_manager,
+            new MilestonesInSidebarXmlImport(new MilestonesInSidebarDao()),
         );
 
         switch ($request->get('action')) {

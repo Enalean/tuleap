@@ -21,32 +21,19 @@
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\XMLExporter as ExplicitBacklogXMLExporter;
+use Tuleap\AgileDashboard\Milestone\Sidebar\CheckMilestonesInSidebar;
+use Tuleap\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarDao;
 use Tuleap\Kanban\SemanticStatusNotFoundException;
 use Tuleap\AgileDashboard\Planning\XML\XMLExporter as PlanningXMLExporter;
 
 class AgileDashboard_XMLExporter
 {
-    /**  @var XML_RNGValidator */
-    private $xml_validator;
-
-    /**
-     * @var ExplicitBacklogXMLExporter
-     */
-    private $explicit_backlog_xml_exporter;
-
-    /**
-     * @var PlanningXMLExporter
-     */
-    private $planning_xml_exporter;
-
     public function __construct(
-        XML_RNGValidator $xml_validator,
-        PlanningXMLExporter $planning_xml_exporter,
-        ExplicitBacklogXMLExporter $explicit_backlog_xml_exporter,
+        private readonly XML_RNGValidator $xml_validator,
+        private readonly PlanningXMLExporter $planning_xml_exporter,
+        private readonly ExplicitBacklogXMLExporter $explicit_backlog_xml_exporter,
+        private readonly CheckMilestonesInSidebar $milestones_in_sidebar,
     ) {
-        $this->xml_validator                 = $xml_validator;
-        $this->explicit_backlog_xml_exporter = $explicit_backlog_xml_exporter;
-        $this->planning_xml_exporter         = $planning_xml_exporter;
     }
 
     public static function build(): AgileDashboard_XMLExporter
@@ -59,7 +46,8 @@ class AgileDashboard_XMLExporter
             new ExplicitBacklogXMLExporter(
                 new ExplicitBacklogDao(),
                 new ArtifactsInExplicitBacklogDao()
-            )
+            ),
+            new MilestonesInSidebarDao(),
         );
     }
 
@@ -70,7 +58,7 @@ class AgileDashboard_XMLExporter
      */
     public function export(Project $project, SimpleXMLElement $xml_element, array $plannings): void
     {
-        $agiledashboard_node = $this->getAgiledashboardNode($xml_element);
+        $agiledashboard_node = $this->getAgiledashboardNode($project, $xml_element);
 
         $this->explicit_backlog_xml_exporter->exportExplicitBacklogConfiguration($project, $agiledashboard_node);
         $this->planning_xml_exporter->exportPlannings($agiledashboard_node, $plannings);
@@ -85,7 +73,7 @@ class AgileDashboard_XMLExporter
      */
     public function exportFull(Project $project, SimpleXMLElement $xml_element, array $plannings)
     {
-        $agiledashboard_node = $this->getAgiledashboardNode($xml_element);
+        $agiledashboard_node = $this->getAgiledashboardNode($project, $xml_element);
 
         $this->explicit_backlog_xml_exporter->exportExplicitBacklogConfiguration($project, $agiledashboard_node);
         $this->explicit_backlog_xml_exporter->exportExplicitBacklogContent($project, $agiledashboard_node);
@@ -103,10 +91,12 @@ class AgileDashboard_XMLExporter
         $this->xml_validator->validate($agiledashboard_node, $rng_path);
     }
 
-    private function getAgiledashboardNode(SimpleXMLElement $xml_element): SimpleXMLElement
+    private function getAgiledashboardNode(Project $project, SimpleXMLElement $xml_element): SimpleXMLElement
     {
         $existing_agiledashboard_node = $xml_element->agiledashboard;
         if ($existing_agiledashboard_node) {
+            $this->addMissingAttributes($project, $existing_agiledashboard_node);
+
             return $existing_agiledashboard_node;
         }
 
@@ -115,6 +105,19 @@ class AgileDashboard_XMLExporter
             throw new \Exception('Unable to create agiledashboard node');
         }
 
+        $this->addMissingAttributes($project, $agiledashboard_node);
+
         return $agiledashboard_node;
+    }
+
+    private function addMissingAttributes(Project $project, SimpleXMLElement $agiledashboard_node): void
+    {
+        if (isset($agiledashboard_node['should_sidebar_display_last_milestones'])) {
+            unset($agiledashboard_node['should_sidebar_display_last_milestones']);
+        }
+
+        if (! $this->milestones_in_sidebar->shouldSidebarDisplayLastMilestones((int) $project->getID())) {
+            $agiledashboard_node->addAttribute('should_sidebar_display_last_milestones', '0');
+        }
     }
 }

@@ -621,6 +621,11 @@
   <define name="agiledashboard">
     <interleave>
       <optional>
+        <attribute name="should_sidebar_display_last_milestones">
+          <data type="boolean" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+        </attribute>
+      </optional>
+      <optional>
         <element name="admin">
           <element name="scrum">
             <element name="explicit_backlog">

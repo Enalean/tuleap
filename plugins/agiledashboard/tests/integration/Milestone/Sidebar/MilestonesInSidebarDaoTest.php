@@ -50,15 +50,8 @@ final class MilestonesInSidebarDaoTest extends TestCase
     public function testShouldSidebarDisplayLastMilestonesWhenFeatureFlagIsNotSet(): void
     {
         \ForgeConfig::setFeatureFlag(MilestonesInSidebarDao::DEV_MODE, '1');
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->insert(
-            'plugin_agiledashboard_milestones_in_sidebar_config',
-            ['project_id' => self::ACME_PROJECT_ID, 'should_sidebar_display_last_milestones' => 0],
-        );
-        $db->insert(
-            'plugin_agiledashboard_milestones_in_sidebar_config',
-            ['project_id' => self::DUNDER_MIFFLIN_PROJECT_ID, 'should_sidebar_display_last_milestones' => 1],
-        );
+        $this->dao->deactivateMilestonesInSidebar(self::ACME_PROJECT_ID);
+        $this->dao->activateMilestonesInSidebar(self::DUNDER_MIFFLIN_PROJECT_ID);
 
         self::assertFalse($this->dao->shouldSidebarDisplayLastMilestones(self::ACME_PROJECT_ID));
         self::assertTrue($this->dao->shouldSidebarDisplayLastMilestones(self::DUNDER_MIFFLIN_PROJECT_ID));
@@ -69,12 +62,7 @@ final class MilestonesInSidebarDaoTest extends TestCase
     {
         \ForgeConfig::setFeatureFlag(MilestonesInSidebarDao::DEV_MODE, '1');
         \ForgeConfig::setFeatureFlag(MilestonesInSidebarDao::FEATURE_FLAG, '1');
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->insert(
-            'plugin_agiledashboard_milestones_in_sidebar_config',
-            ['project_id' => self::ACME_PROJECT_ID, 'should_sidebar_display_last_milestones' => 0],
-        );
-
+        $this->dao->deactivateMilestonesInSidebar(self::ACME_PROJECT_ID);
 
         $this->dao->duplicate(self::LOS_POLLOS_HERMANOS_PROJECT_ID, self::ACME_PROJECT_ID);
         self::assertFalse($this->dao->shouldSidebarDisplayLastMilestones(self::ACME_PROJECT_ID));
@@ -85,11 +73,7 @@ final class MilestonesInSidebarDaoTest extends TestCase
     {
         \ForgeConfig::setFeatureFlag(MilestonesInSidebarDao::DEV_MODE, '1');
         \ForgeConfig::setFeatureFlag(MilestonesInSidebarDao::FEATURE_FLAG, '1');
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->insert(
-            'plugin_agiledashboard_milestones_in_sidebar_config',
-            ['project_id' => self::DUNDER_MIFFLIN_PROJECT_ID, 'should_sidebar_display_last_milestones' => 1],
-        );
+        $this->dao->activateMilestonesInSidebar(self::DUNDER_MIFFLIN_PROJECT_ID);
 
         $this->dao->duplicate(self::LOS_POLLOS_HERMANOS_PROJECT_ID, self::DUNDER_MIFFLIN_PROJECT_ID);
         self::assertTrue($this->dao->shouldSidebarDisplayLastMilestones(self::DUNDER_MIFFLIN_PROJECT_ID));
@@ -109,15 +93,8 @@ final class MilestonesInSidebarDaoTest extends TestCase
     {
         \ForgeConfig::setFeatureFlag(MilestonesInSidebarDao::DEV_MODE, '1');
         \ForgeConfig::setFeatureFlag(MilestonesInSidebarDao::FEATURE_FLAG, '1');
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->insert(
-            'plugin_agiledashboard_milestones_in_sidebar_config',
-            ['project_id' => self::ACME_PROJECT_ID, 'should_sidebar_display_last_milestones' => 0],
-        );
-        $db->insert(
-            'plugin_agiledashboard_milestones_in_sidebar_config',
-            ['project_id' => self::DUNDER_MIFFLIN_PROJECT_ID, 'should_sidebar_display_last_milestones' => 1],
-        );
+        $this->dao->deactivateMilestonesInSidebar(self::ACME_PROJECT_ID);
+        $this->dao->activateMilestonesInSidebar(self::DUNDER_MIFFLIN_PROJECT_ID);
 
         self::assertFalse($this->dao->shouldSidebarDisplayLastMilestones(self::ACME_PROJECT_ID));
         self::assertTrue($this->dao->shouldSidebarDisplayLastMilestones(self::DUNDER_MIFFLIN_PROJECT_ID));
@@ -128,15 +105,8 @@ final class MilestonesInSidebarDaoTest extends TestCase
     {
         \ForgeConfig::setFeatureFlag(MilestonesInSidebarDao::DEV_MODE, '1');
         \ForgeConfig::setFeatureFlag(MilestonesInSidebarDao::FEATURE_FLAG, '0');
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->insert(
-            'plugin_agiledashboard_milestones_in_sidebar_config',
-            ['project_id' => self::ACME_PROJECT_ID, 'should_sidebar_display_last_milestones' => 0],
-        );
-        $db->insert(
-            'plugin_agiledashboard_milestones_in_sidebar_config',
-            ['project_id' => self::DUNDER_MIFFLIN_PROJECT_ID, 'should_sidebar_display_last_milestones' => 1],
-        );
+        $this->dao->deactivateMilestonesInSidebar(self::ACME_PROJECT_ID);
+        $this->dao->activateMilestonesInSidebar(self::DUNDER_MIFFLIN_PROJECT_ID);
 
         self::assertFalse($this->dao->shouldSidebarDisplayLastMilestones(self::ACME_PROJECT_ID));
         self::assertFalse($this->dao->shouldSidebarDisplayLastMilestones(self::DUNDER_MIFFLIN_PROJECT_ID));
@@ -147,15 +117,8 @@ final class MilestonesInSidebarDaoTest extends TestCase
     {
         \ForgeConfig::setFeatureFlag(MilestonesInSidebarDao::DEV_MODE, '0');
         \ForgeConfig::setFeatureFlag(MilestonesInSidebarDao::FEATURE_FLAG, '1');
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->insert(
-            'plugin_agiledashboard_milestones_in_sidebar_config',
-            ['project_id' => self::ACME_PROJECT_ID, 'should_sidebar_display_last_milestones' => 0],
-        );
-        $db->insert(
-            'plugin_agiledashboard_milestones_in_sidebar_config',
-            ['project_id' => self::DUNDER_MIFFLIN_PROJECT_ID, 'should_sidebar_display_last_milestones' => 1],
-        );
+        $this->dao->deactivateMilestonesInSidebar(self::ACME_PROJECT_ID);
+        $this->dao->activateMilestonesInSidebar(self::DUNDER_MIFFLIN_PROJECT_ID);
 
         self::assertFalse($this->dao->shouldSidebarDisplayLastMilestones(self::ACME_PROJECT_ID));
         self::assertFalse($this->dao->shouldSidebarDisplayLastMilestones(self::DUNDER_MIFFLIN_PROJECT_ID));
@@ -165,18 +128,21 @@ final class MilestonesInSidebarDaoTest extends TestCase
     public function testShouldSidebarDisplayLastMilestonesWhenDevModeIsNotSetAtAll(): void
     {
         \ForgeConfig::setFeatureFlag(MilestonesInSidebarDao::FEATURE_FLAG, '1');
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->insert(
-            'plugin_agiledashboard_milestones_in_sidebar_config',
-            ['project_id' => self::ACME_PROJECT_ID, 'should_sidebar_display_last_milestones' => 0],
-        );
-        $db->insert(
-            'plugin_agiledashboard_milestones_in_sidebar_config',
-            ['project_id' => self::DUNDER_MIFFLIN_PROJECT_ID, 'should_sidebar_display_last_milestones' => 1],
-        );
+        $this->dao->deactivateMilestonesInSidebar(self::ACME_PROJECT_ID);
+        $this->dao->activateMilestonesInSidebar(self::DUNDER_MIFFLIN_PROJECT_ID);
 
         self::assertFalse($this->dao->shouldSidebarDisplayLastMilestones(self::ACME_PROJECT_ID));
         self::assertFalse($this->dao->shouldSidebarDisplayLastMilestones(self::DUNDER_MIFFLIN_PROJECT_ID));
         self::assertFalse($this->dao->shouldSidebarDisplayLastMilestones(self::SKYNET_PROJECT_ID));
+    }
+
+    public function testShouldActivateOrDeactivateAnExistingEntry(): void
+    {
+        \ForgeConfig::setFeatureFlag(MilestonesInSidebarDao::DEV_MODE, '1');
+        $this->dao->activateMilestonesInSidebar(self::ACME_PROJECT_ID);
+        $this->dao->deactivateMilestonesInSidebar(self::ACME_PROJECT_ID);
+        $this->dao->activateMilestonesInSidebar(self::ACME_PROJECT_ID);
+
+        self::assertTrue($this->dao->shouldSidebarDisplayLastMilestones(self::ACME_PROJECT_ID));
     }
 }

@@ -19,6 +19,7 @@
  */
 
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\AgileDashboard\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarXmlImport;
 use Tuleap\XML\SimpleXMLElementBuilder;
 use Tuleap\AgileDashboard\ExplicitBacklog\XMLImporter;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
@@ -78,6 +79,7 @@ class AgileDashboard_XMLController extends MVC2_PluginController
         XMLImporter $explicit_backlog_xml_import,
         ExternalFieldsExtractor $external_field_extractor,
         EventDispatcherInterface $event_dispatcher,
+        private readonly MilestonesInSidebarXmlImport $milestones_in_sidebar_xml_import,
     ) {
         parent::__construct('agiledashboard', $request);
 
@@ -121,6 +123,8 @@ class AgileDashboard_XMLController extends MVC2_PluginController
 
         $this->xml_rng_validator->validate($xml, $rng_path);
 
+        $this->milestones_in_sidebar_xml_import->import($xml, $project);
+
         $this->importPlannings($xml);
 
         $this->explicit_backlog_xml_import->importConfiguration($xml, $project);
@@ -149,6 +153,8 @@ class AgileDashboard_XMLController extends MVC2_PluginController
         $this->xml_rng_validator->validate($partial_element, $rng_path);
 
         $xml_agiledashboard = $xml->agiledashboard;
+
+        $this->milestones_in_sidebar_xml_import->import($xml_agiledashboard, $project);
 
         $this->importPlannings($xml_agiledashboard);
 
