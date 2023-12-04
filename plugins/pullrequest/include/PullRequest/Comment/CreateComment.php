@@ -24,12 +24,5 @@ namespace Tuleap\PullRequest\Comment;
 
 interface CreateComment
 {
-    public function save(
-        int $pull_request_id,
-        int $author_user_id,
-        \DateTimeImmutable $post_date,
-        string $content,
-        string $format,
-        int $parent_id,
-    ): int;
+    public function create(NewComment $comment): int;
 }

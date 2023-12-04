@@ -125,18 +125,18 @@ final class Comment implements TimelineEvent, TimelineComment
         );
     }
 
-    public static function buildWithNewId(int $new_comment_id, Comment $comment, string $color): self
+    public static function fromNewComment(NewComment $comment, int $new_comment_id, string $color): self
     {
         return new self(
             $new_comment_id,
-            $comment->pull_request_id,
-            $comment->user_id,
+            $comment->pull_request->getId(),
+            (int) $comment->author->getId(),
             $comment->post_date,
             $comment->content,
             $comment->parent_id,
             $color,
             $comment->format,
-            $comment->last_edition_date
+            Option::nothing(\DateTimeImmutable::class)
         );
     }
 }

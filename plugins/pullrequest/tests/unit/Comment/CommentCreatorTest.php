@@ -26,7 +26,7 @@ use Tuleap\PullRequest\Comment\Notification\PullRequestNewCommentEvent;
 use Tuleap\PullRequest\Notification\EventSubjectToNotification;
 use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorAssigner;
 use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorRetriever;
-use Tuleap\PullRequest\Tests\Builders\CommentTestBuilder;
+use Tuleap\PullRequest\Tests\Builders\NewCommentTestBuilder;
 use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
 use Tuleap\PullRequest\Tests\Stub\CountThreadsStub;
 use Tuleap\PullRequest\Tests\Stub\CreateCommentStub;
@@ -58,7 +58,7 @@ final class CommentCreatorTest extends TestCase
     private function create(): Comment
     {
         $pull_request = PullRequestTestBuilder::aPullRequestInReview()->build();
-        $new_comment  = CommentTestBuilder::aMarkdownComment('creatureless cladodontid')
+        $new_comment  = NewCommentTestBuilder::aMarkdownComment('creatureless cladodontid')
             ->onPullRequest($pull_request)
             ->childOf(self::PARENT_ID)
             ->build();
@@ -70,7 +70,7 @@ final class CommentCreatorTest extends TestCase
             new ThreadCommentColorRetriever($this->thread_counter, $this->parent_comment_searcher),
             new ThreadCommentColorAssigner($this->parent_comment_searcher, $this->thread_color_updater)
         );
-        return $creator->create($new_comment, 111);
+        return $creator->create($new_comment);
     }
 
     public function testNewCommentCanBeCreated(): void
