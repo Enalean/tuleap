@@ -48,14 +48,18 @@ final class AgileDashboardPromotedMilestonesRetriever
             return [];
         }
 
-        $paginated_milestones = $this->factory->getPaginatedTopMilestones(new TopMilestoneRequest(
-            $user,
-            $this->project,
-            5,
-            0,
-            'desc',
-            FilteringQuery::fromPeriodQuery(PeriodQuery::createCurrent())
-        ));
+        try {
+            $paginated_milestones = $this->factory->getPaginatedTopMilestones(new TopMilestoneRequest(
+                $user,
+                $this->project,
+                5,
+                0,
+                'desc',
+                FilteringQuery::fromPeriodQuery(PeriodQuery::createCurrent())
+            ));
+        } catch (\Planning_NoPlanningsException) {
+            return [];
+        }
 
         $items = [];
         foreach ($paginated_milestones->getMilestones() as $milestone) {
