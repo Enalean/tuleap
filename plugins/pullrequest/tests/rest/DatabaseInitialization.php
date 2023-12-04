@@ -25,7 +25,6 @@ namespace Tuleap\PullRequest\REST;
 require_once __DIR__ . '/../../../../tests/lib/DatabaseInitialisation.class.php';
 
 use ForgeConfig;
-use Tuleap\PullRequest\FeatureFlagEditComments;
 
 final class DatabaseInitialization extends \DatabaseInitialization
 {
@@ -35,7 +34,6 @@ final class DatabaseInitialization extends \DatabaseInitialization
 
         echo "Setup Pull Request REST Tests configuration \n";
 
-        $this->enableCommentFeatureFlag();
         $this->insertPullRequest();
         $this->insertFakeGitPullRequestReferences();
         $this->insertPullRequestComments();
@@ -84,15 +82,6 @@ final class DatabaseInitialization extends \DatabaseInitialization
         VALUES (1, 1, 102, 1617961430, 'path/to/file.php', 10, 'nonsmoking pannage', 0, 'right', 0, '', 'commonmark', NULL);
         EOSQL;
 
-        $this->mysqli->real_query($sql);
-    }
-
-    private function enableCommentFeatureFlag(): void
-    {
-        $sql = sprintf(
-            "INSERT INTO forgeconfig (name, value) VALUES ('feature_flag_%s', 1)",
-            FeatureFlagEditComments::FEATURE_FLAG_KEY
-        );
         $this->mysqli->real_query($sql);
     }
 }

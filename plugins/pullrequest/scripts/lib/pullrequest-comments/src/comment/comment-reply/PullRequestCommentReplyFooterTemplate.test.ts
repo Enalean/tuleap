@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { selectOrThrow } from "@tuleap/dom";
 import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { FORMAT_TEXT } from "@tuleap/plugin-pullrequest-constants";
@@ -29,107 +29,84 @@ import type { HostElement } from "./PullRequestCommentReply";
 import { buildFooterForComment } from "./PullRequestCommentReplyFooterTemplate";
 import type { ControlPullRequestCommentReply } from "./PullRequestCommentReplyController";
 
-const is_comment_edition_enabled = true;
+const current_user_id = 102;
 
 describe("PullRequestCommentReplyFooterTemplate", () => {
-    let target: ShadowRoot;
+    let target: ShadowRoot, controller: ControlPullRequestCommentReply, is_last_reply: boolean;
 
     beforeEach(() => {
         target = document.implementation
             .createHTMLDocument()
             .createElement("div") as unknown as ShadowRoot;
+
+        controller = ControlPullRequestCommentReplyStub(current_user_id);
+        is_last_reply = true;
     });
 
-    it("When the reply is not the last one in the thread, then no [Reply] button is shown", () => {
+    const render = (comment: PullRequestCommentPresenter): void => {
         const host = {
-            is_last_reply: false,
-        } as unknown as HostElement;
+            comment,
+            controller,
+            is_last_reply,
+        } as HostElement;
+        const updateFunction = buildFooterForComment(host, GettextProviderStub);
+        updateFunction(host, target);
+    };
 
-        const render = buildFooterForComment(host, GettextProviderStub);
+    it("When the reply is not the last one in the thread, then no [Reply] button is shown", () => {
+        is_last_reply = false;
 
-        render(host, target);
+        render(PullRequestCommentPresenterStub.buildGlobalComment());
 
         expect(target.querySelector("[data-test=button-reply-to-comment]")).toBeNull();
     });
 
     it("When the [Reply] button is clicked, then it should show the reply form", () => {
-        const controller = ControlPullRequestCommentReplyStub();
-        const host = {
-            controller,
-            is_last_reply: true,
-        } as unknown as HostElement;
-
         const showReplyForm = vi.spyOn(controller, "showReplyForm");
-        const render = buildFooterForComment(host, GettextProviderStub);
+        is_last_reply = true;
 
-        render(host, target);
+        render(PullRequestCommentPresenterStub.buildGlobalComment());
 
         selectOrThrow(target, "[data-test=button-reply-to-comment]").click();
-
         expect(showReplyForm).toHaveBeenCalledTimes(1);
     });
 
     describe("Edit button", () => {
-        let controller: ControlPullRequestCommentReply;
-        const current_user_id = 102;
-
-        beforeEach(() => {
-            controller = ControlPullRequestCommentReplyStub(current_user_id);
-        });
-        const getHost = (comment: PullRequestCommentPresenter): HostElement =>
-            ({
-                comment,
-                controller,
-                replies: [],
-                is_comment_edition_enabled,
-            }) as unknown as HostElement;
-
         it("When the current user is the author of the comment, then the footer should contain an [Edit] button", () => {
-            const host = getHost(
-                PullRequestCommentPresenterStub.buildGlobalCommentWithData({
-                    user: { id: current_user_id } as User,
-                }),
-            );
-            const render = buildFooterForComment(host, GettextProviderStub);
-            render(host, target);
+            const comment = PullRequestCommentPresenterStub.buildGlobalCommentWithData({
+                user: { id: current_user_id } as User,
+            });
+            render(comment);
 
             expect(target.querySelector("[data-test=button-edit-comment]")).not.toBeNull();
         });
 
         it("When the current user is not the author of the comment, then the footer should NOT contain an [Edit] button", () => {
-            const host = getHost(
-                PullRequestCommentPresenterStub.buildGlobalCommentWithData({
-                    user: { id: 200 } as User,
-                }),
-            );
-            const render = buildFooterForComment(host, GettextProviderStub);
-            render(host, target);
+            const comment = PullRequestCommentPresenterStub.buildGlobalCommentWithData({
+                user: { id: 200 } as User,
+            });
+            render(comment);
 
             expect(target.querySelector("[data-test=button-edit-comment]")).toBeNull();
         });
 
         it("When the comment is in text format, then the footer should NOT contain an [Edit] button", () => {
-            const host = getHost(
-                PullRequestCommentPresenterStub.buildGlobalCommentWithData({ format: FORMAT_TEXT }),
-            );
-            const render = buildFooterForComment(host, GettextProviderStub);
-            render(host, target);
+            const comment = PullRequestCommentPresenterStub.buildGlobalCommentWithData({
+                format: FORMAT_TEXT,
+            });
+            render(comment);
 
             expect(target.querySelector("[data-test=button-edit-comment]")).toBeNull();
         });
 
         it("When it is clicked, then it should show the edition form", () => {
-            const host = getHost(
-                PullRequestCommentPresenterStub.buildGlobalCommentWithData({
-                    user: { id: current_user_id } as User,
-                }),
-            );
+            const comment = PullRequestCommentPresenterStub.buildGlobalCommentWithData({
+                user: { id: current_user_id } as User,
+            });
             const showEditionForm = vi.spyOn(controller, "showEditionForm");
-            const render = buildFooterForComment(host, GettextProviderStub);
-            render(host, target);
+            render(comment);
 
             selectOrThrow(target, "[data-test=button-edit-comment]").click();
-
             expect(showEditionForm).toHaveBeenCalledOnce();
         });
     });

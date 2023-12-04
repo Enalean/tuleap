@@ -31,6 +31,8 @@ import { PullRequestCommentPresenterStub } from "../../tests/stubs/PullRequestCo
 import "@tuleap/tlp-relative-date";
 import { PullRequestCommentRepliesCollectionPresenter } from "./PullRequestCommentRepliesCollectionPresenter";
 import { RelativeDateHelperStub } from "../../tests/stubs/RelativeDateHelperStub";
+import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
+import { ControlPullRequestCommentStub } from "../../tests/stubs/ControlPullRequestCommentStub";
 
 vi.mock("@tuleap/tooltip", () => ({
     loadTooltips: (): void => {
@@ -51,15 +53,20 @@ describe("PullRequestComment", () => {
             .createElement("div") as unknown as ShadowRoot;
     });
 
+    const render = (comment: PullRequestCommentPresenter): void => {
+        const host = {
+            comment,
+            controller: ControlPullRequestCommentStub(),
+            relative_date_helper: RelativeDateHelperStub,
+            replies: PullRequestCommentRepliesCollectionPresenter.buildEmpty(),
+        } as HostElement;
+        const updateFunction = PullRequestCommentComponent.content(host);
+        updateFunction(host, target);
+    };
+
     describe("Display", () => {
         it(`Given a not outdated inline comment, then it should have the right classes`, () => {
-            const host = {
-                comment: PullRequestCommentPresenterStub.buildInlineComment(),
-                relative_date_helper: RelativeDateHelperStub,
-                replies: PullRequestCommentRepliesCollectionPresenter.buildEmpty(),
-            } as unknown as HostElement;
-            const update = PullRequestCommentComponent.content(host);
-            update(host, target);
+            render(PullRequestCommentPresenterStub.buildInlineComment());
 
             const root = selectOrThrow(target, "[data-test=pullrequest-comment]");
             const root_classes = Array.from(root.classList);
@@ -69,14 +76,7 @@ describe("PullRequestComment", () => {
         });
 
         it(`Given an outdated inline comment, then it should have the right classes`, () => {
-            const host = {
-                comment: PullRequestCommentPresenterStub.buildInlineCommentOutdated(),
-                relative_date_helper: RelativeDateHelperStub,
-                replies: PullRequestCommentRepliesCollectionPresenter.buildEmpty(),
-            } as unknown as HostElement;
-            const update = PullRequestCommentComponent.content(host);
-
-            update(host, target);
+            render(PullRequestCommentPresenterStub.buildInlineCommentOutdated());
 
             const root = selectOrThrow(target, "[data-test=pullrequest-comment]");
             const root_classes = Array.from(root.classList);
@@ -86,14 +86,7 @@ describe("PullRequestComment", () => {
         });
 
         it(`Given a global comment, then it should have the right classes`, () => {
-            const host = {
-                comment: PullRequestCommentPresenterStub.buildGlobalComment(),
-                relative_date_helper: RelativeDateHelperStub,
-                replies: PullRequestCommentRepliesCollectionPresenter.buildEmpty(),
-            } as unknown as HostElement;
-            const update = PullRequestCommentComponent.content(host);
-
-            update(host, target);
+            render(PullRequestCommentPresenterStub.buildGlobalComment());
 
             const root = selectOrThrow(target, "[data-test=pullrequest-comment]");
             const root_classes = Array.from(root.classList);
@@ -105,8 +98,8 @@ describe("PullRequestComment", () => {
         it("should execute the post_rendering_callback each time the component height changes", () => {
             vi.useFakeTimers();
 
-            const post_rendering_callback = vi.fn();
-            const host = { post_rendering_callback } as unknown as HostElement;
+            const post_rendering_callback: () => void = vi.fn();
+            const host = { post_rendering_callback } as HostElement;
 
             element_height_descriptor.observe(host);
 

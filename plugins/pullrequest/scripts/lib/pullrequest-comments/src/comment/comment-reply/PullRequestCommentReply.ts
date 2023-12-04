@@ -31,7 +31,6 @@ export const TAG = "tuleap-pullrequest-comment-reply";
 
 type PullRequestCommentReply = {
     readonly controller: ControlPullRequestCommentReply;
-    readonly is_comment_edition_enabled: boolean;
     readonly is_last_reply: boolean;
 };
 
@@ -66,7 +65,6 @@ export const element_height_descriptor = {
 
 export const PullRequestCommentReply = define<InternalPullRequestCommentReply>({
     tag: TAG,
-    is_comment_edition_enabled: false,
     is_last_reply: false,
     is_in_edition_mode: false,
     comment: undefined,

@@ -28,75 +28,59 @@ import type { HostElement } from "./PullRequestComment";
 import { getCommentFooter } from "./PullRequestCommentFooterTemplate";
 import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 import type { ControlPullRequestComment } from "./PullRequestCommentController";
+import type { PullRequestCommentRepliesCollectionPresenter } from "./PullRequestCommentRepliesCollectionPresenter";
 
-const is_comment_edition_enabled = true;
+const current_user_id = 102;
 
 describe("PullRequestCommentFooterTemplate", () => {
-    let target: ShadowRoot;
+    let target: ShadowRoot,
+        controller: ControlPullRequestComment,
+        replies: PullRequestCommentRepliesCollectionPresenter;
 
     beforeEach(() => {
         target = document.implementation
             .createHTMLDocument()
             .createElement("div") as unknown as ShadowRoot;
+
+        controller = ControlPullRequestCommentStub(current_user_id);
+        replies = [];
     });
 
-    it.each([
-        ["an inline comment", PullRequestCommentPresenterStub.buildInlineCommentOutdated(), []],
-        ["a global comment", PullRequestCommentPresenterStub.buildGlobalComment(), []],
-    ])(`Given %s, Then it should display a footer`, (expectation, comment, replies) => {
-        const host = {
-            comment,
-            replies,
-        } as unknown as HostElement;
-        const render = getCommentFooter(host, GettextProviderStub);
+    const render = (comment: PullRequestCommentPresenter): void => {
+        const host = { comment, replies, controller } as HostElement;
+        const updateFunction = getCommentFooter(host, GettextProviderStub);
+        updateFunction(host, target);
+    };
 
-        render(host, target);
+    it.each([
+        ["an inline comment", PullRequestCommentPresenterStub.buildInlineCommentOutdated()],
+        ["a global comment", PullRequestCommentPresenterStub.buildGlobalComment()],
+    ])(`Given %s, Then it should display a footer`, (expectation, comment) => {
+        render(comment);
 
         const footer = selectOrThrow(target, "[data-test=pull-request-comment-footer]");
 
         expect(footer).not.toBeNull();
     });
 
-    it.each([
-        [
-            "that the current comment is the root comment and there are some replies",
-            PullRequestCommentPresenterStub.buildGlobalComment(),
-            [],
-        ],
-        [
-            "that the current comment has reply",
-            PullRequestCommentPresenterStub.buildInlineCommentWithData({ id: 10 }),
-            [
-                PullRequestCommentPresenterStub.buildInlineCommentWithData({ id: 10 }),
-                PullRequestCommentPresenterStub.buildInlineCommentWithData({ id: 11 }),
-            ],
-        ],
-    ])(`Given %s, Then it should not display a footer`, (expectation_string, comment, replies) => {
-        const host = {
-            comment,
-            replies,
-        } as unknown as HostElement;
-        const render = getCommentFooter(host, GettextProviderStub);
+    it(`When there is neither a [Reply] nor [Edit] button, Then it should not display a footer`, () => {
+        const comment = PullRequestCommentPresenterStub.buildGlobalCommentWithData({
+            id: 35,
+            format: FORMAT_TEXT,
+        });
+        replies = [PullRequestCommentPresenterStub.buildGlobalCommentWithData({ id: 37 })];
 
-        render(host, target);
+        render(comment);
 
-        const footer = target.querySelector("[data-test=pullrequest-comment-footer]");
+        const footer = target.querySelector("[data-test=pull-request-comment-footer]");
 
         expect(footer).toBeNull();
     });
 
     it("When the [Reply] button is clicked, then it should show the reply form", () => {
-        const controller = ControlPullRequestCommentStub();
         const showReplyForm = vi.spyOn(controller, "showReplyForm");
-        const host = {
-            comment: PullRequestCommentPresenterStub.buildGlobalComment(),
-            controller,
-            replies: [],
-        } as unknown as HostElement;
 
-        const render = getCommentFooter(host, GettextProviderStub);
-
-        render(host, target);
+        render(PullRequestCommentPresenterStub.buildGlobalComment());
 
         selectOrThrow(target, "[data-test=button-reply-to-comment]").click();
 
@@ -104,64 +88,39 @@ describe("PullRequestCommentFooterTemplate", () => {
     });
 
     describe("Edit button", () => {
-        let controller: ControlPullRequestComment;
-        const current_user_id = 102;
-
-        beforeEach(() => {
-            controller = ControlPullRequestCommentStub(current_user_id);
-        });
-
-        const getHost = (comment: PullRequestCommentPresenter): HostElement =>
-            ({
-                comment,
-                controller,
-                replies: [],
-                is_comment_edition_enabled,
-            }) as unknown as HostElement;
-
         it("When the current user is the author of the comment, then the footer should contain an [Edit] button", () => {
-            const host = getHost(
-                PullRequestCommentPresenterStub.buildGlobalCommentWithData({
-                    user: { id: current_user_id } as User,
-                }),
-            );
-            const render = getCommentFooter(host, GettextProviderStub);
-            render(host, target);
+            const comment = PullRequestCommentPresenterStub.buildGlobalCommentWithData({
+                user: { id: current_user_id } as User,
+            });
+            render(comment);
 
             expect(target.querySelector("[data-test=button-edit-comment]")).not.toBeNull();
         });
 
         it("When the current user is not the author of the comment, then the footer should NOT contain an [Edit] button", () => {
-            const host = getHost(
-                PullRequestCommentPresenterStub.buildGlobalCommentWithData({
-                    user: { id: 200 } as User,
-                }),
-            );
-            const render = getCommentFooter(host, GettextProviderStub);
-            render(host, target);
+            const comment = PullRequestCommentPresenterStub.buildGlobalCommentWithData({
+                user: { id: 200 } as User,
+            });
+            render(comment);
 
             expect(target.querySelector("[data-test=button-edit-comment]")).toBeNull();
         });
 
         it("When the comment is in text format, then the footer should NOT contain an [Edit] button", () => {
-            const host = getHost(
-                PullRequestCommentPresenterStub.buildGlobalCommentWithData({ format: FORMAT_TEXT }),
-            );
-            const render = getCommentFooter(host, GettextProviderStub);
-            render(host, target);
+            const comment = PullRequestCommentPresenterStub.buildGlobalCommentWithData({
+                format: FORMAT_TEXT,
+            });
+            render(comment);
 
             expect(target.querySelector("[data-test=button-edit-comment]")).toBeNull();
         });
 
         it("When it is clicked, then it should show the edition form", () => {
-            const host = getHost(
-                PullRequestCommentPresenterStub.buildGlobalCommentWithData({
-                    user: { id: current_user_id } as User,
-                }),
-            );
+            const comment = PullRequestCommentPresenterStub.buildGlobalCommentWithData({
+                user: { id: current_user_id } as User,
+            });
             const showEditionForm = vi.spyOn(controller, "showEditionForm");
-            const render = getCommentFooter(host, GettextProviderStub);
-            render(host, target);
+            render(comment);
 
             selectOrThrow(target, "[data-test=button-edit-comment]").click();
 

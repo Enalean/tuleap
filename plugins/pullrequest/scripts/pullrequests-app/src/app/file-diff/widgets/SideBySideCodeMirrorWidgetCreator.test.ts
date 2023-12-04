@@ -53,7 +53,6 @@ type EditorThatCanHaveWidgets = Editor & {
 };
 
 const project_id = 105;
-const is_comment_edition_enabled = true;
 
 describe("side-by-side-code-mirror-widget-creator", () => {
     let doc: Document,
@@ -68,7 +67,6 @@ describe("side-by-side-code-mirror-widget-creator", () => {
             controller,
             comments_store,
             FileDiffCommentWidgetsMap(),
-            is_comment_edition_enabled,
         );
 
     beforeEach(() => {

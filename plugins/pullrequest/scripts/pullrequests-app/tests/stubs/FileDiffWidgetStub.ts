@@ -55,7 +55,6 @@ export const FileDiffWidgetStub = {
     ): InlineCommentWidget => ({
         ...base_element,
         localName: "tuleap-pullrequest-comment",
-        is_comment_edition_enabled: true,
         getBoundingClientRect: stubBounding(height),
         comment: PullRequestCommentPresenterStub.buildInlineComment(),
         controller: ControlPullRequestCommentStub(),
