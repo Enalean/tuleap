@@ -19,20 +19,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\GlobalSVNPollution;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class SystemEvent_UGROUP_MODIFYRenameTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SystemEvent_UGROUP_MODIFYRenameTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalSVNPollution;
 
     private $system_event;
     private $project;
 
     /**
-     * @var EventManager|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     * @var EventManager&\PHPUnit\Framework\MockObject\MockObject
      */
     private $event_manager;
 
@@ -40,8 +38,8 @@ class SystemEvent_UGROUP_MODIFYRenameTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->event_manager = \Mockery::mock(\EventManager::class);
-        $project_manager     = \Mockery::spy(\ProjectManager::class);
+        $this->event_manager = $this->createMock(\EventManager::class);
+        $project_manager     = $this->createMock(\ProjectManager::class);
 
         EventManager::setInstance($this->event_manager);
         ProjectManager::setInstance($project_manager);
@@ -59,17 +57,24 @@ class SystemEvent_UGROUP_MODIFYRenameTest extends \Tuleap\Test\PHPUnit\TestCase
             '',
         ];
 
-        $this->system_event = \Mockery::mock(\SystemEvent_UGROUP_MODIFY::class, $event_params)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->system_event = $this->getMockBuilder(\SystemEvent_UGROUP_MODIFY::class)
+            ->setConstructorArgs($event_params)
+            ->onlyMethods(['getUgroupBinding', 'getBackend'])
+            ->getMock();
 
-        $ugroup_binding = \Mockery::spy(\UGroupBinding::class);
-        $ugroup_binding->shouldReceive('updateBindedUGroups')->andReturns(true);
-        $ugroup_binding->shouldReceive('removeAllUGroupsBinding')->andReturns(true);
-        $ugroup_binding->shouldReceive('getUGroupsByBindingSource')->andReturns([]);
+        $ugroup_binding = $this->createMock(\UGroupBinding::class);
+        $ugroup_binding->method('updateBindedUGroups')->willReturn(true);
+        $ugroup_binding->method('removeAllUGroupsBinding')->willReturn(true);
+        $ugroup_binding->method('getUGroupsByBindingSource')->willReturn([]);
+        $ugroup_binding->method('checkUGroupValidity')->willReturn(true);
 
-        $this->system_event->shouldReceive('getUgroupBinding')->andReturns($ugroup_binding);
+        $this->system_event->method('getUgroupBinding')->willReturn($ugroup_binding);
 
-        $this->project = \Mockery::spy(\Project::class);
-        $project_manager->shouldReceive('getProject')->with('101')->andReturns($this->project);
+        $this->project = $this->createMock(\Project::class);
+        $this->project->method('usesSVN')->willReturn(true);
+        $this->project->method('getSVNRootPath')->willReturn('/');
+
+        $project_manager->method('getProject')->with('101')->willReturn($this->project);
     }
 
     protected function tearDown(): void
@@ -80,9 +85,12 @@ class SystemEvent_UGROUP_MODIFYRenameTest extends \Tuleap\Test\PHPUnit\TestCase
         parent::tearDown();
     }
 
-    public function testItWarnsOthersThatUGroupHasBeenModified(): void
+    public function testSVNCoreAccessFilesAreUpdated(): void
     {
-        $this->event_manager->shouldReceive('processEvent')
+        $backend_svn = $this->createMock(\BackendSVN::class);
+        $this->system_event->method('getBackend')->with('SVN')->willReturn($backend_svn);
+
+        $this->event_manager->expects(self::once())->method('processEvent')
             ->with(
                 Event::UGROUP_RENAME,
                 [
@@ -90,22 +98,9 @@ class SystemEvent_UGROUP_MODIFYRenameTest extends \Tuleap\Test\PHPUnit\TestCase
                     'new_ugroup_name' => 'Amleth',
                     'old_ugroup_name' => 'Hamlet',
                 ]
-            )
-            ->once();
+            );
 
-        $this->system_event->process();
-    }
-
-    public function testSVNCoreAccessFilesAreUpdated(): void
-    {
-        $this->project->shouldReceive('usesSVN')->andReturnTrue();
-
-        $backend_svn = Mockery::mock(\BackendSVN::class);
-        $this->system_event->shouldReceive('getBackend')->with('SVN')->andReturn($backend_svn);
-
-        $this->event_manager->shouldReceive('processEvent');
-
-        $backend_svn->shouldReceive('updateSVNAccess')->once();
+        $backend_svn->expects(self::once())->method('updateSVNAccess');
 
         $this->system_event->process();
     }

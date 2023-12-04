@@ -19,14 +19,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalSVNPollution;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class SystemEvent_USER_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
+final class SystemEvent_USER_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
     use GlobalSVNPollution;
 
@@ -37,94 +35,108 @@ class SystemEvent_USER_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
     {
         $now = (new DateTimeImmutable())->getTimestamp();
 
-        $evt = \Mockery::mock(
-            \SystemEvent_USER_RENAME::class,
-            [
-                '1',
-                SystemEvent::TYPE_USER_RENAME,
-                SystemEvent::OWNER_ROOT,
-                '142' . SystemEvent::PARAMETER_SEPARATOR . 'tazmani',
-                SystemEvent::PRIORITY_HIGH,
-                SystemEvent::STATUS_RUNNING,
-                $now,
-                $now,
-                $now,
-                '',
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $evt = $this->getMockBuilder(\SystemEvent_USER_RENAME::class)
+            ->setConstructorArgs(
+                [
+                    '1',
+                    SystemEvent::TYPE_USER_RENAME,
+                    SystemEvent::OWNER_ROOT,
+                    '142' . SystemEvent::PARAMETER_SEPARATOR . 'tazmani',
+                    SystemEvent::PRIORITY_HIGH,
+                    SystemEvent::STATUS_RUNNING,
+                    $now,
+                    $now,
+                    $now,
+                    '',
+                ]
+            )
+            ->onlyMethods([
+                'getUser',
+                'getBackend',
+                'updateDB',
+                'done',
+            ])
+            ->getMock();
 
         // The user
-        $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('getUserName')->andReturns('mickey');
-        $evt->shouldReceive('getUser')->with('142')->andReturns($user);
+        $user = \Tuleap\Test\Builders\UserTestBuilder::aUser()->withId(142)->withUserName('mickey')->build();
+        $evt->method('getUser')->with('142')->willReturn($user);
 
         // System
-        $backendSystem = \Mockery::spy(\BackendSystem::class);
-        $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
+        $backendSystem = $this->createMock(\BackendSystem::class);
 
         // DB
-        $evt->shouldReceive('updateDB')->andReturns(true);
+        $evt->method('updateDB')->willReturn(true);
 
         // SVN
-        $backendSVN = \Mockery::spy(\BackendSVN::class);
-        $backendSVN->shouldReceive('updateSVNAccessForGivenMember')->andReturns(true);
-        $evt->shouldReceive('getBackend')->with('SVN')->andReturns($backendSVN);
+        $backendSVN = $this->createMock(\BackendSVN::class);
+        $backendSVN->method('updateSVNAccessForGivenMember')->willReturn(true);
+
+        $evt->method('getBackend')->willReturnMap([
+            ['System', $backendSystem],
+            ['SVN', $backendSVN],
+        ]);
 
         // Expect everything went OK
-        $evt->shouldReceive('done')->once();
+        $evt->expects(self::once())->method('done');
 
         // Launch the event
-        $this->assertTrue($evt->process());
+        self::assertTrue($evt->process());
     }
 
     public function testUpdateSVNAccessFailure(): void
     {
         $now = (new DateTimeImmutable())->getTimestamp();
 
-        $evt = \Mockery::mock(
-            \SystemEvent_USER_RENAME::class,
-            [
-                '1',
-                SystemEvent::TYPE_USER_RENAME,
-                SystemEvent::OWNER_ROOT,
-                '142' . SystemEvent::PARAMETER_SEPARATOR . 'tazmani',
-                SystemEvent::PRIORITY_HIGH,
-                SystemEvent::STATUS_RUNNING,
-                $now,
-                $now,
-                $now,
-                '',
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $evt = $this->getMockBuilder(\SystemEvent_USER_RENAME::class)
+            ->setConstructorArgs(
+                [
+                    '1',
+                    SystemEvent::TYPE_USER_RENAME,
+                    SystemEvent::OWNER_ROOT,
+                    '142' . SystemEvent::PARAMETER_SEPARATOR . 'tazmani',
+                    SystemEvent::PRIORITY_HIGH,
+                    SystemEvent::STATUS_RUNNING,
+                    $now,
+                    $now,
+                    $now,
+                    '',
+                ]
+            )
+            ->onlyMethods([
+                'getUser',
+                'getBackend',
+                'updateDB',
+                'done',
+            ])
+            ->getMock();
 
         // The user
-        $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('getUserName')->andReturns('mickey');
-        $evt->shouldReceive('getUser')->with('142')->andReturns($user);
+        $user = \Tuleap\Test\Builders\UserTestBuilder::aUser()->withId(142)->withUserName('mickey')->build();
+        $evt->method('getUser')->with('142')->willReturn($user);
 
         // System
-        $backendSystem = \Mockery::spy(\BackendSystem::class);
-        $evt->shouldReceive('getBackend')->with('System')->andReturns($backendSystem);
+        $backendSystem = $this->createMock(\BackendSystem::class);
 
         // DB
-        $evt->shouldReceive('updateDB')->andReturns(true);
+        $evt->method('updateDB')->willReturn(true);
 
         // SVN
-        $backendSVN = \Mockery::spy(\BackendSVN::class);
-        $backendSVN->shouldReceive('updateSVNAccessForGivenMember')->andReturns(false);
-        $evt->shouldReceive('getBackend')->with('SVN')->andReturns($backendSVN);
+        $backendSVN = $this->createMock(\BackendSVN::class);
+        $backendSVN->method('updateSVNAccessForGivenMember')->willReturn(false);
+
+        $evt->method('getBackend')->willReturnMap([
+            ['System', $backendSystem],
+            ['SVN', $backendSVN],
+        ]);
 
         // There is an error, the rename is not "done"
-        $evt->shouldReceive('done')->never();
+        $evt->expects(self::never())->method('done');
 
-        $this->assertFalse($evt->process());
+        self::assertFalse($evt->process());
 
         // Check errors
-        $this->assertEquals(SystemEvent::STATUS_ERROR, $evt->getStatus());
-        $this->assertMatchesRegularExpression('/Could not update SVN access files for the user/i', $evt->getLog());
+        self::assertEquals(SystemEvent::STATUS_ERROR, $evt->getStatus());
+        self::assertMatchesRegularExpression('/Could not update SVN access files for the user/i', $evt->getLog());
     }
 }
