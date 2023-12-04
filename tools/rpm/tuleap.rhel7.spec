@@ -999,7 +999,6 @@ fi
 /usr/bin/systemctl daemon-reload &>/dev/null || :
 
 %postun plugin-mediawiki-standalone
-/usr/bin/systemctl unmask php74-php-fpm || :
 /usr/bin/systemctl daemon-reload &>/dev/null || :
 
 %clean
