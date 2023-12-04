@@ -23,9 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\common\Project\Admin\DescriptionFields;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use ProjectCreationData;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Tuleap\Project\Admin\DescriptionFields\FieldUpdator;
 use Tuleap\Project\Admin\DescriptionFields\ProjectRegistrationSubmittedFieldsCollection;
 use Tuleap\Project\Admin\ProjectDetails\ProjectDetailsDAO;
@@ -35,36 +36,19 @@ use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 
 final class FieldUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private LoggerInterface $logger;
+    private DefaultProjectVisibilityRetriever $default_project_visibility_retriever;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var DefaultProjectVisibilityRetriever
-     */
-    private $default_project_visibility_retriever;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|DescriptionFieldsFactory
-     */
-    private $field_factory;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectDetailsDAO
-     */
-    private $dao;
-    /**
-     * @var FieldUpdator
-     */
-    private $updater;
+    private DescriptionFieldsFactory&MockObject $field_factory;
+    private ProjectDetailsDAO&MockObject $dao;
+    private FieldUpdator $updater;
 
     protected function setUp(): void
     {
         $this->default_project_visibility_retriever = new DefaultProjectVisibilityRetriever();
-        $this->field_factory                        = \Mockery::mock(DescriptionFieldsFactory::class);
-        $this->dao                                  = \Mockery::mock(ProjectDetailsDAO::class);
-        $this->logger                               = \Mockery::mock(LoggerInterface::class);
+        $this->field_factory                        = $this->createMock(DescriptionFieldsFactory::class);
+        $this->dao                                  = $this->createMock(ProjectDetailsDAO::class);
+        $this->logger                               = new NullLogger();
         $this->updater                              = new FieldUpdator($this->field_factory, $this->dao, $this->logger);
     }
 
@@ -83,7 +67,7 @@ final class FieldUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ])
         );
 
-        $this->field_factory->shouldReceive('getAllDescriptionFields')->andReturn(
+        $this->field_factory->method('getAllDescriptionFields')->willReturn(
             [
                 ['group_desc_id' => 1],
                 ['group_desc_id' => 2],
@@ -91,10 +75,14 @@ final class FieldUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->dao->shouldReceive('createGroupDescription')->withArgs([$group_id, 1, 'My field 1 content'])->once()->andReturn(100);
-        $this->dao->shouldReceive('createGroupDescription')->withArgs([$group_id, 2, 'Other content for field 2'])->once()->andReturn(101);
-
-        $this->logger->shouldReceive('debug')->never();
+        $this->dao
+            ->expects(self::exactly(2))
+            ->method('createGroupDescription')
+            ->withConsecutive(
+                [$group_id, 1, 'My field 1 content'],
+                [$group_id, 2, 'Other content for field 2']
+            )
+            ->willReturnOnConsecutiveCalls(100, 101);
 
         $this->updater->update($project_data, $group_id);
     }
@@ -113,7 +101,7 @@ final class FieldUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ])
         );
 
-        $this->field_factory->shouldReceive('getAllDescriptionFields')->andReturn(
+        $this->field_factory->method('getAllDescriptionFields')->willReturn(
             [
                 ['group_desc_id' => 1],
                 ['group_desc_id' => 2],
@@ -121,9 +109,11 @@ final class FieldUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->dao->shouldReceive('createGroupDescription')->withArgs([$group_id, 1, 'My field 1 content'])->once()->andReturn(false);
-
-        $this->logger->shouldReceive('debug')->once();
+        $this->dao
+            ->expects(self::once())
+            ->method('createGroupDescription')
+            ->with($group_id, 1, 'My field 1 content')
+            ->willReturn(false);
 
         $this->updater->update($project_data, $group_id);
     }
