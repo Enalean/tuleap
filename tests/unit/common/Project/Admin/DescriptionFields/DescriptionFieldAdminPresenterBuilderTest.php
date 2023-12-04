@@ -23,12 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Admin\DescriptionFields;
 
-use Mockery;
 use Tuleap\GlobalLanguageMock;
 
 final class DescriptionFieldAdminPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
     public function testItBuildsAListOfFields(): void
@@ -71,6 +69,6 @@ final class DescriptionFieldAdminPresenterBuilderTest extends \Tuleap\Test\PHPUn
         $presenter_builder = new DescriptionFieldAdminPresenterBuilder();
         $fields_presenters = $presenter_builder->build([$row]);
 
-        $this->assertEquals($expected_presenters, $fields_presenters);
+        self::assertEquals($expected_presenters, $fields_presenters);
     }
 }
