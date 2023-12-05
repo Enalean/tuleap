@@ -38,6 +38,7 @@ use Tuleap\SVN\Dao;
 use Tuleap\SVN\Events\SystemEvent_SVN_RESTORE_REPOSITORY;
 use Tuleap\SVN\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\SVN\SvnAdmin;
+use Tuleap\SVNCore\Repository;
 use Tuleap\SVNCore\SvnCoreUsage;
 
 class RepositoryManager

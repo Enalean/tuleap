@@ -29,7 +29,7 @@ use Tuleap\SVN\Admin\ImmutableTagFactory;
 use Tuleap\SVN\Admin\ImmutableTagListTooBigException;
 use Tuleap\SVN\Admin\MailNotificationManager;
 use Tuleap\SVN\Repository\HookConfigUpdator;
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVNCore\Repository;
 use Tuleap\SVN\Repository\Settings;
 
 class RepositoryResourceUpdater

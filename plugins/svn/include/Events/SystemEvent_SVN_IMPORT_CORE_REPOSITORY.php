@@ -30,7 +30,7 @@ use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\SVN\Logs\LastAccessDao;
 use Tuleap\SVN\Repository\Exception\CannotFindRepositoryException;
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVNCore\Repository;
 use Tuleap\SVN\Repository\RepositoryManager;
 
 final class SystemEvent_SVN_IMPORT_CORE_REPOSITORY extends \SystemEvent // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps

@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,11 +16,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-namespace Tuleap\SVN\AccessControl;
-
-use Tuleap\SVN\Repository\Repository;
+namespace Tuleap\SVNCore;
 
 /**
  * Read the content of a .SVNAccessFile

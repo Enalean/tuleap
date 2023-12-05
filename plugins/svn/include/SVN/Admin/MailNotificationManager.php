@@ -28,7 +28,7 @@ use Tuleap\SVN\Notifications\CannotAddUsersNotificationException;
 use Tuleap\SVN\Notifications\NotificationsEmailsBuilder;
 use Tuleap\SVN\Notifications\UgroupsToNotifyDao;
 use Tuleap\SVN\Notifications\UsersToNotifyDao;
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVNCore\Repository;
 use UGroupManager;
 
 class MailNotificationManager

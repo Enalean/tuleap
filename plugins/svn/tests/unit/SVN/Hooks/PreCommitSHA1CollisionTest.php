@@ -23,7 +23,7 @@ namespace Tuleap\SVN\Hooks;
 use Psr\Log\NullLogger;
 use Tuleap\SVN\Commit\CollidingSHA1Validator;
 use Tuleap\SVN\Commit\CommitMessageValidator;
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVNCore\Repository;
 use Tuleap\SVNCore\SHA1CollisionException;
 
 final class PreCommitSHA1CollisionTest extends \Tuleap\Test\PHPUnit\TestCase

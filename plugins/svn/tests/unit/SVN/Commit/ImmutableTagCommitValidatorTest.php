@@ -25,7 +25,7 @@ namespace Tuleap\SVN\Commit;
 use Psr\Log\NullLogger;
 use Tuleap\SVN\Admin\ImmutableTag;
 use Tuleap\SVN\Admin\ImmutableTagFactory;
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVNCore\Repository;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class ImmutableTagCommitValidatorTest extends TestCase

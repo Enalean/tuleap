@@ -22,7 +22,7 @@ namespace Tuleap\SVN\REST\v1;
 
 use Tuleap\SVN\Admin\ImmutableTag;
 use Tuleap\SVN\Repository\HookConfig;
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVNCore\Repository;
 
 final class SettingsRepresentationValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {

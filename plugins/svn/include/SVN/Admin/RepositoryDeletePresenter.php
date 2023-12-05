@@ -21,7 +21,7 @@
 namespace Tuleap\SVN\Admin;
 
 use Project;
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVNCore\Repository;
 use CSRFSynchronizerToken;
 
 class RepositoryDeletePresenter extends BaseAdminPresenter

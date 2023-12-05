@@ -22,7 +22,7 @@ namespace Tuleap\SVN\Migration;
 
 use PFUser;
 use Tuleap\SVN\Repository\Exception\RepositoryNameIsInvalidException;
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVNCore\Repository;
 use Tuleap\SVN\Repository\RepositoryCreator;
 
 class BareRepositoryCreator

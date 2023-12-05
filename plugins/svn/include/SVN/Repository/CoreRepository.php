@@ -25,6 +25,7 @@ namespace Tuleap\SVN\Repository;
 
 use ForgeConfig;
 use Project;
+use Tuleap\SVNCore\Repository;
 
 final class CoreRepository implements Repository
 {

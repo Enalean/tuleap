@@ -21,7 +21,7 @@
 
 namespace Tuleap\SVN\Reference;
 
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVNCore\Repository;
 use Project;
 use SvnPlugin;
 

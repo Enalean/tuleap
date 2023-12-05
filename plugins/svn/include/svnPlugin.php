@@ -69,7 +69,7 @@ use Tuleap\SVN\AccessControl\AccessControlController;
 use Tuleap\SVN\AccessControl\AccessFileHistoryCreator;
 use Tuleap\SVN\AccessControl\AccessFileHistoryDao;
 use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
-use Tuleap\SVN\AccessControl\AccessFileReader;
+use Tuleap\SVNCore\AccessFileReader;
 use Tuleap\SVN\AccessControl\SVNRefreshAllAccessFilesCommand;
 use Tuleap\SVN\Admin\AdminController;
 use Tuleap\SVN\Admin\GlobalAdministratorsUpdater;

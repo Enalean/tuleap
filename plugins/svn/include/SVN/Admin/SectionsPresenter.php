@@ -20,7 +20,7 @@
 
 namespace Tuleap\SVN\Admin;
 
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVNCore\Repository;
 
 final class SectionsPresenter
 {

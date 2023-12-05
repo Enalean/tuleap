@@ -21,7 +21,7 @@
 namespace Tuleap\SVN\Events;
 
 use Tuleap\GlobalSVNPollution;
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVNCore\Repository;
 use Tuleap\SVNCore\Exception\SVNRepositoryCreationException;
 use Tuleap\SVNCore\Exception\SVNRepositoryLayoutInitializationException;
 

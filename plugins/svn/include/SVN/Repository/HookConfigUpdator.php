@@ -20,6 +20,8 @@
 
 namespace Tuleap\SVN\Repository;
 
+use Tuleap\SVNCore\Repository;
+
 class HookConfigUpdator
 {
     /**

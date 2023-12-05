@@ -31,7 +31,7 @@ use Tuleap\SVN\Admin\ImmutableTagFactory;
 use Tuleap\SVN\Admin\MailNotificationManager;
 use Tuleap\SVN\Repository\HookConfig;
 use Tuleap\SVN\Repository\HookConfigUpdator;
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVNCore\Repository;
 use Tuleap\SVN\Repository\Settings;
 use Tuleap\SVNCore\CollectionOfSVNAccessFileFaults;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -72,7 +72,7 @@ final class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->notification_updater_checker,
         );
 
-        $this->repository = $this->createMock(\Tuleap\SVN\Repository\Repository::class);
+        $this->repository = $this->createMock(\Tuleap\SVNCore\Repository::class);
         $project          = ProjectTestBuilder::aProject()->withId(101)->build();
 
         $this->repository->method('getProject')->willReturn($project);

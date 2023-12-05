@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\SVN\AccessControl;
 
+use Tuleap\SVNCore\SvnAccessFileContent;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class DuplicateSectionDetectorTest extends TestCase
