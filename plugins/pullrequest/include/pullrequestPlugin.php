@@ -744,7 +744,7 @@ class pullrequestPlugin extends Plugin
     {
         $pull_request_organizer = new CrossReferencePullRequestOrganizer(
             ProjectManager::instance(),
-            new Factory(new \Tuleap\PullRequest\Dao(), ReferenceManager::instance()),
+            new PullRequestRetriever(new \Tuleap\PullRequest\Dao()),
             $this->getPullRequestPermissionsChecker(),
             $this->getRepositoryFactory(),
             new \Tuleap\Date\TlpRelativeDatePresenterBuilder(),

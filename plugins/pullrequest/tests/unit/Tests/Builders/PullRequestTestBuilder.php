@@ -92,6 +92,12 @@ final class PullRequestTestBuilder
         return $this;
     }
 
+    public function createdAt(int $creation_date): self
+    {
+        $this->creation_date = $creation_date;
+        return $this;
+    }
+
     public function build(): PullRequest
     {
         return new PullRequest(
