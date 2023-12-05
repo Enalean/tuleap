@@ -104,7 +104,8 @@ use Tuleap\Reference\Nature;
 use Tuleap\Reference\NatureCollection;
 use Tuleap\Request\CollectRoutesEvent;
 
-class pullrequestPlugin extends Plugin // phpcs:ignore
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class pullrequestPlugin extends Plugin
 {
     public const PR_REFERENCE_KEYWORD          = 'pr';
     public const PULLREQUEST_REFERENCE_KEYWORD = 'pullrequest';
@@ -116,43 +117,6 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         parent::__construct($id);
         $this->setScope(self::SCOPE_SYSTEM);
         bindtextdomain('tuleap-pullrequest', __DIR__ . '/../site-content/');
-
-        $this->addHook(Event::REST_RESOURCES);
-        $this->addHook(GetReferenceEvent::NAME);
-        $this->addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES);
-        $this->addHook(NatureCollection::NAME);
-        $this->addHook('codendi_daily_start', 'dailyExecution');
-        $this->addHook(\Tuleap\Reference\ReferenceGetTooltipContentEvent::NAME);
-        $this->addHook(CollectionOfLabelableDao::NAME);
-        $this->addHook(LabeledItemCollection::NAME);
-        $this->addHook(GlyphLocationsCollector::NAME);
-        $this->addHook(CanProjectUseLabels::NAME);
-        $this->addHook(GetProtectedGitReferences::NAME);
-        $this->addHook(MarkTechnicalReference::NAME);
-        $this->addHook(PostInitGitRepositoryWithDataEvent::NAME);
-        $this->addHook(RegisterProjectCreationEvent::NAME);
-        $this->addHook(CollectRoutesEvent::NAME);
-        $this->addHook(GetProjectHistoryEntryValue::NAME);
-        $this->addHook(WorkerEvent::NAME);
-        $this->addHook(CrossReferenceByNatureOrganizer::NAME);
-
-        if (defined('GIT_BASE_URL')) {
-            $this->addHook(PullRequestEndpointsAvailableEvent::NAME);
-            $this->addHook(REST_GIT_PULL_REQUEST_GET_FOR_REPOSITORY);
-            $this->addHook(GIT_ADDITIONAL_BODY_CLASSES);
-            $this->addHook(GIT_ADDITIONAL_PERMITTED_ACTIONS);
-            $this->addHook(PostReceiveExecuteEvent::NAME);
-            $this->addHook(GitRepositoryDeletionEvent::NAME);
-            $this->addHook(GitAdditionalActionEvent::NAME);
-            $this->addHook(AdditionalInformationRepresentationRetriever::NAME);
-            $this->addHook(AdditionalInformationRepresentationCache::NAME);
-            $this->addHook(AfterRepositoryForked::NAME);
-            $this->addHook(AfterRepositoryCreated::NAME);
-            $this->addHook(PanesCollection::NAME);
-            $this->addHook(DefaultSettingsPanesCollection::NAME);
-            $this->addHook(CollectAssets::NAME);
-            $this->addHook(RepositoryExternalNavigationTabsCollector::NAME);
-        }
     }
 
     public function getServiceShortname(): string
@@ -168,6 +132,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         return ['git'];
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function collectAssets(CollectAssets $retriever): void
     {
         $assets = new IncludeAssets(
@@ -196,24 +161,21 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         return $this->pluginInfo;
     }
 
-    /**
-     * @see REST_RESOURCES
-     */
-    public function rest_resources(array $params) // phpcs:ignore
+    #[\Tuleap\Plugin\ListeningToEventName(Event::REST_RESOURCES)]
+    public function addRESTResources(array $params): void
     {
         $injector = new ResourcesInjector();
         $injector->populate($params['restler']);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function pullRequestEndpointsAvailableEvent(PullRequestEndpointsAvailableEvent $event): void
     {
         $event->endpointsAreAvailable();
     }
 
-    /**
-     * @see REST_GIT_PULL_REQUEST_GET_FOR_REPOSITORY
-     */
-    public function rest_git_pull_request_get_for_repository($params) // phpcs:ignore
+    #[\Tuleap\Plugin\ListeningToEventName(REST_GIT_PULL_REQUEST_GET_FOR_REPOSITORY)]
+    public function restGitPullRequestGetForRepository($params): void
     {
         $version = $params['version'];
         $class   = "\\Tuleap\\PullRequest\\REST\\$version\\RepositoryResource";
@@ -231,20 +193,16 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         );
     }
 
-    /**
-     * @see GIT_ADDITIONAL_BODY_CLASSES
-     */
-    public function git_additional_body_classes($params) // phpcs:ignore
+    #[\Tuleap\Plugin\ListeningToEventName(GIT_ADDITIONAL_BODY_CLASSES)]
+    public function gitAdditionalBodyClasses($params): void
     {
         if ($params['request']->get('action') === 'pull-requests') {
             $params['classes'][] = 'git-pull-requests';
         }
     }
 
-    /**
-     * @see GIT_ADDITIONAL_PERMITTED_ACTIONS
-     */
-    public function git_additional_permitted_actions($params) // phpcs:ignore
+    #[\Tuleap\Plugin\ListeningToEventName(GIT_ADDITIONAL_PERMITTED_ACTIONS)]
+    public function gitAdditionalPermittedActions($params): void
     {
         $repository = $params['repository'];
         $user       = $params['user'];
@@ -254,7 +212,8 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         }
     }
 
-    public function gitAdditionalAction(GitAdditionalActionEvent $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function gitAdditionalAction(GitAdditionalActionEvent $event): void
     {
         if ($event->getRequest()->get('action') === 'pull-requests') {
             $layout = $this->getThemeManager()->getBurningParrot(UserManager::instance()->getCurrentUserWithLoggedInInformation());
@@ -265,7 +224,8 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         }
     }
 
-    public function postReceiveExecuteEvent(PostReceiveExecuteEvent $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function postReceiveExecuteEvent(PostReceiveExecuteEvent $event): void
     {
         $refname     = $event->getRefname();
         $branch_name = $this->getBranchNameFromRef($refname);
@@ -395,6 +355,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         return new TimelineEventCreator(new TimelineDao());
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function getReference(GetReferenceEvent $event): void
     {
         $keyword         = $event->getKeyword();
@@ -430,7 +391,8 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         return $keyword === self::PR_REFERENCE_KEYWORD || $keyword === self::PULLREQUEST_REFERENCE_KEYWORD;
     }
 
-    public function get_plugins_available_keywords_references($params) // phpcs:ignore
+    #[\Tuleap\Plugin\ListeningToEventName(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES)]
+    public function getPluginsAvailableKeywordsReferences($params): void
     {
         $params['keywords'] = array_merge(
             $params['keywords'],
@@ -438,6 +400,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function getAvailableReferenceNatures(NatureCollection $natures): void
     {
         $natures->addNature(
@@ -446,7 +409,8 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         );
     }
 
-    public function referenceGetTooltipContentEvent(Tuleap\Reference\ReferenceGetTooltipContentEvent $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function referenceGetTooltipContentEvent(Tuleap\Reference\ReferenceGetTooltipContentEvent $event): void
     {
         if ($event->getReference()->getNature() === self::REFERENCE_NATURE) {
                 $pull_request_id = $event->getValue();
@@ -471,18 +435,21 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         }
     }
 
-    public function collectionOfLabelableDao(CollectionOfLabelableDao $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function collectionOfLabelableDao(CollectionOfLabelableDao $event): void
     {
         $event->add(new PullRequestLabelDao());
     }
 
-    public function gitRepositoryDeletion(GitRepositoryDeletionEvent $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function gitRepositoryDeletion(GitRepositoryDeletionEvent $event): void
     {
         $dao = new PullRequestDao();
         $dao->deleteAllPullRequestsOfRepository($event->getRepository()->getId());
     }
 
-    public function collectGlyphLocations(GlyphLocationsCollector $glyph_locations_collector)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function collectGlyphLocations(GlyphLocationsCollector $glyph_locations_collector): void
     {
         $glyph_locations_collector->addLocation(
             'tuleap-pullrequest',
@@ -490,7 +457,8 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         );
     }
 
-    public function collectLabeledItems(LabeledItemCollection $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function collectLabeledItems(LabeledItemCollection $event): void
     {
         $git_plugin = PluginManager::instance()->getPluginByName('git');
         if (! ($git_plugin instanceof GitPlugin)) {
@@ -515,26 +483,30 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         $labeled_item_collector->collect($event);
     }
 
-    public function canProjectUseLabels(CanProjectUseLabels $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function canProjectUseLabels(CanProjectUseLabels $event): void
     {
         if ($event->getProject()->usesService(GitPlugin::SERVICE_SHORTNAME)) {
             $event->projectCanUseLabels();
         }
     }
 
-    public function getProtectedGitReferences(GetProtectedGitReferences $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function getProtectedGitReferences(GetProtectedGitReferences $event): void
     {
         $event->addProtectedReference(new ProtectedReferencePermission(GitPullRequestReference::PR_NAMESPACE . '*'));
     }
 
-    public function markTechnicalReference(MarkTechnicalReference $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function markTechnicalReference(MarkTechnicalReference $event): void
     {
         if (strpos($event->getReferenceName(), GitPullRequestReference::PR_NAMESPACE) === 0) {
             $event->markAsTechnical();
         }
     }
 
-    public function postInitGitRepositoryWithDataEvent(PostInitGitRepositoryWithDataEvent $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function postInitGitRepositoryWithDataEvent(PostInitGitRepositoryWithDataEvent $event): void
     {
         (new GitPullRequestReferenceRemover())->removeAll(GitExec::buildFromRepository($event->getRepository()));
     }
@@ -544,7 +516,8 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         return BackendLogger::getDefaultLogger('pullrequest_syslog');
     }
 
-    public function dailyExecution()
+    #[\Tuleap\Plugin\ListeningToEventName('codendi_daily_start')]
+    public function codendiDailyStart(): void
     {
         $pull_request_git_reference_dao            = new GitPullRequestReferenceDAO();
         $pull_request_git_reference_bulk_converter = new GitPullRequestReferenceBulkConverter(
@@ -560,12 +533,14 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         $pull_request_git_reference_bulk_converter->convertAllPullRequestsWithoutAGitReference();
     }
 
-    public function additionalInformationRepresentationRetriever(AdditionalInformationRepresentationRetriever $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function additionalInformationRepresentationRetriever(AdditionalInformationRepresentationRetriever $event): void
     {
         $this->getGitRestRouteAdditionaInformations()->getOpenPullRequestsCount($event);
     }
 
-    public function additionalInformationRepresentationCache(AdditionalInformationRepresentationCache $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function additionalInformationRepresentationCache(AdditionalInformationRepresentationCache $event): void
     {
         $this->getGitRestRouteAdditionaInformations()->createCache($event);
     }
@@ -578,7 +553,8 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         return $this->git_rest_route_additional_informations;
     }
 
-    public function afterRepositoryForked(AfterRepositoryForked $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function afterRepositoryForked(AfterRepositoryForked $event): void
     {
         $dao = new MergeSettingDAO();
         $dao->duplicateRepositoryMergeSettings(
@@ -587,7 +563,8 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         );
     }
 
-    public function afterRepositoryCreated(AfterRepositoryCreated $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function afterRepositoryCreated(AfterRepositoryCreated $event): void
     {
         $repository = $event->getRepository();
         $dao        = new MergeSettingDAO();
@@ -598,6 +575,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function registerProjectCreationEvent(RegisterProjectCreationEvent $event): void
     {
         $dao = new MergeSettingDAO();
@@ -607,7 +585,8 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         );
     }
 
-    public function collectPanes(PanesCollection $collection)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function collectPanes(PanesCollection $collection): void
     {
         $collection->add(
             new PullRequestPane(
@@ -618,7 +597,8 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         );
     }
 
-    public function collectDefaultSettingsPanes(DefaultSettingsPanesCollection $collection)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function collectDefaultSettingsPanes(DefaultSettingsPanesCollection $collection): void
     {
         $collection->add(
             new DefaultSettingsPullRequestPane(
@@ -629,7 +609,8 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         );
     }
 
-    public function getProjectHistoryEntryValue(GetProjectHistoryEntryValue $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function getProjectHistoryEntryValue(GetProjectHistoryEntryValue $event): void
     {
         $project_history_entry = $event->getRow();
         if ($project_history_entry['field_name'] === DefaultSettingsController::HISTORY_FIELD_NAME) {
@@ -681,6 +662,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addGroup(
@@ -702,7 +684,8 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         );
     }
 
-    public function repositoryExternalNavigationTabsCollector(RepositoryExternalNavigationTabsCollector $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function repositoryExternalNavigationTabsCollector(RepositoryExternalNavigationTabsCollector $event): void
     {
         if ($event->getRepository()->isMigratedToGerrit()) {
             return;
@@ -712,6 +695,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         $event->addNewTab($builder->build($event->getRepository(), $event->getSelectedTab()));
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function workerEvent(WorkerEvent $event): void
     {
         PullRequestNotificationSupport::listen($event);
@@ -755,6 +739,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function crossReferenceByNatureOrganizer(CrossReferenceByNatureOrganizer $organizer): void
     {
         $pull_request_organizer = new CrossReferencePullRequestOrganizer(
