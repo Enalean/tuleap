@@ -1021,7 +1021,7 @@ class PullRequestsResource extends AuthenticatedResource
             $timeline_dao,
             new ReviewerChangeRetriever(
                 new ReviewerChangeDAO(),
-                $this->pull_request_factory,
+                new PullRequestRetriever($this->pull_request_dao),
                 $this->user_manager,
             )
         );

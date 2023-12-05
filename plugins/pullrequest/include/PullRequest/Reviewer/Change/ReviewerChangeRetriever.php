@@ -22,34 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Reviewer\Change;
 
-use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
-use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\PullRequest;
-use UserManager;
+use Tuleap\PullRequest\PullRequestRetriever;
+use Tuleap\User\RetrieveUserById;
 
 class ReviewerChangeRetriever
 {
-    /**
-     * @var ReviewerChangeDAO
-     */
-    private $dao;
-    /**
-     * @var Factory
-     */
-    private $pull_request_factory;
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-
     public function __construct(
-        ReviewerChangeDAO $dao,
-        Factory $pull_request_factory,
-        UserManager $user_manager,
+        private readonly ReviewerChangeDAO $dao,
+        private readonly PullRequestRetriever $pull_request_retriever,
+        private readonly RetrieveUserById $user_manager,
     ) {
-        $this->dao                  = $dao;
-        $this->pull_request_factory = $pull_request_factory;
-        $this->user_manager         = $user_manager;
     }
 
     public function getChangeWithTheAssociatedPullRequestByID(int $change_id): ?ReviewerChangePullRequestAssociation
@@ -59,19 +42,18 @@ class ReviewerChangeRetriever
             return null;
         }
 
-        try {
-            $pull_request = $this->pull_request_factory->getPullRequestById($raw_change_information[0]['pull_request_id']);
-        } catch (PullRequestNotFoundException $e) {
-            return null;
-        }
+        return $this->pull_request_retriever->getPullRequestById($raw_change_information[0]['pull_request_id'])->match(
+            function (PullRequest $pull_request) use ($raw_change_information) {
+                $reviewer_change = $this->buildReviewerChangeFromRawReviewerInformation($raw_change_information);
 
-        $reviewer_change = $this->buildReviewerChangeFromRawReviewerInformation($raw_change_information);
+                if ($reviewer_change === null) {
+                    return null;
+                }
 
-        if ($reviewer_change === null) {
-            return null;
-        }
-
-        return new ReviewerChangePullRequestAssociation($reviewer_change, $pull_request);
+                return new ReviewerChangePullRequestAssociation($reviewer_change, $pull_request);
+            },
+            static fn() => null
+        );
     }
 
     /**

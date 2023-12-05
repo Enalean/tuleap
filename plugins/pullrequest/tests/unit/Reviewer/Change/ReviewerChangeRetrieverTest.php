@@ -22,59 +22,51 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Reviewer\Change;
 
-use PFUser;
-use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
-use Tuleap\PullRequest\Factory;
-use Tuleap\PullRequest\PullRequest;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\PullRequest\PullRequestRetriever;
+use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
+use Tuleap\PullRequest\Tests\Stub\SearchPullRequestStub;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 
 final class ReviewerChangeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&ReviewerChangeDAO
-     */
-    private $reviewer_change_dao;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\UserManager
-     */
-    private $user_manager;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&Factory
-     */
-    private $pull_request_factory;
-    private ReviewerChangeRetriever $reviewer_change_retriever;
+    private MockObject&ReviewerChangeDAO $reviewer_change_dao;
+    private RetrieveUserByIdStub $user_manager;
+    private SearchPullRequestStub $pull_request_dao;
 
     protected function setUp(): void
     {
-        $this->reviewer_change_dao  = $this->createMock(ReviewerChangeDAO::class);
-        $this->pull_request_factory = $this->createMock(Factory::class);
-        $this->user_manager         = $this->createMock(\UserManager::class);
+        $this->reviewer_change_dao = $this->createMock(ReviewerChangeDAO::class);
+        $this->pull_request_dao    = SearchPullRequestStub::withNoRow();
+        $this->user_manager        = RetrieveUserByIdStub::withNoUser();
+    }
 
-        $this->reviewer_change_retriever = new ReviewerChangeRetriever(
+    public function buildReviewerChangeRetriever(): ReviewerChangeRetriever
+    {
+        return new ReviewerChangeRetriever(
             $this->reviewer_change_dao,
-            $this->pull_request_factory,
+            new PullRequestRetriever($this->pull_request_dao),
             $this->user_manager
         );
     }
 
     public function testRetrieveListOfReviewerChangesOfAPullRequest(): void
     {
-        $pull_request = $this->createMock(PullRequest::class);
-        $pull_request->method('getId')->willReturn(63);
-
         $user_1_id       = 102;
         $user_2_id       = 103;
         $user_3_id       = 104;
         $unknown_user_id = 404;
 
-        $this->user_manager->method('getUserById')->willReturnMap([
-            [$user_1_id, $this->buildUserWithID($user_1_id)],
-            [$user_2_id, $this->buildUserWithID($user_2_id)],
-            [$user_3_id, $this->buildUserWithID($user_3_id)],
-            [$unknown_user_id, null],
-        ]);
+        $this->user_manager = RetrieveUserByIdStub::withUsers(
+            UserTestBuilder::buildWithId($user_1_id),
+            UserTestBuilder::buildWithId($user_2_id),
+            UserTestBuilder::buildWithId($user_3_id),
+        );
 
         $valid_change_timestamp = 1575044496;
 
+        $pull_request = PullRequestTestBuilder::aPullRequestInReview()->withId(63)->build();
         $this->reviewer_change_dao->method('searchByPullRequestID')->with($pull_request->getId())->willReturn([
             12 => [
                 [
@@ -106,7 +98,7 @@ final class ReviewerChangeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ]);
 
-        $changes = $this->reviewer_change_retriever->getChangesForPullRequest($pull_request);
+        $changes = $this->buildReviewerChangeRetriever()->getChangesForPullRequest($pull_request);
         self::assertCount(1, $changes);
         $valid_change = $changes[0];
         self::assertEquals($valid_change_timestamp, $valid_change->changedAt()->getTimestamp());
@@ -133,19 +125,18 @@ final class ReviewerChangeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ]);
 
-        $this->user_manager->method('getUserById')->willReturnMap([
-            [$user_1_id, $this->buildUserWithID($user_1_id)],
-            [$user_2_id, $this->buildUserWithID($user_2_id)],
-        ]);
+        $this->user_manager = RetrieveUserByIdStub::withUsers(
+            UserTestBuilder::buildWithId($user_1_id),
+            UserTestBuilder::buildWithId($user_2_id),
+        );
 
-        $pull_request = $this->createMock(PullRequest::class);
-        $this->pull_request_factory->method('getPullRequestById')->with($pull_request_id)
-            ->willReturn($pull_request);
+        $pull_request           = PullRequestTestBuilder::aPullRequestInReview()->withId($pull_request_id)->build();
+        $this->pull_request_dao = SearchPullRequestStub::withAtLeastOnePullRequest($pull_request);
 
-        $change_pull_request_association = $this->reviewer_change_retriever->getChangeWithTheAssociatedPullRequestByID($change_id);
+        $change_pull_request_association = $this->buildReviewerChangeRetriever()->getChangeWithTheAssociatedPullRequestByID($change_id);
 
         self::assertNotNull($change_pull_request_association);
-        self::assertSame($pull_request, $change_pull_request_association->getPullRequest());
+        self::assertEqualsCanonicalizing($pull_request, $change_pull_request_association->getPullRequest());
         $reviewer_change = $change_pull_request_association->getReviewerChange();
         self::assertEquals($user_1_id, $reviewer_change->changedBy()->getId());
         self::assertCount(1, $reviewer_change->getAddedReviewers());
@@ -167,9 +158,7 @@ final class ReviewerChangeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ]);
 
-        $this->pull_request_factory->method('getPullRequestById')->willThrowException(new PullRequestNotFoundException());
-
-        $change_pull_request_association = $this->reviewer_change_retriever->getChangeWithTheAssociatedPullRequestByID($change_id);
+        $change_pull_request_association = $this->buildReviewerChangeRetriever()->getChangeWithTheAssociatedPullRequestByID($change_id);
 
         self::assertNull($change_pull_request_association);
     }
@@ -188,11 +177,9 @@ final class ReviewerChangeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ]);
 
-        $this->pull_request_factory->method('getPullRequestById')->willReturn($this->createMock(PullRequest::class));
+        $this->pull_request_dao = SearchPullRequestStub::withAtLeastOnePullRequest(PullRequestTestBuilder::aPullRequestInReview()->build());
 
-        $this->user_manager->method('getUserById')->willReturn(null);
-
-        $change_pull_request_association = $this->reviewer_change_retriever->getChangeWithTheAssociatedPullRequestByID($change_id);
+        $change_pull_request_association = $this->buildReviewerChangeRetriever()->getChangeWithTheAssociatedPullRequestByID($change_id);
 
         self::assertNull($change_pull_request_association);
     }
@@ -201,13 +188,8 @@ final class ReviewerChangeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->reviewer_change_dao->method('searchByChangeID')->willReturn([]);
 
-        $change_pull_request_association = $this->reviewer_change_retriever->getChangeWithTheAssociatedPullRequestByID(404);
+        $change_pull_request_association = $this->buildReviewerChangeRetriever()->getChangeWithTheAssociatedPullRequestByID(404);
 
         self::assertNull($change_pull_request_association);
-    }
-
-    private function buildUserWithID(int $user_id): PFUser
-    {
-        return new PFUser(['user_id' => $user_id, 'language_id' => 'en']);
     }
 }

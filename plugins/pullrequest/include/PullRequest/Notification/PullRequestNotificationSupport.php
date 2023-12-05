@@ -102,9 +102,8 @@ final class PullRequestNotificationSupport
                             new ReviewerChangeNotificationToProcessBuilder(
                                 new ReviewerChangeRetriever(
                                     new ReviewerChangeDAO(),
-                                    new Factory(
+                                    new PullRequestRetriever(
                                         new Dao(),
-                                        \ReferenceManager::instance()
                                     ),
                                     \UserManager::instance()
                                 ),

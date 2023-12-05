@@ -654,7 +654,7 @@ class pullrequestPlugin extends Plugin
 
         return new ReviewerAutocompleterController(
             $user_manager,
-            $this->getPullRequestFactory(),
+            new PullRequestRetriever(new PullRequestDao()),
             $permissions_checker,
             new PotentialReviewerRetriever($user_manager, new UserDao(), $permissions_checker),
             new JSONResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
