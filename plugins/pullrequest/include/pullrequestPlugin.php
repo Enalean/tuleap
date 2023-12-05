@@ -362,7 +362,12 @@ class pullrequestPlugin extends Plugin
         $pull_request_id = $event->getValue();
 
         if ($this->isReferenceAPullRequestReference($keyword)) {
-            $reference = $this->getReferenceFactory()->getReferenceByPullRequestId(
+            $reference = (new ReferenceFactory(
+                new PullRequestRetriever(new PullRequestDao()),
+                $this->getRepositoryFactory(),
+                new ProjectReferenceRetriever(new ReferenceDao()),
+                $this->getHTMLBuilder()
+            ))->getReferenceByPullRequestId(
                 $keyword,
                 $pull_request_id
             );
@@ -371,19 +376,6 @@ class pullrequestPlugin extends Plugin
                 $event->setReference($reference);
             }
         }
-    }
-
-    /**
-     * @return ReferenceFactory
-     */
-    private function getReferenceFactory()
-    {
-        return new ReferenceFactory(
-            $this->getPullRequestFactory(),
-            $this->getRepositoryFactory(),
-            new ProjectReferenceRetriever(new ReferenceDao()),
-            $this->getHTMLBuilder()
-        );
     }
 
     private function isReferenceAPullRequestReference($keyword)
