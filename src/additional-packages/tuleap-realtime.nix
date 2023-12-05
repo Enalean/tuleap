@@ -7,7 +7,7 @@ let
 in pkgs.stdenvNoCC.mkDerivation {
   name = "tuleap-realtime-rpm-package";
   srcs = [
-    ./tuleap-realtime/dist/tuleap-realtime
+    ./tuleap-realtime/dist/tuleap-realtime.js
     ./tuleap-realtime/packaging/tuleap-realtime.systemd-service
   ];
 

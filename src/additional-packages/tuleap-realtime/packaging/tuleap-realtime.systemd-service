@@ -7,7 +7,7 @@ PartOf=tuleap.service
 Type=simple
 Environment=NODE_ENV=production
 PIDFile=/run/tuleap-realtime.pid
-ExecStart=/usr/lib/tuleap-realtime/tuleap-realtime
+ExecStart=/usr/bin/tuleap-node /usr/lib/tuleap-realtime/tuleap-realtime.js
 EnvironmentFile=/var/lib/tuleap/tuleap-realtime-key
 Restart=on-failure
 User=tuleaprt
