@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "89ae1fb636ef63f5f9972c38379e2f15",
+    "content-hash": "5f4906c8b2e4a5d25b42211b0868c2b0",
     "packages": [
         {
             "name": "composer/installers",
@@ -286,16 +286,16 @@
         },
         {
             "name": "mediawiki/tuleap-integration",
-            "version": "1.0.4",
+            "version": "dev-REL1_35",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration.git",
-                "reference": "0496864cae0e872882bb679b64bf859cbd3a0d24"
+                "reference": "1e5fd9df19cc98f203598c71c29a5f66fe57fe8d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapIntegration/zipball/0496864cae0e872882bb679b64bf859cbd3a0d24",
-                "reference": "0496864cae0e872882bb679b64bf859cbd3a0d24",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapIntegration/zipball/1e5fd9df19cc98f203598c71c29a5f66fe57fe8d",
+                "reference": "1e5fd9df19cc98f203598c71c29a5f66fe57fe8d",
                 "shasum": ""
             },
             "require": {
@@ -335,9 +335,9 @@
                 ]
             },
             "support": {
-                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration/tree/1.0.4"
+                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration/tree/REL1_35"
             },
-            "time": "2023-04-06T07:22:54+00:00"
+            "time": "2023-12-04T07:15:33+00:00"
         },
         {
             "name": "mediawiki/tuleap-skin",
@@ -801,6 +801,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "mediawiki/tuleap-integration": 20,
         "mediawiki/tuleap-wiki-farm": 20
     },
     "prefer-stable": false,

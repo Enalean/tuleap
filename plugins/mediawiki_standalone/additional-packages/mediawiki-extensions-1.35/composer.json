@@ -14,7 +14,7 @@
     }
   ],
   "require": {
-    "mediawiki/tuleap-integration": "1.0.4",
+    "mediawiki/tuleap-integration": "dev-REL1_35",
     "mediawiki/tuleap-skin": "^1.0",
     "mediawiki/tuleap-wiki-farm": "dev-REL1_35#2435d7c103b134c88ddfed9ec4fe15855eb768a3"
   },
