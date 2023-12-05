@@ -8,7 +8,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Tuleap\\AgileDashboard\\": "tests/unit/",
+      "Tuleap\\AgileDashboard\\": ["tests/unit/", "tests/integration"],
       "Tuleap\\AgileDashboard\\Test\\Stub\\": ["./tests/unit/Stub/"],
       "Tuleap\\AgileDashboard\\Test\\Builders\\": ["./tests/unit/Builders/"]
     }

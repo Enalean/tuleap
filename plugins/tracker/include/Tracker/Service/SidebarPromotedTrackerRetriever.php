@@ -60,6 +60,7 @@ final class SidebarPromotedTrackerRetriever
                         $tracker->getSubmitUrl(),
                         $tracker->getSubmitLabel(),
                     ),
+                    []
                 );
             }
         }
