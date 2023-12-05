@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Admin\ProjectUGroup;
 
-use Mockery as M;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Layout\BaseLayout;
@@ -36,63 +36,32 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
     use GlobalResponseMock;
 
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|ProjectRetriever
-     */
-    private $project_retriever;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|ProjectAdministratorChecker
-     */
-    private $administrator_checker;
-    /**
-     * @var M\MockInterface|\UGroupManager
-     */
-    private $ugroup_manager;
-    /**
-     * @var M\MockInterface|\UserManager
-     */
-    private $user_manager;
-    /**
-     * @var MemberRemovalController
-     */
-    private $controller;
-    /**
-     * @var \HTTPRequest|M\MockInterface
-     */
-    private $http_request;
-    /**
-     * @var M\MockInterface|BaseLayout
-     */
-    private $layout;
-    /**
-     * @var M\MockInterface|MemberRemover
-     */
-    private $member_remover;
-    /**
-     * @var M\MockInterface|ProjectMemberRemover
-     */
-    private $project_member_remover;
-    /**
-     * @var \CSRFSynchronizerToken|M\MockInterface
-     */
-    private $csrf;
+    private ProjectRetriever&MockObject $project_retriever;
+    private ProjectAdministratorChecker&MockObject $administrator_checker;
+    private \UGroupManager&MockObject $ugroup_manager;
+    private \UserManager&MockObject $user_manager;
+    private MemberRemovalController $controller;
+    private \HTTPRequest&MockObject $http_request;
+    private BaseLayout&MockObject $layout;
+    private MemberRemover&MockObject $member_remover;
+    private ProjectMemberRemover&MockObject $project_member_remover;
+    private \CSRFSynchronizerToken&MockObject $csrf;
 
     protected function setUp(): void
     {
-        $this->project_retriever      = M::mock(ProjectRetriever::class);
-        $this->administrator_checker  = M::mock(ProjectAdministratorChecker::class);
-        $this->ugroup_manager         = M::mock(\UGroupManager::class);
-        $this->user_manager           = M::mock(\UserManager::class);
-        $this->member_remover         = M::mock(MemberRemover::class);
-        $this->http_request           = M::mock(\HTTPRequest::class);
-        $this->layout                 = M::mock(BaseLayout::class);
-        $this->project_member_remover = M::mock(ProjectMemberRemover::class);
-        $this->csrf                   = M::mock(\CSRFSynchronizerToken::class);
-        $this->csrf->shouldReceive('check')->once();
+        $this->project_retriever      = $this->createMock(ProjectRetriever::class);
+        $this->administrator_checker  = $this->createMock(ProjectAdministratorChecker::class);
+        $this->ugroup_manager         = $this->createMock(\UGroupManager::class);
+        $this->user_manager           = $this->createMock(\UserManager::class);
+        $this->member_remover         = $this->createMock(MemberRemover::class);
+        $this->http_request           = $this->createMock(\HTTPRequest::class);
+        $this->layout                 = $this->createMock(BaseLayout::class);
+        $this->project_member_remover = $this->createMock(ProjectMemberRemover::class);
+        $this->csrf                   = $this->createMock(\CSRFSynchronizerToken::class);
+        $this->csrf->expects(self::once())->method('check');
         $this->controller = new MemberRemovalController(
             $this->project_retriever,
             $this->administrator_checker,
@@ -107,10 +76,11 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private function checkUserIsProjectAdmin(\Project $project): \PFUser
     {
         $project_admin = UserTestBuilder::aUser()->build();
-        $this->http_request->shouldReceive('getCurrentUser')->andReturn($project_admin);
-        $this->administrator_checker->shouldReceive('checkUserIsProjectAdministrator')
-            ->with($project_admin, $project)
-            ->once();
+        $this->http_request->method('getCurrentUser')->willReturn($project_admin);
+        $this->administrator_checker
+            ->expects(self::once())
+            ->method('checkUserIsProjectAdministrator')
+            ->with($project_admin, $project);
 
         return $project_admin;
     }
@@ -118,25 +88,30 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRemovesWithSuccess(): void
     {
         $project = new \Project(['group_id' => 101]);
-        $this->project_retriever->shouldReceive('getProjectFromId')
+        $this->project_retriever
+            ->expects(self::once())
+            ->method('getProjectFromId')
             ->with('101')
-            ->once()
-            ->andReturn($project);
+            ->willReturn($project);
 
         $project_admin = $this->checkUserIsProjectAdmin($project);
 
-        $ugroup = M::mock(\ProjectUGroup::class, ['getProjectId' => 101, 'getId' => 202]);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($project, '202')->andReturn($ugroup);
+        $ugroup = $this->createMock(\ProjectUGroup::class);
+        $ugroup->method('getProjectId')->willReturn(101);
+        $ugroup->method('getId')->willReturn(202);
+        $this->ugroup_manager->method('getUGroup')->with($project, '202')->willReturn($ugroup);
 
         $user_to_remove = new \PFUser(['user_id' => 303]);
-        $this->http_request->shouldReceive('get')->with('remove_user')->andReturn('303');
-        $this->user_manager->shouldReceive('getUserById')->with('303')->andReturn($user_to_remove);
+        $this->http_request->method('get')
+            ->withConsecutive(
+                ['remove_user'],
+                ['remove-from-ugroup']
+            )->willReturnOnConsecutiveCalls('303', 'remove-from-ugroup-only');
+        $this->user_manager->method('getUserById')->with('303')->willReturn($user_to_remove);
 
-        $this->http_request->shouldReceive('get')->with('remove-from-ugroup')->andReturn('remove-from-ugroup-only');
+        $this->member_remover->method('removeMember')->with($user_to_remove, $project_admin, $ugroup);
 
-        $this->member_remover->shouldReceive('removeMember')->with($user_to_remove, $project_admin, $ugroup);
-
-        $this->layout->shouldReceive('redirect')->with(UGroupRouter::getUGroupUrl($ugroup));
+        $this->layout->method('redirect')->with(UGroupRouter::getUGroupUrl($ugroup));
 
         $this->controller->process($this->http_request, $this->layout, ['project_id' => '101', 'user-group-id' => '202']);
     }
@@ -144,27 +119,33 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRemovesFromUserGroupOnlyWithError()
     {
         $project = new \Project(['group_id' => 101]);
-        $this->project_retriever->shouldReceive('getProjectFromId')
+        $this->project_retriever
+            ->expects(self::once())
+            ->method('getProjectFromId')
             ->with('101')
-            ->once()
-            ->andReturn($project);
+            ->willReturn($project);
 
         $project_admin = $this->checkUserIsProjectAdmin($project);
 
-        $ugroup = M::mock(\ProjectUGroup::class, ['getProjectId' => 101, 'getId' => 202]);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($project, '202')->andReturn($ugroup);
+        $ugroup = $this->createMock(\ProjectUGroup::class);
+        $ugroup->method('getProjectId')->willReturn(101);
+        $ugroup->method('getId')->willReturn(202);
+        $this->ugroup_manager->method('getUGroup')->with($project, '202')->willReturn($ugroup);
 
         $user_to_remove = new \PFUser(['user_id' => 303]);
-        $this->http_request->shouldReceive('get')->with('remove_user')->andReturn('303');
-        $this->user_manager->shouldReceive('getUserById')->with('303')->andReturn($user_to_remove);
+        $this->http_request->method('get')
+            ->withConsecutive(
+                ['remove_user'],
+                ['remove-from-ugroup']
+            )->willReturnOnConsecutiveCalls('303', 'remove-from-ugroup-only');
+        $this->user_manager->method('getUserById')->with('303')->willReturn($user_to_remove);
 
-        $this->http_request->shouldReceive('get')->with('remove-from-ugroup')->andReturn('remove-from-ugroup-only');
+        $this->member_remover->method('removeMember')->with($user_to_remove, $project_admin, $ugroup)
+            ->willThrowException(new CannotModifyBoundGroupException());
 
-        $this->member_remover->shouldReceive('removeMember')->with($user_to_remove, $project_admin, $ugroup)->andThrow(new CannotModifyBoundGroupException());
+        $this->layout->method('addFeedback')->with(\Feedback::ERROR, self::anything());
 
-        $this->layout->shouldReceive('addFeedback')->with(\Feedback::ERROR, M::any());
-
-        $this->layout->shouldReceive('redirect')->with(UGroupRouter::getUGroupUrl($ugroup));
+        $this->layout->method('redirect')->with(UGroupRouter::getUGroupUrl($ugroup));
 
         $this->controller->process($this->http_request, $this->layout, ['project_id' => '101', 'user-group-id' => '202']);
     }
@@ -172,25 +153,34 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRemovesFromUserGroupAndProject()
     {
         $project = new \Project(['group_id' => 101]);
-        $this->project_retriever->shouldReceive('getProjectFromId')
+        $this->project_retriever
+            ->expects(self::once())
+            ->method('getProjectFromId')
             ->with('101')
-            ->once()
-            ->andReturn($project);
+            ->willReturn($project);
 
         $this->checkUserIsProjectAdmin($project);
 
-        $ugroup = M::mock(\ProjectUGroup::class, ['getProjectId' => 101, 'getId' => 202]);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($project, '202')->andReturn($ugroup);
+        $ugroup = $this->createMock(\ProjectUGroup::class);
+        $ugroup->method('getProjectId')->willReturn(101);
+        $ugroup->method('getId')->willReturn(202);
+        $this->ugroup_manager->method('getUGroup')->with($project, '202')->willReturn($ugroup);
 
-        $user_to_remove = M::mock(\PFUser::class, ['getId' => 303, 'isAdmin' => false]);
-        $this->http_request->shouldReceive('get')->with('remove_user')->andReturn('303');
-        $this->user_manager->shouldReceive('getUserById')->with('303')->andReturn($user_to_remove);
+        $user_to_remove = UserTestBuilder::aUser()
+            ->withId(303)
+            ->withMemberOf($project)
+            ->withoutSiteAdministrator()
+            ->build();
+        $this->http_request->method('get')
+            ->withConsecutive(
+                ['remove_user'],
+                ['remove-from-ugroup']
+            )->willReturnOnConsecutiveCalls('303', 'remove-from-ugroup-and-project');
+        $this->user_manager->method('getUserById')->with('303')->willReturn($user_to_remove);
 
-        $this->http_request->shouldReceive('get')->with('remove-from-ugroup')->andReturn('remove-from-ugroup-and-project');
+        $this->project_member_remover->expects(self::once())->method('removeUserFromProject')->with(101, 303);
 
-        $this->project_member_remover->shouldReceive('removeUserFromProject')->with(101, 303)->once();
-
-        $this->layout->shouldReceive('redirect')->with(UGroupRouter::getUGroupUrl($ugroup));
+        $this->layout->method('redirect')->with(UGroupRouter::getUGroupUrl($ugroup));
 
         $this->controller->process($this->http_request, $this->layout, ['project_id' => '101', 'user-group-id' => '202']);
     }
@@ -198,30 +188,38 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesntRemoveProjectAdminsFromUserGroupAndProject(): void
     {
         $project = new \Project(['group_id' => 101]);
-        $this->project_retriever->shouldReceive('getProjectFromId')
+        $this->project_retriever
+            ->expects(self::once())
+            ->method('getProjectFromId')
             ->with('101')
-            ->once()
-            ->andReturn($project);
+            ->willReturn($project);
 
         $this->checkUserIsProjectAdmin($project);
 
-        $ugroup = M::mock(\ProjectUGroup::class, ['getProjectId' => 101, 'getId' => 202]);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($project, '202')->andReturn($ugroup);
+        $ugroup = $this->createMock(\ProjectUGroup::class);
+        $ugroup->method('getProjectId')->willReturn(101);
+        $ugroup->method('getId')->willReturn(202);
+        $this->ugroup_manager->method('getUGroup')->with($project, '202')->willReturn($ugroup);
 
-        $user_to_remove = M::mock(\PFUser::class, ['getId' => 303]);
-        $user_to_remove->shouldReceive('isAdmin')->with(101)->andReturnTrue();
-        $this->http_request->shouldReceive('get')->with('remove_user')->andReturn('303');
-        $this->user_manager->shouldReceive('getUserById')->with('303')->andReturn($user_to_remove);
+        $user_to_remove = UserTestBuilder::aUser()
+            ->withId(303)
+            ->withAdministratorOf($project)
+            ->withoutSiteAdministrator()
+            ->build();
+        $this->http_request->method('get')
+            ->withConsecutive(
+                ['remove_user'],
+                ['remove-from-ugroup']
+            )->willReturnOnConsecutiveCalls('303', 'remove-from-ugroup-and-project');
+        $this->user_manager->method('getUserById')->with('303')->willReturn($user_to_remove);
 
-        $this->http_request->shouldReceive('get')->with('remove-from-ugroup')->andReturn('remove-from-ugroup-and-project');
+        $this->project_member_remover->method('removeUserFromProject');
 
-        $this->project_member_remover->shouldNotReceive('removeUserFromProject');
-
-        $this->layout->shouldReceive('addFeedback')->with(\Feedback::ERROR, M::any());
+        $this->layout->method('addFeedback')->with(\Feedback::ERROR, self::anything());
         $exception_stop_exec_redirect = new \Exception("Redirect");
-        $this->layout->shouldReceive('redirect')->with(UGroupRouter::getUGroupUrl($ugroup))->andThrow($exception_stop_exec_redirect);
+        $this->layout->method('redirect')->with(UGroupRouter::getUGroupUrl($ugroup))->willThrowException($exception_stop_exec_redirect);
 
-        $this->expectExceptionObject($exception_stop_exec_redirect);
+        self::expectExceptionObject($exception_stop_exec_redirect);
         $this->controller->process($this->http_request, $this->layout, ['project_id' => '101', 'user-group-id' => '202']);
     }
 }

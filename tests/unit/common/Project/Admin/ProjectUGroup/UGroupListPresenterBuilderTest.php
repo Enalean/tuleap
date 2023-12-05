@@ -22,101 +22,84 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Admin\ProjectUGroup;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class UGroupListPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
-    /**
-     * @var UGroupListPresenterBuilder
-     */
-    private $builder;
-    /**
-     * @var Mockery\MockInterface|\UGroupManager
-     */
-    private $ugroup_manager;
-    /**
-     * @var Mockery\MockInterface|\Project
-     */
-    private $project;
-    /**
-     * @var Mockery\MockInterface|SynchronizedProjectMembershipDetector
-     */
-    private $detector;
+    private UGroupListPresenterBuilder $builder;
+    private \UGroupManager&MockObject $ugroup_manager;
+    private SynchronizedProjectMembershipDetector&MockObject $detector;
 
     protected function setUp(): void
     {
-        $this->ugroup_manager = Mockery::mock(\UGroupManager::class);
-        $this->detector       = Mockery::mock(SynchronizedProjectMembershipDetector::class);
+        $this->ugroup_manager = $this->createMock(\UGroupManager::class);
+        $this->detector       = $this->createMock(SynchronizedProjectMembershipDetector::class);
 
         $this->builder = new UGroupListPresenterBuilder($this->ugroup_manager, $this->detector);
 
-        $this->ugroup_manager->shouldReceive('getStaticUgroups')->andReturn([]);
-        $mock_ugroup = Mockery::mock(
-            \ProjectUGroup::class,
-            [
-                'getId'                       => 15,
-                'getTranslatedName'           => '',
-                'getTranslatedDescription'    => '',
-                'countStaticOrDynamicMembers' => 0,
-            ]
-        );
-        $this->ugroup_manager->shouldReceive('getUGroup')->andReturn($mock_ugroup);
-
-        $this->project = Mockery::mock(
-            \Project::class,
-            [
-                'getID'                   => 106,
-                'isLegacyDefaultTemplate' => false,
-                'usesWiki'                => false,
-                'usesForum'               => false,
-                'usesNews'                => false,
-            ]
-        );
+        $this->ugroup_manager->method('getStaticUgroups')->willReturn([]);
+        $mock_ugroup = $this->createMock(\ProjectUGroup::class);
+        $mock_ugroup->method('getId')->willReturn(15);
+        $mock_ugroup->method('getTranslatedName')->willReturn('');
+        $mock_ugroup->method('getTranslatedDescription')->willReturn('');
+        $mock_ugroup->method('countStaticOrDynamicMembers')->willReturn(0);
+        $this->ugroup_manager->method('getUGroup')->willReturn($mock_ugroup);
 
         $GLOBALS['Language']->method('getText')->willReturn('whatever');
     }
 
     public function testItBuildsASynchronizedProjectMembershipPresenterForPublicProject(): void
     {
-        $csrf = Mockery::mock(\CSRFSynchronizerToken::class);
-        $this->project->shouldReceive('isPublic')->andReturnTrue();
-        $this->detector->shouldReceive('isSynchronizedWithProjectMembers')->andReturnTrue();
+        $csrf    = $this->createMock(\CSRFSynchronizerToken::class);
+        $project = ProjectTestBuilder::aProject()
+            ->withId(106)
+            ->withAccessPublic()
+            ->withoutServices()
+            ->build();
+        $this->detector->method('isSynchronizedWithProjectMembers')->willReturn(true);
 
-        $result = $this->builder->build($this->project, $csrf, $csrf);
+        $result = $this->builder->build($project, $csrf, $csrf);
 
-        $this->assertTrue($result->is_synchronized_project_membership);
-        $this->assertNotNull($result->synchronized_project_membership_presenter);
-        $this->assertTrue($result->synchronized_project_membership_presenter->is_enabled);
+        self::assertTrue($result->is_synchronized_project_membership);
+        self::assertNotNull($result->synchronized_project_membership_presenter);
+        self::assertTrue($result->synchronized_project_membership_presenter->is_enabled);
     }
 
     public function testItDoesNotBuildASynchronizedPresenterForPrivateProject(): void
     {
-        $csrf = Mockery::mock(\CSRFSynchronizerToken::class);
-        $this->project->shouldReceive('isPublic')->andReturnFalse();
-        $this->detector->shouldReceive('isSynchronizedWithProjectMembers')->andReturnTrue();
+        $csrf    = $this->createMock(\CSRFSynchronizerToken::class);
+        $project = ProjectTestBuilder::aProject()
+            ->withId(106)
+            ->withAccessPrivate()
+            ->withoutServices()
+            ->build();
+        $this->detector->method('isSynchronizedWithProjectMembers')->willReturn(true);
 
-        $result = $this->builder->build($this->project, $csrf, $csrf);
+        $result = $this->builder->build($project, $csrf, $csrf);
 
-        $this->assertTrue($result->is_synchronized_project_membership);
-        $this->assertNull($result->synchronized_project_membership_presenter);
+        self::assertTrue($result->is_synchronized_project_membership);
+        self::assertNull($result->synchronized_project_membership_presenter);
     }
 
     public function testItBuildsASynchronizedProjectMembershipPresenterForPublicProjectWithoutSynchronization(): void
     {
-        $csrf = Mockery::mock(\CSRFSynchronizerToken::class);
-        $this->project->shouldReceive('isPublic')->andReturnTrue();
-        $this->detector->shouldReceive('isSynchronizedWithProjectMembers')->andReturnFalse();
+        $csrf    = $this->createMock(\CSRFSynchronizerToken::class);
+        $project = ProjectTestBuilder::aProject()
+            ->withId(106)
+            ->withAccessPublic()
+            ->withoutServices()
+            ->build();
+        $this->detector->method('isSynchronizedWithProjectMembers')->willReturn(false);
 
-        $result = $this->builder->build($this->project, $csrf, $csrf);
+        $result = $this->builder->build($project, $csrf, $csrf);
 
-        $this->assertFalse($result->is_synchronized_project_membership);
-        $this->assertNotNull($result->synchronized_project_membership_presenter);
-        $this->assertFalse($result->synchronized_project_membership_presenter->is_enabled);
+        self::assertFalse($result->is_synchronized_project_membership);
+        self::assertNotNull($result->synchronized_project_membership_presenter);
+        self::assertFalse($result->synchronized_project_membership_presenter->is_enabled);
     }
 }
