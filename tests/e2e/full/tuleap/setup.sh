@@ -48,6 +48,8 @@ enable_plugins() {
         testplan  \
         program_management  \
         frs \
+        botmattermost \
+        botmattermost_agiledashboard \
         statistics \
         webauthn
 

@@ -54,6 +54,7 @@
             <div class="tlp-form-element">
                 <label class="tlp-label" for="channels">{{ label_channels_handles }} <i class="fa fa-asterisk"></i></label>
                 <select id="channels"
+                    data-test="channels"
                     class="tlp-select"
                     name="channels[]"
                     placeholder="{{ input_channels_handles }}"
@@ -72,6 +73,7 @@
                     <span class="tlp-prepend"><i class="fa fa-clock-o"></i></span>
                     <input type="text"
                         id="bot-mattermost-agiledashboard-send-time"
+                        data-test="bot-agiledashboard-send-time"
                         name="send_time"
                         class="tlp-input"
                         size="6"
@@ -92,7 +94,7 @@
     </div>
     <div class="tlp-modal-footer">
         <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{ button_close }}</button>
-        <button type="submit" class="tlp-button-primary tlp-modal-action">
+        <button type="submit" class="tlp-button-primary tlp-modal-action" data-test="add-notification-button">
             <i class="fa fa-plus tlp-button-icon"></i> {{ button_confirm }}
         </button>
     </div>
