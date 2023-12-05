@@ -23,8 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Project\Admin\ProjectMembers;
 
 use HTTPRequest;
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\InviteBuddy\InviteBuddiesPresenterBuilder;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
@@ -35,12 +34,11 @@ use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Project\UserRemover;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\ProjectRetriever;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ProjectMembersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     protected function tearDown(): void
     {
         if (isset($GLOBALS['_SESSION'])) {
@@ -50,76 +48,77 @@ final class ProjectMembersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testNotProjectAdminWithoutDelegationCannotAccessThePage(): void
     {
-        $project           = M::mock(\Project::class)->shouldReceive('getID')
-            ->andReturn('102')
-            ->getMock();
-        $project_retriever = M::mock(ProjectRetriever::class);
-        $project_retriever->shouldReceive('getProjectFromId')
-            ->once()
+        $project           = ProjectTestBuilder::aProject()->withId(102)->build();
+        $project_retriever = $this->createMock(ProjectRetriever::class);
+        $project_retriever
+            ->expects(self::once())
+            ->method('getProjectFromId')
             ->with('102')
-            ->andReturn($project);
+            ->willReturn($project);
         $current_user = UserTestBuilder::aUser()
             ->withId(110)
             ->withoutSiteAdministrator()
             ->build();
-        $request      = M::mock(HTTPRequest::class)->shouldReceive('getCurrentUser')
-            ->once()
-            ->andReturn($current_user)
-            ->getMock();
+        $request      = $this->createMock(HTTPRequest::class);
+        $request
+            ->expects(self::once())
+            ->method('getCurrentUser')
+            ->willReturn($current_user);
 
         $controller = $this->buildController(
             $project_retriever,
             EnsureUserCanManageProjectMembersStub::cannotManageMembers(),
         );
 
-        $this->expectException(ForbiddenException::class);
-        $controller->process($request, M::mock(BaseLayout::class), ['project_id' => '102']);
+        self::expectException(ForbiddenException::class);
+        $controller->process($request, $this->createMock(BaseLayout::class), ['project_id' => '102']);
     }
 
     public function testItThrowsWhenProjectIsNotActiveAndCurrentUserIsNotSiteAdmin(): void
     {
-        $project = M::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturn('102');
-        $project->shouldReceive('getStatus')
-            ->once()
-            ->andReturn(\Project::STATUS_SUSPENDED);
-        $project_retriever = M::mock(ProjectRetriever::class);
-        $project_retriever->shouldReceive('getProjectFromId')
-            ->once()
+        $project           = ProjectTestBuilder::aProject()
+            ->withId(102)
+            ->withStatusSuspended()
+            ->build();
+        $project_retriever = $this->createMock(ProjectRetriever::class);
+        $project_retriever
+            ->expects(self::once())
+            ->method('getProjectFromId')
             ->with('102')
-            ->andReturn($project);
+            ->willReturn($project);
         $current_user = UserTestBuilder::aUser()
             ->withId(110)
             ->withoutSiteAdministrator()
             ->build();
-        $request      = M::mock(HTTPRequest::class)->shouldReceive('getCurrentUser')
-            ->once()
-            ->andReturn($current_user)
-            ->getMock();
+        $request      = $this->createMock(HTTPRequest::class);
+        $request
+            ->expects(self::once())
+            ->method('getCurrentUser')
+            ->willReturn($current_user);
 
         $controller = $this->buildController(
             $project_retriever,
             EnsureUserCanManageProjectMembersStub::canManageMembers(),
         );
 
-        $this->expectException(ForbiddenException::class);
-        $controller->process($request, M::mock(BaseLayout::class), ['project_id' => '102']);
+        self::expectException(ForbiddenException::class);
+        $controller->process($request, $this->createMock(BaseLayout::class), ['project_id' => '102']);
     }
 
     private function buildController(
-        M\LegacyMockInterface|M\MockInterface|ProjectRetriever $project_retriever,
+        ProjectRetriever&MockObject $project_retriever,
         EnsureUserCanManageProjectMembers $members_manager_checker,
     ): ProjectMembersController {
         return new ProjectMembersController(
-            M::mock(ProjectMembersDAO::class),
-            M::mock(\UserHelper::class),
-            M::mock(\UGroupBinding::class),
-            M::mock(UserRemover::class),
-            M::mock(\EventManager::class),
-            M::mock(\UGroupManager::class),
-            M::mock(\UserImport::class),
+            $this->createMock(ProjectMembersDAO::class),
+            $this->createMock(\UserHelper::class),
+            $this->createMock(\UGroupBinding::class),
+            $this->createMock(UserRemover::class),
+            $this->createMock(\EventManager::class),
+            $this->createMock(\UGroupManager::class),
+            $this->createMock(\UserImport::class),
             $project_retriever,
-            M::mock(SynchronizedProjectMembershipDetector::class),
+            $this->createMock(SynchronizedProjectMembershipDetector::class),
             $members_manager_checker,
             new ListOfPendingInvitationsPresenterBuilder(
                 $this->createStub(InviteBuddyConfiguration::class),

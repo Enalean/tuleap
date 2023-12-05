@@ -24,76 +24,87 @@ namespace Tuleap\Project\Admin\PermissionsPerGroup;
 
 use ForgeAccess;
 use ForgeConfig;
+use PHPUnit\Framework\MockObject\MockObject;
 use ProjectUGroup;
+use Service;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use UGroupManager;
 
 final class PermissionPerGroupBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
     use GlobalLanguageMock;
 
-    /**
-     * @var UGroupManager
-     */
-    private $ugroup_manager;
-    /**
-     * @var PermissionPerGroupBuilder
-     */
-    private $builder;
+    private UGroupManager&MockObject $ugroup_manager;
+    private PermissionPerGroupBuilder $builder;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->ugroup_manager = \Mockery::mock(\UGroupManager::class);
+        $this->ugroup_manager = $this->createMock(\UGroupManager::class);
         $this->builder        = new PermissionPerGroupBuilder($this->ugroup_manager);
         $GLOBALS['Language']->method('getText')->willReturn('whatever');
     }
 
     public function testItAddsAnonymousUgroupIfPlatformAllowsThem(): void
     {
-        $project = \Mockery::spy(\Project::class, ['getID' => false, 'getUnixName' => false, 'isPublic' => false]);
-        $request = \Mockery::spy(\HTTPRequest::class);
+        $project = ProjectTestBuilder::aProject()
+            ->withAccessPrivate()
+            ->withUsedService(Service::WIKI)
+            ->build();
+        $request = $this->createMock(\HTTPRequest::class);
+        $request->method('get');
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
-        $this->ugroup_manager->shouldReceive('getStaticUGroups')->with($project)->andReturns([]);
+        $this->ugroup_manager->method('getStaticUGroups')->with($project)->willReturn([]);
+        $this->ugroup_manager->method('getUGroup');
 
         $ugroups = $this->builder->buildUGroup($project, $request);
 
-        $this->assertEquals(ProjectUGroup::ANONYMOUS, $ugroups['dynamic'][0]['id']);
+        self::assertEquals(ProjectUGroup::ANONYMOUS, $ugroups['dynamic'][0]['id']);
     }
 
     public function testItAddsAuthenticatedUgroupIfPlatformAllowsThem(): void
     {
-        $project = \Mockery::spy(\Project::class, ['getID' => false, 'getUnixName' => false, 'isPublic' => false]);
-        $request = \Mockery::spy(\HTTPRequest::class);
+        $project = ProjectTestBuilder::aProject()
+            ->withAccessPrivate()
+            ->withUsedService(Service::WIKI)
+            ->build();
+        $request = $this->createMock(\HTTPRequest::class);
+        $request->method('get');
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 
-        $this->ugroup_manager->shouldReceive('getStaticUGroups')->with($project)->andReturns([]);
+        $this->ugroup_manager->method('getStaticUGroups')->with($project)->willReturn([]);
+        $this->ugroup_manager->method('getUGroup');
 
         $ugroups = $this->builder->buildUGroup($project, $request);
 
-        $this->assertEquals(ProjectUGroup::AUTHENTICATED, $ugroups['dynamic'][0]['id']);
+        self::assertEquals(ProjectUGroup::AUTHENTICATED, $ugroups['dynamic'][0]['id']);
     }
 
     public function testItAlwaysAddRegisteredUgroup(): void
     {
-        $project = \Mockery::spy(\Project::class, ['getID' => false, 'getUnixName' => false, 'isPublic' => false]);
-        $request = \Mockery::spy(\HTTPRequest::class);
+        $project = ProjectTestBuilder::aProject()
+            ->withAccessPrivate()
+            ->withUsedService(Service::WIKI)
+            ->build();
+        $request = $this->createMock(\HTTPRequest::class);
+        $request->method('get');
 
-        $this->ugroup_manager->shouldReceive('getStaticUGroups')->with($project)->andReturns([]);
+        $this->ugroup_manager->method('getStaticUGroups')->with($project)->willReturn([]);
+        $this->ugroup_manager->method('getUGroup');
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
         $ugroups = $this->builder->buildUGroup($project, $request);
-        $this->assertEquals(ProjectUGroup::REGISTERED, $ugroups['dynamic'][1]['id']);
+        self::assertEquals(ProjectUGroup::REGISTERED, $ugroups['dynamic'][1]['id']);
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
         $ugroups = $this->builder->buildUGroup($project, $request);
-        $this->assertEquals(ProjectUGroup::REGISTERED, $ugroups['dynamic'][1]['id']);
+        self::assertEquals(ProjectUGroup::REGISTERED, $ugroups['dynamic'][1]['id']);
     }
 }

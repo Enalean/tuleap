@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Admin\ProjectCreation;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Config\ConfigDao;
-use Mockery;
 use Project_CustomDescription_CustomDescriptionDao;
 use Tuleap\Admin\ProjectCreation\ProjetFields\ProjectsFieldDescriptionUpdater;
 use Tuleap\GlobalLanguageMock;
@@ -33,28 +33,18 @@ use Tuleap\Project\Admin\DescriptionFields\DescriptionFieldAdminPresenterBuilder
 
 class ProjectsFieldDescriptionUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
-    /**
-     * @var ProjectsFieldDescriptionUpdater
-     */
-    private $updater;
-    /**
-     * @var ConfigDao|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $config_dao;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Project_CustomDescription_CustomDescriptionDao
-     */
-    private $custom_description_dao;
+    private ProjectsFieldDescriptionUpdater $updater;
+    private ConfigDao&MockObject $config_dao;
+    private Project_CustomDescription_CustomDescriptionDao&MockObject $custom_description_dao;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->custom_description_dao = Mockery::mock(Project_CustomDescription_CustomDescriptionDao::class);
-        $this->config_dao             = Mockery::mock(ConfigDao::class);
+        $this->custom_description_dao = $this->createMock(Project_CustomDescription_CustomDescriptionDao::class);
+        $this->config_dao             = $this->createMock(ConfigDao::class);
 
         $this->updater = new ProjectsFieldDescriptionUpdater(
             $this->custom_description_dao,
@@ -64,33 +54,33 @@ class ProjectsFieldDescriptionUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItMakesCustomFieldDescriptionOptional(): void
     {
-        $layout = \Mockery::mock(BaseLayout::class);
+        $layout = $this->createMock(BaseLayout::class);
 
-        $this->custom_description_dao->shouldReceive('updateRequiredCustomDescription')->withArgs([true, 1])->once();
-        $layout->shouldReceive('addFeedback')->once()->withArgs([\Feedback::INFO, Mockery::any()]);
-        $layout->shouldReceive('redirect')->once();
+        $this->custom_description_dao->expects(self::once())->method('updateRequiredCustomDescription')->with(true, 1);
+        $layout->expects(self::once())->method('addFeedback')->with(\Feedback::INFO, self::anything());
+        $layout->expects(self::once())->method('redirect');
 
         $this->updater->updateDescription("1", null, $layout);
     }
 
     public function testItMakesCustomFieldDescriptionRequired(): void
     {
-        $layout = \Mockery::mock(BaseLayout::class);
+        $layout = $this->createMock(BaseLayout::class);
 
-        $this->custom_description_dao->shouldReceive('updateRequiredCustomDescription')->withArgs([false, 1])->once();
-        $layout->shouldReceive('addFeedback')->once()->withArgs([\Feedback::INFO, Mockery::any()]);
-        $layout->shouldReceive('redirect')->once();
+        $this->custom_description_dao->expects(self::once())->method('updateRequiredCustomDescription')->with(false, 1);
+        $layout->expects(self::once())->method('addFeedback')->with(\Feedback::INFO, self::anything());
+        $layout->expects(self::once())->method('redirect');
 
         $this->updater->updateDescription(null, "1", $layout);
     }
 
     public function testItProjectDescriptionFieldOptional(): void
     {
-        $layout = \Mockery::mock(BaseLayout::class);
+        $layout = $this->createMock(BaseLayout::class);
 
-        $this->config_dao->shouldReceive('saveBool')->withArgs(['enable_not_mandatory_description', false])->once();
-        $layout->shouldReceive('addFeedback')->once()->withArgs([\Feedback::INFO, Mockery::any()]);
-        $layout->shouldReceive('redirect')->once();
+        $this->config_dao->expects(self::once())->method('saveBool')->with('enable_not_mandatory_description', false);
+        $layout->expects(self::once())->method('addFeedback')->with(\Feedback::INFO, self::anything());
+        $layout->expects(self::once())->method('redirect');
 
         $this->updater->updateDescription(
             DescriptionFieldAdminPresenterBuilder::SHORT_DESCRIPTION_FIELD_ID,
@@ -101,11 +91,11 @@ class ProjectsFieldDescriptionUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItProjectDescriptionFieldRequired(): void
     {
-        $layout = \Mockery::mock(BaseLayout::class);
+        $layout = $this->createMock(BaseLayout::class);
 
-        $this->config_dao->shouldReceive('saveBool')->withArgs(['enable_not_mandatory_description', true])->once();
-        $layout->shouldReceive('addFeedback')->once()->withArgs([\Feedback::INFO, Mockery::any()]);
-        $layout->shouldReceive('redirect')->once();
+        $this->config_dao->expects(self::once())->method('saveBool')->with('enable_not_mandatory_description', true);
+        $layout->expects(self::once())->method('addFeedback')->with(\Feedback::INFO, self::anything());
+        $layout->expects(self::once())->method('redirect');
 
         $this->updater->updateDescription(
             null,
