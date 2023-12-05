@@ -366,6 +366,11 @@ msgstr ""
 "Les jalons terminés ont leur statut défini à 'fermé' tel que précisé dans la "
 "sémantique."
 
+msgid "Milestones must have timeframe, title, and status semantics."
+msgstr ""
+"Les milestones doivent avoir les sémantiques plage de temps, titre, et "
+"statut."
+
 msgid "Name"
 msgstr "Nom"
 
@@ -610,8 +615,8 @@ msgstr ""
 "Les trackers \"planning\" potentiels sont déterminés à partir de la "
 "configuration de %1$s et de sa hiérarchie."
 
-msgid "The sidebar will display the last 5 open milestones"
-msgstr "La barre latérale affichera les 5 derniers jalons ouverts"
+msgid "The sidebar will display the last 5 open milestones."
+msgstr "La barre latérale affichera les 5 derniers jalons ouverts."
 
 #, php-format
 msgid "The tracker %s is not found"
