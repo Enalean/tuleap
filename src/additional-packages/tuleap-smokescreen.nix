@@ -10,8 +10,8 @@ let
     src = pkgs.fetchFromGitHub {
       owner = "stripe";
       repo = "smokescreen";
-      rev = "7c83effc9df4daf3a00a8e7215eda906693e51f6";
-      hash = "sha256-Je1QYkGX+t9vtJca4vP0PZCqlGW8U2F/U7ICVcP5IlU=";
+      rev = "8c0fa26edf63f35d5632ba7682d78ff07a306819";
+      hash = "sha256-+v0Yr+KtKEYgSwyxDOqWjCKxTsC8B2nKFQL1qLBjCaE=";
     };
 
     vendorHash = null;
