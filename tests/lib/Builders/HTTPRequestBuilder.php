@@ -25,7 +25,7 @@ namespace Tuleap\Test\Builders;
 
 class HTTPRequestBuilder
 {
-    private $request;
+    private \HTTPRequest $request;
 
     public function __construct()
     {
@@ -62,6 +62,14 @@ class HTTPRequestBuilder
         foreach ($params as $key => $value) {
             $this->request->set($key, $value);
         }
+        return $this;
+    }
+
+    public function withProject(\Project $project): self
+    {
+        $this->request->set('group_id', $project->getID());
+        $this->request->setProject($project);
+
         return $this;
     }
 

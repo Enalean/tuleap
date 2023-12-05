@@ -16,32 +16,23 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-class Codendi_RequestTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
+
+final class Codendi_RequestTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 {
-    private $project_manager;
-    private $project;
-
-    public function setUp(): void
-    {
-        $this->project         = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()
-            ->withId(123)
-            ->build();
-        $this->project_manager = $this->createMock(\ProjectManager::class);
-    }
-
     public function testItReturnsTheProject(): void
     {
-        $this->project_manager->method('getProject')->with(123)->willReturn($this->project);
-        $request = new Codendi_Request(['group_id' => '123'], $this->project_manager);
-        self::assertEquals($this->project, $request->getProject());
-    }
+        $project = ProjectTestBuilder::aProject()
+            ->withId(123)
+            ->build();
 
-    public function testItReturnsNullIfInvalidRequestedGroupId(): void
-    {
-        $request = new Codendi_Request(['group_id' => 'stuff'], $this->project_manager);
-        self::assertNull($request->getProject());
+        $project_manager = ProjectByIDFactoryStub::buildWith($project);
+
+        $request = new Codendi_Request(['group_id' => '123'], $project_manager);
+
+        self::assertEquals($project, $request->getProject());
     }
 }

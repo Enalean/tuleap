@@ -22,6 +22,7 @@ namespace Tuleap\AgileDashboard\ServiceAdministration;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\AgileDashboard\ExplicitBacklog\ConfigurationUpdater;
+use Tuleap\AgileDashboard\Milestone\Sidebar\CheckMilestonesInSidebar;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDisabler;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneEnabler;
@@ -42,6 +43,7 @@ class ScrumConfigurationUpdater
         private readonly ConfigurationUpdater $configuration_updater,
         private readonly EventDispatcherInterface $event_dispatcher,
         private readonly \Tuleap\Kanban\SplitKanbanConfigurationChecker $split_kanban_configuration_checker,
+        private readonly CheckMilestonesInSidebar $milestones_in_sidebar,
     ) {
         $this->project_id = (int) $this->request->get('group_id');
     }
@@ -56,11 +58,13 @@ class ScrumConfigurationUpdater
             return;
         }
 
-        $scrum_is_activated = $this->getActivatedScrum();
+        $scrum_is_activated                     = $this->getActivatedScrum();
+        $should_sidebar_display_last_milestones = $this->shouldSidebarDisplayLastMilestones();
 
         $this->config_manager->updateConfiguration(
             $this->project_id,
             $scrum_is_activated,
+            $should_sidebar_display_last_milestones,
         );
 
         $this->configuration_updater->updateScrumConfiguration($this->request);
@@ -110,5 +114,16 @@ class ScrumConfigurationUpdater
         }
 
         return $scrum_is_activated;
+    }
+
+    private function shouldSidebarDisplayLastMilestones(): bool
+    {
+        $project = $this->request->getProject();
+
+        if (! $this->request->exist('should-sidebar-display-last-milestones')) {
+            return $this->milestones_in_sidebar->shouldSidebarDisplayLastMilestones((int) $project->getID());
+        }
+
+        return (bool) $this->request->get('should-sidebar-display-last-milestones');
     }
 }

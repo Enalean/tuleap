@@ -21,6 +21,7 @@
 
 use Tuleap\AgileDashboard\BlockScrumAccess;
 use Tuleap\AgileDashboard\Milestone\Sidebar\DuplicateMilestonesInSidebarConfig;
+use Tuleap\AgileDashboard\Milestone\Sidebar\UpdateMilestonesInSidebarConfig;
 
 class AgileDashboard_ConfigurationManager
 {
@@ -31,6 +32,7 @@ class AgileDashboard_ConfigurationManager
         private readonly \Tuleap\Kanban\Legacy\LegacyKanbanRetriever $kanban_configuration_dao,
         private readonly Psr\EventDispatcher\EventDispatcherInterface $event_dispatcher,
         private readonly DuplicateMilestonesInSidebarConfig $milestones_in_sidebar_config_duplicator,
+        private readonly UpdateMilestonesInSidebarConfig $milestones_in_sidebar_config,
     ) {
     }
 
@@ -68,11 +70,16 @@ class AgileDashboard_ConfigurationManager
     public function updateConfiguration(
         $project_id,
         $scrum_is_activated,
+        bool $should_sidebar_display_last_milestones,
     ): void {
         $this->dao->updateConfiguration(
             $project_id,
             $scrum_is_activated,
         );
+
+        $should_sidebar_display_last_milestones
+            ? $this->milestones_in_sidebar_config->activateMilestonesInSidebar((int) $project_id)
+            : $this->milestones_in_sidebar_config->deactivateMilestonesInSidebar((int) $project_id);
     }
 
     public function duplicate($project_id, $template_id): void
