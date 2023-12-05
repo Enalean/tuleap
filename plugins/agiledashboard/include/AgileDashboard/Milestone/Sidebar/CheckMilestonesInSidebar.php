@@ -23,4 +23,6 @@ namespace Tuleap\AgileDashboard\Milestone\Sidebar;
 interface CheckMilestonesInSidebar
 {
     public function shouldSidebarDisplayLastMilestones(int $project_id): bool;
+
+    public function isMilestonesInSidebarAvailable(): bool;
 }

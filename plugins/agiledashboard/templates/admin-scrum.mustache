@@ -96,13 +96,13 @@
                             </p>
                         </div>
 
-                        {{# should_sidebar_display_last_milestones }}
+                        {{# is_milestones_in_sidebar_available }}
                             <div class="tlp-form-element">
                                 <label class="tlp-label tlp-checkbox">
                                     <input type="checkbox"
                                            class="tlp-form-element-disabled"
                                            value="1"
-                                           checked
+                                           {{# should_sidebar_display_last_milestones }}checked{{/ should_sidebar_display_last_milestones }}
                                            disabled
                                     >
                                     {{# dgettext }}tuleap-agiledashboard | Display milestones in sidebar{{/ dgettext }}
@@ -112,7 +112,7 @@
                                     {{# dgettext }}tuleap-agiledashboard | The sidebar will display the last 5 open milestones{{/ dgettext }}
                                 </p>
                             </div>
-                        {{/ should_sidebar_display_last_milestones }}
+                        {{/ is_milestones_in_sidebar_available }}
 
                     </section>
 

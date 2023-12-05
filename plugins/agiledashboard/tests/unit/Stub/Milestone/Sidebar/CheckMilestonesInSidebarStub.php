@@ -44,4 +44,9 @@ final class CheckMilestonesInSidebarStub implements CheckMilestonesInSidebar
     {
         return $this->should_sidebar_display_last_milestones;
     }
+
+    public function isMilestonesInSidebarAvailable(): bool
+    {
+        return true;
+    }
 }

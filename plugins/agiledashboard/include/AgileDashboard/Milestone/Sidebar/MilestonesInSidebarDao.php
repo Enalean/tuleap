@@ -38,10 +38,19 @@ final class MilestonesInSidebarDao extends DataAccessObject implements CheckMile
 
     private const SHOULD_SIDEBAR_DISPLAY_LAST_MILESTONES_WHEN_NO_CONFIG = true;
 
-    public function shouldSidebarDisplayLastMilestones(int $project_id): bool
+    public function isMilestonesInSidebarAvailable(): bool
     {
         $dev_mode = (int) \ForgeConfig::getFeatureFlag(self::DEV_MODE);
         if ($dev_mode !== 1) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function shouldSidebarDisplayLastMilestones(int $project_id): bool
+    {
+        if (! $this->isMilestonesInSidebarAvailable()) {
             return false;
         }
 
