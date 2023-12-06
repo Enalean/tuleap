@@ -50,6 +50,7 @@ enable_plugins() {
         frs \
         botmattermost \
         botmattermost_agiledashboard \
+        botmattermost_git \
         statistics \
         webauthn
 

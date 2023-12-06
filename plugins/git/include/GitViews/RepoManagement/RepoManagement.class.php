@@ -164,6 +164,8 @@ class GitViews_RepoManagement
         );
         $purifier = Codendi_HTMLPurifier::instance();
 
-        echo '<a href="' . $url . '" title="' . $purifier->purify($pane->getTitle()) . '">' . $purifier->purify($pane->getLabel()) . '</a></li>';
+        echo '<a href="' . $url . '" title="' . $purifier->purify($pane->getTitle()) . '" data-test="' . $purifier->purify($pane->getIdentifier()) . '">' .
+            $purifier->purify($pane->getLabel()) .
+            '</a></li>';
     }
 }

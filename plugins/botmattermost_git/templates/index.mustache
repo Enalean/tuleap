@@ -5,7 +5,7 @@
             <p>{{ any_configured_notification }}</p>
             {{# has_bots }}
                 <p class="git-notification-mattermost-configuration-description">{{ any_configured_notification_tips }}</p>
-                <button class="btn btn-primary" data-toggle="modal" href="#admin-config-bot-add">
+                <button class="btn btn-primary" data-toggle="modal" href="#admin-config-bot-add" data-test="add-git-bot">
                     <i class="fa fa-plus"></i> {{ button_config }}
                 </button>
             {{/ has_bots }}
@@ -23,7 +23,7 @@
                     {{ name }}
                 </p>
             </div>
-            <div class="panel-container">
+            <div class="panel-container" data-test="git-bot-mattermost-list">
                 <section class="panel-section">
                     <p class="bot-assigned-label">{{ label_channels_handles }}</p>
                     {{# channels }}<p>{{ channels }}</p>{{/ channels }}

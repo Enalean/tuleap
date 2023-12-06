@@ -70,3 +70,28 @@ Cypress.Commands.add("updatePlatformAndMakeUserInAdminApprovalMode", (): void =>
 
     cy.anonymousSession();
 });
+
+Cypress.Commands.add("addBotMattermost", (bot_name: string): void => {
+    cy.siteAdministratorSession();
+    cy.log("Add new bot");
+    cy.visit("/admin/");
+    cy.get("[data-test=botmattermost]").click();
+    cy.get("[data-test=add-bot]").click();
+    cy.get("[data-test=bot-mattermost-name]").type(bot_name);
+    cy.get("[data-test=bot-mattermost-webhook-url]").type("https://example.com");
+    cy.get("[data-test=add-bot-button]").click();
+    cy.get("[data-test=bot-list]").contains(bot_name);
+
+    cy.anonymousSession();
+});
+Cypress.Commands.add("deleteBotMattermost", (bot_name: string): void => {
+    cy.siteAdministratorSession();
+    cy.log("remove bot");
+    cy.visit("/admin/");
+    cy.get("[data-test=botmattermost]").click();
+    cy.get("[data-test=delete-bot]").click();
+    cy.get("[data-test=confirm-bot-delete]").click();
+    cy.get("[data-test=bot-list]").should("not.contain", bot_name);
+
+    cy.anonymousSession();
+});
