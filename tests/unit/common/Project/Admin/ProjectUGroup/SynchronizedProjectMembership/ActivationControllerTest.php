@@ -22,53 +22,32 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Admin\ProjectUGroup\SynchronizedProjectMembership;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Project;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Request\ProjectRetriever;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ActivationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var ActivationController */
-    private $controller;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|ProjectRetriever
-     */
-    private $project_retriever;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|ProjectAdministratorChecker
-     */
-    private $administrator_checker;
-    /**
-     * @var M\MockInterface|SynchronizedProjectMembershipDao
-     */
-    private $dao;
-    /**
-     * @var \CSRFSynchronizerToken|M\MockInterface
-     */
-    private $csrf;
-    /**
-     * @var M\MockInterface|BaseLayout
-     */
-    private $layout;
-    /**
-     * @var \HTTPRequest|M\MockInterface
-     */
-    private $request;
+    private ActivationController $controller;
+    private ProjectRetriever&MockObject $project_retriever;
+    private ProjectAdministratorChecker&MockObject $administrator_checker;
+    private SynchronizedProjectMembershipDao&MockObject $dao;
+    private \CSRFSynchronizerToken&MockObject $csrf;
+    private BaseLayout&MockObject $layout;
+    private \HTTPRequest&MockObject $request;
 
     protected function setUp(): void
     {
-        $this->layout                = M::mock(BaseLayout::class);
-        $this->request               = M::mock(\HTTPRequest::class);
-        $this->project_retriever     = M::mock(ProjectRetriever::class);
-        $this->administrator_checker = M::mock(ProjectAdministratorChecker::class);
-        $this->dao                   = M::mock(SynchronizedProjectMembershipDao::class);
-        $this->csrf                  = M::mock(\CSRFSynchronizerToken::class);
+        $this->layout                = $this->createMock(BaseLayout::class);
+        $this->request               = $this->createMock(\HTTPRequest::class);
+        $this->project_retriever     = $this->createMock(ProjectRetriever::class);
+        $this->administrator_checker = $this->createMock(ProjectAdministratorChecker::class);
+        $this->dao                   = $this->createMock(SynchronizedProjectMembershipDao::class);
+        $this->csrf                  = $this->createMock(\CSRFSynchronizerToken::class);
         $this->controller            = new ActivationController(
             $this->project_retriever,
             $this->administrator_checker,
@@ -79,12 +58,9 @@ final class ActivationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetUrl(): void
     {
-        $project = M::mock(Project::class);
-        $project->shouldReceive('getID')
-            ->once()
-            ->andReturn('104');
+        $project = ProjectTestBuilder::aProject()->withId(104)->build();
 
-        $this->assertEquals(
+        self::assertEquals(
             '/project/104/admin/change-synchronized-project-membership',
             ActivationController::getUrl($project)
         );
@@ -92,66 +68,70 @@ final class ActivationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testProcessEnablesSynchronizedProjectMembership(): void
     {
-        $this->csrf->shouldReceive('check')->once();
-        $project = M::mock(Project::class, ['isError' => false, 'getID' => '104']);
-        $this->project_retriever->shouldReceive('getProjectFromId')
+        $this->csrf->expects(self::once())->method('check');
+        $project = ProjectTestBuilder::aProject()->withId(104)->build();
+        $this->project_retriever
+            ->expects(self::once())
+            ->method('getProjectFromId')
             ->with('104')
-            ->once()
-            ->andReturn($project);
+            ->willReturn($project);
         $variables = ['project_id' => '104'];
-        $this->request->shouldReceive('get')
+        $this->request
+            ->expects(self::once())
+            ->method('get')
             ->with('activation')
-            ->once()
-            ->andReturn('on');
-        $user = M::mock(\PFUser::class);
-        $this->request->shouldReceive('getCurrentUser')
-            ->once()
-            ->andReturn($user);
-        $this->administrator_checker->shouldReceive('checkUserIsProjectAdministrator')
-            ->with($user, $project)
-            ->once();
+            ->willReturn('on');
+        $user = UserTestBuilder::buildWithDefaults();
+        $this->request
+            ->expects(self::once())
+            ->method('getCurrentUser')
+            ->willReturn($user);
+        $this->administrator_checker
+            ->expects(self::once())
+            ->method('checkUserIsProjectAdministrator')
+            ->with($user, $project);
 
-        $this->dao->shouldReceive('enable')
-            ->once();
-        $this->dao->shouldNotReceive('disable');
+        $this->dao->expects(self::once())->method('enable');
+        $this->dao->expects(self::never())->method('disable');
 
-        $this->layout->shouldReceive('addFeedback');
-        $this->layout->shouldReceive('redirect')
-            ->with('/project/admin/ugroup.php?group_id=104')
-            ->once();
+        $this->layout->method('addFeedback');
+        $this->layout->expects(self::once())->method('redirect')
+            ->with('/project/admin/ugroup.php?group_id=104');
 
         $this->controller->process($this->request, $this->layout, $variables);
     }
 
     public function testProcessDisablesSynchronizedProjectMembership(): void
     {
-        $this->csrf->shouldReceive('check')->once();
-        $project = M::mock(Project::class, ['isError' => false, 'getID' => '104']);
-        $this->project_retriever->shouldReceive('getProjectFromId')
+        $this->csrf->expects(self::once())->method('check');
+        $project = ProjectTestBuilder::aProject()->withId(104)->build();
+        $this->project_retriever
+            ->expects(self::once())
+            ->method('getProjectFromId')
             ->with('104')
-            ->once()
-            ->andReturn($project);
+            ->willReturn($project);
         $variables = ['project_id' => '104'];
-        $this->request->shouldReceive('get')
+        $this->request
+            ->expects(self::once())
+            ->method('get')
             ->with('activation')
-            ->once()
-            ->andReturnFalse();
-        $user = M::mock(\PFUser::class);
-        $this->request->shouldReceive('getCurrentUser')
-            ->once()
-            ->andReturn($user);
-        $this->administrator_checker->shouldReceive('checkUserIsProjectAdministrator')
-            ->with($user, $project)
-            ->once();
+            ->willReturn(false);
+        $user = UserTestBuilder::buildWithDefaults();
+        $this->request
+            ->expects(self::once())
+            ->method('getCurrentUser')
+            ->willReturn($user);
+        $this->administrator_checker
+            ->expects(self::once())
+            ->method('checkUserIsProjectAdministrator')
+            ->with($user, $project);
 
-        $this->dao->shouldReceive('disable')
-            ->once();
-        $this->dao->shouldNotReceive('enable');
+        $this->dao->expects(self::once())->method('disable');
+        $this->dao->expects(self::never())->method('enable');
 
-        $this->layout->shouldReceive('addFeedback');
-        $this->layout->shouldReceive('redirect')
-            ->with('/project/admin/ugroup.php?group_id=104')
-            ->once();
+        $this->layout->method('addFeedback');
+        $this->layout->expects(self::once())->method('redirect')
+            ->with('/project/admin/ugroup.php?group_id=104');
 
         $this->controller->process($this->request, $this->layout, $variables);
     }
