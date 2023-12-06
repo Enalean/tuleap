@@ -24,15 +24,16 @@ declare(strict_types=1);
 namespace Tuleap\SVNCore;
 
 use EventManager;
-use ForgeConfig;
 use Project;
 use Project_AccessException;
+use ProjectUGroup;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Project\CachedProjectAccessChecker;
 use Tuleap\Project\CheckProjectAccess;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\UGroupRetriever;
+use UGroupManager;
 
 final class SvnAccessFileDefaultBlockGenerator
 {
@@ -47,7 +48,7 @@ final class SvnAccessFileDefaultBlockGenerator
     {
         if (! isset(self::$instance)) {
             self::$instance = new self(
-                new \UGroupManager(),
+                new UGroupManager(),
                 new CachedProjectAccessChecker(
                     new ProjectAccessChecker(
                         new RestrictedUserCanAccessProjectVerifier(),
@@ -64,24 +65,28 @@ final class SvnAccessFileDefaultBlockGenerator
     {
         $project_id = (int) $project->getID();
         if (! isset($this->project_default_blocks_cache[$project_id])) {
-            $this->project_default_blocks_cache[$project_id] = $this->getSVNAccessGroups($project) . "\n" . $this->getSVNAccessRootPathDef($project);
+            $default_block_plugin_override                   = $this->getDefaultBlockPluginOverride($project);
+            $this->project_default_blocks_cache[$project_id] = $this->getSVNAccessGroups($project, $default_block_plugin_override) . "\n" . $this->getSVNAccessRootPathDef($project, $default_block_plugin_override);
         }
 
         return $this->project_default_blocks_cache[$project_id];
     }
 
-    private function getSVNAccessGroups(Project $project): string
+    private function getDefaultBlockPluginOverride(Project $project): SVNAccessFileDefaultBlockOverride
     {
         $ugroups = [];
         foreach ($this->ugroup_retriever->getUgroups($project) as $ugroup) {
-            if ($ugroup->getId() > \ProjectUGroup::DYNAMIC_UPPER_BOUNDARY || $ugroup->getId() === \ProjectUGroup::PROJECT_MEMBERS) {
+            if ($ugroup->getId() > ProjectUGroup::DYNAMIC_UPPER_BOUNDARY || $ugroup->getId() === ProjectUGroup::PROJECT_MEMBERS) {
                 $ugroups[$ugroup->getId()] = $ugroup;
             }
         }
-        $projects_and_group_members = $this->dispatcher->dispatch(new GetSVNUserGroups($project, ...$ugroups));
+        return $this->dispatcher->dispatch(new SVNAccessFileDefaultBlockOverride($project, ...$ugroups));
+    }
 
+    private function getSVNAccessGroups(Project $project, SVNAccessFileDefaultBlockOverride $default_block_plugin_override): string
+    {
         $ugroup_list = '';
-        foreach ($projects_and_group_members->getSVNUserGroups() as $svn_group) {
+        foreach ($default_block_plugin_override->getSVNUserGroups() as $svn_group) {
             $ugroup_list .= sprintf("%s = %s\n", $svn_group->name, implode(', ', $this->getAllowedUserNamesFromSVNUserList($project, $svn_group->users)));
         }
 
@@ -109,12 +114,16 @@ final class SvnAccessFileDefaultBlockGenerator
         return $allowed;
     }
 
-    private function getSVNAccessRootPathDef(Project $project): string
+    private function getSVNAccessRootPathDef(Project $project, SVNAccessFileDefaultBlockOverride $default_block_plugin_override): string
     {
-        $world_access = '* = ';
-        if ($project->isPublic() && ! ForgeConfig::areRestrictedUsersAllowed()) {
+        if ($default_block_plugin_override->isWorldAccessForbidden()) {
+            $world_access = '* =';
+        } elseif ($project->isPublic()) {
             $world_access = '* = r';
+        } else {
+            $world_access = '* =';
         }
+
         $members_access = '@' . SVNUserGroup::MEMBERS . ' = rw';
 
         return <<<EOT

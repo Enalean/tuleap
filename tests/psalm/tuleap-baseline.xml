@@ -24174,7 +24174,7 @@
       <code>account_login_login_with_tuleap</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/ldap/include/SVN/SVNUserGroupsProvider.php">
+  <file src="plugins/ldap/include/SVN/SVNAccessFileDefaultBlockForLDAP.php">
     <DeprecatedMethod>
       <code>$dar</code>
       <code>$dar</code>
