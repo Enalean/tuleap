@@ -52,7 +52,7 @@
   "require": {
     "mediawiki/labeled-section-transclusion": "^1.39.1",
     "mediawiki/mpdf": "^1.0",
-    "mediawiki/tuleap-integration": "dev-REL1_39#b419b081a37ef022ad266b72722546649a2e79f8",
+    "mediawiki/tuleap-integration": "dev-REL1_39",
     "mediawiki/tuleap-skin": "dev-REL1_39",
     "mediawiki/tuleap-wiki-farm": "dev-REL1_39"
   },

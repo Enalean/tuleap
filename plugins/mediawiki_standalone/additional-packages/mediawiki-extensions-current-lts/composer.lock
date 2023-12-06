@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9eec75fcc76d46b96eaa7dfd8d79bed0",
+    "content-hash": "84ce6d148b96199683da334c63d41467",
     "packages": [
         {
             "name": "composer/installers",
@@ -316,12 +316,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration.git",
-                "reference": "b419b081a37ef022ad266b72722546649a2e79f8"
+                "reference": "e8b2e2d2f44cd2d64edc5afd5e9f3deb08fa48f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapIntegration/zipball/b419b081a37ef022ad266b72722546649a2e79f8",
-                "reference": "b419b081a37ef022ad266b72722546649a2e79f8",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapIntegration/zipball/e8b2e2d2f44cd2d64edc5afd5e9f3deb08fa48f1",
+                "reference": "e8b2e2d2f44cd2d64edc5afd5e9f3deb08fa48f1",
                 "shasum": ""
             },
             "require": {
@@ -367,7 +367,7 @@
             "support": {
                 "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration/tree/REL1_39"
             },
-            "time": "2023-11-23T07:15:19+00:00"
+            "time": "2023-12-05T07:23:08+00:00"
         },
         {
             "name": "mediawiki/tuleap-skin",
