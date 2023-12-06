@@ -22,86 +22,54 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\StateStatus;
 
-use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
-use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\Notification\EventSubjectToNotification;
 use Tuleap\PullRequest\Notification\FilterUserFromCollection;
 use Tuleap\PullRequest\Notification\NotificationToProcessBuilder;
 use Tuleap\PullRequest\Notification\OwnerRetriever;
+use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\PullRequestRetriever;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
+use Tuleap\User\RetrieveUserById;
 use UserHelper;
-use UserManager;
 
 /**
  * @template-implements NotificationToProcessBuilder<PullRequestMergedEvent>
  */
 final class PullRequestMergedNotificationToProcessBuilder implements NotificationToProcessBuilder
 {
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-    /**
-     * @var Factory
-     */
-    private $pull_request_factory;
-    /**
-     * @var OwnerRetriever
-     */
-    private $owner_retriever;
-    /**
-     * @var FilterUserFromCollection
-     */
-    private $filter_user_from_collection;
-    /**
-     * @var UserHelper
-     */
-    private $user_helper;
-    /**
-     * @var HTMLURLBuilder
-     */
-    private $html_url_builder;
-
     public function __construct(
-        UserManager $user_manager,
-        Factory $pull_request_factory,
-        OwnerRetriever $owner_retriever,
-        FilterUserFromCollection $filter_user_from_collection,
-        UserHelper $user_helper,
-        HTMLURLBuilder $html_url_builder,
+        private readonly RetrieveUserById $user_manager,
+        private readonly PullRequestRetriever $pull_request_retriever,
+        private readonly OwnerRetriever $owner_retriever,
+        private readonly FilterUserFromCollection $filter_user_from_collection,
+        private readonly UserHelper $user_helper,
+        private readonly HTMLURLBuilder $html_url_builder,
     ) {
-        $this->user_manager                = $user_manager;
-        $this->pull_request_factory        = $pull_request_factory;
-        $this->owner_retriever             = $owner_retriever;
-        $this->filter_user_from_collection = $filter_user_from_collection;
-        $this->user_helper                 = $user_helper;
-        $this->html_url_builder            = $html_url_builder;
     }
 
     public function getNotificationsToProcess(EventSubjectToNotification $event): array
     {
-        try {
-            $pull_request = $this->pull_request_factory->getPullRequestById($event->getPullRequestID());
-        } catch (PullRequestNotFoundException $e) {
-            return [];
-        }
+        return $this->pull_request_retriever->getPullRequestById($event->getPullRequestID())->match(
+            function (PullRequest $pull_request) use ($event) {
+                $change_user = $this->user_manager->getUserById($event->getUserID());
+                if ($change_user === null) {
+                    return [];
+                }
 
-        $change_user = $this->user_manager->getUserById($event->getUserID());
-        if ($change_user === null) {
-            return [];
-        }
+                $pull_request_owners = $this->owner_retriever->getOwners($pull_request);
 
-        $pull_request_owners = $this->owner_retriever->getOwners($pull_request);
-
-        return [
-            PullRequestMergedNotification::fromOwners(
-                $this->user_helper,
-                $this->html_url_builder,
-                $this->filter_user_from_collection,
-                $pull_request,
-                $change_user,
-                $pull_request_owners
-            ),
-        ];
+                return [
+                    PullRequestMergedNotification::fromOwners(
+                        $this->user_helper,
+                        $this->html_url_builder,
+                        $this->filter_user_from_collection,
+                        $pull_request,
+                        $change_user,
+                        $pull_request_owners
+                    ),
+                ];
+            },
+            static fn() => []
+        );
     }
 }

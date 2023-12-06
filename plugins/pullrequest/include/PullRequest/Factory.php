@@ -22,7 +22,6 @@ namespace Tuleap\PullRequest;
 
 use GitRepository;
 use PFUser;
-use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
 use Tuleap\PullRequest\Exception\PullRequestNotCreatedException;
 use pullrequestPlugin;
 use ReferenceManager;
@@ -31,20 +30,6 @@ class Factory
 {
     public function __construct(private readonly Dao $dao, private readonly ReferenceManager $reference_manager)
     {
-    }
-
-    /**
-     * @return PullRequest
-     * @throws PullRequestNotFoundException
-     */
-    public function getPullRequestById($id)
-    {
-        $row = $this->dao->searchByPullRequestId($id);
-        if (empty($row)) {
-            throw new PullRequestNotFoundException();
-        }
-
-        return $this->getInstanceFromRow($row);
     }
 
     /**
