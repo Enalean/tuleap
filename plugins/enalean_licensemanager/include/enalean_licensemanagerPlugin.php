@@ -25,6 +25,7 @@ use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\Enalean\LicenseManager\CountDueLicenses\DueLicencesDao;
 use Tuleap\Enalean\LicenseManager\CountDueLicenses\LicenseManagerCountDueLicensesCommand;
 use Tuleap\Enalean\LicenseManager\LicenseManagerComputedMetricsCollector;
+use Tuleap\Enalean\LicenseManager\QuotaLicenseCalculator;
 use Tuleap\Enalean\LicenseManager\StatusActivityEmitter;
 use Tuleap\Enalean\LicenseManager\Webhook\StatusLogger;
 use Tuleap\Enalean\LicenseManager\Webhook\UserCounterPayload;
@@ -117,9 +118,9 @@ class enalean_licensemanagerPlugin extends Plugin
 
         $nb_used_users = $this->getNbUsedUsersFromEventParams($params);
 
-        if ($this->isQuotaExceeded($nb_used_users, $nb_max_users)) {
+        if (QuotaLicenseCalculator::isQuotaExceeded($nb_used_users, $nb_max_users)) {
             $params['warnings'][] = $this->getExceededWarning($nb_max_users);
-        } elseif ($this->isQuotaExceedingSoon($nb_used_users, $nb_max_users)) {
+        } elseif (QuotaLicenseCalculator::isQuotaExceedingSoon($nb_used_users, $nb_max_users)) {
             $params['warnings'][] = $this->getExceedingSoonWarning($nb_used_users, $nb_max_users);
         }
     }
@@ -155,9 +156,9 @@ class enalean_licensemanagerPlugin extends Plugin
         );
 
         $level = StatisticsBadgePresenter::LEVEL_SECONDARY;
-        if ($this->isQuotaExceeded($nb_used_users, $nb_max_users)) {
+        if (QuotaLicenseCalculator::isQuotaExceeded($nb_used_users, $nb_max_users)) {
             $level = StatisticsBadgePresenter::LEVEL_DANGER;
-        } elseif ($this->isQuotaExceedingSoon($nb_used_users, $nb_max_users)) {
+        } elseif (QuotaLicenseCalculator::isQuotaExceedingSoon($nb_used_users, $nb_max_users)) {
             $level = StatisticsBadgePresenter::LEVEL_WARNING;
         }
 
@@ -231,16 +232,6 @@ class enalean_licensemanagerPlugin extends Plugin
     /**
      * @param int $nb_used_users
      * @param int $nb_max_users
-     * @return bool
-     */
-    private function isQuotaExceedingSoon($nb_used_users, $nb_max_users)
-    {
-        return 1 - $nb_used_users / $nb_max_users < 0.2;
-    }
-
-    /**
-     * @param int $nb_used_users
-     * @param int $nb_max_users
      * @return string
      */
     private function getExceedingSoonWarning($nb_used_users, $nb_max_users)
@@ -296,16 +287,6 @@ class enalean_licensemanagerPlugin extends Plugin
             ';
 
         return $warning;
-    }
-
-    /**
-     * @param int $nb_used_users
-     * @param int $nb_max_users
-     * @return bool
-     */
-    private function isQuotaExceeded($nb_used_users, $nb_max_users)
-    {
-        return $nb_used_users > $nb_max_users;
     }
 
     public function collectCLICommands(CLICommandsCollector $commands_collector): void
