@@ -22,33 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Admin\Routing;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Project\Admin\Navigation\FooterDisplayer;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Request\ProjectRetriever;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class AdministrationLayoutHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var AdministrationLayoutHelper */
-    private $helper;
-    /** @var M\LegacyMockInterface|M\MockInterface|ProjectRetriever */
-    private $project_retriever;
-    /** @var M\LegacyMockInterface|M\MockInterface|ProjectAdministratorChecker */
-    private $administrator_checker;
-    /** @var M\LegacyMockInterface|M\MockInterface|HeaderNavigationDisplayer */
-    private $header_displayer;
-    /** @var M\LegacyMockInterface|M\MockInterface|FooterDisplayer */
-    private $footer_displayer;
+    private AdministrationLayoutHelper $helper;
+    private ProjectRetriever&MockObject $project_retriever;
+    private ProjectAdministratorChecker&MockObject $administrator_checker;
+    private HeaderNavigationDisplayer&MockObject $header_displayer;
+    private FooterDisplayer&MockObject $footer_displayer;
 
     protected function setUp(): void
     {
-        $this->project_retriever     = M::mock(ProjectRetriever::class);
-        $this->administrator_checker = M::mock(ProjectAdministratorChecker::class);
-        $this->header_displayer      = M::mock(HeaderNavigationDisplayer::class);
-        $this->footer_displayer      = M::mock(FooterDisplayer::class);
+        $this->project_retriever     = $this->createMock(ProjectRetriever::class);
+        $this->administrator_checker = $this->createMock(ProjectAdministratorChecker::class);
+        $this->header_displayer      = $this->createMock(HeaderNavigationDisplayer::class);
+        $this->footer_displayer      = $this->createMock(FooterDisplayer::class);
         $this->helper                = new AdministrationLayoutHelper(
             $this->project_retriever,
             $this->administrator_checker,
@@ -59,32 +53,36 @@ final class AdministrationLayoutHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCallsCallbackWithProjectAndCurrentUser(): void
     {
-        $request                = M::mock(\HTTPRequest::class);
+        $request                = $this->createMock(\HTTPRequest::class);
         $project_id             = '101';
         $page_title             = 'Project Administration';
         $current_pane_shortname = 'details';
 
-        $current_user = M::mock(\PFUser::class);
-        $request->shouldReceive('getCurrentUser')
-            ->once()
-            ->andReturn($current_user);
+        $current_user = UserTestBuilder::buildWithDefaults();
+        $request
+            ->expects(self::once())
+            ->method('getCurrentUser')
+            ->willReturn($current_user);
 
-        $project = M::mock(\Project::class);
-        $this->project_retriever->shouldReceive('getProjectFromId')
-            ->once()
+        $project = ProjectTestBuilder::aProject()->build();
+        $this->project_retriever
+            ->expects(self::once())
+            ->method('getProjectFromId')
             ->with($project_id)
-            ->andReturn($project);
-        $this->administrator_checker->shouldReceive('checkUserIsProjectAdministrator')
-            ->once()
+            ->willReturn($project);
+        $this->administrator_checker
+            ->expects(self::once())
+            ->method('checkUserIsProjectAdministrator')
             ->with($current_user, $project);
-        $this->header_displayer->shouldReceive('displayBurningParrotNavigation')
-            ->once()
+        $this->header_displayer
+            ->expects(self::once())
+            ->method('displayBurningParrotNavigation')
             ->with($page_title, $project, $current_pane_shortname);
-        $this->footer_displayer->shouldReceive('display');
+        $this->footer_displayer->method('display');
 
         $callback = function (\Project $param_project, \PFUser $param_current_user) use ($project, $current_user): void {
-            $this->assertSame($project, $param_project);
-            $this->assertSame($current_user, $param_current_user);
+            self::assertSame($project, $param_project);
+            self::assertSame($current_user, $param_current_user);
         };
 
         $this->helper->renderInProjectAdministrationLayout(
