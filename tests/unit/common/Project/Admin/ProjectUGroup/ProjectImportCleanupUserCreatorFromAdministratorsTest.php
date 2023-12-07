@@ -22,32 +22,28 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Admin\ProjectUGroup;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
 use ProjectUGroup;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ProjectImportCleanupUserCreatorFromAdministratorsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testValuesHoldByTheEventCanBeAccessed(): void
     {
-        $creator = Mockery::mock(PFUser::class);
-        $ugroup  = Mockery::mock(ProjectUGroup::class);
-        $ugroup->shouldReceive('getId')->andReturn(ProjectUGroup::PROJECT_ADMIN);
+        $creator = UserTestBuilder::buildWithDefaults();
+        $ugroup  = $this->createMock(ProjectUGroup::class);
+        $ugroup->method('getId')->willReturn(ProjectUGroup::PROJECT_ADMIN);
         $event = new ProjectImportCleanupUserCreatorFromAdministrators($creator, $ugroup);
 
-        $this->assertSame($creator, $event->getCreator());
-        $this->assertSame($ugroup, $event->getUGroupAdministrator());
+        self::assertSame($creator, $event->getCreator());
+        self::assertSame($ugroup, $event->getUGroupAdministrator());
     }
 
     public function testOnlyProjectAdminUGroupAreAccepted(): void
     {
-        $ugroup = Mockery::mock(ProjectUGroup::class);
-        $ugroup->shouldReceive('getId')->andReturn(ProjectUGroup::PROJECT_MEMBERS);
+        $ugroup = $this->createMock(ProjectUGroup::class);
+        $ugroup->method('getId')->willReturn(ProjectUGroup::PROJECT_MEMBERS);
 
-        $this->expectException(NotProjectAdministratorUGroup::class);
-        new ProjectImportCleanupUserCreatorFromAdministrators(Mockery::mock(PFUser::class), $ugroup);
+        self::expectException(NotProjectAdministratorUGroup::class);
+        new ProjectImportCleanupUserCreatorFromAdministrators(UserTestBuilder::buildWithDefaults(), $ugroup);
     }
 }
