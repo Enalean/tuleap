@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace Tuleap\REST;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Rest_Token;
 use Rest_TokenDao;
 use Rest_TokenFactory;
@@ -29,18 +28,16 @@ use Rest_TokenManager;
 
 final class TokenManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /** @var  Rest_TokenManager */
     private $token_manager;
 
-    /** @var  Rest_TokenDao */
+    /** @var \PHPUnit\Framework\MockObject\MockObject&Rest_TokenDao */
     private $token_dao;
 
     /** @var  Rest_TokenFactory */
     private $token_factory;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\UserManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&\UserManager
      */
     private $user_manager;
     /**
@@ -62,8 +59,8 @@ final class TokenManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->user_manager  = \Mockery::spy(\UserManager::class);
-        $this->token_dao     = \Mockery::spy(\Rest_TokenDao::class);
+        $this->user_manager  = $this->createMock(\UserManager::class);
+        $this->token_dao     = $this->createMock(\Rest_TokenDao::class);
         $this->token_factory = new Rest_TokenFactory($this->token_dao);
         $this->token_manager = new Rest_TokenManager($this->token_dao, $this->token_factory, $this->user_manager);
 
@@ -75,15 +72,15 @@ final class TokenManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTheUserIfTokenIsValid(): void
     {
-        $this->user_manager->shouldReceive('getUserById')->with($this->user_id)->andReturns($this->user);
+        $this->user_manager->method('getUserById')->with($this->user_id)->willReturn($this->user);
 
-        $this->token_dao->shouldReceive('checkTokenExistenceForUserId')->with($this->user_id, $this->token_value)->andReturns(\TestHelper::arrayToDar([]));
+        $this->token_dao->method('checkTokenExistenceForUserId')->with($this->user_id, $this->token_value)->willReturn(\TestHelper::arrayToDar([]));
         $this->assertEquals($this->user, $this->token_manager->checkToken($this->token));
     }
 
     public function testItThrowsAnExceptionIfTokenIsInvalid(): void
     {
-        $this->token_dao->shouldReceive('checkTokenExistenceForUserId')->with($this->user_id, $this->token_value)->andReturns(\TestHelper::emptyDar());
+        $this->token_dao->method('checkTokenExistenceForUserId')->with($this->user_id, $this->token_value)->willReturn(\TestHelper::emptyDar());
         $this->expectException(\Rest_Exception_InvalidTokenException::class);
 
         $this->token_manager->checkToken($this->token);
@@ -91,26 +88,26 @@ final class TokenManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItExpiresATokenIfItBelongsToUser(): void
     {
-        $this->user_manager->shouldReceive('getUserById')->with($this->user_id)->andReturns($this->user);
+        $this->user_manager->method('getUserById')->with($this->user_id)->willReturn($this->user);
 
-        $this->token_dao->shouldReceive('checkTokenExistenceForUserId')->with($this->user_id, $this->token_value)->andReturns(\TestHelper::arrayToDar([]));
-        $this->token_dao->shouldReceive('deleteToken')->with($this->token_value)->andReturns(true)->once();
+        $this->token_dao->method('checkTokenExistenceForUserId')->with($this->user_id, $this->token_value)->willReturn(\TestHelper::arrayToDar([]));
+        $this->token_dao->expects(self::once())->method('deleteToken')->with($this->token_value)->willReturn(true);
 
         $this->token_manager->expireToken($this->token);
     }
 
     public function testItExpiresAllTokensForAUser(): void
     {
-        $this->token_dao->shouldReceive('deleteAllTokensForUser')->with($this->user_id)->once();
+        $this->token_dao->expects(self::once())->method('deleteAllTokensForUser')->with($this->user_id);
 
         $this->token_manager->expireAllTokensForUser($this->user);
     }
 
     public function testItDoesNotExpireATokenIfItDoesNotBelongToUser(): void
     {
-        $this->token_dao->shouldReceive('checkTokenExistenceForUserId')->with($this->user_id, $this->token_value)->andReturns(\TestHelper::emptyDar());
+        $this->token_dao->method('checkTokenExistenceForUserId')->with($this->user_id, $this->token_value)->willReturn(\TestHelper::emptyDar());
 
-        $this->token_dao->shouldReceive('deleteToken')->with($this->token_value)->never();
+        $this->token_dao->expects(self::never())->method('deleteToken')->with($this->token_value);
         $this->expectException(\Rest_Exception_InvalidTokenException::class);
 
         $this->token_manager->expireToken($this->token);
@@ -118,7 +115,7 @@ final class TokenManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItAddsATokenToDatabase(): void
     {
-        $this->token_dao->shouldReceive('addTokenForUserId')->with($this->user_id, \Mockery::any(), \Mockery::any())->andReturns(true)->once();
+        $this->token_dao->expects(self::once())->method('addTokenForUserId')->with($this->user_id, self::anything(), self::anything())->willReturn(true);
 
         $this->assertNotNull($this->token_manager->generateTokenForUser($this->user));
     }

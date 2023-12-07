@@ -25,32 +25,29 @@ namespace Tuleap\REST;
 use Event;
 use Luracast\Restler\Defaults;
 use Luracast\Restler\Format\JsonFormat;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 
 final class RestlerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testBuildsRestler(): void
     {
-        $restler_cache          = \Mockery::mock(\RestlerCache::class);
-        $core_resource_injector = \Mockery::mock(ResourcesInjector::class);
-        $event_manager          = \Mockery::mock(\EventManager::class);
+        $restler_cache          = $this->createMock(\RestlerCache::class);
+        $core_resource_injector = $this->createMock(ResourcesInjector::class);
+        $event_manager          = $this->createMock(\EventManager::class);
 
         $restler_factory = new RestlerFactory($restler_cache, $core_resource_injector, $event_manager);
 
         $expected_cache_directory = vfsStream::setup()->url();
-        $restler_cache->shouldReceive('getAndInitiateCacheDirectory')->andReturn($expected_cache_directory);
-        $core_resource_injector->shouldReceive('populate')->once();
-        $event_manager->shouldReceive('processEvent')->with(Event::REST_RESOURCES, \Mockery::any())->once();
+        $restler_cache->method('getAndInitiateCacheDirectory')->willReturn($expected_cache_directory);
+        $core_resource_injector->expects(self::once())->method('populate');
+        $event_manager->expects(self::once())->method('processEvent')->with(Event::REST_RESOURCES, self::anything());
 
         $restler = $restler_factory->buildRestler(147);
 
-        $this->assertEquals(147, $restler->getApiVersion());
+        self::assertEquals(147, $restler->getApiVersion());
 
-        $this->assertTrue(Defaults::$useUrlBasedVersioning);
-        $this->assertFalse(JsonFormat::$unEscapedUnicode);
-        $this->assertEquals($expected_cache_directory, Defaults::$cacheDirectory);
+        self::assertTrue(Defaults::$useUrlBasedVersioning);
+        self::assertFalse(JsonFormat::$unEscapedUnicode);
+        self::assertEquals($expected_cache_directory, Defaults::$cacheDirectory);
     }
 }

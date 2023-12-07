@@ -20,51 +20,49 @@
 
 namespace Tuleap\REST;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 
-class TuleapRESTCORSMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TuleapRESTCORSMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $message_factory;
+    private ResponseFactoryInterface $message_factory;
 
     public function testMinimalInformationNeededForATuleapRESTCallIsAdded()
     {
         $this->message_factory = HTTPFactoryBuilder::responseFactory();
 
-        $request_handler_response = $this->message_factory->createResponse(200);
+        $request_handler_response = $this->message_factory->createResponse();
 
-        $request_handler = \Mockery::mock(RequestHandlerInterface::class);
-        $request_handler->shouldReceive('handle')->andReturns($request_handler_response);
+        $request_handler = $this->createMock(RequestHandlerInterface::class);
+        $request_handler->method('handle')->willReturn($request_handler_response);
 
         $middleware = new TuleapRESTCORSMiddleware();
 
-        $response = $middleware->process(\Mockery::mock(ServerRequestInterface::class), $request_handler);
+        $response = $middleware->process($this->createMock(ServerRequestInterface::class), $request_handler);
 
-        $this->assertTrue($response->hasHeader('Access-Control-Allow-Origin'));
-        $this->assertTrue($response->hasHeader('Access-Control-Allow-Headers'));
-        $this->assertTrue($response->hasHeader('Access-Control-Expose-Headers'));
+        self::assertTrue($response->hasHeader('Access-Control-Allow-Origin'));
+        self::assertTrue($response->hasHeader('Access-Control-Allow-Headers'));
+        self::assertTrue($response->hasHeader('Access-Control-Expose-Headers'));
     }
 
     public function testAllowedAndExposedHeadersAreNotOverwritten()
     {
         $this->message_factory = HTTPFactoryBuilder::responseFactory();
 
-        $request_handler_response = $this->message_factory->createResponse(200)
+        $request_handler_response = $this->message_factory->createResponse()
             ->withHeader('Access-Control-Allow-Headers', 'MyAllowedHeader')
             ->withHeader('Access-Control-Expose-Headers', 'MyExposedHeader');
 
-        $request_handler = \Mockery::mock(RequestHandlerInterface::class);
-        $request_handler->shouldReceive('handle')->andReturns($request_handler_response);
+        $request_handler = $this->createMock(RequestHandlerInterface::class);
+        $request_handler->method('handle')->willReturn($request_handler_response);
 
         $middleware = new TuleapRESTCORSMiddleware();
 
-        $response = $middleware->process(\Mockery::mock(ServerRequestInterface::class), $request_handler);
+        $response = $middleware->process($this->createMock(ServerRequestInterface::class), $request_handler);
 
-        $this->assertContains('MyAllowedHeader', $response->getHeader('Access-Control-Allow-Headers'));
-        $this->assertContains('MyExposedHeader', $response->getHeader('Access-Control-Expose-Headers'));
+        self::assertContains('MyAllowedHeader', $response->getHeader('Access-Control-Allow-Headers'));
+        self::assertContains('MyExposedHeader', $response->getHeader('Access-Control-Expose-Headers'));
     }
 }
