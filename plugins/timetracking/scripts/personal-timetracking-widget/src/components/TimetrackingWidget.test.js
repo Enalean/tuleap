@@ -22,43 +22,49 @@ import TimetrackingWidget from "./TimetrackingWidget.vue";
 import WidgetReadingMode from "./WidgetReadingMode.vue";
 import WidgetWritingMode from "./WidgetWritingMode.vue";
 import WidgetArtifactTable from "./WidgetArtifactTable.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { createTestingPinia } from "@pinia/testing";
+import { defineStore } from "pinia";
+import localVue from "../helpers/local-vue";
 
 const userId = 102;
-function getPersonalWidgetInstance(store_options) {
-    const store = createStoreMock(store_options);
-    const component_options = {
-        propsData: {
-            userId,
-        },
-        mocks: { $store: store },
-    };
-    return shallowMount(TimetrackingWidget, component_options);
-}
 
 describe("Given a personal timetracking widget", () => {
-    let store_options;
-    beforeEach(() => {
-        store_options = {
-            state: {
-                reading_mode: true,
-            },
-        };
+    let reading_mode;
 
-        getPersonalWidgetInstance(store_options);
-    });
+    function getPersonalWidgetInstance() {
+        const useStore = defineStore("root", {
+            state: () => ({
+                reading_mode: reading_mode,
+            }),
+            actions: {
+                initUserId() {},
+                initUserLocale() {},
+            },
+        });
+        const pinia = createTestingPinia({ stubActions: false });
+        useStore(pinia);
+
+        const component_options = {
+            propsData: {
+                userId,
+            },
+            localVue,
+            pinia,
+        };
+        return shallowMount(TimetrackingWidget, component_options);
+    }
 
     it("When reading mode is true, then reading should be displayed but not writing mode", () => {
-        const wrapper = getPersonalWidgetInstance(store_options);
+        reading_mode = true;
+        const wrapper = getPersonalWidgetInstance();
         expect(wrapper.findComponent(WidgetReadingMode).exists()).toBeTruthy();
         expect(wrapper.findComponent(WidgetWritingMode).exists()).toBeFalsy();
         expect(wrapper.findComponent(WidgetArtifactTable).exists()).toBeTruthy();
     });
 
     it("When reading mode is false, then writing should be displayed but not reading mode", () => {
-        store_options.state.reading_mode = false;
-        const wrapper = getPersonalWidgetInstance(store_options);
-
+        reading_mode = false;
+        const wrapper = getPersonalWidgetInstance();
         expect(wrapper.findComponent(WidgetReadingMode).exists()).toBeFalsy();
         expect(wrapper.findComponent(WidgetWritingMode).exists()).toBeTruthy();
     });

@@ -20,48 +20,58 @@
 import { shallowMount } from "@vue/test-utils";
 import WidgetModalContent from "./WidgetModalContent.vue";
 import localVue from "../../helpers/local-vue.js";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-
-function getWidgetModalContentInstance(store) {
-    const component_options = {
-        localVue,
-        mocks: { $store: store },
-    };
-    return shallowMount(WidgetModalContent, component_options);
-}
+import { createTestingPinia } from "@pinia/testing";
+import { defineStore } from "pinia";
 
 describe("Given a personal timetracking widget modal", () => {
-    let store_options, store;
-    beforeEach(() => {
-        store_options = {
-            state: {
-                rest_feedback: "",
-                is_add_mode: false,
-            },
-            getters: {
-                current_artifact: { artifact: "artifact" },
-            },
-        };
-        store = createStoreMock(store_options);
+    let rest_feedback;
+    let is_add_mode;
+    let current_artifact;
+    let setAddMode = jest.fn();
 
-        getWidgetModalContentInstance(store_options, store);
+    function getWidgetModalContentInstance() {
+        const useStore = defineStore("root", {
+            state: () => ({
+                rest_feedback: rest_feedback,
+                is_add_mode: is_add_mode,
+            }),
+            getters: {
+                current_artifact: () => current_artifact,
+            },
+            actions: {
+                setAddMode: setAddMode,
+            },
+        });
+        const pinia = createTestingPinia({ stubActions: false });
+        useStore(pinia);
+
+        const component_options = {
+            localVue,
+            pinia,
+        };
+        return shallowMount(WidgetModalContent, component_options);
+    }
+
+    beforeEach(() => {
+        rest_feedback = "";
+        is_add_mode = false;
+        current_artifact = { artifact: "artifact" };
     });
 
     it("When there is no REST feedback, then feedback message should not be displayed", () => {
-        const wrapper = getWidgetModalContentInstance(store);
+        const wrapper = getWidgetModalContentInstance();
         expect(wrapper.find("[data-test=feedback]").exists()).toBeFalsy();
     });
 
     it("When there is REST feedback, then feedback message should be displayed", () => {
-        store.state.rest_feedback = { type: "success" };
-        const wrapper = getWidgetModalContentInstance(store);
+        rest_feedback = { type: "success" };
+        const wrapper = getWidgetModalContentInstance();
         expect(wrapper.find("[data-test=feedback]").exists()).toBeTruthy();
     });
 
     it("When add mode button is triggered, then setAddMode should be called", () => {
-        const wrapper = getWidgetModalContentInstance(store);
-
+        const wrapper = getWidgetModalContentInstance();
         wrapper.get("[data-test=button-set-add-mode]").trigger("click");
-        expect(store.commit).toHaveBeenCalledWith("setAddMode", true);
+        expect(setAddMode).toHaveBeenCalledWith(true);
     });
 });

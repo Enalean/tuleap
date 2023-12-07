@@ -21,36 +21,43 @@
 import { shallowMount } from "@vue/test-utils";
 import WidgetModalEditTime from "./WidgetModalEditTime.vue";
 import localVue from "../../helpers/local-vue.js";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-
-function getWrapperInstance(time_data = {}) {
-    const component_options = {
-        localVue,
-        mocks: {
-            $store: createStoreMock({
-                state: {
-                    rest_feedback: "",
-                    is_add_mode: false,
-                },
-                getters: {
-                    current_artifact: { artifact: "artifact", id: 10 },
-                },
-            }),
-        },
-        propsData: {
-            timeData: time_data,
-        },
-    };
-    return shallowMount(WidgetModalEditTime, component_options);
-}
+import { createTestingPinia } from "@pinia/testing";
+import { defineStore } from "pinia";
 
 describe("Given a personal timetracking widget modal", () => {
+    let rest_feedback = "";
+    let is_add_mode = false;
+    let current_artifact = { artifact: "artifact", id: 10 };
+    let times = {};
+
+    function getWrapperInstance(time_data = {}) {
+        const useStore = defineStore("root", {
+            state: () => ({
+                rest_feedback,
+                is_add_mode,
+                times,
+            }),
+            getters: {
+                current_artifact: () => current_artifact,
+            },
+        });
+        const pinia = createTestingPinia();
+        useStore(pinia);
+
+        const component_options = {
+            localVue,
+            propsData: {
+                timeData: time_data,
+            },
+            pinia,
+        };
+        return shallowMount(WidgetModalEditTime, component_options);
+    }
+
     describe("Initialisation", () => {
         it("When no date is given, then it should be initialized", () => {
-            const wrapper = getWrapperInstance({
-                date: undefined,
-            });
-
+            times.date = undefined;
+            const wrapper = getWrapperInstance();
             expect(wrapper.vm.date).toBeDefined();
         });
 

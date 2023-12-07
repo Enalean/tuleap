@@ -21,14 +21,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import initial_state from "./state.js";
-import * as getters from "./getters.js";
-import mutations from "./mutations";
+import { createPinia, setActivePinia } from "pinia";
+import { usePersonalTimetrackingWidgetStore } from "./index";
 
 describe("Widget", () => {
-    let state;
+    let store;
     beforeEach(() => {
-        state = { ...initial_state };
+        setActivePinia(createPinia());
+        store = usePersonalTimetrackingWidgetStore();
     });
 
     describe("Call sums", () => {
@@ -49,8 +49,8 @@ describe("Widget", () => {
                     ],
                 ];
 
-                mutations.loadAChunkOfTimes(state, [times, times.length]);
-                expect(getters.get_formatted_total_sum(state)).toBe("00:40");
+                store.loadAChunkOfTimes([times, times.length]);
+                expect(store.get_formatted_total_sum).toBe("00:40");
             });
 
             it("Then we add times, aggregated time must change too", () => {
@@ -67,7 +67,7 @@ describe("Widget", () => {
                     },
                 ];
 
-                expect(getters.get_formatted_aggregated_time()(times)).toBe("00:40");
+                expect(store.get_formatted_aggregated_time(times)).toBe("00:40");
             });
         });
     });

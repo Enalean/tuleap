@@ -20,31 +20,33 @@
 <template>
     <div
         class="timetracking-reading-mode"
-        v-on:click="toggleReadingMode()"
+        v-on:click="personal_store.toggleReadingMode"
         data-test="timetracking-switch-reading-mode"
     >
         <div class="timetracking-reading-mode-dates">
             <div class="tlp-property timetracking-reading-date">
                 <label class="tlp-label">{{ $gettext("From") }}</label>
-                <span>{{ start_date }}</span>
+                <span>{{ personal_store.start_date }}</span>
             </div>
             <div class="tlp-property timetracking-reading-date">
                 <label class="tlp-label">{{ $gettext("To") }}</label>
-                <span>{{ end_date }}</span>
+                <span>{{ personal_store.end_date }}</span>
             </div>
         </div>
     </div>
 </template>
 <script>
-import { mapState, mapMutations } from "vuex";
-
+import { usePersonalTimetrackingWidgetStore } from "../store";
+import { mapState } from "pinia";
 export default {
     name: "WidgetReadingMode",
-    computed: {
-        ...mapState(["start_date", "end_date"]),
+    setup() {
+        const personal_store = usePersonalTimetrackingWidgetStore();
+
+        return { personal_store };
     },
-    methods: {
-        ...mapMutations(["toggleReadingMode"]),
+    computed: {
+        ...mapState(usePersonalTimetrackingWidgetStore, ["start_date", "end_date"]),
     },
 };
 </script>

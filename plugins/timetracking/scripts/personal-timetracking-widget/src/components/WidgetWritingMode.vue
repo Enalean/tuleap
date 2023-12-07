@@ -32,7 +32,7 @@
                         class="tlp-input tlp-input-date"
                         id="timetracking-start-date"
                         ref="start_date"
-                        v-model="start_date"
+                        v-model="personal_store.start_date"
                         size="11"
                         data-test="timetracking-start-date"
                     />
@@ -51,7 +51,7 @@
                         class="tlp-input tlp-input-date"
                         id="timetracking-end-date"
                         ref="end_date"
-                        v-model="end_date"
+                        v-model="personal_store.end_date"
                         size="11"
                         data-test="timetracking-end-date"
                     />
@@ -62,7 +62,7 @@
             <button
                 class="tlp-button-primary tlp-button-outline"
                 type="button"
-                v-on:click="toggleReadingMode()"
+                v-on:click="personal_store.toggleReadingMode"
             >
                 {{ $gettext("Cancel") }}
             </button>
@@ -79,23 +79,28 @@
 </template>
 <script>
 import { datePicker } from "tlp";
-import { mapState, mapMutations, mapActions } from "vuex";
-
+import { usePersonalTimetrackingWidgetStore } from "../store";
+import { mapState } from "pinia";
 export default {
     name: "WidgetWritingMode",
+    setup() {
+        const personal_store = usePersonalTimetrackingWidgetStore();
 
-    computed: {
-        ...mapState(["start_date", "end_date"]),
+        return { personal_store };
     },
     mounted() {
         [this.$refs.start_date, this.$refs.end_date].forEach((element) => datePicker(element));
     },
     methods: {
-        ...mapMutations(["toggleReadingMode"]),
-        ...mapActions(["setDatesAndReload"]),
         changeDates() {
-            this.setDatesAndReload([this.$refs.start_date.value, this.$refs.end_date.value]);
+            this.personal_store.setDatesAndReload([
+                this.$refs.start_date.value,
+                this.$refs.end_date.value,
+            ]);
         },
+    },
+    computed: {
+        ...mapState(usePersonalTimetrackingWidgetStore, ["start_date", "end_date"]),
     },
 };
 </script>

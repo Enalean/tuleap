@@ -27,7 +27,7 @@
                 <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
             </button>
         </div>
-        <widget-modal-content v-if="current_artifact" data-test="modal-content" />
+        <widget-modal-content v-if="personal_store.current_artifact" data-test="modal-content" />
         <div class="tlp-modal-footer tlp-modal-footer-large">
             <button
                 type="button"
@@ -40,16 +40,19 @@
     </div>
 </template>
 <script>
-import { mapGetters, mapActions } from "vuex";
 import WidgetModalContent from "./WidgetModalContent.vue";
+import { usePersonalTimetrackingWidgetStore } from "../../store";
+import { mapState } from "pinia";
 export default {
     name: "WidgetModalTimes",
     components: { WidgetModalContent },
-    computed: {
-        ...mapGetters(["current_artifact"]),
+    setup() {
+        const personal_store = usePersonalTimetrackingWidgetStore();
+
+        return { personal_store };
     },
-    methods: {
-        ...mapActions(["reloadTimes"]),
+    computed: {
+        ...mapState(usePersonalTimetrackingWidgetStore, ["current_artifact"]),
     },
 };
 </script>

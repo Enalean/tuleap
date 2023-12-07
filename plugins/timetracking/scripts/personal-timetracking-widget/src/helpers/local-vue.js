@@ -19,11 +19,11 @@
  */
 
 import { createLocalVue } from "@vue/test-utils";
-import Vuex from "vuex";
 import GettextPlugin from "vue-gettext";
+import { PiniaVuePlugin } from "pinia";
 
 const localVue = createLocalVue();
-localVue.use(Vuex);
+localVue.use(PiniaVuePlugin);
 
 localVue.use(GettextPlugin, {
     translations: {},

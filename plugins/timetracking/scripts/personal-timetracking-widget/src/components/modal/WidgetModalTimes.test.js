@@ -20,38 +20,37 @@
 import { shallowMount } from "@vue/test-utils";
 import WidgetModalTimes from "./WidgetModalTimes.vue";
 import localVue from "../../helpers/local-vue.js";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-
-function getWidgetModalTimesInstance(store_options) {
-    const store = createStoreMock(store_options);
-
-    const component_options = {
-        localVue,
-        mocks: { $store: store },
-    };
-    return shallowMount(WidgetModalTimes, component_options);
-}
+import { createTestingPinia } from "@pinia/testing";
+import { defineStore } from "pinia";
 
 describe("Given a personal timetracking widget modal", () => {
-    let store_options;
-    beforeEach(() => {
-        store_options = {
-            getters: {
-                current_artifact: { artifact: "artifact" },
-            },
-        };
+    let current_artifact;
 
-        getWidgetModalTimesInstance(store_options);
-    });
+    function getWidgetModalTimesInstance() {
+        const useStore = defineStore("root", {
+            getters: {
+                current_artifact: () => current_artifact,
+            },
+        });
+        const pinia = createTestingPinia();
+        useStore(pinia);
+
+        const component_options = {
+            localVue,
+            pinia,
+        };
+        return shallowMount(WidgetModalTimes, component_options);
+    }
 
     it("When current artifact is not empty, then modal content should be displayed", () => {
-        const wrapper = getWidgetModalTimesInstance(store_options);
+        current_artifact = { artifact: "artifact" };
+        const wrapper = getWidgetModalTimesInstance();
         expect(wrapper.find("[data-test=modal-content]").exists()).toBeTruthy();
     });
 
     it("When current artifact is empty, then modal content should not be displayed", () => {
-        store_options.getters.current_artifact = null;
-        const wrapper = getWidgetModalTimesInstance(store_options);
+        current_artifact = null;
+        const wrapper = getWidgetModalTimesInstance();
         expect(wrapper.find("[data-test=modal-content]").exists()).toBeFalsy();
     });
 });

@@ -86,7 +86,7 @@ import {
 } from "@tuleap/plugin-timetracking-time-formatters";
 import { TIME_REGEX } from "@tuleap/plugin-timetracking-constants";
 import { datePicker } from "tlp";
-import { mapGetters } from "vuex";
+import { usePersonalTimetrackingWidgetStore } from "../../store";
 
 export default {
     name: "WidgetModalEditTime",
@@ -97,6 +97,11 @@ export default {
                 return {};
             },
         },
+    },
+    setup() {
+        const personal_store = usePersonalTimetrackingWidgetStore();
+
+        return { personal_store };
     },
     data() {
         const data = this.timeData || {};
@@ -111,12 +116,10 @@ export default {
         };
     },
     computed: {
-        ...mapGetters(["current_artifact"]),
         getButtonIconClass() {
             if (this.is_loading) {
                 return "fa fa-spinner";
             }
-
             return "fa fa-check";
         },
     },
@@ -140,7 +143,9 @@ export default {
                 this.is_loading = true;
 
                 const id =
-                    this.timeData && this.timeData.id ? this.timeData.id : this.current_artifact.id;
+                    this.timeData && this.timeData.id
+                        ? this.timeData.id
+                        : this.personal_store.current_artifact.id;
                 this.$emit("validate-time", this.date, id, this.time, this.step);
             } else {
                 this.error_message = this.$gettext("Please check time's format (hh:mm)");

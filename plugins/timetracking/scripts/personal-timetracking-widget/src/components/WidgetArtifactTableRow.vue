@@ -29,7 +29,7 @@
             <a v-bind:href="/projects/ + project.shortname">{{ project.label }}</a>
         </td>
         <td class="tlp-table-cell-numeric">
-            {{ get_formatted_aggregated_time(timeData) }}
+            {{ personal_store.get_formatted_aggregated_time(timeData) }}
         </td>
         <td class="tlp-table-cell-actions timetracking-details-link-to-open-modal">
             <a
@@ -44,10 +44,10 @@
     </tr>
 </template>
 <script>
-import { mapGetters, mapMutations } from "vuex";
 import { createModal } from "tlp";
 import WidgetLinkToArtifact from "./WidgetLinkToArtifact.vue";
 import WidgetModalTimes from "./modal/WidgetModalTimes.vue";
+import { usePersonalTimetrackingWidgetStore } from "../store";
 
 export default {
     name: "WidgetArtifactTableRow",
@@ -58,6 +58,11 @@ export default {
     props: {
         timeData: Array,
     },
+    setup() {
+        const personal_store = usePersonalTimetrackingWidgetStore();
+
+        return { personal_store };
+    },
     data() {
         return {
             artifact: this.timeData[0].artifact,
@@ -66,7 +71,6 @@ export default {
         };
     },
     computed: {
-        ...mapGetters(["get_formatted_aggregated_time"]),
         link_to_artifact_timetracking() {
             return this.artifact.html_url + "&view=timetracking";
         },
@@ -75,14 +79,13 @@ export default {
         const modal = this.$refs.timetracking_modal.$el;
         this.modal_simple_content = createModal(modal);
         this.modal_simple_content.addEventListener("tlp-modal-hidden", () => {
-            this.setAddMode(false);
-            this.$store.dispatch("reloadTimes");
+            this.personal_store.setAddMode(false);
+            this.personal_store.reloadTimes();
         });
     },
     methods: {
-        ...mapMutations(["setAddMode"]),
         show_modal() {
-            this.$store.commit("setCurrentTimes", this.timeData);
+            this.personal_store.setCurrentTimes(this.timeData);
             this.modal_simple_content.toggle();
         },
     },

@@ -47,17 +47,23 @@
     </section>
 </template>
 <script>
+import { usePersonalTimetrackingWidgetStore } from "../../store";
 export default {
     name: "WidgetModalDeletePopover",
     props: {
         timeId: Number,
+    },
+    setup() {
+        const personal_store = usePersonalTimetrackingWidgetStore();
+
+        return { personal_store };
     },
     mounted() {
         this.$emit("create-delete-popover");
     },
     methods: {
         removeTime() {
-            this.$store.dispatch("deleteTime", this.timeId);
+            this.personal_store.deleteTime(this.timeId);
         },
     },
 };
