@@ -35,4 +35,32 @@ final class Codendi_RequestTest extends \PHPUnit\Framework\TestCase // phpcs:ign
 
         self::assertEquals($project, $request->getProject());
     }
+
+    public function testItReturnsTheRightProjectWhenGroupIdInParamsIsChanged(): void
+    {
+        $not_a_valid_project = ProjectTestBuilder::aProject()
+            ->withId(0)
+            ->build();
+
+        $project = ProjectTestBuilder::aProject()
+            ->withId(123)
+            ->build();
+
+        $project_manager = ProjectByIDFactoryStub::buildWith($not_a_valid_project, $project);
+
+        // Given we use urls like /projects/acme
+        // When we get the project from the request (for exemple a plugin in pre.php)
+        // Then request return a not valid project
+        // Because there is no group_id parameter
+        $request = new Codendi_Request([], $project_manager);
+        self::assertEquals($not_a_valid_project, $request->getProject());
+
+        // Somewhere in the stack, for example in the home of the project,
+        // we can assume that /projects/acme is linked to a valid project acme
+        // and might want to manually set the group_id parameter so that
+        // subsequent queries to request return the right project
+        // and not the project in error
+        $request->params['group_id'] = "123";
+        self::assertEquals($project, $request->getProject());
+    }
 }

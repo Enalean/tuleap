@@ -277,8 +277,9 @@ class Codendi_Request
      */
     public function getProject(): Project
     {
-        if ($this->project === null) {
-            $this->project = $this->project_manager->getProjectById((int) $this->get('group_id'));
+        $requested_project_id = (int) $this->get('group_id');
+        if ($this->project === null || ($requested_project_id && $requested_project_id !== (int) $this->project->getID())) {
+            $this->project = $this->project_manager->getProjectById($requested_project_id);
         }
 
         return $this->project;
