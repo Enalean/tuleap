@@ -23,25 +23,33 @@ declare(strict_types=1);
 
 namespace Tuleap\LDAP\SVN;
 
+use ForgeConfig;
 use LDAP_ProjectManager;
-use Tuleap\SVNCore\GetSVNUserGroups;
+use Tuleap\SVNCore\SVNAccessFileDefaultBlockOverride;
 use Tuleap\SVNCore\SVNUser;
 use Tuleap\SVNCore\SVNUserGroup;
 
-final class SVNUserGroupsProvider
+final class SVNAccessFileDefaultBlockForLDAP
 {
     public function __construct(private readonly \LDAP_UserManager $LDAP_user_manager, private readonly LDAP_ProjectManager $LDAP_project_manager)
     {
     }
 
-    public function handle(GetSVNUserGroups $svn_user_groups): void
+    public function handle(SVNAccessFileDefaultBlockOverride $svn_access_file_default_block): void
     {
-        if (! $this->LDAP_project_manager->hasSVNLDAPAuth((int) $svn_user_groups->project->getID())) {
+        if (! $this->LDAP_project_manager->hasSVNLDAPAuth((int) $svn_access_file_default_block->project->getID())) {
             return;
         }
 
-        foreach ($svn_user_groups->user_groups as $user_group) {
-            $svn_user_groups->addSVNGroup(SVNUserGroup::fromUserGroupAndMembers($user_group, ...$this->getSVNGroupDef($user_group->getMembers())));
+        foreach ($svn_access_file_default_block->user_groups as $user_group) {
+            $svn_access_file_default_block->addSVNGroup(SVNUserGroup::fromUserGroupAndMembers($user_group, ...$this->getSVNGroupDef($user_group->getMembers())));
+        }
+
+        // This is the default behaviour inherited from LDAP_BackendSVN at 1182b1ef816e9aa2b9d33ffa91be270196ba749d
+        // Kept as is to avoid change in permission scheme in projects at a time when [/] cannot be under project
+        // control
+        if (! $svn_access_file_default_block->project->isPublic() || ForgeConfig::areRestrictedUsersAllowed()) {
+            $svn_access_file_default_block->disableWorldAccess();
         }
     }
 

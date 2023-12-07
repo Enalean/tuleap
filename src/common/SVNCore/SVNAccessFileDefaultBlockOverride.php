@@ -25,11 +25,12 @@ namespace Tuleap\SVNCore;
 
 use Tuleap\Event\Dispatchable;
 
-final class GetSVNUserGroups implements Dispatchable
+final class SVNAccessFileDefaultBlockOverride implements Dispatchable
 {
     public readonly array $user_groups;
 
     private ?array $svn_user_groups;
+    private ?bool $world_access;
 
     public function __construct(public readonly \Project $project, \ProjectUGroup ...$user_groups)
     {
@@ -39,6 +40,16 @@ final class GetSVNUserGroups implements Dispatchable
     public function addSVNGroup(SVNUserGroup $group): void
     {
         $this->svn_user_groups[] = $group;
+    }
+
+    public function disableWorldAccess(): void
+    {
+        $this->world_access = false;
+    }
+
+    public function isWorldAccessForbidden(): bool
+    {
+        return isset($this->world_access);
     }
 
     /**

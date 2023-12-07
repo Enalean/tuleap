@@ -26,7 +26,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/constants.php';
 
 use FastRoute\RouteCollector;
-use Tuleap\SVNCore\GetSVNUserGroups;
+use Tuleap\SVNCore\SVNAccessFileDefaultBlockOverride;
 use Tuleap\CLI\Command\ConfigDumpEvent;
 use Tuleap\Git\Git\RemoteServer\GerritCanMigrateEvent;
 use Tuleap\Layout\IncludeAssets;
@@ -38,7 +38,7 @@ use Tuleap\LDAP\LinkModalContentPresenter;
 use Tuleap\LDAP\NonUniqueUidDAO;
 use Tuleap\LDAP\Project\UGroup\Binding\AdditionalModalPresenterBuilder;
 use Tuleap\LDAP\ProjectGroupManagerRestrictedUserFilter;
-use Tuleap\LDAP\SVN\SVNUserGroupsProvider;
+use Tuleap\LDAP\SVN\SVNAccessFileDefaultBlockForLDAP;
 use Tuleap\LDAP\User\AccountCreation;
 use Tuleap\LDAP\User\CreateUserFromEmail;
 use Tuleap\Project\Admin\ProjectMembers\MembersEditProcessAction;
@@ -793,12 +793,12 @@ class LdapPlugin extends Plugin
     }
 
     #[\Tuleap\Plugin\ListeningToEventClass]
-    public function getSVNUserGroups(GetSVNUserGroups $event): void
+    public function svnAccessFileDefaultBlockOverride(SVNAccessFileDefaultBlockOverride $event): void
     {
         if (! $this->isLdapAuthType()) {
             return;
         }
-        $provider = new SVNUserGroupsProvider($this->getLdapUserManager(), new LDAP_ProjectManager());
+        $provider = new SVNAccessFileDefaultBlockForLDAP($this->getLdapUserManager(), new LDAP_ProjectManager());
         $provider->handle($event);
     }
 
