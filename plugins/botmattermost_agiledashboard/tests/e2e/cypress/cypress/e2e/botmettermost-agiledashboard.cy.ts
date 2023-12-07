@@ -19,15 +19,7 @@
 
 describe(`Bot Mattermost`, function () {
     it(`can configure backlog notifications`, function () {
-        cy.log("Add new bot");
-        cy.siteAdministratorSession();
-        cy.visit("/admin/");
-        cy.get("[data-test=botmattermost]").click();
-        cy.get("[data-test=add-bot]").click();
-        cy.get("[data-test=bot-mattermost-name]").type("My bot");
-        cy.get("[data-test=bot-mattermost-webhook-url]").type("https://example.com");
-        cy.get("[data-test=add-bot-button]").click();
-        cy.get("[data-test=bot-list]").contains("My bot");
+        cy.addBotMattermost("My bot");
 
         cy.log("configure backlog notifications");
         cy.projectAdministratorSession();
@@ -48,12 +40,6 @@ describe(`Bot Mattermost`, function () {
 
         cy.get("[data-test=configured-bot-mattermost]").contains("My bot");
 
-        cy.log("remove bot");
-        cy.siteAdministratorSession();
-        cy.visit("/admin/");
-        cy.get("[data-test=botmattermost]").click();
-        cy.get("[data-test=delete-bot]").click();
-        cy.get("[data-test=confirm-bot-delete]").click();
-        cy.get("[data-test=bot-list]").should("not.contain", "My bot");
+        cy.deleteBotMattermost("My bot");
     });
 });

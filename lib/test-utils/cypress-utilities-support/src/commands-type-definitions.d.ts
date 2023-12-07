@@ -128,6 +128,10 @@ declare global {
             ): void;
 
             deleteAllMessagesInMailbox(): void;
+
+            addBotMattermost(bot_name: string): void;
+
+            deleteBotMattermost(bot_name: string): void;
         }
     }
 }
