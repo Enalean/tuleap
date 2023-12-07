@@ -321,6 +321,9 @@ msgid ""
 "defined in their tracker's semantic."
 msgstr ""
 
+msgid "Milestones must have timeframe, title, and status semantics."
+msgstr ""
+
 msgid "Name"
 msgstr "Nome"
 
@@ -528,7 +531,7 @@ msgid ""
 "its hierarchy."
 msgstr ""
 
-msgid "The sidebar will display the last 5 open milestones"
+msgid "The sidebar will display the last 5 open milestones."
 msgstr ""
 
 #, php-format
