@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
  * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
+ * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2008
  *
@@ -24,13 +24,12 @@
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\LDAP\Exception\IdentifierTypeNotFoundException;
 use Tuleap\LDAP\Exception\IdentifierTypeNotRecognizedException;
+use Tuleap\LDAP\User\UserDao;
+use Tuleap\LDAP\User\LdapLoginFromTuleapUserIdProvider;
 use Tuleap\User\DataIncompatibleWithUsernameGenerationException;
 use Tuleap\User\UserNameNormalizer;
 
-/**
- * Manage interaction between an LDAP group and Codendi user_group.
- */
-class LDAP_UserManager
+class LDAP_UserManager implements LdapLoginFromTuleapUserIdProvider
 {
     public const EVENT_UPDATE_LOGIN = 'PLUGIN_LDAP_UPDATE_LOGIN';
 
@@ -201,13 +200,12 @@ class LDAP_UserManager
     /**
      * Return LDAP logins stored in DB corresponding to given userIds.
      *
-     * @param array $userIds Array of user ids
-     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface ldap logins
+     * @param int[] $user_ids
+     * @return array<array{user_id: int, ldap_uid: string, status: string}>
      */
-    public function getLdapLoginFromUserIds(array $userIds)
+    public function getLdapLoginFromUserIds(array $user_ids): array
     {
-        $dao = $this->getDao();
-        return $dao->searchLdapLoginFromUserIds($userIds);
+        return $this->getDao()->searchLdapLoginFromUserIds($user_ids);
     }
 
     /**
@@ -352,7 +350,7 @@ class LDAP_UserManager
             $this->getUserManager()->updateDb($user);
         }
 
-        $user_id = $this->getLdapLoginFromUserIds([$user->getId()])->getRow();
+        $user_id = $this->getLdapLoginFromUserIds([(int) $user->getId()])[0];
         if ($user_id['ldap_uid'] != $lr->getLogin()) {
             $this->updateLdapUid($user, $lr->getLogin());
             $this->triggerRenameOfUsers();
@@ -364,19 +362,11 @@ class LDAP_UserManager
      *
      * Force update of SVNAccessFile in project the user belongs to as
      * project member or user group member
-     *
-     * @param PFUser    $user    The user to update
-     * @param String  $ldapUid New LDAP login
-     *
-     * @return bool
      */
-    public function updateLdapUid(PFUser $user, $ldapUid)
+    public function updateLdapUid(PFUser $user, string $ldapUid): void
     {
-        if ($this->getDao()->updateLdapUid($user->getId(), $ldapUid)) {
-            $this->addUserToRename($user);
-            return true;
-        }
-        return false;
+        $this->getDao()->updateLdapUid((int) $user->getId(), $ldapUid);
+        $this->addUserToRename($user);
     }
 
     /**
@@ -435,14 +425,10 @@ class LDAP_UserManager
 
     /**
      * Return number of active users
-     *
-     * @return int
-     *
      */
-    public function getNbrActiveUsers()
+    public function getNbrActiveUsers(): int
     {
-        $row = $this->getDao()->getNbrActiveUsers()->getRow();
-        return $row["count"];
+        return $this->getDao()->getNbrActiveUsers();
     }
 
     /**
@@ -521,11 +507,11 @@ class LDAP_UserManager
     /**
      * Wrapper for DAO
      *
-     * @return LDAP_UserDao
+     * @return UserDao
      */
     public function getDao()
     {
-        return new LDAP_UserDao(CodendiDataAccess::instance());
+        return new UserDao();
     }
 
     /**

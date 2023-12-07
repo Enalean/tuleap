@@ -24,14 +24,15 @@ declare(strict_types=1);
 namespace Tuleap\LDAP\SVN;
 
 use ForgeConfig;
-use LDAP_ProjectManager;
+use Tuleap\LDAP\Project\UsesLDAPAuthProvider;
+use Tuleap\LDAP\User\LdapLoginFromTuleapUserIdProvider;
 use Tuleap\SVNCore\SVNAccessFileDefaultBlockOverride;
 use Tuleap\SVNCore\SVNUser;
 use Tuleap\SVNCore\SVNUserGroup;
 
 final class SVNAccessFileDefaultBlockForLDAP
 {
-    public function __construct(private readonly \LDAP_UserManager $LDAP_user_manager, private readonly LDAP_ProjectManager $LDAP_project_manager)
+    public function __construct(private readonly LdapLoginFromTuleapUserIdProvider $LDAP_user_manager, private readonly UsesLDAPAuthProvider $LDAP_project_manager)
     {
     }
 

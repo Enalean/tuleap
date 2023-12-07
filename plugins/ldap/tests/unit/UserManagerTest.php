@@ -42,11 +42,14 @@ final class UserManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $dao = $this->createMock(\LDAP_UserDao::class);
-        $dao->expects(self::once())->method('updateLdapUid')->with(105, $ldap_uid)->willReturn(true);
+        $dao = new class {
+            public function updateLdapUid(int $user_id, string $ldap_uid): void
+            {
+            }
+        };
         $lum->method('getDao')->willReturn($dao);
 
-        self::assertTrue($lum->updateLdapUid($user, $ldap_uid));
+        $lum->updateLdapUid($user, $ldap_uid);
         self::assertEquals($lum->getUsersToRename(), [$user]);
     }
 

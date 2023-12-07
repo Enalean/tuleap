@@ -34,7 +34,7 @@ final class WelcomeUpdateControllerTest extends TestCase
     {
         $this->controller = new WelcomeUpdateController(
             $this->createStub(\UserManager::class),
-            $this->createStub(\LDAP_UserDao::class),
+            $this->createStub(User\UserDao::class),
             new Account_TimezonesCollection()
         );
     }
