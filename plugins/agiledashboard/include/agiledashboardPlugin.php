@@ -20,6 +20,8 @@
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
+use Tuleap\AgileDashboard\AgileDashboard\Milestone\Backlog\RecentlyVisitedTopBacklogDao;
+use Tuleap\AgileDashboard\AgileDashboard\Milestone\Backlog\VisitRetriever;
 use Tuleap\AgileDashboard\AgileDashboardLegacyController;
 use Tuleap\AgileDashboard\Artifact\AdditionalArtifactActionBuilder;
 use Tuleap\AgileDashboard\Artifact\EventRedirectAfterArtifactCreationOrUpdateHandler;
@@ -97,13 +99,17 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Plugin\ListeningToEventClass;
+use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Project\Admin\Routing\RejectNonProjectAdministratorMiddleware;
+use Tuleap\Project\CachedProjectAccessChecker;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Event\ProjectXMLImportPreChecksEvent;
+use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\Routing\CheckProjectCSRFMiddleware;
 use Tuleap\Project\Routing\ProjectByNameRetrieverMiddleware;
 use Tuleap\Project\Service\AddMissingService;
@@ -157,6 +163,8 @@ use Tuleap\Tracker\Workflow\PostAction\GetExternalSubFactoryByNameEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetPostActionShortNameFromXmlTagNameEvent;
 use Tuleap\Tracker\XML\Exporter\TrackerEventExportFullXML;
 use Tuleap\Tracker\XML\Exporter\TrackerEventExportStructureXML;
+use Tuleap\User\History\HistoryEntryCollection;
+use Tuleap\User\History\HistoryRetriever;
 use Tuleap\User\ProvideCurrentUser;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
@@ -409,6 +417,32 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             new MilestonesInSidebarDao(),
             new MilestonesInSidebarDao(),
         );
+    }
+
+    #[ListeningToEventClass]
+    public function historyEntryCollection(HistoryEntryCollection $collection): void
+    {
+        $visit_retriever = new VisitRetriever(
+            new RecentlyVisitedTopBacklogDao(),
+            \ProjectManager::instance(),
+            new CachedProjectAccessChecker(
+                new ProjectAccessChecker(
+                    new RestrictedUserCanAccessProjectVerifier(),
+                    EventManager::instance(),
+                ),
+            ),
+        );
+        $visit_retriever->getVisitHistory($collection, HistoryRetriever::MAX_LENGTH_HISTORY);
+    }
+
+    #[ListeningToEventName(Event::USER_HISTORY_CLEAR)]
+    public function userHistoryClear(array $params): void
+    {
+        $user = $params['user'];
+        assert($user instanceof PFUser);
+
+        $visit_cleaner = new RecentlyVisitedTopBacklogDao();
+        $visit_cleaner->deleteVisitByUserId((int) $user->getId());
     }
 
     public function cardwall_event_get_swimline_tracker($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
@@ -1102,6 +1136,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             SystemEvent::PRIORITY_MEDIUM,
             SystemEvent::OWNER_APP
         );
+        (new RecentlyVisitedTopBacklogDao())->deleteOldVisits();
     }
 
     public function get_system_event_class($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

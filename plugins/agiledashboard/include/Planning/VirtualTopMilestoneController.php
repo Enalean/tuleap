@@ -20,6 +20,7 @@
 
 namespace Tuleap\AgileDashboard\Planning;
 
+use Tuleap\AgileDashboard\AgileDashboard\Milestone\Backlog\RecentlyVisitedTopBacklogDao;
 use Tuleap\AgileDashboard\BaseController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
@@ -57,6 +58,7 @@ final class VirtualTopMilestoneController extends BaseController
         private readonly SplitKanbanConfigurationChecker $flag_checker,
         private readonly CSRFSynchronizerTokenProvider $token_provider,
         private readonly ScrumForMonoMilestoneChecker $mono_milestone_checker,
+        private readonly RecentlyVisitedTopBacklogDao $recently_visited_top_backlog_dao,
     ) {
         parent::__construct('agiledashboard', $request);
         $this->project = $project_manager->getProject($request->get('group_id'));
@@ -82,10 +84,19 @@ final class VirtualTopMilestoneController extends BaseController
             $query_parts = ['group_id' => $this->request->get('group_id')];
             $this->redirect($query_parts);
         }
+        $current_user = $this->getCurrentUser();
+        if (! $current_user->isAnonymous()) {
+            $this->recently_visited_top_backlog_dao->save(
+                (int) $current_user->getId(),
+                (int) $this->project->getID(),
+                $_SERVER['REQUEST_TIME'] ?? (new \DateTimeImmutable())->getTimestamp(),
+            );
+        }
+
         $presenter = $this->presenter_builder->buildPresenter(
             $this->milestone,
             $this->project,
-            $this->getCurrentUser(),
+            $current_user,
             $this->token_provider->getCSRF($this->project),
         );
 

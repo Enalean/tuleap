@@ -148,6 +148,15 @@ CREATE TABLE plugin_agiledashboard_milestones_in_sidebar_config (
     should_sidebar_display_last_milestones BOOL NOT NULL
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS plugin_agiledashboard_top_backlog_recently_visited;
+CREATE TABLE plugin_agiledashboard_top_backlog_recently_visited (
+    user_id INT(11) NOT NULL,
+    project_id INT(11) NOT NULL,
+    created_on INT(11) UNSIGNED NOT NULL,
+    PRIMARY KEY(user_id, project_id),
+    INDEX idx_user_visit_time(user_id, created_on)
+) ENGINE=InnoDB;
+
 -- Enable service for project 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, `rank`)
        VALUES      ( 100, 'plugin_agiledashboard:service_lbl_key', 'plugin_agiledashboard:service_desc_key', 'plugin_agiledashboard', '/plugins/agiledashboard/?group_id=$group_id', 1, 0, 'system', 152);

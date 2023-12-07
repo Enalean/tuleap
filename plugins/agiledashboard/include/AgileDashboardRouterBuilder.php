@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\AgileDashboard\Milestone\Backlog\RecentlyVisitedTopBacklogDao;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
@@ -157,6 +158,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
             $split_kanban_configuration_checker,
             new \Tuleap\AgileDashboard\CSRFSynchronizerTokenProvider(),
             new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory),
+            new RecentlyVisitedTopBacklogDao(),
         );
 
         $ugroup_manager = new UGroupManager();
