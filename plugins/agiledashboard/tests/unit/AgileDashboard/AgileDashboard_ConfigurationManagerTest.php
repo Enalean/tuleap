@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 use Tuleap\AgileDashboard\Stub\Milestone\Sidebar\DuplicateMilestonesInSidebarConfigStub;
+use Tuleap\AgileDashboard\Stub\Milestone\Sidebar\UpdateMilestonesInSidebarConfigStub;
 use Tuleap\Kanban\Stubs\Legacy\LegacyKanbanRetrieverStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
@@ -45,6 +46,7 @@ final class AgileDashboard_ConfigurationManagerTest extends \Tuleap\Test\PHPUnit
             LegacyKanbanRetrieverStub::withoutActivatedKanban(),
             $event_dispatcher,
             DuplicateMilestonesInSidebarConfigStub::build(),
+            UpdateMilestonesInSidebarConfigStub::build(),
         );
 
         self::assertTrue($configuration_manager->scrumIsActivatedForProject(ProjectTestBuilder::aProject()->build()));
@@ -68,6 +70,7 @@ final class AgileDashboard_ConfigurationManagerTest extends \Tuleap\Test\PHPUnit
             LegacyKanbanRetrieverStub::withoutActivatedKanban(),
             $event_dispatcher,
             DuplicateMilestonesInSidebarConfigStub::build(),
+            UpdateMilestonesInSidebarConfigStub::build(),
         );
 
         self::assertFalse($configuration_manager->scrumIsActivatedForProject(ProjectTestBuilder::aProject()->build()));
@@ -85,10 +88,55 @@ final class AgileDashboard_ConfigurationManagerTest extends \Tuleap\Test\PHPUnit
             LegacyKanbanRetrieverStub::withoutActivatedKanban(),
             \Tuleap\Test\Stubs\EventDispatcherStub::withIdentityCallback(),
             $milestones_in_sidebar_config_duplicator,
+            UpdateMilestonesInSidebarConfigStub::build(),
         );
 
         $configuration_manager->duplicate(1, 2);
 
         self::assertTrue($milestones_in_sidebar_config_duplicator->hasBeenCalled());
+    }
+
+    public function testUpdateConfigurationWithMilestoneInSidebar(): void
+    {
+        $config_dao = $this->createMock(AgileDashboard_ConfigurationDao::class);
+        $config_dao->expects(self::once())->method('updateConfiguration');
+
+
+        $milestones_in_sidebar_config = UpdateMilestonesInSidebarConfigStub::build();
+
+        $configuration_manager = new AgileDashboard_ConfigurationManager(
+            $config_dao,
+            LegacyKanbanRetrieverStub::withoutActivatedKanban(),
+            \Tuleap\Test\Stubs\EventDispatcherStub::withIdentityCallback(),
+            DuplicateMilestonesInSidebarConfigStub::build(),
+            $milestones_in_sidebar_config,
+        );
+
+        $configuration_manager->updateConfiguration(1, true, true);
+
+        self::assertTrue($milestones_in_sidebar_config->hasActivateBeenCalled());
+        self::assertFalse($milestones_in_sidebar_config->hasDeactivateBeenCalled());
+    }
+
+    public function testUpdateConfigurationWithoutMilestoneInSidebar(): void
+    {
+        $config_dao = $this->createMock(AgileDashboard_ConfigurationDao::class);
+        $config_dao->expects(self::once())->method('updateConfiguration');
+
+
+        $milestones_in_sidebar_config = UpdateMilestonesInSidebarConfigStub::build();
+
+        $configuration_manager = new AgileDashboard_ConfigurationManager(
+            $config_dao,
+            LegacyKanbanRetrieverStub::withoutActivatedKanban(),
+            \Tuleap\Test\Stubs\EventDispatcherStub::withIdentityCallback(),
+            DuplicateMilestonesInSidebarConfigStub::build(),
+            $milestones_in_sidebar_config,
+        );
+
+        $configuration_manager->updateConfiguration(1, true, false);
+
+        self::assertFalse($milestones_in_sidebar_config->hasActivateBeenCalled());
+        self::assertTrue($milestones_in_sidebar_config->hasDeactivateBeenCalled());
     }
 }

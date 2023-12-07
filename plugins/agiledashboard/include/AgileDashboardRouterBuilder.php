@@ -281,6 +281,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
             new \Tuleap\Kanban\Legacy\LegacyConfigurationDao(),
             EventManager::instance(),
             new MilestonesInSidebarDao(),
+            new MilestonesInSidebarDao(),
         );
     }
 

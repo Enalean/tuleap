@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\ProjectByIDFactory;
+
 class Codendi_Request
 {
     /**
@@ -31,21 +33,17 @@ class Codendi_Request
      */
     protected $current_user;
 
-    /**
-     * @var Project
-     */
-    protected $project;
+    protected Project|null $project = null;
 
-    /** @var ProjectManager */
-    private $project_manager;
+    private readonly ProjectByIDFactory $project_manager;
 
     /**
      * Constructor
      */
-    public function __construct($params, ?ProjectManager $project_manager = null)
+    public function __construct($params, ?ProjectByIDFactory $project_manager = null)
     {
         $this->params          = $params;
-        $this->project_manager = $project_manager ? $project_manager : ProjectManager::instance();
+        $this->project_manager = $project_manager ?: ProjectManager::instance();
     }
 
     public function isAjax()
@@ -276,12 +274,22 @@ class Codendi_Request
 
     /**
      * Return the requested project (url parameter: group_id)
-     *
-     * @return Project
      */
-    public function getProject()
+    public function getProject(): Project
     {
-        return $this->project_manager->getProject((int) $this->get('group_id'));
+        if ($this->project === null) {
+            $this->project = $this->project_manager->getProjectById((int) $this->get('group_id'));
+        }
+
+        return $this->project;
+    }
+
+    /**
+     * @psalm-internal \Tuleap\Test\Builders
+     */
+    public function setProject(Project $project): void
+    {
+        $this->project = $project;
     }
 
     /**

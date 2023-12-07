@@ -166,6 +166,7 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test
     public function testItRedirectsToPlanning(): void
     {
         $request = HTTPRequestBuilder::get()
+            ->withProject($this->project)
             ->withUser($this->user)
             ->withParam('planning', ['details' => [(string) self::PLANNING_ID => (string) self::MILESTONE_ID]])
             ->build();
@@ -247,6 +248,7 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test
     public function testItRedirectsToPlanningWithFallbackToLegacyUrlIfPaneCannotBeFound(): void
     {
         $request = HTTPRequestBuilder::get()
+            ->withProject($this->project)
             ->withUser($this->user)
             ->withParam('planning', ['details' => [(string) self::PLANNING_ID => (string) self::MILESTONE_ID]])
             ->build();
@@ -313,6 +315,7 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test
     public function testItRedirectsToPlanningWithFallbackToLegacyUrlIfMilestoneHasNoArtifact(): void
     {
         $request = HTTPRequestBuilder::get()
+            ->withProject($this->project)
             ->withUser($this->user)
             ->withParam('planning', ['details' => [(string) self::PLANNING_ID => (string) self::MILESTONE_ID]])
             ->build();
@@ -366,6 +369,7 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test
     public function testItRedirectsToPlanningWithFallbackToLegacyUrlIfMilestoneCannotBeFound(): void
     {
         $request = HTTPRequestBuilder::get()
+            ->withProject($this->project)
             ->withUser($this->user)
             ->withParam('planning', ['details' => [(string) self::PLANNING_ID => (string) self::MILESTONE_ID]])
             ->build();

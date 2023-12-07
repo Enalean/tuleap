@@ -26,15 +26,18 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\AgileDashboard\BlockScrumAccess;
 use Tuleap\AgileDashboard\ExplicitBacklog\ConfigurationUpdater;
+use Tuleap\AgileDashboard\Milestone\Sidebar\CheckMilestonesInSidebar;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDisabler;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneEnabler;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
+use Tuleap\AgileDashboard\Stub\Milestone\Sidebar\CheckMilestonesInSidebarStub;
 use Tuleap\AgileDashboard\Stub\SplitKanbanConfigurationCheckerStub;
 use Tuleap\Event\Dispatchable;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Kanban\SplitKanbanConfigurationChecker;
 use Tuleap\Layout\Feedback\NewFeedback;
+use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 
@@ -44,7 +47,6 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private const PROJECT_ID = 165;
 
-    private \Codendi_Request & Stub $request;
     private ConfigurationResponse & MockObject $response;
     private EventDispatcherStub $event_dispatcher;
     private ScrumForMonoMilestoneEnabler & MockObject $mono_milestone_enabler;
@@ -53,12 +55,11 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     private \AgileDashboard_ConfigurationManager & MockObject $config_manager;
     private ScrumForMonoMilestoneChecker & Stub $mono_milestone_checker;
     private \AgileDashboard_FirstScrumCreator & MockObject $first_scrum_creator;
+    private \Project $project;
 
     protected function setUp(): void
     {
-        $this->request = $this->createStub(\Codendi_Request::class);
-        $project       = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
-        $this->request->method('getProject')->willReturn($project);
+        $this->project  = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
         $this->response = $this->createMock(ConfigurationResponse::class);
 
         $this->event_dispatcher = EventDispatcherStub::withIdentityCallback();
@@ -71,10 +72,13 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->first_scrum_creator      = $this->createMock(\AgileDashboard_FirstScrumCreator::class);
     }
 
-    private function update(SplitKanbanConfigurationChecker $split_kanban_configuration_checker): void
-    {
+    private function update(
+        \HTTPRequest $request,
+        SplitKanbanConfigurationChecker $split_kanban_configuration_checker,
+        CheckMilestonesInSidebar $milestones_in_sidebar,
+    ): void {
         $configuration_updater = new ScrumConfigurationUpdater(
-            $this->request,
+            $request,
             $this->config_manager,
             $this->response,
             $this->first_scrum_creator,
@@ -84,6 +88,7 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->explicit_backlog_updater,
             $this->event_dispatcher,
             $split_kanban_configuration_checker,
+            $milestones_in_sidebar,
         );
         $configuration_updater->updateConfiguration();
     }
@@ -98,10 +103,14 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
                 return $event;
             }
         );
-        $this->request->method('get')->willReturnMap([['group_id', self::PROJECT_ID]]);
+        $request                = HTTPRequestBuilder::get()->withProject($this->project)->build();
 
         $this->expectNotToPerformAssertions();
-        $this->update(SplitKanbanConfigurationCheckerStub::withoutAllowedProject());
+        $this->update(
+            $request,
+            SplitKanbanConfigurationCheckerStub::withoutAllowedProject(),
+            CheckMilestonesInSidebarStub::withoutMilestonesInSidebar(),
+        );
     }
 
     public function testBlockingAccessToScrumBlocksConfigurationChangesInSplitKanbanContext(): void
@@ -114,20 +123,91 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
                 return $event;
             }
         );
-        $this->request->method('get')->willReturnMap([['group_id', self::PROJECT_ID]]);
+        $request                = HTTPRequestBuilder::get()->withProject($this->project)->build();
 
         $this->expectNotToPerformAssertions();
-        $this->update(SplitKanbanConfigurationCheckerStub::withAllowedProject());
+        $this->update(
+            $request,
+            SplitKanbanConfigurationCheckerStub::withAllowedProject(),
+            CheckMilestonesInSidebarStub::withoutMilestonesInSidebar(),
+        );
+    }
+
+    /**
+     * @testWith [false]
+     *           [true]
+     */
+    public function testItDoesNotUpdateSidebarConfigWhenNotPartOfTheRequest(
+        bool $existing_config,
+    ): void {
+        $request = HTTPRequestBuilder::get()->withProject($this->project)->withParams([
+            'activate-scrum' => '1',
+            'activate-scrum-v2' => '1',
+            'home-ease-onboarding' => false,
+        ])->build();
+        $this->config_manager->method('scrumIsActivatedForProject')->willReturn(true);
+        $this->explicit_backlog_updater->expects(self::once())->method('updateScrumConfiguration');
+        $this->config_manager
+            ->expects(self::once())
+            ->method('updateConfiguration')
+            ->with(self::PROJECT_ID, "1", $existing_config);
+        $this->mono_milestone_checker->method('isMonoMilestoneEnabled')->willReturn(false);
+
+        $this->mono_milestone_enabler->expects(self::once())->method('enableScrumForMonoMilestones');
+        $this->first_scrum_creator->expects(self::never())->method('createFirstScrum');
+        $this->update(
+            $request,
+            SplitKanbanConfigurationCheckerStub::withoutAllowedProject(),
+            $existing_config
+                ? CheckMilestonesInSidebarStub::withMilestonesInSidebar()
+                : CheckMilestonesInSidebarStub::withoutMilestonesInSidebar(),
+        );
+    }
+
+    /**
+     * @testWith ["0", false, false]
+     *           ["0", true, false]
+     *           ["1", false, true]
+     *           ["1", true, true]
+     */
+    public function testItUpdatesSidebarConfigAccordinglyToRequest(
+        string $submitted_value,
+        bool $existing_config,
+        bool $expected,
+    ): void {
+        $request = HTTPRequestBuilder::get()->withProject($this->project)->withParams([
+            'activate-scrum' => '1',
+            'should-sidebar-display-last-milestones' => $submitted_value,
+            'activate-scrum-v2' => '1',
+            'home-ease-onboarding' => false,
+        ])->build();
+        $this->config_manager->method('scrumIsActivatedForProject')->willReturn(true);
+        $this->explicit_backlog_updater->expects(self::once())->method('updateScrumConfiguration');
+        $this->config_manager
+            ->expects(self::once())
+            ->method('updateConfiguration')
+            ->with(self::PROJECT_ID, "1", $expected);
+        $this->mono_milestone_checker->method('isMonoMilestoneEnabled')->willReturn(false);
+
+        $this->mono_milestone_enabler->expects(self::once())->method('enableScrumForMonoMilestones');
+        $this->first_scrum_creator->expects(self::never())->method('createFirstScrum');
+        $this->update(
+            $request,
+            SplitKanbanConfigurationCheckerStub::withoutAllowedProject(),
+            $existing_config
+                ? CheckMilestonesInSidebarStub::withMilestonesInSidebar()
+                : CheckMilestonesInSidebarStub::withoutMilestonesInSidebar(),
+        );
     }
 
     public function testItEnablesScrumV2MonoMilestoneMode(): void
     {
-        $this->request->method('get')->willReturnMap([
-            ['group_id', self::PROJECT_ID],
-            ['activate-scrum', '1'],
-            ['activate-scrum-v2', '1'],
-            ['home-ease-onboarding', false],
-        ]);
+        $request = HTTPRequestBuilder::get()->withProject($this->project)->withParams([
+            'activate-scrum' => '1',
+            'should-sidebar-display-last-milestones' => '0',
+            'activate-scrum-v2' => '1',
+            'home-ease-onboarding' => false,
+        ])->build();
         $this->config_manager->method('scrumIsActivatedForProject')->willReturn(true);
         $this->explicit_backlog_updater->expects(self::once())->method('updateScrumConfiguration');
         $this->config_manager->expects(self::once())->method('updateConfiguration');
@@ -135,17 +215,21 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->mono_milestone_enabler->expects(self::once())->method('enableScrumForMonoMilestones');
         $this->first_scrum_creator->expects(self::never())->method('createFirstScrum');
-        $this->update(SplitKanbanConfigurationCheckerStub::withoutAllowedProject());
+        $this->update(
+            $request,
+            SplitKanbanConfigurationCheckerStub::withoutAllowedProject(),
+            CheckMilestonesInSidebarStub::withoutMilestonesInSidebar(),
+        );
     }
 
     public function testItEnablesScrumV2MonoMilestoneModeInSplitKanbanContext(): void
     {
-        $this->request->method('get')->willReturnMap([
-            ['group_id', self::PROJECT_ID],
-            ['activate-scrum', '1'],
-            ['activate-scrum-v2', '1'],
-            ['home-ease-onboarding', false],
-        ]);
+        $request = HTTPRequestBuilder::get()->withProject($this->project)->withParams([
+            'activate-scrum' => '1',
+            'should-sidebar-display-last-milestones' => '0',
+            'activate-scrum-v2' => '1',
+            'home-ease-onboarding' => false,
+        ])->build();
         $this->config_manager->method('scrumIsActivatedForProject')->willReturn(true);
         $this->explicit_backlog_updater->expects(self::once())->method('updateScrumConfiguration');
         $this->config_manager->expects(self::once())->method('updateConfiguration');
@@ -153,17 +237,20 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->mono_milestone_enabler->expects(self::once())->method('enableScrumForMonoMilestones');
         $this->first_scrum_creator->expects(self::never())->method('createFirstScrum');
-        $this->update(SplitKanbanConfigurationCheckerStub::withAllowedProject());
+        $this->update(
+            $request,
+            SplitKanbanConfigurationCheckerStub::withAllowedProject(),
+            CheckMilestonesInSidebarStub::withoutMilestonesInSidebar(),
+        );
     }
 
     public function testItDisablesScrumV2MonoMilestoneMode(): void
     {
-        $this->request->method('get')->willReturnMap([
-            ['group_id', self::PROJECT_ID],
-            ['activate-scrum', '1'],
-            ['activate-scrum-v2', '0'],
-            ['home-ease-onboarding', false],
-        ]);
+        $request = HTTPRequestBuilder::get()->withProject($this->project)->withParams([
+            'activate-scrum' => '1',
+            'should-sidebar-display-last-milestones' => '0',
+            'activate-scrum-v2' => '0',
+        ])->build();
 
         $this->config_manager->method('scrumIsActivatedForProject')->willReturn(true);
         $this->explicit_backlog_updater->expects(self::once())->method('updateScrumConfiguration');
@@ -172,17 +259,20 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->mono_milestone_disabler->expects(self::once())->method('disableScrumForMonoMilestones');
         $this->first_scrum_creator->expects(self::never())->method('createFirstScrum');
-        $this->update(SplitKanbanConfigurationCheckerStub::withoutAllowedProject());
+        $this->update(
+            $request,
+            SplitKanbanConfigurationCheckerStub::withoutAllowedProject(),
+            CheckMilestonesInSidebarStub::withoutMilestonesInSidebar(),
+        );
     }
 
     public function testItDisablesScrumV2MonoMilestoneModeInSplitKanbanContext(): void
     {
-        $this->request->method('get')->willReturnMap([
-            ['group_id', self::PROJECT_ID],
-            ['activate-scrum', '1'],
-            ['activate-scrum-v2', '0'],
-            ['home-ease-onboarding', false],
-        ]);
+        $request = HTTPRequestBuilder::get()->withProject($this->project)->withParams([
+            'activate-scrum' => '1',
+            'should-sidebar-display-last-milestones' => '0',
+            'activate-scrum-v2' => '0',
+        ])->build();
 
         $this->config_manager->method('scrumIsActivatedForProject')->willReturn(true);
         $this->explicit_backlog_updater->expects(self::once())->method('updateScrumConfiguration');
@@ -191,18 +281,22 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->mono_milestone_disabler->expects(self::once())->method('disableScrumForMonoMilestones');
         $this->first_scrum_creator->expects(self::never())->method('createFirstScrum');
-        $this->update(SplitKanbanConfigurationCheckerStub::withAllowedProject());
+        $this->update(
+            $request,
+            SplitKanbanConfigurationCheckerStub::withAllowedProject(),
+            CheckMilestonesInSidebarStub::withoutMilestonesInSidebar(),
+        );
     }
 
     public function testItDiscardsActivationOfScrumV2MonoMilestoneModeFromAgileDashboardHomepage(): void
     {
-        $this->request->method('exist')->willReturnMap([['scrum-title-admin', true]]);
-        $this->request->method('get')->willReturnMap([
-            ['group_id', self::PROJECT_ID],
-            ['activate-scrum', '1'],
-            ['activate-scrum-v2', '1'],
-            ['home-ease-onboarding', '1'],
-        ]);
+        $request = HTTPRequestBuilder::get()->withProject($this->project)->withParams([
+            'activate-scrum' => '1',
+            'should-sidebar-display-last-milestones' => '0',
+            'activate-scrum-v2' => '1',
+            'home-ease-onboarding' => '1',
+            'scrum-title-admin' => 'Scrum',
+        ])->build();
 
         $this->config_manager->method('scrumIsActivatedForProject')->willReturn(false);
         $this->mono_milestone_checker->method('isMonoMilestoneEnabled')->willReturn(false);
@@ -211,18 +305,22 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->response->expects(self::once())->method('scrumActivated');
         $this->mono_milestone_enabler->expects(self::never())->method('enableScrumForMonoMilestones');
-        $this->update(SplitKanbanConfigurationCheckerStub::withoutAllowedProject());
+        $this->update(
+            $request,
+            SplitKanbanConfigurationCheckerStub::withoutAllowedProject(),
+            CheckMilestonesInSidebarStub::withoutMilestonesInSidebar(),
+        );
     }
 
     public function testItDiscardsActivationOfScrumV2MonoMilestoneModeFromAgileDashboardHomepageInSplitKanbanContext(): void
     {
-        $this->request->method('exist')->willReturnMap([['scrum-title-admin', true]]);
-        $this->request->method('get')->willReturnMap([
-            ['group_id', self::PROJECT_ID],
-            ['activate-scrum', '1'],
-            ['activate-scrum-v2', '1'],
-            ['home-ease-onboarding', '1'],
-        ]);
+        $request = HTTPRequestBuilder::get()->withProject($this->project)->withParams([
+            'activate-scrum' => '1',
+            'should-sidebar-display-last-milestones' => '0',
+            'activate-scrum-v2' => '1',
+            'home-ease-onboarding' => '1',
+            'scrum-title-admin' => 'Scrum',
+        ])->build();
 
         $this->config_manager->method('scrumIsActivatedForProject')->willReturn(false);
         $this->mono_milestone_checker->method('isMonoMilestoneEnabled')->willReturn(false);
@@ -231,17 +329,21 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->response->expects(self::never())->method('scrumActivated');
         $this->mono_milestone_enabler->expects(self::never())->method('enableScrumForMonoMilestones');
-        $this->update(SplitKanbanConfigurationCheckerStub::withAllowedProject());
+        $this->update(
+            $request,
+            SplitKanbanConfigurationCheckerStub::withAllowedProject(),
+            CheckMilestonesInSidebarStub::withoutMilestonesInSidebar(),
+        );
     }
 
     public function testItCreatesFirstScrum(): void
     {
-        $this->request->method('exist')->willReturnMap([['scrum-title-admin', true]]);
-        $this->request->method('get')->willReturnMap([
-            ['group_id', self::PROJECT_ID],
-            ['activate-scrum', '1'],
-            ['activate-scrum-v2', '0'],
-        ]);
+        $request = HTTPRequestBuilder::get()->withProject($this->project)->withParams([
+            'activate-scrum' => '1',
+            'should-sidebar-display-last-milestones' => '0',
+            'activate-scrum-v2' => '0',
+            'scrum-title-admin' => 'Scrum',
+        ])->build();
 
         $this->config_manager->method('scrumIsActivatedForProject')->willReturn(false);
         $this->explicit_backlog_updater->expects(self::once())->method('updateScrumConfiguration');
@@ -251,17 +353,21 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->response->expects(self::once())->method('scrumActivated');
         $this->first_scrum_creator->expects(self::once())->method('createFirstScrum')->willReturn(NewFeedback::success('yay!'));
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('success', 'yay!');
-        $this->update(SplitKanbanConfigurationCheckerStub::withoutAllowedProject());
+        $this->update(
+            $request,
+            SplitKanbanConfigurationCheckerStub::withoutAllowedProject(),
+            CheckMilestonesInSidebarStub::withoutMilestonesInSidebar(),
+        );
     }
 
     public function testItDoesNotCreatesFirstScrumWhenProjectUseSplitKanban(): void
     {
-        $this->request->method('exist')->willReturnMap([['scrum-title-admin', true]]);
-        $this->request->method('get')->willReturnMap([
-            ['group_id', self::PROJECT_ID],
-            ['activate-scrum', '1'],
-            ['activate-scrum-v2', '0'],
-        ]);
+        $request = HTTPRequestBuilder::get()->withProject($this->project)->withParams([
+            'activate-scrum' => '1',
+            'should-sidebar-display-last-milestones' => '0',
+            'activate-scrum-v2' => '0',
+            'scrum-title-admin' => 'Scrum',
+        ])->build();
 
         $this->config_manager->method('scrumIsActivatedForProject')->willReturn(false);
         $this->explicit_backlog_updater->expects(self::once())->method('updateScrumConfiguration');
@@ -270,17 +376,21 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->response->expects(self::never())->method('scrumActivated');
         $this->first_scrum_creator->expects(self::never())->method('createFirstScrum');
-        $this->update(SplitKanbanConfigurationCheckerStub::withAllowedProject());
+        $this->update(
+            $request,
+            SplitKanbanConfigurationCheckerStub::withAllowedProject(),
+            CheckMilestonesInSidebarStub::withoutMilestonesInSidebar(),
+        );
     }
 
     public function testItDoesNotCreatesFirstScrumWhenProjectUseSplitKanbanEvenIfItWasAlreadyActivated(): void
     {
-        $this->request->method('exist')->willReturnMap([['scrum-title-admin', true]]);
-        $this->request->method('get')->willReturnMap([
-            ['group_id', self::PROJECT_ID],
-            ['activate-scrum', '1'],
-            ['activate-scrum-v2', '0'],
-        ]);
+        $request = HTTPRequestBuilder::get()->withProject($this->project)->withParams([
+            'activate-scrum' => '1',
+            'should-sidebar-display-last-milestones' => '0',
+            'activate-scrum-v2' => '0',
+            'scrum-title-admin' => 'Scrum',
+        ])->build();
 
         $this->config_manager->method('scrumIsActivatedForProject')->willReturn(true);
         $this->explicit_backlog_updater->expects(self::once())->method('updateScrumConfiguration');
@@ -289,17 +399,21 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->response->expects(self::never())->method('scrumActivated');
         $this->first_scrum_creator->expects(self::never())->method('createFirstScrum');
-        $this->update(SplitKanbanConfigurationCheckerStub::withAllowedProject());
+        $this->update(
+            $request,
+            SplitKanbanConfigurationCheckerStub::withAllowedProject(),
+            CheckMilestonesInSidebarStub::withoutMilestonesInSidebar(),
+        );
     }
 
     public function testWhenPlanningAdministrationIsDelegatedItDoesNotCreateFirstScrum(): void
     {
-        $this->request->method('exist')->willReturnMap([['scrum-title-admin', true]]);
-        $this->request->method('get')->willReturnMap([
-            ['group_id', self::PROJECT_ID],
-            ['activate-scrum', '1'],
-            ['activate-scrum-v2', '0'],
-        ]);
+        $request = HTTPRequestBuilder::get()->withProject($this->project)->withParams([
+            'activate-scrum' => '1',
+            'should-sidebar-display-last-milestones' => '0',
+            'activate-scrum-v2' => '0',
+            'scrum-title-admin' => 'Scrum',
+        ])->build();
 
         $this->config_manager->method('scrumIsActivatedForProject')->willReturn(false);
         $this->explicit_backlog_updater->expects(self::once())->method('updateScrumConfiguration');
@@ -316,17 +430,21 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->response->expects(self::once())->method('scrumActivated');
         $this->first_scrum_creator->expects(self::never())->method('createFirstScrum');
-        $this->update(SplitKanbanConfigurationCheckerStub::withoutAllowedProject());
+        $this->update(
+            $request,
+            SplitKanbanConfigurationCheckerStub::withoutAllowedProject(),
+            CheckMilestonesInSidebarStub::withoutMilestonesInSidebar(),
+        );
     }
 
     public function testWhenPlanningAdministrationIsDelegatedItDoesNotCreateFirstScrumInSplitKanbanContext(): void
     {
-        $this->request->method('exist')->willReturnMap([['scrum-title-admin', true]]);
-        $this->request->method('get')->willReturnMap([
-            ['group_id', self::PROJECT_ID],
-            ['activate-scrum', '1'],
-            ['activate-scrum-v2', '0'],
-        ]);
+        $request = HTTPRequestBuilder::get()->withProject($this->project)->withParams([
+            'activate-scrum' => '1',
+            'should-sidebar-display-last-milestones' => '0',
+            'activate-scrum-v2' => '0',
+            'scrum-title-admin' => 'Scrum',
+        ])->build();
 
         $this->config_manager->method('scrumIsActivatedForProject')->willReturn(false);
         $this->explicit_backlog_updater->expects(self::once())->method('updateScrumConfiguration');
@@ -343,6 +461,10 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->response->expects(self::never())->method('scrumActivated');
         $this->first_scrum_creator->expects(self::never())->method('createFirstScrum');
-        $this->update(SplitKanbanConfigurationCheckerStub::withAllowedProject());
+        $this->update(
+            $request,
+            SplitKanbanConfigurationCheckerStub::withAllowedProject(),
+            CheckMilestonesInSidebarStub::withoutMilestonesInSidebar(),
+        );
     }
 }

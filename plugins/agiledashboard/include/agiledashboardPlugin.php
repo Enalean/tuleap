@@ -407,6 +407,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             new \Tuleap\Kanban\Legacy\LegacyConfigurationDao(),
             EventManager::instance(),
             new MilestonesInSidebarDao(),
+            new MilestonesInSidebarDao(),
         );
     }
 
