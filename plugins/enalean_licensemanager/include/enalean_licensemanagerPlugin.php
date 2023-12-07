@@ -287,7 +287,7 @@ class enalean_licensemanagerPlugin extends Plugin
         );
 
         $warning = '
-                <div class="tlp-alert-danger alert alert-danger alert-block">
+                <div class="tlp-alert-danger alert alert-danger alert-block" data-test="no-more-licences">
                     <h4>' . $purifier->purify($title) . '</h4>
                     <p>
                         ' . $purifier->purify($message, CODENDI_PURIFIER_BASIC) . '
