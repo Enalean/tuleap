@@ -88,7 +88,8 @@ class ProjectDashboardXMLImporterBase extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->dao                      = \Mockery::spy(\Tuleap\Dashboard\Project\ProjectDashboardDao::class);
         $this->project_dashboard_saver  = new ProjectDashboardSaver(
-            $this->dao
+            $this->dao,
+            $this->createStub(DeleteVisitByDashboardId::class),
         );
         $this->widget_creator           = \Mockery::spy(\Tuleap\Dashboard\Widget\WidgetCreator::class);
         $this->widget_factory           = \Mockery::spy(\Tuleap\Widget\WidgetFactory::class);

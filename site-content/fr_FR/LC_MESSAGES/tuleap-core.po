@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Poedit 3.0.1\n"
 
 msgid " New user"
 msgstr " Nouvel utilisateur"
@@ -2640,6 +2640,10 @@ msgstr "Modération de la création de projets"
 
 msgid "Project creation moderation settings"
 msgstr "Paramètres de création de projets"
+
+#, php-format
+msgid "Project dashboard: %s"
+msgstr "Tableau de bord de projet : %s"
 
 #, php-format
 msgid "Project developers (%1$s users)"

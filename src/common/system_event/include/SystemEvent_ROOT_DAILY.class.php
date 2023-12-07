@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Dashboard\Project\RecentlyVisitedProjectDashboardDao;
 use Tuleap\SystemEvent\RootDailyStartEvent;
 
 class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
@@ -95,5 +96,6 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
     {
         (new SessionDao())->deleteExpiredSession($current_time->getTimestamp(), \ForgeConfig::getInt('sys_session_lifetime'));
         (new UserDao())->updatePendingExpiredUsersToDeleted($current_time->getTimestamp(), 3600 * 24 * \ForgeConfig::getInt('sys_pending_account_lifetime'));
+        (new RecentlyVisitedProjectDashboardDao())->deleteOldVisits();
     }
 }

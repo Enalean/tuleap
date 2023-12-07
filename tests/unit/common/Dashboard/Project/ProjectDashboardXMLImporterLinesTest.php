@@ -33,7 +33,7 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
     public function testItImportsALine()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -66,7 +66,7 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
     public function testItImportsAColumn()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -98,7 +98,7 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
     public function testItSetOwnerAndIdExplicitlyToOvercomeWidgetDesignedToGatherThoseDataFromHTTP()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -133,7 +133,7 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
     public function testItImportsAWidget()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -164,7 +164,7 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
     public function testItErrorsWhenWidgetNameIsUnknown()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -195,7 +195,7 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
     public function testItErrorsWhenWidgetIsDisabled()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -228,7 +228,7 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
     public function testItErrorsWhenWidgetContentCannotBeCreated()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -261,7 +261,7 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
     public function testItImportsTwoWidgetsInSameColumn()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -298,7 +298,7 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
     public function testItDoesntImportTwiceUniqueWidgets()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -339,7 +339,7 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
     public function testItImportsUniqueWidgetsWhenThereAreInDifferentDashboards()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -384,7 +384,7 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
     public function testItDoesntCreateLineAndColumnWhenWidgetIsNotValid()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -413,7 +413,7 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
     public function testItDoesntImportAPersonalWidget()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -445,7 +445,7 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
     public function testItImportsTwoWidgetsInTwoColumns()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -487,7 +487,7 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
     public function testItImportsTwoWidgetsWithSetLayout()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -531,7 +531,7 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
     public function testItFallsbackToAutomaticLayoutWhenLayoutIsUnknown()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -575,7 +575,7 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
     public function testItImportsAWidgetWithPreferences()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -624,7 +624,7 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
     public function testItSkipWidgetCreationWhenCreateRaisesExceptions()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>

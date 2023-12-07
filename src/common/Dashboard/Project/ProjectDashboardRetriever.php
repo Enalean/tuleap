@@ -21,6 +21,7 @@
 namespace Tuleap\Dashboard\Project;
 
 use Project;
+use Tuleap\Option\Option;
 
 class ProjectDashboardRetriever implements IRetrieveDashboards
 {
@@ -46,6 +47,19 @@ class ProjectDashboardRetriever implements IRetrieveDashboards
         }
 
         return $project_dashboards;
+    }
+
+    /**
+     * @return Option<ProjectDashboard>
+     */
+    public function getProjectDashboardById(int $dashboard_id): Option
+    {
+        $dashboard_row = $this->dao->searchById($dashboard_id);
+        if (! $dashboard_row) {
+            return Option::nothing(ProjectDashboard::class);
+        }
+
+        return Option::fromValue($this->instantiateFromRow($dashboard_row));
     }
 
     /**

@@ -20,135 +20,80 @@
 
 namespace Tuleap\Dashboard\Project;
 
-use DataAccessObject;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\DB\DataAccessObject;
 
 class ProjectDashboardDao extends DataAccessObject
 {
-    /**
-     * @var DashboardWidgetDao
-     */
-    private $widget_dao;
-
-    public function __construct(DashboardWidgetDao $widget_dao)
+    public function __construct(private readonly DashboardWidgetDao $widget_dao)
     {
         parent::__construct();
-        $this->enableExceptionsOnError();
-        $this->widget_dao = $widget_dao;
     }
 
     public function searchAllProjectDashboards($project_id)
     {
-        $project_id = $this->da->escapeInt($project_id);
-
         $sql = "SELECT *
                 FROM project_dashboards
-                WHERE project_id=$project_id";
+                WHERE project_id = ?";
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $project_id);
     }
 
-    /**
-     * @param $project_id
-     * @param $name
-     * @return int
-     */
-    public function save($project_id, $name)
+    public function save($project_id, $name): int
     {
-        $project_id = $this->da->escapeInt($project_id);
-        $name       = $this->da->quoteSmart($name);
-
-        $sql = "INSERT INTO project_dashboards(project_id, name)
-                VALUES ($project_id, $name)";
-
-        return $this->updateAndGetLastId($sql);
+        return (int) $this->getDB()->insertReturnId('project_dashboards', [
+            'project_id' => $project_id,
+            'name' => $name,
+        ]);
     }
 
-    /**
-     * @param $dashboard_id
-     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
-     */
-    public function searchById($dashboard_id)
+    public function searchById($dashboard_id): array
     {
-        $dashboard_id = $this->da->escapeInt($dashboard_id);
-
         $sql = "SELECT *
                 FROM project_dashboards
-                WHERE id=$dashboard_id";
+                WHERE id = ?";
 
-        return $this->retrieve($sql);
+        return $this->getDB()->row($sql, $dashboard_id);
     }
 
-    /**
-     * @param $project_id
-     * @param $name
-     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
-     */
-    public function searchByProjectIdAndName($project_id, $name)
+    public function searchByProjectIdAndName($project_id, $name): array
     {
-        $project_id = $this->da->escapeInt($project_id);
-        $name       = $this->da->quoteSmart($name);
-
         $sql = "SELECT *
                 FROM project_dashboards
-                WHERE project_id=$project_id AND name=$name";
+                WHERE project_id = ? AND name = ?";
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $project_id, $name);
     }
 
-    /**
-     * @param $id
-     * @param $name
-     * @return bool
-     */
-    public function edit($id, $name)
+    public function edit($id, $name): void
     {
-        $id   = $this->da->escapeInt($id);
-        $name = $this->da->quoteSmart($name);
-
         $sql = "UPDATE
                 project_dashboards
-                SET name = $name
-                WHERE id = $id";
+                SET name = ?
+                WHERE id = ?";
 
-        return $this->update($sql);
+        $this->getDB()->run($sql, $name, $id);
     }
 
-    /**
-     * @param $project_id
-     * @param $dashboard_id
-     */
-    public function delete($project_id, $dashboard_id)
+    public function delete($project_id, $dashboard_id): void
     {
-        $this->da->startTransaction();
-        try {
+        $this->getDB()->tryFlatTransaction(function () use ($project_id, $dashboard_id): void {
             $this->widget_dao->deleteAllWidgetsInProjectDashboardInsideTransaction($project_id, $dashboard_id);
 
-            $project_id   = $this->da->escapeInt($project_id);
-            $dashboard_id = $this->da->escapeInt($dashboard_id);
-
-            $sql = "DELETE FROM project_dashboards WHERE project_id = $project_id AND id = $dashboard_id";
-
-            $this->update($sql);
-            $this->da->commit();
-        } catch (\Exception $exception) {
-            $this->rollBack();
-            throw $exception;
-        }
+            $this->getDB()->delete('project_dashboards', ['project_id' => $project_id, 'id' => $dashboard_id]);
+        });
     }
 
-    public function duplicateDashboard($template_id, $new_project_id, $template_dashboard_id)
+    public function duplicateDashboard($template_id, $new_project_id, $template_dashboard_id): int
     {
-        $template_id           = $this->da->escapeInt($template_id);
-        $new_project_id        = $this->da->escapeInt($new_project_id);
-        $template_dashboard_id = $this->da->escapeInt($template_dashboard_id);
-
         $sql = "INSERT INTO project_dashboards (project_id, name)
-                SELECT $new_project_id, name
+                SELECT ?, name
                 FROM project_dashboards
-                WHERE project_id = $template_id
-                  AND id = $template_dashboard_id";
+                WHERE project_id = ?
+                  AND id = ?";
 
-        return $this->updateAndGetLastId($sql);
+        $this->getDB()->run($sql, $new_project_id, $template_id, $template_dashboard_id);
+
+        return (int) $this->getDB()->lastInsertId();
     }
 }

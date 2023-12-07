@@ -36,6 +36,7 @@ class ProjectDashboardSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     /** @var Project */
     private $project;
+    private DeleteVisitByDashboardId $delete_visit_by_dashboard_id;
 
     protected function setUp(): void
     {
@@ -49,27 +50,36 @@ class ProjectDashboardSaverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->regular_user = $this->createMock(\PFUser::class);
         $this->regular_user->method('isAdmin')->willReturn(false);
 
-        $this->project_saver = new ProjectDashboardSaver($this->dao);
+        $this->delete_visit_by_dashboard_id = new class implements DeleteVisitByDashboardId {
+            public bool $called = false;
+
+            public function deleteVisitByDashboardId(int $dashboard_id): void
+            {
+                $this->called = true;
+            }
+        };
     }
 
     public function testItSavesDashboard(): void
     {
-        $this->dao->method('searchByProjectIdAndName')->with(1, 'new_dashboard')->willReturn(\TestHelper::emptyDar());
+        $this->dao->method('searchByProjectIdAndName')->with(1, 'new_dashboard')->willReturn([]);
         $this->dao->expects(self::once())->method('save')->with(1, 'new_dashboard');
 
+        $this->project_saver = new ProjectDashboardSaver($this->dao, $this->delete_visit_by_dashboard_id);
         $this->project_saver->save($this->admin_user, $this->project, 'new_dashboard');
     }
 
     public function testItThrowsExceptionWhenDashboardAlreadyExists(): void
     {
-        $this->dao->method('searchByProjectIdAndName')->with(1, 'existing_dashboard')->willReturn(\TestHelper::arrayToDar([
+        $this->dao->method('searchByProjectIdAndName')->with(1, 'existing_dashboard')->willReturn([
             'id' => 1,
             'project_id' => 1,
             'name' => 'existing_dashboard',
-        ]));
+        ]);
         $this->dao->expects(self::never())->method('save');
         self::expectException('Tuleap\Dashboard\NameDashboardAlreadyExistsException');
 
+        $this->project_saver = new ProjectDashboardSaver($this->dao, $this->delete_visit_by_dashboard_id);
         $this->project_saver->save($this->admin_user, $this->project, 'existing_dashboard');
     }
 
@@ -78,6 +88,7 @@ class ProjectDashboardSaverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->expects(self::never())->method('save');
         self::expectException('Tuleap\Dashboard\NameDashboardDoesNotExistException');
 
+        $this->project_saver = new ProjectDashboardSaver($this->dao, $this->delete_visit_by_dashboard_id);
         $this->project_saver->save($this->admin_user, $this->project, '');
     }
 
@@ -86,6 +97,33 @@ class ProjectDashboardSaverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->expects(self::never())->method('save');
         self::expectException('Tuleap\Dashboard\Project\UserCanNotUpdateProjectDashboardException');
 
+        $this->project_saver = new ProjectDashboardSaver($this->dao, $this->delete_visit_by_dashboard_id);
         $this->project_saver->save($this->regular_user, $this->project, 'new_dashboard');
+    }
+
+    public function testDelete(): void
+    {
+        $this->dao->method('searchById')->with(1)->willReturn([
+            'id' => 1,
+            'project_id' => 1,
+            'name' => 'existing_dashboard',
+        ]);
+        $this->dao->expects(self::once())->method('delete');
+
+        $this->project_saver = new ProjectDashboardSaver($this->dao, $this->delete_visit_by_dashboard_id);
+        $this->project_saver->delete($this->admin_user, $this->project, 1);
+
+        self::assertTrue($this->delete_visit_by_dashboard_id->called);
+    }
+
+    public function testDeleteByNonAdmin(): void
+    {
+        $this->dao->expects(self::never())->method('delete');
+        self::expectException('Tuleap\Dashboard\Project\UserCanNotUpdateProjectDashboardException');
+
+        $this->project_saver = new ProjectDashboardSaver($this->dao, $this->delete_visit_by_dashboard_id);
+        $this->project_saver->delete($this->regular_user, $this->project, 1);
+
+        self::assertFalse($this->delete_visit_by_dashboard_id->called);
     }
 }

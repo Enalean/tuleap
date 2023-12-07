@@ -1295,6 +1295,16 @@ CREATE TABLE project_dashboards (
   INDEX idx(project_id, name(5))
 );
 
+DROP TABLE IF EXISTS project_dashboards_recently_visited;
+CREATE TABLE project_dashboards_recently_visited (
+    user_id INT(11) NOT NULL,
+    dashboard_id INT(11) UNSIGNED NOT NULL,
+    created_on INT(11) UNSIGNED NOT NULL,
+    PRIMARY KEY(user_id, dashboard_id),
+    INDEX idx_dashboard(dashboard_id),
+    INDEX idx_user_visit_time(user_id, created_on)
+) ENGINE=InnoDB;
+
 DROP TABLE IF EXISTS project_dashboards_disabled_widgets;
 CREATE TABLE project_dashboards_disabled_widgets (
     name VARCHAR(255) PRIMARY KEY

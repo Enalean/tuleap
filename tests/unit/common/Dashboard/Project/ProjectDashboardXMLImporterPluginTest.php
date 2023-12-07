@@ -47,7 +47,7 @@ class ProjectDashboardXMLImporterPluginTest extends ProjectDashboardXMLImporterB
     public function testItImportsAWidgetDefinedInAPlugin()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>

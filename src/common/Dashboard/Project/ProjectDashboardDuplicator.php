@@ -26,6 +26,7 @@ use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetLine;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\Dashboard\Widget\WidgetDashboardController;
+use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Widget\WidgetFactory;
 
@@ -68,6 +69,7 @@ class ProjectDashboardDuplicator
         DashboardWidgetRetriever $widget_retriever,
         WidgetFactory $widget_factory,
         DisabledProjectWidgetsChecker $disabled_project_widgets_checker,
+        private readonly DBTransactionExecutor $transaction_executor,
     ) {
         $this->dao                              = $dao;
         $this->retriever                        = $retriever;
@@ -77,28 +79,26 @@ class ProjectDashboardDuplicator
         $this->disabled_project_widgets_checker = $disabled_project_widgets_checker;
     }
 
-    public function duplicate(Project $template_project, Project $new_project, MappingRegistry $mapping_registry)
+    public function duplicate(Project $template_project, Project $new_project, MappingRegistry $mapping_registry): void
     {
-        $this->dao->startTransaction();
+        $this->transaction_executor->execute(function () use ($template_project, $new_project, $mapping_registry): void {
+            $template_dashboards = $this->retriever->getAllProjectDashboards($template_project);
+            foreach ($template_dashboards as $template_dashboard) {
+                $new_dashboard_id = $this->dao->duplicateDashboard(
+                    $template_project->getID(),
+                    $new_project->getID(),
+                    $template_dashboard->getId()
+                );
 
-        $template_dashboards = $this->retriever->getAllProjectDashboards($template_project);
-        foreach ($template_dashboards as $template_dashboard) {
-            $new_dashboard_id = $this->dao->duplicateDashboard(
-                $template_project->getID(),
-                $new_project->getID(),
-                $template_dashboard->getId()
-            );
-
-            $this->duplicateDashboardContent(
-                $template_project,
-                $new_project,
-                $template_dashboard,
-                $new_dashboard_id,
-                $mapping_registry,
-            );
-        }
-
-        return $this->dao->commit();
+                $this->duplicateDashboardContent(
+                    $template_project,
+                    $new_project,
+                    $template_dashboard,
+                    $new_dashboard_id,
+                    $mapping_registry,
+                );
+            }
+        });
     }
 
     private function duplicateDashboardContent(

@@ -70,7 +70,7 @@ class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporterBase
     public function testItLogsAWarningWhenDashboardNameAlreadyExistsInTheSameProject()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar([1, 101, 'test']));
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([1, 101, 'test']);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -90,7 +90,7 @@ class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporterBase
     public function testItImportsAProjectDashboard()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
