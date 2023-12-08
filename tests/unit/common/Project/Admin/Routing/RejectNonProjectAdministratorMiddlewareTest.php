@@ -22,62 +22,57 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Admin\Routing;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Server\RequestHandlerInterface;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class RejectNonProjectAdministratorMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var RejectNonProjectAdministratorMiddleware
-     */
-    private $middleware;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|\UserManager
-     */
-    private $user_manager;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|ProjectAdministratorChecker
-     */
-    private $checker;
+    private RejectNonProjectAdministratorMiddleware $middleware;
+    private \UserManager&MockObject $user_manager;
+    private ProjectAdministratorChecker&MockObject $checker;
 
     protected function setUp(): void
     {
-        $this->user_manager = M::mock(\UserManager::class);
-        $this->checker      = M::mock(ProjectAdministratorChecker::class);
+        $this->user_manager = $this->createMock(\UserManager::class);
+        $this->checker      = $this->createMock(ProjectAdministratorChecker::class);
         $this->middleware   = new RejectNonProjectAdministratorMiddleware($this->user_manager, $this->checker);
     }
 
     public function testProcessThrowsWhenProjectIsNotAnAttributeOfRequest(): void
     {
-        $handler = M::mock(RequestHandlerInterface::class);
-        $handler->shouldNotReceive('handle');
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $handler->expects(self::never())->method('handle');
 
         $request = new NullServerRequest();
 
-        $this->expectException(\LogicException::class);
+        self::expectException(\LogicException::class);
         $this->middleware->process($request, $handler);
     }
 
     public function testProcess(): void
     {
-        $handler = M::mock(RequestHandlerInterface::class);
-        $handler->shouldReceive('handle')->once()->with(M::capture($enriched_request));
+        $handler          = $this->createMock(RequestHandlerInterface::class);
+        $enriched_request = null;
+        $handler->expects(self::once())->method('handle')
+            ->with(self::callback(function ($argument) use (&$enriched_request) {
+                $enriched_request = $argument;
+
+                return true;
+            }));
         $user = UserTestBuilder::aUser()->build();
-        $this->user_manager->shouldReceive('getCurrentUser')->once()->andReturn($user);
+        $this->user_manager->expects(self::once())->method('getCurrentUser')->willReturn($user);
 
         $project = new \Project(['group_id' => 102]);
         $request = (new NullServerRequest())->withAttribute(\Project::class, $project);
 
-        $this->checker->shouldReceive('checkUserIsProjectAdministrator')
-            ->once()
+        $this->checker
+            ->expects(self::once())
+            ->method('checkUserIsProjectAdministrator')
             ->with($user, $project);
 
         $this->middleware->process($request, $handler);
-        $this->assertSame($user, $enriched_request->getAttribute(\PFUser::class));
+        self::assertSame($user, $enriched_request->getAttribute(\PFUser::class));
     }
 }

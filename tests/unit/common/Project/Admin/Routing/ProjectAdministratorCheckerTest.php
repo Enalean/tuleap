@@ -22,16 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Admin\Routing;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Request\ForbiddenException;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ProjectAdministratorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var ProjectAdministratorChecker */
-    private $project_administrator_checker;
+    private ProjectAdministratorChecker $project_administrator_checker;
 
     protected function setUp(): void
     {
@@ -40,33 +37,25 @@ final class ProjectAdministratorCheckerTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testcheckUserIsProjectAdministratorThrowsWhenNotAdministrator(): void
     {
-        $project = M::mock(\Project::class)->shouldReceive('getID')
-            ->once()
-            ->andReturn(104)
-            ->getMock();
-        $user    = M::mock(\PFUser::class)->shouldReceive('isAdmin')
-            ->with(104)
-            ->once()
-            ->andReturnFalse()
-            ->getMock();
+        $project = ProjectTestBuilder::aProject()->withId(104)->build();
+        $user    = UserTestBuilder::aUser()
+            ->withMemberOf($project)
+            ->withoutSiteAdministrator()
+            ->build();
 
-        $this->expectException(ForbiddenException::class);
+        self::expectException(ForbiddenException::class);
         $this->project_administrator_checker->checkUserIsProjectAdministrator($user, $project);
     }
 
     public function testCheckUserIsProjectAdministratorDoesNotThrow(): void
     {
-        $project = M::mock(\Project::class)->shouldReceive('getID')
-            ->once()
-            ->andReturn(104)
-            ->getMock();
-        $user    = M::mock(\PFUser::class)->shouldReceive('isAdmin')
-            ->with(104)
-            ->once()
-            ->andReturnTrue()
-            ->getMock();
+        $project = ProjectTestBuilder::aProject()->withId(104)->build();
+        $user    = UserTestBuilder::aUser()
+            ->withAdministratorOf($project)
+            ->withoutSiteAdministrator()
+            ->build();
 
-        $this->addToAssertionCount(1);
+        self::addToAssertionCount(1);
         $this->project_administrator_checker->checkUserIsProjectAdministrator($user, $project);
     }
 }
