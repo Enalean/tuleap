@@ -20,12 +20,8 @@
 
 namespace Tuleap\REST;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
 class QueryParameterParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /** @var QueryParameterParser */
     private $query_parser;
 
@@ -36,93 +32,93 @@ class QueryParameterParserTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testMissingParameter()
+    public function testMissingParameter(): void
     {
         $this->expectException(MissingMandatoryParameterException::class);
 
         $this->query_parser->getArrayOfInt('{"some_other_property": ""}', 'labels_id');
     }
 
-    public function testArrayOfIntWithAnEmptyString()
+    public function testArrayOfIntWithAnEmptyString(): void
     {
         $this->expectException(InvalidParameterTypeException::class);
 
         $this->query_parser->getArrayOfInt('{"labels_id": ""}', 'labels_id');
     }
 
-    public function testArrayOfIntWithAnArrayOfStrings()
+    public function testArrayOfIntWithAnArrayOfStrings(): void
     {
         $this->expectException(InvalidParameterTypeException::class);
 
         $this->query_parser->getArrayOfInt('{"labels_id": ["a", "b"]}', 'labels_id');
     }
 
-    public function testArrayOfIntWithAnArrayContainingDuplicates()
+    public function testArrayOfIntWithAnArrayContainingDuplicates(): void
     {
         $this->expectException(DuplicatedParameterValueException::class);
 
         $this->query_parser->getArrayOfInt('{"labels_id": [1, 1, 2, 2]}', 'labels_id');
     }
 
-    public function testArrayOfIntReturn()
+    public function testArrayOfIntReturn(): void
     {
         $result = $this->query_parser->getArrayOfInt('{"labels_id": [21, 74]}', 'labels_id');
 
-        $this->assertEquals([21, 74], $result);
+        self::assertEquals([21, 74], $result);
     }
 
-    public function testGetIntWithAnEmptyString()
+    public function testGetIntWithAnEmptyString(): void
     {
         $this->expectException(MissingMandatoryParameterException::class);
 
         $this->query_parser->getInt('{"some_other_property": ""}', 'tracker_report_id');
     }
 
-    public function testGetIntWithAString()
+    public function testGetIntWithAString(): void
     {
         $this->expectException(InvalidParameterTypeException::class);
 
         $this->query_parser->getInt('{"tracker_report_id": "a"}', 'tracker_report_id');
     }
 
-    public function testGetInt()
+    public function testGetInt(): void
     {
         $result = $this->query_parser->getInt('{"tracker_report_id": 47}', 'tracker_report_id');
 
-        $this->assertEquals(47, $result);
+        self::assertEquals(47, $result);
     }
 
-    public function testGetStringWithAnEmptyString()
+    public function testGetStringWithAnEmptyString(): void
     {
         $this->expectException(MissingMandatoryParameterException::class);
 
         $this->query_parser->getString('{"some_other_property": ""}', 'identifier');
     }
 
-    public function testGetStringWithAnArray()
+    public function testGetStringWithAnArray(): void
     {
         $this->expectException(InvalidParameterTypeException::class);
 
         $this->query_parser->getString('{"identifier": ["test"]}', 'identifier');
     }
 
-    public function testGetStringWithANumber()
+    public function testGetStringWithANumber(): void
     {
         $this->expectException(InvalidParameterTypeException::class);
 
         $this->query_parser->getString('{"identifier": 123}', 'identifier');
     }
 
-    public function testGetString()
+    public function testGetString(): void
     {
         $result = $this->query_parser->getString('{"identifier": "test"}', 'identifier');
-        $this->assertEquals('test', $result);
+        self::assertEquals('test', $result);
     }
 
-    public function testGetBoolean()
+    public function testGetBoolean(): void
     {
         $result = $this->query_parser->getBoolean('{"identifier": true}', 'identifier');
-        $this->assertTrue($result);
+        self::assertTrue($result);
     }
 
     public function testGetObjectWithAnEmptyString()
@@ -132,23 +128,23 @@ class QueryParameterParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->query_parser->getObject('{"some_other_property": ""}', 'identifier');
     }
 
-    public function testGetObjectWithAString()
+    public function testGetObjectWithAString(): void
     {
         $this->expectException(MissingMandatoryParameterException::class);
 
         $this->query_parser->getObject('{"some_other_property": "a"}', 'identifier');
     }
 
-    public function testGetObjectWithANumber()
+    public function testGetObjectWithANumber(): void
     {
         $this->expectException(InvalidParameterTypeException::class);
 
         $this->query_parser->getObject('{"identifier": 123}', 'identifier');
     }
 
-    public function testGetObject()
+    public function testGetObject(): void
     {
         $result = $this->query_parser->getObject('{"identifier": {"key": "value"}}', 'identifier');
-        $this->assertEquals(["key" => "value"], $result);
+        self::assertEquals(["key" => "value"], $result);
     }
 }

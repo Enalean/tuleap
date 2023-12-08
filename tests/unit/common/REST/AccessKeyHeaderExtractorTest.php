@@ -22,50 +22,49 @@ declare(strict_types=1);
 
 namespace Tuleap\REST;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenException;
 use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
 
 final class AccessKeyHeaderExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|SplitTokenIdentifierTranslator
+     * @var \PHPUnit\Framework\MockObject\MockObject&SplitTokenIdentifierTranslator
      */
     private $access_token_unserializer;
 
     protected function setUp(): void
     {
-        $this->access_token_unserializer = \Mockery::mock(SplitTokenIdentifierTranslator::class);
+        $this->access_token_unserializer = $this->createMock(SplitTokenIdentifierTranslator::class);
     }
 
     public function testAccessKeyIsExtractedFromTheHeader(): void
     {
         $extractor = new AccessKeyHeaderExtractor($this->access_token_unserializer, ['HTTP_X_AUTH_ACCESSKEY' => 'valid']);
 
-        $this->access_token_unserializer->shouldReceive('getSplitToken')->andReturn(\Mockery::mock(SplitToken::class));
+        $this->access_token_unserializer->method('getSplitToken')->willReturn($this->createMock(SplitToken::class));
 
-        $this->assertTrue($extractor->isAccessKeyHeaderPresent());
-        $this->assertNotNull($extractor->extractAccessKey());
+        self::assertTrue($extractor->isAccessKeyHeaderPresent());
+        self::assertNotNull($extractor->extractAccessKey());
     }
 
     public function testAccessKeyCannotBeFoundWhenTheHeaderIsNotPresent(): void
     {
         $extractor = new AccessKeyHeaderExtractor($this->access_token_unserializer, []);
 
-        $this->assertFalse($extractor->isAccessKeyHeaderPresent());
-        $this->assertNull($extractor->extractAccessKey());
+        self::assertFalse($extractor->isAccessKeyHeaderPresent());
+        self::assertNull($extractor->extractAccessKey());
     }
 
     public function testAccessKeyCannotBeExtractedWhenTheHeaderIsNotPresentButTheIdentifierIsNotValid(): void
     {
         $extractor = new AccessKeyHeaderExtractor($this->access_token_unserializer, ['HTTP_X_AUTH_ACCESSKEY' => 'not_valid']);
 
-        $this->access_token_unserializer->shouldReceive('getSplitToken')->andThrow(\Mockery::mock(SplitTokenException::class));
+        $this->access_token_unserializer->method('getSplitToken')->willThrowException(
+            $this->createMock(SplitTokenException::class),
+        );
 
-        $this->assertTrue($extractor->isAccessKeyHeaderPresent());
+        self::assertTrue($extractor->isAccessKeyHeaderPresent());
         $this->expectException(SplitTokenException::class);
         $extractor->extractAccessKey();
     }

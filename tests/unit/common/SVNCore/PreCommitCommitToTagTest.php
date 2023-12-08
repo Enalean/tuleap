@@ -22,30 +22,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class PreCommitCommitToTagTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PreCommitCommitToTagTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var SVN_Svnlook */
+    /** @var \PHPUnit\Framework\MockObject\MockObject&SVN_Svnlook */
     protected $svn_look;
+    protected Project $project;
 
-    /** @var Project */
-    protected $project;
-
-    /** @var SVN_Immutable_Tags_Handler */
+    /** @var \PHPUnit\Framework\MockObject\MockObject&SVN_Immutable_Tags_Handler */
     protected $handler;
     private string $repo;
     private string $commit_message;
     private string $transaction;
     /**
-     * @var \Mockery\MockInterface&SVN_Hooks
+     * @var \PHPUnit\Framework\MockObject\MockObject&SVN_Hooks
      */
     private $svn_hook;
     /**
-     * @var SVN_CommitMessageValidator&\Mockery\MockInterface
+     * @var SVN_CommitMessageValidator&\PHPUnit\Framework\MockObject\MockObject
      */
     private $commit_message_validator;
     private SVN_Hook_PreCommit $pre_commit;
@@ -57,27 +51,29 @@ class PreCommitCommitToTagTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->repo           = 'SVN_repo';
         $this->commit_message = '';
         $this->transaction    = '1';
-        $this->project        = \Mockery::spy(\Project::class);
+        $this->project        = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->build();
 
-        $this->svn_hook                 = \Mockery::spy(\SVN_Hooks::class)->shouldReceive('getProjectFromRepositoryPath')->with($this->repo)->andReturns($this->project)->getMock();
-        $this->commit_message_validator = \Mockery::spy(\SVN_CommitMessageValidator::class);
+        $this->svn_hook = $this->createMock(\SVN_Hooks::class);
+        $this->svn_hook->method('getProjectFromRepositoryPath')->with($this->repo)->willReturn($this->project);
 
-        $this->svn_look = \Mockery::spy(\SVN_Svnlook::class);
-        $this->handler  = \Mockery::spy(\SVN_Immutable_Tags_Handler::class);
+        $this->commit_message_validator = $this->createMock(\SVN_CommitMessageValidator::class);
+
+        $this->svn_look = $this->createMock(\SVN_Svnlook::class);
+        $this->handler  = $this->createMock(\SVN_Immutable_Tags_Handler::class);
 
         $this->pre_commit = new SVN_Hook_PreCommit(
             $this->svn_hook,
             $this->commit_message_validator,
             $this->svn_look,
             $this->handler,
-            \Mockery::spy(\Tuleap\SVNCore\SHA1CollisionDetector::class),
-            \Mockery::spy(\Psr\Log\LoggerInterface::class)
+            $this->createMock(\Tuleap\SVNCore\SHA1CollisionDetector::class),
+            new \Psr\Log\NullLogger(),
         );
     }
 
     public function testCommitToTagIsAllowed(): void
     {
-        $this->handler->shouldReceive('doesProjectUsesImmutableTags')->andReturns(false);
+        $this->handler->method('doesProjectUsesImmutableTags')->willReturn(false);
 
         $this->assertCommitIsAllowed('A   moduleA/trunk/toto');
         $this->assertCommitIsAllowed('U   moduleA/trunk/toto');
@@ -126,8 +122,9 @@ class PreCommitCommitToTagTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCommitToTagIsDeniedInModule(): void
     {
-        $this->handler->shouldReceive('doesProjectUsesImmutableTags')->andReturns(true);
-        $this->handler->shouldReceive('getImmutableTagsPathForProject')->andReturns('/*/tags/');
+        $this->handler->method('doesProjectUsesImmutableTags')->willReturn(true);
+        $this->handler->method('getImmutableTagsPathForProject')->willReturn('/*/tags/');
+        $this->handler->method('getAllowedTagsFromWhiteList')->willReturn([]);
 
         $this->assertCommitIsAllowed('A   moduleA/trunk/toto');
         $this->assertCommitIsAllowed('U   moduleA/trunk/toto');
@@ -176,9 +173,9 @@ class PreCommitCommitToTagTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCommitToTagIsDeniedAtRoot(): void
     {
-        $this->handler->shouldReceive('doesProjectUsesImmutableTags')->andReturns(true);
-        $this->handler->shouldReceive('getImmutableTagsPathForProject')->andReturns('/tags/');
-        $this->handler->shouldReceive('getAllowedTagsFromWhiteList')->andReturns([
+        $this->handler->method('doesProjectUsesImmutableTags')->willReturn(true);
+        $this->handler->method('getImmutableTagsPathForProject')->willReturn('/tags/');
+        $this->handler->method('getAllowedTagsFromWhiteList')->willReturn([
             '/tags/moduleA',
         ]);
 
@@ -234,8 +231,9 @@ class PreCommitCommitToTagTest extends \Tuleap\Test\PHPUnit\TestCase
 /*/tags
 EOS;
 
-        $this->handler->shouldReceive('doesProjectUsesImmutableTags')->andReturns(true);
-        $this->handler->shouldReceive('getImmutableTagsPathForProject')->andReturns($paths);
+        $this->handler->method('doesProjectUsesImmutableTags')->willReturn(true);
+        $this->handler->method('getImmutableTagsPathForProject')->willReturn($paths);
+        $this->handler->method('getAllowedTagsFromWhiteList')->willReturn([]);
 
         $this->assertCommitIsAllowed('A   moduleA/trunk/toto');
         $this->assertCommitIsAllowed('U   moduleA/trunk/toto');
@@ -318,15 +316,16 @@ EOS;
 
     private function buildPreCommitHook(array $paths): SVN_Hook_PreCommit
     {
-        $svn_look = \Mockery::spy(\SVN_Svnlook::class)->shouldReceive('getTransactionPath')->with($this->project, $this->transaction)->andReturns($paths)->getMock();
+        $svn_look = $this->createMock(\SVN_Svnlook::class);
+        $svn_look->method('getTransactionPath')->with($this->project, $this->transaction)->willReturn($paths);
 
         return new SVN_Hook_PreCommit(
             $this->svn_hook,
             $this->commit_message_validator,
             $svn_look,
             $this->handler,
-            \Mockery::spy(\Tuleap\SVNCore\SHA1CollisionDetector::class),
-            \Mockery::spy(\Psr\Log\LoggerInterface::class)
+            $this->createMock(\Tuleap\SVNCore\SHA1CollisionDetector::class),
+            new \Psr\Log\NullLogger(),
         );
     }
 }

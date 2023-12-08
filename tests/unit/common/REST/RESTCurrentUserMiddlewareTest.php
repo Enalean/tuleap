@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\REST;
 
 use Exception;
-use Mockery;
 use PFUser;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -37,26 +36,24 @@ use User_StatusInvalidException;
 
 final class RESTCurrentUserMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testRequestIsProcessedWhenCurrentUserIsNotRejected(): void
     {
-        $basic_rest_auth   = Mockery::mock(BasicAuthentication::class);
-        $rest_user_manager = Mockery::mock(UserManager::class);
+        $basic_rest_auth   = $this->createMock(BasicAuthentication::class);
+        $rest_user_manager = $this->createMock(UserManager::class);
 
         $rest_current_user_middleware = new RESTCurrentUserMiddleware($rest_user_manager, $basic_rest_auth);
 
-        $expected_user = Mockery::mock(PFUser::class);
-        $basic_rest_auth->shouldReceive('__isAllowed');
-        $rest_user_manager->shouldReceive('getCurrentUser')->andReturn($expected_user);
+        $expected_user = $this->createMock(PFUser::class);
+        $basic_rest_auth->method('__isAllowed');
+        $rest_user_manager->method('getCurrentUser')->willReturn($expected_user);
 
-        $request_handler   = Mockery::mock(RequestHandlerInterface::class);
+        $request_handler   = $this->createMock(RequestHandlerInterface::class);
         $expected_response = HTTPFactoryBuilder::responseFactory()->createResponse();
-        $request_handler->shouldReceive('handle')->with(Mockery::on(
+        $request_handler->method('handle')->with(self::callback(
             static function (ServerRequestInterface $request) use ($rest_current_user_middleware, $expected_user): bool {
                 return $rest_current_user_middleware->getCurrentRequestUser($request) === $expected_user;
             }
-        ))->andReturn($expected_response);
+        ))->willReturn($expected_response);
 
         $server_request = new NullServerRequest();
         $response       = $rest_current_user_middleware->process(
@@ -71,18 +68,18 @@ final class RESTCurrentUserMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testRequestIsRejectedWhenTheCurrentUserCanNotBeAuthenticated(Exception $exception): void
     {
-        $basic_rest_auth   = Mockery::mock(BasicAuthentication::class);
-        $rest_user_manager = Mockery::mock(UserManager::class);
+        $basic_rest_auth   = $this->createMock(BasicAuthentication::class);
+        $rest_user_manager = $this->createMock(UserManager::class);
 
         $rest_current_user_middleware = new RESTCurrentUserMiddleware($rest_user_manager, $basic_rest_auth);
 
-        $basic_rest_auth->shouldReceive('__isAllowed');
-        $rest_user_manager->shouldReceive('getCurrentUser')->andThrow($exception);
+        $basic_rest_auth->method('__isAllowed');
+        $rest_user_manager->method('getCurrentUser')->willThrowException($exception);
 
         $this->expectException(ForbiddenException::class);
         $rest_current_user_middleware->process(
-            Mockery::mock(ServerRequestInterface::class),
-            Mockery::mock(RequestHandlerInterface::class)
+            $this->createMock(ServerRequestInterface::class),
+            $this->createMock(RequestHandlerInterface::class)
         );
     }
 

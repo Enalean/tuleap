@@ -20,56 +20,53 @@
 
 namespace Tuleap\Sanitizer;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Valid_HTTPURI;
 
-class URISanitizerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class URISanitizerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItDoesNotTouchValidURI(): void
     {
-        $validator_local_uri = \Mockery::spy(\Valid_LocalURI::class);
-        $validator_local_uri->shouldReceive('validate')->andReturns(true);
+        $validator_local_uri = $this->createMock(\Valid_LocalURI::class);
+        $validator_local_uri->method('validate')->willReturn(true);
 
-        $validator_ftp_uri = \Mockery::spy(\Valid_FTPURI::class);
-        $validator_ftp_uri->shouldReceive('validate')->andReturns(false);
+        $validator_ftp_uri = $this->createMock(\Valid_FTPURI::class);
+        $validator_ftp_uri->method('validate')->willReturn(false);
 
         $uri_sanitizer = new URISanitizer($validator_local_uri, $validator_ftp_uri);
 
         $uri = '/valid_uri';
 
-        $this->assertEquals($uri, $uri_sanitizer->sanitizeForHTMLAttribute($uri));
+        self::assertEquals($uri, $uri_sanitizer->sanitizeForHTMLAttribute($uri));
     }
 
     public function testItDoesNotTouchValidFTPURI(): void
     {
-        $validator_local_uri = \Mockery::spy(\Valid_LocalURI::class);
-        $validator_local_uri->shouldReceive('validate')->andReturns(false);
+        $validator_local_uri = $this->createMock(\Valid_LocalURI::class);
+        $validator_local_uri->method('validate')->willReturn(false);
 
-        $validator_ftp_uri = \Mockery::spy(\Valid_FTPURI::class);
-        $validator_ftp_uri->shouldReceive('validate')->andReturns(true);
+        $validator_ftp_uri = $this->createMock(\Valid_FTPURI::class);
+        $validator_ftp_uri->method('validate')->willReturn(true);
 
         $uri_sanitizer = new URISanitizer($validator_local_uri, $validator_ftp_uri);
 
         $uri = 'ftp://example.com';
 
-        $this->assertEquals($uri, $uri_sanitizer->sanitizeForHTMLAttribute($uri));
+        self::assertEquals($uri, $uri_sanitizer->sanitizeForHTMLAttribute($uri));
     }
 
     public function testItManglesInvalidURI(): void
     {
-        $validator_local_uri = \Mockery::spy(\Valid_LocalURI::class);
-        $validator_local_uri->shouldReceive('validate')->andReturns(false);
+        $validator_local_uri = $this->createMock(\Valid_LocalURI::class);
+        $validator_local_uri->method('validate')->willReturn(false);
 
-        $validator_ftp_uri = \Mockery::spy(\Valid_FTPURI::class);
-        $validator_ftp_uri->shouldReceive('validate')->andReturns(false);
+        $validator_ftp_uri = $this->createMock(\Valid_FTPURI::class);
+        $validator_ftp_uri->method('validate')->willReturn(false);
 
         $uri_sanitizer = new URISanitizer($validator_local_uri, $validator_ftp_uri);
 
         $uri = 'invalid_uri';
 
-        $this->assertEquals('', $uri_sanitizer->sanitizeForHTMLAttribute($uri));
+        self::assertEquals('', $uri_sanitizer->sanitizeForHTMLAttribute($uri));
     }
 
     public function testItAcceptsOnlyOneValidator(): void
@@ -79,15 +76,15 @@ class URISanitizerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $uri_sanitizer = new URISanitizer($validator_http_uri);
 
-        $this->assertEquals(
+        self::assertEquals(
             '',
             $uri_sanitizer->sanitizeForHTMLAttribute('javascript:alert(1);')
         );
-        $this->assertEquals(
+        self::assertEquals(
             'http://example.test',
             $uri_sanitizer->sanitizeForHTMLAttribute('http://example.test')
         );
-        $this->assertEquals(
+        self::assertEquals(
             'https://example.test',
             $uri_sanitizer->sanitizeForHTMLAttribute('https://example.test')
         );
