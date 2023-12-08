@@ -21,17 +21,16 @@
 
 declare(strict_types=1);
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class MetadataListOfValuesElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MetadataListOfValuesElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testCloneValues(): void
     {
         // Factory to test
-        $srcLoveF = \Mockery::mock(Docman_MetadataListOfValuesElementFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $metadata_list_of_values_element_factory = $this->getMockBuilder(Docman_MetadataListOfValuesElementFactory::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getListByFieldId', 'getMetadataListOfValuesElementFactory'])
+            ->getMock();
 
         // Parameters
         $srcMd = new Docman_ListMetadata();
@@ -41,24 +40,23 @@ class MetadataListOfValuesElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCa
         $dstMd->setId(321);
 
         // List of src elements
-        $loveArray[0] = \Mockery::spy(Docman_MetadataListOfValuesElement::class);
-        $loveArray[0]->allows(['getId' => 100]);
-        $loveArray[1] = \Mockery::spy(Docman_MetadataListOfValuesElement::class);
-        $loveArray[1]->allows(['getId' => 101]);
-        $loveArray[2] = \Mockery::spy(Docman_MetadataListOfValuesElement::class);
-        $loveArray[2]->allows(['getId' => 102]);
-        $srcLoveF->expects()->getListByFieldId(123, 'field_123', false)->andReturns($loveArray);
+        $loveArray[0] = $this->createMock(Docman_MetadataListOfValuesElement::class);
+        $loveArray[0]->method('getId')->willReturn(100);
+        $loveArray[1] = $this->createMock(Docman_MetadataListOfValuesElement::class);
+        $loveArray[1]->method('getId')->willReturn(101);
+        $loveArray[2] = $this->createMock(Docman_MetadataListOfValuesElement::class);
+        $loveArray[2]->method('getId')->willReturn(102);
+        $metadata_list_of_values_element_factory->method('getListByFieldId')->with(123, 'field_123', false)->willReturn($loveArray);
 
         // Actions in the dst factory
-        $dstLoveF = \Mockery::spy(Docman_MetadataListOfValuesElementFactory::class);
-        $dstLoveF->shouldReceive('create')->andReturns(201)->once();
-        $dstLoveF->shouldReceive('create')->andReturns(202)->once();
-        $srcLoveF->expects()->getMetadataListOfValuesElementFactory(321)->andReturns($dstLoveF);
+        $dstLoveF = $this->createMock(Docman_MetadataListOfValuesElementFactory::class);
+        $dstLoveF->method('create')->willReturnOnConsecutiveCalls(201, 202);
+        $metadata_list_of_values_element_factory->method('getMetadataListOfValuesElementFactory')->with(321)->willReturn($dstLoveF);
 
         // Run the test
-        $valuesMapping = $srcLoveF->cloneValues($srcMd, $dstMd);
-        $this->assertEquals(201, $valuesMapping[101]);
-        $this->assertEquals(202, $valuesMapping[102]);
+        $valuesMapping = $metadata_list_of_values_element_factory->cloneValues($srcMd, $dstMd);
+        self::assertEquals(201, $valuesMapping[101]);
+        self::assertEquals(202, $valuesMapping[102]);
     }
 
     /**
@@ -68,7 +66,10 @@ class MetadataListOfValuesElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCa
     public function testExportValuesWithEmptyDest(): void
     {
         // Factory to test
-        $srcLoveF = \Mockery::mock(Docman_MetadataListOfValuesElementFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $metadata_list_of_values_element_factory = $this->getMockBuilder(Docman_MetadataListOfValuesElementFactory::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getListByFieldId', 'getMetadataListOfValuesElementFactory'])
+            ->getMock();
 
         // Parameters
         $valuesMapping = [];
@@ -79,19 +80,22 @@ class MetadataListOfValuesElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCa
         $dstMd->setId(321);
 
         // Src elements
-        $loveArray[0] = \Mockery::spy(Docman_MetadataListOfValuesElement::class);
-        $loveArray[0]->allows(['getId' => 100]);
-        $loveArray[1] = \Mockery::spy(Docman_MetadataListOfValuesElement::class);
-        $loveArray[1]->allows(['getId' => 101]);
-        $loveArray[2] = \Mockery::spy(Docman_MetadataListOfValuesElement::class);
-        $loveArray[2]->allows(['getId' => 102]);
-        $srcLoveF->shouldReceive('getListByFieldId')->andReturns($loveArray);
+        $loveArray[0] = $this->createMock(Docman_MetadataListOfValuesElement::class);
+        $loveArray[0]->method('getId')->willReturn(100);
+        $loveArray[0]->method('setRank');
+        $loveArray[1] = $this->createMock(Docman_MetadataListOfValuesElement::class);
+        $loveArray[1]->method('getId')->willReturn(101);
+        $loveArray[1]->method('setRank');
+        $loveArray[2] = $this->createMock(Docman_MetadataListOfValuesElement::class);
+        $loveArray[2]->method('getId')->willReturn(102);
+        $loveArray[2]->method('setRank');
+        $metadata_list_of_values_element_factory->method('getListByFieldId')->willReturn($loveArray);
 
-        $dstLoveF = \Mockery::spy(Docman_MetadataListOfValuesElementFactory::class);
-        $dstLoveF->shouldReceive('create')->times(2);
-        $srcLoveF->allows(['getMetadataListOfValuesElementFactory' => $dstLoveF]);
+        $dstLoveF = $this->createMock(Docman_MetadataListOfValuesElementFactory::class);
+        $dstLoveF->expects(self::exactly(2))->method('create');
+        $metadata_list_of_values_element_factory->method('getMetadataListOfValuesElementFactory')->willReturn($dstLoveF);
 
-        $srcLoveF->exportValues($srcMd, $dstMd, $valuesMapping);
+        $metadata_list_of_values_element_factory->exportValues($srcMd, $dstMd, $valuesMapping);
     }
 
     /**
@@ -101,7 +105,10 @@ class MetadataListOfValuesElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCa
     public function testExportValuesWithNonEmptyDest(): void
     {
         // Factory to test
-        $srcLoveF = \Mockery::mock(Docman_MetadataListOfValuesElementFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $metadata_list_of_values_element_factory = $this->getMockBuilder(Docman_MetadataListOfValuesElementFactory::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getListByFieldId', 'getMetadataListOfValuesElementFactory'])
+            ->getMock();
 
         // Parameters
         $valuesMapping = [101 => 201];
@@ -112,19 +119,72 @@ class MetadataListOfValuesElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCa
         $dstMd->setId(321);
 
         // Src elements
-        $loveArray[0] = \Mockery::spy(Docman_MetadataListOfValuesElement::class);
-        $loveArray[0]->allows(['getId' => 100]);
-        $loveArray[1] = \Mockery::spy(Docman_MetadataListOfValuesElement::class);
-        $loveArray[1]->allows(['getId' => 101]);
-        $loveArray[2] = \Mockery::spy(Docman_MetadataListOfValuesElement::class);
-        $loveArray[2]->allows(['getId' => 102]);
-        $srcLoveF->shouldReceive('getListByFieldId')->andReturns($loveArray);
+        $loveArray[0] = $this->createMock(Docman_MetadataListOfValuesElement::class);
+        $loveArray[0]->method('getId')->willReturn(100);
+        $loveArray[0]->method('setId');
+        $loveArray[0]->method('setRank');
+        $loveArray[1] = $this->createMock(Docman_MetadataListOfValuesElement::class);
+        $loveArray[1]->method('getId')->willReturn(101);
+        $loveArray[1]->method('setId');
+        $loveArray[1]->method('setRank');
+        $loveArray[2] = $this->createMock(Docman_MetadataListOfValuesElement::class);
+        $loveArray[2]->method('getId')->willReturn(102);
+        $loveArray[2]->method('setId');
+        $loveArray[2]->method('setRank');
+        $metadata_list_of_values_element_factory->method('getListByFieldId')->willReturn($loveArray);
 
-        $dstLoveF = \Mockery::spy(Docman_MetadataListOfValuesElementFactory::class);
-        $dstLoveF->shouldReceive('create')->once();
-        $dstLoveF->shouldReceive('update')->once();
-        $srcLoveF->allows(['getMetadataListOfValuesElementFactory' => $dstLoveF]);
+        $dstLoveF = $this->createMock(Docman_MetadataListOfValuesElementFactory::class);
+        $dstLoveF->expects(self::once())->method('create');
+        $dstLoveF->expects(self::once())->method('update');
+        $metadata_list_of_values_element_factory->method('getMetadataListOfValuesElementFactory')->willReturn($dstLoveF);
 
-        $srcLoveF->exportValues($srcMd, $dstMd, $valuesMapping);
+        $metadata_list_of_values_element_factory->exportValues($srcMd, $dstMd, $valuesMapping);
+    }
+
+    public function testItReturnsTheListOfAllStatus(): void
+    {
+        $metadata_list_of_values_element_factory = new Docman_MetadataListOfValuesElementFactory();
+
+        $statuses = $metadata_list_of_values_element_factory->getStatusList();
+
+        self::assertCount(4, $statuses);
+        self::assertArrayHasKey(PLUGIN_DOCMAN_ITEM_STATUS_NONE, $statuses);
+        self::assertArrayHasKey(PLUGIN_DOCMAN_ITEM_STATUS_DRAFT, $statuses);
+        self::assertArrayHasKey(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED, $statuses);
+        self::assertArrayHasKey(PLUGIN_DOCMAN_ITEM_STATUS_REJECTED, $statuses);
+    }
+
+    /**
+     * @dataProvider dataProviderDocmanStatus
+     */
+    public function testItReturnsTheExpectedStatus(int $status_id): void
+    {
+        $metadata_list_of_values_element_factory = new Docman_MetadataListOfValuesElementFactory();
+
+        $status = $metadata_list_of_values_element_factory->getStatusList($status_id);
+
+        self::assertSame($status_id, $status->getId());
+    }
+
+    public function dataProviderDocmanStatus(): array
+    {
+        return [
+            [PLUGIN_DOCMAN_ITEM_STATUS_NONE],
+            [PLUGIN_DOCMAN_ITEM_STATUS_DRAFT],
+            [PLUGIN_DOCMAN_ITEM_STATUS_APPROVED],
+            [PLUGIN_DOCMAN_ITEM_STATUS_REJECTED],
+        ];
+    }
+
+    /**
+     * @dataProvider dataProviderDocmanStatus
+     */
+    public function testItReturnsNoneStatusIfTheExpectedStatusIDIsZero(): void
+    {
+        $metadata_list_of_values_element_factory = new Docman_MetadataListOfValuesElementFactory();
+
+        $status = $metadata_list_of_values_element_factory->getStatusList(0);
+
+        self::assertSame(PLUGIN_DOCMAN_ITEM_STATUS_NONE, $status->getId());
     }
 }
