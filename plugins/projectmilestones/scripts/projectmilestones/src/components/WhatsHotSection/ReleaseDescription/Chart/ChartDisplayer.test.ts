@@ -22,6 +22,7 @@ import type {
     BurnupData,
     MilestoneData,
     PointsWithDateForBurndown,
+    ArtifactMilestoneChartBurnup,
 } from "../../../../type";
 import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
@@ -83,7 +84,32 @@ describe("ChartDisplayer", () => {
             is_loading: false,
         };
 
+        const burndown_data = {
+            start_date: new Date().toString(),
+            duration: 10,
+            capacity: 10,
+            points: [] as number[],
+            is_under_calculation: true,
+            opening_days: [] as number[],
+            points_with_date: [] as PointsWithDateForBurndown[],
+        } as BurndownData;
+
+        jest.spyOn(rest_querier, "getChartData").mockReturnValue(
+            Promise.resolve({
+                values: [
+                    {
+                        value: burndown_data,
+                        field_id: 10,
+                        label: "burndown",
+                        type: "burndown",
+                    },
+                    {} as ArtifactMilestoneChartBurnup,
+                ],
+            }),
+        );
+
         const wrapper = await getPersonalWidgetInstance();
+        await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(BurndownDisplayer).exists()).toBe(true);
     });
@@ -186,8 +212,6 @@ describe("ChartDisplayer", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance();
-        wrapper.setData({ is_loading: true });
-        await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=loading-data]").exists()).toBe(true);
     });

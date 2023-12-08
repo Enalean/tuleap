@@ -40,6 +40,7 @@ describe("Burndown", () => {
 
         component_options.propsData = {
             release_data,
+            burnup_data: null,
         };
 
         getPersonalWidgetInstance();

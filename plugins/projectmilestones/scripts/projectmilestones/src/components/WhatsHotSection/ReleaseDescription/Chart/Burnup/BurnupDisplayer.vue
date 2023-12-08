@@ -30,13 +30,13 @@
                 $gettext('Burnup is under calculation. It will be available in a few minutes.')
             "
         />
-        <burnup v-else v-bind:release_data="release_data" />
+        <burnup v-else v-bind:release_data="release_data" v-bind:burnup_data="burnup_data" />
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
-import type { MilestoneData } from "../../../../../type";
+import type { BurnupData, MilestoneData } from "../../../../../type";
 import Vue from "vue";
 import ChartError from "../ChartError.vue";
 import Burnup from "./Burnup.vue";
@@ -49,6 +49,8 @@ export default class BurnupDisplayer extends Vue {
 
     @Prop()
     readonly release_data!: MilestoneData;
+    @Prop()
+    readonly burnup_data!: BurnupData | null;
 
     get message_error_duration(): string {
         return this.$gettextInterpolate(
@@ -69,14 +71,11 @@ export default class BurnupDisplayer extends Vue {
             return !this.release_data.end_date;
         }
 
-        if (!this.release_data.burnup_data) {
+        if (!this.burnup_data) {
             return true;
         }
 
-        return (
-            this.release_data.burnup_data.duration === null ||
-            this.release_data.burnup_data.duration === 0
-        );
+        return this.burnup_data.duration === null || this.burnup_data.duration === 0;
     }
 
     get has_error_start_date(): boolean {
@@ -84,11 +83,11 @@ export default class BurnupDisplayer extends Vue {
     }
 
     get is_under_calculation(): boolean {
-        if (!this.release_data.burnup_data) {
+        if (!this.burnup_data) {
             return false;
         }
 
-        return this.release_data.burnup_data.is_under_calculation;
+        return this.burnup_data.is_under_calculation;
     }
 }
 </script>

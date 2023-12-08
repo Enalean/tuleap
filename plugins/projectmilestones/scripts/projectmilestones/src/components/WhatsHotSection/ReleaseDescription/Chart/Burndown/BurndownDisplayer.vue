@@ -30,13 +30,13 @@
                 $gettext('Burndown is under calculation. It will be available in a few minutes.')
             "
         />
-        <burndown v-else v-bind:release_data="release_data" />
+        <burndown v-else v-bind:release_data="release_data" v-bind:burndown_data="burndown_data" />
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
-import type { MilestoneData } from "../../../../../type";
+import type { BurndownData, MilestoneData } from "../../../../../type";
 import Vue from "vue";
 import ChartError from "../ChartError.vue";
 import Burndown from "./Burndown.vue";
@@ -47,6 +47,8 @@ import { useStore } from "../../../../../stores/root";
 export default class BurndownDisplayer extends Vue {
     @Prop()
     readonly release_data!: MilestoneData;
+    @Prop()
+    readonly burndown_data!: BurndownData | null;
     public root_store = useStore();
 
     get message_error_duration(): string {
@@ -68,14 +70,11 @@ export default class BurndownDisplayer extends Vue {
             return !this.release_data.end_date;
         }
 
-        if (!this.release_data.burndown_data) {
+        if (!this.burndown_data) {
             return true;
         }
 
-        return (
-            this.release_data.burndown_data.duration === null ||
-            this.release_data.burndown_data.duration === 0
-        );
+        return this.burndown_data.duration === null || this.burndown_data.duration === 0;
     }
 
     get has_error_start_date(): boolean {
@@ -83,11 +82,11 @@ export default class BurndownDisplayer extends Vue {
     }
 
     get is_under_calculation(): boolean {
-        if (!this.release_data.burndown_data) {
+        if (!this.burndown_data) {
             return false;
         }
 
-        return this.release_data.burndown_data.is_under_calculation;
+        return this.burndown_data.is_under_calculation;
     }
 }
 </script>
