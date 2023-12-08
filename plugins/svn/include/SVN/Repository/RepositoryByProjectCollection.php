@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\SVN\Repository;
 
 use Project;
+use Tuleap\SVNCore\Repository;
 
 class RepositoryByProjectCollection
 {

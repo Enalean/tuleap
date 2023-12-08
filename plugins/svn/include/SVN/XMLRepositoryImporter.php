@@ -36,7 +36,7 @@ use Tuleap\SVN\Notifications\NotificationsEmailsBuilder;
 use Tuleap\SVN\Repository\Exception\CannotCreateRepositoryException;
 use Tuleap\SVN\Repository\Exception\RepositoryNameIsInvalidException;
 use Tuleap\SVN\Repository\SvnRepository;
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVNCore\Repository;
 use Tuleap\SVN\Repository\RepositoryCreator;
 use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\SVN\Repository\RuleName;

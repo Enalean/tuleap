@@ -21,7 +21,7 @@
 namespace Tuleap\SVN\PermissionsPerGroup;
 
 use Project;
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVNCore\Repository;
 use Tuleap\SVN\Repository\RepositoryManager;
 
 class PermissionPerGroupRepositoryRepresentationBuilder

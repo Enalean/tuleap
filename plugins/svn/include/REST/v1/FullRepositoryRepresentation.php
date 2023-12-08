@@ -26,7 +26,7 @@ use Tuleap\SVN\AccessControl\AccessFileHistory;
 use Tuleap\SVN\Admin\ImmutableTag;
 use Tuleap\SVN\Admin\MailNotification;
 use Tuleap\SVN\Repository\HookConfig;
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVNCore\Repository;
 
 /**
  * @psalm-immutable

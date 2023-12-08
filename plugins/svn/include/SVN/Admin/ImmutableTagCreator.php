@@ -26,7 +26,7 @@ namespace Tuleap\SVN\Admin;
 
 use ProjectHistoryDao;
 use Tuleap\SVN\Repository\ProjectHistoryFormatter;
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVNCore\Repository;
 
 class ImmutableTagCreator
 {

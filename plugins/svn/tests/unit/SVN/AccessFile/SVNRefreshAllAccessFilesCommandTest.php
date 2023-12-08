@@ -25,7 +25,7 @@ namespace Tuleap\SVN\AccessControl;
 use ForgeConfig;
 use Symfony\Component\Console\Tester\CommandTester;
 use Tuleap\ForgeConfigSandbox;
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVNCore\Repository;
 use Tuleap\SVN\Repository\RepositoryByProjectCollection;
 use Tuleap\SVN\Repository\RepositoryManager;
 

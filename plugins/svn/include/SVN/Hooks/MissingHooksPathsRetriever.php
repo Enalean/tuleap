@@ -25,7 +25,7 @@ namespace Tuleap\SVN\Hooks;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVNCore\Repository;
 
 interface MissingHooksPathsRetriever
 {

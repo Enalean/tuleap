@@ -25,6 +25,7 @@ namespace Tuleap\SVN\AccessControl;
 
 use Tuleap\NeverThrow\Fault;
 use Tuleap\SVNCore\CollectionOfSVNAccessFileFaults;
+use Tuleap\SVNCore\SvnAccessFileContent;
 
 final class DuplicateSectionDetector
 {

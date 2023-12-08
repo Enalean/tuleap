@@ -30,7 +30,7 @@ use Tuleap\SVN\Commit\CommitInfo;
 use Tuleap\SVN\Commit\CommitMessageValidator;
 use Tuleap\SVN\Repository\HookConfig;
 use Tuleap\SVN\Repository\HookConfigRetriever;
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVNCore\Repository;
 use Tuleap\SVN\Repository\RepositoryManager;
 
 class PreRevpropChange

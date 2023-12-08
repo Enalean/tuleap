@@ -26,7 +26,7 @@ use ForgeConfig;
 use Psr\Log\LoggerInterface;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Result;
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVNCore\Repository;
 
 final class RestoreMissingHooks
 {

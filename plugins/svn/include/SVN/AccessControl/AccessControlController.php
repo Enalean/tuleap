@@ -23,9 +23,11 @@ namespace Tuleap\SVN\AccessControl;
 use SVN_AccessFile_Writer;
 use Tuleap\SVN\ServiceSvn;
 use HTTPRequest;
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVNCore\AccessFileReader;
+use Tuleap\SVNCore\Repository;
 use Tuleap\SVN\Repository\RepositoryManager;
 use CSRFSynchronizerToken;
+use Tuleap\SVNCore\SvnAccessFileContent;
 
 class AccessControlController
 {

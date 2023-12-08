@@ -92,7 +92,7 @@ final class ExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $keyword    = 'svn';
         $value      = 'repo01/1';
-        $repository = $this->createMock(\Tuleap\SVN\Repository\Repository::class);
+        $repository = $this->createMock(\Tuleap\SVNCore\Repository::class);
         $repository->method('getFullName')->willReturn('project01/repo01');
 
         $this->project->method('usesService')->with('plugin_svn')->willReturn(true);

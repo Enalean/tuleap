@@ -26,7 +26,7 @@ namespace Tuleap\SVN\Admin;
 use CSRFSynchronizerToken;
 use Project;
 use Tuleap\SVN\Repository\CoreRepository;
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVNCore\Repository;
 
 final class MigrateFromCorePresenter extends BaseGlobalAdminPresenter
 {

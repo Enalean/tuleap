@@ -28,7 +28,7 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use System_Command;
 use Tuleap\SVN\Admin\ImmutableTagPresenter;
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVNCore\Repository;
 
 class Svnlook
 {

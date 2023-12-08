@@ -26,6 +26,7 @@ namespace Tuleap\SVN\Repository;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\SVN\Dao;
+use Tuleap\SVNCore\Repository;
 
 class Destructor
 {

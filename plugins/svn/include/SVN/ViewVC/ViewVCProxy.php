@@ -30,7 +30,7 @@ use ReferenceManager;
 use Tuleap\Error\ProjectAccessSuspendedController;
 use Tuleap\Project\CheckProjectAccess;
 use Tuleap\SVNCore\Event\GetSVNLoginNameEvent;
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVNCore\Repository;
 use Tuleap\User\CurrentUserWithLoggedInInformation;
 
 class ViewVCProxy

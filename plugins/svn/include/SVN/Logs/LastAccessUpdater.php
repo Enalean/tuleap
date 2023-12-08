@@ -21,7 +21,7 @@
 namespace Tuleap\SVN\Logs;
 
 use Tuleap\SVN\Commit\CommitInfo;
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVNCore\Repository;
 
 class LastAccessUpdater
 {

@@ -33,7 +33,7 @@ use Tuleap\SVN\Notifications\NotificationsEmailsBuilder;
 use Tuleap\SVN\Repository\HookConfig;
 use Tuleap\SVN\Repository\HookConfigRetriever;
 use Tuleap\SVN\Repository\HookConfigUpdator;
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVNCore\Repository;
 use Tuleap\SVN\Repository\RepositoryDeleter;
 use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\SVN\ServiceSvn;

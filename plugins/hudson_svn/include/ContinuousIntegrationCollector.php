@@ -22,7 +22,7 @@ namespace Tuleap\HudsonSvn;
 
 use Tuleap\HudsonSvn\Job\Job;
 use Tuleap\SVN\Repository\RepositoryManager;
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVNCore\Repository;
 use Tuleap\HudsonSvn\Job\Dao;
 use Tuleap\HudsonSvn\Job\Factory;
 use TemplateRenderer;

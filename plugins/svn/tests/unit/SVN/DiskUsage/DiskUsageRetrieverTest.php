@@ -25,7 +25,7 @@ use Project;
 use Psr\Log\LoggerInterface;
 use Statistics_DiskUsageDao;
 use Statistics_DiskUsageManager;
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVNCore\Repository;
 use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 

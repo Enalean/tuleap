@@ -23,6 +23,7 @@ namespace Tuleap\SVN\Repository;
 use org\bovigo\vfs\vfsStream;
 use Tuleap\SVN\Dao;
 use Tuleap\SVN\Repository\Exception\CannotDeleteRepositoryException;
+use Tuleap\SVNCore\Repository;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class RepositoryDeleterTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -70,7 +71,7 @@ final class RepositoryDeleterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->repository_manager,
         );
 
-        $this->repository = $this->createMock(\Tuleap\SVN\Repository\Repository::class);
+        $this->repository = $this->createMock(\Tuleap\SVNCore\Repository::class);
         $this->project    = ProjectTestBuilder::aProject()->build();
 
         $this->fixtures_dir = __DIR__ . '/../_fixtures';

@@ -26,7 +26,7 @@ use Project;
 use Statistics_DiskUsageManager;
 use SvnPlugin;
 use Tuleap\SVN\Repository\Exception\CannotFindRepositoryException;
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVNCore\Repository;
 use Tuleap\SVN\Repository\RepositoryManager;
 
 class DiskUsageRetriever

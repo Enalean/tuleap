@@ -24,7 +24,7 @@ namespace Tuleap\SVN\Admin;
 
 use ProjectHistoryDao;
 use Tuleap\SVN\Repository\ProjectHistoryFormatter;
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVNCore\Repository;
 use Tuleap\SVN\Repository\SvnRepository;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;

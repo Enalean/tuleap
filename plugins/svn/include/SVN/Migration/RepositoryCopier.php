@@ -20,7 +20,7 @@
 
 namespace Tuleap\SVN\Migration;
 
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVNCore\Repository;
 
 class RepositoryCopier
 {

@@ -28,7 +28,7 @@ use SVN_AccessFile_Writer;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\SVN\Repository\SvnRepository;
 use Tuleap\SVN\Repository\ProjectHistoryFormatter;
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVNCore\Repository;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class AccessFileHistoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase

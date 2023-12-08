@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\SVN\AccessControl;
+namespace Tuleap\SVNCore;
 
 /**
  * @psalm-immutable
