@@ -1,7 +1,7 @@
 { pkgs }:
 
 let
-    node = pkgs.nodejs-18_x;
+    node = pkgs.nodejs_20;
     nodePackages = (import ./pnpm { inherit pkgs; nodejs = node; });
     pnpm = nodePackages."pnpm-^8".override { dontNpmInstall = true; };
     nodeBaseBin = pkgs.stdenv.mkDerivation {
