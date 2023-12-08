@@ -1,8 +1,6 @@
 %define _buildhost tuleap-builder
 %define _source_payload w9.xzdio
 %define _binary_payload w9.xzdio
-%define debug_package %{nil}
-%define __os_install_post %{nil}
 
 %define target_path /usr/lib/tuleap-realtime
 
@@ -13,14 +11,14 @@ Summary:    Tuleap realtime server
 
 Group:      Development/Tools
 License:    GPLv3
-Source0:    %{name}
+Source0:    %{name}.js
 Source2:    %{name}.systemd-service
 
 BuildArch:      x86_64
 
 AutoReqProv: no
 Requires(pre):   /usr/sbin/useradd
-Requires: systemd
+Requires: systemd, tuleap-node
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
@@ -32,7 +30,7 @@ Tuleap realtime server
 %install
 rm -rf               %{buildroot}
 mkdir -p             %{buildroot}%{target_path}
-cp -pr               %{SOURCE0} %{buildroot}%{target_path}/%{name}
+cp -pr               %{SOURCE0} %{buildroot}%{target_path}/%{name}.js
 install -p -D -m 644 %{SOURCE2} %{buildroot}%{_unitdir}/%{name}.service
 
 %pre
@@ -63,5 +61,5 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %attr(00644,root,root) %{_unitdir}/%{name}.service
 
-%{target_path}/%{name}
+%{target_path}/%{name}.js
 
