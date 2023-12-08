@@ -47,7 +47,7 @@
     </section>
 </template>
 <script>
-import { usePersonalTimetrackingWidgetStore } from "../../store";
+import { usePersonalTimetrackingWidgetStore } from "../../store/root";
 export default {
     name: "WidgetModalDeletePopover",
     props: {

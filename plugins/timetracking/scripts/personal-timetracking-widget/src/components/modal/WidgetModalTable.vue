@@ -70,7 +70,7 @@
 <script>
 import WidgetModalRow from "./WidgetModalRow.vue";
 import WidgetModalEditTime from "./WidgetModalEditTime.vue";
-import { usePersonalTimetrackingWidgetStore } from "../../store";
+import { usePersonalTimetrackingWidgetStore } from "../../store/root";
 import { mapState } from "pinia";
 
 export default {
@@ -102,7 +102,7 @@ export default {
             this.personal_store.setAddMode(false);
         },
         addNewTime(date, artifact_id, time, step) {
-            this.personal_store.addTime([date, artifact_id, time, step]);
+            this.personal_store.addTime(date, artifact_id, time, step);
         },
     },
 };

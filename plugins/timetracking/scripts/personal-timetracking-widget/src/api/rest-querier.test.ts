@@ -18,7 +18,7 @@
  */
 
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import { getTrackedTimes, addTime, deleteTime } from "./rest-querier";
+import { getTrackedTimes, postTime, delTime } from "./rest-querier";
 import type { PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
 import * as tlp_fetch from "@tuleap/tlp-fetch";
 
@@ -28,13 +28,11 @@ describe("getTrackedTimes() -", (): void => {
             offset = 0,
             user_id = 102;
 
-        const times: PersonalTime[][] = [
-            [
-                {
-                    minutes: 20,
-                } as PersonalTime,
-            ],
-        ];
+        const time: PersonalTime[] = [
+            {
+                minutes: 20,
+            },
+        ] as PersonalTime[];
 
         const tlpGet = jest.spyOn(tlp_fetch, "get");
         mockFetchSuccess(tlpGet, {
@@ -46,7 +44,7 @@ describe("getTrackedTimes() -", (): void => {
                     return null;
                 },
             },
-            return_json: times,
+            return_json: time,
         });
 
         const result = await getTrackedTimes(user_id, "2018-03-08", "2018-03-15", limit, offset);
@@ -61,7 +59,7 @@ describe("getTrackedTimes() -", (): void => {
             },
         });
 
-        expect(result.times).toStrictEqual(times);
+        expect(result.times).toStrictEqual(time);
         expect(result.total).toBe(1);
     });
 
@@ -74,7 +72,7 @@ describe("getTrackedTimes() -", (): void => {
         mockFetchSuccess(tlpPost, {
             return_json: time,
         });
-        const result = await addTime("2018-03-08", 2, "11:11", "oui");
+        const result = await postTime("2018-03-08", 2, "11:11", "oui");
         const headers = {
             "content-type": "application/json",
         };
@@ -97,7 +95,7 @@ describe("getTrackedTimes() -", (): void => {
             return_json: [],
         });
         const time_id = 2;
-        await deleteTime(time_id);
+        await delTime(time_id);
         const headers = {
             "content-type": "application/json",
         };

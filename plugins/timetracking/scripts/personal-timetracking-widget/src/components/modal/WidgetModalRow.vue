@@ -65,7 +65,7 @@ import {
 import WidgetModalEditTime from "./WidgetModalEditTime.vue";
 import { createPopover } from "tlp";
 import WidgetModalDeletePopover from "./WidgetModalDeletePopover.vue";
-import { usePersonalTimetrackingWidgetStore } from "../../store";
+import { usePersonalTimetrackingWidgetStore } from "../../store/root";
 
 export default {
     name: "WidgetModalRow",
@@ -99,7 +99,7 @@ export default {
             this.edit_mode = !this.edit_mode;
         },
         editTime(date, time_id, time, step) {
-            this.personal_store.updateTime([date, time_id, time, step]);
+            this.personal_store.updateTime(date, time_id, time, step);
             this.swapEditMode();
         },
     },

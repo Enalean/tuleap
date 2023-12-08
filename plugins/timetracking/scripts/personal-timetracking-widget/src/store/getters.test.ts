@@ -22,39 +22,37 @@
  */
 
 import { createPinia, setActivePinia } from "pinia";
-import { usePersonalTimetrackingWidgetStore } from "./index";
+import { usePersonalTimetrackingWidgetStore } from "./root";
+import type { PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
 
 describe("Widget", () => {
-    let store;
     beforeEach(() => {
         setActivePinia(createPinia());
-        store = usePersonalTimetrackingWidgetStore();
     });
-
     describe("Call sums", () => {
         describe("Given a widget with state initialisation", () => {
             it("Then we add times, total sum must change too", () => {
-                let times = [
-                    [
-                        {
-                            artifact: {},
-                            project: {},
-                            minutes: 20,
-                        },
-                        {
-                            artifact: {},
-                            project: {},
-                            minutes: 20,
-                        },
-                    ],
-                ];
+                const store = usePersonalTimetrackingWidgetStore();
+                const times = [
+                    {
+                        artifact: {},
+                        project: {},
+                        minutes: 20,
+                    },
+                    {
+                        artifact: {},
+                        project: {},
+                        minutes: 20,
+                    },
+                ] as PersonalTime[];
 
-                store.loadAChunkOfTimes([times, times.length]);
+                store.loadAChunkOfTimes(times, times.length);
                 expect(store.get_formatted_total_sum).toBe("00:40");
             });
 
             it("Then we add times, aggregated time must change too", () => {
-                let times = [
+                const store = usePersonalTimetrackingWidgetStore();
+                const times = [
                     {
                         artifact: {},
                         project: {},
@@ -65,7 +63,7 @@ describe("Widget", () => {
                         project: {},
                         minutes: 20,
                     },
-                ];
+                ] as PersonalTime[];
 
                 expect(store.get_formatted_aggregated_time(times)).toBe("00:40");
             });

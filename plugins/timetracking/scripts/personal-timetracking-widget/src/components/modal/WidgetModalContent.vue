@@ -55,7 +55,7 @@ import {
 import WidgetModalArtifactInfo from "./WidgetModalArtifactInfo.vue";
 import WidgetModalTable from "./WidgetModalTable.vue";
 import WidgetLinkToArtifact from "../WidgetLinkToArtifact.vue";
-import { usePersonalTimetrackingWidgetStore } from "../../store";
+import { usePersonalTimetrackingWidgetStore } from "../../store/root";
 import { mapState, mapActions } from "pinia";
 export default {
     name: "WidgetModalContent",
