@@ -24,8 +24,6 @@ namespace Tuleap\Request;
 
 final class CurrentPageTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     /**
      * @var CurrentPage
      */
@@ -45,41 +43,41 @@ final class CurrentPageTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $_SERVER['REQUEST_URI'] = '/projects/gpig/';
 
-        $this->assertTrue($this->current_page->isDashboard());
+        self::assertTrue($this->current_page->isDashboard());
     }
 
     public function testItIsInASpecifiedProjectDashboard(): void
     {
         $_SERVER['REQUEST_URI'] = '/projects/gpig/?dashboard=666';
 
-        $this->assertTrue($this->current_page->isDashboard());
+        self::assertTrue($this->current_page->isDashboard());
     }
 
     public function testItIsInUserDashboard(): void
     {
         $_SERVER['REQUEST_URI'] = '/my/';
 
-        $this->assertTrue($this->current_page->isDashboard());
+        self::assertTrue($this->current_page->isDashboard());
     }
 
     public function testItIsInASpecifiedUserDashboard(): void
     {
         $_SERVER['REQUEST_URI'] = '/my/?dashboard=666';
 
-        $this->assertTrue($this->current_page->isDashboard());
+        self::assertTrue($this->current_page->isDashboard());
     }
 
     public function testItIsNotInDashboardIfUserIsManagingBookmarks(): void
     {
         $_SERVER['REQUEST_URI'] = '/my/bookmark';
 
-        $this->assertFalse($this->current_page->isDashboard());
+        self::assertFalse($this->current_page->isDashboard());
     }
 
     public function testItIsNotInDashboardIfUserIsOnAnotherPage(): void
     {
         $_SERVER['REQUEST_URI'] = '/whatever';
 
-        $this->assertFalse($this->current_page->isDashboard());
+        self::assertFalse($this->current_page->isDashboard());
     }
 }
