@@ -28,8 +28,8 @@ use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Token;
 use Lcobucci\JWT\UnencryptedToken;
+use Lcobucci\JWT\Validation\Constraint\LooseValidAt;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
-use Lcobucci\JWT\Validation\Constraint\ValidAt;
 use Lcobucci\JWT\Validation\Validator;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 
@@ -83,6 +83,9 @@ class IDTokenVerifier
      */
     public function validate(Provider $provider, string $nonce, string $encoded_id_token): string
     {
+        if ($encoded_id_token === '') {
+            throw new MalformedIDTokenException('The encoded ID Token cannot be an empty string');
+        }
         try {
             $id_token = $this->parser->parse($encoded_id_token);
             assert($id_token instanceof UnencryptedToken);
@@ -95,7 +98,7 @@ class IDTokenVerifier
             throw new MalformedIDTokenException(sprintf('sub claim is not present or malformed (got %s)', gettype($sub_claim)));
         }
 
-        if (! $this->jwt_validator->validate($id_token, new ValidAt(new FrozenClock(new \DateTimeImmutable()), new \DateInterval(self::LEEWAY_DATE_INTERVAL)))) {
+        if (! $this->jwt_validator->validate($id_token, new LooseValidAt(new FrozenClock(new \DateTimeImmutable()), new \DateInterval(self::LEEWAY_DATE_INTERVAL)))) {
             self::throwsInvalidIDTokenClaims(sprintf('the token is outside its validity period, including a leeway of %s', self::LEEWAY_DATE_INTERVAL));
         }
 
@@ -120,6 +123,9 @@ class IDTokenVerifier
 
     private function isAudienceClaimValid(string $provider_client_id, Token $id_token): bool
     {
+        if ($provider_client_id === '') {
+            return false;
+        }
         return $id_token->isPermittedFor($provider_client_id);
     }
 

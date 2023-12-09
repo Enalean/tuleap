@@ -45,13 +45,13 @@ final class OnlyOfficeGlobalEditorJWTokenProvider implements ProvideOnlyOfficeGl
     }
 
     /**
-     * @psalm-return Ok<string>|Err<Fault>
+     * @psalm-return Ok<non-empty-string>|Err<Fault>
      */
     public function getGlobalEditorJWToken(\PFUser $user, int $item_id, DateTimeImmutable $now): Ok|Err
     {
         return $this->config_document_provider->getDocumentConfig($user, $item_id, $now)
             ->andThen(
-                /** @psalm-return Ok<string> */
+                /** @psalm-return Ok<non-empty-string> */
                 function (OnlyOfficeDocumentConfig $document_config) use ($user, $now): Ok {
                     $callback_url = $this->office_save_callback_url_generator->getCallbackURL($user, $document_config, $now);
                     $signing_key  = $this->encryption->decryptValue($document_config->getAssociatedDocument()->document_server->encrypted_secret_key->getString());

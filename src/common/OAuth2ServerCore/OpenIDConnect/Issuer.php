@@ -26,6 +26,9 @@ use Tuleap\ServerHostname;
 
 final class Issuer
 {
+    /**
+     * @psalm-return non-empty-string
+     */
     public static function toString(): string
     {
         return ServerHostname::HTTPSUrl();

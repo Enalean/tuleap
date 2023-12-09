@@ -64,6 +64,7 @@ class State
     }
 
     /**
+     * @psalm-param non-empty-string $signed_state
      * @psalm-param non-empty-string $secret_key
      */
     public static function createFromSignature(string $signed_state, ?string $return_to, string $secret_key, string $nonce, ConcealedString $pkce_code_verifier): self
@@ -77,6 +78,9 @@ class State
         return new self($provider_id, $return_to, $secret_key, $nonce, $pkce_code_verifier);
     }
 
+    /**
+     * @psalm-return non-empty-string
+     */
     public function getSignedState(): string
     {
         return (new \Lcobucci\JWT\Token\Builder(new JoseEncoder(), ChainedFormatter::default()))->withClaim('provider_id', $this->provider_id)->getToken(new Sha256(), InMemory::plaintext($this->secret_key))->toString();

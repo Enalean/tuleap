@@ -40,7 +40,7 @@ final class OpenIDConnectTokenBuilder
     }
 
     /**
-     * @param array<string,mixed> $additional_claims
+     * @param array<non-empty-string,mixed> $additional_claims
      */
     public function getToken(\DateTimeImmutable $current_time, OAuth2App $app, \PFUser $user, array $additional_claims): string
     {
