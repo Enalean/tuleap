@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,28 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AgileDashboard\Stub\Milestone\Sidebar;
-
-use Tuleap\AgileDashboard\Milestone\Sidebar\CheckMilestonesInSidebar;
-
-final class CheckMilestonesInSidebarStub implements CheckMilestonesInSidebar
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class b202312111445_remove_dev_mode extends \Tuleap\ForgeUpgrade\Bucket
 {
-    private function __construct(private readonly bool $should_sidebar_display_last_milestones)
+    public function description(): string
     {
+        return "Remove dev mode";
     }
 
-    public static function withMilestonesInSidebar(): self
+    public function up(): void
     {
-        return new self(true);
-    }
-
-    public static function withoutMilestonesInSidebar(): self
-    {
-        return new self(false);
-    }
-
-    public function shouldSidebarDisplayLastMilestones(int $project_id): bool
-    {
-        return $this->should_sidebar_display_last_milestones;
+        $this->api->dbh->exec("TRUNCATE TABLE plugin_agiledashboard_milestones_in_sidebar_config");
+        $this->api->dbh->exec("DELETE FROM forgeconfig WHERE name = 'feature_flag_allow_milestones_in_sidebar_dev_mode'");
     }
 }

@@ -148,7 +148,6 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [],
             false,
             false,
-            true,
             false,
         );
 
@@ -212,7 +211,6 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [],
             false,
             false,
-            true,
             false,
         );
 
@@ -278,7 +276,6 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [],
             false,
             false,
-            true,
             false,
         );
 
@@ -342,7 +339,6 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [],
             false,
             false,
-            true,
             false,
         );
 
