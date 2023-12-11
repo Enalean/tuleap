@@ -142,4 +142,30 @@ describe("Artifact link usage", () => {
             cy.get("[data-test=reverse-link-section").contains(this.child_of_artifact);
         });
     });
+
+    describe("Project administration", function () {
+        it("can create a new `Parent` link between two artifact", function () {
+            cy.projectMemberSession();
+            cy.visitProjectService("hierarchy", "Trackers");
+
+            cy.get("[data-test=tracker-link-bugs]").click();
+            cy.get("[data-test=direct-link-to-artifact]").click();
+            cy.get("[data-test=current-artifact-id]")
+                .should("have.attr", "data-artifact-id")
+                .then((artifact_id) => {
+                    cy.projectMemberSession();
+                    cy.visitProjectService("hierarchy", "Trackers");
+                    cy.get("[data-test=tracker-link-issue]").click();
+                    cy.get("[data-test=direct-link-to-artifact]").click();
+
+                    cy.get("[data-test=edit-field-linked_issues]").click();
+                    cy.get("[data-test=artifact-link-submit]").type(`${artifact_id}`);
+                    cy.get("[data-test=artifact-link-type-selector]").first().select("Parent");
+                    submitArtifactAndStay();
+
+                    cy.get("[data-test=tracker-hierarchy]").contains(`${artifact_id}`);
+                    cy.get("[data-test=tracker-artifact-title]").contains("issue");
+                });
+        });
+    });
 });
