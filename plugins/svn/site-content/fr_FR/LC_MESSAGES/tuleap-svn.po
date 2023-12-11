@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2017-04-03 14:12+0200\n"
-"PO-Revision-Date: 2023-11-30 10:42+0100\n"
+"PO-Revision-Date: 2023-12-11 14:58+0100\n"
 "Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -32,6 +32,9 @@ msgstr "Une sauvegarde du dépôt '%1$s' sera disponible dans le répertoire %2$
 msgid "Access control"
 msgstr "Contrôle d'accès"
 
+msgid "Access denied"
+msgstr "Accès refusé"
+
 msgid "Active notifications list"
 msgstr "Liste des notifications actives"
 
@@ -57,6 +60,13 @@ msgstr "Cache d'authentification"
 
 msgid "Be careful"
 msgstr "Attention"
+
+msgid ""
+"Below is a typical command you would use to checkout the source code of this "
+"project."
+msgstr ""
+"Vous trouverez ci-dessous la commande type pour créer une copie de travail "
+"(checkout) du code source de ce projet."
 
 msgid "Browse"
 msgstr "Accès depuis l'interface"
@@ -646,6 +656,14 @@ msgid "You are about to remove the notification. Please confirm your action."
 msgstr ""
 "Vous êtes sur le point de supprimer la notification. Merci de confirmer "
 "votre action."
+
+#, php-format
+msgid ""
+"You are not authorized to access this file. Please contact a <a "
+"href=\"%1$s\">Project Administrator</a>"
+msgstr ""
+"Vous n'avez pas l'autorisation d'accès pour ce fichier. Veuillez contacter "
+"un <a href=\"%1$s\">administrateur du projet</a>"
 
 #, php-format
 msgid "You are using a previous version (#%1$s):"

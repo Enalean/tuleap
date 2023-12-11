@@ -18,7 +18,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\GlobalSVNPollution;
 use Tuleap\SVNCore\SVNAuthenticationCacheInvalidator;
 
 /**
@@ -27,8 +26,6 @@ use Tuleap\SVNCore\SVNAuthenticationCacheInvalidator;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use GlobalSVNPollution;
-
     /**
      * Project delete Users fail
      *

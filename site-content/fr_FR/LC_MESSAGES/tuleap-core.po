@@ -3248,9 +3248,6 @@ msgstr ""
 "changement de mot de passe avec vérification par e-mail. Si vous n'avez pas "
 "fait cette demande, ignorez tout simplement ce message."
 
-msgid "Source code management"
-msgstr "Gestion de code source"
-
 msgid "Specific project"
 msgstr "Projet spécifique"
 
@@ -3304,24 +3301,6 @@ msgstr "Le formal de texte n'est pas valide"
 
 msgid "Submitted username display is not valid."
 msgstr "Le formal d'affichage des noms n'est pas valide"
-
-#, php-format
-msgid ""
-"Subversion Core is deprecated, it will be removed on march 2022. Please <a "
-"href=\"/project/%d/admin/services\">install and activate `SVN` plugin.</a>"
-msgstr ""
-"Ce service est déprécié, il sera supprimé en mars 2022. Merci <a href=\"/"
-"project/%d/admin/services\">d'installer et activer le plugin`SVN`.</a>"
-
-#, php-format
-msgid ""
-"Subversion Core is deprecated, it will be removed on march 2022. Please "
-"install and activate `SVN` plugin and <a href=\"/plugins/svn/%s/admin-"
-"migrate\">migrate your repository.</a>"
-msgstr ""
-"Ce service est déprécié, is sera supprimé en mars 2022. Merci d'installer et "
-"activer le plugin`SVN` et de <a href=\"/plugins/svn/%s/admin-"
-"migrate\">migrer votre dépôt.</a>"
 
 msgid "Successfully created reference pattern"
 msgstr "Modèle de référence créé avec succès"
@@ -3895,9 +3874,6 @@ msgstr[0] ""
 msgstr[1] ""
 "Ce groupe est la source de %d autres groupes que vous ne pouvez pas "
 "administrer."
-
-msgid "This widget is deprecated, you should remove it."
-msgstr "Ce widget est déprécié, vous devriez le supprimer."
 
 msgid ""
 "This will generate a zip archive with a project.xml file that contains "

@@ -3190,9 +3190,6 @@ msgid ""
 "will happen."
 msgstr ""
 
-msgid "Source code management"
-msgstr "Gestão do código fonte"
-
 msgid "Specific project"
 msgstr "Projeto específico"
 
@@ -3246,25 +3243,6 @@ msgstr "O formato do texto escolhido não é válido"
 
 msgid "Submitted username display is not valid."
 msgstr "A exibição do nome de usuário escolhida não é válida."
-
-#, php-format
-msgid ""
-"Subversion Core is deprecated, it will be removed on march 2022. Please <a "
-"href=\"/project/%d/admin/services\">install and activate `SVN` plugin.</a>"
-msgstr ""
-"O Core do Sobversion foi descontinuado, será removido em março de 2022. Por "
-"favor <a href=\"/project/%d/admin/services\">instale e ative o plugin `SVN`."
-"</a>"
-
-#, php-format
-msgid ""
-"Subversion Core is deprecated, it will be removed on march 2022. Please "
-"install and activate `SVN` plugin and <a href=\"/plugins/svn/%s/admin-"
-"migrate\">migrate your repository.</a>"
-msgstr ""
-"O Core do Subversion foi descontinuado, será removido em março de 2022. Por "
-"favor, instale e ative o plugin `SVN` e <a href=\"/plugins/svn/%s/admin-"
-"migrate\">migrate seu repositório.</a>"
 
 msgid "Successfully created reference pattern"
 msgstr "Padrão de referência criado com sucesso"
@@ -3829,9 +3807,6 @@ msgstr[0] ""
 msgstr[1] ""
 "Este grupo de usuário é a origem de %d outros grupo de usuários que você não "
 "possui permissão para administrar."
-
-msgid "This widget is deprecated, you should remove it."
-msgstr "Este widget foi descontinuado, você deve removê-lo."
 
 msgid ""
 "This will generate a zip archive with a project.xml file that contains "

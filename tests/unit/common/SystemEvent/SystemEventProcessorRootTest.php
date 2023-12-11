@@ -38,13 +38,11 @@ use SystemEventManager;
 use SystemEventProcessor_Root;
 use SystemEventProcessRootDefaultQueue;
 use Tuleap\DB\DBConnection;
-use Tuleap\GlobalSVNPollution;
 use Tuleap\SVNCore\ApacheConfGenerator;
 
 class SystemEventProcessorRootTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use GlobalSVNPollution;
 
     private $system_event_manager;
     /**

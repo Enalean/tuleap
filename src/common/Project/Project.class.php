@@ -179,11 +179,6 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
         return $this->project_data_array['svn_can_change_log'];
     }
 
-    public function getSVNpreamble()
-    {
-        return $this->project_data_array['svn_preamble'];
-    }
-
     /**
      * @psalm-mutation-free
      */

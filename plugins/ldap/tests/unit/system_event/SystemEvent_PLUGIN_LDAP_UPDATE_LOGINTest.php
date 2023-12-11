@@ -25,14 +25,11 @@ namespace Tuleap\LDAP\SystemEvent;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN;
-use Tuleap\GlobalSVNPollution;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 final class SystemEvent_PLUGIN_LDAP_UPDATE_LOGINTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use GlobalSVNPollution;
-
     private \UserManager&MockObject $um;
     private \BackendSVN&MockObject $backend;
     private \LDAP_ProjectManager&MockObject $ldap_project_manager;

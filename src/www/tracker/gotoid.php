@@ -18,8 +18,6 @@
    ********************************************************************/
 
 
-require_once('../svn/svn_data.php');
-
 /**
  * Redirect function for generic trackers.
  * This function checks the artifact short name and project.
@@ -69,17 +67,6 @@ if (($atn == 'rev') || ($atn == 'revision')) {
     header($location);
     exit;
 }
-if ($atn == 'commit') {
-    // when commit is used see if it revision exists in SVN else redirect to CVS
-    $res  = svn_data_get_revision_detail($group_id, 0, $aid);
-    $feed = '';
-    if ($res && db_numrows($res) > 0) {
-        $location .= $svn_loc . $feed;
-        header($location);
-        exit;
-    }
-}
-
 
 // Should we remove this one?
 if (! $group_id) {

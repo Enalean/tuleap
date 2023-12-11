@@ -1,6 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,15 +15,21 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SVN_PermissionsManager
+declare(strict_types=1);
+
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class b202312151422_remove_svn_core_service extends \Tuleap\ForgeUpgrade\Bucket
 {
-    public function userCanRead(PFUser $user, Project $project, $svnpath)
+    public function description(): string
     {
-        include_once __DIR__ . '/../../www/svn/svn_utils.php';
-        return svn_utils_check_access($user->getUserName(), $project->getSVNRootPath(), $svnpath);
+        return "Remove SVN core service";
+    }
+
+    public function up(): void
+    {
+        $this->api->dbh->exec('DELETE FROM service WHERE short_name = "svn"');
     }
 }

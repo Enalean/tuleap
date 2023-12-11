@@ -34,7 +34,6 @@ final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use \Tuleap\TemporaryTestDirectory;
-    use \Tuleap\GlobalSVNPollution;
     use \Tuleap\GlobalLanguageMock;
 
     // Cannot use ForgeConfigSandbox here, you will generate an instance of CodendiDataAccess with invalid DB creds.

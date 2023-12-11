@@ -36,7 +36,6 @@ use Widget_MyAdmin;
 use Widget_MyArtifacts;
 use Widget_MyBookmarks;
 use Widget_MyImageViewer;
-use Widget_MyLatestSvnCommits;
 use Widget_MyMonitoredForums;
 use Widget_MyMonitoredFp;
 use Widget_MyRss;
@@ -44,10 +43,8 @@ use Widget_MySystemEvent;
 use Widget_ProjectDescription;
 use Widget_ProjectImageViewer;
 use Widget_ProjectLatestFileReleases;
-use Widget_ProjectLatestSvnCommits;
 use Widget_ProjectPublicAreas;
 use Widget_ProjectRss;
-use Widget_ProjectSvnStats;
 
 class WidgetFactory implements IBuildInstanceOfWidgets
 {
@@ -94,9 +91,6 @@ class WidgetFactory implements IBuildInstanceOfWidgets
                 break;
             case 'mymonitoredfp':
                 $widget = new Widget_MyMonitoredFp();
-                break;
-            case 'mylatestsvncommits':
-                $widget = new Widget_MyLatestSvnCommits();
                 break;
             case 'myartifacts':
                 $widget = new Widget_MyArtifacts();
@@ -147,12 +141,6 @@ class WidgetFactory implements IBuildInstanceOfWidgets
                 break;
             case 'projectrss':
                 $widget = new Widget_ProjectRss();
-                break;
-            case 'projectsvnstats':
-                $widget = new Widget_ProjectSvnStats();
-                break;
-            case 'projectlatestsvncommits':
-                $widget = new Widget_ProjectLatestSvnCommits();
                 break;
             case 'projectimageviewer':
                 $widget = new Widget_ProjectImageViewer();

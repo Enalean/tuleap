@@ -26,7 +26,6 @@ use Project;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use SimpleXMLElement;
-use Tuleap\GlobalSVNPollution;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\SVN\AccessControl\AccessFileHistoryCreator;
 use Tuleap\SVN\Admin\MailNotificationManager;
@@ -40,8 +39,6 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use GlobalSVNPollution;
-
     private string $arpath;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&AccessFileHistoryCreator

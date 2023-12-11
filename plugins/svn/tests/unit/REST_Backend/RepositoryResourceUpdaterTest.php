@@ -21,7 +21,6 @@
 namespace Tuleap\SVN\REST\v1;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tuleap\GlobalSVNPollution;
 use Tuleap\SVN\AccessControl\AccessFileHistory;
 use Tuleap\SVN\AccessControl\AccessFileHistoryCreator;
 use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
@@ -38,8 +37,6 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use GlobalSVNPollution;
-
     private MailNotificationManager&MockObject $mail_notification_manager;
     private Repository&MockObject $repository;
     private ImmutableTagFactory&MockObject $immutable_tag_factory;

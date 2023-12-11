@@ -142,28 +142,6 @@ if ($ref) {
 if ($request->isAjax()) {
     $html_purifier = Codendi_HTMLPurifier::instance();
     switch ($ref->getServiceShortName()) {
-        case 'svn':
-            require_once __DIR__ . '/../www/svn/svn_data.php';
-            $group_id = $request->get('group_id');
-            $rev_id   = $request->get('val');
-            $result   = svn_data_get_revision_detail($group_id, 0, $rev_id);
-            $date     = format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, 0, 'date'));
-
-            $description = db_result($result, 0, 'description');
-            $description = htmlspecialchars_decode($description, ENT_QUOTES);
-            $list_log    = util_line_wrap($description);
-
-            echo '<table>';
-            echo ' <tr>';
-            echo '  <td><strong>' . $GLOBALS['Language']->getText('svn_utils', 'date') . ':</strong></td>';
-            echo '  <td>' . $html_purifier->purify($date) . '</td>';
-            echo ' </tr>';
-            echo ' <tr>';
-            echo '  <td><strong>' . $GLOBALS['Language']->getText('svn_browse_revision', 'log_message') . ':</strong></td>';
-            echo '  <td>' . $html_purifier->purify($list_log) . '</td>';
-            echo ' </tr>';
-            echo '</table>';
-            break;
         case 'file':
             $group_id = $request->get('group_id');
             switch ($ref->getNature()) {

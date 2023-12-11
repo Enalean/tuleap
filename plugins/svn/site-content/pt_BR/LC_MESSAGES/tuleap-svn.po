@@ -22,6 +22,9 @@ msgstr ""
 msgid "Access control"
 msgstr "Controle de acesso"
 
+msgid "Access denied"
+msgstr ""
+
 msgid "Active notifications list"
 msgstr ""
 
@@ -44,6 +47,11 @@ msgid "Authentication cache"
 msgstr ""
 
 msgid "Be careful"
+msgstr ""
+
+msgid ""
+"Below is a typical command you would use to checkout the source code of this "
+"project."
 msgstr ""
 
 msgid "Browse"
@@ -570,6 +578,12 @@ msgid "You are about to permanently delete the repository:"
 msgstr ""
 
 msgid "You are about to remove the notification. Please confirm your action."
+msgstr ""
+
+#, php-format
+msgid ""
+"You are not authorized to access this file. Please contact a <a "
+"href=\"%1$s\">Project Administrator</a>"
 msgstr ""
 
 #, php-format

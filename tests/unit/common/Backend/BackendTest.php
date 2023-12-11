@@ -31,12 +31,9 @@ use BackendSVN;
 use Event;
 use EventManager;
 use org\bovigo\vfs\vfsStream;
-use Tuleap\GlobalSVNPollution;
 
 final class BackendTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use GlobalSVNPollution;
-
     protected function tearDown(): void
     {
         Backend::clearInstances();
