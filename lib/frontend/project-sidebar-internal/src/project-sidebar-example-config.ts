@@ -141,6 +141,7 @@ export const example_config: Configuration = {
                     },
                 },
             ],
+            info_tooltip: "Sidebar shows only the last 5 open milestones",
         },
         {
             label: "Git",

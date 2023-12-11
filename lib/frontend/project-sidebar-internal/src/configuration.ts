@@ -46,6 +46,7 @@ export interface Tool {
     is_active: boolean;
     shortcut_id: string;
     readonly promoted_items?: ReadonlyArray<PromotedItem>;
+    readonly info_tooltip?: string;
 }
 
 interface InstanceVersionInformation {

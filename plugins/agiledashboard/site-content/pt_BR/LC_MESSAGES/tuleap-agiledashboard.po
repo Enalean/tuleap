@@ -454,6 +454,9 @@ msgstr ""
 msgid "Service Backlog is disabled."
 msgstr ""
 
+msgid "Sidebar shows only the last 5 open milestones"
+msgstr ""
+
 msgid "Some items are not linked to this milestone."
 msgstr ""
 
