@@ -22,13 +22,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ForgeConfigSandbox;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class PreCommitMessageTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     /** @var SVN_Svnlook */
@@ -59,21 +57,23 @@ class PreCommitMessageTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->repo           = 'SVN_repo';
         $this->commit_message = '';
         $this->transaction    = '1';
-        $this->project        = \Mockery::spy(\Project::class);
+        $this->project        = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->build();
 
-        $this->svn_hook                 = \Mockery::spy(\SVN_Hooks::class)->shouldReceive('getProjectFromRepositoryPath')->with($this->repo)->andReturns($this->project)->getMock();
-        $this->commit_message_validator = \Mockery::spy(\SVN_CommitMessageValidator::class);
+        $this->svn_hook = $this->createMock(\SVN_Hooks::class);
+        $this->svn_hook->method('getProjectFromRepositoryPath')->with($this->repo)->willReturn($this->project);
 
-        $this->svn_look = \Mockery::spy(\SVN_Svnlook::class);
-        $this->handler  = \Mockery::spy(\SVN_Immutable_Tags_Handler::class);
+        $this->commit_message_validator = $this->createMock(\SVN_CommitMessageValidator::class);
+
+        $this->svn_look = $this->createMock(\SVN_Svnlook::class);
+        $this->handler  = $this->createMock(\SVN_Immutable_Tags_Handler::class);
 
         $this->pre_commit = new SVN_Hook_PreCommit(
             $this->svn_hook,
             $this->commit_message_validator,
             $this->svn_look,
             $this->handler,
-            \Mockery::spy(\Tuleap\SVNCore\SHA1CollisionDetector::class),
-            \Mockery::spy(\Psr\Log\LoggerInterface::class)
+            $this->createMock(\Tuleap\SVNCore\SHA1CollisionDetector::class),
+            $this->createMock(\Psr\Log\LoggerInterface::class)
         );
     }
 
@@ -82,7 +82,7 @@ class PreCommitMessageTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set('sys_allow_empty_svn_commit_message', false);
 
         $this->expectException(\Exception::class);
-        $this->commit_message_validator->shouldReceive('assertCommitMessageIsValid')->never();
+        $this->commit_message_validator->expects(self::never())->method('assertCommitMessageIsValid');
 
         $this->pre_commit->assertCommitMessageIsValid($this->repo, $this->commit_message);
     }
@@ -91,7 +91,7 @@ class PreCommitMessageTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         ForgeConfig::set('sys_allow_empty_svn_commit_message', true);
 
-        $this->commit_message_validator->shouldReceive('assertCommitMessageIsValid')->once();
+        $this->commit_message_validator->expects(self::once())->method('assertCommitMessageIsValid');
 
         $this->pre_commit->assertCommitMessageIsValid($this->repo, $this->commit_message);
     }
