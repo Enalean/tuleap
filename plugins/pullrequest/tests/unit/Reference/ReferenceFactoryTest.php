@@ -22,63 +22,48 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Reference;
 
-use Tuleap\PullRequest\PullRequest;
-use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
-use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
+use GitRepository;
+use GitRepositoryFactory;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\PullRequest\PullRequestRetriever;
+use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
+use Tuleap\PullRequest\Tests\Stub\SearchPullRequestStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class ReferenceFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ReferenceFactoryTest extends TestCase
 {
-    private ReferenceFactory $reference_factory;
-
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\Tuleap\PullRequest\Factory
-     */
-    private $pull_request_factory;
-
-    /**
-     * @var \GitRepositoryFactory&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $repository_factory;
-
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&ProjectReferenceRetriever
-     */
-    private $reference_retriever;
-
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&HTMLURLBuilder
-     */
-    private $html_url_builder;
-
-    /**
-     * @var \GitRepository&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $repository;
-
-    private PullRequest $pull_request;
+    private GitRepositoryFactory&MockObject $repository_factory;
+    private MockObject&ProjectReferenceRetriever $reference_retriever;
+    private MockObject&HTMLURLBuilder $html_url_builder;
+    private GitRepository&MockObject $repository;
+    private SearchPullRequestStub $pull_request_dao;
 
     public function setUp(): void
     {
-        parent::setUp();
-        $this->pull_request_factory = $this->createMock(\Tuleap\PullRequest\Factory::class);
-        $this->repository_factory   = $this->createMock(\GitRepositoryFactory::class);
-        $this->reference_retriever  = $this->createMock(\Tuleap\PullRequest\Reference\ProjectReferenceRetriever::class);
-        $this->html_url_builder     = $this->createMock(\Tuleap\PullRequest\Reference\HTMLURLBuilder::class);
+        $this->repository_factory  = $this->createMock(GitRepositoryFactory::class);
+        $this->reference_retriever = $this->createMock(ProjectReferenceRetriever::class);
+        $this->html_url_builder    = $this->createMock(HTMLURLBuilder::class);
 
-        $this->reference_factory = new ReferenceFactory(
-            $this->pull_request_factory,
+        $pull_request           = PullRequestTestBuilder::aPullRequestInReview()->withId(1)->withRepositoryId(42)->createdBy(101)->build();
+        $this->pull_request_dao = SearchPullRequestStub::withAtLeastOnePullRequest($pull_request);
+
+        $project          = ProjectTestBuilder::aProject()->withId(101)->build();
+        $this->repository = $this->createMock(GitRepository::class);
+        $this->repository->method('getProject')->willReturn($project);
+        $this->repository->method('getProjectId')->willReturn(101);
+    }
+
+    private function getReferenceByPullRequestId(string $keyword, int $pull_request_id): ?\Reference
+    {
+        $reference_factory = new ReferenceFactory(
+            new PullRequestRetriever($this->pull_request_dao),
             $this->repository_factory,
             $this->reference_retriever,
             $this->html_url_builder
         );
 
-        $this->pull_request = new PullRequest(1, '', '', 42, 101, '', '', '', '', '', '', TimelineComment::FORMAT_TEXT);
-
-        $project          = ProjectTestBuilder::aProject()->withId(101)->build();
-        $this->repository = $this->createMock(\GitRepository::class);
-        $this->repository->method('getProject')->willReturn($project);
-        $this->repository->method('getProjectId')->willReturn(101);
+        return $reference_factory->getReferenceByPullRequestId($keyword, $pull_request_id);
     }
 
     public function testItCreatesAReference(): void
@@ -86,12 +71,11 @@ final class ReferenceFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $keyword         = 'pr';
         $pull_request_id = 1;
 
-        $this->pull_request_factory->method('getPullRequestById')->with(1)->willReturn($this->pull_request);
         $this->repository_factory->method('getRepositoryById')->with(42)->willReturn($this->repository);
         $this->reference_retriever->method('doesProjectReferenceWithKeywordExists')->with($keyword, 101)->willReturn(false);
         $this->html_url_builder->method('getPullRequestOverviewUrl')->willReturn('');
 
-        $reference = $this->reference_factory->getReferenceByPullRequestId($keyword, $pull_request_id);
+        $reference = $this->getReferenceByPullRequestId($keyword, $pull_request_id);
 
         self::assertNotNull($reference);
         self::assertInstanceOf(Reference::class, $reference);
@@ -102,11 +86,11 @@ final class ReferenceFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $keyword         = 'pr';
         $pull_request_id = 1;
 
-        $this->pull_request_factory->method('getPullRequestById')->with(1)->willThrowException(new PullRequestNotFoundException());
+        $this->pull_request_dao = SearchPullRequestStub::withNoRow();
         $this->repository_factory->method('getRepositoryById')->with(42)->willReturn($this->repository);
         $this->reference_retriever->method('doesProjectReferenceWithKeywordExists')->with($keyword, 101)->willReturn(false);
 
-        $reference = $this->reference_factory->getReferenceByPullRequestId($keyword, $pull_request_id);
+        $reference = $this->getReferenceByPullRequestId($keyword, $pull_request_id);
 
         self::assertNull($reference);
     }
@@ -116,11 +100,10 @@ final class ReferenceFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $keyword         = 'pr';
         $pull_request_id = 1;
 
-        $this->pull_request_factory->method('getPullRequestById')->with(1)->willReturn($this->pull_request);
         $this->repository_factory->method('getRepositoryById')->with(42)->willReturn(null);
         $this->reference_retriever->method('doesProjectReferenceWithKeywordExists')->with($keyword, 101)->willReturn(false);
 
-        $reference = $this->reference_factory->getReferenceByPullRequestId($keyword, $pull_request_id);
+        $reference = $this->getReferenceByPullRequestId($keyword, $pull_request_id);
 
         self::assertNull($reference);
     }
@@ -130,11 +113,10 @@ final class ReferenceFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $keyword         = 'pr';
         $pull_request_id = 1;
 
-        $this->pull_request_factory->method('getPullRequestById')->with(1)->willReturn($this->pull_request);
         $this->repository_factory->method('getRepositoryById')->with(42)->willReturn($this->repository);
         $this->reference_retriever->method('doesProjectReferenceWithKeywordExists')->with($keyword, 101)->willReturn(true);
 
-        $reference = $this->reference_factory->getReferenceByPullRequestId($keyword, $pull_request_id);
+        $reference = $this->getReferenceByPullRequestId($keyword, $pull_request_id);
 
         self::assertNull($reference);
     }

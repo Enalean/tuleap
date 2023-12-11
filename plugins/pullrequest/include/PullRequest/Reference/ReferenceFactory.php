@@ -20,65 +20,46 @@
 
 namespace Tuleap\PullRequest\Reference;
 
-use Tuleap\PullRequest\Factory;
 use GitRepositoryFactory;
-use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
+use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\PullRequestRetriever;
 
 class ReferenceFactory
 {
-    /**
-     * @var ProjectReferenceRetriever
-     */
-    private $reference_retriever;
-
-    /**
-     * @var GitRepositoryFactory
-     */
-    private $repository_factory;
-
-    /**
-     * @var Factory
-     */
-    private $pull_request_factory;
-    /**
-     * @var HTMLURLBuilder
-     */
-    private $html_url_builder;
-
     public function __construct(
-        Factory $pull_request_factory,
-        GitRepositoryFactory $repository_factory,
-        ProjectReferenceRetriever $reference_retriever,
-        HTMLURLBuilder $html_url_builder,
+        private readonly PullRequestRetriever $pull_request_factory,
+        private readonly GitRepositoryFactory $repository_factory,
+        private readonly ProjectReferenceRetriever $reference_retriever,
+        private readonly HTMLURLBuilder $html_url_builder,
     ) {
-        $this->pull_request_factory = $pull_request_factory;
-        $this->repository_factory   = $repository_factory;
-        $this->reference_retriever  = $reference_retriever;
-        $this->html_url_builder     = $html_url_builder;
     }
 
     public function getReferenceByPullRequestId($keyword, $pull_request_id): ?\Reference
     {
-        try {
-            $pull_request  = $this->pull_request_factory->getPullRequestById($pull_request_id);
-            $repository_id = $pull_request->getRepositoryId();
-            $repository    = $this->repository_factory->getRepositoryById($repository_id);
+        return $this->pull_request_factory->getPullRequestById($pull_request_id)->match(
+            function (PullRequest $pull_request) use ($keyword) {
+                try {
+                    $repository_id = $pull_request->getRepositoryId();
+                    $repository    = $this->repository_factory->getRepositoryById($repository_id);
 
-            if (! $repository) {
-                return null;
-            }
+                    if (! $repository) {
+                        return null;
+                    }
 
-            $project_id = $repository->getProjectId();
+                    $project_id = $repository->getProjectId();
 
-            if ($this->reference_retriever->doesProjectReferenceWithKeywordExists($keyword, $project_id)) {
-                return null;
-            }
+                    if ($this->reference_retriever->doesProjectReferenceWithKeywordExists($keyword, $project_id)) {
+                        return null;
+                    }
 
-            $html_url = $this->html_url_builder->getPullRequestOverviewUrl($pull_request);
+                    $html_url = $this->html_url_builder->getPullRequestOverviewUrl($pull_request);
 
-            return new Reference($keyword, $html_url, $project_id);
-        } catch (PullRequestNotFoundException | \GitRepoNotFoundException $ex) {
-            return null;
-        }
+                    return new Reference($keyword, $html_url, $project_id);
+                } catch (\GitRepoNotFoundException) {
+                    return null;
+                }
+            },
+            static fn() => null
+        );
     }
 }
