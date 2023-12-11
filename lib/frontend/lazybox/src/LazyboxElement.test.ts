@@ -354,8 +354,11 @@ describe(`LazyboxElement`, () => {
             it will call the new_item_clicked_callback with the search input's text
             and it will clear the search input`, () => {
             const query = "chromazurine";
+            const callback = vi.fn();
+            options = OptionsBuilder.withSingle()
+                .withNewItemButton(callback, () => "New item")
+                .build();
             const host = getHost();
-            const callback = vi.spyOn(options, "new_item_clicked_callback");
             const clearSearch = vi.spyOn(host.search_input_element, "clear");
             vi.spyOn(host.search_input_element, "getQuery").mockReturnValue(query);
             const dropdown = getDropdownElement(host);

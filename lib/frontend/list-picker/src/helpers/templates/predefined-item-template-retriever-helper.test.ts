@@ -52,12 +52,12 @@ describe("predefined-item-template-retriever", () => {
         const div = document.createElement("div");
         render(retrievePredefinedTemplate(option_with_colored_badge), div);
         expect(stripExpressionComments(div.innerHTML)).toMatchInlineSnapshot(`
-            "
-                        <span class=\\"list-picker-option-colored-label-container\\">
-                            <span class=\\"tlp-swatch-fiesta-red list-picker-circular-color\\"></span>
-                            TS050 Hybrid
-                        </span>
-                    "
+          "
+                      <span class="list-picker-option-colored-label-container">
+                          <span class="tlp-swatch-fiesta-red list-picker-circular-color"></span>
+                          TS050 Hybrid
+                      </span>
+                  "
         `);
     });
 

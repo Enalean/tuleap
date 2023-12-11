@@ -32,17 +32,22 @@ export const FetchInterfaceStub = {
         const all_responses = [first_response, ...other_responses];
         const recorded_arguments = new Map<number, [RequestInfo | URL, RequestInit | undefined]>();
         let calls = 0;
+        const fetchStub = (
+            info: RequestInfo | URL,
+            init: RequestInit | undefined,
+        ): Promise<Response> => {
+            recorded_arguments.set(calls, [info, init]);
+            calls++;
+            const response = all_responses.shift();
+            if (response !== undefined) {
+                return Promise.resolve(response);
+            }
+            throw new Error("No response configured");
+        };
         return {
-            fetch(info: RequestInfo | URL, init: RequestInit | undefined): Promise<Response> {
-                recorded_arguments.set(calls, [info, init]);
-                calls++;
-                const response = all_responses.shift();
-                if (response !== undefined) {
-                    return Promise.resolve(response);
-                }
-                throw new Error("No response configured");
-            },
-
+            // See https://github.com/nodejs/undici/issues/1943
+            // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+            fetch: fetchStub as typeof fetch,
             getRequestInfo(call: number): RequestInfo | URL | undefined {
                 const call_arguments = recorded_arguments.get(call);
                 return call_arguments ? call_arguments[0] : undefined;

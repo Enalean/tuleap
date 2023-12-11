@@ -2,14 +2,14 @@
 
 exports[`plugin-po-gettext > transform > converts .PO files 1`] = `
 {
-  "code": "export var charset = \\"utf-8\\";
+  "code": "export var charset = "utf-8";
 export var headers = undefined;
 export var translations = {
-	\\"\\": {
+	"": {
 		Cancel: {
-			msgid: \\"Cancel\\",
+			msgid: "Cancel",
 			msgstr: [
-				\\"Annuler\\"
+				"Annuler"
 			]
 		}
 	}
