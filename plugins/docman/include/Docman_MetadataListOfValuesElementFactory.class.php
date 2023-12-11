@@ -351,6 +351,9 @@ class Docman_MetadataListOfValuesElementFactory
 
         if ($status === null) {
             return $ea;
+        } elseif ($status === 0) {
+            //We add this check because of old default value added in install.sql before this patch
+            return $ea[PLUGIN_DOCMAN_ITEM_STATUS_NONE];
         } else {
             return $ea[$status];
         }
