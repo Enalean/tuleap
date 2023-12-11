@@ -22,53 +22,44 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Reviewer\Autocompleter;
 
-use PFUser;
+use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Authorization\UserCannotMergePullRequestException;
-use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
-use Tuleap\PullRequest\Factory;
-use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\PullRequestRetriever;
+use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
+use Tuleap\PullRequest\Tests\Stub\SearchPullRequestStub;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\UserTestBuilder;
 use UserManager;
-use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 
 final class ReviewerAutocompleterControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&UserManager
-     */
-    private $user_manager;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&Factory
-     */
-    private $pull_request_factory;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&PullRequestPermissionChecker
-     */
-    private $pull_request_permission_checker;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&PotentialReviewerRetriever
-     */
-    private $potential_reviewer_retriever;
-    private ReviewerAutocompleterController $controller;
+    private MockObject&UserManager $user_manager;
+    private MockObject&PullRequestPermissionChecker $pull_request_permission_checker;
+    private MockObject&PotentialReviewerRetriever $potential_reviewer_retriever;
+    private SearchPullRequestStub $pull_request_dao;
 
     protected function setUp(): void
     {
         $this->user_manager                    = $this->createMock(UserManager::class);
-        $this->pull_request_factory            = $this->createMock(Factory::class);
+        $this->pull_request_dao                = SearchPullRequestStub::withNoRow();
         $this->pull_request_permission_checker = $this->createMock(PullRequestPermissionChecker::class);
         $this->potential_reviewer_retriever    = $this->createMock(PotentialReviewerRetriever::class);
+    }
 
-        $this->controller = new ReviewerAutocompleterController(
+    private function handle(ServerRequestInterface $request): ResponseInterface
+    {
+        $controller = new ReviewerAutocompleterController(
             $this->user_manager,
-            $this->pull_request_factory,
+            new PullRequestRetriever($this->pull_request_dao),
             $this->pull_request_permission_checker,
             $this->potential_reviewer_retriever,
             new JSONResponseBuilder(
@@ -77,6 +68,8 @@ final class ReviewerAutocompleterControllerTest extends \Tuleap\Test\PHPUnit\Tes
             ),
             $this->createMock(EmitterInterface::class)
         );
+
+        return $controller->handle($request);
     }
 
     public function testReturnsJSONEncodedListOfPotentialReviewers(): void
@@ -85,10 +78,10 @@ final class ReviewerAutocompleterControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $server_request->method('getAttribute')->with('pull_request_id')->willReturn('123');
         $server_request->method('getQueryParams')->willReturn(['name' => 'review']);
 
-        $pull_request = $this->createMock(PullRequest::class);
-        $this->pull_request_factory->method('getPullRequestById')->with(123)->willReturn($pull_request);
+        $pull_request           = PullRequestTestBuilder::aPullRequestInReview()->withId(123)->build();
+        $this->pull_request_dao = SearchPullRequestStub::withAtLeastOnePullRequest($pull_request);
 
-        $current_user = $this->buildUser(99, 'pr_owner', 'pull_request');
+        $current_user = UserTestBuilder::aUser()->withId(101)->withUserName('pr_owner')->withRealName('pull_request')->build();
         $this->user_manager->method('getCurrentUser')->willReturn($current_user);
 
         $this->pull_request_permission_checker->method('checkPullRequestIsMergeableByUser')
@@ -96,24 +89,19 @@ final class ReviewerAutocompleterControllerTest extends \Tuleap\Test\PHPUnit\Tes
 
         $this->potential_reviewer_retriever->method('getPotentialReviewers')
             ->willReturn([
-                $this->buildUser(78, 'reviewer1', 'first'),
-                $this->buildUser(79, 'reviewer2', 'second'),
+                UserTestBuilder::aUser()->withId(105)->withUserName('reviewer1')->withRealName('first')->build(),
+                UserTestBuilder::aUser()->withId(106)->withUserName('reviewer2')->withRealName('second')->build(),
             ]);
 
-        $response = $this->controller->handle($server_request);
+        $response = $this->handle($server_request);
 
         self::assertEquals(200, $response->getStatusCode());
 
         $decoded_response = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         self::assertCount(2, $decoded_response);
-        self::assertEquals(78, $decoded_response[0]['id']);
-        self::assertEquals(79, $decoded_response[1]['id']);
-    }
-
-    private function buildUser(int $id, string $username, string $realname): PFUser
-    {
-        return UserTestBuilder::aUser()->withId($id)->withUserName($username)->withRealName($realname)->build();
+        self::assertSame(105, $decoded_response[0]['id']);
+        self::assertSame(106, $decoded_response[1]['id']);
     }
 
     public function testNotFoundIfThePullRequestDoesNotExist(): void
@@ -121,12 +109,8 @@ final class ReviewerAutocompleterControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $server_request = $this->createMock(ServerRequestInterface::class);
         $server_request->method('getAttribute')->with('pull_request_id')->willReturn('404');
 
-        $this->pull_request_factory->method('getPullRequestById')
-            ->willThrowException(new PullRequestNotFoundException());
-
-
         $this->expectException(NotFoundException::class);
-        $this->controller->handle($server_request);
+        $this->handle($server_request);
     }
 
     public function testOnlyUserThatCanMergeThePRCanUseItsAutocompleter(): void
@@ -134,18 +118,17 @@ final class ReviewerAutocompleterControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $server_request = $this->createMock(ServerRequestInterface::class);
         $server_request->method('getAttribute')->with('pull_request_id')->willReturn('124');
 
-        $pull_request = $this->createMock(PullRequest::class);
-        $pull_request->method('getId')->willReturn(124);
-        $this->pull_request_factory->method('getPullRequestById')->with(124)->willReturn($pull_request);
+        $pull_request           = PullRequestTestBuilder::aPullRequestInReview()->withId(124)->build();
+        $this->pull_request_dao = SearchPullRequestStub::withAtLeastOnePullRequest($pull_request);
 
-        $current_user = $this->buildUser(101, 'random_user_with_no_merge_capability', 'paysan');
+        $current_user =  UserTestBuilder::aUser()->withId(101)->withUserName('random_user_with_no_merge_capability')->withRealName('paysan')->build();
         $this->user_manager->method('getCurrentUser')->willReturn($current_user);
 
         $this->pull_request_permission_checker->method('checkPullRequestIsMergeableByUser')
             ->willThrowException(new UserCannotMergePullRequestException($pull_request, $current_user));
 
         $this->expectException(NotFoundException::class);
-        $this->controller->handle($server_request);
+        $this->handle($server_request);
     }
 
     public function testRequestIsRejectedWhenTheNameToSearchIsEmpty(): void
@@ -154,16 +137,16 @@ final class ReviewerAutocompleterControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $server_request->method('getAttribute')->with('pull_request_id')->willReturn('126');
         $server_request->method('getQueryParams')->willReturn(['name' => '']);
 
-        $pull_request = $this->createMock(PullRequest::class);
-        $this->pull_request_factory->method('getPullRequestById')->with(126)->willReturn($pull_request);
+        $pull_request           = PullRequestTestBuilder::aPullRequestInReview()->withId(126)->build();
+        $this->pull_request_dao = SearchPullRequestStub::withAtLeastOnePullRequest($pull_request);
 
-        $current_user = $this->buildUser(99, 'pr_owner', 'boss');
+        $current_user =  UserTestBuilder::aUser()->withId(105)->withUserName('pr_owner')->withRealName('boss')->build();
         $this->user_manager->method('getCurrentUser')->willReturn($current_user);
 
         $this->pull_request_permission_checker->method('checkPullRequestIsMergeableByUser')
             ->with($pull_request, $current_user);
 
-        $response = $this->controller->handle($server_request);
+        $response = $this->handle($server_request);
 
         self::assertEquals(400, $response->getStatusCode());
     }
