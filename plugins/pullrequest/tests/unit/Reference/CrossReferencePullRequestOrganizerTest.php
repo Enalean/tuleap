@@ -22,71 +22,48 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Reference;
 
+use GitRepository;
 use GitRepositoryFactory;
-use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project_AccessException;
 use ProjectManager;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
-use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
-use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\PullRequestRetriever;
+use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
+use Tuleap\PullRequest\Tests\Stub\SearchPullRequestStub;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\CrossReferencePresenter;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use UserHelper;
-use UserManager;
 
-final class CrossReferencePullRequestOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CrossReferencePullRequestOrganizerTest extends TestCase
 {
     use GlobalLanguageMock;
 
-    private CrossReferencePullRequestOrganizer $organizer;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&Factory
-     */
-    private $pull_request_factory;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&PullRequestPermissionChecker
-     */
-    private $permission_checker;
-    /**
-     * @var GitRepositoryFactory&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $git_repository_factory;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&UserManager
-     */
-    private $user_manager;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&UserHelper
-     */
-    private $user_helper;
+    private MockObject&ProjectManager $project_manager;
+    private MockObject&PullRequestPermissionChecker $permission_checker;
+    private GitRepositoryFactory&MockObject $git_repository_factory;
+    private RetrieveUserByIdStub $user_manager;
+    private MockObject&UserHelper $user_helper;
+    private SearchPullRequestStub $pull_request_dao;
 
     protected function setUp(): void
     {
         $this->project_manager        = $this->createMock(ProjectManager::class);
-        $this->pull_request_factory   = $this->createMock(Factory::class);
+        $this->pull_request_dao       = SearchPullRequestStub::withNoRow();
         $this->permission_checker     = $this->createMock(PullRequestPermissionChecker::class);
         $this->git_repository_factory = $this->createMock(GitRepositoryFactory::class);
-        $this->user_manager           = $this->createMock(UserManager::class);
+        $this->user_manager           = RetrieveUserByIdStub::withNoUser();
         $this->user_helper            = $this->createMock(UserHelper::class);
 
-        $this->organizer = new CrossReferencePullRequestOrganizer(
-            $this->project_manager,
-            $this->pull_request_factory,
-            $this->permission_checker,
-            $this->git_repository_factory,
-            new TlpRelativeDatePresenterBuilder(),
-            $this->user_manager,
-            $this->user_helper,
-        );
 
         $GLOBALS['Language']
             ->method('getText')
@@ -94,9 +71,24 @@ final class CrossReferencePullRequestOrganizerTest extends \Tuleap\Test\PHPUnit\
             ->willReturn('d/m/Y H:i');
     }
 
+    private function organizePullRequestReferences(MockObject&CrossReferenceByNatureOrganizer $by_nature_organizer): void
+    {
+        $organizer = new CrossReferencePullRequestOrganizer(
+            $this->project_manager,
+            new PullRequestRetriever($this->pull_request_dao),
+            $this->permission_checker,
+            $this->git_repository_factory,
+            new TlpRelativeDatePresenterBuilder(),
+            $this->user_manager,
+            $this->user_helper,
+        );
+
+        $organizer->organizePullRequestReferences($by_nature_organizer);
+    }
+
     public function testItDoesNotOrganizeCrossReferencesItDoesNotKnow(): void
     {
-        $user                = $this->createMock(PFUser::class);
+        $user                = UserTestBuilder::buildWithDefaults();
         $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
         $by_nature_organizer->method('getCurrentUser')->willReturn($user);
         $by_nature_organizer->method('getCrossReferencePresenters')->willReturn(
@@ -108,12 +100,12 @@ final class CrossReferencePullRequestOrganizerTest extends \Tuleap\Test\PHPUnit\
         );
         $by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
 
-        $this->organizer->organizePullRequestReferences($by_nature_organizer);
+        $this->organizePullRequestReferences($by_nature_organizer);
     }
 
     public function testItRemovesPullRequestCrossReferenceIfPRIsNotFound(): void
     {
-        $user = $this->createMock(PFUser::class);
+        $user = UserTestBuilder::buildWithDefaults();
 
         $ref = CrossReferencePresenterBuilder::get(2)
             ->withType('pullrequest')
@@ -130,22 +122,17 @@ final class CrossReferencePullRequestOrganizerTest extends \Tuleap\Test\PHPUnit\
             ],
         );
 
-        $this->pull_request_factory
-            ->method('getPullRequestById')
-            ->with(42)
-            ->willThrowException(new PullRequestNotFoundException());
-
         $by_nature_organizer
             ->expects(self::once())
             ->method('removeUnreadableCrossReference')
             ->with($ref);
 
-        $this->organizer->organizePullRequestReferences($by_nature_organizer);
+        $this->organizePullRequestReferences($by_nature_organizer);
     }
 
     public function testItRemovesPullRequestCrossReferenceIfPRBelongsToAnInaccessibleProject(): void
     {
-        $user = $this->createMock(PFUser::class);
+        $user = UserTestBuilder::buildWithDefaults();
 
         $ref = CrossReferencePresenterBuilder::get(2)
             ->withType('pullrequest')
@@ -162,29 +149,24 @@ final class CrossReferencePullRequestOrganizerTest extends \Tuleap\Test\PHPUnit\
             ],
         );
 
-        $pull_request = $this->createMock(PullRequest::class);
-
-        $this->pull_request_factory
-            ->method('getPullRequestById')
-            ->with(42)
-            ->willReturn($pull_request);
+        $pull_request = PullRequestTestBuilder::aPullRequestInReview()->withId(42);
 
         $this->permission_checker
             ->method('checkPullRequestIsReadableByUser')
             ->with($pull_request, $user)
-            ->willThrowException($this->createMock(\Project_AccessException::class));
+            ->willThrowException($this->createMock(Project_AccessException::class));
 
         $by_nature_organizer
             ->expects(self::once())
             ->method('removeUnreadableCrossReference')
             ->with($ref);
 
-        $this->organizer->organizePullRequestReferences($by_nature_organizer);
+        $this->organizePullRequestReferences($by_nature_organizer);
     }
 
     public function testItRemovesPullRequestCrossReferenceIfPRBelongsToARepositoryTheUserCannotAccess(): void
     {
-        $user = $this->createMock(PFUser::class);
+        $user = UserTestBuilder::buildWithDefaults();
 
         $ref = CrossReferencePresenterBuilder::get(2)
             ->withType('pullrequest')
@@ -201,12 +183,7 @@ final class CrossReferencePullRequestOrganizerTest extends \Tuleap\Test\PHPUnit\
             ],
         );
 
-        $pull_request = $this->createMock(PullRequest::class);
-
-        $this->pull_request_factory
-            ->method('getPullRequestById')
-            ->with(42)
-            ->willReturn($pull_request);
+        $pull_request = PullRequestTestBuilder::aPullRequestInReview()->withId(42);
 
         $this->permission_checker
             ->method('checkPullRequestIsReadableByUser')
@@ -218,12 +195,12 @@ final class CrossReferencePullRequestOrganizerTest extends \Tuleap\Test\PHPUnit\
             ->method('removeUnreadableCrossReference')
             ->with($ref);
 
-        $this->organizer->organizePullRequestReferences($by_nature_organizer);
+        $this->organizePullRequestReferences($by_nature_organizer);
     }
 
     public function testItRemovesPullRequestCrossReferenceIfPRBelongsToARepositoryWeCannotInstantiate(): void
     {
-        $user = $this->createMock(PFUser::class);
+        $user = UserTestBuilder::buildWithDefaults();
 
         $ref = CrossReferencePresenterBuilder::get(2)
             ->withType('pullrequest')
@@ -240,13 +217,7 @@ final class CrossReferencePullRequestOrganizerTest extends \Tuleap\Test\PHPUnit\
             ],
         );
 
-        $pull_request = $this->createMock(PullRequest::class);
-        $pull_request->method('getRepositoryId')->willReturn(101);
-
-        $this->pull_request_factory
-            ->method('getPullRequestById')
-            ->with(42)
-            ->willReturn($pull_request);
+        $pull_request = PullRequestTestBuilder::aPullRequestInReview()->withId(101);
 
         $this->permission_checker
             ->method('checkPullRequestIsReadableByUser')
@@ -262,19 +233,15 @@ final class CrossReferencePullRequestOrganizerTest extends \Tuleap\Test\PHPUnit\
             ->method('removeUnreadableCrossReference')
             ->with($ref);
 
-        $this->organizer->organizePullRequestReferences($by_nature_organizer);
+        $this->organizePullRequestReferences($by_nature_organizer);
     }
 
     /**
-     * @testWith ["A", "Abandonned"]
-     *           ["M", "Merged"]
-     *           ["R", "Review"]
+     * @dataProvider getPullRequest
      */
-    public function testItMovesCrossReferenceToRepositorySection(string $status, string $expected_status_label): void
+    public function testItMovesCrossReferenceToRepositorySection(PullRequest $pull_request_with_status, string $expected_status_label): void
     {
-        $user = $this->createMock(PFUser::class);
-        $user->method('getLocale')->willReturn('en_US');
-        $user->method('getPreference')->willReturn('relative_first-absolute_tooltip');
+        $user = UserTestBuilder::aUser()->withId(105)->withLocale('en_US')->build();
 
         $ref = CrossReferencePresenterBuilder::get(2)
             ->withType('pullrequest')
@@ -291,23 +258,13 @@ final class CrossReferencePullRequestOrganizerTest extends \Tuleap\Test\PHPUnit\
             ],
         );
 
-        $pull_request = $this->createMock(PullRequest::class);
-        $pull_request->method('getRepositoryId')->willReturn(101);
-        $pull_request->method('getTitle')->willReturn('Lorem ipsum doloret');
-        $pull_request->method('getCreationDate')->willReturn(1234567890);
-        $pull_request->method('getUserId')->willReturn(1001);
-        $pull_request->method('getStatus')->willReturn($status);
-
-        $this->pull_request_factory
-            ->method('getPullRequestById')
-            ->with(42)
-            ->willReturn($pull_request);
+        $this->pull_request_dao = SearchPullRequestStub::withAtLeastOnePullRequest($pull_request_with_status);
 
         $this->permission_checker
             ->method('checkPullRequestIsReadableByUser')
-            ->with($pull_request, $user);
+            ->with($pull_request_with_status, $user);
 
-        $gir_repository = $this->createMock(\GitRepository::class);
+        $gir_repository = $this->createMock(GitRepository::class);
         $gir_repository->method('getName')->willReturn('barry/ginger');
 
         $this->git_repository_factory
@@ -319,14 +276,9 @@ final class CrossReferencePullRequestOrganizerTest extends \Tuleap\Test\PHPUnit\
             ->method('getProject')
             ->willReturn(ProjectTestBuilder::aProject()->withUnixName('peculiar')->build());
 
-        $user_1001 = $this->createMock(PFUser::class);
-        $user_1001->method('hasAvatar')->willReturn(true);
-        $user_1001->method('getAvatarUrl')->willReturn('/path/to/avatar.png');
+        $user_1001 = UserTestBuilder::aUser()->withId(1001)->withAvatarUrl("https://example.com")->build();
 
-        $this->user_manager
-            ->method('getUserById')
-            ->with(1001)
-            ->willReturn($user_1001);
+        $this->user_manager = RetrieveUserByIdStub::withUser($user_1001);
 
         $this->user_helper
             ->method('getDisplayNameFromUser')
@@ -350,6 +302,13 @@ final class CrossReferencePullRequestOrganizerTest extends \Tuleap\Test\PHPUnit\
                 'peculiar/barry/ginger',
             );
 
-        $this->organizer->organizePullRequestReferences($by_nature_organizer);
+        $this->organizePullRequestReferences($by_nature_organizer);
+    }
+
+    public function getPullRequest(): iterable
+    {
+        yield 'With an abandoned pull request' => [PullRequestTestBuilder::anAbandonedPullRequest()->withRepositoryId(101)->withTitle('Lorem ipsum doloret')->createdAt(1234567890)->createdBy(1001)->build(), "Abandonned"];
+        yield 'With a merged pull request' => [PullRequestTestBuilder::aMergedPullRequest()->withRepositoryId(101)->withTitle('Lorem ipsum doloret')->createdAt(1234567890)->createdBy(1001)->build(), "Merged"];
+        yield 'With a pull request in review ' => [PullRequestTestBuilder::aPullRequestInReview()->withRepositoryId(101)->withTitle('Lorem ipsum doloret')->createdAt(1234567890)->createdBy(1001)->build(), "Review"];
     }
 }

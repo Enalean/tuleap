@@ -32,65 +32,27 @@ use pullrequestPlugin;
 use Tuleap\Date\TlpRelativeDatePresenter;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
-use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
-use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\PullRequestRetriever;
 use Tuleap\Reference\AdditionalBadgePresenter;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\CrossReferencePresenter;
 use Tuleap\Reference\Metadata\CreatedByPresenter;
+use Tuleap\User\RetrieveUserById;
 use UserHelper;
-use UserManager;
 
-class CrossReferencePullRequestOrganizer
+final class CrossReferencePullRequestOrganizer
 {
-    /**
-     * @var ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var Factory
-     */
-    private $pull_request_factory;
-    /**
-     * @var PullRequestPermissionChecker
-     */
-    private $permission_checker;
-
-    /**
-     * @var GitRepositoryFactory
-     */
-    private $git_repository_factory;
-    /**
-     * @var TlpRelativeDatePresenterBuilder
-     */
-    private $relative_date_builder;
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-    /**
-     * @var UserHelper
-     */
-    private $user_helper;
-
     public function __construct(
-        ProjectManager $project_manager,
-        Factory $pull_request_factory,
-        PullRequestPermissionChecker $permission_checker,
-        GitRepositoryFactory $git_repository_factory,
-        TlpRelativeDatePresenterBuilder $relative_date_builder,
-        UserManager $user_manager,
-        UserHelper $user_helper,
+        private readonly ProjectManager $project_manager,
+        private readonly PullRequestRetriever $pull_request_retriever,
+        private readonly PullRequestPermissionChecker $permission_checker,
+        private readonly GitRepositoryFactory $git_repository_factory,
+        private readonly TlpRelativeDatePresenterBuilder $relative_date_builder,
+        private readonly RetrieveUserById $user_manager,
+        private readonly UserHelper $user_helper,
     ) {
-        $this->project_manager        = $project_manager;
-        $this->pull_request_factory   = $pull_request_factory;
-        $this->permission_checker     = $permission_checker;
-        $this->git_repository_factory = $git_repository_factory;
-        $this->relative_date_builder  = $relative_date_builder;
-        $this->user_manager           = $user_manager;
-        $this->user_helper            = $user_helper;
     }
 
     public function organizePullRequestReferences(CrossReferenceByNatureOrganizer $by_nature_organizer): void
@@ -111,37 +73,40 @@ class CrossReferencePullRequestOrganizer
         $user = $by_nature_organizer->getCurrentUser();
 
         $pull_request_id = (int) $cross_reference_presenter->target_value;
-        try {
-            $pull_request = $this->pull_request_factory->getPullRequestById($pull_request_id);
+        $this->pull_request_retriever->getPullRequestById($pull_request_id)->match(
+            function (PullRequest $pull_request) use ($user, $by_nature_organizer, $cross_reference_presenter) {
+                try {
+                    $this->permission_checker->checkPullRequestIsReadableByUser(
+                        $pull_request,
+                        $user
+                    );
+                } catch (GitRepoNotFoundException | Project_AccessException | UserCannotReadGitRepositoryException) {
+                    $by_nature_organizer->removeUnreadableCrossReference($cross_reference_presenter);
+                    return;
+                }
 
-            $this->permission_checker->checkPullRequestIsReadableByUser(
-                $pull_request,
-                $user
-            );
-        } catch (GitRepoNotFoundException | Project_AccessException | UserCannotReadGitRepositoryException | PullRequestNotFoundException $e) {
-            $by_nature_organizer->removeUnreadableCrossReference($cross_reference_presenter);
+                $repository = $this->git_repository_factory->getRepositoryById($pull_request->getRepositoryId());
+                if (! $repository) {
+                    $by_nature_organizer->removeUnreadableCrossReference($cross_reference_presenter);
+                    return;
+                }
 
-            return;
-        }
+                $project = $this->project_manager->getProject($cross_reference_presenter->target_gid);
 
-        $repository = $this->git_repository_factory->getRepositoryById($pull_request->getRepositoryId());
-        if (! $repository) {
-            $by_nature_organizer->removeUnreadableCrossReference($cross_reference_presenter);
-
-            return;
-        }
-
-        $project = $this->project_manager->getProject($cross_reference_presenter->target_gid);
-
-        $by_nature_organizer->moveCrossReferenceToSection(
-            $this->withCreationMetadata(
-                $cross_reference_presenter
-                    ->withTitle($pull_request->getTitle(), null)
-                    ->withAdditionalBadges($this->getAdditionalBadgePresenters($pull_request)),
-                $pull_request,
-                $user,
-            ),
-            $project->getUnixNameLowerCase() . '/' . $repository->getName()
+                $by_nature_organizer->moveCrossReferenceToSection(
+                    $this->withCreationMetadata(
+                        $cross_reference_presenter
+                            ->withTitle($pull_request->getTitle(), null)
+                            ->withAdditionalBadges($this->getAdditionalBadgePresenters($pull_request)),
+                        $pull_request,
+                        $user,
+                    ),
+                    $project->getUnixNameLowerCase() . '/' . $repository->getName()
+                );
+            },
+            function () use ($by_nature_organizer, $cross_reference_presenter) {
+                $by_nature_organizer->removeUnreadableCrossReference($cross_reference_presenter);
+            }
         );
     }
 
