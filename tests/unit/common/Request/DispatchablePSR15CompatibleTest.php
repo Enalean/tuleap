@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Request;
 
 use HTTPRequest;
-use Mockery;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -35,8 +34,6 @@ use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 
 final class DispatchablePSR15CompatibleTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testRequestIsProcessed(): void
     {
         $middleware = new class implements MiddlewareInterface {
@@ -48,10 +45,9 @@ final class DispatchablePSR15CompatibleTest extends \Tuleap\Test\PHPUnit\TestCas
                 return $response->withHeader('middleware', 'OK');
             }
         };
-        $emitter    = Mockery::mock(EmitterInterface::class);
 
-        $base_layout = Mockery::mock(BaseLayout::class);
-
+        $emitter      = $this->createMock(EmitterInterface::class);
+        $base_layout  = $this->createMock(BaseLayout::class);
         $dispatchable = new class ($emitter, $base_layout, $middleware) extends DispatchablePSR15Compatible {
             /**
              * @var BaseLayout
@@ -77,15 +73,15 @@ final class DispatchablePSR15CompatibleTest extends \Tuleap\Test\PHPUnit\TestCas
             }
         };
 
-        $emitter->shouldReceive('emit')->with(Mockery::on(
+        $emitter->expects(self::once())->method('emit')->with(self::callback(
             static function (ResponseInterface $response): bool {
                 return $response->getHeaderLine('middleware') === 'OK' &&
                     $response->getHeaderLine('dispatchable_got_front_controller_param') === 'front_controller_param';
             }
-        ))->andReturn(true)->once();
+        ))->willReturn(true);
 
         $dispatchable->process(
-            Mockery::mock(HTTPRequest::class),
+            $this->createMock(HTTPRequest::class),
             $base_layout,
             ['front_controller_attribute' => 'front_controller_param']
         );
@@ -93,8 +89,8 @@ final class DispatchablePSR15CompatibleTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testResponseEmissionFailureThrowsAnException(): void
     {
-        $emitter = Mockery::mock(EmitterInterface::class);
-        $emitter->shouldReceive('emit')->andReturn(false);
+        $emitter = $this->createMock(EmitterInterface::class);
+        $emitter->method('emit')->willReturn(false);
 
         $dispatchable = new class ($emitter) extends DispatchablePSR15Compatible {
             public function handle(ServerRequestInterface $request): ResponseInterface
@@ -105,8 +101,8 @@ final class DispatchablePSR15CompatibleTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->expectException(PSR15PipelineResponseEmissionException::class);
         $dispatchable->process(
-            Mockery::mock(HTTPRequest::class),
-            Mockery::mock(BaseLayout::class),
+            $this->createMock(HTTPRequest::class),
+            $this->createMock(BaseLayout::class),
             []
         );
     }

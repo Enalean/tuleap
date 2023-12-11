@@ -23,58 +23,56 @@ declare(strict_types=1);
 namespace Tuleap\Request;
 
 use HTTPRequest;
-use Mockery;
+use PHPUnit\Framework\MockObject\MockObject;
 
 final class HeaderAcceptReaderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     /**
-     * @var HTTPRequest
+     * @var HTTPRequest&MockObject
      */
     private $request;
 
     protected function setUp(): void
     {
-        $this->request = Mockery::mock(\HTTPRequest::class);
+        $this->request = $this->createMock(\HTTPRequest::class);
     }
 
     public function testItReturnsTrueWhenTextHasImplicitWeight(): void
     {
-        $this->request->shouldReceive('getFromServer')->andReturn('application/xhtml+xml,text/html');
+        $this->request->method('getFromServer')->willReturn('application/xhtml+xml,text/html');
 
-        $this->assertTrue(HeaderAcceptReader::doesClientPreferHTMLResponse($this->request));
+        self::assertTrue(HeaderAcceptReader::doesClientPreferHTMLResponse($this->request));
     }
 
     public function testItReturnsTrueWhenTextWeightIsHeavier(): void
     {
-        $this->request->shouldReceive('getFromServer')->andReturn('application/xhtml+xml;q=0.1,text/html;q=0.9');
+        $this->request->method('getFromServer')->willReturn('application/xhtml+xml;q=0.1,text/html;q=0.9');
 
-        $this->assertTrue(HeaderAcceptReader::doesClientPreferHTMLResponse($this->request));
+        self::assertTrue(HeaderAcceptReader::doesClientPreferHTMLResponse($this->request));
     }
 
     public function testItReturnsTrueWhenAcceptMixHeightAndNoHeight(): void
     {
-        $this->request->shouldReceive('getFromServer')->andReturn(
+        $this->request->method('getFromServer')->willReturn(
             'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
         );
 
-        $this->assertTrue(HeaderAcceptReader::doesClientPreferHTMLResponse($this->request));
+        self::assertTrue(HeaderAcceptReader::doesClientPreferHTMLResponse($this->request));
     }
 
     public function testItReturnsFalseWhenAcceptHeaderIsSetToAcceptAll(): void
     {
-        $this->request->shouldReceive('getFromServer')->andReturn('*/*');
+        $this->request->method('getFromServer')->willReturn('*/*');
 
-        $this->assertFalse(HeaderAcceptReader::doesClientPreferHTMLResponse($this->request));
+        self::assertFalse(HeaderAcceptReader::doesClientPreferHTMLResponse($this->request));
     }
 
     public function testItReturnsFalseOtherwise(): void
     {
-        $this->request->shouldReceive('getFromServer')->andReturn(
+        $this->request->method('getFromServer')->willReturn(
             'image/webp'
         );
 
-        $this->assertFalse(HeaderAcceptReader::doesClientPreferHTMLResponse($this->request));
+        self::assertFalse(HeaderAcceptReader::doesClientPreferHTMLResponse($this->request));
     }
 }
