@@ -18,9 +18,9 @@
     "@tuleap/build-system-configurator": "workspace:*"
   },
   "scripts": {
-    "typecheck": "vitest typecheck && tsc --noEmit",
+    "typecheck": "tsc --noEmit",
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false",
-    "test": "vitest"
+    "test": "vitest --typecheck"
   }
 }
