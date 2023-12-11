@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\WebAuthn\Controllers;
 
+use ForgeConfig;
 use HTTPRequest;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRenderer;
@@ -36,6 +37,7 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 use Tuleap\User\Account\UserPreferencesHeader;
 use Tuleap\User\RetrievePasswordlessOnlyState;
+use Tuleap\WebAuthn\Authentication\WebAuthnAuthentication;
 use Tuleap\WebAuthn\Source\AuthenticatorPresenter;
 use Tuleap\WebAuthn\Source\WebAuthnCredentialSource;
 use Tuleap\WebAuthn\Source\WebAuthnCredentialSourceDao;
@@ -73,7 +75,8 @@ final class AccountController implements DispatchableWithRequest, DispatchableWi
             $this->passwordless_only_state->isPasswordlessOnly($user),
             CSRFSynchronizerTokenPresenter::fromToken(new \CSRFSynchronizerToken(PostRegistrationController::URL)),
             CSRFSynchronizerTokenPresenter::fromToken(new \CSRFSynchronizerToken(DeleteSourceController::URL)),
-            CSRFSynchronizerTokenPresenter::fromToken(new \CSRFSynchronizerToken(PostSwitchPasswordlessAuthenticationController::URL))
+            CSRFSynchronizerTokenPresenter::fromToken(new \CSRFSynchronizerToken(PostSwitchPasswordlessAuthenticationController::URL)),
+            ForgeConfig::getFeatureFlag(WebAuthnAuthentication::FEATURE_FLAG_LOGIN) === '1'
         );
 
         $layout->addJavascriptAsset(new JavascriptViteAsset($this->vite_assets, 'src/account.ts'));
