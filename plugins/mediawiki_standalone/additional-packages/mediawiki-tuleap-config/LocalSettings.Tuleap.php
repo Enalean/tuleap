@@ -100,7 +100,8 @@ $GLOBALS['wgDefaultUserOptions']['math'] = 'mathml';
 $GLOBALS['wgMaxShellMemory']             = 1228800;
 $GLOBALS['wgHiddenPrefs'][]              = 'math';
 $GLOBALS['wgMathoidCli']                 = [
-    '/usr/lib/tuleap/mathoid/bin/mathoid-cli',
+    '/usr/bin/tuleap-node',
+    '/usr/share/tuleap-mathoid/src/cli.js',
     '--config',
     '/usr/share/tuleap-mathoid/config.yaml',
 ];

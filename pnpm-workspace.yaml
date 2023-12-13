@@ -10,7 +10,6 @@ packages:  # all packages in subdirs of packages/ and components/  - 'packages/*
   - "plugins/*/"
   - "plugins/*/scripts/**/"
   - "plugins/*/tests/e2e/**/"
-  - "plugins/mediawiki_standalone/additional-packages/mediawiki-mathoid/"
   - "plugins/tracker/grammar/"
   - "tests/e2e/**/"
 shared-workspace-lockfile: false

@@ -45,32 +45,6 @@ reason = "Only used when targetting macOS."
 id = "GHSA-j8xg-fqg3-53r7" # CVE-2023-26115
 reason = "ReDoS. No direct impact in our situation."
 
-# plugins/mediawiki_standalone/additional-packages/mediawiki-mathoid/pnpm-lock.yaml
-## jsdom
-[[IgnoredVulns]]
-id = "GHSA-f4c9-cqv8-9v98" # CVE-2021-20066
-reason = "No impact in our situation. No fix available upstream."
-
-## tough-cookie (transitive dep of jsdom)
-[[IgnoredVulns]]
-id = "GHSA-72xf-g2v4-qvf3" # CVE-2023-26136
-reason = "No impact in our situation. No fix available upstream because the version used is far too old (2.5.0 vs current 4.x)."
-
-## ms
-[[IgnoredVulns]]
-id = "GHSA-w9mr-4mfr-499f" # CVE-2017-20162
-reason = "No impact in our situation. No fix available upstream."
-
-## requestretry
-[[IgnoredVulns]]
-id = "GHSA-hjp8-2cm3-cc45" # CVE-2022-0654
-reason = "No impact in our situation. No fix available upstream."
-
-## request
-[[IgnoredVulns]]
-id = "GHSA-p8p7-x288-28g6" # CVE-2023-28155
-reason = "No impact in our situation. No fix available upstream."
-
 # unplugin-vue2-script-setup via the transitive dep @antfu/utils
 [[IgnoredVulns]]
 id = "GHSA-p2fh-2h23-6grg" # CVE-2023-2972
