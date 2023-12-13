@@ -180,7 +180,8 @@ final class PrimeLegacyMediawikiDB extends DataAccessObject implements LegacyMed
                         'INSERT INTO %s.%s(tum_user_id, tum_user_name)
                         SELECT user.user_id, %s.user_name
                         FROM %s.%s
-                        JOIN user ON (LOWER(user.user_name) = LOWER(%s.user_name))',
+                        JOIN user ON (LOWER(user.user_name) = LOWER(%s.user_name))
+                        GROUP BY user.user_id',
                         $escaped_db_name,
                         $escaped_mapping_table_name,
                         $escaped_mw_user_table_name,
