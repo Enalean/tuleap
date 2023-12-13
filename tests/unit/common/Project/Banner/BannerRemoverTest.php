@@ -22,21 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Banner;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class BannerRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testBannerIsRemoved(): void
     {
-        $dao            = \Mockery::mock(BannerDao::class);
+        $dao            = $this->createMock(BannerDao::class);
         $banner_remover = new BannerRemover($dao);
 
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturn('102');
+        $project = ProjectTestBuilder::aProject()->withId(102)->build();
 
-        $dao->shouldReceive('deleteBanner')->once();
+        $dao->expects(self::once())->method('deleteBanner');
 
         $banner_remover->deleteBanner(new UserCanEditBannerPermission($project));
     }

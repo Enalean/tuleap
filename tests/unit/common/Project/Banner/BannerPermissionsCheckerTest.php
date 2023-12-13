@@ -20,18 +20,12 @@
 
 namespace Tuleap\Project\Banner;
 
-use Mockery;
-use PFUser;
-use Project;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 class BannerPermissionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var BannerPermissionsChecker
-     */
-    private $banner_permissions_checker;
+    private BannerPermissionsChecker $banner_permissions_checker;
 
     public function setUp(): void
     {
@@ -40,26 +34,26 @@ class BannerPermissionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetUpdateBannerPermissionShouldReturnNullIfUserIsNotProjectAdmin()
     {
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('isAdmin')->andReturn(false);
+        $user = UserTestBuilder::aUser()
+            ->withoutSiteAdministrator()
+            ->build();
 
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturn(108);
+        $project = ProjectTestBuilder::aProject()->withId(108)->build();
 
-        $this->assertNull($this->banner_permissions_checker->getEditBannerPermission($user, $project));
+        self::assertNull($this->banner_permissions_checker->getEditBannerPermission($user, $project));
     }
 
     public function testGetUpdateBannerPermissionShouldReturnThePermissionIfUserIsProjectAdmin()
     {
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('isAdmin')->andReturn(true);
-
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturn(108);
+        $project = ProjectTestBuilder::aProject()->withId(108)->build();
+        $user    = UserTestBuilder::aUser()
+            ->withAdministratorOf($project)
+            ->withoutSiteAdministrator()
+            ->build();
 
         $permission = $this->banner_permissions_checker->getEditBannerPermission($user, $project);
 
-        $this->assertInstanceOf(UserCanEditBannerPermission::class, $permission);
-        $this->assertEquals(108, $permission->getProject()->getID());
+        self::assertInstanceOf(UserCanEditBannerPermission::class, $permission);
+        self::assertEquals(108, $permission->getProject()->getID());
     }
 }
