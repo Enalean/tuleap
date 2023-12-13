@@ -47,7 +47,6 @@ use Tuleap\PullRequest\Comment\Notification\PullRequestNewCommentNotificationToP
 use Tuleap\PullRequest\Comment\Notification\UpdatedCommentEvent;
 use Tuleap\PullRequest\Comment\Notification\UpdatedCommentNotificationToProcessBuilder;
 use Tuleap\PullRequest\Dao;
-use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\FileUniDiffBuilder;
 use Tuleap\PullRequest\InlineComment\InlineCommentRetriever;
 use Tuleap\PullRequest\InlineComment\Notification\InlineCommentCodeContextExtractor;
@@ -122,9 +121,8 @@ final class PullRequestNotificationSupport
                             self::buildPullRequestNotificationSendMail($git_repository_factory, $html_url_builder),
                             new PullRequestAbandonedNotificationToProcessBuilder(
                                 $user_manager,
-                                new Factory(
+                                new PullRequestRetriever(
                                     new Dao(),
-                                    \ReferenceManager::instance()
                                 ),
                                 new OwnerRetriever(
                                     $user_manager,
@@ -161,9 +159,8 @@ final class PullRequestNotificationSupport
                             self::buildPullRequestNotificationSendMail($git_repository_factory, $html_url_builder),
                             new PullRequestMergedNotificationToProcessBuilder(
                                 $user_manager,
-                                new Factory(
+                                new PullRequestRetriever(
                                     new Dao(),
-                                    \ReferenceManager::instance()
                                 ),
                                 new OwnerRetriever(
                                     $user_manager,
