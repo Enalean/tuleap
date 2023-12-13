@@ -24,42 +24,39 @@ namespace Tuleap\Project\Admin;
 
 use ForgeAccess;
 use ForgeConfig;
-use Mockery;
-use Project;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use UserDao;
 
 final class RestrictedUsersProjectCounterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     public function testThereIsNoRestrictedUsersWhenRestrictedUsersAreDisabledAtTheInstanceLevel(): void
     {
-        $user_dao = Mockery::mock(UserDao::class);
+        $user_dao = $this->createMock(UserDao::class);
         $counter  = new RestrictedUsersProjectCounter($user_dao);
 
-        $project = Mockery::mock(Project::class);
+        $project = ProjectTestBuilder::aProject()->build();
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
-        $this->assertEquals(0, $counter->getNumberOfRestrictedUsersInProject($project));
+        self::assertEquals(0, $counter->getNumberOfRestrictedUsersInProject($project));
     }
 
     public function testTotalNumberOfRestrictedUsersInAProjectCanBeRetrieved(): void
     {
-        $user_dao = Mockery::mock(UserDao::class);
+        $user_dao = $this->createMock(UserDao::class);
         $counter  = new RestrictedUsersProjectCounter($user_dao);
 
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturn(101);
+        $project = ProjectTestBuilder::aProject()->withId(101)->build();
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
-        $user_dao->shouldReceive('listAllUsers')->andReturn([
+        $user_dao->method('listAllUsers')->willReturn([
             'users'   => false,
             'numrows' => 123,
         ]);
 
-        $this->assertEquals(123, $counter->getNumberOfRestrictedUsersInProject($project));
+        self::assertEquals(123, $counter->getNumberOfRestrictedUsersInProject($project));
     }
 }
