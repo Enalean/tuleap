@@ -2592,6 +2592,10 @@ msgid "Project creation moderation settings"
 msgstr "Configurações de moderação na criação do projeto"
 
 #, php-format
+msgid "Project dashboard: %s"
+msgstr ""
+
+#, php-format
 msgid "Project developers (%1$s users)"
 msgstr "Desenvolvedores de projetos (%1$s de usuários)"
 

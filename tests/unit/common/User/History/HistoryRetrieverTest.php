@@ -25,24 +25,30 @@ namespace Tuleap\User\History;
 use Tuleap\Test\Builders\HistoryEntryBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\EventDispatcherStub;
+use Tuleap\Test\Stubs\User\History\GetVisitHistoryStub;
 
 final class HistoryRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @param HistoryEntry[] $entries
+     * @param HistoryEntry[] $other_entries
      * @return HistoryEntry[]
      */
-    private function getHistory(array $entries): array
+    private function getHistory(GetVisitHistory $project_dashboard_visit_retriever, array $other_entries): array
     {
         $event_manager = EventDispatcherStub::withCallback(
-            static function (HistoryEntryCollection $event) use ($entries) {
-                foreach ($entries as $entry) {
+            static function (HistoryEntryCollection $event) use ($other_entries) {
+                foreach ($other_entries as $entry) {
                     $event->addEntry($entry);
                 }
                 return $event;
             }
         );
-        $retriever     = new HistoryRetriever($event_manager);
+
+        $retriever = new HistoryRetriever(
+            $event_manager,
+            $project_dashboard_visit_retriever,
+        );
+
         return $retriever->getHistory(UserTestBuilder::buildWithDefaults());
     }
 
@@ -54,12 +60,18 @@ final class HistoryRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             HistoryEntryBuilder::anEntryVisitedAt(200)->build(),
         ];
 
-        $history = $this->getHistory($entries);
+        $history = $this->getHistory(
+            GetVisitHistoryStub::withEntries(
+                HistoryEntryBuilder::anEntryVisitedAt(150)->build()
+            ),
+            $entries
+        );
 
-        $this->assertCount(3, $history);
+        $this->assertCount(4, $history);
         $this->assertSame(300, $history[0]->getVisitTime());
         $this->assertSame(200, $history[1]->getVisitTime());
-        $this->assertSame(100, $history[2]->getVisitTime());
+        $this->assertSame(150, $history[2]->getVisitTime());
+        $this->assertSame(100, $history[3]->getVisitTime());
     }
 
     public function testItTruncatesHistoryToTheMaxLength(): void
@@ -69,7 +81,7 @@ final class HistoryRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             $entries[] = HistoryEntryBuilder::anEntryVisitedAt($n)->build();
         }
 
-        $history = $this->getHistory($entries);
+        $history = $this->getHistory(GetVisitHistoryStub::withoutEntries(), $entries);
 
         $this->assertCount(HistoryRetriever::MAX_LENGTH_HISTORY, $history);
     }

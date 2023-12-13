@@ -20,6 +20,7 @@
 
 namespace Tuleap\User\History;
 
+use Tuleap\Dashboard\Project\DeleteVisitByUserId;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class HistoryCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -30,7 +31,18 @@ final class HistoryCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
         $event_manager = $this->createMock(\EventManager::class);
         $event_manager->expects(self::once())->method('processEvent')->with(\Event::USER_HISTORY_CLEAR, ['user' => $user]);
 
-        $history_cleaner = new HistoryCleaner($event_manager);
+        $delete_visit_by_user_id = new class implements DeleteVisitByUserId {
+            public bool $called = false;
+
+            public function deleteVisitByUserId(int $user_id): void
+            {
+                $this->called = true;
+            }
+        };
+
+        $history_cleaner = new HistoryCleaner($event_manager, $delete_visit_by_user_id);
         $history_cleaner->clearHistory($user);
+
+        self::assertTrue($delete_visit_by_user_id->called);
     }
 }

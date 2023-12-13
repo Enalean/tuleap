@@ -24,9 +24,17 @@ use PaginatedUserCollection;
 use PFUser;
 use Rule_UserName;
 use Tuleap\Authentication\Scope\AggregateAuthenticationScopeBuilder;
+use Tuleap\Dashboard\Project\ProjectDashboardDao;
+use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
+use Tuleap\Dashboard\Project\ProjectDashboardVisitRetriever;
+use Tuleap\Dashboard\Project\RecentlyVisitedProjectDashboardDao;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Date\DefaultRelativeDatesDisplayPreferenceRetriever;
+use Tuleap\Project\CachedProjectAccessChecker;
+use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\Project\REST\UserGroupRetriever;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\UGroupLiteralizer;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -45,6 +53,7 @@ use Tuleap\User\History\HistoryRetriever;
 use Tuleap\User\Preferences\UserPreferencesGetDefaultValue;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use Tuleap\User\REST\UserRepresentation;
+use Tuleap\Widget\WidgetFactory;
 use User_ForgeUserGroupPermission_RetrieveUserMembershipInformation;
 use User_ForgeUserGroupPermission_UserManagement;
 use User_ForgeUserGroupPermissionsDao;
@@ -726,7 +735,32 @@ class UserResource extends AuthenticatedResource
         $current_user = $this->user_manager->getCurrentUser();
         $this->checkUserCanAccessToTheHistory($current_user, $id);
 
-        $history_retriever = new HistoryRetriever(\EventManager::instance());
+        $event_manager = \EventManager::instance();
+
+        $history_retriever = new HistoryRetriever(
+            $event_manager,
+            new ProjectDashboardVisitRetriever(
+                new RecentlyVisitedProjectDashboardDao(),
+                new ProjectDashboardRetriever(
+                    new ProjectDashboardDao(
+                        new DashboardWidgetDao(
+                            new WidgetFactory(
+                                UserManager::instance(),
+                                new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+                                $event_manager,
+                            ),
+                        ),
+                    ),
+                ),
+                \ProjectManager::instance(),
+                new CachedProjectAccessChecker(
+                    new ProjectAccessChecker(
+                        new RestrictedUserCanAccessProjectVerifier(),
+                        $event_manager,
+                    ),
+                ),
+            )
+        );
 
         $filtered_history = array_filter(
             $history_retriever->getHistory($current_user),
@@ -763,7 +797,7 @@ class UserResource extends AuthenticatedResource
             throw new RestException(403, 'You can only clear your history');
         }
 
-        $history_cleaner = new HistoryCleaner(\EventManager::instance());
+        $history_cleaner = new HistoryCleaner(\EventManager::instance(), new RecentlyVisitedProjectDashboardDao());
         $history_cleaner->clearHistory($current_user);
     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,27 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\User\History;
+namespace Tuleap\Dashboard\Project;
 
-use Event;
-use Tuleap\Dashboard\Project\DeleteVisitByUserId;
-
-class HistoryCleaner
+interface DeleteVisitByUserId
 {
-    public function __construct(
-        private readonly \EventManager $event_manager,
-        private readonly DeleteVisitByUserId $recently_visited_project_dashboard_dao,
-    ) {
-    }
-
-    public function clearHistory(\PFUser $user): void
-    {
-        $this->recently_visited_project_dashboard_dao->deleteVisitByUserId((int) $user->getId());
-        $this->event_manager->processEvent(
-            Event::USER_HISTORY_CLEAR,
-            [
-                'user' => $user,
-            ]
-        );
-    }
+    public function deleteVisitByUserId(int $user_id): void;
 }

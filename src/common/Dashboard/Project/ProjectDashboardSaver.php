@@ -28,14 +28,10 @@ use Tuleap\Dashboard\NameDashboardDoesNotExistException;
 
 class ProjectDashboardSaver
 {
-    /**
-     * @var ProjectDashboardDao
-     */
-    private $dao;
-
-    public function __construct(ProjectDashboardDao $dao)
-    {
-        $this->dao = $dao;
+    public function __construct(
+        private readonly ProjectDashboardDao $dao,
+        private readonly DeleteVisitByDashboardId $delete_visit_by_dashboard_id,
+    ) {
     }
 
     /**
@@ -51,12 +47,11 @@ class ProjectDashboardSaver
     /**
      * @param $id
      * @param $name
-     * @return bool
      */
-    public function update(PFUser $user, Project $project, $id, $name)
+    public function update(PFUser $user, Project $project, $id, $name): void
     {
         $this->checkUserCanSaveByDashboardName($user, $project, $name);
-        return $this->dao->edit($id, $name);
+        $this->dao->edit($id, $name);
     }
 
     /**
@@ -66,6 +61,7 @@ class ProjectDashboardSaver
     {
         $this->checkUserCanDeleteByDashboardId($user, $project, $dashboard_id);
         $this->dao->delete($project->getId(), $dashboard_id);
+        $this->delete_visit_by_dashboard_id->deleteVisitByDashboardId($dashboard_id);
     }
 
     private function checkUserCanSaveByDashboardName(PFUser $user, Project $project, $name)
@@ -78,7 +74,7 @@ class ProjectDashboardSaver
             throw new NameDashboardDoesNotExistException();
         }
 
-        if ($this->dao->searchByProjectIdAndName($project->getID(), $name)->count() > 0) {
+        if (count($this->dao->searchByProjectIdAndName($project->getID(), $name)) > 0) {
             throw new NameDashboardAlreadyExistsException();
         }
     }
@@ -89,7 +85,7 @@ class ProjectDashboardSaver
             throw new UserCanNotUpdateProjectDashboardException();
         }
 
-        if ($this->dao->searchById($dashboard_id)->count() <= 0) {
+        if (empty($this->dao->searchById($dashboard_id))) {
             throw new DashboardDoesNotExistException();
         }
     }

@@ -32,6 +32,7 @@ use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
+use Tuleap\DB\DBFactory;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
@@ -250,7 +251,8 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             $widget_dao,
             $widget_retriever,
             $widget_factory,
-            new DisabledProjectWidgetsChecker(new DisabledProjectWidgetsDao())
+            new DisabledProjectWidgetsChecker(new DisabledProjectWidgetsDao()),
+            new \Tuleap\DB\DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
         );
 
         $service_dao = new ServiceDao();

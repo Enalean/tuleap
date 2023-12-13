@@ -28,8 +28,10 @@ final class HistoryRetriever
 {
     public const MAX_LENGTH_HISTORY = 30;
 
-    public function __construct(private EventDispatcherInterface $event_manager)
-    {
+    public function __construct(
+        private readonly EventDispatcherInterface $event_manager,
+        private readonly GetVisitHistory $project_dashboard_visit_retriever,
+    ) {
     }
 
     /**
@@ -38,6 +40,8 @@ final class HistoryRetriever
     public function getHistory(\PFUser $user): array
     {
         $collection = new HistoryEntryCollection($user);
+
+        $this->project_dashboard_visit_retriever->getVisitHistory($collection, self::MAX_LENGTH_HISTORY);
 
         $this->event_manager->dispatch($collection);
         $history = $collection->getEntries();

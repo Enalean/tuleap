@@ -114,6 +114,7 @@ class ProjectDashboardController
         private JavascriptAssetGeneric $project_registration_assets,
         Codendi_HTMLPurifier $purifier,
         private FirstTimerPresenterBuilder $first_timer_presenter_builder,
+        private readonly RecentlyVisitedProjectDashboardDao $recently_visited_project_dashboard_dao,
     ) {
         $this->csrf                     = $csrf;
         $this->project                  = $project;
@@ -133,7 +134,7 @@ class ProjectDashboardController
     {
         $project            = $request->getProject();
         $user               = $request->getCurrentUser();
-        $dashboard_id       = $request->get('dashboard_id');
+        $dashboard_id       = (int) $request->get('dashboard_id');
         $project_dashboards = $this->retriever->getAllProjectDashboards($this->project);
 
         $display_project_created_modal_presenter = $this->event_manager->dispatch(
@@ -153,6 +154,16 @@ class ProjectDashboardController
             $this->layout->addFeedback(
                 Feedback::ERROR,
                 _('The requested dashboard does not exist.')
+            );
+        }
+
+        $reversed_project_dashboards = array_reverse($project_dashboards);
+        $first_dashboard             = array_pop($reversed_project_dashboards);
+        if (($dashboard_id || $first_dashboard) && ! $user->isAnonymous()) {
+            $this->recently_visited_project_dashboard_dao->save(
+                (int) $user->getId(),
+                $dashboard_id ?: (int) $first_dashboard->getId(),
+                $_SERVER['REQUEST_TIME'] ?? (new \DateTimeImmutable())->getTimestamp(),
             );
         }
 
@@ -370,10 +381,10 @@ class ProjectDashboardController
 
     /**
      * @param $dashboard_id
-     * @param array $project_dashboards
+     * @param ProjectDashboard[] $project_dashboards
      * @return ProjectDashboardPresenter[]
      */
-    private function getProjectDashboardsPresenter(PFUser $user, Project $project, $dashboard_id, array $project_dashboards)
+    private function getProjectDashboardsPresenter(PFUser $user, Project $project, $dashboard_id, array $project_dashboards): array
     {
         $project_dashboards_presenter = [];
 
@@ -405,11 +416,9 @@ class ProjectDashboardController
     }
 
     /**
-     * @param $dashboard_id
-     * @param $project_dashboards
-     * @return bool
+     * @param ProjectDashboard[] $project_dashboards
      */
-    private function doesDashboardIdExist($dashboard_id, array $project_dashboards)
+    private function doesDashboardIdExist(int $dashboard_id, array $project_dashboards): bool
     {
         foreach ($project_dashboards as $dashboard) {
             if ($dashboard_id === $dashboard->getId()) {

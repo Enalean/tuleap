@@ -26,6 +26,7 @@ use Tuleap\Dashboard\Widget\DashboardWidget;
 use Tuleap\Dashboard\Widget\DashboardWidgetColumn;
 use Tuleap\Dashboard\Widget\DashboardWidgetLine;
 use Tuleap\Project\MappingRegistry;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -57,8 +58,6 @@ class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->dao = $this->createMock(\Tuleap\Dashboard\Project\ProjectDashboardDao::class);
-        $this->dao->method('startTransaction');
-        $this->dao->method('commit');
         $this->dao->method('duplicateDashboard');
         $this->retriever  = $this->createMock(\Tuleap\Dashboard\Project\ProjectDashboardRetriever::class);
         $this->widget_dao = $this->createMock(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
@@ -74,7 +73,8 @@ class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->widget_dao,
             $this->widget_retriever,
             $this->widget_factory,
-            $this->checker
+            $this->checker,
+            new DBTransactionExecutorPassthrough(),
         );
 
         $this->template_project = $this->createMock(\Project::class);

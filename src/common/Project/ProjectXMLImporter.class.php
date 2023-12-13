@@ -25,6 +25,7 @@ use Tuleap\Dashboard\Project\DisabledProjectWidgetsDao;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Project\ProjectDashboardSaver;
 use Tuleap\Dashboard\Project\ProjectDashboardXMLImporter;
+use Tuleap\Dashboard\Project\RecentlyVisitedProjectDashboardDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
@@ -202,7 +203,8 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
             new UploadedLinksUpdater(new UploadedLinksDao(), FRSLog::instance()),
             new ProjectDashboardXMLImporter(
                 new ProjectDashboardSaver(
-                    $project_dao
+                    $project_dao,
+                    new RecentlyVisitedProjectDashboardDao(),
                 ),
                 $widget_factory,
                 $widget_dao,

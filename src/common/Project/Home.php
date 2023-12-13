@@ -37,6 +37,7 @@ use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\Project\ProjectDashboardRouter;
 use Tuleap\Dashboard\Project\ProjectDashboardSaver;
+use Tuleap\Dashboard\Project\RecentlyVisitedProjectDashboardDao;
 use Tuleap\Dashboard\Project\WidgetDeletor;
 use Tuleap\Dashboard\Widget\WidgetMinimizor;
 use Tuleap\Dashboard\Widget\DashboardWidgetChecker;
@@ -108,7 +109,10 @@ class Home implements DispatchableWithRequest, DispatchableWithProject
                     $csrf_token,
                     $project,
                     new ProjectDashboardRetriever($project_dashboard_dao),
-                    new ProjectDashboardSaver($project_dashboard_dao),
+                    new ProjectDashboardSaver(
+                        $project_dashboard_dao,
+                        new RecentlyVisitedProjectDashboardDao(),
+                    ),
                     new DashboardWidgetRetriever(
                         $dashboard_widget_dao
                     ),
@@ -140,6 +144,7 @@ class Home implements DispatchableWithRequest, DispatchableWithProject
                         ),
                         UserManager::instance(),
                     ),
+                    new RecentlyVisitedProjectDashboardDao(),
                 ),
                 new WidgetDashboardController(
                     $csrf_token,
