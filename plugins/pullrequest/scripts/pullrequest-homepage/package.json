@@ -6,16 +6,27 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@tuleap/burningparrot-theme": "workspace:*",
     "@tuleap/dom": "workspace:*",
-    "vue": "^3.3.4"
+    "@tuleap/fault": "workspace:*",
+    "@tuleap/fetch-result": "workspace:*",
+    "@tuleap/plugin-pullrequest-constants": "workspace:*",
+    "@tuleap/plugin-pullrequest-rest-api-types": "workspace:*",
+    "@tuleap/tooltip": "workspace:*",
+    "@tuleap/vue-strict-inject": "workspace:*",
+    "vue": "^3.3.4",
+    "vue-dompurify-html": "^5.0.0",
+    "neverthrow": "^6.0.0"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
-    "@vitejs/plugin-vue": "^4.2.3"
+    "@vitejs/plugin-vue": "^4.2.3",
+    "@vue/test-utils": "^2.4.3"
   },
   "scripts": {
     "typecheck": "vue-tsc --noEmit",
     "build": "vite build",
-    "watch": "vite build --watch --mode development --minify false"
+    "watch": "vite build --watch --mode development --minify false",
+    "test": "vitest"
   }
 }
