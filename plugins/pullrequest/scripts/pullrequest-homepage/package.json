@@ -1,0 +1,21 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-pullrequest-homepage",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@tuleap/dom": "workspace:*",
+    "vue": "^3.3.4"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*",
+    "@vitejs/plugin-vue": "^4.2.3"
+  },
+  "scripts": {
+    "typecheck": "vue-tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false"
+  }
+}

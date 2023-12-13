@@ -1,4 +1,4 @@
-{{^ is_vue_overview_shown }}
+{{# is_legacy_angular_app_shown }}
     <div id="pullrequest-app"
          ng-app="tuleap.pull-request"
          ng-controller="MainController"
@@ -16,7 +16,7 @@
         ></div>
         <ui-view class="pull-requests-app-ui-view"></ui-view>
     </div>
-{{/ is_vue_overview_shown }}
+{{/ is_legacy_angular_app_shown }}
 {{# is_vue_overview_shown }}
     <div class="vue-overview-mount-point"
          data-repository-id="{{ repository_id }}"
@@ -26,3 +26,6 @@
          data-are-merge-commits-allowed-in-repository="{{ is_merge_commit_allowed }}"
     ></div>
 {{/ is_vue_overview_shown }}
+{{# is_vue_homepage_shown }}
+    <div class="vue-homepage-mount-point" data-repository-id="{{ repository_id }}" data-project-id="{{ project_id }}"></div>
+{{/ is_vue_homepage_shown }}

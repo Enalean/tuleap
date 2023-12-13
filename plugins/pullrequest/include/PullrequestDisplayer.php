@@ -24,12 +24,8 @@ use GitRepositoryFactory;
 use TemplateRenderer;
 use Tuleap\Git\Repository\GitRepositoryHeaderDisplayer;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\IncludeCoreAssets;
-use Tuleap\Layout\IncludeViteAssets;
-use Tuleap\Layout\JavascriptAsset;
-use Tuleap\Layout\JavascriptViteAsset;
+use Tuleap\PullRequest\FrontendApps\PullRequestAppsLoader;
+use Tuleap\PullRequest\FrontendApps\PullRequestApp;
 use Tuleap\PullRequest\MergeSetting\MergeSettingRetriever;
 use Tuleap\Request\NotFoundException;
 
@@ -56,41 +52,12 @@ class PullrequestDisplayer
 
         $GLOBALS['HTML'] = $GLOBALS['Response'] = $layout;
 
-        $assets = new IncludeAssets(
-            __DIR__ . '/../scripts/pullrequests-app/frontend-assets',
-            '/assets/pullrequest/pullrequests-app'
-        );
+        $app_to_load = PullRequestApp::fromRequest($request);
 
-        $layout->addCssAsset(
-            new CssAssetWithoutVariantDeclinaisons(
-                $assets,
-                'pull-requests-style'
-            )
+        PullRequestAppsLoader::loadPullRequestApps(
+            $layout,
+            $app_to_load,
         );
-
-        $layout->addJavascriptAsset(
-            new JavascriptAsset(
-                new IncludeCoreAssets(),
-                'syntax-highlight.js'
-            )
-        );
-
-        $is_vue_overview_shown = $request->get("tab") === "overview";
-        if ($is_vue_overview_shown) {
-            $layout->addJavascriptAsset(
-                new JavascriptViteAsset(
-                    new IncludeViteAssets(
-                        __DIR__ . '/../scripts/pullrequest-overview/frontend-assets',
-                        '/assets/pullrequest/pullrequest-overview'
-                    ),
-                    'src/index.ts'
-                )
-            );
-        } else {
-            $layout->includeFooterJavascriptFile(
-                (new JavascriptAsset($assets, 'tuleap-pullrequest.js'))->getFileURL()
-            );
-        }
 
         $this->header_displayer->display(
             $request,
@@ -104,7 +71,7 @@ class PullrequestDisplayer
             $user,
             $nb_pull_requests,
             $this->merge_setting_retriever->getMergeSettingForRepository($repository),
-            $is_vue_overview_shown
+            $app_to_load
         );
 
         $this->template_renderer->renderToPage($presenter->getTemplateName(), $presenter);
