@@ -26,6 +26,8 @@
         v-bind:class="{
             active: is_item_active,
         }"
+        v-on:click="goToItem"
+        ref="root"
     >
         <a
             v-bind:href="sanitized_href"
@@ -54,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { sanitizeURL } from "../url-sanitizer";
 import type { Item, QuickLink } from "../configuration";
 import SubItemPresenter from "./SubItemPresenter.vue";
@@ -77,4 +79,11 @@ const has_items = computed(() => props.items && props.items.length > 0);
 const is_item_active = computed(
     () => props.is_active && !props.items?.some((item) => item.is_active),
 );
+const root = ref<HTMLInputElement | null>(null);
+
+function goToItem(event: MouseEvent): void {
+    if (root.value && event.target === root.value) {
+        window.location.href = props.href;
+    }
+}
 </script>
