@@ -359,6 +359,11 @@
     font-size: 10px;
 }
 
+.project-sidebar-nav-item-info-tooltip {
+    margin: 0 0 0 var(--tlp-small-spacing);
+    font-size: 0.75rem;
+}
+
 .project-sidebar-nav-item-icon {
     flex: 0 0 auto;
     margin: 0 var(--tlp-small-spacing) 0 0;

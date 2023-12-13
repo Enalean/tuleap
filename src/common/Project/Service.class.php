@@ -334,4 +334,9 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     {
         return [];
     }
+
+    public function getSidebarInfoTooltip(): string
+    {
+        return '';
+    }
 }

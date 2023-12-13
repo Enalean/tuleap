@@ -43,6 +43,7 @@ final class SidebarServicePresenter
         public bool $is_active,
         public string $shortcut_id,
         public array $promoted_items,
+        public string $info_tooltip,
     ) {
     }
 
@@ -63,6 +64,7 @@ final class SidebarServicePresenter
             $is_enabled && $service->isIFrame(),
             '',
             $service->getPromotedItemPresenters($user, $active_promoted_item_id),
+            $service->getSidebarInfoTooltip(),
         );
     }
 
@@ -77,6 +79,7 @@ final class SidebarServicePresenter
             $is_enabled,
             $service->getShortName(),
             $service->getPromotedItemPresenters($user, $active_promoted_item_id),
+            $service->getSidebarInfoTooltip(),
         );
     }
 }

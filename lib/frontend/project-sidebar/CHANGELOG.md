@@ -3,6 +3,7 @@
 ## In development
 
 * ✨ Now promoted items can have subitems. This allows for example to display Backlog » Releases » Sprint.
+* ✨ Now tools can have an info tooltip. A question mark icon will be displayed next to the tool name and the tooltip will display the information on hover.
 
 ## 2.5.0
 

@@ -42,6 +42,13 @@
             data-test="tool-icon"
         ></i>
         <span class="project-sidebar-nav-item-label">{{ label }}</span>
+        <span
+            v-if="has_tooltip"
+            class="project-sidebar-nav-item-info-tooltip"
+            v-bind:title="tooltip"
+        >
+            <i class="fa-solid fa-circle-question" role="img" v-bind:aria-label="tooltip"></i>
+        </span>
         <i
             v-if="open_in_new_tab"
             class="fa-solid fa-arrow-right project-sidebar-nav-item-new-tab"
@@ -74,6 +81,7 @@ const props = defineProps<{
     is_active: boolean;
     shortcut_id: string;
     promoted_items?: ReadonlyArray<PromotedItem>;
+    info_tooltip?: string;
 }>();
 const sanitized_href = computed(() => sanitizeURL(props.href));
 const shortcut = computed(() => `sidebar-${props.shortcut_id}`);
@@ -81,4 +89,6 @@ const has_promoted_items = computed(() => props.promoted_items && props.promoted
 const is_tool_active = computed(
     () => props.is_active && !props.promoted_items?.some((item) => item.is_active),
 );
+const tooltip = computed(() => props.info_tooltip || "");
+const has_tooltip = computed(() => tooltip.value !== "");
 </script>

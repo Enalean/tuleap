@@ -90,4 +90,16 @@ class AgileDashboardService extends \Service
             new MilestonesInSidebarDao()
         ))->getSidebarPromotedMilestones($user);
     }
+
+    public function getSidebarInfoTooltip(): string
+    {
+        if ((new MilestonesInSidebarDao())->shouldSidebarDisplayLastMilestones((int) $this->project->getID())) {
+            return \dgettext(
+                'tuleap-agiledashboard',
+                'Sidebar shows only the last 5 open milestones',
+            );
+        }
+
+        return parent::getSidebarInfoTooltip();
+    }
 }
