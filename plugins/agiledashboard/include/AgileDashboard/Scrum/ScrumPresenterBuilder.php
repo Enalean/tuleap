@@ -112,7 +112,6 @@ class ScrumPresenterBuilder
         $is_split_feature_flag_enabled = $this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project);
         $is_legacy_agiledashboard      = ! $is_split_feature_flag_enabled;
 
-        $is_milestones_in_sidebar_available     = $this->milestones_in_sidebar_config->isMilestonesInSidebarAvailable();
         $should_sidebar_display_last_milestones = $this->milestones_in_sidebar_config->shouldSidebarDisplayLastMilestones((int) $project->getID());
 
         return new AdminScrumPresenter(
@@ -131,7 +130,6 @@ class ScrumPresenterBuilder
             $additional_scrum_sections->getAdditionalSectionsControllers(),
             $planning_administration_delegation->isPlanningAdministrationDelegated(),
             $is_legacy_agiledashboard,
-            $is_milestones_in_sidebar_available,
             $should_sidebar_display_last_milestones,
         );
     }

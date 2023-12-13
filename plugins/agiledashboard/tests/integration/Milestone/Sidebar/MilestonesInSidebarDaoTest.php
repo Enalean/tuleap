@@ -41,15 +41,12 @@ final class MilestonesInSidebarDaoTest extends TestCase
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
         $db->query('TRUNCATE TABLE plugin_agiledashboard_milestones_in_sidebar_config');
-        \ForgeConfig::clearFeatureFlag(MilestonesInSidebarDao::DEV_MODE);
         \ForgeConfig::clearFeatureFlag(MilestonesInSidebarDao::FEATURE_FLAG);
-        $db->run('DELETE FROM forgeconfig where name = CONCAT("feature_flag_", ?)', MilestonesInSidebarDao::DEV_MODE);
         $db->run('DELETE FROM forgeconfig where name = CONCAT("feature_flag_", ?)', MilestonesInSidebarDao::FEATURE_FLAG);
     }
 
     public function testShouldSidebarDisplayLastMilestonesWhenFeatureFlagIsNotSet(): void
     {
-        \ForgeConfig::setFeatureFlag(MilestonesInSidebarDao::DEV_MODE, '1');
         $this->dao->deactivateMilestonesInSidebar(self::ACME_PROJECT_ID);
         $this->dao->activateMilestonesInSidebar(self::DUNDER_MIFFLIN_PROJECT_ID);
 
@@ -60,7 +57,6 @@ final class MilestonesInSidebarDaoTest extends TestCase
 
     public function testDuplicateWhenDeactivated(): void
     {
-        \ForgeConfig::setFeatureFlag(MilestonesInSidebarDao::DEV_MODE, '1');
         \ForgeConfig::setFeatureFlag(MilestonesInSidebarDao::FEATURE_FLAG, '1');
         $this->dao->deactivateMilestonesInSidebar(self::ACME_PROJECT_ID);
 
@@ -71,7 +67,6 @@ final class MilestonesInSidebarDaoTest extends TestCase
 
     public function testDuplicateWhenActivated(): void
     {
-        \ForgeConfig::setFeatureFlag(MilestonesInSidebarDao::DEV_MODE, '1');
         \ForgeConfig::setFeatureFlag(MilestonesInSidebarDao::FEATURE_FLAG, '1');
         $this->dao->activateMilestonesInSidebar(self::DUNDER_MIFFLIN_PROJECT_ID);
 
@@ -82,7 +77,6 @@ final class MilestonesInSidebarDaoTest extends TestCase
 
     public function testDuplicateWhenNoExplicitChoice(): void
     {
-        \ForgeConfig::setFeatureFlag(MilestonesInSidebarDao::DEV_MODE, '1');
         \ForgeConfig::setFeatureFlag(MilestonesInSidebarDao::FEATURE_FLAG, '1');
         $this->dao->duplicate(self::LOS_POLLOS_HERMANOS_PROJECT_ID, self::SKYNET_PROJECT_ID);
         self::assertTrue($this->dao->shouldSidebarDisplayLastMilestones(self::SKYNET_PROJECT_ID));
@@ -91,7 +85,6 @@ final class MilestonesInSidebarDaoTest extends TestCase
 
     public function testShouldSidebarDisplayLastMilestonesWhenFeatureFlagAllowsMilestonesInSidebar(): void
     {
-        \ForgeConfig::setFeatureFlag(MilestonesInSidebarDao::DEV_MODE, '1');
         \ForgeConfig::setFeatureFlag(MilestonesInSidebarDao::FEATURE_FLAG, '1');
         $this->dao->deactivateMilestonesInSidebar(self::ACME_PROJECT_ID);
         $this->dao->activateMilestonesInSidebar(self::DUNDER_MIFFLIN_PROJECT_ID);
@@ -103,31 +96,7 @@ final class MilestonesInSidebarDaoTest extends TestCase
 
     public function testShouldSidebarDisplayLastMilestonesWhenFeatureFlagForbidsMilestonesInSidebar(): void
     {
-        \ForgeConfig::setFeatureFlag(MilestonesInSidebarDao::DEV_MODE, '1');
         \ForgeConfig::setFeatureFlag(MilestonesInSidebarDao::FEATURE_FLAG, '0');
-        $this->dao->deactivateMilestonesInSidebar(self::ACME_PROJECT_ID);
-        $this->dao->activateMilestonesInSidebar(self::DUNDER_MIFFLIN_PROJECT_ID);
-
-        self::assertFalse($this->dao->shouldSidebarDisplayLastMilestones(self::ACME_PROJECT_ID));
-        self::assertFalse($this->dao->shouldSidebarDisplayLastMilestones(self::DUNDER_MIFFLIN_PROJECT_ID));
-        self::assertFalse($this->dao->shouldSidebarDisplayLastMilestones(self::SKYNET_PROJECT_ID));
-    }
-
-    public function testShouldSidebarDisplayLastMilestonesWhenDevModeIsNotActivated(): void
-    {
-        \ForgeConfig::setFeatureFlag(MilestonesInSidebarDao::DEV_MODE, '0');
-        \ForgeConfig::setFeatureFlag(MilestonesInSidebarDao::FEATURE_FLAG, '1');
-        $this->dao->deactivateMilestonesInSidebar(self::ACME_PROJECT_ID);
-        $this->dao->activateMilestonesInSidebar(self::DUNDER_MIFFLIN_PROJECT_ID);
-
-        self::assertFalse($this->dao->shouldSidebarDisplayLastMilestones(self::ACME_PROJECT_ID));
-        self::assertFalse($this->dao->shouldSidebarDisplayLastMilestones(self::DUNDER_MIFFLIN_PROJECT_ID));
-        self::assertFalse($this->dao->shouldSidebarDisplayLastMilestones(self::SKYNET_PROJECT_ID));
-    }
-
-    public function testShouldSidebarDisplayLastMilestonesWhenDevModeIsNotSetAtAll(): void
-    {
-        \ForgeConfig::setFeatureFlag(MilestonesInSidebarDao::FEATURE_FLAG, '1');
         $this->dao->deactivateMilestonesInSidebar(self::ACME_PROJECT_ID);
         $this->dao->activateMilestonesInSidebar(self::DUNDER_MIFFLIN_PROJECT_ID);
 
@@ -138,7 +107,6 @@ final class MilestonesInSidebarDaoTest extends TestCase
 
     public function testShouldActivateOrDeactivateAnExistingEntry(): void
     {
-        \ForgeConfig::setFeatureFlag(MilestonesInSidebarDao::DEV_MODE, '1');
         $this->dao->activateMilestonesInSidebar(self::ACME_PROJECT_ID);
         $this->dao->deactivateMilestonesInSidebar(self::ACME_PROJECT_ID);
         $this->dao->activateMilestonesInSidebar(self::ACME_PROJECT_ID);

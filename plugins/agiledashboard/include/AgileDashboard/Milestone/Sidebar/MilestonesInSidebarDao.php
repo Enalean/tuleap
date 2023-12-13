@@ -32,28 +32,10 @@ final class MilestonesInSidebarDao extends DataAccessObject implements CheckMile
     #[ConfigKeyInt(1)]
     public const FEATURE_FLAG = 'allow_milestones_in_sidebar';
 
-    #[FeatureFlagConfigKey('Allow access to feature under development: milestones in sidebar.')]
-    #[ConfigKeyInt(0)]
-    public const DEV_MODE = 'allow_milestones_in_sidebar_dev_mode';
-
     private const SHOULD_SIDEBAR_DISPLAY_LAST_MILESTONES_WHEN_NO_CONFIG = true;
-
-    public function isMilestonesInSidebarAvailable(): bool
-    {
-        $dev_mode = (int) \ForgeConfig::getFeatureFlag(self::DEV_MODE);
-        if ($dev_mode !== 1) {
-            return false;
-        }
-
-        return true;
-    }
 
     public function shouldSidebarDisplayLastMilestones(int $project_id): bool
     {
-        if (! $this->isMilestonesInSidebarAvailable()) {
-            return false;
-        }
-
         $feature_flag = \ForgeConfig::getFeatureFlag(self::FEATURE_FLAG);
         if ($feature_flag !== false && (int) $feature_flag === 0) {
             return false;
