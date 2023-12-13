@@ -26,6 +26,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/constants.php';
 
 use FastRoute\RouteCollector;
+use Tuleap\LDAP\User\UserDao;
 use Tuleap\SVNCore\SVNAccessFileDefaultBlockOverride;
 use Tuleap\CLI\Command\ConfigDumpEvent;
 use Tuleap\Git\Git\RemoteServer\GerritCanMigrateEvent;
@@ -278,8 +279,8 @@ class LdapPlugin extends Plugin
     public function redirectAfterLogin(RedirectAfterLogin $event): void
     {
         if ($this->isLdapAuthType()) {
-            $ldapUserDao = new LDAP_UserDao();
-            if (! $ldapUserDao->alreadyLoggedInOnce($event->user->getId())) {
+            $ldapUserDao = new UserDao();
+            if (! $ldapUserDao->alreadyLoggedInOnce((int) $event->user->getId())) {
                 $return_to_arg = "";
                 if ($event->getReturnTo()) {
                     $return_to_arg = '?return_to=' . urlencode($event->getReturnTo());
@@ -809,12 +810,12 @@ class LdapPlugin extends Plugin
             return;
         }
         $ldap_project_manager = new LDAP_ProjectManager();
-        if (! $ldap_project_manager->hasSVNLDAPAuth($event->getProject()->getID())) {
+        if (! $ldap_project_manager->hasSVNLDAPAuth((int) $event->getProject()->getID())) {
             return;
         }
 
         $user_name = $event->getUsername();
-        $ldap_user = $this->getLdapUserManager()->getLdapLoginFromUserIds([$event->getUser()->getId()])->getRow();
+        $ldap_user = $this->getLdapUserManager()->getLdapLoginFromUserIds([(int) $event->getUser()->getId()])[0];
         if ($ldap_user['ldap_uid'] !== false) {
             $user_name = $ldap_user['ldap_uid'];
         }
@@ -1285,7 +1286,7 @@ class LdapPlugin extends Plugin
 
     public function routePostWelcome(): DispatchableWithRequest
     {
-        return new \Tuleap\LDAP\WelcomeUpdateController(UserManager::instance(), new LDAP_UserDao(), new Account_TimezonesCollection());
+        return new \Tuleap\LDAP\WelcomeUpdateController(UserManager::instance(), new UserDao(), new Account_TimezonesCollection());
     }
 
     public function routeGetAutocomplete(): DispatchableWithRequest

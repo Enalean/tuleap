@@ -82,7 +82,7 @@ class SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN extends SystemEvent
         $backendSVN = $this->getBackendSVN();
         foreach ($project_ids as $project_id) {
             $project = $this->project_manager->getProject($project_id);
-            if ($project && $this->ldap_project_manager->hasSVNLDAPAuth($project->getId())) {
+            if ($project && $this->ldap_project_manager->hasSVNLDAPAuth((int) $project->getId())) {
                 $backendSVN->updateProjectSVNAccessFile($project);
             }
         }

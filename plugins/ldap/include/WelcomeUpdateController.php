@@ -25,7 +25,7 @@ namespace Tuleap\LDAP;
 
 use Account_TimezonesCollection;
 use HTTPRequest;
-use LDAP_UserDao;
+use Tuleap\LDAP\User\UserDao;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -39,7 +39,7 @@ class WelcomeUpdateController implements DispatchableWithRequest
      */
     private $user_manager;
     /**
-     * @var LDAP_UserDao
+     * @var UserDao
      */
     private $ldap_user_dao;
     /**
@@ -47,7 +47,7 @@ class WelcomeUpdateController implements DispatchableWithRequest
      */
     private $timezones_collection;
 
-    public function __construct(\UserManager $user_manager, LDAP_UserDao $ldap_user_dao, Account_TimezonesCollection $timezones_collection)
+    public function __construct(\UserManager $user_manager, UserDao $ldap_user_dao, Account_TimezonesCollection $timezones_collection)
     {
         $this->user_manager         = $user_manager;
         $this->ldap_user_dao        = $ldap_user_dao;

@@ -1,48 +1,45 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2009. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2009
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
+ * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'LDAP_ProjectDao.class.php';
+use Tuleap\LDAP\Project\UsesLDAPAuthProvider;
 
-class LDAP_ProjectManager
+class LDAP_ProjectManager implements UsesLDAPAuthProvider
 {
     /**
-     * @var array
+     * @var array<int, bool>
      */
-    private $cacheSVNLDAP = [];
+    private array $cacheSVNLDAP = [];
 
     /**
      * Return true if project uses LDAP for SVN authentication
-     *
-     * @param int $groupId
-     *
-     * @return bool
      */
-    public function hasSVNLDAPAuth($groupId)
+    public function hasSVNLDAPAuth(int $project_id): bool
     {
-        if (! isset($this->cacheSVNLDAP[$groupId])) {
-            $this->cacheSVNLDAP[$groupId] = $this->getDao()->hasLdapSvn($groupId);
+        if (! isset($this->cacheSVNLDAP[$project_id])) {
+            $this->cacheSVNLDAP[$project_id] = $this->getDao()->hasLdapSvn($project_id);
         }
-        return $this->cacheSVNLDAP[$groupId];
+        return $this->cacheSVNLDAP[$project_id];
     }
 
     /**
