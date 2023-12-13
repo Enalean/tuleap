@@ -289,7 +289,8 @@ class PullRequestsResource extends AuthenticatedResource
             $this->getGitoliteAccessURLGenerator(),
             new PullRequestStatusInfoRepresentationBuilder(new TimelineDao(), new TimelineDao(), UserManager::instance()),
             $purifier,
-            $content_interpretor
+            $content_interpretor,
+            $this->getPullReviewerRetrievers()
         );
 
         return $pr_representation_factory->getPullRequestRepresentation(
@@ -914,7 +915,8 @@ class PullRequestsResource extends AuthenticatedResource
                     $this->getGitoliteAccessURLGenerator(),
                     new PullRequestStatusInfoRepresentationBuilder(new TimelineDao(), new TimelineDao(), UserManager::instance()),
                     $purifier,
-                    $content_interpretor
+                    $content_interpretor,
+                    $this->getPullReviewerRetrievers()
                 );
 
                 return $pr_representation_factory->getPullRequestRepresentation(
@@ -1390,6 +1392,25 @@ class PullRequestsResource extends AuthenticatedResource
             $this->git_repository_factory,
             $this->getAccessiblePullRequestRetriever(),
             $bypass_broken_git_reference_check
+        );
+    }
+
+    private function getPullReviewerRetrievers(): ReviewerRetriever
+    {
+        return new ReviewerRetriever(
+            UserManager::instance(),
+            new ReviewerDAO(),
+            new PullRequestPermissionChecker(
+                $this->git_repository_factory,
+                new \Tuleap\Project\ProjectAccessChecker(
+                    new RestrictedUserCanAccessProjectVerifier(),
+                    \EventManager::instance()
+                ),
+                new AccessControlVerifier(
+                    new FineGrainedRetriever(new FineGrainedDao()),
+                    new \System_Command()
+                )
+            )
         );
     }
 }

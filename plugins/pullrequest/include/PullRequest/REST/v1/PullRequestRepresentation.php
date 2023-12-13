@@ -20,13 +20,14 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
+use Codendi_HTMLPurifier;
+use GitRepository;
 use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\PullRequest\GitReference\GitPullRequestReference;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\REST\JsonCast;
-use GitRepository;
-use Codendi_HTMLPurifier;
+use Tuleap\User\REST\MinimalUserRepresentation;
 
 class PullRequestRepresentation extends PullRequestMinimalRepresentation
 {
@@ -141,6 +142,9 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
     public string $description_format;
     public string $post_processed_description;
 
+    /**
+     * @param MinimalUserRepresentation[] $reviewers
+     */
     public function build(
         Codendi_HTMLPurifier $purifier,
         ContentInterpretor $common_mark_interpreter,
@@ -155,10 +159,11 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
         $last_build_status_name,
         $last_build_date,
         \PFUser $user,
+        array $reviewers,
         PullRequestShortStatRepresentation $pr_short_stat_representation,
         ?PullRequestStatusInfoRepresentation $status_info_representation,
     ) {
-        $this->buildMinimal($pull_request, $repository, $repository_dest, $git_reference);
+        $this->buildMinimal($pull_request, $repository, $repository_dest, $git_reference, $reviewers);
 
         $project_id                       = $repository->getProjectId();
         $this->description_format         = $pull_request->getDescriptionFormat();

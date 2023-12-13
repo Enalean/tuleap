@@ -26,6 +26,7 @@ use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\PullRequest\GitReference\GitPullRequestReference;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\REST\JsonCast;
+use Tuleap\User\REST\MinimalUserRepresentation;
 
 class PullRequestMinimalRepresentation
 {
@@ -91,16 +92,25 @@ class PullRequestMinimalRepresentation
 
     public bool $is_git_reference_broken;
 
+    /**
+     * @var MinimalUserRepresentation[]
+     */
+    public array $reviewers;
+
     public function __construct(GitoliteAccessURLGenerator $gitolite_access_URL_generator)
     {
         $this->gitolite_access_URL_generator = $gitolite_access_URL_generator;
     }
 
+    /**
+     * @param MinimalUserRepresentation[] $reviewers
+     */
     public function buildMinimal(
         PullRequest $pull_request,
         GitRepository $repository,
         GitRepository $repository_dest,
         GitPullRequestReference $git_pull_request_reference,
+        array $reviewers,
     ) {
         $this->id = JsonCast::toInt($pull_request->getId());
 
@@ -123,6 +133,7 @@ class PullRequestMinimalRepresentation
         $this->status                  = $this->expandStatusName($pull_request->getStatus());
         $this->head                    = new PullRequestHEADRepresentation($pull_request);
         $this->is_git_reference_broken = $git_pull_request_reference->isGitReferenceBroken();
+        $this->reviewers               = $reviewers;
     }
 
     private function expandStatusName($status_acronym)
