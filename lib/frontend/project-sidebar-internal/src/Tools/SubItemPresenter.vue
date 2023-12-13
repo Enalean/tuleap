@@ -26,6 +26,8 @@
         v-bind:class="{
             active: is_active,
         }"
+        v-on:click="goToItem"
+        ref="root"
     >
         <a
             v-bind:href="sanitized_href"
@@ -47,7 +49,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { sanitizeURL } from "../url-sanitizer";
 import type { QuickLink } from "../configuration";
 
@@ -64,4 +66,11 @@ const sanitized_href = computed(() => sanitizeURL(props.href));
 const sanitized_quick_link_add_href = computed(() =>
     props.quick_link_add ? sanitizeURL(props.quick_link_add.href) : "",
 );
+const root = ref<HTMLInputElement | null>(null);
+
+function goToItem(event: MouseEvent): void {
+    if (root.value && event.target === root.value) {
+        window.location.href = props.href;
+    }
+}
 </script>
