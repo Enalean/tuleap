@@ -22,7 +22,7 @@
     "@tuleap/vue-strict-inject": "workspace:*",
     "@vueuse/core": "^8.7.3",
     "vue": "^3.3.4",
-    "vue-dompurify-html": "^4.0.0"
+    "vue-dompurify-html": "^5.0.0"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",

@@ -30,8 +30,8 @@ dependencies:
     specifier: ^3.3.4
     version: 3.3.4
   vue-dompurify-html:
-    specifier: ^4.0.0
-    version: 4.0.0(vue@3.3.4)
+    specifier: ^5.0.0
+    version: 5.0.0(vue@3.3.4)
 
 devDependencies:
   '@tuleap/build-system-configurator':
@@ -208,8 +208,8 @@ packages:
   /csstype@3.1.2:
     resolution: {integrity: sha512-I7K1Uu0MBPzaFKg4nI5Q7Vs2t+3gWWW648spaF+Rg7pI9ds18Ugn+lvg4SHczUdKlHI5LWBXyqfS8+DufyBsgQ==}
 
-  /dompurify@3.0.0:
-    resolution: {integrity: sha512-0g/yr2IJn4nTbxwL785YxS7/AvvgGFJw6LLWP+BzWzB1+BYOqPUT9Hy0rXrZh5HLdHnxH72aDdzvC9SdTjsuaA==}
+  /dompurify@3.0.6:
+    resolution: {integrity: sha512-ilkD8YEnnGh1zJ240uJsW7AzE+2qpbOUYjacomn3AvJ6J4JhKGSZ2nh4wUIXPZrEPppaCLx5jFe8T89Rk8tQ7w==}
     dev: false
 
   /estree-walker@2.0.2:
@@ -260,31 +260,13 @@ packages:
       vue: 3.3.4
     dev: false
 
-  /vue-demi@0.13.11(vue@3.3.4):
-    resolution: {integrity: sha512-IR8HoEEGM65YY3ZJYAjMlKygDQn25D5ajNFNoKh9RSDMQtlzCxtfQjdQgv9jjK+m3377SsJXY8ysq8kLCZL25A==}
-    engines: {node: '>=12'}
-    hasBin: true
-    requiresBuild: true
+  /vue-dompurify-html@5.0.0(vue@3.3.4):
+    resolution: {integrity: sha512-mirhe1ANWPU5wTCkR1IARtL0eXPFQGO8iLQNQWC+/X0HMeY1Ne+mh/EIvF5e970fME0UOCF/tMxDmqx5Lo679Q==}
     peerDependencies:
-      '@vue/composition-api': ^1.0.0-rc.1
-      vue: ^3.0.0-0 || ^2.6.0
-    peerDependenciesMeta:
-      '@vue/composition-api':
-        optional: true
+      vue: ^3.0.0
     dependencies:
+      dompurify: 3.0.6
       vue: 3.3.4
-    dev: false
-
-  /vue-dompurify-html@4.0.0(vue@3.3.4):
-    resolution: {integrity: sha512-yLxmZSoVNM+ZpRXwbrq6mwY7xidRd6W4P2/W8zLBdXSQckpmPVvmDaJALYH0jm0CgibNJbe4+E5j6wzOKwRKvg==}
-    peerDependencies:
-      vue: ^2.7.0 || ^3.0.0
-    dependencies:
-      dompurify: 3.0.0
-      vue: 3.3.4
-      vue-demi: 0.13.11(vue@3.3.4)
-    transitivePeerDependencies:
-      - '@vue/composition-api'
     dev: false
 
   /vue@3.3.4:
