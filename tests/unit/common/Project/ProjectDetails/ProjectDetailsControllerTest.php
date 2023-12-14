@@ -29,8 +29,8 @@ use Feedback;
 use ForgeAccess;
 use ForgeConfig;
 use HTTPRequest;
-use Mockery;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use ProjectHistoryDao;
 use ProjectManager;
@@ -44,66 +44,39 @@ use Tuleap\Project\Admin\Visibility\UpdateVisibilityChecker;
 use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\Icons\ProjectIconRetriever;
 use Tuleap\Project\Registration\Template\TemplateFactory;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\TroveCat\TroveCatLinkDao;
 use UGroupBinding;
 
 class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectVisibilityUserConfigurationPermissions
-     */
-    private $project_visibility_configuration;
-    /**
-     * @var EventManager|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $event_manager;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CSRFSynchronizerToken
-     */
-    private $csrf_token;
-    /**
-     * @var ProjectDetailsController
-     */
-    private $controller;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectHistoryDao
-     */
-    private $project_history_dao;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectDetailsDAO
-     */
-    private $project_details_dao;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $current_project;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|DescriptionFieldsFactory
-     */
-    private $description_fields_factory;
+    private ProjectVisibilityUserConfigurationPermissions&MockObject $project_visibility_configuration;
+    private EventManager&MockObject $event_manager;
+    private CSRFSynchronizerToken&MockObject $csrf_token;
+    private ProjectDetailsController $controller;
+    private ProjectHistoryDao&MockObject $project_history_dao;
+    private ProjectDetailsDAO&MockObject $project_details_dao;
+    private Project&MockObject $current_project;
+    private DescriptionFieldsFactory&MockObject $description_fields_factory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->description_fields_factory       = Mockery::mock(DescriptionFieldsFactory::class);
-        $this->current_project                  = Mockery::mock(Project::class);
-        $this->project_details_dao              = Mockery::mock(ProjectDetailsDAO::class);
-        $project_manager                        = Mockery::mock(ProjectManager::class);
-        $this->event_manager                    = Mockery::mock(EventManager::class);
-        $this->project_history_dao              = Mockery::mock(ProjectHistoryDao::class);
-        $project_visibility_presenter_builder   = Mockery::mock(ProjectVisibilityPresenterBuilder::class);
-        $this->project_visibility_configuration = Mockery::mock(
-            ProjectVisibilityUserConfigurationPermissions::class
-        );
-        $ugroup_binding                         = Mockery::mock(UGroupBinding::class);
-        $trove_cat_link_dao                     = Mockery::mock(TroveCatLinkDao::class);
-        $this->csrf_token                       = Mockery::mock(CSRFSynchronizerToken::class);
+        $this->description_fields_factory       = $this->createMock(DescriptionFieldsFactory::class);
+        $this->current_project                  = $this->createMock(Project::class);
+        $this->project_details_dao              = $this->createMock(ProjectDetailsDAO::class);
+        $project_manager                        = $this->createMock(ProjectManager::class);
+        $this->event_manager                    = $this->createMock(EventManager::class);
+        $this->project_history_dao              = $this->createMock(ProjectHistoryDao::class);
+        $project_visibility_presenter_builder   = $this->createMock(ProjectVisibilityPresenterBuilder::class);
+        $this->project_visibility_configuration = $this->createMock(ProjectVisibilityUserConfigurationPermissions::class);
+        $ugroup_binding                         = $this->createMock(UGroupBinding::class);
+        $trove_cat_link_dao                     = $this->createMock(TroveCatLinkDao::class);
+        $this->csrf_token                       = $this->createMock(CSRFSynchronizerToken::class);
 
         $this->controller = new ProjectDetailsController(
             $this->description_fields_factory,
@@ -117,12 +90,14 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $ugroup_binding,
             $trove_cat_link_dao,
             $this->csrf_token,
-            Mockery::mock(TemplateFactory::class),
+            $this->createMock(TemplateFactory::class),
             new ProjectIconRetriever(),
             new UpdateVisibilityChecker($this->event_manager),
         );
 
-        $GLOBALS['Response'] = Mockery::mock(BaseLayout::class);
+        $this->csrf_token->expects(self::once())->method('check');
+
+        $GLOBALS['Response'] = $this->createMock(BaseLayout::class);
     }
 
     protected function tearDown(): void
@@ -134,26 +109,33 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUpdateIsInvalidWhenProjectNameIsNotProvided(): void
     {
-        $this->csrf_token->shouldReceive('check')->once();
+        $request = $this->createMock(HTTPRequest::class);
+        $request
+            ->expects(self::exactly(2))
+            ->method('get')
+            ->withConsecutive(
+                ['form_group_name'],
+                ['form_shortdesc']
+            )
+            ->willReturnOnConsecutiveCalls(false, 'decription');
 
-        $request = Mockery::mock(HTTPRequest::class);
-        $request->shouldReceive('get')->once()->withArgs(['form_group_name'])->andReturn(false);
-        $request->shouldReceive('get')->once()->withArgs(['form_shortdesc'])->andReturn('decription');
-
-        $GLOBALS['Response']->shouldReceive('addFeedback')->once();
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback');
 
         $this->controller->update($request);
     }
 
     public function testUpdateIsInvalidWhenDescriptionIsNotProvidedAndFlagIsNotProvided(): void
     {
-        $this->csrf_token->shouldReceive('check')->once();
+        $request = $this->createMock(HTTPRequest::class);
+        $request
+            ->expects(self::exactly(2))
+            ->method('get')
+            ->withConsecutive(
+                ['form_group_name'],
+                ['form_shortdesc']
+            )->willReturnOnConsecutiveCalls('project_name', false);
 
-        $request = Mockery::mock(HTTPRequest::class);
-        $request->shouldReceive('get')->once()->withArgs(['form_group_name'])->andReturn('project_name');
-        $request->shouldReceive('get')->once()->withArgs(['form_shortdesc'])->andReturn(false);
-
-        $GLOBALS['Response']->shouldReceive('addFeedback')->once();
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback');
 
         $this->controller->update($request);
     }
@@ -162,13 +144,16 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         ForgeConfig::set('enable_not_mandatory_description', false);
 
-        $this->csrf_token->shouldReceive('check')->once();
+        $request = $this->createMock(HTTPRequest::class);
+        $request
+            ->expects(self::exactly(2))
+            ->method('get')
+            ->withConsecutive(
+                ['form_group_name'],
+                ['form_shortdesc']
+            )->willReturnOnConsecutiveCalls('project_name', false);
 
-        $request = Mockery::mock(HTTPRequest::class);
-        $request->shouldReceive('get')->once()->withArgs(['form_group_name'])->andReturn('project_name');
-        $request->shouldReceive('get')->once()->withArgs(['form_shortdesc'])->andReturn(false);
-
-        $GLOBALS['Response']->shouldReceive('addFeedback')->once();
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback');
 
         $this->controller->update($request);
     }
@@ -178,30 +163,45 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set('enable_not_mandatory_description', true);
         ForgeConfig::set('feature_flag_project_icon_display', '1');
 
-        $this->csrf_token->shouldReceive('check')->once();
+        $request = $this->createMock(HTTPRequest::class);
+        $request
+            ->expects(self::atLeast(8))
+            ->method('get')
+            ->withConsecutive(
+                ['form_group_name'],
+                ['form_shortdesc'],
+                ['group_id'],
+                ['group_id'],
+                ['form_group_name'],
+                ['form_shortdesc'],
+                ['group_id'],
+                ['form-group-name-icon'],
+            )
+            ->willReturnOnConsecutiveCalls(
+                'project_name',
+                false,
+                102,
+                102,
+                'project_name',
+                false,
+                102,
+                "😬",
+            );
+        $request->expects(self::atLeastOnce())->method('getCurrentUser')->willReturn(UserTestBuilder::buildWithDefaults());
+        $request->expects(self::atLeastOnce())->method('existAndNonEmpty')->willReturn(false);
+        $request->expects(self::exactly(2))->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
 
-        $request = Mockery::mock(HTTPRequest::class);
-        $request->shouldReceive('get')->twice()->withArgs(['form_group_name'])->andReturn('project_name');
-        $request->shouldReceive('get')->twice()->withArgs(['form_shortdesc'])->andReturn(false);
-        $request->shouldReceive('get')->atLeast()->once()->withArgs(['form-group-name-icon'])->andReturn("😬");
-        $request->shouldReceive('get')->atLeast()->once()->withArgs(['group_id'])->andReturn(102);
-        $request->shouldReceive('getCurrentUser')->atLeast()->once()->andReturn(Mockery::mock(PFUser::class));
-        $request->shouldReceive('existAndNonEmpty')->atLeast()->once()->andReturnFalse();
-        $request->shouldReceive('getProject')->twice()->andReturn(Mockery::mock(Project::class));
+        $this->description_fields_factory->expects(self::exactly(2))->method('getAllDescriptionFields')->willReturn([]);
 
-        $this->description_fields_factory->shouldReceive('getAllDescriptionFields')->twice()->andReturn([]);
+        $this->current_project->expects(self::once())->method('getProjectsDescFieldsValue')->willReturn([]);
 
-        $this->current_project->shouldReceive('getProjectsDescFieldsValue')->once()->andReturn([]);
+        $this->project_details_dao->expects(self::once())->method('updateGroupNameAndDescription');
+        $this->project_history_dao->expects(self::once())->method('groupAddHistory');
+        $this->event_manager->expects(self::once())->method('processEvent');
+        $this->project_visibility_configuration->expects(self::once())->method('canUserConfigureProjectVisibility')->willReturn(false);
+        $this->project_visibility_configuration->expects(self::once())->method('canUserConfigureTruncatedMail')->willReturn(false);
 
-        $this->project_details_dao->shouldReceive('updateGroupNameAndDescription')->once();
-        $this->project_history_dao->shouldReceive('groupAddHistory')->once();
-        $this->event_manager->shouldReceive('processEvent')->once();
-        $this->project_visibility_configuration->shouldReceive('canUserConfigureProjectVisibility')->once(
-        )->andReturnFalse();
-        $this->project_visibility_configuration->shouldReceive('canUserConfigureTruncatedMail')->once()->andReturnFalse(
-        );
-
-        $GLOBALS['Response']->shouldReceive('addFeedback')->once()->withArgs([Feedback::INFO, _('Update successful')]);
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(Feedback::INFO, _('Update successful'));
 
         $this->controller->update($request);
     }
@@ -211,18 +211,41 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set('feature_flag_project_icon_display', '1');
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 
-        $this->csrf_token->shouldReceive('check')->once();
-
-        $request = Mockery::mock(HTTPRequest::class);
-        $request->shouldReceive('get')->twice()->withArgs(['form_group_name'])->andReturn('project_name');
-        $request->shouldReceive('get')->twice()->withArgs(['form_shortdesc'])->andReturn('decription');
-        $request->shouldReceive('get')->atLeast()->once()->withArgs(['form-group-name-icon'])->andReturn("");
-        $request->shouldReceive('get')->atLeast()->once()->withArgs(['group_id'])->andReturn(102);
-        $request->shouldReceive('get')->withArgs(['project_visibility'])->andReturn(Project::ACCESS_PRIVATE_WO_RESTRICTED);
-        $request->shouldReceive('get')->withArgs(['term_of_service'])->andReturn(true);
+        $request = $this->createMock(HTTPRequest::class);
+        $request
+            ->expects(self::exactly(12))
+            ->method('get')
+            ->withConsecutive(
+                ['form_group_name'],
+                ['form_shortdesc'],
+                ['group_id'],
+                ['group_id'],
+                ['form_group_name'],
+                ['form_shortdesc'],
+                ['group_id'],
+                ['form-group-name-icon'],
+                ['group_id'],
+                ['project_visibility'],
+                ['term_of_service'],
+                ['project_visibility']
+            )
+            ->willReturnOnConsecutiveCalls(
+                'project_name',
+                'decription',
+                102,
+                102,
+                'project_name',
+                'decription',
+                102,
+                '',
+                102,
+                Project::ACCESS_PRIVATE_WO_RESTRICTED,
+                true,
+                Project::ACCESS_PRIVATE_WO_RESTRICTED
+            );
         $current_user = $this->createMock(PFUser::class);
-        $request->shouldReceive('getCurrentUser')->atLeast()->once()->andReturn($current_user);
-        $request->shouldReceive('existAndNonEmpty')->atLeast()->once()->andReturnFalse();
+        $request->expects(self::atLeastOnce())->method('getCurrentUser')->willReturn($current_user);
+        $request->expects(self::atLeastOnce())->method('existAndNonEmpty')->willReturn(false);
 
         $project = $this->createMock(Project::class);
         $project->method('getAdmins')->willReturn([
@@ -231,25 +254,22 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $project->method('getAccess')->willReturn(Project::ACCESS_PUBLIC);
         $project->method('getID')->willReturn(101);
         $current_user->method('isAdmin')->with(101)->willReturn(true);
-        $request->shouldReceive('getProject')->twice()->andReturn($project);
+        $request->expects(self::exactly(2))->method('getProject')->willReturn($project);
 
-        $this->description_fields_factory->shouldReceive('getAllDescriptionFields')->twice()->andReturn([]);
+        $this->description_fields_factory->expects(self::exactly(2))->method('getAllDescriptionFields')->willReturn([]);
 
-        $this->current_project->shouldReceive('getProjectsDescFieldsValue')->once()->andReturn([]);
+        $this->current_project->expects(self::once())->method('getProjectsDescFieldsValue')->willReturn([]);
 
-        $this->project_details_dao->shouldReceive('updateGroupNameAndDescription')->once();
-        $this->project_history_dao->shouldReceive('groupAddHistory')->once();
-        $this->event_manager->shouldReceive('processEvent')->once();
-        $this->project_visibility_configuration->shouldReceive('canUserConfigureProjectVisibility')->once(
-        )->andReturnTrue();
-        $this->project_visibility_configuration->shouldReceive('canUserConfigureTruncatedMail')->once()->andReturnFalse(
+        $this->project_details_dao->expects(self::once())->method('updateGroupNameAndDescription');
+        $this->project_history_dao->expects(self::once())->method('groupAddHistory');
+        $this->event_manager->expects(self::once())->method('processEvent');
+        $this->project_visibility_configuration->expects(self::once())->method('canUserConfigureProjectVisibility')->willReturn(true);
+        $this->project_visibility_configuration->expects(self::once())->method('canUserConfigureTruncatedMail')->willReturn(false);
+
+        $GLOBALS['Response']->expects(self::exactly(2))->method('addFeedback')->withConsecutive(
+            [Feedback::INFO, _('Update successful')],
+            [Feedback::ERROR, _('Cannot switch the project visibility because it will remove every restricted users from the project, and after that no administrator will be left.')],
         );
-
-        $GLOBALS['Response']->shouldReceive('addFeedback')->once()->withArgs(
-            [Feedback::ERROR, _('Cannot switch the project visibility because it will remove every restricted users from the project, and after that no administrator will be left.')]
-        );
-
-        $GLOBALS['Response']->shouldReceive('addFeedback')->once()->withArgs([Feedback::INFO, _('Update successful')]);
 
         $this->controller->update($request);
     }
@@ -258,30 +278,47 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         ForgeConfig::set('feature_flag_project_icon_display', '1');
 
-        $this->csrf_token->shouldReceive('check')->once();
+        $request = $this->createMock(HTTPRequest::class);
+        $request
+            ->expects(self::exactly(9))
+            ->method('get')
+            ->withConsecutive(
+                ['form_group_name'],
+                ['form_shortdesc'],
+                ['group_id'],
+                ['group_id'],
+                ['form_group_name'],
+                ['form_shortdesc'],
+                ['group_id'],
+                ['form-group-name-icon'],
+                ['group_id']
+            )
+            ->willReturnOnConsecutiveCalls(
+                'project_name',
+                'decription',
+                102,
+                102,
+                'project_name',
+                'decription',
+                102,
+                '',
+                102
+            );
+        $request->expects(self::atLeastOnce())->method('getCurrentUser')->willReturn(UserTestBuilder::buildWithDefaults());
+        $request->expects(self::atLeastOnce())->method('existAndNonEmpty')->willReturn(false);
+        $request->expects(self::exactly(2))->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
 
-        $request = Mockery::mock(HTTPRequest::class);
-        $request->shouldReceive('get')->twice()->withArgs(['form_group_name'])->andReturn('project_name');
-        $request->shouldReceive('get')->twice()->withArgs(['form_shortdesc'])->andReturn('decription');
-        $request->shouldReceive('get')->atLeast()->once()->withArgs(['form-group-name-icon'])->andReturn("");
-        $request->shouldReceive('get')->atLeast()->once()->withArgs(['group_id'])->andReturn(102);
-        $request->shouldReceive('getCurrentUser')->atLeast()->once()->andReturn(Mockery::mock(PFUser::class));
-        $request->shouldReceive('existAndNonEmpty')->atLeast()->once()->andReturnFalse();
-        $request->shouldReceive('getProject')->twice()->andReturn(Mockery::mock(Project::class));
+        $this->description_fields_factory->expects(self::exactly(2))->method('getAllDescriptionFields')->willReturn([]);
 
-        $this->description_fields_factory->shouldReceive('getAllDescriptionFields')->twice()->andReturn([]);
+        $this->current_project->expects(self::once())->method('getProjectsDescFieldsValue')->willReturn([]);
 
-        $this->current_project->shouldReceive('getProjectsDescFieldsValue')->once()->andReturn([]);
+        $this->project_details_dao->expects(self::once())->method('updateGroupNameAndDescription');
+        $this->project_history_dao->expects(self::once())->method('groupAddHistory');
+        $this->event_manager->expects(self::once())->method('processEvent');
+        $this->project_visibility_configuration->expects(self::once())->method('canUserConfigureProjectVisibility')->willReturn(false);
+        $this->project_visibility_configuration->expects(self::once())->method('canUserConfigureTruncatedMail')->willReturn(false);
 
-        $this->project_details_dao->shouldReceive('updateGroupNameAndDescription')->once();
-        $this->project_history_dao->shouldReceive('groupAddHistory')->once();
-        $this->event_manager->shouldReceive('processEvent')->once();
-        $this->project_visibility_configuration->shouldReceive('canUserConfigureProjectVisibility')->once(
-        )->andReturnFalse();
-        $this->project_visibility_configuration->shouldReceive('canUserConfigureTruncatedMail')->once()->andReturnFalse(
-        );
-
-        $GLOBALS['Response']->shouldReceive('addFeedback')->once()->withArgs([Feedback::INFO, _('Update successful')]);
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(Feedback::INFO, _('Update successful'));
 
         $this->controller->update($request);
     }
