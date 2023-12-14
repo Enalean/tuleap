@@ -52,9 +52,18 @@ enable_plugins() {
         botmattermost_agiledashboard \
         botmattermost_git \
         statistics \
+        enalean_licensemanager \
         webauthn
 
     sed -i -e 's#/var/lib/codendi#/var/lib/tuleap#g' /etc/tuleap/plugins/docman/etc/docman.inc
+
+    instantiate_licence_manager
+}
+
+instantiate_licence_manager() {
+    echo "Create licence file and define a limit of max users to 1"
+    sudo -u codendiadm mkdir -p /etc/tuleap/plugins/enalean_licensemanager/etc
+    sudo -u codendiadm echo 1 > /etc/tuleap/plugins/enalean_licensemanager/etc/max_users.txt
 }
 
 load_project() {
