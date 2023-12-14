@@ -16,25 +16,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Layout;
+namespace Tuleap\AgileDashboard\Milestone\Sidebar;
 
-final class SidebarPromotedItemPresenter
+interface RetrieveMilestonesWithSubMilestones
 {
-    /**
-     * @param SidebarPromotedItemPresenter[] $items
-     */
-    public function __construct(
-        public readonly string $href,
-        public readonly string $label,
-        public readonly string $description,
-        public readonly bool $is_active,
-        public readonly ?PromotedItemQuickLinkPresenter $quick_link_add,
-        public readonly array $items,
-    ) {
-    }
+    public function retrieveMilestonesWithSubMilestones(int $project_id, int $parent_tracker_id): array;
 }

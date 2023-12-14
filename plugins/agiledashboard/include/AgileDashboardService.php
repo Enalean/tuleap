@@ -23,11 +23,20 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard;
 
+use BackendLogger;
 use EventManager;
 use PFUser;
-use Tuleap\AgileDashboard\Milestone\AgileDashboardPromotedMilestonesRetriever;
+use Planning_MilestoneFactory;
+use PlanningFactory;
+use Tracker_ArtifactFactory;
+use Tuleap\AgileDashboard\Milestone\Sidebar\MilestoneDao;
+use Tuleap\AgileDashboard\Milestone\Sidebar\AgileDashboardPromotedMilestonesRetriever;
 use Tuleap\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarDao;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\Kanban\CheckSplitKanbanConfiguration;
+use Tuleap\Layout\SidebarPromotedItemPresenter;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 class AgileDashboardService extends \Service
 {
@@ -82,12 +91,23 @@ class AgileDashboardService extends \Service
         return AgileDashboardServiceHomepageUrlBuilder::buildSelf()->getUrl($this->project);
     }
 
+    /**
+     * @return list<SidebarPromotedItemPresenter>
+     */
     public function getPromotedItemPresenters(PFUser $user, ?string $active_promoted_item_id): array
     {
+        $planning_factory = PlanningFactory::build();
+
         return (new AgileDashboardPromotedMilestonesRetriever(
-            \Planning_MilestoneFactory::build(),
+            Planning_MilestoneFactory::build(),
+            new MilestoneDao(),
             $this->project,
-            new MilestonesInSidebarDao()
+            new MilestonesInSidebarDao(),
+            Tracker_ArtifactFactory::instance(),
+            $planning_factory,
+            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory),
+            SemanticTimeframeBuilder::build(),
+            BackendLogger::getDefaultLogger()
         ))->getSidebarPromotedMilestones($user);
     }
 

@@ -137,6 +137,7 @@ final class KanbanService extends \Service implements ServiceForCreation
                     '/kanban/' . urlencode((string) $kanban_for_project->getId()) . '?should-display-artifact-creation-modal=true',
                     $kanban_for_project->getName()
                 ),
+                []
             );
         }
 

@@ -38,7 +38,6 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
 use Tuleap\Tracker\Artifact\Changeset\CreateInitialChangeset;
-use Tuleap\Tracker\Artifact\Changeset\InitialChangesetCreator;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
@@ -68,7 +67,7 @@ class TrackerArtifactCreator
     }
 
     public static function build(
-        InitialChangesetCreator $changeset_creator_base,
+        CreateInitialChangeset $changeset_creator_base,
         Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
         LoggerInterface $logger,
     ): self {

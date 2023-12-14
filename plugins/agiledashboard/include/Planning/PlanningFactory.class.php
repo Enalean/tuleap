@@ -28,6 +28,11 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
     private TrackerFactory $tracker_factory;
     private PlanningPermissionsManager $planning_permissions_manager;
 
+    /**
+     * @var array<int, Planning>
+     */
+    private array $instances = [];
+
     public function __construct(
         PlanningDao $dao,
         TrackerFactory $tracker_factory,
@@ -367,6 +372,10 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
      */
     public function getPlanningByPlanningTracker(Tracker $planning_tracker): ?Planning
     {
+        if (array_key_exists($planning_tracker->getId(), $this->instances)) {
+            return $this->instances[$planning_tracker->getId()];
+        }
+
         $planning = $this->dao->searchByMilestoneTrackerId($planning_tracker->getId());
         if ($planning === null) {
             return null;
@@ -383,6 +392,7 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
         );
         $returned->setPlanningTracker($this->getPlanningTracker($returned));
         $returned->setBacklogTrackers($this->getBacklogTrackers($returned));
+        $this->instances[$planning_tracker->getId()] = $returned;
         return $returned;
     }
 
