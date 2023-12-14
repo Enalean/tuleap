@@ -25,6 +25,7 @@ namespace Tuleap\Test\Builders;
 
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetCollection;
+use Tuleap\Layout\CssAssetGeneric;
 use Tuleap\Layout\FooterConfiguration;
 use Tuleap\Layout\HeaderConfiguration;
 use Tuleap\Layout\JavascriptAssetGeneric;
@@ -81,6 +82,16 @@ final class TestLayout extends BaseLayout
     public function getJavascriptAssets(): array
     {
         return $this->javascript_assets;
+    }
+
+    public function addCssAsset(CssAssetGeneric $asset): void
+    {
+        $this->css_assets = $this->css_assets->merge(new CssAssetCollection([$asset]));
+    }
+
+    public function getCssAssets(): CssAssetCollection
+    {
+        return $this->css_assets;
     }
 
     protected function getUser()
