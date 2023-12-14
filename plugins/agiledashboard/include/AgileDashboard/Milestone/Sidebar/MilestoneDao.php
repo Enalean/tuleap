@@ -59,12 +59,12 @@ final class MilestoneDao extends DataAccessObject implements RetrieveMilestonesW
                ) ON (parent.tracker_id = SemanticStatus_Parent.tracker_id AND Changeset_Parent.id = ChangesetValue_Parent.changeset_id)
 
                    -- Get submilestones
-               LEFT JOIN tracker_field as TrakcerField ON (
-                   parent.tracker_id = TrakcerField.tracker_id
-                   AND TrakcerField.formElement_type = 'art_link'
+               LEFT JOIN tracker_field as TrackerField ON (
+                   parent.tracker_id = TrackerField.tracker_id
+                   AND TrackerField.formElement_type = 'art_link'
                )
                LEFT JOIN tracker_changeset_value AS CV ON (
-                   CV.field_id = TrakcerField.id
+                   CV.field_id = TrackerField.id
                    AND CV.changeset_id = parent.last_changeset_id
                )
                LEFT JOIN tracker_changeset_value_artifactlink AS ChangesetValueArtlink ON (
@@ -76,6 +76,10 @@ final class MilestoneDao extends DataAccessObject implements RetrieveMilestonesW
                    INNER JOIN tracker AS submilestone_tracker ON (
                        submilestone_tracker.id = submilestone.tracker_id
                        AND submilestone_tracker.deletion_date IS NULL
+                   )
+                   INNER JOIN tracker_hierarchy as hierarchy ON (
+                       hierarchy.parent_id = ? AND
+                       hierarchy.child_id = submilestone.tracker_id
                    )
                    INNER JOIN plugin_agiledashboard_planning AS planning ON (
                        planning.planning_tracker_id = submilestone.tracker_id AND planning.group_id = ?
@@ -97,6 +101,6 @@ final class MilestoneDao extends DataAccessObject implements RetrieveMilestonesW
                ;
                SQL;
 
-        return $this->getDB()->run($sql, $project_id, $parent_tracker_id);
+        return $this->getDB()->run($sql, $parent_tracker_id, $project_id, $parent_tracker_id);
     }
 }

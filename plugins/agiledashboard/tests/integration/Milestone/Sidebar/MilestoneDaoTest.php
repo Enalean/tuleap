@@ -60,6 +60,7 @@ final class MilestoneDaoTest extends TestCase
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
         $db->run('DELETE FROM plugin_agiledashboard_planning');
         $db->run('DELETE FROM tracker_artifact');
+        $db->run('DELETE FROM tracker_hierarchy');
     }
 
     public static function tearDownAfterClass(): void
@@ -67,6 +68,7 @@ final class MilestoneDaoTest extends TestCase
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
         $db->run('DELETE FROM plugin_agiledashboard_planning');
         $db->run('DELETE FROM tracker_artifact');
+        $db->run('DELETE FROM tracker_hierarchy');
     }
 
     protected function setUp(): void
@@ -272,6 +274,31 @@ final class MilestoneDaoTest extends TestCase
         ], $result[0]);
     }
 
+    public function testItRetrievesOnlySubMilestonesInHierarchy(): void
+    {
+        $this->createMilestoneWithOpenSubMilestoneWithoutHierarchy();
+
+        $result = $this->dao->retrieveMilestonesWithSubMilestones($this->project_id, $this->release_tracker_id);
+
+        self::assertCount(1, $result);
+        self::assertEquals([
+            'parent_id'                             => $this->milestone_id,
+            'parent_tracker'                        => $this->release_tracker_id,
+            'parent_changeset'                      => $this->milestone_changeset_id,
+            'parent_submitted_by'                   => 143,
+            'parent_submitted_on'                   => 1234567890,
+            'parent_use_artifact_permissions'       => 0,
+            'parent_per_tracker_artifact_id'        => 1,
+            'submilestone_id'                       => null,
+            'submilestone_tracker'                  => null,
+            'submilestone_changeset'                => null,
+            'submilestone_submitted_by'             => null,
+            'submilestone_submitted_on'             => null,
+            'submilestone_use_artifact_permissions' => null,
+            'submilestone_per_tracker_artifact_id'  => null,
+        ], $result[0]);
+    }
+
     private function createMilestone(): void
     {
         $builder = new DatabaseBuilder();
@@ -282,6 +309,14 @@ final class MilestoneDaoTest extends TestCase
     }
 
     private function createMilestoneWithOpenSubMilestone(): void
+    {
+        $builder = new DatabaseBuilder();
+
+        $this->createMilestoneWithOpenSubMilestoneWithoutHierarchy();
+        $builder->buildHierarchy($this->release_tracker_id, $this->sprint_tracker_id);
+    }
+
+    private function createMilestoneWithOpenSubMilestoneWithoutHierarchy(): void
     {
         $builder = new DatabaseBuilder();
 
