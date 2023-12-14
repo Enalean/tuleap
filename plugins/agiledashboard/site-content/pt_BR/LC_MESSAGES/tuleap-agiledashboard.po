@@ -454,7 +454,7 @@ msgstr ""
 msgid "Service Backlog is disabled."
 msgstr ""
 
-msgid "Sidebar shows only the last 5 open milestones"
+msgid "Sidebar shows only the last 5 current milestones"
 msgstr ""
 
 msgid "Some items are not linked to this milestone."
@@ -534,7 +534,7 @@ msgid ""
 "its hierarchy."
 msgstr ""
 
-msgid "The sidebar will display the last 5 open milestones."
+msgid "The sidebar will display the last 5 current milestones."
 msgstr ""
 
 #, php-format

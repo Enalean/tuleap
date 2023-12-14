@@ -116,7 +116,7 @@ class AgileDashboardService extends \Service
         if ((new MilestonesInSidebarDao())->shouldSidebarDisplayLastMilestones((int) $this->project->getID())) {
             return \dgettext(
                 'tuleap-agiledashboard',
-                'Sidebar shows only the last 5 open milestones',
+                'Sidebar shows only the last 5 current milestones',
             );
         }
 
