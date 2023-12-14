@@ -62,7 +62,8 @@ class HelpDropdownPresenterBuilder
                 ),
                 "/help/",
                 "fa-life-saver",
-                $this->uri_sanitizer
+                $this->uri_sanitizer,
+                'help-link'
             ),
             HelpLinkPresenter::build(
                 dgettext(
@@ -71,7 +72,8 @@ class HelpDropdownPresenterBuilder
                 ),
                 $documentation,
                 "fa-book",
-                $this->uri_sanitizer
+                $this->uri_sanitizer,
+                'documentation-link'
             ),
         ];
 
@@ -105,7 +107,8 @@ class HelpDropdownPresenterBuilder
             ),
             $release_note_link,
             "fa-star",
-            $this->uri_sanitizer
+            $this->uri_sanitizer,
+            'release-note-link'
         );
     }
 
@@ -135,7 +138,7 @@ class HelpDropdownPresenterBuilder
         $links = [];
         foreach ($additional_tabs as $link) {
             if (isset($link['link'], $link['title']) && is_string($link['link']) && is_string($link['title'])) {
-                $links[] = HelpLinkPresenter::build($link['title'], $link['link'], '', $this->uri_sanitizer);
+                $links[] = HelpLinkPresenter::build($link['title'], $link['link'], '', $this->uri_sanitizer, 'extra-tab-link');
             }
         }
 

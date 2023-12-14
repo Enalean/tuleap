@@ -1,6 +1,6 @@
 {{# help_dropdown }}
     <div class="tlp-dropdown help-dropdown">
-        <button type="button" aria-label="{{# gettext }}Help{{/ gettext }}" id="help"
+        <button type="button" aria-label="{{# gettext }}Help{{/ gettext }}" id="help" data-test="help-button"
                 class="tlp-button-primary tlp-button-outline {{^ has_release_note_been_seen }} new-release-note-available {{/ has_release_note_been_seen }}">
             <svg class="svg-question-mark" width="12" height="20" viewBox="0 0 12 20" fill="none"
                  xmlns="http://www.w3.org/2000/svg">
@@ -14,7 +14,7 @@
         </button>
         <div class="tlp-dropdown-menu tlp-dropdown-menu-top" role="menu">
             {{# platform_links }}
-                <a href="{{ link }}" class="help-dropdown-link dropdown-item tlp-dropdown-menu-item" role="menuitem">
+                <a href="{{ link }}" class="help-dropdown-link dropdown-item tlp-dropdown-menu-item" role="menuitem" data-test="{{ data_test }}">
                     <i class="tlp-dropdown-menu-item-icon fa fa-fw {{ icon }}"></i>{{ title }}
                 </a>
             {{/ platform_links }}
