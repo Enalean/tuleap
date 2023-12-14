@@ -28,7 +28,6 @@ use BackendSVN;
 use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ProjectManager;
-use Tuleap\SVNCore\SVNAccessFile;
 
 final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -207,9 +206,6 @@ final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->backend->shouldReceive('getUGroupFromRow')->andReturns($ugroup);
         $this->backend->shouldReceive('getUGroupDao')->andReturns($ugdao);
 
-        $access_file = new SVNAccessFile();
-        $this->backend->shouldReceive('_getSVNAccessFile')->andReturns($access_file);
-
         $this->assertEquals($this->backend->createProjectSVN(142), true);
         $this->assertTrue(is_dir(ForgeConfig::get('svn_prefix') . "/TestProj"), "SVN dir should be created");
         $this->assertTrue(is_dir(ForgeConfig::get('svn_prefix') . "/TestProj/hooks"), "hooks dir should be created");
@@ -305,9 +301,6 @@ final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->backend->shouldReceive('getUGroupDao')->andReturns($ugdao);
         $this->backend->shouldReceive('getSVNAccessGroups')->andReturns("");
 
-        $access_file = new SVNAccessFile();
-        $this->backend->shouldReceive('_getSVNAccessFile')->andReturns($access_file);
-
         $this->assertEquals($this->backend->createProjectSVN(142), true);
         $this->assertDirectoryExists(ForgeConfig::get('svn_prefix') . "/TestProj", "SVN dir should be created");
         $this->assertTrue(is_file(ForgeConfig::get('svn_prefix') . "/TestProj/.SVNAccessFile"), "SVN access file should be created");
@@ -391,9 +384,6 @@ final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $ugdao = \Mockery::spy(\UGroupDao::class);
         $ugdao->shouldReceive('searchByGroupId')->andReturns([]);
-
-        $access_file = new SVNAccessFile();
-        $this->backend->shouldReceive('_getSVNAccessFile')->andReturns($access_file);
 
         $this->backend->shouldReceive('getProjectManager')->andReturns($pm);
         $this->backend->shouldReceive('getUGroupDao')->andReturns($ugdao);

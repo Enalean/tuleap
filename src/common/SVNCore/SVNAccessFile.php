@@ -19,8 +19,6 @@
 
 namespace Tuleap\SVNCore;
 
-use Project;
-use SVN_AccessFile_Writer;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\Option\Option;
 
@@ -57,7 +55,9 @@ class SVNAccessFile
      */
     private ?string $ugroupOldName = null;
 
-    private string $platformBlock = '';
+    public function __construct(private readonly SvnAccessFileDefaultBlock $platformBlock)
+    {
+    }
 
     /**
      * Detect if a line is correctly formatted and corresponds to a defined group
@@ -147,26 +147,26 @@ class SVNAccessFile
     /**
      * Update renamed ugroup line or comment invalid ugroup lines for all lines of .SVNAccessFile
      */
-    public function parseGroupLines(Project $project, string $contents): SVNAccessFileContentAndFaults
+    public function parseGroupLines(string $contents): SVNAccessFileContentAndFaults
     {
         $faults = new CollectionOfSVNAccessFileFaults();
-        return $this->parse($project->getSVNRootPath(), $contents, $faults);
+        return $this->parse($contents, $faults);
     }
 
-    public function parseGroupLinesByRepositories(string $svn_dir, string $contents): SVNAccessFileContentAndFaults
+    public function parseGroupLinesByRepositories(string $contents): SVNAccessFileContentAndFaults
     {
         $faults = new CollectionOfSVNAccessFileFaults();
-        return $this->parse($svn_dir, $contents, $faults);
+        return $this->parse($contents, $faults);
     }
 
-    private function parse(string $svn_dir, string $contents, CollectionOfSVNAccessFileFaults $faults): SVNAccessFileContentAndFaults
+    private function parse(string $contents, CollectionOfSVNAccessFileFaults $faults): SVNAccessFileContentAndFaults
     {
-        return new SVNAccessFileContentAndFaults($this->parseGroup($svn_dir, $contents, $faults), $faults);
+        return new SVNAccessFileContentAndFaults($this->parseGroup($contents, $faults), $faults);
     }
 
-    private function parseGroup(string $svn_dir, string $contents, CollectionOfSVNAccessFileFaults $faults): string
+    private function parseGroup(string $contents, CollectionOfSVNAccessFileFaults $faults): string
     {
-        $defaultLines   = explode("\n", $this->getPlatformBlock($svn_dir));
+        $defaultLines   = explode("\n", $this->platformBlock->content);
         $groups         = [];
         $currentSection = -1;
         foreach ($defaultLines as $line) {
@@ -249,25 +249,5 @@ class SVNAccessFile
     private function getGroupMatcher(string $groupPattern): string
     {
         return '/^@' . $groupPattern . '\s*=/i';
-    }
-
-    /**
-     * Returns permissions defined by Tuleap (based on ugroups)
-     */
-    protected function getPlatformBlock(string $project_svnroot): string
-    {
-        if (! $this->platformBlock) {
-            $accessfile          = new SVN_AccessFile_Writer($project_svnroot);
-            $this->platformBlock = $accessfile->read_defaults(true);
-        }
-        return $this->platformBlock;
-    }
-
-    /**
-     * Define the platform default groups & root perms
-     */
-    public function setPlatformBlock(string $block): void
-    {
-        $this->platformBlock = $block;
     }
 }

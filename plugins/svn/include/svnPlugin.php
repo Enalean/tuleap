@@ -216,7 +216,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             new XML_SimpleXMLCDATAFactory(),
             $this->getMailNotificationManager(),
             self::getLogger(),
-            new AccessFileReader()
+            new AccessFileReader(\Tuleap\SVNCore\SvnAccessFileDefaultBlockGenerator::instance())
         );
     }
 
@@ -427,7 +427,8 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                 $this->getAccessFileHistoryFactory(),
                 $this->getProjectHistoryDao(),
                 $this->getProjectHistoryFormatter(),
-                $this->getBackendSVN()
+                $this->getBackendSVN(),
+                \Tuleap\SVNCore\SvnAccessFileDefaultBlockGenerator::instance(),
             );
         }
 

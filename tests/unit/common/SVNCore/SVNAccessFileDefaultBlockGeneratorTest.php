@@ -31,7 +31,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\CheckProjectAccessStub;
 use Tuleap\Test\Stubs\UGroupRetrieverStub;
 
-final class SvnAccessFileDefaultBlockGeneratorTest extends TestCase
+final class SVNAccessFileDefaultBlockGeneratorTest extends TestCase
 {
     /**
      * @dataProvider membersDataProvider
@@ -46,16 +46,18 @@ final class SvnAccessFileDefaultBlockGeneratorTest extends TestCase
             CheckProjectAccessStub::withValidAccess(),
             $event_manager,
         );
-        self::assertSame(
-            <<<EOT
-            [groups]
-            $expected
+        self::assertEquals(
+            new SvnAccessFileDefaultBlock(
+                <<<EOT
+                [groups]
+                $expected
 
-            [/]
-            * = r
-            @members = rw
+                [/]
+                * = r
+                @members = rw
 
-            EOT,
+                EOT
+            ),
             $generator->getDefaultBlock(ProjectTestBuilder::aProject()->build())
         );
     }
@@ -150,17 +152,19 @@ final class SvnAccessFileDefaultBlockGeneratorTest extends TestCase
             CheckProjectAccessStub::withValidAccess(),
             $event_manager,
         );
-        self::assertSame(
-            <<<EOT
-            [groups]
-            members = jmalko, csteven, disciplus_simplex
-            Developers = csteven, disciplus_simplex
+        self::assertEquals(
+            new SvnAccessFileDefaultBlock(
+                <<<EOT
+                [groups]
+                members = jmalko, csteven, disciplus_simplex
+                Developers = csteven, disciplus_simplex
 
-            [/]
-            $expected
-            @members = rw
+                [/]
+                $expected
+                @members = rw
 
-            EOT,
+                EOT
+            ),
             $generator->getDefaultBlock($project)
         );
     }

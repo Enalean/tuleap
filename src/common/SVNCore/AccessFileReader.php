@@ -26,9 +26,13 @@ namespace Tuleap\SVNCore;
  */
 class AccessFileReader
 {
-    private const FILENAME     = ".SVNAccessFile";
-    private const BEGIN_MARKER = '# BEGIN CODENDI DEFAULT';
-    private const END_MARKER   = '# END CODENDI DEFAULT';
+    private const FILENAME    = ".SVNAccessFile";
+    public const BEGIN_MARKER = '# BEGIN CODENDI DEFAULT SETTINGS - DO NOT REMOVE';
+    public const END_MARKER   = '# END CODENDI DEFAULT SETTINGS';
+
+    public function __construct(private readonly SvnAccessFileDefaultBlockGeneratorInterface $default_block_generator)
+    {
+    }
 
     public function readContentBlock(Repository $repository): string
     {
@@ -42,7 +46,6 @@ class AccessFileReader
 
     public function getAccessFileContent(Repository $repository): SvnAccessFileContent
     {
-        $default = '';
         $content = '';
 
         $in_default_block = false;
@@ -57,14 +60,12 @@ class AccessFileReader
                 continue;
             }
 
-            if ($in_default_block) {
-                $default .= $line;
-            } else {
+            if (! $in_default_block) {
                 $content .= $line;
             }
         }
 
-        return new SvnAccessFileContent($default, $content);
+        return new SvnAccessFileContent($this->default_block_generator->getDefaultBlock($repository->getProject())->content, $content);
     }
 
     private function isDefaultBlockStarting(string $line): bool

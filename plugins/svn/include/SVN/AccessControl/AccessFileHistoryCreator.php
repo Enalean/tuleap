@@ -20,55 +20,30 @@
 
 namespace Tuleap\SVN\AccessControl;
 
-use SVN_AccessFile_Writer;
+use Tuleap\SVNCore\SVNAccessFileWriter;
 use Tuleap\SVNCore\SVNAccessFile;
 use Tuleap\SVN\Repository\ProjectHistoryFormatter;
 use Tuleap\SVNCore\Repository;
 use Tuleap\SVNCore\CollectionOfSVNAccessFileFaults;
 use Tuleap\SVNCore\SVNAccessFileContentAndFaults;
+use Tuleap\SVNCore\SvnAccessFileDefaultBlockGeneratorInterface;
 
 class AccessFileHistoryCreator
 {
-    /**
-     * @var AccessFileHistoryFactory
-     */
-    private $access_file_factory;
-
-    /**
-     * @var AccessFileHistoryDao
-     */
-    private $dao;
-    /**
-     * @var \ProjectHistoryDao
-     */
-    private $project_history_dao;
-    /**
-     * @var ProjectHistoryFormatter
-     */
-    private $project_history_formatter;
-    /**
-     * @var \BackendSVN
-     */
-    private $backend_SVN;
-
     public function __construct(
-        AccessFileHistoryDao $dao,
-        AccessFileHistoryFactory $access_file_factory,
-        \ProjectHistoryDao $project_history_dao,
-        ProjectHistoryFormatter $project_history_formatter,
-        \BackendSVN $backend_SVN,
+        private readonly AccessFileHistoryDao $dao,
+        private readonly AccessFileHistoryFactory $access_file_factory,
+        private readonly \ProjectHistoryDao $project_history_dao,
+        private readonly ProjectHistoryFormatter $project_history_formatter,
+        private readonly \BackendSVN $backend_SVN,
+        private readonly SvnAccessFileDefaultBlockGeneratorInterface $default_block_generator,
     ) {
-        $this->dao                       = $dao;
-        $this->access_file_factory       = $access_file_factory;
-        $this->project_history_dao       = $project_history_dao;
-        $this->project_history_formatter = $project_history_formatter;
-        $this->backend_SVN               = $backend_SVN;
     }
 
     /**
      * @throws CannotCreateAccessFileHistoryException
      */
-    public function create(Repository $repository, $content, $timestamp, SVN_AccessFile_Writer $access_file_writer): CollectionOfSVNAccessFileFaults
+    public function create(Repository $repository, $content, $timestamp, SVNAccessFileWriter $access_file_writer): CollectionOfSVNAccessFileFaults
     {
         [$file_history, $faults] = $this->storeInDB($repository, $content, $timestamp);
         $this->logHistory($repository, $content);
@@ -105,7 +80,7 @@ class AccessFileHistoryCreator
 
         $current_version = $this->access_file_factory->getCurrentVersion($repository);
 
-        $accessfile = new SVN_AccessFile_Writer($repository->getSystemPath());
+        $accessfile = new SVNAccessFileWriter($repository->getSystemPath());
         $this->saveAccessFile($repository, $current_version, $accessfile);
 
         if ($log_history) {
@@ -115,16 +90,16 @@ class AccessFileHistoryCreator
 
     private function cleanContent(Repository $repository, string $content): SVNAccessFileContentAndFaults
     {
-        $access_file = new SVNAccessFile();
-        return $access_file->parseGroupLinesByRepositories($repository->getSystemPath(), trim($content));
+        $access_file = new SVNAccessFile($this->default_block_generator->getDefaultBlock($repository->getProject()));
+        return $access_file->parseGroupLinesByRepositories(trim($content));
     }
 
     /**
      * @throws CannotCreateAccessFileHistoryException
      */
-    private function saveAccessFile(Repository $repository, AccessFileHistory $history, SVN_AccessFile_Writer $access_file_writer)
+    private function saveAccessFile(Repository $repository, AccessFileHistory $history, SVNAccessFileWriter $access_file_writer)
     {
-        if (! $access_file_writer->write_with_defaults($history->getContent())) {
+        if (! $access_file_writer->writeWithDefaults($this->default_block_generator->getDefaultBlock($repository->getProject()), $history->getContent())) {
             $this->checkAccessFileWriteError($repository, $access_file_writer);
         }
     }
@@ -134,7 +109,7 @@ class AccessFileHistoryCreator
      */
     public function saveAccessFileAndForceDefaultGeneration(Repository $repository, AccessFileHistory $history)
     {
-        $accessfile          = new SVN_AccessFile_Writer($repository->getSystemPath());
+        $accessfile          = new SVNAccessFileWriter($repository->getSystemPath());
         $access_file_content = $this->backend_SVN->exportSVNAccessFileDefaultBloc($repository->getProject()) .
             $history->getContent();
         if (! $accessfile->write($access_file_content)) {
@@ -221,7 +196,7 @@ class AccessFileHistoryCreator
     /**
      * @throws CannotCreateAccessFileHistoryException
      */
-    private function checkAccessFileWriteError(Repository $repository, SVN_AccessFile_Writer $access_file)
+    private function checkAccessFileWriteError(Repository $repository, SVNAccessFileWriter $access_file)
     {
         if ($access_file->isErrorFile()) {
             throw new CannotCreateAccessFileHistoryException(

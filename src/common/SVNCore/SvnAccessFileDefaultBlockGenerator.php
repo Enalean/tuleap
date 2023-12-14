@@ -35,9 +35,12 @@ use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\UGroupRetriever;
 use UGroupManager;
 
-final class SvnAccessFileDefaultBlockGenerator
+final class SvnAccessFileDefaultBlockGenerator implements SvnAccessFileDefaultBlockGeneratorInterface
 {
     private static ?self $instance;
+    /**
+     * @var array<int, SvnAccessFileDefaultBlock>
+     */
     private array $project_default_blocks_cache = [];
 
     public function __construct(private readonly UGroupRetriever $ugroup_retriever, private readonly CheckProjectAccess $check_project_access, private readonly EventDispatcherInterface $dispatcher)
@@ -61,12 +64,14 @@ final class SvnAccessFileDefaultBlockGenerator
         return self::$instance;
     }
 
-    public function getDefaultBlock(Project $project): string
+    public function getDefaultBlock(Project $project): SvnAccessFileDefaultBlock
     {
         $project_id = (int) $project->getID();
         if (! isset($this->project_default_blocks_cache[$project_id])) {
             $default_block_plugin_override                   = $this->getDefaultBlockPluginOverride($project);
-            $this->project_default_blocks_cache[$project_id] = $this->getSVNAccessGroups($project, $default_block_plugin_override) . "\n" . $this->getSVNAccessRootPathDef($project, $default_block_plugin_override);
+            $this->project_default_blocks_cache[$project_id] = new SvnAccessFileDefaultBlock(
+                $this->getSVNAccessGroups($project, $default_block_plugin_override) . "\n" . $this->getSVNAccessRootPathDef($project, $default_block_plugin_override)
+            );
         }
 
         return $this->project_default_blocks_cache[$project_id];

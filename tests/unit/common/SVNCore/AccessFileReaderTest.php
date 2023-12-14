@@ -21,11 +21,16 @@
 
 namespace Tuleap\SVNCore;
 
-use PHPUnit\Framework\MockObject\MockObject;
+use Project;
+use Tuleap\ForgeConfigSandbox;
+use Tuleap\SVN\Repository\SvnRepository;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class AccessFileReaderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private Repository&MockObject $repository;
+    use ForgeConfigSandbox;
+
+    private Repository $repository;
     private AccessFileReader $reader;
 
     protected function setUp(): void
@@ -33,10 +38,22 @@ final class AccessFileReaderTest extends \Tuleap\Test\PHPUnit\TestCase
         parent::setUp();
         $fixtures_dir = __DIR__ . '/_fixtures';
 
-        $this->repository = $this->createMock(Repository::class);
-        $this->repository->method('getSystemPath')->willReturn($fixtures_dir);
+        \ForgeConfig::set('sys_data_dir', $fixtures_dir);
 
-        $this->reader = new AccessFileReader();
+        $this->repository = SvnRepository::buildActiveRepository(-1, 'foo', ProjectTestBuilder::aProject()->build());
+
+        $default_block_generator = new class implements SvnAccessFileDefaultBlockGeneratorInterface {
+            public function getDefaultBlock(Project $project): SvnAccessFileDefaultBlock
+            {
+                return new SvnAccessFileDefaultBlock(<<<EOT
+
+                le default
+
+                EOT);
+            }
+        };
+
+        $this->reader = new AccessFileReader($default_block_generator);
     }
 
     public function testItReadsTheDefaultBlock(): void

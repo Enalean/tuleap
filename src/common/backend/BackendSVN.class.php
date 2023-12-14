@@ -19,8 +19,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\SVNCore\AccessFileReader;
 use Tuleap\SVNCore\GetAllRepositories;
 use Tuleap\SVNCore\SVNAccessFile;
+use Tuleap\SVNCore\SvnAccessFileDefaultBlockGenerator;
 use Tuleap\SVNCore\SvnCoreUsage;
 use Tuleap\SVNCore\Exception\SVNRepositoryCreationException;
 use Tuleap\SVNCore\Exception\SVNRepositoryLayoutInitializationException;
@@ -373,16 +375,6 @@ class BackendSVN extends Backend
     }
 
     /**
-     * Wrapper for tests
-     *
-     * @return SVNAccessFile
-     */
-    protected function _getSVNAccessFile()
-    {
-        return new SVNAccessFile();
-    }
-
-    /**
      * Update Subversion DAV access control file if needed
      *
      * @param int    $group_id        the id of the project
@@ -395,7 +387,7 @@ class BackendSVN extends Backend
     {
         $project = $this->getProjectManager()->getProject($group_id);
 
-        $svn_access_file = $this->_getSVNAccessFile();
+        $svn_access_file = new SVNAccessFile(SvnAccessFileDefaultBlockGenerator::instance()->getDefaultBlock($project));
 
         $contents     = $this->getCustomPermission($system_path, $svn_access_file, $project);
         $custom_perms = $this->getCustomPermissionForProject($project, $svn_access_file, $contents, $ugroup_name, $ugroup_old_name);
@@ -405,7 +397,7 @@ class BackendSVN extends Backend
 
     public function updateSVNAccessForRepository(Project $project, $system_path, $ugroup_name, $ugroup_old_name, $svn_dir)
     {
-        $svn_access_file = $this->_getSVNAccessFile();
+        $svn_access_file = new SVNAccessFile(SvnAccessFileDefaultBlockGenerator::instance()->getDefaultBlock($project));
 
         $contents = $this->getCustomPermission($system_path, $svn_access_file, $project);
 
@@ -416,7 +408,7 @@ class BackendSVN extends Backend
 
     public function updateCustomSVNAccessForRepository(Project $project, $system_path, $ugroup_name, $ugroup_old_name, $svn_dir, $contents)
     {
-        $svn_access_file = $this->_getSVNAccessFile();
+        $svn_access_file = new SVNAccessFile(SvnAccessFileDefaultBlockGenerator::instance()->getDefaultBlock($project));
 
         $custom_perms = $this->getCustomPermissionForRepository($project, $svn_access_file, $contents, $ugroup_name, $ugroup_old_name, $svn_dir);
 
@@ -428,15 +420,15 @@ class BackendSVN extends Backend
         return $system_path . "/.SVNAccessFile";
     }
 
-    private function getDefaultBlocEnd()
+    private function getDefaultBlocEnd(): string
     {
-        return "# END CODENDI DEFAULT SETTINGS\n";
+        return AccessFileReader::END_MARKER . "\n";
     }
 
     private function getDefaultBlockStart(): string
     {
         // if you change these block markers also change them in src/www/svn/svn_utils.php
-        return "# BEGIN CODENDI DEFAULT SETTINGS - DO NOT REMOVE\n";
+        return AccessFileReader::BEGIN_MARKER . "\n";
     }
 
     private function getCustomPermission($system_path, SVNAccessFile $svn_access_file, Project $project)
@@ -461,22 +453,19 @@ class BackendSVN extends Backend
 
     private function getDefaultBlock(Project $project): string
     {
-        return \Tuleap\SVNCore\SvnAccessFileDefaultBlockGenerator::instance()->getDefaultBlock($project);
+        return SvnAccessFileDefaultBlockGenerator::instance()->getDefaultBlock($project)->content;
     }
 
     private function getCustomPermissionForProject(Project $project, SVNAccessFile $svn_access_file, $contents, $ugroup_name, $ugroup_old_name): string
     {
         $svn_access_file->setRenamedGroup($ugroup_name, $ugroup_old_name);
-        $svn_access_file->setPlatformBlock($this->getDefaultBlock($project));
-        return $svn_access_file->parseGroupLines($project, $contents)->contents;
+        return $svn_access_file->parseGroupLines($contents)->contents;
     }
 
-    private function getCustomPermissionForRepository($project, SVNAccessFile $svn_access_file, $contents, $ugroup_name, $ugroup_old_name, $svn_dir): string
+    private function getCustomPermissionForRepository(Project $project, SVNAccessFile $svn_access_file, $contents, $ugroup_name, $ugroup_old_name, $svn_dir): string
     {
         $svn_access_file->setRenamedGroup($ugroup_name, $ugroup_old_name);
-        $svn_access_file->setPlatformBlock($this->getDefaultBlock($project));
-
-        return $svn_access_file->parseGroupLinesByRepositories($svn_dir, $contents)->contents;
+        return $svn_access_file->parseGroupLinesByRepositories($contents)->contents;
     }
 
     private function updateSVNAccessFile($system_path, $custom_perms, Project $project)
