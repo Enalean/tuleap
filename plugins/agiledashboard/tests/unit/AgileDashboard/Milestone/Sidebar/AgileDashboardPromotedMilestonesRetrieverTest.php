@@ -241,7 +241,7 @@ final class AgileDashboardPromotedMilestonesRetrieverTest extends TestCase
         $items = $retriever->getSidebarPromotedMilestones($user);
         self::assertCount(1, $items);
         $item = $items[0];
-        self::assertSame('/plugins/agiledashboard/?group_id=101&planning_id=105&action=show&aid=5&pane=planning-v2', $item->href);
+        self::assertSame('/plugins/agiledashboard/?group_id=101&planning_id=105&action=show&aid=5&pane=details', $item->href);
         self::assertSame('Title', $item->label);
         self::assertSame('', $item->description);
         self::assertFalse($item->is_active);
@@ -417,14 +417,14 @@ final class AgileDashboardPromotedMilestonesRetrieverTest extends TestCase
         $items = $retriever->getSidebarPromotedMilestones($user);
         self::assertCount(1, $items);
         $item = $items[0];
-        self::assertSame('/plugins/agiledashboard/?group_id=101&planning_id=105&action=show&aid=5&pane=planning-v2', $item->href);
+        self::assertSame('/plugins/agiledashboard/?group_id=101&planning_id=105&action=show&aid=5&pane=details', $item->href);
         self::assertSame('Title', $item->label);
         self::assertSame('', $item->description);
         self::assertFalse($item->is_active);
         self::assertEmpty($item->quick_link_add);
         self::assertCount(1, $item->items);
         $sub_item = $item->items[0];
-        self::assertSame('/plugins/agiledashboard/?group_id=101&planning_id=105&action=show&aid=6&pane=planning-v2', $sub_item->href);
+        self::assertSame('/plugins/agiledashboard/?group_id=101&planning_id=105&action=show&aid=6&pane=details', $sub_item->href);
         self::assertSame('Sub Title', $sub_item->label);
         self::assertSame('', $sub_item->description);
         self::assertFalse($sub_item->is_active);
