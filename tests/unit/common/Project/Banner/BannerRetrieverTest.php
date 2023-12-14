@@ -22,97 +22,82 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Banner;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class BannerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|BannerDao
-     */
-    private $banner_dao;
-    /**
-     * @var BannerRetriever
-     */
-    private $banner_retriever;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Project
-     */
-    private $project;
+    private BannerDao&MockObject $banner_dao;
+    private BannerRetriever $banner_retriever;
+    private Project $project;
 
     protected function setUp(): void
     {
-        $this->banner_dao       = Mockery::mock(BannerDao::class);
+        $this->banner_dao       = $this->createMock(BannerDao::class);
         $this->banner_retriever = new BannerRetriever($this->banner_dao);
 
-        $this->project = Mockery::mock(Project::class);
-        $this->project->shouldReceive('getID')->andReturn('102');
+        $this->project = ProjectTestBuilder::aProject()->withId(102)->build();
     }
 
     public function testBannerCanBeRetrievedWhenItExists(): void
     {
         $expected_banner_message = 'banner message';
-        $this->banner_dao->shouldReceive('searchBannerByProjectId')->andReturn($expected_banner_message);
+        $this->banner_dao->method('searchBannerByProjectId')->willReturn($expected_banner_message);
 
         $banner = $this->banner_retriever->getBannerForProject($this->project);
 
-        $this->assertEquals($expected_banner_message, $banner->getMessage());
+        self::assertEquals($expected_banner_message, $banner->getMessage());
     }
 
     public function testCanCheckBannerDoesNotExistForAProject(): void
     {
-        $this->banner_dao->shouldReceive('searchBannerByProjectId')->andReturn(null);
+        $this->banner_dao->method('searchBannerByProjectId')->willReturn(null);
 
         $banner = $this->banner_retriever->getBannerForProject($this->project);
 
-        $this->assertNull($banner);
+        self::assertNull($banner);
     }
 
     public function testBannerVisibilityForAUserThatHasNotOptOutFromTheProjectBanner(): void
     {
         $expected_banner_message = 'banner message';
-        $this->banner_dao->shouldReceive('searchBannerWithVisibilityByProjectID')->andReturn(
+        $this->banner_dao->method('searchBannerWithVisibilityByProjectID')->willReturn(
             ['message' => $expected_banner_message, 'preference_value' => null]
         );
 
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('getId')->andReturn('1200');
+        $user = UserTestBuilder::aUser()->withId(1200)->build();
 
         $banner = $this->banner_retriever->getBannerForDisplayPurpose($this->project, $user);
 
-        $this->assertEquals($expected_banner_message, $banner->getMessage());
-        $this->assertTrue($banner->isVisible());
+        self::assertEquals($expected_banner_message, $banner->getMessage());
+        self::assertTrue($banner->isVisible());
     }
 
     public function testBannerVisibilityForAUserThatHasOptOutFromTheProjectBanner(): void
     {
         $expected_banner_message = 'banner message';
-        $this->banner_dao->shouldReceive('searchBannerWithVisibilityByProjectID')->andReturn(
+        $this->banner_dao->method('searchBannerWithVisibilityByProjectID')->willReturn(
             ['message' => $expected_banner_message, 'preference_value' => 'hidden']
         );
 
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('getId')->andReturn('1200');
+        $user = UserTestBuilder::aUser()->withId(1200)->build();
 
         $banner = $this->banner_retriever->getBannerForDisplayPurpose($this->project, $user);
 
-        $this->assertEquals($expected_banner_message, $banner->getMessage());
-        $this->assertFalse($banner->isVisible());
+        self::assertEquals($expected_banner_message, $banner->getMessage());
+        self::assertFalse($banner->isVisible());
     }
 
     public function testCanCheckBannerVisibilityDoesNotExistForAProject(): void
     {
-        $this->banner_dao->shouldReceive('searchBannerWithVisibilityByProjectID')->andReturn(null);
+        $this->banner_dao->method('searchBannerWithVisibilityByProjectID')->willReturn(null);
 
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('getId')->andReturn('1200');
+        $user = UserTestBuilder::aUser()->withId(1200)->build();
 
         $banner = $this->banner_retriever->getBannerForDisplayPurpose($this->project, $user);
 
-        $this->assertNull($banner);
+        self::assertNull($banner);
     }
 }
