@@ -32,7 +32,7 @@ use Project;
 use Psr\Log\LoggerInterface;
 use Tracker_ArtifactFactory;
 use Tracker_Semantic_Title;
-use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
+use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\Layout\SidebarPromotedItemPresenter;
 use Tuleap\Option\Option;
@@ -143,7 +143,7 @@ final class AgileDashboardPromotedMilestonesRetriever
             'planning_id' => $milestone->getPlanningId(),
             'action'      => 'show',
             'aid'         => $artifact->getId(),
-            'pane'        => PlanningV2PaneInfo::IDENTIFIER,
+            'pane'        => DetailsPaneInfo::IDENTIFIER,
         ]);
 
         return Option::fromValue([
