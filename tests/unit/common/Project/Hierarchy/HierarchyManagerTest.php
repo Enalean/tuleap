@@ -20,142 +20,157 @@
 
 namespace Tuleap\Project\Hierarchy;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Project_HierarchyManager;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class HierarchyManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    private \ProjectHierarchyDao&MockObject $dao;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\ProjectHierarchyDao
-     */
-    private $dao;
-
-    /** @var Project_HierarchyManager */
-    private $hierarchy_manager;
+    private Project_HierarchyManager&MockObject $hierarchy_manager;
 
     protected function setUp(): void
     {
-        $this->dao               = \Mockery::spy(\ProjectHierarchyDao::class);
-        $this->hierarchy_manager = \Mockery::mock(\Project_HierarchyManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->hierarchy_manager->__construct(
-            \Mockery::spy(\ProjectManager::class),
-            $this->dao
-        );
+        $this->dao               = $this->createMock(\ProjectHierarchyDao::class);
+        $this->hierarchy_manager = $this->getMockBuilder(Project_HierarchyManager::class)
+            ->setConstructorArgs([
+                $this->createMock(\ProjectManager::class),
+                $this->dao,
+            ])
+            ->onlyMethods([
+                'getParentProject',
+                'getAllParents',
+            ])
+            ->getMock();
     }
 
     public function testSetParentProjectReturnsTrueIfItAddsParent(): void
     {
-        $this->dao->shouldReceive('addParentProject')->andReturns(true)->once();
+        $this->dao->expects(self::once())->method('addParentProject')->willReturn(true);
 
-        $this->hierarchy_manager->shouldReceive('getParentProject')->andReturns(null);
+        $this->hierarchy_manager->method('getParentProject')->willReturn(null);
+        $this->hierarchy_manager->method('getAllParents')->willReturn([]);
 
-        $this->dao->shouldReceive('removeParentProject')->never();
-        $this->dao->shouldReceive('updateParentProject')->never();
+        $this->dao->expects(self::never())->method('removeParentProject');
+        $this->dao->expects(self::never())->method('updateParentProject');
 
         $set = $this->hierarchy_manager->setParentProject(185, 52);
-        $this->assertTrue($set);
+        self::assertTrue($set);
     }
 
     public function testSetParentProjectReturnsTrueIfItUpdatesParent(): void
     {
-        $this->hierarchy_manager->shouldReceive('getAllParents')->andReturns([]);
-        $this->dao->shouldReceive('updateParentProject')->andReturns(true)->once();
+        $this->hierarchy_manager->method('getAllParents')->willReturn([]);
+        $this->dao->expects(self::once())->method('updateParentProject')->willReturn(true);
 
-        $parent_project_already_saved = \Mockery::spy(\Project::class)->shouldReceive('getId')->andReturns(52)->getMock();
+        $parent_project_already_saved = ProjectTestBuilder::aProject()->withId(52)->build();
 
-        $this->hierarchy_manager->shouldReceive('getParentProject')->andReturns($parent_project_already_saved);
+        $this->hierarchy_manager->method('getParentProject')->willReturn($parent_project_already_saved);
 
-        $this->dao->shouldReceive('removeParentProject')->never();
-        $this->dao->shouldReceive('addParentProject')->never();
+        $this->dao->expects(self::never())->method('removeParentProject');
+        $this->dao->expects(self::never())->method('addParentProject');
 
         $set = $this->hierarchy_manager->setParentProject(185, 59);
-        $this->assertTrue($set);
+        self::assertTrue($set);
     }
 
     public function testSetParentProjectReturnsTrueIfItDeletesParent(): void
     {
-        $this->hierarchy_manager->shouldReceive('getAllParents')->andReturns([]);
-        $this->dao->shouldReceive('removeParentProject')->andReturns(true)->once();
+        $this->hierarchy_manager->method('getAllParents')->willReturn([]);
+        $this->dao->expects(self::once())->method('removeParentProject')->willReturn(true);
 
-        $parent_project_already_saved = \Mockery::spy(\Project::class)->shouldReceive('getId')->andReturns(52)->getMock();
+        $parent_project_already_saved = ProjectTestBuilder::aProject()->withId(52)->build();
 
-        $this->hierarchy_manager->shouldReceive('getParentProject')->andReturns($parent_project_already_saved);
+        $this->hierarchy_manager->method('getParentProject')->willReturn($parent_project_already_saved);
 
-        $this->dao->shouldReceive('addParentProject')->never();
-        $this->dao->shouldReceive('updateParentProject')->never();
+        $this->dao->expects(self::never())->method('addParentProject');
+        $this->dao->expects(self::never())->method('updateParentProject');
 
         $set = $this->hierarchy_manager->setParentProject(185, null);
-        $this->assertTrue($set);
+        self::assertTrue($set);
     }
 
     public function testSetParentProjectThrowsExceptionIfProjectIsAncestorOfParent(): void
     {
-        $hierarchy_manager = \Mockery::mock(\Project_HierarchyManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $hierarchy_manager = $this->createPartialMock(\Project_HierarchyManager::class, [
+            'getAllParents',
+            'getParentProject',
+        ]);
 
-        $this->dao->shouldReceive('addParentProject')->andReturns(true);
-        $hierarchy_manager->shouldReceive('getAllParents')->with(185)->andReturns([135]);
-        $hierarchy_manager->shouldReceive('getParentProject')->with(135)->andReturns(null);
+        $this->dao->method('addParentProject')->willReturn(true);
+        $hierarchy_manager->method('getAllParents')->with(185)->willReturn([135]);
+        $hierarchy_manager->method('getParentProject')->with(135)->willReturn(null);
 
-        $this->expectException(\Project_HierarchyManagerAlreadyAncestorException::class);
+        self::expectException(\Project_HierarchyManagerAlreadyAncestorException::class);
 
         $hierarchy_manager->setParentProject(135, 185);
     }
 
     public function testSetParentProjectReturnsFalseIfProjectAddsItselfAsParent(): void
     {
-        $this->dao->shouldReceive('getParentProject')->andReturns(\TestHelper::emptyDar());
+        $this->dao->method('getParentProject')->willReturn(\TestHelper::emptyDar());
+        $this->hierarchy_manager->method('getParentProject');
+        $this->hierarchy_manager->method('getAllParents')->willReturn([]);
 
-
-        $this->expectException(\Project_HierarchyManagerAncestorIsSelfException::class);
+        self::expectException(\Project_HierarchyManagerAncestorIsSelfException::class);
 
         $this->hierarchy_manager->setParentProject(135, 135);
     }
 
     public function testGetAllParentsReturnsAnEmptyArrayIfTheProjectIsOrphan(): void
     {
-        $project_id = 145;
-        $this->hierarchy_manager->shouldReceive('getParentProject')->with(145)->andReturns(false);
+        $project_id        = 145;
+        $hierarchy_manager = $this->createPartialMock(\Project_HierarchyManager::class, [
+            'getParentProject',
+        ]);
+        $hierarchy_manager->method('getParentProject')->with(145)->willReturn(false);
 
-        $result = $this->hierarchy_manager->getAllParents($project_id);
-        $this->assertEmpty($result);
+        $result = $hierarchy_manager->getAllParents($project_id);
+        self::assertEmpty($result);
     }
 
     public function testGetAllParentsReturnsOneElementInArrayIfTheProjectHasOneParentWhichIsOrphan(): void
     {
-        $father_project = \Mockery::spy(\Project::class)->shouldReceive('getId')->andReturns(247)->getMock();
+        $father_project = ProjectTestBuilder::aProject()->withId(247)->build();
         $project_id     = 145;
 
-        $this->hierarchy_manager->shouldReceive('getParentProject')->with(145)->andReturns($father_project);
-        $this->hierarchy_manager->shouldReceive('getParentProject')->with(247)->andReturns(false);
+        $hierarchy_manager = $this->createPartialMock(\Project_HierarchyManager::class, [
+            'getParentProject',
+        ]);
+        $hierarchy_manager->method('getParentProject')
+            ->withConsecutive([145], [247])
+            ->willReturnOnConsecutiveCalls($father_project, false);
 
-        $result   = $this->hierarchy_manager->getAllParents($project_id);
+        $result   = $hierarchy_manager->getAllParents($project_id);
         $expected = [247];
 
-        $this->assertNotEmpty($result);
-        $this->assertEquals($expected, $result);
+        self::assertNotEmpty($result);
+        self::assertEquals($expected, $result);
     }
 
     public function testGetAllParentsReturnsAsManyElementsInArrayAsTheProjectHasAncestors(): void
     {
-        $great_grand_mother_project = \Mockery::spy(\Project::class)->shouldReceive('getId')->andReturns(444)->getMock();
-        $grand_mother_project       = \Mockery::spy(\Project::class)->shouldReceive('getId')->andReturns(333)->getMock();
-        $mother_project             = \Mockery::spy(\Project::class)->shouldReceive('getId')->andReturns(222)->getMock();
+        $great_grand_mother_project = ProjectTestBuilder::aProject()->withId(444)->build();
+        $grand_mother_project       = ProjectTestBuilder::aProject()->withId(333)->build();
+        $mother_project             = ProjectTestBuilder::aProject()->withId(222)->build();
         $project_id                 = 111;
 
-        $this->hierarchy_manager->shouldReceive('getParentProject')->with(111)->andReturns($mother_project);
-        $this->hierarchy_manager->shouldReceive('getParentProject')->with(222)->andReturns($grand_mother_project);
-        $this->hierarchy_manager->shouldReceive('getParentProject')->with(333)->andReturns($great_grand_mother_project);
-        $this->hierarchy_manager->shouldReceive('getParentProject')->with(444)->andReturns(false);
+        $hierarchy_manager = $this->createPartialMock(\Project_HierarchyManager::class, [
+            'getParentProject',
+        ]);
+        $hierarchy_manager->method('getParentProject')
+            ->withConsecutive([111], [222], [333], [444])
+            ->willReturnOnConsecutiveCalls($mother_project, $grand_mother_project, $great_grand_mother_project, false);
 
-        $result   = $this->hierarchy_manager->getAllParents($project_id);
+        $result   = $hierarchy_manager->getAllParents($project_id);
         $expected = [
             222,
             333,
             444,
         ];
 
-        $this->assertNotEmpty($result);
-        $this->assertEquals($expected, $result);
+        self::assertNotEmpty($result);
+        self::assertEquals($expected, $result);
     }
 }
