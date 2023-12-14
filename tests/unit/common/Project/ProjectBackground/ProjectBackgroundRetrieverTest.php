@@ -22,19 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\ProjectBackground;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class ProjectBackgroundRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testNoBackgroundIsSelectedIfProjectDidNotSelectOne(): void
     {
-        $project = Mockery::mock(\Project::class);
+        $project = ProjectTestBuilder::aProject()->build();
 
-        $configuration = Mockery::mock(ProjectBackgroundConfiguration::class);
-        $configuration->shouldReceive(['getBackground' => null]);
+        $configuration = $this->createMock(ProjectBackgroundConfiguration::class);
+        $configuration->method('getBackground')->willReturn(null);
 
         $retriever   = new ProjectBackgroundRetriever($configuration);
         $backgrounds = $retriever->getBackgrounds($project);
@@ -49,10 +46,10 @@ final class ProjectBackgroundRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetBackgrounds(): void
     {
-        $project = Mockery::mock(\Project::class);
+        $project = ProjectTestBuilder::aProject()->build();
 
-        $configuration = Mockery::mock(ProjectBackgroundConfiguration::class);
-        $configuration->shouldReceive(['getBackground' => ProjectBackgroundName::fromIdentifier('beach-daytime')]);
+        $configuration = $this->createMock(ProjectBackgroundConfiguration::class);
+        $configuration->method('getBackground')->willReturn(ProjectBackgroundName::fromIdentifier('beach-daytime'));
 
         $retriever   = new ProjectBackgroundRetriever($configuration);
         $backgrounds = $retriever->getBackgrounds($project);

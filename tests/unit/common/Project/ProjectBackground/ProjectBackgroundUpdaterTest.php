@@ -22,31 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\ProjectBackground;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class ProjectBackgroundUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectBackgroundDao
-     */
-    private $project_background_dao;
-    /**
-     * @var ProjectBackgroundUpdater
-     */
-    private $project_background_updater;
+    private ProjectBackgroundDao&MockObject $project_background_dao;
+    private ProjectBackgroundUpdater $project_background_updater;
 
     protected function setUp(): void
     {
-        $this->project_background_dao     = \Mockery::mock(ProjectBackgroundDao::class);
+        $this->project_background_dao     = $this->createMock(ProjectBackgroundDao::class);
         $this->project_background_updater = new ProjectBackgroundUpdater($this->project_background_dao);
     }
 
     public function testUpdatesAProjectBackground(): void
     {
-        $this->project_background_dao->shouldReceive('setBackgroundByProjectID')->once();
+        $this->project_background_dao->expects(self::once())->method('setBackgroundByProjectID');
 
         $this->project_background_updater->updateProjectBackground(
             $this->buildPermission(),
@@ -56,7 +48,7 @@ final class ProjectBackgroundUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDeletesAProjectBackground(): void
     {
-        $this->project_background_dao->shouldReceive('deleteBackgroundByProjectID')->once();
+        $this->project_background_dao->expects(self::once())->method('deleteBackgroundByProjectID');
 
         $this->project_background_updater->deleteProjectBackground($this->buildPermission());
     }
