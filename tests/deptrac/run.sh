@@ -31,14 +31,14 @@ function execDeptrac() {
     config_file_name="$(basename "$config_file_path")"
     local args=()
     if [[ -n "${CI_REPORT_OUTPUT_PATH:-}" ]]; then
-        args+=(--no-progress --no-interaction --formatter=junit --junit-dump-xml="$CI_REPORT_OUTPUT_PATH/${config_file_name%.*}_$(date +%s).xml")
+        args+=(--no-progress --no-interaction --formatter=junit --output="$CI_REPORT_OUTPUT_PATH/${config_file_name%.*}_$(date +%s).xml")
     fi
     if ! [[ "${config_file_name%.*}" == *"skip_uncovered" ]]; then
         args+=(--fail-on-uncovered --report-uncovered)
     fi
 
     echo "Processing $config_file_path"
-    "${PHP:-php}" "$root_path"/src/vendor/bin/deptrac analyze "${args[@]}" -- "$config_file_path"
+    "${PHP:-php}" "$root_path"/src/vendor/bin/deptrac analyse "${args[@]}" --config-file="$config_file_path"
 }
 
 pushd "$root_path" > /dev/null

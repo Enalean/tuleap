@@ -1,20 +1,20 @@
-use_relative_path_from_depfile: false
-paths:
-  - ./src/common
-  - ./plugins
-exclude_files:
-  - tests
-  - node_modules
-  - vendor
-layers:
-  - name: Core
-    collectors:
-      - type: directory
-        regex: src/common/.*
-  - name: Plugins
-    collectors:
-      - type: directory
-        regex: plugins/\w+/include/.*
-ruleset:
-  Plugins:
-    - Core
+deptrac:
+  paths:
+    - ../../src/common
+    - ../../plugins
+  exclude_files:
+    - tests
+    - node_modules
+    - vendor
+  layers:
+    - name: Core
+      collectors:
+        - type: directory
+          regex: src/common/.*
+    - name: Plugins
+      collectors:
+        - type: directory
+          regex: plugins/\w+/include/.*
+  ruleset:
+    Plugins:
+      - Core

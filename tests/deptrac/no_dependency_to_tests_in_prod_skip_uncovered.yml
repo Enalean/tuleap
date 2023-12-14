@@ -1,25 +1,25 @@
-use_relative_path_from_depfile: false
-paths:
-  - ./src/common
-  - ./src/core
-  - ./src/www
-  - ./tests
-  - ./plugins
-exclude_files:
-  - node_modules
-  - vendor
-  - _fixtures
-layers:
-  - name: Production code
-    collectors:
-      - type: directory
-        regex: src/.*
-      - type: directory
-        regex: plugins/\w+/include/.*
-  - name: Test code
-    collectors:
-      - type: directory
-        regex: .*/tests/.*
-ruleset:
-  Test code:
-    - Production code
+deptrac:
+  paths:
+    - ../../src/common
+    - ../../src/core
+    - ../../src/www
+    - ../../tests
+    - ../../plugins
+  exclude_files:
+    - node_modules
+    - vendor
+    - _fixtures
+  layers:
+    - name: Production code
+      collectors:
+        - type: directory
+          regex: src/.*
+        - type: directory
+          regex: plugins/\w+/include/.*
+    - name: Test code
+      collectors:
+        - type: directory
+          regex: .*/tests/.*
+  ruleset:
+    Test code:
+      - Production code

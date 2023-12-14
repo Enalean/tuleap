@@ -113,7 +113,7 @@
     "php-standard-library/psalm-plugin": "^2.2",
     "phpunit/phpunit": "^9.1",
     "psalm/plugin-phpunit": "^0.18.3",
-    "qossmic/deptrac-shim": "^0.18.0",
+    "qossmic/deptrac-shim": "^1.0",
     "rector/rector": "^0.15.21",
     "slevomat/coding-standard": "^8.3.0",
     "squizlabs/php_codesniffer": "^3.4",
