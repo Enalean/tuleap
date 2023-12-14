@@ -22,17 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\ProjectBackground;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ProjectBackgroundPermissionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var ProjectBackgroundPermissionsChecker
-     */
-    private $permissions_checker;
+    private ProjectBackgroundPermissionsChecker $permissions_checker;
 
     protected function setUp(): void
     {
@@ -41,10 +36,12 @@ final class ProjectBackgroundPermissionsCheckerTest extends \Tuleap\Test\PHPUnit
 
     public function testPermissionIsGrantedWhenTheUserIsProjectAdmin(): void
     {
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAdmin')->andReturn(true);
+        $project = ProjectTestBuilder::aProject()->build();
+        $user    = UserTestBuilder::aUser()
+            ->withAdministratorOf($project)
+            ->withoutSiteAdministrator()
+            ->build();
 
-        $project    = ProjectTestBuilder::aProject()->build();
         $permission = $this->permissions_checker->getModifyProjectBackgroundPermission($project, $user);
         self::assertNotNull($permission);
         self::assertSame($project, $permission->getProject());
@@ -52,8 +49,9 @@ final class ProjectBackgroundPermissionsCheckerTest extends \Tuleap\Test\PHPUnit
 
     public function testPermissionIsDeniedWhenTheUserIsNotProjectAdmin(): void
     {
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAdmin')->andReturn(false);
+        $user = UserTestBuilder::aUser()
+            ->withoutSiteAdministrator()
+            ->build();
 
         $permission = $this->permissions_checker->getModifyProjectBackgroundPermission(
             ProjectTestBuilder::aProject()->build(),

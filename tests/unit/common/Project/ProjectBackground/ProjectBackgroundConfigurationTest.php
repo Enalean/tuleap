@@ -22,18 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\ProjectBackground;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class ProjectBackgroundConfigurationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testReturnsTheProjectBackgroundIdentifierWhenOneIsSet(): void
     {
-        $project = \Mockery::mock(\Project::class)->shouldReceive(['getID' => 102])->getMock();
+        $project = ProjectTestBuilder::aProject()->withId(102)->build();
 
-        $dao = \Mockery::mock(ProjectBackgroundDao::class);
-        $dao->shouldReceive('getBackground')->andReturn('beach-daytime');
+        $dao = $this->createMock(ProjectBackgroundDao::class);
+        $dao->method('getBackground')->willReturn('beach-daytime');
 
         $configuration = new ProjectBackgroundConfiguration($dao);
 
@@ -42,10 +40,10 @@ final class ProjectBackgroundConfigurationTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testItReturnsNullIfProjectDoesNotHaveABackground(): void
     {
-        $project = \Mockery::mock(\Project::class)->shouldReceive(['getID' => 102])->getMock();
+        $project = ProjectTestBuilder::aProject()->withId(102)->build();
 
-        $dao = \Mockery::mock(ProjectBackgroundDao::class);
-        $dao->shouldReceive('getBackground')->andReturnNull();
+        $dao = $this->createMock(ProjectBackgroundDao::class);
+        $dao->method('getBackground')->willReturn(null);
 
         $configuration = new ProjectBackgroundConfiguration($dao);
 
@@ -54,10 +52,10 @@ final class ProjectBackgroundConfigurationTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testItReturnsNullIfTheProjectBackgroundIdentifierStoredIsInvalid(): void
     {
-        $project = \Mockery::mock(\Project::class)->shouldReceive(['getID' => 102])->getMock();
+        $project = ProjectTestBuilder::aProject()->withId(102)->build();
 
-        $dao = \Mockery::mock(ProjectBackgroundDao::class);
-        $dao->shouldReceive('getBackground')->andReturn('invalid-project-background-identifier');
+        $dao = $this->createMock(ProjectBackgroundDao::class);
+        $dao->method('getBackground')->willReturn('invalid-project-background-identifier');
 
         $configuration = new ProjectBackgroundConfiguration($dao);
 
