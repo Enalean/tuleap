@@ -179,9 +179,6 @@ devDependencies:
   stylelint-config-html:
     specifier: ^1.1.0
     version: 1.1.0(postcss-html@1.5.0)(stylelint@15.10.1)
-  stylelint-config-prettier:
-    specifier: ^9.0.3
-    version: 9.0.3(stylelint@15.10.1)
   stylelint-config-property-sort-order-smacss:
     specifier: ^9.1.0
     version: 9.1.0(stylelint@15.10.1)
@@ -9568,16 +9565,6 @@ packages:
       stylelint: '>=14.0.0'
     dependencies:
       postcss-html: 1.5.0
-      stylelint: 15.10.1
-    dev: true
-
-  /stylelint-config-prettier@9.0.3(stylelint@15.10.1):
-    resolution: {integrity: sha512-5n9gUDp/n5tTMCq1GLqSpA30w2sqWITSSEiAWQlpxkKGAUbjcemQ0nbkRvRUa0B1LgD3+hCvdL7B1eTxy1QHJg==}
-    engines: {node: '>= 12'}
-    hasBin: true
-    peerDependencies:
-      stylelint: '>=11.0.0'
-    dependencies:
       stylelint: 15.10.1
     dev: true
 
