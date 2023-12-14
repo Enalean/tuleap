@@ -17,27 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { vite } from "@tuleap/build-system-configurator";
-import * as path from "path";
-import vue from "@vitejs/plugin-vue";
-import POGettextPlugin from "@tuleap/po-gettext-plugin";
+import type { MountingOptions } from "@vue/test-utils";
+import { createGettext } from "vue3-gettext";
 
-export default vite.defineAppConfig(
-    {
-        plugin_name: path.basename(path.resolve(__dirname, "../..")),
-        sub_app_name: path.basename(__dirname),
-    },
-    {
-        plugins: [POGettextPlugin.vite(), vue()],
-        build: {
-            rollupOptions: {
-                input: {
-                    "pullrequest-homepage": path.resolve(__dirname, "src/index.ts"),
-                },
-            },
-        },
-        resolve: {
-            dedupe: ["vue"],
-        },
-    },
-);
+export function getGlobalTestOptions(): MountingOptions<unknown>["global"] {
+    return {
+        plugins: [createGettext({ silent: true })],
+    };
+}

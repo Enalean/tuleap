@@ -40,7 +40,7 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { fetchAllPullRequests } from "../../api/tuleap-rest-querier";
 import { REPOSITORY_ID } from "../../injection-symbols";
-import PullRequestCard from "./PullRequestCard.vue";
+import PullRequestCard from "./PullRequest/PullRequestCard.vue";
 
 const repository_id = strictInject(REPOSITORY_ID);
 

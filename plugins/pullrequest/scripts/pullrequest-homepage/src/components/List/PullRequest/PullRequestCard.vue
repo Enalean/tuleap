@@ -21,7 +21,7 @@
     <a
         v-bind:href="overview_url"
         v-bind:class="{ 'tlp-card-inactive': is_pull_request_closed }"
-        class="tlp-card tlp-card-selectable"
+        class="tlp-card tlp-card-selectable pull-request-homepage-card"
         data-test="pull-request-card"
     >
         <span
@@ -30,6 +30,7 @@
             v-bind:class="{ 'tlp-text-muted': is_pull_request_closed }"
             data-test="pull-request-card-title"
         ></span>
+        <pull-request-broken-badge v-bind:pull_request="pull_request" />
     </a>
 </template>
 
@@ -40,8 +41,9 @@ import { loadTooltips } from "@tuleap/tooltip";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { PULL_REQUEST_STATUS_REVIEW } from "@tuleap/plugin-pullrequest-constants";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
-import { buildPullRequestOverviewUrl } from "../../urls/base-url-builders";
-import { BASE_URL } from "../../injection-symbols";
+import { buildPullRequestOverviewUrl } from "../../../urls/base-url-builders";
+import { BASE_URL } from "../../../injection-symbols";
+import PullRequestBrokenBadge from "./PullRequestBrokenBadge.vue";
 
 const props = defineProps<{
     pull_request: PullRequest;
@@ -62,3 +64,10 @@ onMounted(() => {
     loadTooltips(pull_request_title.value);
 });
 </script>
+
+<style scoped lang="scss">
+.pull-request-homepage-card {
+    display: flex;
+    justify-content: space-between;
+}
+</style>

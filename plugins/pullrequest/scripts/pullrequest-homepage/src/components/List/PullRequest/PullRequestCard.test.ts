@@ -28,9 +28,12 @@ import {
     PULL_REQUEST_STATUS_REVIEW,
     PULL_REQUEST_STATUS_MERGED,
 } from "@tuleap/plugin-pullrequest-constants";
-import { injected_base_url, injection_symbols_stub } from "../../../tests/injection-symbols-stub";
+import {
+    injected_base_url,
+    injection_symbols_stub,
+} from "../../../../tests/injection-symbols-stub";
 import PullRequestCard from "./PullRequestCard.vue";
-import { buildPullRequestOverviewUrl } from "../../urls/base-url-builders";
+import { buildPullRequestOverviewUrl } from "../../../urls/base-url-builders";
 import { buildVueDompurifyHTMLDirective } from "vue-dompurify-html";
 
 const pull_request_id = 2;
