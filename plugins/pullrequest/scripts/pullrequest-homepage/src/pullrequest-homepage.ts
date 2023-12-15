@@ -18,13 +18,15 @@
  */
 
 import { createApp } from "vue";
+import { createGettext } from "vue3-gettext";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import { getDatasetItemOrThrow } from "@tuleap/dom";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { buildBaseUrl } from "./urls/base-url-builders";
 import HomePage from "./components/HomePage.vue";
 import { BASE_URL, REPOSITORY_ID } from "./injection-symbols";
 
-export const init = (mount_point: HTMLElement): void => {
+export const init = async (mount_point: HTMLElement): Promise<void> => {
     const repository_id = Number.parseInt(getDatasetItemOrThrow(mount_point, "repositoryId"), 10);
     const project_id = Number.parseInt(getDatasetItemOrThrow(mount_point, "projectId"), 10);
     const base_url = buildBaseUrl(window.location, repository_id, project_id);
@@ -33,5 +35,10 @@ export const init = (mount_point: HTMLElement): void => {
         .provide(REPOSITORY_ID, repository_id)
         .provide(BASE_URL, base_url)
         .use(VueDOMPurifyHTML)
+        .use(
+            await initVueGettext(createGettext, (locale: string) => {
+                return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
+            }),
+        )
         .mount(mount_point);
 };

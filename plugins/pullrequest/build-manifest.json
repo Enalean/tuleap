@@ -16,6 +16,10 @@
         "tuleap-pullrequest-overview": {
             "src": "scripts/pullrequest-overview/src",
             "po": "scripts/pullrequest-overview/po"
+        },
+        "tuleap-pullrequest-homepage": {
+            "src": "scripts/pullrequest-homepage/src",
+            "po": "scripts/pullrequest-homepage/po"
         }
     },
     "gettext-ts": {
