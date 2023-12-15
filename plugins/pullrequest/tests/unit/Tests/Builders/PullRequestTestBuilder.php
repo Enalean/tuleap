@@ -27,19 +27,19 @@ use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 
 final class PullRequestTestBuilder
 {
-    private int $id                    = 15;
-    private string $title              = "This is a title";
-    private string $description        = "This is a description";
-    private int $repository_id         = 5;
-    private int $user_id               = 105;
-    private int $creation_date         = 1679910276;
-    private string $branch_src         = "pr-1";
-    private string $branch_dest        = "master";
-    private string $sha1_src           = "1b8e9594dc204eb9907f78df8bb60f564c389832";
-    private string $sha1_dest          = "aba2416a22a0c5d985207fbed10de5d1c8c91397";
-    private int $repo_dest_id          = 5;
-    private int $merge_status          = PullRequest::FASTFORWARD_MERGE;
-    private string $description_format = TimelineComment::FORMAT_TEXT;
+    private int $id                         = 15;
+    private string $title                   = "This is a title";
+    private string $description             = "This is a description";
+    private int $repository_id              = 5;
+    private int $user_id                    = 105;
+    private int $creation_timestamp         = 1679910276;
+    private string $source_branch_name      = "pr-1";
+    private string $destination_branch_name = "master";
+    private string $source_sha1             = "1b8e9594dc204eb9907f78df8bb60f564c389832";
+    private string $destination_sha1        = "aba2416a22a0c5d985207fbed10de5d1c8c91397";
+    private int $repo_dest_id               = 5;
+    private int $merge_status               = PullRequest::FASTFORWARD_MERGE;
+    private string $description_format      = TimelineComment::FORMAT_TEXT;
 
 
     private function __construct(
@@ -92,9 +92,27 @@ final class PullRequestTestBuilder
         return $this;
     }
 
-    public function createdAt(int $creation_date): self
+    public function createdAt(int $creation_timestamp): self
     {
-        $this->creation_date = $creation_date;
+        $this->creation_timestamp = $creation_timestamp;
+        return $this;
+    }
+
+    public function fromSourceBranch(string $source_branch_name): self
+    {
+        $this->source_branch_name = $source_branch_name;
+        return $this;
+    }
+
+    public function toDestinationBranch(string $destination_branch_name): self
+    {
+        $this->destination_branch_name = $destination_branch_name;
+        return $this;
+    }
+
+    public function fromSourceGitSHA1(string $source_sha1): self
+    {
+        $this->source_sha1 = $source_sha1;
         return $this;
     }
 
@@ -106,12 +124,12 @@ final class PullRequestTestBuilder
             $this->description,
             $this->repository_id,
             $this->user_id,
-            $this->creation_date,
-            $this->branch_src,
-            $this->sha1_src,
+            $this->creation_timestamp,
+            $this->source_branch_name,
+            $this->source_sha1,
             $this->repo_dest_id,
-            $this->branch_dest,
-            $this->sha1_dest,
+            $this->destination_branch_name,
+            $this->destination_sha1,
             $this->description_format,
             $this->status,
             $this->merge_status

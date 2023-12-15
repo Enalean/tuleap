@@ -70,11 +70,6 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
     public $head_reference;
 
     /**
-     * @var string {@type string}
-     */
-    public $status;
-
-    /**
      * @var array {@type array}
      */
     public $resources;

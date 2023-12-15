@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\REST\v1\Comment;
 
 use DateTimeImmutable;
-use GitRepository;
 use Luracast\Restler\RestException;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
 use Tuleap\Git\Tests\Stub\RetrieveGitRepositoryStub;
 use Tuleap\Markdown\CodeBlockFeatures;
 use Tuleap\Markdown\CommonMarkInterpreter;
@@ -49,7 +49,6 @@ use Tuleap\PullRequest\Tests\Stub\CommentSearcherStub;
 use Tuleap\PullRequest\Tests\Stub\CommentUpdaterStub;
 use Tuleap\PullRequest\Tests\Stub\SearchPullRequestStub;
 use Tuleap\REST\JsonCast;
-use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
@@ -87,8 +86,7 @@ final class PATCHCommentHandlerTest extends TestCase
         $this->pull_request_permission_checker = CheckUserCanAccessPullRequestStub::withAllowed();
         $this->cross_references_saver          = ExtractAndSaveCrossReferencesStub::withCallCount();
 
-        $git_repository = new GitRepository();
-        $git_repository->setProject(ProjectTestBuilder::aProject()->withId(156)->build());
+        $git_repository    = GitRepositoryTestBuilder::aProjectRepository()->build();
         $this->git_factory = RetrieveGitRepositoryStub::withGitRepository($git_repository);
 
         $this->last_edition_date = new DateTimeImmutable();
