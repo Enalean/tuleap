@@ -21,51 +21,44 @@
 namespace Tuleap\Project\REST;
 
 use Luracast\Restler\RestException;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-class UserRESTReferenceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UserRESTReferenceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\MockInterface
-     */
-    private $user_manager;
+    private \UserManager&MockObject $user_manager;
 
     protected function setUp(): void
     {
-        $this->user_manager = \Mockery::mock(\UserManager::class);
+        $this->user_manager = $this->createMock(\UserManager::class);
     }
 
     /**
      * @dataProvider userReferenceProvider
+     * @param \PFUser|\PFUser[]|null $user_manager_return_value
      */
     public function testGetUserFromReference(
-        $reference_used,
-        $expected_user_manager_call,
-        $user_manager_return_value,
+        string $reference_used,
+        string $expected_user_manager_call,
+        \PFUser|array|null $user_manager_return_value,
         ?\PFUser $expected_user = null,
-    ) {
+    ): void {
         $representation                  = new UserRESTReferenceRepresentation();
         $representation->$reference_used = 'value';
 
-        $this->user_manager->shouldReceive($expected_user_manager_call)->andReturns($user_manager_return_value);
+        $this->user_manager->method($expected_user_manager_call)->willReturn($user_manager_return_value);
 
         $retriever = new UserRESTReferenceRetriever($this->user_manager);
 
-        $this->assertSame(
+        self::assertSame(
             $expected_user,
             $retriever->getUserFromReference($representation)
         );
     }
 
-    public static function userReferenceProvider()
+    public static function userReferenceProvider(): array
     {
-        $user = new class extends \PFUser {
-            public function __construct()
-            {
-            }
-        };
+        $user = UserTestBuilder::buildWithDefaults();
         return [
             ['id', 'getUserById', $user, $user],
             ['id', 'getUserById', null, null],
@@ -78,24 +71,24 @@ class UserRESTReferenceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
     }
 
-    public function testMultipleUsersMatchingASameEmailAreRejected()
+    public function testMultipleUsersMatchingASameEmailAreRejected(): void
     {
         $representation        = new UserRESTReferenceRepresentation();
         $representation->email = 'user@example.com';
 
-        $this->user_manager->shouldReceive('getAllUsersByEmail')
-            ->andReturns([\Mockery::mock(\PFUser::class), \Mockery::mock(\PFUser::class)]);
+        $this->user_manager->method('getAllUsersByEmail')
+            ->willReturn([UserTestBuilder::buildWithDefaults(), UserTestBuilder::buildWithDefaults()]);
 
         $retriever = new UserRESTReferenceRetriever($this->user_manager);
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(400);
-        $this->expectExceptionMessage('More than one user use the email');
+        self::expectException(RestException::class);
+        self::expectExceptionCode(400);
+        self::expectExceptionMessage('More than one user use the email');
 
         $retriever->getUserFromReference($representation);
     }
 
-    public function testOnlyKeyOfTheRepresentationCanBeSet()
+    public function testOnlyKeyOfTheRepresentationCanBeSet(): void
     {
         $representation           = new UserRESTReferenceRepresentation();
         $representation->id       = 101;
@@ -103,20 +96,20 @@ class UserRESTReferenceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $retriever = new UserRESTReferenceRetriever($this->user_manager);
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(400);
-        $this->expectExceptionMessage('Only one key can be passed');
+        self::expectException(RestException::class);
+        self::expectExceptionCode(400);
+        self::expectExceptionMessage('Only one key can be passed');
 
         $retriever->getUserFromReference($representation);
     }
 
-    public function testRepresentationMustHaveAtLeastOneValue()
+    public function testRepresentationMustHaveAtLeastOneValue(): void
     {
         $retriever = new UserRESTReferenceRetriever($this->user_manager);
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(400);
-        $this->expectExceptionMessage('At least one key must');
+        self::expectException(RestException::class);
+        self::expectExceptionCode(400);
+        self::expectExceptionMessage('At least one key must');
 
         $retriever->getUserFromReference(new UserRESTReferenceRepresentation());
     }
