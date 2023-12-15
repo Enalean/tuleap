@@ -27,6 +27,8 @@ use Tuleap\Tracker\Artifact\Artifact;
  */
 class Planning_ArtifactMilestone implements Planning_Milestone
 {
+    private const PROMOTED_ITEM_PREFIX = 'milestone-';
+
     /**
      * The project where the milestone is defined
      *
@@ -420,5 +422,10 @@ class Planning_ArtifactMilestone implements Planning_Milestone
     public function setDatePeriod(DatePeriodWithoutWeekEnd $date_period): void
     {
         $this->date_period = $date_period;
+    }
+
+    public function getPromotedMilestoneId(): string
+    {
+        return self::PROMOTED_ITEM_PREFIX . $this->getArtifactId();
     }
 }

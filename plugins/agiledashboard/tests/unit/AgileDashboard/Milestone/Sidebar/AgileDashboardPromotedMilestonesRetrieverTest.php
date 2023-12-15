@@ -65,7 +65,7 @@ final class AgileDashboardPromotedMilestonesRetrieverTest extends TestCase
             new NullLogger()
         );
 
-        self::assertEmpty($retriever->getSidebarPromotedMilestones(UserTestBuilder::buildWithDefaults()));
+        self::assertEmpty($retriever->getSidebarPromotedMilestones(UserTestBuilder::buildWithDefaults(), 'whatever'));
     }
 
     public function testItReturnsNoMilestonesWhenFactoryThrowNoPlanning(): void
@@ -85,7 +85,7 @@ final class AgileDashboardPromotedMilestonesRetrieverTest extends TestCase
             new NullLogger()
         );
 
-        self::assertEmpty($retriever->getSidebarPromotedMilestones(UserTestBuilder::buildWithDefaults()));
+        self::assertEmpty($retriever->getSidebarPromotedMilestones(UserTestBuilder::buildWithDefaults(), 'whatever'));
     }
 
     public function testItReturnsNoMilestone(): void
@@ -109,7 +109,7 @@ final class AgileDashboardPromotedMilestonesRetrieverTest extends TestCase
             new NullLogger()
         );
 
-        self::assertEmpty($retriever->getSidebarPromotedMilestones(UserTestBuilder::buildWithDefaults()));
+        self::assertEmpty($retriever->getSidebarPromotedMilestones(UserTestBuilder::buildWithDefaults(), 'whatever'));
     }
 
     public function testItReturnsNoMilestoneWhenNotCurrent(): void
@@ -173,7 +173,7 @@ final class AgileDashboardPromotedMilestonesRetrieverTest extends TestCase
             new NullLogger()
         );
 
-        $items = $retriever->getSidebarPromotedMilestones($user);
+        $items = $retriever->getSidebarPromotedMilestones($user, 'whatever');
         self::assertEmpty($items);
     }
 
@@ -238,7 +238,7 @@ final class AgileDashboardPromotedMilestonesRetrieverTest extends TestCase
             new NullLogger()
         );
 
-        $items = $retriever->getSidebarPromotedMilestones($user);
+        $items = $retriever->getSidebarPromotedMilestones($user, 'whatever');
         self::assertCount(1, $items);
         $item = $items[0];
         self::assertSame('/plugins/agiledashboard/?group_id=101&planning_id=105&action=show&aid=5&pane=details', $item->href);
@@ -321,12 +321,20 @@ final class AgileDashboardPromotedMilestonesRetrieverTest extends TestCase
             new NullLogger()
         );
 
-        $items = $retriever->getSidebarPromotedMilestones($user);
+        $items = $retriever->getSidebarPromotedMilestones($user, 'whatever');
         self::assertCount(5, $items);
     }
 
-    public function testItReturnsAMilestoneWithASubMilestone(): void
-    {
+    /**
+     * @testWith ["whatever", false, false]
+     *           ["milestone-5", true, false]
+     *           ["milestone-6", true, true]
+     */
+    public function testItReturnsAMilestoneWithASubMilestone(
+        string $active_promoted_item_id,
+        bool $should_milestone_be_active,
+        bool $should_sub_milestone_be_active,
+    ): void {
         $user              = UserTestBuilder::buildWithDefaults();
         $milestone_factory = $this->createMock(Planning_MilestoneFactory::class);
         $project           = ProjectTestBuilder::aProject()->build();
@@ -414,20 +422,20 @@ final class AgileDashboardPromotedMilestonesRetrieverTest extends TestCase
             new NullLogger()
         );
 
-        $items = $retriever->getSidebarPromotedMilestones($user);
+        $items = $retriever->getSidebarPromotedMilestones($user, $active_promoted_item_id);
         self::assertCount(1, $items);
         $item = $items[0];
         self::assertSame('/plugins/agiledashboard/?group_id=101&planning_id=105&action=show&aid=5&pane=details', $item->href);
         self::assertSame('Title', $item->label);
         self::assertSame('', $item->description);
-        self::assertFalse($item->is_active);
+        self::assertSame($should_milestone_be_active, $item->is_active);
         self::assertEmpty($item->quick_link_add);
         self::assertCount(1, $item->items);
         $sub_item = $item->items[0];
         self::assertSame('/plugins/agiledashboard/?group_id=101&planning_id=105&action=show&aid=6&pane=details', $sub_item->href);
         self::assertSame('Sub Title', $sub_item->label);
         self::assertSame('', $sub_item->description);
-        self::assertFalse($sub_item->is_active);
+        self::assertSame($should_sub_milestone_be_active, $sub_item->is_active);
         self::assertEmpty($sub_item->quick_link_add);
     }
 

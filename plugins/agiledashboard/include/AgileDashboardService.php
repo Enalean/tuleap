@@ -108,7 +108,7 @@ class AgileDashboardService extends \Service
             new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory),
             SemanticTimeframeBuilder::build(),
             BackendLogger::getDefaultLogger()
-        ))->getSidebarPromotedMilestones($user);
+        ))->getSidebarPromotedMilestones($user, $active_promoted_item_id);
     }
 
     public function getSidebarInfoTooltip(): string

@@ -190,4 +190,6 @@ interface Planning_Milestone // @codingStandardsIgnoreLine
     public function setCapacity($capacity);
 
     public function setRemainingEffort($remaining_effort);
+
+    public function getPromotedMilestoneId(): string;
 }

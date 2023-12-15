@@ -130,7 +130,11 @@ final class TestPlanController implements DispatchableWithRequestNoAuthz, Dispat
             $this->bread_crumbs_builder->getBreadcrumbs($user, $project, $milestone),
             [],
             HeaderConfigurationBuilder::get($title)
-                ->inProject($project, AgileDashboardPlugin::PLUGIN_SHORTNAME)
+                ->inProjectWithActivePromotedItem(
+                    $project,
+                    AgileDashboardPlugin::PLUGIN_SHORTNAME,
+                    $milestone->getPromotedMilestoneId(),
+                )
                 ->withBodyClass(['agiledashboard-body'])
                 ->withMainClass(['fluid-main'])
                 ->withNewDropdownLinkSection($this->header_options_provider->getCurrentContextSection($user, $milestone)->unwrapOr(null))
