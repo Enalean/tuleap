@@ -139,4 +139,10 @@ final class ProjectTestBuilder
         $this->used_service_short_names = [];
         return $this;
     }
+
+    public function withTypeTemplate(): self
+    {
+        $this->data['type'] = (string) TemplateSingleton::TEMPLATE;
+        return $this;
+    }
 }

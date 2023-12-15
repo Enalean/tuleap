@@ -22,46 +22,31 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\REST\v1;
 
-use Mockery;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use Service;
 use ServiceManager;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 class ServiceRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\MockInterface|ServiceManager
-     */
-    private $service_manager;
-    /**
-     * @var Mockery\MockInterface|Project
-     */
-    private $project;
-    /**
-     * @var Mockery\MockInterface|PFUser
-     */
-    private $siteadmin;
-    /**
-     * @var Mockery\MockInterface|PFUser
-     */
-    private $projectadmin;
-    /**
-     * @var ServiceRepresentationCollectionBuilder
-     */
-    private $builder;
+    private ServiceManager&MockObject $service_manager;
+    private Project $project;
+    private PFUser $siteadmin;
+    private PFUser $projectadmin;
+    private ServiceRepresentationCollectionBuilder $builder;
 
     protected function setUp(): void
     {
-        $this->service_manager = Mockery::mock(ServiceManager::class);
-        $this->project         = Mockery::mock(Project::class);
-        $this->siteadmin       = Mockery::mock(PFUser::class);
-        $this->projectadmin    = Mockery::mock(PFUser::class);
-
-        $this->projectadmin->shouldReceive('isSuperUser')->andReturn(false);
-        $this->siteadmin->shouldReceive('isSuperUser')->andReturn(true);
+        $this->service_manager = $this->createMock(ServiceManager::class);
+        $this->project         = ProjectTestBuilder::aProject()->build();
+        $this->siteadmin       = UserTestBuilder::buildSiteAdministrator();
+        $this->projectadmin    = UserTestBuilder::aUser()
+            ->withAdministratorOf($this->project)
+            ->withoutSiteAdministrator()
+            ->build();
 
         $this->builder = new ServiceRepresentationCollectionBuilder($this->service_manager);
 
@@ -70,53 +55,53 @@ class ServiceRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItDoesNotReturnNone(): void
     {
-        $service = Mockery::mock(Service::class);
-        $service->shouldReceive('getId')->andReturn(100);
+        $service = $this->createMock(Service::class);
+        $service->method('getId')->willReturn(100);
 
-        $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->andReturn([$service]);
+        $this->service_manager->method('getListOfAllowedServicesForProject')->willReturn([$service]);
 
         $collection = $this->builder->getServiceRepresentationCollectionForProject($this->project, $this->siteadmin);
-        $this->assertEmpty($collection);
+        self::assertEmpty($collection);
 
         $collection = $this->builder->getServiceRepresentationCollectionForProject($this->project, $this->projectadmin);
-        $this->assertEmpty($collection);
+        self::assertEmpty($collection);
     }
 
     public function testItReturnsInactiveServiceOnlyForSiteadmin(): void
     {
-        $service = Mockery::mock(Service::class);
-        $service->shouldReceive('getId')->andReturn(101);
-        $service->shouldReceive('isActive')->andReturn(false);
-        $service->shouldReceive('isUsed')->andReturn('true');
-        $service->shouldReceive('getShortName')->andReturn('plugin_git');
-        $service->shouldReceive('getInternationalizedName')->andReturn('Git');
-        $service->shouldReceive('getIconName')->andReturn('fa-tlp-versioning-git');
+        $service = $this->createMock(Service::class);
+        $service->method('getId')->willReturn(101);
+        $service->method('isActive')->willReturn(false);
+        $service->method('isUsed')->willReturn(true);
+        $service->method('getShortName')->willReturn('plugin_git');
+        $service->method('getInternationalizedName')->willReturn('Git');
+        $service->method('getIconName')->willReturn('fa-tlp-versioning-git');
 
-        $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->andReturn([$service]);
+        $this->service_manager->method('getListOfAllowedServicesForProject')->willReturn([$service]);
 
         $collection = $this->builder->getServiceRepresentationCollectionForProject($this->project, $this->siteadmin);
-        $this->assertNotEmpty($collection);
+        self::assertNotEmpty($collection);
 
         $collection = $this->builder->getServiceRepresentationCollectionForProject($this->project, $this->projectadmin);
-        $this->assertEmpty($collection);
+        self::assertEmpty($collection);
     }
 
     public function testItReturnsActiveServiceForEveryone(): void
     {
-        $service = Mockery::mock(Service::class);
-        $service->shouldReceive('getId')->andReturn(101);
-        $service->shouldReceive('isActive')->andReturn(true);
-        $service->shouldReceive('isUsed')->andReturn('true');
-        $service->shouldReceive('getShortName')->andReturn('plugin_git');
-        $service->shouldReceive('getInternationalizedName')->andReturn('Git');
-        $service->shouldReceive('getIconName')->andReturn('fa-tlp-versioning-git');
+        $service = $this->createMock(Service::class);
+        $service->method('getId')->willReturn(101);
+        $service->method('isActive')->willReturn(true);
+        $service->method('isUsed')->willReturn(true);
+        $service->method('getShortName')->willReturn('plugin_git');
+        $service->method('getInternationalizedName')->willReturn('Git');
+        $service->method('getIconName')->willReturn('fa-tlp-versioning-git');
 
-        $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->andReturn([$service]);
+        $this->service_manager->method('getListOfAllowedServicesForProject')->willReturn([$service]);
 
         $collection = $this->builder->getServiceRepresentationCollectionForProject($this->project, $this->siteadmin);
-        $this->assertNotEmpty($collection);
+        self::assertNotEmpty($collection);
 
         $collection = $this->builder->getServiceRepresentationCollectionForProject($this->project, $this->projectadmin);
-        $this->assertNotEmpty($collection);
+        self::assertNotEmpty($collection);
     }
 }
