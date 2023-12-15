@@ -26,8 +26,8 @@ namespace Tuleap\Project\REST\v1;
 use ForgeAccess;
 use ForgeConfig;
 use Luracast\Restler\RestException;
-use Mockery as M;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use ProjectCreationData;
 use ProjectCreator;
@@ -52,54 +52,41 @@ use Tuleap\Project\XML\Import\ArchiveInterface;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\Project\XML\XMLFileContentRetriever;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\XML\ProjectXMLMerger;
 use URLVerification;
 use UserManager;
 
 final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|ServiceEnableForXmlImportRetriever
-     */
-    private $retriever;
-    /**
-     * @var \EventManager|M\LegacyMockInterface|M\MockInterface
-     */
-    private $event_manager;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|ServiceManager
-     */
-    private $service_manager;
-
-    private $project_manager;
+    private ServiceEnableForXmlImportRetriever&MockObject $retriever;
+    private \EventManager&MockObject $event_manager;
+    private ServiceManager&MockObject $service_manager;
+    private ProjectManager&MockObject $project_manager;
     private RestProjectCreator $creator;
     private \PFUser $user;
     private ProjectPostRepresentation $project_post_representation;
-    private $project_creator;
-    private $project_XML_importer;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|TemplateDao
-     */
-    private $template_dao;
-    private \PHPUnit\Framework\MockObject\MockObject|\PluginFactory $plugin_factory;
-    private $user_manager;
-    private $url_verification;
+    private ProjectCreator&MockObject $project_creator;
+    private ProjectXMLImporter&MockObject $project_XML_importer;
+    private TemplateDao&MockObject $template_dao;
+    private \PluginFactory&MockObject $plugin_factory;
+    private UserManager&MockObject $user_manager;
+    private URLVerification&MockObject $url_verification;
 
     protected function setUp(): void
     {
         \ForgeConfig::set('codendi_cache_dir', vfsStream::setup('RestProjectCreatorTest')->url());
 
-        $this->project_manager      = M::mock(ProjectManager::class);
-        $this->project_creator      = M::mock(ProjectCreator::class);
-        $this->service_manager      = M::mock(ServiceManager::class);
-        $this->project_XML_importer = M::mock(ProjectXMLImporter::class);
-        $this->template_dao         = M::mock(TemplateDao::class);
+        $this->project_manager      = $this->createMock(ProjectManager::class);
+        $this->project_creator      = $this->createMock(ProjectCreator::class);
+        $this->service_manager      = $this->createMock(ServiceManager::class);
+        $this->project_XML_importer = $this->createMock(ProjectXMLImporter::class);
+        $this->template_dao         = $this->createMock(TemplateDao::class);
 
-        $this->event_manager  = \Mockery::mock(\EventManager::class);
-        $this->retriever      = \Mockery::mock(ServiceEnableForXmlImportRetriever::class);
+        $this->event_manager  = $this->createMock(\EventManager::class);
+        $this->retriever      = $this->createMock(ServiceEnableForXmlImportRetriever::class);
         $this->plugin_factory = $this->createMock(\PluginFactory::class);
 
         $this->user_manager     = $this->createMock(UserManager::class);
@@ -120,15 +107,14 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                     $this->plugin_factory,
                 ),
                 $this->template_dao,
-                M::mock(ProjectManager::class),
+                $this->project_manager,
                 new \EventManager(),
                 $this->user_manager,
                 $this->url_verification
             )
         );
 
-        $this->user = new \PFUser(['language_id' => 'en_US']);
-        $this->project_manager->shouldReceive('userCanCreateProject')->with($this->user)->andReturnTrue()->byDefault();
+        $this->user                        = new \PFUser(['language_id' => 'en_US']);
         $this->project_post_representation = ProjectPostRepresentation::build(101);
     }
 
@@ -145,15 +131,18 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             CategoryPostRepresentation::build(18, 53),
         ];
 
-        $template_project = M::mock(Project::class, ['isError' => false, 'isActive' => false, 'isTemplate' => true]);
+        $template_project = ProjectTestBuilder::aProject()
+            ->withStatusSuspended()
+            ->withTypeTemplate()
+            ->build();
 
-        $this->project_manager->shouldReceive('getProject')->with($this->project_post_representation->template_id)->andReturn($template_project);
+        $this->project_manager->method('getProject')->with($this->project_post_representation->template_id)->willReturn($template_project);
 
-        $this->project_creator->shouldReceive('processProjectCreation')->andThrow(
+        $this->project_creator->method('processProjectCreation')->willThrowException(
             new MaxNumberOfProjectReachedForPlatformException()
         );
 
-        $this->expectException(RestException::class);
+        self::expectException(RestException::class);
 
         $this->creator->create(
             $this->project_post_representation,
@@ -198,12 +187,12 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             new NullLogger()
         );
 
-        $template_project = \Mockery::mock(Project::class);
-        $template_project->shouldReceive('isError')->andReturnFalse();
-        $template_project->shouldReceive('isActive')->andReturnFalse();
-        $template_project->shouldReceive('isTemplate')->andReturnTrue();
-        $this->project_manager->shouldReceive('getProject')->with($this->project_post_representation->template_id)->andReturn($template_project);
-        $this->project_creator->shouldReceive('processProjectCreation')->with($project_creation_data)->atLeast()->once();
+        $template_project = ProjectTestBuilder::aProject()
+            ->withStatusSuspended()
+            ->withTypeTemplate()
+            ->build();
+        $this->project_manager->method('getProject')->with($this->project_post_representation->template_id)->willReturn($template_project);
+        $this->project_creator->expects(self::atLeastOnce())->method('processProjectCreation')->with($project_creation_data);
 
         $this->creator->create(
             $this->project_post_representation,
@@ -225,12 +214,12 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             new NullLogger()
         );
 
-        $template_project = \Mockery::mock(Project::class);
-        $template_project->shouldReceive('isError')->andReturnFalse();
-        $template_project->shouldReceive('isActive')->andReturnFalse();
-        $template_project->shouldReceive('isTemplate')->andReturnTrue();
-        $this->project_manager->shouldReceive('getProject')->with($this->project_post_representation->template_id)->andReturn($template_project);
-        $this->project_creator->shouldReceive('processProjectCreation')->with($project_creation_data)->atLeast()->once();
+        $template_project = ProjectTestBuilder::aProject()
+            ->withStatusSuspended()
+            ->withTypeTemplate()
+            ->build();
+        $this->project_manager->method('getProject')->with($this->project_post_representation->template_id)->willReturn($template_project);
+        $this->project_creator->expects(self::atLeastOnce())->method('processProjectCreation')->with($project_creation_data);
 
         $this->creator->create(
             $this->project_post_representation,
@@ -256,18 +245,31 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             new NullLogger()
         );
 
+        $service1 = $this->createMock(Service::class);
+        $service1->method('getShortName')->willReturn("summary");
+        $service1->method('getId')->willReturn(12);
+        $service2 = $this->createMock(Service::class);
+        $service2->method('getShortName')->willReturn("admin");
+        $service2->method('getId')->willReturn(13);
+        $service3 = $this->createMock(Service::class);
+        $service3->method('getShortName')->willReturn(\AgileDashboardPlugin::PLUGIN_SHORTNAME);
+        $service3->method('getId')->willReturn(14);
+        $service4 = $this->createMock(Service::class);
+        $service4->method('getShortName')->willReturn(\trackerPlugin::SERVICE_SHORTNAME);
+        $service4->method('getId')->willReturn(15);
+
         $services = [
-            M::mock(Service::class, ['getShortName' => "summary", 'getId' => 12]),
-            M::mock(Service::class, ['getShortName' => "admin", 'getId' => 13]),
-            M::mock(Service::class, ['getShortName' => \AgileDashboardPlugin::PLUGIN_SHORTNAME, 'getId' => 14]),
-            M::mock(Service::class, ['getShortName' => \trackerPlugin::SERVICE_SHORTNAME, 'getId' => 15]),
+            $service1,
+            $service2,
+            $service3,
+            $service4,
         ];
 
         $this->plugin_factory->method('getPluginByName')->willReturn(new \Plugin());
         $this->plugin_factory->method('isPluginEnabled')->willReturn(true);
 
-        $this->retriever->shouldReceive('addServiceByName');
-        $this->retriever->shouldReceive('getAvailableServices')->andReturn(
+        $this->retriever->method('addServiceByName');
+        $this->retriever->method('getAvailableServices')->willReturn(
             [
                 "summary"                               => true,
                 "admin"                                 => true,
@@ -275,27 +277,31 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 \trackerPlugin::SERVICE_SHORTNAME       => true,
             ]
         );
-        $this->event_manager->shouldReceive('processEvent');
-        $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')
-            ->with(\Mockery::on(
+        $this->event_manager->method('processEvent');
+        $this->service_manager->method('getListOfAllowedServicesForProject')
+            ->with(self::callback(
                 static function (Project $project): bool {
                     return $project->getID() === Project::DEFAULT_TEMPLATE_PROJECT_ID;
                 }
             ))
-            ->andReturns($services);
+            ->willReturn($services);
 
         $new_project = new \Project(['group_id' => 201]);
 
-        $this->project_XML_importer->shouldReceive('importWithProjectData')->with(
-            \Hamcrest\Core\IsEqual::equalTo(new ImportConfig()),
-            M::on(static function (ArchiveInterface $archive) {
-                return realpath($archive->getExtractionPath()) === realpath(dirname((new ScrumTemplate(M::mock(GlyphFinder::class), new ProjectXMLMerger(), M::mock(ConsistencyChecker::class)))->getXMLPath()));
+        $this->project_XML_importer->method('importWithProjectData')->with(
+            self::isInstanceOf(ImportConfig::class),
+            self::callback(function (ArchiveInterface $archive) {
+                return realpath($archive->getExtractionPath()) === realpath(dirname((new ScrumTemplate(
+                    $this->createMock(GlyphFinder::class),
+                    new ProjectXMLMerger(),
+                    $this->createMock(ConsistencyChecker::class)
+                ))->getXMLPath()));
             }),
-            \Hamcrest\Core\IsEqual::equalTo(new SystemEventRunnerForProjectCreationFromXMLTemplate()),
+            self::isInstanceOf(SystemEventRunnerForProjectCreationFromXMLTemplate::class),
             $project_creation_data
-        )->andReturn(Result::ok($new_project));
+        )->willReturn(Result::ok($new_project));
 
-        $this->template_dao->shouldReceive('saveTemplate')->with($new_project, ScrumTemplate::NAME)->once();
+        $this->template_dao->expects(self::once())->method('saveTemplate')->with($new_project, ScrumTemplate::NAME);
 
         $this->creator->create(
             $this->project_post_representation,
