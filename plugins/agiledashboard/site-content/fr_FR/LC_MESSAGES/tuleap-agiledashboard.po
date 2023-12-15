@@ -520,8 +520,8 @@ msgstr "Le service des tableaux de bords agile est désactivé."
 msgid "Service Backlog is disabled."
 msgstr "Le service Backlog est désactivé."
 
-msgid "Sidebar shows only the last 5 open milestones"
-msgstr "La barre latérale n'affiche que les 5 derniers jalons ouverts."
+msgid "Sidebar shows only the last 5 current milestones"
+msgstr "La barre latérale n'affiche que les 5 derniers jalons ouverts"
 
 msgid "Some items are not linked to this milestone."
 msgstr "Certains éléments n'ont pas été liés à ce jalon."
@@ -618,8 +618,8 @@ msgstr ""
 "Les trackers \"planning\" potentiels sont déterminés à partir de la "
 "configuration de %1$s et de sa hiérarchie."
 
-msgid "The sidebar will display the last 5 open milestones."
-msgstr "La barre latérale affichera les 5 derniers jalons ouverts."
+msgid "The sidebar will display the last 5 current milestones."
+msgstr "La barre latérale n'affichera que les 5 derniers jalons ouverts."
 
 #, php-format
 msgid "The tracker %s is not found"
