@@ -24,9 +24,37 @@ namespace Tuleap\PullRequest\Reviewer;
 
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\PullRequest\PullRequest\Reviewer\RetrieveReviewers;
 
-class ReviewerDAO extends DataAccessObject
+class ReviewerDAO extends DataAccessObject implements RetrieveReviewers
 {
+    /**
+     * @psalm-return list<array{
+     *  "user_id": int,
+     *  "user_name": string,
+     *  "email": string,
+     *  "password": string,
+     *  "realname": string,
+     *  "register_purpose": string | null,
+     *  "status": string,
+     *  "ldap_id": string | null,
+     *  "add_date": int,
+     *  "approved_by": int,
+     *  "confirm_hash": string | null,
+     *  "mail_siteupdates": int,
+     *  "mail_va": int,
+     *  "sticky_login": int,
+     *  "authorized_keys": string | null,
+     *  "email_new": string | null,
+     *  "timezone": string | null,
+     *  "language_id": string,
+     *  "last_pwd_update": int,
+     *  "expiry_date": int | null,
+     *  "has_custom_avatar": int,
+     *  "is_first_timer": int,
+     *  "passwordless_only": int
+     *  }>
+     */
     public function searchReviewers(int $pull_request_id): array
     {
         return $this->getDB()->run(

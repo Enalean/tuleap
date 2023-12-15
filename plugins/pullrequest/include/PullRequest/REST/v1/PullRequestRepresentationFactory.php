@@ -28,6 +28,8 @@ use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\PullRequest\GitExec;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequestWithGitReference;
+use Tuleap\PullRequest\REST\v1\Reviewer\ReviewersRepresentation;
+use Tuleap\PullRequest\Reviewer\ReviewerRetriever;
 
 class PullRequestRepresentationFactory
 {
@@ -43,6 +45,7 @@ class PullRequestRepresentationFactory
         private readonly PullRequestStatusInfoRepresentationBuilder $status_info_representation_builder,
         private readonly Codendi_HTMLPurifier $purifier,
         private readonly ContentInterpretor $common_mark_interpreter,
+        private readonly ReviewerRetriever $reviewer_retriever,
     ) {
     }
 
@@ -78,6 +81,8 @@ class PullRequestRepresentationFactory
 
         [$last_build_status_name, $last_build_date] = $this->getLastBuildInformation($pull_request, $repository_dest);
 
+        $reviewers = $this->reviewer_retriever->getReviewers($pull_request);
+
         $pull_request_representation = new PullRequestRepresentation($this->gitolite_access_URL_generator);
         $pull_request_representation->build(
             $this->purifier,
@@ -93,6 +98,7 @@ class PullRequestRepresentationFactory
             $last_build_status_name,
             $last_build_date,
             $user,
+            ReviewersRepresentation::fromUsers(...$reviewers)->users,
             $short_stat_repres,
             $this->status_info_representation_builder->buildPullRequestStatusInfoRepresentation($pull_request)
         );

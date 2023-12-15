@@ -28,11 +28,20 @@ use ProjectManager;
 use Psr\Log\LoggerInterface;
 use ReferenceManager;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
+use Tuleap\Git\Permissions\AccessControlVerifier;
+use Tuleap\Git\Permissions\FineGrainedDao;
+use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Dao as PullRequestDao;
 use Tuleap\PullRequest\Exception\MalformedQueryParameterException;
 use Tuleap\PullRequest\Factory as PullRequestFactory;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceDAO;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceRetriever;
+use Tuleap\PullRequest\REST\v1\Reviewer\ReviewersRepresentation;
+use Tuleap\PullRequest\Reviewer\ReviewerDAO;
+use Tuleap\PullRequest\Reviewer\ReviewerRetriever;
+use UserManager;
 
 class RepositoryResource
 {
@@ -59,6 +68,7 @@ class RepositoryResource
     private $logger;
 
     private GitPullRequestReferenceRetriever $git_pull_request_reference_retriever;
+    private ReviewerRetriever $reviewer_retriever;
 
     public function __construct()
     {
@@ -77,7 +87,22 @@ class RepositoryResource
         $this->gitolite_access_URL_generator        = new GitoliteAccessURLGenerator($git_plugin->getPluginInfo());
         $this->git_pull_request_reference_retriever = new GitPullRequestReferenceRetriever(new GitPullRequestReferenceDAO());
 
-        $this->logger = \pullrequestPlugin::getLogger();
+        $this->logger             = \pullrequestPlugin::getLogger();
+        $this->reviewer_retriever = new ReviewerRetriever(
+            UserManager::instance(),
+            new ReviewerDAO(),
+            new PullRequestPermissionChecker(
+                $this->git_repository_factory,
+                new \Tuleap\Project\ProjectAccessChecker(
+                    new RestrictedUserCanAccessProjectVerifier(),
+                    \EventManager::instance()
+                ),
+                new AccessControlVerifier(
+                    new FineGrainedRetriever(new FineGrainedDao()),
+                    new \System_Command()
+                )
+            )
+        );
     }
 
     public function getPaginatedPullRequests(GitRepository $repository, $query, $limit, $offset): RepositoryPullRequestRepresentation
@@ -89,7 +114,7 @@ class RepositoryResource
         }
 
         $result     = $this->pull_request_dao->getPaginatedPullRequests($repository->getId(), $criterion, $limit, $offset);
-        $total_size = (int) $this->pull_request_dao->foundRows();
+        $total_size = $this->pull_request_dao->foundRows();
 
         $collection = [];
         foreach ($result as $row) {
@@ -101,13 +126,17 @@ class RepositoryResource
                 $pull_request
             );
 
+            $reviewers                = $this->reviewer_retriever->getReviewers($pull_request);
+            $reviewers_representation = ReviewersRepresentation::fromUsers(...$reviewers);
+
             if ($repository_src && $repository_dest) {
                 $pull_request_representation = new PullRequestMinimalRepresentation($this->gitolite_access_URL_generator);
                 $pull_request_representation->buildMinimal(
                     $pull_request,
                     $repository_src,
                     $repository_dest,
-                    $git_reference
+                    $git_reference,
+                    $reviewers_representation->users
                 );
                 $collection[] = $pull_request_representation;
             } else {

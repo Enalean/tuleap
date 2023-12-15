@@ -23,34 +23,19 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\Reviewer;
 
 use Project_AccessException;
-use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
+use Tuleap\PullRequest\Authorization\CheckUserCanAccessPullRequest;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 use Tuleap\PullRequest\PullRequest;
-use UserManager;
+use Tuleap\PullRequest\PullRequest\Reviewer\RetrieveReviewers;
+use Tuleap\User\ProvideUserFromRow;
 
 class ReviewerRetriever
 {
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-    /**
-     * @var ReviewerDAO
-     */
-    private $reviewer_dao;
-    /**
-     * @var PullRequestPermissionChecker
-     */
-    private $pull_request_permission_checker;
-
     public function __construct(
-        UserManager $user_manager,
-        ReviewerDAO $reviewer_dao,
-        PullRequestPermissionChecker $pull_request_permission_checker,
+        private readonly ProvideUserFromRow $user_manager,
+        private readonly RetrieveReviewers $reviewer_dao,
+        private readonly CheckUserCanAccessPullRequest $pull_request_permission_checker,
     ) {
-        $this->user_manager                    = $user_manager;
-        $this->reviewer_dao                    = $reviewer_dao;
-        $this->pull_request_permission_checker = $pull_request_permission_checker;
     }
 
     /**

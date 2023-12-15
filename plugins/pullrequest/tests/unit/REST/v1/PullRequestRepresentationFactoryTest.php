@@ -30,13 +30,18 @@ use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\PullRequest\GitExec;
 use Tuleap\PullRequest\GitReference\GitPullRequestReference;
 use Tuleap\PullRequest\PullRequestWithGitReference;
+use Tuleap\PullRequest\Reviewer\ReviewerRetriever;
 use Tuleap\PullRequest\ShortStat;
 use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
+use Tuleap\PullRequest\Tests\Stub\CheckUserCanAccessPullRequestStub;
+use Tuleap\PullRequest\Tests\Stub\RetrieveReviewersStub;
 use Tuleap\PullRequest\Timeline\SearchAbandonEvent;
 use Tuleap\PullRequest\Timeline\SearchMergeEvent;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\ProvideUserFromRowStub;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
+use Tuleap\User\ProvideUserFromRow;
 
 final class PullRequestRepresentationFactoryTest extends TestCase
 {
@@ -53,6 +58,9 @@ final class PullRequestRepresentationFactoryTest extends TestCase
      */
     private $git_exec;
     private \PFUser $user;
+    private RetrieveReviewersStub $reviwer_dao;
+    private ProvideUserFromRow $user_manager;
+    private CheckUserCanAccessPullRequestStub $pull_request_permission_checker;
 
     protected function setUp(): void
     {
@@ -77,15 +85,6 @@ final class PullRequestRepresentationFactoryTest extends TestCase
 
         $purifier = $this->createMock(\Codendi_HTMLPurifier::class);
         $purifier->method('purify')->willReturn("");
-        $this->representation_factory = new PullRequestRepresentationFactory(
-            $this->access_controll_verifier,
-            $commit_status_retriever,
-            $url_generator,
-            $status_info_builder,
-            $purifier,
-            $this->createMock(ContentInterpretor::class)
-        );
-
 
         $this->pullrequest_with_reference = new PullRequestWithGitReference(
             $pull_request,
@@ -93,6 +92,28 @@ final class PullRequestRepresentationFactoryTest extends TestCase
         );
         $this->source_repository          = new \GitRepository();
         $this->destination_repository     = new \GitRepository();
+
+        $reviewer                              = UserTestBuilder::buildWithId(101);
+        $reviewer_1                            = UserTestBuilder::buildWithId(102);
+        $this->reviwer_dao                     = RetrieveReviewersStub::fromReviewers($reviewer, $reviewer_1);
+        $this->user_manager                    = ProvideUserFromRowStub::build();
+        $this->pull_request_permission_checker = CheckUserCanAccessPullRequestStub::withAllowed();
+
+        $this->representation_factory = new PullRequestRepresentationFactory(
+            $this->access_controll_verifier,
+            $commit_status_retriever,
+            $url_generator,
+            $status_info_builder,
+            $purifier,
+            $this->createMock(ContentInterpretor::class),
+            new ReviewerRetriever($this->user_manager, $this->reviwer_dao, $this->pull_request_permission_checker)
+        );
+
+
+        $this->pullrequest_with_reference = new PullRequestWithGitReference(
+            $pull_request,
+            new GitPullRequestReference(1, GitPullRequestReference::STATUS_OK)
+        );
     }
 
     public function testItBuildsARepresentationForUserWhoCanMergePullRequest(): void
@@ -108,6 +129,22 @@ final class PullRequestRepresentationFactoryTest extends TestCase
 
         self::assertTrue($representation->user_can_merge);
         self::assertTrue($representation->user_can_update_title_and_description);
+    }
+
+    public function testItBuildsARepresentationWithReviewers(): void
+    {
+        $this->access_controll_verifier->method("canWrite")->willReturnOnConsecutiveCalls(true, true, true, true);
+        $representation = $this->representation_factory->getPullRequestRepresentation(
+            $this->pullrequest_with_reference,
+            $this->source_repository,
+            $this->destination_repository,
+            $this->git_exec,
+            $this->user
+        );
+
+        self::assertCount(2, $representation->reviewers);
+        self::assertSame(101, $representation->reviewers[0]->id);
+        self::assertSame(102, $representation->reviewers[1]->id);
     }
 
     public function testNonIntegratorCanUpdateDescriptionOfHisOwnPullRequest(): void
