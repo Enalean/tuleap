@@ -19,8 +19,10 @@
 
 <template>
     <div class="tlp-framed">
-        <h2>Hello world!</h2>
+        <pull-requests-list />
     </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import PullRequestsList from "./List/PullRequestsList.vue";
+</script>

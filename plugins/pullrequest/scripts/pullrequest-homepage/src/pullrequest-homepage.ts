@@ -18,8 +18,20 @@
  */
 
 import { createApp } from "vue";
+import VueDOMPurifyHTML from "vue-dompurify-html";
+import { getDatasetItemOrThrow } from "@tuleap/dom";
+import { buildBaseUrl } from "./urls/base-url-builders";
 import HomePage from "./components/HomePage.vue";
+import { BASE_URL, REPOSITORY_ID } from "./injection-symbols";
 
 export const init = (mount_point: HTMLElement): void => {
-    createApp(HomePage).mount(mount_point);
+    const repository_id = Number.parseInt(getDatasetItemOrThrow(mount_point, "repositoryId"), 10);
+    const project_id = Number.parseInt(getDatasetItemOrThrow(mount_point, "projectId"), 10);
+    const base_url = buildBaseUrl(window.location, repository_id, project_id);
+
+    createApp(HomePage)
+        .provide(REPOSITORY_ID, repository_id)
+        .provide(BASE_URL, base_url)
+        .use(VueDOMPurifyHTML)
+        .mount(mount_point);
 };
