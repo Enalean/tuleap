@@ -272,6 +272,10 @@
 
         color: var(--tlp-white-color);
         text-decoration: none;
+
+        > .project-sidebar-nav-item-info-tooltip {
+            opacity: 1;
+        }
     }
 
     &.active,
@@ -362,6 +366,9 @@
 
 .project-sidebar-nav-item-info-tooltip {
     margin: 0 0 0 var(--tlp-small-spacing);
+    transition: opacity ease-in-out 150ms;
+    opacity: 0;
+    color: var(--tlp-neutral-normal-color);
     font-size: 0.75rem;
 }
 
