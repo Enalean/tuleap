@@ -21,7 +21,6 @@
 use Tuleap\AgileDashboard\AgileDashboard\Milestone\Backlog\RecentlyVisitedTopBacklogDao;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
-use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
@@ -46,20 +45,14 @@ use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
-use Tuleap\Kanban\KanbanManager;
-use Tuleap\Kanban\KanbanFactory;
-use Tuleap\Kanban\KanbanDao;
 use Tuleap\Layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\User\ProvideCurrentUser;
 
 class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    /** PluginFactory */
-    private $plugin_factory;
     /**
      * @var Planning_MilestonePaneFactory
      */
@@ -79,14 +72,12 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
     private ProvideCurrentUser $current_user_provider;
 
     public function __construct(
-        PluginFactory $plugin_factory,
         Planning_MilestonePaneFactory $pane_factory,
         VisitRecorder $visit_recorder,
         AllBreadCrumbsForMilestoneBuilder $all_bread_crumbs_for_milestone_builder,
         AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
         ProvideCurrentUser $current_user_provider,
     ) {
-        $this->plugin_factory                         = $plugin_factory;
         $this->pane_factory                           = $pane_factory;
         $this->visit_recorder                         = $visit_recorder;
         $this->all_bread_crumbs_for_milestone_builder = $all_bread_crumbs_for_milestone_builder;
@@ -96,11 +87,6 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function build(Codendi_Request $request): AgileDashboardRouter
     {
-        $plugin = $this->plugin_factory->getPluginByName(
-            AgileDashboardPlugin::PLUGIN_NAME
-        );
-        assert($plugin instanceof AgileDashboardPlugin);
-
         $project_explicit_backlog_dao = new ExplicitBacklogDao();
         $tracker_dao                  = new TrackerDao();
         $planning_dao                 = new PlanningDao($tracker_dao);
@@ -119,10 +105,9 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
 
         $tracker_new_dropdown_link_presenter_builder = new TrackerNewDropdownLinkPresenterBuilder();
 
-        $split_kanban_configuration_checker = new \Tuleap\Kanban\CheckSplitKanbanConfiguration(EventManager::instance());
-        $service_crumb_builder              = new AgileDashboardCrumbBuilder($split_kanban_configuration_checker);
-        $admin_crumb_builder                = new AdministrationCrumbBuilder();
-        $header_options_inserter            = new CurrentContextSectionToHeaderOptionsInserter();
+        $service_crumb_builder   = new AgileDashboardCrumbBuilder();
+        $admin_crumb_builder     = new AdministrationCrumbBuilder();
+        $header_options_inserter = new CurrentContextSectionToHeaderOptionsInserter();
 
         $milestone_controller_factory = new MilestoneControllerFactory(
             ProjectManager::instance(),
@@ -131,10 +116,8 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
             new \Tuleap\AgileDashboard\Planning\VirtualTopMilestonePresenterBuilder(
                 $event_manager,
                 $project_explicit_backlog_dao,
-                $split_kanban_configuration_checker
             ),
             $service_crumb_builder,
-            new VirtualTopMilestoneCrumbBuilder($plugin->getPluginPath()),
             $this->visit_recorder,
             $this->all_bread_crumbs_for_milestone_builder,
             new HeaderOptionsProvider(
@@ -155,7 +138,6 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
                 ),
                 $header_options_inserter
             ),
-            $split_kanban_configuration_checker,
             new \Tuleap\AgileDashboard\CSRFSynchronizerTokenProvider(),
             new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory),
             new RecentlyVisitedTopBacklogDao(),
@@ -168,7 +150,6 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
         $form_element_factory  = Tracker_FormElementFactory::instance();
 
         return new AgileDashboardRouter(
-            $plugin,
             $milestone_factory,
             $planning_factory,
             $milestone_controller_factory,
@@ -177,9 +158,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
                 $event_manager,
                 $this
             ),
-            $this->getKanbanManager(),
             $this->getConfigurationManager(),
-            $this->getKanbanFactory(),
             new PlanningPermissionsManager(),
             $mono_milestone_checker,
             $scrum_planning_filter,
@@ -195,11 +174,9 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
                         )
                     )
                 ),
-                $split_kanban_configuration_checker,
             ),
             $service_crumb_builder,
             $admin_crumb_builder,
-            SemanticTimeframeBuilder::build(),
             new CountElementsModeChecker(new ProjectsCountModeDao()),
             new DBTransactionExecutorWithConnection($db_connection),
             new ArtifactsInExplicitBacklogDao(),
@@ -210,7 +187,6 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
                 $planning_factory,
                 $project_explicit_backlog_dao,
                 new AddToTopBacklogPostActionDao(),
-                $split_kanban_configuration_checker,
                 new MilestonesInSidebarDao(),
             ),
             $event_manager,
@@ -241,7 +217,6 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
                 TrackerFactory::instance(),
                 BackendLogger::getDefaultLogger(),
             ),
-            $split_kanban_configuration_checker,
         );
     }
 
@@ -255,46 +230,15 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
     }
 
     /**
-     * @return KanbanManager
-     */
-    private function getKanbanManager()
-    {
-        return new KanbanManager(
-            new KanbanDao(),
-            $this->getTrackerFactory()
-        );
-    }
-
-    /**
-     * @return TrackerFactory
-     */
-    private function getTrackerFactory()
-    {
-        return TrackerFactory::instance();
-    }
-
-    /**
      * @return AgileDashboard_ConfigurationManager
      */
     private function getConfigurationManager()
     {
         return new AgileDashboard_ConfigurationManager(
             new AgileDashboard_ConfigurationDao(),
-            new \Tuleap\Kanban\Legacy\LegacyConfigurationDao(),
             EventManager::instance(),
             new MilestonesInSidebarDao(),
             new MilestonesInSidebarDao(),
-        );
-    }
-
-    /**
-     * @return KanbanFactory
-     */
-    private function getKanbanFactory()
-    {
-        return new KanbanFactory(
-            $this->getTrackerFactory(),
-            new KanbanDao()
         );
     }
 }

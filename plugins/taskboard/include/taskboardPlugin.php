@@ -31,8 +31,6 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\AllowedAdditionalPanesToDisplayCollector;
 use Tuleap\AgileDashboard\Planning\HeaderOptionsForPlanningProvider;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
-use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkEvent;
-use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkPresenter;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Cardwall\CardwallIsAllowedEvent;
 use Tuleap\Layout\IncludeViteAssets;
@@ -231,21 +229,6 @@ class taskboardPlugin extends Plugin
     {
         if (! $this->getTaskboardUsage()->isCardwallAllowed($event->getProject())) {
             $event->disallowCardwall();
-        }
-    }
-
-    #[\Tuleap\Plugin\ListeningToEventClass]
-    public function alternativeBoardLinkEvent(AlternativeBoardLinkEvent $event): void
-    {
-        $pane = $this->getPaneInfoForMilestone($event->getMilestone());
-        if ($pane !== null) {
-            $event->setAlternativeBoardLink(
-                new AlternativeBoardLinkPresenter(
-                    $pane->getUri(),
-                    $pane->getIconName(),
-                    $pane->getTitle()
-                )
-            );
         }
     }
 

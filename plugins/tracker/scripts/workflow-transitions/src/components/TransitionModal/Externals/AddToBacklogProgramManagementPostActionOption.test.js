@@ -49,7 +49,7 @@ describe("AddToBacklogProgramManagementPostActionOption", () => {
     it("returns the option", () => {
         store.getters["transitionModal/post_actions"] = [];
         expect(wrapper.vm.add_to_backlog_information).toStrictEqual({
-            option: "Add to the top backlog",
+            option: "Add to the backlog",
             title: "",
             valid: true,
         });
@@ -60,7 +60,7 @@ describe("AddToBacklogProgramManagementPostActionOption", () => {
             create("post_action", { type: "program_management_add_to_top_backlog" }),
         ];
         expect(wrapper.vm.add_to_backlog_information).toStrictEqual({
-            option: "Add to the top backlog (already used)",
+            option: "Add to the backlog (already used)",
             title: "You can only have this post-action once.",
             valid: false,
         });

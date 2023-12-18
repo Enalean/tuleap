@@ -24,9 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 
 use PFUser;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Layout\JavascriptAssetGeneric;
-use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveFullProject;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\NotAllowedToPrioritizeException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\VerifyFeaturePlanned;
@@ -42,7 +40,6 @@ use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\VerifyTrackerSemantics;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonAction;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonLinkPresenter;
-use Tuleap\Tracker\Events\SplitBacklogFeatureFlagEvent;
 
 final class ArtifactTopBacklogActionBuilder
 {
@@ -54,8 +51,6 @@ final class ArtifactTopBacklogActionBuilder
         private VerifyFeaturePlanned $planned_feature_dao,
         private JavascriptAssetGeneric $asset,
         private VerifyTrackerSemantics $tracker_factory,
-        private readonly EventDispatcherInterface $event_manager,
-        private readonly RetrieveFullProject $project_manager_adapter,
     ) {
     }
 
@@ -76,36 +71,28 @@ final class ArtifactTopBacklogActionBuilder
             return null;
         }
 
-        $is_split_feature_flag_enabled = $this->event_manager->dispatch(new SplitBacklogFeatureFlagEvent($this->project_manager_adapter->getProject($source_information->project_id)))->isSplitFeatureFlagEnabled();
-
         $error_messages = [];
 
         if (! $this->tracker_factory->hasTitleSemantic($source_information->tracker_id)) {
-            $error_messages[] = $is_split_feature_flag_enabled ? dgettext(
+            $error_messages[] = dgettext(
                 'tuleap-program_management',
                 'Title semantic is not defined, the artifact cannot be added to the backlog'
-            ) : dgettext(
-                'tuleap-program_management',
-                'Title semantic is not defined, the artifact cannot be added to the top backlog'
             );
         }
 
         if (! $this->tracker_factory->hasStatusSemantic($source_information->tracker_id)) {
-            $error_messages[] = $is_split_feature_flag_enabled ? dgettext(
+            $error_messages[] = dgettext(
                 'tuleap-program_management',
                 'Status semantic is not defined, the artifact cannot be added to the backlog'
-            ) : dgettext(
-                'tuleap-program_management',
-                'Status semantic is not defined, the artifact cannot be added to the top backlog'
             );
         }
 
-        $link_label = $is_split_feature_flag_enabled ?  dgettext('tuleap-program_management', 'Add to backlog') : dgettext('tuleap-program_management', 'Add to top backlog');
+        $link_label = dgettext('tuleap-program_management', 'Add to backlog');
         $icon       = 'fa-tlp-add-to-backlog';
         $action     = 'add';
 
         if ($this->artifacts_explicit_top_backlog_dao->isInTheExplicitTopBacklog($source_information->artifact_id)) {
-            $link_label = $is_split_feature_flag_enabled ?  dgettext('tuleap-program_management', 'Remove from backlog') : dgettext('tuleap-program_management', 'Remove from top backlog');
+            $link_label = dgettext('tuleap-program_management', 'Remove from backlog');
             $icon       = 'fa-tlp-remove-from-backlog';
             $action     = 'remove';
         } elseif (
@@ -134,10 +121,6 @@ final class ArtifactTopBacklogActionBuilder
                 [
                     'name'  => 'action',
                     'value' => $action,
-                ],
-                [
-                    'name' => 'is-split-feature-flag-enabled',
-                    'value' => $is_split_feature_flag_enabled,
                 ],
             ],
             $error_messages

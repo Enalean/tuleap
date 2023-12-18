@@ -93,11 +93,6 @@ class Planning_ArtifactMilestone implements Planning_Milestone
      */
     private $remaining_effort = null;
 
-     /**
-      * @var bool
-      */
-    private $has_useable_burndown_field;
-
     /**
      * @var ScrumForMonoMilestoneChecker
      */
@@ -384,39 +379,6 @@ class Planning_ArtifactMilestone implements Planning_Milestone
         $burndown_field = $this->getArtifact()->getABurndownField($user);
 
         return (bool) $burndown_field;
-    }
-
-    /**
-     * @param bool $bool
-     */
-    public function setHasUsableBurndownField($bool)
-    {
-        $this->has_useable_burndown_field = $bool;
-    }
-
-    public function hasUsableBurndownField()
-    {
-        return (bool) $this->has_useable_burndown_field;
-    }
-
-    public function getBurndownData(PFUser $user)
-    {
-        if (! $this->hasBurdownField($user)) {
-            return null;
-        }
-
-        if ($this->date_period === null) {
-            return null;
-        }
-
-        $milestone_artifact = $this->getArtifact();
-        $burndown_field     = $milestone_artifact->getABurndownField($user);
-
-        return $burndown_field->getBurndownData(
-            $milestone_artifact,
-            $user,
-            $this->date_period
-        );
     }
 
     public function setDatePeriod(DatePeriodWithoutWeekEnd $date_period): void

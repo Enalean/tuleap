@@ -26,7 +26,7 @@ namespace Tuleap\Kanban\XML;
 use Tuleap\Kanban\KanbanFactory;
 use Project;
 use SimpleXMLElement;
-use Tuleap\Kanban\Legacy\LegacyKanbanRetriever;
+use Tuleap\Kanban\Service\KanbanService;
 use XML_RNGValidator;
 
 class KanbanXMLExporter
@@ -38,7 +38,6 @@ class KanbanXMLExporter
     public const KANBAN_ID_PREFIX  = 'K';
 
     public function __construct(
-        private readonly LegacyKanbanRetriever $configuration_dao,
         private readonly KanbanFactory $kanban_factory,
         private readonly XML_RNGValidator $xml_validator,
     ) {
@@ -49,7 +48,7 @@ class KanbanXMLExporter
      */
     public function export(SimpleXMLElement $xml_element, Project $project): void
     {
-        if (! $this->configuration_dao->isKanbanActivated((int) $project->getID())) {
+        if (! $project->usesService(KanbanService::SERVICE_SHORTNAME)) {
             return;
         }
 

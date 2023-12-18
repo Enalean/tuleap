@@ -30,7 +30,6 @@ use Tracker;
 use Tuleap\AgileDashboard\BlockScrumAccess;
 use Tuleap\AgileDashboard\Stub\VerifyProjectUsesExplicitBacklogStub;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
-use Tuleap\Kanban\CheckSplitKanbanConfiguration;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveRootPlanningStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -85,7 +84,6 @@ final class AdditionalMasschangeActionBuilderTest extends TestCase
             $this->planning_factory,
             $this->template_renderer,
             $this->event_dispatcher,
-            new CheckSplitKanbanConfiguration($this->event_dispatcher)
         );
         $user          = UserTestBuilder::buildWithDefaults();
         return $this->builder->buildMasschangeAction($this->tracker, $user);

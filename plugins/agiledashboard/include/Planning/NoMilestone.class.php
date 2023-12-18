@@ -177,11 +177,6 @@ class Planning_NoMilestone implements Planning_Milestone
         return 0;
     }
 
-    public function getBurndownData(PFUser $user)
-    {
-        return null;
-    }
-
     public function setDatePeriod(DatePeriodWithoutWeekEnd $date_period): void
     {
     }

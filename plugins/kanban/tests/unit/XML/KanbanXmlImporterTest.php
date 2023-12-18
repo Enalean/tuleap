@@ -20,17 +20,14 @@
 
 namespace Tuleap\Kanban\XML;
 
+use ColinODell\PsrTestLogger\TestLogger;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
-use Psr\Log\NullLogger;
 use SimpleXMLElement;
-use Tuleap\Kanban\Stubs\Legacy\LegacyKanbanActivatorStub;
-use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private \Project $project;
     /**
      * @var \Tuleap\Kanban\KanbanColumnManager&MockObject
      */
@@ -48,30 +45,28 @@ final class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $dashboard_kanban_column_factory;
     private KanbanXmlImporter $kanban_xml_importer;
-    private LegacyKanbanActivatorStub $kanban_activator;
     private \Tuleap\XML\MappingsRegistry $mappings_registry;
     /**
      * @var \Tuleap\Kanban\KanbanFactory&MockObject
      */
     private $kanban_factory;
+    private TestLogger $logger;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->dashboard_kanban_column_factory = $this->createMock(\Tuleap\Kanban\KanbanColumnFactory::class);
-        $this->kanban_activator                = new LegacyKanbanActivatorStub();
         $this->kanban_column_manager           = $this->createMock(\Tuleap\Kanban\KanbanColumnManager::class);
         $this->kanban_manager                  = $this->createMock(\Tuleap\Kanban\KanbanManager::class);
         $this->kanban_factory                  = $this->createMock(\Tuleap\Kanban\KanbanFactory::class);
         $this->mappings_registry               = new \Tuleap\XML\MappingsRegistry();
 
         $this->user                = new PFUser(['user_id' => 101, 'language_id' => 'en']);
-        $this->project             = ProjectTestBuilder::aProject()->withId(101)->withAccessPublic()->build();
+        $this->logger              = new TestLogger();
         $this->kanban_xml_importer = new KanbanXmlImporter(
-            new NullLogger(),
+            $this->logger,
             $this->kanban_manager,
-            $this->kanban_activator,
             $this->kanban_column_manager,
             $this->kanban_factory,
             $this->dashboard_kanban_column_factory
@@ -109,13 +104,12 @@ final class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->kanban_xml_importer->import(
             $xml,
             [],
-            $this->project,
             $field_mapping,
             $this->user,
             $this->mappings_registry
         );
 
-        self::assertNull($this->kanban_activator->getActivatedProjectId());
+        self::assertTrue($this->logger->hasInfo("0 Kanban found"));
     }
 
     public function testItImportsAKanbanWithItsOwnConfiguration(): void
@@ -151,13 +145,10 @@ final class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'T22' => 50,
             ],
-            $this->project,
             $field_mapping,
             $this->user,
             $this->mappings_registry
         );
-
-        self::assertEquals(101, $this->kanban_activator->getActivatedProjectId());
     }
 
     public function testItActivatesScrumAsWellOnlyIfThereAreImportedPlannings(): void
@@ -196,13 +187,10 @@ final class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'T22' => 50,
             ],
-            $this->project,
             $field_mapping,
             $this->user,
             $this->mappings_registry
         );
-
-        self::assertEquals(101, $this->kanban_activator->getActivatedProjectId());
     }
 
     public function testItImportsAKanbanWithASimpleConfiguration(): void
@@ -229,13 +217,10 @@ final class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'T22' => 50,
             ],
-            $this->project,
             $field_mapping,
             $this->user,
             $this->mappings_registry
         );
-
-        self::assertEquals(101, $this->kanban_activator->getActivatedProjectId());
     }
 
     public function testItImportsMultipleKanban(): void
@@ -273,13 +258,10 @@ final class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 'T22' => 50,
                 'T21' => 51,
             ],
-            $this->project,
             $field_mapping,
             $this->user,
             $this->mappings_registry
         );
-
-        self::assertEquals(101, $this->kanban_activator->getActivatedProjectId());
     }
 
     public function testItSetsKanbanIdInWidgetRegistry(): void
@@ -319,12 +301,9 @@ final class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 'T22' => 50,
                 'T21' => 51,
             ],
-            $this->project,
             $field_mapping,
             $this->user,
             $this->mappings_registry
         );
-
-        self::assertEquals(11221, $this->mappings_registry->getReference('K03')->getId());
     }
 }

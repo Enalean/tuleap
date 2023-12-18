@@ -307,11 +307,6 @@ msgid ""
 "service."
 msgstr ""
 
-msgid ""
-"Program service cannot be enabled when the project has a Scrum configuration "
-"in the AgileDashboard service."
-msgstr ""
-
 #, php-format
 msgid ""
 "Project #%d cannot be a Team because it is not in the explicit backlog mode"
@@ -394,11 +389,6 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Status semantic is not defined, the artifact cannot be added to the top "
-"backlog"
-msgstr ""
-
-msgid ""
 "Status semantic is not linked to a field in program tracker <a "
 "href='%s'>#%s</a>:"
 msgstr ""
@@ -467,11 +457,6 @@ msgstr "Título"
 
 msgid ""
 "Title semantic is not defined, the artifact cannot be added to the backlog"
-msgstr ""
-
-msgid ""
-"Title semantic is not defined, the artifact cannot be added to the top "
-"backlog"
 msgstr ""
 
 msgid "To be planned"

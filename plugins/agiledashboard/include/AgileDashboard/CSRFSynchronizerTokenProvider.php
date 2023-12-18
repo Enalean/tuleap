@@ -29,6 +29,6 @@ final class CSRFSynchronizerTokenProvider implements ProjectCSRFSynchronizerToke
 {
     public function getCSRF(\Project $project): CSRFSynchronizerTokenInterface
     {
-        return new \CSRFSynchronizerToken(AgileDashboardServiceHomepageUrlBuilder::buildSelf()->getUrl($project));
+        return new \CSRFSynchronizerToken(AgileDashboardServiceHomepageUrlBuilder::getTopBacklogUrl($project));
     }
 }

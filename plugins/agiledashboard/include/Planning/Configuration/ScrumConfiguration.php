@@ -51,11 +51,6 @@ final class ScrumConfiguration
         $this->last_plannings = $last_plannings;
     }
 
-    public function isNotEmpty(): bool
-    {
-        return ! empty($this->plannings) || ! empty($this->last_plannings);
-    }
-
     /**
      * @return Planning[]
      */

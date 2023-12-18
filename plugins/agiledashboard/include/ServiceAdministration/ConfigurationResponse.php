@@ -22,11 +22,6 @@ namespace Tuleap\AgileDashboard\ServiceAdministration;
 
 class ConfigurationResponse
 {
-    public function kanbanActivated(): void
-    {
-        $this->info(dgettext('tuleap-agiledashboard', 'Kanban successfully activated.'));
-    }
-
     public function scrumActivated(): void
     {
         $this->info(dgettext('tuleap-agiledashboard', 'Scrum successfully activated.'));

@@ -25,7 +25,6 @@ use Tuleap\AgileDashboard\Milestone\Request\SubMilestoneRequest;
 use Tuleap\AgileDashboard\Milestone\Request\TopMilestoneRequest;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
-use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\AgileDashboard\Planning\NotFoundException;
 use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
@@ -79,10 +78,6 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
      */
     private $semantic_timeframe_builder;
     /**
-     * @var MilestoneBurndownFieldChecker
-     */
-    private $burndown_field_checker;
-    /**
      * @var array
      */
     private $cache_all_milestone = [];
@@ -108,7 +103,6 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
         SemanticTimeframeBuilder $semantic_timeframe_builder,
         LoggerInterface $logger,
-        MilestoneBurndownFieldChecker $burndown_field_checker,
     ) {
         $this->planning_factory             = $planning_factory;
         $this->artifact_factory             = $artifact_factory;
@@ -119,7 +113,6 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
         $this->semantic_timeframe_builder   = $semantic_timeframe_builder;
         $this->logger                       = $logger;
-        $this->burndown_field_checker       = $burndown_field_checker;
     }
 
     public static function build(): self
@@ -142,7 +135,6 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
             new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory),
             SemanticTimeframeBuilder::build(),
             BackendLogger::getDefaultLogger(),
-            new MilestoneBurndownFieldChecker($form_element_factory)
         );
     }
 
@@ -773,25 +765,6 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     }
 
     /**
-     * Create Milestones corresponding to an array of artifacts
-     *
-     * @param Artifact[] $artifacts
-     *
-     * @return Planning_ArtifactMilestone[]
-     */
-    private function getReverseKeySortedMilestonesFromArtifacts($artifacts)
-    {
-        krsort($artifacts);
-
-        $milestones = [];
-        foreach ($artifacts as $artifact) {
-            $milestones[] = $this->getMilestoneFromArtifact($artifact);
-        }
-
-        return $milestones;
-    }
-
-    /**
      * Returns an array with all Parent milestone of given milestone.
      *
      * The array starts with current milestone, until the "oldest" ancestor
@@ -872,7 +845,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                 continue;
             }
 
-            $milestones[] = $this->getMilestoneFromArtifactWithBurndownInfo($artifact, $user);
+            $milestones[] = $this->getMilestoneFromArtifact($artifact);
         }
 
         return $milestones;
@@ -891,54 +864,10 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                 continue;
             }
 
-            $milestones[] = $this->getMilestoneFromArtifactWithBurndownInfo($artifact, $user);
+            $milestones[] = $this->getMilestoneFromArtifact($artifact);
         }
 
         return $milestones;
-    }
-
-    /**
-     * Returns the last $quantity milestones - ordered by oldest first
-     *
-     * @return Planning_Milestone[]
-     */
-    public function getPastMilestones(PFUser $user, Planning $planning, $quantity)
-    {
-        $milestones = [];
-        $artifacts  = $this->artifact_factory->getArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
-
-        foreach ($artifacts as $artifact) {
-            if (! $this->isMilestonePast($artifact)) {
-                continue;
-            }
-
-            $end_date                                         = $this->getMilestoneEndDate($artifact, $user);
-            $milestones[$end_date . '_' . $artifact->getId()] = $this->getMilestoneFromArtifactWithBurndownInfo($artifact, $user);
-        }
-        ksort($milestones);
-        $milestones = array_values($milestones);
-
-        $count = count($milestones);
-        $start = ($quantity > $count) ? 0 : $count - $quantity;
-
-        return array_reverse(array_slice($milestones, $start));
-    }
-
-    /**
-     * @return Planning_ArtifactMilestone
-     */
-    private function getMilestoneFromArtifactWithBurndownInfo(Artifact $artifact, PFUser $user)
-    {
-        $milestone = $this->getMilestoneFromArtifact($artifact);
-        $milestone->setHasUsableBurndownField($this->burndown_field_checker->hasUsableBurndownField($user, $milestone));
-
-        return $milestone;
-    }
-
-    private function getMilestoneEndDate(Artifact $milestone_artifact, PFUser $user)
-    {
-        return $this->getMilestoneDatePeriod($milestone_artifact, $user)
-            ->getEndDate();
     }
 
     private function isMilestoneCurrent(Artifact $milestone_artifact, PFUser $user)
@@ -951,11 +880,6 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     {
         return $milestone_artifact->isOpen() && $this->getMilestoneDatePeriod($milestone_artifact, $user)
             ->isTodayBeforeDatePeriod();
-    }
-
-    private function isMilestonePast(Artifact $milestone_artifact)
-    {
-        return $milestone_artifact->getStatus() && ! $milestone_artifact->isOpen();
     }
 
     /**
@@ -976,26 +900,6 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         $date_period = $this->getMilestoneDatePeriod($milestone_artifact, $user);
 
         return (bool) $date_period->getStartDate() > 0;
-    }
-
-    /**
-     * @return Planning_ArtifactMilestone[]
-     */
-    public function getAllClosedMilestones(PFUser $user, Planning $planning)
-    {
-        $artifacts = $this->artifact_factory->getClosedArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
-
-        return $this->getReverseKeySortedMilestonesFromArtifacts($artifacts);
-    }
-
-    /**
-     * @return Planning_ArtifactMilestone[]
-     */
-    public function getAllOpenMilestones(PFUser $user, Planning $planning)
-    {
-        $artifacts = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
-
-        return $this->getReverseKeySortedMilestonesFromArtifacts($artifacts);
     }
 
     public function userCanChangePrioritiesInMilestone(Planning_Milestone $milestone, PFUser $user)

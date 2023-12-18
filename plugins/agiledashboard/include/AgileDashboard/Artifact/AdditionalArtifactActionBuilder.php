@@ -27,7 +27,6 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\Planning\PlanningTrackerBacklogChecker;
-use Tuleap\Kanban\SplitKanbanConfigurationChecker;
 use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonAction;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonLinkPresenter;
@@ -83,7 +82,6 @@ class AdditionalArtifactActionBuilder
         JavascriptAssetGeneric $include_assets,
         PlanningTrackerBacklogChecker $planning_tracker_backlog_checker,
         EventDispatcherInterface $event_dispatcher,
-        private readonly SplitKanbanConfigurationChecker $split_kanban_configuration_checker,
     ) {
         $this->explicit_backlog_dao              = $explicit_backlog_dao;
         $this->planning_factory                  = $planning_factory;
@@ -136,14 +134,14 @@ class AdditionalArtifactActionBuilder
         if ($this->planned_artifact_dao->isArtifactPlannedInAMilestoneOfTheProject($artifact_id, $project_id)) {
             return null;
         }
-        $is_split_feature_flag_enabled = $this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project);
-        $link_label                    = $is_split_feature_flag_enabled ? dgettext('tuleap-agiledashboard', 'Add to backlog') : dgettext('tuleap-agiledashboard', 'Add to top backlog');
-        $icon                          = 'fa-tlp-add-to-backlog';
-        $id                            = 'artifact-explicit-backlog-action';
-        $action                        = 'add';
+
+        $link_label = dgettext('tuleap-agiledashboard', 'Add to backlog');
+        $icon       = 'fa-tlp-add-to-backlog';
+        $id         = 'artifact-explicit-backlog-action';
+        $action     = 'add';
 
         if ($this->artifacts_in_explicit_backlog_dao->isArtifactInTopBacklogOfProject($artifact_id, $project_id)) {
-            $link_label =  $is_split_feature_flag_enabled ? dgettext('tuleap-agiledashboard', 'Remove from backlog') : dgettext('tuleap-agiledashboard', 'Remove from top backlog');
+            $link_label = dgettext('tuleap-agiledashboard', 'Remove from backlog');
             $icon       = 'fa-tlp-remove-from-backlog';
             $action     = 'remove';
         }
@@ -166,10 +164,6 @@ class AdditionalArtifactActionBuilder
                 [
                     'name'  => 'action',
                     'value' => $action,
-                ],
-                [
-                    'name'  => 'is-split-feature-flag-enabled',
-                    'value' => $is_split_feature_flag_enabled,
                 ],
             ]
         );

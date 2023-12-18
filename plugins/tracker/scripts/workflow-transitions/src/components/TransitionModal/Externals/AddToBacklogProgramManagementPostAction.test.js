@@ -26,14 +26,7 @@ import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("AddToBacklogProgramManagementPostAction", () => {
     it("spawns the component", async () => {
-        const store_options = {
-            state: {
-                transitionModal: {
-                    is_split_feature_flag_enabled: false,
-                },
-            },
-        };
-        const store = createStoreMock(store_options);
+        const store = createStoreMock({});
 
         const wrapper = shallowMount(AddToBacklogProgramManagementPostAction, {
             mocks: { $store: store },

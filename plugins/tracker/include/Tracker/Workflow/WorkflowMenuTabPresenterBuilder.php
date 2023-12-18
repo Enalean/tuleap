@@ -30,11 +30,11 @@ class WorkflowMenuTabPresenterBuilder
     public const TAB_CROSS_TRACKER_TRIGGERS = 'triggers';
     public const TAB_WEBHOOKS               = 'webhooks';
 
-    public function build(Tracker $tracker, $active_tab_name, array $used_services, bool $is_split_feature_flag_enabled)
+    public function build(Tracker $tracker, $active_tab_name, array $used_services)
     {
         $tabs_menu                                = $this->buildTabsMenu($tracker);
         $tabs_menu[$active_tab_name]['is_active'] = true;
-        return new WorkflowMenuTabPresenter(array_values($tabs_menu), $tracker->getId(), $used_services, $is_split_feature_flag_enabled);
+        return new WorkflowMenuTabPresenter(array_values($tabs_menu), $tracker->getId(), $used_services);
     }
 
     private function buildTabsMenu(Tracker $tracker)

@@ -190,7 +190,6 @@ final class MilestoneFactoryGetAllMilestonesTest extends \Tuleap\Test\PHPUnit\Te
                 Mockery::spy(ScrumForMonoMilestoneChecker::class),
                 Mockery::mock(SemanticTimeframeBuilder::class),
                 new NullLogger(),
-                Mockery::mock(MilestoneBurndownFieldChecker::class),
             ]
         )
             ->makePartial()

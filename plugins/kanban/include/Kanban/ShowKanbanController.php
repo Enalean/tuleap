@@ -22,10 +22,8 @@ namespace Tuleap\Kanban;
 
 use HTTPRequest;
 use Project;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRendererFactory;
 use TrackerFactory;
-use Tuleap\Kanban\Legacy\ServiceForKanbanEvent;
 use Tuleap\Kanban\NewDropdown\NewDropdownCurrentContextSectionForKanbanProvider;
 use Tuleap\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao;
 use Tuleap\Kanban\Service\KanbanService;
@@ -47,11 +45,9 @@ final class ShowKanbanController implements DispatchableWithRequest, Dispatchabl
         private readonly KanbanFactory $kanban_factory,
         private readonly TrackerFactory $tracker_factory,
         private readonly KanbanPermissionsManager $permissions_manager,
-        private readonly EventDispatcherInterface $dispatcher,
         private readonly BreadCrumbBuilder $kanban_crumb_builder,
         private readonly RecentlyVisitedKanbanDao $recently_visited_dao,
         private readonly NewDropdownCurrentContextSectionForKanbanProvider $current_context_section_for_kanban_provider,
-        private readonly SplitKanbanConfigurationChecker $configuration_checker,
     ) {
     }
 
@@ -155,18 +151,10 @@ final class ShowKanbanController implements DispatchableWithRequest, Dispatchabl
         }
 
         $kanban_service = $project->getService(KanbanService::SERVICE_SHORTNAME);
-        if ($kanban_service && $this->configuration_checker->isProjectAllowedToUseSplitKanban($project)) {
+        if ($kanban_service) {
             return $kanban_service;
         }
 
-        $fallback = $this->dispatcher
-            ->dispatch(new ServiceForKanbanEvent($project))
-            ->service;
-
-        if ($fallback === null) {
-            throw new NotFoundException();
-        }
-
-        return $fallback;
+        throw new NotFoundException();
     }
 }

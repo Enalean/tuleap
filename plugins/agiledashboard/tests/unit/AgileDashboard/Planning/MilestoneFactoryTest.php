@@ -176,9 +176,6 @@ class MilestoneFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withArgs([$this->artifact_open_future_without_start_date->getLastChangeset(), $this->user, $logger])
             ->andReturn($date_period_open_future_without_start_date);
 
-        $milestone_burndown_field_checker = Mockery::mock(MilestoneBurndownFieldChecker::class);
-        $milestone_burndown_field_checker->shouldReceive('hasUsableBurndownField')->andReturn(true);
-
         $this->milestone = new Planning_MilestoneFactory(
             $planning_factory,
             $artifact_factory,
@@ -189,7 +186,6 @@ class MilestoneFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             $scrum_mono_milestone_checker,
             $semantic_timeframe_builder,
             $logger,
-            $milestone_burndown_field_checker
         );
     }
 
@@ -209,13 +205,6 @@ class MilestoneFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($this->artifact_open_current_without_start_date, $milestones[0]->getArtifact());
         $this->assertEquals($this->artifact_open_future_without_start_date, $milestones[1]->getArtifact());
         $this->assertEquals($this->artifact_open_future_with_start_date, $milestones[2]->getArtifact());
-    }
-
-    public function testGetOnlyPastMilestone(): void
-    {
-        $milestones = $this->milestone->getPastMilestones($this->user, $this->planning, 1);
-        $this->assertCount(1, $milestones);
-        $this->assertEquals($this->artifact_closed_passed, $milestones[0]->getArtifact());
     }
 
     private function getAnArtifact(int $id, bool $is_open, string $status, \Tracker $tracker): Artifact

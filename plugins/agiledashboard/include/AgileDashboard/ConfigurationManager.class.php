@@ -25,20 +25,12 @@ use Tuleap\AgileDashboard\Milestone\Sidebar\UpdateMilestonesInSidebarConfig;
 
 class AgileDashboard_ConfigurationManager
 {
-    public const DEFAULT_SCRUM_TITLE = 'Scrum';
-
     public function __construct(
         private readonly AgileDashboard_ConfigurationDao $dao,
-        private readonly \Tuleap\Kanban\Legacy\LegacyKanbanRetriever $kanban_configuration_dao,
         private readonly Psr\EventDispatcher\EventDispatcherInterface $event_dispatcher,
         private readonly DuplicateMilestonesInSidebarConfig $milestones_in_sidebar_config_duplicator,
         private readonly UpdateMilestonesInSidebarConfig $milestones_in_sidebar_config,
     ) {
-    }
-
-    public function kanbanIsActivatedForProject(int $project_id): bool
-    {
-        return $this->kanban_configuration_dao->isKanbanActivated($project_id);
     }
 
     public function scrumIsActivatedForProject(Project $project): bool
@@ -54,17 +46,6 @@ class AgileDashboard_ConfigurationManager
         }
 
         return true;
-    }
-
-    public function getScrumTitle($project_id)
-    {
-        $row = $this->dao->getScrumTitle($project_id);
-
-        if ($row) {
-            return $row['scrum_title'];
-        }
-
-        return self::DEFAULT_SCRUM_TITLE;
     }
 
     public function updateConfiguration(

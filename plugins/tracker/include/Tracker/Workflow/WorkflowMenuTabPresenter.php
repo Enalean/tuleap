@@ -28,7 +28,6 @@ class WorkflowMenuTabPresenter
         public readonly array $tabs_menu,
         public readonly int $tracker_id,
         array $used_services_names,
-        public readonly bool $is_split_feature_flag_enabled,
     ) {
         $this->used_services_names = json_encode($used_services_names);
     }

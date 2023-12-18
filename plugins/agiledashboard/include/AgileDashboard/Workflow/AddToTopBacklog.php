@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Workflow;
 
-use EventManager;
 use Feedback;
 use SimpleXMLElement;
 use Tracker_Artifact_Changeset;
@@ -31,7 +30,6 @@ use Transition;
 use Transition_PostAction;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactAlreadyPlannedException;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
-use Tuleap\Kanban\CheckSplitKanbanConfiguration;
 use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
 class AddToTopBacklog extends Transition_PostAction
@@ -90,30 +88,23 @@ class AddToTopBacklog extends Transition_PostAction
      */
     public function after(Tracker_Artifact_Changeset $changeset)
     {
-        $is_split_feature_flag_enabled = (new CheckSplitKanbanConfiguration(EventManager::instance()))->isProjectAllowedToUseSplitKanban($changeset->getTracker()->getProject());
         try {
             $this->unplanned_artifacts_adder->addArtifactToTopBacklog($changeset->getArtifact());
 
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
-                $is_split_feature_flag_enabled ? dgettext(
+                dgettext(
                     'tuleap-agiledashboard',
                     'This artifact has been successfully added to the backlog of the project.',
-                ) : dgettext(
-                    'tuleap-agiledashboard',
-                    'This artifact has been successfully added to the top backlog of the project.',
                 )
             );
         } catch (ArtifactAlreadyPlannedException $exception) {
             //Do nothing
             $GLOBALS['Response']->addFeedback(
                 Feedback::WARN,
-                $is_split_feature_flag_enabled ? dgettext(
+                dgettext(
                     'tuleap-agiledashboard',
                     "This artifact has not been added to the backlog of the project because it's already planned in sub milestone of the project."
-                ) : dgettext(
-                    'tuleap-agiledashboard',
-                    "This artifact has not been added to the top backlog of the project because it's already planned in sub milestone of the project."
                 )
             );
         }

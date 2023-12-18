@@ -22,38 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard;
 
-use EventManager;
 use Project;
-use Tuleap\Kanban\CheckSplitKanbanConfiguration;
-use Tuleap\Kanban\SplitKanbanConfigurationChecker;
 
 final class AgileDashboardServiceHomepageUrlBuilder
 {
-    private function __construct(private readonly SplitKanbanConfigurationChecker $split_kanban_configuration_checker)
-    {
-    }
-
-    public static function buildSelf(): self
-    {
-        return self::buildWithSplitKanbanConfigurationChecker(new CheckSplitKanbanConfiguration(EventManager::instance()));
-    }
-
-    public static function buildWithSplitKanbanConfigurationChecker(SplitKanbanConfigurationChecker $split_kanban_configuration_checker): self
-    {
-        return new self($split_kanban_configuration_checker);
-    }
-
-    public function getUrl(Project $project): string
-    {
-        if ($this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project)) {
-            return self::getTopBacklogUrl($project);
-        }
-
-        return '/plugins/agiledashboard/?' . http_build_query([
-            'group_id' => $project->getID(),
-        ]);
-    }
-
     public static function getTopBacklogUrl(Project $project): string
     {
         return '/plugins/agiledashboard/?' . http_build_query([

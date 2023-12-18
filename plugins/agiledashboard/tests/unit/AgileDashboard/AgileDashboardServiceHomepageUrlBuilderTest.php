@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard;
 
-use Tuleap\AgileDashboard\Stub\SplitKanbanConfigurationCheckerStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -35,28 +34,6 @@ final class AgileDashboardServiceHomepageUrlBuilderTest extends TestCase
             AgileDashboardServiceHomepageUrlBuilder::getTopBacklogUrl(
                 ProjectTestBuilder::aProject()->withId(116)->build(),
             )
-        );
-    }
-
-    public function testGetUrlReturnLegacyUrlWhenProjectIsNotUsingSplitKanban(): void
-    {
-        $checker = SplitKanbanConfigurationCheckerStub::withoutAllowedProject();
-
-        self::assertSame(
-            '/plugins/agiledashboard/?group_id=116',
-            AgileDashboardServiceHomepageUrlBuilder::buildWithSplitKanbanConfigurationChecker($checker)
-                ->getUrl(ProjectTestBuilder::aProject()->withId(116)->build())
-        );
-    }
-
-    public function testGetUrlTopBacklogUrlWhenProjectIsUsingSplitKanban(): void
-    {
-        $checker = SplitKanbanConfigurationCheckerStub::withAllowedProject();
-
-        self::assertSame(
-            '/plugins/agiledashboard/?group_id=116&action=show-top&pane=topplanning-v2',
-            AgileDashboardServiceHomepageUrlBuilder::buildWithSplitKanbanConfigurationChecker($checker)
-                ->getUrl(ProjectTestBuilder::aProject()->withId(116)->build())
         );
     }
 }

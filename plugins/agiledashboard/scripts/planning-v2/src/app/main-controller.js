@@ -60,8 +60,6 @@ function MainController($element, $window, SharedPropertiesService, amMoment, ge
         SharedPropertiesService.setAllowedAdditionalPanesToDisplay(
             JSON.parse(planning_init_data.allowedAdditionalPanesToDisplay),
         );
-        const is_split_feature_flag_enabled = planning_init_data.isSplitFeatureFlagEnabled === "1";
-        SharedPropertiesService.setIsSplitFeatureFlagEnabled(is_split_feature_flag_enabled);
 
         const language = planning_init_data.language;
         initLocale(language);

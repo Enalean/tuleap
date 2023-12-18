@@ -1,9 +1,3 @@
-DROP TABLE IF EXISTS plugin_kanban_legacy_configuration;
-CREATE TABLE IF NOT EXISTS plugin_kanban_legacy_configuration (
-    project_id INT(11) PRIMARY KEY,
-    kanban TINYINT NOT NULL
-);
-
 DROP TABLE IF EXISTS plugin_agiledashboard_kanban_configuration;
 CREATE TABLE IF NOT EXISTS plugin_agiledashboard_kanban_configuration (
     id INT(11) AUTO_INCREMENT PRIMARY KEY,

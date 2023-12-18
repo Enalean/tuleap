@@ -26,7 +26,6 @@ use Tuleap\AgileDashboard\Milestone\Sidebar\CheckMilestonesInSidebar;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDisabler;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneEnabler;
-use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 
 class ScrumConfigurationUpdater
 {
@@ -35,14 +34,11 @@ class ScrumConfigurationUpdater
     public function __construct(
         private readonly \Codendi_Request $request,
         private readonly \AgileDashboard_ConfigurationManager $config_manager,
-        private readonly ConfigurationResponse $response,
-        private readonly \AgileDashboard_FirstScrumCreator $first_scrum_creator,
         private readonly ScrumForMonoMilestoneEnabler $scrum_mono_milestone_enabler,
         private readonly ScrumForMonoMilestoneDisabler $scrum_mono_milestone_disabler,
         private readonly ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
         private readonly ConfigurationUpdater $configuration_updater,
         private readonly EventDispatcherInterface $event_dispatcher,
-        private readonly \Tuleap\Kanban\SplitKanbanConfigurationChecker $split_kanban_configuration_checker,
         private readonly CheckMilestonesInSidebar $milestones_in_sidebar,
     ) {
         $this->project_id = (int) $this->request->get('group_id');
@@ -72,29 +68,11 @@ class ScrumConfigurationUpdater
         $is_scrum_mono_milestone_enabled = $this->scrum_mono_milestone_checker->isMonoMilestoneEnabled(
             $this->project_id
         );
-        if ($this->request->get('home-ease-onboarding') === false) {
-            if ($this->request->get('activate-scrum-v2') && $is_scrum_mono_milestone_enabled === false) {
-                $this->scrum_mono_milestone_enabler->enableScrumForMonoMilestones($this->project_id);
-            } elseif ($this->request->get('activate-scrum-v2') == false && $is_scrum_mono_milestone_enabled === true) {
-                $this->scrum_mono_milestone_disabler->disableScrumForMonoMilestones($this->project_id);
-            }
-        }
 
-        if ($this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project)) {
-            return;
-        }
-
-        if ($scrum_is_activated) {
-            $planning_administration_delegation = new PlanningAdministrationDelegation($project);
-            $this->event_dispatcher->dispatch($planning_administration_delegation);
-
-            if (
-                $this->request->get('activate-scrum-v2') == false && $is_scrum_mono_milestone_enabled === false &&
-                ! $planning_administration_delegation->isPlanningAdministrationDelegated()
-            ) {
-                $feedback = $this->first_scrum_creator->createFirstScrum($project);
-                $GLOBALS['Response']->addFeedback($feedback->getLevel(), $feedback->getMessage());
-            }
+        if ($this->request->get('activate-scrum-v2') && $is_scrum_mono_milestone_enabled === false) {
+            $this->scrum_mono_milestone_enabler->enableScrumForMonoMilestones($this->project_id);
+        } elseif ($this->request->get('activate-scrum-v2') == false && $is_scrum_mono_milestone_enabled === true) {
+            $this->scrum_mono_milestone_disabler->disableScrumForMonoMilestones($this->project_id);
         }
     }
 
@@ -102,18 +80,7 @@ class ScrumConfigurationUpdater
     {
         $project = $this->request->getProject();
 
-        $scrum_was_activated = $this->config_manager->scrumIsActivatedForProject($project);
-        if ($this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project)) {
-            return $scrum_was_activated;
-        }
-
-        $scrum_is_activated = $this->request->get('activate-scrum');
-
-        if ($scrum_is_activated && ! $scrum_was_activated) {
-            $this->response->scrumActivated();
-        }
-
-        return $scrum_is_activated;
+        return $this->config_manager->scrumIsActivatedForProject($project);
     }
 
     private function shouldSidebarDisplayLastMilestones(): bool

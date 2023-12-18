@@ -32,14 +32,11 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyIsPlannable;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFeaturePlannedStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsInTopBacklogStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsPlannableStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
 use Tuleap\Test\Builders\IncludeAssetsBuilder;
-use Tuleap\Test\Builders\ProjectTestBuilder;
-use Tuleap\Test\Stubs\EventDispatcherStub;
 
 final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -176,10 +173,6 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             $this->verify_feature_planned,
             new JavascriptAsset(IncludeAssetsBuilder::build(), 'action.js'),
             new TrackerSemantics($this->tracker_factory),
-            EventDispatcherStub::withIdentityCallback(),
-            RetrieveFullProjectStub::withProject(
-                ProjectTestBuilder::aProject()->build()
-            )
         );
     }
 

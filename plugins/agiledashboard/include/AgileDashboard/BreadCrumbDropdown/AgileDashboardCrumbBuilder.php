@@ -23,7 +23,6 @@ namespace Tuleap\AgileDashboard\BreadCrumbDropdown;
 use PFUser;
 use Project;
 use Tuleap\AgileDashboard\AgileDashboardServiceHomepageUrlBuilder;
-use Tuleap\Kanban\SplitKanbanConfigurationChecker;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
@@ -32,26 +31,18 @@ use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
 
 class AgileDashboardCrumbBuilder
 {
-    public function __construct(
-        private readonly SplitKanbanConfigurationChecker $split_kanban_configuration_checker,
-    ) {
-    }
-
     /**
      *
      * @return BreadCrumb
      */
     public function build(PFUser $user, Project $project)
     {
-        $label = dgettext('tuleap-agiledashboard', 'Agile Dashboard');
-        if ($this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project)) {
-            $label = dgettext('tuleap-agiledashboard', 'Backlog');
-        }
+        $label = dgettext('tuleap-agiledashboard', 'Backlog');
 
         $agile_breadcrumb = new BreadCrumb(
             new BreadCrumbLink(
                 $label,
-                AgileDashboardServiceHomepageUrlBuilder::buildSelf()->getUrl($project),
+                AgileDashboardServiceHomepageUrlBuilder::getTopBacklogUrl($project),
             )
         );
 

@@ -31,7 +31,6 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
-use Tuleap\Kanban\ForceUsageOfSplitKanbanEvent;
 use Tuleap\ProgramManagement\Adapter\ArtifactLinks\DeletedArtifactLinksProxy;
 use Tuleap\ProgramManagement\Adapter\ArtifactLinks\LinkedArtifactDAO;
 use Tuleap\ProgramManagement\Adapter\ArtifactLinks\MoveArtifactActionEventProxy;
@@ -324,16 +323,12 @@ final class program_managementPlugin extends Plugin implements PluginWithService
     {
         $user_retriever    = new UserManagerAdapter(UserManager::instance());
         $project_retriever = new ProjectManagerAdapter(ProjectManager::instance(), $user_retriever);
-        $event_dispatcher  = EventManager::instance();
         $handler           = new ServiceDisabledCollectorHandler(
             new TeamDao(),
             new ProgramServiceBlocker(
-                PlanningFactory::build(),
-                $user_retriever,
-                $event_dispatcher,
                 $project_retriever
             ),
-            new BacklogServiceBlocker($project_retriever, $event_dispatcher),
+            new BacklogServiceBlocker($project_retriever),
             ProgramService::SERVICE_SHORTNAME,
             \AgileDashboardPlugin::PLUGIN_SHORTNAME,
         );
@@ -344,16 +339,12 @@ final class program_managementPlugin extends Plugin implements PluginWithService
     {
         $user_retriever    = new UserManagerAdapter(UserManager::instance());
         $project_retriever = new ProjectManagerAdapter(ProjectManager::instance(), $user_retriever);
-        $event_dispatcher  = EventManager::instance();
         $handler           = new ProjectServiceBeforeActivationHandler(
             new TeamDao(),
             new ProgramServiceBlocker(
-                PlanningFactory::build(),
-                $user_retriever,
-                $event_dispatcher,
                 $project_retriever
             ),
-            new BacklogServiceBlocker($project_retriever, $event_dispatcher),
+            new BacklogServiceBlocker($project_retriever),
             ProgramService::SERVICE_SHORTNAME,
             \AgileDashboardPlugin::PLUGIN_SHORTNAME,
         );
@@ -1169,8 +1160,6 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             new PlannedFeatureDAO(),
             new \Tuleap\Layout\JavascriptViteAsset($assets, 'src/index.ts'),
             new \Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerSemantics(TrackerFactory::instance()),
-            $event_manager,
-            $project_manager_adapter
         );
 
         $artifact = $event->getArtifact();
@@ -1738,13 +1727,5 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             ),
             array_map(static fn ($link) => $link->getId(), $event->getArtifact()->getLinkedArtifacts($event->getUser()))
         );
-    }
-
-    #[\Tuleap\Plugin\ListeningToEventClass]
-    public function forceUsageOfSplitKanbanEvent(ForceUsageOfSplitKanbanEvent $event): void
-    {
-        if ($event->project->usesService(ProgramService::SERVICE_SHORTNAME)) {
-            $event->splitKanbanIsMandatory();
-        }
     }
 }

@@ -90,11 +90,6 @@ class ServicesPresenterBuilder
             return true;
         }
 
-        $is_service_shown = $this->event_manager->dispatch(new HideServiceInUserInterfaceEvent($service))->isShown();
-        if (! $is_service_shown) {
-            return false;
-        }
-
         if ($service->isActive()) {
             return true;
         }

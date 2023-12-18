@@ -25,7 +25,6 @@ export default function SharedPropertiesService() {
         milestone_id: undefined,
         is_in_explicit_top_backlog: undefined,
         allowed_additional_panes_to_display: [],
-        is_split_feature_flag_enabled: false,
         should_load_open_and_closed_milestones: false,
     };
 
@@ -42,8 +41,6 @@ export default function SharedPropertiesService() {
         setIsInExplicitTopBacklogManagement,
         setAllowedAdditionalPanesToDisplay,
         getAllowedAdditionalPanesToDisplay,
-        isSplitFeatureFlagEnabled,
-        setIsSplitFeatureFlagEnabled,
         setShouldloadOpenAndClosedMilestones,
         shouldloadOpenAndClosedMilestones,
     };
@@ -94,13 +91,6 @@ export default function SharedPropertiesService() {
 
     function getAllowedAdditionalPanesToDisplay() {
         return property.allowed_additional_panes_to_display;
-    }
-
-    function isSplitFeatureFlagEnabled() {
-        return property.is_split_feature_flag_enabled;
-    }
-    function setIsSplitFeatureFlagEnabled(is_split_feature_flag_enabled) {
-        property.is_split_feature_flag_enabled = is_split_feature_flag_enabled;
     }
 
     function shouldloadOpenAndClosedMilestones() {

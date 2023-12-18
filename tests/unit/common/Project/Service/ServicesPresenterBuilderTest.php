@@ -118,33 +118,4 @@ final class ServicesPresenterBuilderTest extends TestCase
         self::assertCount(2, $service_presenter->services);
         self::assertSame('plugin_mediawiki_standalone', $service_presenter->services[1]->short_name);
     }
-
-    public function testItBuildServiceWithoutHiddenService(): void
-    {
-        $tracker_service = ServiceBuilder::aProjectDefinedService($this->project)
-                                         ->withLabel('Tracker')
-                                         ->build();
-
-        $hidden_service_short_name = 'kanban';
-        $kanban_hidden_service     = ServiceBuilder::aProjectDefinedService($this->project)
-                                         ->withShortName($hidden_service_short_name)
-                                         ->build();
-
-        $this->service_manager->expects(self::once())->method('getListOfAllowedServicesForProject')->willReturn([$tracker_service, $kanban_hidden_service]);
-
-        $this->event_manager = EventDispatcherStub::withCallback(
-            function (AddMissingService | HideServiceInUserInterfaceEvent | ServiceDisabledCollector $event) use ($hidden_service_short_name) {
-                if ($event instanceof HideServiceInUserInterfaceEvent) {
-                    if ($event->service->getShortName() === $hidden_service_short_name) {
-                        $event->hideService();
-                    }
-                }
-                return $event;
-            }
-        );
-
-        $service_presenter = $this->buildPresenter();
-        self::assertCount(1, $service_presenter->services);
-        self::assertSame('Tracker', $service_presenter->services[0]->label);
-    }
 }

@@ -106,7 +106,6 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
                 $this->addHook(Planning_Controller::AGILEDASHBOARD_EVENT_PLANNING_CONFIG_UPDATE);
                 $this->addHook(MilestoneResource::AGILEDASHBOARD_EVENT_REST_GET_CARDWALL);
                 $this->addHook(MilestoneRepresentationBuilder::AGILEDASHBOARD_EVENT_REST_GET_MILESTONE);
-                $this->addHook(Planning_Controller::AGILEDASHBOARD_EVENT_IS_CARDWALL_ENABLED);
                 $this->addHook(AgileDashboardPlugin::AGILEDASHBOARD_EVENT_REST_RESOURCES);
                 $this->addHook(AgileDashboard_XMLFullStructureExporter::AGILEDASHBOARD_EXPORT_XML);
             }
@@ -611,19 +610,6 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
 
         $admin_view     = new Cardwall_OnTop_Config_View_Admin();
         $params['view'] = $admin_view->displayAdminOnTop($config);
-    }
-
-    public function agiledashboard_event_is_cardwall_enabled($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $tracker = $params['tracker'];
-        assert($tracker instanceof Tracker);
-
-        if (! $this->isCardwallAllowed($tracker->getProject())) {
-            return;
-        }
-
-        $params['enabled'] = $this->getConfigFactory()
-            ->isOnTopConfigEnabledForPlanning($tracker);
     }
 
     private function isCardwallAllowed(Project $project): bool

@@ -99,7 +99,6 @@ class AdminScrumPresenter
         bool $has_workflow_action_add_to_top_backlog_defined,
         array $additional_scrum_sections_controllers,
         bool $is_planning_administration_delegated,
-        public readonly bool $is_legacy_agiledashboard,
         public readonly bool $should_sidebar_display_last_milestones,
     ) {
         $this->plannings                                   = $plannings;
@@ -124,8 +123,8 @@ class AdminScrumPresenter
         $this->is_planning_administration_delegated           = $is_planning_administration_delegated;
         $this->has_side_panes                                 = ! $is_planning_administration_delegated || $additional_content !== '';
 
-        $this->explicit_backlog_checkbox_title = $is_legacy_agiledashboard ? dgettext("tuleap-agiledashboard", "Explicit top backlog") : dgettext("tuleap-agiledashboard", "Explicit backlog");
-        $this->explicit_backlog_checkbox_info  = $is_legacy_agiledashboard ? dgettext("tuleap-agiledashboard", "Explicit backlog allows to select, item per item, what goes in Scrum top backlog.") : dgettext("tuleap-agiledashboard", "Explicit backlog allows to select, item per item, what goes in Scrum backlog.");
+        $this->explicit_backlog_checkbox_title = dgettext("tuleap-agiledashboard", "Explicit backlog");
+        $this->explicit_backlog_checkbox_info  = dgettext("tuleap-agiledashboard", "Explicit backlog allows to select, item per item, what goes in Scrum backlog.");
     }
 
     public function has_plannings()

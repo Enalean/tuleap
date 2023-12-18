@@ -27,14 +27,11 @@ use Planning_Milestone;
 use Planning_MilestoneController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
-use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
-use Tuleap\Kanban\CheckSplitKanbanConfiguration;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
-use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
 final class MilestoneControllerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -79,9 +76,6 @@ final class MilestoneControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     /** @var AgileDashboardCrumbBuilder */
     private $agile_dashboard_crumb_builder;
-
-    /** @var VirtualTopMilestoneCrumbBuilder */
-    private $top_milestone_crumb_builder;
 
     /** @var MilestoneCrumbBuilder */
     private $milestone_crumb_builder;
@@ -128,14 +122,11 @@ final class MilestoneControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_manager->shouldReceive('getProject', 102)->andReturn($this->project);
 
         $this->agile_dashboard_crumb_builder = Mockery::mock(AgileDashboardCrumbBuilder::class);
-        $this->top_milestone_crumb_builder   = Mockery::mock(VirtualTopMilestoneCrumbBuilder::class);
         $this->milestone_crumb_builder       = Mockery::mock(MilestoneCrumbBuilder::class);
 
         $this->crumb_builder = new AllBreadCrumbsForMilestoneBuilder(
             $this->agile_dashboard_crumb_builder,
-            $this->top_milestone_crumb_builder,
             $this->milestone_crumb_builder,
-            new CheckSplitKanbanConfiguration(EventDispatcherStub::withIdentityCallback()),
         );
 
         $this->service_breadcrumb     = new BreadCrumb(
@@ -168,7 +159,6 @@ final class MilestoneControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->milestone_factory->shouldReceive('getBareMilestone')->andReturn($this->nomilestone);
         $this->agile_dashboard_crumb_builder->shouldReceive('build')->andReturn($this->service_breadcrumb);
-        $this->top_milestone_crumb_builder->shouldReceive('build')->andReturn($this->top_backlog_breadcrumb);
         $this->milestone_crumb_builder->shouldNotReceive('build');
 
         $breadcrumbs = $this->milestone_controller->getBreadcrumbs();
@@ -187,7 +177,6 @@ final class MilestoneControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->sprint->shouldReceive('getAncestors')->andReturn([$this->release, $this->product]);
         $this->milestone_factory->shouldReceive('getBareMilestone')->andReturn($this->sprint);
         $this->agile_dashboard_crumb_builder->shouldReceive('build')->andReturn($this->service_breadcrumb);
-        $this->top_milestone_crumb_builder->shouldReceive('build')->andReturn($this->top_backlog_breadcrumb);
         $this->milestone_crumb_builder->shouldReceive('build')->andReturn(
             $product_breadcrumb,
             $release_breadcrumb,

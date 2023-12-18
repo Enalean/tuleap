@@ -23,13 +23,11 @@ namespace Tuleap\AgileDashboard\PermissionsPerGroup;
 use AgileDashboardPlugin;
 use PFUser;
 use Project;
-use Tuleap\Kanban\SplitKanbanConfigurationChecker;
 
 class AgileDashboardJSONPermissionsRetriever
 {
     public function __construct(
         private readonly AgileDashboardPermissionsRepresentationBuilder $representation_builder,
-        private readonly SplitKanbanConfigurationChecker $split_kanban_configuration_checker,
     ) {
     }
 
@@ -38,9 +36,7 @@ class AgileDashboardJSONPermissionsRetriever
         if (! $project->usesService(AgileDashboardPlugin::PLUGIN_SHORTNAME)) {
             $GLOBALS['Response']->send400JSONErrors(
                 [
-                    'error' => $this->split_kanban_configuration_checker->isProjectAllowedToUseSplitKanban($project)
-                        ? dgettext('tuleap-agiledashboard', "Service Backlog is disabled.")
-                        : dgettext('tuleap-agiledashboard', "Service Agiledashboard is disabled."),
+                    'error' => dgettext('tuleap-agiledashboard', "Service Backlog is disabled."),
                 ]
             );
         }

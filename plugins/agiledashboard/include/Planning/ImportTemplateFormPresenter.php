@@ -33,8 +33,6 @@ final class ImportTemplateFormPresenter
 
     public function __construct(
         Project $project,
-        public readonly bool $is_using_kanban_service,
-        public readonly bool $is_legacy_agiledashboard,
     ) {
         $this->group_id = (int) $project->getID();
 

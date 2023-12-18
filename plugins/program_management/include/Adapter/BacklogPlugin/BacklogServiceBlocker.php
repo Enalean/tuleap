@@ -22,27 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\BacklogPlugin;
 
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveFullProject;
 use Tuleap\ProgramManagement\Domain\Workspace\ProjectIdentifier;
 use Tuleap\ProgramManagement\ProgramService;
-use Tuleap\Tracker\Events\SplitBacklogFeatureFlagEvent;
 
 final class BacklogServiceBlocker implements \Tuleap\ProgramManagement\Domain\Workspace\ProgramBlocksBacklogServiceIfNeeded
 {
     public function __construct(
         private readonly RetrieveFullProject $project_retriever,
-        private readonly EventDispatcherInterface $event_dispatcher,
     ) {
     }
 
     public function shouldBacklogServiceBeBlocked(ProjectIdentifier $project_identifier): bool
     {
         $project = $this->project_retriever->getProject($project_identifier->getId());
-        $event   = $this->event_dispatcher->dispatch(new SplitBacklogFeatureFlagEvent($project));
-        if (! $event->isSplitFeatureFlagEnabled()) {
-            return false;
-        }
+
         return $project->usesService(ProgramService::SERVICE_SHORTNAME);
     }
 }

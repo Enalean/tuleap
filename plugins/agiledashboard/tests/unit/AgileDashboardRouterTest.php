@@ -21,14 +21,10 @@
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\Planning\MilestoneControllerFactory;
-use Tuleap\Kanban\KanbanManager;
 use Tuleap\AgileDashboard\Planning\BacklogTrackersUpdateChecker;
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\Kanban\KanbanFactory;
-use Tuleap\Test\Stubs\EventDispatcherStub;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 final class AgileDashboardRouterTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
@@ -67,22 +63,18 @@ final class AgileDashboardRouterTest extends \Tuleap\Test\PHPUnit\TestCase //php
         $this->router = Mockery::mock(
             AgileDashboardRouter::class,
             [
-                $plugin,
                 $this->planning_milestone_factory,
                 Mockery::mock(PlanningFactory::class),
                 $this->milestone_controller_factory,
                 Mockery::mock(ProjectManager::class),
                 Mockery::mock(AgileDashboard_XMLFullStructureExporter::class),
-                Mockery::mock(KanbanManager::class),
                 Mockery::mock(AgileDashboard_ConfigurationManager::class),
-                Mockery::mock(KanbanFactory::class),
                 Mockery::mock(PlanningPermissionsManager::class),
                 Mockery::mock(Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class),
                 Mockery::mock(Tuleap\AgileDashboard\Planning\ScrumPlanningFilter::class),
                 Mockery::mock(Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetriever::class),
                 Mockery::mock(Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder::class),
                 Mockery::mock(Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder::class),
-                Mockery::mock(SemanticTimeframeBuilder::class),
                 Mockery::mock(CountElementsModeChecker::class),
                 Mockery::mock(DBTransactionExecutor::class),
                 Mockery::mock(ArtifactsInExplicitBacklogDao::class),
@@ -95,7 +87,6 @@ final class AgileDashboardRouterTest extends \Tuleap\Test\PHPUnit\TestCase //php
                 Mockery::mock(\Tuleap\AgileDashboard\Planning\Admin\PlanningEditionPresenterBuilder::class),
                 new \Tuleap\AgileDashboard\Planning\Admin\UpdateRequestValidator(),
                 $this->createMock(BacklogTrackersUpdateChecker::class),
-                new \Tuleap\Kanban\CheckSplitKanbanConfiguration(EventDispatcherStub::withIdentityCallback()),
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
 

@@ -117,9 +117,6 @@ msgstr "Recharger la page"
 msgid "Remove from backlog"
 msgstr "Supprimer du backlog"
 
-msgid "Remove from top backlog"
-msgstr "Supprimer de la planification générale"
-
 msgid "Show closed backlog items"
 msgstr "Afficher les éléments du backlog fermés"
 

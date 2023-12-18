@@ -32,7 +32,6 @@ use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
-use Tuleap\Tracker\Events\SplitBacklogFeatureFlagEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetExternalPostActionPluginsEvent;
 
 class WorkflowTransitionController implements DispatchableWithRequest, DispatchableWithBurningParrot
@@ -94,14 +93,12 @@ class WorkflowTransitionController implements DispatchableWithRequest, Dispatcha
             ['main_classes' => ['fluid-main']]
         );
 
-        $is_split_feature_flag_enabled = $this->event_manager->dispatch(new SplitBacklogFeatureFlagEvent($tracker->getProject()))->isSplitFeatureFlagEnabled();
 
         $renderer  = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/workflow-transitions');
         $presenter = $this->presenter_builder->build(
             $tracker,
             WorkflowMenuTabPresenterBuilder::TAB_TRANSITIONS,
             $event->getServiceNameUsed(),
-            $is_split_feature_flag_enabled
         );
         $renderer->renderToPage('workflow-transitions', $presenter);
 

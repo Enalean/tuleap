@@ -21,14 +21,12 @@
 declare(strict_types=1);
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
-use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Http\Server\ServiceInstrumentationMiddleware;
 use Tuleap\JWT\generators\MercureJWTGeneratorBuilder;
 use Tuleap\Kanban\BreadCrumbBuilder;
-use Tuleap\Kanban\CheckSplitKanbanConfiguration;
 use Tuleap\Kanban\HierarchyChecker;
 use Tuleap\Kanban\KanbanActionsChecker;
 use Tuleap\Kanban\KanbanColumnDao;
@@ -41,7 +39,6 @@ use Tuleap\Kanban\KanbanManager;
 use Tuleap\Kanban\KanbanPermissionsManager;
 use Tuleap\Kanban\KanbanStatisticsAggregator;
 use Tuleap\Kanban\KanbanUserPreferences;
-use Tuleap\Kanban\Legacy\LegacyConfigurationDao;
 use Tuleap\Kanban\Plugin\KanbanPluginInfo;
 use Tuleap\Kanban\RealTime\KanbanArtifactMessageBuilder;
 use Tuleap\Kanban\RealTime\KanbanArtifactMessageSender;
@@ -73,12 +70,10 @@ use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
-use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\Routing\CheckProjectCSRFMiddleware;
 use Tuleap\Project\Routing\ProjectAccessCheckerMiddleware;
 use Tuleap\Project\Routing\ProjectByNameRetrieverMiddleware;
-use Tuleap\Project\Service\HideServiceInUserInterfaceEvent;
 use Tuleap\Project\Service\PluginWithService;
 use Tuleap\Project\Service\ServiceClassnamesCollector;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
@@ -92,7 +87,6 @@ use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 use Tuleap\Tracker\Config\GeneralSettingsEvent;
 use Tuleap\Tracker\Creation\DefaultTemplatesXMLFileCollection;
-use Tuleap\Tracker\Events\SplitBacklogFeatureFlagEvent;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
@@ -113,7 +107,7 @@ require_once __DIR__ . '/../../cardwall/include/cardwallPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-final class KanbanPlugin extends Plugin implements PluginWithConfigKeys, PluginWithService
+final class KanbanPlugin extends Plugin implements PluginWithService
 {
     public function __construct(?int $id)
     {
@@ -333,8 +327,6 @@ final class KanbanPlugin extends Plugin implements PluginWithConfigKeys, PluginW
             new KanbanFactory($tracker_factory, $dao),
             new KanbanItemDao(),
             TemplateRendererFactory::build(),
-            new CheckSplitKanbanConfiguration(EventManager::instance()),
-            EventManager::instance(),
             new SapiEmitter(),
             new ProjectByNameRetrieverMiddleware(ProjectRetriever::buildSelf()),
             new ProjectAccessCheckerMiddleware(
@@ -356,7 +348,6 @@ final class KanbanPlugin extends Plugin implements PluginWithConfigKeys, PluginW
             $this->getKanbanFactory(),
             $tracker_factory,
             new KanbanPermissionsManager(),
-            EventManager::instance(),
             new BreadCrumbBuilder($tracker_factory, $this->getKanbanFactory()),
             new RecentlyVisitedKanbanDao(),
             new \Tuleap\Kanban\NewDropdown\NewDropdownCurrentContextSectionForKanbanProvider(
@@ -370,7 +361,6 @@ final class KanbanPlugin extends Plugin implements PluginWithConfigKeys, PluginW
                     \Tuleap\Tracker\Permission\SubmissionPermissionVerifier::instance(),
                 )
             ),
-            new CheckSplitKanbanConfiguration(EventManager::instance()),
         );
     }
 
@@ -541,17 +531,6 @@ final class KanbanPlugin extends Plugin implements PluginWithConfigKeys, PluginW
     }
 
     #[ListeningToEventClass]
-    public function registerProjectCreationEvent(RegisterProjectCreationEvent $event): void
-    {
-        if ($event->shouldProjectInheritFromTemplate()) {
-            (new \Tuleap\Kanban\Legacy\LegacyConfigurationDao())->duplicate(
-                (int) $event->getJustCreatedProject()->getID(),
-                (int) $event->getTemplateProject()->getID(),
-            );
-        }
-    }
-
-    #[ListeningToEventClass]
     public function defaultTemplatesXMLFileCollection(DefaultTemplatesXMLFileCollection $collection): void
     {
         $this->addKanbanTemplates($collection);
@@ -606,18 +585,16 @@ final class KanbanPlugin extends Plugin implements PluginWithConfigKeys, PluginW
         $tracker_mapping = $event->getCreatedTrackersMapping();
         $value_mapping   = $event->getXmlFieldValuesMapping();
         $logger          = $event->getLogger();
-        $project         = $event->getProject();
         $user            = UserManager::instance()->getCurrentUser();
 
         $kanban = new KanbanXmlImporter(
             new WrapperLogger($logger, "kanban"),
             $this->getKanbanManager(),
-            new \Tuleap\Kanban\Legacy\LegacyConfigurationDao(),
             $this->getDashboardKanbanColumnManager(),
             $this->getKanbanFactory(),
             $this->getKanbanColumnFactory()
         );
-        $kanban->import($xml, $tracker_mapping, $project, $value_mapping, $user, $event->getMappingsRegistery());
+        $kanban->import($xml, $tracker_mapping, $value_mapping, $user, $event->getMappingsRegistery());
     }
 
     private function getDashboardKanbanColumnManager(): KanbanColumnManager
@@ -710,11 +687,6 @@ final class KanbanPlugin extends Plugin implements PluginWithConfigKeys, PluginW
         return BackendLogger::getDefaultLogger();
     }
 
-    public function getConfigKeys(\Tuleap\Config\ConfigClassProvider $event): void
-    {
-        $event->addConfigClass(\Tuleap\Kanban\SplitKanbanConfiguration::class);
-    }
-
     public function getServiceShortname(): string
     {
         return KanbanService::SERVICE_SHORTNAME;
@@ -741,38 +713,9 @@ final class KanbanPlugin extends Plugin implements PluginWithConfigKeys, PluginW
         // nothing to do for kanban
     }
 
-    #[ListeningToEventClass]
-    public function hideKanbanServiceAccordingToFeatureFlag(HideServiceInUserInterfaceEvent $event): void
-    {
-        $service = $event->service;
-        if ($service->getShortName() !== KanbanService::SERVICE_SHORTNAME) {
-            return;
-        }
-        $configuration_checker = new CheckSplitKanbanConfiguration(EventManager::instance());
-        if (! $configuration_checker->isProjectAllowedToUseSplitKanban($service->getProject())) {
-            $event->hideService();
-        }
-    }
-
-
-    #[ListeningToEventClass]
-    public function enableSplitFeatureFlagIfNeeded(SplitBacklogFeatureFlagEvent $event): void
-    {
-        $project               = $event->project;
-        $configuration_checker = new CheckSplitKanbanConfiguration(EventManager::instance());
-        if ($configuration_checker->isProjectAllowedToUseSplitKanban($project)) {
-            $event->enableSplitFeatureFlag();
-        }
-    }
-
     public function addMissingService(\Tuleap\Project\Service\AddMissingService $event): void
     {
-        $project               = $event->project;
-        $configuration_checker = new CheckSplitKanbanConfiguration(EventManager::instance());
-        if (! $configuration_checker->isProjectAllowedToUseSplitKanban($project)) {
-            return;
-        }
-        $event->addService(KanbanService::forServiceCreation($project));
+        $event->addService(KanbanService::forServiceCreation($event->project));
     }
 
     public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event): void
@@ -784,7 +727,6 @@ final class KanbanPlugin extends Plugin implements PluginWithConfigKeys, PluginW
     public function trackerEventExportStructureXML(TrackerEventExportStructureXML $event): void
     {
         (new KanbanXMLExporter(
-            new LegacyConfigurationDao(),
             new KanbanFactory(
                 TrackerFactory::instance(),
                 new KanbanDao()
@@ -800,7 +742,6 @@ final class KanbanPlugin extends Plugin implements PluginWithConfigKeys, PluginW
     public function trackerEventExportFullXML(TrackerEventExportFullXML $event): void
     {
         (new KanbanXMLExporter(
-            new LegacyConfigurationDao(),
             new KanbanFactory(
                 TrackerFactory::instance(),
                 new KanbanDao()

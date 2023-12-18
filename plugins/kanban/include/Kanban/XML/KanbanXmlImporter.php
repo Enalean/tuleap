@@ -26,10 +26,8 @@ use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Kanban\KanbanManager;
 use Psr\Log\LoggerInterface;
 use PFUser;
-use Project;
 use SimpleXMLElement;
 use TrackerXmlFieldsMapping;
-use Tuleap\Kanban\Legacy\LegacyKanbanActivator;
 use Tuleap\XML\MappingsRegistry;
 
 final class KanbanXmlImporter
@@ -37,7 +35,6 @@ final class KanbanXmlImporter
     public function __construct(
         private readonly LoggerInterface $logger,
         private readonly KanbanManager $kanban_manager,
-        private readonly LegacyKanbanActivator $kanban_activator,
         private readonly KanbanColumnManager $dashboard_kanban_column_manager,
         private readonly KanbanFactory $dashboard_kanban_factory,
         private readonly KanbanColumnFactory $dashboard_kanban_column_factory,
@@ -47,7 +44,6 @@ final class KanbanXmlImporter
     public function import(
         SimpleXMLElement $xml,
         array $tracker_mapping,
-        Project $project,
         TrackerXmlFieldsMapping $field_mapping,
         PFUser $user,
         MappingsRegistry $mappings_registry,
@@ -57,8 +53,6 @@ final class KanbanXmlImporter
 
             return;
         }
-
-        $this->kanban_activator->activateKanban((int) $project->getID());
 
         foreach ($xml->agiledashboard->kanban_list->kanban as $xml_configuration) {
             $attrs = $xml_configuration->attributes();

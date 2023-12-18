@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard;
 
 use BackendLogger;
-use EventManager;
 use PFUser;
 use Planning_MilestoneFactory;
 use PlanningFactory;
@@ -34,7 +33,6 @@ use Tuleap\AgileDashboard\Milestone\Sidebar\AgileDashboardPromotedMilestonesRetr
 use Tuleap\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarDao;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
-use Tuleap\Kanban\CheckSplitKanbanConfiguration;
 use Tuleap\Layout\SidebarPromotedItemPresenter;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
@@ -42,43 +40,22 @@ class AgileDashboardService extends \Service
 {
     public function getIconName(): string
     {
-        if ($this->isLegacyAgileDashboard()) {
-            return 'fa-solid fa-tlp-taskboard';
-        }
-
         return 'fa-solid fa-tlp-backlog';
     }
 
     public function getInternationalizedName(): string
     {
-        if ($this->isLegacyAgileDashboard()) {
-            return parent::getInternationalizedName();
-        }
-
         return dgettext('tuleap-agiledashboard', 'Backlog');
     }
 
     public function getProjectAdministrationName(): string
     {
-        if ($this->isLegacyAgileDashboard()) {
-            return parent::getProjectAdministrationName();
-        }
-
         return dgettext('tuleap-agiledashboard', 'Backlog');
     }
 
     public function getInternationalizedDescription(): string
     {
-        if ($this->isLegacyAgileDashboard()) {
-            return parent::getInternationalizedDescription();
-        }
-
         return dgettext('tuleap-agiledashboard', 'Backlog');
-    }
-
-    private function isLegacyAgileDashboard(): bool
-    {
-        return ! (new CheckSplitKanbanConfiguration(EventManager::instance()))->isProjectAllowedToUseSplitKanban($this->project);
     }
 
     public function urlCanChange(): bool
@@ -88,7 +65,7 @@ class AgileDashboardService extends \Service
 
     public function getUrl(?string $url = null): string
     {
-        return AgileDashboardServiceHomepageUrlBuilder::buildSelf()->getUrl($this->project);
+        return AgileDashboardServiceHomepageUrlBuilder::getTopBacklogUrl($this->project);
     }
 
     /**
