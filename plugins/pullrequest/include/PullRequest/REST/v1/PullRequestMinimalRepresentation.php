@@ -40,6 +40,7 @@ class PullRequestMinimalRepresentation
     public GitRepositoryReference $repository;
     public GitRepositoryReference $repository_dest;
     public int $user_id;
+    public MinimalUserRepresentation $creator;
     public string $creation_date;
     public string $branch_src;
     public string $branch_dest;
@@ -64,6 +65,7 @@ class PullRequestMinimalRepresentation
         GitRepository $repository,
         GitRepository $repository_dest,
         GitPullRequestReference $git_pull_request_reference,
+        MinimalUserRepresentation $pull_request_creator,
         array $reviewers,
     ) {
         $this->id = JsonCast::toInt($pull_request->getId());
@@ -81,6 +83,7 @@ class PullRequestMinimalRepresentation
         $this->repository_dest->build($repository_dest);
 
         $this->user_id                 = JsonCast::toInt($pull_request->getUserId());
+        $this->creator                 = $pull_request_creator;
         $this->creation_date           = JsonCast::toDate($pull_request->getCreationDate());
         $this->branch_src              = $pull_request->getBranchSrc();
         $this->branch_dest             = $pull_request->getBranchDest();

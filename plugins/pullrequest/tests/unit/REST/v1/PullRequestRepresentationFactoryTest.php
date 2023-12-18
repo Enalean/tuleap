@@ -22,10 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\REST\v1;
 
+use Luracast\Restler\RestException;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Git\CommitStatus\CommitStatusRetriever;
 use Tuleap\Git\CommitStatus\CommitStatusWithKnownStatus;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\Git\Permissions\AccessControlVerifier;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
 use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\PullRequest\GitExec;
 use Tuleap\PullRequest\GitReference\GitPullRequestReference;
@@ -41,91 +44,89 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProvideUserFromRowStub;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
-use Tuleap\User\ProvideUserFromRow;
 
 final class PullRequestRepresentationFactoryTest extends TestCase
 {
-    /**
-     * @var AccessControlVerifier&\PHPUnit\Framework\MockObject\Stub
-     */
-    private $access_controll_verifier;
-    private PullRequestRepresentationFactory $representation_factory;
-    private PullRequestWithGitReference $pullrequest_with_reference;
-    private \GitRepository $source_repository;
-    private \GitRepository $destination_repository;
-    /**
-     * @var GitExec&\PHPUnit\Framework\MockObject\Stub
-     */
-    private $git_exec;
-    private \PFUser $user;
-    private RetrieveReviewersStub $reviwer_dao;
-    private ProvideUserFromRow $user_manager;
-    private CheckUserCanAccessPullRequestStub $pull_request_permission_checker;
+    private const FIRST_REVIEWER_USER_ID  = 101;
+    private const SECOND_REVIEWER_USER_ID = 102;
+    private const CREATOR_USER_ID         = 172;
+    private AccessControlVerifier & Stub $access_control_verifier;
+    private \PFUser $current_user;
+    private RetrieveUserByIdStub $user_retriever;
 
     protected function setUp(): void
     {
-        $pull_request = PullRequestTestBuilder::aPullRequestInReview()->build();
-        $this->user   = UserTestBuilder::anActiveUser()->withId($pull_request->getUserId())->build();
+        $this->current_user = UserTestBuilder::anActiveUser()->withId(self::CREATOR_USER_ID)->build();
 
-        $this->access_controll_verifier = $this->createStub(AccessControlVerifier::class);
-        $this->git_exec                 = $this->createStub(GitExec::class);
-        $this->git_exec->method('getShortStat')->willReturn(new ShortStat(2, 20, 30));
+        $this->access_control_verifier = $this->createStub(AccessControlVerifier::class);
+        $this->user_retriever          = RetrieveUserByIdStub::withUser($this->current_user);
+    }
 
-        $commit_status_retriever = $this->createStub(CommitStatusRetriever::class);
-        $url_generator           = $this->createStub(GitoliteAccessURLGenerator::class);
-        $status_info_builder     = new PullRequestStatusInfoRepresentationBuilder(
-            $this->createStub(SearchMergeEvent::class),
-            $this->createStub(SearchAbandonEvent::class),
-            RetrieveUserByIdStub::withUser($this->user),
-        );
-
-        $commit_status_retriever->method('getLastCommitStatus')->willReturn(new CommitStatusWithKnownStatus(CommitStatusWithKnownStatus::STATUS_SUCCESS, new \DateTimeImmutable()));
-        $url_generator->method('getHTTPURL')->willReturn("an_http_url/");
-        $url_generator->method('getSSHURL')->willReturn("an_ssh_url");
-
-        $purifier = $this->createMock(\Codendi_HTMLPurifier::class);
-        $purifier->method('purify')->willReturn("");
-
-        $this->pullrequest_with_reference = new PullRequestWithGitReference(
+    /**
+     * @throws \Git_Command_Exception
+     * @throws RestException
+     */
+    private function getRepresentation(): PullRequestRepresentation
+    {
+        $pull_request               = PullRequestTestBuilder::aPullRequestInReview()
+            ->createdBy(self::CREATOR_USER_ID)
+            ->build();
+        $source_repository          = GitRepositoryTestBuilder::aProjectRepository()->build();
+        $destination_repository     = GitRepositoryTestBuilder::aProjectRepository()->build();
+        $pullrequest_with_reference = new PullRequestWithGitReference(
             $pull_request,
             new GitPullRequestReference(1, GitPullRequestReference::STATUS_OK)
         );
-        $this->source_repository          = new \GitRepository();
-        $this->destination_repository     = new \GitRepository();
 
-        $reviewer                              = UserTestBuilder::buildWithId(101);
-        $reviewer_1                            = UserTestBuilder::buildWithId(102);
-        $this->reviwer_dao                     = RetrieveReviewersStub::fromReviewers($reviewer, $reviewer_1);
-        $this->user_manager                    = ProvideUserFromRowStub::build();
-        $this->pull_request_permission_checker = CheckUserCanAccessPullRequestStub::withAllowed();
+        $first_reviewer  = UserTestBuilder::buildWithId(self::FIRST_REVIEWER_USER_ID);
+        $second_reviewer = UserTestBuilder::buildWithId(self::SECOND_REVIEWER_USER_ID);
 
-        $this->representation_factory = new PullRequestRepresentationFactory(
-            $this->access_controll_verifier,
+        $commit_status_retriever = $this->createStub(CommitStatusRetriever::class);
+        $commit_status_retriever->method('getLastCommitStatus')->willReturn(
+            new CommitStatusWithKnownStatus(CommitStatusWithKnownStatus::STATUS_SUCCESS, new \DateTimeImmutable())
+        );
+
+        $url_generator = $this->createStub(GitoliteAccessURLGenerator::class);
+        $url_generator->method('getHTTPURL')->willReturn('https://example.com/git');
+        $url_generator->method('getSSHURL')->willReturn('ssh://example.com/git');
+
+        $status_info_builder = new PullRequestStatusInfoRepresentationBuilder(
+            $this->createStub(SearchMergeEvent::class),
+            $this->createStub(SearchAbandonEvent::class),
+            RetrieveUserByIdStub::withNoUser(),
+        );
+
+        $git_exec = $this->createStub(GitExec::class);
+        $git_exec->method('getShortStat')->willReturn(new ShortStat(2, 20, 30));
+
+        $representation_factory = new PullRequestRepresentationFactory(
+            $this->access_control_verifier,
             $commit_status_retriever,
             $url_generator,
             $status_info_builder,
-            $purifier,
+            \Codendi_HTMLPurifier::instance(),
             $this->createMock(ContentInterpretor::class),
-            new ReviewerRetriever($this->user_manager, $this->reviwer_dao, $this->pull_request_permission_checker)
+            new ReviewerRetriever(
+                ProvideUserFromRowStub::build(),
+                RetrieveReviewersStub::fromReviewers($first_reviewer, $second_reviewer),
+                CheckUserCanAccessPullRequestStub::withAllowed()
+            ),
+            $this->user_retriever
         );
 
-
-        $this->pullrequest_with_reference = new PullRequestWithGitReference(
-            $pull_request,
-            new GitPullRequestReference(1, GitPullRequestReference::STATUS_OK)
+        return $representation_factory->getPullRequestRepresentation(
+            $pullrequest_with_reference,
+            $source_repository,
+            $destination_repository,
+            $git_exec,
+            $this->current_user
         );
     }
 
     public function testItBuildsARepresentationForUserWhoCanMergePullRequest(): void
     {
-        $this->access_controll_verifier->method("canWrite")->willReturnOnConsecutiveCalls(true, true, true, true);
-        $representation = $this->representation_factory->getPullRequestRepresentation(
-            $this->pullrequest_with_reference,
-            $this->source_repository,
-            $this->destination_repository,
-            $this->git_exec,
-            $this->user
-        );
+        $this->access_control_verifier->method('canWrite')->willReturnOnConsecutiveCalls(true, true, true, true);
+        $representation = $this->getRepresentation();
 
         self::assertTrue($representation->user_can_merge);
         self::assertTrue($representation->user_can_update_title_and_description);
@@ -133,30 +134,18 @@ final class PullRequestRepresentationFactoryTest extends TestCase
 
     public function testItBuildsARepresentationWithReviewers(): void
     {
-        $this->access_controll_verifier->method("canWrite")->willReturnOnConsecutiveCalls(true, true, true, true);
-        $representation = $this->representation_factory->getPullRequestRepresentation(
-            $this->pullrequest_with_reference,
-            $this->source_repository,
-            $this->destination_repository,
-            $this->git_exec,
-            $this->user
-        );
+        $this->access_control_verifier->method('canWrite')->willReturnOnConsecutiveCalls(true, true, true, true);
+        $representation = $this->getRepresentation();
 
         self::assertCount(2, $representation->reviewers);
-        self::assertSame(101, $representation->reviewers[0]->id);
-        self::assertSame(102, $representation->reviewers[1]->id);
+        self::assertSame(self::FIRST_REVIEWER_USER_ID, $representation->reviewers[0]->id);
+        self::assertSame(self::SECOND_REVIEWER_USER_ID, $representation->reviewers[1]->id);
     }
 
     public function testNonIntegratorCanUpdateDescriptionOfHisOwnPullRequest(): void
     {
-        $this->access_controll_verifier->method("canWrite")->willReturnOnConsecutiveCalls(false, false, false, false);
-        $representation = $this->representation_factory->getPullRequestRepresentation(
-            $this->pullrequest_with_reference,
-            $this->source_repository,
-            $this->destination_repository,
-            $this->git_exec,
-            $this->user
-        );
+        $this->access_control_verifier->method('canWrite')->willReturnOnConsecutiveCalls(false, false, false, false);
+        $representation = $this->getRepresentation();
 
         self::assertFalse($representation->user_can_merge);
         self::assertTrue($representation->user_can_update_title_and_description);
@@ -164,18 +153,22 @@ final class PullRequestRepresentationFactoryTest extends TestCase
 
     public function testItBuildsARepresentationForANonIntegrator(): void
     {
-        $user = UserTestBuilder::anActiveUser()->withId(999)->build();
+        $this->current_user = UserTestBuilder::anActiveUser()->withId(999)->build();
 
-        $this->access_controll_verifier->method("canWrite")->willReturnOnConsecutiveCalls(false, false, false, false);
-        $representation = $this->representation_factory->getPullRequestRepresentation(
-            $this->pullrequest_with_reference,
-            $this->source_repository,
-            $this->destination_repository,
-            $this->git_exec,
-            $user
-        );
+        $this->access_control_verifier->method('canWrite')->willReturnOnConsecutiveCalls(false, false, false, false);
+        $representation = $this->getRepresentation();
 
         self::assertFalse($representation->user_can_merge);
         self::assertFalse($representation->user_can_update_title_and_description);
+    }
+
+    public function testItThrowsError500WhenItCannotFindUserWhoCreatedThePullRequest(): void
+    {
+        $this->user_retriever = RetrieveUserByIdStub::withNoUser();
+        // Tuleap is never supposed to delete rows from the User table.
+        // When this case happens, there is a problem with stored data.
+        $this->expectExceptionCode(500);
+        $this->expectException(RestException::class);
+        $this->getRepresentation();
     }
 }
