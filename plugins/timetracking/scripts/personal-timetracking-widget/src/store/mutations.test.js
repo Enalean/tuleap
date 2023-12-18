@@ -139,13 +139,7 @@ describe("Store mutations", () => {
                 ];
                 const deleted_time_id = 1;
                 store.deleteInCurrentTimes([deleted_time_id, REST_FEEDBACK_DELETE]);
-                expect(store.current_times).toEqual([
-                    {
-                        artifact: {},
-                        project: {},
-                        minutes: null,
-                    },
-                ]);
+                expect(store.current_times).toHaveLength(0);
                 expect(store.rest_feedback.message).toBe(REST_FEEDBACK_DELETE);
                 expect(store.rest_feedback.type).toBe(SUCCESS_TYPE);
             });

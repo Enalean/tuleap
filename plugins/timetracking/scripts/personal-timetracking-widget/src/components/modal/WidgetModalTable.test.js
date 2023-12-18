@@ -72,7 +72,7 @@ describe("Given a personal timetracking widget modal", () => {
 
     describe("Given an empty state", () => {
         beforeEach(() => {
-            current_times[0].minutes = null;
+            current_times.length = 0;
         });
 
         it("When add mode is false, then empty table should be displayed", () => {

@@ -40,7 +40,11 @@
                 {{ $gettext("Details") }}
             </a>
         </td>
-        <widget-modal-times ref="timetracking_modal" />
+        <widget-modal-times
+            ref="timetracking_modal"
+            v-bind:artifact="artifact"
+            v-bind:project="project"
+        />
     </tr>
 </template>
 <script>

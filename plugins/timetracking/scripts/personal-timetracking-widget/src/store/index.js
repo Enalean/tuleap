@@ -69,18 +69,6 @@ export const usePersonalTimetrackingWidgetStore = defineStore("root", {
         has_rest_error: (state) => state.error_message !== "",
         can_results_be_displayed: (state) => state.is_loaded && state.error_message === "",
         can_load_more: (state) => state.pagination_offset < state.total_times,
-        current_artifact: (state) => {
-            if (state.current_times.length === 0) {
-                return;
-            }
-            return state.current_times[0].artifact;
-        },
-        current_project: (state) => {
-            if (state.current_times.length === 0) {
-                return;
-            }
-            return state.current_times[0].project;
-        },
     },
     actions: {
         setDatesAndReload([start_date, end_date]) {
@@ -213,21 +201,10 @@ export const usePersonalTimetrackingWidgetStore = defineStore("root", {
             this.rest_feedback.type = SUCCESS_TYPE;
         },
         deleteInCurrentTimes([time_id, feedback_message]) {
-            const void_times = [
-                {
-                    artifact: this.current_times[0].artifact,
-                    project: this.current_times[0].project,
-                    minutes: null,
-                },
-            ];
             const time_to_delete_index = this.current_times.findIndex(
                 (current_time) => current_time.id === time_id,
             );
-
             this.current_times.splice(time_to_delete_index, 1);
-            if (this.current_times.length === 0) {
-                this.current_times = void_times;
-            }
             this.rest_feedback.message = feedback_message;
             this.rest_feedback.type = SUCCESS_TYPE;
         },
@@ -238,9 +215,6 @@ export const usePersonalTimetrackingWidgetStore = defineStore("root", {
             this.error_message = error_message;
         },
         pushCurrentTimes([times, feedback_message]) {
-            if (this.current_times.length === 1 && !this.current_times[0].minutes) {
-                this.current_times = [];
-            }
             this.current_times = this.current_times.concat(Object.values(times));
             this.current_times = this.current_times.sort((a, b) => {
                 return new Date(b.date) - new Date(a.date);

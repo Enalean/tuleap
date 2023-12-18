@@ -20,10 +20,10 @@
 <template>
     <div class="tlp-modal-body timetracking-details-modal-content">
         <div class="tlp-pane-section timetracking-details-modal-artifact-title">
-            <widget-link-to-artifact v-bind:artifact="personal_store.current_artifact" />
+            <widget-link-to-artifact v-bind:artifact="artifact" />
         </div>
         <div class="timetracking-details-modal-artifact-details">
-            <widget-modal-artifact-info />
+            <widget-modal-artifact-info v-bind:project="project" v-bind:artifact="artifact" />
             <div class="timetracking-details-modal-artefact-link-top-bottom-spacer">
                 <button
                     class="tlp-button-primary"
@@ -41,7 +41,7 @@
             >
                 {{ feedback_message }}
             </div>
-            <widget-modal-table />
+            <widget-modal-table v-bind:artifact="artifact" />
         </div>
     </div>
 </template>
@@ -60,13 +60,17 @@ import { mapState, mapActions } from "pinia";
 export default {
     name: "WidgetModalContent",
     components: { WidgetLinkToArtifact, WidgetModalTable, WidgetModalArtifactInfo },
+    props: {
+        artifact: Object,
+        project: Object,
+    },
     setup() {
         const personal_store = usePersonalTimetrackingWidgetStore();
 
         return { personal_store };
     },
     computed: {
-        ...mapState(usePersonalTimetrackingWidgetStore, ["current_artifact", "is_add_mode"]),
+        ...mapState(usePersonalTimetrackingWidgetStore, ["is_add_mode"]),
         ...mapActions(usePersonalTimetrackingWidgetStore, ["setAddMode"]),
 
         feedback_class() {

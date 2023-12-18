@@ -21,35 +21,18 @@
 import { shallowMount } from "@vue/test-utils";
 import WidgetModalEditTime from "./WidgetModalEditTime.vue";
 import localVue from "../../helpers/local-vue.js";
-import { createTestingPinia } from "@pinia/testing";
-import { defineStore } from "pinia";
 
 describe("Given a personal timetracking widget modal", () => {
-    let rest_feedback = "";
-    let is_add_mode = false;
     let current_artifact = { artifact: "artifact", id: 10 };
     let times = {};
 
     function getWrapperInstance(time_data = {}) {
-        const useStore = defineStore("root", {
-            state: () => ({
-                rest_feedback,
-                is_add_mode,
-                times,
-            }),
-            getters: {
-                current_artifact: () => current_artifact,
-            },
-        });
-        const pinia = createTestingPinia();
-        useStore(pinia);
-
         const component_options = {
             localVue,
             propsData: {
                 timeData: time_data,
+                artifact: current_artifact,
             },
-            pinia,
         };
         return shallowMount(WidgetModalEditTime, component_options);
     }

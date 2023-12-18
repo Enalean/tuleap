@@ -215,8 +215,7 @@ describe("Store actions", () => {
                     ],
                 ];
                 await store.deleteTime(time_id);
-                let empty_time = { artifact: undefined, minutes: null, project: undefined };
-                expect(store.current_times).toStrictEqual([empty_time]);
+                expect(store.current_times).toHaveLength(0);
                 expect(getTrackedTimes).toHaveBeenCalled();
                 expect(store.rest_feedback.message).toBe(REST_FEEDBACK_DELETE);
                 expect(store.rest_feedback.type).toBe(SUCCESS_TYPE);

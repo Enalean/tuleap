@@ -20,24 +20,16 @@
 import { shallowMount } from "@vue/test-utils";
 import WidgetModalTimes from "./WidgetModalTimes.vue";
 import localVue from "../../helpers/local-vue.js";
-import { createTestingPinia } from "@pinia/testing";
-import { defineStore } from "pinia";
 
 describe("Given a personal timetracking widget modal", () => {
     let current_artifact;
 
     function getWidgetModalTimesInstance() {
-        const useStore = defineStore("root", {
-            getters: {
-                current_artifact: () => current_artifact,
-            },
-        });
-        const pinia = createTestingPinia();
-        useStore(pinia);
-
         const component_options = {
             localVue,
-            pinia,
+            propsData: {
+                artifact: current_artifact,
+            },
         };
         return shallowMount(WidgetModalTimes, component_options);
     }
