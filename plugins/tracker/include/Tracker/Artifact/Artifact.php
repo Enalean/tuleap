@@ -221,6 +221,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      * @var String
      */
     private $title;
+    private string $description = "";
 
     /**
      * @var String
@@ -688,6 +689,9 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      */
     public function getDescription(): string
     {
+        if ($this->description !== '') {
+            return $this->description;
+        }
         $provider = new ArtifactDescriptionProvider(Tracker_Semantic_Description::load($this->getTracker()));
 
         return $provider->getDescription($this);
@@ -737,6 +741,11 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     public function setTitle($title)
     {
         $this->title = $title;
+    }
+
+    public function setDescription(string $description): void
+    {
+        $this->description = $description;
     }
 
     /**
