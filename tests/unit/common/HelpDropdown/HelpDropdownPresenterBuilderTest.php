@@ -31,30 +31,19 @@ use Tuleap\REST\ExplorerEndpointAvailableEvent;
 use Tuleap\Sanitizer\URISanitizer;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-class HelpDropdownPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class HelpDropdownPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;
     use ForgeConfigSandbox;
 
-    /**
-     * @var HelpDropdownPresenterBuilder
-     */
-    private $help_dropdown_builder;
+    private HelpDropdownPresenterBuilder $help_dropdown_builder;
 
     private PFUser $user;
-    /**
-     * @var ReleaseNoteManager&MockObject
-     */
-    private $release_note_manager;
-    /**
-     * @var URISanitizer
-     */
-    private $uri_sanitizer;
+    private ReleaseNoteManager&MockObject $release_note_manager;
+    private URISanitizer $uri_sanitizer;
 
     protected function setUp(): void
     {
-        //$this->user->shouldReceive("getPreference")->andReturn(true);
-
         $event_dispatcher = $this->createMock(EventDispatcherInterface::class);
         $event_dispatcher->method('dispatch')->willReturn(new ExplorerEndpointAvailableEvent());
 
@@ -82,12 +71,14 @@ class HelpDropdownPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     '/help/',
                     'fa-life-saver',
                     $this->uri_sanitizer,
+                    "help-link"
                 ),
                 HelpLinkPresenter::build(
                     'Documentation',
                     '/doc/en/',
                     'fa-book',
-                    $this->uri_sanitizer
+                    $this->uri_sanitizer,
+                    "documentation-link"
                 ),
             ],
             null,
@@ -95,7 +86,8 @@ class HelpDropdownPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'Release Note',
                 'https://www.tuleap.org/resources/release-notes/tuleap-11-17',
                 'fa-star',
-                $this->uri_sanitizer
+                $this->uri_sanitizer,
+                "release-note-link"
             ),
             true,
             []
@@ -119,13 +111,15 @@ class HelpDropdownPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     'Get help',
                     '/help/',
                     'fa-life-saver',
-                    $this->uri_sanitizer
+                    $this->uri_sanitizer,
+                    "help-link"
                 ),
                 HelpLinkPresenter::build(
                     'Documentation',
                     '/doc/en/',
                     'fa-book',
-                    $this->uri_sanitizer
+                    $this->uri_sanitizer,
+                    "documentation-link"
                 ),
             ],
             null,
@@ -133,7 +127,8 @@ class HelpDropdownPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'Release Note',
                 'https://www.tuleap.org/resources/release-notes/tuleap-11-17',
                 'fa-star',
-                $this->uri_sanitizer
+                $this->uri_sanitizer,
+                "release-note-link"
             ),
             true,
             []

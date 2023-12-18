@@ -26,31 +26,14 @@ use Tuleap\Sanitizer\URISanitizer;
 /**
  * @psalm-immutable
  */
-class HelpLinkPresenter
+final class HelpLinkPresenter
 {
-    /**
-     * @var string
-     */
-    public $title;
-
-    /**
-     * @var string
-     */
-    public $link;
-    /**
-     * @var string
-     */
-    public $icon;
-
-    private function __construct(string $title, string $link, string $icon)
+    private function __construct(public string $title, public string $link, public string $icon, public string $data_test)
     {
-        $this->title = $title;
-        $this->link  = $link;
-        $this->icon  = $icon;
     }
 
-    public static function build(string $title, string $link, string $icon, URISanitizer $uri_sanitizer): self
+    public static function build(string $title, string $link, string $icon, URISanitizer $uri_sanitizer, string $data_test): self
     {
-        return new self($title, $uri_sanitizer->sanitizeForHTMLAttribute($link), $icon);
+        return new self($title, $uri_sanitizer->sanitizeForHTMLAttribute($link), $icon, $data_test);
     }
 }

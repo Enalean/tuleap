@@ -53,6 +53,7 @@ enable_plugins() {
         botmattermost_git \
         statistics \
         enalean_licensemanager \
+        mytuleap_contact_support \
         webauthn
 
     sed -i -e 's#/var/lib/codendi#/var/lib/tuleap#g' /etc/tuleap/plugins/docman/etc/docman.inc
