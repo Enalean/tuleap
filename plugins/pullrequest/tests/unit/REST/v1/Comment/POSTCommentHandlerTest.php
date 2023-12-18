@@ -85,7 +85,10 @@ final class POSTCommentHandlerTest extends TestCase
                 ),
                 new ThreadCommentColorAssigner($this->parent_comment_searcher, ThreadColorUpdaterStub::withCallCount())
             ),
-            new CommentRepresentationBuilder(\Codendi_HTMLPurifier::instance(), ContentInterpretorStub::build())
+            new CommentRepresentationBuilder(
+                \Codendi_HTMLPurifier::instance(),
+                ContentInterpretorStub::withInterpretedText('')
+            )
         );
         return $handler->handle($comment_data, $user, $post_date, $pull_request);
     }

@@ -94,7 +94,10 @@ final class PATCHHandlerTest extends TestCase
             $this->comment_saver,
             $this->repository_retriever,
             $this->cross_references_saver,
-            new SingleRepresentationBuilder(\Codendi_HTMLPurifier::instance(), ContentInterpretorStub::build()),
+            new SingleRepresentationBuilder(
+                \Codendi_HTMLPurifier::instance(),
+                ContentInterpretorStub::withInterpretedText('')
+            ),
             EventDispatcherStub::withIdentityCallback()
         );
         return $handler->handle(

@@ -102,6 +102,7 @@ final class PullRequestMinimalRepresentationTest extends TestCase
         $representation = $this->build();
 
         self::assertSame(self::PULL_REQUEST_ID, $representation->id);
+        self::assertSame('pull_requests/' . self::PULL_REQUEST_ID, $representation->uri);
         self::assertStringContainsString(self::TITLE, $representation->title);
         self::assertSame(self::SOURCE_REPO_NAME, $representation->repository->name);
         self::assertSame(self::SOURCE_BRANCH_NAME, $representation->branch_src);
