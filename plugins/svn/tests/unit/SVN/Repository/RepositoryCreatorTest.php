@@ -21,7 +21,6 @@
 namespace Tuleap\SVN\Repository;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tuleap\GlobalSVNPollution;
 use Tuleap\SVN\AccessControl\AccessFileHistory;
 use Tuleap\SVN\AccessControl\AccessFileHistoryCreator;
 use Tuleap\SVN\Admin\ImmutableTag;
@@ -35,8 +34,6 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class RepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use GlobalSVNPollution;
-
     /**
      * @var AccessFileHistoryCreator&MockObject
      */

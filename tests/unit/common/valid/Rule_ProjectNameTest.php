@@ -20,13 +20,11 @@
  */
 
 use Tuleap\GlobalLanguageMock;
-use Tuleap\GlobalSVNPollution;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Rule_ProjectNameTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;
-    use GlobalSVNPollution;
 
     public function testNoUnderscore(): void
     {

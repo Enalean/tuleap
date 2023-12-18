@@ -278,16 +278,12 @@ class ViewVCProxy
 
     private function getPermissionDeniedError(Project $project)
     {
-        $purifier = $this->getPurifier();
-        $url      = session_make_url("/project/memberlist.php?group_id=" . urlencode((string) $project->getID()));
-
-        $title  = $purifier->purify($GLOBALS['Language']->getText('svn_viewvc', 'access_denied'));
-        $reason = $GLOBALS['Language']->getText('svn_viewvc', 'acc_den_comment', $purifier->purify($url));
+        $url = session_make_url("/project/memberlist.php?group_id=" . urlencode((string) $project->getID()));
 
         return '<link rel="stylesheet" href="/viewvc-theme-tuleap/style.css">
             <div class="tuleap-viewvc-header">
-                <h3>' . $title . '</h3>
-                ' . $reason . '
+                <h3>' . dgettext('tuleap-svn', 'Access denied') . '</h3>
+                ' . sprintf(dgettext('tuleap-svn', 'You are not authorized to access this file. Please contact a <a href="%1$s">Project Administrator</a>'), $url) . '
             </div>';
     }
 

@@ -20,13 +20,11 @@
  */
 
 use Tuleap\ForgeConfigSandbox;
-use Tuleap\GlobalSVNPollution;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 final class SystemEvent_USER_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
-    use GlobalSVNPollution;
 
     /**
      * Rename user 142 'mickey' in 'tazmani'

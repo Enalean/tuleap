@@ -25,7 +25,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 use SimpleXMLElement;
 use Tuleap\ForgeConfigSandbox;
-use Tuleap\GlobalSVNPollution;
 use Tuleap\Project\XML\Export\ZipArchive;
 use Tuleap\SVNCore\AccessFileReader;
 use Tuleap\SVN\Admin\MailNotification;
@@ -35,7 +34,6 @@ use XML_SimpleXMLCDATAFactory;
 final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
-    use GlobalSVNPollution;
 
     private AccessFileReader&MockObject $access_file_reader;
     private XMLSvnExporter $xml_exporter;

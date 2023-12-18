@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\GlobalSVNPollution;
 
 /**
  * Test for project delete system event
@@ -27,8 +26,6 @@ use Tuleap\GlobalSVNPollution;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 final class SystemEvent_UGROUP_MODIFY_Test extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use GlobalSVNPollution;
-
     /**
      * ProjectUGroup modify Users fail
      *

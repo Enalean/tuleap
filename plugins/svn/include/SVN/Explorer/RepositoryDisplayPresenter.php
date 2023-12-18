@@ -32,7 +32,6 @@ class RepositoryDisplayPresenter
     public $repository_not_created;
     public $is_repository_created;
     public $help_command;
-    public $help_message;
     /**
      * @var string
      */
@@ -48,7 +47,6 @@ class RepositoryDisplayPresenter
         $this->viewvc_html           = $viewvc_html;
         $this->is_repository_created = $repository->isRepositoryCreated();
 
-        $this->help_message           = $GLOBALS['Language']->getText('svn_intro', 'command_intro');
         $this->repository_not_created = dgettext('tuleap-svn', 'The repository is in queue for creation. Please check back here in a few minutes');
 
         if (FileSizeValidator::isLimitSet()) {

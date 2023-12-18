@@ -46,15 +46,10 @@ final class SVNRefreshAllAccessFilesCommandTest extends \Tuleap\Test\PHPUnit\Tes
      */
     private $repository_manager;
 
-    private bool $globals_svnaccess_set_initially;
-    private bool $globals_svngroups_set_initially;
     private SVNRefreshAllAccessFilesCommand $command;
 
     protected function setUp(): void
     {
-        $this->globals_svnaccess_set_initially = isset($GLOBALS['SVNACCESS']);
-        $this->globals_svngroups_set_initially = isset($GLOBALS['SVNGROUPS']);
-
         $this->repository_manager          = $this->createMock(RepositoryManager::class);
         $this->access_file_history_factory = $this->createMock(AccessFileHistoryFactory::class);
         $this->access_file_history_creator = $this->createMock(AccessFileHistoryCreator::class);
@@ -65,16 +60,6 @@ final class SVNRefreshAllAccessFilesCommandTest extends \Tuleap\Test\PHPUnit\Tes
         );
 
         ForgeConfig::set('svn_root_file', 'svn_root_file');
-    }
-
-    protected function tearDown(): void
-    {
-        if (! $this->globals_svnaccess_set_initially) {
-            unset($GLOBALS['SVNACCESS']);
-        }
-        if (! $this->globals_svngroups_set_initially) {
-            unset($GLOBALS['SVNGROUPS']);
-        }
     }
 
     public function testItDisplayEmptyResultWhenPlatformDoNotHaveAnySVNPluginRepositories(): void

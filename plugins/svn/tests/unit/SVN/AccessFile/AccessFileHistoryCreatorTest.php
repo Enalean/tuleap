@@ -54,8 +54,6 @@ final class AccessFileHistoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \BackendSVN&\PHPUnit\Framework\MockObject\MockObject
      */
     private $backend_svn;
-    private bool $globals_svnaccess_set_initially;
-    private bool $globals_svngroups_set_initially;
     private AccessFileHistoryDao&MockObject $access_file_dao;
     private Repository $repository;
     private AccessFileHistoryCreator $creator;
@@ -66,9 +64,6 @@ final class AccessFileHistoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function setUp(): void
     {
-        $this->globals_svnaccess_set_initially = isset($GLOBALS['SVNACCESS']);
-        $this->globals_svngroups_set_initially = isset($GLOBALS['SVNGROUPS']);
-
         $this->access_file_dao           = $this->createMock(AccessFileHistoryDao::class);
         $this->access_file_factory       = $this->createMock(AccessFileHistoryFactory::class);
         $this->project_history_formatter = $this->createMock(ProjectHistoryFormatter::class);
@@ -99,16 +94,6 @@ final class AccessFileHistoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->access_file_writer = $this->createMock(SVNAccessFileWriter::class);
 
         ForgeConfig::set('svn_root_file', 'svn_root_file');
-    }
-
-    protected function tearDown(): void
-    {
-        if (! $this->globals_svnaccess_set_initially) {
-            unset($GLOBALS['SVNACCESS']);
-        }
-        if (! $this->globals_svngroups_set_initially) {
-            unset($GLOBALS['SVNGROUPS']);
-        }
     }
 
     public function testItUpdatesAccessFile(): void

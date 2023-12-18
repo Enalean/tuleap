@@ -23,12 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\SVNCore\Event;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Tuleap\GlobalSVNPollution;
 
 final class UpdateProjectAccessFileSystemEventTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use GlobalSVNPollution;
-
     private const PROJECT_ID = 102;
 
     /**

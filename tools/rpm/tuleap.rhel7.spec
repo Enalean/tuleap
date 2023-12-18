@@ -1054,7 +1054,6 @@ fi
 %{APP_DIR}/src/www/search
 %{APP_DIR}/src/www/service
 %{APP_DIR}/src/www/softwaremap
-%{APP_DIR}/src/www/svn
 # Only "common" theme is embedded into the package
 %dir %{APP_DIR}/src/www/themes
 %{APP_DIR}/src/www/themes/common

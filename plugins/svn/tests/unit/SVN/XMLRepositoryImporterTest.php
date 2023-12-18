@@ -32,7 +32,6 @@ use Project;
 use Psr\Log\LogLevel;
 use SimpleXMLElement;
 use SystemEvent;
-use Tuleap\GlobalSVNPollution;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\SVN\AccessControl\AccessFileHistoryCreator;
 use Tuleap\SVN\Admin\MailNotificationManager;
@@ -48,8 +47,6 @@ use UserManager;
 
 final class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use GlobalSVNPollution;
-
     private XMLRepositoryImporter $repository_importer;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&PFUser

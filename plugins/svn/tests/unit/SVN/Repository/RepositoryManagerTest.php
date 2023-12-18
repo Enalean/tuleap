@@ -28,7 +28,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use ProjectManager;
 use Psr\Log\NullLogger;
 use System_Command;
-use Tuleap\GlobalSVNPollution;
 use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
 use Tuleap\SVN\Dao;
 use Tuleap\SVN\Repository\Exception\CannotFindRepositoryException;
@@ -38,7 +37,6 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use GlobalSVNPollution;
     use TemporaryTestDirectory;
 
     /**

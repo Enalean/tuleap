@@ -20,30 +20,12 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('include/DataAccessObject.class.php');
-
 class SvnCommitsDao extends DataAccessObject
 {
     public function __construct()
     {
         parent::__construct();
         $this->table_name = 'svn_commits';
-    }
-
-    public function statsByGroupId($group_id, $duration)
-    {
-        $group_id = $this->da->escapeInt($group_id);
-        $duration = $this->da->escapeInt($duration);
-        $sql      = "SELECT whoid, 
-                        TO_DAYS(FROM_UNIXTIME(date)) - TO_DAYS(FROM_UNIXTIME(0)) as day, 
-                        WEEK(FROM_UNIXTIME(date), 3) as week,
-                        count(id) AS nb_commits 
-                FROM $this->table_name
-                WHERE DATEDIFF(NOW(), FROM_UNIXTIME(date)) < $duration 
-                  AND group_id = $group_id
-                GROUP BY whoid, week 
-                ORDER BY whoid, day";
-        return $this->retrieve($sql);
     }
 
     public function updateCommitMessage($group_id, $revision, $description)

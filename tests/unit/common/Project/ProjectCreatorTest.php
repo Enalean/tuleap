@@ -31,7 +31,6 @@ use ReferenceManager;
 use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
-use Tuleap\GlobalSVNPollution;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
 use Tuleap\Project\Admin\DescriptionFields\FieldUpdator;
 use Tuleap\Project\Admin\Service\ProjectServiceActivator;
@@ -50,7 +49,6 @@ use UserManager;
 final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use GlobalSVNPollution;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectManager

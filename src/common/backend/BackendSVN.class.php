@@ -30,8 +30,6 @@ use Tuleap\SVNCore\Cache\ParameterDao;
 use Tuleap\SVNCore\Cache\ParameterRetriever;
 use Tuleap\URI\URIModifier;
 
-require_once __DIR__ . '/../../www/svn/svn_utils.php';
-
 class BackendSVN extends Backend
 {
     public const PRE_COMMIT_HOOK          = 'pre-commit';

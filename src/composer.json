@@ -19,7 +19,6 @@
       "www/include/utils.php",
       "www/include/user.php",
       "www/project/admin/permissions.php",
-      "www/svn/svn_utils.php",
       "embedded_vendor/jpgraph/jpgraph_utils_func.php"
     ]
   },
