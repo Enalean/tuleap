@@ -21,6 +21,7 @@
 
 use Tuleap\LDAP\GroupSyncNotificationsManager;
 use Tuleap\LDAP\LDAPSetOfUserIDsForDiff;
+use Tuleap\LDAP\Project\AddProjectMembers;
 use Tuleap\LDAP\ProjectGroupManagerRestrictedUserFilter;
 
 /**
@@ -53,6 +54,7 @@ class LDAP_ProjectGroupManager extends LDAP_GroupManager
         UserManager $user_manager,
         GroupSyncNotificationsManager $notifications_manager,
         ProjectGroupManagerRestrictedUserFilter $project_restricted_user_filter,
+        private readonly AddProjectMembers $add_project_members,
     ) {
         parent::__construct($ldap, $ldap_user_manager, $project_manager, $notifications_manager);
 
@@ -67,10 +69,8 @@ class LDAP_ProjectGroupManager extends LDAP_GroupManager
      *
      * @param int $id Id of the project
      * @param int $userId User Id
-     *
-     * @return bool
      */
-    protected function addUserToGroup($id, $userId)
+    protected function addUserToGroup($id, $userId): bool
     {
         $user = $this->user_manager->getUserById($userId);
         if ($user === null) {
@@ -82,7 +82,8 @@ class LDAP_ProjectGroupManager extends LDAP_GroupManager
         if (empty($filtered_set_of_user_ids->getUserIDsToAdd())) {
             return false;
         }
-        return $this->getDao()->addUserToGroup($id, $user->getUserName());
+
+        return $this->add_project_members->addProjectMember($project, $user);
     }
 
     /**
@@ -138,7 +139,7 @@ class LDAP_ProjectGroupManager extends LDAP_GroupManager
         return $this->getDao()->getSynchronizedProjects();
     }
 
-    public function synchronize()
+    public function synchronize(): void
     {
         foreach ($this->getSynchronizedProjects() as $row) {
             $dn = $row['ldap_group_dn'];

@@ -25,6 +25,7 @@ namespace Tuleap\Project\UGroups\Membership\DynamicUGroups;
 
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Admin\ProjectMembers\EnsureUserCanManageProjectMembers;
+use Tuleap\Project\Admin\ProjectMembers\DoNotCheckIfUserIsAllowedToManageProjectMembers;
 use Tuleap\Project\Admin\ProjectMembers\UserCanManageProjectMembersChecker;
 use Tuleap\Project\Admin\ProjectMembers\UserIsNotAllowedToManageProjectMembersException;
 use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
@@ -52,6 +53,20 @@ class AddProjectMember
                 new \UGroupManager()
             ),
             new UserCanManageProjectMembersChecker(new MembershipDelegationDao()),
+        );
+    }
+
+    public static function buildWithoutPermissionsChecks(): self
+    {
+        return new self(
+            new UserPermissionsDao(),
+            \EventManager::instance(),
+            new \ProjectHistoryDao(),
+            new \UGroupBinding(
+                new \UGroupUserDao(),
+                new \UGroupManager()
+            ),
+            new DoNotCheckIfUserIsAllowedToManageProjectMembers(),
         );
     }
 
