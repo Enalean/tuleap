@@ -23,10 +23,6 @@
             "src": "scripts/lib/colorpicker/src",
             "po": "scripts/lib/colorpicker/po"
         },
-        "permissions-per-group": {
-            "src": "scripts/permissions-per-group/src",
-            "po": "scripts/permissions-per-group/po"
-        },
         "workflow-transitions": {
             "src": "scripts/workflow-transitions/src",
             "po": "scripts/workflow-transitions/po"
@@ -41,6 +37,10 @@
         }
     },
     "gettext-vue3": {
+        "permissions-per-group": {
+            "src": "scripts/permissions-per-group/src",
+            "po": "scripts/permissions-per-group/po"
+        },
         "move-artifact-action": {
             "src": "scripts/move-artifact-action/src",
             "po": "scripts/move-artifact-action/po"

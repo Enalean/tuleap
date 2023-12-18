@@ -223,10 +223,12 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                                 if (! $request->getCurrentUser()->isAdmin($request->getProject()->getID())) {
                                     $GLOBALS['Response']->send400JSONErrors(
                                         [
-                                            'error' => dgettext(
-                                                "tuleap-tracker",
-                                                "You don't have permissions to see user groups."
-                                            ),
+                                            'error' => [
+                                                'message' => dgettext(
+                                                    "tuleap-tracker",
+                                                    "You don't have permissions to see user groups."
+                                                ),
+                                            ],
                                         ]
                                     );
                                 }

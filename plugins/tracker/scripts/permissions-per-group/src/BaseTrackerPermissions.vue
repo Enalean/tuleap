@@ -19,17 +19,13 @@
 
 <template>
     <section class="tlp-pane-section">
-        <div class="tlp-alert-danger" v-if="hasError">
+        <div class="tlp-alert-danger" v-if="has_error">
             {{ error }}
         </div>
 
-        <div class="permission-per-group-load-button" v-if="isButtonLoadAllDisplayed">
-            <button
-                class="tlp-button-primary tlp-button-outline"
-                v-on:click="loadAll()"
-                v-translate
-            >
-                See all tracker permissions
+        <div class="permission-per-group-load-button" v-if="display_button_load_all">
+            <button class="tlp-button-primary tlp-button-outline" v-on:click="loadAll()">
+                {{ $gettext("See all tracker permissions") }}
             </button>
         </div>
 
@@ -37,59 +33,45 @@
 
         <tracker-permissions-table
             v-if="is_loaded"
-            v-bind:tracker-permissions="tracker_permissions"
-            v-bind:selected-ugroup-name="selectedUgroupName"
+            v-bind:tracker_permissions="permissions"
+            v-bind:selected_ugroup_name="selected_ugroup_name"
         />
     </section>
 </template>
-<script>
+<script setup lang="ts">
+import type { TrackerPermissions } from "./rest-querier.js";
 import { getTrackerPermissions } from "./rest-querier.js";
 import TrackerPermissionsTable from "./TrackerPermissionsTable.vue";
+import { computed, ref } from "vue";
+import { useGettext } from "vue3-gettext";
 
-export default {
-    name: "BaseTrackerPermissions",
-    components: {
-        TrackerPermissionsTable,
-    },
-    props: {
-        selectedUgroupId: String,
-        selectedProjectId: String,
-        selectedUgroupName: String,
-    },
-    data() {
-        return {
-            is_loaded: false,
-            is_loading: false,
-            error: null,
-            tracker_permissions: [],
-        };
-    },
-    computed: {
-        hasError() {
-            return this.error !== null;
-        },
-        isButtonLoadAllDisplayed() {
-            return !this.is_loaded && !this.is_loading;
-        },
-    },
-    methods: {
-        async loadAll() {
-            try {
-                this.is_loading = true;
+const props = defineProps<{
+    selected_project_id: string;
+    selected_ugroup_id: string;
+    selected_ugroup_name: string;
+}>();
 
-                this.tracker_permissions = await getTrackerPermissions(
-                    this.selectedProjectId,
-                    this.selectedUgroupId,
-                );
+const { $gettext } = useGettext();
 
-                this.is_loaded = true;
-            } catch (e) {
-                const { error } = await e.response.json();
-                this.error = error;
-            } finally {
-                this.is_loading = false;
-            }
+const permissions = ref<TrackerPermissions>([]);
+const error = ref<string | null>(null);
+const is_loaded = ref(false);
+const is_loading = ref(false);
+const has_error = computed(() => error.value !== null);
+const display_button_load_all = computed(() => !is_loaded.value && !is_loading.value);
+
+function loadAll(): void {
+    is_loading.value = true;
+    getTrackerPermissions(props.selected_project_id, props.selected_ugroup_id).match(
+        (tracker_permissions: TrackerPermissions) => {
+            is_loaded.value = true;
+            is_loading.value = false;
+            permissions.value = tracker_permissions;
         },
-    },
-};
+        (fault) => {
+            is_loading.value = false;
+            error.value = String(fault);
+        },
+    );
+}
 </script>

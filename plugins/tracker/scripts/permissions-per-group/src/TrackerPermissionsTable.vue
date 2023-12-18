@@ -21,26 +21,24 @@
     <table class="tlp-table permission-per-group-table">
         <thead>
             <tr class="permission-per-group-triple-column-table">
-                <th v-translate>Tracker name</th>
-                <th v-translate>Permissions</th>
-                <th v-translate>Granted groups</th>
+                <th>{{ $gettext("Tracker name") }}</th>
+                <th>{{ $gettext("Permissions") }}</th>
+                <th>{{ $gettext("Granted groups") }}</th>
             </tr>
         </thead>
 
-        <table-content v-bind="$props" />
+        <table-content v-bind="props" />
     </table>
 </template>
-<script>
+<script setup lang="ts">
 import TableContent from "./TrackerPermissionsTableContent.vue";
+import type { TrackerPermissions } from "./rest-querier";
+import { useGettext } from "vue3-gettext";
 
-export default {
-    name: "TrackerPermissionsTable",
-    components: {
-        TableContent,
-    },
-    props: {
-        trackerPermissions: Array,
-        selectedUgroupName: String,
-    },
-};
+const props = defineProps<{
+    tracker_permissions: TrackerPermissions;
+    selected_ugroup_name: string;
+}>();
+
+const { $gettext } = useGettext();
 </script>

@@ -19,8 +19,8 @@
 
 <template>
     <tbody>
-        <template v-for="tracker in trackerPermissions">
-            <tr v-bind:key="tracker.tracker_name">
+        <template v-for="tracker in tracker_permissions" v-bind:key="tracker.tracker_name">
+            <tr>
                 <td>
                     <a v-bind:href="tracker.admin_quick_link">{{ tracker.tracker_name }}</a>
                 </td>
@@ -39,38 +39,30 @@
                     <tracker-permissions-ugroup-badge
                         v-for="group in permission.granted_groups"
                         v-bind:key="group.ugroup_name"
-                        v-bind:is-project-admin="group.is_project_admin"
-                        v-bind:is-static="group.is_static"
-                        v-bind:is-custom="group.is_custom"
-                        v-bind:group-name="group.ugroup_name"
+                        v-bind:is_project_admin="group.is_project_admin"
+                        v-bind:is_static="group.is_static"
+                        v-bind:is_custom="group.is_custom"
+                        v-bind:group_name="group.ugroup_name"
                     />
                 </td>
             </tr>
         </template>
 
-        <tr v-if="!hasTrackerPermissions">
-            <empty-state v-bind:selected-ugroup-name="selectedUgroupName" />
+        <tr v-if="!has_tracker_permissions">
+            <empty-state v-bind:selected_ugroup_name="selected_ugroup_name" />
         </tr>
     </tbody>
 </template>
-<script>
-import TrackerPermissionsUgroupBadge from "@tuleap/vue-permissions-per-group-badge";
+<script setup lang="ts">
+import TrackerPermissionsUgroupBadge from "@tuleap/vue3-permissions-per-group-badge";
 import EmptyState from "./TrackerPermissionTableEmptyState.vue";
+import type { TrackerPermissions } from "./rest-querier.js";
+import { computed } from "vue";
 
-export default {
-    name: "TrackerPermissionsTableContent",
-    components: {
-        TrackerPermissionsUgroupBadge,
-        EmptyState,
-    },
-    props: {
-        trackerPermissions: Array,
-        selectedUgroupName: String,
-    },
-    computed: {
-        hasTrackerPermissions() {
-            return this.trackerPermissions.length > 0;
-        },
-    },
-};
+const props = defineProps<{
+    tracker_permissions: TrackerPermissions;
+    selected_ugroup_name: string;
+}>();
+
+const has_tracker_permissions = computed(() => props.tracker_permissions.length > 0);
 </script>
