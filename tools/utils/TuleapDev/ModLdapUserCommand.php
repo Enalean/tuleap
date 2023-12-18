@@ -29,7 +29,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
@@ -38,7 +37,8 @@ final class ModLdapUserCommand extends Command
 {
     protected function configure(): void
     {
-        $this->setName('mod-ldap-user')
+        $this->setName('ldap:mod-user')
+            ->setAliases(['mod-ldap-user'])
             ->setDescription('Modify a LDAP user into development directory')
             ->addArgument('login', InputArgument::REQUIRED, 'Login name (uid)')
             ->addOption('realname', '', InputOption::VALUE_REQUIRED, 'New Realname')
@@ -66,48 +66,42 @@ final class ModLdapUserCommand extends Command
         $ldap_plugin->setName('ldap');
         $ldap_plugin->getPluginInfo();
 
-        $result = $this->getLdapConnection()
-            ->andThen(function (Connection $ds) use ($login, $real_name, $new_uid) {
-                $login_search = \ForgeConfig::get('sys_ldap_uid') . '=' . ldap_escape($login, '', LDAP_ESCAPE_FILTER);
-                $sr           = ldap_search($ds, \ForgeConfig::get('sys_ldap_dn'), $login_search);
-                $entries      = ldap_get_entries($ds, $sr);
-                if ($entries['count'] !== 1) {
-                    return Result::err(Fault::fromMessage('There is no entry that corresponds to this login'));
-                }
-
-                $info         = $this->getExistingUserInfo($entries);
-                $info_changed = false;
-                if ($real_name && $info['cn'] !== $real_name) {
-                    $info['cn']          = $real_name;
-                    $info['sn']          = $real_name;
-                    $info['displayName'] = $real_name;
-                    $info_changed        = true;
-                }
-
-                if ($new_uid && $new_uid !== $login) {
-                    $info['uid']  = $new_uid;
-                    $info_changed = true;
-                }
-
-                if ($new_uid && $new_uid !== $login) {
-                    $existing_full_user_dn = 'uid=' . ldap_escape($login) . ',' . \ForgeConfig::get('sys_ldap_people_dn');
-                    $new_user_dn           = 'uid=' . ldap_escape($new_uid);
-                    $parent_dn             = \ForgeConfig::get('sys_ldap_people_dn');
-                    if (! ldap_rename($ds, $existing_full_user_dn, $new_user_dn, $parent_dn, true)) {
-                        return Result::err(Fault::fromMessage('Unable to modify user in LDAP: ' . ldap_error($ds)));
+        $result = LDAPHelper::getLdapConnection()
+            ->andThen(fn (Connection $ds) => LDAPHelper::getUser($ds, $login)
+                ->andThen(function (array $entries) use ($ds, $login, $real_name, $new_uid) {
+                    $info         = $this->getExistingUserInfo($entries);
+                    $info_changed = false;
+                    if ($real_name && $info['cn'] !== $real_name) {
+                        $info['cn']          = $real_name;
+                        $info['sn']          = $real_name;
+                        $info['displayName'] = $real_name;
+                        $info_changed        = true;
                     }
-                    $login = $new_uid;
-                }
 
-                if ($info_changed) {
-                    $user_dn = 'uid=' . ldap_escape($login) . ',' . \ForgeConfig::get('sys_ldap_people_dn');
-                    if (! ldap_mod_replace($ds, $user_dn, $info)) {
-                        return Result::err(Fault::fromMessage('Unable to modify user in LDAP: ' . ldap_error($ds)));
+                    if ($new_uid && $new_uid !== $login) {
+                        $info['uid']  = $new_uid;
+                        $info_changed = true;
                     }
-                }
 
-                return Result::ok('User modified in LDAP');
-            });
+                    if ($new_uid && $new_uid !== $login) {
+                        $existing_full_user_dn = 'uid=' . ldap_escape($login) . ',' . \ForgeConfig::get('sys_ldap_people_dn');
+                        $new_user_dn           = 'uid=' . ldap_escape($new_uid);
+                        $parent_dn             = \ForgeConfig::get('sys_ldap_people_dn');
+                        if (! ldap_rename($ds, $existing_full_user_dn, $new_user_dn, $parent_dn, true)) {
+                            return Result::err(Fault::fromMessage('Unable to modify user in LDAP: ' . ldap_error($ds)));
+                        }
+                        $login = $new_uid;
+                    }
+
+                    if ($info_changed) {
+                        $user_dn = 'uid=' . ldap_escape($login) . ',' . \ForgeConfig::get('sys_ldap_people_dn');
+                        if (! ldap_mod_replace($ds, $user_dn, $info)) {
+                            return Result::err(Fault::fromMessage('Unable to modify user in LDAP: ' . ldap_error($ds)));
+                        }
+                    }
+
+                    return Result::ok('User modified in LDAP');
+                }));
         if (Result::isErr($result)) {
             $output->writeln((string) $result->error);
             return self::FAILURE;
@@ -117,24 +111,10 @@ final class ModLdapUserCommand extends Command
         return self::SUCCESS;
     }
 
-    /**
-     * @return Ok<Connection>|Err<Fault>
-     */
-    private function getLdapConnection(): Ok|Err
-    {
-        $ds = ldap_connect(\ForgeConfig::get('sys_ldap_server'));
-        ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
-        ldap_set_option($ds, LDAP_OPT_REFERRALS, 0);
-        if (! @ldap_bind($ds, 'cn=Manager,dc=tuleap,dc=local', getenv('LDAP_MANAGER_PASSWORD'))) {
-            return Result::err(Fault::fromMessage('Unable to bind to LDAP server for Manager: ' . ldap_error($ds)));
-        }
-        return Result::ok($ds);
-    }
-
     private function getExistingUserInfo(array $entries): array
     {
         $info = [];
-        foreach ($entries[0] as $key => $entry) {
+        foreach ($entries as $key => $entry) {
             if (is_int($key) || $key === 'count' || $key === 'dn') {
                 continue;
             }

@@ -35,7 +35,8 @@ final class AddLDAPUserCommand extends Command
 {
     protected function configure(): void
     {
-        $this->setName('add-ldap-user')
+        $this->setName('ldap:add-user')
+            ->setAliases(['add-ldap-user'])
             ->setDescription('Add a LDAP user into development directory')
             ->addArgument('login', InputArgument::REQUIRED, 'Login name (tuleap username)')
             ->addArgument('realname', InputArgument::REQUIRED, 'Real name')
