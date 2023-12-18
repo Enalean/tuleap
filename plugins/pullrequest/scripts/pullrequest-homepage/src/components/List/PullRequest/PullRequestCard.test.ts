@@ -21,46 +21,30 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import * as strict_inject from "@tuleap/vue-strict-inject";
-import * as tooltip from "@tuleap/tooltip";
+import { PullRequestStub } from "@tuleap/plugin-pullrequest-stub";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
-import type { PullRequestStatusType } from "@tuleap/plugin-pullrequest-constants";
-import {
-    PULL_REQUEST_STATUS_REVIEW,
-    PULL_REQUEST_STATUS_MERGED,
-} from "@tuleap/plugin-pullrequest-constants";
 import {
     injected_base_url,
     injection_symbols_stub,
 } from "../../../../tests/injection-symbols-stub";
-import PullRequestCard from "./PullRequestCard.vue";
 import { buildPullRequestOverviewUrl } from "../../../urls/base-url-builders";
-import { buildVueDompurifyHTMLDirective } from "vue-dompurify-html";
+import PullRequestCard from "./PullRequestCard.vue";
 
 const pull_request_id = 2;
-const pull_request_title = "Please pull my request";
 
 describe("PullRequestCard", () => {
-    let pull_request_status: PullRequestStatusType;
+    let pull_request: PullRequest;
 
     beforeEach(() => {
-        pull_request_status = PULL_REQUEST_STATUS_REVIEW;
+        pull_request = PullRequestStub.buildOpenPullRequest({ id: pull_request_id });
     });
 
     const getWrapper = (): VueWrapper => {
         vi.spyOn(strict_inject, "strictInject").mockImplementation(injection_symbols_stub);
 
         return shallowMount(PullRequestCard, {
-            global: {
-                directives: {
-                    "dompurify-html": buildVueDompurifyHTMLDirective(),
-                },
-            },
             props: {
-                pull_request: {
-                    id: pull_request_id,
-                    title: pull_request_title,
-                    status: pull_request_status,
-                } as PullRequest,
+                pull_request,
             },
         });
     };
@@ -73,32 +57,14 @@ describe("PullRequestCard", () => {
         );
     });
 
-    it("should display the title of the pull-request", () => {
-        const card_title = getWrapper().find("[data-test=pull-request-card-title]").element;
-
-        expect(card_title.textContent).toBe(pull_request_title);
-    });
-
     it("should be displayed inactive when the pull-request is not open", () => {
-        pull_request_status = PULL_REQUEST_STATUS_MERGED;
+        pull_request = PullRequestStub.buildMergedPullRequest();
 
         const wrapper = getWrapper();
         const card_classes = Array.from(
             wrapper.find("[data-test=pull-request-card]").element.classList,
         );
-        const card_title_classes = Array.from(
-            wrapper.find("[data-test=pull-request-card-title]").element.classList,
-        );
 
         expect(card_classes).toContain("tlp-card-inactive");
-        expect(card_title_classes).toContain("tlp-text-muted");
-    });
-
-    it("Should load the tooltips inside the card's title", () => {
-        const loadTooltips = vi.spyOn(tooltip, "loadTooltips");
-        const card_title = getWrapper().find("[data-test=pull-request-card-title]").element;
-
-        expect(loadTooltips).toHaveBeenCalledOnce();
-        expect(loadTooltips).toHaveBeenCalledWith(card_title);
     });
 });

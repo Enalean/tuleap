@@ -12,5 +12,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.3.1\n"
 
+msgid "Created"
+msgstr "Création"
+
 msgid "Error"
 msgstr "Erreur"
+
+msgid "by"
+msgstr "par"

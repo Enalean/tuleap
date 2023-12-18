@@ -24,7 +24,13 @@ import { getDatasetItemOrThrow } from "@tuleap/dom";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { buildBaseUrl } from "./urls/base-url-builders";
 import HomePage from "./components/HomePage.vue";
-import { BASE_URL, REPOSITORY_ID } from "./injection-symbols";
+import {
+    BASE_URL,
+    REPOSITORY_ID,
+    USER_DATE_TIME_FORMAT_KEY,
+    USER_LOCALE_KEY,
+    USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
+} from "./injection-symbols";
 
 export const init = async (mount_point: HTMLElement): Promise<void> => {
     const repository_id = Number.parseInt(getDatasetItemOrThrow(mount_point, "repositoryId"), 10);
@@ -34,6 +40,12 @@ export const init = async (mount_point: HTMLElement): Promise<void> => {
     createApp(HomePage)
         .provide(REPOSITORY_ID, repository_id)
         .provide(BASE_URL, base_url)
+        .provide(USER_LOCALE_KEY, getDatasetItemOrThrow(document.body, "userLocale"))
+        .provide(USER_DATE_TIME_FORMAT_KEY, getDatasetItemOrThrow(document.body, "dateTimeFormat"))
+        .provide(
+            USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
+            getDatasetItemOrThrow(mount_point, "relativeDateDisplay"),
+        )
         .use(VueDOMPurifyHTML)
         .use(
             await initVueGettext(createGettext, (locale: string) => {

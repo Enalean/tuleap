@@ -71,6 +71,7 @@ interface CommonPullRequest {
         readonly project: ProjectReference;
     };
     readonly is_git_reference_broken: boolean;
+    readonly creator: User;
 }
 
 export type PullRequestInReview = CommonPullRequest & {

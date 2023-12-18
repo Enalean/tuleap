@@ -20,9 +20,9 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
-import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
-import PullRequestBrokenBadge from "./PullRequestBrokenBadge.vue";
+import { PullRequestStub } from "@tuleap/plugin-pullrequest-stub";
 import { getGlobalTestOptions } from "../../../../tests/global-options-for-tests";
+import PullRequestBrokenBadge from "./PullRequestBrokenBadge.vue";
 
 describe("PullRequestBrokenBadge", () => {
     let is_git_reference_broken: boolean;
@@ -33,9 +33,7 @@ describe("PullRequestBrokenBadge", () => {
                 ...getGlobalTestOptions(),
             },
             props: {
-                pull_request: {
-                    is_git_reference_broken,
-                } as PullRequest,
+                pull_request: PullRequestStub.buildOpenPullRequest({ is_git_reference_broken }),
             },
         });
     };

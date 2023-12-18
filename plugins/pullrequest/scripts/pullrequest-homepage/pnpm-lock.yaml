@@ -8,6 +8,9 @@ dependencies:
   '@tuleap/burningparrot-theme':
     specifier: workspace:*
     version: link:../../../../src/themes/BurningParrot
+  '@tuleap/date-helper':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/date-helper
   '@tuleap/dom':
     specifier: workspace:*
     version: link:../../../../lib/frontend/dom
@@ -23,6 +26,12 @@ dependencies:
   '@tuleap/plugin-pullrequest-rest-api-types':
     specifier: workspace:*
     version: link:../lib/rest-api-types
+  '@tuleap/plugin-pullrequest-stub':
+    specifier: workspace:*
+    version: link:../lib/pull-request-stub
+  '@tuleap/tlp-relative-date':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/tlp-relative-date
   '@tuleap/tooltip':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tooltip
@@ -32,6 +41,9 @@ dependencies:
   '@tuleap/vue3-gettext-init':
     specifier: workspace:*
     version: link:../../../../lib/frontend/vue3-gettext-init
+  moment:
+    specifier: ^2.29.4
+    version: 2.29.4
   neverthrow:
     specifier: ^6.0.0
     version: 6.0.0
@@ -620,6 +632,10 @@ packages:
     resolution: {integrity: sha512-jYofLM5Dam9279rdkWzqHozUo4ybjdZmCsDHePy5V/PbBcVMiSZR97gmAy45aqi8CK1lG2ECd356FU86avfwUQ==}
     engines: {node: '>=16 || 14 >=14.17'}
     dev: true
+
+  /moment@2.29.4:
+    resolution: {integrity: sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==}
+    dev: false
 
   /nanoid@3.3.6:
     resolution: {integrity: sha512-BGcqMMJuToF7i1rt+2PWSNVnWIkGCU78jBG3RxO/bZlnZPK2Cmi2QaffxGO/2RvWi9sL+FAiRiXMgsyxQ1DIDA==}

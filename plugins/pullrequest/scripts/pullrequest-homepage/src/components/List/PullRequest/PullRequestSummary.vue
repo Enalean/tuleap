@@ -18,39 +18,45 @@
   -->
 
 <template>
-    <a
-        v-bind:href="overview_url"
-        v-bind:class="{ 'tlp-card-inactive': is_pull_request_closed }"
-        class="tlp-card tlp-card-selectable pull-request-homepage-card"
-        data-test="pull-request-card"
-    >
-        <pull-request-summary v-bind:pull_request="pull_request" />
-        <pull-request-broken-badge v-bind:pull_request="pull_request" />
-    </a>
+    <span class="pull-request-card-summary">
+        <span
+            ref="pull_request_title"
+            v-dompurify-html="pull_request.title"
+            v-bind:class="{ 'tlp-text-muted': is_pull_request_closed }"
+            data-test="pull-request-card-title"
+        ></span>
+        <pull-request-creation-date v-bind:pull_request="pull_request" />
+    </span>
 </template>
 
 <script setup lang="ts">
-import { strictInject } from "@tuleap/vue-strict-inject";
-import { PULL_REQUEST_STATUS_REVIEW } from "@tuleap/plugin-pullrequest-constants";
+import { onMounted, ref } from "vue";
+import type { Ref } from "vue";
+import { loadTooltips } from "@tuleap/tooltip";
+import PullRequestCreationDate from "./PullRequestCreationDate.vue";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
-import { buildPullRequestOverviewUrl } from "../../../urls/base-url-builders";
-import { BASE_URL } from "../../../injection-symbols";
-import PullRequestBrokenBadge from "./PullRequestBrokenBadge.vue";
-import PullRequestSummary from "./PullRequestSummary.vue";
+import { PULL_REQUEST_STATUS_REVIEW } from "@tuleap/plugin-pullrequest-constants";
 
 const props = defineProps<{
     pull_request: PullRequest;
 }>();
 
-const base_url = strictInject(BASE_URL);
+const pull_request_title: Ref<HTMLElement | undefined> = ref();
 const is_pull_request_closed = props.pull_request.status !== PULL_REQUEST_STATUS_REVIEW;
-const overview_url = buildPullRequestOverviewUrl(base_url, props.pull_request.id).toString();
+
+onMounted(() => {
+    if (!pull_request_title.value) {
+        return;
+    }
+
+    loadTooltips(pull_request_title.value);
+});
 </script>
 
 <style scoped lang="scss">
-.pull-request-homepage-card {
+.pull-request-card-summary {
     display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: var(--tlp-small-spacing);
 }
 </style>
