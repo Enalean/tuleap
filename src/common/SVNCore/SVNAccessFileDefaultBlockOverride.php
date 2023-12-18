@@ -30,7 +30,7 @@ final class SVNAccessFileDefaultBlockOverride implements Dispatchable
     public readonly array $user_groups;
 
     private ?array $svn_user_groups;
-    private ?bool $world_access;
+    private bool $world_access = true;
 
     public function __construct(public readonly \Project $project, \ProjectUGroup ...$user_groups)
     {
@@ -49,7 +49,7 @@ final class SVNAccessFileDefaultBlockOverride implements Dispatchable
 
     public function isWorldAccessForbidden(): bool
     {
-        return isset($this->world_access);
+        return $this->world_access === false;
     }
 
     /**

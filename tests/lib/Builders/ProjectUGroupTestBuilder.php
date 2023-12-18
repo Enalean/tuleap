@@ -28,9 +28,9 @@ final class ProjectUGroupTestBuilder
 {
     private string $name = 'My group';
     /**
-     * @var ?\PFUser[]
+     * @psalm-var list<\PFUser>
      */
-    private ?array $users = null;
+    private array $users = [];
 
     private function __construct(private int $id)
     {
@@ -85,10 +85,10 @@ final class ProjectUGroupTestBuilder
         ]);
     }
 
-    public static function buildProjectMembersWith(\PFUser ...$users): \ProjectUGroup
+    public static function buildProjectMembersWith(\PFUser $user, \PFUser ...$other_users): \ProjectUGroup
     {
         $group = self::buildProjectMembers();
-        $group->setMembers(...$users);
+        $group->setMembers($user, ...$other_users);
         return $group;
     }
 
@@ -107,9 +107,9 @@ final class ProjectUGroupTestBuilder
         return $this;
     }
 
-    public function withUsers(\PFUser ...$users): self
+    public function withUsers(\PFUser $user, \PFUser ...$other_users): self
     {
-        $this->users = $users;
+        $this->users = [$user, ...$other_users];
 
         return $this;
     }
@@ -117,9 +117,7 @@ final class ProjectUGroupTestBuilder
     public function build(): \ProjectUGroup
     {
         $ugroup = new \ProjectUGroup(['ugroup_id' => $this->id, 'name' => $this->name]);
-        if ($this->users !== null) {
-            $ugroup->setMembers(...$this->users);
-        }
+        $ugroup->setMembers(...$this->users);
         return $ugroup;
     }
 }
