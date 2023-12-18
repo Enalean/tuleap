@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Notification;
 
-use GitRepositoryFactory;
+use Tuleap\Git\RetrieveGitRepository;
 use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
@@ -31,7 +31,7 @@ final class NotificationContentFormatter implements FormatNotificationContent
 {
     public function __construct(
         private readonly ContentInterpretor $content_interpreter,
-        private readonly GitRepositoryFactory $repository_factory,
+        private readonly RetrieveGitRepository $repository_factory,
         private readonly \Codendi_HTMLPurifier $purifier,
     ) {
     }

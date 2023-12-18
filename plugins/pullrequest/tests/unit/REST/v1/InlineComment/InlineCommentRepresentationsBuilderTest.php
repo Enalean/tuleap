@@ -71,7 +71,10 @@ final class InlineCommentRepresentationsBuilderTest extends TestCase
         $builder = new InlineCommentRepresentationsBuilder(
             $this->comments_searcher,
             $this->user_retriever,
-            new SingleRepresentationBuilder(\Codendi_HTMLPurifier::instance(), ContentInterpretorStub::build()),
+            new SingleRepresentationBuilder(
+                \Codendi_HTMLPurifier::instance(),
+                ContentInterpretorStub::withInterpretedText('')
+            ),
         );
         return $builder->getForFile($this->pull_request, self::FILE_PATH, $project_id);
     }

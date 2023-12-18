@@ -41,7 +41,6 @@ final class PullRequestTestBuilder
     private int $merge_status               = PullRequest::FASTFORWARD_MERGE;
     private string $description_format      = TimelineComment::FORMAT_TEXT;
 
-
     private function __construct(
         private string $status,
     ) {
@@ -113,6 +112,31 @@ final class PullRequestTestBuilder
     public function fromSourceGitSHA1(string $source_sha1): self
     {
         $this->source_sha1 = $source_sha1;
+        return $this;
+    }
+
+    public function toDestinationGitSHA1(string $destination_sha1): self
+    {
+        $this->destination_sha1 = $destination_sha1;
+        return $this;
+    }
+
+    /**
+     * @psalm-param PullRequest::UNKNOWN_MERGE|PullRequest::NO_FASTFORWARD_MERGE|PullRequest::FASTFORWARD_MERGE|PullRequest::CONFLICT_MERGE $merge_status
+     */
+    public function withMergeStatus(int $merge_status): self
+    {
+        $this->merge_status = $merge_status;
+        return $this;
+    }
+
+    /**
+     * @psalm-param TimelineComment::FORMAT_TEXT|TimelineComment::FORMAT_MARKDOWN $format
+     */
+    public function withDescription(string $format, string $description): self
+    {
+        $this->description        = $description;
+        $this->description_format = $format;
         return $this;
     }
 

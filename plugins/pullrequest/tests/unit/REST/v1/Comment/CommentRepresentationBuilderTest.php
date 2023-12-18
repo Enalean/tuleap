@@ -37,7 +37,7 @@ final class CommentRepresentationBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->interpreter = ContentInterpretorStub::build();
+        $this->interpreter = ContentInterpretorStub::withInterpretedText('');
     }
 
     private function build(Comment $comment): CommentRepresentation
@@ -52,17 +52,18 @@ final class CommentRepresentationBuilderTest extends TestCase
     {
         $comment        = CommentTestBuilder::aTextComment('Galant AMG')->build();
         $representation = $this->build($comment);
-        self::assertSame(0, $this->interpreter->getInterpretedContentWithReferencesCount());
         self::assertNull($representation->last_edition_date);
+        self::assertSame('Galant AMG', $representation->post_processed_content);
     }
 
     public function testItBuildsRepresentationForMarkdown(): void
     {
-        $comment        = CommentTestBuilder::aMarkdownComment('Galant AMG')
+        $this->interpreter = ContentInterpretorStub::withInterpretedText('<b>Galant AMG</b>');
+        $comment           = CommentTestBuilder::aMarkdownComment('**Galant AMG**')
             ->editedOn(new DateTimeImmutable())
             ->build();
-        $representation = $this->build($comment);
-        self::assertSame(1, $this->interpreter->getInterpretedContentWithReferencesCount());
+        $representation    = $this->build($comment);
+        self::assertSame('<b>Galant AMG</b>', $representation->post_processed_content);
         self::assertSame(TimelineComment::FORMAT_MARKDOWN, $representation->format);
         self::assertNotNull($representation->last_edition_date);
     }

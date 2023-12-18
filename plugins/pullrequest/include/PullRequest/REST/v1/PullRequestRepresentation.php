@@ -49,89 +49,25 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
     public const CONFLICT_MERGE       = 'conflict';
     public const UNKNOWN_MERGE        = 'unknown-merge-status';
 
-    /**
-     * @var string {@type string}
-     */
-    public $description;
+    public string $description;
+    public string $reference_src;
+    public string $reference_dest;
+    public string $head_reference;
 
     /**
-     * @var string {@type string}
+     * @var array $resources {@type [uri: string]}
      */
-    public $reference_src;
-
-    /**
-     * @var string {@type string}
-     */
-    public $reference_dest;
-
-    /**
-     * @var string
-     */
-    public $head_reference;
-
-    /**
-     * @var array {@type array}
-     */
-    public $resources;
-
-    /**
-     * @var bool {@type bool}
-     */
-    public $user_can_merge;
-
-    /**
-     * @var bool {@type bool}
-     */
-    public $user_can_abandon;
-
-    /**
-     * @var bool {@type bool}
-     */
-    public $user_can_update_labels;
-
-    /**
-     * @var string {@type string}
-     */
-    public $merge_status;
-
-    /**
-     * @var PullRequestShortStatRepresentation {@type PullRequestShortStatRepresentation}
-     */
-    public $short_stat;
-
-    /**
-     * @var string {@type string}
-     */
-    public $last_build_status;
-
-    /**
-     * @var string {@type string}
-     */
-    public $last_build_date;
-
-    /**
-     * @var string {@type string}
-     */
-    public $raw_title;
-
-    /**
-     * @var string {@type string}
-     */
-    public $raw_description;
-
-    /**
-     * @var int {@type int} {@required false}
-     */
-    public $parent_id;
-
-    /**
-     * @var bool {@type bool}
-     */
+    public array $resources;
+    public bool $user_can_merge;
+    public bool $user_can_abandon;
+    public bool $user_can_update_labels;
+    public string $merge_status;
+    public PullRequestShortStatRepresentation $short_stat;
+    public string $last_build_status;
+    public string $last_build_date;
+    public string $raw_title;
+    public string $raw_description;
     public bool $user_can_reopen;
-
-    /**
-     * @var PullRequestStatusInfoRepresentation | null {@type PullRequestStatusInfoRepresentation | null}
-     */
     public ?PullRequestStatusInfoRepresentation $status_info;
     public bool $user_can_update_title_and_description;
     public string $description_format;
@@ -157,7 +93,7 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
         array $reviewers,
         PullRequestShortStatRepresentation $pr_short_stat_representation,
         ?PullRequestStatusInfoRepresentation $status_info_representation,
-    ) {
+    ): void {
         $this->buildMinimal($pull_request, $repository, $repository_dest, $git_reference, $reviewers);
 
         $project_id                       = $repository->getProjectId();
@@ -168,7 +104,6 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
         $this->reference_src  = $pull_request->getSha1Src();
         $this->reference_dest = $pull_request->getSha1Dest();
         $this->head_reference = $git_reference->getGitHeadReference();
-        $this->status         = $this->expandStatusName($pull_request->getStatus());
 
         $this->last_build_status = $last_build_status_name;
         $this->last_build_date   = JsonCast::toDate($last_build_date);
@@ -208,18 +143,7 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
         ];
     }
 
-    private function expandStatusName($status_acronym)
-    {
-        $status_name = [
-            PullRequest::STATUS_ABANDONED => self::STATUS_ABANDON,
-            PullRequest::STATUS_MERGED    => self::STATUS_MERGE,
-            PullRequest::STATUS_REVIEW    => self::STATUS_REVIEW,
-        ];
-
-        return $status_name[$status_acronym];
-    }
-
-    private function expandMergeStatusName($merge_status_acronym)
+    private function expandMergeStatusName(int $merge_status_acronym): string
     {
         $status_name = [
             PullRequest::NO_FASTFORWARD_MERGE => self::NO_FASTFORWARD_MERGE,
