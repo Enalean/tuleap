@@ -27,6 +27,7 @@ require_once __DIR__ . '/constants.php';
 
 use FastRoute\RouteCollector;
 use Tuleap\LDAP\User\UserDao;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
 use Tuleap\SVNCore\SVNAccessFileDefaultBlockOverride;
 use Tuleap\CLI\Command\ConfigDumpEvent;
 use Tuleap\Git\Git\RemoteServer\GerritCanMigrateEvent;
@@ -860,11 +861,14 @@ class LdapPlugin extends Plugin
         }
     }
 
-    private function synchronizeProjectMembers()
+    private function synchronizeProjectMembers(): void
     {
         $this->getLogger()->info('LDAP daily synchronisation: project members');
 
-        $ldap_project_group_manager = $this->buildLdapProjectGroupManager($this->getGroupSyncNotificationsManager());
+        $ldap_project_group_manager = $this->buildLdapProjectGroupManagerWithoutPermissionsCheckOnProjectMemberAdd(
+            $this->getGroupSyncNotificationsManager(),
+        );
+
         $ldap_project_group_manager->synchronize();
     }
 
@@ -1135,9 +1139,30 @@ class LdapPlugin extends Plugin
             $project_manager,
             $user_manager,
             $notifications_manager,
-            new ProjectGroupManagerRestrictedUserFilter($user_manager)
+            new ProjectGroupManagerRestrictedUserFilter($user_manager),
+            new \Tuleap\LDAP\Project\ProjectMemberAdder($this->getLdapProjectGroupDao()),
         );
         return $manager;
+    }
+
+    private function buildLdapProjectGroupManagerWithoutPermissionsCheckOnProjectMemberAdd(
+        \Tuleap\LDAP\GroupSyncNotificationsManager $notifications_manager,
+    ): LDAP_ProjectGroupManager {
+        $user_manager    = UserManager::instance();
+        $project_manager = ProjectManager::instance();
+        return new LDAP_ProjectGroupManager(
+            $this->getLdap(),
+            $this->getLdapUserManager(),
+            $this->getLdapProjectGroupDao(),
+            $project_manager,
+            $user_manager,
+            $notifications_manager,
+            new ProjectGroupManagerRestrictedUserFilter($user_manager),
+            new \Tuleap\LDAP\Project\DailySyncProjectMemberAdder(
+                $user_manager,
+                ProjectMemberAdderWithStatusCheckAndNotifications::buildWithoutPermissionsChecks(),
+            ),
+        );
     }
 
     /**

@@ -59,6 +59,15 @@ class ProjectMemberAdderWithStatusCheckAndNotifications implements ProjectMember
         );
     }
 
+    public static function buildWithoutPermissionsChecks(): self
+    {
+        return new self(
+            AddProjectMember::buildWithoutPermissionsChecks(),
+            $GLOBALS['Language'],
+            new MailFactory()
+        );
+    }
+
     public function addProjectMemberWithFeedback(\PFUser $user, \Project $project, \PFUser $project_admin): void
     {
         try {
