@@ -1,10 +1,10 @@
-use_relative_path_from_depfile: false
-paths:
-  - ./plugins/baseline/include/
-layers:
-  - name: Domain
-    collectors:
-      - type: directory
-        regex: plugins/baseline/include/Domain/.*
-ruleset:
-  Domain: ~
+deptrac:
+  paths:
+    - ../../include/
+  layers:
+    - name: Domain
+      collectors:
+        - type: directory
+          regex: plugins/baseline/include/Domain/.*
+  ruleset:
+    Domain: ~

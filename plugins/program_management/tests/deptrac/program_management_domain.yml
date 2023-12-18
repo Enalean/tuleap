@@ -1,17 +1,17 @@
-use_relative_path_from_depfile: false
-paths:
-  - ./plugins/program_management/include/
-layers:
-  - name: Domain
-    collectors:
-      - type: directory
-        regex: plugins/program_management/include/Domain/.*
-  - name: CoreLibraries
-    collectors:
-      - type: className
-        regex: Tuleap\\Option\\Option
-ruleset:
-  Domain:
-    - Domain
-    - CoreLibraries
-  CoreLibraries: ~
+deptrac:
+  paths:
+    - ../../include/
+  layers:
+    - name: Domain
+      collectors:
+        - type: directory
+          regex: plugins/program_management/include/Domain/.*
+    - name: CoreLibraries
+      collectors:
+        - type: className
+          regex: Tuleap\\Option\\Option
+  ruleset:
+    Domain:
+      - Domain
+      - CoreLibraries
+    CoreLibraries: ~
