@@ -226,4 +226,9 @@ class Planning_VirtualTopMilestone implements Planning_Milestone
     public function setRemainingEffort($remaining_effort)
     {
     }
+
+    public function getPromotedMilestoneId(): string
+    {
+        return 'topbacklog';
+    }
 }

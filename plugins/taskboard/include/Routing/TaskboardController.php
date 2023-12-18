@@ -125,7 +125,11 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
             $this->bread_crumbs_builder->getBreadcrumbs($user, $project, $milestone),
             [],
             HeaderConfigurationBuilder::get($title)
-                ->inProject($project, \AgileDashboardPlugin::PLUGIN_SHORTNAME)
+                ->inProjectWithActivePromotedItem(
+                    $project,
+                    \AgileDashboardPlugin::PLUGIN_SHORTNAME,
+                    $milestone->getPromotedMilestoneId(),
+                )
                 ->withBodyClass(['reduce-help-button'])
                 ->withMainClass(['fluid-main'])
                 ->withNewDropdownLinkSection($this->getCurrentContextSection($user, $milestone)->unwrapOr(null))

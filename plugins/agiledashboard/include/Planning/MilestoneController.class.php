@@ -109,7 +109,11 @@ class Planning_MilestoneController extends BaseController
             $title,
             $this->getBreadcrumbs(),
             HeaderConfigurationBuilder::get($title)
-                ->inProject($this->project, \AgileDashboardPlugin::PLUGIN_SHORTNAME)
+                ->inProjectWithActivePromotedItem(
+                    $this->project,
+                    \AgileDashboardPlugin::PLUGIN_SHORTNAME,
+                    $this->milestone->getPromotedMilestoneId(),
+                )
                 ->withBodyClass($active_pane->getBodyClass())
                 ->withFatCombined($active_pane->shouldIncludeFatCombined())
                 ->withNewDropdownLinkSection(

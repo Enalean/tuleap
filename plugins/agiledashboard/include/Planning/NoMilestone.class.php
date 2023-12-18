@@ -193,4 +193,9 @@ class Planning_NoMilestone implements Planning_Milestone
     public function setRemainingEffort($remaining_effort)
     {
     }
+
+    public function getPromotedMilestoneId(): string
+    {
+        return 'no-milestone';
+    }
 }

@@ -60,7 +60,7 @@ final class AgileDashboardPromotedMilestonesRetriever
     /**
      * @return list<SidebarPromotedItemPresenter>
      */
-    public function getSidebarPromotedMilestones(PFUser $user): array
+    public function getSidebarPromotedMilestones(PFUser $user, ?string $active_promoted_item_id): array
     {
         if (! $this->milestones_in_sidebar->shouldSidebarDisplayLastMilestones((int) $this->project->getID())) {
             return [];
@@ -86,27 +86,32 @@ final class AgileDashboardPromotedMilestonesRetriever
                 continue;
             }
 
-            $sub_milestones_items = [];
+            $is_one_sub_milestone_active = false;
+            $sub_milestones_items        = [];
             foreach ($sub_milestones as $sub_milestone) {
                 $data_sub_milestone = $this->getDataForMilestone($sub_milestone);
-                $data_sub_milestone->apply(function ($data) use (&$sub_milestones_items) {
+                $data_sub_milestone->apply(function ($data) use (&$sub_milestones_items, &$is_one_sub_milestone_active, $active_promoted_item_id, $sub_milestone) {
+                    $is_active = $active_promoted_item_id === $sub_milestone->getPromotedMilestoneId();
+                    if ($is_active) {
+                        $is_one_sub_milestone_active = true;
+                    }
                     $sub_milestones_items[] = new SidebarPromotedItemPresenter(
                         $data['uri'],
                         $data['title'],
                         $data['description'],
-                        false,
+                        $is_active,
                         null,
                         []
                     );
                 });
             }
 
-            $data_milestone->apply(function ($data) use (&$items, $sub_milestones_items) {
+            $data_milestone->apply(function ($data) use (&$items, $sub_milestones_items, $is_one_sub_milestone_active, $active_promoted_item_id, $milestone) {
                 $items[] = new SidebarPromotedItemPresenter(
                     $data['uri'],
                     $data['title'],
                     $data['description'],
-                    false,
+                    $is_one_sub_milestone_active || $active_promoted_item_id === $milestone->getPromotedMilestoneId(),
                     null,
                     $sub_milestones_items
                 );
