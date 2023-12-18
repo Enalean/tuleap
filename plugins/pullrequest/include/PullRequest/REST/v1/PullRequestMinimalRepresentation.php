@@ -32,66 +32,20 @@ class PullRequestMinimalRepresentation
 {
     public const ROUTE = 'pull_requests';
 
-    /**
-     * @var GitoliteAccessURLGenerator
-     */
-    private $gitolite_access_URL_generator;
+    private GitoliteAccessURLGenerator $gitolite_access_URL_generator;
 
-    /**
-     * @var int {@type int}
-     */
-    public $id;
-
-    /**
-     * @var string {@type string}
-     */
-    public $title;
-
-    /**
-     * @var string {@type string}
-     */
-    public $uri;
-
-    /**
-     * @var GitRepositoryReference {@type GitRepositoryReference}
-     */
-    public $repository;
-
-    /**
-     * @var GitRepositoryReference {@type GitRepositoryReference}
-     */
-    public $repository_dest;
-
-    /**
-     * @var int {@type int}
-     */
-    public $user_id;
-
-    /**
-     * @var string {@type string}
-     */
-    public $creation_date;
-
-    /**
-     * @var string {@type string}
-     */
-    public $branch_src;
-
-    /**
-     * @var string {@type string}
-     */
-    public $branch_dest;
-    /**
-     * @var string {@type string}
-     */
-    public $status;
-    /**
-     * @var PullRequestHEADRepresentation {@type PullRequestHEADRepresentation}
-     */
-    public $head;
-
+    public int $id;
+    public string $title;
+    public string $uri;
+    public GitRepositoryReference $repository;
+    public GitRepositoryReference $repository_dest;
+    public int $user_id;
+    public string $creation_date;
+    public string $branch_src;
+    public string $branch_dest;
+    public string $status;
+    public PullRequestHEADRepresentation $head;
     public bool $is_git_reference_broken;
-
     /**
      * @var MinimalUserRepresentation[]
      */

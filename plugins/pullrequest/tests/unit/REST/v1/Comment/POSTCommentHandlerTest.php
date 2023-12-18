@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\REST\v1\Comment;
 
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
 use Tuleap\Git\Tests\Stub\RetrieveGitRepositoryStub;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
@@ -35,7 +36,6 @@ use Tuleap\PullRequest\Tests\Stub\CountThreadsStub;
 use Tuleap\PullRequest\Tests\Stub\CreateCommentStub;
 use Tuleap\PullRequest\Tests\Stub\ParentCommentSearcherStub;
 use Tuleap\PullRequest\Tests\Stub\ThreadColorUpdaterStub;
-use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ContentInterpretorStub;
@@ -59,9 +59,7 @@ final class POSTCommentHandlerTest extends TestCase
         $this->format    = TimelineComment::FORMAT_TEXT;
         $this->parent_id = self::PARENT_ID;
 
-        $project        = ProjectTestBuilder::aProject()->build();
-        $git_repository = new \GitRepository();
-        $git_repository->setProject($project);
+        $git_repository = GitRepositoryTestBuilder::aProjectRepository()->build();
 
         $this->parent_comment_searcher = ParentCommentSearcherStub::withNotFound();
         $this->repository_retriever    = RetrieveGitRepositoryStub::withGitRepository($git_repository);
