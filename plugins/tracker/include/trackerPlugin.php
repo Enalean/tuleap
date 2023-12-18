@@ -575,12 +575,12 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
 
     public function permissionPerGroupDisplayEvent(PermissionPerGroupDisplayEvent $event): void
     {
-        $assets = new IncludeAssets(
+        $assets = new \Tuleap\Layout\IncludeViteAssets(
             __DIR__ . '/../scripts/permissions-per-group/frontend-assets',
             '/assets/trackers/permissions-per-group'
         );
         $event->addJavascript(
-            new \Tuleap\Layout\JavascriptAsset($assets, 'tracker-permissions-per-group.js')
+            new \Tuleap\Layout\JavascriptViteAsset($assets, 'src/index.ts')
         );
     }
 

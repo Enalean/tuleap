@@ -17,9 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import { getPOFileFromLocale, initVueGettextFromPoGettextPlugin } from "@tuleap/vue2-gettext-init";
-import BaseTrackerPermissionsComponent from "./BaseTrackerPermissions.vue";
+import { createApp } from "vue";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
+import { createGettext } from "vue3-gettext";
+import BaseTrackerPermissions from "./BaseTrackerPermissions.vue";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("tracker-permissions-per-group");
@@ -27,13 +28,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    await initVueGettextFromPoGettextPlugin(
-        Vue,
-        (locale) => import(`../po/${getPOFileFromLocale(locale)}`),
-    );
+    const gettext = await initVueGettext(createGettext, (locale: string) => {
+        return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
+    });
 
-    const RootComponent = Vue.extend(BaseTrackerPermissionsComponent);
-    new RootComponent({
-        propsData: { ...vue_mount_point.dataset },
-    }).$mount(vue_mount_point);
+    const app = createApp(BaseTrackerPermissions, {
+        selected_project_id: vue_mount_point.dataset.selectedProjectId,
+        selected_ugroup_id: vue_mount_point.dataset.selectedUgroupId,
+        selected_ugroup_name: vue_mount_point.dataset.selectedUgroupName,
+    });
+    app.use(gettext);
+    app.mount(vue_mount_point);
 });

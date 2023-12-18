@@ -19,29 +19,31 @@
 
 <template>
     <td
-        v-if="hasASelectedUserGroup"
+        v-if="has_a_selected_ugroup_name"
         key="selected-ugroup"
         colspan="3"
         class="tlp-table-cell-empty"
-        v-translate="{ user_group: selectedUgroupName }"
     >
-        %{ user_group } has no permission for trackers
+        {{ message }}
     </td>
 
-    <td v-else key="no-selected-ugroup" colspan="3" class="tlp-table-cell-empty" v-translate>
-        Project has no tracker
+    <td v-else key="no-selected-ugroup" colspan="3" class="tlp-table-cell-empty">
+        {{ $gettext("Project has no tracker") }}
     </td>
 </template>
-<script>
-export default {
-    name: "TrackerPermissionTableEmptyState",
-    props: {
-        selectedUgroupName: String,
-    },
-    computed: {
-        hasASelectedUserGroup() {
-            return this.selectedUgroupName !== "";
-        },
-    },
-};
+<script setup lang="ts">
+import { computed } from "vue";
+import { useGettext } from "vue3-gettext";
+
+const props = defineProps<{
+    selected_ugroup_name: string;
+}>();
+
+const has_a_selected_ugroup_name = computed(() => props.selected_ugroup_name !== "");
+
+const { $gettext, interpolate } = useGettext();
+
+const message = interpolate($gettext("%{ user_group } has no permission for trackers"), {
+    user_group: props.selected_ugroup_name,
+});
 </script>
