@@ -39,7 +39,6 @@ use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
@@ -144,7 +143,6 @@ final class MilestoneFactoryGetAllMilestonesTest extends \Tuleap\Test\PHPUnit\Te
             $this->project,
             $planning,
             $artifact,
-            Mockery::spy(ScrumForMonoMilestoneChecker::class),
             $planned_artifacts
         );
         $milestones = $factory->getAllMilestones($this->user, $planning);
@@ -166,7 +164,6 @@ final class MilestoneFactoryGetAllMilestonesTest extends \Tuleap\Test\PHPUnit\Te
             $this->project,
             $planning,
             $artifact,
-            Mockery::spy(ScrumForMonoMilestoneChecker::class),
             null
         );
         $milestones = $factory->getAllMilestonesWithoutPlannedElement($this->user, $planning);
@@ -187,7 +184,6 @@ final class MilestoneFactoryGetAllMilestonesTest extends \Tuleap\Test\PHPUnit\Te
                 Mockery::spy(AgileDashboard_Milestone_MilestoneStatusCounter::class),
                 Mockery::spy(PlanningPermissionsManager::class),
                 Mockery::spy(AgileDashboard_Milestone_MilestoneDao::class),
-                Mockery::spy(ScrumForMonoMilestoneChecker::class),
                 Mockery::mock(SemanticTimeframeBuilder::class),
                 new NullLogger(),
             ]

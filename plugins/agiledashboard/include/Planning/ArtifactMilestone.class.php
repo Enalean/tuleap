@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Tracker\Artifact\Artifact;
 
@@ -93,23 +92,16 @@ class Planning_ArtifactMilestone implements Planning_Milestone
      */
     private $remaining_effort = null;
 
-    /**
-     * @var ScrumForMonoMilestoneChecker
-     */
-    private $scrum_mono_milestone_checker;
-
     public function __construct(
         Project $project,
         Planning $planning,
         Artifact $artifact,
-        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
         ?ArtifactNode $planned_artifacts = null,
     ) {
-        $this->project                      = $project;
-        $this->planning                     = $planning;
-        $this->artifact                     = $artifact;
-        $this->planned_artifacts            = $planned_artifacts;
-        $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
+        $this->project           = $project;
+        $this->planning          = $planning;
+        $this->artifact          = $artifact;
+        $this->planned_artifacts = $planned_artifacts;
     }
 
     /**
@@ -198,11 +190,6 @@ class Planning_ArtifactMilestone implements Planning_Milestone
     public function getPlannedArtifacts()
     {
         return $this->planned_artifacts;
-    }
-
-    public function setPlannedArtifacts(ArtifactNode $node)
-    {
-        $this->planned_artifacts = $node;
     }
 
     /**
@@ -349,12 +336,8 @@ class Planning_ArtifactMilestone implements Planning_Milestone
         return null;
     }
 
-    public function milestoneCanBeSubmilestone(Planning_Milestone $potential_submilestone)
+    public function milestoneCanBeSubmilestone(Planning_Milestone $potential_submilestone): bool
     {
-        if ($this->scrum_mono_milestone_checker->isMonoMilestoneEnabled($potential_submilestone->getProject()->getID()) === true) {
-            return $this->acceptOnlySameTrackerInMonoMilestoneCofiguration($potential_submilestone);
-        }
-
         if ($potential_submilestone->getArtifact()->getTracker()->getParent()) {
             $parent = $potential_submilestone->getArtifact()->getTracker()->getParent();
             if ($parent === null) {
@@ -364,11 +347,6 @@ class Planning_ArtifactMilestone implements Planning_Milestone
         }
 
         return false;
-    }
-
-    private function acceptOnlySameTrackerInMonoMilestoneCofiguration(Planning_Milestone $potential_submilestone)
-    {
-        return $potential_submilestone->getArtifact()->getTracker()->getId()  == $this->getArtifact()->getTracker()->getId();
     }
 
     /**

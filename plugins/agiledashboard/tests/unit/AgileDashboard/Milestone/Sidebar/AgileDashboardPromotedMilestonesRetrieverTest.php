@@ -28,7 +28,6 @@ use Planning_MilestoneFactory;
 use Planning_NoPlanningsException;
 use Planning_VirtualTopMilestone;
 use Tracker_Semantic_Description;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\Stub\Milestone\Sidebar\BuildPromotedMilestoneListStub;
 use Tuleap\AgileDashboard\Stub\Milestone\Sidebar\CheckMilestonesInSidebarStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -103,13 +102,11 @@ final class AgileDashboardPromotedMilestonesRetrieverTest extends TestCase
             $project,
             $planning,
             $artifact,
-            $this->createMock(ScrumForMonoMilestoneChecker::class)
         );
         $promoted_sub_artifact = new Planning_ArtifactMilestone(
             $project,
             $planning,
             $sub_artifact,
-            $this->createMock(ScrumForMonoMilestoneChecker::class)
         );
 
         $milestone_factory->method('getVirtualTopMilestone')->willReturn($virtual_milestone);

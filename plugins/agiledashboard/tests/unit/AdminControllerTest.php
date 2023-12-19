@@ -40,7 +40,6 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private const PROJECT_ID = 123;
     private \Codendi_Request & Stub $request;
-    private \PlanningFactory & Stub $planning_factory;
     private \AgileDashboard_ConfigurationManager & MockObject $config_manager;
     private \EventManager & Stub $event_manager;
     private CountElementsModeChecker & Stub $count_element_mode_checker;
@@ -51,7 +50,6 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         \ForgeConfig::set('codendi_dir', AGILEDASHBOARD_BASE_DIR . '/../../..');
 
         $this->request                    = $this->createStub(\Codendi_Request::class);
-        $this->planning_factory           = $this->createStub(\PlanningFactory::class);
         $this->config_manager             = $this->createMock(\AgileDashboard_ConfigurationManager::class);
         $this->event_manager              = $this->createStub(\EventManager::class);
         $this->count_element_mode_checker = $this->createStub(CountElementsModeChecker::class);
@@ -70,7 +68,6 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $controller = new AdminController(
             $this->request,
-            $this->planning_factory,
             $this->config_manager,
             $this->event_manager,
             $this->createStub(AgileDashboardCrumbBuilder::class),

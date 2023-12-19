@@ -23,9 +23,6 @@ namespace Tuleap\AgileDashboard\ServiceAdministration;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\AgileDashboard\ExplicitBacklog\ConfigurationUpdater;
 use Tuleap\AgileDashboard\Milestone\Sidebar\CheckMilestonesInSidebar;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDisabler;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneEnabler;
 
 class ScrumConfigurationUpdater
 {
@@ -34,9 +31,6 @@ class ScrumConfigurationUpdater
     public function __construct(
         private readonly \Codendi_Request $request,
         private readonly \AgileDashboard_ConfigurationManager $config_manager,
-        private readonly ScrumForMonoMilestoneEnabler $scrum_mono_milestone_enabler,
-        private readonly ScrumForMonoMilestoneDisabler $scrum_mono_milestone_disabler,
-        private readonly ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
         private readonly ConfigurationUpdater $configuration_updater,
         private readonly EventDispatcherInterface $event_dispatcher,
         private readonly CheckMilestonesInSidebar $milestones_in_sidebar,
@@ -64,16 +58,6 @@ class ScrumConfigurationUpdater
         );
 
         $this->configuration_updater->updateScrumConfiguration($this->request);
-
-        $is_scrum_mono_milestone_enabled = $this->scrum_mono_milestone_checker->isMonoMilestoneEnabled(
-            $this->project_id
-        );
-
-        if ($this->request->get('activate-scrum-v2') && $is_scrum_mono_milestone_enabled === false) {
-            $this->scrum_mono_milestone_enabler->enableScrumForMonoMilestones($this->project_id);
-        } elseif ($this->request->get('activate-scrum-v2') == false && $is_scrum_mono_milestone_enabled === true) {
-            $this->scrum_mono_milestone_disabler->disableScrumForMonoMilestones($this->project_id);
-        }
     }
 
     private function getActivatedScrum(): bool|string

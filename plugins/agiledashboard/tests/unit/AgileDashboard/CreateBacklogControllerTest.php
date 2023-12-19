@@ -24,7 +24,6 @@ namespace Tuleap\AgileDashboard;
 
 use AgileDashboard_FirstScrumCreator;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
@@ -54,7 +53,6 @@ final class CreateBacklogControllerTest extends TestCase
             FeedbackSerializerStub::buildSelf(),
             IsProjectAllowedToUsePluginStub::projectIsNotAllowed(),
             $this->createStub(AgileDashboard_FirstScrumCreator::class),
-            $this->createStub(ScrumForMonoMilestoneChecker::class),
             EventDispatcherStub::withIdentityCallback(),
         )->handle((new NullServerRequest())
             ->withAttribute(\Project::class, $project)
@@ -74,38 +72,10 @@ final class CreateBacklogControllerTest extends TestCase
             FeedbackSerializerStub::buildSelf(),
             IsProjectAllowedToUsePluginStub::projectIsAllowed(),
             $this->createStub(AgileDashboard_FirstScrumCreator::class),
-            $this->createStub(ScrumForMonoMilestoneChecker::class),
             EventDispatcherStub::withIdentityCallback(),
         )->handle((new NullServerRequest())
             ->withAttribute(\Project::class, $project)
             ->withAttribute(\PFUser::class, $user));
-    }
-
-    public function testNoScrumCreationWhenMonoMilestone(): void
-    {
-        $user    = UserTestBuilder::buildWithDefaults();
-        $project = ProjectTestBuilder::aProject()->build();
-        $project->addUsedServices([\AgileDashboardPlugin::PLUGIN_SHORTNAME, $this->createStub(AgileDashboardService::class)]);
-
-        $mono_milestone_checker = $this->createMock(ScrumForMonoMilestoneChecker::class);
-        $mono_milestone_checker->method('isMonoMilestoneEnabled')->willReturn(true);
-
-        $first_scrum_creator = $this->createMock(AgileDashboard_FirstScrumCreator::class);
-        $first_scrum_creator->expects(self::never())->method('createFirstScrum');
-
-        $feedback_serializer = FeedbackSerializerStub::buildSelf();
-
-        $this->getController(
-            $feedback_serializer,
-            IsProjectAllowedToUsePluginStub::projectIsAllowed(),
-            $first_scrum_creator,
-            $mono_milestone_checker,
-            EventDispatcherStub::withIdentityCallback(),
-        )->handle((new NullServerRequest())
-            ->withAttribute(\Project::class, $project)
-            ->withAttribute(\PFUser::class, $user));
-
-        self::assertEquals(\Feedback::ERROR, $feedback_serializer->getCapturedFeedbacks()[0]->getLevel());
     }
 
     public function testNoScrumCreationWhenAdministrationIsDelegated(): void
@@ -114,9 +84,6 @@ final class CreateBacklogControllerTest extends TestCase
         $project = ProjectTestBuilder::aProject()->build();
         $project->addUsedServices([\AgileDashboardPlugin::PLUGIN_SHORTNAME, $this->createStub(AgileDashboardService::class)]);
 
-        $mono_milestone_checker = $this->createMock(ScrumForMonoMilestoneChecker::class);
-        $mono_milestone_checker->method('isMonoMilestoneEnabled')->willReturn(false);
-
         $first_scrum_creator = $this->createMock(AgileDashboard_FirstScrumCreator::class);
         $first_scrum_creator->expects(self::never())->method('createFirstScrum');
 
@@ -126,7 +93,6 @@ final class CreateBacklogControllerTest extends TestCase
             $feedback_serializer,
             IsProjectAllowedToUsePluginStub::projectIsAllowed(),
             $first_scrum_creator,
-            $mono_milestone_checker,
             EventDispatcherStub::withCallback(static function (object $event): object {
                 if ($event instanceof PlanningAdministrationDelegation) {
                     $event->enablePlanningAdministrationDelegation();
@@ -146,9 +112,6 @@ final class CreateBacklogControllerTest extends TestCase
         $project = ProjectTestBuilder::aProject()->build();
         $project->addUsedServices([\AgileDashboardPlugin::PLUGIN_SHORTNAME, $this->createStub(AgileDashboardService::class)]);
 
-        $mono_milestone_checker = $this->createMock(ScrumForMonoMilestoneChecker::class);
-        $mono_milestone_checker->method('isMonoMilestoneEnabled')->willReturn(false);
-
         $first_scrum_creator = $this->createMock(AgileDashboard_FirstScrumCreator::class);
         $first_scrum_creator->expects(self::once())->method('createFirstScrum')->willReturn(NewFeedback::success('yay!'));
 
@@ -158,7 +121,6 @@ final class CreateBacklogControllerTest extends TestCase
             $feedback_serializer,
             IsProjectAllowedToUsePluginStub::projectIsAllowed(),
             $first_scrum_creator,
-            $mono_milestone_checker,
             EventDispatcherStub::withIdentityCallback(),
         )->handle((new NullServerRequest())
             ->withAttribute(\Project::class, $project)
@@ -173,14 +135,12 @@ final class CreateBacklogControllerTest extends TestCase
         ISerializeFeedback $feedback_serializer,
         IsProjectAllowedToUsePlugin $plugin,
         AgileDashboard_FirstScrumCreator $first_scrum_creator,
-        ScrumForMonoMilestoneChecker $mono_milestone_checker,
         EventDispatcherInterface $event_dispatcher,
     ): CreateBacklogController {
         return new CreateBacklogController(
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),
             $plugin,
             $first_scrum_creator,
-            $mono_milestone_checker,
             $event_dispatcher,
             new NoopSapiEmitter(),
         );

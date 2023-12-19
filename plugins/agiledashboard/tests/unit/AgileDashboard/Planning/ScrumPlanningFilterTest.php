@@ -22,7 +22,6 @@ namespace Tuleap\AgileDashboard\Planning;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 
 class ScrumPlanningFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -44,46 +43,23 @@ class ScrumPlanningFilterTest extends \Tuleap\Test\PHPUnit\TestCase
     private $planning_factory;
 
     /**
-     * @var ScrumForMonoMilestoneChecker
-     */
-    private $mono_milestone_checker;
-
-    /**
      * @var  ScrumPlanningFilter
      */
     private $scrum_planning_filter;
 
     protected function setUp(): void
     {
-        $this->mono_milestone_checker = \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class);
-        $this->planning_factory       = \Mockery::spy(\PlanningFactory::class);
-        $this->planning               = \Mockery::spy(\Planning::class);
-        $this->user                   = \Mockery::spy(\PFUser::class);
+        $this->planning_factory = \Mockery::spy(\PlanningFactory::class);
+        $this->planning         = \Mockery::spy(\Planning::class);
+        $this->user             = \Mockery::spy(\PFUser::class);
 
         $this->scrum_planning_filter = new ScrumPlanningFilter(
-            $this->mono_milestone_checker,
             $this->planning_factory
         );
     }
 
-    public function testItRetrieveMonoMilestoneTrackerWhenScrumMonoMilestoneIsEnabled(): void
+    public function testItRetrievesMilestoneTracker(): void
     {
-        $this->mono_milestone_checker->shouldReceive('isMonoMilestoneEnabled')->with(101)->andReturns(true);
-        $this->planning_factory->shouldReceive('getAvailableBacklogTrackers')->andReturns([])->once();
-        $this->planning_factory->shouldReceive('getPotentialPlanningTrackers')->andReturns([])->once();
-
-        $this->scrum_planning_filter->getPlanningTrackersFiltered(
-            $this->planning,
-            $this->user,
-            101
-        );
-
-        $this->addToAssertionCount(1);
-    }
-
-    public function testItRetrieveMultiMilestoneTrackerWhenScrumMonoMilestoneIsDisabled(): void
-    {
-        $this->mono_milestone_checker->shouldReceive('isMonoMilestoneEnabled')->with(101)->andReturns(false);
         $this->planning_factory->shouldReceive('getAvailablePlanningTrackers')->once();
         $tracker = \Mockery::spy(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(888);

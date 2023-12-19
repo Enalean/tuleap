@@ -19,10 +19,6 @@
  */
 
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
-use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
-use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -232,22 +228,10 @@ class Cardwall_Pane extends AgileDashboard_Pane
             new Tracker_Artifact_PriorityDao()
         );
 
-        $mono_milestone_items_finder = new MonoMilestoneItemsFinder(
-            new MonoMilestoneBacklogItemDao(),
-            $this->artifact_factory
-        );
-
-        $scrum_mono_milestone_checker = new ScrumForMonoMilestoneChecker(
-            new ScrumForMonoMilestoneDao(),
-            $this->planning_factory
-        );
-
         $backlog_factory = new AgileDashboard_Milestone_Backlog_BacklogFactory(
             new AgileDashboard_BacklogItemDao(),
             $this->artifact_factory,
             $this->planning_factory,
-            $scrum_mono_milestone_checker,
-            $mono_milestone_items_finder
         );
 
         return $backlog_item_collection_factory->getOpenAndClosedCollection(

@@ -19,11 +19,6 @@ msgstr ""
 msgid "%s backlog"
 msgstr ""
 
-msgid ""
-"A first scrum configuration will be used during the activation. This "
-"operation can take a few seconds."
-msgstr ""
-
 msgid "Activate Scrum"
 msgstr ""
 
@@ -158,9 +153,6 @@ msgid "Edit %1$s"
 msgstr ""
 
 msgid "Edit planning: %s"
-msgstr ""
-
-msgid "Enable Scrum V2"
 msgstr ""
 
 msgid "Explicit backlog"
@@ -308,9 +300,6 @@ msgstr ""
 msgid "Scrum configuration successfully updated."
 msgstr ""
 
-msgid "Scrum mono milestone"
-msgstr ""
-
 msgid "Scrum successfully activated."
 msgstr ""
 
@@ -404,11 +393,6 @@ msgid ""
 "already planned in sub milestone of the project."
 msgstr ""
 
-msgid ""
-"This feature is under development. Once checked it wont be possible to start "
-"scrum with default template."
-msgstr ""
-
 msgid "This is used in the Backlog if enabled."
 msgstr ""
 
@@ -452,10 +436,6 @@ msgid "Unable to find milestone"
 msgstr ""
 
 msgid "Unable to import the configuration!"
-msgstr ""
-
-msgid ""
-"Unable to initiate a default backlog when Scrum mono milestone is enabled."
 msgstr ""
 
 msgid ""
@@ -535,9 +515,6 @@ msgstr ""
 msgid "You can import configuration from an XML template."
 msgstr ""
 
-msgid "You cannot create more than one planning in scrum V2."
-msgstr ""
-
 msgid "You cannot create new planning because either:"
 msgstr ""
 
@@ -550,10 +527,6 @@ msgstr ""
 msgid ""
 "You cannot have parent and child as backlog trackers (%s, %s). Please choose "
 "only one."
-msgstr ""
-
-msgid ""
-"You cannot import more than one planning in scrum V2, please check your XML."
 msgstr ""
 
 msgid "You don't have permissions to see user groups."

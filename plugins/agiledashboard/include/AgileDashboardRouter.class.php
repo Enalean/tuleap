@@ -35,7 +35,6 @@ use Tuleap\AgileDashboard\FormElement\FormElementController;
 use Tuleap\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarDao;
 use Tuleap\AgileDashboard\Planning\MilestoneControllerFactory;
 use Tuleap\AgileDashboard\Milestone\Backlog\TopBacklogElementsToAddChecker;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetriever;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningEditionPresenterBuilder;
 use Tuleap\AgileDashboard\Planning\Admin\UpdateRequestValidator;
@@ -102,11 +101,6 @@ class AgileDashboardRouter
     private $planning_permissions_manager;
 
     /**
-     * @var ScrumForMonoMilestoneChecker
-     */
-
-    private $scrum_mono_milestone_checker;
-    /**
      * @var ScrumPlanningFilter
      */
     private $planning_filter;
@@ -172,7 +166,6 @@ class AgileDashboardRouter
         AgileDashboard_XMLFullStructureExporter $xml_exporter,
         AgileDashboard_ConfigurationManager $config_manager,
         PlanningPermissionsManager $planning_permissions_manager,
-        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
         ScrumPlanningFilter $planning_filter,
         AgileDashboardJSONPermissionsRetriever $permissions_retriever,
         AgileDashboardCrumbBuilder $service_crumb_builder,
@@ -197,7 +190,6 @@ class AgileDashboardRouter
         $this->xml_exporter                       = $xml_exporter;
         $this->config_manager                     = $config_manager;
         $this->planning_permissions_manager       = $planning_permissions_manager;
-        $this->scrum_mono_milestone_checker       = $scrum_mono_milestone_checker;
         $this->planning_filter                    = $planning_filter;
         $this->permissions_retriever              = $permissions_retriever;
         $this->service_crumb_builder              = $service_crumb_builder;
@@ -405,7 +397,6 @@ class AgileDashboardRouter
             $this->project_manager,
             $this->xml_exporter,
             $this->planning_permissions_manager,
-            $this->scrum_mono_milestone_checker,
             $this->planning_filter,
             Tracker_FormElementFactory::instance(),
             $this->service_crumb_builder,
@@ -428,7 +419,6 @@ class AgileDashboardRouter
         assert($layout instanceof \Tuleap\Layout\BaseLayout);
         return new AdminController(
             $request,
-            $this->planning_factory,
             $this->config_manager,
             EventManager::instance(),
             $this->service_crumb_builder,

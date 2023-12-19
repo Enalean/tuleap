@@ -38,7 +38,6 @@ use Psr\Log\NullLogger;
 use Tracker;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
@@ -93,7 +92,6 @@ final class MilestoneFactoryGetLastMilestoneCreatedTest extends \Tuleap\Test\PHP
                 Mockery::mock(AgileDashboard_Milestone_MilestoneStatusCounter::class),
                 Mockery::mock(PlanningPermissionsManager::class),
                 Mockery::mock(AgileDashboard_Milestone_MilestoneDao::class),
-                Mockery::mock(ScrumForMonoMilestoneChecker::class),
                 Mockery::mock(SemanticTimeframeBuilder::class),
                 new NullLogger(),
                 Mockery::spy(MilestoneBurndownFieldChecker::class),

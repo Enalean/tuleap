@@ -29,7 +29,6 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
@@ -146,7 +145,6 @@ final class MilestoneControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->visit_recorder,
             $this->crumb_builder,
             Mockery::mock(HeaderOptionsProvider::class),
-            $this->createStub(ScrumForMonoMilestoneChecker::class)
         );
     }
 

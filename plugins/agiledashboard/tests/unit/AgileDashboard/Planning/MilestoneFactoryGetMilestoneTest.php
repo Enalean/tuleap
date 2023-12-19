@@ -39,7 +39,6 @@ use TestHelper;
 use Tracker;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -85,7 +84,6 @@ final class MilestoneFactoryGetMilestoneTest extends \Tuleap\Test\PHPUnit\TestCa
         $status_counter               = Mockery::spy(AgileDashboard_Milestone_MilestoneStatusCounter::class);
         $planning_permissions_manager = Mockery::spy(PlanningPermissionsManager::class);
         $this->dao                    = Mockery::spy(AgileDashboard_Milestone_MilestoneDao::class);
-        $mono_milestone_checker       = Mockery::spy(ScrumForMonoMilestoneChecker::class);
         $milestone_burndown_cheker    = Mockery::spy(MilestoneBurndownFieldChecker::class);
         $this->timeframe_calculator   = Mockery::mock(IComputeTimeframes::class);
         $semantic_timeframe           = Mockery::mock(SemanticTimeframe::class, ['getTimeframeCalculator' => $this->timeframe_calculator]);
@@ -99,7 +97,6 @@ final class MilestoneFactoryGetMilestoneTest extends \Tuleap\Test\PHPUnit\TestCa
             $status_counter,
             $planning_permissions_manager,
             $this->dao,
-            $mono_milestone_checker,
             $semantic_timeframe_builder,
             $this->logger,
             $milestone_burndown_cheker

@@ -31,7 +31,6 @@ use Tuleap\AgileDashboard\Milestone\Request\FilteringQuery;
 use Tuleap\AgileDashboard\Milestone\Request\SiblingMilestoneRequest;
 use Tuleap\AgileDashboard\Milestone\Request\SubMilestoneRequest;
 use Tuleap\AgileDashboard\Milestone\Request\TopMilestoneRequest;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -59,10 +58,6 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
      */
     private $planning_factory;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|ScrumForMonoMilestoneChecker
-     */
-    private $mono_milestone_checker;
-    /**
      * @var \AgileDashboard_Milestone_MilestoneDao|M\LegacyMockInterface|M\MockInterface
      */
     private $milestone_dao;
@@ -86,16 +81,15 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
 
     protected function setUp(): void
     {
-        $this->planning_factory       = M::mock(\PlanningFactory::class);
-        $this->artifact_factory       = M::mock(\Tracker_ArtifactFactory::class);
-        $this->mono_milestone_checker = M::mock(ScrumForMonoMilestoneChecker::class);
-        $this->milestone_dao          = M::mock(\AgileDashboard_Milestone_MilestoneDao::class);
-        $this->timeframe_calculator   = M::mock(IComputeTimeframes::class);
-        $semantic_timeframe           = M::mock(
+        $this->planning_factory     = M::mock(\PlanningFactory::class);
+        $this->artifact_factory     = M::mock(\Tracker_ArtifactFactory::class);
+        $this->milestone_dao        = M::mock(\AgileDashboard_Milestone_MilestoneDao::class);
+        $this->timeframe_calculator = M::mock(IComputeTimeframes::class);
+        $semantic_timeframe         = M::mock(
             SemanticTimeframe::class,
             ['getTimeframeCalculator' => $this->timeframe_calculator]
         );
-        $semantic_timeframe_builder   = M::mock(SemanticTimeframeBuilder::class, ['getSemantic' => $semantic_timeframe]);
+        $semantic_timeframe_builder = M::mock(SemanticTimeframeBuilder::class, ['getSemantic' => $semantic_timeframe]);
 
         $this->milestone_factory = new \Planning_MilestoneFactory(
             $this->planning_factory,
@@ -104,7 +98,6 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
             M::mock(\AgileDashboard_Milestone_MilestoneStatusCounter::class),
             M::mock(\PlanningPermissionsManager::class),
             $this->milestone_dao,
-            $this->mono_milestone_checker,
             $semantic_timeframe_builder,
             new NullLogger(),
             M::mock(MilestoneBurndownFieldChecker::class)
@@ -127,7 +120,6 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
             $this->project,
             $this->top_planning,
             ArtifactTestBuilder::anArtifact(121)->build(),
-            $this->mono_milestone_checker
         );
 
         $this->sub_milestone_request = new SubMilestoneRequest(
@@ -149,7 +141,6 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
             $this->project,
             $this->sub_planning,
             $reference_milestone_artifact,
-            $this->mono_milestone_checker
         );
 
         $this->sibling_milestone_request = new SiblingMilestoneRequest(
@@ -186,7 +177,6 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
         $this->top_planning = PlanningBuilder::aPlanning(self::PROJECT_ID)
             ->withMilestoneTracker($milestone_tracker)
             ->build();
-        $this->mono_milestone_checker->shouldReceive('isMonoMilestoneEnabled')->andReturnFalse();
         $this->milestone_dao->shouldReceive('searchPaginatedTopMilestones')
             ->once()
             ->with(15, $this->top_milestone_request)
@@ -297,7 +287,6 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
             $this->project,
             $this->top_planning,
             $reference_milestone_artifact,
-            $this->mono_milestone_checker
         );
         $this->sibling_milestone_request = new SiblingMilestoneRequest(
             $this->user,
@@ -346,7 +335,6 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
             $this->project,
             $this->top_planning,
             ArtifactTestBuilder::anArtifact(462)->build(),
-            $this->mono_milestone_checker
         );
         $this->reference_milestone->setAncestors([$parent_milestone]);
 
@@ -365,7 +353,6 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
             $this->project,
             $this->top_planning,
             ArtifactTestBuilder::anArtifact(462)->build(),
-            $this->mono_milestone_checker
         );
         $this->reference_milestone->setAncestors([$parent_milestone]);
 

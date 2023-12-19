@@ -36,7 +36,6 @@ use Psr\Log\NullLogger;
 use Tracker;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
@@ -94,7 +93,6 @@ class MilestoneFactoryGetMilestoneFromArtifactTest extends \Tuleap\Test\PHPUnit\
             Mockery::spy(AgileDashboard_Milestone_MilestoneStatusCounter::class),
             Mockery::spy(PlanningPermissionsManager::class),
             Mockery::spy(AgileDashboard_Milestone_MilestoneDao::class),
-            Mockery::spy(ScrumForMonoMilestoneChecker::class),
             Mockery::mock(SemanticTimeframeBuilder::class),
             new NullLogger(),
             Mockery::spy(MilestoneBurndownFieldChecker::class)
@@ -114,7 +112,6 @@ class MilestoneFactoryGetMilestoneFromArtifactTest extends \Tuleap\Test\PHPUnit\
             $this->project,
             $this->release_planning,
             $this->release_artifact,
-            Mockery::spy(ScrumForMonoMilestoneChecker::class)
         );
         $this->assertEquals($expected_release_milestone, $actual_release_milestone);
     }

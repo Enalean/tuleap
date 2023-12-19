@@ -35,7 +35,6 @@ use Project;
 use Psr\Log\NullLogger;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -125,7 +124,6 @@ class MilestoneFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $status_counter               = Mockery::mock(AgileDashboard_Milestone_MilestoneStatusCounter::class);
         $planning_permissions_manager = Mockery::mock(PlanningPermissionsManager::class);
         $milestone_dao                = Mockery::mock(AgileDashboard_Milestone_MilestoneDao::class);
-        $scrum_mono_milestone_checker = Mockery::mock(ScrumForMonoMilestoneChecker::class);
 
         $date_period_open_current_without_start_date = Mockery::mock(DatePeriodWithoutWeekEnd::class);
         $date_period_open_current_without_start_date->shouldReceive('isTodayBeforeDatePeriod')->andReturn(false);
@@ -183,7 +181,6 @@ class MilestoneFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             $status_counter,
             $planning_permissions_manager,
             $milestone_dao,
-            $scrum_mono_milestone_checker,
             $semantic_timeframe_builder,
             $logger,
         );

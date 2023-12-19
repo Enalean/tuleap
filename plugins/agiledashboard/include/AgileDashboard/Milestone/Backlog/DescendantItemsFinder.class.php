@@ -191,19 +191,6 @@ class AgileDashboard_Milestone_Backlog_DescendantItemsFinder
     }
 
     /** @return AgileDashboard_Milestone_Backlog_DescendantItemsCollection */
-    public function getOpenArtifactsForSubmilestonesForMonoMilestoneConfiguration(PFUser $user, $sub_milestone_ids)
-    {
-        $result = $this->artifact_dao->getArtifactsWithOpenStatusForSubmilestonesForMonoMilestoneConfiguration(
-            $this->milestone_id,
-            $this->descendant_tracker_ids,
-            $sub_milestone_ids,
-            $this->getDescendantPlannifiableItems()
-        );
-
-        return $this->getItemsForUser($user, $result, $this->artifact_dao->foundRows());
-    }
-
-    /** @return AgileDashboard_Milestone_Backlog_DescendantItemsCollection */
     public function getMilestoneOpenUnplannedBacklogItemsWithLimitAndOffset(PFUser $user, $sub_milestone_ids, $limit, $offset)
     {
         $result = $this->artifact_dao->getLinkedOpenArtifactsOfTrackersNotLinkedToOthersWithLimitAndOffset(

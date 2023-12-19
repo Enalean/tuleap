@@ -28,7 +28,6 @@ use Planning_ArtifactMilestone;
 use PlanningFactory;
 use Psr\Log\LoggerInterface;
 use Tracker_Semantic_Title;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
@@ -37,7 +36,6 @@ final class PromotedMilestoneBuilder implements BuildPromotedMilestone
 {
     public function __construct(
         private readonly PlanningFactory $planning_factory,
-        private readonly ScrumForMonoMilestoneChecker $milestone_checker,
         private readonly SemanticTimeframeBuilder $timeframe_builder,
         private readonly LoggerInterface $logger,
     ) {
@@ -80,7 +78,6 @@ final class PromotedMilestoneBuilder implements BuildPromotedMilestone
             $project,
             $planning,
             $milestone_artifact,
-            $this->milestone_checker
         ));
     }
 }

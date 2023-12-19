@@ -23,8 +23,6 @@ use Tuleap\AgileDashboard\Milestone\PaginatedMilestones;
 use Tuleap\AgileDashboard\Milestone\Request\SiblingMilestoneRequest;
 use Tuleap\AgileDashboard\Milestone\Request\SubMilestoneRequest;
 use Tuleap\AgileDashboard\Milestone\Request\TopMilestoneRequest;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\NotFoundException;
 use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
@@ -69,11 +67,6 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     private $milestone_dao;
 
     /**
-     * @var ScrumForMonoMilestoneChecker
-     */
-    private $scrum_mono_milestone_checker;
-
-    /**
      * @var SemanticTimeframeBuilder
      */
     private $semantic_timeframe_builder;
@@ -100,7 +93,6 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         AgileDashboard_Milestone_MilestoneStatusCounter $status_counter,
         PlanningPermissionsManager $planning_permissions_manager,
         AgileDashboard_Milestone_MilestoneDao $milestone_dao,
-        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
         SemanticTimeframeBuilder $semantic_timeframe_builder,
         LoggerInterface $logger,
     ) {
@@ -110,7 +102,6 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         $this->status_counter               = $status_counter;
         $this->planning_permissions_manager = $planning_permissions_manager;
         $this->milestone_dao                = $milestone_dao;
-        $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
         $this->semantic_timeframe_builder   = $semantic_timeframe_builder;
         $this->logger                       = $logger;
     }
@@ -132,7 +123,6 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
             ),
             new PlanningPermissionsManager(),
             new AgileDashboard_Milestone_MilestoneDao(),
-            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory),
             SemanticTimeframeBuilder::build(),
             BackendLogger::getDefaultLogger(),
         );
@@ -195,7 +185,6 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
             $artifact->getTracker()->getProject(),
             $planning,
             $artifact,
-            $this->scrum_mono_milestone_checker
         );
         $milestone->setAncestors($this->getMilestoneAncestors($user, $milestone));
         $this->updateMilestoneContextualInfo($user, $milestone);
@@ -274,21 +263,6 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
             return $field->getComputedValue($user, $milestone_artifact);
         }
         return 0;
-    }
-
-    /**
-     * Add planned artifacts to Planning_Milestone
-     *
-     * Only objects that should be visible for the given user are loaded.
-     *
-     *
-     */
-    public function updateMilestoneWithPlannedArtifacts(PFUser $user, Planning_Milestone $milestone)
-    {
-        $planned_artifacts = $this->getPlannedArtifacts($user, $milestone->getArtifact());
-        $this->removeSubMilestones($user, $milestone->getArtifact(), $planned_artifacts);
-
-        $milestone->setPlannedArtifacts($planned_artifacts);
     }
 
     /**
@@ -482,17 +456,10 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         $milestone_planning_tracker_id = $virtual_milestone->getPlanning()->getPlanningTrackerId();
 
         if ($milestone_planning_tracker_id) {
-            if ($this->scrum_mono_milestone_checker->isMonoMilestoneEnabled($project->getID()) === true) {
-                $top_milestone_artifacts = $this->milestone_dao->searchPaginatedTopMilestonesForMonoMilestoneConfiguration(
-                    $milestone_planning_tracker_id,
-                    $request,
-                );
-            } else {
-                $top_milestone_artifacts = $this->milestone_dao->searchPaginatedTopMilestones(
-                    $milestone_planning_tracker_id,
-                    $request,
-                );
-            }
+            $top_milestone_artifacts = $this->milestone_dao->searchPaginatedTopMilestones(
+                $milestone_planning_tracker_id,
+                $request,
+            );
 
             $total_size     = $this->milestone_dao->foundRows();
             $top_milestones = $this->convertDarToArrayOfMilestones($user, $virtual_milestone, $top_milestone_artifacts);
@@ -564,7 +531,6 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                 $milestone->getProject(),
                 $planning,
                 $artifact,
-                $this->scrum_mono_milestone_checker
             );
             $this->addMilestoneAncestors($user, $sub_milestone);
             $this->updateMilestoneContextualInfo($user, $sub_milestone);
@@ -592,7 +558,6 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                     $top_milestone->getProject(),
                     $root_planning,
                     $artifact,
-                    $this->scrum_mono_milestone_checker
                 );
                 $this->addMilestoneAncestors($user, $milestone);
                 $this->updateMilestoneContextualInfo($user, $milestone);
@@ -648,7 +613,6 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                 $project,
                 $planning,
                 $artifact,
-                $this->scrum_mono_milestone_checker
             );
         }
 
@@ -690,7 +654,6 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                     $project,
                     $planning,
                     $artifact,
-                    $this->scrum_mono_milestone_checker,
                     null
                 );
             }
@@ -720,7 +683,6 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                     $project,
                     $planning,
                     $artifact,
-                    $this->scrum_mono_milestone_checker,
                     $planned_artifacts
                 );
             }
@@ -759,7 +721,6 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
             $tracker->getProject(),
             $planning,
             $artifact,
-            $this->scrum_mono_milestone_checker,
             $planned_artifacts
         );
     }

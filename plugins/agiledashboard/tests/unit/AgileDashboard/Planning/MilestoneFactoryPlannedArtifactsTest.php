@@ -59,7 +59,6 @@ final class MilestoneFactoryPlannedArtifactsTest extends \Tuleap\Test\PHPUnit\Te
             Mockery::spy(\AgileDashboard_Milestone_MilestoneStatusCounter::class),
             Mockery::spy(\PlanningPermissionsManager::class),
             Mockery::spy(\AgileDashboard_Milestone_MilestoneDao::class),
-            Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class),
             Mockery::mock(SemanticTimeframeBuilder::class),
             new NullLogger(),
             Mockery::spy(MilestoneBurndownFieldChecker::class)

@@ -40,7 +40,6 @@ use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningEditionPresenterBuilder;
 use Tuleap\AgileDashboard\Planning\Admin\UpdateRequestValidator;
 use Tuleap\AgileDashboard\Planning\RootPlanning\UpdateIsAllowedChecker;
@@ -61,10 +60,6 @@ final class PlanningControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ArtifactsInExplicitBacklogDao
      */
     public $explicit_backlog_dao;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ScrumForMonoMilestoneChecker
-     */
-    private $scrum_mono_milestone_checker;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningUpdater
      */
@@ -119,7 +114,6 @@ final class PlanningControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->event_manager                   = Mockery::mock(EventManager::class);
         $this->planning_request_validator      = Mockery::mock(\Planning_RequestValidator::class);
         $this->planning_updater                = Mockery::mock(PlanningUpdater::class);
-        $this->scrum_mono_milestone_checker    = Mockery::mock(ScrumForMonoMilestoneChecker::class);
         $this->root_planning_update_checker    = Mockery::mock(UpdateIsAllowedChecker::class);
         $this->update_request_validator        = Mockery::mock(UpdateRequestValidator::class);
         $this->backlog_trackers_update_checker = $this->createMock(BacklogTrackersUpdateChecker::class);
@@ -130,7 +124,6 @@ final class PlanningControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             Mockery::mock(ProjectManager::class),
             Mockery::mock(AgileDashboard_XMLFullStructureExporter::class),
             Mockery::mock(PlanningPermissionsManager::class),
-            $this->scrum_mono_milestone_checker,
             Mockery::mock(ScrumPlanningFilter::class),
             Mockery::mock(Tracker_FormElementFactory::class),
             Mockery::mock(AgileDashboardCrumbBuilder::class),
@@ -357,10 +350,6 @@ final class PlanningControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->planning_request_validator->shouldReceive('isValid')->andReturnFalse();
 
-        $this->scrum_mono_milestone_checker->shouldReceive(
-            'doesScrumMonoMilestoneConfigurationAllowsPlanningCreation'
-        )->andReturnTrue();
-
         $this->planning_factory->shouldReceive('createPlanning')->never();
 
         $GLOBALS['Response']->shouldReceive('addFeedback')->once();
@@ -396,10 +385,6 @@ final class PlanningControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->request->shouldReceive('getProject')->andReturn($project);
 
         $this->planning_request_validator->shouldReceive('isValid')->andReturnTrue();
-
-        $this->scrum_mono_milestone_checker->shouldReceive(
-            'doesScrumMonoMilestoneConfigurationAllowsPlanningCreation'
-        )->andReturnTrue();
 
         $this->planning_factory->shouldReceive('createPlanning')->once();
 

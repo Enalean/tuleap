@@ -474,17 +474,6 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
         return $tracker_ids;
     }
 
-    public function getBacklogTrackersIdsIndexedByTrackerId($planning_id)
-    {
-        $tracker_ids = [];
-        $rows        = $this->dao->searchBacklogTrackersByPlanningId($planning_id);
-        foreach ($rows as $row) {
-            $tracker_ids[$row['tracker_id']] = true;
-        }
-
-        return $tracker_ids;
-    }
-
     /**
      * @return Tracker
      */

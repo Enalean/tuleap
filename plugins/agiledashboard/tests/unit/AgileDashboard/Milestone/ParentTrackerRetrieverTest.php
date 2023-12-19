@@ -166,9 +166,6 @@ final class ParentTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEmpty($trackers);
     }
 
-    /**
-     * This test is in Scrum v2 setup where everything is possible
-     */
     public function testItDoesNotRetrieveParentTrackersIfItIsTrackerBacklogOfPlanning(): void
     {
         $epic_tracker       = $this->getMockedTracker(101, null);

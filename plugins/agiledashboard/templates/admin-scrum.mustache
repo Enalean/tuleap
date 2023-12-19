@@ -25,22 +25,6 @@
                         </h1>
                     </div>
                     <section class="tlp-pane-section">
-                        {{# can_scrum_mono_milestone_be_enabled }}
-                            <div class="tlp-form-element">
-                                <label class="tlp-label tlp-checkbox">
-                                    <input type="checkbox"
-                                        id="activate-scrum-v2"
-                                        name="activate-scrum-v2"
-                                        value="1"
-                                        {{# use_mono_milestone }} checked {{/ use_mono_milestone }}
-                                    > {{ activate_scrum_mono_milestone_label }} ({{ scrum_monomilestone_title }})
-                                </label>
-                                <p class="tlp-text-warning">
-                                    <i class="fas fa-exclamation-triangle"></i> {{ warning_feature_under_construction }}
-                                </p>
-                            </div>
-                        {{/ can_scrum_mono_milestone_be_enabled }}
-
                         {{# additional_scrum_sections_controllers }}
                             {{{ content }}}
                         {{/ additional_scrum_sections_controllers }}
@@ -137,21 +121,14 @@
                                     <h1 class="tlp-popover-title">{{ cannot_create_planning_popover_title }}</h1>
                                 </div>
                                 <div class="tlp-popover-body">
-                                    {{# use_mono_milestone }}
-                                        <p>
-                                            {{ cannot_create_planning_in_scrum_v2 }}
-                                        </p>
-                                    {{/ use_mono_milestone }}
-                                    {{^ use_mono_milestone }}
-                                        {{^ can_create_planning }}
-                                            <p>{{ cannot_create_planning }}</p>
-                                            <ul>
-                                                <li>{{ cannot_create_planning_no_trackers }}</li>
-                                                <li>{{ cannot_create_planning_hierarchy }}</li>
-                                            </ul>
-                                            <p>{{{ cannot_create_planning_config }}}</p>
-                                        {{/ can_create_planning }}
-                                    {{/ use_mono_milestone }}
+                                    {{^ can_create_planning }}
+                                        <p>{{ cannot_create_planning }}</p>
+                                        <ul>
+                                            <li>{{ cannot_create_planning_no_trackers }}</li>
+                                            <li>{{ cannot_create_planning_hierarchy }}</li>
+                                        </ul>
+                                        <p>{{{ cannot_create_planning_config }}}</p>
+                                    {{/ can_create_planning }}
                                 </div>
                             </section>
                         {{/ does_configuration_allows_planning_creation }}

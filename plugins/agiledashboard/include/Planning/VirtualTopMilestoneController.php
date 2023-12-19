@@ -24,8 +24,6 @@ use Tuleap\AgileDashboard\AgileDashboard\Milestone\Backlog\RecentlyVisitedTopBac
 use Tuleap\AgileDashboard\BaseController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\CSRFSynchronizerTokenProvider;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDeprecatedException;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Option\Option;
@@ -53,7 +51,6 @@ final class VirtualTopMilestoneController extends BaseController
         private readonly VirtualTopMilestonePresenterBuilder $presenter_builder,
         private readonly AgileDashboardCrumbBuilder $agile_dashboard_crumb_builder,
         private readonly CSRFSynchronizerTokenProvider $token_provider,
-        private readonly ScrumForMonoMilestoneChecker $mono_milestone_checker,
         private readonly RecentlyVisitedTopBacklogDao $recently_visited_top_backlog_dao,
     ) {
         parent::__construct('agiledashboard', $request);
@@ -73,10 +70,6 @@ final class VirtualTopMilestoneController extends BaseController
      */
     public function showTop(\Closure $displayHeader, \Closure $displayFooter): void
     {
-        if ($this->mono_milestone_checker->isMonoMilestoneEnabled($this->project->getID())) {
-            throw new ScrumForMonoMilestoneDeprecatedException();
-        }
-
         $current_user = $this->getCurrentUser();
         if (! $current_user->isAnonymous()) {
             $this->recently_visited_top_backlog_dao->save(

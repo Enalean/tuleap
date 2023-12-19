@@ -27,7 +27,6 @@ use PlanningFactory;
 use Psr\Log\NullLogger;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_Semantic_Title;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -85,7 +84,6 @@ final class PromotedMilestoneBuilderTest extends TestCase
 
         $this->builder = new PromotedMilestoneBuilder(
             $this->planning_factory,
-            $this->createMock(ScrumForMonoMilestoneChecker::class),
             $this->timeframe_builder,
             new NullLogger()
         );

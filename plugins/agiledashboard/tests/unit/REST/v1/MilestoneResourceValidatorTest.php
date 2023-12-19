@@ -25,7 +25,6 @@ use AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Planning_ArtifactMilestone;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\Tracker\REST\Helpers\IdsFromBodyAreNotUniqueException;
 
 final class MilestoneResourceValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -132,7 +131,6 @@ final class MilestoneResourceValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $backlog_factory,
             $milestone_factory,
             $backlog_row_collection_factory,
-            Mockery::spy(ScrumForMonoMilestoneChecker::class)
         );
     }
 

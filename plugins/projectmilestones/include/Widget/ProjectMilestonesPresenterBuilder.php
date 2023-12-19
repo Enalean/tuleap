@@ -39,10 +39,6 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
-use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
-use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
@@ -155,15 +151,6 @@ class ProjectMilestonesPresenterBuilder
             new PlanningPermissionsManager()
         );
 
-        $scrum_mono_milestone_checker = new ScrumForMonoMilestoneChecker(
-            new ScrumForMonoMilestoneDao(),
-            $planning_factory
-        );
-
-        $mono_milestone_items_finder = new MonoMilestoneItemsFinder(
-            new MonoMilestoneBacklogItemDao(),
-            $artifact_factory
-        );
 
         $milestone_factory = Planning_MilestoneFactory::build();
 
@@ -173,8 +160,6 @@ class ProjectMilestonesPresenterBuilder
                 new AgileDashboard_BacklogItemDao(),
                 $artifact_factory,
                 $planning_factory,
-                $scrum_mono_milestone_checker,
-                $mono_milestone_items_finder
             ),
             new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
                 new AgileDashboard_BacklogItemDao(),

@@ -36,7 +36,6 @@ use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminPaneContent;
 use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminSection;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\Milestone\Sidebar\CheckMilestonesInSidebar;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 
@@ -50,10 +49,6 @@ class ScrumPresenterBuilder
      * @var AgileDashboard_ConfigurationManager
      */
     private $config_manager;
-    /**
-     * @var ScrumForMonoMilestoneChecker
-     */
-    private $scrum_mono_milestone_checker;
     /**
      * @var EventManager
      */
@@ -70,7 +65,6 @@ class ScrumPresenterBuilder
 
     public function __construct(
         AgileDashboard_ConfigurationManager $config_manager,
-        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
         EventManager $event_manager,
         PlanningFactory $planning_factory,
         ExplicitBacklogDao $explicit_backlog_dao,
@@ -78,7 +72,6 @@ class ScrumPresenterBuilder
         private readonly CheckMilestonesInSidebar $milestones_in_sidebar_config,
     ) {
         $this->config_manager                     = $config_manager;
-        $this->scrum_mono_milestone_checker       = $scrum_mono_milestone_checker;
         $this->event_manager                      = $event_manager;
         $this->planning_factory                   = $planning_factory;
         $this->explicit_backlog_dao               = $explicit_backlog_dao;
@@ -116,9 +109,7 @@ class ScrumPresenterBuilder
             $root_planning_name,
             $potential_planning_trackers,
             $scrum_activated,
-            $this->scrum_mono_milestone_checker->isScrumMonoMilestoneAvailable($user, $group_id),
-            $this->isScrumMonoMilestoneEnable($group_id),
-            $this->doesConfigurationAllowsPlanningCreation($user, $group_id, $can_create_planning),
+            $can_create_planning,
             $this->getAdditionalContent(),
             $this->doesProjectUseExplicitBacklog($project),
             $has_workflow_action_add_to_top_backlog_defined,
@@ -126,26 +117,6 @@ class ScrumPresenterBuilder
             $planning_administration_delegation->isPlanningAdministrationDelegated(),
             $should_sidebar_display_last_milestones,
         );
-    }
-
-    private function doesConfigurationAllowsPlanningCreation(
-        PFUser $user,
-        int $project_id,
-        bool $can_create_planning,
-    ): bool {
-        if ($this->isScrumMonoMilestoneEnable($project_id) === false) {
-            return $can_create_planning;
-        }
-
-        return $this->scrum_mono_milestone_checker->doesScrumMonoMilestoneConfigurationAllowsPlanningCreation(
-            $user,
-            $project_id
-        );
-    }
-
-    private function isScrumMonoMilestoneEnable(int $project_id): bool
-    {
-        return $this->scrum_mono_milestone_checker->isMonoMilestoneEnabled($project_id);
     }
 
     private function getAdditionalContent(): string

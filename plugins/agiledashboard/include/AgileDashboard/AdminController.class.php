@@ -27,7 +27,6 @@ use CSRFSynchronizerToken;
 use EventManager;
 use MilestoneReportCriterionDao;
 use Planning_MilestoneFactory;
-use PlanningFactory;
 use Project;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
@@ -41,10 +40,6 @@ use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeUpdater;
 use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
 use Tuleap\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarDao;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDisabler;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneEnabler;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\AgileDashboard\ServiceAdministration\RedirectURI;
 use Tuleap\AgileDashboard\ServiceAdministration\ScrumConfigurationUpdater;
@@ -60,9 +55,6 @@ use Tuleap\Request\ForbiddenException;
 
 class AdminController extends BaseController
 {
-    /** @var PlanningFactory */
-    private $planning_factory;
-
     /** @var AgileDashboard_ConfigurationManager */
     private $config_manager;
 
@@ -94,7 +86,6 @@ class AdminController extends BaseController
 
     public function __construct(
         Codendi_Request $request,
-        PlanningFactory $planning_factory,
         AgileDashboard_ConfigurationManager $config_manager,
         EventManager $event_manager,
         AgileDashboardCrumbBuilder $service_crumb_builder,
@@ -107,7 +98,6 @@ class AdminController extends BaseController
 
         $this->group_id                    = (int) $this->request->get('group_id');
         $this->project                     = $this->request->getProject();
-        $this->planning_factory            = $planning_factory;
         $this->config_manager              = $config_manager;
         $this->event_manager               = $event_manager;
         $this->service_crumb_builder       = $service_crumb_builder;
@@ -231,15 +221,11 @@ class AdminController extends BaseController
             return;
         }
 
-        $scrum_mono_milestone_dao = new ScrumForMonoMilestoneDao();
-        $explicit_artifacts_dao   = new ArtifactsInExplicitBacklogDao();
-        $explicit_backlog_dao     = new ExplicitBacklogDao();
-        $updater                  = new ScrumConfigurationUpdater(
+        $explicit_artifacts_dao = new ArtifactsInExplicitBacklogDao();
+        $explicit_backlog_dao   = new ExplicitBacklogDao();
+        $updater                = new ScrumConfigurationUpdater(
             $this->request,
             $this->config_manager,
-            new ScrumForMonoMilestoneEnabler($scrum_mono_milestone_dao),
-            new ScrumForMonoMilestoneDisabler($scrum_mono_milestone_dao),
-            new ScrumForMonoMilestoneChecker($scrum_mono_milestone_dao, $this->planning_factory),
             new ConfigurationUpdater(
                 $explicit_backlog_dao,
                 new MilestoneReportCriterionDao(),
