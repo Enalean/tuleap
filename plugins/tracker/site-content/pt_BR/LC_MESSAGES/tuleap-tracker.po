@@ -3607,6 +3607,16 @@ msgstr ""
 msgid "Tracker renderer"
 msgstr ""
 
+#, php-format
+msgid ""
+"Tracker service cannot be deactivated because the following service is in "
+"use: %s"
+msgid_plural ""
+"Tracker service cannot be deactivated because the following services are in "
+"use: %s"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Tracker service is disabled."
 msgstr ""
 

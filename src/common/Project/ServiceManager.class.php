@@ -17,7 +17,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
+use Tuleap\Project\Event\ProjectServiceBeforeDeactivation;
 use Tuleap\Project\Service\ListOfAllowedServicesForProjectRetriever;
 use Tuleap\Project\Service\ServiceCannotBeUpdatedException;
 use Tuleap\Project\Service\ServiceClassnameRetriever;
@@ -50,6 +52,7 @@ class ServiceManager implements ListOfAllowedServicesForProjectRetriever //phpcs
         private readonly ServiceDao $dao,
         private readonly ProjectManager $project_manager,
         private readonly ServiceClassnameRetriever $service_classname_retriever,
+        private readonly EventDispatcherInterface $event_dispatcher,
     ) {
     }
 
@@ -64,6 +67,7 @@ class ServiceManager implements ListOfAllowedServicesForProjectRetriever //phpcs
                 new ServiceDao(),
                 ProjectManager::instance(),
                 new ServiceClassnameRetriever(EventManager::instance()),
+                EventManager::instance(),
             );
         }
         return self::$instance;
@@ -177,7 +181,12 @@ class ServiceManager implements ListOfAllowedServicesForProjectRetriever //phpcs
         }
 
         if ($is_used === false) {
-            // Service is being inactivated. We should always allow this, otherwise mutually-exclusive services can become locked.
+            $event = $this->event_dispatcher->dispatch(new ProjectServiceBeforeDeactivation($project, $short_name));
+
+            if ($event->doesPluginSetAValue() && ! $event->canServiceBeDeactivated()) {
+                throw new ServiceCannotBeUpdatedException($event->getWarningMessage());
+            }
+
             return;
         }
 
@@ -186,7 +195,7 @@ class ServiceManager implements ListOfAllowedServicesForProjectRetriever //phpcs
         }
 
         $event = new ProjectServiceBeforeActivation($project, $short_name, $user);
-        EventManager::instance()->dispatch($event);
+        $this->event_dispatcher->dispatch($event);
 
         if ($event->doesPluginSetAValue() && ! $event->canServiceBeActivated()) {
             throw new ServiceCannotBeUpdatedException($event->getWarningMessage());
