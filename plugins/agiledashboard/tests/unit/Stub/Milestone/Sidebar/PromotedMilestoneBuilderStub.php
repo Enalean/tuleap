@@ -40,6 +40,11 @@ final class PromotedMilestoneBuilderStub implements BuildPromotedMilestone
     {
     }
 
+    public static function buildWithNothing(): self
+    {
+        return new self([Option::nothing(Planning_ArtifactMilestone::class)]);
+    }
+
     public static function buildWithPlanningArtifactMilestone(Planning_ArtifactMilestone ...$milestones): self
     {
         $milestone_list = [];
