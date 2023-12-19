@@ -23,32 +23,73 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Milestone\Sidebar;
 
 use Planning_ArtifactMilestone;
+use Tuleap\AgileDashboard\AgileDashboard\Milestone\Sidebar\PromotedMilestoneWithItsSubmilestones;
 use Tuleap\Option\Option;
 
 final class PromotedMilestoneList
 {
-    public const MAX_ITEMS = 5;
+    private const MAX_ITEMS = 5;
 
     /**
-     * @var PromotedMilestone[]
+     * @var array<int, Planning_ArtifactMilestone>
      */
     private array $milestone_list = [];
-    private int $list_size        = 0;
 
     /**
-     * @param Option<Planning_ArtifactMilestone> $promoted_milestone
+     * @var array<int, Planning_ArtifactMilestone[]>
      */
-    public function addMilestone(Option $promoted_milestone): void
+    private array $sub_milestone_list = [];
+
+    public function addMilestone(Planning_ArtifactMilestone $milestone): void
     {
-        if ($this->list_size === self::MAX_ITEMS) {
+        if ($this->isListSizeLimitReached()) {
             return;
         }
-        $promoted_milestone->apply(function ($milestone) {
-            if (! $this->containsMilestone($milestone->getArtifactId())) {
-                $this->milestone_list[$milestone->getArtifactId()] = new PromotedMilestone($milestone);
-                $this->list_size++;
-            }
-        });
+
+        $this->milestone_list[$milestone->getArtifactId()] = $milestone;
+    }
+
+    public function addSubMilestone(Planning_ArtifactMilestone $parent_milestone, Planning_ArtifactMilestone $sub_milestone): void
+    {
+        if ($this->isListSizeLimitReached()) {
+            return;
+        }
+
+        $parent_milestone_id = $parent_milestone->getArtifactId();
+
+        if (! isset($this->sub_milestone_list[$parent_milestone_id])) {
+            $this->sub_milestone_list[$parent_milestone_id] = [];
+        }
+
+        $this->sub_milestone_list[$parent_milestone_id][] = $sub_milestone;
+    }
+
+    /**
+     * @return PromotedMilestoneWithItsSubmilestones[]
+     */
+    public function getMilestoneList(): array
+    {
+        return array_values(
+            array_map(
+                fn (Planning_ArtifactMilestone $milestone) => new PromotedMilestoneWithItsSubmilestones(
+                    $milestone,
+                    ...($this->sub_milestone_list[$milestone->getArtifactId()] ?? [])
+                ),
+                $this->milestone_list,
+            ),
+        );
+    }
+
+    /**
+     * @return Option<Planning_ArtifactMilestone>
+     */
+    public function getMilestone(int $milestone_id): Option
+    {
+        if ($this->containsMilestone($milestone_id)) {
+            return Option::fromValue($this->milestone_list[$milestone_id]);
+        }
+
+        return Option::nothing(Planning_ArtifactMilestone::class);
     }
 
     public function containsMilestone(int $milestone_id): bool
@@ -56,40 +97,15 @@ final class PromotedMilestoneList
         return isset($this->milestone_list[$milestone_id]);
     }
 
-    /**
-     * @param Option<Planning_ArtifactMilestone> $sub_milestone
-     */
-    public function addSubMilestoneIntoMilestone(int $milestone_id, Option $sub_milestone): void
+    private function getTotalSize(): int
     {
-        if ($this->list_size === self::MAX_ITEMS) {
-            return;
-        }
-
-        if (isset($this->milestone_list[$milestone_id])) {
-            $this->milestone_list[$milestone_id]->addPromotedSubMilestone($sub_milestone);
-            $this->list_size++;
-        }
+        return count($this->milestone_list)
+            + count($this->sub_milestone_list, COUNT_RECURSIVE)
+            - count($this->sub_milestone_list); // so that we don't double count a milestone if it has submilestones
     }
 
-    /**
-     * @return PromotedMilestone[]
-     */
-    public function getMilestoneList(): array
+    public function isListSizeLimitReached(): bool
     {
-        return $this->milestone_list;
-    }
-
-    public function getMilestone(int $milestone_id): ?PromotedMilestone
-    {
-        if ($this->containsMilestone($milestone_id)) {
-            return $this->milestone_list[$milestone_id];
-        }
-
-        return null;
-    }
-
-    public function getListSize(): int
-    {
-        return $this->list_size;
+        return $this->getTotalSize() >= self::MAX_ITEMS;
     }
 }

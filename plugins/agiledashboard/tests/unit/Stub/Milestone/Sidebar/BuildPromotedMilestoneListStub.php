@@ -27,7 +27,6 @@ use Planning_ArtifactMilestone;
 use Planning_VirtualTopMilestone;
 use Tuleap\AgileDashboard\Milestone\Sidebar\BuildPromotedMilestoneList;
 use Tuleap\AgileDashboard\Milestone\Sidebar\PromotedMilestoneList;
-use Tuleap\Option\Option;
 
 /**
  * @psalm-immutable
@@ -47,8 +46,8 @@ final class BuildPromotedMilestoneListStub implements BuildPromotedMilestoneList
     public static function buildWithValues(Planning_ArtifactMilestone $milestone, Planning_ArtifactMilestone $sub_milestone): self
     {
         $list = new PromotedMilestoneList();
-        $list->addMilestone(Option::fromValue($milestone));
-        $list->addSubMilestoneIntoMilestone($milestone->getArtifactId(), Option::fromValue($sub_milestone));
+        $list->addMilestone($milestone);
+        $list->addSubMilestone($milestone, $sub_milestone);
         return new self($list);
     }
 

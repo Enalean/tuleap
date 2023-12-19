@@ -75,6 +75,14 @@ $other_option = $option->andThen(fn(\PFUser $user): Option => getUserPreference(
 // $other_option will hold a `UserPreference` or Nothing, depending on the return of the function `getUserPreference`
 ```
 
+If you need to convert `nothing` into an optional value, you can chain with `::orElse()`:
+```php
+$option = getUser($name)->orElse(fn() => ceateUser($name));
+// $option will hold the User returned by `getUser` unless
+// nothing is returned then it will hold the User returned
+// by `createUser`
+```
+
 If you need to convert the optional value to a `Result (Ok|Err)`, you can do so with `::okOr()`:
 
 ```php

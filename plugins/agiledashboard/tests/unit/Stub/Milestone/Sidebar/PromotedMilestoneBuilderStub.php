@@ -33,6 +33,7 @@ use Tuleap\Tracker\Artifact\Artifact;
  */
 final class PromotedMilestoneBuilderStub implements BuildPromotedMilestone
 {
+    private int $nb_called = 0;
     /**
      * @param Option<Planning_ArtifactMilestone>[] $milestones
      */
@@ -56,10 +57,17 @@ final class PromotedMilestoneBuilderStub implements BuildPromotedMilestone
 
     public function build(Artifact $milestone_artifact, PFUser $user, \Project $project): Option
     {
+        $this->nb_called++;
+
         if (count($this->milestones) > 0) {
             return array_shift($this->milestones);
         }
 
         throw new \LogicException('No promoted milestone configured');
+    }
+
+    public function getNbCalled(): int
+    {
+        return $this->nb_called;
     }
 }

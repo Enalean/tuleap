@@ -39,7 +39,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
  */
 final class PromotedMilestoneListBuilderTest extends TestCase
 {
-    public function testItBuildsAPromotedArtifactAndSubArtifactUntilLimitIsReached(): void
+    public function testItBuildsOnePromotedMilestoneAndSubMilestonesUntilLimitIsReached(): void
     {
         $artifact_factory = $this->createMock(Tracker_ArtifactFactory::class);
 
@@ -110,22 +110,96 @@ final class PromotedMilestoneListBuilderTest extends TestCase
             $this->aMilestoneArrayWithASubmilestone($tracker->getId(), $artifact->getId(), $sub_tracker->getId(), $sub_artifact5->getId()),
         ];
 
+        $promoted_milestone_builder = PromotedMilestoneBuilderStub::buildWithPlanningArtifactMilestone(
+            $promoted_release,
+            $promoted_sub_artifact1,
+            $promoted_sub_artifact2,
+            $promoted_sub_artifact3,
+            $promoted_sub_artifact4,
+            $promoted_sub_artifact5
+        );
+
         $list_builder = new PromotedMilestoneListBuilder(
             $artifact_factory,
-            PromotedMilestoneBuilderStub::buildWithPlanningArtifactMilestone(
-                $promoted_release,
-                $promoted_sub_artifact1,
-                $promoted_sub_artifact2,
-                $promoted_sub_artifact3,
-                $promoted_sub_artifact4,
-                $promoted_sub_artifact5
-            ),
+            $promoted_milestone_builder,
             RetrieveMilestonesWithSubMilestonesStub::withMilestones($rows)
         );
 
         $items = $list_builder->buildPromotedMilestoneList($user, $top_milestone);
         self::assertCount(1, $items->getMilestoneList());
-        self::assertSame(5, $items->getListSize());
+        self::assertCount(4, $items->getMilestoneList()[0]->getSubMilestoneList());
+        self::assertSame(5, $promoted_milestone_builder->getNbCalled());
+    }
+
+    public function testItBuildsSomePromotedMilestonesAndSubMilestonesUntilLimitIsReached(): void
+    {
+        $artifact_factory = $this->createMock(Tracker_ArtifactFactory::class);
+
+        $user     = UserTestBuilder::buildWithDefaults();
+        $project  = ProjectTestBuilder::aProject()->build();
+        $planning = $this->createMock(Planning::class);
+        $tracker  = TrackerTestBuilder::aTracker()->withId(3)->build();
+        $planning->method('getPlanningTrackerId')->willReturn($tracker->getId());
+        $planning->method('getId')->willReturn(1);
+        $sub_tracker = TrackerTestBuilder::aTracker()->withId(4)->build();
+
+        $top_milestone = new Planning_VirtualTopMilestone($project, $planning);
+
+        $artifact1 = ArtifactTestBuilder::anArtifact(51)->withTitle('Title 1')->build();
+        $artifact2 = ArtifactTestBuilder::anArtifact(52)->withTitle('Title 2')->build();
+        $artifact3 = ArtifactTestBuilder::anArtifact(53)->withTitle('Title 3')->build();
+
+        $sub_artifact1 = ArtifactTestBuilder::anArtifact(61)->withTitle('Sub Title 1')->build();
+        $sub_artifact2 = ArtifactTestBuilder::anArtifact(62)->withTitle('Sub Title 2')->build();
+        $sub_artifact3 = ArtifactTestBuilder::anArtifact(63)->withTitle('Sub Title 3')->build();
+
+        $promoted_release_1 = new Planning_ArtifactMilestone($project, $planning, $artifact1);
+        $promoted_release_2 = new Planning_ArtifactMilestone($project, $planning, $artifact2);
+        $promoted_release_3 = new Planning_ArtifactMilestone($project, $planning, $artifact3);
+
+        $promoted_sub_artifact1 = new Planning_ArtifactMilestone($project, $planning, $sub_artifact1);
+        $promoted_sub_artifact2 = new Planning_ArtifactMilestone($project, $planning, $sub_artifact2);
+        $promoted_sub_artifact3 = new Planning_ArtifactMilestone($project, $planning, $sub_artifact3);
+
+        $artifact_factory
+            ->method('getInstanceFromRow')
+            ->willReturnOnConsecutiveCalls(
+                $artifact1,
+                $sub_artifact1,
+                $artifact2,
+                $sub_artifact2,
+                $artifact3,
+                $sub_artifact3,
+            );
+
+
+        $rows = [
+            $this->aMilestoneArrayWithASubmilestone($tracker->getId(), $artifact1->getId(), $sub_tracker->getId(), $sub_artifact1->getId()),
+            $this->aMilestoneArrayWithASubmilestone($tracker->getId(), $artifact2->getId(), $sub_tracker->getId(), $sub_artifact2->getId()),
+            $this->aMilestoneArrayWithASubmilestone($tracker->getId(), $artifact3->getId(), $sub_tracker->getId(), $sub_artifact3->getId()),
+        ];
+
+        $promoted_milestone_builder = PromotedMilestoneBuilderStub::buildWithPlanningArtifactMilestone(
+            $promoted_release_1,
+            $promoted_sub_artifact1,
+            $promoted_release_2,
+            $promoted_sub_artifact2,
+            $promoted_release_3,
+            $promoted_sub_artifact3,
+        );
+
+        $list_builder = new PromotedMilestoneListBuilder(
+            $artifact_factory,
+            $promoted_milestone_builder,
+            RetrieveMilestonesWithSubMilestonesStub::withMilestones($rows)
+        );
+
+        $items = $list_builder->buildPromotedMilestoneList($user, $top_milestone);
+        self::assertCount(3, $items->getMilestoneList());
+        self::assertCount(1, $items->getMilestoneList()[0]->getSubMilestoneList());
+        self::assertCount(1, $items->getMilestoneList()[1]->getSubMilestoneList());
+        self::assertCount(0, $items->getMilestoneList()[2]->getSubMilestoneList());
+        self::assertSame(5, $promoted_milestone_builder->getNbCalled());
     }
 
     public function testPromotedReleasesAreCached(): void
@@ -166,7 +240,7 @@ final class PromotedMilestoneListBuilderTest extends TestCase
 
         $items = $list_builder->buildPromotedMilestoneList($user, $top_milestone);
         self::assertCount(1, $items->getMilestoneList());
-        self::assertSame(1, $items->getListSize());
+        self::assertCount(0, $items->getMilestoneList()[0]->getSubMilestoneList());
     }
 
     public function testCurrentSubMilestoneInMilestoneInThePast(): void
@@ -198,7 +272,6 @@ final class PromotedMilestoneListBuilderTest extends TestCase
 
         $items = $list_builder->buildPromotedMilestoneList($user, $top_milestone);
         self::assertCount(0, $items->getMilestoneList());
-        self::assertSame(0, $items->getListSize());
     }
 
     private function aMilestoneArrayWithASubmilestone(int $tracker_id, int $artifact_id, int $sub_tracker_id, int $sub_artifact_id): array

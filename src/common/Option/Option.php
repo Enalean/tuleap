@@ -127,6 +127,20 @@ final class Option
 
     /**
      * @template T
+     * @psalm-param callable(): self<T> $fn
+     * @psalm-return self<T|Value>
+     */
+    public function orElse(callable $fn): self
+    {
+        if (! $this->has_value) {
+            return $fn();
+        }
+
+        return $this;
+    }
+
+    /**
+     * @template T
      * @psalm-param callable(Value): T $fn
      * @psalm-param T                  $default
      * @psalm-return T

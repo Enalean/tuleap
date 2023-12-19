@@ -24,7 +24,7 @@ namespace Tuleap\AgileDashboard\Milestone\Sidebar;
 
 use Planning;
 use Planning_ArtifactMilestone;
-use Tuleap\Option\Option;
+use Tuleap\AgileDashboard\AgileDashboard\Milestone\Sidebar\PromotedMilestoneWithItsSubmilestones;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -66,15 +66,49 @@ final class PromotedMilestoneListTest extends TestCase
             ArtifactTestBuilder::anArtifact(6)->build(),
         );
 
-        $list->addMilestone(Option::fromValue($release1));
-        $list->addMilestone(Option::fromValue($release2));
-        $list->addMilestone(Option::fromValue($release3));
-        $list->addMilestone(Option::fromValue($release4));
-        $list->addMilestone(Option::fromValue($release5));
+        self::assertCount(0, $list->getMilestoneList());
+        self::assertFalse($list->isListSizeLimitReached());
 
-        self::assertEquals(5, $list->getListSize());
-        $list->addMilestone(Option::fromValue($release6));
-        self::assertEquals(5, $list->getListSize());
+        $list->addMilestone($release1);
+        self::assertTrue($list->containsMilestone($release1->getArtifactId()));
+        self::assertFalse($list->isListSizeLimitReached());
+        self::assertSame(1, $this->getListSize($list));
+
+        $list->addMilestone($release2);
+        self::assertTrue($list->containsMilestone($release2->getArtifactId()));
+        self::assertFalse($list->isListSizeLimitReached());
+        self::assertSame(2, $this->getListSize($list));
+
+        $list->addMilestone($release3);
+        self::assertTrue($list->containsMilestone($release3->getArtifactId()));
+        self::assertFalse($list->isListSizeLimitReached());
+        self::assertSame(3, $this->getListSize($list));
+
+        $list->addMilestone($release4);
+        self::assertTrue($list->containsMilestone($release4->getArtifactId()));
+        self::assertFalse($list->isListSizeLimitReached());
+        self::assertSame(4, $this->getListSize($list));
+
+        $list->addMilestone($release5);
+        self::assertTrue($list->containsMilestone($release5->getArtifactId()));
+        self::assertTrue($list->isListSizeLimitReached());
+        self::assertSame(5, $this->getListSize($list));
+
+        $list->addMilestone($release6);
+        self::assertFalse($list->containsMilestone($release6->getArtifactId()));
+        self::assertTrue($list->isListSizeLimitReached());
+        self::assertSame(5, $this->getListSize($list));
+    }
+
+    private function getListSize(PromotedMilestoneList $list): int
+    {
+        return array_reduce(
+            $list->getMilestoneList(),
+            function (int $sum, PromotedMilestoneWithItsSubmilestones $milestone_with_its_submilestones) {
+                return $sum + 1 + count($milestone_with_its_submilestones->getSubMilestoneList());
+            },
+            0
+        );
     }
 
     public function testItAddsSprintsUntilMaxListSizeIsReached(): void
@@ -109,24 +143,24 @@ final class PromotedMilestoneListTest extends TestCase
             $this->createMock(Planning::class),
             ArtifactTestBuilder::anArtifact(30)->build(),
         );
-        $list->addMilestone(Option::fromValue($release1));
-        $list->addSubMilestoneIntoMilestone($artifact_release_1->getId(), Option::fromValue($sprint1));
-        $list->addMilestone(Option::fromValue($release2));
-        $list->addSubMilestoneIntoMilestone($artifact_release_2->getId(), Option::fromValue($sprint2));
-        $list->addSubMilestoneIntoMilestone($artifact_release_2->getId(), Option::fromValue($sprint3));
-        self::assertEquals(5, $list->getListSize());
+        $list->addMilestone($release1);
+        $list->addSubMilestone($release1, $sprint1);
+        $list->addMilestone($release2);
+        $list->addSubMilestone($release2, $sprint2);
+        $list->addSubMilestone($release2, $sprint3);
+        self::assertSame(5, $this->getListSize($list));
 
         $sprint4 = new Planning_ArtifactMilestone(
             $project,
             $this->createMock(Planning::class),
             ArtifactTestBuilder::anArtifact(40)->build(),
         );
-        $list->addSubMilestoneIntoMilestone($artifact_release_1->getId(), Option::fromValue($sprint4));
-        self::assertEquals(5, $list->getListSize());
-        self::assertEquals(1, $list->getMilestoneList()[1]->getMilestone()->getArtifactId());
-        self::assertEquals(2, $list->getMilestoneList()[2]->getMilestone()->getArtifactId());
-        self::assertCount(1, $list->getMilestoneList()[1]->getSubMilestoneList());
-        self::assertCount(2, $list->getMilestoneList()[2]->getSubMilestoneList());
+        $list->addSubMilestone($release1, $sprint4);
+        self::assertSame(5, $this->getListSize($list));
+        self::assertSame(1, $list->getMilestoneList()[0]->getMilestone()->getArtifactId());
+        self::assertSame(2, $list->getMilestoneList()[1]->getMilestone()->getArtifactId());
+        self::assertCount(1, $list->getMilestoneList()[0]->getSubMilestoneList());
+        self::assertCount(2, $list->getMilestoneList()[1]->getSubMilestoneList());
     }
 
     public function testItReturnsTrueWhenMilestoneExists(): void
@@ -139,7 +173,7 @@ final class PromotedMilestoneListTest extends TestCase
             $this->createMock(Planning::class),
             $artifact_release_1,
         );
-        $milestone_list->addMilestone(Option::fromValue($release1));
+        $milestone_list->addMilestone($release1);
 
         self::assertTrue($milestone_list->containsMilestone($release1->getArtifactId()));
     }
