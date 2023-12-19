@@ -31,6 +31,8 @@ use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\Milestone\Sidebar\MilestoneDao;
 use Tuleap\AgileDashboard\Milestone\Sidebar\AgileDashboardPromotedMilestonesRetriever;
 use Tuleap\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarDao;
+use Tuleap\AgileDashboard\Milestone\Sidebar\PromotedMilestoneBuilder;
+use Tuleap\AgileDashboard\Milestone\Sidebar\PromotedMilestoneListBuilder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\Layout\SidebarPromotedItemPresenter;
@@ -77,14 +79,18 @@ class AgileDashboardService extends \Service
 
         return (new AgileDashboardPromotedMilestonesRetriever(
             Planning_MilestoneFactory::build(),
-            new MilestoneDao(),
             $this->project,
             new MilestonesInSidebarDao(),
-            Tracker_ArtifactFactory::instance(),
-            $planning_factory,
-            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory),
-            SemanticTimeframeBuilder::build(),
-            BackendLogger::getDefaultLogger()
+            new PromotedMilestoneListBuilder(
+                Tracker_ArtifactFactory::instance(),
+                new PromotedMilestoneBuilder(
+                    $planning_factory,
+                    new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory),
+                    SemanticTimeframeBuilder::build(),
+                    BackendLogger::getDefaultLogger(),
+                ),
+                new MilestoneDao(),
+            )
         ))->getSidebarPromotedMilestones($user, $active_promoted_item_id);
     }
 

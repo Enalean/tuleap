@@ -36,10 +36,8 @@ final class ArtifactTestBuilder
      * @var \Tracker
      */
     private $tracker;
-    /**
-     * @var string
-     */
-    private $title = '';
+    private string $title       = '';
+    private string $description = '';
     /**
      * @var \Tracker_Artifact_Changeset[]
      */
@@ -84,6 +82,13 @@ final class ArtifactTestBuilder
     public function withTitle(string $title): self
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function withDescription(string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }
@@ -180,6 +185,7 @@ final class ArtifactTestBuilder
 
         $artifact->setTracker($this->tracker);
         $artifact->setTitle($this->title);
+        $artifact->setDescription($this->description);
 
         if ($this->submitted_by_user) {
             $artifact->setSubmittedByUser($this->submitted_by_user);
