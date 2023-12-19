@@ -22,66 +22,62 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Service;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Request\ProjectRetriever;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class AddControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var AddController */
-    private $controller;
-    /** @var M\LegacyMockInterface|M\MockInterface|ProjectRetriever */
-    private $project_retriever;
-    /** @var M\LegacyMockInterface|M\MockInterface|ProjectAdministratorChecker */
-    private $admininistrator_checker;
-    /** @var M\LegacyMockInterface|M\MockInterface|ServicePOSTDataBuilder */
-    private $data_builder;
+    private AddController $controller;
+    private ProjectRetriever&MockObject $project_retriever;
+    private ProjectAdministratorChecker&MockObject $administrator_checker;
+    private ServicePOSTDataBuilder&MockObject $data_builder;
 
     protected function setUp(): void
     {
-        $this->project_retriever       = M::mock(ProjectRetriever::class);
-        $this->admininistrator_checker = M::mock(ProjectAdministratorChecker::class);
-        $this->data_builder            = M::mock(ServicePOSTDataBuilder::class);
-        $csrf_token                    = M::mock(\CSRFSynchronizerToken::class);
-        $this->controller              = new AddController(
+        $this->project_retriever     = $this->createMock(ProjectRetriever::class);
+        $this->administrator_checker = $this->createMock(ProjectAdministratorChecker::class);
+        $this->data_builder          = $this->createMock(ServicePOSTDataBuilder::class);
+        $csrf_token                  = $this->createMock(\CSRFSynchronizerToken::class);
+        $this->controller            = new AddController(
             $this->project_retriever,
-            $this->admininistrator_checker,
-            M::mock(ServiceCreator::class),
+            $this->administrator_checker,
+            $this->createMock(ServiceCreator::class),
             $this->data_builder,
             $csrf_token
         );
 
-        $csrf_token->shouldReceive('check');
+        $csrf_token->method('check');
     }
 
     public function testItRedirectsWhenServiceDataIsInvalid(): void
     {
-        $project = M::mock(\Project::class)->shouldReceive('getID')
-            ->andReturn('102')
-            ->getMock();
-        $this->project_retriever->shouldReceive('getProjectFromId')
+        $project = ProjectTestBuilder::aProject()->withId(102)->build();
+        $this->project_retriever
+            ->expects(self::once())
+            ->method('getProjectFromId')
             ->with('102')
-            ->once()
-            ->andReturn($project);
+            ->willReturn($project);
 
-        $request      = M::mock(\HTTPRequest::class);
-        $current_user = M::mock(\PFUser::class);
-        $request->shouldReceive('getCurrentUser')->andReturn($current_user);
-        $this->admininistrator_checker->shouldReceive('checkUserIsProjectAdministrator')
-            ->once()
+        $request      = $this->createMock(\HTTPRequest::class);
+        $current_user = UserTestBuilder::buildWithDefaults();
+        $request->method('getCurrentUser')->willReturn($current_user);
+        $this->administrator_checker
+            ->expects(self::once())
+            ->method('checkUserIsProjectAdministrator')
             ->with($current_user, $project);
-        $response = M::mock(BaseLayout::class);
-        $this->data_builder->shouldReceive('buildFromRequest')
-            ->once()
-            ->with($request, $project, M::any(), $response)
-            ->andThrow(new InvalidServicePOSTDataException());
+        $response = $this->createMock(BaseLayout::class);
+        $this->data_builder
+            ->expects(self::once())
+            ->method('buildFromRequest')
+            ->with($request, $project, self::anything(), $response)
+            ->willThrowException(new InvalidServicePOSTDataException());
 
-        $response->shouldReceive('addFeedback')->once();
-        $response->shouldReceive('redirect')->once();
+        $response->expects(self::once())->method('addFeedback');
+        $response->expects(self::once())->method('redirect');
         $this->controller->process($request, $response, ['project_id' => '102']);
     }
 }

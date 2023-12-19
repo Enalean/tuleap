@@ -26,8 +26,7 @@ namespace Tuleap\Project\Service;
 use CSRFSynchronizerToken;
 use Feedback;
 use HTTPRequest;
-use Mockery as M;
-use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use Service;
 use ServiceDao;
@@ -36,71 +35,51 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Request\ProjectRetriever;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
-    /** @var DeleteController */
-    private $controller;
-    /** @var M\MockInterface|ServiceDao */
-    private $service_dao;
-    /** @var M\LegacyMockInterface|M\MockInterface|ProjectRetriever */
-    private $project_retriever;
-    /** @var CSRFSynchronizerToken|M\MockInterface */
-    private $csrf_token;
-    /** @var M\MockInterface|ServiceManager */
-    private $service_manager;
-    /** @var HTTPRequest|M\MockInterface */
-    private $request;
-    /** @var M\MockInterface|BaseLayout */
-    private $layout;
-    /** @var M\MockInterface|Project */
-    private $project;
-    /** @var int */
-    private $project_id;
-    private $service_id;
-    /** * @var M\LegacyMockInterface|M\MockInterface|Project */
-    private $default_template_project;
-    /** @var M\LegacyMockInterface|M\MockInterface|ProjectAdministratorChecker */
-    private $administrator_checker;
+    private DeleteController $controller;
+    private ServiceDao&MockObject $service_dao;
+    private ProjectRetriever&MockObject $project_retriever;
+    private CSRFSynchronizerToken&MockObject $csrf_token;
+    private ServiceManager&MockObject $service_manager;
+    private HTTPRequest&MockObject $request;
+    private BaseLayout&MockObject $layout;
+    private Project $project;
+    private int $project_id;
+    private string $service_id;
+    private Project $default_template_project;
+    private ProjectAdministratorChecker&MockObject $administrator_checker;
+    private \PFUser $project_admin;
 
     protected function setUp(): void
     {
-        $this->service_dao           = M::mock(ServiceDao::class);
-        $project_admin               = M::mock(PFUser::class);
-        $this->service_manager       = M::mock(ServiceManager::class);
-        $this->project_retriever     = M::mock(ProjectRetriever::class);
-        $this->administrator_checker = M::mock(ProjectAdministratorChecker::class);
+        $this->project_admin         = UserTestBuilder::buildWithDefaults();
+        $this->service_dao           = $this->createMock(ServiceDao::class);
+        $this->service_manager       = $this->createMock(ServiceManager::class);
+        $this->project_retriever     = $this->createMock(ProjectRetriever::class);
+        $this->administrator_checker = $this->createMock(ProjectAdministratorChecker::class);
 
         $this->service_id = '14';
 
         $this->project_id = 120;
-        $this->project    = M::mock(Project::class, ['getID' => (string) $this->project_id]);
-        $this->project_retriever->shouldReceive('getProjectFromId')
-            ->with((string) $this->project_id)
-            ->andReturn($this->project);
-        $this->administrator_checker->shouldReceive('checkUserIsProjectAdministrator')
-            ->with($project_admin, $this->project);
+        $this->project    = ProjectTestBuilder::aProject()->withId($this->project_id)->build();
 
-        $this->default_template_project = M::mock(Project::class, ['getID' => (string) Project::DEFAULT_TEMPLATE_PROJECT_ID]);
-        $this->project_retriever->shouldReceive('getProjectFromId')
-            ->with((string) Project::DEFAULT_TEMPLATE_PROJECT_ID)
-            ->andReturn($this->default_template_project);
-        $this->administrator_checker->shouldReceive('checkUserIsProjectAdministrator')
-            ->with($project_admin, $this->default_template_project);
+        $this->default_template_project = ProjectTestBuilder::aProject()->withId(Project::DEFAULT_TEMPLATE_PROJECT_ID)->build();
 
-        $this->csrf_token = M::mock(CSRFSynchronizerToken::class);
-        $this->csrf_token->shouldReceive('check')->once()->byDefault();
-        $this->request = M::mock(HTTPRequest::class);
-        $this->request->shouldReceive('getCurrentUser')
-            ->once()
-            ->andReturn($project_admin);
-        $this->layout = M::mock(BaseLayout::class);
-        $this->request->shouldReceive('getValidated')->with('service_id', M::andAnyOtherArgs())->andReturn(
-            $this->service_id
-        )->byDefault();
+        $this->csrf_token = $this->createMock(CSRFSynchronizerToken::class);
+        $this->csrf_token->expects(self::once())->method('check');
+        $this->request = $this->createMock(HTTPRequest::class);
+        $this->request
+            ->expects(self::once())
+            ->method('getCurrentUser')
+            ->willReturn($this->project_admin);
+        $this->layout = $this->createMock(BaseLayout::class);
+        $this->request->method('getValidated')->with('service_id', self::anything())->willReturn($this->service_id);
 
         $this->controller = new DeleteController(
             $this->project_retriever,
@@ -113,43 +92,58 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDeletesOneService(): void
     {
-        $this->service_manager->shouldReceive('getService')->with($this->service_id)->andReturn(
+        $this->service_manager->method('getService')->with($this->service_id)->willReturn(
             new Service($this->project, ['service_id' => $this->service_id, 'scope' => Service::SCOPE_PROJECT])
         );
 
-        $this->service_dao->shouldReceive('delete')->with($this->project_id, $this->service_id)->andReturnTrue();
+        $this->service_dao->method('delete')->with($this->project_id, $this->service_id)->willReturn(true);
+        $this->project_retriever->method('getProjectFromId')
+            ->with((string) $this->project_id)
+            ->willReturn($this->project);
+        $this->administrator_checker->method('checkUserIsProjectAdministrator')
+            ->with($this->project_admin, $this->project);
 
-        $this->layout->shouldReceive('addFeedback')->with(Feedback::INFO, M::any())->once();
-        $this->layout->shouldReceive('redirect')->once();
+        $this->layout->expects(self::once())->method('addFeedback')->with(Feedback::INFO, self::anything());
+        $this->layout->expects(self::once())->method('redirect');
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '120']);
     }
 
     public function testItDeletesAllServicesWhenItsInDefaultTemplate(): void
     {
-        $this->service_manager->shouldReceive('getService')->with($this->service_id)->andReturn(
+        $this->service_manager->method('getService')->with($this->service_id)->willReturn(
             new Service($this->default_template_project, ['service_id' => $this->service_id, 'short_name' => 'homepage', 'scope' => Service::SCOPE_PROJECT])
         );
 
-        $this->service_dao->shouldReceive('delete')->with((string) Project::DEFAULT_TEMPLATE_PROJECT_ID, $this->service_id)->andReturnTrue();
-        $this->service_dao->shouldReceive('deleteFromAllProjects')->with('homepage')->once()->andReturnTrue();
+        $this->service_dao->method('delete')->with((string) Project::DEFAULT_TEMPLATE_PROJECT_ID, $this->service_id)->willReturn(true);
+        $this->service_dao->expects(self::once())->method('deleteFromAllProjects')->with('homepage')->willReturn(true);
+        $this->project_retriever->method('getProjectFromId')
+            ->with((string) Project::DEFAULT_TEMPLATE_PROJECT_ID)
+            ->willReturn($this->default_template_project);
+        $this->administrator_checker->method('checkUserIsProjectAdministrator')
+            ->with($this->project_admin, $this->default_template_project);
 
-        $this->layout->shouldReceive('addFeedback')->with(Feedback::INFO, M::any())->twice();
-        $this->layout->shouldReceive('redirect')->once();
+        $this->layout->expects(self::exactly(2))->method('addFeedback')->with(Feedback::INFO, self::anything());
+        $this->layout->expects(self::once())->method('redirect');
 
         $this->controller->process($this->request, $this->layout, ['project_id' => (string) Project::DEFAULT_TEMPLATE_PROJECT_ID]);
     }
 
     public function testItDoesNotAllowToDeleteSystemServices(): void
     {
-        $this->service_manager->shouldReceive('getService')->with($this->service_id)->andReturn(
+        $this->service_manager->method('getService')->with($this->service_id)->willReturn(
             new Service($this->project, ['service_id' => $this->service_id, 'scope' => Service::SCOPE_SYSTEM])
         );
 
-        $this->service_dao->shouldReceive('delete')->never();
+        $this->service_dao->expects(self::never())->method('delete');
+        $this->project_retriever->method('getProjectFromId')
+            ->with((string) $this->project_id)
+            ->willReturn($this->project);
+        $this->administrator_checker->method('checkUserIsProjectAdministrator')
+            ->with($this->project_admin, $this->project);
 
-        $this->layout->shouldReceive('addFeedback')->with(Feedback::ERROR, M::any())->once();
-        $this->layout->shouldReceive('redirect')->once();
+        $this->layout->expects(self::once())->method('addFeedback')->with(Feedback::ERROR, self::anything());
+        $this->layout->expects(self::once())->method('redirect');
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '120']);
     }
