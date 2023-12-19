@@ -22,10 +22,10 @@ import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import { okAsync } from "neverthrow";
 import * as strict_inject from "@tuleap/vue-strict-inject";
+import { PullRequestStub } from "@tuleap/plugin-pullrequest-stub";
 import { injection_symbols_stub } from "../../../tests/injection-symbols-stub";
 import * as tuleap_api from "../../api/tuleap-rest-querier";
 import PullRequestsList from "./PullRequestsList.vue";
-import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 
 const getWrapper = (): VueWrapper => {
     vi.spyOn(strict_inject, "strictInject").mockImplementation(injection_symbols_stub);
@@ -37,9 +37,9 @@ describe("PullRequestsList", () => {
     it("should load all the pull-requests of the repository and display them", async () => {
         vi.spyOn(tuleap_api, "fetchAllPullRequests").mockReturnValue(
             okAsync([
-                { id: 6, creation_date: "2023-12-06T12:00:00Z" } as PullRequest,
-                { id: 5, creation_date: "2023-12-05T12:00:00Z" } as PullRequest,
-                { id: 3, creation_date: "2023-12-03T12:00:00Z" } as PullRequest,
+                PullRequestStub.buildOpenPullRequest({ id: 6 }),
+                PullRequestStub.buildOpenPullRequest({ id: 5 }),
+                PullRequestStub.buildOpenPullRequest({ id: 3 }),
             ]),
         );
 

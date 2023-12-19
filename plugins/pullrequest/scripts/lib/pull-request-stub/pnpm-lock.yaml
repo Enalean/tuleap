@@ -1,0 +1,18 @@
+lockfileVersion: '6.0'
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
+dependencies:
+  '@tuleap/plugin-pullrequest-constants':
+    specifier: workspace:*
+    version: link:../constants
+  '@tuleap/plugin-pullrequest-rest-api-types':
+    specifier: workspace:*
+    version: link:../rest-api-types
+
+devDependencies:
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/build-system-configurator

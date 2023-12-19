@@ -18,6 +18,12 @@
  */
 
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
+import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 
 export const REPOSITORY_ID: StrictInjectionKey<number> = Symbol("repository_id");
 export const BASE_URL: StrictInjectionKey<URL> = Symbol("base_url");
+export const USER_LOCALE_KEY: StrictInjectionKey<string> = Symbol("user_locale");
+export const USER_DATE_TIME_FORMAT_KEY: StrictInjectionKey<string> =
+    Symbol("user_date_time_format");
+export const USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY: StrictInjectionKey<RelativeDatesDisplayPreference> =
+    Symbol("user_relative_date_display_preference");

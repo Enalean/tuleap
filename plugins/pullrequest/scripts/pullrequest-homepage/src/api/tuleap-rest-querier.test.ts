@@ -21,13 +21,17 @@ import { describe, it, expect, vi } from "vitest";
 import { okAsync } from "neverthrow";
 import { uri } from "@tuleap/fetch-result";
 import * as fetch_result from "@tuleap/fetch-result";
-import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
+import { PullRequestStub } from "@tuleap/plugin-pullrequest-stub";
 import { fetchAllPullRequests } from "./tuleap-rest-querier";
 
 const repository_id = 10;
 const pull_requests_collection = [
     {
-        collection: [{ id: 1 } as PullRequest, { id: 2 } as PullRequest, { id: 3 } as PullRequest],
+        collection: [
+            PullRequestStub.buildOpenPullRequest({ id: 1 }),
+            PullRequestStub.buildOpenPullRequest({ id: 2 }),
+            PullRequestStub.buildOpenPullRequest({ id: 3 }),
+        ],
     },
 ];
 

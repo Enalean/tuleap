@@ -18,10 +18,18 @@
  */
 
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
-import { BASE_URL, REPOSITORY_ID } from "../src/injection-symbols";
+import { PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN } from "@tuleap/tlp-relative-date";
+import {
+    BASE_URL,
+    REPOSITORY_ID,
+    USER_DATE_TIME_FORMAT_KEY,
+    USER_LOCALE_KEY,
+    USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
+} from "../src/injection-symbols";
 
 export const injected_repository_id = 2;
 export const injected_base_url = new URL("https://example.com");
+export const injected_user_locale = "fr_FR";
 
 export const injection_symbols_stub = (key: StrictInjectionKey<unknown>): unknown => {
     switch (key) {
@@ -29,6 +37,12 @@ export const injection_symbols_stub = (key: StrictInjectionKey<unknown>): unknow
             return injected_repository_id;
         case BASE_URL:
             return injected_base_url;
+        case USER_LOCALE_KEY:
+            return injected_user_locale;
+        case USER_DATE_TIME_FORMAT_KEY:
+            return "d/m/Y H:i";
+        case USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY:
+            return PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN;
         default:
             throw new Error("Tried to strictInject a value while it was not mocked");
     }
