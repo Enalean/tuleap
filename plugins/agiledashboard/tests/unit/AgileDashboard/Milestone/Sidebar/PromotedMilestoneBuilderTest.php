@@ -162,14 +162,14 @@ final class PromotedMilestoneBuilderTest extends TestCase
             2,
             $this->changeset,
             $this->end_field
-        )->withTimestamp((new DateTime('-1day'))->getTimestamp())->build());
+        )->withTimestamp((new DateTime('+1day'))->getTimestamp())->build());
         $this->timeframe_builder->method('getSemantic')->willReturn(
             new SemanticTimeframe(
                 $this->tracker,
                 new TimeframeWithEndDate($this->start_field, $this->end_field)
             )
         );
-        $this->planning_factory->method('getPlanningByPlanningTracker')->willReturn(null);
+        $this->planning_factory->expects(self::once())->method('getPlanningByPlanningTracker')->willReturn(null);
         self::assertTrue($this->builder->build($this->artifact, $this->user, $this->project)->isNothing());
     }
 
