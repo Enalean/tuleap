@@ -43,16 +43,22 @@ final class PullRequestMinimalRepresentationTest extends TestCase
     private const DESTINATION_REPO_NAME   = 'pantherlike_pennant';
     private const DESTINATION_BRANCH_NAME = 'main';
     private const CREATOR_USER_ID         = 172;
+    private const CREATOR_NAME            = 'Sarah Rocha';
     private const FIRST_REVIEWER_USER_ID  = 126;
     private const SECOND_REVIEWER_USER_ID = 187;
 
     private GitoliteAccessURLGenerator & Stub $url_generator;
     private PullRequest $pull_request;
+    private MinimalUserRepresentation $pull_request_creator;
 
     protected function setUp(): void
     {
-        $this->url_generator = $this->createStub(GitoliteAccessURLGenerator::class);
-        $this->pull_request  = PullRequestTestBuilder::aPullRequestInReview()
+        $this->url_generator        = $this->createStub(GitoliteAccessURLGenerator::class);
+        $this->pull_request_creator = MinimalUserRepresentation::build(
+            UserTestBuilder::aUser()->withId(self::CREATOR_USER_ID)->withRealName(self::CREATOR_NAME)->build()
+        );
+
+        $this->pull_request = PullRequestTestBuilder::aPullRequestInReview()
             ->withId(self::PULL_REQUEST_ID)
             ->withTitle(self::TITLE)
             ->fromSourceBranch(self::SOURCE_BRANCH_NAME)
@@ -89,6 +95,7 @@ final class PullRequestMinimalRepresentationTest extends TestCase
             $source_repository,
             $destination_repository,
             $git_reference,
+            $this->pull_request_creator,
             [$first_reviewer, $second_reviewer]
         );
         return $representation;
@@ -109,6 +116,8 @@ final class PullRequestMinimalRepresentationTest extends TestCase
         self::assertSame(self::DESTINATION_REPO_NAME, $representation->repository_dest->name);
         self::assertSame(self::DESTINATION_BRANCH_NAME, $representation->branch_dest);
         self::assertSame(self::CREATOR_USER_ID, $representation->user_id);
+        self::assertSame(self::CREATOR_USER_ID, $representation->creator->id);
+        self::assertSame(self::CREATOR_NAME, $representation->creator->real_name);
         self::assertNotNull($representation->creation_date);
         self::assertSame(self::SOURCE_SHA1, $representation->head->id);
         self::assertFalse($representation->is_git_reference_broken);

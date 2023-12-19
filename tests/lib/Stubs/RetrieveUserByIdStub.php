@@ -36,10 +36,10 @@ final class RetrieveUserByIdStub implements \Tuleap\User\RetrieveUserById
         return self::withUsers($user);
     }
 
-    public static function withUsers(\PFUser ...$users): self
+    public static function withUsers(\PFUser $first_user, \PFUser ...$other_users): self
     {
         return new self(array_reduce(
-            $users,
+            [$first_user, ...$other_users],
             /**
              * @return array<int, \PFUser>
              */
@@ -57,7 +57,7 @@ final class RetrieveUserByIdStub implements \Tuleap\User\RetrieveUserById
         return new self([]);
     }
 
-    public function getUserById($user_id)
+    public function getUserById($user_id): ?\PFUser
     {
         return $this->users[$user_id] ?? null;
     }

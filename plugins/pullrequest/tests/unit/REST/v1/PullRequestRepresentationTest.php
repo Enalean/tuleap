@@ -48,6 +48,7 @@ final class PullRequestRepresentationTest extends TestCase
     private const DESTINATION_BRANCH_NAME = 'main';
     private const DESTINATION_SHA1        = '541b0bd1b9db61b63ed9e6eac6e13cae39d1b9fd';
     private const CREATOR_USER_ID         = 149;
+    private const CREATOR_NAME            = 'Andre Chowdhury';
     private const FIRST_REVIERWER_USER_ID = 159;
     private const SECOND_REVIEWER_USER_ID = 134;
     private const SOURCE_DESCRIPTION      = '_reboast gift_';
@@ -57,11 +58,15 @@ final class PullRequestRepresentationTest extends TestCase
     private const PULL_REQUEST_STATUS     = 'merge';
     private GitoliteAccessURLGenerator & Stub $url_generator;
     private PullRequest $pull_request;
+    private MinimalUserRepresentation $pull_request_creator;
 
     protected function setUp(): void
     {
-        $this->url_generator = $this->createStub(GitoliteAccessURLGenerator::class);
-        $this->pull_request  = PullRequestTestBuilder::aMergedPullRequest()
+        $this->url_generator        = $this->createStub(GitoliteAccessURLGenerator::class);
+        $this->pull_request_creator = MinimalUserRepresentation::build(
+            UserTestBuilder::aUser()->withId(self::CREATOR_USER_ID)->withRealName(self::CREATOR_NAME)->build()
+        );
+        $this->pull_request         = PullRequestTestBuilder::aMergedPullRequest()
             ->withId(self::PULL_REQUEST_ID)
             ->withTitle(self::TITLE)
             ->fromSourceBranch(self::SOURCE_BRANCH_NAME)
@@ -115,6 +120,7 @@ final class PullRequestRepresentationTest extends TestCase
             PullRequestRepresentationFactory::BUILD_STATUS_SUCCESS,
             1402941022,
             $current_user,
+            $this->pull_request_creator,
             [$first_reviewer, $second_reviewer],
             new PullRequestShortStatRepresentation(new ShortStat(self::NUMBER_OF_CHANGED_FILES, 131, 103)),
             new PullRequestStatusInfoRepresentation(
@@ -141,6 +147,8 @@ final class PullRequestRepresentationTest extends TestCase
         self::assertSame(self::DESTINATION_REPO_NAME, $representation->repository_dest->name);
         self::assertSame(self::DESTINATION_BRANCH_NAME, $representation->branch_dest);
         self::assertSame(self::CREATOR_USER_ID, $representation->user_id);
+        self::assertSame(self::CREATOR_USER_ID, $representation->creator->id);
+        self::assertSame(self::CREATOR_NAME, $representation->creator->real_name);
         self::assertNotNull($representation->creation_date);
         self::assertSame(self::SOURCE_SHA1, $representation->head->id);
         self::assertFalse($representation->is_git_reference_broken);

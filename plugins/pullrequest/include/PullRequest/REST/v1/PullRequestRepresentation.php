@@ -64,7 +64,7 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
     public string $merge_status;
     public PullRequestShortStatRepresentation $short_stat;
     public string $last_build_status;
-    public string $last_build_date;
+    public ?string $last_build_date;
     public string $raw_title;
     public string $raw_description;
     public bool $user_can_reopen;
@@ -90,11 +90,19 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
         $last_build_status_name,
         $last_build_date,
         \PFUser $user,
+        MinimalUserRepresentation $pull_request_creator,
         array $reviewers,
         PullRequestShortStatRepresentation $pr_short_stat_representation,
         ?PullRequestStatusInfoRepresentation $status_info_representation,
     ): void {
-        $this->buildMinimal($pull_request, $repository, $repository_dest, $git_reference, $reviewers);
+        $this->buildMinimal(
+            $pull_request,
+            $repository,
+            $repository_dest,
+            $git_reference,
+            $pull_request_creator,
+            $reviewers
+        );
 
         $project_id                       = $repository->getProjectId();
         $this->description_format         = $pull_request->getDescriptionFormat();

@@ -287,10 +287,11 @@ class PullRequestsResource extends AuthenticatedResource
             $this->access_control_verifier,
             $this->status_retriever,
             $this->getGitoliteAccessURLGenerator(),
-            new PullRequestStatusInfoRepresentationBuilder(new TimelineDao(), new TimelineDao(), UserManager::instance()),
+            new PullRequestStatusInfoRepresentationBuilder(new TimelineDao(), new TimelineDao(), $this->user_manager),
             $purifier,
             $content_interpretor,
-            $this->getPullReviewerRetrievers()
+            $this->getPullReviewerRetrievers(),
+            $this->user_manager
         );
 
         return $pr_representation_factory->getPullRequestRepresentation(
@@ -913,10 +914,11 @@ class PullRequestsResource extends AuthenticatedResource
                     $this->access_control_verifier,
                     new CommitStatusRetriever(new CommitStatusDAO()),
                     $this->getGitoliteAccessURLGenerator(),
-                    new PullRequestStatusInfoRepresentationBuilder(new TimelineDao(), new TimelineDao(), UserManager::instance()),
+                    new PullRequestStatusInfoRepresentationBuilder(new TimelineDao(), new TimelineDao(), $this->user_manager),
                     $purifier,
                     $content_interpretor,
-                    $this->getPullReviewerRetrievers()
+                    $this->getPullReviewerRetrievers(),
+                    $this->user_manager
                 );
 
                 return $pr_representation_factory->getPullRequestRepresentation(

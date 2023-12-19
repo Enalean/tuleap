@@ -21,6 +21,7 @@
 namespace Tuleap\PullRequest\REST\v1;
 
 use Codendi_HTMLPurifier;
+use Luracast\Restler\RestException;
 use Tuleap\Git\CommitStatus\CommitStatusRetriever;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\Git\Permissions\AccessControlVerifier;
@@ -30,6 +31,8 @@ use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequestWithGitReference;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewersRepresentation;
 use Tuleap\PullRequest\Reviewer\ReviewerRetriever;
+use Tuleap\User\REST\MinimalUserRepresentation;
+use Tuleap\User\RetrieveUserById;
 
 class PullRequestRepresentationFactory
 {
@@ -46,11 +49,13 @@ class PullRequestRepresentationFactory
         private readonly Codendi_HTMLPurifier $purifier,
         private readonly ContentInterpretor $common_mark_interpreter,
         private readonly ReviewerRetriever $reviewer_retriever,
+        private readonly RetrieveUserById $user_retriever,
     ) {
     }
 
     /**
      * @throws \Git_Command_Exception
+     * @throws RestException
      */
     public function getPullRequestRepresentation(
         PullRequestWithGitReference $pull_request_with_git_reference,
@@ -58,8 +63,20 @@ class PullRequestRepresentationFactory
         \GitRepository $repository_dest,
         GitExec $executor_repository_destination,
         \PFUser $user,
-    ) {
+    ): PullRequestRepresentation {
         $pull_request = $pull_request_with_git_reference->getPullRequest();
+
+        $pull_request_creator = $this->user_retriever->getUserById($pull_request->getUserId());
+        if (! $pull_request_creator) {
+            throw new RestException(
+                500,
+                sprintf(
+                    'Could not find user #%d who created pull request #%d',
+                    $pull_request->getUserId(),
+                    $pull_request->getId()
+                )
+            );
+        }
 
         $short_stat        = $executor_repository_destination->getShortStat(
             $pull_request->getSha1Dest(),
@@ -98,6 +115,7 @@ class PullRequestRepresentationFactory
             $last_build_status_name,
             $last_build_date,
             $user,
+            MinimalUserRepresentation::build($pull_request_creator),
             ReviewersRepresentation::fromUsers(...$reviewers)->users,
             $short_stat_repres,
             $this->status_info_representation_builder->buildPullRequestStatusInfoRepresentation($pull_request)

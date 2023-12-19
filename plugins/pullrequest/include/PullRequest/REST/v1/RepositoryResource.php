@@ -37,10 +37,12 @@ use Tuleap\PullRequest\Dao as PullRequestDao;
 use Tuleap\PullRequest\Exception\MalformedQueryParameterException;
 use Tuleap\PullRequest\Factory as PullRequestFactory;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceDAO;
+use Tuleap\PullRequest\GitReference\GitPullRequestReferenceNotFoundException;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceRetriever;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewersRepresentation;
 use Tuleap\PullRequest\Reviewer\ReviewerDAO;
 use Tuleap\PullRequest\Reviewer\ReviewerRetriever;
+use Tuleap\User\REST\MinimalUserRepresentation;
 use UserManager;
 
 class RepositoryResource
@@ -69,6 +71,7 @@ class RepositoryResource
 
     private GitPullRequestReferenceRetriever $git_pull_request_reference_retriever;
     private ReviewerRetriever $reviewer_retriever;
+    private UserManager $user_manager;
 
     public function __construct()
     {
@@ -88,8 +91,9 @@ class RepositoryResource
         $this->git_pull_request_reference_retriever = new GitPullRequestReferenceRetriever(new GitPullRequestReferenceDAO());
 
         $this->logger             = \pullrequestPlugin::getLogger();
+        $this->user_manager       = UserManager::instance();
         $this->reviewer_retriever = new ReviewerRetriever(
-            UserManager::instance(),
+            $this->user_manager,
             new ReviewerDAO(),
             new PullRequestPermissionChecker(
                 $this->git_repository_factory,
@@ -105,6 +109,10 @@ class RepositoryResource
         );
     }
 
+    /**
+     * @throws RestException
+     * @throws GitPullRequestReferenceNotFoundException
+     */
     public function getPaginatedPullRequests(GitRepository $repository, $query, $limit, $offset): RepositoryPullRequestRepresentation
     {
         try {
@@ -118,7 +126,18 @@ class RepositoryResource
 
         $collection = [];
         foreach ($result as $row) {
-            $pull_request = $this->pull_request_factory->getInstanceFromRow($row);
+            $pull_request         = $this->pull_request_factory->getInstanceFromRow($row);
+            $pull_request_creator = $this->user_manager->getUserById($pull_request->getUserId());
+            if (! $pull_request_creator) {
+                throw new RestException(
+                    500,
+                    sprintf(
+                        'Could not find user #%d who created pull request #%d',
+                        $pull_request->getUserId(),
+                        $pull_request->getId()
+                    )
+                );
+            }
 
             $repository_src  = $this->git_repository_factory->getRepositoryById($pull_request->getRepositoryId());
             $repository_dest = $this->git_repository_factory->getRepositoryById($pull_request->getRepoDestId());
@@ -136,6 +155,7 @@ class RepositoryResource
                     $repository_src,
                     $repository_dest,
                     $git_reference,
+                    MinimalUserRepresentation::build($pull_request_creator),
                     $reviewers_representation->users
                 );
                 $collection[] = $pull_request_representation;
