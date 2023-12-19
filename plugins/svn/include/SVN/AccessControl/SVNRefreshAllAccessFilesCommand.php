@@ -95,7 +95,7 @@ class SVNRefreshAllAccessFilesCommand extends Command
     {
         foreach ($project_repositories as $repository) {
             $current_version = $this->access_file_history_factory->getCurrentVersion($repository);
-            $this->access_file_history_creator->saveAccessFileAndForceDefaultGeneration($repository, $current_version);
+            $this->access_file_history_creator->saveAccessFile($repository, $current_version);
 
             $table->addRow([null, null, $repository->getName()]);
         }

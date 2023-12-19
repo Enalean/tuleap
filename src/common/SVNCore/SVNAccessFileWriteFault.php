@@ -23,12 +23,19 @@ declare(strict_types=1);
 
 namespace Tuleap\SVNCore;
 
+use Tuleap\NeverThrow\Fault;
+
 /**
  * @psalm-immutable
  */
-final class SvnAccessFileDefaultBlock
+final class SVNAccessFileWriteFault extends Fault
 {
-    public function __construct(public readonly string $content)
+    public readonly string $access_file;
+
+    public static function fromWriteError(string $access_file, \Throwable $throwable): self
     {
+        $fault              = new self($throwable->getMessage(), $throwable);
+        $fault->access_file = $access_file;
+        return $fault;
     }
 }

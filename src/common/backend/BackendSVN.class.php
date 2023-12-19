@@ -848,11 +848,6 @@ class BackendSVN extends Backend
         return $parameter_manager->getParameters();
     }
 
-    public function exportSVNAccessFileDefaultBloc(Project $project): string
-    {
-        return $this->getDefaultBlockStart() . $this->getDefaultBlock($project) . $this->getDefaultBlocEnd();
-    }
-
     public function systemCheck(Project $project): void
     {
         if ($project->usesSVN() && $this->getSvnCoreUsage()->isManagedByCore($project)) {

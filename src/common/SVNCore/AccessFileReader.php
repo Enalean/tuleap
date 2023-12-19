@@ -26,7 +26,7 @@ namespace Tuleap\SVNCore;
  */
 class AccessFileReader
 {
-    private const FILENAME    = ".SVNAccessFile";
+    public const FILENAME     = ".SVNAccessFile";
     public const BEGIN_MARKER = '# BEGIN CODENDI DEFAULT SETTINGS - DO NOT REMOVE';
     public const END_MARKER   = '# END CODENDI DEFAULT SETTINGS';
 

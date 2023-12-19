@@ -427,7 +427,6 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                 $this->getAccessFileHistoryFactory(),
                 $this->getProjectHistoryDao(),
                 $this->getProjectHistoryFormatter(),
-                $this->getBackendSVN(),
                 \Tuleap\SVNCore\SvnAccessFileDefaultBlockGenerator::instance(),
             );
         }

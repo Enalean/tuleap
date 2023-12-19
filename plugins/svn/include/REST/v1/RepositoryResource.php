@@ -195,7 +195,6 @@ class RepositoryResource extends AuthenticatedResource
             $access_file_history_factory,
             $project_history_dao,
             $project_history_formatter,
-            $backend_svn,
             \Tuleap\SVNCore\SvnAccessFileDefaultBlockGenerator::instance(),
         );
 

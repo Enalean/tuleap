@@ -20,46 +20,25 @@
 
 namespace Tuleap\SVNCore;
 
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
+use Webimpress\SafeWriter\FileWriter;
+
 class SVNAccessFileWriter
 {
-    private string $accessfile;
-    private string $err;
-
-    public function __construct(string $svnroot)
+    /**
+     * @psalm-return Ok<null>|Err<SVNAccessFileWriteFault>
+     */
+    public function writeWithDefaults(Repository $repository, SvnAccessFileDefaultBlock $default_block, string $contents): Ok|Err
     {
-        $this->accessfile = "$svnroot/.SVNAccessFile";
-    }
-
-    public function filename(): string
-    {
-        return $this->accessfile;
-    }
-
-    public function isErrorFile(): bool
-    {
-        return $this->err === 'file';
-    }
-
-    public function write(string $contents): bool
-    {
-        $fd = fopen($this->accessfile, "w+");
-        if ($fd) {
-            if (fwrite($fd, str_replace("\r", '', $contents)) === false) {
-                $this->err = 'write';
-                $ret       = false;
-            } else {
-                $ret = true;
-            }
-        } else {
-            $this->err = 'file';
-            $ret       = false;
+        $accessfile = $repository->getSystemPath() . '/' . AccessFileReader::FILENAME;
+        try {
+            $svn_contents = new SvnAccessFileContent($default_block->content, $contents);
+            FileWriter::writeFile($accessfile, $svn_contents->formatForSave(), 0644);
+            return Result::ok(null);
+        } catch (\Throwable $e) {
+            return Result::err(SVNAccessFileWriteFault::fromWriteError($accessfile, $e));
         }
-        fclose($fd);
-        return $ret;
-    }
-
-    public function writeWithDefaults(SvnAccessFileDefaultBlock $default_block, string $contents): bool
-    {
-        return $this->write($default_block->formatForSave() . $contents);
     }
 }

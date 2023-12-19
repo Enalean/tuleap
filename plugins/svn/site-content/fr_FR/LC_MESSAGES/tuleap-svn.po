@@ -598,10 +598,6 @@ msgstr "Impossible de supprimer la liste des emails notifiés"
 msgid "Unable to find SVN service"
 msgstr "Impossible de trouver le service SVN"
 
-#, php-format
-msgid "Unable to read file %1$s"
-msgstr "Impossible de lire le fichier %1$s"
-
 msgid "Unable to save Notification"
 msgstr "Impossible de sauvegarder la notification"
 
