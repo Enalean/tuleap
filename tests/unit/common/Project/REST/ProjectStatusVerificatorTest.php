@@ -21,64 +21,61 @@
 namespace Tuleap\Project\REST;
 
 use Luracast\Restler\RestException;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\ProjectAccessSuspendedException;
 use Tuleap\REST\ProjectStatusVerificator;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-class ProjectStatusVerificatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProjectStatusVerificatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
-    /**
-     * @var ProjectStatusVerificator
-     */
-    private $verificator;
-    /**
-     * @var \Mockery\MockInterface|ProjectAccessChecker
-     */
-    private $access_checker;
+    private ProjectStatusVerificator $verificator;
+    private ProjectAccessChecker&MockObject $access_checker;
 
     protected function setUp(): void
     {
-        $this->access_checker = \Mockery::mock(ProjectAccessChecker::class);
+        $this->access_checker = $this->createMock(ProjectAccessChecker::class);
         $this->verificator    = new ProjectStatusVerificator($this->access_checker);
     }
 
-    public function testEverybodyCanAccessANotSuspendedProject()
+    public function testEverybodyCanAccessANotSuspendedProject(): void
     {
-        $this->expectNotToPerformAssertions();
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('isSuspended')->andReturn(false);
+        self::expectNotToPerformAssertions();
+        $project = ProjectTestBuilder::aProject()
+            ->withStatusActive()
+            ->build();
 
         $this->verificator->checkProjectStatusAllowsAllUsersToAccessIt($project);
     }
 
-    public function testNobodyCanAccessASuspendedProject()
+    public function testNobodyCanAccessASuspendedProject(): void
     {
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('isSuspended')->andReturn(true);
+        $project = ProjectTestBuilder::aProject()
+            ->withStatusSuspended()
+            ->build();
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(403);
-        $this->expectExceptionMessage('This project is suspended');
+        self::expectException(RestException::class);
+        self::expectExceptionCode(403);
+        self::expectExceptionMessage('This project is suspended');
 
         $this->verificator->checkProjectStatusAllowsAllUsersToAccessIt($project);
     }
 
-    public function testRegularUsersCantAccessASuspendedProject()
+    public function testRegularUsersCantAccessASuspendedProject(): void
     {
-        $project = \Mockery::mock(\Project::class);
+        $project = ProjectTestBuilder::aProject()->build();
 
-        $user = \Mockery::mock(\PFUser::class);
+        $user = UserTestBuilder::buildWithDefaults();
 
-        $this->access_checker->shouldReceive('checkUserCanAccessProject')->with($user, $project)->andThrow(ProjectAccessSuspendedException::class);
+        $this->access_checker->method('checkUserCanAccessProject')->with($user, $project)->willThrowException(new ProjectAccessSuspendedException());
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(403);
-        $this->expectExceptionMessage('This project is suspended');
+        self::expectException(RestException::class);
+        self::expectExceptionCode(403);
+        self::expectExceptionMessage('This project is suspended');
 
         $this->verificator->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
             $user,
@@ -86,14 +83,14 @@ class ProjectStatusVerificatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testSiteAdminUsersCanAccessASuspendedProject()
+    public function testSiteAdminUsersCanAccessASuspendedProject(): void
     {
-        $this->expectNotToPerformAssertions();
-        $project = \Mockery::mock(\Project::class);
+        self::expectNotToPerformAssertions();
+        $project = ProjectTestBuilder::aProject()->build();
 
-        $user = \Mockery::mock(\PFUser::class);
+        $user = UserTestBuilder::buildWithDefaults();
 
-        $this->access_checker->shouldReceive('checkUserCanAccessProject')->with($user, $project);
+        $this->access_checker->method('checkUserCanAccessProject')->with($user, $project);
 
         $this->verificator->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
             $user,
