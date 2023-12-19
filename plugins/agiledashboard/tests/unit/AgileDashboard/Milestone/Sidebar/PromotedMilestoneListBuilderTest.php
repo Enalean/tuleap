@@ -169,6 +169,38 @@ final class PromotedMilestoneListBuilderTest extends TestCase
         self::assertSame(1, $items->getListSize());
     }
 
+    public function testCurrentSubMilestoneInMilestoneInThePast(): void
+    {
+        $artifact_factory = $this->createMock(Tracker_ArtifactFactory::class);
+
+        $user     = UserTestBuilder::buildWithDefaults();
+        $project  = ProjectTestBuilder::aProject()->build();
+        $planning = $this->createMock(Planning::class);
+        $tracker  = TrackerTestBuilder::aTracker()->withId(3)->build();
+        $planning->method('getPlanningTrackerId')->willReturn($tracker->getId());
+        $planning->method('getId')->willReturn(1);
+        $top_milestone = new Planning_VirtualTopMilestone($project, $planning);
+
+        $artifact = ArtifactTestBuilder::anArtifact(5)->withTitle('Title')->build();
+
+        $artifact_factory
+            ->method('getInstanceFromRow')
+            ->willReturnOnConsecutiveCalls($artifact, $artifact, $artifact);
+
+
+        $list_builder = new PromotedMilestoneListBuilder(
+            $artifact_factory,
+            PromotedMilestoneBuilderStub::buildWithNothing(), // parent is in the past, so builder will  return nothing for it
+            RetrieveMilestonesWithSubMilestonesStub::withMilestones([
+                $this->aMilestoneArrayWithoutASubmilestone($tracker->getId(), $artifact->getId()),
+            ])
+        );
+
+        $items = $list_builder->buildPromotedMilestoneList($user, $top_milestone);
+        self::assertCount(0, $items->getMilestoneList());
+        self::assertSame(0, $items->getListSize());
+    }
+
     private function aMilestoneArrayWithASubmilestone(int $tracker_id, int $artifact_id, int $sub_tracker_id, int $sub_artifact_id): array
     {
         return [
