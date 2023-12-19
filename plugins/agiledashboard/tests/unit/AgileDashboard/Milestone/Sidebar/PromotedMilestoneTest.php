@@ -24,7 +24,6 @@ namespace Tuleap\AgileDashboard\Milestone\Sidebar;
 
 use Planning;
 use Planning_ArtifactMilestone;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\Option\Option;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -39,13 +38,11 @@ final class PromotedMilestoneTest extends TestCase
             $project,
             $this->createMock(Planning::class),
             ArtifactTestBuilder::anArtifact(1)->build(),
-            $this->createMock(ScrumForMonoMilestoneChecker::class)
         );
         $sprint1  = new Planning_ArtifactMilestone(
             $project,
             $this->createMock(Planning::class),
             ArtifactTestBuilder::anArtifact(10)->build(),
-            $this->createMock(ScrumForMonoMilestoneChecker::class)
         );
 
         $promoted_milestone = new PromotedMilestone($release1);

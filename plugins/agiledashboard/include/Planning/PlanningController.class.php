@@ -23,7 +23,6 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\Planning\Admin\AdditionalPlanningConfigurationWarningsRetriever;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningEditionPresenterBuilder;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningWarningPossibleMisconfigurationPresenter;
@@ -78,7 +77,6 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     private ProjectManager $project_manager;
     private AgileDashboard_XMLFullStructureExporter $xml_exporter;
     private PlanningPermissionsManager $planning_permissions_manager;
-    private ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker;
     private ScrumPlanningFilter $scrum_planning_filter;
     private Tracker_FormElementFactory $tracker_form_element_factory;
     private Project $project;
@@ -99,7 +97,6 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         ProjectManager $project_manager,
         AgileDashboard_XMLFullStructureExporter $xml_exporter,
         PlanningPermissionsManager $planning_permissions_manager,
-        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
         ScrumPlanningFilter $scrum_planning_filter,
         Tracker_FormElementFactory $tracker_form_element_factory,
         AgileDashboardCrumbBuilder $service_crumb_builder,
@@ -122,7 +119,6 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $this->project_manager                    = $project_manager;
         $this->xml_exporter                       = $xml_exporter;
         $this->planning_permissions_manager       = $planning_permissions_manager;
-        $this->scrum_mono_milestone_checker       = $scrum_mono_milestone_checker;
         $this->scrum_planning_filter              = $scrum_planning_filter;
         $this->tracker_form_element_factory       = $tracker_form_element_factory;
         $this->service_crumb_builder              = $service_crumb_builder;
@@ -280,14 +276,6 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     public function create(): void
     {
         $this->checkUserIsAdmin();
-
-        if ($this->scrum_mono_milestone_checker->doesScrumMonoMilestoneConfigurationAllowsPlanningCreation($this->getCurrentUser(), $this->group_id) === false) {
-            $this->addFeedback(
-                Feedback::ERROR,
-                dgettext('tuleap-agiledashboard', 'You cannot create more than one planning in scrum V2.')
-            );
-            $this->redirect(['group_id' => $this->group_id, 'action' => 'new']);
-        }
 
         if ($this->planning_request_validator->isValid($this->request)) {
             $this->planning_factory->createPlanning(

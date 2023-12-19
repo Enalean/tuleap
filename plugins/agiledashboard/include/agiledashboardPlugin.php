@@ -60,10 +60,6 @@ use Tuleap\AgileDashboard\SplitModalPresenter;
 use Tuleap\Cardwall\Cardwall\CardwallUseStandardJavascriptEvent;
 use Tuleap\AgileDashboard\Masschange\AdditionalMasschangeActionProcessor;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
-use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
-use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
 use Tuleap\AgileDashboard\Planning\PlanningTrackerBacklogChecker;
 use Tuleap\AgileDashboard\Planning\XML\ProvideCurrentUserForXMLImport;
@@ -221,7 +217,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $this->addHook(Event::REST_PROJECT_ADDITIONAL_INFORMATIONS);
             $this->addHook(Event::REST_PROJECT_RESOURCES);
             $this->addHook(Event::GET_PROJECTID_FROM_URL);
-            $this->addHook(Event::COLLECT_ERRORS_WITHOUT_IMPORTING_XML_PROJECT);
             $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);
             $this->addHook(PermissionPerGroupDisplayEvent::NAME);
             $this->addHook(ArtifactCreated::NAME);
@@ -386,17 +381,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
                 (int) $event->getTemplateProject()->getID(),
                 (int) $event->getJustCreatedProject()->getID(),
             );
-        }
-    }
-
-    public function collect_errors_without_importing_xml_project($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $is_mono_milestone_enabled = $this->getMonoMilestoneChecker()->isMonoMilestoneEnabled(
-            $params['project']->getId()
-        );
-
-        if ($is_mono_milestone_enabled && count($params['xml_content']->agiledashboard->plannings->planning) > 1) {
-            $params['errors'] = dgettext('tuleap-agiledashboard', 'You cannot import more than one planning in scrum V2, please check your XML.');
         }
     }
 
@@ -662,7 +646,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
 
     public function getConfigKeys(ConfigClassProvider $event): void
     {
-        $event->addConfigClass(ScrumForMonoMilestoneChecker::class);
         $event->addConfigClass(MilestonesInSidebarDao::class);
     }
 
@@ -766,8 +749,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             new AgileDashboard_BacklogItemDao(),
             $this->getArtifactFactory(),
             PlanningFactory::build(),
-            $this->getMonoMilestoneChecker(),
-            $this->getMonoMilestoneItemsFinder()
         );
     }
 
@@ -1010,22 +991,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     private function getPlanningPermissionsManager()
     {
         return new PlanningPermissionsManager();
-    }
-
-    /**
-     * @return ScrumForMonoMilestoneChecker
-     */
-    private function getMonoMilestoneChecker()
-    {
-        return new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $this->getPlanningFactory());
-    }
-
-    private function getMonoMilestoneItemsFinder()
-    {
-        return new MonoMilestoneItemsFinder(
-            new MonoMilestoneBacklogItemDao(),
-            $this->getArtifactFactory()
-        );
     }
 
     #[ListeningToEventClass]
@@ -1278,7 +1243,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
                     \ProjectCreator::buildSelfByPassValidation()
                 )
             ),
-            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory),
             EventManager::instance(),
             new SapiEmitter(),
             new ProjectByNameRetrieverMiddleware(ProjectRetriever::buildSelf()),
@@ -1376,14 +1340,12 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     {
         $request = HTTPRequest::instance();
 
-        $planning_factory       = $this->getPlanningFactory();
-        $milestone_factory      = $this->getMilestoneFactory();
-        $hierarchy_factory      = $this->getHierarchyFactory();
-        $mono_milestone_checker = $this->getMonoMileStoneChecker();
-        $submilestone_finder    = new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(
+        $planning_factory    = $this->getPlanningFactory();
+        $milestone_factory   = $this->getMilestoneFactory();
+        $hierarchy_factory   = $this->getHierarchyFactory();
+        $submilestone_finder = new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(
             $hierarchy_factory,
             $planning_factory,
-            $mono_milestone_checker
         );
 
         $pane_info_factory = new AgileDashboard_PaneInfoFactory(

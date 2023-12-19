@@ -33,8 +33,6 @@ use Tuleap\AgileDashboard\Milestone\Sidebar\AgileDashboardPromotedMilestonesRetr
 use Tuleap\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarDao;
 use Tuleap\AgileDashboard\Milestone\Sidebar\PromotedMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\Sidebar\PromotedMilestoneListBuilder;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\Layout\SidebarPromotedItemPresenter;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
@@ -85,7 +83,6 @@ class AgileDashboardService extends \Service
                 Tracker_ArtifactFactory::instance(),
                 new PromotedMilestoneBuilder(
                     $planning_factory,
-                    new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory),
                     SemanticTimeframeBuilder::build(),
                     BackendLogger::getDefaultLogger(),
                 ),

@@ -22,8 +22,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 
 /**
  * I retrieve the content of the backlog
@@ -53,41 +51,28 @@ class AgileDashboard_Milestone_Backlog_Backlog
     /** @var AgileDashboard_Milestone_Backlog_DescendantItemsFinder */
     private $items_finder;
 
-    /**
-     * @var ScrumForMonoMilestoneChecker
-     */
-    private $scrum_mono_milestone_checker;
-    /**
-     * @var MonoMilestoneItemsFinder
-     */
-    private $mono_milestone_items_finder;
-
     public function __construct(
         Tracker_ArtifactFactory $artifact_factory,
         Planning_Milestone $milestone,
         array $item_names,
         array $descendant_trackers,
         AgileDashboard_BacklogItemDao $item_dao,
-        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
-        MonoMilestoneItemsFinder $mono_milestone_items_finder,
         $limit = null,
         $offset = null,
     ) {
-        $this->milestone                    = $milestone;
-        $this->backlogitem_trackers         = $item_names;
-        $this->descendant_trackers          = $descendant_trackers;
-        $this->limit                        = $limit;
-        $this->offset                       = $offset;
-        $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
+        $this->milestone            = $milestone;
+        $this->backlogitem_trackers = $item_names;
+        $this->descendant_trackers  = $descendant_trackers;
+        $this->limit                = $limit;
+        $this->offset               = $offset;
 
-        $this->items_finder                = new AgileDashboard_Milestone_Backlog_DescendantItemsFinder(
+        $this->items_finder = new AgileDashboard_Milestone_Backlog_DescendantItemsFinder(
             $item_dao,
             $artifact_factory->getDao(),
             $artifact_factory,
             $milestone,
             $this->getDescendantTrackerIds()
         );
-        $this->mono_milestone_items_finder = $mono_milestone_items_finder;
     }
 
     public function getDescendantTrackers()
@@ -151,20 +136,11 @@ class AgileDashboard_Milestone_Backlog_Backlog
     {
         if ($this->milestone instanceof Planning_VirtualTopMilestone) {
             if ($this->limit !== null || $this->offset !== null) {
-                if ($this->scrum_mono_milestone_checker->isMonoMilestoneEnabled($this->milestone->getProject()->getID()) === true) {
-                    $artifacts_collection = $this->mono_milestone_items_finder->getTopMilestoneOpenUnplannedBacklogItemsWithLimitAndOffset(
-                        $user,
-                        $this->getDescendantTrackerIds(),
-                        $this->limit,
-                        $this->offset
-                    );
-                } else {
-                    $artifacts_collection = $this->items_finder->getTopMilestoneOpenUnplannedBacklogItemsWithLimitAndOffset(
-                        $user,
-                        $this->limit,
-                        $this->offset
-                    );
-                }
+                $artifacts_collection = $this->items_finder->getTopMilestoneOpenUnplannedBacklogItemsWithLimitAndOffset(
+                    $user,
+                    $this->limit,
+                    $this->offset
+                );
             } else {
                 $artifacts_collection = $this->items_finder->getAllTopMilestoneOpenUnplannedBacklogItems($user, $sub_milestone_ids);
             }
@@ -186,15 +162,6 @@ class AgileDashboard_Milestone_Backlog_Backlog
                 return $this->items_finder->getAllTopMilestoneUnplannedBacklogItems($user);
             }
 
-            if ($this->scrum_mono_milestone_checker->isMonoMilestoneEnabled($this->milestone->getProject()->getID()) === true) {
-                return $this->mono_milestone_items_finder->getTopMilestonesOpenClosedUnplannedBacklogItemsWithLimitAndOffset(
-                    $user,
-                    $this->getDescendantTrackerIds(),
-                    $this->limit,
-                    $this->offset
-                );
-            }
-
             return $this->items_finder->getTopMilestoneOpenClosedUnplannedBacklogItemsWithLimitAndOffset(
                 $user,
                 $this->limit,
@@ -211,24 +178,6 @@ class AgileDashboard_Milestone_Backlog_Backlog
 
     /** @return AgileDashboard_Milestone_Backlog_DescendantItemsCollection */
     public function getUnplannedArtifacts(PFUser $user, $sub_milestone_ids)
-    {
-        if ($this->scrum_mono_milestone_checker->isMonoMilestoneEnabled($this->milestone->getProject()->getID()) === true) {
-            return $this->getUnplannedArtifactsForMonoMilestoneConfiguration($user, $sub_milestone_ids);
-        } else {
-            return $this->getUnplannedArtifactsForMultiMilestoneConfiguration($user, $sub_milestone_ids);
-        }
-    }
-
-    private function getUnplannedArtifactsForMonoMilestoneConfiguration(PFUser $user, $sub_milestone_ids)
-    {
-        if ($this->milestone instanceof Planning_VirtualTopMilestone) {
-            return $this->items_finder->getAllTopMilestoneUnplannedBacklogItems($user);
-        } else {
-            return $this->items_finder->getOpenArtifactsForSubmilestonesForMonoMilestoneConfiguration($user, $sub_milestone_ids);
-        }
-    }
-
-    private function getUnplannedArtifactsForMultiMilestoneConfiguration(PFUser $user, array $sub_milestone_ids): AgileDashboard_Milestone_Backlog_DescendantItemsCollection
     {
         if ($this->milestone instanceof Planning_VirtualTopMilestone) {
             if ($this->limit !== null || $this->offset !== null) {

@@ -22,7 +22,6 @@ namespace Tuleap\AgileDashboard\REST\v1\Milestone;
 
 use Tuleap\AgileDashboard\Milestone\PaginatedMilestones;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 
@@ -51,10 +50,6 @@ class MilestoneRepresentationBuilder
      */
     private $event_manager;
     /**
-     * @var ScrumForMonoMilestoneChecker
-     */
-    private $scrum_mono_milestone_checker;
-    /**
      * @var ParentTrackerRetriever
      */
     private $parent_tracker_retriever;
@@ -75,7 +70,6 @@ class MilestoneRepresentationBuilder
         \Planning_MilestoneFactory $milestone_factory,
         \AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
         \EventManager $event_manager,
-        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
         ParentTrackerRetriever $parent_tracker_retriever,
         \AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder $sub_milestone_finder,
         \PlanningFactory $planning_factory,
@@ -84,7 +78,6 @@ class MilestoneRepresentationBuilder
         $this->milestone_factory                = $milestone_factory;
         $this->backlog_factory                  = $backlog_factory;
         $this->event_manager                    = $event_manager;
-        $this->scrum_mono_milestone_checker     = $scrum_mono_milestone_checker;
         $this->parent_tracker_retriever         = $parent_tracker_retriever;
         $this->sub_milestone_finder             = $sub_milestone_finder;
         $this->planning_factory                 = $planning_factory;
@@ -100,10 +93,6 @@ class MilestoneRepresentationBuilder
         if ($representation_type === MilestoneRepresentation::ALL_FIELDS) {
             $status_count = $this->milestone_factory->getMilestoneStatusCount($user, $milestone);
         }
-
-        $is_scrum_mono_milestone_enabled = $this->scrum_mono_milestone_checker->isMonoMilestoneEnabled(
-            $milestone->getProject()->getID()
-        );
 
         $backlog_trackers = $this->getBacklogTrackers($milestone);
 
@@ -129,7 +118,7 @@ class MilestoneRepresentationBuilder
             $this->parent_tracker_retriever->getCreatableParentTrackers($milestone, $user, $backlog_trackers),
             $this->milestone_factory->userCanChangePrioritiesInMilestone($milestone, $user),
             $representation_type,
-            $this->getSubPlanning($milestone, $is_scrum_mono_milestone_enabled),
+            $this->getSubPlanning($milestone),
             $pane_info_collector,
             $submilestone_tracker,
             $original_project_collector,
@@ -179,12 +168,10 @@ class MilestoneRepresentationBuilder
         return $this->backlog_factory->getBacklog($milestone)->getDescendantTrackers();
     }
 
-    private function getSubPlanning(\Planning_Milestone $milestone, bool $is_mono_milestone_enabled): ?\Planning
+    private function getSubPlanning(\Planning_Milestone $milestone): ?\Planning
     {
         $planning = $milestone->getPlanning();
-        if ($is_mono_milestone_enabled) {
-            return $this->planning_factory->getPlanning($planning->getId());
-        }
+
         return $this->planning_factory->getChildrenPlanning($planning);
     }
 }

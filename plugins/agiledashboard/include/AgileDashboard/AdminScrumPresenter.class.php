@@ -67,11 +67,6 @@ class AdminScrumPresenter
      */
     public $additional_scrum_sections_controllers;
     /**
-     * @var string
-     * @psalm-readonly
-     */
-    public $cannot_create_planning_in_scrum_v2;
-    /**
      * @var bool
      * @psalm-readonly
      */
@@ -91,8 +86,6 @@ class AdminScrumPresenter
         $root_planning_name,
         array $hierarchy,
         $scrum_activated,
-        $can_scrum_mono_milestone_be_enabled,
-        $use_mono_milestone,
         $does_configuration_allows_planning_creation,
         $additional_content,
         bool $explicit_top_backlog_enabled,
@@ -106,12 +99,8 @@ class AdminScrumPresenter
         $this->can_create_planning                         = $can_create_planning;
         $this->root_planning_name                          = $root_planning_name;
         $this->scrum_activated                             = $scrum_activated;
-        $this->can_scrum_mono_milestone_be_enabled         = $can_scrum_mono_milestone_be_enabled;
-        $this->use_mono_milestone                          = $use_mono_milestone;
         $this->does_configuration_allows_planning_creation = $does_configuration_allows_planning_creation;
         $this->additional_content                          = $additional_content;
-
-        $this->cannot_create_planning_in_scrum_v2 = dgettext('tuleap-agiledashboard', 'You cannot create more than one planning in scrum V2.');
 
         foreach ($hierarchy as $tracker) {
             $this->planning_hierarchy[] = $tracker->getName();
@@ -211,30 +200,10 @@ class AdminScrumPresenter
         return dgettext('tuleap-agiledashboard', 'Activate Scrum');
     }
 
-    public function first_scrum_will_be_created()
-    {
-        return dgettext('tuleap-agiledashboard', 'A first scrum configuration will be used during the activation. This operation can take a few seconds.');
-    }
-
     public function token()
     {
         $token = new CSRFSynchronizerToken('/plugins/agiledashboard/?action=admin');
         return $token->fetchHTMLInput();
-    }
-
-    public function activate_scrum_mono_milestone_label()
-    {
-        return dgettext('tuleap-agiledashboard', 'Enable Scrum V2');
-    }
-
-    public function warning_feature_under_construction()
-    {
-        return dgettext('tuleap-agiledashboard', 'This feature is under development. Once checked it wont be possible to start scrum with default template.');
-    }
-
-    public function scrum_monomilestone_title()
-    {
-        return dgettext('tuleap-agiledashboard', 'Scrum mono milestone');
     }
 
     public function additional_content()

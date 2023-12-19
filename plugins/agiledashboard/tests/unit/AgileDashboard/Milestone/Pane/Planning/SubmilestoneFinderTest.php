@@ -32,11 +32,6 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends \Tul
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var \Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker'
-     */
-    private $mono_milestone_checker;
-
-    /**
      * @var Project
      */
     private $project;
@@ -148,12 +143,10 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends \Tul
         $this->tracker_hierarchy_factory = \Mockery::spy(\Tracker_HierarchyFactory::class);
         $this->planning_factory          = \Mockery::spy(\PlanningFactory::class);
 
-        $this->mono_milestone_checker = \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class);
 
         $this->finder = new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(
             $this->tracker_hierarchy_factory,
             $this->planning_factory,
-            $this->mono_milestone_checker
         );
 
         $this->project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUserName' => false, 'isPublic' => false]);
@@ -167,7 +160,6 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends \Tul
         $this->sprint_planning->shouldReceive('getBacklogTrackers')->andReturns([$this->user_story_tracker]);
         $this->tracker_hierarchy_factory->shouldReceive('getChildren')->with($this->sprint_tracker_id)->andReturns([]);
 
-        $this->mono_milestone_checker->shouldReceive('isMonoMilestoneEnabled')->andReturns(false);
         $this->sprint_milestone->shouldReceive('getProject')->andReturns($this->project);
         $this->release_milestone->shouldReceive('getProject')->andReturns($this->project);
 
@@ -187,7 +179,6 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends \Tul
         $this->tracker_hierarchy_factory->shouldReceive('getChildren')->with($this->release_tracker_id)->andReturns([$this->sprint_tracker]);
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($this->sprint_tracker)->andReturns($this->sprint_planning);
 
-        $this->mono_milestone_checker->shouldReceive('isMonoMilestoneEnabled')->andReturns(false);
         $this->release_milestone->shouldReceive('getProject')->andReturns($this->project);
 
         $tracker = $this->finder->findFirstSubmilestoneTracker($this->release_milestone);
@@ -205,7 +196,6 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends \Tul
         $this->tracker_hierarchy_factory->shouldReceive('getChildren')->with($this->release_tracker_id)->andReturns([$this->sprint_tracker]);
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($this->sprint_tracker)->andReturns(null);
 
-        $this->mono_milestone_checker->shouldReceive('isMonoMilestoneEnabled')->andReturns(false);
         $this->release_milestone->shouldReceive('getProject')->andReturns($this->project);
 
         $tracker = $this->finder->findFirstSubmilestoneTracker($this->release_milestone);
@@ -225,7 +215,6 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends \Tul
         $this->tracker_hierarchy_factory->shouldReceive('getAllParents')->with($this->user_story_tracker)->andReturns([$this->epic_tracker]);
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($this->sprint_tracker)->andReturns($this->sprint_planning);
 
-        $this->mono_milestone_checker->shouldReceive('isMonoMilestoneEnabled')->andReturns(false);
         $this->release_milestone->shouldReceive('getProject')->andReturns($this->project);
 
         $tracker = $this->finder->findFirstSubmilestoneTracker($this->release_milestone);
@@ -247,7 +236,6 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends \Tul
         $this->tracker_hierarchy_factory->shouldReceive('getAllParents')->with($this->team_tracker)->andReturns([]);
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($this->requirement_tracker)->andReturns($this->requirement_planning);
 
-        $this->mono_milestone_checker->shouldReceive('isMonoMilestoneEnabled')->andReturns(false);
         $this->release_milestone->shouldReceive('getProject')->andReturns($this->project);
 
         $tracker = $this->finder->findFirstSubmilestoneTracker($this->release_milestone);
@@ -268,7 +256,6 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends \Tul
         $this->tracker_hierarchy_factory->shouldReceive('getAllParents')->with($this->user_story_tracker)->andReturns([$this->epic_tracker, $this->theme_tracker]);
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($this->sprint_tracker)->andReturns($this->sprint_planning);
 
-        $this->mono_milestone_checker->shouldReceive('isMonoMilestoneEnabled')->andReturns(false);
         $this->release_milestone->shouldReceive('getProject')->andReturns($this->project);
 
         $tracker = $this->finder->findFirstSubmilestoneTracker($this->release_milestone);
@@ -295,22 +282,10 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends \Tul
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($this->requirement_tracker)->andReturns($this->requirement_planning);
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($this->sprint_tracker)->andReturns($this->sprint_planning);
 
-        $this->mono_milestone_checker->shouldReceive('isMonoMilestoneEnabled')->andReturns(false);
         $this->release_milestone->shouldReceive('getProject')->andReturns($this->project);
 
         $tracker = $this->finder->findFirstSubmilestoneTracker($this->release_milestone);
 
         $this->assertEquals($this->sprint_tracker, $tracker);
-    }
-
-    public function testItRetrievesTheTrackerInMonoMilestoneConfiguration(): void
-    {
-        $this->release_milestone->shouldReceive('getProject')->andReturns($this->project);
-        $this->mono_milestone_checker->shouldReceive('isMonoMilestoneEnabled')->andReturns(true);
-        $this->release_planning->shouldReceive('getPlanningTracker')->andReturns($this->release_tracker);
-
-        $tracker = $this->finder->findFirstSubmilestoneTracker($this->release_milestone);
-
-        $this->assertEquals($this->release_tracker, $tracker);
     }
 }

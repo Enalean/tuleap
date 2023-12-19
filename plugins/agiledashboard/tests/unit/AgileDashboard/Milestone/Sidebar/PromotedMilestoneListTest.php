@@ -24,7 +24,6 @@ namespace Tuleap\AgileDashboard\Milestone\Sidebar;
 
 use Planning;
 use Planning_ArtifactMilestone;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\Option\Option;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -40,37 +39,31 @@ final class PromotedMilestoneListTest extends TestCase
             $project,
             $this->createMock(Planning::class),
             ArtifactTestBuilder::anArtifact(1)->build(),
-            $this->createMock(ScrumForMonoMilestoneChecker::class)
         );
         $release2 = new Planning_ArtifactMilestone(
             $project,
             $this->createMock(Planning::class),
             ArtifactTestBuilder::anArtifact(2)->build(),
-            $this->createMock(ScrumForMonoMilestoneChecker::class)
         );
         $release3 = new Planning_ArtifactMilestone(
             $project,
             $this->createMock(Planning::class),
             ArtifactTestBuilder::anArtifact(3)->build(),
-            $this->createMock(ScrumForMonoMilestoneChecker::class)
         );
         $release4 = new Planning_ArtifactMilestone(
             $project,
             $this->createMock(Planning::class),
             ArtifactTestBuilder::anArtifact(4)->build(),
-            $this->createMock(ScrumForMonoMilestoneChecker::class)
         );
         $release5 = new Planning_ArtifactMilestone(
             $project,
             $this->createMock(Planning::class),
             ArtifactTestBuilder::anArtifact(5)->build(),
-            $this->createMock(ScrumForMonoMilestoneChecker::class)
         );
         $release6 = new Planning_ArtifactMilestone(
             $project,
             $this->createMock(Planning::class),
             ArtifactTestBuilder::anArtifact(6)->build(),
-            $this->createMock(ScrumForMonoMilestoneChecker::class)
         );
 
         $list->addMilestone(Option::fromValue($release1));
@@ -93,33 +86,28 @@ final class PromotedMilestoneListTest extends TestCase
             $project,
             $this->createMock(Planning::class),
             $artifact_release_1,
-            $this->createMock(ScrumForMonoMilestoneChecker::class)
         );
         $artifact_release_2 = ArtifactTestBuilder::anArtifact(2)->build();
         $release2           = new Planning_ArtifactMilestone(
             $project,
             $this->createMock(Planning::class),
             $artifact_release_2,
-            $this->createMock(ScrumForMonoMilestoneChecker::class)
         );
 
         $sprint1 = new Planning_ArtifactMilestone(
             $project,
             $this->createMock(Planning::class),
             ArtifactTestBuilder::anArtifact(10)->build(),
-            $this->createMock(ScrumForMonoMilestoneChecker::class)
         );
         $sprint2 = new Planning_ArtifactMilestone(
             $project,
             $this->createMock(Planning::class),
             ArtifactTestBuilder::anArtifact(20)->build(),
-            $this->createMock(ScrumForMonoMilestoneChecker::class)
         );
         $sprint3 = new Planning_ArtifactMilestone(
             $project,
             $this->createMock(Planning::class),
             ArtifactTestBuilder::anArtifact(30)->build(),
-            $this->createMock(ScrumForMonoMilestoneChecker::class)
         );
         $list->addMilestone(Option::fromValue($release1));
         $list->addSubMilestoneIntoMilestone($artifact_release_1->getId(), Option::fromValue($sprint1));
@@ -132,7 +120,6 @@ final class PromotedMilestoneListTest extends TestCase
             $project,
             $this->createMock(Planning::class),
             ArtifactTestBuilder::anArtifact(40)->build(),
-            $this->createMock(ScrumForMonoMilestoneChecker::class)
         );
         $list->addSubMilestoneIntoMilestone($artifact_release_1->getId(), Option::fromValue($sprint4));
         self::assertEquals(5, $list->getListSize());
@@ -151,7 +138,6 @@ final class PromotedMilestoneListTest extends TestCase
             $project,
             $this->createMock(Planning::class),
             $artifact_release_1,
-            $this->createMock(ScrumForMonoMilestoneChecker::class)
         );
         $milestone_list->addMilestone(Option::fromValue($release1));
 

@@ -24,10 +24,6 @@ namespace Tuleap\AgileDashboard\REST\v1;
 use Luracast\Restler\RestException;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\Milestone\Request\FilteringQueryParser;
-use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
-use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneRepresentationBuilder;
 use Tuleap\AgileDashboard\REST\v1\Milestone\ProjectMilestonesResource;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
@@ -322,18 +318,8 @@ final class AgileDashboardProjectResource extends AuthenticatedResource
 
     private function getProjectMilestonesResource(): ProjectMilestonesResource
     {
-        $planning_factory             = \PlanningFactory::build();
-        $tracker_artifact_factory     = \Tracker_ArtifactFactory::instance();
-        $scrum_for_mono_milestone_dao = new ScrumForMonoMilestoneDao();
-        $scrum_mono_milestone_checker = new ScrumForMonoMilestoneChecker(
-            $scrum_for_mono_milestone_dao,
-            $planning_factory
-        );
-
-        $mono_milestone_items_finder = new MonoMilestoneItemsFinder(
-            new MonoMilestoneBacklogItemDao(),
-            $tracker_artifact_factory
-        );
+        $planning_factory         = \PlanningFactory::build();
+        $tracker_artifact_factory = \Tracker_ArtifactFactory::instance();
 
         $milestone_factory = \Planning_MilestoneFactory::build();
 
@@ -341,8 +327,6 @@ final class AgileDashboardProjectResource extends AuthenticatedResource
             new \AgileDashboard_BacklogItemDao(),
             $tracker_artifact_factory,
             $planning_factory,
-            $scrum_mono_milestone_checker,
-            $mono_milestone_items_finder
         );
 
         $parent_tracker_retriever = new ParentTrackerRetriever($planning_factory);
@@ -350,14 +334,12 @@ final class AgileDashboardProjectResource extends AuthenticatedResource
         $sub_milestone_finder = new \AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(
             \Tracker_HierarchyFactory::instance(),
             $planning_factory,
-            $scrum_mono_milestone_checker
         );
 
         $milestone_representation_builder = new MilestoneRepresentationBuilder(
             $milestone_factory,
             $backlog_factory,
             \EventManager::instance(),
-            $scrum_mono_milestone_checker,
             $parent_tracker_retriever,
             $sub_milestone_finder,
             $planning_factory,

@@ -33,7 +33,6 @@ use Planning_PlanningAdminPresenter;
 use PlanningFactory;
 use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminSection;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\Stub\Milestone\Sidebar\CheckMilestonesInSidebarStub;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 use Tuleap\GlobalLanguageMock;
@@ -60,10 +59,6 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var EventManager|\Mockery\LegacyMockInterface|\Mockery\MockInterface
      */
     private $event_manager;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ScrumForMonoMilestoneChecker
-     */
-    private $scrum_mono_milestone_checker;
 
     /**
      * @var AgileDashboard_ConfigurationManager|\Mockery\LegacyMockInterface|\Mockery\MockInterface
@@ -80,7 +75,6 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         parent::setUp();
 
         $this->config_manager                     = Mockery::mock(AgileDashboard_ConfigurationManager::class);
-        $this->scrum_mono_milestone_checker       = Mockery::mock(ScrumForMonoMilestoneChecker::class);
         $this->event_manager                      = Mockery::mock(EventManager::class);
         $this->planning_factory                   = Mockery::mock(PlanningFactory::class);
         $this->explicit_backlog_dao               = Mockery::mock(ExplicitBacklogDao::class);
@@ -88,7 +82,6 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->scrum_presenter_builder = new ScrumPresenterBuilder(
             $this->config_manager,
-            $this->scrum_mono_milestone_checker,
             $this->event_manager,
             $this->planning_factory,
             $this->explicit_backlog_dao,
@@ -117,9 +110,6 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->planning_factory->shouldReceive('getPlanningsOutOfRootPlanningHierarchy')->once()->andReturn($planning);
         $this->planning_factory->shouldReceive('getPlannings')->once()->andReturn([$planning]);
 
-        $this->scrum_mono_milestone_checker->shouldReceive('isScrumMonoMilestoneAvailable')->once()->andReturnFalse();
-        $this->scrum_mono_milestone_checker->shouldReceive('isMonoMilestoneEnabled')->atLeast(1)->andReturnFalse();
-
         $this->event_manager->shouldReceive('processEvent')->once();
         $this->event_manager->shouldReceive('dispatch')->once();
 
@@ -136,136 +126,6 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             "",
             [],
             false,
-            false,
-            false,
-            true,
-            "",
-            false,
-            true,
-            [],
-            false,
-            false,
-            false,
-        );
-
-        $additional_sections_event = new GetAdditionalScrumAdminSection(Mockery::mock(\Project::class));
-
-        $presenter = $this->scrum_presenter_builder->getAdminScrumPresenter($user, $project, $additional_sections_event);
-
-        $this->assertEquals($expected_presenter, $presenter);
-    }
-
-    public function testItBuildsPresenterInMonoMilestoneContextWhenMonoMilestoneAreDisabled(): void
-    {
-        $user    = Mockery::mock(\PFUser::class);
-        $project = ProjectTestBuilder::aProject()
-            ->withId(101)
-            ->withUsedService('plugin_agiledashboard')
-            ->build();
-
-        $planning = Mockery::mock(Planning::class);
-        $planning->shouldReceive('getId')->andReturn(42);
-
-        $tracker = Mockery::mock(\Tracker::class);
-        $planning->shouldReceive('getPlanningTracker')->andReturn($tracker);
-        $planning->shouldReceive('getName')->once()->andReturn("tracker name");
-        $this->planning_factory->shouldReceive('getRootPlanning')->atLeast(1)->andReturn($planning);
-
-        $this->config_manager->shouldReceive('scrumIsActivatedForProject')->once()->andReturnTrue();
-
-        $this->planning_factory->shouldReceive('getAvailablePlanningTrackers')->once()->andReturn([]);
-
-        $this->planning_factory->shouldReceive('getPlanningsOutOfRootPlanningHierarchy')->once()->andReturn($planning);
-        $this->planning_factory->shouldReceive('getPlannings')->once()->andReturn([$planning]);
-
-        $this->event_manager->shouldReceive('processEvent')->once();
-        $this->event_manager->shouldReceive('dispatch')->once();
-
-        $this->scrum_mono_milestone_checker->shouldReceive('isScrumMonoMilestoneAvailable')->once()->andReturnTrue();
-        $this->scrum_mono_milestone_checker->shouldReceive('isMonoMilestoneEnabled')->andReturnFalse();
-
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturnFalse();
-
-        $this->planning_factory->shouldReceive('getPotentialPlanningTrackers')->once()->andReturn([]);
-
-        $expected_presenter = new AdminScrumPresenter(
-            [new Planning_PlanningAdminPresenter(
-                $planning,
-                false
-            ),
-            ],
-            101,
-            false,
-            "tracker name",
-            [],
-            true,
-            true,
-            false,
-            false,
-            "",
-            false,
-            true,
-            [],
-            false,
-            false,
-            false,
-        );
-
-        $additional_sections_event = new GetAdditionalScrumAdminSection(Mockery::mock(\Project::class));
-
-        $presenter = $this->scrum_presenter_builder->getAdminScrumPresenter($user, $project, $additional_sections_event);
-
-        $this->assertEquals($expected_presenter, $presenter);
-    }
-
-    public function testItBuildsPresenterInMonoMilestoneContextWhenMonoMilestoneAreEnabled(): void
-    {
-        $user    = Mockery::mock(\PFUser::class);
-        $project = ProjectTestBuilder::aProject()
-            ->withId(101)
-            ->withUsedService('plugin_agiledashboard')
-            ->build();
-
-        $planning = Mockery::mock(Planning::class);
-        $planning->shouldReceive('getId')->andReturn(42);
-
-        $tracker = Mockery::mock(\Tracker::class);
-        $planning->shouldReceive('getPlanningTracker')->andReturn($tracker);
-        $planning->shouldReceive('getName')->once()->andReturn("tracker name");
-        $this->planning_factory->shouldReceive('getRootPlanning')->atLeast(1)->andReturn($planning);
-
-        $this->config_manager->shouldReceive('scrumIsActivatedForProject')->once()->andReturnTrue();
-
-        $this->planning_factory->shouldReceive('getAvailablePlanningTrackers')->once()->andReturn([]);
-        $this->planning_factory->shouldReceive('getPlanningsOutOfRootPlanningHierarchy')->once()->andReturn($planning);
-        $this->planning_factory->shouldReceive('getPlannings')->once()->andReturn([$planning]);
-
-        $this->event_manager->shouldReceive('processEvent')->once();
-        $this->event_manager->shouldReceive('dispatch')->once();
-
-        $this->scrum_mono_milestone_checker->shouldReceive('isScrumMonoMilestoneAvailable')->once()->andReturnTrue();
-        $this->scrum_mono_milestone_checker->shouldReceive('isMonoMilestoneEnabled')->andReturnTrue();
-        $this->scrum_mono_milestone_checker->shouldReceive(
-            'doesScrumMonoMilestoneConfigurationAllowsPlanningCreation'
-        )->andReturnTrue();
-
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturnFalse();
-
-        $this->planning_factory->shouldReceive('getPotentialPlanningTrackers')->once()->andReturn([]);
-
-        $expected_presenter = new AdminScrumPresenter(
-            [new Planning_PlanningAdminPresenter(
-                $planning,
-                false
-            ),
-            ],
-            101,
-            false,
-            "tracker name",
-            [],
-            true,
-            true,
-            true,
             true,
             "",
             false,
@@ -309,9 +169,6 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->event_manager->shouldReceive('processEvent')->once();
         $this->event_manager->shouldReceive('dispatch')->once();
 
-        $this->scrum_mono_milestone_checker->shouldReceive('isScrumMonoMilestoneAvailable')->once()->andReturnFalse();
-        $this->scrum_mono_milestone_checker->shouldReceive('isMonoMilestoneEnabled')->atLeast(1)->andReturnFalse();
-
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturnTrue();
 
         $this->planning_factory->shouldReceive('getPotentialPlanningTrackers')->once()->andReturn([]);
@@ -327,8 +184,6 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             "tracker name",
             [],
             true,
-            false,
-            false,
             false,
             "",
             true,

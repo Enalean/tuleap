@@ -27,7 +27,6 @@ use PFUser;
 use Planning;
 use Planning_ArtifactMilestone;
 use Project;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Tracker\Artifact\Artifact;
 
@@ -39,7 +38,6 @@ final class ArtifactMilestoneTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private $project;
     private $planning;
-    private $scrum_mono_milestone_checker;
     private $artifact;
 
     /**
@@ -60,13 +58,10 @@ final class ArtifactMilestoneTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact = Mockery::mock(Artifact::class);
         $this->artifact->shouldReceive('getId')->andReturn(201);
 
-        $this->scrum_mono_milestone_checker = Mockery::mock(ScrumForMonoMilestoneChecker::class);
-
         $this->milestone = new Planning_ArtifactMilestone(
             $this->project,
             $this->planning,
             $this->artifact,
-            $this->scrum_mono_milestone_checker
         );
     }
 
@@ -98,15 +93,20 @@ final class ArtifactMilestoneTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItMayHavePlannedArtifacts()
     {
-        $this->assertNull($this->milestone->getPlannedArtifacts());
-
         $node_artifact = Mockery::mock(Artifact::class);
         $node_artifact->shouldReceive('getId')->andReturn(202);
 
         $planned_artifacts = new ArtifactNode($node_artifact);
-        $this->milestone->setPlannedArtifacts($planned_artifacts);
 
-        $this->assertSame($planned_artifacts, $this->milestone->getPlannedArtifacts());
+        $milestone = new Planning_ArtifactMilestone(
+            $this->project,
+            $this->planning,
+            $this->artifact,
+            $planned_artifacts,
+        );
+
+
+        $this->assertSame($planned_artifacts, $milestone->getPlannedArtifacts());
     }
 
     public function testItGetsLinkedArtifactsOfTheRootLevelArtifact()
@@ -145,9 +145,14 @@ final class ArtifactMilestoneTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $planned_artifacts->addChildren($child1_artifact_node, $child2_artifact_node);
 
-        $this->milestone->setPlannedArtifacts($planned_artifacts);
+        $milestone = new Planning_ArtifactMilestone(
+            $this->project,
+            $this->planning,
+            $this->artifact,
+            $planned_artifacts,
+        );
 
-        $all_artifacts = $this->milestone->getLinkedArtifacts(Mockery::mock(PFUser::class));
+        $all_artifacts = $milestone->getLinkedArtifacts(Mockery::mock(PFUser::class));
 
         $this->assertCount(2, $all_artifacts);
     }
@@ -178,9 +183,14 @@ final class ArtifactMilestoneTest extends \Tuleap\Test\PHPUnit\TestCase
         $depth1_artifact_node->addChild($depth2_artifact_node);
         $planned_artifacts->addChild($depth1_artifact_node);
 
-        $this->milestone->setPlannedArtifacts($planned_artifacts);
+        $milestone = new Planning_ArtifactMilestone(
+            $this->project,
+            $this->planning,
+            $this->artifact,
+            $planned_artifacts,
+        );
 
-        $all_artifacts = $this->milestone->getLinkedArtifacts(Mockery::mock(PFUser::class));
+        $all_artifacts = $milestone->getLinkedArtifacts(Mockery::mock(PFUser::class));
 
         $this->assertCount(2, $all_artifacts);
     }
@@ -214,9 +224,14 @@ final class ArtifactMilestoneTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $planned_artifacts->addChild($artifact_node);
 
-        $this->milestone->setPlannedArtifacts($planned_artifacts);
+        $milestone = new Planning_ArtifactMilestone(
+            $this->project,
+            $this->planning,
+            $this->artifact,
+            $planned_artifacts,
+        );
 
-        $all_artifacts = $this->milestone->getLinkedArtifacts(Mockery::mock(PFUser::class));
+        $all_artifacts = $milestone->getLinkedArtifacts(Mockery::mock(PFUser::class));
 
         $this->assertCount(3, $all_artifacts);
     }

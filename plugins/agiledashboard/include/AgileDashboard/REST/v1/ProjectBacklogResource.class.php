@@ -44,10 +44,6 @@ use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
 use Tuleap\AgileDashboard\Milestone\Backlog\NoRootPlanningException;
 use Tuleap\AgileDashboard\Milestone\Backlog\ProvidedAddedIdIsNotInPartOfTopBacklogException;
 use Tuleap\AgileDashboard\Milestone\Backlog\TopBacklogElementsToAddChecker;
-use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
-use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneElementAdder;
 use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneElementRemover;
@@ -102,20 +98,8 @@ class ProjectBacklogResource
         $this->planning_factory             = PlanningFactory::build();
         $tracker_artifact_factory           = Tracker_ArtifactFactory::instance();
         $tracker_form_element_factory       = Tracker_FormElementFactory::instance();
-        $event_manager                      = \EventManager::instance();
         $user_manager                       = UserManager::instance();
         $this->planning_permissions_manager = new PlanningPermissionsManager();
-
-        $planning_factory             = PlanningFactory::build();
-        $scrum_mono_milestone_checker = new ScrumForMonoMilestoneChecker(
-            new ScrumForMonoMilestoneDao(),
-            $planning_factory
-        );
-
-        $mono_milestone_items_finder = new MonoMilestoneItemsFinder(
-            new MonoMilestoneBacklogItemDao(),
-            $tracker_artifact_factory
-        );
 
         $this->milestone_factory = Planning_MilestoneFactory::build();
 
@@ -123,8 +107,6 @@ class ProjectBacklogResource
             new AgileDashboard_BacklogItemDao(),
             $tracker_artifact_factory,
             $this->planning_factory,
-            $scrum_mono_milestone_checker,
-            $mono_milestone_items_finder
         );
 
         $backlog_item_collection_factory = new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
@@ -146,7 +128,6 @@ class ProjectBacklogResource
             $backlog_factory,
             $this->milestone_factory,
             $backlog_item_collection_factory,
-            $scrum_mono_milestone_checker
         );
 
         $priority_manager = new Tracker_Artifact_PriorityManager(

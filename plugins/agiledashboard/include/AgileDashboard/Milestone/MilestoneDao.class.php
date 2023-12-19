@@ -200,34 +200,6 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function searchPaginatedTopMilestonesForMonoMilestoneConfiguration(
-        int $milestone_tracker_id,
-        TopMilestoneRequest $request,
-    ) {
-        $built_sql            = $this->getPaginationAndStatusStatements($request);
-        $milestone_tracker_id = $this->da->escapeInt($milestone_tracker_id);
-        $nature               = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD);
-
-        $sql = "SELECT SQL_CALC_FOUND_ROWS submilestones.id  AS submilestone_id, submilestones.*
-                FROM tracker_artifact AS submilestones
-                LEFT JOIN ( tracker_artifact parent_art
-                    INNER JOIN tracker_field                        f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
-                    INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
-                    INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
-                    INNER JOIN tracker_artifact                     child_art  ON (child_art.id = artlink.artifact_id)
-                    INNER JOIN tracker                              child_tracker ON (child_art.tracker_id = child_tracker.id)
-                ) ON (submilestones.id = child_art.id AND artlink.nature = $nature)
-                " . $built_sql['from_statement'] . "
-                WHERE submilestones.tracker_id = $milestone_tracker_id
-                    AND " . $built_sql['where_status_statement'] . "
-                    AND child_art.id IS NULL
-                    AND child_tracker.deletion_date IS NULL
-                ORDER BY submilestone_id " . $built_sql['order'] . "
-                " . $built_sql['limit_statement'];
-
-        return $this->retrieve($sql);
-    }
-
     /**
      * @psalm-return array{0:string, 1:string}
      */

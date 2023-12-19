@@ -33,10 +33,6 @@ use Tracker_Artifact_PriorityDao;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
-use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
-use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 
 class ContentForMiletoneProvider
@@ -63,23 +59,11 @@ class ContentForMiletoneProvider
         $planning_factory         = PlanningFactory::build();
         $tracker_artifact_factory = Tracker_ArtifactFactory::instance();
 
-        $scrum_for_mono_milestone_checker = new ScrumForMonoMilestoneChecker(
-            new ScrumForMonoMilestoneDao(),
-            $planning_factory
-        );
-
-        $mono_milestone_items_finder = new MonoMilestoneItemsFinder(
-            new MonoMilestoneBacklogItemDao(),
-            $tracker_artifact_factory
-        );
-
         return new self(
             new AgileDashboard_Milestone_Backlog_BacklogFactory(
                 new AgileDashboard_BacklogItemDao(),
                 $tracker_artifact_factory,
                 $planning_factory,
-                $scrum_for_mono_milestone_checker,
-                $mono_milestone_items_finder
             ),
             new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
                 new AgileDashboard_BacklogItemDao(),

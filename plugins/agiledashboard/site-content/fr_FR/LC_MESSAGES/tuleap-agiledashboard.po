@@ -27,13 +27,6 @@ msgstr "Planification de %1$s"
 msgid "%s backlog"
 msgstr "%s backlog"
 
-msgid ""
-"A first scrum configuration will be used during the activation. This "
-"operation can take a few seconds."
-msgstr ""
-"Une configuration scrum initiale sera utilisée lors de l'activation. Ceci "
-"peut prendre quelques secondes."
-
 msgid "Activate Scrum"
 msgstr "Activer Scrum"
 
@@ -185,9 +178,6 @@ msgstr "Éditer %1$s"
 
 msgid "Edit planning: %s"
 msgstr "Éditer le planning : %s"
-
-msgid "Enable Scrum V2"
-msgstr "Activer Scrum V2"
 
 msgid "Explicit backlog"
 msgstr "Backlog explicite"
@@ -350,9 +340,6 @@ msgstr "Administration Scrum du Backlog"
 msgid "Scrum configuration successfully updated."
 msgstr "La configuration de Scrum a été mise à jour."
 
-msgid "Scrum mono milestone"
-msgstr "Scrum jalon unique"
-
 msgid "Scrum successfully activated."
 msgstr "Scrum activé avec succès."
 
@@ -464,13 +451,6 @@ msgstr ""
 "Cet artéfact n'a pas été ajouté au backlog car il est déjà présent dans un "
 "sous jalon."
 
-msgid ""
-"This feature is under development. Once checked it wont be possible to start "
-"scrum with default template."
-msgstr ""
-"Cette fonctionnalité est en cours de développement. Une fois coché il n'est "
-"plus possible de démarrer un mode Scrum avec un template par défaut."
-
 msgid "This is used in the Backlog if enabled."
 msgstr "Ce champ est utilisé dans le Backlog si activé."
 
@@ -521,12 +501,6 @@ msgstr "Impossible de trouver le jalon"
 
 msgid "Unable to import the configuration!"
 msgstr "Impossible d'importer la configuration!"
-
-msgid ""
-"Unable to initiate a default backlog when Scrum mono milestone is enabled."
-msgstr ""
-"Impossible d'initialiser un backlog par défaut quand Scrum à jalon unique "
-"est activé."
 
 msgid ""
 "Unable to initiate a default backlog when backlog administration is "
@@ -620,9 +594,6 @@ msgid "You can import configuration from an XML template."
 msgstr ""
 "Il est possible d'importer une configuration à partir d'un fichier XML."
 
-msgid "You cannot create more than one planning in scrum V2."
-msgstr "Vous ne pouvez pas créer plus d'un planning en utilisant scrum V2."
-
 msgid "You cannot create new planning because either:"
 msgstr "Vous ne pouvez plus créer de planning soit:"
 
@@ -641,12 +612,6 @@ msgstr ""
 "Vous ne pouvez pas choisir à la fois des outils de suivi parent et enfant en "
 "tant qu'outils de suivi définissant le backlog (%s, %s). Merci de n'en "
 "sélectionner qu'un seul."
-
-msgid ""
-"You cannot import more than one planning in scrum V2, please check your XML."
-msgstr ""
-"Vous ne pouvez pas importer plus d'un planning en utilisant scrum V2, merci "
-"de vérifier votre XML."
 
 msgid "You don't have permissions to see user groups."
 msgstr "Vous n'avez pas la permission de voir les groupes utilisateurs."

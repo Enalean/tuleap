@@ -46,10 +46,6 @@ use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\Milestone\Request\MalformedQueryParameterException;
 use Tuleap\AgileDashboard\Milestone\Request\SiblingMilestoneRequest;
 use Tuleap\AgileDashboard\Milestone\Request\SubMilestoneRequest;
-use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
-use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\REST\QueryToCriterionOnlyAllStatusConverter;
 use Tuleap\AgileDashboard\REST\QueryToCriterionStatusConverter;
@@ -148,24 +144,12 @@ class MilestoneResource extends AuthenticatedResource
         $planning_factory               = PlanningFactory::build();
         $this->tracker_artifact_factory = Tracker_ArtifactFactory::instance();
 
-        $scrum_for_mono_milestone_checker = new ScrumForMonoMilestoneChecker(
-            new ScrumForMonoMilestoneDao(),
-            $planning_factory
-        );
-
-        $mono_milestone_items_finder = new MonoMilestoneItemsFinder(
-            new MonoMilestoneBacklogItemDao(),
-            $this->tracker_artifact_factory
-        );
-
         $this->milestone_factory = Planning_MilestoneFactory::build();
 
         $this->backlog_factory = new AgileDashboard_Milestone_Backlog_BacklogFactory(
             new AgileDashboard_BacklogItemDao(),
             $this->tracker_artifact_factory,
             $planning_factory,
-            $scrum_for_mono_milestone_checker,
-            $mono_milestone_items_finder
         );
 
         $this->backlog_item_collection_factory = new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
@@ -185,7 +169,6 @@ class MilestoneResource extends AuthenticatedResource
             $this->backlog_factory,
             $this->milestone_factory,
             $this->backlog_item_collection_factory,
-            $scrum_for_mono_milestone_checker
         );
 
         $priority_manager = new Tracker_Artifact_PriorityManager(
@@ -210,14 +193,12 @@ class MilestoneResource extends AuthenticatedResource
         $sub_milestone_finder = new \AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(
             \Tracker_HierarchyFactory::instance(),
             $planning_factory,
-            $scrum_for_mono_milestone_checker
         );
 
         $this->milestone_representation_builder = new MilestoneRepresentationBuilder(
             $this->milestone_factory,
             $this->backlog_factory,
             $this->event_manager,
-            $scrum_for_mono_milestone_checker,
             $parent_tracker_retriever,
             $sub_milestone_finder,
             $planning_factory,

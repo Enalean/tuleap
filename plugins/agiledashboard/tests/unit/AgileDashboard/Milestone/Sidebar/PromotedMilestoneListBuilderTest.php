@@ -26,7 +26,6 @@ use Planning;
 use Planning_ArtifactMilestone;
 use Planning_VirtualTopMilestone;
 use Tracker_ArtifactFactory;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\Stub\Milestone\RetrieveMilestonesWithSubMilestonesStub;
 use Tuleap\AgileDashboard\Stub\Milestone\Sidebar\PromotedMilestoneBuilderStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -64,37 +63,31 @@ final class PromotedMilestoneListBuilderTest extends TestCase
             $project,
             $planning,
             $artifact,
-            $this->createMock(ScrumForMonoMilestoneChecker::class)
         );
         $promoted_sub_artifact1 = new Planning_ArtifactMilestone(
             $project,
             $planning,
             $sub_artifact1,
-            $this->createMock(ScrumForMonoMilestoneChecker::class)
         );
         $promoted_sub_artifact2 = new Planning_ArtifactMilestone(
             $project,
             $planning,
             $sub_artifact2,
-            $this->createMock(ScrumForMonoMilestoneChecker::class)
         );
         $promoted_sub_artifact3 = new Planning_ArtifactMilestone(
             $project,
             $planning,
             $sub_artifact3,
-            $this->createMock(ScrumForMonoMilestoneChecker::class)
         );
         $promoted_sub_artifact4 = new Planning_ArtifactMilestone(
             $project,
             $planning,
             $sub_artifact4,
-            $this->createMock(ScrumForMonoMilestoneChecker::class)
         );
         $promoted_sub_artifact5 = new Planning_ArtifactMilestone(
             $project,
             $planning,
             $sub_artifact5,
-            $this->createMock(ScrumForMonoMilestoneChecker::class)
         );
 
         $artifact_factory
@@ -152,7 +145,6 @@ final class PromotedMilestoneListBuilderTest extends TestCase
             $project,
             $planning,
             $artifact,
-            $this->createMock(ScrumForMonoMilestoneChecker::class)
         );
 
         $artifact_factory

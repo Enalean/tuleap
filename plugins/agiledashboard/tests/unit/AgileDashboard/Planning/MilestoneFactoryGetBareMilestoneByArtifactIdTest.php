@@ -36,7 +36,6 @@ use Psr\Log\NullLogger;
 use Tracker;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -89,7 +88,6 @@ final class MilestoneFactoryGetBareMilestoneByArtifactIdTest extends \Tuleap\Tes
             Mockery::spy(AgileDashboard_Milestone_MilestoneStatusCounter::class),
             Mockery::spy(PlanningPermissionsManager::class),
             Mockery::spy(AgileDashboard_Milestone_MilestoneDao::class),
-            Mockery::spy(ScrumForMonoMilestoneChecker::class),
             $semantic_timeframe_builder,
             $this->logger,
             Mockery::spy(MilestoneBurndownFieldChecker::class)

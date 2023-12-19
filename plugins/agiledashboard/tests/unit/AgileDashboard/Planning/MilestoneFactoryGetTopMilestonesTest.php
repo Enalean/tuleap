@@ -37,7 +37,6 @@ use Psr\Log\NullLogger;
 use Tracker;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\Date\DatePeriodWithoutWeekEnd;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -89,7 +88,6 @@ final class MilestoneFactoryGetTopMilestonesTest extends \Tuleap\Test\PHPUnit\Te
             Mockery::mock(AgileDashboard_Milestone_MilestoneStatusCounter::class),
             Mockery::mock(PlanningPermissionsManager::class),
             Mockery::mock(AgileDashboard_Milestone_MilestoneDao::class),
-            Mockery::mock(ScrumForMonoMilestoneChecker::class),
             $semantic_timeframe_builder,
             $this->logger,
             Mockery::mock(MilestoneBurndownFieldChecker::class)

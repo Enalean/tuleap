@@ -28,8 +28,6 @@ use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
 use Tuleap\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarDao;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetriever;
 use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardPermissionsRepresentationBuilder;
 use Tuleap\AgileDashboard\PermissionsPerGroup\PlanningPermissionsRepresentationBuilder;
@@ -101,8 +99,6 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
 
         $event_manager = EventManager::instance();
 
-        $mono_milestone_checker = new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory);
-
         $tracker_new_dropdown_link_presenter_builder = new TrackerNewDropdownLinkPresenterBuilder();
 
         $service_crumb_builder   = new AgileDashboardCrumbBuilder();
@@ -128,7 +124,6 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
                     new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(
                         Tracker_HierarchyFactory::instance(),
                         $planning_factory,
-                        $mono_milestone_checker,
                     ),
                     $tracker_new_dropdown_link_presenter_builder,
                     $header_options_inserter,
@@ -139,14 +134,13 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
                 $header_options_inserter
             ),
             new \Tuleap\AgileDashboard\CSRFSynchronizerTokenProvider(),
-            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory),
             new RecentlyVisitedTopBacklogDao(),
         );
 
         $ugroup_manager = new UGroupManager();
 
         $db_connection         = DBFactory::getMainTuleapDBConnection();
-        $scrum_planning_filter = new ScrumPlanningFilter($mono_milestone_checker, $planning_factory);
+        $scrum_planning_filter = new ScrumPlanningFilter($planning_factory);
         $form_element_factory  = Tracker_FormElementFactory::instance();
 
         return new AgileDashboardRouter(
@@ -160,7 +154,6 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
             ),
             $this->getConfigurationManager(),
             new PlanningPermissionsManager(),
-            $mono_milestone_checker,
             $scrum_planning_filter,
             new AgileDashboardJSONPermissionsRetriever(
                 new AgileDashboardPermissionsRepresentationBuilder(
@@ -182,7 +175,6 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
             new ArtifactsInExplicitBacklogDao(),
             new ScrumPresenterBuilder(
                 $this->getConfigurationManager(),
-                $mono_milestone_checker,
                 $event_manager,
                 $planning_factory,
                 $project_explicit_backlog_dao,

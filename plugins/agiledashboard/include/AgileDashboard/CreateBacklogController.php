@@ -30,7 +30,6 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Layout\Feedback\NewFeedback;
@@ -44,7 +43,6 @@ final class CreateBacklogController extends DispatchablePSR15Compatible
         private readonly RedirectWithFeedbackFactory $redirect_with_feedback_factory,
         private readonly IsProjectAllowedToUsePlugin $plugin,
         private readonly AgileDashboard_FirstScrumCreator $first_scrum_creator,
-        private readonly ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
         private readonly EventDispatcherInterface $event_dispatcher,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
@@ -67,15 +65,6 @@ final class CreateBacklogController extends DispatchablePSR15Compatible
         $service = $project->getService(\AgileDashboardPlugin::PLUGIN_SHORTNAME);
         if (! $service instanceof AgileDashboardService) {
             throw new ForbiddenException();
-        }
-
-        $is_scrum_mono_milestone_enabled = $this->scrum_mono_milestone_checker->isMonoMilestoneEnabled(
-            $project->getID()
-        );
-        if ($is_scrum_mono_milestone_enabled) {
-            return $this->redirectToBacklog($user, $project, NewFeedback::error(
-                dgettext('tuleap-agiledashboard', 'Unable to initiate a default backlog when Scrum mono milestone is enabled.')
-            ));
         }
 
         $planning_administration_delegation = new PlanningAdministrationDelegation($project);

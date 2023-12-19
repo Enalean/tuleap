@@ -63,11 +63,6 @@ CREATE TABLE IF NOT EXISTS plugin_agiledashboard_kanban_configuration_column (
     PRIMARY KEY(kanban_id, value_id)
 );
 
-DROP TABLE IF EXISTS plugin_agiledashboard_scrum_mono_milestones;
-CREATE TABLE IF NOT EXISTS plugin_agiledashboard_scrum_mono_milestones (
-    project_id INT(11) NOT NULL PRIMARY KEY
-);
-
 DROP TABLE IF EXISTS plugin_agiledashboard_kanban_widget;
 CREATE TABLE IF NOT EXISTS plugin_agiledashboard_kanban_widget (
   id int(11) unsigned NOT NULL auto_increment PRIMARY KEY,

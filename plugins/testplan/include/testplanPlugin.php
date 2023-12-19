@@ -23,10 +23,6 @@ declare(strict_types=1);
 use FastRoute\RouteCollector;
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
-use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
-use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\AllowedAdditionalPanesToDisplayCollector;
 use Tuleap\AgileDashboard\Planning\HeaderOptionsForPlanningProvider;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
@@ -161,8 +157,6 @@ final class testplanPlugin extends Plugin
             $planning_permissions_manager
         );
 
-        $mono_milestone_checker = new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory);
-
         $header_options_inserter = new CurrentContextSectionToHeaderOptionsInserter();
 
         return new TestPlanController(
@@ -192,11 +186,6 @@ final class testplanPlugin extends Plugin
                         new AgileDashboard_BacklogItemDao(),
                         Tracker_ArtifactFactory::instance(),
                         $planning_factory,
-                        $mono_milestone_checker,
-                        new MonoMilestoneItemsFinder(
-                            new MonoMilestoneBacklogItemDao(),
-                            Tracker_ArtifactFactory::instance()
-                        )
                     ),
                     new AgileDashboard_PaneInfoIdentifier(),
                     $tracker_new_dropdown_link_presenter_builder,
@@ -204,7 +193,6 @@ final class testplanPlugin extends Plugin
                         new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(
                             \Tracker_HierarchyFactory::instance(),
                             $planning_factory,
-                            $mono_milestone_checker,
                         ),
                         $tracker_new_dropdown_link_presenter_builder,
                         $header_options_inserter,

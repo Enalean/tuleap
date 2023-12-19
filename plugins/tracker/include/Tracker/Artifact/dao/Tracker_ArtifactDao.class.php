@@ -843,60 +843,6 @@ class Tracker_ArtifactDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function getArtifactsWithOpenStatusForSubmilestonesForMonoMilestoneConfiguration(
-        $artifact_id,
-        array $tracker_ids,
-        array $excluded_linked_ids,
-        array $additional_artifacts,
-    ) {
-        $artifact_id = $this->da->escapeInt($artifact_id);
-        $tracker_ids = $this->da->escapeIntImplode($tracker_ids);
-
-        $additional_artifacts_sql = '';
-        if (! empty($additional_artifacts)) {
-            $additional_artifacts_sql = 'OR linked_art.id IN (' . $this->da->escapeIntImplode($additional_artifacts) . ')';
-        }
-
-        $exclude       = '';
-        $exclude_where = '';
-        if (count($excluded_linked_ids) > 0) {
-            $exclude = 'LEFT JOIN (
-                        tracker_artifact as submile
-                        INNER JOIN tracker_field AS f2 ON (f2.tracker_id = submile.tracker_id AND f2.formElement_type = \'art_link\' AND f2.use_it = 1)
-                        INNER JOIN tracker_changeset_value AS excluded_cv ON (excluded_cv.changeset_id = submile.last_changeset_id AND excluded_cv.field_id = f2.id)
-                        INNER JOIN tracker_changeset_value_artifactlink AS artlink2 ON (artlink2.changeset_value_id = excluded_cv.id)
-                    ) ON (linked_art.id = artlink2.artifact_id AND submile.id IN (' . $this->da->escapeIntImplode($excluded_linked_ids) . '))';
-
-            $exclude_where = "AND submile.id IS NULL";
-        }
-
-        $sql = "SELECT SQL_CALC_FOUND_ROWS linked_art.*
-                FROM tracker_artifact parent_art
-                    INNER JOIN tracker_field                        f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND f.use_it = 1)
-                    INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
-                    INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
-                    INNER JOIN tracker_artifact                     linked_art ON (linked_art.id = artlink.artifact_id $additional_artifacts_sql)
-                    INNER JOIN tracker_artifact_priority_rank                       ON (tracker_artifact_priority_rank.artifact_id = linked_art.id)
-                    -- exlude all those linked to wrong artifacts
-                    $exclude
-                        -- only those with open status
-                    INNER JOIN tracker AS T ON (linked_art.tracker_id = T.id)
-                    INNER JOIN `groups` AS G ON (G.group_id = T.group_id)
-                    INNER JOIN tracker_changeset AS C ON (linked_art.last_changeset_id = C.id)
-                    LEFT JOIN (
-                        tracker_changeset_value AS CV2
-                        INNER JOIN tracker_semantic_title as ST ON (CV2.field_id = ST.field_id)
-                        INNER JOIN tracker_changeset_value_text AS CVT ON (CV2.id = CVT.changeset_value_id)
-                    ) ON (C.id = CV2.changeset_id)
-                WHERE parent_art.id = $artifact_id
-                    $exclude_where
-                    AND linked_art.tracker_id IN ($tracker_ids)
-                GROUP BY (linked_art.id)
-                ORDER BY tracker_artifact_priority_rank.`rank` ASC";
-
-        return $this->retrieve($sql);
-    }
-
     public function getLinkedArtifactsOfTrackersConcatenatedToCustomList($artifact_id, array $tracker_ids, array $additional_artifacts)
     {
         $artifact_id = $this->da->escapeInt($artifact_id);

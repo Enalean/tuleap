@@ -70,7 +70,6 @@ final class AgileDashboardRouterTest extends \Tuleap\Test\PHPUnit\TestCase //php
                 Mockery::mock(AgileDashboard_XMLFullStructureExporter::class),
                 Mockery::mock(AgileDashboard_ConfigurationManager::class),
                 Mockery::mock(PlanningPermissionsManager::class),
-                Mockery::mock(Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class),
                 Mockery::mock(Tuleap\AgileDashboard\Planning\ScrumPlanningFilter::class),
                 Mockery::mock(Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetriever::class),
                 Mockery::mock(Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder::class),
