@@ -114,7 +114,6 @@ class ServiceTracker extends Service
                 TrackerFactory::instance(),
             ),
             new CheckPromotedTrackerConfiguration(),
-            EventManager::instance(),
         );
 
         return $retriever->getPromotedItemPresenters($user, $this->project, $active_promoted_item_id);
