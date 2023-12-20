@@ -22,15 +22,26 @@ import { okAsync } from "neverthrow";
 import { uri } from "@tuleap/fetch-result";
 import * as fetch_result from "@tuleap/fetch-result";
 import { PullRequestStub } from "@tuleap/plugin-pullrequest-stub";
-import { fetchAllPullRequests } from "./tuleap-rest-querier";
+import { fetchAllPullRequests, fetchPullRequestLabels } from "./tuleap-rest-querier";
 
 const repository_id = 10;
+const pull_request_id = 2;
 const pull_requests_collection = [
     {
         collection: [
             PullRequestStub.buildOpenPullRequest({ id: 1 }),
             PullRequestStub.buildOpenPullRequest({ id: 2 }),
             PullRequestStub.buildOpenPullRequest({ id: 3 }),
+        ],
+    },
+];
+
+const labels_collection = [
+    {
+        labels: [
+            { id: 1, label: "Salade", is_outline: true, color: "neon-green" },
+            { id: 2, label: "Tomates", is_outline: true, color: "fiesta-red" },
+            { id: 3, label: "Oignons", is_outline: false, color: "plum-crazy" },
         ],
     },
 ];
@@ -56,6 +67,29 @@ describe("tuleap-rest-querier", () => {
             );
 
             expect(result.value).toStrictEqual(pull_requests_collection);
+        });
+    });
+
+    describe("fetchPullRequestLabels", () => {
+        it("should query all the labels of a given pull-request and return them", async () => {
+            vi.spyOn(fetch_result, "getAllJSON").mockReturnValue(okAsync(labels_collection));
+
+            const result = await fetchPullRequestLabels(pull_request_id);
+            if (!result.isOk()) {
+                throw new Error("Expected an OK");
+            }
+
+            expect(fetch_result.getAllJSON).toHaveBeenCalledWith(
+                uri`/api/v1/pull_requests/${pull_request_id}/labels`,
+                {
+                    params: {
+                        limit: 50,
+                    },
+                    getCollectionCallback: expect.any(Function),
+                },
+            );
+
+            expect(result.value).toStrictEqual(labels_collection);
         });
     });
 });

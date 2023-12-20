@@ -19,7 +19,11 @@
 
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
+import type {
+    ProjectLabel,
+    ProjectLabelsCollection,
+    PullRequest,
+} from "@tuleap/plugin-pullrequest-rest-api-types";
 import { uri, getAllJSON } from "@tuleap/fetch-result";
 
 type PullRequestCollection = {
@@ -36,6 +40,22 @@ export const fetchAllPullRequests = (
                 limit: 50,
             },
             getCollectionCallback: (payload) => payload.collection,
+        },
+    );
+};
+
+export const fetchPullRequestLabels = (
+    pull_request_id: number,
+): ResultAsync<readonly ProjectLabel[], Fault> => {
+    return getAllJSON<ProjectLabel, ProjectLabelsCollection>(
+        uri`/api/v1/pull_requests/${pull_request_id}/labels`,
+        {
+            params: {
+                limit: 50,
+            },
+            getCollectionCallback: (payload) => {
+                return payload.labels;
+            },
         },
     );
 };
