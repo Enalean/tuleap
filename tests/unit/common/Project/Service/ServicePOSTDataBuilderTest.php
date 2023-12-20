@@ -22,17 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Service;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Service;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
     use ForgeConfigSandbox;
 
@@ -51,7 +49,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testBuildFromServiceThrowsWhenTemplateProjectAndNoShortname(): void
     {
-        $project = M::mock(Project::class, ['getID' => 100]);
+        $project = ProjectTestBuilder::aProject()->withId(100)->build();
         $service = new Service(
             $project,
             [
@@ -68,14 +66,14 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->expectException(InvalidServicePOSTDataException::class);
+        self::expectException(InvalidServicePOSTDataException::class);
 
         $this->service_postdata_builder->buildFromService($service, false);
     }
 
     public function testBuildFromServiceThrowsWhenNoLabel(): void
     {
-        $project = M::mock(Project::class, ['getID' => 105]);
+        $project = ProjectTestBuilder::aProject()->withId(105)->build();
         $service = new Service(
             $project,
             [
@@ -92,14 +90,16 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->expectException(InvalidServicePOSTDataException::class);
+        self::expectException(InvalidServicePOSTDataException::class);
 
         $this->service_postdata_builder->buildFromService($service, false);
     }
 
     public function testBuildFromServiceThrowsWhenNoRank(): void
     {
-        $project = M::mock(Project::class, ['getID' => 105, 'getMinimalRank' => 10]);
+        $project = $this->createMock(Project::class);
+        $project->method('getID')->willReturn(105);
+        $project->method('getMinimalRank')->willReturn(10);
         $service = new Service(
             $project,
             [
@@ -116,14 +116,16 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->expectException(InvalidServicePOSTDataException::class);
+        self::expectException(InvalidServicePOSTDataException::class);
 
         $this->service_postdata_builder->buildFromService($service, false);
     }
 
     public function testBuildFromServiceThrowsWhenRankBelowMinimalRank(): void
     {
-        $project = M::mock(Project::class, ['getID' => 105, 'getMinimalRank' => 10]);
+        $project = $this->createMock(Project::class);
+        $project->method('getID')->willReturn(105);
+        $project->method('getMinimalRank')->willReturn(10);
         $service = new Service(
             $project,
             [
@@ -140,14 +142,16 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->expectException(InvalidServicePOSTDataException::class);
+        self::expectException(InvalidServicePOSTDataException::class);
 
         $this->service_postdata_builder->buildFromService($service, false);
     }
 
     public function testBuildFromServiceDoesntCheckIconWhenScopeIsSystem(): void
     {
-        $project = M::mock(Project::class, ['getID' => 105, 'getMinimalRank' => 10]);
+        $project = $this->createMock(Project::class);
+        $project->method('getID')->willReturn(105);
+        $project->method('getMinimalRank')->willReturn(10);
         $service = new Service(
             $project,
             [
@@ -166,12 +170,14 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $post_data = $this->service_postdata_builder->buildFromService($service, false);
 
-        $this->assertSame($post_data->getId(), 12);
+        self::assertSame($post_data->getId(), 12);
     }
 
     public function testBuildFromServiceThrowsWhenIconIsMissing(): void
     {
-        $project = M::mock(Project::class, ['getID' => 105, 'getMinimalRank' => 10]);
+        $project = $this->createMock(Project::class);
+        $project->method('getID')->willReturn(105);
+        $project->method('getMinimalRank')->willReturn(10);
         $service = new Service(
             $project,
             [
@@ -188,14 +194,16 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->expectException(InvalidServicePOSTDataException::class);
+        self::expectException(InvalidServicePOSTDataException::class);
 
         $this->service_postdata_builder->buildFromService($service, false);
     }
 
     public function testBuildFromServiceThrowsWhenBothOpenInIframeAndInNewTab(): void
     {
-        $project = M::mock(Project::class, ['getID' => 105, 'getMinimalRank' => 10]);
+        $project = $this->createMock(Project::class);
+        $project->method('getID')->willReturn(105);
+        $project->method('getMinimalRank')->willReturn(10);
         $service = new Service(
             $project,
             [
@@ -212,14 +220,16 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->expectException(InvalidServicePOSTDataException::class);
+        self::expectException(InvalidServicePOSTDataException::class);
 
         $this->service_postdata_builder->buildFromService($service, false);
     }
 
     public function testBuildFromServiceSucceeds(): void
     {
-        $project = M::mock(Project::class, ['getID' => 105, 'getMinimalRank' => 10]);
+        $project = $this->createMock(Project::class);
+        $project->method('getID')->willReturn(105);
+        $project->method('getMinimalRank')->willReturn(10);
         $service = new Service(
             $project,
             [
@@ -238,120 +248,102 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $post_data = $this->service_postdata_builder->buildFromService($service, false);
 
-        $this->assertSame('fas fa-rss', $post_data->getIconName());
+        self::assertSame('fas fa-rss', $post_data->getIconName());
     }
 
     public function testBuildFromRequestForceAdminServiceToBeUsed(): void
     {
-        $project  = M::mock(Project::class, ['getID' => 105, 'getMinimalRank' => 10]);
-        $response = M::mock(BaseLayout::class);
-        $request  = M::mock(\HTTPRequest::class);
-        $request->shouldReceive('getValidated')
-            ->with('service_id', M::any(), M::any())
-            ->once()
-            ->andReturn(12);
-        $request->shouldReceive('getValidated')
-            ->with('short_name', M::any(), M::any())
-            ->once()
-            ->andReturn('admin');
-        $request->shouldReceive('exist')
+        $project = $this->createMock(Project::class);
+        $project->method('getID')->willReturn(105);
+        $project->method('getMinimalRank')->willReturn(10);
+        $response = $this->createMock(BaseLayout::class);
+        $request  = $this->createMock(\HTTPRequest::class);
+        $request
+            ->expects(self::exactly(8))
+            ->method('getValidated')
+            ->withConsecutive(
+                ['service_id', self::anything(), self::anything()],
+                ['short_name', self::anything(), self::anything()],
+                ['label', self::anything(), self::anything()],
+                ['icon_name', self::anything(), self::anything()],
+                ['description', self::anything(), self::anything()],
+                ['rank', self::anything(), self::anything()],
+                ['is_active', self::anything(), self::anything()],
+                ['link', self::anything(), self::anything()],
+            )
+            ->willReturnOnConsecutiveCalls(
+                12,
+                'admin',
+                'My custom service',
+                'fa-invalid-icon-name',
+                '',
+                1230,
+                1,
+                'https://example.com/custom',
+            );
+        $request
+            ->expects(self::once())
+            ->method('exist')
             ->with('short_name')
-            ->once()
-            ->andReturnTrue();
-        $request->shouldReceive('getValidated')
-            ->with('label', M::any(), M::any())
-            ->once()
-            ->andReturn('My custom service');
-        $request->shouldReceive('getValidated')
-            ->with('icon_name', M::any(), M::any())
-            ->once()
-            ->andReturn('fa-invalid-icon-name');
-        $request->shouldReceive('getValidated')
-            ->with('description', M::any(), M::any())
-            ->once()
-            ->andReturn('');
-        $request->shouldReceive('getValidated')
-            ->with('rank', M::any(), M::any())
-            ->once()
-            ->andReturn(1230);
-        $request->shouldReceive('getValidated')
-            ->with('is_active', M::any(), M::any())
-            ->once()
-            ->andReturn(1);
-        $request->shouldReceive('get')
-            ->with('is_in_iframe')
-            ->once()
-            ->andReturnFalse();
-        $request->shouldReceive('get')
-            ->with('is_in_new_tab')
-            ->once()
-            ->andReturnFalse();
-        $request->shouldReceive('getValidated')
-            ->with('link', M::any(), M::any())
-            ->andReturn('https://example.com/custom');
+            ->willReturn(true);
+        $request
+            ->expects(self::exactly(2))
+            ->method('get')
+            ->withConsecutive(['is_in_iframe'], ['is_in_new_tab'])
+            ->willReturn(false);
 
         $current_admin_service = new Service($project, ['label' => 'Admin', 'short_name' => Service::ADMIN, 'description' => 'admin']);
 
         $admin_service = $this->service_postdata_builder->buildFromRequest($request, $project, $current_admin_service, $response);
 
-        $this->assertTrue($admin_service->isUsed());
+        self::assertTrue($admin_service->isUsed());
     }
 
     public function testBuildFromRequestThrowsWhenIconIsInvalid(): void
     {
-        $project  = M::mock(Project::class, ['getID' => 105, 'getMinimalRank' => 10]);
+        $project = $this->createMock(Project::class);
+        $project->method('getID')->willReturn(105);
+        $project->method('getMinimalRank')->willReturn(10);
         $service  = new Service($project, ['label' => 'foo', 'short_name' => 'bar', 'description' => 'baz']);
-        $response = M::mock(BaseLayout::class);
-        $request  = M::mock(\HTTPRequest::class);
-        $request->shouldReceive('getValidated')
-            ->with('service_id', M::any(), M::any())
-            ->once()
-            ->andReturn(12);
-        $request->shouldReceive('getValidated')
-            ->with('short_name', M::any(), M::any())
-            ->once()
-            ->andReturn('');
-        $request->shouldReceive('exist')
+        $response = $this->createMock(BaseLayout::class);
+        $request  = $this->createMock(\HTTPRequest::class);
+        $request
+            ->expects(self::exactly(9))
+            ->method('getValidated')
+            ->withConsecutive(
+                ['service_id', self::anything(), self::anything()],
+                ['short_name', self::anything(), self::anything()],
+                ['label', self::anything(), self::anything()],
+                ['icon_name', self::anything(), self::anything()],
+                ['description', self::anything(), self::anything()],
+                ['rank', self::anything(), self::anything()],
+                ['is_active', self::anything(), self::anything()],
+                ['is_used', self::anything(), self::anything()],
+                ['link', self::anything(), self::anything()],
+            )
+            ->willReturnOnConsecutiveCalls(
+                12,
+                '',
+                'My custom service',
+                'fa-invalid-icon-name',
+                '',
+                123,
+                1,
+                true,
+                'https://example.com/custom',
+            );
+        $request
+            ->expects(self::once())
+            ->method('exist')
             ->with('short_name')
-            ->once()
-            ->andReturnFalse();
-        $request->shouldReceive('getValidated')
-            ->with('label', M::any(), M::any())
-            ->once()
-            ->andReturn('My custom service');
-        $request->shouldReceive('getValidated')
-            ->with('icon_name', M::any(), M::any())
-            ->once()
-            ->andReturn('fa-invalid-icon-name');
-        $request->shouldReceive('getValidated')
-            ->with('description', M::any(), M::any())
-            ->once()
-            ->andReturn('');
-        $request->shouldReceive('getValidated')
-            ->with('rank', M::any(), M::any())
-            ->once()
-            ->andReturn(123);
-        $request->shouldReceive('getValidated')
-            ->with('is_active', M::any(), M::any())
-            ->once()
-            ->andReturn(1);
-        $request->shouldReceive('getValidated')
-            ->with('is_used', M::any(), M::any())
-            ->once()
-            ->andReturn(true);
-        $request->shouldReceive('get')
-            ->with('is_in_iframe')
-            ->once()
-            ->andReturnFalse();
-        $request->shouldReceive('get')
-            ->with('is_in_new_tab')
-            ->once()
-            ->andReturnFalse();
-        $request->shouldReceive('getValidated')
-            ->with('link', M::any(), M::any())
-            ->andReturn('https://example.com/custom');
+            ->willReturn(false);
+        $request
+            ->expects(self::exactly(2))
+            ->method('get')
+            ->withConsecutive(['is_in_iframe'], ['is_in_new_tab'])
+            ->willReturn(false);
 
-        $this->expectException(InvalidServicePOSTDataException::class);
+        self::expectException(InvalidServicePOSTDataException::class);
 
         $this->service_postdata_builder->buildFromRequest($request, $project, $service, $response);
     }
@@ -365,61 +357,52 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         string $expected_label,
         string $expected_description,
     ): void {
-        $service = M::mock(Service::class);
-        $service->shouldReceive(
-            [
-                'getInternationalizedName' => 'SVN',
-                'getLabel' => 'plugin_svn:service_lbl_key',
-                'getInternationalizedDescription' => 'SVN plugin to manage multiple SVN repositories',
-                'getDescription' => 'plugin_svn:service_lbl_description',
-                'urlCanChange' => true,
-            ]
-        );
-        $project = M::mock(Project::class, ['getID' => 105, 'getMinimalRank' => 10]);
+        $service = $this->createMock(Service::class);
+        $service->method('getInternationalizedName')->willReturn('SVN');
+        $service->method('getLabel')->willReturn('plugin_svn:service_lbl_key');
+        $service->method('getInternationalizedDescription')->willReturn('SVN plugin to manage multiple SVN repositories');
+        $service->method('getDescription')->willReturn('plugin_svn:service_lbl_description');
+        $service->method('urlCanChange')->willReturn(true);
+        $project = $this->createMock(Project::class);
+        $project->method('getID')->willReturn(105);
+        $project->method('getMinimalRank')->willReturn(10);
 
-        $response = M::mock(BaseLayout::class);
-        $request  = M::mock(\HTTPRequest::class);
-        $request->shouldReceive('getValidated')
-            ->with('service_id', M::any(), M::any())
-            ->andReturn(12);
-        $request->shouldReceive('getValidated')
-            ->with('short_name', M::any(), M::any())
-            ->andReturn('');
-        $request->shouldReceive('exist')
+        $response = $this->createMock(BaseLayout::class);
+        $request  = $this->createMock(\HTTPRequest::class);
+        $request->method('getValidated')
+            ->withConsecutive(
+                ['service_id', self::anything(), self::anything()],
+                ['short_name', self::anything(), self::anything()],
+                ['label', self::anything(), self::anything()],
+                ['icon_name', self::anything(), self::anything()],
+                ['description', self::anything(), self::anything()],
+                ['rank', self::anything(), self::anything()],
+                ['is_active', self::anything(), self::anything()],
+                ['is_used', self::anything(), self::anything()],
+                ['link', self::anything(), self::anything()],
+            )
+            ->willReturnOnConsecutiveCalls(
+                12,
+                '',
+                $submitted_label,
+                'fa-bolt',
+                $submitted_description,
+                123,
+                1,
+                true,
+                'https://example.com/custom',
+            );
+        $request->method('exist')
             ->with('short_name')
-            ->andReturnFalse();
-        $request->shouldReceive('getValidated')
-            ->with('label', M::any(), M::any())
-            ->andReturn($submitted_label);
-        $request->shouldReceive('getValidated')
-            ->with('icon_name', M::any(), M::any())
-            ->andReturn('fa-bolt');
-        $request->shouldReceive('getValidated')
-            ->with('description', M::any(), M::any())
-            ->andReturn($submitted_description);
-        $request->shouldReceive('getValidated')
-            ->with('rank', M::any(), M::any())
-            ->andReturn(123);
-        $request->shouldReceive('getValidated')
-            ->with('is_active', M::any(), M::any())
-            ->andReturn(1);
-        $request->shouldReceive('getValidated')
-            ->with('is_used', M::any(), M::any())
-            ->andReturn(true);
-        $request->shouldReceive('get')
-            ->with('is_in_iframe')
-            ->andReturn(false);
-        $request->shouldReceive('get')
-            ->with('is_in_new_tab')
-            ->andReturnFalse();
-        $request->shouldReceive('getValidated')
-            ->with('link', M::any(), M::any())
-            ->andReturn('https://example.com/custom');
+            ->willReturn(false);
+        $request->method('get')
+            ->withConsecutive(['is_in_iframe'], ['is_in_new_tab'])
+            ->willReturn(false);
 
         $service = $this->service_postdata_builder->buildFromRequest($request, $project, $service, $response);
 
-        $this->assertEquals($expected_label, $service->getLabel());
-        $this->assertEquals($expected_description, $service->getDescription());
+        self::assertEquals($expected_label, $service->getLabel());
+        self::assertEquals($expected_description, $service->getDescription());
     }
 
     public static function provideLabelAndDescription(): array
@@ -431,7 +414,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'plugin_svn:service_lbl_key',
                 'plugin_svn:service_lbl_description',
             ],
-            'customised label' => [
+            'customised label'                 => [
                 'My SVN',
                 'SVN plugin to manage multiple SVN repositories',
                 'My SVN',
