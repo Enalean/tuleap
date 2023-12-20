@@ -22,83 +22,68 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\UGroups\Binding;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 
 final class RecursiveBoundUGroupsRefresherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var RecursiveBoundUGroupsRefresherTest */
-    private $recursive_refresher;
-    /**
-     * @var Mockery\MockInterface|BoundUGroupRefresher
-     */
-    private $refresher;
-    /**
-     * @var Mockery\MockInterface|\UGroupManager
-     */
-    private $ugroup_manager;
+    private RecursiveBoundUGroupsRefresher $recursive_refresher;
+    private BoundUGroupRefresher&MockObject $refresher;
+    private \UGroupManager&MockObject $ugroup_manager;
 
     protected function setUp(): void
     {
-        $this->refresher           = Mockery::mock(BoundUGroupRefresher::class);
-        $this->ugroup_manager      = Mockery::mock(\UGroupManager::class);
+        $this->refresher           = $this->createMock(BoundUGroupRefresher::class);
+        $this->ugroup_manager      = $this->createMock(\UGroupManager::class);
         $this->recursive_refresher = new RecursiveBoundUGroupsRefresher($this->refresher, $this->ugroup_manager);
     }
 
     public function testItRefreshesTheUGroup(): void
     {
-        $source      = Mockery::mock(\ProjectUGroup::class, ['getId' => 149]);
-        $destination = Mockery::mock(\ProjectUGroup::class, ['getId' => 371]);
-        $this->refresher->shouldReceive('refresh')
-            ->with($source, $destination)
-            ->once();
-        $this->ugroup_manager->shouldReceive('searchUGroupByBindingSource')
+        $source      = ProjectUGroupTestBuilder::aCustomUserGroup(149)->build();
+        $destination = ProjectUGroupTestBuilder::aCustomUserGroup(371)->build();
+        $this->refresher
+            ->expects(self::once())
+            ->method('refresh')
+            ->with($source, $destination);
+        $this->ugroup_manager
+            ->expects(self::once())
+            ->method('searchUGroupByBindingSource')
             ->with(371)
-            ->once()
-            ->andReturn([]);
+            ->willReturn([]);
 
         $this->recursive_refresher->refreshUGroupAndBoundUGroups($source, $destination);
     }
 
     public function testItRefreshesAllUGroupsBoundToTheGivenUGroup(): void
     {
-        $source      = Mockery::mock(\ProjectUGroup::class, ['getId' => 149]);
-        $destination = Mockery::mock(\ProjectUGroup::class, ['getId' => 371]);
-        $this->refresher->shouldReceive('refresh')
-            ->with($source, $destination)
-            ->once();
+        $source      = ProjectUGroupTestBuilder::aCustomUserGroup(149)->build();
+        $destination = ProjectUGroupTestBuilder::aCustomUserGroup(371)->build();
 
-        $first_bound_ugroup = Mockery::mock(\ProjectUGroup::class, ['getId' => 473]);
-        $this->ugroup_manager->shouldReceive('getById')
-            ->with(473)
-            ->once()
-            ->andReturn($first_bound_ugroup);
-        $second_bound_ugroup = Mockery::mock(\ProjectUGroup::class, ['getId' => 623]);
-        $this->ugroup_manager->shouldReceive('getById')
-            ->with(623)
-            ->once()
-            ->andReturn($second_bound_ugroup);
-        $this->ugroup_manager->shouldReceive('searchUGroupByBindingSource')
-            ->with(371)
-            ->once()
-            ->andReturn([['ugroup_id' => 473], ['ugroup_id' => 623]]);
+        $first_bound_ugroup  = ProjectUGroupTestBuilder::aCustomUserGroup(473)->build();
+        $second_bound_ugroup = ProjectUGroupTestBuilder::aCustomUserGroup(623)->build();
+        $this->ugroup_manager
+            ->expects(self::exactly(2))
+            ->method('getById')
+            ->withConsecutive([473], [623])
+            ->willReturnOnConsecutiveCalls(
+                $first_bound_ugroup,
+                $second_bound_ugroup
+            );
 
-        $this->refresher->shouldReceive('refresh')
-            ->with($destination, $first_bound_ugroup)
-            ->once();
-        $this->ugroup_manager->shouldReceive('searchUGroupByBindingSource')
-            ->with(473)
-            ->once()
-            ->andReturn([]);
-        $this->refresher->shouldReceive('refresh')
-            ->with($destination, $second_bound_ugroup)
-            ->once();
-        $this->ugroup_manager->shouldReceive('searchUGroupByBindingSource')
-            ->with(623)
-            ->once()
-            ->andReturn([]);
+        $this->refresher
+            ->expects(self::exactly(3))
+            ->method('refresh')
+            ->withConsecutive(
+                [$source, $destination],
+                [$destination, $first_bound_ugroup],
+                [$destination, $second_bound_ugroup]
+            );
+        $this->ugroup_manager
+            ->expects(self::exactly(3))
+            ->method('searchUGroupByBindingSource')
+            ->withConsecutive([371], [473], [623])
+            ->willReturnOnConsecutiveCalls([['ugroup_id' => 473], ['ugroup_id' => 623]], [], []);
 
         $this->recursive_refresher->refreshUGroupAndBoundUGroups($source, $destination);
     }
