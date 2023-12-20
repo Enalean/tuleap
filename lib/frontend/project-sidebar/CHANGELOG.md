@@ -1,10 +1,10 @@
 # Changelog
 
-## In development
+## 2.6.0
 
 * ✨ Now promoted items can have subitems. This allows for example to display Backlog » Releases » Sprint.
 * ✨ Now tools can have an info tooltip. A question mark icon will be displayed next to the tool name and the tooltip will display the information on hover.
-* 🚸 Promoted items (and subitems) have a larger target click area. If users click on the highlighted row, they are redirected to the item (before they have to explicitely click on the label). This behavior is consistent with the one for tools.
+* 🚸 Promoted items (and subitems) have a larger target click area. If users click on the highlighted row, they are redirected to the item (before they had to explicitly click on the label). This behavior is consistent with the one for tools.
 
 ## 2.5.0
 
