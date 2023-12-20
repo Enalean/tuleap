@@ -6,7 +6,6 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@tuleap/burningparrot-theme": "workspace:*",
     "@tuleap/date-helper": "workspace:*",
     "@tuleap/dom": "workspace:*",
     "@tuleap/fault": "workspace:*",

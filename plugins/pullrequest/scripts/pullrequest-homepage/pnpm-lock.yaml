@@ -5,9 +5,6 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
-  '@tuleap/burningparrot-theme':
-    specifier: workspace:*
-    version: link:../../../../src/themes/BurningParrot
   '@tuleap/date-helper':
     specifier: workspace:*
     version: link:../../../../lib/frontend/date-helper
