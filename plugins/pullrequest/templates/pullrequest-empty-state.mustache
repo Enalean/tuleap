@@ -1,0 +1,20 @@
+<section class="empty-state-page">
+    <h1 class="empty-state-title">
+        {{# dgettext }} tuleap-pullrequest | Nothing to see here {{/ dgettext }}
+    </h1>
+    <p class="empty-state-text">
+        {{# dgettext }} tuleap-pullrequest | There is no pull-request yet {{/ dgettext }}
+    </p>
+
+    <div class="create-pull-request-button-mount-point empty-state-action"
+         data-repository-id="{{ repository_id }}"
+         data-project-id="{{ project_id }}"
+         data-is-migrated-to-gerrit="{{ is_migrated_to_gerrit }}"
+        {{# parent_repository_presenter }}
+         data-parent-repository-id="{{ parent_repository_id }}"
+         data-parent-repository-name="{{ parent_repository_name }}"
+         data-parent-project-id="{{ parent_project_id }}"
+         data-user-can-see-parent-repository="{{ user_can_see_parent_repository }}"
+        {{/ parent_repository_presenter }}
+    ></div>
+</section>

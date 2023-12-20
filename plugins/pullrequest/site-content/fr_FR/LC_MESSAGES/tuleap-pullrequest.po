@@ -134,6 +134,9 @@ msgstr "Fusion"
 msgid "Merged"
 msgstr "Intégrée"
 
+msgid "Nothing to see here"
+msgstr "Rien à voir ici"
+
 msgid "Pull request"
 msgstr "Pull request"
 
@@ -155,6 +158,9 @@ msgstr "Cette pull request n'est plus accessible"
 
 msgid "There are broken pull-requests in this repository."
 msgstr "Il y a des pull-requests cassées dans ce dépôt."
+
+msgid "There is no pull-request yet"
+msgstr "Il n'y a pas encore de pull-request"
 
 msgid "You are not allowed to edit a comment from another user"
 msgstr ""

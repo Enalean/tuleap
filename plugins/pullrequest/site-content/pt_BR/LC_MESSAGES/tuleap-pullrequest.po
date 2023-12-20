@@ -116,6 +116,9 @@ msgstr ""
 msgid "Merged"
 msgstr ""
 
+msgid "Nothing to see here"
+msgstr ""
+
 msgid "Pull request"
 msgstr ""
 
@@ -136,6 +139,9 @@ msgid "The pull request is not accessible anymore"
 msgstr ""
 
 msgid "There are broken pull-requests in this repository."
+msgstr ""
+
+msgid "There is no pull-request yet"
 msgstr ""
 
 msgid "You are not allowed to edit a comment from another user"

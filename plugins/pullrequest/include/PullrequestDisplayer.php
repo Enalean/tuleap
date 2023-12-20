@@ -32,11 +32,12 @@ use Tuleap\Request\NotFoundException;
 class PullrequestDisplayer
 {
     public function __construct(
-        private Factory $factory,
-        private TemplateRenderer $template_renderer,
-        private MergeSettingRetriever $merge_setting_retriever,
-        private GitRepositoryHeaderDisplayer $header_displayer,
-        private GitRepositoryFactory $repository_factory,
+        private readonly Factory $factory,
+        private readonly TemplateRenderer $template_renderer,
+        private readonly MergeSettingRetriever $merge_setting_retriever,
+        private readonly GitRepositoryHeaderDisplayer $header_displayer,
+        private readonly GitRepositoryFactory $repository_factory,
+        private readonly PullRequestEmptyStatePresenterBuilder $empty_state_presenter_builder,
     ) {
     }
 
@@ -54,24 +55,31 @@ class PullrequestDisplayer
 
         $app_to_load = PullRequestApp::fromRequest($request);
 
-        PullRequestAppsLoader::loadPullRequestApps(
-            $layout,
-            $app_to_load,
-        );
+        if ($app_to_load === PullRequestApp::HOMEPAGE_APP && ! $nb_pull_requests->isThereAtLeastOnePullRequest()) {
+            $presenter = $this->empty_state_presenter_builder->build(
+                $repository,
+                $user,
+            );
+        } else {
+            PullRequestAppsLoader::loadPullRequestApps(
+                $layout,
+                $app_to_load,
+            );
+
+            $presenter = new PullRequestPresenter(
+                $repository,
+                $user,
+                $nb_pull_requests,
+                $this->merge_setting_retriever->getMergeSettingForRepository($repository),
+                $app_to_load
+            );
+        }
 
         $this->header_displayer->display(
             $request,
             $layout,
             $user,
             $repository
-        );
-
-        $presenter = new PullRequestPresenter(
-            $repository,
-            $user,
-            $nb_pull_requests,
-            $this->merge_setting_retriever->getMergeSettingForRepository($repository),
-            $app_to_load
         );
 
         $this->template_renderer->renderToPage($presenter->getTemplateName(), $presenter);
