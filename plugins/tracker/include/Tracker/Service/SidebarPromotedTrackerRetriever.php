@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Service;
 
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Layout\PromotedItemQuickLinkPresenter;
 use Tuleap\Layout\SidebarPromotedItemPresenter;
 use Tuleap\Tracker\RetrievePromotedTrackers;
@@ -32,7 +31,6 @@ final class SidebarPromotedTrackerRetriever
     public function __construct(
         private readonly RetrievePromotedTrackers $retriever,
         private readonly PromotedTrackerConfigurationChecker $configuration_checker,
-        private readonly EventDispatcherInterface $dispatcher,
     ) {
     }
 
@@ -47,22 +45,17 @@ final class SidebarPromotedTrackerRetriever
 
         $trackers_in_sidebar = [];
         foreach ($this->retriever->getTrackers($user, $project) as $tracker) {
-            $can_be_promoted = $this->dispatcher
-                ->dispatch(new TrackerCanBePromotedInSidebar($tracker))
-                ->canBePromoted();
-            if ($can_be_promoted) {
-                $trackers_in_sidebar[] = new SidebarPromotedItemPresenter(
-                    $tracker->getUri(),
-                    $tracker->getName(),
-                    $tracker->getDescription(),
-                    $tracker->getPromotedTrackerId() === $active_promoted_item_id,
-                    new PromotedItemQuickLinkPresenter(
-                        $tracker->getSubmitUrl(),
-                        $tracker->getSubmitLabel(),
-                    ),
-                    []
-                );
-            }
+            $trackers_in_sidebar[] = new SidebarPromotedItemPresenter(
+                $tracker->getUri(),
+                $tracker->getName(),
+                $tracker->getDescription(),
+                $tracker->getPromotedTrackerId() === $active_promoted_item_id,
+                new PromotedItemQuickLinkPresenter(
+                    $tracker->getSubmitUrl(),
+                    $tracker->getSubmitLabel(),
+                ),
+                []
+            );
         }
 
         return $trackers_in_sidebar;
