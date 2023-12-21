@@ -56,6 +56,7 @@ onMounted(() => {
 <style scoped lang="scss">
 .pull-request-card-summary {
     display: flex;
+    flex: 1;
     flex-direction: column;
     gap: var(--tlp-small-spacing);
 }
