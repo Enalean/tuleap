@@ -25,6 +25,7 @@
         data-test="pull-request-card"
     >
         <pull-request-summary v-bind:pull_request="pull_request" />
+        <pull-request-reviewers v-bind:pull_request="pull_request" />
         <pull-request-broken-badge v-bind:pull_request="pull_request" />
         <pull-request-labels v-bind:pull_request="pull_request" />
     </a>
@@ -39,6 +40,7 @@ import { BASE_URL } from "../../../injection-symbols";
 import PullRequestBrokenBadge from "./PullRequestBrokenBadge.vue";
 import PullRequestSummary from "./PullRequestSummary.vue";
 import PullRequestLabels from "./PullRequestLabels.vue";
+import PullRequestReviewers from "./PullRequestReviewers.vue";
 
 const props = defineProps<{
     pull_request: PullRequest;
