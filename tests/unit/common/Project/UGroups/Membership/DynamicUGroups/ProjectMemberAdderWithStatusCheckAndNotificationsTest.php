@@ -23,59 +23,44 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\UGroups\Membership\DynamicUGroups;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Mail\MailFactory;
 use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-class ProjectMemberAdderWithStatusCheckAndNotificationsTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProjectMemberAdderWithStatusCheckAndNotificationsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
     use ForgeConfigSandbox;
     use GlobalResponseMock;
 
-    /**
-     * @var M\MockInterface|AddProjectMember
-     */
-    private $add_project_member;
-    /**
-     * @var \BaseLanguage|M\MockInterface
-     */
-    private $base_language;
-    /**
-     * @var M\MockInterface|MailFactory
-     */
-    private $mail_factory;
-    /**
-     * @var ProjectMemberAdderWithStatusCheckAndNotifications
-     */
-    private $project_member_adder;
-    /**
-     * @var \PFUser
-     */
-    private $an_active_user;
-    /**
-     * @var \Project
-     */
-    private $an_active_project;
+    private AddProjectMember&MockObject $add_project_member;
+    private \BaseLanguage&MockObject $base_language;
+    private MailFactory&MockObject $mail_factory;
+    private ProjectMemberAdderWithStatusCheckAndNotifications $project_member_adder;
+    private \PFUser $an_active_user;
+    private \Project $an_active_project;
     private \PFUser $project_admin;
 
     protected function setUp(): void
     {
-        $this->add_project_member = M::mock(AddProjectMember::class);
-        $this->base_language      = M::mock(\BaseLanguage::class);
-        $this->mail_factory       = M::mock(MailFactory::class);
+        $this->add_project_member = $this->createMock(AddProjectMember::class);
+        $this->base_language      = $this->createMock(\BaseLanguage::class);
+        $this->mail_factory       = $this->createMock(MailFactory::class);
         \ForgeConfig::set('sys_noreply', 'noreply@tuleap.example.com');
         \ForgeConfig::set(\Tuleap\Config\ConfigurationVariables::NAME, 'Tuleap');
         \ForgeConfig::set('sys_email_admin', 'admin@tuleap.example.com');
 
         $this->an_active_user    = new \PFUser(['user_id' => 101, 'user_name' => 'foo', 'status' => \PFUser::STATUS_ACTIVE, 'language_id' => \BaseLanguage::DEFAULT_LANG, 'email' => 'foo@example.com']);
-        $this->an_active_project = M::mock(\Project::class, ['getID' => 202, 'getPublicName' => 'A project name', 'getUnixName' => 'a-project-name']);
+        $this->an_active_project = ProjectTestBuilder::aProject()
+            ->withId(202)
+            ->withPublicName('A project name')
+            ->withUnixName('a-project-name')
+            ->build();
 
         $this->project_admin = UserTestBuilder::buildWithDefaults();
 
@@ -88,19 +73,19 @@ class ProjectMemberAdderWithStatusCheckAndNotificationsTest extends \Tuleap\Test
 
     public function testItAddsAndNotifyActiveUsers(): void
     {
-        $this->base_language->shouldReceive('getOverridableText')->once()->andReturn('A Subject');
-        $this->base_language->shouldReceive('getContent')->once()->andReturn(__DIR__ . '/_fixtures/empty.php');
+        $this->base_language->expects(self::once())->method('getOverridableText')->willReturn('A Subject');
+        $this->base_language->expects(self::once())->method('getContent')->willReturn(__DIR__ . '/_fixtures/empty.php');
 
-        $mail = M::mock(\Codendi_Mail::class);
-        $mail->shouldReceive('setTo')->with('foo@example.com')->once();
-        $mail->shouldReceive('setFrom')->once();
-        $mail->shouldReceive('setSubject')->with('A Subject')->once();
-        $mail->shouldReceive('setBodyText')->with('A body')->once();
-        $mail->shouldReceive('send')->once()->andReturnTrue();
+        $mail = $this->createMock(\Codendi_Mail::class);
+        $mail->expects(self::once())->method('setTo')->with('foo@example.com');
+        $mail->expects(self::once())->method('setFrom');
+        $mail->expects(self::once())->method('setSubject')->with('A Subject');
+        $mail->expects(self::once())->method('setBodyText')->with('A body');
+        $mail->expects(self::once())->method('send')->willReturn(true);
 
-        $this->mail_factory->shouldReceive('getMail')->once()->andReturn($mail);
+        $this->mail_factory->expects(self::once())->method('getMail')->willReturn($mail);
 
-        $this->add_project_member->shouldReceive('addProjectMember')->with($this->an_active_user, $this->an_active_project, $this->project_admin)->once();
+        $this->add_project_member->expects(self::once())->method('addProjectMember')->with($this->an_active_user, $this->an_active_project, $this->project_admin);
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(\Feedback::INFO);
 
@@ -111,15 +96,19 @@ class ProjectMemberAdderWithStatusCheckAndNotificationsTest extends \Tuleap\Test
     {
         $this->an_active_user = new \PFUser(['user_id' => 101, 'user_name' => 'foo', 'status' => \PFUser::STATUS_RESTRICTED, 'language_id' => \BaseLanguage::DEFAULT_LANG, 'email' => 'foo@example.com']);
 
-        $this->base_language->shouldReceive('getOverridableText')->once()->andReturn('A Subject');
-        $this->base_language->shouldReceive('getContent')->once()->andReturn(__DIR__ . '/_fixtures/empty.php');
+        $this->base_language->expects(self::once())->method('getOverridableText')->willReturn('A Subject');
+        $this->base_language->expects(self::once())->method('getContent')->willReturn(__DIR__ . '/_fixtures/empty.php');
 
-        $mail = M::spy(\Codendi_Mail::class);
-        $mail->shouldReceive('send')->once()->andReturnTrue();
+        $mail = $this->createMock(\Codendi_Mail::class);
+        $mail->expects(self::once())->method('setTo');
+        $mail->expects(self::once())->method('setFrom');
+        $mail->expects(self::once())->method('setSubject');
+        $mail->expects(self::once())->method('setBodyText');
+        $mail->expects(self::once())->method('send')->willReturn(true);
 
-        $this->mail_factory->shouldReceive('getMail')->once()->andReturn($mail);
+        $this->mail_factory->expects(self::once())->method('getMail')->willReturn($mail);
 
-        $this->add_project_member->shouldReceive('addProjectMember')->with($this->an_active_user, $this->an_active_project, $this->project_admin)->once();
+        $this->add_project_member->expects(self::once())->method('addProjectMember')->with($this->an_active_user, $this->an_active_project, $this->project_admin);
 
         $this->project_member_adder->addProjectMemberWithFeedback($this->an_active_user, $this->an_active_project, $this->project_admin);
     }
@@ -128,7 +117,7 @@ class ProjectMemberAdderWithStatusCheckAndNotificationsTest extends \Tuleap\Test
     {
         $this->an_active_user = new \PFUser(['user_id' => 101, 'user_name' => 'foo', 'status' => \PFUser::STATUS_RESTRICTED, 'language_id' => \BaseLanguage::DEFAULT_LANG, 'email' => '']);
 
-        $this->add_project_member->shouldReceive('addProjectMember')->with($this->an_active_user, $this->an_active_project, $this->project_admin)->once();
+        $this->add_project_member->expects(self::once())->method('addProjectMember')->with($this->an_active_user, $this->an_active_project, $this->project_admin);
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(\Feedback::ERROR);
 
@@ -155,7 +144,7 @@ class ProjectMemberAdderWithStatusCheckAndNotificationsTest extends \Tuleap\Test
 
     public function testItDisplaysAnErrorWhenRestrictedUserIsAddedToWoRestrictedProject(): void
     {
-        $this->add_project_member->shouldReceive('addProjectMember')->andThrow(new CannotAddRestrictedUserToProjectNotAllowingRestricted($this->an_active_user, $this->an_active_project));
+        $this->add_project_member->method('addProjectMember')->willThrowException(new CannotAddRestrictedUserToProjectNotAllowingRestricted($this->an_active_user, $this->an_active_project));
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(\Feedback::ERROR);
 
@@ -164,7 +153,7 @@ class ProjectMemberAdderWithStatusCheckAndNotificationsTest extends \Tuleap\Test
 
     public function testItDisplaysAnErrorWhenUserIsAlreadyMember(): void
     {
-        $this->add_project_member->shouldReceive('addProjectMember')->andThrow(new AlreadyProjectMemberException());
+        $this->add_project_member->method('addProjectMember')->willThrowException(new AlreadyProjectMemberException());
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(\Feedback::ERROR);
 
