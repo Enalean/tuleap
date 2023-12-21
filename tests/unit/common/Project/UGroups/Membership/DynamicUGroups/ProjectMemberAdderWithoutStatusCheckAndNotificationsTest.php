@@ -23,41 +23,35 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\UGroups\Membership\DynamicUGroups;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ProjectMemberAdderWithoutStatusCheckAndNotificationsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
     use ForgeConfigSandbox;
     use GlobalResponseMock;
 
-    /**
-     * @var M\MockInterface|AddProjectMember
-     */
-    private $add_project_member;
-    /**
-     * @var ProjectMemberAdderWithStatusCheckAndNotifications
-     */
-    private $project_member_adder;
-    /**
-     * @var \Project
-     */
-    private $an_active_project;
+    private AddProjectMember&MockObject $add_project_member;
+    private ProjectMemberAdderWithoutStatusCheckAndNotifications $project_member_adder;
+    private \Project $an_active_project;
     private \PFUser $project_admin;
 
     protected function setUp(): void
     {
-        $this->add_project_member = M::mock(AddProjectMember::class);
+        $this->add_project_member = $this->createMock(AddProjectMember::class);
         $this->project_admin      = UserTestBuilder::buildWithDefaults();
 
-        $this->an_active_project = M::mock(\Project::class, ['getID' => 202, 'getPublicName' => 'A project name', 'getUnixName' => 'a-project-name']);
+        $this->an_active_project = ProjectTestBuilder::aProject()
+            ->withId(202)
+            ->withPublicName('A project name')
+            ->withUnixName('a-project-name')
+            ->build();
 
         $this->project_member_adder = new ProjectMemberAdderWithoutStatusCheckAndNotifications($this->add_project_member);
     }
@@ -65,7 +59,7 @@ final class ProjectMemberAdderWithoutStatusCheckAndNotificationsTest extends \Tu
     public function testItAddsActiveUsers(): void
     {
         $user = new \PFUser(['user_id' => 101, 'user_name' => 'foo', 'status' => \PFUser::STATUS_ACTIVE, 'language_id' => \BaseLanguage::DEFAULT_LANG, 'email' => 'foo@example.com']);
-        $this->add_project_member->shouldReceive('addProjectMember')->with($user, $this->an_active_project, $this->project_admin)->once();
+        $this->add_project_member->expects(self::once())->method('addProjectMember')->with($user, $this->an_active_project, $this->project_admin);
 
         $GLOBALS['Response']->expects(self::never())->method('addFeedback');
 
@@ -75,7 +69,7 @@ final class ProjectMemberAdderWithoutStatusCheckAndNotificationsTest extends \Tu
     public function testItDisplaysAnErrorWhenRestrictedUserIsAddedToWoRestrictedProject(): void
     {
         $user = new \PFUser(['user_id' => 101, 'user_name' => 'foo', 'status' => \PFUser::STATUS_ACTIVE, 'language_id' => \BaseLanguage::DEFAULT_LANG, 'email' => 'foo@example.com']);
-        $this->add_project_member->shouldReceive('addProjectMember')->andThrow(new CannotAddRestrictedUserToProjectNotAllowingRestricted($user, $this->an_active_project));
+        $this->add_project_member->method('addProjectMember')->willThrowException(new CannotAddRestrictedUserToProjectNotAllowingRestricted($user, $this->an_active_project));
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(\Feedback::ERROR);
 
@@ -85,7 +79,7 @@ final class ProjectMemberAdderWithoutStatusCheckAndNotificationsTest extends \Tu
     public function testItDisplaysAnErrorWhenUserIsAlreadyMember(): void
     {
         $user = new \PFUser(['user_id' => 101, 'user_name' => 'foo', 'status' => \PFUser::STATUS_ACTIVE, 'language_id' => \BaseLanguage::DEFAULT_LANG, 'email' => 'foo@example.com']);
-        $this->add_project_member->shouldReceive('addProjectMember')->andThrow(new AlreadyProjectMemberException());
+        $this->add_project_member->method('addProjectMember')->willThrowException(new AlreadyProjectMemberException());
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(\Feedback::ERROR);
 
