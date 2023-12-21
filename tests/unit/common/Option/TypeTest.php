@@ -115,6 +115,34 @@ final class TypeTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertTrue($test->expectation->isNothing());
     }
 
+    public function testOrElseCanMapValueToADifferentTypeThanTheInitialOption(): void
+    {
+        $option = Option::nothing(\Psl\Type\string());
+
+        $test = new class {
+            /** @var Option<string> */
+            public Option $expectation;
+        };
+
+        $test->expectation = $option->orElse(static fn() => Option::fromValue('observe'));
+        self::assertTrue($test->expectation->isValue());
+        self::assertSame('observe', $test->expectation->unwrapOr(null));
+    }
+
+    public function testOrElseCanMapNothingToADifferentTypeThanTheInitialOption(): void
+    {
+        $option = Option::nothing(\Psl\Type\string());
+
+        $test = new class {
+            /** @var Option<int|string> */
+            public Option $expectation;
+        };
+
+        $test->expectation = $option->orElse(static fn() => Option::fromValue(55));
+        self::assertTrue($test->expectation->isValue());
+        self::assertSame(55, $test->expectation->unwrapOr(null));
+    }
+
     public function testMapOrCanMapToADifferentTypeThanTheInitialOption(): void
     {
         $option = Option::fromValue('33');

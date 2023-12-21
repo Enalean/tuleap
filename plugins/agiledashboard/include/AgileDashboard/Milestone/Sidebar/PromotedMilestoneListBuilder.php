@@ -23,8 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Milestone\Sidebar;
 
 use PFUser;
+use Planning_ArtifactMilestone;
 use Planning_VirtualTopMilestone;
 use Tracker_ArtifactFactory;
+use Tuleap\Option\Option;
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class PromotedMilestoneListBuilder implements BuildPromotedMilestoneList
 {
@@ -45,27 +48,58 @@ final class PromotedMilestoneListBuilder implements BuildPromotedMilestoneList
 
         $milestones = new PromotedMilestoneList();
         foreach ($milestones_rows as $row) {
-            if ($this->isListSizeLimitReached($milestones)) {
+            if ($milestones->isListSizeLimitReached()) {
                 return $milestones;
             }
 
-            if (! $milestones->containsMilestone((int) $row['parent_id'])) {
-                $artifact = $this->instantiateArtifactFromRow($row);
-                $milestones->addMilestone($this->promoted_milestone_builder->build($artifact, $user, $project));
-            }
-
-            $milestone = $milestones->getMilestone((int) $row['parent_id']);
-            if ($this->isSubmilestoneDefined($row['submilestone_id']) && $milestone !== null) {
-                $sub_artifact = $this->instantiateSubArtifactFromRow($row);
-                $artifact_id  = $milestone->getMilestone()->getArtifactId();
-                $milestones->addSubMilestoneIntoMilestone($artifact_id, $this->promoted_milestone_builder->build($sub_artifact, $user, $project));
-            }
+            $milestones
+                ->getMilestone((int) $row['parent_id'])
+                ->orElse(fn () => $this->createMilestone($row, $user, $project, $milestones))
+                ->apply(fn (Planning_ArtifactMilestone $parent_milestone) => $this->createSubMilestone($parent_milestone, $row, $user, $project, $milestones));
         }
 
         return $milestones;
     }
 
-    private function instantiateArtifactFromRow(array $row): \Tuleap\Tracker\Artifact\Artifact
+    /**
+     * @return Option<Planning_ArtifactMilestone>
+     */
+    private function createMilestone(
+        array $row,
+        PFUser $user,
+        \Project $project,
+        PromotedMilestoneList $milestones,
+    ): Option {
+        $artifact = $this->instantiateArtifactFromRow($row);
+        $option   = $this->promoted_milestone_builder->build($artifact, $user, $project);
+        $option->apply($milestones->addMilestone(...));
+
+        return $option;
+    }
+
+    private function createSubMilestone(
+        Planning_ArtifactMilestone $parent_milestone,
+        array $row,
+        PFUser $user,
+        \Project $project,
+        PromotedMilestoneList $milestones,
+    ): void {
+        if ($milestones->isListSizeLimitReached()) {
+            return;
+        }
+
+        $this->instantiateSubArtifactFromRow($row)
+            ->andThen(
+                fn (Artifact $sub_artifact) =>
+                $this->promoted_milestone_builder->build($sub_artifact, $user, $project)
+            )
+            ->apply(
+                fn (Planning_ArtifactMilestone $sub_milestone) =>
+                    $milestones->addSubMilestone($parent_milestone, $sub_milestone)
+            );
+    }
+
+    private function instantiateArtifactFromRow(array $row): Artifact
     {
         return $this->artifact_factory->getInstanceFromRow([
             'id'                       => $row['parent_id'],
@@ -78,26 +112,25 @@ final class PromotedMilestoneListBuilder implements BuildPromotedMilestoneList
         ]);
     }
 
-    private function instantiateSubArtifactFromRow(array $row): \Tuleap\Tracker\Artifact\Artifact
+    /**
+     * @return Option<Artifact>
+     */
+    private function instantiateSubArtifactFromRow(array $row): Option
     {
-        return $this->artifact_factory->getInstanceFromRow([
-            'id'                       => $row['submilestone_id'],
-            'tracker_id'               => $row['submilestone_tracker'],
-            'last_changeset_id'        => $row['submilestone_changeset'],
-            'submitted_by'             => $row['submilestone_submitted_by'],
-            'submitted_on'             => $row['submilestone_submitted_on'],
-            'use_artifact_permissions' => $row['submilestone_use_artifact_permissions'],
-            'per_tracker_artifact_id'  => $row['submilestone_per_tracker_artifact_id'],
-        ]);
-    }
+        if (! $row['submilestone_id']) {
+            return Option::nothing(Artifact::class);
+        }
 
-    private function isSubmilestoneDefined(?int $submilestone_id): bool
-    {
-        return $submilestone_id !== null;
-    }
-
-    private function isListSizeLimitReached(PromotedMilestoneList $milestones): bool
-    {
-        return $milestones->getListSize() === PromotedMilestoneList::MAX_ITEMS;
+        return Option::fromValue(
+            $this->artifact_factory->getInstanceFromRow([
+                'id'                       => $row['submilestone_id'],
+                'tracker_id'               => $row['submilestone_tracker'],
+                'last_changeset_id'        => $row['submilestone_changeset'],
+                'submitted_by'             => $row['submilestone_submitted_by'],
+                'submitted_on'             => $row['submilestone_submitted_on'],
+                'use_artifact_permissions' => $row['submilestone_use_artifact_permissions'],
+                'per_tracker_artifact_id'  => $row['submilestone_per_tracker_artifact_id'],
+            ])
+        );
     }
 }

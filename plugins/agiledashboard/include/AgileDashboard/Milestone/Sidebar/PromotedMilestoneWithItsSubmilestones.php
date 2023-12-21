@@ -20,34 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AgileDashboard\Milestone\Sidebar;
+namespace Tuleap\AgileDashboard\AgileDashboard\Milestone\Sidebar;
 
 use Planning_ArtifactMilestone;
-use Tuleap\Option\Option;
 
-final class PromotedMilestone
+final class PromotedMilestoneWithItsSubmilestones
 {
     /**
      * @var Planning_ArtifactMilestone[]
      */
-    private array $sub_milestone_list = [];
+    private readonly array $sub_milestone_list;
 
-    /**
-     * @psalm-internal Tuleap\AgileDashboard\Milestone\Sidebar
-     * @internal Promoted milestone should only exist inside a ListContext @see Tuleap\AgileDashboard\Milestone\Sidebar\PromotedMilestoneList
-     */
-    public function __construct(private readonly Planning_ArtifactMilestone $milestone)
-    {
-    }
-
-    /**
-     * @param Option<Planning_ArtifactMilestone> $promoted_sub_milestone
-     */
-    public function addPromotedSubMilestone(Option $promoted_sub_milestone): void
-    {
-        $promoted_sub_milestone->apply(function ($sub_milestone) {
-            $this->sub_milestone_list[] = $sub_milestone;
-        });
+    public function __construct(
+        private readonly Planning_ArtifactMilestone $milestone,
+        Planning_ArtifactMilestone ...$sub_milestone_list,
+    ) {
+        $this->sub_milestone_list = $sub_milestone_list;
     }
 
     /**

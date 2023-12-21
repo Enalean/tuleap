@@ -153,6 +153,40 @@ final class OptionTest extends TestCase
         self::assertSame($expected_error, $result);
     }
 
+    public function testValueOrElseReturnsValue(): void
+    {
+        $value                   = new \stdClass();
+        $has_called_map_function = false;
+
+        $option     = Option::fromValue($value);
+        $new_option = $option->orElse(static function () use (&$has_called_map_function): Option {
+            $has_called_map_function = true;
+            return Option::fromValue('callback');
+        });
+
+        self::assertSame($option, $new_option);
+        self::assertFalse($has_called_map_function);
+        self::assertTrue($new_option->isValue());
+        self::assertNotSame('callback', $new_option->unwrapOr('default'));
+    }
+
+    public function testNothingOrElseReturnsDifferentOption(): void
+    {
+        $value                   = new \stdClass();
+        $has_called_map_function = false;
+
+        $option     = Option::nothing(\stdClass::class);
+        $new_option = $option->orElse(static function () use (&$has_called_map_function): Option {
+            $has_called_map_function = true;
+            return Option::fromValue('callback');
+        });
+
+        self::assertNotSame($option, $new_option);
+        self::assertTrue($has_called_map_function);
+        self::assertTrue($new_option->isValue());
+        self::assertSame('callback', $new_option->unwrapOr('default'));
+    }
+
     public function testValueAndThenReturnsDifferentOption(): void
     {
         $value             = new \stdClass();
