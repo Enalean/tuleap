@@ -29,7 +29,6 @@ use Rule_Email;
 use Tuleap\SVN\Notifications\CannotAddUgroupsNotificationException;
 use Tuleap\SVN\Notifications\CannotAddUsersNotificationException;
 use Tuleap\SVN\Notifications\NotificationListBuilder;
-use Tuleap\SVN\Notifications\NotificationsEmailsBuilder;
 use Tuleap\SVN\Repository\HookConfig;
 use Tuleap\SVN\Repository\HookConfigRetriever;
 use Tuleap\SVN\Repository\HookConfigUpdator;
@@ -46,17 +45,13 @@ use Valid_String;
 
 class AdminController
 {
-    private $repository_manager;
-    private $mail_header_manager;
-    private $mail_notification_manager;
+    private RepositoryManager $repository_manager;
+    private MailHeaderManager $mail_header_manager;
+    private MailNotificationManager $mail_notification_manager;
     /**
      * @var NotificationListBuilder
      */
     private $notification_list_builder;
-    /**
-     * @var NotificationsEmailsBuilder
-     */
-    private $emails_builder;
     /**
      * @var UserManager
      */
@@ -84,7 +79,6 @@ class AdminController
         MailNotificationManager $mail_notification_manager,
         LoggerInterface $logger,
         NotificationListBuilder $notification_list_builder,
-        NotificationsEmailsBuilder $emails_builder,
         UserManager $user_manager,
         UGroupManager $ugroup_manager,
         HookConfigUpdator $hook_config_updator,
@@ -96,7 +90,6 @@ class AdminController
         $this->mail_notification_manager = $mail_notification_manager;
         $this->logger                    = $logger;
         $this->notification_list_builder = $notification_list_builder;
-        $this->emails_builder            = $emails_builder;
         $this->user_manager              = $user_manager;
         $this->ugroup_manager            = $ugroup_manager;
         $this->hook_config_updator       = $hook_config_updator;
@@ -109,7 +102,7 @@ class AdminController
         return new CSRFSynchronizerToken(SVN_BASE_URL . "/?group_id=" . $project->getid() . '&repo_id=' . $repository->getId() . "&action=display-mail-notification");
     }
 
-    public function displayMailNotification(ServiceSvn $service, HTTPRequest $request)
+    public function displayMailNotification(ServiceSvn $service, HTTPRequest $request): void
     {
         $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
 
@@ -130,7 +123,7 @@ class AdminController
                 $token,
                 $title,
                 $mail_header,
-                $this->notification_list_builder->getNotificationsPresenter($notifications_details, $this->emails_builder)
+                $this->notification_list_builder->getNotificationsPresenter($notifications_details)
             ),
             '',
             $repository,
