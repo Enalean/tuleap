@@ -22,49 +22,37 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\UGroups\Binding;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 
 final class BoundUGroupRefresherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
     use GlobalResponseMock;
 
-    /** @var BoundUGroupRefresher */
-    private $refresher;
-    /**
-     * @var Mockery\MockInterface|\UGroupUserDao
-     */
-    private $ugroup_user_dao;
-    /**
-     * @var Mockery\MockInterface|\UGroupManager
-     */
-    private $ugroup_manager;
+    private BoundUGroupRefresher $refresher;
+    private \UGroupUserDao&MockObject $ugroup_user_dao;
+    private \UGroupManager&MockObject $ugroup_manager;
 
     protected function setUp(): void
     {
-        $this->ugroup_user_dao = Mockery::mock(\UGroupUserDao::class);
-        $this->ugroup_manager  = Mockery::mock(\UGroupManager::class);
+        $this->ugroup_user_dao = $this->createMock(\UGroupUserDao::class);
+        $this->ugroup_manager  = $this->createMock(\UGroupManager::class);
         $this->refresher       = new BoundUGroupRefresher($this->ugroup_manager, $this->ugroup_user_dao);
-
-        $this->ugroup_manager->shouldReceive('isUpdateUsersAllowed')
-            ->with(371)
-            ->andReturnTrue()
-            ->byDefault();
     }
 
     public function testRefreshThrowsWhenUpdateOfMembersIsNotAllowed(): void
     {
-        $source      = Mockery::mock(\ProjectUGroup::class, ['getId' => 149]);
-        $destination = Mockery::mock(\ProjectUGroup::class, ['getId' => 371]);
+        $source      = ProjectUGroupTestBuilder::aCustomUserGroup(149)->build();
+        $destination = ProjectUGroupTestBuilder::aCustomUserGroup(371)->build();
 
-        $this->ugroup_manager->shouldReceive('isUpdateUsersAllowed')
+        $this->ugroup_manager
+            ->expects(self::once())
+            ->method('isUpdateUsersAllowed')
             ->with(371)
-            ->once()
-            ->andReturnFalse();
+            ->willReturn(false);
 
         $GLOBALS['Language']->method('getText')
             ->willReturn('Error message');
@@ -72,25 +60,32 @@ final class BoundUGroupRefresherTest extends \Tuleap\Test\PHPUnit\TestCase
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')
             ->with('warning', 'Error message');
 
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Error message');
+        self::expectException(\Exception::class);
+        self::expectExceptionMessage('Error message');
 
         $this->refresher->refresh($source, $destination);
     }
 
     public function testRefreshClearsAndDuplicatesUGroupMembers(): void
     {
-        $source      = Mockery::mock(\ProjectUGroup::class, ['getId' => 149]);
-        $destination = Mockery::mock(\ProjectUGroup::class, ['getId' => 371]);
+        $source      = ProjectUGroupTestBuilder::aCustomUserGroup(149)->build();
+        $destination = ProjectUGroupTestBuilder::aCustomUserGroup(371)->build();
 
-        $this->ugroup_user_dao->shouldReceive('resetUgroupUserList')
+        $this->ugroup_manager
+            ->expects(self::once())
+            ->method('isUpdateUsersAllowed')
             ->with(371)
-            ->once()
-            ->andReturnTrue();
-        $this->ugroup_user_dao->shouldReceive('cloneUgroup')
+            ->willReturn(true);
+        $this->ugroup_user_dao
+            ->expects(self::once())
+            ->method('resetUgroupUserList')
+            ->with(371)
+            ->willReturn(true);
+        $this->ugroup_user_dao
+            ->expects(self::once())
+            ->method('cloneUgroup')
             ->with(149, 371)
-            ->once()
-            ->andReturnTrue();
+            ->willReturn(true);
 
         $this->refresher->refresh($source, $destination);
     }
