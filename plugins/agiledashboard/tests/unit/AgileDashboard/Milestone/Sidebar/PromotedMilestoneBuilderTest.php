@@ -125,6 +125,34 @@ final class PromotedMilestoneBuilderTest extends TestCase
         self::assertTrue($this->builder->build($this->artifact, $this->user, $this->project)->isNothing());
     }
 
+    /**
+     * @testWith [true, false]
+     *           [false, true]
+     *           [true, true]
+     */
+    public function testItReturnsNothingOptionWhenStartDateOrEndDateAreZero(bool $start_date_zero, bool $end_date_zero): void
+    {
+        Tracker_Semantic_Title::setInstance(new Tracker_Semantic_Title($this->tracker, $this->title_field), $this->tracker);
+
+        $this->timeframe_builder->method('getSemantic')->willReturn(
+            new SemanticTimeframe(
+                $this->tracker,
+                new TimeframeWithEndDate($this->start_field, $this->end_field)
+            )
+        );
+        $this->changeset->setFieldValue($this->start_field, ChangesetValueDateTestBuilder::aValue(
+            1,
+            $this->changeset,
+            $this->start_field
+        )->withTimestamp($start_date_zero ? 0 : (new DateTime('-1day'))->getTimestamp())->build());
+        $this->changeset->setFieldValue($this->end_field, ChangesetValueDateTestBuilder::aValue(
+            2,
+            $this->changeset,
+            $this->end_field
+        )->withTimestamp($end_date_zero ? 0 : (new DateTime('+1day'))->getTimestamp())->build());
+        self::assertTrue($this->builder->build($this->artifact, $this->user, $this->project)->isNothing());
+    }
+
     public function testItReturnsNothingOptionWhenTimeFrameSemanticIsNotCurrent(): void
     {
         Tracker_Semantic_Title::setInstance(new Tracker_Semantic_Title($this->tracker, $this->title_field), $this->tracker);
