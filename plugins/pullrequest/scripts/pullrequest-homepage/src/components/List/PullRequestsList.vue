@@ -18,9 +18,9 @@
   -->
 
 <template>
-    <section class="tlp-pane" v-if="!is_loading_pull_requests">
+    <section class="tlp-pane">
         <div class="tlp-pane-container">
-            <section class="tlp-pane-section-for-cards">
+            <section class="tlp-pane-section-for-cards" v-if="!is_loading_pull_requests">
                 <pull-request-card
                     data-test="pull-request-card"
                     v-for="pull_request of pull_requests"
@@ -28,9 +28,9 @@
                     v-bind:pull_request="pull_request"
                 />
             </section>
+            <pull-requests-cards-skeletons v-else />
         </div>
     </section>
-    <div v-else class="pull-request-list-spinner"></div>
 </template>
 
 <script setup lang="ts">
@@ -41,6 +41,7 @@ import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { fetchAllPullRequests } from "../../api/tuleap-rest-querier";
 import { REPOSITORY_ID } from "../../injection-symbols";
 import PullRequestCard from "./PullRequest/PullRequestCard.vue";
+import PullRequestsCardsSkeletons from "./PullRequestsCardsSkeletons.vue";
 
 const repository_id = strictInject(REPOSITORY_ID);
 
@@ -54,16 +55,7 @@ fetchAllPullRequests(repository_id).match(
         is_loading_pull_requests.value = false;
     },
     () => {
-        is_loading_pull_requests.value = false;
+        // Do nothing
     },
 );
 </script>
-
-<style scoped lang="scss">
-.pull-request-list-spinner {
-    width: 250px;
-    height: 200px;
-    margin: 0 auto;
-    background: url("@tuleap/burningparrot-theme/images/spinner.gif") no-repeat center center;
-}
-</style>
