@@ -25,12 +25,13 @@ import { shallowMount } from "@vue/test-utils";
 import SidebarHeader from "./SidebarHeader.vue";
 import { example_config } from "../project-sidebar-example-config";
 import * as strict_inject from "@tuleap/vue-strict-inject";
+import { ref } from "vue";
 
 vi.mock("@tuleap/vue-strict-inject");
 
 describe("SidebarHeader", () => {
     it("displays the sidebar header", () => {
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(example_config);
+        vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(example_config));
         const wrapper = shallowMount(SidebarHeader, {
             propsData: {
                 is_sidebar_collapsed: false,
@@ -43,7 +44,7 @@ describe("SidebarHeader", () => {
     it("does not display the administration link when the user is not a project administrator", () => {
         const config = example_config;
         config.user.is_project_administrator = false;
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(config);
+        vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(config));
         const wrapper = shallowMount(SidebarHeader, {
             propsData: {
                 is_sidebar_collapsed: false,

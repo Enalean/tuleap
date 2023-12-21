@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.6.1
+
+* 🐛 Bring back config reactivity that was removed during the bump vue: 3.2.37 -> 3.3.4 (introduced by 2.4.0)
+
 ## 2.6.0
 
 * ✨ Now promoted items can have subitems. This allows for example to display Backlog » Releases » Sprint.

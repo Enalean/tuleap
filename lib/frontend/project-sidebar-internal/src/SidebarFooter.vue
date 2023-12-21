@@ -24,6 +24,7 @@
     <a
         href="https://www.tuleap.org/?utm_source=forge&utm_medium=forge&utm_campaign=forge"
         class="sidebar-about"
+        v-if="config"
     >
         <svg class="sidebar-about-logo" viewBox="0 0 172 50" xmlns="http://www.w3.org/2000/svg">
             <title>{{ config.instance_information.version.full_descriptive_version }}</title>
@@ -57,7 +58,7 @@
         </span>
     </a>
     <span
-        v-if="config.instance_information.copyright !== null"
+        v-if="config && config.instance_information.copyright !== null"
         class="sidebar-copyright"
         data-test="copyright"
     >

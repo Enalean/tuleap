@@ -6,6 +6,7 @@
   "private": true,
   "dependencies": {
     "@tuleap/burningparrot-theme": "workspace:*",
+    "@tuleap/fetch-result": "workspace:*",
     "@tuleap/plugin-cardwall-card-fields": "workspace:*",
     "@tuleap/plugin-agiledashboard-scrum-header": "workspace:*",
     "@tuleap/plugin-agiledashboard-scrum-milestone-header": "workspace:*",

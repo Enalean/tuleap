@@ -23,7 +23,10 @@ import { createAngularPromiseWrapper } from "@tuleap/build-system-configurator/d
 
 import planning_module from "../app.js";
 import * as rest_querier from "../api/rest-querier";
+import * as refresh_sidebar from "./refresh-project-sidebar";
 import { SESSION_STORAGE_KEY } from "../session";
+
+jest.mock("./refresh-project-sidebar");
 
 const noop = () => {
     // Do nothing
@@ -545,6 +548,7 @@ describe("PlannerView", () => {
             const refreshSubmilestone = jest
                 .spyOn(PlanningController, "refreshSubmilestone")
                 .mockImplementation(noop);
+            const refreshSidebar = jest.spyOn(refresh_sidebar, "refreshProjectSidebar");
 
             editSubMilestone();
 
@@ -557,6 +561,7 @@ describe("PlannerView", () => {
                 expect.any(Function),
             );
             expect(refreshSubmilestone).toHaveBeenCalledWith(SUB_MILESTONE_ID);
+            expect(refreshSidebar).toHaveBeenCalled();
         });
 
         it(`when the user changed the artifact links during edition,
@@ -566,6 +571,7 @@ describe("PlannerView", () => {
             did_artifact_links_change = true;
             const reload = jest.spyOn($window.location, "reload");
             const setItem = jest.spyOn($window.sessionStorage, "setItem");
+            jest.spyOn(refresh_sidebar, "refreshProjectSidebar");
 
             editSubMilestone();
 

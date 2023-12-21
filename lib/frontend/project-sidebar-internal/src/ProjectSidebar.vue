@@ -58,6 +58,7 @@ const props = defineProps<{
     // eslint-disable-next-line vue/prop-name-casing -- Vue transforms properties with dashes in camelCase
     noCollapseButton?: boolean | undefined;
 }>();
+
 const sidebar_configuration = readonly(computed(() => unserializeConfiguration(props.config)));
 
 const can_sidebar_be_collapsed = readonly(
@@ -82,9 +83,8 @@ const can_sidebar_be_collapsed = readonly(
 
 const is_sidebar_collapsed = ref(can_sidebar_be_collapsed.value && (props.collapsed ?? false));
 
-if (sidebar_configuration.value !== undefined) {
-    provide(SIDEBAR_CONFIGURATION, sidebar_configuration.value);
-}
+provide(SIDEBAR_CONFIGURATION, sidebar_configuration);
+
 const emit = defineEmits<{
     (e: "show-project-announcement"): void;
     (e: "sidebar-collapsed"): void;

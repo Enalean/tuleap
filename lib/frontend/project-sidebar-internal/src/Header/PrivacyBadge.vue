@@ -29,19 +29,19 @@
                 data-test="project-icon"
                 aria-hidden="true"
             ></i>
-            {{ config.project.privacy.privacy_title }}
+            {{ config?.project.privacy.privacy_title }}
         </span>
     </div>
     <div id="project-sidebar-nav-title-popover" ref="popover_content" class="tlp-popover">
         <div class="tlp-popover-arrow"></div>
         <div class="tlp-popover-header">
             <h1 class="tlp-popover-title">
-                {{ config.project.privacy.privacy_title }}
+                {{ config?.project.privacy.privacy_title }}
             </h1>
         </div>
         <div class="tlp-popover-body">
             <p class="current-project-nav-title-popover-description">
-                {{ config.project.privacy.explanation_text }}
+                {{ config?.project.privacy.explanation_text }}
             </p>
         </div>
     </div>
@@ -54,7 +54,9 @@ import { getProjectPrivacyIcon } from "@tuleap/project-privacy-helper";
 import { createPopover } from "@tuleap/tlp-popovers";
 
 const config = strictInject(SIDEBAR_CONFIGURATION);
-const project_privacy_icon = computed(() => getProjectPrivacyIcon(config.project.privacy));
+const project_privacy_icon = computed(() =>
+    config.value ? getProjectPrivacyIcon(config.value.project.privacy) : "",
+);
 
 const badge = ref<InstanceType<typeof HTMLElement>>();
 const popover_content = ref<InstanceType<typeof HTMLElement>>();

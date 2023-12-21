@@ -30,7 +30,7 @@
     "@vue/test-utils": "^2.0.0"
   },
   "scripts": {
-    "typecheck": "vue-tsc --noEmit",
+    "typecheck": "vue-tsc --noEmit --noErrorTruncation",
     "build": "vite build",
     "dev": "vite",
     "test": "vitest"

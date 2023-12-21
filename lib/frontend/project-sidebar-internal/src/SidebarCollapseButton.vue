@@ -22,7 +22,7 @@
 
 <template>
     <button
-        v-if="can_sidebar_be_collapsed && config.user.is_logged_in"
+        v-if="can_sidebar_be_collapsed && config && config.user.is_logged_in"
         type="button"
         v-bind:title="
             props.is_sidebar_collapsed

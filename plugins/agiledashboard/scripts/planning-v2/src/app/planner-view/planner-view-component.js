@@ -30,6 +30,7 @@ import { isEmpty } from "lodash-es";
 import { isFunction } from "angular";
 import { sprintf } from "sprintf-js";
 import { SESSION_STORAGE_KEY } from "../session";
+import { refreshProjectSidebar } from "./refresh-project-sidebar";
 
 export default {
     templateUrl: "planner-view.tpl.html",
@@ -270,6 +271,7 @@ function controller(
             submilestone.artifact.tracker.id,
             submilestone.artifact.id,
             (submilestone_id, changes) => {
+                refreshProjectSidebar(self.project_id);
                 if (changes.did_artifact_links_change) {
                     $window.sessionStorage.setItem(
                         SESSION_STORAGE_KEY,
@@ -291,6 +293,8 @@ function controller(
 
         function callback(submilestone_id) {
             if (!self.isMilestoneContext()) {
+                refreshProjectSidebar(self.project_id);
+
                 return prependSubmilestoneToSubmilestoneList(submilestone_id);
             }
 
@@ -312,6 +316,8 @@ function controller(
         return MilestoneService.patchSubMilestones(self.backlog.rest_route_id, [
             submilestone_id,
         ]).then(function () {
+            refreshProjectSidebar(self.project_id);
+
             return prependSubmilestoneToSubmilestoneList(submilestone_id);
         });
     }

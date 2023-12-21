@@ -21,7 +21,7 @@
   -->
 
 <template>
-    <div class="project-sidebar-header-name">
+    <div class="project-sidebar-header-name" v-if="config">
         <div class="project-title-container">
             <a
                 v-bind:href="config.project.href"
@@ -66,5 +66,7 @@ defineProps<{ is_sidebar_collapsed: boolean }>();
 
 const config = strictInject(SIDEBAR_CONFIGURATION);
 
-const sanitized_admin_link = computed(() => sanitizeURL(config.project.administration_href));
+const sanitized_admin_link = computed(() =>
+    sanitizeURL(config.value ? config.value.project.administration_href : ""),
+);
 </script>
