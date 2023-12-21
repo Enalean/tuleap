@@ -85,6 +85,7 @@ const default_pull_request: PullRequest = {
         clone_http_url: "https://example.com/plugins/git/git-project/the-repo.git",
     },
     creator: user,
+    reviewers: [],
 };
 
 type StubPullRequest = {
