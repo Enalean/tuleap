@@ -65,6 +65,12 @@ final class PromotedMilestoneBuilder implements BuildPromotedMilestone
             $this->logger
         );
         $current_date = (new DateTime())->getTimestamp();
+        if (
+            $date_period->getStartDate() === null || $date_period->getStartDate() === 0 ||
+            $date_period->getEndDate() === null || $date_period->getEndDate() === 0
+        ) {
+            return Option::nothing(Planning_ArtifactMilestone::class);
+        }
         if (! ($date_period->getStartDate() <= $current_date && $date_period->getEndDate() >= $current_date)) {
             return Option::nothing(Planning_ArtifactMilestone::class);
         }
