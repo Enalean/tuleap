@@ -25,7 +25,7 @@ import { PullRequestStub } from "@tuleap/plugin-pullrequest-stub";
 import type { PullRequest, User } from "@tuleap/plugin-pullrequest-rest-api-types";
 import {
     injected_user_locale,
-    injection_symbols_stub,
+    StubInjectionSymbols,
 } from "../../../../tests/injection-symbols-stub";
 import { getGlobalTestOptions } from "../../../../tests/global-options-for-tests";
 import PullRequestCreationDate from "./PullRequestCreationDate.vue";
@@ -34,7 +34,9 @@ describe("PullRequestCreationDate", () => {
     let pull_request: PullRequest, creation_date: string, creator: User;
 
     const getWrapper = (): VueWrapper => {
-        vi.spyOn(strict_inject, "strictInject").mockImplementation(injection_symbols_stub);
+        vi.spyOn(strict_inject, "strictInject").mockImplementation(
+            StubInjectionSymbols.withDefaults(),
+        );
 
         return shallowMount(PullRequestCreationDate, {
             global: {

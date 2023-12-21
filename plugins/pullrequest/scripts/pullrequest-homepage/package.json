@@ -14,6 +14,7 @@
     "@tuleap/plugin-pullrequest-rest-api-types": "workspace:*",
     "@tuleap/plugin-pullrequest-stub": "workspace:*",
     "@tuleap/tlp-relative-date": "workspace:*",
+    "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/tooltip": "workspace:*",
     "@tuleap/vue-strict-inject": "workspace:*",
     "@tuleap/vue3-gettext-init": "workspace:*",

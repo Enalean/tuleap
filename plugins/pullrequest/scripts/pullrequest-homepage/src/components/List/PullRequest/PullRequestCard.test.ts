@@ -23,10 +23,7 @@ import { shallowMount } from "@vue/test-utils";
 import * as strict_inject from "@tuleap/vue-strict-inject";
 import { PullRequestStub } from "@tuleap/plugin-pullrequest-stub";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
-import {
-    injected_base_url,
-    injection_symbols_stub,
-} from "../../../../tests/injection-symbols-stub";
+import { injected_base_url, StubInjectionSymbols } from "../../../../tests/injection-symbols-stub";
 import { buildPullRequestOverviewUrl } from "../../../urls/base-url-builders";
 import PullRequestCard from "./PullRequestCard.vue";
 
@@ -40,7 +37,9 @@ describe("PullRequestCard", () => {
     });
 
     const getWrapper = (): VueWrapper => {
-        vi.spyOn(strict_inject, "strictInject").mockImplementation(injection_symbols_stub);
+        vi.spyOn(strict_inject, "strictInject").mockImplementation(
+            StubInjectionSymbols.withDefaults(),
+        );
 
         return shallowMount(PullRequestCard, {
             props: {

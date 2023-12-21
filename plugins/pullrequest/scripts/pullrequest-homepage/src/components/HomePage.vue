@@ -20,9 +20,22 @@
 <template>
     <div class="tlp-framed">
         <pull-requests-list />
+        <pull-request-error-modal v-bind:fault="error" />
     </div>
 </template>
 
 <script setup lang="ts">
+import { provide, ref } from "vue";
+import type { Fault } from "@tuleap/fault";
+import { DISPLAY_TULEAP_API_ERROR } from "../injection-symbols";
 import PullRequestsList from "./List/PullRequestsList.vue";
+import PullRequestErrorModal from "./Error/PullRequestErrorModal.vue";
+
+const error = ref<Fault | null>(null);
+
+const handleAPIFault = (fault: Fault) => {
+    error.value = fault;
+};
+
+provide(DISPLAY_TULEAP_API_ERROR, handleAPIFault);
 </script>

@@ -56,7 +56,7 @@ if (!props.pull_request.is_git_reference_broken) {
             labels.value = pull_request_labels;
         },
         () => {
-            // Do nothing for the moment
+            // Do nothing, because we don't want to spam the users with X error modals.
         },
     );
 }

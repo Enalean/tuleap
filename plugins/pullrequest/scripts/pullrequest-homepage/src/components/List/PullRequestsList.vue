@@ -39,23 +39,19 @@ import type { Ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { fetchAllPullRequests } from "../../api/tuleap-rest-querier";
-import { REPOSITORY_ID } from "../../injection-symbols";
+import { DISPLAY_TULEAP_API_ERROR, REPOSITORY_ID } from "../../injection-symbols";
 import PullRequestCard from "./PullRequest/PullRequestCard.vue";
 import PullRequestsCardsSkeletons from "./PullRequestsCardsSkeletons.vue";
 
 const repository_id = strictInject(REPOSITORY_ID);
+const displayTuleapAPIFault = strictInject(DISPLAY_TULEAP_API_ERROR);
 
 const pull_requests: Ref<readonly PullRequest[]> = ref([]);
 const is_loading_pull_requests = ref(true);
 
-fetchAllPullRequests(repository_id).match(
-    (all_pull_requests) => {
-        pull_requests.value = all_pull_requests;
+fetchAllPullRequests(repository_id).match((all_pull_requests) => {
+    pull_requests.value = all_pull_requests;
 
-        is_loading_pull_requests.value = false;
-    },
-    () => {
-        // Do nothing
-    },
-);
+    is_loading_pull_requests.value = false;
+}, displayTuleapAPIFault);
 </script>

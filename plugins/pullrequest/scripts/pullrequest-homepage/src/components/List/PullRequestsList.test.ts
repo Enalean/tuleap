@@ -17,23 +17,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, vi } from "vitest";
+import { describe, beforeEach, it, expect, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
-import { okAsync } from "neverthrow";
+import { okAsync, errAsync } from "neverthrow";
+import { Fault } from "@tuleap/fault";
 import * as strict_inject from "@tuleap/vue-strict-inject";
 import { PullRequestStub } from "@tuleap/plugin-pullrequest-stub";
-import { injection_symbols_stub } from "../../../tests/injection-symbols-stub";
+import { StubInjectionSymbols } from "../../../tests/injection-symbols-stub";
+import type { DisplayErrorCallback } from "../../injection-symbols";
 import * as tuleap_api from "../../api/tuleap-rest-querier";
 import PullRequestsList from "./PullRequestsList.vue";
 
-const getWrapper = (): VueWrapper => {
-    vi.spyOn(strict_inject, "strictInject").mockImplementation(injection_symbols_stub);
-
-    return shallowMount(PullRequestsList);
-};
-
 describe("PullRequestsList", () => {
+    let tuleap_api_error_callback: DisplayErrorCallback;
+
+    beforeEach(() => {
+        tuleap_api_error_callback = vi.fn();
+    });
+
+    const getWrapper = (): VueWrapper => {
+        vi.spyOn(strict_inject, "strictInject").mockImplementation(
+            StubInjectionSymbols.withTuleapApiErrorCallback(tuleap_api_error_callback),
+        );
+
+        return shallowMount(PullRequestsList);
+    };
+
     it("should load all the pull-requests of the repository and display them", async () => {
         vi.spyOn(tuleap_api, "fetchAllPullRequests").mockReturnValue(
             okAsync([
@@ -48,5 +58,17 @@ describe("PullRequestsList", () => {
         await wrapper.vm.$nextTick();
 
         expect(wrapper.findAll("[data-test=pull-request-card]").length).toBe(3);
+    });
+
+    it("should call the tuleap_api_error_callback when an error occurres while the pull-requests are being retrieved", async () => {
+        const tuleap_ap_fault = Fault.fromMessage("Nope");
+
+        vi.spyOn(tuleap_api, "fetchAllPullRequests").mockReturnValue(errAsync(tuleap_ap_fault));
+
+        const wrapper = getWrapper();
+        await wrapper.vm.$nextTick();
+
+        expect(tuleap_api_error_callback).toHaveBeenCalledOnce();
+        expect(tuleap_api_error_callback).toHaveBeenCalledWith(tuleap_ap_fault);
     });
 });

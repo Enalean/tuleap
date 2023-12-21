@@ -12,11 +12,29 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.3.1\n"
 
+msgid "An error occurred while doing one of your last actions."
+msgstr "Une erreur est survenue durant l’une de vos dernières actions."
+
+msgid "Close"
+msgstr "Fermer"
+
 msgid "Created"
 msgstr "Création"
 
 msgid "Error"
 msgstr "Erreur"
+
+msgid "Error details"
+msgstr "Détails de l'erreur"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Oh snap!"
+msgstr "Oh mince !"
+
+msgid "Show details"
+msgstr "Voir les détails"
 
 msgid "by"
 msgstr "par"
