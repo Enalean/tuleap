@@ -19,8 +19,10 @@
 
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 import { PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN } from "@tuleap/tlp-relative-date";
+import type { DisplayErrorCallback } from "../src/injection-symbols";
 import {
     BASE_URL,
+    DISPLAY_TULEAP_API_ERROR,
     REPOSITORY_ID,
     USER_DATE_TIME_FORMAT_KEY,
     USER_LOCALE_KEY,
@@ -30,8 +32,11 @@ import {
 export const injected_repository_id = 2;
 export const injected_base_url = new URL("https://example.com");
 export const injected_user_locale = "fr_FR";
+export let injected_tuleap_error_api_callback: DisplayErrorCallback = () => {};
 
-export const injection_symbols_stub = (key: StrictInjectionKey<unknown>): unknown => {
+type StrictInjectImplementation = (key: StrictInjectionKey<unknown>) => unknown;
+
+const injection_symbols: StrictInjectImplementation = (key): unknown => {
     switch (key) {
         case REPOSITORY_ID:
             return injected_repository_id;
@@ -43,7 +48,18 @@ export const injection_symbols_stub = (key: StrictInjectionKey<unknown>): unknow
             return "d/m/Y H:i";
         case USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY:
             return PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN;
+        case DISPLAY_TULEAP_API_ERROR:
+            return injected_tuleap_error_api_callback;
         default:
             throw new Error("Tried to strictInject a value while it was not mocked");
     }
+};
+
+export const StubInjectionSymbols = {
+    withDefaults: (): StrictInjectImplementation => injection_symbols,
+    withTuleapApiErrorCallback: (callback: DisplayErrorCallback): StrictInjectImplementation => {
+        injected_tuleap_error_api_callback = callback;
+
+        return injection_symbols;
+    },
 };
