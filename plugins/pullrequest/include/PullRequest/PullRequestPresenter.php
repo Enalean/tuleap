@@ -22,10 +22,11 @@ namespace Tuleap\PullRequest;
 
 use Tuleap\Date\DateHelper;
 use Tuleap\Date\DefaultRelativeDatesDisplayPreferenceRetriever;
+use Tuleap\Git\Repository\View\PresentPullRequest;
 use Tuleap\PullRequest\FrontendApps\PullRequestApp;
 use Tuleap\PullRequest\MergeSetting\MergeSetting;
 
-final class PullRequestPresenter
+final class PullRequestPresenter implements PresentPullRequest
 {
     public bool $is_there_at_least_one_pull_request;
     public bool $is_merge_commit_allowed;

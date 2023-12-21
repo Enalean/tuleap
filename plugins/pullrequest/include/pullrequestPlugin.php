@@ -81,6 +81,7 @@ use Tuleap\PullRequest\Notification\PullRequestNotificationSupport;
 use Tuleap\PullRequest\PluginInfo;
 use Tuleap\PullRequest\PullRequestCloser;
 use Tuleap\PullRequest\PullrequestDisplayer;
+use Tuleap\PullRequest\PullRequestEmptyStatePresenterBuilder;
 use Tuleap\PullRequest\PullRequestMerger;
 use Tuleap\PullRequest\PullRequestRetriever;
 use Tuleap\PullRequest\PullRequestUpdater;
@@ -468,7 +469,7 @@ class pullrequestPlugin extends Plugin
             new GitRepositoryFactory(new GitDao(), ProjectManager::instance()),
             UserManager::instance(),
             new UserHelper(),
-            new Git_GitRepositoryUrlManager($git_plugin),
+            $this->getGitRepositoryUrlManager(),
             $this->getTemplateRenderer()
         );
 
@@ -720,7 +721,11 @@ class pullrequestPlugin extends Plugin
             $this->getTemplateRenderer(),
             new MergeSettingRetriever(new MergeSettingDAO()),
             $header_builder->build(NavigationTabPresenterBuilder::TAB_PULLREQUEST),
-            $this->getRepositoryFactory()
+            $this->getRepositoryFactory(),
+            new PullRequestEmptyStatePresenterBuilder(
+                $this->getGitRepositoryUrlManager(),
+                new URLVerification()
+            ),
         );
     }
 
@@ -729,6 +734,15 @@ class pullrequestPlugin extends Plugin
         return new HTMLURLBuilder(
             $this->getRepositoryFactory()
         );
+    }
+
+    private function getGitRepositoryUrlManager(): Git_GitRepositoryUrlManager
+    {
+        $git_plugin = PluginManager::instance()->getPluginByName('git');
+        if (! ($git_plugin instanceof GitPlugin)) {
+            throw new Exception("Pullrequest plugin cannot find git plugin");
+        }
+        return new Git_GitRepositoryUrlManager($git_plugin);
     }
 
     #[\Tuleap\Plugin\ListeningToEventClass]

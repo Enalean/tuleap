@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,20 +20,7 @@
 
 namespace Tuleap\Git\Repository\View;
 
-use GitRepository;
-
-class ParentRepositoryPresenter
+interface PresentPullRequest
 {
-    public int $parent_repository_id;
-    public string $parent_repository_url;
-    public string $parent_repository_name;
-    public string $parent_project_id;
-
-    public function __construct(GitRepository $repository, $repository_url, public bool $user_can_see_parent_repository)
-    {
-        $this->parent_repository_url  = $repository_url;
-        $this->parent_repository_name = $repository->getName();
-        $this->parent_repository_id   = $repository->getId();
-        $this->parent_project_id      = $repository->getProjectId();
-    }
+    public function getTemplateName(): string;
 }

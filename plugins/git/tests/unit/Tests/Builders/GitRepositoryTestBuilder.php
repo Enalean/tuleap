@@ -30,6 +30,8 @@ final class GitRepositoryTestBuilder
     private string $namespace = '';
     private string $name      = 'unfederal_dictation';
     private \Project $project;
+    private bool $is_migrated_to_gerrit        = false;
+    private ?\GitRepository $parent_repository = null;
 
     private function __construct()
     {
@@ -47,6 +49,24 @@ final class GitRepositoryTestBuilder
         return $this;
     }
 
+    public function withId(int $id): self
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    public function withParentRepository(\GitRepository $repository): self
+    {
+        $this->parent_repository = $repository;
+        return $this;
+    }
+
+    public function migratedToGerrit(): self
+    {
+        $this->is_migrated_to_gerrit = true;
+        return $this;
+    }
+
     public function inProject(\Project $project): self
     {
         $this->project = $project;
@@ -60,6 +80,15 @@ final class GitRepositoryTestBuilder
         $repository->setProject($this->project);
         $repository->setNamespace($this->namespace);
         $repository->setName($this->name);
+
+        if ($this->parent_repository) {
+            $repository->setParent($this->parent_repository);
+        }
+
+        if ($this->is_migrated_to_gerrit) {
+            $repository->setRemoteServerId('gerrit-server');
+        }
+
         return $repository;
     }
 }

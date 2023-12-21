@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,22 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\Repository\View;
+declare(strict_types=1);
 
-use GitRepository;
+namespace Tuleap\PullRequest;
 
-class ParentRepositoryPresenter
+use Tuleap\Git\Repository\View\ParentRepositoryPresenter;
+use Tuleap\Git\Repository\View\PresentPullRequest;
+
+/**
+ * @psalm-immutable
+ */
+final class PullRequestEmptyStatePresenter implements PresentPullRequest
 {
-    public int $parent_repository_id;
-    public string $parent_repository_url;
-    public string $parent_repository_name;
-    public string $parent_project_id;
+    public function __construct(
+        public readonly int $repository_id,
+        public readonly int $project_id,
+        public readonly bool $is_migrated_to_gerrit,
+        public readonly ?ParentRepositoryPresenter $parent_repository_presenter,
+    ) {
+    }
 
-    public function __construct(GitRepository $repository, $repository_url, public bool $user_can_see_parent_repository)
+    public function getTemplateName(): string
     {
-        $this->parent_repository_url  = $repository_url;
-        $this->parent_repository_name = $repository->getName();
-        $this->parent_repository_id   = $repository->getId();
-        $this->parent_project_id      = $repository->getProjectId();
+        return 'pullrequest-empty-state';
     }
 }

@@ -22,23 +22,30 @@ import App from "./components/App.vue";
 import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
     const is_anonymous = document.body.dataset.userId === "0";
     if (is_anonymous) {
         return;
     }
 
-    const container = document.getElementById("git-repository-actions-main-buttons");
-    if (!container || container.dataset.isMigratedToGerrit === "1") {
-        return;
-    }
+    const mount_points = document.querySelectorAll(".create-pull-request-button-mount-point");
+    for (const mount_point of mount_points) {
+        const is_migrated_to_gerrit = mount_point.dataset.isMigratedToGerrit === "1";
+        if (is_migrated_to_gerrit) {
+            continue;
+        }
 
+        initButton(mount_point);
+    }
+});
+
+const initButton = async (container) => {
     const repository_id = parseInt(container.dataset.repositoryId, 10);
     const project_id = parseInt(container.dataset.projectId, 10);
     const parent_repository_id = parseInt(container.dataset.parentRepositoryId, 10);
     const parent_repository_name = container.dataset.parentRepositoryName;
     const parent_project_id = parseInt(container.dataset.parentProjectId, 10);
-    const user_can_see_parent_repository = container.dataset.userCanSeeParentRepository === "1";
+    const user_can_see_parent_repository = Boolean(container.dataset.userCanSeeParentRepository);
 
     const mount_point = document.createElement("div");
     container.appendChild(mount_point);
@@ -59,4 +66,4 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     app.use(gettext);
     app.mount(mount_point);
-});
+};
