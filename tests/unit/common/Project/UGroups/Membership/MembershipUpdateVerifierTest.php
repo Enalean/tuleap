@@ -22,17 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\UGroups\Membership;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class MembershipUpdateVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var MembershipUpdateVerifier
-     */
-    private $verifier;
+    private MembershipUpdateVerifier $verifier;
 
     protected function setUp(): void
     {
@@ -41,48 +35,47 @@ final class MembershipUpdateVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testAssertUGroupAndUserValidityThrowsWhenUGroupHasNoProject(): void
     {
-        $user   = Mockery::mock(\PFUser::class);
-        $ugroup = Mockery::mock(\ProjectUGroup::class, ['getProjectId' => 0]);
+        $user   = UserTestBuilder::buildWithDefaults();
+        $ugroup = $this->createMock(\ProjectUGroup::class);
+        $ugroup->method('getProjectId')->willReturn(0);
 
-        $this->expectException(InvalidProjectException::class);
+        self::expectException(InvalidProjectException::class);
 
         $this->verifier->assertUGroupAndUserValidity($user, $ugroup);
     }
 
     public function testAssertUGroupAndUserValidityThrowsWhenUGroupHasNoId(): void
     {
-        $user   = Mockery::mock(\PFUser::class);
-        $ugroup = Mockery::mock(
-            \ProjectUGroup::class,
-            ['getProjectId' => 105, 'getId' => 0]
-        );
+        $user   = UserTestBuilder::buildWithDefaults();
+        $ugroup = $this->createMock(\ProjectUGroup::class);
+        $ugroup->method('getProjectId')->willReturn(105);
+        $ugroup->method('getId')->willReturn(0);
 
-        $this->expectException(\UGroup_Invalid_Exception::class);
+        self::expectException(\UGroup_Invalid_Exception::class);
 
         $this->verifier->assertUGroupAndUserValidity($user, $ugroup);
     }
 
     public function testAssertUGroupAndUserValidityThrowsWhenUserIsAnonymous(): void
     {
-        $user   = Mockery::mock(\PFUser::class, ['isAnonymous' => true]);
-        $ugroup = Mockery::mock(
-            \ProjectUGroup::class,
-            ['getProjectId' => 105, 'getId' => 64]
-        );
+        $user   = UserTestBuilder::anAnonymousUser()->build();
+        $ugroup = $this->createMock(\ProjectUGroup::class);
+        $ugroup->method('getProjectId')->willReturn(105);
+        $ugroup->method('getId')->willReturn(64);
 
-        $this->expectException(UserIsAnonymousException::class);
+        self::expectException(UserIsAnonymousException::class);
 
         $this->verifier->assertUGroupAndUserValidity($user, $ugroup);
     }
 
     public function testAssertUGroupAndUserValiditySucceedsOtherwise(): void
     {
-        $user   = Mockery::mock(\PFUser::class, ['isAnonymous' => false]);
-        $ugroup = Mockery::mock(
-            \ProjectUGroup::class,
-            ['getProjectId' => 105, 'getId' => 64]
-        );
+        $user   = UserTestBuilder::anActiveUser()->build();
+        $ugroup = $this->createMock(\ProjectUGroup::class);
+        $ugroup->method('getProjectId')->willReturn(105);
+        $ugroup->method('getId')->willReturn(64);
 
-        $this->assertNull($this->verifier->assertUGroupAndUserValidity($user, $ugroup));
+        $this->verifier->assertUGroupAndUserValidity($user, $ugroup);
+        self::expectNotToPerformAssertions();
     }
 }

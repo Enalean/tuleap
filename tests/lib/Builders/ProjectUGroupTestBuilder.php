@@ -30,7 +30,8 @@ final class ProjectUGroupTestBuilder
     /**
      * @psalm-var list<\PFUser>
      */
-    private array $users = [];
+    private array $users       = [];
+    private ?\Project $project = null;
 
     private function __construct(private int $id)
     {
@@ -114,10 +115,21 @@ final class ProjectUGroupTestBuilder
         return $this;
     }
 
+    public function withProject(\Project $project): self
+    {
+        $this->project = $project;
+
+        return $this;
+    }
+
     public function build(): \ProjectUGroup
     {
         $ugroup = new \ProjectUGroup(['ugroup_id' => $this->id, 'name' => $this->name]);
         $ugroup->setMembers(...$this->users);
+        if ($this->project !== null) {
+            $ugroup->setProject($this->project);
+        }
+
         return $ugroup;
     }
 }
