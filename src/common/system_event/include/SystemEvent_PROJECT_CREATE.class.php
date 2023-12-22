@@ -65,15 +65,6 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent
                     $this->error("Could not project FRS repository");
                     return false;
                 }
-                if ($project->usesSVN()) {
-                    $backendSVN = Backend::instanceSVN();
-                    if (! $backendSVN->createProjectSVN((int) $group_id)) {
-                        $this->error("Could not create/initialize project SVN repository");
-                        return false;
-                    }
-                    $backendSVN->setSVNApacheConfNeedUpdate();
-                    $backendSVN->setSVNPrivacy($project, ! $project->isPublic());
-                }
                 $backendSystem->log("Project " . $project->getUnixName() . " created");
             }
         }
