@@ -17,57 +17,50 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import GitRepositoryTableSimplePermissions from "./GitRepositoryTableSimplePermissions.vue";
 import type { RepositorySimplePermissions } from "./type";
-import localVueForTest from "./helper/local-vue-for-test";
+import { createGettext } from "vue3-gettext";
 
 describe("GitRepositoryTableSimplePermissions", () => {
-    let propsData = {};
-
-    function instantiateComponent(): Wrapper<GitRepositoryTableSimplePermissions> {
-        return shallowMount(GitRepositoryTableSimplePermissions, {
-            propsData,
-            localVue: localVueForTest,
-        });
-    }
-
     it("When permissions exist, Then GitPermissionsBadge si displayed for each group", () => {
-        propsData = {
-            repositoryPermission: {
-                has_fined_grained_permissions: false,
-                name: "repo",
-                readers: [
-                    {
-                        is_custom: false,
-                        is_project_admin: false,
-                        is_static: false,
-                        ugroup_name: "project_members_readers",
-                    },
-                ],
-                writers: [
-                    {
-                        is_custom: false,
-                        is_project_admin: false,
-                        is_static: false,
-                        ugroup_name: "project_members_writers",
-                    },
-                ],
-                rewinders: [
-                    {
-                        is_custom: false,
-                        is_project_admin: false,
-                        is_static: false,
-                        ugroup_name: "project_members_rewinders",
-                    },
-                ],
-                repository_id: 1,
-                url: "/git/?action=repo_management&group_id=101&repo_id=1&pane=perms",
-            } as RepositorySimplePermissions,
-        };
-
-        const wrapper = instantiateComponent();
+        const wrapper = shallowMount(GitRepositoryTableSimplePermissions, {
+            global: {
+                plugins: [createGettext({ silent: true })],
+            },
+            props: {
+                repositoryPermission: {
+                    has_fined_grained_permissions: false,
+                    name: "repo",
+                    readers: [
+                        {
+                            is_custom: false,
+                            is_project_admin: false,
+                            is_static: false,
+                            ugroup_name: "project_members_readers",
+                        },
+                    ],
+                    writers: [
+                        {
+                            is_custom: false,
+                            is_project_admin: false,
+                            is_static: false,
+                            ugroup_name: "project_members_writers",
+                        },
+                    ],
+                    rewinders: [
+                        {
+                            is_custom: false,
+                            is_project_admin: false,
+                            is_static: false,
+                            ugroup_name: "project_members_rewinders",
+                        },
+                    ],
+                    repository_id: 1,
+                    url: "/git/?action=repo_management&group_id=101&repo_id=1&pane=perms",
+                } as RepositorySimplePermissions,
+            },
+        });
 
         expect(
             wrapper.find("[data-test=git-permission-badge-project_members_readers]").exists(),

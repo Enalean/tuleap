@@ -17,37 +17,33 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import GitPermissions from "./GitPermissions.vue";
 import * as api from "./rest-querier";
 import GitInlineFilter from "./GitInlineFilter.vue";
 import GitPermissionsTable from "./GitPermissionsTable.vue";
-import localVueForTest from "./helper/local-vue-for-test";
-import { FetchWrapperError } from "@tuleap/tlp-fetch";
+import { createGettext } from "vue3-gettext";
+import { errAsync, okAsync } from "neverthrow";
+import { Fault } from "@tuleap/fault";
+import type { RepositoryFineGrainedPermissions } from "./type";
 
 describe("GitPermissions", () => {
-    function instantiateComponent(): Wrapper<GitPermissions> {
-        return shallowMount(GitPermissions, {
-            localVue: localVueForTest,
-        });
-    }
-
     it("When API returns Error, Then it's displayed", async () => {
-        const wrapper = instantiateComponent();
+        const wrapper = shallowMount(GitPermissions, {
+            props: {
+                selected_project_id: 1,
+                selected_ugroup_id: "1",
+                selected_ugroup_name: "lorem",
+            },
+            global: {
+                plugins: [createGettext({ silent: true })],
+            },
+        });
         jest.spyOn(api, "getGitPermissions").mockReturnValue(
-            Promise.reject(
-                new FetchWrapperError("Not found", {
-                    status: 404,
-                    json: (): Promise<{ error: string }> =>
-                        Promise.resolve({ error: "Error during get permissions" }),
-                } as Response),
-            ),
+            errAsync(Fault.fromMessage("Error during get permissions")),
         );
 
-        wrapper.find("[data-test=git-permission-button-load]").trigger("click");
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await wrapper.find("[data-test=git-permission-button-load]").trigger("click");
 
         expect(wrapper.find("[data-test=git-permission-error]").text()).toBe(
             "Error during get permissions",
@@ -55,12 +51,19 @@ describe("GitPermissions", () => {
     });
 
     it("When component is loading, Then loader is displayed", async () => {
-        const wrapper = instantiateComponent();
-        wrapper.setData({
-            is_loading: true,
-            is_loaded: false,
+        const wrapper = shallowMount(GitPermissions, {
+            props: {
+                selected_project_id: 1,
+                selected_ugroup_id: "1",
+                selected_ugroup_name: "lorem",
+            },
+            global: {
+                plugins: [createGettext({ silent: true })],
+            },
         });
+        jest.spyOn(api, "getGitPermissions").mockReturnValue(okAsync({ repositories: [] }));
 
+        wrapper.find("[data-test=git-permission-button-load]").trigger("click");
         await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=git-permission-error]").exists()).toBeFalsy();
@@ -71,21 +74,28 @@ describe("GitPermissions", () => {
     });
 
     it("When API returned repositories, Then GitInlineFilter and GitPermissionsTable are displayed", async () => {
-        const wrapper = instantiateComponent();
-        wrapper.setData({
-            is_loading: false,
-            is_loaded: true,
-            repositories: [{ id: 1 }],
+        const wrapper = shallowMount(GitPermissions, {
+            props: {
+                selected_project_id: 1,
+                selected_ugroup_id: "1",
+                selected_ugroup_name: "lorem",
+            },
+            global: {
+                plugins: [createGettext({ silent: true })],
+            },
         });
+        jest.spyOn(api, "getGitPermissions").mockReturnValue(
+            okAsync({ repositories: [{ id: 1 } as unknown as RepositoryFineGrainedPermissions] }),
+        );
 
-        await wrapper.vm.$nextTick();
+        await wrapper.find("[data-test=git-permission-button-load]").trigger("click");
 
         expect(wrapper.find("[data-test=git-permission-error]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=git-permission-button-load]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=git-permission-loading]").exists()).toBeFalsy();
         expect(wrapper.findComponent(GitInlineFilter).exists()).toBeTruthy();
         expect(wrapper.findComponent(GitPermissionsTable).exists()).toBeTruthy();
-        expect(wrapper.findComponent(GitPermissionsTable).props("repositories")).toEqual([
+        expect(wrapper.findComponent(GitPermissionsTable).props("repositories")).toStrictEqual([
             { id: 1 },
         ]);
     });

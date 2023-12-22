@@ -39,39 +39,34 @@
     </tbody>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import GitRepositoryTableSimplePermissions from "./GitRepositoryTableSimplePermissions.vue";
 import GitRepositoryTableFineGrainedPermissionsRepository from "./GitRepositoryTableFineGrainedPermissionsRepository.vue";
 import GitRepositoryTableFineGrainedPermission from "./GitRepositoryTableFineGrainedPermission.vue";
-import Vue from "vue";
-import { Component, Prop, Watch } from "vue-property-decorator";
+import { ref, watch } from "vue";
 import type { RepositoryFineGrainedPermissions, RepositorySimplePermissions } from "./type";
 
-@Component({
-    components: {
-        GitRepositoryTableSimplePermissions,
-        GitRepositoryTableFineGrainedPermissionsRepository,
-        GitRepositoryTableFineGrainedPermission,
-    },
-})
-export default class GitPermissionsTableRepository extends Vue {
-    @Prop()
-    readonly repository!: RepositoryFineGrainedPermissions | RepositorySimplePermissions;
-    @Prop()
-    readonly filter!: string;
+const props = defineProps<{
+    repository: RepositoryFineGrainedPermissions | RepositorySimplePermissions;
+    filter: string;
+}>();
 
-    is_hidden = false;
+const is_hidden = ref(false);
+const emit = defineEmits<{
+    filtered: [{ hidden: boolean }];
+}>();
 
-    @Watch("filter")
-    filter_value(new_value: string) {
-        if (!new_value || this.repository.name.includes(new_value)) {
-            this.is_hidden = false;
-            this.$emit("filtered", { hidden: this.is_hidden });
+watch(
+    () => props.filter,
+    (new_value: string) => {
+        if (!new_value || props.repository.name.includes(new_value)) {
+            is_hidden.value = false;
+            emit("filtered", { hidden: is_hidden.value });
             return;
         }
 
-        this.is_hidden = true;
-        this.$emit("filtered", { hidden: this.is_hidden });
-    }
-}
+        is_hidden.value = true;
+        emit("filtered", { hidden: is_hidden.value });
+    },
+);
 </script>

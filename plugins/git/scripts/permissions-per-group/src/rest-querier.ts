@@ -17,20 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get } from "@tuleap/tlp-fetch";
 import type { RepositoryFineGrainedPermissions } from "./type";
+import type { Fault } from "@tuleap/fault";
+import { getJSON, uri } from "@tuleap/fetch-result";
+import type { ResultAsync } from "neverthrow";
 
-export async function getGitPermissions(
+export function getGitPermissions(
     project_id: number,
     selected_ugroup_id: string,
-): Promise<{ repositories: RepositoryFineGrainedPermissions[] }> {
-    const response = await get("/plugins/git/", {
-        params: {
-            group_id: project_id,
-            selected_ugroup_id: selected_ugroup_id,
-            action: "permission-per-group",
-        },
-    });
-
-    return response.json();
+): ResultAsync<{ repositories: RepositoryFineGrainedPermissions[] }, Fault> {
+    return getJSON<{ repositories: RepositoryFineGrainedPermissions[] }>(
+        uri`/plugins/git/?group_id=${project_id}&selected_ugroup_id=${selected_ugroup_id}&action=permission-per-group`,
+    );
 }

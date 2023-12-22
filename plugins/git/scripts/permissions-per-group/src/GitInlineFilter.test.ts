@@ -17,21 +17,21 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import GitInlineFilter from "./GitInlineFilter.vue";
-import localVueForTest from "./helper/local-vue-for-test";
+import { createGettext } from "vue3-gettext";
 
 describe("GitInlineFilter", () => {
-    function instantiateComponent(): Wrapper<GitInlineFilter> {
-        return shallowMount(GitInlineFilter, {
-            localVue: localVueForTest,
-        });
-    }
-
     it("When user types on keyboard, Then event is emitted", () => {
-        const wrapper = instantiateComponent();
+        const wrapper = shallowMount(GitInlineFilter, {
+            props: {
+                modelValue: "lorem",
+            },
+            global: {
+                plugins: [createGettext({ silent: true })],
+            },
+        });
         wrapper.find("[data-test=git-inline-filter-input]").trigger("keyup");
-        expect(wrapper.emitted("input")).toBeTruthy();
+        expect(wrapper.emitted("update:modelValue")).toBeTruthy();
     });
 });
