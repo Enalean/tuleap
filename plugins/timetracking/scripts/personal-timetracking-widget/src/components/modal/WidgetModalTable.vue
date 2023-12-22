@@ -32,6 +32,7 @@
                 v-on:swap-mode="setAddMode"
                 v-on:validate-time="addNewTime"
                 data-test="edit-time-with-row"
+                v-bind:artifact="artifact"
             />
             <widget-modal-row
                 v-for="time in personal_store.current_times"
@@ -45,6 +46,7 @@
                 v-on:swap-mode="setAddMode"
                 v-on:validate-time="addNewTime"
                 data-test="edit-time-without-row"
+                v-bind:artifact="artifact"
             />
             <tr>
                 <td colspan="4" class="tlp-table-cell-empty">
@@ -77,6 +79,9 @@ export default {
         WidgetModalRow,
         WidgetModalEditTime,
     },
+    props: {
+        artifact: Object,
+    },
     setup() {
         const personal_store = usePersonalTimetrackingWidgetStore();
 
@@ -89,7 +94,7 @@ export default {
             "current_times",
         ]),
         has_times_on_artifact() {
-            return this.personal_store.current_times[0].minutes !== null;
+            return this.personal_store.current_times.length > 0;
         },
     },
     methods: {

@@ -86,7 +86,6 @@ import {
 } from "@tuleap/plugin-timetracking-time-formatters";
 import { TIME_REGEX } from "@tuleap/plugin-timetracking-constants";
 import { datePicker } from "tlp";
-import { usePersonalTimetrackingWidgetStore } from "../../store";
 
 export default {
     name: "WidgetModalEditTime",
@@ -97,11 +96,7 @@ export default {
                 return {};
             },
         },
-    },
-    setup() {
-        const personal_store = usePersonalTimetrackingWidgetStore();
-
-        return { personal_store };
+        artifact: Object,
     },
     data() {
         const data = this.timeData || {};
@@ -142,10 +137,7 @@ export default {
                 }
                 this.is_loading = true;
 
-                const id =
-                    this.timeData && this.timeData.id
-                        ? this.timeData.id
-                        : this.personal_store.current_artifact.id;
+                const id = this.timeData && this.timeData.id ? this.timeData.id : this.artifact.id;
                 this.$emit("validate-time", this.date, id, this.time, this.step);
             } else {
                 this.error_message = this.$gettext("Please check time's format (hh:mm)");
