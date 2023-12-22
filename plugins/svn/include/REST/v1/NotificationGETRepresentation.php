@@ -20,26 +20,29 @@
 
 namespace Tuleap\SVN\REST\v1;
 
+use Tuleap\Project\REST\UserGroupRepresentation;
+use Tuleap\User\REST\MinimalUserRepresentation;
+
 /**
  * @psalm-immutable
  */
-class NotificationRepresentation
+class NotificationGETRepresentation
 {
     /**
-     * @var array {@type Tuleap\Project\REST\UserGroupRepresentation} {@required false}
+     * @var UserGroupRepresentation[] user groups representations {@type \Tuleap\Project\REST\UserGroupRepresentation} {@required false}
      */
     public $user_groups;
 
     /**
-     * @var array {@type Tuleap\User\REST\MinimalUserRepresentation} {@required false}
+     * @var MinimalUserRepresentation[] minimal users representations {@type \Tuleap\User\REST\MinimalUserRepresentation} {@required false}
      */
     public $users;
     /**
-     * @var array {@type email} {@required true} {@min 1}
+     * @var string[] emails {@type email} {@required true} {@min 1}
      */
     public $emails;
     /**
-     * @var string {@type string} {@required true}
+     * @var string path {@required true}
      */
     public $path;
 

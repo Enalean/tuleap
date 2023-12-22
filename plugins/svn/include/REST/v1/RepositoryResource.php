@@ -419,14 +419,14 @@ class RepositoryResource extends AuthenticatedResource
      * @url PUT {id}
      *
      * @param int $id Id of the repository
-     * @param SettingsPUTRepresentation $settings The new settings of the SVN repository {@from body} {@type Tuleap\SVN\REST\v1\SettingsPUTRepresentation}
+     * @param SettingsPUTRepresentation $settings The new settings of the SVN repository {@from body} {@type \Tuleap\SVN\REST\v1\SettingsPUTRepresentation}
      *
      * @return FullRepositoryRepresentation
      *
      * @throws RestException 404
      * @throws RestException 403
      */
-    protected function put($id, SettingsPUTRepresentation $settings)
+    protected function put(int $id, SettingsPUTRepresentation $settings)
     {
         $this->sendAllowHeaders();
         $this->checkAccess();
@@ -629,8 +629,8 @@ class RepositoryResource extends AuthenticatedResource
      * @access protected
      * @status 201
      *
-     * @param $project_id project id {@type int} {@from body}
-     * @param $name Repository name {@type string} {@form body}
+     * @param int $project_id project id {@type int} {@from body}
+     * @param string $name Repository name {@type string} {@form body}
      * @param SettingsPOSTRepresentation $settings Repository settings {@type \Tuleap\SVN\REST\v1\SettingsPOSTRepresentation} {@required false}
      *
      * @return \Tuleap\SVN\REST\v1\RepositoryRepresentation
@@ -639,7 +639,7 @@ class RepositoryResource extends AuthenticatedResource
      * @throws RestException 500 Error Unable to create the repository
      * @throws RestException 409 Repository name is invalid
      */
-    protected function post($project_id, $name, ?SettingsPOSTRepresentation $settings = null)
+    protected function post(int $project_id, string $name, ?SettingsPOSTRepresentation $settings = null)
     {
         $this->checkAccess();
         $this->options();
@@ -716,11 +716,10 @@ class RepositoryResource extends AuthenticatedResource
         Header::allowOptionsPost();
     }
 
-    /**
-     * @return Settings
-     */
-    private function getSettings(Repository $repository, ?SettingsRepresentation $settings = null)
-    {
+    private function getSettings(
+        Repository $repository,
+        SettingsGETRepresentation | SettingsPOSTRepresentation | SettingsPUTRepresentation | null $settings = null,
+    ): Settings {
         return $this->extractSettingsFromRepresentation($repository, $settings);
     }
 
@@ -734,10 +733,11 @@ class RepositoryResource extends AuthenticatedResource
 
     /**
      * @throws RestException
-     * @return Settings
      */
-    private function extractSettingsFromRepresentation(Repository $repository, ?SettingsRepresentationInterface $settings = null)
-    {
+    private function extractSettingsFromRepresentation(
+        Repository $repository,
+        SettingsGETRepresentation | SettingsPOSTRepresentation | SettingsPUTRepresentation | null $settings = null,
+    ): Settings {
         $commit_rules = [];
         if ($settings && $settings->commit_rules) {
             $commit_rules = $settings->commit_rules->toArray();
@@ -773,7 +773,7 @@ class RepositoryResource extends AuthenticatedResource
                 $user_groups_notification = [];
                 if ($notification->user_groups) {
                     foreach ($notification->user_groups as $group_id) {
-                        $group = $this->user_group_id_retriever->getExistingUserGroup($group_id);
+                        $group = $this->user_group_id_retriever->getExistingUserGroup((string) $group_id);
 
                         if (! $group->isStatic() && ! $this->isAnAuthorizedDynamicUgroup($group)) {
                             throw new RestException(

@@ -40,18 +40,18 @@ final class SettingsRepresentationValidatorTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testItThrowAnExceptionWHenPathAreNotUnique(): void
     {
-        $notification_representation_01 = new NotificationRepresentation(
+        $notification_representation_01 = new NotificationPOSTPUTRepresentation(
             ['emails' =>  ['test@example.com'], 'users' => [], 'ugroups' => []],
             '/tags'
         );
 
-        $notification_representation_02 = new NotificationRepresentation(
+        $notification_representation_02 = new NotificationPOSTPUTRepresentation(
             ['emails' =>  ['test@example.com'], 'users' => [], 'ugroups' => []],
             '/tags'
         );
 
         $settings = new /** @psalm-immutable */ class ($notification_representation_01, $notification_representation_02) extends SettingsPOSTRepresentation {
-            public function __construct(NotificationRepresentation ...$emails_notifications)
+            public function __construct(NotificationPOSTPUTRepresentation ...$emails_notifications)
             {
                 $this->email_notifications = $emails_notifications;
             }
@@ -63,18 +63,18 @@ final class SettingsRepresentationValidatorTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testItDontThrowExceptionWhenPathAreUnique(): void
     {
-        $notification_representation_01 = new NotificationRepresentation(
+        $notification_representation_01 = new NotificationPOSTPUTRepresentation(
             ['emails' =>  ['test@example.com'], 'users' => [], 'ugroups' => []],
             '/tags'
         );
 
-        $notification_representation_02 = new NotificationRepresentation(
+        $notification_representation_02 = new NotificationPOSTPUTRepresentation(
             ['emails' =>  ['test@example.com'], 'users' => [], 'ugroups' => []],
             '/trunks'
         );
 
         $settings = new /** @psalm-immutable */ class ($notification_representation_01, $notification_representation_02) extends SettingsPOSTRepresentation {
-            public function __construct(NotificationRepresentation ...$emails_notifications)
+            public function __construct(NotificationPOSTPUTRepresentation ...$emails_notifications)
             {
                 $this->email_notifications = $emails_notifications;
             }
@@ -120,13 +120,13 @@ final class SettingsRepresentationValidatorTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testItThrowsAnExceptionWhenUsersAndEmailAndUgroupsAreAllEmpty(): void
     {
-        $notification_representation_01 = new NotificationRepresentation(
+        $notification_representation_01 = new NotificationPOSTPUTRepresentation(
             ['emails' =>  [], 'users' => [], 'ugroups' => []],
             '/tags'
         );
 
         $settings = new /** @psalm-immutable */ class ($notification_representation_01) extends SettingsPOSTRepresentation {
-            public function __construct(NotificationRepresentation ...$emails_notifications)
+            public function __construct(NotificationPOSTPUTRepresentation ...$emails_notifications)
             {
                 $this->email_notifications = $emails_notifications;
             }
@@ -138,13 +138,13 @@ final class SettingsRepresentationValidatorTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testItThrowsAnExceptionWhenSameMailIsAddedTwiceOnTheSamePathOnPOST(): void
     {
-        $notification_representation_01 = new NotificationRepresentation(
+        $notification_representation_01 = new NotificationPOSTPUTRepresentation(
             ['emails' =>  ['test@example.com', 'test1@example.com', 'test@example.com'], 'users' => [], 'ugroups' => []],
             '/tags'
         );
 
         $settings = new /** @psalm-immutable */ class ($notification_representation_01) extends SettingsPOSTRepresentation {
-            public function __construct(NotificationRepresentation ...$emails_notifications)
+            public function __construct(NotificationPOSTPUTRepresentation ...$emails_notifications)
             {
                 $this->email_notifications = $emails_notifications;
             }
@@ -156,18 +156,18 @@ final class SettingsRepresentationValidatorTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testItDontThrowExceptionWhenSameMailIsUsedForTwoDifferentPathOnPOST(): void
     {
-        $notification_representation_01 = new NotificationRepresentation(
+        $notification_representation_01 = new NotificationPOSTPUTRepresentation(
             ['emails' =>  ['test@example.com'], 'users' => [], 'ugroups' => []],
             '/tags'
         );
 
-        $notification_representation_02 = new NotificationRepresentation(
+        $notification_representation_02 = new NotificationPOSTPUTRepresentation(
             ['emails' =>  ['test@example.com'], 'users' => [], 'ugroups' => []],
             '/trunks'
         );
 
         $settings = new /** @psalm-immutable */ class ($notification_representation_01, $notification_representation_02) extends SettingsPOSTRepresentation {
-            public function __construct(NotificationRepresentation ...$emails_notifications)
+            public function __construct(NotificationPOSTPUTRepresentation ...$emails_notifications)
             {
                 $this->email_notifications = $emails_notifications;
             }
@@ -180,7 +180,7 @@ final class SettingsRepresentationValidatorTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testItThrowsAnExceptionWhenSameMailIsAddedTwiceOnTheSamePathOnPUT(): void
     {
-        $notification_representation_01 = new NotificationRepresentation(
+        $notification_representation_01 = new NotificationPOSTPUTRepresentation(
             ['emails' =>  ['test@example.com', 'test1@example.com', 'test@example.com'], 'users' => [], 'ugroups' => []],
             '/tags'
         );
@@ -188,7 +188,7 @@ final class SettingsRepresentationValidatorTest extends \Tuleap\Test\PHPUnit\Tes
         $repository = $this->createMock(Repository::class);
 
         $settings = new /** @psalm-immutable */ class ($repository, $notification_representation_01) extends SettingsPUTRepresentation {
-            public function __construct(Repository $repository, NotificationRepresentation ...$emails_notifications)
+            public function __construct(Repository $repository, NotificationPOSTPUTRepresentation ...$emails_notifications)
             {
                 $this->email_notifications = $emails_notifications;
                 $this->access_file         = '';
@@ -203,12 +203,12 @@ final class SettingsRepresentationValidatorTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testItDontThrowExceptionWhenSameMailIsUsedForTwoDifferentPathOnPUT(): void
     {
-        $notification_representation_01 = new NotificationRepresentation(
+        $notification_representation_01 = new NotificationPOSTPUTRepresentation(
             ['emails' =>  ['test@example.com'], 'users' => [], 'ugroups' => []],
             '/tags'
         );
 
-        $notification_representation_02 = new NotificationRepresentation(
+        $notification_representation_02 = new NotificationPOSTPUTRepresentation(
             ['emails' =>  ['test@example.com'], 'users' => [], 'ugroups' => []],
             '/trunks'
         );
@@ -216,7 +216,7 @@ final class SettingsRepresentationValidatorTest extends \Tuleap\Test\PHPUnit\Tes
         $repository = $this->createMock(Repository::class);
 
         $settings = new /** @psalm-immutable */ class ($repository, $notification_representation_01, $notification_representation_02) extends SettingsPUTRepresentation {
-            public function __construct(Repository $repository, NotificationRepresentation ...$emails_notifications)
+            public function __construct(Repository $repository, NotificationPOSTPUTRepresentation ...$emails_notifications)
             {
                 $this->email_notifications = $emails_notifications;
                 $this->access_file         = '';
@@ -232,7 +232,7 @@ final class SettingsRepresentationValidatorTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testItDontThrowExceptionWhenOnlyUgroupsIsProvidedOnPUT(): void
     {
-        $notification_representation_01 = new NotificationRepresentation(
+        $notification_representation_01 = new NotificationPOSTPUTRepresentation(
             ['emails' =>  [], 'users' => [], 'ugroups' => ['101_4']],
             '/tags'
         );
@@ -240,7 +240,7 @@ final class SettingsRepresentationValidatorTest extends \Tuleap\Test\PHPUnit\Tes
         $repository = $this->createMock(Repository::class);
 
         $settings = new /** @psalm-immutable */ class ($repository, $notification_representation_01) extends SettingsPUTRepresentation {
-            public function __construct(Repository $repository, NotificationRepresentation ...$emails_notifications)
+            public function __construct(Repository $repository, NotificationPOSTPUTRepresentation ...$emails_notifications)
             {
                 $this->email_notifications = $emails_notifications;
                 $this->access_file         = '';

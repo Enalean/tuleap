@@ -22,11 +22,7 @@ namespace Tuleap\SVN\REST\v1;
 
 class SettingsRepresentationValidator
 {
-    /**
-     *
-     * @return array
-     */
-    private function getNonUniquePath(?SettingsRepresentation $settings = null)
+    private function getNonUniquePath(SettingsPOSTRepresentation | SettingsPUTRepresentation | null $settings = null): array
     {
         $already_seen_path = [];
         $non_unique_path   = [];
@@ -44,7 +40,7 @@ class SettingsRepresentationValidator
         return $non_unique_path;
     }
 
-    private function getNonUniqueEmail(SettingsRepresentation $settings)
+    private function getNonUniqueEmail(SettingsPOSTRepresentation | SettingsPUTRepresentation $settings): array
     {
         $non_unique_mail = [];
 
@@ -62,12 +58,12 @@ class SettingsRepresentationValidator
         return $non_unique_mail;
     }
 
-    private function isAccessFileKeySent(?SettingsRepresentation $settings = null)
+    private function isAccessFileKeySent(SettingsPOSTRepresentation | SettingsPUTRepresentation | null $settings = null): bool
     {
         return isset($settings->access_file);
     }
 
-    public function validateForPUTRepresentation(?SettingsPUTRepresentation $settings = null)
+    public function validateForPUTRepresentation(?SettingsPUTRepresentation $settings = null): void
     {
         if (isset($settings)) {
             if (! $this->isAccessFileKeySent($settings)) {
@@ -80,7 +76,7 @@ class SettingsRepresentationValidator
         }
     }
 
-    public function validateForPOSTRepresentation(?SettingsPOSTRepresentation $settings = null)
+    public function validateForPOSTRepresentation(?SettingsPOSTRepresentation $settings = null): void
     {
         if (isset($settings)) {
             $this->validatePathAreUnique($settings);
@@ -89,7 +85,7 @@ class SettingsRepresentationValidator
         }
     }
 
-    private function validatePathAreUnique(SettingsRepresentation $settings)
+    private function validatePathAreUnique(SettingsPOSTRepresentation | SettingsPUTRepresentation $settings): void
     {
         $non_unique_path = $this->getNonUniquePath($settings);
         if (count($non_unique_path) > 0) {
@@ -97,7 +93,7 @@ class SettingsRepresentationValidator
         }
     }
 
-    private function validateAtLeastOneNotificationSent(?SettingsRepresentation $settings = null)
+    private function validateAtLeastOneNotificationSent(SettingsPOSTRepresentation | SettingsPUTRepresentation | null $settings = null): void
     {
         $empty_notification = [];
         if ($settings && $settings->email_notifications) {
@@ -116,7 +112,7 @@ class SettingsRepresentationValidator
         }
     }
 
-    private function validateMailAreUnique(SettingsRepresentation $settings)
+    private function validateMailAreUnique(SettingsPOSTRepresentation | SettingsPUTRepresentation $settings): void
     {
         $non_unique_mail = $this->getNonUniqueEmail($settings);
 
