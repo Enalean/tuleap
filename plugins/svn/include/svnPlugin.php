@@ -597,12 +597,11 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                     new CollectionOfUserToBeNotifiedPresenterBuilder($this->getUserNotifyDao()),
                     new CollectionOfUgroupToBeNotifiedPresenterBuilder($this->getUGroupNotifyDao())
                 ),
-                $this->getNotificationEmailsBuilder(),
                 $this->getUserManager(),
                 new UGroupManager(),
                 $hook_config_updator,
                 $this->getHookConfigRetriever(),
-                $this->getRepositoryDeleter()
+                $this->getRepositoryDeleter(),
             ),
             new ExplorerController(
                 $repository_manager,

@@ -22,7 +22,7 @@ namespace Tuleap\SVN\Notifications;
 
 use Tuleap\SVN\Admin\MailNotification;
 
-class NotificationPresenter
+final class NotificationPresenter
 {
     /**
      * @var int
@@ -58,11 +58,6 @@ class NotificationPresenter
      */
     public $emails_to_be_notified_json;
 
-    /**
-     * @var bool
-     */
-    public $has_notified;
-
     public function __construct(
         MailNotification $notification,
         array $emails_to_be_notified,
@@ -82,9 +77,5 @@ class NotificationPresenter
         $this->emails_to_be_notified_json  = $emails_to_be_notified_json;
         $this->users_to_be_notified_json   = $users_to_be_notified_json;
         $this->ugroups_to_be_notified_json = $ugroups_to_be_notified_json;
-
-        $this->has_notified = count($this->emails_to_be_notified) > 0
-            || count($this->users_to_be_notified) > 0
-            || count($this->ugroups_to_be_notified) > 0;
     }
 }
