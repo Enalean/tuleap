@@ -56,6 +56,7 @@ use Tuleap\Project\Event\GetProjectWithTrackerAdministrationPermission;
 use Tuleap\Project\Event\GetUriFromCrossReference;
 use Tuleap\Project\Event\ProjectRegistrationActivateService;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
+use Tuleap\Project\Event\ProjectServiceBeforeDeactivation;
 use Tuleap\Project\Event\ProjectXMLImportPreChecksEvent;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\PaginatedProjects;
@@ -167,6 +168,7 @@ use Tuleap\Tracker\Creation\TrackerCreationPermissionChecker;
 use Tuleap\Tracker\Creation\TrackerCreationPresenterBuilder;
 use Tuleap\Tracker\Creation\TrackerCreationProcessorController;
 use Tuleap\Tracker\Creation\TrackerCreator;
+use Tuleap\Tracker\Events\CollectTrackerDependantServices;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
@@ -2735,5 +2737,43 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         if ($event->value === false && str_starts_with($event->key, 'tracker_comment_invertorder_')) {
             $event->setDefaultValue('0');
         }
+    }
+
+    #[ListeningToEventClass]
+    public function projectServiceBeforeDeactivation(ProjectServiceBeforeDeactivation $event): void
+    {
+        if (! $event->isForService($this->getServiceShortname())) {
+            return;
+        }
+
+        $tracker_dependant_services = EventManager::instance()->dispatch(
+            new CollectTrackerDependantServices(),
+        );
+
+        $event->pluginSetAValue();
+
+        $services = array_filter(
+            array_map(
+                static fn(string $name) => $event->getProject()->getService($name),
+                $tracker_dependant_services->getDependantServicesNames(),
+            ),
+        );
+
+        if (empty($services)) {
+            $event->serviceCanBeDeactivated();
+            return;
+        }
+
+        $event->setWarningMessage(
+            sprintf(
+                dngettext(
+                    'tuleap-tracker',
+                    'Tracker service cannot be deactivated because the following service is in use: %s',
+                    'Tracker service cannot be deactivated because the following services are in use: %s',
+                    count($services),
+                ),
+                implode(', ', array_map(static fn($service) => $service->getInternationalizedName(), $services)),
+            )
+        );
     }
 }

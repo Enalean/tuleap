@@ -87,6 +87,7 @@ use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 use Tuleap\Tracker\Config\GeneralSettingsEvent;
 use Tuleap\Tracker\Creation\DefaultTemplatesXMLFileCollection;
+use Tuleap\Tracker\Events\CollectTrackerDependantServices;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
@@ -750,5 +751,11 @@ final class KanbanPlugin extends Plugin implements PluginWithService
             $event->getXmlElement(),
             $event->getProject(),
         );
+    }
+
+    #[ListeningToEventClass]
+    public function collectTrackerDependantServices(CollectTrackerDependantServices $event): void
+    {
+        $event->addDependantServicesNames($this->getServiceShortname());
     }
 }

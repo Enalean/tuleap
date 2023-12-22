@@ -4109,6 +4109,20 @@ msgstr "Permissions de l'outil de suivi"
 msgid "Tracker renderer"
 msgstr "Rendu d'un tracker"
 
+#, php-format
+msgid ""
+"Tracker service cannot be deactivated because the following service is in "
+"use: %s"
+msgid_plural ""
+"Tracker service cannot be deactivated because the following services are in "
+"use: %s"
+msgstr[0] ""
+"Le service Suivi ne peut être désactivé car il est utilisé par le service "
+"suivant : %s"
+msgstr[1] ""
+"Le service Suivi ne peut être désactivé car il est utilisé par les services "
+"suivants : %s"
+
 msgid "Tracker service is disabled."
 msgstr "Le service tracker est désactivé."
 

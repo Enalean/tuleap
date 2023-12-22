@@ -128,6 +128,7 @@ use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
 use Tuleap\Tracker\Config\GeneralSettingsEvent;
 use Tuleap\Tracker\CreateTrackerFromXMLEvent;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraImporterExternalPluginsEvent;
+use Tuleap\Tracker\Events\CollectTrackerDependantServices;
 use Tuleap\Tracker\FormElement\Event\MessageFetcherAdditionalWarnings;
 use Tuleap\Tracker\Hierarchy\TrackerHierarchyUpdateEvent;
 use Tuleap\Tracker\Masschange\TrackerMasschangeGetExternalActionsEvent;
@@ -1827,5 +1828,11 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $kanban_service?->getUrl(),
             $backlog_service?->getUrl(),
         );
+    }
+
+    #[ListeningToEventClass]
+    public function collectTrackerDependantServices(CollectTrackerDependantServices $event): void
+    {
+        $event->addDependantServicesNames($this->getServiceShortname());
     }
 }

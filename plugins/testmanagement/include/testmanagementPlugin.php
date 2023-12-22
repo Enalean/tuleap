@@ -91,6 +91,7 @@ use Tuleap\Tracker\Artifact\RecentlyVisited\SwitchToLinksCollection;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
 use Tuleap\Tracker\Events\GetEditableTypesInProject;
+use Tuleap\Tracker\Events\CollectTrackerDependantServices;
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
 use Tuleap\Tracker\FormElement\Event\ImportExternalElement;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkValueSaver;
@@ -1018,5 +1019,11 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
     public function collectMovableExternalFieldEvent(CollectMovableExternalFieldEvent $event): void
     {
         TTMMovableFieldsCollector::collectMovableFields($event);
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function collectTrackerDependantServices(CollectTrackerDependantServices $event): void
+    {
+        $event->addDependantServicesNames($this->getServiceShortname());
     }
 }
