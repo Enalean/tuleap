@@ -34,11 +34,11 @@ use Tuleap\SVNCore\Repository;
 class FullRepositoryRepresentation extends RepositoryRepresentation
 {
     /**
-     * @var SettingsRepresentation {@type Tuleap\SVN\REST\v1\SettingsRepresentation}
+     * @var SettingsGETRepresentation {@type \Tuleap\SVN\REST\v1\SettingsGETRepresentation}
      */
     public $settings;
 
-    protected function __construct(Project $project, int $id, string $name, string $svn_url, SettingsRepresentation $settings)
+    protected function __construct(Project $project, int $id, string $name, string $svn_url, SettingsGETRepresentation $settings)
     {
         parent::__construct($project, $id, $name, $svn_url);
         $this->settings = $settings;
@@ -58,7 +58,7 @@ class FullRepositoryRepresentation extends RepositoryRepresentation
 
         $commit_rules_representation = CommitRulesRepresentation::build($hook_config);
 
-        $settings_representation = SettingsRepresentation::build(
+        $settings_representation = SettingsGETRepresentation::build(
             $commit_rules_representation,
             $immutable_tag_representation,
             $access_file_history,

@@ -25,30 +25,30 @@ use Tuleap\SVN\AccessControl\AccessFileHistory;
 /**
  * @psalm-immutable
  */
-class SettingsRepresentation implements SettingsRepresentationInterface
+class SettingsGETRepresentation
 {
     /**
-     * @var CommitRulesRepresentation {@type \Tuleap\SVN\REST\v1\CommitRulesRepresentation} {@required false}
+     * @var CommitRulesRepresentation commit rules representation {@type \Tuleap\SVN\REST\v1\CommitRulesRepresentation} {@required false}
      */
     public $commit_rules;
 
     /**
-     * @var ImmutableTagRepresentation {@type \Tuleap\SVN\REST\v1\ImmutableTagRepresentation} {@required false}
+     * @var ImmutableTagRepresentation immutable tags representations {@type \Tuleap\SVN\REST\v1\ImmutableTagRepresentation} {@required false}
      */
     public $immutable_tags;
 
     /**
-     * @var string {@type string} {@required false}
+     * @var string access file content {@required false}
      */
     public $access_file;
 
     /**
-     * @var array {@type \Tuleap\SVN\REST\v1\NotificationRepresentation} {@required false}
+     * @var NotificationGETRepresentation[] notifications representation {@type \Tuleap\SVN\REST\v1\NotificationGETRepresentation} {@required false}
      */
     public $email_notifications;
 
     /**
-     * @param NotificationRepresentation[] $email_notifications
+     * @param NotificationGETRepresentation[] $email_notifications
      */
     private function __construct(
         CommitRulesRepresentation $commit_rules,

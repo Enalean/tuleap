@@ -74,7 +74,7 @@ class NotificationsBuilder
             $extracted_notifications['users']   = $this->extractUsers($notification);
             $extracted_notifications['ugroups'] = $this->extractUGroups($notification);
 
-            $notification_representation = new NotificationRepresentation($extracted_notifications, $notification->getPath());
+            $notification_representation = new NotificationGETRepresentation($extracted_notifications, $notification->getPath());
 
             $notifications_representation[] = $notification_representation;
         }

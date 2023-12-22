@@ -26,20 +26,30 @@ namespace Tuleap\SVN\REST\v1;
 class NotificationPOSTPUTRepresentation
 {
     /**
-     * @var array {@type string} {@required true} {@min 0}
+     * @var string[] user groups ids {@type string} {@required true} {@min 0}
      */
     public $user_groups;
-
     /**
-     * @var array {@type int} {@required true} {@min 0}
+     * @var int[] users ids {@type int} {@required true} {@min 0}
      */
     public $users;
     /**
-     * @var array {@type string} {@required true} {@min 0}
+     * @var string[] emails {@type string} {@required true} {@min 0}
      */
     public $emails;
     /**
-     * @var string {@type string} {@required true}
+     * @var string path {@required true}
      */
     public $path;
+
+    /**
+     * @psalm-param array{ugroups: list<string>, users: list<int>, emails: list<string>} $notification
+     */
+    public function __construct(array $notification, string $path)
+    {
+        $this->path        = $path;
+        $this->user_groups = $notification['ugroups'];
+        $this->users       = $notification['users'];
+        $this->emails      = $notification['emails'];
+    }
 }

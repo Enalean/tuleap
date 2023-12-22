@@ -23,30 +23,30 @@ namespace Tuleap\SVN\REST\v1;
 /**
  * @psalm-immutable
  */
-class SettingsPOSTRepresentation extends SettingsRepresentation
+class SettingsPOSTRepresentation
 {
     /**
-     * @var array {@type string} {@required false}
+     * @var string[] layout {@required false}
      */
     public $layout;
 
     /**
-     * @var CommitRulesRepresentation {@type \Tuleap\SVN\REST\v1\CommitRulesRepresentation} {@required false}
+     * @var CommitRulesRepresentation commit rules representations {@type \Tuleap\SVN\REST\v1\CommitRulesRepresentation} {@required false}
      */
     public $commit_rules;
 
     /**
-     * @var ImmutableTagRepresentation {@type \Tuleap\SVN\REST\v1\ImmutableTagRepresentation} {@required false}
+     * @var ImmutableTagRepresentation immutable tags representations {@type \Tuleap\SVN\REST\v1\ImmutableTagRepresentation} {@required false}
      */
     public $immutable_tags;
 
     /**
-     * @var string {@type string} {@required false}
+     * @var string access file content {@required false}
      */
     public $access_file;
 
     /**
-     * @var array {@type \Tuleap\SVN\REST\v1\NotificationPOSTPUTRepresentation} {@required false}
+     * @var NotificationPOSTPUTRepresentation[] notifications representations {@type \Tuleap\SVN\REST\v1\NotificationPOSTPUTRepresentation} {@required false}
      */
     public $email_notifications;
 }
