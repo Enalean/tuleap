@@ -20,22 +20,25 @@
 
 namespace Tuleap\SVN\REST\v1;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\SVN\Admin\ImmutableTag;
 use Tuleap\SVN\Repository\HookConfig;
 use Tuleap\SVNCore\Repository;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\User\RetrieveUserById;
 
 final class SettingsRepresentationValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var SettingsRepresentationValidator
-     */
-    private $validator;
+    private SettingsRepresentationValidator $validator;
+    private RetrieveUserById&MockObject $user_manager;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->validator = new SettingsRepresentationValidator();
+        $this->user_manager = $this->createMock(RetrieveUserById::class);
+
+        $this->validator = new SettingsRepresentationValidator($this->user_manager);
     }
 
     public function testItThrowAnExceptionWHenPathAreNotUnique(): void
@@ -178,6 +181,63 @@ final class SettingsRepresentationValidatorTest extends \Tuleap\Test\PHPUnit\Tes
         $this->validator->validateForPOSTRepresentation($settings);
     }
 
+    public function testItThrowsAnExceptionWhenAtLeastOneProvidedUserIsSuspendedOnPOST(): void
+    {
+        $notification_representation_01 = new NotificationPOSTPUTRepresentation(
+            ['emails' =>  [], 'users' => [101, 102], 'ugroups' => []],
+            '/tags'
+        );
+
+        $settings = new /** @psalm-immutable */ class ($notification_representation_01) extends SettingsPOSTRepresentation {
+            public function __construct(NotificationPOSTPUTRepresentation ...$emails_notifications)
+            {
+                $this->email_notifications = $emails_notifications;
+            }
+        };
+
+        $this->user_manager->method('getUserById')
+            ->withConsecutive([101], [102])
+            ->willReturnOnConsecutiveCalls(
+                UserTestBuilder::anActiveUser()->build(),
+                UserTestBuilder::aUser()->withStatus('S')->build(),
+            );
+
+        $this->expectException(SettingsInvalidException::class);
+
+        $this->validator->validateForPOSTRepresentation($settings);
+    }
+
+    public function testItDoesNotThrowAnExceptionWhenNoProvidedUserIsSuspendedOnPOST(): void
+    {
+        $notification_representation_01 = new NotificationPOSTPUTRepresentation(
+            ['emails' =>  [], 'users' => [101, 102], 'ugroups' => []],
+            '/tags'
+        );
+
+        $repository = $this->createMock(Repository::class);
+
+        $settings = new /** @psalm-immutable */ class ($repository, $notification_representation_01) extends SettingsPOSTRepresentation {
+            public function __construct(Repository $repository, NotificationPOSTPUTRepresentation ...$emails_notifications)
+            {
+                $this->email_notifications = $emails_notifications;
+                $this->access_file         = '';
+                $this->immutable_tags      = ImmutableTagRepresentation::build(ImmutableTag::buildEmptyImmutableTag($repository));
+                $this->commit_rules        = CommitRulesRepresentation::build(new HookConfig($repository, []));
+            }
+        };
+
+        $this->user_manager->method('getUserById')
+            ->withConsecutive([101], [102])
+            ->willReturnOnConsecutiveCalls(
+                UserTestBuilder::anActiveUser()->build(),
+                UserTestBuilder::anActiveUser()->build(),
+            );
+
+        $this->expectNotToPerformAssertions();
+
+        $this->validator->validateForPOSTRepresentation($settings);
+    }
+
     public function testItThrowsAnExceptionWhenSameMailIsAddedTwiceOnTheSamePathOnPUT(): void
     {
         $notification_representation_01 = new NotificationPOSTPUTRepresentation(
@@ -248,6 +308,63 @@ final class SettingsRepresentationValidatorTest extends \Tuleap\Test\PHPUnit\Tes
                 $this->commit_rules        = CommitRulesRepresentation::build(new HookConfig($repository, []));
             }
         };
+
+        $this->expectNotToPerformAssertions();
+
+        $this->validator->validateForPUTRepresentation($settings);
+    }
+
+    public function testItThrowsAnExceptionWhenAtLeastOneProvidedUserIsSuspendedOnPUT(): void
+    {
+        $notification_representation_01 = new NotificationPOSTPUTRepresentation(
+            ['emails' =>  [], 'users' => [101, 102], 'ugroups' => []],
+            '/tags'
+        );
+
+        $settings = new /** @psalm-immutable */ class ($notification_representation_01) extends SettingsPUTRepresentation {
+            public function __construct(NotificationPOSTPUTRepresentation ...$emails_notifications)
+            {
+                $this->email_notifications = $emails_notifications;
+            }
+        };
+
+        $this->user_manager->method('getUserById')
+            ->withConsecutive([101], [102])
+            ->willReturnOnConsecutiveCalls(
+                UserTestBuilder::anActiveUser()->build(),
+                UserTestBuilder::aUser()->withStatus('S')->build(),
+            );
+
+        $this->expectException(SettingsInvalidException::class);
+
+        $this->validator->validateForPUTRepresentation($settings);
+    }
+
+    public function testItDoesNotThrowAnExceptionWhenNoProvidedUserIsSuspendedOnPUT(): void
+    {
+        $notification_representation_01 = new NotificationPOSTPUTRepresentation(
+            ['emails' =>  [], 'users' => [101, 102], 'ugroups' => []],
+            '/tags'
+        );
+
+        $repository = $this->createMock(Repository::class);
+
+        $settings = new /** @psalm-immutable */ class ($repository, $notification_representation_01) extends SettingsPUTRepresentation {
+            public function __construct(Repository $repository, NotificationPOSTPUTRepresentation ...$emails_notifications)
+            {
+                $this->email_notifications = $emails_notifications;
+                $this->access_file         = '';
+                $this->immutable_tags      = ImmutableTagRepresentation::build(ImmutableTag::buildEmptyImmutableTag($repository));
+                $this->commit_rules        = CommitRulesRepresentation::build(new HookConfig($repository, []));
+            }
+        };
+
+        $this->user_manager->method('getUserById')
+            ->withConsecutive([101], [102])
+            ->willReturnOnConsecutiveCalls(
+                UserTestBuilder::anActiveUser()->build(),
+                UserTestBuilder::anActiveUser()->build(),
+            );
 
         $this->expectNotToPerformAssertions();
 

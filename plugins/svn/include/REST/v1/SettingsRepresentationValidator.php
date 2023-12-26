@@ -18,10 +18,18 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\SVN\REST\v1;
 
-class SettingsRepresentationValidator
+use Tuleap\User\RetrieveUserById;
+
+final class SettingsRepresentationValidator
 {
+    public function __construct(private readonly RetrieveUserById $user_manager)
+    {
+    }
+
     private function getNonUniquePath(SettingsPOSTRepresentation | SettingsPUTRepresentation | null $settings = null): array
     {
         $already_seen_path = [];
@@ -72,6 +80,7 @@ class SettingsRepresentationValidator
 
             $this->validatePathAreUnique($settings);
             $this->validateAtLeastOneNotificationSent($settings);
+            $this->validateUsersDefinedInNotificationNotAlive($settings);
             $this->validateMailAreUnique($settings);
         }
     }
@@ -81,6 +90,7 @@ class SettingsRepresentationValidator
         if (isset($settings)) {
             $this->validatePathAreUnique($settings);
             $this->validateAtLeastOneNotificationSent($settings);
+            $this->validateUsersDefinedInNotificationNotAlive($settings);
             $this->validateMailAreUnique($settings);
         }
     }
@@ -125,6 +135,29 @@ class SettingsRepresentationValidator
             throw new SettingsInvalidException(
                 'One email or more are not unique for path: ' . implode(PHP_EOL, $exceptions)
             );
+        }
+    }
+
+    private function validateUsersDefinedInNotificationNotAlive(SettingsPOSTRepresentation | SettingsPUTRepresentation | null $settings = null): void
+    {
+        $not_alive_users = [];
+        if ($settings && $settings->email_notifications) {
+            foreach ($settings->email_notifications as $notification) {
+                foreach ($notification->users as $user_id) {
+                    $user = $this->user_manager->getUserById($user_id);
+                    if ($user === null) {
+                        throw new SettingsInvalidException("User #$user_id does not exist");
+                    }
+                    if (! $user->isAlive()) {
+                        $not_alive_users[] = $user_id;
+                    }
+                }
+            }
+            if (count($not_alive_users) > 0) {
+                throw new SettingsInvalidException(
+                    'One user or more are neither active nor restricted: ' . implode(PHP_EOL, $not_alive_users)
+                );
+            }
         }
     }
 }
