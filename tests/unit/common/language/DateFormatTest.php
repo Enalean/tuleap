@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\language;
 
 use DateTimeImmutable;
-use Tuleap\Language\DateFormat;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -38,5 +37,16 @@ final class DateFormatTest extends TestCase
 
         self::assertEquals('February 14, 2009', DateFormat::getYearFullMonthAndDayFormatter($dylan)->format($date));
         self::assertEquals('14 février 2009', DateFormat::getYearFullMonthAndDayFormatter($jean)->format($date));
+    }
+
+    public function testGetYearFullMonthAndDayFormatterFormatsCorrectlyDateForLastDayOfYear(): void
+    {
+        $dylan = UserTestBuilder::aUser()->withLocale('en_US')->build();
+        $jean  = UserTestBuilder::aUser()->withLocale('fr_FR')->build();
+
+        $date = (new DateTimeImmutable())->setTimestamp(1767135600);
+
+        self::assertEquals('December 31, 2025', DateFormat::getYearFullMonthAndDayFormatter($dylan)->format($date));
+        self::assertEquals('31 décembre 2025', DateFormat::getYearFullMonthAndDayFormatter($jean)->format($date));
     }
 }

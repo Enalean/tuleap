@@ -29,8 +29,8 @@ final class DateFormat
     public static function getYearFullMonthAndDayFormatter(\PFUser $user): IntlDateFormatter
     {
         $pattern = match ($user->getLocale()) {
-            'fr_FR' => 'd MMMM YYYY',
-            default => 'MMMM d, YYYY', // default to en_US
+            'fr_FR' => 'd MMMM yyyy',
+            default => 'MMMM d, yyyy', // default to en_US
         };
 
         return new IntlDateFormatter(
