@@ -22,56 +22,56 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\UGroups;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Project;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class SynchronizedProjectMembershipDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var SynchronizedProjectMembershipDetector */
-    private $detector;
-    /**
-     * @var Mockery\MockInterface|SynchronizedProjectMembershipDao
-     */
-    private $dao;
+    private SynchronizedProjectMembershipDetector $detector;
+    private SynchronizedProjectMembershipDao&MockObject $dao;
 
     protected function setUp(): void
     {
-        $this->dao      = Mockery::mock(SynchronizedProjectMembershipDao::class);
+        $this->dao      = $this->createMock(SynchronizedProjectMembershipDao::class);
         $this->detector = new SynchronizedProjectMembershipDetector($this->dao);
     }
 
     public function testItReturnsTrueWhenTheProjectIsPrivate(): void
     {
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('isPublic')->andReturnFalse();
+        $project = ProjectTestBuilder::aProject()
+            ->withAccessPrivate()
+            ->build();
 
-        $this->assertTrue($this->detector->isSynchronizedWithProjectMembers($project));
+        self::assertTrue($this->detector->isSynchronizedWithProjectMembers($project));
     }
 
     public function testItReturnsTrueWhenTheProjectIsPublicAndHasSynchronizedManagementEnabled(): void
     {
-        $project = Mockery::mock(Project::class, ['getID' => 165]);
-        $project->shouldReceive('isPublic')->andReturnTrue();
-        $this->dao->shouldReceive('isEnabled')
+        $project = ProjectTestBuilder::aProject()
+            ->withId(165)
+            ->withAccessPublic()
+            ->build();
+        $this->dao
+            ->expects(self::once())
+            ->method('isEnabled')
             ->with(165)
-            ->once()
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $this->assertTrue($this->detector->isSynchronizedWithProjectMembers($project));
+        self::assertTrue($this->detector->isSynchronizedWithProjectMembers($project));
     }
 
     public function testItReturnsFalseWhenTheProjectIsPublicAndHasSynchronizedManagementDisabled(): void
     {
-        $project = Mockery::mock(Project::class, ['getID' => 165]);
-        $project->shouldReceive('isPublic')->andReturnTrue();
-        $this->dao->shouldReceive('isEnabled')
+        $project = ProjectTestBuilder::aProject()
+            ->withId(165)
+            ->withAccessPublic()
+            ->build();
+        $this->dao
+            ->expects(self::once())
+            ->method('isEnabled')
             ->with(165)
-            ->once()
-            ->andReturnFalse();
+            ->willReturn(false);
 
-        $this->assertFalse($this->detector->isSynchronizedWithProjectMembers($project));
+        self::assertFalse($this->detector->isSynchronizedWithProjectMembers($project));
     }
 }

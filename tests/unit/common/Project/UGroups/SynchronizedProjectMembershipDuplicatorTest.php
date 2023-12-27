@@ -22,47 +22,38 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\UGroups;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Project;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class SynchronizedProjectMembershipDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var SynchronizedProjectMembershipDuplicator
-     */
-    private $duplicator;
-    /**
-     * @var M\MockInterface|SynchronizedProjectMembershipDao
-     */
-    private $dao;
+    private SynchronizedProjectMembershipDuplicator $duplicator;
+    private SynchronizedProjectMembershipDao&MockObject $dao;
 
     protected function setUp(): void
     {
-        $this->dao        = M::mock(SynchronizedProjectMembershipDao::class);
+        $this->dao        = $this->createMock(SynchronizedProjectMembershipDao::class);
         $this->duplicator = new SynchronizedProjectMembershipDuplicator($this->dao);
     }
 
     public function testDuplicateSucceeds(): void
     {
-        $destination = M::mock(Project::class);
-        $destination->shouldReceive('isPublic')->andReturnTrue();
-        $destination->shouldReceive('getID')->andReturn(120);
+        $destination = ProjectTestBuilder::aProject()
+            ->withId(120)
+            ->withAccessPublic()
+            ->build();
 
-        $this->dao->shouldReceive('duplicateActivationFromTemplate')
-            ->with(104, 120)->atLeast()->once();
+        $this->dao->expects(self::atLeastOnce())->method('duplicateActivationFromTemplate')
+            ->with(104, 120);
 
         $this->duplicator->duplicate(104, $destination);
     }
 
     public function testDuplicateDoesNothingWhenTheDestinationProjectIsPrivate(): void
     {
-        $destination = M::mock(Project::class);
-        $destination->shouldReceive('isPublic')->andReturnFalse();
+        $destination = ProjectTestBuilder::aProject()->withAccessPrivate()->build();
 
-        $this->dao->shouldNotReceive('duplicateActivationFromTemplate');
+        $this->dao->expects(self::never())->method('duplicateActivationFromTemplate');
 
         $this->duplicator->duplicate(104, $destination);
     }

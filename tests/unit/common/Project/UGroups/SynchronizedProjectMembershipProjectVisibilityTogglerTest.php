@@ -23,62 +23,53 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\UGroups;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Tuleap\GlobalLanguageMock;
 
 final class SynchronizedProjectMembershipProjectVisibilityTogglerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
-    /**
-     * @var SynchronizedProjectMembershipProjectVisibilityToggler
-     */
-    private $toggler;
-    /**
-     * @var M\MockInterface|SynchronizedProjectMembershipDao
-     */
-    private $dao;
+    private SynchronizedProjectMembershipProjectVisibilityToggler $toggler;
+    private SynchronizedProjectMembershipDao $dao;
 
     protected function setUp(): void
     {
-        $this->dao     = M::mock(SynchronizedProjectMembershipDao::class);
+        $this->dao     = $this->createMock(SynchronizedProjectMembershipDao::class);
         $this->toggler = new SynchronizedProjectMembershipProjectVisibilityToggler($this->dao);
     }
 
     /**
      * @dataProvider toggleProvider
      */
-    public function testToggleOfSynchroAccordingToVisibilityChange(string $old_visibility, string $new_visibility, bool $should_enable)
+    public function testToggleOfSynchroAccordingToVisibilityChange(string $old_visibility, string $new_visibility, bool $should_enable): void
     {
         $project = new Project(['group_id' => 101]);
 
         if ($should_enable) {
-            $this->dao->shouldReceive('enable')->with($project)->once();
+            $this->dao->expects(self::once())->method('enable')->with($project);
         } else {
-            $this->dao->shouldNotReceive('enable');
+            $this->dao->expects(self::never())->method('enable');
         }
 
         $this->toggler->enableAccordingToVisibility($project, $old_visibility, $new_visibility);
     }
 
-    public static function toggleProvider()
+    public static function toggleProvider(): array
     {
         return [
-            [ Project::ACCESS_PRIVATE, Project::ACCESS_PUBLIC, true ],
-            [ Project::ACCESS_PRIVATE, Project::ACCESS_PUBLIC_UNRESTRICTED, true ],
-            [ Project::ACCESS_PRIVATE, Project::ACCESS_PRIVATE_WO_RESTRICTED, false ],
-            [ Project::ACCESS_PRIVATE_WO_RESTRICTED, Project::ACCESS_PUBLIC, true ],
-            [ Project::ACCESS_PRIVATE_WO_RESTRICTED, Project::ACCESS_PUBLIC_UNRESTRICTED, true ],
-            [ Project::ACCESS_PRIVATE_WO_RESTRICTED, Project::ACCESS_PRIVATE, false ],
-            [ Project::ACCESS_PUBLIC, Project::ACCESS_PRIVATE, false ],
-            [ Project::ACCESS_PUBLIC, Project::ACCESS_PRIVATE_WO_RESTRICTED, false ],
-            [ Project::ACCESS_PUBLIC, Project::ACCESS_PUBLIC_UNRESTRICTED, false ],
-            [ Project::ACCESS_PUBLIC_UNRESTRICTED, Project::ACCESS_PRIVATE, false ],
-            [ Project::ACCESS_PUBLIC_UNRESTRICTED, Project::ACCESS_PRIVATE_WO_RESTRICTED, false ],
-            [ Project::ACCESS_PUBLIC_UNRESTRICTED, Project::ACCESS_PUBLIC, false ],
+            [Project::ACCESS_PRIVATE, Project::ACCESS_PUBLIC, true],
+            [Project::ACCESS_PRIVATE, Project::ACCESS_PUBLIC_UNRESTRICTED, true],
+            [Project::ACCESS_PRIVATE, Project::ACCESS_PRIVATE_WO_RESTRICTED, false],
+            [Project::ACCESS_PRIVATE_WO_RESTRICTED, Project::ACCESS_PUBLIC, true],
+            [Project::ACCESS_PRIVATE_WO_RESTRICTED, Project::ACCESS_PUBLIC_UNRESTRICTED, true],
+            [Project::ACCESS_PRIVATE_WO_RESTRICTED, Project::ACCESS_PRIVATE, false],
+            [Project::ACCESS_PUBLIC, Project::ACCESS_PRIVATE, false],
+            [Project::ACCESS_PUBLIC, Project::ACCESS_PRIVATE_WO_RESTRICTED, false],
+            [Project::ACCESS_PUBLIC, Project::ACCESS_PUBLIC_UNRESTRICTED, false],
+            [Project::ACCESS_PUBLIC_UNRESTRICTED, Project::ACCESS_PRIVATE, false],
+            [Project::ACCESS_PUBLIC_UNRESTRICTED, Project::ACCESS_PRIVATE_WO_RESTRICTED, false],
+            [Project::ACCESS_PUBLIC_UNRESTRICTED, Project::ACCESS_PUBLIC, false],
         ];
     }
 }
