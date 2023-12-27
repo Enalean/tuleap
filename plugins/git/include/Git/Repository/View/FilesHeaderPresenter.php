@@ -58,7 +58,7 @@ class FilesHeaderPresenter
         $this->repository_url            = $repository_url;
         $this->repository_default_branch = \Git_Exec::buildFromRepository($repository)->getDefaultBranch();
         $this->can_display_selector      = $can_display_selector;
-        if ($head_name) {
+        if ($head_name !== '') {
             $this->head_name = $head_name;
         } else {
             $this->head_name    = dgettext('tuleap-git', 'Undefined');
