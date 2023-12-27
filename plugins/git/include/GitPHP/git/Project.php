@@ -734,7 +734,7 @@ class Project
      */
     public function GetCommit($hash) // @codingStandardsIgnoreLine
     {
-        if (empty($hash)) {
+        if ($hash === '') {
             return null;
         }
 
@@ -984,7 +984,7 @@ class Project
      */
     public function GetTag($tag) // @codingStandardsIgnoreLine
     {
-        if (empty($tag)) {
+        if ($tag === '') {
             return null;
         }
 
@@ -1012,7 +1012,7 @@ class Project
      */
     private function LoadTag($tag, $hash = '') // @codingStandardsIgnoreLine
     {
-        if (empty($tag)) {
+        if ($tag === '') {
             return;
         }
 

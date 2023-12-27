@@ -815,7 +815,7 @@ class Commit extends GitObject
      */
     public function PathToHash($path) // @codingStandardsIgnoreLine
     {
-        if (empty($path)) {
+        if ($path === '') {
             return '';
         }
 
