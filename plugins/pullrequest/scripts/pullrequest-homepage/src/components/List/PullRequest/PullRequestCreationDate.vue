@@ -34,7 +34,6 @@
             <div class="tlp-avatar-mini">
                 <img
                     v-bind:src="pull_request.creator.avatar_url"
-                    class="media-object"
                     aria-hidden="true"
                     data-test="pull-request-creator-avatar-img"
                 />
