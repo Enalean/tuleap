@@ -24,43 +24,41 @@ namespace Tuleap\Project\Webhook;
 
 final class WebhookUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testItCreatesAWebhook(): void
     {
-        $dao     = \Mockery::mock(\Tuleap\Project\Webhook\WebhookDao::class);
+        $dao     = $this->createMock(\Tuleap\Project\Webhook\WebhookDao::class);
         $updater = new WebhookUpdater($dao);
 
-        $dao->shouldReceive('createWebhook')->andReturnTrue()->once();
+        $dao->expects(self::once())->method('createWebhook')->willReturn(true);
         $updater->add('Webhook name', 'https://example.com');
     }
 
     public function testItUpdatesAWebhook(): void
     {
-        $dao     = \Mockery::mock(\Tuleap\Project\Webhook\WebhookDao::class);
+        $dao     = $this->createMock(\Tuleap\Project\Webhook\WebhookDao::class);
         $updater = new WebhookUpdater($dao);
 
-        $dao->shouldReceive('editWebhook')->andReturnTrue()->once();
+        $dao->expects(self::once())->method('editWebhook')->willReturn(true);
         $updater->edit(1, 'Webhook name', 'https://example.com');
     }
 
     public function testItDeletesAWebhook(): void
     {
-        $dao     = \Mockery::mock(\Tuleap\Project\Webhook\WebhookDao::class);
+        $dao     = $this->createMock(\Tuleap\Project\Webhook\WebhookDao::class);
         $updater = new WebhookUpdater($dao);
 
-        $dao->shouldReceive('deleteWebhookById')->andReturnTrue()->once();
+        $dao->expects(self::once())->method('deleteWebhookById')->willReturn(true);
         $updater->delete(1);
     }
 
     public function testItChecksDataBeforeManipulatingIt(): void
     {
-        $dao     = \Mockery::spy(\Tuleap\Project\Webhook\WebhookDao::class);
+        $dao     = $this->createMock(\Tuleap\Project\Webhook\WebhookDao::class);
         $updater = new WebhookUpdater($dao);
 
-        $this->expectException(\Tuleap\Project\Webhook\WebhookMalformedDataException::class);
-        $dao->shouldReceive('createWebhook')->never();
-        $dao->shouldReceive('editWebhook')->never();
+        self::expectException(\Tuleap\Project\Webhook\WebhookMalformedDataException::class);
+        $dao->expects(self::never())->method('createWebhook');
+        $dao->expects(self::never())->method('editWebhook');
 
         $updater->add('Webhook name', 'Not an URL');
         $updater->edit(1, 'Webhook name', 'Not an URL');
@@ -68,11 +66,11 @@ final class WebhookUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionWhenDataCanNotBeProperlyAccessed(): void
     {
-        $dao = \Mockery::mock(\Tuleap\Project\Webhook\WebhookDao::class);
-        $dao->shouldReceive('createWebhook')->andReturns(false);
+        $dao = $this->createMock(\Tuleap\Project\Webhook\WebhookDao::class);
+        $dao->method('createWebhook')->willReturn(false);
         $updater = new WebhookUpdater($dao);
 
-        $this->expectException(\Tuleap\Project\Webhook\WebhookDataAccessException::class);
+        self::expectException(\Tuleap\Project\Webhook\WebhookDataAccessException::class);
 
         $updater->add('Webhook name', 'https://example.com');
     }

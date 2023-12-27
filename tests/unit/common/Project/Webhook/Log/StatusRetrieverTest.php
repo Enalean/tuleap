@@ -24,33 +24,33 @@ namespace Tuleap\Project\Webhook\Log;
 
 final class StatusRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testItRetrievesStatus(): void
     {
         $row_1              = ['webhook_id' => 1, 'created_on' => 1489595500, 'status' => 'Operation timed out after 5000 milliseconds with 0 bytes received'];
         $row_2              = ['webhook_id' => 1, 'created_on' => 1489595525, 'status' => '200 OK'];
         $data_access_result = \TestHelper::arrayToDar($row_1, $row_2);
-        $dao                = \Mockery::mock(\Tuleap\Project\Webhook\Log\WebhookLoggerDao::class);
-        $dao->shouldReceive('searchLogsByWebhookId')->andReturns($data_access_result);
-        $webhook = \Mockery::spy(\Tuleap\Project\Webhook\Webhook::class);
+        $dao                = $this->createMock(\Tuleap\Project\Webhook\Log\WebhookLoggerDao::class);
+        $dao->method('searchLogsByWebhookId')->willReturn($data_access_result);
+        $webhook = $this->createMock(\Tuleap\Project\Webhook\Webhook::class);
+        $webhook->method('getId');
 
         $retriever = new StatusRetriever($dao);
 
         $status = $retriever->getMostRecentStatus($webhook);
 
-        $this->assertCount(2, $status);
+        self::assertCount(2, $status);
     }
 
     public function testItFailsWhenStatusCanNotBeRetrieved(): void
     {
-        $dao = \Mockery::mock(\Tuleap\Project\Webhook\Log\WebhookLoggerDao::class);
-        $dao->shouldReceive('searchLogsByWebhookId')->andReturns(false);
-        $webhook = \Mockery::spy(\Tuleap\Project\Webhook\Webhook::class);
+        $dao = $this->createMock(\Tuleap\Project\Webhook\Log\WebhookLoggerDao::class);
+        $dao->method('searchLogsByWebhookId')->willReturn(false);
+        $webhook = $this->createMock(\Tuleap\Project\Webhook\Webhook::class);
+        $webhook->method('getId');
 
         $retriever = new StatusRetriever($dao);
 
-        $this->expectException(\Tuleap\Project\Webhook\Log\StatusDataAccessException::class);
+        self::expectException(\Tuleap\Project\Webhook\Log\StatusDataAccessException::class);
         $retriever->getMostRecentStatus($webhook);
     }
 }

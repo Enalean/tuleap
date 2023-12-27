@@ -24,31 +24,29 @@ namespace Tuleap\Project\Webhook;
 
 final class RetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testItRetrievesWebhooks(): void
     {
         $row_1              = ['id' => 1, 'name' => 'W1', 'url' => 'https://example.com'];
         $row_2              = ['id' => 2, 'name' => 'W2', 'url' => 'https://webhook2.example.com'];
         $data_access_result = \TestHelper::arrayToDar($row_1, $row_2);
-        $dao                = \Mockery::mock(\Tuleap\Project\Webhook\WebhookDao::class);
-        $dao->shouldReceive('searchWebhooks')->andReturns($data_access_result);
+        $dao                = $this->createMock(\Tuleap\Project\Webhook\WebhookDao::class);
+        $dao->method('searchWebhooks')->willReturn($data_access_result);
 
         $retriever = new Retriever($dao);
 
         $webhooks = $retriever->getWebhooks();
 
-        $this->assertCount(2, $webhooks);
+        self::assertCount(2, $webhooks);
     }
 
     public function testItFailsWhenWebhooksCanNotBeRetrieved(): void
     {
-        $dao = \Mockery::mock(\Tuleap\Project\Webhook\WebhookDao::class);
-        $dao->shouldReceive('searchWebhooks')->andReturns(false);
+        $dao = $this->createMock(\Tuleap\Project\Webhook\WebhookDao::class);
+        $dao->method('searchWebhooks')->willReturn(false);
 
         $retriever = new Retriever($dao);
 
-        $this->expectException(\Tuleap\Project\Webhook\WebhookDataAccessException::class);
+        self::expectException(\Tuleap\Project\Webhook\WebhookDataAccessException::class);
         $retriever->getWebhooks();
     }
 }
