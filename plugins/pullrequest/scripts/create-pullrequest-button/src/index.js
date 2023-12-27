@@ -52,7 +52,7 @@ const initButton = async (container) => {
 
     const gettext = await initVueGettext(
         createGettext,
-        (locale) => import(`./${getPOFileFromLocale(locale)}`),
+        (locale) => import(`../po/${getPOFileFromLocale(locale)}`),
     );
 
     const app = createApp(App, {
