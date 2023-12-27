@@ -28,7 +28,6 @@
                 <img
                     v-bind:title="reviewer.display_name"
                     v-bind:src="reviewer.avatar_url"
-                    class="media-object"
                     aria-hidden="true"
                     data-test="pull-request-card-reviewer-avatar"
                 />
@@ -54,7 +53,6 @@
                         <div class="tlp-avatar-mini">
                             <img
                                 v-bind:src="remaining_reviewer.avatar_url"
-                                class="media-object"
                                 aria-hidden="true"
                                 data-test="pull-request-card-remaining-reviewer-avatar"
                             />
