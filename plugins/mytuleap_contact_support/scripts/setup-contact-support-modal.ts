@@ -47,7 +47,7 @@ function setupContactSupportModal(
     mount_point.addEventListener("DOMContentLoaded", () => {
         const help_modal_trigger = mount_point.querySelector('.help-dropdown-link[href="/help/"]');
         if (!(help_modal_trigger instanceof Element)) {
-            throw new Error("Cannot find help link used to display the contact support modal");
+            return;
         }
 
         let modal_element: Element | null = null;
