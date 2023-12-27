@@ -30,17 +30,23 @@ final class GitRepositoryTestBuilder
     private string $namespace = '';
     private string $name      = 'unfederal_dictation';
     private \Project $project;
-    private bool $is_migrated_to_gerrit        = false;
-    private ?\GitRepository $parent_repository = null;
+    private bool $is_migrated_to_gerrit = false;
+    private ?\GitRepository $parent_repository;
 
-    private function __construct()
+    private function __construct(?\GitRepository $parent_repository)
     {
-        $this->project = ProjectTestBuilder::aProject()->build();
+        $this->project           = ProjectTestBuilder::aProject()->build();
+        $this->parent_repository = $parent_repository;
     }
 
     public static function aProjectRepository(): self
     {
-        return new self();
+        return new self(null);
+    }
+
+    public static function aForkOf(\GitRepository $parent_repository): self
+    {
+        return new self($parent_repository);
     }
 
     public function withName(string $name): self
@@ -52,12 +58,6 @@ final class GitRepositoryTestBuilder
     public function withId(int $id): self
     {
         $this->id = $id;
-        return $this;
-    }
-
-    public function withParentRepository(\GitRepository $repository): self
-    {
-        $this->parent_repository = $repository;
         return $this;
     }
 
