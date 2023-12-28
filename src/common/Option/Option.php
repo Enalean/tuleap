@@ -136,7 +136,7 @@ final class Option
             return $fn();
         }
 
-        return $this;
+        return new self($this->value, true);
     }
 
     /**

@@ -164,7 +164,7 @@ final class OptionTest extends TestCase
             return Option::fromValue('callback');
         });
 
-        self::assertSame($option, $new_option);
+        self::assertNotSame($option, $new_option);
         self::assertFalse($has_called_map_function);
         self::assertTrue($new_option->isValue());
         self::assertNotSame('callback', $new_option->unwrapOr('default'));
@@ -172,7 +172,6 @@ final class OptionTest extends TestCase
 
     public function testNothingOrElseReturnsDifferentOption(): void
     {
-        $value                   = new \stdClass();
         $has_called_map_function = false;
 
         $option     = Option::nothing(\stdClass::class);
