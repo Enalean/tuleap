@@ -30,7 +30,7 @@
         <div class="tlp-modal-body">
             <p>
                 <translate>
-                    An error occured while retrieving needed information to create a pull request.
+                    An error occurred while retrieving needed information to create a pull request.
                 </translate>
             </p>
             <p>

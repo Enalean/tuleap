@@ -12,11 +12,17 @@ msgstr ""
 "X-Generator: Poedit 3.2.2\n"
 
 msgid ""
-"An error occured while retrieving needed information to create a pull "
+"An error occurred while retrieving needed information to create a pull "
 "request."
 msgstr ""
 
 msgid "Cancel"
+msgstr ""
+
+msgid "Choose destination branch"
+msgstr ""
+
+msgid "Choose source branch…"
 msgstr ""
 
 msgid "Close"
