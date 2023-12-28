@@ -18,9 +18,9 @@
   -->
 
 <template>
-    <span class="pull-request-creation-info">
-        {{ $gettext("Created") }}
-        <tlp-relative-date
+    <span class="pull-request-creation-info"
+        >{{ $gettext("Created:")
+        }}<tlp-relative-date
             data-test="pull-request-creation-date"
             v-bind:date="pull_request.creation_date"
             v-bind:absolute-date="formatted_full_date"
@@ -29,7 +29,7 @@
             v-bind:locale="user_locale"
             >{{ formatted_full_date }}</tlp-relative-date
         >
-        {{ $gettext("by") }}
+        {{ $gettext("Created by:") }}
         <div class="pull-request-creation-info">
             <div class="tlp-avatar-mini">
                 <img
