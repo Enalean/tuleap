@@ -24,8 +24,6 @@ namespace Tuleap\PullRequest\Comment;
 
 use Tuleap\PullRequest\Comment\Notification\PullRequestNewCommentEvent;
 use Tuleap\PullRequest\Notification\EventSubjectToNotification;
-use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorAssigner;
-use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorRetriever;
 use Tuleap\PullRequest\Tests\Builders\NewCommentTestBuilder;
 use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
 use Tuleap\PullRequest\Tests\Stub\CountThreadsStub;

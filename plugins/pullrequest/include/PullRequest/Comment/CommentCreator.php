@@ -24,8 +24,6 @@ namespace Tuleap\PullRequest\Comment;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\PullRequest\Comment\Notification\PullRequestNewCommentEvent;
-use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorAssigner;
-use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorRetriever;
 use Tuleap\Reference\ExtractAndSaveCrossReferences;
 
 final class CommentCreator

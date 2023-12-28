@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\PullRequest\REST\v1\Comment;
+namespace Tuleap\PullRequest\Comment;
 
 use Tuleap\PullRequest\Tests\Stub\CountThreadsStub;
 use Tuleap\PullRequest\Tests\Stub\ParentCommentSearcherStub;

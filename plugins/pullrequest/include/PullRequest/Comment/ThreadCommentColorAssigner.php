@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
+ * Copyright (c) Enalean 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,35 +20,25 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\PullRequest\Tests\Stub;
+namespace Tuleap\PullRequest\Comment;
 
-final class ThreadColorUpdaterStub implements \Tuleap\PullRequest\Comment\ThreadColorUpdater
+final class ThreadCommentColorAssigner
 {
-    private int $call_count        = 0;
-    private ?string $last_argument = null;
-
-    private function __construct()
+    public function __construct(private ParentCommentSearcher $dao, private ThreadColorUpdater $thread_color_updater)
     {
     }
 
-    public static function withCallCount(): self
+    public function assignColor(int $parent_id, string $color): void
     {
-        return new self();
-    }
+        if ($parent_id === 0) {
+            return;
+        }
 
-    public function setThreadColor(int $pull_request_id, string $color): void
-    {
-        $this->call_count++;
-        $this->last_argument = $color;
-    }
+        $parent_comment = $this->dao->searchByCommentID($parent_id);
+        if (! $parent_comment || $parent_comment['parent_id'] !== 0 || $parent_comment['color'] !== '') {
+            return;
+        }
 
-    public function getCallCount(): int
-    {
-        return $this->call_count;
-    }
-
-    public function getLastArgument(): ?string
-    {
-        return $this->last_argument;
+        $this->thread_color_updater->setThreadColor($parent_comment['id'], $color);
     }
 }

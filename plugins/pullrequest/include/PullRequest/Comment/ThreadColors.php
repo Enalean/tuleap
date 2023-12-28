@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\PullRequest\REST\v1\Comment;
+namespace Tuleap\PullRequest\Comment;
 
 /**
  * @psalm-immutable
@@ -28,13 +28,13 @@ namespace Tuleap\PullRequest\REST\v1\Comment;
 final class ThreadColors
 {
     public const TLP_COLORS = [
-        "graffiti-yellow",
-        "daphne-blue",
-        "coral-pink",
-        "acid-green",
-        "lilac-purple",
-        "clockwork-orange",
-        "lake-placid-blue",
-        "flamingo-pink",
+        'graffiti-yellow',
+        'daphne-blue',
+        'coral-pink',
+        'acid-green',
+        'lilac-purple',
+        'clockwork-orange',
+        'lake-placid-blue',
+        'flamingo-pink',
     ];
 }

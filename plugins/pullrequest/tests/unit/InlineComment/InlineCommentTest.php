@@ -20,12 +20,10 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\PullRequest\Tests\InlineComment;
+namespace Tuleap\PullRequest\InlineComment;
 
-use Tuleap\PullRequest\InlineComment\InlineComment;
-use Tuleap\PullRequest\InlineComment\NewInlineComment;
+use Tuleap\PullRequest\Comment\ThreadColors;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
-use Tuleap\PullRequest\REST\v1\Comment\ThreadColors;
 use Tuleap\PullRequest\Tests\Builders\InlineCommentTestBuilder;
 use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;

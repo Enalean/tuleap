@@ -20,28 +20,38 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\PullRequest\REST\v1\Comment;
+namespace Tuleap\PullRequest\Comment;
 
-use Tuleap\PullRequest\Comment\ParentCommentSearcher;
-use Tuleap\PullRequest\Comment\ThreadColorUpdater;
-
-class ThreadCommentColorAssigner
+final class ThreadCommentColorRetriever
 {
-    public function __construct(private ParentCommentSearcher $dao, private ThreadColorUpdater $thread_color_updater)
+    public function __construct(private CountThreads $comment_dao, private ParentCommentSearcher $dao)
     {
     }
 
-    public function assignColor(int $parent_id, string $color): void
+    public function retrieveColor(int $id, int $parent_id): string
     {
         if ($parent_id === 0) {
-            return;
+            return "";
         }
 
         $parent_comment = $this->dao->searchByCommentID($parent_id);
-        if (! $parent_comment || $parent_comment['parent_id'] !== 0 || $parent_comment['color'] !== '') {
-            return;
+        if ($parent_comment && $parent_comment['color'] !== '') {
+            return $parent_comment['color'];
         }
 
-        $this->thread_color_updater->setThreadColor($parent_comment['id'], $color);
+        $number_of_threads = $this->comment_dao->countAllThreadsOfPullRequest($id);
+        return $this->getCorrespondingTlpColor($number_of_threads);
+    }
+
+    /**
+     * @psalm-param int<0, max> $number_of_threads
+     */
+    private function getCorrespondingTlpColor(int $number_of_threads): string
+    {
+        $count = $number_of_threads;
+        if ($count >= count(ThreadColors::TLP_COLORS)) {
+            $count %= count(ThreadColors::TLP_COLORS);
+        }
+        return ThreadColors::TLP_COLORS[$count];
     }
 }
