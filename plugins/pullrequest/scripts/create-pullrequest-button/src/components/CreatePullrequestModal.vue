@@ -20,19 +20,18 @@
 <template>
     <div class="tlp-modal" role="dialog">
         <div class="tlp-modal-header">
-            <h1 class="tlp-modal-title">
-                <translate>Create a pull request</translate>
-            </h1>
-            <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="Close">
+            <h1 class="tlp-modal-title">{{ create_label }}</h1>
+            <button
+                class="tlp-modal-close"
+                type="button"
+                data-dismiss="modal"
+                v-bind:aria-label="close_label"
+            >
                 <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
             </button>
         </div>
         <div class="tlp-modal-feedback" v-if="displayParentRepositoryWarning">
-            <div class="tlp-alert-warning">
-                <translate>
-                    You don't have permission to see parent repository's branches.
-                </translate>
-            </div>
+            <div class="tlp-alert-warning">{{ no_permission_message }}</div>
         </div>
         <div class="tlp-modal-body">
             <div class="tlp-alert-danger" v-if="create_error_message">
@@ -44,17 +43,14 @@
                     <label
                         class="tlp-label"
                         for="git-repository-actions-pullrequest-modal-body-source"
-                    >
-                        <translate>Source branch</translate>
-                        <i class="fa fa-asterisk"></i>
-                    </label>
-                    <select
+                        >{{ source_branch_label }}<i class="fa fa-asterisk"></i></label
+                    ><select
                         class="tlp-select"
                         id="git-repository-actions-pullrequest-modal-body-source"
                         required
                         v-model="source_branch"
                     >
-                        <option value="" selected disabled>Choose source branch…</option>
+                        <option value="" selected disabled>{{ choose_source }}</option>
                         <option
                             v-for="branch of source_branches"
                             v-bind:value="branch"
@@ -68,17 +64,14 @@
                     <label
                         class="tlp-label"
                         for="git-repository-actions-pullrequest-modal-body-destination"
-                    >
-                        <translate>Destination branch</translate>
-                        <i class="fa fa-asterisk"></i>
-                    </label>
-                    <select
+                        >{{ destination_branch_label }}<i class="fa fa-asterisk"></i></label
+                    ><select
                         class="tlp-select"
                         id="git-repository-actions-pullrequest-modal-body-destination"
                         required
                         v-model="destination_branch"
                     >
-                        <option value="" selected disabled>Choose destination branch</option>
+                        <option value="" selected disabled>{{ choose_destination }}</option>
                         <option
                             v-for="branch of destination_branches"
                             v-bind:value="branch"
@@ -96,7 +89,7 @@
                 class="tlp-button-primary tlp-button-outline tlp-modal-action"
                 data-dismiss="modal"
             >
-                <translate>Cancel</translate>
+                {{ cancel_label }}
             </button>
             <button
                 type="submit"
@@ -104,8 +97,7 @@
                 v-on:click="create()"
                 v-bind:disabled="is_button_disabled"
             >
-                <i v-bind:class="is_creating_pullrequest_icon_class"></i>
-                <translate>Create the pull request</translate>
+                <i v-bind:class="is_creating_pullrequest_icon_class"></i>{{ create_button }}
             </button>
         </div>
     </div>
@@ -156,6 +148,33 @@ export default {
             set(value) {
                 this.$store.commit("setSelectedDestinationBranch", value);
             },
+        },
+        create_label() {
+            return this.$gettext("Create a pull request");
+        },
+        close_label() {
+            return this.$gettext("Close");
+        },
+        no_permission_message() {
+            return this.$gettext("You don't have permission to see parent repository's branches.");
+        },
+        source_branch_label() {
+            return this.$gettext("Source branch");
+        },
+        choose_source() {
+            return this.$gettext("Choose source branch…");
+        },
+        destination_branch_label() {
+            return this.$gettext("Destination branch");
+        },
+        choose_destination() {
+            return this.$gettext("Choose destination branch");
+        },
+        cancel_label() {
+            return this.$gettext("Cancel");
+        },
+        create_button() {
+            return this.$gettext("Create the pull request");
         },
     },
     methods: {
