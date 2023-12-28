@@ -62,9 +62,8 @@ final class PullRequestEmptyStatePresenterBuilderTest extends TestCase
             ->inProject(ProjectTestBuilder::aProject()->withId($parent_repository_project_id)->build())
             ->build();
 
-        $repository = GitRepositoryTestBuilder::aProjectRepository()
+        $repository = GitRepositoryTestBuilder::aForkOf($parent_repository)
             ->inProject(ProjectTestBuilder::aProject()->withId($project_id)->build())
-            ->withParentRepository($parent_repository)
             ->migratedToGerrit()
             ->withId($repository_id)
             ->build();
