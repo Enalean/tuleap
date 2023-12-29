@@ -23,17 +23,26 @@ declare(strict_types=1);
 
 namespace Tuleap\Dashboard\Project;
 
-require_once __DIR__ . '/ProjectDashboardXMLImporterBase.php';
-
-use Psr\Log\LogLevel;
 use SimpleXMLElement;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBase
+final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBase
 {
-    public function testItImportsALine()
+    private \PFUser $user;
+
+    protected function setUp(): void
     {
-        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
+        parent::setUp();
+
+        $this->user = UserTestBuilder::aUser()
+            ->withAdministratorOf($this->project)
+            ->withoutSiteAdministrator()
+            ->build();
+    }
+
+    public function testItImportsALine(): void
+    {
+        $this->dao->method('searchByProjectIdAndName')->willReturn([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -50,23 +59,27 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
               </project>'
         );
 
-        $this->dao->shouldReceive('save')->andReturns(10001);
-        $widget = \Mockery::spy(\Widget::class);
-        $widget->shouldReceive('getId')->andReturns('projectmembers');
-        $widget->shouldReceive('getInstanceId')->andReturns(null);
-        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectmembers')->andReturns($widget);
+        $this->dao->method('save')->willReturn(10001);
+        $widget = $this->createMock(\Widget::class);
+        $widget->method('getId')->willReturn('projectmembers');
+        $widget->method('getInstanceId')->willReturn(null);
+        $widget->method('setOwner');
+        $widget->method('isUnique');
+        $widget->method('create');
+        $this->widget_factory->method('getInstanceByWidgetName')->with('projectmembers')->willReturn($widget);
 
-        $this->widget_dao->shouldReceive('createLine')->with(10001, ProjectDashboardController::DASHBOARD_TYPE, 1)->once();
+        $this->widget_dao->expects(self::once())->method('createLine')->with(10001, ProjectDashboardController::DASHBOARD_TYPE, 1);
 
-        $this->disabled_widgets_checker->shouldReceive('isWidgetDisabled')->andReturnFalse();
+        $this->disabled_widgets_checker->method('isWidgetDisabled')->willReturn(false);
+
+        $this->event_manager->method('processEvent');
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
-    public function testItImportsAColumn()
+    public function testItImportsAColumn(): void
     {
-        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
+        $this->dao->method('searchByProjectIdAndName')->willReturn([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -83,22 +96,28 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
               </project>'
         );
 
-        $this->dao->shouldReceive('save')->andReturns(10001);
+        $this->dao->method('save')->willReturn(10001);
 
-        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectmembers')->andReturns(\Mockery::spy(\Widget::class)->shouldReceive('getId')->andReturns('projectmembers')->getMock());
+        $widget = $this->createMock(\Widget::class);
+        $widget->method('getId')->willReturn('projectmembers');
+        $widget->method('setOwner');
+        $widget->method('isUnique');
+        $widget->method('create');
+        $this->widget_factory->method('getInstanceByWidgetName')->with('projectmembers')->willReturn($widget);
 
-        $this->widget_dao->shouldReceive('createLine')->andReturns(12);
-        $this->widget_dao->shouldReceive('createColumn')->with(12, 1)->once();
+        $this->widget_dao->method('createLine')->willReturn(12);
+        $this->widget_dao->expects(self::once())->method('createColumn')->with(12, 1);
 
-        $this->disabled_widgets_checker->shouldReceive('isWidgetDisabled')->andReturnFalse();
+        $this->disabled_widgets_checker->method('isWidgetDisabled')->willReturn(false);
+
+        $this->event_manager->method('processEvent');
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
-    public function testItSetOwnerAndIdExplicitlyToOvercomeWidgetDesignedToGatherThoseDataFromHTTP()
+    public function testItSetOwnerAndIdExplicitlyToOvercomeWidgetDesignedToGatherThoseDataFromHTTP(): void
     {
-        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
+        $this->dao->method('searchByProjectIdAndName')->willReturn([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -115,25 +134,30 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
               </project>'
         );
 
-        $this->widget_dao->shouldReceive('createLine')->andReturns(12);
-        $this->widget_dao->shouldReceive('createColumn')->andReturns(122);
+        $this->widget_dao->method('createLine')->willReturn(12);
+        $this->widget_dao->method('createColumn')->willReturn(122);
+        $this->dao->method('save');
 
-        $widget = \Mockery::spy(\Widget::class)->shouldReceive('getId')->andReturns('projectmembers')->getMock();
-        $widget->shouldReceive('setOwner')->with(101, ProjectDashboardController::LEGACY_DASHBOARD_TYPE)->once();
+        $widget = $this->createMock(\Widget::class);
+        $widget->method('getId')->willReturn('projectmembers');
+        $widget->expects(self::once())->method('setOwner')->with(101, ProjectDashboardController::LEGACY_DASHBOARD_TYPE);
+        $widget->method('isUnique');
+        $widget->method('create');
 
-        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectmembers')->andReturns($widget);
+        $this->widget_factory->method('getInstanceByWidgetName')->with('projectmembers')->willReturn($widget);
 
-        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectmembers', 0, 122, 1)->once();
+        $this->widget_dao->expects(self::once())->method('insertWidgetInColumnWithRank')->with('projectmembers', 0, 122, 1);
 
-        $this->disabled_widgets_checker->shouldReceive('isWidgetDisabled')->andReturnFalse();
+        $this->disabled_widgets_checker->method('isWidgetDisabled')->willReturn(false);
+
+        $this->event_manager->method('processEvent');
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
-    public function testItImportsAWidget()
+    public function testItImportsAWidget(): void
     {
-        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
+        $this->dao->method('searchByProjectIdAndName')->willReturn([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -150,21 +174,28 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
               </project>'
         );
 
-        $this->widget_dao->shouldReceive('createLine')->andReturns(12);
-        $this->widget_dao->shouldReceive('createColumn')->andReturns(122);
-        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectmembers')->andReturns(\Mockery::spy(\Widget::class)->shouldReceive('getId')->andReturns('projectmembers')->getMock());
+        $this->widget_dao->method('createLine')->willReturn(12);
+        $this->widget_dao->method('createColumn')->willReturn(122);
+        $this->dao->method('save');
+        $widget = $this->createMock(\Widget::class);
+        $widget->method('getId')->willReturn('projectmembers');
+        $widget->method('setOwner');
+        $widget->method('isUnique');
+        $widget->method('create');
+        $this->widget_factory->method('getInstanceByWidgetName')->with('projectmembers')->willReturn($widget);
 
-        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectmembers', 0, 122, 1)->once();
+        $this->widget_dao->expects(self::once())->method('insertWidgetInColumnWithRank')->with('projectmembers', 0, 122, 1);
 
-        $this->disabled_widgets_checker->shouldReceive('isWidgetDisabled')->andReturnFalse();
+        $this->disabled_widgets_checker->method('isWidgetDisabled')->willReturn(false);
+
+        $this->event_manager->method('processEvent');
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
-    public function testItErrorsWhenWidgetNameIsUnknown()
+    public function testItErrorsWhenWidgetNameIsUnknown(): void
     {
-        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
+        $this->dao->method('searchByProjectIdAndName')->willReturn([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -181,21 +212,20 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
               </project>'
         );
 
-        $this->widget_dao->shouldReceive('createLine')->andReturns(12);
-        $this->widget_dao->shouldReceive('createColumn')->andReturns(122);
-        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->andReturns(null);
+        $this->widget_dao->method('createLine')->willReturn(12);
+        $this->widget_dao->method('createColumn')->willReturn(122);
+        $this->dao->method('save');
+        $this->widget_factory->method('getInstanceByWidgetName')->willReturn(null);
 
-        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->never();
-
-        $this->logger->shouldReceive('log')->with(LogLevel::ERROR, \Mockery::any(), [])->once();
+        $this->widget_dao->expects(self::never())->method('insertWidgetInColumnWithRank');
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
+        self::assertTrue($this->logger->hasErrorRecords());
     }
 
-    public function testItErrorsWhenWidgetIsDisabled()
+    public function testItErrorsWhenWidgetIsDisabled(): void
     {
-        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
+        $this->dao->method('searchByProjectIdAndName')->willReturn([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -212,23 +242,24 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
               </project>'
         );
 
-        $this->widget_dao->shouldReceive('createLine')->never();
-        $this->widget_dao->shouldReceive('createColumn')->never();
-        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->andReturns(\Mockery::spy(\Widget::class)->shouldReceive('getInstanceId')->andReturns(false)->getMock());
+        $this->widget_dao->expects(self::never())->method('createLine');
+        $this->widget_dao->expects(self::never())->method('createColumn');
+        $this->dao->method('save');
+        $widget = $this->createMock(\Widget::class);
+        $widget->method('getInstanceId')->willReturn(false);
+        $this->widget_factory->method('getInstanceByWidgetName')->willReturn($widget);
 
-        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->never();
+        $this->widget_dao->expects(self::never())->method('insertWidgetInColumnWithRank');
 
-        $this->logger->shouldReceive('log')->with(LogLevel::ERROR, \Mockery::any(), [])->once();
-
-        $this->disabled_widgets_checker->shouldReceive('isWidgetDisabled')->andReturnTrue();
+        $this->disabled_widgets_checker->method('isWidgetDisabled')->willReturn(true);
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
+        self::assertTrue($this->logger->hasErrorRecords());
     }
 
-    public function testItErrorsWhenWidgetContentCannotBeCreated()
+    public function testItErrorsWhenWidgetContentCannotBeCreated(): void
     {
-        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
+        $this->dao->method('searchByProjectIdAndName')->willReturn([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -245,23 +276,29 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
               </project>'
         );
 
-        $this->widget_dao->shouldReceive('createLine')->never();
-        $this->widget_dao->shouldReceive('createColumn')->never();
-        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->andReturns(\Mockery::spy(\Widget::class)->shouldReceive('getInstanceId')->andReturns(false)->getMock());
+        $this->widget_dao->expects(self::never())->method('createLine');
+        $this->widget_dao->expects(self::never())->method('createColumn');
+        $this->dao->method('save');
+        $widget = $this->createMock(\Widget::class);
+        $widget->method('getInstanceId')->willReturn(false);
+        $widget->method('setOwner');
+        $widget->method('isUnique');
+        $widget->method('getId');
+        $this->widget_factory->method('getInstanceByWidgetName')->willReturn($widget);
 
-        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->never();
+        $this->widget_dao->expects(self::never())->method('insertWidgetInColumnWithRank');
 
-        $this->logger->shouldReceive('log')->with(LogLevel::ERROR, \Mockery::any(), [])->once();
+        $this->disabled_widgets_checker->method('isWidgetDisabled')->willReturn(false);
 
-        $this->disabled_widgets_checker->shouldReceive('isWidgetDisabled')->andReturnFalse();
+        $this->event_manager->method('processEvent');
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
+        self::assertTrue($this->logger->hasErrorRecords());
     }
 
-    public function testItImportsTwoWidgetsInSameColumn()
+    public function testItImportsTwoWidgetsInSameColumn(): void
     {
-        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
+        $this->dao->method('searchByProjectIdAndName')->willReturn([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -279,26 +316,42 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
               </project>'
         );
 
-        $this->logger->shouldReceive('log')->with(LogLevel::ERROR, \Mockery::any(), \Mockery::any())->never();
+        $this->widget_dao->method('createLine')->willReturn(12);
+        $this->widget_dao->method('createColumn')->willReturn(122);
+        $this->dao->method('save');
+        $widget_members = $this->createMock(\Widget::class);
+        $widget_members->method('getId')->willReturn('projectmembers');
+        $widget_members->method('setOwner');
+        $widget_members->method('isUnique');
+        $widget_members->method('getId');
+        $widget_members->method('create');
+        $widget_heartbeat = $this->createMock(\Widget::class);
+        $widget_heartbeat->method('getId')->willReturn('projectheartbeat');
+        $widget_heartbeat->method('setOwner');
+        $widget_heartbeat->method('isUnique');
+        $widget_heartbeat->method('getId');
+        $widget_heartbeat->method('create');
+        $this->widget_factory->method('getInstanceByWidgetName')
+            ->withConsecutive(['projectmembers'], ['projectheartbeat'])
+            ->willReturnOnConsecutiveCalls($widget_members, $widget_heartbeat);
 
-        $this->widget_dao->shouldReceive('createLine')->andReturns(12);
-        $this->widget_dao->shouldReceive('createColumn')->andReturns(122);
-        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectmembers')->andReturns(\Mockery::spy(\Widget::class)->shouldReceive('getId')->andReturns('projectmembers')->getMock());
-        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectheartbeat')->andReturns(\Mockery::spy(\Widget::class)->shouldReceive('getId')->andReturns('projectheartbeat')->getMock());
+        $this->widget_dao->expects(self::exactly(2))->method('insertWidgetInColumnWithRank')
+            ->withConsecutive(
+                ['projectmembers', 0, 122, 1],
+                ['projectheartbeat', 0, 122, 2],
+            );
 
-        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->times(2);
-        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectmembers', 0, 122, 1)->ordered();
-        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectheartbeat', 0, 122, 2)->ordered();
+        $this->disabled_widgets_checker->method('isWidgetDisabled')->willReturn(false);
 
-        $this->disabled_widgets_checker->shouldReceive('isWidgetDisabled')->andReturnFalse();
+        $this->event_manager->method('processEvent');
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
+        self::assertFalse($this->logger->hasErrorRecords());
     }
 
-    public function testItDoesntImportTwiceUniqueWidgets()
+    public function testItDoesntImportTwiceUniqueWidgets(): void
     {
-        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
+        $this->dao->method('searchByProjectIdAndName')->willReturn([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -320,26 +373,29 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
               </project>'
         );
 
-        $this->widget_dao->shouldReceive('createLine')->andReturns(12);
-        $this->widget_dao->shouldReceive('createColumn')->andReturns(122);
-        $widget = \Mockery::spy(\Widget::class);
-        $widget->shouldReceive('getId')->andReturns('projectheartbeat');
-        $widget->shouldReceive('isUnique')->andReturns(true);
-        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectheartbeat')->andReturns($widget);
+        $this->widget_dao->method('createLine')->willReturn(12);
+        $this->widget_dao->method('createColumn')->willReturn(122);
+        $this->dao->method('save');
+        $widget = $this->createMock(\Widget::class);
+        $widget->method('getId')->willReturn('projectheartbeat');
+        $widget->method('isUnique')->willReturn(true);
+        $widget->method('setOwner');
+        $widget->method('create');
+        $this->widget_factory->method('getInstanceByWidgetName')->with('projectheartbeat')->willReturn($widget);
 
-        $this->logger->shouldReceive('log')->with(LogLevel::WARNING, \Mockery::any(), [])->once();
-        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->times(1);
-        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectheartbeat', 0, 122, 1);
+        $this->widget_dao->expects(self::once())->method('insertWidgetInColumnWithRank')->with('projectheartbeat', 0, 122, 1);
 
-        $this->disabled_widgets_checker->shouldReceive('isWidgetDisabled')->andReturnFalse();
+        $this->disabled_widgets_checker->method('isWidgetDisabled')->willReturn(false);
+
+        $this->event_manager->method('processEvent');
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
+        self::assertTrue($this->logger->hasWarningRecords());
     }
 
-    public function testItImportsUniqueWidgetsWhenThereAreInDifferentDashboards()
+    public function testItImportsUniqueWidgetsWhenThereAreInDifferentDashboards(): void
     {
-        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
+        $this->dao->method('searchByProjectIdAndName')->willReturn([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -363,28 +419,34 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
               </project>'
         );
 
-        $this->widget_dao->shouldReceive('createColumn')->andReturns(122)->ordered();
-        $this->widget_dao->shouldReceive('createColumn')->andReturns(222)->ordered();
-        $widget = \Mockery::spy(\Widget::class);
-        $widget->shouldReceive('getId')->andReturns('projectheartbeat');
-        $widget->shouldReceive('isUnique')->andReturns(true);
-        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectheartbeat')->andReturns($widget);
+        $this->widget_dao->method('createColumn')->willReturnOnConsecutiveCalls(122, 222);
+        $this->widget_dao->method('createLine');
+        $this->dao->method('save');
+        $widget = $this->createMock(\Widget::class);
+        $widget->method('getId')->willReturn('projectheartbeat');
+        $widget->method('isUnique')->willReturn(true);
+        $widget->method('setOwner');
+        $widget->method('create');
+        $this->widget_factory->method('getInstanceByWidgetName')->with('projectheartbeat')->willReturn($widget);
 
-        $this->logger->shouldReceive('log')->with(LogLevel::WARNING, \Mockery::any(), \Mockery::any())->never();
-        $this->logger->shouldReceive('log')->with(LogLevel::ERROR, \Mockery::any(), \Mockery::any())->never();
-        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->times(2);
-        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectheartbeat', 0, 122, 1)->ordered();
-        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectheartbeat', 0, 222, 1)->ordered();
+        $this->widget_dao->expects(self::exactly(2))->method('insertWidgetInColumnWithRank')
+            ->withConsecutive(
+                ['projectheartbeat', 0, 122, 1],
+                ['projectheartbeat', 0, 222, 1],
+            );
 
-        $this->disabled_widgets_checker->shouldReceive('isWidgetDisabled')->andReturnFalse();
+        $this->disabled_widgets_checker->method('isWidgetDisabled')->willReturn(false);
+
+        $this->event_manager->method('processEvent');
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
+        self::assertFalse($this->logger->hasWarningRecords());
+        self::assertFalse($this->logger->hasErrorRecords());
     }
 
-    public function testItDoesntCreateLineAndColumnWhenWidgetIsNotValid()
+    public function testItDoesntCreateLineAndColumnWhenWidgetIsNotValid(): void
     {
-        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
+        $this->dao->method('searchByProjectIdAndName')->willReturn([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -401,19 +463,19 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
               </project>'
         );
 
-        $this->widget_dao->shouldReceive('createLine')->never();
-        $this->widget_dao->shouldReceive('createColumn')->never();
-        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->never();
+        $this->widget_dao->expects(self::never())->method('createLine');
+        $this->widget_dao->expects(self::never())->method('createColumn');
+        $this->widget_dao->expects(self::never())->method('insertWidgetInColumnWithRank');
+        $this->dao->method('save');
 
-        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectmembers')->andReturns(null);
+        $this->widget_factory->method('getInstanceByWidgetName')->with('projectmembers')->willReturn(null);
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
-    public function testItDoesntImportAPersonalWidget()
+    public function testItDoesntImportAPersonalWidget(): void
     {
-        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
+        $this->dao->method('searchByProjectIdAndName')->willReturn([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -430,22 +492,29 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
               </project>'
         );
 
-        $this->widget_dao->shouldReceive('createLine')->never();
-        $this->widget_dao->shouldReceive('createColumn')->never();
-        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('myprojects')->andReturns(\Mockery::spy(\Widget::class)->shouldReceive('getId')->andReturns('myprojects')->getMock());
+        $this->widget_dao->expects(self::never())->method('createLine');
+        $this->widget_dao->expects(self::never())->method('createColumn');
+        $this->dao->method('save');
+        $widget = $this->createMock(\Widget::class);
+        $widget->method('getId')->willReturn('myprojects');
+        $widget->method('isUnique');
+        $widget->method('setOwner');
+        $widget->method('create');
+        $this->widget_factory->method('getInstanceByWidgetName')->with('myprojects')->willReturn($widget);
 
-        $this->logger->shouldReceive('log')->with(LogLevel::ERROR, \Mockery::any(), [])->once();
-        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->never();
+        $this->widget_dao->expects(self::never())->method('insertWidgetInColumnWithRank');
 
-        $this->disabled_widgets_checker->shouldReceive('isWidgetDisabled')->andReturnFalse();
+        $this->disabled_widgets_checker->method('isWidgetDisabled')->willReturn(false);
+
+        $this->event_manager->method('processEvent');
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
+        self::assertTrue($this->logger->hasErrorRecords());
     }
 
-    public function testItImportsTwoWidgetsInTwoColumns()
+    public function testItImportsTwoWidgetsInTwoColumns(): void
     {
-        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
+        $this->dao->method('searchByProjectIdAndName')->willReturn([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -465,29 +534,42 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
               </project>'
         );
 
-        $this->logger->shouldReceive('log')->with(LogLevel::ERROR, \Mockery::any(), \Mockery::any())->never();
+        $this->widget_dao->method('createLine')->willReturn(12);
+        $this->widget_dao->method('createColumn')->willReturnOnConsecutiveCalls(122, 124);
+        $this->dao->method('save');
+        $widget_members = $this->createMock(\Widget::class);
+        $widget_members->method('getId')->willReturn('projectmembers');
+        $widget_members->method('isUnique');
+        $widget_members->method('setOwner');
+        $widget_members->method('create');
+        $widget_heartbeat = $this->createMock(\Widget::class);
+        $widget_heartbeat->method('getId')->willReturn('projectheartbeat');
+        $widget_heartbeat->method('isUnique');
+        $widget_heartbeat->method('setOwner');
+        $widget_heartbeat->method('create');
+        $this->widget_factory->method('getInstanceByWidgetName')
+            ->withConsecutive(['projectmembers'], ['projectheartbeat'])
+            ->willReturnOnConsecutiveCalls($widget_members, $widget_heartbeat);
 
-        $this->widget_dao->shouldReceive('createLine')->andReturns(12);
-        $this->widget_dao->shouldReceive('createColumn')->andReturns(122)->ordered();
-        $this->widget_dao->shouldReceive('createColumn')->andReturns(124)->ordered();
-        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectmembers')->andReturns(\Mockery::spy(\Widget::class)->shouldReceive('getId')->andReturns('projectmembers')->getMock());
-        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectheartbeat')->andReturns(\Mockery::spy(\Widget::class)->shouldReceive('getId')->andReturns('projectheartbeat')->getMock());
+        $this->widget_dao->expects(self::exactly(2))->method('insertWidgetInColumnWithRank')
+            ->withConsecutive(
+                ['projectmembers', 0, 122, 1],
+                ['projectheartbeat', 0, 124, 1],
+            );
 
-        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->times(2);
-        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectmembers', 0, 122, 1)->ordered();
-        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectheartbeat', 0, 124, 1)->ordered();
+        $this->widget_dao->expects(self::once())->method('adjustLayoutAccordinglyToNumberOfWidgets')->with(2, 12);
 
-        $this->widget_dao->shouldReceive('adjustLayoutAccordinglyToNumberOfWidgets')->with(2, 12)->once();
+        $this->disabled_widgets_checker->method('isWidgetDisabled')->willReturn(false);
 
-        $this->disabled_widgets_checker->shouldReceive('isWidgetDisabled')->andReturnFalse();
+        $this->event_manager->method('processEvent');
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
+        self::assertFalse($this->logger->hasErrorRecords());
     }
 
-    public function testItImportsTwoWidgetsWithSetLayout()
+    public function testItImportsTwoWidgetsWithSetLayout(): void
     {
-        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
+        $this->dao->method('searchByProjectIdAndName')->willReturn([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -507,31 +589,43 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
               </project>'
         );
 
-        $this->dao->shouldReceive('save')->andReturns(144);
+        $this->dao->method('save')->willReturn(144);
 
-        $this->logger->shouldReceive('log')->with(LogLevel::ERROR, \Mockery::any(), \Mockery::any())->never();
+        $this->widget_dao->method('createLine')->willReturn(12);
+        $this->widget_dao->method('createColumn')->willReturnOnConsecutiveCalls(122, 124);
+        $widget_members = $this->createMock(\Widget::class);
+        $widget_members->method('getId')->willReturn('projectmembers');
+        $widget_members->method('isUnique');
+        $widget_members->method('setOwner');
+        $widget_members->method('create');
+        $widget_heartbeat = $this->createMock(\Widget::class);
+        $widget_heartbeat->method('getId')->willReturn('projectheartbeat');
+        $widget_heartbeat->method('isUnique');
+        $widget_heartbeat->method('setOwner');
+        $widget_heartbeat->method('create');
+        $this->widget_factory->method('getInstanceByWidgetName')
+            ->withConsecutive(['projectmembers'], ['projectheartbeat'])
+            ->willReturnOnConsecutiveCalls($widget_members, $widget_heartbeat);
 
-        $this->widget_dao->shouldReceive('createLine')->andReturns(12);
-        $this->widget_dao->shouldReceive('createColumn')->andReturns(122)->ordered();
-        $this->widget_dao->shouldReceive('createColumn')->andReturns(124)->ordered();
-        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectmembers')->andReturns(\Mockery::spy(\Widget::class)->shouldReceive('getId')->andReturns('projectmembers')->getMock());
-        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectheartbeat')->andReturns(\Mockery::spy(\Widget::class)->shouldReceive('getId')->andReturns('projectheartbeat')->getMock());
+        $this->widget_dao->expects(self::exactly(2))->method('insertWidgetInColumnWithRank')
+            ->withConsecutive(
+                ['projectmembers', 0, 122, 1],
+                ['projectheartbeat', 0, 124, 1],
+            );
 
-        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->times(2);
-        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectmembers', 0, 122, 1)->ordered();
-        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectheartbeat', 0, 124, 1)->ordered();
+        $this->widget_dao->expects(self::once())->method('updateLayout')->with(12, 'two-columns-small-big');
 
-        $this->widget_dao->shouldReceive('updateLayout')->with(12, 'two-columns-small-big')->once();
+        $this->disabled_widgets_checker->method('isWidgetDisabled')->willReturn(false);
 
-        $this->disabled_widgets_checker->shouldReceive('isWidgetDisabled')->andReturnFalse();
+        $this->event_manager->method('processEvent');
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
+        self::assertFalse($this->logger->hasErrorRecords());
     }
 
-    public function testItFallsbackToAutomaticLayoutWhenLayoutIsUnknown()
+    public function testItFallsbackToAutomaticLayoutWhenLayoutIsUnknown(): void
     {
-        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
+        $this->dao->method('searchByProjectIdAndName')->willReturn([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -551,31 +645,44 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
               </project>'
         );
 
-        $this->logger->shouldReceive('log')->with(LogLevel::ERROR, \Mockery::any(), \Mockery::any())->never();
-        $this->logger->shouldReceive('log')->with(LogLevel::WARNING, \Mockery::any(), [])->once();
+        $this->widget_dao->method('createLine')->willReturn(12);
+        $this->widget_dao->method('createColumn')->willReturnOnConsecutiveCalls(122, 124);
+        $this->dao->method('save');
+        $widget_members = $this->createMock(\Widget::class);
+        $widget_members->method('getId')->willReturn('projectmembers');
+        $widget_members->method('isUnique');
+        $widget_members->method('setOwner');
+        $widget_members->method('create');
+        $widget_heartbeat = $this->createMock(\Widget::class);
+        $widget_heartbeat->method('getId')->willReturn('projectheartbeat');
+        $widget_heartbeat->method('isUnique');
+        $widget_heartbeat->method('setOwner');
+        $widget_heartbeat->method('create');
+        $this->widget_factory->method('getInstanceByWidgetName')
+            ->withConsecutive(['projectmembers'], ['projectheartbeat'])
+            ->willReturnOnConsecutiveCalls($widget_members, $widget_heartbeat);
 
-        $this->widget_dao->shouldReceive('createLine')->andReturns(12);
-        $this->widget_dao->shouldReceive('createColumn')->andReturns(122)->ordered();
-        $this->widget_dao->shouldReceive('createColumn')->andReturns(124)->ordered();
-        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectmembers')->andReturns(\Mockery::spy(\Widget::class)->shouldReceive('getId')->andReturns('projectmembers')->getMock());
-        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectheartbeat')->andReturns(\Mockery::spy(\Widget::class)->shouldReceive('getId')->andReturns('projectheartbeat')->getMock());
+        $this->widget_dao->expects(self::exactly(2))->method('insertWidgetInColumnWithRank')
+            ->withConsecutive(
+                ['projectmembers', 0, 122, 1],
+                ['projectheartbeat', 0, 124, 1],
+            );
 
-        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->times(2);
-        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectmembers', 0, 122, 1)->ordered();
-        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectheartbeat', 0, 124, 1)->ordered();
+        $this->widget_dao->expects(self::never())->method('updateLayout');
+        $this->widget_dao->expects(self::once())->method('adjustLayoutAccordinglyToNumberOfWidgets');
 
-        $this->widget_dao->shouldReceive('updateLayout')->never();
-        $this->widget_dao->shouldReceive('adjustLayoutAccordinglyToNumberOfWidgets')->once();
+        $this->disabled_widgets_checker->method('isWidgetDisabled')->willReturn(false);
 
-        $this->disabled_widgets_checker->shouldReceive('isWidgetDisabled')->andReturnFalse();
+        $this->event_manager->method('processEvent');
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
+        self::assertFalse($this->logger->hasErrorRecords());
+        self::assertTrue($this->logger->hasWarningRecords());
     }
 
-    public function testItImportsAWidgetWithPreferences()
+    public function testItImportsAWidgetWithPreferences(): void
     {
-        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
+        $this->dao->method('searchByProjectIdAndName')->willReturn([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -597,11 +704,13 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
               </project>'
         );
 
-        $this->widget_dao->shouldReceive('createLine')->andReturns(12);
-        $this->widget_dao->shouldReceive('createColumn')->andReturns(122);
+        $this->widget_dao->method('createLine')->willReturn(12);
+        $this->widget_dao->method('createColumn')->willReturn(122);
+        $this->dao->method('save');
 
-        $widget = \Mockery::mock(\Widget::class, ['getId' => 'projectrss'])->shouldIgnoreMissing();
-        $widget->shouldReceive('create')->with(\Mockery::on(function (\Codendi_Request $request) {
+        $widget = $this->createMock(\Widget::class);
+        $widget->method('getId')->willReturn('projectrss');
+        $widget->expects(self::once())->method('create')->with(self::callback(function (\Codendi_Request $request) {
             if (
                 $request->get('rss') &&
                 $request->getInArray('rss', 'title') === 'Da feed' &&
@@ -610,21 +719,24 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
                 return true;
             }
             return false;
-        }))->once()->andReturns(35);
+        }))->willReturn(35);
+        $widget->method('isUnique');
+        $widget->method('setOwner');
 
-        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectrss')->andReturns($widget);
+        $this->widget_factory->method('getInstanceByWidgetName')->with('projectrss')->willReturn($widget);
 
-        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectrss', 35, 122, 1)->once();
+        $this->widget_dao->expects(self::once())->method('insertWidgetInColumnWithRank')->with('projectrss', 35, 122, 1);
 
-        $this->disabled_widgets_checker->shouldReceive('isWidgetDisabled')->andReturnFalse();
+        $this->disabled_widgets_checker->method('isWidgetDisabled')->willReturn(false);
+
+        $this->event_manager->method('processEvent');
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
-    public function testItSkipWidgetCreationWhenCreateRaisesExceptions()
+    public function testItSkipWidgetCreationWhenCreateRaisesExceptions(): void
     {
-        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
+        $this->dao->method('searchByProjectIdAndName')->willReturn([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -646,18 +758,19 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
               </project>'
         );
 
-        $this->widget_dao->shouldReceive('createLine')->never();
-        $this->widget_dao->shouldReceive('createColumn')->never();
+        $this->widget_dao->expects(self::never())->method('createLine');
+        $this->widget_dao->expects(self::never())->method('createColumn');
+        $this->dao->method('save');
 
         $this->mappings_registry->addReference('K123', 78998);
 
-        $widget = \Mockery::spy(\Widget::class);
-        $widget->shouldReceive('getId')->andReturns('projectimageviewer');
-        $widget->shouldReceive('create')->andThrows(new \Exception("foo"));
+        $widget = $this->createMock(\Widget::class);
+        $widget->method('getId')->willReturn('projectimageviewer');
+        $widget->method('create')->willThrowException(new \Exception("foo"));
 
-        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectimageviewer')->andReturns($widget);
+        $this->widget_factory->method('getInstanceByWidgetName')->with('projectimageviewer')->willReturn($widget);
 
-        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->never();
+        $this->widget_dao->expects(self::never())->method('insertWidgetInColumnWithRank');
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
