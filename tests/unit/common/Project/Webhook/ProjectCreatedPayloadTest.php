@@ -22,32 +22,31 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Webhook;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ProjectCreatedPayloadTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @dataProvider ownerDataProvider
      */
     public function testPayloadCreation(bool $has_owner): void
     {
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getStartDate')->andReturn(0);
-        $project->shouldReceive('getPublicName')->andReturn('public_name');
-        $project->shouldReceive('getUnixName')->andReturn('unix_name');
-        $project->shouldReceive('getID')->andReturn(101);
-        $project->shouldReceive('getAccess')->andReturn('private');
+        $project = $this->createMock(\Project::class);
+        $project->method('getStartDate')->willReturn(0);
+        $project->method('getPublicName')->willReturn('public_name');
+        $project->method('getUnixName')->willReturn('unix_name');
+        $project->method('getID')->willReturn(101);
+        $project->method('getAccess')->willReturn('private');
         $owner = null;
         if ($has_owner) {
-            $owner = \Mockery::mock(\PFUser::class);
-            $owner->shouldReceive('getId')->andReturn(10);
-            $owner->shouldReceive('getEmail')->andReturn('tuleap@example.com');
-            $owner->shouldReceive('getRealName')->andReturn('user realname');
-            $project->shouldReceive('getAdmins')->andReturn([$owner]);
+            $owner = UserTestBuilder::aUser()
+                ->withId(10)
+                ->withEmail('tuleap@example.com')
+                ->withRealName('user realname')
+                ->build();
+            $project->method('getAdmins')->willReturn([$owner]);
         } else {
-            $project->shouldReceive('getAdmins')->andReturn([]);
+            $project->method('getAdmins')->willReturn([]);
         }
 
         $payload = new ProjectCreatedPayload($project, 0);
@@ -57,9 +56,9 @@ final class ProjectCreatedPayloadTest extends \Tuleap\Test\PHPUnit\TestCase
                 'updated_at'          => '1970-01-01T00:00:00+00:00',
                 'event_name'          => 'project_create',
                 'name'                => 'public_name',
-                'owner_id'            => $owner !== null ? $owner->getId() : null,
-                'owner_email'         => $owner !== null ? $owner->getEmail() : null,
-                'owner_name'          => $owner !== null ? $owner->getRealName() : null,
+                'owner_id'            => $owner?->getId(),
+                'owner_email'         => $owner?->getEmail(),
+                'owner_name'          => $owner?->getRealName(),
                 'path'                => 'unix_name',
                 'path_with_namespace' => 'unix_name',
                 'project_id'          => 101,
