@@ -26,16 +26,13 @@ use Tuleap\TemporaryTestDirectory;
 
 final class ZipArchiveTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;
 
     private const FIXTURES_DIR = __DIR__ . '/_fixtures';
 
-    /** @var string */
-    private $tmp_dir;
+    private string $tmp_dir;
 
-    /** @var ZipArchive */
-    private $archive;
+    private ZipArchive $archive;
 
     protected function setUp(): void
     {
@@ -56,30 +53,30 @@ final class ZipArchiveTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItGivesTheXMLFile(): void
     {
         $expected = file_get_contents(self::FIXTURES_DIR . '/project.xml');
-        $this->assertEquals($expected, $this->archive->getProjectXML());
+        self::assertEquals($expected, $this->archive->getProjectXML());
     }
 
     public function testItExtractAttachmentsIntoARandomTemporaryDirectory(): void
     {
         $extraction_path = $this->archive->getExtractionPath();
-        $this->assertDirectoryExists($extraction_path);
+        self::assertDirectoryExists($extraction_path);
 
         $expected_prefix = $this->tmp_dir . '/import_project_';
-        $this->assertMatchesRegularExpression('%' . $expected_prefix . '\w+%', $extraction_path);
+        self::assertMatchesRegularExpression('%' . $expected_prefix . '\w+%', $extraction_path);
 
         $this->archive->extractFiles();
 
         $expected  = file_get_contents(self::FIXTURES_DIR . '/data/Artifact69');
         $extracted = file_get_contents($extraction_path . '/data/Artifact69');
 
-        $this->assertEquals($expected, $extracted);
+        self::assertEquals($expected, $extracted);
     }
 
     public function testItEnsuresThatTemporaryDirectoryIsNotReadableByEveryone(): void
     {
         $extraction_path = $this->archive->getExtractionPath();
         $perms           = fileperms($extraction_path) & 0777;
-        $this->assertEquals(0700, $perms);
+        self::assertEquals(0700, $perms);
     }
 
     public function testItCleansUp(): void
@@ -87,6 +84,6 @@ final class ZipArchiveTest extends \Tuleap\Test\PHPUnit\TestCase
         $extraction_path = $this->archive->getExtractionPath();
         $this->archive->extractFiles();
         $this->archive->cleanUp();
-        $this->assertFileDoesNotExist($extraction_path);
+        self::assertFileDoesNotExist($extraction_path);
     }
 }
