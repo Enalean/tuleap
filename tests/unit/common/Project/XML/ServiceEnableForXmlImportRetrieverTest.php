@@ -23,47 +23,38 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\XML;
 
-use Mockery;
+use PHPUnit\Framework\MockObject\MockObject;
 use PluginFactory;
 
 final class ServiceEnableForXmlImportRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var ServiceEnableForXmlImportRetriever
-     */
-    private $retriever;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PluginFactory
-     */
-    private $plugin_factory;
+    private ServiceEnableForXmlImportRetriever $retriever;
+    private PluginFactory&MockObject $plugin_factory;
 
     protected function setUp(): void
     {
-        $this->plugin_factory = Mockery::mock(PluginFactory::class);
-        $this->plugin_factory->shouldReceive('getEnabledPlugins');
+        $this->plugin_factory = $this->createMock(PluginFactory::class);
+        $this->plugin_factory->method('getEnabledPlugins');
         $this->retriever = new ServiceEnableForXmlImportRetriever($this->plugin_factory);
     }
 
     public function testServiceIsDisabledIfPluginIsRestricted(): void
     {
-        $plugin = Mockery::mock(\Plugin::class);
-        $this->plugin_factory->shouldReceive('isProjectPluginRestricted')->andReturnTrue();
+        $plugin = $this->createMock(\Plugin::class);
+        $this->plugin_factory->method('isProjectPluginRestricted')->willReturn(true);
 
         $this->retriever->addServiceIfPluginIsNotRestricted($plugin, 'plugin_name');
 
-        $this->assertEquals([], $this->retriever->getAvailableServices());
+        self::assertEquals([], $this->retriever->getAvailableServices());
     }
 
     public function testItStoreNotRestrictedServices(): void
     {
-        $plugin = Mockery::mock(\Plugin::class);
-        $this->plugin_factory->shouldReceive('isProjectPluginRestricted')->andReturnFalse();
+        $plugin = $this->createMock(\Plugin::class);
+        $this->plugin_factory->method('isProjectPluginRestricted')->willReturn(false);
 
         $this->retriever->addServiceIfPluginIsNotRestricted($plugin, 'plugin_name');
 
-        $this->assertEquals(['plugin_name' => true], $this->retriever->getAvailableServices());
+        self::assertEquals(['plugin_name' => true], $this->retriever->getAvailableServices());
     }
 }

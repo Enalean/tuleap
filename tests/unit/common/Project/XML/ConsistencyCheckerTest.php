@@ -19,31 +19,24 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Project\XML;
 
-use Mockery as M;
+use PHPUnit\Framework\MockObject\MockObject;
 
-class ConsistencyCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ConsistencyCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    private $event;
-
-    /**
-     * @var ConsistencyChecker
-     */
-    private $checker;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|\EventManager
-     */
-    private $event_manager;
-    private \PHPUnit\Framework\MockObject\MockObject|\PluginFactory $plugin_factory;
+    private ServiceEnableForXmlImportRetriever&MockObject $event;
+    private ConsistencyChecker $checker;
+    private \EventManager&MockObject $event_manager;
+    private \PluginFactory&MockObject $plugin_factory;
 
     protected function setUp(): void
     {
-        $this->event_manager = M::mock(\EventManager::class);
-        $this->event         = M::mock(ServiceEnableForXmlImportRetriever::class);
-        $this->event->shouldReceive('addServiceByName');
+        $this->event_manager = $this->createMock(\EventManager::class);
+        $this->event         = $this->createMock(ServiceEnableForXmlImportRetriever::class);
+        $this->event->method('addServiceByName');
 
         $this->plugin_factory = $this->createMock(\PluginFactory::class);
 
@@ -57,8 +50,8 @@ class ConsistencyCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testAreAllServicesAvailable(): void
     {
-        $this->event_manager->shouldReceive('processEvent')->withArgs([$this->event]);
-        $this->event->shouldReceive('getAvailableServices')->andReturn(
+        $this->event_manager->method('processEvent')->with($this->event);
+        $this->event->method('getAvailableServices')->willReturn(
             [
                 \trackerPlugin::SERVICE_SHORTNAME       => true,
                 \GitPlugin::SERVICE_SHORTNAME           => true,
@@ -66,13 +59,13 @@ class ConsistencyCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->assertTrue($this->checker->areAllServicesAvailable(__DIR__ . '/_fixtures/project.xml', []));
+        self::assertTrue($this->checker->areAllServicesAvailable(__DIR__ . '/_fixtures/project.xml', []));
     }
 
     public function testAllServicesAreAvailableButNotExtraPlugin(): void
     {
-        $this->event_manager->shouldReceive('processEvent')->withArgs([$this->event]);
-        $this->event->shouldReceive('getAvailableServices')->andReturn(
+        $this->event_manager->method('processEvent')->with($this->event);
+        $this->event->method('getAvailableServices')->willReturn(
             [
                 \trackerPlugin::SERVICE_SHORTNAME       => true,
                 \GitPlugin::SERVICE_SHORTNAME           => true,
@@ -90,15 +83,15 @@ class ConsistencyCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($plugin)
             ->willReturn(false);
 
-        $this->assertFalse(
+        self::assertFalse(
             $this->checker->areAllServicesAvailable(__DIR__ . '/_fixtures/project.xml', ['graphontrackersv5'])
         );
     }
 
     public function testAllServicesAreAvailableButExtraIsNotActivated(): void
     {
-        $this->event_manager->shouldReceive('processEvent')->withArgs([$this->event]);
-        $this->event->shouldReceive('getAvailableServices')->andReturn(
+        $this->event_manager->method('processEvent')->with($this->event);
+        $this->event->method('getAvailableServices')->willReturn(
             [
                 \trackerPlugin::SERVICE_SHORTNAME       => true,
                 \GitPlugin::SERVICE_SHORTNAME           => true,
@@ -110,15 +103,15 @@ class ConsistencyCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getPluginByName')
             ->willReturn(null);
 
-        $this->assertFalse(
+        self::assertFalse(
             $this->checker->areAllServicesAvailable(__DIR__ . '/_fixtures/project.xml', ['graphontrackersv5'])
         );
     }
 
     public function testAllServicesAndExtraPluginsAreAvailable(): void
     {
-        $this->event_manager->shouldReceive('processEvent')->withArgs([$this->event]);
-        $this->event->shouldReceive('getAvailableServices')->andReturn(
+        $this->event_manager->method('processEvent')->with($this->event);
+        $this->event->method('getAvailableServices')->willReturn(
             [
                 \trackerPlugin::SERVICE_SHORTNAME       => true,
                 \GitPlugin::SERVICE_SHORTNAME           => true,
@@ -136,27 +129,27 @@ class ConsistencyCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($plugin)
             ->willReturn(true);
 
-        $this->assertTrue(
+        self::assertTrue(
             $this->checker->areAllServicesAvailable(__DIR__ . '/_fixtures/project.xml', ['graphontrackersv5'])
         );
     }
 
     public function testAgileDashboardIsNotAvailable(): void
     {
-        $this->event_manager->shouldReceive('processEvent')->withArgs([$this->event]);
-        $this->event->shouldReceive('getAvailableServices')->andReturn(
+        $this->event_manager->method('processEvent')->with($this->event);
+        $this->event->method('getAvailableServices')->willReturn(
             [
                 \trackerPlugin::SERVICE_SHORTNAME => true,
                 \GitPlugin::SERVICE_SHORTNAME     => true,
             ]
         );
 
-        $this->assertFalse($this->checker->areAllServicesAvailable(__DIR__ . '/_fixtures/project.xml', []));
+        self::assertFalse($this->checker->areAllServicesAvailable(__DIR__ . '/_fixtures/project.xml', []));
     }
 
     public function testInvalidFile(): void
     {
-        $this->expectException(\RuntimeException::class);
+        self::expectException(\RuntimeException::class);
         $this->checker->areAllServicesAvailable(__DIR__ . '/_fixtures', []);
     }
 }

@@ -23,31 +23,21 @@ declare(strict_types=1);
 namespace Tuleap\Project\XML\Import;
 
 use EventManager;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
 
-class ExternalFieldsExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ExternalFieldsExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var EventManager|\Mockery\MockInterface
-     */
-    private $event_manager;
-
-    /**
-     * @var ExternalFieldsExtractor
-     */
-    private $external_field_extractor;
+    private EventManager&MockObject $event_manager;
+    private ExternalFieldsExtractor $external_field_extractor;
 
     public function setUp(): void
     {
-        $this->event_manager            = Mockery::mock(EventManager::class);
+        $this->event_manager            = $this->createMock(EventManager::class);
         $this->external_field_extractor = new ExternalFieldsExtractor($this->event_manager);
     }
 
-    public function testItExtractOneExternalField()
+    public function testItExtractOneExternalField(): void
     {
         $xml_input = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -84,13 +74,13 @@ class ExternalFieldsExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
                     </tracker>'
         );
 
-        $this->event_manager->shouldReceive('processEvent')->once();
+        $this->event_manager->expects(self::once())->method('processEvent');
         $this->external_field_extractor->extractExternalFieldsFromTracker($xml_input);
-        $this->assertEquals([], $xml_input->xpath('externalField'));
-        $this->assertEquals([], $xml_input->xpath('permission'));
+        self::assertEquals([], $xml_input->xpath('externalField'));
+        self::assertEquals([], $xml_input->xpath('permission'));
     }
 
-    public function testItExtractExternalFieldWithChangeset()
+    public function testItExtractExternalFieldWithChangeset(): void
     {
         $xml_input = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -151,14 +141,14 @@ class ExternalFieldsExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
                     </tracker>'
         );
 
-        $this->event_manager->shouldReceive('processEvent')->twice();
+        $this->event_manager->expects(self::exactly(2))->method('processEvent');
         $this->external_field_extractor->extractExternalFieldsFromTracker($xml_input);
-        $this->assertEquals([], $xml_input->xpath('externalField'));
-        $this->assertEquals([], $xml_input->xpath('permission'));
-        $this->assertEquals([], $xml_input->xpath('external_field_change'));
+        self::assertEquals([], $xml_input->xpath('externalField'));
+        self::assertEquals([], $xml_input->xpath('permission'));
+        self::assertEquals([], $xml_input->xpath('external_field_change'));
     }
 
-    public function testItExtractMultipleExternalField()
+    public function testItExtractMultipleExternalField(): void
     {
         $xml_input = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -210,13 +200,13 @@ class ExternalFieldsExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
                     </tracker>'
         );
 
-        $this->event_manager->shouldReceive('processEvent')->twice();
+        $this->event_manager->expects(self::exactly(2))->method('processEvent');
         $this->external_field_extractor->extractExternalFieldsFromTracker($xml_input);
-        $this->assertEquals([], $xml_input->xpath('externalField'));
-        $this->assertEquals([], $xml_input->xpath('permission'));
+        self::assertEquals([], $xml_input->xpath('externalField'));
+        self::assertEquals([], $xml_input->xpath('permission'));
     }
 
-    public function testItExtractMultipleExternalFieldFromProjectElement()
+    public function testItExtractMultipleExternalFieldFromProjectElement(): void
     {
         $xml_input = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -302,9 +292,9 @@ class ExternalFieldsExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
                 </project>'
         );
 
-        $this->event_manager->shouldReceive('processEvent')->twice();
+        $this->event_manager->expects(self::exactly(2))->method('processEvent');
         $this->external_field_extractor->extractExternalFieldFromProjectElement($xml_input);
-        $this->assertEquals([], $xml_input->xpath('externalField'));
-        $this->assertEquals([], $xml_input->xpath('permission'));
+        self::assertEquals([], $xml_input->xpath('externalField'));
+        self::assertEquals([], $xml_input->xpath('permission'));
     }
 }
