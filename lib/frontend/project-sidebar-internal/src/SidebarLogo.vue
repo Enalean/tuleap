@@ -22,7 +22,7 @@
 
 <template>
     <a
-        v-if="config.instance_information.logo.legacy_png_href !== null"
+        v-if="config && config.instance_information.logo.legacy_png_href !== null"
         id="logo"
         ref="legacy_logo"
         v-bind:href="homepage_link"
@@ -30,7 +30,7 @@
         data-test="legacy-logo"
     ></a>
     <a
-        v-else-if="config.instance_information.logo.svg !== null"
+        v-else-if="config && config.instance_information.logo.svg !== null"
         v-bind:href="homepage_link"
         class="logo-svg-link"
         v-bind:aria-label="config.internationalization.homepage"
@@ -47,7 +47,7 @@
         ></span>
     </a>
     <a
-        v-else
+        v-else-if="config"
         v-bind:href="homepage_link"
         class="logo-svg-link"
         v-bind:aria-label="config.internationalization.homepage"
@@ -100,7 +100,9 @@ import { SIDEBAR_CONFIGURATION } from "./injection-symbols";
 import { buildVueDompurifyHTMLDirective } from "vue-dompurify-html";
 
 const config = strictInject(SIDEBAR_CONFIGURATION);
-const homepage_link = computed(() => sanitizeURL(config.instance_information.logo.logo_link_href));
+const homepage_link = computed(() =>
+    sanitizeURL(config.value ? config.value.instance_information.logo.logo_link_href : ""),
+);
 const vDompurifyHtml = buildVueDompurifyHTMLDirective({
     default: {
         USE_PROFILES: {
@@ -122,9 +124,11 @@ const updateLegacyLogoURLCssVar = (addresses: { normal: string; small: string } 
 onMounted(() => {
     watch(
         (): { normal: string; small: string } | null =>
-            config.instance_information.logo.legacy_png_href,
+            config.value ? config.value.instance_information.logo.legacy_png_href : null,
         updateLegacyLogoURLCssVar,
     );
-    updateLegacyLogoURLCssVar(config.instance_information.logo.legacy_png_href);
+    updateLegacyLogoURLCssVar(
+        config.value ? config.value.instance_information.logo.legacy_png_href : null,
+    );
 });
 </script>

@@ -22,7 +22,7 @@
 
 <template>
     <div
-        v-if="config.project.linked_projects !== null"
+        v-if="config && config.project.linked_projects !== null"
         id="project-sidebar-linked-projects"
         class="project-sidebar-linked-projects"
     >
@@ -84,7 +84,7 @@
         </ul>
     </div>
     <div
-        v-if="config.project.linked_projects !== null"
+        v-if="config && config.project.linked_projects !== null"
         id="project-sidebar-linked-projects-popover"
         ref="popover_content"
         class="tlp-popover project-sidebar-linked-projects-popover"
@@ -153,9 +153,10 @@ const popover_content = ref<InstanceType<typeof HTMLElement>>();
 const popover_anchor = ref<InstanceType<typeof HTMLElement>>();
 
 const is_nb_max_exceeded = ref<boolean>(
-    config.project.linked_projects !== null &&
-        config.project.linked_projects.projects.length >
-            (config.project.linked_projects.nb_max_projects_before_popover ?? 5),
+    config.value !== undefined &&
+        config.value.project.linked_projects !== null &&
+        config.value.project.linked_projects.projects.length >
+            (config.value.project.linked_projects.nb_max_projects_before_popover ?? 5),
 );
 const can_display_linked_projects_in_sidebar = ref<boolean>(!is_nb_max_exceeded.value);
 const tabindex = computed(() => (is_nb_max_exceeded.value || props.is_sidebar_collapsed ? 0 : -1));

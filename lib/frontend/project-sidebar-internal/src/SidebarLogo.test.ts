@@ -26,12 +26,13 @@ import { shallowMount } from "@vue/test-utils";
 import { example_config } from "./project-sidebar-example-config";
 import type { Configuration } from "./configuration";
 import * as strict_inject from "@tuleap/vue-strict-inject";
+import { ref } from "vue";
 
 vi.mock("@tuleap/vue-strict-inject");
 
 describe("SidebarLogo", () => {
     it("displays default logo when no customization has been done", () => {
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(example_config);
+        vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(example_config));
         const wrapper = shallowMount(SidebarLogo);
 
         const logo_link = wrapper.find("a");
@@ -58,7 +59,7 @@ describe("SidebarLogo", () => {
                 },
             },
         };
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(config);
+        vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(config));
         const wrapper = shallowMount(SidebarLogo);
 
         const logo_link = wrapper.find("a");
@@ -89,7 +90,7 @@ describe("SidebarLogo", () => {
                 },
             },
         };
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(config);
+        vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(config));
         const wrapper = shallowMount(SidebarLogo);
 
         const logo = wrapper.find("[data-test=legacy-logo]");

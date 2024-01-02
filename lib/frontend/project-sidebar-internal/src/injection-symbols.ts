@@ -20,12 +20,14 @@
  * SOFTWARE.
  */
 
-import type { DeepReadonly } from "vue";
+import type { DeepReadonly, Ref } from "vue";
 import type { Configuration } from "./configuration";
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 
-export const SIDEBAR_CONFIGURATION: StrictInjectionKey<DeepReadonly<Configuration>> =
-    Symbol("sidebar_configuration");
+export const SIDEBAR_CONFIGURATION: StrictInjectionKey<
+    DeepReadonly<Ref<Configuration | undefined>>
+> = Symbol("sidebar_configuration");
+
 export const TRIGGER_SHOW_PROJECT_ANNOUNCEMENT: StrictInjectionKey<() => void> = Symbol(
     "trigger_show_project_announcement",
 );

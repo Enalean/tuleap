@@ -22,7 +22,7 @@
 
 <template>
     <div
-        v-if="config.project.flags.length > 0"
+        v-if="config && config.project.flags.length > 0"
         ref="popover_anchor"
         class="project-sidebar-project-flags"
         role="button"
@@ -42,7 +42,7 @@
         </span>
     </div>
     <div
-        v-if="config.project.flags.length > 0"
+        v-if="config && config.project.flags.length > 0"
         id="project-sidebar-project-flags-popover"
         ref="popover_content"
         class="tlp-popover"

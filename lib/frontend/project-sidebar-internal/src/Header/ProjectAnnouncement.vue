@@ -22,7 +22,7 @@
 
 <template>
     <button
-        v-if="config.project.has_project_announcement"
+        v-if="config && config.project.has_project_announcement"
         type="button"
         aria-labelledby="current-project-banner-message"
         class="project-sidebar-banner-button"

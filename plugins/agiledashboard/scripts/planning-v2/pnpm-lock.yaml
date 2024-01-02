@@ -1,9 +1,16 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
 dependencies:
   '@tuleap/burningparrot-theme':
     specifier: workspace:*
     version: link:../../../../src/themes/BurningParrot
+  '@tuleap/fetch-result':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/fetch-result
   '@tuleap/plugin-agiledashboard-scrum-header':
     specifier: workspace:*
     version: link:../lib/scrum-header

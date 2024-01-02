@@ -27,6 +27,7 @@ import { example_config } from "../project-sidebar-example-config";
 import * as tlp_popovers from "@tuleap/tlp-popovers";
 import type { Popover } from "@tuleap/tlp-popovers";
 import * as strict_inject from "@tuleap/vue-strict-inject";
+import { ref } from "vue";
 
 vi.mock("@tuleap/vue-strict-inject");
 
@@ -36,7 +37,7 @@ describe("LinkedProjects", () => {
             .spyOn(tlp_popovers, "createPopover")
             .mockReturnValue({} as Popover);
 
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(example_config);
+        vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(example_config));
 
         const wrapper = shallowMount(LinkedProjects, {
             propsData: {
@@ -56,7 +57,7 @@ describe("LinkedProjects", () => {
                 linked_projects: null,
             },
         };
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(config);
+        vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(config));
         const wrapper = shallowMount(LinkedProjects, {
             propsData: {
                 is_sidebar_collapsed: false,
@@ -88,7 +89,7 @@ describe("LinkedProjects", () => {
                     },
                 },
             };
-            vi.spyOn(strict_inject, "strictInject").mockReturnValue(config);
+            vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(config));
 
             const wrapper = shallowMount(LinkedProjects, {
                 propsData: {
@@ -131,7 +132,7 @@ describe("LinkedProjects", () => {
                     },
                 },
             };
-            vi.spyOn(strict_inject, "strictInject").mockReturnValue(config);
+            vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(config));
 
             const wrapper = shallowMount(LinkedProjects, {
                 propsData: {
@@ -154,7 +155,7 @@ describe("LinkedProjects", () => {
         Then accessible attributes are added to the popover anchor
         So that popover can be displayed with keyboard`, () => {
         vi.spyOn(tlp_popovers, "createPopover").mockReturnValue({} as Popover);
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue({ ...example_config });
+        vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref({ ...example_config }));
         const wrapper = shallowMount(LinkedProjects, {
             propsData: {
                 is_sidebar_collapsed: true,
@@ -170,7 +171,7 @@ describe("LinkedProjects", () => {
         Then accessible attributes are not added to the popover anchor
         Because we don't need to display a popover`, () => {
         vi.spyOn(tlp_popovers, "createPopover").mockReturnValue({} as Popover);
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue({ ...example_config });
+        vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref({ ...example_config }));
 
         const wrapper = shallowMount(LinkedProjects, {
             propsData: {
@@ -186,17 +187,19 @@ describe("LinkedProjects", () => {
         Then accessible attributes are added to the popover anchor
         So that popover can be displayed with keyboard`, () => {
         vi.spyOn(tlp_popovers, "createPopover").mockReturnValue({} as Popover);
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue({
-            ...example_config,
-            project: {
-                ...example_config.project,
-                linked_projects: {
-                    ...example_config.project.linked_projects,
-                    nb_max_projects_before_popover: 3,
-                    projects: Array(20).fill({ name: "acme" }),
+        vi.spyOn(strict_inject, "strictInject").mockReturnValue(
+            ref({
+                ...example_config,
+                project: {
+                    ...example_config.project,
+                    linked_projects: {
+                        ...example_config.project.linked_projects,
+                        nb_max_projects_before_popover: 3,
+                        projects: Array(20).fill({ name: "acme" }),
+                    },
                 },
-            },
-        });
+            }),
+        );
 
         const wrapper = shallowMount(LinkedProjects, {
             propsData: {

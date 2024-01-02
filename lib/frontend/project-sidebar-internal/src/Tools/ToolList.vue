@@ -22,11 +22,11 @@
 
 <template>
     <h2 class="project-sidebar-tools-section-label">
-        {{ config.internationalization.tools }}
+        {{ config?.internationalization.tools }}
     </h2>
     <nav ref="tools_element" class="project-sidebar-nav">
         <tool-presenter
-            v-for="tool in config.tools"
+            v-for="tool in config?.tools"
             v-bind="tool"
             v-bind:key="tool.href + tool.label + tool.description"
         />
@@ -47,12 +47,16 @@ const tools_element = ref<InstanceType<typeof HTMLElement>>();
 function setupShortcutsInteraction(): void {
     // We want to wait that everything has been rendered including child components
     nextTick((): void => {
+        if (config.value === undefined) {
+            return;
+        }
+
         const element_to_check_for_shortcut = tools_element.value;
         if (element_to_check_for_shortcut === undefined) {
             return;
         }
 
-        const shortcuts = getAvailableShortcutsFromToolsConfiguration(config.tools);
+        const shortcuts = getAvailableShortcutsFromToolsConfiguration(config.value.tools);
 
         if (shortcuts === null) {
             return;
