@@ -69,8 +69,7 @@ class AccessFileHistoryFactory
         return $this->instantiateFromRowAndRepository($row, $repository);
     }
 
-    /** return AccessFileHistory */
-    public function getCurrentVersion(Repository $repository)
+    public function getCurrentVersion(Repository $repository): AccessFileHistory
     {
         $row = $this->dao->searchCurrentVersion($repository->getId());
 
@@ -93,7 +92,7 @@ class AccessFileHistoryFactory
         return $this->instantiateFromRowAndRepository($row, $repository);
     }
 
-    private function instantiateFromRowAndRepository(array $row, Repository $repository)
+    private function instantiateFromRowAndRepository(array $row, Repository $repository): AccessFileHistory
     {
         return new AccessFileHistory(
             $repository,

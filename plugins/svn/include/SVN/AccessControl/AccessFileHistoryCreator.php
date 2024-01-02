@@ -90,7 +90,7 @@ class AccessFileHistoryCreator
     private function cleanContent(Repository $repository, string $content): SVNAccessFileContentAndFaults
     {
         $access_file = new SVNAccessFile($this->default_block_generator->getDefaultBlock($repository->getProject()));
-        return $access_file->parseGroupLinesByRepositories(trim($content));
+        return $access_file->parseGroupLines(trim($content));
     }
 
     /**

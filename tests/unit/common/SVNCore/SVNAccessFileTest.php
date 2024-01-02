@@ -46,7 +46,7 @@ final class SVNAccessFileTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $saf->setRenamedGroup($new_group, $old_group);
 
-        $result = $saf->parseGroupLinesByRepositories($source_access_file);
+        $result = $saf->parseGroupLines($source_access_file);
         self::assertEquals($expected_access_file, $result->contents);
     }
 
