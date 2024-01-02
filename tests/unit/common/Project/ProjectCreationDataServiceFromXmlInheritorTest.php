@@ -23,41 +23,29 @@ declare(strict_types=1);
 
 namespace Tuleap\Project;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Service;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class ProjectCreationDataServiceFromXmlInheritorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var ProjectCreationDataServiceFromXmlInheritor
-     */
-    private $service_inheritor;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\ServiceManager
-     */
-    private $service_manager;
+    private ProjectCreationDataServiceFromXmlInheritor $service_inheritor;
+    private \ServiceManager&MockObject $service_manager;
 
     protected function setUp(): void
     {
-        $this->service_manager = \Mockery::mock(\ServiceManager::class);
+        $this->service_manager = $this->createMock(\ServiceManager::class);
 
         $this->service_inheritor = new ProjectCreationDataServiceFromXmlInheritor($this->service_manager);
 
-        $admin_service = \Mockery::mock(Service::class);
-        $admin_service->shouldReceive('getShortName')->andReturn('admin');
-        $admin_service->shouldReceive('getId')->andReturn(1);
-        $git_service = \Mockery::mock(Service::class);
-        $git_service->shouldReceive('getShortName')->andReturn('plugin_git');
-        $git_service->shouldReceive('getId')->andReturn(10);
+        $admin_service = $this->createMock(Service::class);
+        $admin_service->method('getShortName')->willReturn('admin');
+        $admin_service->method('getId')->willReturn(1);
+        $git_service = $this->createMock(Service::class);
+        $git_service->method('getShortName')->willReturn('plugin_git');
+        $git_service->method('getId')->willReturn(10);
 
-        $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->andReturn(
-            [
-                $admin_service,
-                $git_service,
-            ]
-        );
+        $this->service_manager->method('getListOfAllowedServicesForProject')->willReturn([$admin_service, $git_service,]);
     }
 
     public function testItBuildsServiceUsageFromXml(): void
@@ -72,16 +60,16 @@ final class ProjectCreationDataServiceFromXmlInheritorTest extends \Tuleap\Test\
                   </project>'
         );
 
-        $project = \Mockery::mock(\Project::class);
+        $project = ProjectTestBuilder::aProject()->build();
 
         $result = $this->service_inheritor->markUsedServicesFromXML($xml, $project);
 
         $expected_result = [
-            1 => ['is_used' => true],
+            1  => ['is_used' => true],
             10 => ['is_used' => true],
         ];
 
-        $this->assertEquals($expected_result, $result);
+        self::assertEquals($expected_result, $result);
     }
 
     public function testItAddsAdminServiceIfItIsNotPresentInXml(): void
@@ -95,15 +83,15 @@ final class ProjectCreationDataServiceFromXmlInheritorTest extends \Tuleap\Test\
                   </project>'
         );
 
-        $project = \Mockery::mock(\Project::class);
+        $project = ProjectTestBuilder::aProject()->build();
 
         $result = $this->service_inheritor->markUsedServicesFromXML($xml, $project);
 
         $expected_result = [
-            1 => ['is_used' => true],
+            1  => ['is_used' => true],
             10 => ['is_used' => true],
         ];
 
-        $this->assertEquals($expected_result, $result);
+        self::assertEquals($expected_result, $result);
     }
 }

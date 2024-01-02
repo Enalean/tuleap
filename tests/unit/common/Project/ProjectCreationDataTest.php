@@ -22,83 +22,71 @@
 
 declare(strict_types=1);
 
-use Mockery as M;
-use Tuleap\Project\DefaultProjectVisibilityRetriever;
+namespace Tuleap\Project;
+
+use ForgeAccess;
+use ForgeConfig;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project;
+use ProjectCreationData;
+use ProjectManager;
+use Service;
+use ServiceManager;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use XML_RNGValidator;
 
 final class ProjectCreationDataTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
-    /**
-     * @var M\MockInterface|ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var M\MockInterface|XML_RNGValidator
-     */
-    private $xml_rngvalidator;
-    /**
-     * @var M\MockInterface|ServiceManager
-     */
-    private $service_manager;
-    /**
-     * @var DefaultProjectVisibilityRetriever
-     */
-    private $default_project_visibility_retriever;
+    private ProjectManager&MockObject $project_manager;
+    private XML_RNGValidator&MockObject $xml_rngvalidator;
+    private ServiceManager&MockObject $service_manager;
+    private DefaultProjectVisibilityRetriever $default_project_visibility_retriever;
 
     protected function setUp(): void
     {
         $this->default_project_visibility_retriever = new DefaultProjectVisibilityRetriever();
 
-        $this->xml_rngvalidator = M::mock(XML_RNGValidator::class);
-        $this->xml_rngvalidator->shouldReceive('validate');
+        $this->xml_rngvalidator = $this->createMock(XML_RNGValidator::class);
+        $this->xml_rngvalidator->method('validate');
 
-        $admin_service = \Mockery::mock(Service::class);
-        $admin_service->shouldReceive('getShortName')->andReturn('admin');
-        $admin_service->shouldReceive('getId')->andReturn(1);
-        $git_service = \Mockery::mock(Service::class);
-        $git_service->shouldReceive('getShortName')->andReturn('plugin_git');
-        $git_service->shouldReceive('getId')->andReturn(10);
+        $admin_service = $this->createMock(Service::class);
+        $admin_service->method('getShortName')->willReturn('admin');
+        $admin_service->method('getId')->willReturn(1);
+        $git_service = $this->createMock(Service::class);
+        $git_service->method('getShortName')->willReturn('plugin_git');
+        $git_service->method('getId')->willReturn(10);
 
-        $this->service_manager = M::mock(ServiceManager::class);
-        $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->andReturns(
-            [
-                $admin_service,
-                $git_service,
-            ]
-        );
+        $this->service_manager = $this->createMock(ServiceManager::class);
+        $this->service_manager->method('getListOfAllowedServicesForProject')->willReturn([$admin_service, $git_service,]);
 
-        $this->project_manager = M::mock(ProjectManager::class);
-        $this->project_manager->shouldReceive('getProject')->with(100)->andReturns(M::mock(Project::class));
-        ForgeConfig::store();
-    }
-
-    protected function tearDown(): void
-    {
-        ForgeConfig::restore();
+        $this->project_manager = $this->createMock(ProjectManager::class);
+        $this->project_manager->method('getProject')->with(100)->willReturn(ProjectTestBuilder::aProject()->build());
     }
 
     public function testItHasBasicMetadataFromProject(): void
     {
         $xml          = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
         $project_data = ProjectCreationData::buildFromXML($xml, $this->xml_rngvalidator, $this->service_manager);
-        $this->assertEquals('kanbansampleproject', $project_data->getUnixName());
-        $this->assertEquals('Kanban Sample project', $project_data->getFullName());
-        $this->assertEquals('Control project workflow and focus on what’s hot with a card board. Connect it to development tools.', $project_data->getShortDescription());
-        $this->assertEquals(Project::ACCESS_PUBLIC, $project_data->getAccess());
+        self::assertEquals('kanbansampleproject', $project_data->getUnixName());
+        self::assertEquals('Kanban Sample project', $project_data->getFullName());
+        self::assertEquals('Control project workflow and focus on what’s hot with a card board. Connect it to development tools.', $project_data->getShortDescription());
+        self::assertEquals(Project::ACCESS_PUBLIC, $project_data->getAccess());
     }
 
     public function testItLoadsPrivateProjects(): void
     {
         $xml                      = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
         $xml['access']            = 'private';
-        $external_field_extractor = Mockery::mock(ExternalFieldsExtractor::class);
-        $external_field_extractor->shouldReceive('extractExternalFieldFromProjectElement');
+        $external_field_extractor = $this->createMock(ExternalFieldsExtractor::class);
+        $external_field_extractor->method('extractExternalFieldFromProjectElement');
 
         $project_data = ProjectCreationData::buildFromXML($xml, $this->xml_rngvalidator, $this->service_manager, null, null, $external_field_extractor);
-        $this->assertEquals(Project::ACCESS_PRIVATE, $project_data->getAccess());
+        self::assertEquals(Project::ACCESS_PRIVATE, $project_data->getAccess());
     }
 
     public function testItLoadsPublicWithRestrictedProjects(): void
@@ -108,7 +96,7 @@ final class ProjectCreationDataTest extends \Tuleap\Test\PHPUnit\TestCase
         $xml           = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
         $xml['access'] = 'unrestricted';
         $project_data  = ProjectCreationData::buildFromXML($xml, $this->xml_rngvalidator, $this->service_manager);
-        $this->assertEquals(Project::ACCESS_PUBLIC_UNRESTRICTED, $project_data->getAccess());
+        self::assertEquals(Project::ACCESS_PUBLIC_UNRESTRICTED, $project_data->getAccess());
     }
 
     public function testItLoadsPrivateWithRestrictedProjects(): void
@@ -118,7 +106,7 @@ final class ProjectCreationDataTest extends \Tuleap\Test\PHPUnit\TestCase
         $xml           = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
         $xml['access'] = 'private-wo-restr';
         $project_data  = ProjectCreationData::buildFromXML($xml, $this->xml_rngvalidator, $this->service_manager);
-        $this->assertEquals(Project::ACCESS_PRIVATE_WO_RESTRICTED, $project_data->getAccess());
+        self::assertEquals(Project::ACCESS_PRIVATE_WO_RESTRICTED, $project_data->getAccess());
     }
 
     public function testItCreatesProjectWithDefaultPlatformAccessWhenDataNotInXML(): void
@@ -129,7 +117,7 @@ final class ProjectCreationDataTest extends \Tuleap\Test\PHPUnit\TestCase
         unset($xml['access']);
 
         $project_data = ProjectCreationData::buildFromXML($xml, $this->xml_rngvalidator, $this->service_manager);
-        $this->assertEquals(Project::ACCESS_PUBLIC, $project_data->getAccess());
+        self::assertEquals(Project::ACCESS_PUBLIC, $project_data->getAccess());
     }
 
     public function testItCreatesAPrivateProjectFromWebPayload(): void
@@ -146,7 +134,7 @@ final class ProjectCreationDataTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->assertEquals(Project::ACCESS_PRIVATE, $project_data->getAccess());
+        self::assertEquals(Project::ACCESS_PRIVATE, $project_data->getAccess());
     }
 
     /**
@@ -176,7 +164,7 @@ final class ProjectCreationDataTest extends \Tuleap\Test\PHPUnit\TestCase
             $web_payload
         );
 
-        $this->assertEquals($expected_visibility, $project_data->getAccess());
+        self::assertEquals($expected_visibility, $project_data->getAccess());
     }
 
     public function testItCreatesAPublicProjectFromWebPayload(): void
@@ -193,7 +181,7 @@ final class ProjectCreationDataTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->assertEquals(Project::ACCESS_PUBLIC, $project_data->getAccess());
+        self::assertEquals(Project::ACCESS_PUBLIC, $project_data->getAccess());
     }
 
     public function testItTakesPlatformConfigWhenNoDataSent(): void
@@ -207,6 +195,6 @@ final class ProjectCreationDataTest extends \Tuleap\Test\PHPUnit\TestCase
             []
         );
 
-        $this->assertEquals(Project::ACCESS_PRIVATE, $project_data->getAccess());
+        self::assertEquals(Project::ACCESS_PRIVATE, $project_data->getAccess());
     }
 }
