@@ -385,7 +385,6 @@ class RepositoryManager
             $repository->getSystemPath(),
             $new_ugroup_name,
             $old_ugroup_name,
-            $repository->getFullName(),
             $this->access_file_history_factory->getCurrentVersion($repository)->getContent()
         );
         $this->deleteArchivedRepository($repository);

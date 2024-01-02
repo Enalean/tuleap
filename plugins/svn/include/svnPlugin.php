@@ -320,7 +320,6 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                 $repository->getSystemPath(),
                 $new_ugroup_name,
                 $old_ugroup_name,
-                $repository->getFullName()
             );
         }
     }

@@ -153,12 +153,6 @@ class SVNAccessFile
         return $this->parse($contents, $faults);
     }
 
-    public function parseGroupLinesByRepositories(string $contents): SVNAccessFileContentAndFaults
-    {
-        $faults = new CollectionOfSVNAccessFileFaults();
-        return $this->parse($contents, $faults);
-    }
-
     private function parse(string $contents, CollectionOfSVNAccessFileFaults $faults): SVNAccessFileContentAndFaults
     {
         return new SVNAccessFileContentAndFaults($this->parseGroup($contents, $faults), $faults);

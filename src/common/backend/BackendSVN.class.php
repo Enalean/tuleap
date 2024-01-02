@@ -340,30 +340,21 @@ class BackendSVN extends Backend
     {
         $project = $this->getProjectManager()->getProject($group_id);
 
-        $svn_access_file = new SVNAccessFile(SvnAccessFileDefaultBlockGenerator::instance()->getDefaultBlock($project));
-
-        $contents     = $this->getCustomPermission($system_path, $svn_access_file, $project);
-        $custom_perms = $this->getCustomPermissionForProject($project, $svn_access_file, $contents, $ugroup_name, $ugroup_old_name);
-
-        return $this->updateSVNAccessFile($system_path, $custom_perms, $project);
+        return $this->updateSVNAccessForRepository($project, $system_path, $ugroup_name, $ugroup_old_name);
     }
 
-    public function updateSVNAccessForRepository(Project $project, $system_path, $ugroup_name, $ugroup_old_name, $svn_dir)
+    public function updateSVNAccessForRepository(Project $project, $system_path, $ugroup_name, $ugroup_old_name)
+    {
+        $contents = $this->getCustomPermission($system_path);
+
+        return $this->updateCustomSVNAccessForRepository($project, $system_path, $ugroup_name, $ugroup_old_name, $contents);
+    }
+
+    public function updateCustomSVNAccessForRepository(Project $project, $system_path, $ugroup_name, $ugroup_old_name, $contents)
     {
         $svn_access_file = new SVNAccessFile(SvnAccessFileDefaultBlockGenerator::instance()->getDefaultBlock($project));
 
-        $contents = $this->getCustomPermission($system_path, $svn_access_file, $project);
-
-        $custom_perms = $this->getCustomPermissionForRepository($project, $svn_access_file, $contents, $ugroup_name, $ugroup_old_name, $svn_dir);
-
-        return $this->updateSVNAccessFile($system_path, $custom_perms, $project);
-    }
-
-    public function updateCustomSVNAccessForRepository(Project $project, $system_path, $ugroup_name, $ugroup_old_name, $svn_dir, $contents)
-    {
-        $svn_access_file = new SVNAccessFile(SvnAccessFileDefaultBlockGenerator::instance()->getDefaultBlock($project));
-
-        $custom_perms = $this->getCustomPermissionForRepository($project, $svn_access_file, $contents, $ugroup_name, $ugroup_old_name, $svn_dir);
+        $custom_perms = $this->getCustomPermissionForProject($svn_access_file, $contents, $ugroup_name, $ugroup_old_name);
 
         return $this->updateSVNAccessFile($system_path, $custom_perms, $project);
     }
@@ -384,7 +375,7 @@ class BackendSVN extends Backend
         return AccessFileReader::BEGIN_MARKER . "\n";
     }
 
-    private function getCustomPermission($system_path, SVNAccessFile $svn_access_file, Project $project)
+    private function getCustomPermission($system_path): string
     {
         $contents = '';
         if (is_file($this->getSvnAccessFile($system_path))) {
@@ -409,16 +400,10 @@ class BackendSVN extends Backend
         return SvnAccessFileDefaultBlockGenerator::instance()->getDefaultBlock($project)->content;
     }
 
-    private function getCustomPermissionForProject(Project $project, SVNAccessFile $svn_access_file, $contents, $ugroup_name, $ugroup_old_name): string
+    private function getCustomPermissionForProject(SVNAccessFile $svn_access_file, $contents, $ugroup_name, $ugroup_old_name): string
     {
         $svn_access_file->setRenamedGroup($ugroup_name, $ugroup_old_name);
         return $svn_access_file->parseGroupLines($contents)->contents;
-    }
-
-    private function getCustomPermissionForRepository(Project $project, SVNAccessFile $svn_access_file, $contents, $ugroup_name, $ugroup_old_name, $svn_dir): string
-    {
-        $svn_access_file->setRenamedGroup($ugroup_name, $ugroup_old_name);
-        return $svn_access_file->parseGroupLinesByRepositories($contents)->contents;
     }
 
     private function updateSVNAccessFile($system_path, $custom_perms, Project $project)
