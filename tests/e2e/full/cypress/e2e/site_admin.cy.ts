@@ -27,5 +27,48 @@ describe("Site admin", function () {
             cy.get("[data-test=global-admin-search-user]").type("heisenberg{enter}");
             cy.get("[data-test=user-login]").should("have.value", "Heisenberg");
         });
+
+        it("Can send preview of mass mail", function () {
+            cy.siteAdministratorSession();
+            cy.visit("/");
+            cy.get("[data-test=platform-administration-link]").click();
+            cy.get("[data-test=mass-mail]").click();
+
+            cy.get("[data-test=massmail-subject]").type("My custom mail");
+            cy.window().then((win) => {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                win.CKEDITOR.instances.mail_message.setData(
+                    `Dear User,<br><b>Important information</b><br>Sincerely,<br>Your support team`,
+                );
+            });
+            cy.get("[data-test=massmail-preview-destination-external]").type(
+                "external-user@example.com",
+            );
+            cy.get("[data-test=submit-preview-button]").click();
+
+            cy.assertEmailWithContentReceived(
+                "external-user@example.com",
+                `<strong>Important information`,
+            );
+        });
+
+        it("Can send a mass emailing", function () {
+            cy.siteAdministratorSession();
+            cy.visit("/");
+            cy.get("[data-test=platform-administration-link]").click();
+            cy.get("[data-test=mass-mail]").click();
+            cy.get("[data-test=massmail-destination]").select("sfadmin");
+
+            cy.get("[data-test=massmail-subject]").type("A mass mail");
+            cy.window().then((win) => {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                win.CKEDITOR.instances.mail_message.setData("MassMailContent");
+            });
+
+            cy.get("[data-test=massmail-send-button]").click();
+            cy.get("[data-test=massmail-warning]").contains("users will receive this email.");
+        });
     });
 });

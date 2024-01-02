@@ -17,7 +17,7 @@
                     <label class="tlp-label" for="massmail-destination">
                         {{ destination_label }} <i class="fa fa-asterisk"></i>
                     </label>
-                    <select class="tlp-select" id="massmail-destination" name="destination">
+                    <select class="tlp-select" id="massmail-destination" data-test="massmail-destination" name="destination">
                         {{# recipients }}
                             <option value="{{ key }}"
                                     data-warning="{{ warning }}"
@@ -35,6 +35,7 @@
                            class="tlp-input"
                            id="subject"
                            name="mail_subject"
+                           data-test="massmail-subject"
                            placeholder="{{ subject_placeholder }}" required>
                 </div>
             </div>
@@ -44,6 +45,7 @@
                 <textarea class="tlp-textarea"
                           id="mail_message"
                           name="mail_message"
+                          data-test="massmail-message"
                           rows="10"
                           placeholder="{{ content_placeholder }}" ></textarea>
             </div>
@@ -62,12 +64,14 @@
                     <input type="text"
                            class="tlp-input"
                            id="massmail-preview-destination-external"
+                           data-test="massmail-preview-destination-external"
                            name="preview-destination-external"
                            placeholder="jdoe@example.com">
                     <button type="button"
                             id="massmail-preview-destination-submit"
                             name="destination"
                             value="preview"
+                            data-test="submit-preview-button"
                             class="tlp-append tlp-button-primary tlp-button-outline"
                             title="{{ send_preview_label }}"
                     >
@@ -79,7 +83,7 @@
             <div id="massmail-preview-feedback"></div>
 
             <div class="tlp-pane-section-submit">
-                <button type="submit" class="tlp-button-primary" id="massmail-submit">
+                <button type="submit" class="tlp-button-primary" id="massmail-submit" data-test="massmail-send-button">
                     <i class="far fa-paper-plane tlp-button-icon"></i> {{ send_email_label }}
                 </button>
             </div>
@@ -99,7 +103,7 @@
                 </div>
                 <div class="tlp-modal-body">
                     <p>
-                        <span id="massmail-warning"></span>
+                        <span id="massmail-warning" data-test="massmail-warning"></span>
                         {{ confirmation_body }}
                     </p>
                 </div>
