@@ -289,13 +289,6 @@ class SystemEventManager
                     }
                 }
                 break;
-            case Event::SERVICE_IS_USED:
-                $this->createEvent(
-                    SystemEvent::TYPE_SERVICE_USAGE_SWITCH,
-                    $this->concatParameters($params, ['group_id', 'shortname', 'is_used']),
-                    SystemEvent::PRIORITY_MEDIUM
-                );
-                break;
             case 'codendi_daily_start':
                 $this->createEvent(
                     SystemEvent::TYPE_ROOT_DAILY,
@@ -465,7 +458,6 @@ class SystemEventManager
             case SystemEvent::TYPE_MEMBERSHIP_CREATE:
             case SystemEvent::TYPE_MEMBERSHIP_DELETE:
             case SystemEvent::TYPE_USER_RENAME:
-            case SystemEvent::TYPE_SERVICE_USAGE_SWITCH:
             case SystemEvent::TYPE_ROOT_DAILY:
             case SystemEvent::TYPE_COMPUTE_MD5SUM:
             case SystemEvent::TYPE_MASSMAIL:

@@ -44,28 +44,6 @@ class BackendSVN extends Backend
     private $svn_core_usage;
 
     /**
-     * For mocking (unit tests)
-     *
-     * @return UGroupDao
-     */
-    protected function getUGroupDao()
-    {
-        return new UGroupDao(CodendiDataAccess::instance());
-    }
-
-     /**
-     * For mocking (unit tests)
-     *
-     * @param array $row a row from the db for a ugroup
-     *
-     * @return ProjectUGroup
-     */
-    protected function getUGroupFromRow($row)
-    {
-        return new ProjectUGroup($row);
-    }
-
-    /**
       * Protected for testing purpose
       */
     protected function getSvnDao()
@@ -81,29 +59,6 @@ class BackendSVN extends Backend
     protected function getConfig($var)
     {
         return ForgeConfig::get($var);
-    }
-
-    /**
-     * Create project SVN repository
-     * If the directory already exists, nothing is done.
-     *
-     * @param int $group_id The id of the project to work on
-     *
-     * @return bool true if repo is successfully created, false otherwise
-     */
-    public function createProjectSVN($group_id)
-    {
-        $project = $this->getProjectManager()->getProject($group_id);
-        if ($this->createRepository($group_id, $project->getSVNRootPath())) {
-            if ($this->updateHooksForProjectRepository($project)) {
-                if ($this->createSVNAccessFile($group_id, $project->getSVNRootPath())) {
-                    $this->forceUpdateApacheConf();
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 
     public function updateHooksForProjectRepository(Project $project)
@@ -468,10 +423,6 @@ class BackendSVN extends Backend
 
     private function updateSVNAccessFile($system_path, $custom_perms, Project $project)
     {
-        if (! $project) {
-            return false;
-        }
-
         if (! is_dir($system_path)) {
             $this->log("Can't update SVN Access file: project SVN repo is missing: " . $system_path, Backend::LOG_ERROR);
             return false;
@@ -510,10 +461,8 @@ class BackendSVN extends Backend
 
     /**
      * Rewrite the .SVNAccessFile if removed
-     *
-     * @return void
      */
-    public function checkSVNAccessPresence($group_id)
+    public function checkSVNAccessPresence($group_id): bool
     {
         $project = $this->getProjectManager()->getProject($group_id);
         if (! $project) {
@@ -851,14 +800,7 @@ class BackendSVN extends Backend
     public function systemCheck(Project $project): void
     {
         if ($project->usesSVN() && $this->getSvnCoreUsage()->isManagedByCore($project)) {
-            if (! $this->repositoryExists($project)) {
-                if (! $this->createProjectSVN($project->getId())) {
-                    throw new RuntimeException('Could not create/initialize project SVN repository');
-                }
-                $this->updateSVNAccess($project->getId(), $project->getSVNRootPath());
-                $this->setSVNPrivacy($project, ! $project->isPublic());
-                $this->setSVNApacheConfNeedUpdate();
-            } else {
+            if ($this->repositoryExists($project)) {
                 $this->checkSVNAccessPresence($project->getId());
             }
 
