@@ -47,13 +47,13 @@
             </div>
         </div>
         <change-field-confirmation-modal
-            v-bind:confirm="confirm"
-            v-bind:is_operation_running="is_operation_running"
+            v-if="is_shown"
+            data-test="change-field-confirmation-modal"
+            v-on:close-modal="closeModal"
         />
     </div>
 </template>
 <script>
-import { createModal } from "@tuleap/tlp-modal";
 import { mapState, mapGetters } from "vuex";
 import ChangeFieldConfirmationModal from "./ChangeFieldConfirmationModal.vue";
 
@@ -62,31 +62,19 @@ export default {
     components: { ChangeFieldConfirmationModal },
     data() {
         return {
-            modal: null,
+            is_shown: false,
         };
     },
     computed: {
         ...mapState(["is_operation_running"]),
-        ...mapGetters(["workflow_field_label", "current_tracker_id"]),
-    },
-    mounted() {
-        this.modal = createModal(this.$refs.modal);
+        ...mapGetters(["workflow_field_label"]),
     },
     methods: {
         showModal() {
-            this.modal.show();
+            this.is_shown = true;
         },
-        async confirm() {
-            await this.$store.dispatch("resetWorkflowTransitions", this.current_tracker_id);
-            const feedback_box = document.getElementById("feedback");
-            const feedback_section_content = document.createElement("section");
-            feedback_section_content.classList.add("tlp-alert-info");
-            feedback_section_content.insertAdjacentText(
-                "afterbegin",
-                this.$gettext("Transitions rules were deleted. Workflow is reset."),
-            );
-            feedback_box.appendChild(feedback_section_content);
-            this.modal.hide();
+        closeModal() {
+            this.is_shown = false;
         },
     },
 };

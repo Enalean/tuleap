@@ -19,11 +19,11 @@
 
 .tracker-workflow-transition-configuration-header {
     display: flex;
-}
 
-.tracker-workflow-transition-configuration-form-item {
-    flex: 0 0 auto;
-    margin: 0 40px 0 0;
+    .tracker-workflow-transition-configuration-form-item {
+        flex: 0 0 auto;
+        margin: 0 40px 0 0;
+    }
 }
 
 .tracker-workflow-transition-configuration-form-button {

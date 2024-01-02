@@ -95,6 +95,9 @@ msgstr "Choisissez un groupe de champs"
 msgid "Clear"
 msgstr "Effacer"
 
+msgid "Close"
+msgstr "Fermer"
+
 msgid "Comment must not be empty"
 msgstr "Le commentaire doit être rempli"
 
