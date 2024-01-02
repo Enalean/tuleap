@@ -23,31 +23,19 @@ declare(strict_types=1);
 
 namespace Tuleap\Dashboard\Project;
 
-require_once __DIR__ . '/ProjectDashboardXMLImporterBase.php';
-
 use SimpleXMLElement;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Widget\Event\ConfigureAtXMLImport;
 
-class ProjectDashboardXMLImporterPluginTest extends ProjectDashboardXMLImporterBase
+final class ProjectDashboardXMLImporterPluginTest extends ProjectDashboardXMLImporterBase
 {
-    protected function setUp(): void
+    public function testItImportsAWidgetDefinedInAPlugin(): void
     {
-        parent::setUp();
-
-        $this->project_dashboard_importer = new ProjectDashboardXMLImporter(
-            $this->project_dashboard_saver,
-            $this->widget_factory,
-            $this->widget_dao,
-            $this->logger,
-            $this->event_manager,
-            $this->disabled_widgets_checker
-        );
-    }
-
-    public function testItImportsAWidgetDefinedInAPlugin()
-    {
-        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
+        $user = UserTestBuilder::aUser()
+            ->withAdministratorOf($this->project)
+            ->withoutSiteAdministrator()
+            ->build();
+        $this->dao->method('searchByProjectIdAndName')->willReturn([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -69,26 +57,30 @@ class ProjectDashboardXMLImporterPluginTest extends ProjectDashboardXMLImporterB
               </project>'
         );
 
-        $this->widget_dao->shouldReceive('createLine')->andReturns(12);
-        $this->widget_dao->shouldReceive('createColumn')->andReturns(122);
+        $this->widget_dao->method('createLine')->willReturn(12);
+        $this->widget_dao->method('createColumn')->willReturn(122);
+        $this->dao->method('save');
 
         $this->mappings_registry->addReference('K123', 78998);
 
-        $widget = \Mockery::spy(\Widget::class);
-        $widget->shouldReceive('getId')->andReturns('kanban');
+        $widget = $this->createMock(\Widget::class);
+        $widget->method('getId')->willReturn('kanban');
+        $widget->method('setOwner');
+        $widget->method('isUnique');
+        $widget->method('create');
 
-        $this->event_manager->shouldReceive('processEvent')->with(\Mockery::on(function (ConfigureAtXMLImport $event) {
+        $this->event_manager->expects(self::once())->method('processEvent')->with(self::callback(function (ConfigureAtXMLImport $event) {
             $event->setContentId(35);
             $event->setWidgetIsConfigured();
             return true;
-        }))->once();
+        }));
 
-        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('plugin_agiledashboard_projects_kanban')->andReturns($widget);
+        $this->widget_factory->method('getInstanceByWidgetName')->with('plugin_agiledashboard_projects_kanban')->willReturn($widget);
 
-        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('kanban', 35, 122, 1)->once();
+        $this->widget_dao->expects(self::once())->method('insertWidgetInColumnWithRank')->with('kanban', 35, 122, 1);
 
-        $this->disabled_widgets_checker->shouldReceive('isWidgetDisabled')->andReturnFalse();
+        $this->disabled_widgets_checker->method('isWidgetDisabled')->willReturn(false);
 
-        $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
+        $this->project_dashboard_importer->import($xml, $user, $this->project, $this->mappings_registry);
     }
 }

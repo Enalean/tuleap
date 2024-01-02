@@ -23,81 +23,42 @@ declare(strict_types=1);
 
 namespace Tuleap\Dashboard\Project;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use ColinODell\PsrTestLogger\TestLogger;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\Dashboard\Widget\WidgetCreator;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Widget\WidgetFactory;
 use Tuleap\XML\MappingsRegistry;
 
 class ProjectDashboardXMLImporterBase extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var ProjectDashboardSaver
-     */
-    protected $project_dashboard_saver;
-    /**
-     * @var ProjectDashboardDao
-     */
-    protected $dao;
-    /**
-     * @var \Logger
-     */
-    protected $logger;
-    /**
-     * @var \Project
-     */
-    protected $project;
-
-    /**
-     * @var \PFUser
-     */
-    protected $user;
-
-    /**
-     * @var ProjectDashboardXMLImporter
-     */
-    protected $project_dashboard_importer;
-    /**
-     * @var \Tuleap\Dashboard\Widget\WidgetCreator
-     */
-    protected $widget_creator;
-    /**
-     * @var WidgetFactory
-     */
-    protected $widget_factory;
-    /**
-     * @var DashboardWidgetDao
-     */
-    protected $widget_dao;
-    /**
-     * @var MappingsRegistry
-     */
-    protected $mappings_registry;
-    /**
-     * @var \EventManager
-     */
-    protected $event_manager;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|DisabledProjectWidgetsChecker
-     */
-    protected $disabled_widgets_checker;
+    protected ProjectDashboardSaver $project_dashboard_saver;
+    protected ProjectDashboardDao&MockObject $dao;
+    protected TestLogger $logger;
+    protected \Project $project;
+    protected ProjectDashboardXMLImporter $project_dashboard_importer;
+    protected WidgetCreator&MockObject $widget_creator;
+    protected WidgetFactory&MockObject $widget_factory;
+    protected DashboardWidgetDao&MockObject $widget_dao;
+    protected MappingsRegistry $mappings_registry;
+    protected \EventManager&MockObject $event_manager;
+    protected DisabledProjectWidgetsChecker&MockObject $disabled_widgets_checker;
 
     protected function setUp(): void
     {
-        $this->dao                      = \Mockery::spy(\Tuleap\Dashboard\Project\ProjectDashboardDao::class);
+        $this->dao                      = $this->createMock(ProjectDashboardDao::class);
         $this->project_dashboard_saver  = new ProjectDashboardSaver(
             $this->dao,
             $this->createStub(DeleteVisitByDashboardId::class),
         );
-        $this->widget_creator           = \Mockery::spy(\Tuleap\Dashboard\Widget\WidgetCreator::class);
-        $this->widget_factory           = \Mockery::spy(\Tuleap\Widget\WidgetFactory::class);
-        $this->widget_dao               = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
-        $this->event_manager            = \Mockery::spy(\EventManager::class);
-        $this->disabled_widgets_checker = \Mockery::mock(DisabledProjectWidgetsChecker::class);
+        $this->widget_creator           = $this->createMock(WidgetCreator::class);
+        $this->widget_factory           = $this->createMock(WidgetFactory::class);
+        $this->widget_dao               = $this->createMock(DashboardWidgetDao::class);
+        $this->event_manager            = $this->createMock(\EventManager::class);
+        $this->disabled_widgets_checker = $this->createMock(DisabledProjectWidgetsChecker::class);
 
-        $this->logger                     = \Mockery::spy(\Psr\Log\LoggerInterface::class);
+        $this->logger                     = new TestLogger();
         $this->project_dashboard_importer = new ProjectDashboardXMLImporter(
             $this->project_dashboard_saver,
             $this->widget_factory,
@@ -109,7 +70,9 @@ class ProjectDashboardXMLImporterBase extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->mappings_registry = new MappingsRegistry();
 
-        $this->user    = \Mockery::spy(\PFUser::class);
-        $this->project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
+        $this->project = ProjectTestBuilder::aProject()
+            ->withId(101)
+            ->withAccessPrivate()
+            ->build();
     }
 }

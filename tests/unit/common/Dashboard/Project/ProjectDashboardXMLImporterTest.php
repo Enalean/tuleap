@@ -20,18 +20,18 @@
 
 namespace Tuleap\Dashboard\Project;
 
-require_once __DIR__ . '/ProjectDashboardXMLImporterBase.php';
-
-use Psr\Log\LogLevel;
 use SimpleXMLElement;
 use Tuleap\Dashboard\NameDashboardAlreadyExistsException;
 use Tuleap\Dashboard\NameDashboardDoesNotExistException;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporterBase
+final class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporterBase
 {
-    public function testItLogsAWarningWhenUserDontHavePrivilegeToAddAProjectDashboard()
+    public function testItLogsAWarningWhenUserDontHavePrivilegeToAddAProjectDashboard(): void
     {
-        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(false);
+        $user = UserTestBuilder::aUser()
+            ->withoutSiteAdministrator()
+            ->build();
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -43,14 +43,17 @@ class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporterBase
         );
 
         $expected_exception = new UserCanNotUpdateProjectDashboardException();
-        $this->logger->shouldReceive('log')->with(LogLevel::WARNING, '[Dashboards] ' . $expected_exception->getMessage(), [])->once();
 
-        $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
+        $this->project_dashboard_importer->import($xml, $user, $this->project, $this->mappings_registry);
+        self::assertTrue($this->logger->hasWarning('[Dashboards] ' . $expected_exception->getMessage()));
     }
 
-    public function testItLogsAWarningWhenDashboardNameIsNull()
+    public function testItLogsAWarningWhenDashboardNameIsNull(): void
     {
-        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
+        $user = UserTestBuilder::aUser()
+            ->withAdministratorOf($this->project)
+            ->withoutSiteAdministrator()
+            ->build();
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -62,15 +65,18 @@ class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporterBase
         );
 
         $expected_exception = new NameDashboardDoesNotExistException();
-        $this->logger->shouldReceive('log')->with(LogLevel::WARNING, '[Dashboards] ' . $expected_exception->getMessage(), [])->once();
 
-        $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
+        $this->project_dashboard_importer->import($xml, $user, $this->project, $this->mappings_registry);
+        self::assertTrue($this->logger->hasWarning('[Dashboards] ' . $expected_exception->getMessage()));
     }
 
-    public function testItLogsAWarningWhenDashboardNameAlreadyExistsInTheSameProject()
+    public function testItLogsAWarningWhenDashboardNameAlreadyExistsInTheSameProject(): void
     {
-        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([1, 101, 'test']);
+        $user = UserTestBuilder::aUser()
+            ->withAdministratorOf($this->project)
+            ->withoutSiteAdministrator()
+            ->build();
+        $this->dao->method('searchByProjectIdAndName')->willReturn([1, 101, 'test']);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -82,15 +88,18 @@ class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporterBase
         );
 
         $expected_exception = new NameDashboardAlreadyExistsException();
-        $this->logger->shouldReceive('log')->with(LogLevel::WARNING, '[Dashboards] ' . $expected_exception->getMessage(), [])->once();
 
-        $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
+        $this->project_dashboard_importer->import($xml, $user, $this->project, $this->mappings_registry);
+        self::assertTrue($this->logger->hasWarning('[Dashboards] ' . $expected_exception->getMessage()));
     }
 
-    public function testItImportsAProjectDashboard()
+    public function testItImportsAProjectDashboard(): void
     {
-        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns([]);
+        $user = UserTestBuilder::aUser()
+            ->withAdministratorOf($this->project)
+            ->withoutSiteAdministrator()
+            ->build();
+        $this->dao->method('searchByProjectIdAndName')->willReturn([]);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -102,8 +111,8 @@ class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporterBase
               </project>'
         );
 
-        $this->logger->shouldReceive('log')->with(LogLevel::WARNING, \Mockery::any(), \Mockery::any())->never();
-        $this->dao->shouldReceive('save')->times(2);
-        $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
+        $this->dao->expects(self::exactly(2))->method('save');
+        $this->project_dashboard_importer->import($xml, $user, $this->project, $this->mappings_registry);
+        self::assertFalse($this->logger->hasWarningRecords());
     }
 }
