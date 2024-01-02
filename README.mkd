@@ -40,6 +40,7 @@ be added.
 * Yannis Rossetto
 * Nicolas Terray
 * Manuel Vacelet
+* Kevin Traini
 
 ### Contributors
 
@@ -48,7 +49,6 @@ be added.
 * Fábio F. Silva
 * Florian Caillol
 * Thomas Piras
-* Kevin Traini
 * Clarisse Deschamps
 
 ### Previous contributors (no longer active committers)
