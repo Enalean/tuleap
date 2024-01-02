@@ -238,8 +238,7 @@ if (! IS_SCRIPT) {
     $mysql_version = \Tuleap\DB\DBFactory::getMainTuleapDBConnection()->getDB()->getAttribute(
         \PDO::ATTR_SERVER_VERSION
     ) ?? '';
-    $flag_disabled = \ForgeConfig::getFeatureFlag(\Tuleap\DB\DBConfig::FEATURE_FLAG) !== '1';
-    if ($flag_disabled && str_contains($mysql_version, '5.7')) {
+    if (str_contains($mysql_version, '5.7')) {
         fwrite(STDERR, "Tuleap does not support MySQL 5.7 anymore, please migrate to MySQL 8.0\n");
         exit(1);
     }
