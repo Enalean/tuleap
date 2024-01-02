@@ -22,28 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\Project;
 
-use Mockery;
-use PFUser;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class DelegatedUserAccessForProjectTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testThatByDefaultUserCanNotAccessProject(): void
     {
-        $user = Mockery::mock(PFUser::class);
+        $user = UserTestBuilder::buildWithDefaults();
 
         $event = new DelegatedUserAccessForProject($user);
 
-        $this->assertSame($user, $event->getUser());
-        $this->assertFalse($event->canUserAccessProject());
+        self::assertSame($user, $event->getUser());
+        self::assertFalse($event->canUserAccessProject());
     }
 
     public function testAccessToProjectCanBeGrantedToUser(): void
     {
-        $event = new DelegatedUserAccessForProject(Mockery::mock(PFUser::class));
+        $event = new DelegatedUserAccessForProject(UserTestBuilder::buildWithDefaults());
 
         $event->enableAccessToProjectToTheUser();
-        $this->assertTrue($event->canUserAccessProject());
+        self::assertTrue($event->canUserAccessProject());
     }
 }
