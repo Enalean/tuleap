@@ -19,30 +19,16 @@
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import { createLocalVueForTests } from "../../support/local-vue.js";
-import * as tlp_modal from "@tuleap/tlp-modal";
 import WorkflowFieldChange from "./WorkflowFieldChange.vue";
 
-const noop = () => {
-    //Do nothing
-};
-
 describe(`WorkflowFieldChange`, () => {
-    let store;
-
-    beforeEach(() => {
-        jest.spyOn(tlp_modal, "createModal").mockReturnValue({
-            show: noop,
-        });
-    });
-
-    async function createWrapper() {
-        store = createStoreMock({
+    async function createWrapper(is_operation_running) {
+        const store = createStoreMock({
             state: {
-                is_operation_running: false,
+                is_operation_running,
             },
             getters: {
                 workflow_field_label: "Status",
-                current_tracker_id: 145,
             },
         });
         return shallowMount(WorkflowFieldChange, {
@@ -51,32 +37,22 @@ describe(`WorkflowFieldChange`, () => {
         });
     }
 
-    it(`when mounted(), it will create a TLP modal`, async () => {
-        const createModal = jest.spyOn(tlp_modal, "createModal");
-        await createWrapper();
-        expect(createModal).toHaveBeenCalled();
+    describe(`when an operation is running`, () => {
+        it(`will disable the "Change or remove" button`, async () => {
+            const wrapper = await createWrapper(true);
+            const change_remove_button = wrapper.get("[data-test=change-or-remove-button]");
+            expect(change_remove_button.attributes("disabled")).toBe("disabled");
+        });
     });
 
     it(`when I click the "Change or remove" button, it will open a confirmation modal`, async () => {
-        const modal = {
-            show: jest.fn(),
-        };
-        jest.spyOn(tlp_modal, "createModal").mockReturnValue(modal);
-        const wrapper = await createWrapper();
+        const wrapper = await createWrapper(false);
 
         const change_remove_button = wrapper.get("[data-test=change-or-remove-button]");
         change_remove_button.trigger("click");
 
-        expect(modal.show).toHaveBeenCalled();
-    });
+        await wrapper.vm.$nextTick();
 
-    describe(`when an operation is running`, () => {
-        it(`will disable the "Change or remove" button`, async () => {
-            const wrapper = await createWrapper();
-            store.state.is_operation_running = true;
-            await wrapper.vm.$nextTick();
-            const change_remove_button = wrapper.get("[data-test=change-or-remove-button]");
-            expect(change_remove_button.attributes("disabled")).toBeTruthy();
-        });
+        expect(wrapper.find("[data-test=change-field-confirmation-modal]").exists()).toBe(true);
     });
 });
