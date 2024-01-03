@@ -57,48 +57,11 @@
                 ></label>
             </div>
         </div>
-        <workflow-mode-switch-modal
-            v-bind:confirm="confirm"
-            v-bind:is_operation_running="is_workflow_mode_change_running"
-        >
-            <template slot="modal-body">
-                <p v-if="is_workflow_advanced" key="simple_text">
-                    {{
-                        $gettext(
-                            "You're about to switch to simple configuration mode. The first configuration in the destination state column will be applied to the whole state. Please check that each state configuration is correct.",
-                        )
-                    }}
-                </p>
-                <p v-else key="advanced_text">
-                    {{
-                        $gettext(
-                            "You're about to switch to advanced configuration mode. Each transition will be configurable independently. They will copy their state configuration during the switch.",
-                        )
-                    }}
-                </p>
-                <p>{{ $gettext("Please confirm your action.") }}</p>
-                <p class="tlp-alert-danger" v-if="!is_workflow_advanced" key="warning_switch">
-                    {{
-                        $gettext(
-                            'If you have any post actions of type "Frozen Fields" or "Hidden Fieldsets", they will be deleted.',
-                        )
-                    }}
-                </p>
-            </template>
-            <template slot="switch-button-label">
-                <span v-if="is_workflow_advanced" key="switch_to_simple">
-                    {{ $gettext("Switch to simple configuration") }}
-                </span>
-                <span v-else key="switch_to_advanced">
-                    {{ $gettext("Switch to advanced configuration") }}
-                </span>
-            </template>
-        </workflow-mode-switch-modal>
+        <workflow-mode-switch-modal v-if="show_modal" v-on:close-modal="hide" />
     </div>
 </template>
 <script>
 import { mapState, mapGetters } from "vuex";
-import { createModal } from "@tuleap/tlp-modal";
 import WorkflowModeSwitchModal from "./WorkflowModeSwitchModal.vue";
 
 export default {
@@ -106,7 +69,7 @@ export default {
     components: { WorkflowModeSwitchModal },
     data() {
         return {
-            modal: null,
+            show_modal: false,
         };
     },
     computed: {
@@ -118,16 +81,12 @@ export default {
             );
         },
     },
-    mounted() {
-        this.modal = createModal(this.$refs.modal);
-    },
     methods: {
         showModal() {
-            this.modal.show();
+            this.show_modal = true;
         },
-        async confirm() {
-            await this.$store.dispatch("changeWorkflowMode", !this.is_workflow_advanced);
-            this.modal.hide();
+        hide() {
+            this.show_modal = false;
         },
     },
 };
