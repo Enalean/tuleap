@@ -22,6 +22,10 @@ let
   };
   mediawikiCurrent = buildMediawikiTarball { version = "1.39.5"; tuleapUsage = "current-lts"; srcHash = "sha256-eFsJxBhRRPmvRnjFi1nzEv3zhyyveC/n2IFkkth+05w="; };
   mediawiki135 = buildMediawikiTarball { version = "1.35.13"; tuleapUsage = "1.35"; srcHash = "sha256-KpcAzhk9sZMtt74+G/3fE11iLUOZumvW0FcORR22O2E="; };
+  projectSidebar261 = pkgs.fetchzip {
+    url = "https://registry.npmjs.org/@tuleap/project-sidebar/-/project-sidebar-2.6.1.tgz";
+    hash = "sha256-C2Fa5XMYTz2/YYqPiBqhKIqo45EDkrQZsciwSu81xxA=";
+  };
   buildMediawikiSkinsAndExtensions = mediawiki: pkgs.stdenvNoCC.mkDerivation rec {
     name = "mediawiki-tuleap-skins-extensions-${mediawiki.tuleapUsage}";
 
@@ -37,6 +41,7 @@ let
       mv vendor/composer/ vendor/composer_tuleap-skins-extensions/
       substituteInPlace vendor/autoload.php --replace '/composer/' '/composer_tuleap-skins-extensions/'
       mv vendor/autoload.php vendor/autoload_tuleap-skins-extensions.php
+      cp ${projectSidebar261}/dist/project-sidebar.umd.cjs skins/TuleapSkin/resources/lib/project-sidebar.umd.cjs
       runHook postBuild
     '';
 
