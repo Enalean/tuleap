@@ -17,14 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const path = require("path");
-const { defineJestConfiguration } = require("@tuleap/build-system-configurator");
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { env } from "node:process";
+import { defineJestConfiguration } from "@tuleap/build-system-configurator";
 
-process.env.DISABLE_TS_TYPECHECK = "true";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+env.DISABLE_TS_TYPECHECK = "true";
 
 const configuration = defineJestConfiguration();
 
-module.exports = {
+export default {
     ...configuration,
     displayName: "roadmap",
     transform: {
