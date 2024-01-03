@@ -19,25 +19,21 @@
  */
 
 import Vue from "vue";
-import french_translations from "./po/fr_FR.po";
+import { getPOFileFromLocale, initVueGettextFromPoGettextPlugin } from "@tuleap/vue2-gettext-init";
 import VueDOMPurifyHTML from "vue-dompurify-html";
-import GetTextPlugin from "vue-gettext";
-import router from "./router";
+import router from "./router/index";
 import App from "./components/App.vue";
-import store from "./store";
+import store from "./store/index";
 import DateUtils from "./support/date-utils";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     Vue.use(VueDOMPurifyHTML);
-    Vue.use(GetTextPlugin, {
-        translations: {
-            fr: french_translations.messages,
-        },
-        silent: true,
-    });
+    await initVueGettextFromPoGettextPlugin(
+        Vue,
+        (locale) => import(`../po/${getPOFileFromLocale(locale)}`),
+    );
 
     let user_locale = document.body.dataset.userLocale;
-    Vue.config.language = user_locale;
 
     DateUtils.setOptions({
         user_locale,

@@ -4,6 +4,7 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@tuleap/date-helper": "workspace:*",
     "@tuleap/project-background": "workspace:*",
@@ -12,6 +13,7 @@
     "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/tlp-swatch-colors": "workspace:*",
     "@tuleap/vue-breadcrumb-privacy": "workspace:*",
+    "@tuleap/vue2-gettext-init": "workspace:^",
     "@tuleap/vuex-store-wrapper-jest": "workspace:*",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.41",
@@ -26,6 +28,7 @@
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/po-gettext-plugin": "workspace:^",
     "@vue/test-utils": "^1.3",
     "vuex-mock-store": "0.0.8"
   },
