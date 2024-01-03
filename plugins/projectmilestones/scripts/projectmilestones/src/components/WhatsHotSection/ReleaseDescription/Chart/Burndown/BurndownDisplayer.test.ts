@@ -18,9 +18,9 @@
  */
 
 import type { BurndownData, MilestoneData, PointsWithDateForBurndown } from "../../../../../type";
-import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import Burndown from "./Burndown.vue";
+import BurndownChart from "./BurndownChart.vue";
 import { createReleaseWidgetLocalVue } from "../../../../../helpers/local-vue-for-test";
 import ChartError from "../ChartError.vue";
 import BurndownDisplayer from "./BurndownDisplayer.vue";
@@ -35,7 +35,7 @@ describe("BurndownDisplayer", () => {
         end_date: string | null,
         burndown_data: BurndownData,
         is_timeframe_duration = true,
-    ): Promise<Wrapper<BurndownDisplayer>> {
+    ): Promise<Wrapper<Vue, Element>> {
         const useStore = defineStore("root", {
             state: () => ({
                 project_id,
@@ -47,9 +47,6 @@ describe("BurndownDisplayer", () => {
         const pinia = createTestingPinia();
         useStore(pinia);
 
-        const component_options: ShallowMountOptions<BurndownDisplayer> = {};
-        component_options.localVue = await createReleaseWidgetLocalVue();
-
         const release_data = {
             id: 2,
             start_date,
@@ -57,12 +54,14 @@ describe("BurndownDisplayer", () => {
             burndown_data,
         } as MilestoneData;
 
-        component_options.propsData = {
-            release_data,
-            burndown_data,
-        };
-
-        return shallowMount(BurndownDisplayer, component_options);
+        return shallowMount(BurndownDisplayer, {
+            propsData: {
+                release_data,
+                burndown_data,
+            },
+            localVue: await createReleaseWidgetLocalVue(),
+            pinia,
+        });
     }
 
     it("When the burndown is under calculation, Then ChartError component is rendered", async () => {
@@ -205,7 +204,7 @@ describe("BurndownDisplayer", () => {
 
         const wrapper = await getPersonalWidgetInstance(start_date, end_date, burndown_data);
 
-        expect(wrapper.findComponent(Burndown).exists()).toBe(true);
+        expect(wrapper.findComponent(BurndownChart).exists()).toBe(true);
     });
 
     it("When the timeframe is not on duration field and end date field is null, Then there is an error", async () => {

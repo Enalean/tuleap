@@ -155,7 +155,7 @@ describe("ChartDisplayer", () => {
             resources: {},
         } as MilestoneData;
 
-        component_options.data = (): DefaultData<BurndownDisplayer> => {
+        component_options.data = (): DefaultData<ChartDisplayer> => {
             return {
                 is_open: false,
                 is_loading: true,
@@ -170,7 +170,7 @@ describe("ChartDisplayer", () => {
         const wrapper = await getPersonalWidgetInstance();
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.findComponent(BurndownDisplayer).exists()).toBe(true);
+        expect(wrapper.findComponent(ChartDisplayer).exists()).toBe(true);
         expect(wrapper.find("[data-test=burnup-exists]").exists()).toBe(true);
     });
 
@@ -183,7 +183,7 @@ describe("ChartDisplayer", () => {
             resources: {},
         } as MilestoneData;
 
-        component_options.data = (): DefaultData<BurndownDisplayer> => {
+        component_options.data = (): DefaultData<ChartDisplayer> => {
             return {
                 is_loading: false,
             };
@@ -199,7 +199,7 @@ describe("ChartDisplayer", () => {
     });
 
     it("When the burndown doesn't yet exist, Then there is a spinner", async () => {
-        component_options.data = (): DefaultData<BurndownDisplayer> => {
+        component_options.data = (): DefaultData<ChartDisplayer> => {
             return {
                 is_open: false,
                 is_loading: true,
@@ -217,7 +217,7 @@ describe("ChartDisplayer", () => {
     });
 
     it("When there is a rest error, Then the error is displayed", async () => {
-        component_options.data = (): DefaultData<BurndownDisplayer> => {
+        component_options.data = (): DefaultData<ChartDisplayer> => {
             return {
                 is_open: false,
                 is_loading: false,
