@@ -22,7 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Project;
 
-use Mockery;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use ProjectCreationData;
 use ProjectCreator;
 use ProjectManager;
@@ -43,85 +44,42 @@ use Tuleap\Project\Registration\ProjectRegistrationChecker;
 use Tuleap\Project\Registration\ProjectRegistrationErrorsCollection;
 use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use UserManager;
 
 final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectManager
-     */
-    public $project_manager;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserManager
-     */
-    public $user_manager;
-    /**
-     * @var ProjectCreator
-     */
-    public $creator;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectServiceActivator
-     */
-    private $service_updator;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|FieldUpdator
-     */
-    private $field_updator;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectDashboardDuplicator
-     */
-    private $dashboard_duplicator;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LabelDao
-     */
-    private $label_dao;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UgroupDuplicator
-     */
-    private $ugroup_duplicator;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|SynchronizedProjectMembershipDuplicator
-     */
-    private $synchronized_project_membership_duplicator;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ReferenceManager
-     */
-    private $reference_manager;
-    /**
-     * @var \EventManager|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $event_manager;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&ProjectRegistrationChecker
-     */
-    private $registration_checker;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&ProjectCategoriesUpdater
-     */
-    private $project_categories_updater;
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&EmailCopier
-     */
-    private $email_copier;
+    public ProjectManager&MockObject $project_manager;
+    public UserManager&MockObject $user_manager;
+    public ProjectCreator&MockObject $creator;
+    private ProjectServiceActivator&MockObject $service_activator;
+    private FieldUpdator&MockObject $field_updator;
+    private ProjectDashboardDuplicator&MockObject $dashboard_duplicator;
+    private LabelDao&MockObject $label_dao;
+    private UgroupDuplicator&MockObject $ugroup_duplicator;
+    private SynchronizedProjectMembershipDuplicator&MockObject $synchronized_project_membership_duplicator;
+    private ReferenceManager&MockObject $reference_manager;
+    private \EventManager&MockObject $event_manager;
+    private ProjectRegistrationChecker&MockObject $registration_checker;
+    private ProjectCategoriesUpdater&MockObject $project_categories_updater;
+    private EmailCopier&Stub $email_copier;
 
     protected function setUp(): void
     {
-        $this->project_manager = Mockery::mock(ProjectManager::class);
-        $this->user_manager    = Mockery::mock(UserManager::class);
+        $this->project_manager = $this->createMock(ProjectManager::class);
+        $this->user_manager    = $this->createMock(UserManager::class);
 
-        $this->event_manager                              = Mockery::mock(\EventManager::class);
-        $this->reference_manager                          = Mockery::mock(ReferenceManager::class);
-        $this->synchronized_project_membership_duplicator = Mockery::mock(
+        $this->event_manager                              = $this->createMock(\EventManager::class);
+        $this->reference_manager                          = $this->createMock(ReferenceManager::class);
+        $this->synchronized_project_membership_duplicator = $this->createMock(
             SynchronizedProjectMembershipDuplicator::class
         );
-        $this->ugroup_duplicator                          = Mockery::mock(UgroupDuplicator::class);
-        $this->label_dao                                  = Mockery::mock(LabelDao::class);
-        $this->dashboard_duplicator                       = Mockery::mock(ProjectDashboardDuplicator::class);
-        $this->field_updator                              = Mockery::mock(FieldUpdator::class);
-        $this->service_updator                            = Mockery::mock(ProjectServiceActivator::class);
+        $this->ugroup_duplicator                          = $this->createMock(UgroupDuplicator::class);
+        $this->label_dao                                  = $this->createMock(LabelDao::class);
+        $this->dashboard_duplicator                       = $this->createMock(ProjectDashboardDuplicator::class);
+        $this->field_updator                              = $this->createMock(FieldUpdator::class);
+        $this->service_activator                          = $this->createMock(ProjectServiceActivator::class);
         $this->registration_checker                       = $this->createMock(ProjectRegistrationChecker::class);
         $this->project_categories_updater                 = $this->createMock(ProjectCategoriesUpdater::class);
         $this->email_copier                               = $this->createStub(EmailCopier::class);
@@ -131,7 +89,7 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->buildProjectCreator(false);
 
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn(
+        $this->user_manager->method('getCurrentUser')->willReturn(
             UserTestBuilder::aUser()->build()
         );
 
@@ -150,7 +108,7 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('collectAllErrorsForProjectRegistration')
             ->willReturn($errors_collection);
 
-        $this->expectException(ProjectDescriptionMandatoryException::class);
+        self::expectException(ProjectDescriptionMandatoryException::class);
 
         $this->creator->processProjectCreation($project_creation_data);
     }
@@ -159,7 +117,7 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->buildProjectCreator(false);
 
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn(
+        $this->user_manager->method('getCurrentUser')->willReturn(
             UserTestBuilder::aUser()->build()
         );
 
@@ -178,7 +136,7 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('collectAllErrorsForProjectRegistration')
             ->willReturn($errors_collection);
 
-        $this->expectException(ProjectInvalidShortNameException::class);
+        self::expectException(ProjectInvalidShortNameException::class);
 
         $this->creator->processProjectCreation($project_creation_data);
     }
@@ -187,7 +145,7 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->buildProjectCreator(false);
 
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn(
+        $this->user_manager->method('getCurrentUser')->willReturn(
             UserTestBuilder::aUser()->build()
         );
 
@@ -206,7 +164,7 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('collectAllErrorsForProjectRegistration')
             ->willReturn($errors_collection);
 
-        $this->expectException(ProjectInvalidFullNameException::class);
+        self::expectException(ProjectInvalidFullNameException::class);
 
         $this->creator->processProjectCreation($project_creation_data);
     }
@@ -227,41 +185,40 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('collectAllErrorsForProjectRegistration')
             ->willReturn($errors_collection);
 
-        $user = Mockery::mock(\PFUser::class);
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
+        $user = UserTestBuilder::buildWithDefaults();
+        $this->user_manager->method('getCurrentUser')->willReturn($user);
 
-        $this->creator->shouldReceive('createGroupEntry')->andReturn(101)->once();
+        $this->creator->expects(self::once())->method('createGroupEntry')->willReturn(101);
         $this->project_categories_updater->expects(self::once())->method('update');
-        $this->creator->shouldReceive('initFileModule')->once();
-        $this->creator->shouldReceive('setProjectAdmin')->once();
-        $this->creator->shouldReceive('fakeGroupIdIntoHTTPParams')->once();
-        $this->creator->shouldReceive('setMessageToRequesterFromTemplate')->once();
-        $this->creator->shouldReceive('initForumModuleFromTemplate')->once();
-        $this->creator->shouldReceive('initSVNModuleFromTemplate')->once();
-        $this->creator->shouldReceive('initFRSModuleFromTemplate')->once();
-        $this->creator->shouldReceive('initTrackerV3ModuleFromTemplate')->once();
-        $this->creator->shouldReceive('initWikiModuleFromTemplate')->once();
+        $this->creator->expects(self::once())->method('initFileModule');
+        $this->creator->expects(self::once())->method('setProjectAdmin');
+        $this->creator->expects(self::once())->method('fakeGroupIdIntoHTTPParams');
+        $this->creator->expects(self::once())->method('setMessageToRequesterFromTemplate');
+        $this->creator->expects(self::once())->method('initForumModuleFromTemplate');
+        $this->creator->expects(self::once())->method('initSVNModuleFromTemplate');
+        $this->creator->expects(self::once())->method('initFRSModuleFromTemplate');
+        $this->creator->expects(self::once())->method('initTrackerV3ModuleFromTemplate');
+        $this->creator->expects(self::once())->method('initWikiModuleFromTemplate');
 
         $this->email_copier->expects(self::once())->method('copyEmailOptionsFromTemplate');
 
-        $this->dashboard_duplicator->shouldReceive('duplicate')->once();
-        $this->field_updator->shouldReceive('update')->once();
+        $this->dashboard_duplicator->expects(self::once())->method('duplicate');
+        $this->field_updator->expects(self::once())->method('update');
 
-        $project = Mockery::mock(\Project::class);
-        $project->shouldReceive('isError')->andReturns(false);
-        $this->project_manager->shouldReceive('getProject')->andReturn($project);
+        $project = ProjectTestBuilder::aProject()->build();
+        $this->project_manager->method('getProject')->willReturn($project);
 
-        $this->event_manager->shouldReceive('processEvent')->twice();
+        $this->event_manager->expects(self::exactly(2))->method('processEvent');
 
-        $this->reference_manager->shouldReceive('addSystemReferencesWithoutService')->once();
-        $this->synchronized_project_membership_duplicator->shouldReceive('duplicate')->once();
-        $this->ugroup_duplicator->shouldReceive('duplicateOnProjectCreation')->once();
+        $this->reference_manager->expects(self::once())->method('addSystemReferencesWithoutService');
+        $this->synchronized_project_membership_duplicator->expects(self::once())->method('duplicate');
+        $this->ugroup_duplicator->expects(self::once())->method('duplicateOnProjectCreation');
 
-        $this->label_dao->shouldReceive('duplicateLabelsIfNeededBetweenProjectsId')->once();
+        $this->label_dao->expects(self::once())->method('duplicateLabelsIfNeededBetweenProjectsId');
 
-        $this->service_updator->shouldReceive('activateServicesFromTemplate')->once();
+        $this->service_activator->expects(self::once())->method('activateServicesFromTemplate');
 
-        $this->creator->shouldReceive('autoActivateProject')->once();
+        $this->creator->expects(self::once())->method('autoActivateProject');
 
         $this->creator->processProjectCreation($project_creation_data);
     }
@@ -282,68 +239,79 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('collectAllErrorsForProjectRegistration')
             ->willReturn($errors_collection);
 
-        $user = Mockery::mock(\PFUser::class);
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
+        $user = UserTestBuilder::buildWithDefaults();
+        $this->user_manager->method('getCurrentUser')->willReturn($user);
 
-        $this->creator->shouldReceive('createGroupEntry')->andReturn(101)->once();
+        $this->creator->expects(self::once())->method('createGroupEntry')->willReturn(101);
         $this->project_categories_updater->expects(self::once())->method('update');
-        $this->creator->shouldReceive('initFileModule')->once();
-        $this->creator->shouldReceive('setProjectAdmin')->once();
-        $this->creator->shouldReceive('fakeGroupIdIntoHTTPParams')->once();
-        $this->creator->shouldReceive('setMessageToRequesterFromTemplate')->once();
-        $this->creator->shouldReceive('initForumModuleFromTemplate')->once();
-        $this->creator->shouldReceive('initSVNModuleFromTemplate')->once();
-        $this->creator->shouldReceive('initFRSModuleFromTemplate')->once();
-        $this->creator->shouldReceive('initTrackerV3ModuleFromTemplate')->once();
-        $this->creator->shouldReceive('initWikiModuleFromTemplate')->once();
+        $this->creator->expects(self::once())->method('initFileModule');
+        $this->creator->expects(self::once())->method('setProjectAdmin');
+        $this->creator->expects(self::once())->method('fakeGroupIdIntoHTTPParams');
+        $this->creator->expects(self::once())->method('setMessageToRequesterFromTemplate');
+        $this->creator->expects(self::once())->method('initForumModuleFromTemplate');
+        $this->creator->expects(self::once())->method('initSVNModuleFromTemplate');
+        $this->creator->expects(self::once())->method('initFRSModuleFromTemplate');
+        $this->creator->expects(self::once())->method('initTrackerV3ModuleFromTemplate');
+        $this->creator->expects(self::once())->method('initWikiModuleFromTemplate');
 
         $this->email_copier->expects(self::once())->method('copyEmailOptionsFromTemplate');
 
-        $this->dashboard_duplicator->shouldReceive('duplicate')->once();
-        $this->field_updator->shouldReceive('update')->once();
+        $this->dashboard_duplicator->expects(self::once())->method('duplicate');
+        $this->field_updator->expects(self::once())->method('update');
 
-        $project = Mockery::mock(\Project::class);
-        $project->shouldReceive('isError')->andReturns(false);
-        $this->project_manager->shouldReceive('getProject')->andReturn($project);
+        $project = ProjectTestBuilder::aProject()->build();
+        $this->project_manager->method('getProject')->willReturn($project);
 
-        $this->event_manager->shouldReceive('processEvent')->twice();
+        $this->event_manager->expects(self::exactly(2))->method('processEvent');
 
-        $this->reference_manager->shouldReceive('addSystemReferencesWithoutService')->once();
-        $this->synchronized_project_membership_duplicator->shouldReceive('duplicate')->once();
-        $this->ugroup_duplicator->shouldReceive('duplicateOnProjectCreation')->once();
+        $this->reference_manager->expects(self::once())->method('addSystemReferencesWithoutService');
+        $this->synchronized_project_membership_duplicator->expects(self::once())->method('duplicate');
+        $this->ugroup_duplicator->expects(self::once())->method('duplicateOnProjectCreation');
 
-        $this->label_dao->shouldReceive('duplicateLabelsIfNeededBetweenProjectsId')->once();
+        $this->label_dao->expects(self::once())->method('duplicateLabelsIfNeededBetweenProjectsId');
 
-        $this->service_updator->shouldReceive('activateServicesFromTemplate')->once();
+        $this->service_activator->expects(self::once())->method('activateServicesFromTemplate');
 
-        $this->creator->shouldReceive('autoActivateProject')->never();
+        $this->creator->expects(self::never())->method('autoActivateProject');
 
         $this->creator->processProjectCreation($project_creation_data);
     }
 
     private function buildProjectCreator(bool $force_activation): void
     {
-        $this->creator = Mockery::mock(
-            ProjectCreator::class,
-            [
+        $this->creator = $this->getMockBuilder(ProjectCreator::class)
+            ->setConstructorArgs([
                 $this->project_manager,
                 $this->reference_manager,
                 $this->user_manager,
                 $this->ugroup_duplicator,
                 false,
-                Mockery::mock(FRSPermissionCreator::class),
-                Mockery::mock(LicenseAgreementFactory::class),
+                $this->createMock(FRSPermissionCreator::class),
+                $this->createMock(LicenseAgreementFactory::class),
                 $this->dashboard_duplicator,
                 $this->label_dao,
                 $this->synchronized_project_membership_duplicator,
                 $this->event_manager,
                 $this->field_updator,
-                $this->service_updator,
+                $this->service_activator,
                 $this->registration_checker,
                 $this->project_categories_updater,
                 $this->email_copier,
                 $force_activation,
-            ]
-        )->makePartial()->shouldAllowMockingProtectedMethods();
+            ])
+            ->onlyMethods([
+                'createGroupEntry',
+                'initFileModule',
+                'setProjectAdmin',
+                'fakeGroupIdIntoHTTPParams',
+                'setMessageToRequesterFromTemplate',
+                'initForumModuleFromTemplate',
+                'initSVNModuleFromTemplate',
+                'initFRSModuleFromTemplate',
+                'initTrackerV3ModuleFromTemplate',
+                'initWikiModuleFromTemplate',
+                'autoActivateProject',
+            ])
+            ->getMock();
     }
 }
