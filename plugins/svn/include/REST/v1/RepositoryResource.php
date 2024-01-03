@@ -262,7 +262,7 @@ class RepositoryResource extends AuthenticatedResource
             )
         );
 
-        $this->settings_representation_validator = new SettingsRepresentationValidator();
+        $this->settings_representation_validator = new SettingsRepresentationValidator(\UserManager::instance());
 
         $this->user_group_id_retriever = new UserGroupRetriever(new UGroupManager());
     }
