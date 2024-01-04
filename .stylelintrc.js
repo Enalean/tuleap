@@ -65,7 +65,6 @@ module.exports = {
             "fr"
         ],
         "media-feature-range-notation": "prefix",
-        "media-query-no-invalid": null, // Disabled because it does not play with SCSS var in media queries
         // Plugins
         "order/properties-alphabetical-order": null, // Overridden by stylelint-config-property-sort-order-smacss
         "scss/at-else-empty-line-before": ["never"],
@@ -76,16 +75,6 @@ module.exports = {
         "no-descending-specificity": null, // Need a lot of work with existing files
         "no-invalid-position-at-import-rule": null, // Need work with existing files
         "scss/operator-no-newline-after": null, // Does not play well with Prettier
-        "max-line-length": null, // Managed by Prettier
-        "indentation": null, // Managed by Prettier
         "prettier/prettier": [true, prettier_config]
     },
-    "overrides": [
-        {
-            "files": ["**/*.scss"],
-            "rules": {
-                "function-no-unknown": null, // Stylelint thinks all SCSS functions (like map.get) are unknown. It's strangely not overridden by scss configs.
-            }
-        }
-    ]
 };

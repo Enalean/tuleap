@@ -79,8 +79,7 @@
 }
 
 .dashboard-widget-content {
-    overflow-x: auto;
-    overflow-y: hidden;
+    overflow: auto hidden;
 }
 
 .dashboard-add-widget-body {
@@ -98,8 +97,7 @@
 
 .dashboard-add-widget-list-body {
     max-height: 50vh;
-    overflow-x: hidden;
-    overflow-y: scroll;
+    overflow: hidden scroll;
 }
 
 #dashboard-add-widget-settings {

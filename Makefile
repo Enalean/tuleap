@@ -268,6 +268,10 @@ stylelint: ## Execute stylelint. Use FILES parameter to execute on specific file
 	$(eval FILES ?= **/*.{vue,scss})
 	@pnpm run stylelint -- $(FILES)
 
+stylelint-fix: ## Execute stylelint with --fix to try to fix problems automatically. Use FILES parameter to execute on specific file or directory.
+	$(eval FILES ?= **/*.{vue,scss})
+	@pnpm run stylelint --fix -- $(FILES)
+
 bash-web: ## Give a bash on web container
 	@$(DOCKER) exec -e COLUMNS="`tput cols`" -e LINES="`tput lines`" -ti `$(DOCKER_COMPOSE) ps -q web` bash
 
