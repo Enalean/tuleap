@@ -28,6 +28,7 @@
         }"
         v-on:click="goToItem"
         ref="root"
+        data-test="project-sidebar-promoted-sub-item"
     >
         <a
             v-bind:href="sanitized_href"
