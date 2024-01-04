@@ -22,57 +22,59 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\Project\ProjectAccessChecker;
+declare(strict_types=1);
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class ProjectManagerGetValidProjectTest extends \Tuleap\Test\PHPUnit\TestCase
+namespace Tuleap\Project;
+
+use PHPUnit\Framework\MockObject\MockObject;
+use ProjectHistoryDao;
+use ProjectManager;
+
+final class ProjectManagerGetValidProjectTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $dao;
-    /** @var ProjectManager */
-    private $project_manager;
+    private \ProjectDao&MockObject $dao;
+    private ProjectManager $project_manager;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dao             = \Mockery::spy(\ProjectDao::class);
+        $this->dao             = $this->createMock(\ProjectDao::class);
         $this->project_manager = ProjectManager::testInstance(
-            Mockery::mock(ProjectAccessChecker::class),
-            Mockery::mock(ProjectHistoryDao::class),
+            $this->createMock(ProjectAccessChecker::class),
+            $this->createMock(ProjectHistoryDao::class),
             $this->dao
         );
     }
 
     public function testItFindsTheProjectWithItsID(): void
     {
-        $this->dao->shouldReceive('searchById')->with(112)->andReturns(\TestHelper::arrayToDar(['group_id' => 112, 'status' => 'A']));
+        $this->dao->method('searchById')->with(112)->willReturn(\TestHelper::arrayToDar(['group_id' => 112, 'status' => 'A']));
+        $this->dao->method('searchByCaseInsensitiveUnixGroupName');
         $project = $this->project_manager->getValidProjectByShortNameOrId(112);
-        $this->assertEquals(112, $project->getID());
+        self::assertEquals(112, $project->getID());
     }
 
     public function testItFindsTheProjectWithItsUnixName(): void
     {
-        $this->dao->shouldReceive('searchByCaseInsensitiveUnixGroupName')->with('1gpig')->andReturns(\TestHelper::arrayToDar(['group_id' => 112, 'status' => 'A']));
+        $this->dao->method('searchByCaseInsensitiveUnixGroupName')->with('1gpig')->willReturn(\TestHelper::arrayToDar(['group_id' => 112, 'status' => 'A']));
         $project = $this->project_manager->getValidProjectByShortNameOrId('1gpig');
-        $this->assertEquals(112, $project->getID());
+        self::assertEquals(112, $project->getID());
     }
 
     public function testItThrowsAnExceptionWhenNoProjectMatches(): void
     {
-        $this->dao->shouldReceive('searchById')->andReturns(\TestHelper::emptyDar());
-        $this->dao->shouldReceive('searchByCaseInsensitiveUnixGroupName')->andReturns(\TestHelper::emptyDar());
+        $this->dao->method('searchById')->willReturn(\TestHelper::emptyDar());
+        $this->dao->method('searchByCaseInsensitiveUnixGroupName')->willReturn(\TestHelper::emptyDar());
 
-        $this->expectException(\Project_NotFoundException::class);
+        self::expectException(\Project_NotFoundException::class);
         $this->project_manager->getValidProjectByShortNameOrId('doesnt exist');
     }
 
     public function testItThrowsAnExceptionWhenProjectIsDeleted(): void
     {
-        $this->expectException(\Project_NotFoundException::class);
-        $this->dao->shouldReceive('searchById')->andReturns(\TestHelper::emptyDar());
-        $this->dao->shouldReceive('searchByCaseInsensitiveUnixGroupName')->with('1gpig')->andReturns(\TestHelper::arrayToDar(['group_id' => 112, 'status' => 'D']));
+        self::expectException(\Project_NotFoundException::class);
+        $this->dao->method('searchById')->willReturn(\TestHelper::emptyDar());
+        $this->dao->method('searchByCaseInsensitiveUnixGroupName')->with('1gpig')->willReturn(\TestHelper::arrayToDar(['group_id' => 112, 'status' => 'D']));
         $this->project_manager->getValidProjectByShortNameOrId('1gpig');
     }
 }
