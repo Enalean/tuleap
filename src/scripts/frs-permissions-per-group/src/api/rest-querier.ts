@@ -17,19 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get } from "@tuleap/tlp-fetch";
 import type { PackagePermission } from "../types";
+import type { Fault } from "@tuleap/fault";
+import { getJSON, uri } from "@tuleap/fetch-result";
+import type { ResultAsync } from "neverthrow";
 
-export async function getPackagesPermissions(
-    group_id: string,
+export function getPackagesPermissions(
+    project_id: number,
     selected_ugroup_id: string,
-): Promise<PackagePermission[]> {
-    const response = await get("/file/files_permissions_per_group.php", {
-        params: {
-            group_id,
-            selected_ugroup_id,
-        },
-    });
-
-    return response.json();
+): ResultAsync<PackagePermission[], Fault> {
+    return getJSON<PackagePermission[]>(
+        uri`/file/files_permissions_per_group.php?group_id=${project_id}&selected_ugroup_id=${selected_ugroup_id}`,
+    );
 }

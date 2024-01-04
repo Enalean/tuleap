@@ -48,10 +48,6 @@ $project         = $project_manager->getProject($group_id);
 $event_manager = EventManager::instance();
 $event_manager->processEvent(new PermissionPerGroupDisplayEvent($GLOBALS['HTML']));
 
-$title                = _('Permissions per group');
-$navigation_displayer = new HeaderNavigationDisplayer();
-$navigation_displayer->displayBurningParrotNavigation($title, $project, 'permissions');
-
 $ugroup_manager    = new UGroupManager();
 $formatter         = new PermissionPerGroupUGroupFormatter($ugroup_manager);
 $presenter_builder = new PermissionPerGroupBuilder($ugroup_manager);
@@ -94,6 +90,10 @@ $additional_panes = $additional_panes_builder->getSortedPanes(
 );
 
 $presenter = new PermissionPerGroupPresenter($project, $groups, $additional_panes);
+
+$title                = _('Permissions per group');
+$navigation_displayer = new HeaderNavigationDisplayer();
+$navigation_displayer->displayBurningParrotNavigation($title, $project, 'permissions');
 
 $templates_dir = ForgeConfig::get('tuleap_dir') . '/src/templates/project/admin/';
 TemplateRendererFactory::build()

@@ -19,15 +19,13 @@
 
 <template>
     <section class="tlp-pane-section">
-        <div v-if="hasRestError" class="tlp-alert-danger">{{ rest_error }}</div>
+        <div v-if="has_rest_error" class="tlp-alert-danger">
+            {{ rest_error }}
+        </div>
 
         <div class="permission-per-group-load-button" v-if="!is_loaded">
-            <button
-                class="tlp-button-primary tlp-button-outline"
-                v-on:click="loadAll()"
-                v-translate
-            >
-                See all packages permissions
+            <button class="tlp-button-primary tlp-button-outline" v-on:click="loadAll()">
+                {{ $gettext("See all packages permissions") }}
             </button>
         </div>
 
@@ -39,61 +37,48 @@
 
         <package-permissions-table
             v-if="is_loaded"
-            v-bind:package-permissions="packages_list"
-            v-bind:selected-ugroup-name="selectedUgroupName"
+            v-bind:package_permissions="packages_list"
+            v-bind:selected_ugroup_name="selected_ugroup_name"
         />
     </section>
 </template>
-<script lang="ts">
+
+<script setup lang="ts">
 import { getPackagesPermissions } from "./api/rest-querier";
 import PackagePermissionsTable from "./FRSPackagePermissionsTable.vue";
-import Component from "vue-class-component";
-import { Prop } from "vue-property-decorator";
-import Vue from "vue";
 import type { PackagePermission } from "./types";
-import { FetchWrapperError } from "@tuleap/tlp-fetch";
+import { computed, ref } from "vue";
+import type { Fault } from "@tuleap/fault";
+import { useGettext } from "vue3-gettext";
 
-@Component({ components: { PackagePermissionsTable } })
-export default class BaseFRSPackagePermissions extends Vue {
-    @Prop()
-    private readonly selectedUgroupId!: string;
-    @Prop()
-    private readonly selectedProjectId!: string;
-    @Prop()
-    readonly selectedUgroupName!: string;
+const props = defineProps<{
+    selected_project_id: number;
+    selected_ugroup_id: string;
+    selected_ugroup_name: string;
+}>();
 
-    is_loaded = false;
-    is_loading = false;
-    rest_error: string | null = null;
-    packages_list: PackagePermission[] = [];
+const rest_error = ref<string | null>(null);
+const is_loaded = ref(false);
+const is_loading = ref(false);
+const has_rest_error = computed(() => rest_error.value !== null);
+const packages_list = ref<PackagePermission[]>([]);
 
-    get hasRestError(): boolean {
-        return this.rest_error !== null;
-    }
+const { $gettext } = useGettext();
 
-    get packages_are_loading(): string {
-        return this.$gettext("Packages are loading");
-    }
+const packages_are_loading = ref($gettext("Packages are loading"));
 
-    async loadAll(): Promise<void> {
-        try {
-            this.is_loading = true;
-
-            this.packages_list = await getPackagesPermissions(
-                this.selectedProjectId,
-                this.selectedUgroupId,
-            );
-
-            this.is_loaded = true;
-        } catch (e) {
-            if (!(e instanceof FetchWrapperError)) {
-                throw e;
-            }
-            const { error } = await e.response.json();
-            this.rest_error = error;
-        } finally {
-            this.is_loading = false;
-        }
-    }
+function loadAll(): void {
+    is_loading.value = true;
+    getPackagesPermissions(props.selected_project_id, props.selected_ugroup_id).match(
+        (permissions: PackagePermission[]) => {
+            is_loaded.value = true;
+            is_loading.value = false;
+            packages_list.value = permissions;
+        },
+        (fault: Fault) => {
+            is_loading.value = false;
+            rest_error.value = String(fault);
+        },
+    );
 }
 </script>

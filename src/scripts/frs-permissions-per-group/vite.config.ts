@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare module "*.vue" {
-    import Vue from "vue";
-    export default Vue;
-}
+import { vite } from "@tuleap/build-system-configurator";
+import * as path from "path";
+import vue from "@vitejs/plugin-vue";
+import POGettextPlugin from "@tuleap/po-gettext-plugin";
+
+export default vite.defineAppConfig(
+    {
+        plugin_name: "core",
+        sub_app_name: "frs-permissions-per-group",
+    },
+    {
+        plugins: [POGettextPlugin.vite(), vue()],
+        build: {
+            rollupOptions: {
+                input: {
+                    "permissions-per-group": path.resolve(__dirname, "src/index.ts"),
+                },
+            },
+        },
+    },
+);

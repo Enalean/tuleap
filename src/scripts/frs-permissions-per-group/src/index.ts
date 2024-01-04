@@ -17,36 +17,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
+import { createApp } from "vue";
 import FRSPermissions from "./BaseFRSPackagePermissions.vue";
-import { getPOFileFromLocale, initVueGettextFromPoGettextPlugin } from "@tuleap/vue2-gettext-init";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
+import { createGettext } from "vue3-gettext";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("frs-packages-permissions-per-group");
-
     if (!vue_mount_point) {
         return;
     }
 
-    const locale = document.body.dataset.userLocale;
-    if (locale === undefined) {
-        throw new Error("Unable to load user locale");
-    }
-
-    Vue.config.language = locale;
-
-    await initVueGettextFromPoGettextPlugin(
-        Vue,
-        (locale: string) =>
-            import(
-                /* webpackChunkName: "permissions-per-group-frs-po-" */ "../po/" +
-                    getPOFileFromLocale(locale)
-            ),
-    );
-
-    const rootComponent = Vue.extend(FRSPermissions);
-
-    new rootComponent({
-        propsData: { ...vue_mount_point.dataset },
-    }).$mount(vue_mount_point);
+    const gettext = await initVueGettext(createGettext, (locale: string) => {
+        return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
+    });
+    const app = createApp(FRSPermissions, {
+        selected_project_id: vue_mount_point.dataset.selectedProjectId,
+        selected_ugroup_id: vue_mount_point.dataset.selectedUgroupId,
+        selected_ugroup_name: vue_mount_point.dataset.selectedUgroupName,
+    });
+    app.use(gettext);
+    app.mount(vue_mount_point);
 });

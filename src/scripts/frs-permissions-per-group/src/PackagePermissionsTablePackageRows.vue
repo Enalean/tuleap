@@ -16,33 +16,37 @@
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
-
 <template>
-    <table class="tlp-table permission-per-group-table">
-        <thead>
-            <tr class="permission-per-group-triple-column-table">
-                <th>{{ $gettext("Package") }}</th>
-                <th>{{ $gettext("Release") }}</th>
-                <th>{{ $gettext("Readers") }}</th>
-            </tr>
-        </thead>
+    <tr>
+        <td>
+            <a v-bind:href="package.package_url">{{ package.package_name }}</a>
+        </td>
+        <td></td>
+        <td>
+            <ugroup-badge
+                v-for="ugroup in package.permissions"
+                v-bind:key="ugroup.ugroup_name"
+                v-bind:is_project_admin="ugroup.is_project_admin"
+                v-bind:is_static="ugroup.is_static"
+                v-bind:is_custom="ugroup.is_custom"
+                v-bind:group_name="ugroup.ugroup_name"
+            />
+        </td>
+    </tr>
 
-        <package-permissions
-            v-bind:package_permissions="package_permissions"
-            v-bind:selected_ugroup_name="selected_ugroup_name"
-        />
-    </table>
+    <release-permissions
+        v-for="release in package.releases"
+        v-bind:key="release.release_name"
+        v-bind:release="release"
+    />
 </template>
 
 <script setup lang="ts">
-import PackagePermissions from "./FRSPackagePermissionsTablePackage.vue";
+import UgroupBadge from "@tuleap/vue3-permissions-per-group-badge";
+import ReleasePermissions from "./FRSPackagePermissionsTablePackageRelease.vue";
 import type { PackagePermission } from "./types";
-import { useGettext } from "vue3-gettext";
 
 defineProps<{
-    package_permissions: PackagePermission[];
-    selected_ugroup_name: string;
+    package: PackagePermission;
 }>();
-
-const { $gettext } = useGettext();
 </script>
