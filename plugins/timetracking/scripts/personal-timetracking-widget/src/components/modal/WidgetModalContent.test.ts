@@ -17,19 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import WidgetModalContent from "./WidgetModalContent.vue";
 import { createLocalVueForTests } from "../../helpers/local-vue.js";
 import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
+import type { Artifact } from "@tuleap/plugin-timetracking-rest-api-types";
+import type Vue from "vue";
 
 describe("Given a personal timetracking widget modal", () => {
-    let rest_feedback;
-    let is_add_mode;
-    let current_artifact;
-    let setAddMode = jest.fn();
+    let rest_feedback: { message: string; type: string };
+    let is_add_mode: boolean;
+    let current_artifact: Artifact;
+    const setAddMode = jest.fn();
 
-    async function getWidgetModalContentInstance() {
+    async function getWidgetModalContentInstance(): Promise<Wrapper<Vue>> {
         const useStore = defineStore("root", {
             state: () => ({
                 rest_feedback: rest_feedback,
@@ -47,15 +50,20 @@ describe("Given a personal timetracking widget modal", () => {
 
         const component_options = {
             localVue: await createLocalVueForTests(),
+            propsData: {
+                artifact: {},
+                project: {},
+                timeData: {},
+            },
             pinia,
         };
         return shallowMount(WidgetModalContent, component_options);
     }
 
     beforeEach(() => {
-        rest_feedback = "";
+        rest_feedback = { message: "", type: "" };
         is_add_mode = false;
-        current_artifact = { artifact: "artifact" };
+        current_artifact = {} as Artifact;
     });
 
     it("When there is no REST feedback, then feedback message should not be displayed", async () => {
@@ -64,7 +72,7 @@ describe("Given a personal timetracking widget modal", () => {
     });
 
     it("When there is REST feedback, then feedback message should be displayed", async () => {
-        rest_feedback = { type: "success" };
+        rest_feedback.type = "success";
         const wrapper = await getWidgetModalContentInstance();
         expect(wrapper.find("[data-test=feedback]").exists()).toBeTruthy();
     });

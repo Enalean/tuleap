@@ -18,40 +18,97 @@
   -->
 
 <template>
-    <div class="tlp-modal" role="dialog">
-        <div class="tlp-modal-header">
-            <h1 class="tlp-modal-title">
-                {{ $gettext("Detailed times") }}
-            </h1>
-            <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="Close">
-                <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
-            </button>
+    <td class="tlp-table-cell-actions">
+        <a
+            v-on:click.prevent="show_modal"
+            v-bind:href="link_to_artifact_timetracking"
+            data-test="timetracking-details"
+        >
+            {{ $gettext("Details") }}
+        </a>
+
+        <div class="tlp-modal" role="dialog" ref="timetracking_modal">
+            <div class="tlp-modal-header">
+                <h1 class="tlp-modal-title">
+                    {{ $gettext("Detailed times") }}
+                </h1>
+                <button
+                    class="tlp-modal-close"
+                    type="button"
+                    data-dismiss="modal"
+                    aria-label="Close"
+                >
+                    <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
+                </button>
+            </div>
+            <widget-modal-content
+                v-if="artifact"
+                data-test="modal-content"
+                v-bind:artifact="artifact"
+                v-bind:project="project"
+                v-bind:time-data="times[0]"
+            />
+            <div class="tlp-modal-footer tlp-modal-footer-large">
+                <button
+                    type="button"
+                    class="tlp-button-primary tlp-button-outline tlp-modal-action"
+                    data-dismiss="modal"
+                >
+                    {{ $gettext("Close") }}
+                </button>
+            </div>
         </div>
-        <widget-modal-content
-            v-if="artifact"
-            data-test="modal-content"
-            v-bind:artifact="artifact"
-            v-bind:project="project"
-        />
-        <div class="tlp-modal-footer tlp-modal-footer-large">
-            <button
-                type="button"
-                class="tlp-button-primary tlp-button-outline tlp-modal-action"
-                data-dismiss="modal"
-            >
-                {{ $gettext("Close") }}
-            </button>
-        </div>
-    </div>
+    </td>
 </template>
-<script>
+<script setup lang="ts">
 import WidgetModalContent from "./WidgetModalContent.vue";
-export default {
-    name: "WidgetModalTimes",
-    components: { WidgetModalContent },
-    props: {
-        artifact: Object,
-        project: Object,
-    },
+import type { Artifact, PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
+import type { ProjectResponse } from "@tuleap/core-rest-api-types";
+import type { Ref } from "vue";
+import { computed, onMounted, ref } from "vue";
+import { createModal, Modal } from "@tuleap/tlp-modal";
+import { usePersonalTimetrackingWidgetStore } from "../../store/root";
+
+const props = defineProps<{
+    artifact: Artifact | null;
+    project: ProjectResponse;
+    times: PersonalTime[];
+}>();
+
+const timetracking_modal: Ref<HTMLElement | undefined> = ref();
+const modal_simple_content: Ref<Modal | undefined> = ref();
+const personal_store = usePersonalTimetrackingWidgetStore();
+
+const link_to_artifact_timetracking = computed((): string => {
+    if (!props.artifact) {
+        return "";
+    }
+
+    return props.artifact.html_url + "&view=timetracking";
+});
+
+onMounted((): void => {
+    if (!(timetracking_modal.value instanceof HTMLElement)) {
+        return;
+    }
+
+    modal_simple_content.value = createModal(timetracking_modal.value);
+    if (!(modal_simple_content.value instanceof Modal)) {
+        return;
+    }
+
+    modal_simple_content.value.addEventListener("tlp-modal-hidden", () => {
+        personal_store.setAddMode(false);
+        personal_store.reloadTimes();
+    });
+});
+
+const show_modal = (): void => {
+    if (!(modal_simple_content.value instanceof Modal)) {
+        return;
+    }
+
+    personal_store.setCurrentTimes(props.times);
+    modal_simple_content.value.toggle();
 };
 </script>

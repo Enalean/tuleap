@@ -17,25 +17,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import WidgetModalTable from "./WidgetModalTable.vue";
 import { createLocalVueForTests } from "../../helpers/local-vue.js";
 import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
+import type { PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
+import type Vue from "vue";
 
 describe("Given a personal timetracking widget modal", () => {
-    let is_add_mode;
-    let current_times;
-    let get_formatted_aggregated_time;
+    let is_add_mode: boolean;
+    let current_times: PersonalTime[];
+    let get_formatted_aggregated_time: string;
 
-    async function getWidgetModalTableInstance() {
+    async function getWidgetModalTableInstance(): Promise<Wrapper<Vue>> {
         const useStore = defineStore("root", {
             state: () => ({
                 is_add_mode,
                 current_times,
             }),
             getters: {
-                get_formatted_aggregated_time: () => () => get_formatted_aggregated_time,
+                get_formatted_aggregated_time: () => (): string => get_formatted_aggregated_time,
             },
         });
         const pinia = createTestingPinia();
@@ -43,6 +46,10 @@ describe("Given a personal timetracking widget modal", () => {
 
         const component_options = {
             localVue: await createLocalVueForTests(),
+            propsData: {
+                artifact: {},
+                timeData: {},
+            },
             pinia,
         };
         return shallowMount(WidgetModalTable, component_options);
@@ -50,7 +57,7 @@ describe("Given a personal timetracking widget modal", () => {
 
     beforeEach(() => {
         is_add_mode = false;
-        current_times = [{ minutes: 660 }];
+        current_times = [{ minutes: 660 }] as PersonalTime[];
         get_formatted_aggregated_time = "11:00";
     });
 

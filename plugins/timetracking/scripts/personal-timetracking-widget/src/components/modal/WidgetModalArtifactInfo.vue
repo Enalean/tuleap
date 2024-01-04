@@ -51,32 +51,28 @@
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import { formatDateUsingPreferredUserFormat } from "@tuleap/plugin-timetracking-time-formatters";
 import { usePersonalTimetrackingWidgetStore } from "../../store/root";
-import { mapState } from "pinia";
-export default {
-    name: "WidgetModalArtifactInfo",
-    props: {
-        artifact: Object,
-        project: Object,
-    },
-    setup() {
-        const personal_store = usePersonalTimetrackingWidgetStore();
+import { computed } from "vue";
+import type { Artifact } from "@tuleap/plugin-timetracking-rest-api-types";
+import type { ProjectResponse } from "@tuleap/core-rest-api-types";
 
-        return { personal_store };
-    },
-    computed: {
-        ...mapState(usePersonalTimetrackingWidgetStore, ["user_locale"]),
-        project_link() {
-            return "/projects/" + this.project.shortname;
-        },
-        submission_date() {
-            return formatDateUsingPreferredUserFormat(
-                this.artifact.submission_date,
-                this.personal_store.user_locale,
-            );
-        },
-    },
-};
+const props = defineProps<{
+    artifact: Artifact;
+    project: ProjectResponse;
+}>();
+
+const personal_store = usePersonalTimetrackingWidgetStore();
+
+const project_link = computed((): string => {
+    return "/projects/" + props.project.shortname;
+});
+
+const submission_date = computed((): string => {
+    return formatDateUsingPreferredUserFormat(
+        new Date(props.artifact.submission_date),
+        personal_store.user_locale,
+    );
+});
 </script>

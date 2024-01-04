@@ -41,11 +41,11 @@
             >
                 {{ feedback_message }}
             </div>
-            <widget-modal-table v-bind:artifact="artifact" />
+            <widget-modal-table v-bind:artifact="artifact" v-bind:time-data="timeData" />
         </div>
     </div>
 </template>
-<script>
+<script setup lang="ts">
 import {
     REST_FEEDBACK_ADD,
     REST_FEEDBACK_EDIT,
@@ -56,40 +56,36 @@ import WidgetModalArtifactInfo from "./WidgetModalArtifactInfo.vue";
 import WidgetModalTable from "./WidgetModalTable.vue";
 import WidgetLinkToArtifact from "../WidgetLinkToArtifact.vue";
 import { usePersonalTimetrackingWidgetStore } from "../../store/root";
-import { mapState, mapActions } from "pinia";
-export default {
-    name: "WidgetModalContent",
-    components: { WidgetLinkToArtifact, WidgetModalTable, WidgetModalArtifactInfo },
-    props: {
-        artifact: Object,
-        project: Object,
-    },
-    setup() {
-        const personal_store = usePersonalTimetrackingWidgetStore();
+import { computed } from "vue";
+import type { Artifact, PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
+import type { ProjectResponse } from "@tuleap/core-rest-api-types";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-        return { personal_store };
-    },
-    computed: {
-        ...mapState(usePersonalTimetrackingWidgetStore, ["is_add_mode"]),
-        ...mapActions(usePersonalTimetrackingWidgetStore, ["setAddMode"]),
+const gettext_provider = useGettext();
 
-        feedback_class() {
-            return "tlp-alert-" + this.personal_store.rest_feedback.type;
-        },
-        feedback_message() {
-            switch (this.personal_store.rest_feedback.message) {
-                case REST_FEEDBACK_ADD:
-                    return this.$gettext("Time successfully added");
-                case REST_FEEDBACK_EDIT:
-                    return this.$gettext("Time successfully updated");
-                case REST_FEEDBACK_DELETE:
-                    return this.$gettext("Time successfully deleted");
-                case ERROR_OCCURRED:
-                    return this.$gettext("An error occurred");
-                default:
-                    return this.personal_store.rest_feedback.message;
-            }
-        },
-    },
-};
+defineProps<{
+    artifact: Artifact;
+    project: ProjectResponse;
+    timeData: PersonalTime;
+}>();
+
+const personal_store = usePersonalTimetrackingWidgetStore();
+
+const feedback_class = computed((): string => {
+    return "tlp-alert-" + personal_store.rest_feedback.type;
+});
+const feedback_message = computed((): string => {
+    switch (personal_store.rest_feedback.message) {
+        case REST_FEEDBACK_ADD:
+            return gettext_provider.$gettext("Time successfully added");
+        case REST_FEEDBACK_EDIT:
+            return gettext_provider.$gettext("Time successfully updated");
+        case REST_FEEDBACK_DELETE:
+            return gettext_provider.$gettext("Time successfully deleted");
+        case ERROR_OCCURRED:
+            return gettext_provider.$gettext("An error occurred");
+        default:
+            return personal_store.rest_feedback.message;
+    }
+});
 </script>

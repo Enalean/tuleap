@@ -17,8 +17,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { env } from "node:process";
 import { defineJestConfiguration } from "@tuleap/build-system-configurator";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+env.DISABLE_TS_TYPECHECK = "true";
+
+const configuration = defineJestConfiguration();
+
 export default {
-    ...defineJestConfiguration(),
+    ...configuration,
     displayName: "personal-timetracking-widget",
+    transform: {
+        ...configuration.transform,
+        "^.+\\.vue$": "unplugin-vue2-script-setup/jest",
+    },
+    moduleNameMapper: {
+        ...configuration.moduleNameMapper,
+        "^vue$": path.resolve(__dirname, "./node_modules/vue/"),
+    },
 };

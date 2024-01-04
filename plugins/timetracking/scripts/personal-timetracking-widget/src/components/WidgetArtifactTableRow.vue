@@ -31,67 +31,26 @@
         <td class="tlp-table-cell-numeric">
             {{ personal_store.get_formatted_aggregated_time(timeData) }}
         </td>
-        <td class="tlp-table-cell-actions timetracking-details-link-to-open-modal">
-            <a
-                v-on:click.prevent="show_modal"
-                v-bind:href="link_to_artifact_timetracking"
-                data-test="timetracking-details"
-            >
-                {{ $gettext("Details") }}
-            </a>
-        </td>
+
         <widget-modal-times
-            ref="timetracking_modal"
             v-bind:artifact="artifact"
             v-bind:project="project"
+            v-bind:times="timeData"
         />
     </tr>
 </template>
-<script>
-import { createModal } from "tlp";
-import WidgetLinkToArtifact from "./WidgetLinkToArtifact.vue";
-import WidgetModalTimes from "./modal/WidgetModalTimes.vue";
+<script setup lang="ts">
+import { ref } from "vue";
+import type { PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
 import { usePersonalTimetrackingWidgetStore } from "../store/root";
+import WidgetModalTimes from "./modal/WidgetModalTimes.vue";
+import WidgetLinkToArtifact from "./WidgetLinkToArtifact.vue";
 
-export default {
-    name: "WidgetArtifactTableRow",
-    components: {
-        WidgetLinkToArtifact,
-        WidgetModalTimes,
-    },
-    props: {
-        timeData: Array,
-    },
-    setup() {
-        const personal_store = usePersonalTimetrackingWidgetStore();
+const props = defineProps<{
+    timeData: PersonalTime[];
+}>();
 
-        return { personal_store };
-    },
-    data() {
-        return {
-            artifact: this.timeData[0].artifact,
-            project: this.timeData[0].project,
-            modal_simple_content: null,
-        };
-    },
-    computed: {
-        link_to_artifact_timetracking() {
-            return this.artifact.html_url + "&view=timetracking";
-        },
-    },
-    mounted() {
-        const modal = this.$refs.timetracking_modal.$el;
-        this.modal_simple_content = createModal(modal);
-        this.modal_simple_content.addEventListener("tlp-modal-hidden", () => {
-            this.personal_store.setAddMode(false);
-            this.personal_store.reloadTimes();
-        });
-    },
-    methods: {
-        show_modal() {
-            this.personal_store.setCurrentTimes(this.timeData);
-            this.modal_simple_content.toggle();
-        },
-    },
-};
+const personal_store = usePersonalTimetrackingWidgetStore();
+const artifact = ref(props.timeData[0].artifact);
+const project = ref(props.timeData[0].project);
 </script>

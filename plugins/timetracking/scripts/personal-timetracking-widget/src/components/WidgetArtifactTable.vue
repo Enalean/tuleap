@@ -19,11 +19,19 @@
 
 <template>
     <div class="timetracking-artifacts-table">
-        <div v-if="has_rest_error" class="tlp-alert-danger" data-test="alert-danger">
+        <div v-if="personal_store.has_rest_error" class="tlp-alert-danger" data-test="alert-danger">
             {{ error }}
         </div>
-        <div v-if="is_loading" class="timetracking-loader" data-test="timetracking-loader"></div>
-        <table v-if="can_results_be_displayed" class="tlp-table" data-test="artifact-table">
+        <div
+            v-if="personal_store.is_loading"
+            class="timetracking-loader"
+            data-test="timetracking-loader"
+        ></div>
+        <table
+            v-if="personal_store.can_results_be_displayed"
+            class="tlp-table"
+            data-test="artifact-table"
+        >
             <thead>
                 <tr>
                     <th>{{ $gettext("Artifact") }}</th>
@@ -48,8 +56,8 @@
                     </td>
                 </tr>
                 <artifact-table-row
-                    v-for="time in times"
-                    v-bind:key="time.id"
+                    v-for="(time, index) in personal_store.times"
+                    v-bind:key="index"
                     v-bind:time-data="time"
                 />
             </tbody>
@@ -58,7 +66,7 @@
                     <th></th>
                     <th></th>
                     <th class="tlp-table-cell-numeric timetracking-total-sum">
-                        ∑ {{ get_formatted_total_sum }}
+                        ∑ {{ personal_store.get_formatted_total_sum }}
                     </th>
                     <th></th>
                 </tr>
@@ -79,56 +87,36 @@
         </div>
     </div>
 </template>
-<script>
-import { mapState } from "pinia";
+<script setup lang="ts">
 import ArtifactTableRow from "./WidgetArtifactTableRow.vue";
 import { usePersonalTimetrackingWidgetStore } from "../store/root";
+import { computed, onMounted, ref } from "vue";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-export default {
-    name: "WidgetArtifactTable",
-    components: { ArtifactTableRow },
-    setup() {
-        const personal_store = usePersonalTimetrackingWidgetStore();
+const gettext_provider = useGettext();
+const personal_store = usePersonalTimetrackingWidgetStore();
 
-        return { personal_store };
-    },
-    data() {
-        return {
-            is_loading_more: false,
-        };
-    },
-    computed: {
-        ...mapState(usePersonalTimetrackingWidgetStore, [
-            "error_message",
-            "times",
-            "is_loading",
-            "get_formatted_total_sum",
-            "has_rest_error",
-            "can_results_be_displayed",
-            "can_load_more",
-        ]),
+const is_loading_more = ref(false);
 
-        has_data_to_display() {
-            return this.times.length > 0;
-        },
-        time_format_tooltip() {
-            return this.$gettext("The time is displayed in hours:minutes");
-        },
-        error() {
-            return this.error_message === "error"
-                ? this.$gettext("An error occurred")
-                : this.error_message;
-        },
-    },
-    mounted() {
-        this.personal_store.loadFirstBatchOfTimes();
-    },
-    methods: {
-        async loadMore() {
-            this.is_loading_more = true;
-            await this.personal_store.getTimes();
-            this.is_loading_more = false;
-        },
-    },
-};
+const has_data_to_display = computed((): boolean => {
+    return personal_store.times.length > 0;
+});
+const time_format_tooltip = computed((): string => {
+    return gettext_provider.$gettext("The time is displayed in hours:minutes");
+});
+const error = computed((): string => {
+    return personal_store.error_message === "error"
+        ? gettext_provider.$gettext("An error occurred")
+        : personal_store.error_message;
+});
+
+onMounted((): void => {
+    personal_store.loadFirstBatchOfTimes();
+});
+
+async function loadMore(): Promise<void> {
+    is_loading_more.value = true;
+    await personal_store.getTimes();
+    is_loading_more.value = false;
+}
 </script>

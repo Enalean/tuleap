@@ -17,20 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import WidgetArtifactTable from "./WidgetArtifactTable.vue";
 import { createLocalVueForTests } from "../helpers/local-vue.js";
 import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
+import type { PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
+import type Vue from "vue";
 
 describe("Given a personal timetracking widget", () => {
-    let times;
-    let is_loading;
-    let has_rest_error;
-    let can_load_more;
-    let can_results_be_displayed;
+    let times: PersonalTime[][];
+    let is_loading: boolean;
+    let has_rest_error: boolean;
+    let can_load_more: boolean;
+    let can_results_be_displayed: boolean;
 
-    async function getWidgetArtifactTableInstance() {
+    async function getWidgetArtifactTableInstance(): Promise<Wrapper<Vue>> {
         const useStore = defineStore("root", {
             state: () => ({
                 error_message: "",
@@ -59,7 +62,7 @@ describe("Given a personal timetracking widget", () => {
     }
 
     beforeEach(() => {
-        times = [[{ time: "time" }]];
+        times = [[{ step: "time" }]] as PersonalTime[][];
         is_loading = false;
         has_rest_error = false;
         can_load_more = false;

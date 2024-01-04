@@ -17,25 +17,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import WidgetModalTimes from "./WidgetModalTimes.vue";
 import { createLocalVueForTests } from "../../helpers/local-vue.js";
+import type { Artifact } from "@tuleap/plugin-timetracking-rest-api-types";
+import { createPinia, setActivePinia } from "pinia";
+import type Vue from "vue";
 
 describe("Given a personal timetracking widget modal", () => {
-    let current_artifact;
+    beforeEach(() => {
+        setActivePinia(createPinia());
+    });
+    let current_artifact: Artifact | null;
 
-    async function getWidgetModalTimesInstance() {
+    async function getWidgetModalTimesInstance(): Promise<Wrapper<Vue>> {
         const component_options = {
             localVue: await createLocalVueForTests(),
             propsData: {
                 artifact: current_artifact,
+                project: {},
+                times: [],
             },
         };
         return shallowMount(WidgetModalTimes, component_options);
     }
 
     it("When current artifact is not empty, then modal content should be displayed", async () => {
-        current_artifact = { artifact: "artifact" };
+        current_artifact = {} as Artifact;
         const wrapper = await getWidgetModalTimesInstance();
         expect(wrapper.find("[data-test=modal-content]").exists()).toBeTruthy();
     });

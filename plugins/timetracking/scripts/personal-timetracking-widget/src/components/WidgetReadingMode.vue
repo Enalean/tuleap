@@ -35,18 +35,8 @@
         </div>
     </div>
 </template>
-<script>
+<script setup lang="ts">
 import { usePersonalTimetrackingWidgetStore } from "../store/root";
-import { mapState } from "pinia";
-export default {
-    name: "WidgetReadingMode",
-    setup() {
-        const personal_store = usePersonalTimetrackingWidgetStore();
 
-        return { personal_store };
-    },
-    computed: {
-        ...mapState(usePersonalTimetrackingWidgetStore, ["start_date", "end_date"]),
-    },
-};
+const personal_store = usePersonalTimetrackingWidgetStore();
 </script>
