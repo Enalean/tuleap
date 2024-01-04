@@ -21,12 +21,12 @@
     <table class="tlp-table permission-per-group-table" id="permission-per-group-git-repositories">
         <thead>
             <tr class="permission-per-group-sextuple-column-table">
-                <th v-translate>Repository</th>
-                <th v-translate>Branch</th>
-                <th v-translate>Tag</th>
-                <th v-translate>Readers</th>
-                <th v-translate>Writers</th>
-                <th v-translate>Rewinders</th>
+                <th>{{ $gettext("Repository") }}</th>
+                <th>{{ $gettext("Branch") }}</th>
+                <th>{{ $gettext("Tag") }}</th>
+                <th>{{ $gettext("Readers") }}</th>
+                <th>{{ $gettext("Writers") }}</th>
+                <th>{{ $gettext("Rewinders") }}</th>
             </tr>
         </thead>
 
@@ -41,6 +41,7 @@
         <git-permissions-table-repository
             v-for="repository in repositories"
             v-bind:key="repository.repository_id"
+            v-bind:data-test="'git-permissions-table-repository-' + repository.repository_id"
             v-bind:repository="repository"
             v-bind:filter="filter"
             v-on:filtered="togglePermission"
@@ -48,66 +49,64 @@
     </table>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import GitPermissionsTableRepository from "./GitPermissionsTableRepository.vue";
-import Vue from "vue";
-import { Component, Prop, Watch } from "vue-property-decorator";
+import { computed, ref, watch } from "vue";
 import type { RepositoryFineGrainedPermissions, RepositorySimplePermissions } from "./type";
+import { useGettext } from "vue3-gettext";
 
-@Component({
-    components: { GitPermissionsTableRepository },
-})
-export default class GitPermissionsTable extends Vue {
-    @Prop()
-    readonly repositories!: (RepositoryFineGrainedPermissions | RepositorySimplePermissions)[];
-    @Prop()
-    readonly selectedUgroupName!: string;
-    @Prop()
-    readonly filter!: string;
+const props = defineProps<{
+    repositories: (RepositoryFineGrainedPermissions | RepositorySimplePermissions)[];
+    selected_ugroup_name: string;
+    filter: string;
+}>();
 
-    nb_repo_hidden = 0;
+const { $gettext, interpolate } = useGettext();
 
-    get no_repo_empty_state(): string {
-        return this.$gettext("No repository found for project");
-    }
-    get filter_empty_state(): string {
-        return this.$gettext("There isn't any matching repository");
-    }
-    get ugroup_empty_state(): string {
-        return this.$gettextInterpolate(
-            this.$gettext("%{ user_group } has no permission for any repository in this project"),
-            { user_group: this.selectedUgroupName },
-        );
-    }
-    get is_empty(): boolean {
-        return this.repositories.length === 0;
-    }
-    get has_a_selected_ugroup(): boolean {
-        return this.selectedUgroupName !== "";
-    }
-    get are_all_repositories_hidden(): boolean {
-        return !this.is_empty && this.nb_repo_hidden === this.repositories.length;
-    }
-    get is_empty_state_shown(): boolean {
-        return this.is_empty || this.are_all_repositories_hidden;
-    }
-    get empty_state(): string {
-        return this.are_all_repositories_hidden
-            ? this.filter_empty_state
-            : this.has_a_selected_ugroup
-              ? this.ugroup_empty_state
-              : this.no_repo_empty_state;
-    }
+const nb_repo_hidden = ref(0);
 
-    @Watch("filter")
-    reset_hidden_repo() {
-        this.nb_repo_hidden = 0;
-    }
+const no_repo_empty_state = computed(() => {
+    return $gettext("No repository found for project");
+});
+const filter_empty_state = computed(() => {
+    return $gettext("There isn't any matching repository");
+});
+const ugroup_empty_state = computed(() => {
+    return interpolate(
+        $gettext("%{ user_group } has no permission for any repository in this project"),
+        { user_group: props.selected_ugroup_name },
+    );
+});
+const is_empty = computed(() => {
+    return props.repositories.length === 0;
+});
+const has_a_selected_ugroup = computed(() => {
+    return props.selected_ugroup_name !== "";
+});
+const are_all_repositories_hidden = computed(() => {
+    return !is_empty.value && nb_repo_hidden.value === props.repositories.length;
+});
+const is_empty_state_shown = computed(() => {
+    return is_empty.value || are_all_repositories_hidden.value;
+});
+const empty_state = computed(() => {
+    return are_all_repositories_hidden.value
+        ? filter_empty_state.value
+        : has_a_selected_ugroup.value
+          ? ugroup_empty_state.value
+          : no_repo_empty_state.value;
+});
 
-    togglePermission(event: { hidden: boolean }) {
-        if (event.hidden) {
-            this.nb_repo_hidden++;
-        }
+watch(
+    () => props.filter,
+    () => {
+        nb_repo_hidden.value = 0;
+    },
+);
+
+function togglePermission(event: { hidden: boolean }) {
+    if (event.hidden) {
+        nb_repo_hidden.value++;
     }
 }
 </script>

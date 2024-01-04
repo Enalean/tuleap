@@ -19,18 +19,17 @@
 
 <template>
     <section class="tlp-pane-section">
-        <div class="tlp-alert-danger" v-if="hasError" data-test="git-permission-error">
+        <div class="tlp-alert-danger" v-if="has_error" data-test="git-permission-error">
             {{ error }}
         </div>
 
-        <div class="permission-per-group-load-button" v-if="displayButtonLoadAll">
+        <div class="permission-per-group-load-button" v-if="display_button_load_all">
             <button
                 data-test="git-permission-button-load"
                 class="tlp-button-primary tlp-button-outline"
                 v-on:click="loadAll()"
-                v-translate
             >
-                See all repositories permissions
+                {{ $gettext("See all repositories permissions") }}
             </button>
         </div>
 
@@ -40,68 +39,54 @@
             v-if="is_loading"
         ></div>
 
-        <h2 class="tlp-pane-subtitle" v-if="is_loaded" v-translate>Repository permissions</h2>
+        <h2 class="tlp-pane-subtitle" v-if="is_loaded">{{ $gettext("Repository permissions") }}</h2>
         <git-inline-filter v-if="is_loaded" v-model="filter" />
         <git-permissions-table
             v-if="is_loaded"
             v-bind:repositories="repositories"
-            v-bind:selected-ugroup-name="selectedUgroupName"
+            v-bind:selected_ugroup_name="selected_ugroup_name"
             v-bind:filter="filter"
         />
     </section>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { getGitPermissions } from "./rest-querier";
-import { Component, Prop } from "vue-property-decorator";
-import Vue from "vue";
+import { computed, ref } from "vue";
 import GitInlineFilter from "./GitInlineFilter.vue";
 import GitPermissionsTable from "./GitPermissionsTable.vue";
 import type { RepositoryFineGrainedPermissions, RepositorySimplePermissions } from "./type";
-import { FetchWrapperError } from "@tuleap/tlp-fetch";
+import { useGettext } from "vue3-gettext";
+import type { Fault } from "@tuleap/fault";
 
-@Component({
-    components: { GitInlineFilter, GitPermissionsTable },
-})
-export default class GitPermissions extends Vue {
-    @Prop()
-    readonly selectedUgroupId!: string;
-    @Prop()
-    readonly selectedProjectId!: number;
-    @Prop()
-    readonly selectedUgroupName!: string;
+const props = defineProps<{
+    selected_project_id: number;
+    selected_ugroup_id: string;
+    selected_ugroup_name: string;
+}>();
 
-    is_loaded = false;
-    is_loading = false;
-    repositories: (RepositoryFineGrainedPermissions | RepositorySimplePermissions)[] = [];
-    error = null;
-    filter = "";
+const repositories = ref<(RepositoryFineGrainedPermissions | RepositorySimplePermissions)[]>([]);
+const error = ref<string | null>(null);
+const is_loaded = ref(false);
+const is_loading = ref(false);
+const has_error = computed(() => error.value !== null);
+const display_button_load_all = computed(() => !is_loaded.value && !is_loading.value);
+const filter = ref("");
 
-    get hasError(): boolean {
-        return this.error !== null;
-    }
+const { $gettext } = useGettext();
 
-    get displayButtonLoadAll(): boolean {
-        return !this.is_loaded && !this.is_loading;
-    }
-
-    async loadAll(): Promise<void> {
-        try {
-            this.is_loading = true;
-            const { repositories } = await getGitPermissions(
-                this.selectedProjectId,
-                this.selectedUgroupId,
-            );
-            this.is_loaded = true;
-            this.repositories = repositories;
-        } catch (e) {
-            if (e instanceof FetchWrapperError) {
-                const { error } = await e.response.json();
-                this.error = error;
-            }
-        } finally {
-            this.is_loading = false;
-        }
-    }
+function loadAll(): void {
+    is_loading.value = true;
+    getGitPermissions(props.selected_project_id, props.selected_ugroup_id).match(
+        (git_permissions: { repositories: RepositoryFineGrainedPermissions[] }) => {
+            is_loaded.value = true;
+            is_loading.value = false;
+            repositories.value = git_permissions.repositories;
+        },
+        (fault: Fault) => {
+            is_loading.value = false;
+            error.value = String(fault);
+        },
+    );
 }
 </script>

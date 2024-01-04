@@ -26,7 +26,7 @@
                 class="tlp-search"
                 autocomplete="off"
                 v-bind:placeholder="placeholder"
-                v-bind:value="value"
+                v-bind:value="modelValue"
                 v-on:keyup="search"
                 data-test="git-inline-filter-input"
             />
@@ -34,23 +34,23 @@
     </div>
 </template>
 
-<script lang="ts">
-import { Component, Prop } from "vue-property-decorator";
-import Vue from "vue";
+<script setup lang="ts">
+import { computed } from "vue";
+import { useGettext } from "vue3-gettext";
 
-@Component
-export default class GitInlineFilter extends Vue {
-    @Prop()
-    readonly value!: string;
+defineProps<{ modelValue?: string }>();
 
-    get placeholder(): string {
-        return this.$gettext("Repository name");
-    }
+const { $gettext } = useGettext();
 
-    search(event: Event): void {
-        if (event.target instanceof HTMLInputElement) {
-            this.$emit("input", event.target.value);
-        }
+const placeholder = computed(() => $gettext("Repository name"));
+
+const emit = defineEmits<{
+    "update:modelValue": [value: string];
+}>();
+
+function search(event: Event): void {
+    if (event.target instanceof HTMLInputElement) {
+        emit("update:modelValue", event.target.value);
     }
 }
 </script>

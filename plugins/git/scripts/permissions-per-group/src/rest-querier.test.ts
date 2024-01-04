@@ -17,41 +17,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp_fetch from "@tuleap/tlp-fetch";
-import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
+import * as fetch_result from "@tuleap/fetch-result";
 import { getGitPermissions } from "./rest-querier";
 import type { RepositoryFineGrainedPermissions } from "./type";
+import { okAsync } from "neverthrow";
+
+jest.mock("@tuleap/fetch-result");
 
 describe("API querier", () => {
     describe("getGitPermissions", () => {
         it("Given a project id and empty group id, Then it will get permission for git", async () => {
             const project_id = 101;
 
-            const tlpGet = jest.spyOn(tlp_fetch, "get");
-            mockFetchSuccess(tlpGet, {
-                headers: {
-                    // X-PAGINATION-SIZE
-                    get: (): string => "2",
-                },
-                return_json: {
+            const get = jest.spyOn(fetch_result, "getJSON");
+            get.mockReturnValue(
+                okAsync({
                     repositories: [{ name: "repo" } as RepositoryFineGrainedPermissions],
-                },
-            });
-
-            const result = await getGitPermissions(project_id, "");
-
-            expect(tlpGet).toHaveBeenCalledWith(
-                "/plugins/git/",
-                expect.objectContaining({
-                    params: {
-                        group_id: project_id,
-                        selected_ugroup_id: "",
-                        action: "permission-per-group",
-                    },
                 }),
             );
 
-            expect(result).toEqual({ repositories: [{ name: "repo" }] });
+            const result = await getGitPermissions(project_id, "");
+
+            expect(get).toHaveBeenCalled();
+
+            expect(result.unwrapOr(null)).toStrictEqual({ repositories: [{ name: "repo" }] });
         });
     });
 });

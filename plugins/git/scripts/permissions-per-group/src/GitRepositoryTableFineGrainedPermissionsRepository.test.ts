@@ -17,42 +17,35 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import GitRepositoryTableFineGrainedPermissionsRepository from "./GitRepositoryTableFineGrainedPermissionsRepository.vue";
 import type { RepositoryFineGrainedPermissions } from "./type";
-import localVueForTest from "./helper/local-vue-for-test";
+import { createGettext } from "vue3-gettext";
 
 describe("GitRepositoryTableFineGrainedPermissionsRepository", () => {
-    let propsData = {};
-
-    function instantiateComponent(): Wrapper<GitRepositoryTableFineGrainedPermissionsRepository> {
-        return shallowMount(GitRepositoryTableFineGrainedPermissionsRepository, {
-            propsData,
-            localVue: localVueForTest,
-        });
-    }
-
     it("When component is displayed, Then name and link are displayed", () => {
-        propsData = {
-            repositoryPermission: {
-                fine_grained_permission: [],
-                has_fined_grained_permissions: true,
-                name: "repo",
-                readers: [
-                    {
-                        is_custom: false,
-                        is_project_admin: false,
-                        is_static: false,
-                        ugroup_name: "project_members_readers",
-                    },
-                ],
-                repository_id: 1,
-                url: "/git/?action=repo_management&group_id=101&repo_id=1&pane=perms",
-            } as RepositoryFineGrainedPermissions,
-        };
-
-        const wrapper = instantiateComponent();
+        const wrapper = shallowMount(GitRepositoryTableFineGrainedPermissionsRepository, {
+            global: {
+                plugins: [createGettext({ silent: true })],
+            },
+            props: {
+                repositoryPermission: {
+                    fine_grained_permission: [],
+                    has_fined_grained_permissions: true,
+                    name: "repo",
+                    readers: [
+                        {
+                            is_custom: false,
+                            is_project_admin: false,
+                            is_static: false,
+                            ugroup_name: "project_members_readers",
+                        },
+                    ],
+                    repository_id: 1,
+                    url: "/git/?action=repo_management&group_id=101&repo_id=1&pane=perms",
+                } as RepositoryFineGrainedPermissions,
+            },
+        });
 
         expect(wrapper.find("[data-test=git-permissions-repository-link]").attributes().href).toBe(
             "/git/?action=repo_management&group_id=101&repo_id=1&pane=perms",

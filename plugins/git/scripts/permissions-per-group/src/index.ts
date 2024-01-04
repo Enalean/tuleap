@@ -17,26 +17,25 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import Vue from "vue";
+import { createApp } from "vue";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
+import { createGettext } from "vue3-gettext";
 import GitPermissions from "./GitPermissions.vue";
-import {
-    initVueGettextFromPoGettextPlugin,
-    getPOFileFromLocaleWithoutExtension,
-} from "@tuleap/vue2-gettext-init";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("git-permission-per-group");
-
     if (!vue_mount_point) {
         return;
     }
-    await initVueGettextFromPoGettextPlugin(
-        Vue,
-        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
-    );
 
-    const RootComponent = Vue.extend(GitPermissions);
-    new RootComponent({
-        propsData: { ...vue_mount_point.dataset },
-    }).$mount(vue_mount_point);
+    const gettext = await initVueGettext(createGettext, (locale: string) => {
+        return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
+    });
+    const app = createApp(GitPermissions, {
+        selected_project_id: vue_mount_point.dataset.selectedProjectId,
+        selected_ugroup_id: vue_mount_point.dataset.selectedUgroupId,
+        selected_ugroup_name: vue_mount_point.dataset.selectedUgroupName,
+    });
+    app.use(gettext);
+    app.mount(vue_mount_point);
 });

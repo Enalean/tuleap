@@ -17,47 +17,40 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import GitRepositoryTableFineGrainedPermission from "./GitRepositoryTableFineGrainedPermission.vue";
-import localVueForTest from "./helper/local-vue-for-test";
+import { createGettext } from "vue3-gettext";
 
 describe("GitRepositoryTableFineGrainedPermission", () => {
-    let propsData = {};
-
-    function instantiateComponent(): Wrapper<GitRepositoryTableFineGrainedPermission> {
-        return shallowMount(GitRepositoryTableFineGrainedPermission, {
-            propsData,
-            localVue: localVueForTest,
-        });
-    }
-
     it("When there are writers and rewinders permissions, Then GitPermissionsBadge is displayed", () => {
-        propsData = {
-            fineGrainedPermissions: {
-                id: 100,
-                branch: "master",
-                tag: "",
-                writers: [
-                    {
-                        is_project_admin: false,
-                        is_static: false,
-                        is_custom: false,
-                        ugroup_name: "project_member_writters",
-                    },
-                ],
-                rewinders: [
-                    {
-                        is_project_admin: false,
-                        is_static: false,
-                        is_custom: false,
-                        ugroup_name: "project_member_rewinders",
-                    },
-                ],
+        const wrapper = shallowMount(GitRepositoryTableFineGrainedPermission, {
+            global: {
+                plugins: [createGettext({ silent: true })],
             },
-        };
-
-        const wrapper = instantiateComponent();
+            props: {
+                fineGrainedPermissions: {
+                    id: 100,
+                    branch: "master",
+                    tag: "",
+                    writers: [
+                        {
+                            is_project_admin: false,
+                            is_static: false,
+                            is_custom: false,
+                            ugroup_name: "project_member_writters",
+                        },
+                    ],
+                    rewinders: [
+                        {
+                            is_project_admin: false,
+                            is_static: false,
+                            is_custom: false,
+                            ugroup_name: "project_member_rewinders",
+                        },
+                    ],
+                },
+            },
+        });
 
         expect(
             wrapper.find("[data-test=git-permission-badge-project_member_writters]").exists(),

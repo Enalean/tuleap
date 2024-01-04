@@ -29,10 +29,10 @@
             <git-permissions-badge
                 v-for="group in repositoryPermission.readers"
                 v-bind:key="group.ugroup_name"
-                v-bind:is-project-admin="group.is_project_admin"
-                v-bind:is-static="group.is_static"
-                v-bind:is-custom="group.is_custom"
-                v-bind:group-name="group.ugroup_name"
+                v-bind:is_project_admin="group.is_project_admin"
+                v-bind:is_static="group.is_static"
+                v-bind:is_custom="group.is_custom"
+                v-bind:group_name="group.ugroup_name"
                 v-bind:data-test="`git-permission-badge-${group.ugroup_name}`"
             />
         </td>
@@ -41,10 +41,10 @@
             <git-permissions-badge
                 v-for="group in repositoryPermission.writers"
                 v-bind:key="group.ugroup_name"
-                v-bind:is-project-admin="group.is_project_admin"
-                v-bind:is-static="group.is_static"
-                v-bind:is-custom="group.is_custom"
-                v-bind:group-name="group.ugroup_name"
+                v-bind:is_project_admin="group.is_project_admin"
+                v-bind:is_static="group.is_static"
+                v-bind:is_custom="group.is_custom"
+                v-bind:group_name="group.ugroup_name"
                 v-bind:data-test="`git-permission-badge-${group.ugroup_name}`"
             />
         </td>
@@ -52,24 +52,18 @@
             <git-permissions-badge
                 v-for="group in repositoryPermission.rewinders"
                 v-bind:key="group.ugroup_name"
-                v-bind:is-project-admin="group.is_project_admin"
-                v-bind:is-static="group.is_static"
-                v-bind:is-custom="group.is_custom"
-                v-bind:group-name="group.ugroup_name"
+                v-bind:is_project_admin="group.is_project_admin"
+                v-bind:is_static="group.is_static"
+                v-bind:is_custom="group.is_custom"
+                v-bind:group_name="group.ugroup_name"
                 v-bind:data-test="`git-permission-badge-${group.ugroup_name}`"
             />
         </td>
     </tr>
 </template>
-<script lang="ts">
-import GitPermissionsBadge from "@tuleap/vue-permissions-per-group-badge";
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import GitPermissionsBadge from "@tuleap/vue3-permissions-per-group-badge";
 import type { RepositorySimplePermissions } from "./type";
 
-@Component({ components: { GitPermissionsBadge } })
-export default class GitRepositoryTableSimplePermissions extends Vue {
-    @Prop()
-    readonly repositoryPermission!: RepositorySimplePermissions;
-}
+defineProps<{ repositoryPermission: RepositorySimplePermissions }>();
 </script>

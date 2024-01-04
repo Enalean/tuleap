@@ -17,9 +17,7 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import localVueForTest from "./helper/local-vue-for-test";
 import GitPermissionsTableRepository from "./GitPermissionsTableRepository.vue";
 import GitRepositoryTableSimplePermissions from "./GitRepositoryTableSimplePermissions.vue";
 import type {
@@ -29,33 +27,29 @@ import type {
 } from "./type";
 import GitRepositoryTableFineGrainedPermissionsRepository from "./GitRepositoryTableFineGrainedPermissionsRepository.vue";
 import GitRepositoryTableFineGrainedPermission from "./GitRepositoryTableFineGrainedPermission.vue";
+import { createGettext } from "vue3-gettext";
 
 describe("GitPermissionsTableRepository", () => {
-    let propsData = {};
-
-    function instantiateComponent(): Wrapper<GitPermissionsTableRepository> {
-        return shallowMount(GitPermissionsTableRepository, {
-            propsData,
-            localVue: localVueForTest,
-        });
-    }
-
     it("When repository hasn't fine grained permission, Then GitRepositoryTableSimplePermissions is displayed", () => {
-        propsData = {
-            repository: {
-                repository_id: 1,
-                has_fined_grained_permissions: false,
-            } as RepositorySimplePermissions,
-        };
-
-        const wrapper = instantiateComponent();
+        const wrapper = shallowMount(GitPermissionsTableRepository, {
+            props: {
+                filter: "",
+                repository: {
+                    repository_id: 1,
+                    has_fined_grained_permissions: false,
+                } as RepositorySimplePermissions,
+            },
+            global: {
+                plugins: [createGettext({ silent: true })],
+            },
+        });
 
         expect(wrapper.findComponent(GitRepositoryTableSimplePermissions).exists()).toBeTruthy();
         expect(
             wrapper
                 .findComponent(GitRepositoryTableSimplePermissions)
                 .props("repositoryPermission"),
-        ).toEqual({ repository_id: 1, has_fined_grained_permissions: false });
+        ).toStrictEqual({ repository_id: 1, has_fined_grained_permissions: false });
         expect(
             wrapper.findComponent(GitRepositoryTableFineGrainedPermissionsRepository).exists(),
         ).toBeFalsy();
@@ -63,17 +57,21 @@ describe("GitPermissionsTableRepository", () => {
     });
 
     it("When repository is hidden and hasn't fine grained permission, Then no components are displayed", async () => {
-        propsData = {
-            repository: {
-                repository_id: 1,
-                has_fined_grained_permissions: false,
-            } as RepositorySimplePermissions,
-        };
+        const wrapper = shallowMount(GitPermissionsTableRepository, {
+            props: {
+                filter: "",
+                repository: {
+                    repository_id: 1,
+                    has_fined_grained_permissions: false,
+                    name: "Repository",
+                } as RepositorySimplePermissions,
+            },
+            global: {
+                plugins: [createGettext({ silent: true })],
+            },
+        });
 
-        const wrapper = instantiateComponent();
-
-        wrapper.setData({ is_hidden: true });
-        await wrapper.vm.$nextTick();
+        await wrapper.setProps({ filter: "lorem" });
 
         expect(wrapper.findComponent(GitRepositoryTableSimplePermissions).exists()).toBeFalsy();
         expect(
@@ -83,17 +81,21 @@ describe("GitPermissionsTableRepository", () => {
     });
 
     it("When repository is hidden and has fine grained permission, Then no components are displayed", async () => {
-        propsData = {
-            repository: {
-                repository_id: 1,
-                has_fined_grained_permissions: true,
-            } as RepositoryFineGrainedPermissions,
-        };
+        const wrapper = shallowMount(GitPermissionsTableRepository, {
+            props: {
+                filter: "",
+                repository: {
+                    repository_id: 1,
+                    has_fined_grained_permissions: true,
+                    name: "Repository",
+                } as RepositoryFineGrainedPermissions,
+            },
+            global: {
+                plugins: [createGettext({ silent: true })],
+            },
+        });
 
-        const wrapper = instantiateComponent();
-
-        wrapper.setData({ is_hidden: true });
-        await wrapper.vm.$nextTick();
+        await wrapper.setProps({ filter: "lorem" });
 
         expect(wrapper.findComponent(GitRepositoryTableSimplePermissions).exists()).toBeFalsy();
         expect(
@@ -103,9 +105,11 @@ describe("GitPermissionsTableRepository", () => {
     });
 
     it("When repository has fine grained permission, Then GitRepositoryTableFineGrainedPermissionsRepository is displayed", () => {
-        propsData = {
+        const props = {
+            filter: "",
             repository: {
                 repository_id: 1,
+                name: "Repository",
                 has_fined_grained_permissions: true,
                 fine_grained_permission: [
                     {
@@ -118,7 +122,12 @@ describe("GitPermissionsTableRepository", () => {
             } as RepositoryFineGrainedPermissions,
         };
 
-        const wrapper = instantiateComponent();
+        const wrapper = shallowMount(GitPermissionsTableRepository, {
+            props,
+            global: {
+                plugins: [createGettext({ silent: true })],
+            },
+        });
 
         expect(wrapper.findComponent(GitRepositoryTableSimplePermissions).exists()).toBeFalsy();
         expect(

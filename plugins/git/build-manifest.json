@@ -1,10 +1,6 @@
 {
     "name": "git",
     "gettext-vue": {
-        "permissions-per-group": {
-            "src": "scripts/permissions-per-group/src",
-            "po": "scripts/permissions-per-group/po"
-        },
         "git-repositories": {
             "src": "scripts/repositories-list/src",
             "po": "scripts/repositories-list/po"
@@ -18,6 +14,10 @@
         "artifact-create-branch-action": {
             "src": "scripts/artifact-create-branch-action/src",
             "po": "scripts/artifact-create-branch-action/po"
+        },
+        "permissions-per-group": {
+            "src": "scripts/permissions-per-group/src",
+            "po": "scripts/permissions-per-group/po"
         }
     },
     "gettext-smarty": {
