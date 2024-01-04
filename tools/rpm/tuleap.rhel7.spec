@@ -55,6 +55,7 @@ Requires: php81-php-pecl-zip
 Requires: php81-php-ffi
 %if "%{?dist}" == ".el9"
 Requires: mysql
+Requires: glibc-locale-source
 %else
 Requires: rh-mysql80-mysql
 %endif
