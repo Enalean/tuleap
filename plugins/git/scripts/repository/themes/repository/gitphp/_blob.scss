@@ -47,8 +47,7 @@ $codemirror-like-line-numbers-color: #8c8c8c;
 }
 
 .git-repository-blob-body {
-    overflow-x: auto;
-    overflow-y: hidden;
+    overflow: auto hidden;
     background: var(--tlp-fade-background-color);
 }
 

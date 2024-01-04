@@ -574,7 +574,6 @@
     $magic-number-to-include-popover-body-in-viewport: 70px;
 
     max-height: calc(100vh - $magic-number-to-include-popover-body-in-viewport);
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: hidden auto;
     background: var(--tlp-dark-color);
 }

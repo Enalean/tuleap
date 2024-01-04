@@ -273,8 +273,7 @@ $editor-scrollbar-color: rgb(241 241 241);
     grid-template-columns: repeat(5, 14px);
     grid-template-rows: repeat(5, 14px);
     margin: 0 0 0 400px;
-    column-gap: 30px;
-    row-gap: 30px;
+    gap: 30px 30px;
 
     > i {
         text-align: center;
