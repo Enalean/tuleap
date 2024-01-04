@@ -16,7 +16,7 @@
     "@tuleap/tlp-relative-date": "workspace:*",
     "@tuleap/tlp-swatch-colors": "workspace:*",
     "codemirror": "^5.62.0",
-    "dompurify": "^3.0.5"
+    "dompurify": "^3.0.7"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*"

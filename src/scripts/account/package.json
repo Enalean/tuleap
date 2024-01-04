@@ -14,7 +14,7 @@
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/webauthn": "workspace:*",
-    "dompurify": "^3.0.5",
+    "dompurify": "^3.0.7",
     "mustache": "^4.2.0",
     "sprintf-js": "^1.1.2"
   },
@@ -22,7 +22,7 @@
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/fault": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:*",
-    "@types/dompurify": "^3.0.2",
+    "@types/dompurify": "^3.0.5",
     "@types/jquery": "^3.5.5",
     "@types/mustache": "^4.1.2",
     "@types/sprintf-js": "^1.1.2",

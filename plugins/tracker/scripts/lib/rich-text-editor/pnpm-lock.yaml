@@ -15,8 +15,8 @@ dependencies:
     specifier: workspace:*
     version: link:../../../../../lib/frontend/tlp-fetch
   dompurify:
-    specifier: ^3.0.5
-    version: 3.0.5
+    specifier: ^3.0.7
+    version: 3.0.7
   lit-html:
     specifier: ^2.8.0
     version: 2.8.0
@@ -41,8 +41,8 @@ devDependencies:
     specifier: ^4.9.10
     version: 4.9.10
   '@types/dompurify':
-    specifier: ^3.0.2
-    version: 3.0.2
+    specifier: ^3.0.5
+    version: 3.0.5
   '@types/marked':
     specifier: ^3.0.2
     version: 3.0.2
@@ -62,8 +62,8 @@ packages:
     resolution: {integrity: sha512-dcOPCXM0Cr5Z0i6eF/aW5LvECrS+cdl2Gi7lU+rEUNWby0w9Yl6mBubjrs29OVAducpuZjB4mfDayE+o4/gGdQ==}
     dev: true
 
-  /@types/dompurify@3.0.2:
-    resolution: {integrity: sha512-YBL4ziFebbbfQfH5mlC+QTJsvh0oJUrWbmxKMyEdL7emlHJqGR2Qb34TEFKj+VCayBvjKy3xczMFNhugThUsfQ==}
+  /@types/dompurify@3.0.5:
+    resolution: {integrity: sha512-1Wg0g3BtQF7sSb27fJQAKck1HECM6zV1EB66j8JH9i3LCjYabJa0FSdiSgsD5K/RbrsR0SiraKacLB+T8ZVYAg==}
     dependencies:
       '@types/trusted-types': 2.0.4
     dev: true
@@ -93,8 +93,8 @@ packages:
     resolution: {integrity: sha512-3VdM/SXBZX2omc9JF9nOPCtDaYQ67BGp5CoLpIQlO2KCAPETs8TcDHacF26jXadGbvUteZzRTeos2fhID5+ucQ==}
     dev: false
 
-  /dompurify@3.0.5:
-    resolution: {integrity: sha512-F9e6wPGtY+8KNMRAVfxeCOHU0/NPWMSENNq4pQctuXRqqdEPW7q3CrLbR5Nse044WwacyjHGOMlvNsBe1y6z9A==}
+  /dompurify@3.0.7:
+    resolution: {integrity: sha512-BViYTZoqP3ak/ULKOc101y+CtHDUvBsVgSxIF1ku0HmK6BRf+C03MC+tArMvOPtVtZp83DDh5puywKDu4sbVjQ==}
     dev: false
 
   /lit-html@2.8.0:

@@ -18,8 +18,8 @@ dependencies:
     specifier: workspace:*
     version: link:../../../lib/frontend/vue2-gettext-init
   dompurify:
-    specifier: ^3.0.5
-    version: 3.0.5
+    specifier: ^3.0.7
+    version: 3.0.7
   sprintf-js:
     specifier: ^1.1.2
     version: 1.1.2
@@ -118,8 +118,8 @@ packages:
     resolution: {integrity: sha512-jNCX+uNJ3v38BKvPbpki6j5ItVlnSqVV6vDWGS6rExzCMjsc39frLjm1n91o6YaKK6AZl0wLloItW6C6mr61BQ==}
     dev: true
 
-  /dompurify@3.0.5:
-    resolution: {integrity: sha512-F9e6wPGtY+8KNMRAVfxeCOHU0/NPWMSENNq4pQctuXRqqdEPW7q3CrLbR5Nse044WwacyjHGOMlvNsBe1y6z9A==}
+  /dompurify@3.0.7:
+    resolution: {integrity: sha512-BViYTZoqP3ak/ULKOc101y+CtHDUvBsVgSxIF1ku0HmK6BRf+C03MC+tArMvOPtVtZp83DDh5puywKDu4sbVjQ==}
     dev: false
 
   /editorconfig@0.15.3:

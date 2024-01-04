@@ -13,12 +13,12 @@
     "@tuleap/plugin-tracker-rich-text-editor": "workspace:*",
     "@tuleap/plugin-tracker-rte-creator": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
-    "dompurify": "^3.0.5",
+    "dompurify": "^3.0.7",
     "lit-html": "^2.8.0"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
-    "@types/dompurify": "^3.0.2",
+    "@types/dompurify": "^3.0.5",
     "@types/jquery": "^3.5.5"
   },
   "scripts": {

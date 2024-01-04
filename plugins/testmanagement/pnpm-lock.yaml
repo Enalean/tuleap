@@ -102,8 +102,8 @@ dependencies:
     specifier: ^7.3.0
     version: 7.8.2
   dompurify:
-    specifier: ^3.0.5
-    version: 3.0.5
+    specifier: ^3.0.7
+    version: 3.0.7
   lodash-es:
     specifier: ^4.17.21
     version: 4.17.21
@@ -355,8 +355,8 @@ packages:
       xml-js: 1.6.11
     dev: false
 
-  /dompurify@3.0.5:
-    resolution: {integrity: sha512-F9e6wPGtY+8KNMRAVfxeCOHU0/NPWMSENNq4pQctuXRqqdEPW7q3CrLbR5Nse044WwacyjHGOMlvNsBe1y6z9A==}
+  /dompurify@3.0.7:
+    resolution: {integrity: sha512-BViYTZoqP3ak/ULKOc101y+CtHDUvBsVgSxIF1ku0HmK6BRf+C03MC+tArMvOPtVtZp83DDh5puywKDu4sbVjQ==}
     dev: false
 
   /engine.io-client@6.4.0:

@@ -18,8 +18,8 @@ dependencies:
     specifier: workspace:*
     version: link:../../../../lib/frontend/vue2-gettext-init
   dompurify:
-    specifier: ^3.0.5
-    version: 3.0.5
+    specifier: ^3.0.7
+    version: 3.0.7
   mustache:
     specifier: ^4.2.0
     version: 4.2.0
@@ -47,8 +47,8 @@ devDependencies:
     specifier: workspace:*
     version: link:../../../../lib/frontend/vuex-store-wrapper-jest
   '@types/dompurify':
-    specifier: ^3.0.2
-    version: 3.0.2
+    specifier: ^3.0.5
+    version: 3.0.5
   '@types/jquery':
     specifier: ^3.5.5
     version: 3.5.5
@@ -91,8 +91,8 @@ packages:
       '@babel/helper-validator-identifier': 7.18.6
       to-fast-properties: 2.0.0
 
-  /@types/dompurify@3.0.2:
-    resolution: {integrity: sha512-YBL4ziFebbbfQfH5mlC+QTJsvh0oJUrWbmxKMyEdL7emlHJqGR2Qb34TEFKj+VCayBvjKy3xczMFNhugThUsfQ==}
+  /@types/dompurify@3.0.5:
+    resolution: {integrity: sha512-1Wg0g3BtQF7sSb27fJQAKck1HECM6zV1EB66j8JH9i3LCjYabJa0FSdiSgsD5K/RbrsR0SiraKacLB+T8ZVYAg==}
     dependencies:
       '@types/trusted-types': 2.0.4
     dev: true
@@ -175,8 +175,8 @@ packages:
     resolution: {integrity: sha512-jNCX+uNJ3v38BKvPbpki6j5ItVlnSqVV6vDWGS6rExzCMjsc39frLjm1n91o6YaKK6AZl0wLloItW6C6mr61BQ==}
     dev: true
 
-  /dompurify@3.0.5:
-    resolution: {integrity: sha512-F9e6wPGtY+8KNMRAVfxeCOHU0/NPWMSENNq4pQctuXRqqdEPW7q3CrLbR5Nse044WwacyjHGOMlvNsBe1y6z9A==}
+  /dompurify@3.0.7:
+    resolution: {integrity: sha512-BViYTZoqP3ak/ULKOc101y+CtHDUvBsVgSxIF1ku0HmK6BRf+C03MC+tArMvOPtVtZp83DDh5puywKDu4sbVjQ==}
     dev: false
 
   /editorconfig@0.15.3:

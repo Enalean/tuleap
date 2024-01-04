@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@tuleap/tlp-swatch-colors": "workspace:*",
-    "dompurify": "^3.0.5",
+    "dompurify": "^3.0.7",
     "escape-string-regexp": "^5.0.0",
     "hybrids": "^8.2.2"
   },
@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
-    "@types/dompurify": "^3.0.2",
+    "@types/dompurify": "^3.0.5",
     "angular": "^1.8.2",
     "angular-mocks": "^1.8.2"
   },
