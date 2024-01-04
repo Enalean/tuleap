@@ -24,9 +24,7 @@ namespace Tuleap\Project;
 
 use ForgeAccess;
 use ForgeConfig;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use Project_AccessException;
 use ProjectDao;
@@ -38,35 +36,34 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Project\Status\SwitchingBackToPendingException;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use UserManager;
 
 final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
     use GlobalLanguageMock;
     use GlobalResponseMock;
 
-    /** @var UserManager */
-    private $user_manager;
-
-    /** @var ProjectManager */
-    private $project_manager_test_version;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectDao
-     */
-    private $project_dao;
+    private UserManager&MockObject $user_manager;
+    private ProjectManager&MockObject $project_manager_test_version;
+    private ProjectDao&MockObject $project_dao;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->user_manager = \Mockery::spy(UserManager::class);
+        $this->user_manager = $this->createMock(UserManager::class);
 
-        $this->project_dao = Mockery::mock(ProjectDao::class);
+        $this->project_dao = $this->createMock(ProjectDao::class);
 
-        $this->project_manager_test_version = \Mockery::mock(\ProjectManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->project_manager_test_version->shouldReceive('_getUserManager')->andReturns($this->user_manager);
+        $this->project_manager_test_version = $this->createPartialMock(\ProjectManager::class, [
+            '_getUserManager',
+            '_getDao',
+            'createProjectInstance',
+            'removeProjectFromCache',
+        ]);
+        $this->project_manager_test_version->method('_getUserManager')->willReturn($this->user_manager);
     }
 
     protected function tearDown(): void
@@ -78,38 +75,39 @@ final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testOnlyProjectsTheUserCanAccessAreReturnedForTheRESTAPI(): void
     {
-        $project_access_checker = Mockery::mock(ProjectAccessChecker::class);
+        $project_access_checker = $this->createMock(ProjectAccessChecker::class);
         $project_manager        = ProjectManager::testInstance(
             $project_access_checker,
-            Mockery::mock(ProjectHistoryDao::class),
+            $this->createMock(ProjectHistoryDao::class),
             $this->project_dao
         );
 
-        $this->project_dao->shouldReceive('getMyAndPublicProjectsForREST')->andReturn(
+        $this->project_dao->method('getMyAndPublicProjectsForREST')->willReturn(
             TestHelper::argListToDar([['group_id' => 102], ['group_id' => 103]])
         );
-        $this->project_dao->shouldReceive('foundRows')->andReturn(2);
+        $this->project_dao->method('foundRows')->willReturn(2);
 
-        $project_access_checker->shouldReceive('checkUserCanAccessProject')
-            ->with(
-                Mockery::any(),
-                Mockery::on(
-                    static function (Project $project): bool {
+        $project_access_checker->method('checkUserCanAccessProject')
+            ->withConsecutive(
+                [
+                    self::anything(),
+                    self::callback(static function (Project $project): bool {
                         return $project->getID() === 102;
-                    }
-                )
-            );
-        $project_access_checker->shouldReceive('checkUserCanAccessProject')
-            ->with(
-                Mockery::any(),
-                Mockery::on(
-                    static function (Project $project): bool {
+                    }),
+                ],
+                [
+                    self::anything(),
+                    self::callback(static function (Project $project): bool {
                         return $project->getID() === 103;
-                    }
-                )
-            )->andThrow(Mockery::mock(Project_AccessException::class));
+                    }),
+                ]
+            )
+            ->willReturnOnConsecutiveCalls(
+                self::anything(),
+                self::throwException($this->createMock(Project_AccessException::class))
+            );
 
-        $paginated_projects = $project_manager->getMyAndPublicProjectsForREST(Mockery::mock(PFUser::class), 0, 100);
+        $paginated_projects = $project_manager->getMyAndPublicProjectsForREST(UserTestBuilder::buildWithDefaults(), 0, 100);
 
         $projects = $paginated_projects->getProjects();
 
@@ -119,16 +117,19 @@ final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetProject(): void
     {
-        $p1 = \Mockery::spy(\Project::class);
-        $p1->shouldReceive('getId')->andReturns('1');
-        $p1->shouldReceive('getUnixName')->andReturns('one');
-        $p2 = \Mockery::spy(\Project::class);
-        $p2->shouldReceive('getId')->andReturns('2');
-        $p2->shouldReceive('getUnixName')->andReturns('two');
+        $p1 = ProjectTestBuilder::aProject()
+            ->withId(1)
+            ->withUnixName('one')
+            ->build();
+        $p2 = ProjectTestBuilder::aProject()
+            ->withId(2)
+            ->withUnixName('two')
+            ->build();
 
-        $p = \Mockery::mock(\ProjectManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $p->shouldReceive('createProjectInstance')->once()->andReturns($p1);
-        $p->shouldReceive('createProjectInstance')->once()->andReturns($p2);
+        $p = $this->createPartialMock(\ProjectManager::class, [
+            'createProjectInstance',
+        ]);
+        $p->expects(self::exactly(2))->method('createProjectInstance')->willReturnOnConsecutiveCalls($p1, $p2);
 
         $o1 = $p->getProject(1);
         $o2 = $p->getProject(1);
@@ -140,18 +141,23 @@ final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testClear(): void
     {
-        $p1 = \Mockery::spy(\Project::class);
-        $p1->shouldReceive('getId')->andReturns('1');
-        $p1->shouldReceive('getUnixName')->andReturns('one');
-        $p2 = \Mockery::spy(\Project::class);
-        $p2->shouldReceive('getId')->andReturns('2');
-        $p2->shouldReceive('getUnixName')->andReturns('two');
+        $p1 = ProjectTestBuilder::aProject()
+            ->withId(1)
+            ->withUnixName('one')
+            ->build();
+        $p2 = ProjectTestBuilder::aProject()
+            ->withId(2)
+            ->withUnixName('two')
+            ->build();
 
-        $p = \Mockery::mock(\ProjectManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $p->shouldReceive('createProjectInstance')->andReturns($p1, $p2, $p1)->atLeast()->once();
-        $p->shouldReceive('createProjectInstance')->with(1)->ordered();
-        $p->shouldReceive('createProjectInstance')->with(2)->ordered();
-        $p->shouldReceive('createProjectInstance')->with(1)->ordered();
+        $p = $this->createPartialMock(\ProjectManager::class, [
+            'createProjectInstance',
+        ]);
+        $p
+            ->expects(self::exactly(3))
+            ->method('createProjectInstance')
+            ->withConsecutive([1], [2], [1])
+            ->willReturnOnConsecutiveCalls($p1, $p2, $p1);
 
         $p->getProject(1);
         $p->getProject(1);
@@ -163,16 +169,20 @@ final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRename(): void
     {
-        $p1 = \Mockery::spy(\Project::class);
-        $p1->shouldReceive('getId')->andReturns('1');
-        $p1->shouldReceive('getUnixName')->andReturns('one');
+        $p1 = ProjectTestBuilder::aProject()
+            ->withId(1)
+            ->withUnixName('one')
+            ->build();
 
-        $pm = \Mockery::mock(\ProjectManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $pm->shouldReceive('createProjectInstance')->andReturns($p1);
+        $pm = $this->createPartialMock(\ProjectManager::class, [
+            'createProjectInstance',
+            '_getDao',
+        ]);
+        $pm->method('createProjectInstance')->willReturn($p1);
         $pm->getProject(1);
 
-        $this->project_dao->shouldReceive('renameProject')->with($p1, 'TestProj')->andReturns(true);
-        $pm->shouldReceive('_getDao')->andReturns($this->project_dao);
+        $this->project_dao->method('renameProject')->with($p1, 'TestProj')->willReturn(true);
+        $pm->method('_getDao')->willReturn($this->project_dao);
 
         self::assertTrue($pm->renameProject($p1, 'TestProj'));
         self::assertFalse($pm->isCached($p1->getId()));
@@ -182,19 +192,19 @@ final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive([
-            'getId' => 69,
-            'isRestricted' => true,
-        ]);
+        $user = UserTestBuilder::aRestrictedUser()
+            ->withId(69)
+            ->build();
 
-        $this->project_dao->shouldReceive('searchActiveProjectsForUser')->with(69)->andReturns(\TestHelper::arrayToDar(['group_id' => 101, 'access' => Project::ACCESS_PRIVATE_WO_RESTRICTED], ['group_id' => 102, 'access' => Project::ACCESS_PRIVATE], ['group_id' => 103, 'access' => Project::ACCESS_PUBLIC], ['group_id' => 104, 'access' => Project::ACCESS_PUBLIC_UNRESTRICTED]));
-        $this->project_manager_test_version->shouldReceive('_getDao')->andReturns($this->project_dao);
+        $this->project_dao->method('searchActiveProjectsForUser')->with(69)->willReturn(\TestHelper::arrayToDar(['group_id' => 101, 'access' => Project::ACCESS_PRIVATE_WO_RESTRICTED], ['group_id' => 102, 'access' => Project::ACCESS_PRIVATE], ['group_id' => 103, 'access' => Project::ACCESS_PUBLIC], ['group_id' => 104, 'access' => Project::ACCESS_PUBLIC_UNRESTRICTED]));
+        $this->project_manager_test_version->method('_getDao')->willReturn($this->project_dao);
 
-        $this->project_manager_test_version->shouldReceive('createProjectInstance')->times(3);
-        $this->project_manager_test_version->shouldReceive('createProjectInstance')->with(['group_id' => 102, 'access' => Project::ACCESS_PRIVATE])->ordered();
-        $this->project_manager_test_version->shouldReceive('createProjectInstance')->with(['group_id' => 103, 'access' => Project::ACCESS_PUBLIC])->ordered();
-        $this->project_manager_test_version->shouldReceive('createProjectInstance')->with(['group_id' => 104, 'access' => Project::ACCESS_PUBLIC_UNRESTRICTED])->ordered();
+        $this->project_manager_test_version->expects(self::exactly(3))->method('createProjectInstance')
+            ->withConsecutive(
+                [['group_id' => 102, 'access' => Project::ACCESS_PRIVATE]],
+                [['group_id' => 103, 'access' => Project::ACCESS_PUBLIC]],
+                [['group_id' => 104, 'access' => Project::ACCESS_PUBLIC_UNRESTRICTED]],
+            );
 
         $projects = $this->project_manager_test_version->getActiveProjectsForUser($user);
 
@@ -205,36 +215,34 @@ final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $project = ProjectTestBuilder::aProject()->withId(111)->withStatusSuspended()->build();
 
-        $this->project_manager_test_version->shouldReceive('_getDao')->andReturns($this->project_dao);
-        $this->project_dao->shouldReceive("updateStatus")->andReturn(true)->once();
+        $this->project_manager_test_version->method('_getDao')->willReturn($this->project_dao);
+        $this->project_dao->expects(self::once())->method('updateStatus')->willReturn(true);
+        $this->project_manager_test_version->method('removeProjectFromCache')->with($project);
 
         $this->project_manager_test_version->updateStatus($project, 'A');
-
-        $this->project_manager_test_version->shouldReceive('removeProjectFromCache')->with($project);
     }
 
     public function testUpdateStatusReturnFeedbackWhenUpdateDidntWork(): void
     {
         $project = ProjectTestBuilder::aProject()->withId(111)->withStatusSuspended()->build();
 
-        $this->project_manager_test_version->shouldReceive('_getDao')->andReturns($this->project_dao);
-        $this->project_dao->shouldReceive("updateStatus")->andReturn(false)->once();
+        $this->project_manager_test_version->method('_getDao')->willReturn($this->project_dao);
+        $this->project_dao->expects(self::once())->method('updateStatus')->willReturn(false);
+        $this->project_manager_test_version->expects(self::once())->method('removeProjectFromCache')->with($project);
 
-        $GLOBALS['Response']->method("addFeedback");
+        $GLOBALS['Response']->method('addFeedback');
 
         $this->project_manager_test_version->updateStatus($project, 'A');
-
-        $this->project_manager_test_version->shouldReceive('removeProjectFromCache')->never();
     }
 
     public function testUpdateStatusThrowsExceptionWhenProjectIsDeleted(): void
     {
         $project = ProjectTestBuilder::aProject()->withId(111)->withStatusDeleted()->build();
 
-        $this->project_manager_test_version->shouldReceive('_getDao')->andReturns($this->project_dao);
-        $this->project_dao->shouldReceive("updateStatus")->never();
+        $this->project_manager_test_version->method('_getDao')->willReturn($this->project_dao);
+        $this->project_dao->expects(self::never())->method('updateStatus');
 
-        $this->expectException(DeletedProjectStatusChangeException::class);
+        self::expectException(DeletedProjectStatusChangeException::class);
         $this->project_manager_test_version->updateStatus($project, 'A');
     }
 
@@ -242,10 +250,10 @@ final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $project = ProjectTestBuilder::aProject()->withId(111)->withStatusActive()->build();
 
-        $this->project_manager_test_version->shouldReceive('_getDao')->andReturns($this->project_dao);
-        $this->project_dao->shouldReceive("updateStatus")->never();
+        $this->project_manager_test_version->method('_getDao')->willReturn($this->project_dao);
+        $this->project_dao->expects(self::never())->method('updateStatus');
 
-        $this->expectException(SwitchingBackToPendingException::class);
+        self::expectException(SwitchingBackToPendingException::class);
         $this->project_manager_test_version->updateStatus($project, 'P');
     }
 }
