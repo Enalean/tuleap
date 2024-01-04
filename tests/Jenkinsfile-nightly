@@ -46,7 +46,6 @@ pipeline {
             post {
                 always {
                     junit 'results/js-test-results/junit-*.xml'
-                    publishCoverage adapters: [istanbulCoberturaAdapter(path: 'results/js-test-results/cobertura-coverage-*.xml', mergeToOneReport: true)], tag: 'Javascript'
                 }
             }
         }
