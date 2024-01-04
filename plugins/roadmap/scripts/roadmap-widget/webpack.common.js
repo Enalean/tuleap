@@ -17,34 +17,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const path = require("path");
-const { webpack_configurator } = require("@tuleap/build-system-configurator");
-const context = __dirname;
-const output = webpack_configurator.configureOutput(
-    path.resolve(__dirname, "./frontend-assets"),
-    "/assets/roadmap/roadmap-widget/",
-);
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { webpack_configurator } from "@tuleap/build-system-configurator";
+import POGettextPlugin from "@tuleap/po-gettext-plugin";
 
-module.exports = [
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default [
     {
         entry: {
             "widget-script": "./src/index.ts",
             "widget-style": "./src/style/widget-roadmap.scss",
         },
-        context,
-        output,
+        context: __dirname,
+        output: webpack_configurator.configureOutput(
+            path.resolve(__dirname, "./frontend-assets"),
+            "/assets/roadmap/roadmap-widget/",
+        ),
         resolve: {
             extensions: [".js", ".ts", ".vue"],
         },
-        externals: {
-            tlp: "tlp",
-        },
         module: {
             rules: [
-                ...webpack_configurator.configureTypescriptRules(
-                    webpack_configurator.babel_options_chrome_firefox,
-                ),
-                webpack_configurator.rule_easygettext_loader,
+                ...webpack_configurator.configureTypescriptRules(),
                 webpack_configurator.rule_vue_loader,
                 webpack_configurator.rule_scss_loader,
                 webpack_configurator.rule_css_assets,
@@ -53,11 +50,9 @@ module.exports = [
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
+            POGettextPlugin.webpack(),
             webpack_configurator.getVueLoaderPlugin(),
             ...webpack_configurator.getCSSExtractionPlugins(),
         ],
-        resolveLoader: {
-            alias: webpack_configurator.easygettext_loader_alias,
-        },
     },
 ];

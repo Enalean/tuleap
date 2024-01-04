@@ -4,6 +4,7 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-popovers": "workspace:*",
@@ -18,6 +19,7 @@
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/po-gettext-plugin": "workspace:^",
     "@tuleap/tlp-swatch-colors": "workspace:*",
     "@tuleap/vuex-store-wrapper-jest": "workspace:*",
     "@vue/test-utils": "^1.3",

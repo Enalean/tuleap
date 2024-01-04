@@ -40,6 +40,9 @@ devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
     version: link:../../../../lib/frontend/build-system-configurator
+  '@tuleap/po-gettext-plugin':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/po-gettext-plugin
   '@tuleap/tlp-swatch-colors':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-swatch-colors
