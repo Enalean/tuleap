@@ -28,8 +28,10 @@ use Tuleap\Event\Events\ImportValidateChangesetExternalField;
 use Tuleap\Event\Events\ImportValidateExternalFields;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\JWT\generators\MercureJWTGeneratorBuilder;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
@@ -90,8 +92,8 @@ use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\SwitchToLinksCollection;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
-use Tuleap\Tracker\Events\GetEditableTypesInProject;
 use Tuleap\Tracker\Events\CollectTrackerDependantServices;
+use Tuleap\Tracker\Events\GetEditableTypesInProject;
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
 use Tuleap\Tracker\FormElement\Event\ImportExternalElement;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkValueSaver;
@@ -136,17 +138,12 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
         if ($this->canIncludeStepDefinitionAssets()) {
             $layout = $params['layout'];
             assert($layout instanceof \Tuleap\Layout\BaseLayout);
-            $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($this->getAssets(), 'step-definition-field.js'));
-        }
-    }
-
-    #[\Tuleap\Plugin\ListeningToEventName('cssfile')]
-    public function cssfile(): void
-    {
-        if ($this->isTrackerURL()) {
-            $style_css_url = $this->getAssets()->getFileURL('flamingparrot.css');
-
-            echo '<link rel="stylesheet" type="text/css" href="' . $style_css_url . '" />';
+            $assets = new IncludeAssets(
+                __DIR__ . '/../scripts/step-definition-field/frontend-assets',
+                '/assets/testmanagement/step-definition-field'
+            );
+            $layout->addJavascriptAsset(new JavascriptAsset($assets, 'step-definition-field.js'));
+            $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'step-definition-style'));
         }
     }
 

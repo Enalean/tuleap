@@ -20,23 +20,15 @@
 import Vue from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import { createStore } from "./store";
-import GetTextPlugin from "vue-gettext";
-import french_translations from "./po/fr_FR.po";
+import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
 import StepDefinitionField from "./StepDefinitionField.vue";
 import { setProjectId } from "./helpers/shared-properties.js";
 
 const StepDefinitionFieldComponent = Vue.extend(StepDefinitionField);
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     Vue.use(VueDOMPurifyHTML);
-    Vue.use(GetTextPlugin, {
-        translations: {
-            fr: french_translations.messages,
-        },
-        silent: true,
-    });
-
-    Vue.config.language = document.body.dataset.userLocale;
+    await initVueGettext(Vue, (locale) => import(`../po/${getPOFileFromLocale(locale)}`));
 
     for (const mount_point of document.querySelectorAll(".ttm-definition-step-mount-point")) {
         const store = createStore();

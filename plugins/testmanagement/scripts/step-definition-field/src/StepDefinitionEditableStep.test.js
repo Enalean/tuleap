@@ -20,27 +20,24 @@
 
 import { shallowMount } from "@vue/test-utils";
 import StepDefinitionEditableStep from "./StepDefinitionEditableStep.vue";
-import localVue from "./helpers/local-vue.js";
+import { createLocalVueForTests } from "./helpers/local-vue.js";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
 import * as tuleap_api from "./api/tuleap-api.js";
 import { TEXT_FORMAT_COMMONMARK, TEXT_FORMAT_HTML } from "@tuleap/plugin-tracker-constants";
 
-let store;
-function getComponentInstance(data = {}, description_format = TEXT_FORMAT_COMMONMARK) {
-    const editor_factory = {
-        createRichTextEditor: () => {
-            return {
-                getContent: () => {
-                    return "some fabulous content";
-                },
-            };
+jest.mock("@tuleap/plugin-tracker-rich-text-editor", () => {
+    return {
+        RichTextEditorFactory: {
+            forFlamingParrotWithExistingFormatSelector: () => ({
+                createRichTextEditor: () => ({
+                    getContent: () => "some fabulous content",
+                }),
+            }),
         },
     };
-    jest.spyOn(RichTextEditorFactory, "forFlamingParrotWithExistingFormatSelector").mockReturnValue(
-        editor_factory,
-    );
+});
 
+async function getComponentInstance(data = {}, description_format = TEXT_FORMAT_COMMONMARK) {
     const state = {
         is_dragging: false,
         field_id: 18,
@@ -48,10 +45,10 @@ function getComponentInstance(data = {}, description_format = TEXT_FORMAT_COMMON
     };
 
     const store_options = { state };
-    store = createStoreMock(store_options);
+    const store = createStoreMock(store_options);
 
     return shallowMount(StepDefinitionEditableStep, {
-        localVue,
+        localVue: await createLocalVueForTests(),
         propsData: {
             step: {
                 raw_description: "raw description",
@@ -70,8 +67,8 @@ function getComponentInstance(data = {}, description_format = TEXT_FORMAT_COMMON
 
 describe("StepDefinitionEditableStep", () => {
     describe(`The display of the textareas, CommonMark preview or error`, () => {
-        it(`displays both textareas if the user is in edit mode and if there is no error`, () => {
-            const wrapper = getComponentInstance({
+        it(`displays both textareas if the user is in edit mode and if there is no error`, async () => {
+            const wrapper = await getComponentInstance({
                 is_in_preview_mode: false,
                 is_preview_in_error: false,
             });
@@ -86,8 +83,8 @@ describe("StepDefinitionEditableStep", () => {
             expect(wrapper.find("[data-test=description-error").exists()).toBe(false);
         });
 
-        it(`displays both preview if the user is in preview mode and there is no error during the CommonMark interpretation`, () => {
-            const wrapper = getComponentInstance({
+        it(`displays both preview if the user is in preview mode and there is no error during the CommonMark interpretation`, async () => {
+            const wrapper = await getComponentInstance({
                 is_in_preview_mode: true,
                 is_preview_in_error: false,
             });
@@ -102,8 +99,8 @@ describe("StepDefinitionEditableStep", () => {
             expect(wrapper.find("[data-test=description-error").exists()).toBe(false);
         });
 
-        it(`displays an error when the CommonMark cannot be interpreted`, () => {
-            const wrapper = getComponentInstance({
+        it(`displays an error when the CommonMark cannot be interpreted`, async () => {
+            const wrapper = await getComponentInstance({
                 is_in_preview_mode: false,
                 is_preview_in_error: true,
             });
@@ -122,7 +119,7 @@ describe("StepDefinitionEditableStep", () => {
         it(`interprets the CommonMark when the user switch to the preview mode`, async () => {
             jest.spyOn(tuleap_api, "postInterpretCommonMark").mockResolvedValue("<p>HTML</p>");
 
-            const wrapper = getComponentInstance({
+            const wrapper = await getComponentInstance({
                 is_in_preview_mode: false,
                 is_preview_loading: false,
                 is_preview_in_error: false,
@@ -139,10 +136,10 @@ describe("StepDefinitionEditableStep", () => {
             expect(wrapper.vm.$data.is_preview_loading).toBe(false);
         });
 
-        it(`does not interpret the CommonMark when the user switch to the edit mode`, () => {
+        it(`does not interpret the CommonMark when the user switch to the edit mode`, async () => {
             jest.spyOn(tuleap_api, "postInterpretCommonMark").mockResolvedValue("<p>HTML</p>");
 
-            const wrapper = getComponentInstance({
+            const wrapper = await getComponentInstance({
                 is_in_preview_mode: true,
             });
 
@@ -157,7 +154,7 @@ describe("StepDefinitionEditableStep", () => {
                 expected_error_text,
             );
 
-            const wrapper = getComponentInstance({
+            const wrapper = await getComponentInstance({
                 is_in_preview_mode: false,
                 is_preview_loading: false,
                 is_preview_in_error: false,
@@ -174,8 +171,8 @@ describe("StepDefinitionEditableStep", () => {
             expect(wrapper.vm.$data.is_preview_loading).toBe(false);
         });
         describe("Get the content of the RTE editors", () => {
-            it("retrieves the content of the both editors if they are set and if the current step is in HTML format", () => {
-                const wrapper = getComponentInstance({}, TEXT_FORMAT_HTML);
+            it("retrieves the content of the both editors if they are set and if the current step is in HTML format", async () => {
+                const wrapper = await getComponentInstance({}, TEXT_FORMAT_HTML);
 
                 expect(wrapper.vm.$props.step.raw_description).toContain("raw description");
                 expect(wrapper.vm.$props.step.raw_expected_results).toContain(
@@ -190,8 +187,8 @@ describe("StepDefinitionEditableStep", () => {
                 );
             });
 
-            it("does not retrieve the RTE content if the format is not HTML", () => {
-                const wrapper = getComponentInstance({});
+            it("does not retrieve the RTE content if the format is not HTML", async () => {
+                const wrapper = await getComponentInstance({});
 
                 expect(wrapper.vm.$props.step.raw_description).toContain("raw description");
                 expect(wrapper.vm.$props.step.raw_expected_results).toContain(
@@ -206,8 +203,8 @@ describe("StepDefinitionEditableStep", () => {
                 );
             });
 
-            it("does not retrieve the RTE content if one RTE editor is not set", () => {
-                const wrapper = getComponentInstance({}, TEXT_FORMAT_HTML);
+            it("does not retrieve the RTE content if one RTE editor is not set", async () => {
+                const wrapper = await getComponentInstance({}, TEXT_FORMAT_HTML);
 
                 expect(wrapper.vm.$props.step.raw_description).toContain("raw description");
                 expect(wrapper.vm.$props.step.raw_expected_results).toContain(

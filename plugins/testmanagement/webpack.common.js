@@ -60,32 +60,8 @@ const webpack_config_for_angular = {
     plugins: [manifest_plugin, webpack_configurator.getMomentLocalePlugin()],
 };
 
-const webpack_config_for_vue_components = {
-    entry: {
-        "step-definition-field": "./scripts/step-definition-field/index.js",
-    },
-    context,
-    output,
-    externals: {
-        jquery: "jQuery",
-        ckeditor4: "CKEDITOR",
-    },
-    module: {
-        rules: [
-            webpack_configurator.rule_vue_images,
-            webpack_configurator.rule_easygettext_loader,
-            webpack_configurator.rule_vue_loader,
-        ],
-    },
-    plugins: [manifest_plugin, webpack_configurator.getVueLoaderPlugin()],
-    resolveLoader: {
-        alias: webpack_configurator.easygettext_loader_alias,
-    },
-};
-
 const webpack_config_for_themes = {
     entry: {
-        flamingparrot: "./themes/FlamingParrot/css/style.scss",
         "testmanagement-style": "./themes/BurningParrot/css/testmanagement.scss",
     },
     context,
@@ -96,8 +72,4 @@ const webpack_config_for_themes = {
     plugins: [manifest_plugin, ...webpack_configurator.getCSSExtractionPlugins()],
 };
 
-module.exports = [
-    webpack_config_for_angular,
-    webpack_config_for_vue_components,
-    webpack_config_for_themes,
-];
+module.exports = [webpack_config_for_angular, webpack_config_for_themes];

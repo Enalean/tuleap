@@ -18,7 +18,7 @@
  */
 
 @use "@tuleap/tlp/src/scss/components/tables";
-@use "./includes/popovers";
+@use "./popovers";
 
 .ttm-definition-step-draggable {
     padding: 5px 0 0;
@@ -85,7 +85,7 @@
     width: 20px;
     height: 24px;
     padding: 5px 0 0;
-    background: url("../../../www/images/ic/drag.png") no-repeat 5px 8px;
+    background: url("../drag.png") no-repeat 5px 8px;
 }
 
 .ttm-definition-step-add-bar {
