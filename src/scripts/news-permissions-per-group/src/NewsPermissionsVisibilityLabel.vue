@@ -18,21 +18,20 @@
   -->
 
 <template>
-    <td v-if="isVisibilityPublic" key="public" class="permission-per-group-public-news">
+    <td v-if="is_visibility_public" key="public" class="permission-per-group-public-news">
         <i class="fa fa-fw fa-unlock"></i>
-        <translate>Public</translate>
+        {{ $gettext("Public") }}
     </td>
 
     <td v-else key="private" class="permission-per-group-private-news">
         <i class="fa fa-fw fa-lock"></i>
-        <translate>Private</translate>
+        {{ $gettext("Private") }}
     </td>
 </template>
-<script>
-export default {
-    name: "NewsPermissionsVisibilityLabel",
-    props: {
-        isVisibilityPublic: Boolean,
-    },
-};
+
+<script setup lang="ts">
+import { useGettext } from "vue3-gettext";
+
+defineProps<{ is_visibility_public: boolean }>();
+const { $gettext } = useGettext();
 </script>

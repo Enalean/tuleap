@@ -19,17 +19,13 @@
 
 <template>
     <section class="tlp-pane-section">
-        <div v-if="hasRestError" class="tlp-alert-danger">
+        <div v-if="has_rest_error" class="tlp-alert-danger">
             {{ rest_error }}
         </div>
 
         <div class="permission-per-group-load-button" v-if="!is_loaded">
-            <button
-                class="tlp-button-primary tlp-button-outline"
-                v-on:click="loadAll()"
-                v-translate
-            >
-                See all news
+            <button class="tlp-button-primary tlp-button-outline" v-on:click="loadAll()">
+                {{ $gettext("See all news") }}
             </button>
         </div>
 
@@ -42,8 +38,8 @@
         <table v-if="is_loaded" class="tlp-table">
             <thead>
                 <tr class="permission-per-group-double-column-table">
-                    <th v-translate>News</th>
-                    <th v-translate>Visibility</th>
+                    <th>{{ $gettext("News") }}</th>
+                    <th>{{ $gettext("Visibility") }}</th>
                 </tr>
             </thead>
 
@@ -53,28 +49,25 @@
                         <a v-bind:href="news.admin_quicklink">{{ news.news_name }}</a>
                     </td>
 
-                    <visibility-label v-bind:is-visibility-public="news.is_public" />
+                    <visibility-label v-bind:is_visibility_public="news.is_public" />
                 </tr>
 
-                <tr v-if="!hasNewsToDisplay">
+                <tr v-if="news_list.length === 0">
                     <td
-                        v-if="hasASelectedUserGroup"
+                        v-if="selected_ugroup_name.length > 0"
                         key="selected-ugroup"
                         colspan="2"
                         class="tlp-table-cell-empty"
-                        v-translate="{ user_group: selectedUgroupName }"
                     >
-                        %{ user_group } can't see any news
+                        {{
+                            interpolate($gettext("%{ user_group } can't see any news"), {
+                                user_group: selected_ugroup_name,
+                            })
+                        }}
                     </td>
 
-                    <td
-                        v-else
-                        key="no-selected-ugroup"
-                        colspan="2"
-                        class="tlp-table-cell-empty"
-                        v-translate
-                    >
-                        The project hasn't any news
+                    <td v-else key="no-selected-ugroup" colspan="2" class="tlp-table-cell-empty">
+                        {{ $gettext("The project hasn't any news") }}
                     </td>
                 </tr>
             </tbody>
@@ -82,60 +75,42 @@
     </section>
 </template>
 
-<script>
-import { getNewsPermissions } from "./rest-querier.js";
+<script setup lang="ts">
+import type { NewsVisibilityRepresentation } from "./rest-querier";
+import { getNewsPermissions } from "./rest-querier";
 import VisibilityLabel from "./NewsPermissionsVisibilityLabel.vue";
+import type { Fault } from "@tuleap/fault";
+import { computed, ref } from "vue";
+import { useGettext } from "vue3-gettext";
 
-export default {
-    name: "BaseNewsPermissions",
-    components: {
-        VisibilityLabel,
-    },
-    props: {
-        selectedUgroupId: String,
-        selectedProjectId: String,
-        selectedUgroupName: String,
-    },
-    data() {
-        return {
-            is_loaded: false,
-            is_loading: false,
-            rest_error: null,
-            news_list: [],
-        };
-    },
-    computed: {
-        hasNewsToDisplay() {
-            return this.news_list.length > 0;
-        },
-        hasASelectedUserGroup() {
-            return this.selectedUgroupId.length > 0;
-        },
-        hasRestError() {
-            return this.rest_error !== null;
-        },
-        news_are_loading() {
-            return this.$gettext("News are loading");
-        },
-    },
-    methods: {
-        async loadAll() {
-            try {
-                this.is_loading = true;
+const props = defineProps<{
+    selected_project_id: number;
+    selected_ugroup_id: string;
+    selected_ugroup_name: string;
+}>();
 
-                this.news_list = await getNewsPermissions(
-                    this.selectedProjectId,
-                    this.selectedUgroupId,
-                );
+const rest_error = ref<string | null>(null);
+const is_loaded = ref(false);
+const is_loading = ref(false);
+const has_rest_error = computed(() => rest_error.value !== null);
+const news_list = ref<NewsVisibilityRepresentation[]>([]);
 
-                this.is_loaded = true;
-            } catch (e) {
-                const { error } = await e.response.json();
-                this.rest_error = error.code + " " + error.message;
-            } finally {
-                this.is_loading = false;
-            }
+const { interpolate, $gettext } = useGettext();
+
+const news_are_loading = ref($gettext("News are loading"));
+
+function loadAll(): void {
+    is_loading.value = true;
+    getNewsPermissions(props.selected_project_id, props.selected_ugroup_id).match(
+        (permissions: NewsVisibilityRepresentation[]) => {
+            is_loaded.value = true;
+            is_loading.value = false;
+            news_list.value = permissions;
         },
-    },
-};
+        (fault: Fault) => {
+            is_loading.value = false;
+            rest_error.value = String(fault);
+        },
+    );
+}
 </script>

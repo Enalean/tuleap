@@ -42,13 +42,13 @@
         "permissions-per-group-frs": {
             "src": "src/scripts/frs-permissions-per-group/src",
             "po": "src/scripts/frs-permissions-per-group/po"
-        }
-    },
-    "gettext-vue": {
+        },
         "permissions-per-group-news": {
             "src": "src/scripts/news-permissions-per-group/src",
             "po": "src/scripts/news-permissions-per-group/po"
-        },
+        }
+    },
+    "gettext-vue": {
         "project-admin-services": {
             "src": "src/scripts/project-services/src",
             "po": "src/scripts/project-services/po"

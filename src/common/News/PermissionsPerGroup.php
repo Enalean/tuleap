@@ -49,9 +49,11 @@ class PermissionsPerGroup implements DispatchableWithRequest
         if (! $request->getCurrentUser()->isAdmin($request->getProject()->getID())) {
             $layout->send400JSONErrors(
                 [
-                    'error' => _(
-                        "You don't have permissions to see user groups."
-                    ),
+                    'error' => [
+                        'message' => _(
+                            "You don't have permissions to see user groups."
+                        ),
+                    ],
                 ]
             );
         }

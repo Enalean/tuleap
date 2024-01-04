@@ -1,9 +1,5 @@
-/**
- * Copyright Enalean (c) 2018 - Present. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+/*
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,17 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get } from "@tuleap/tlp-fetch";
+import { vite } from "@tuleap/build-system-configurator";
+import * as path from "path";
+import vue from "@vitejs/plugin-vue";
+import POGettextPlugin from "@tuleap/po-gettext-plugin";
 
-export { getNewsPermissions };
-
-async function getNewsPermissions(project_id, selected_ugroup_id) {
-    const response = await get("/news/permissions-per-group", {
-        params: {
-            group_id: project_id,
-            selected_ugroup_id: selected_ugroup_id,
+export default vite.defineAppConfig(
+    {
+        plugin_name: "core",
+        sub_app_name: "news-permissions-per-group",
+    },
+    {
+        plugins: [POGettextPlugin.vite(), vue()],
+        build: {
+            rollupOptions: {
+                input: {
+                    "permissions-per-group": path.resolve(__dirname, "src/index.ts"),
+                },
+            },
         },
-    });
-
-    return response.json();
-}
+    },
+);
