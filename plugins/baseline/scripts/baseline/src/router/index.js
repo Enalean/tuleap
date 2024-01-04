@@ -25,7 +25,7 @@ import BaselineContentPage from "../components/baseline-content/ContentPage.vue"
 import IndexPage from "../components/IndexPage.vue";
 import ComparisonPageAsync from "../components/comparison/ComparisonPageAsync.vue";
 import ComparisonPage from "../components/comparison/ComparisonPage.vue";
-import store from "../store";
+import store from "../store/index";
 
 Vue.use(VueRouter);
 

@@ -17,22 +17,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const path = require("path");
-const { webpack_configurator } = require("@tuleap/build-system-configurator");
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { webpack_configurator } from "@tuleap/build-system-configurator";
+import POGettextPlugin from "@tuleap/po-gettext-plugin";
 
-const assets_dir_path = path.resolve(__dirname, "./frontend-assets");
-const assets_public_path = "/assets/baseline/";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-const entry_points = {
-    baseline: "./scripts/baseline/index.js",
-    "baseline-style": "./themes/baseline.scss",
-};
-
-module.exports = [
+export default [
     {
-        entry: entry_points,
-        context: path.resolve(__dirname),
-        output: webpack_configurator.configureOutput(assets_dir_path, assets_public_path),
+        entry: {
+            baseline: "./scripts/baseline/src/index.js",
+            "baseline-style": "./themes/baseline.scss",
+        },
+        context: __dirname,
+        output: webpack_configurator.configureOutput(
+            path.resolve(__dirname, "./frontend-assets"),
+            "/assets/baseline/",
+        ),
         resolve: {
             extensions: [".ts", ".js", ".vue"],
             alias: {
@@ -41,12 +44,12 @@ module.exports = [
         },
         externals: {
             tlp: "tlp",
-            "@tuleap/tlp": "tlp",
         },
         module: {
             rules: [
+                // Allow omitting file extension when importing from a .js file. This matches .ts behaviour
+                { test: /\.js$/, resolve: { fullySpecified: false } },
                 ...webpack_configurator.configureTypescriptRules(),
-                webpack_configurator.rule_easygettext_loader,
                 webpack_configurator.rule_vue_loader,
                 webpack_configurator.rule_scss_loader,
             ],
@@ -54,11 +57,9 @@ module.exports = [
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
+            POGettextPlugin.webpack(),
             webpack_configurator.getVueLoaderPlugin(),
             ...webpack_configurator.getCSSExtractionPlugins(),
         ],
-        resolveLoader: {
-            alias: webpack_configurator.easygettext_loader_alias,
-        },
     },
 ];

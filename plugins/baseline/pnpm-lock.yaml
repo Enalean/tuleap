@@ -26,6 +26,9 @@ dependencies:
   '@tuleap/vue-breadcrumb-privacy':
     specifier: workspace:*
     version: link:../../lib/frontend/vue-breadcrumb-privacy
+  '@tuleap/vue2-gettext-init':
+    specifier: workspace:^
+    version: link:../../lib/frontend/vue2-gettext-init
   '@tuleap/vuex-store-wrapper-jest':
     specifier: workspace:*
     version: link:../../lib/frontend/vuex-store-wrapper-jest
@@ -64,6 +67,9 @@ devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
     version: link:../../lib/frontend/build-system-configurator
+  '@tuleap/po-gettext-plugin':
+    specifier: workspace:^
+    version: link:../../lib/frontend/po-gettext-plugin
   '@vue/test-utils':
     specifier: ^1.3
     version: 1.3.5(vue@2.7.8)

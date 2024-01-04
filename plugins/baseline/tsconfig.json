@@ -8,5 +8,5 @@
     "vueCompilerOptions": {
         "target": 2.7
     },
-    "include": ["scripts/**/*"]
+    "include": ["scripts/baseline/src/**/*"]
 }
