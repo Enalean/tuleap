@@ -36,7 +36,7 @@
     </div>
 </template>
 <script>
-import { usePersonalTimetrackingWidgetStore } from "../store";
+import { usePersonalTimetrackingWidgetStore } from "../store/root";
 import { mapState } from "pinia";
 export default {
     name: "WidgetReadingMode",

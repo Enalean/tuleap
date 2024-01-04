@@ -27,7 +27,7 @@
 
 <script>
 import { mapState } from "pinia";
-import { usePersonalTimetrackingWidgetStore } from "../store";
+import { usePersonalTimetrackingWidgetStore } from "../store/root";
 import WidgetArtifactTable from "./WidgetArtifactTable.vue";
 import WidgetReadingMode from "./WidgetReadingMode.vue";
 import WidgetWritingMode from "./WidgetWritingMode.vue";

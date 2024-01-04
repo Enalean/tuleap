@@ -21,7 +21,7 @@ import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
 import french_translations from "../po/fr_FR.po";
 import TimetrackingWidget from "./components/TimetrackingWidget.vue";
-import { usePersonalTimetrackingWidgetStore } from "./store";
+import { usePersonalTimetrackingWidgetStore } from "./store/root";
 import { createPinia, PiniaVuePlugin } from "pinia";
 
 document.addEventListener("DOMContentLoaded", () => {

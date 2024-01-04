@@ -8,6 +8,9 @@ dependencies:
   '@tuleap/burningparrot-theme':
     specifier: workspace:*
     version: link:../../../../src/themes/BurningParrot
+  '@tuleap/core-rest-api-types':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/rest-api-types
   '@tuleap/tlp-fetch':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-fetch

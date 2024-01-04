@@ -51,7 +51,7 @@
 import { createModal } from "tlp";
 import WidgetLinkToArtifact from "./WidgetLinkToArtifact.vue";
 import WidgetModalTimes from "./modal/WidgetModalTimes.vue";
-import { usePersonalTimetrackingWidgetStore } from "../store";
+import { usePersonalTimetrackingWidgetStore } from "../store/root";
 
 export default {
     name: "WidgetArtifactTableRow",

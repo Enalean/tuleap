@@ -60,7 +60,7 @@ export async function getTrackedTimes(
         total,
     };
 }
-export async function addTime(
+export async function postTime(
     date: string,
     artifact_id: number,
     time_value: string,
@@ -82,7 +82,7 @@ export async function addTime(
     return time;
 }
 
-export async function updateTime(
+export async function putTime(
     date_time: string,
     time_id: number,
     time_value: string,
@@ -101,7 +101,7 @@ export async function updateTime(
     return time;
 }
 
-export async function deleteTime(time_id: number): Promise<void> {
+export async function delTime(time_id: number): Promise<void> {
     await del("/api/v1/timetracking/" + time_id, {
         headers,
     });

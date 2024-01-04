@@ -82,7 +82,7 @@
 <script>
 import { mapState } from "pinia";
 import ArtifactTableRow from "./WidgetArtifactTableRow.vue";
-import { usePersonalTimetrackingWidgetStore } from "../store";
+import { usePersonalTimetrackingWidgetStore } from "../store/root";
 
 export default {
     name: "WidgetArtifactTable",
@@ -91,6 +91,11 @@ export default {
         const personal_store = usePersonalTimetrackingWidgetStore();
 
         return { personal_store };
+    },
+    data() {
+        return {
+            is_loading_more: false,
+        };
     },
     computed: {
         ...mapState(usePersonalTimetrackingWidgetStore, [
@@ -121,14 +126,9 @@ export default {
     methods: {
         async loadMore() {
             this.is_loading_more = true;
-            await this.getTimes();
+            await this.personal_store.getTimes();
             this.is_loading_more = false;
         },
-    },
-    data() {
-        return {
-            is_loading_more: false,
-        };
     },
 };
 </script>

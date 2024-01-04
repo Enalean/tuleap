@@ -53,7 +53,7 @@
 
 <script>
 import { formatDateUsingPreferredUserFormat } from "@tuleap/plugin-timetracking-time-formatters";
-import { usePersonalTimetrackingWidgetStore } from "../../store";
+import { usePersonalTimetrackingWidgetStore } from "../../store/root";
 import { mapState } from "pinia";
 export default {
     name: "WidgetModalArtifactInfo",

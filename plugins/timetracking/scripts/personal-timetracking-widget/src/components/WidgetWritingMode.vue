@@ -79,7 +79,7 @@
 </template>
 <script>
 import { datePicker } from "tlp";
-import { usePersonalTimetrackingWidgetStore } from "../store";
+import { usePersonalTimetrackingWidgetStore } from "../store/root";
 import { mapState } from "pinia";
 export default {
     name: "WidgetWritingMode",
@@ -88,19 +88,19 @@ export default {
 
         return { personal_store };
     },
+    computed: {
+        ...mapState(usePersonalTimetrackingWidgetStore, ["start_date", "end_date"]),
+    },
     mounted() {
         [this.$refs.start_date, this.$refs.end_date].forEach((element) => datePicker(element));
     },
     methods: {
         changeDates() {
-            this.personal_store.setDatesAndReload([
+            this.personal_store.setDatesAndReload(
                 this.$refs.start_date.value,
                 this.$refs.end_date.value,
-            ]);
+            );
         },
-    },
-    computed: {
-        ...mapState(usePersonalTimetrackingWidgetStore, ["start_date", "end_date"]),
     },
 };
 </script>
