@@ -27,24 +27,18 @@
             <ugroup-badge
                 v-for="ugroup in release.release_permissions"
                 v-bind:key="ugroup.ugroup_name"
-                v-bind:is-project-admin="ugroup.is_project_admin"
-                v-bind:is-static="ugroup.is_static"
-                v-bind:is-custom="ugroup.is_custom"
-                v-bind:group-name="ugroup.ugroup_name"
+                v-bind:is_project_admin="ugroup.is_project_admin"
+                v-bind:is_static="ugroup.is_static"
+                v-bind:is_custom="ugroup.is_custom"
+                v-bind:group_name="ugroup.ugroup_name"
             />
         </td>
     </tr>
 </template>
-<script lang="ts">
-import UgroupBadge from "@tuleap/vue-permissions-per-group-badge";
-import Component from "vue-class-component";
-import Vue from "vue";
-import type { PackagePermissionPerGroupReleaseRepresentation } from "./types";
-import { Prop } from "vue-property-decorator";
 
-@Component({ components: { UgroupBadge } })
-export default class FRSPackagePermissionsTablePackageRelease extends Vue {
-    @Prop()
-    readonly release!: PackagePermissionPerGroupReleaseRepresentation;
-}
+<script setup lang="ts">
+import UgroupBadge from "@tuleap/vue3-permissions-per-group-badge";
+import type { PackagePermissionPerGroupReleaseRepresentation } from "./types";
+
+defineProps<{ release: PackagePermissionPerGroupReleaseRepresentation }>();
 </script>

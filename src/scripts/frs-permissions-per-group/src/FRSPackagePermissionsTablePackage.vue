@@ -18,52 +18,26 @@
   -->
 <template>
     <tbody>
-        <template v-for="packages in packagePermissions">
-            <tr v-bind:key="packages.package_name">
-                <td>
-                    <a v-bind:href="packages.package_url">{{ packages.package_name }}</a>
-                </td>
-                <td></td>
-                <td>
-                    <ugroup-badge
-                        v-for="ugroup in packages.permissions"
-                        v-bind:key="ugroup.ugroup_name"
-                        v-bind:is-project-admin="ugroup.is_project_admin"
-                        v-bind:is-static="ugroup.is_static"
-                        v-bind:is-custom="ugroup.is_custom"
-                        v-bind:group-name="ugroup.ugroup_name"
-                    />
-                </td>
-            </tr>
+        <package-permissions-table-package-rows
+            v-for="packages in package_permissions"
+            v-bind:package="packages"
+            v-bind:key="packages.package_name"
+        />
 
-            <release-permissions
-                v-for="release in packages.releases"
-                v-bind:key="release.release_name"
-                v-bind:release="release"
-            />
-        </template>
-
-        <empty-state v-if="!has_permissions" v-bind:selected-ugroup-name="selectedUgroupName" />
+        <empty-state v-if="!has_permissions" v-bind:selected_ugroup_name="selected_ugroup_name" />
     </tbody>
 </template>
-<script lang="ts">
-import UgroupBadge from "@tuleap/vue-permissions-per-group-badge";
+
+<script setup lang="ts">
 import EmptyState from "./FRSPackagePermissionsTablePackageEmptyState.vue";
-import ReleasePermissions from "./FRSPackagePermissionsTablePackageRelease.vue";
-import Component from "vue-class-component";
-import Vue from "vue";
-import { Prop } from "vue-property-decorator";
 import type { PackagePermission } from "./types";
+import { computed } from "vue";
+import PackagePermissionsTablePackageRows from "./PackagePermissionsTablePackageRows.vue";
 
-@Component({ components: { EmptyState, UgroupBadge, ReleasePermissions } })
-export default class FRSPackagePermissionsTablePackage extends Vue {
-    @Prop()
-    readonly packagePermissions!: PackagePermission[];
-    @Prop()
-    readonly selectedUgroupName!: string;
+const props = defineProps<{
+    package_permissions: PackagePermission[];
+    selected_ugroup_name: string;
+}>();
 
-    get has_permissions(): boolean {
-        return this.packagePermissions.length > 0;
-    }
-}
+const has_permissions = computed((): boolean => props.package_permissions.length > 0);
 </script>

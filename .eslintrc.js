@@ -273,6 +273,7 @@ module.exports = {
                 "plugins/onlyoffice/scripts/siteadmin/**/*.vue",
                 "plugins/roadmap/scripts/configure-widget/**/*.vue",
                 "plugins/document/scripts/**/*.vue",
+                "src/scripts/frs-permissions-per-group/**/*.vue",
             ],
             extends: ["plugin:vue/vue3-recommended"],
             rules: {

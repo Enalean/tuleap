@@ -20,32 +20,34 @@
 <template>
     <tr>
         <td
-            v-if="hasASelectedUserGroup"
+            v-if="has_a_selected_user_group"
             key="selected-ugroup"
             colspan="3"
             class="tlp-table-cell-empty"
-            v-translate="{ user_group: selectedUgroupName }"
         >
-            %{ user_group } has no permissions for any package or release
+            {{
+                interpolate(
+                    $gettext("%{ user_group } has no permissions for any package or release"),
+                    { user_group: selected_ugroup_name },
+                )
+            }}
         </td>
 
-        <td v-else key="no-selected-ugroup" colspan="3" class="tlp-table-cell-empty" v-translate>
-            No packages found for project
+        <td v-else key="no-selected-ugroup" colspan="3" class="tlp-table-cell-empty">
+            {{ $gettext("No packages found for project") }}
         </td>
     </tr>
 </template>
-<script lang="ts">
-import Component from "vue-class-component";
-import Vue from "vue";
-import { Prop } from "vue-property-decorator";
 
-@Component
-export default class FRSPackagePermissionsTablePackageEmptyState extends Vue {
-    @Prop()
-    readonly selectedUgroupName!: string;
+<script setup lang="ts">
+import { computed } from "vue";
+import { useGettext } from "vue3-gettext";
 
-    get hasASelectedUserGroup(): boolean {
-        return this.selectedUgroupName !== "";
-    }
-}
+const props = defineProps<{
+    selected_ugroup_name: string;
+}>();
+
+const has_a_selected_user_group = computed((): boolean => props.selected_ugroup_name !== "");
+
+const { interpolate, $gettext } = useGettext();
 </script>
