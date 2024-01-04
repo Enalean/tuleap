@@ -116,7 +116,7 @@ function defineBaseConfig(config: UserConfig): UserConfigExport {
         test_coverage = {
             ...test_coverage,
             enabled: true,
-            reporter: ["text-summary", "cobertura"],
+            reporter: ["text-summary", ["html", { subdir: "coverage" }]],
         };
     }
 

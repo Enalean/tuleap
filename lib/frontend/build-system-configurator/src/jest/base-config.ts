@@ -56,8 +56,8 @@ export const defineJestConfiguration = (): JestConfiguration => {
         config_additional_config = {
             ...config_additional_config,
             collectCoverage: true,
-            coverageReporters: ["text-summary", "cobertura"],
-            coverageDirectory: OUTPUT_DIRECTORY,
+            coverageReporters: ["text-summary", "html"],
+            coverageDirectory: OUTPUT_DIRECTORY + "/coverage/",
         };
     }
 
