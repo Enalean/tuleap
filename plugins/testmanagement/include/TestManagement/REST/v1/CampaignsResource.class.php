@@ -872,7 +872,7 @@ class CampaignsResource
 
         $campaign_representation = $this->campaign_representation_builder->getCampaignRepresentation($user, $campaign);
 
-        $this->realtime_message_sender->sendCampaignUpdated($user, $campaign->getArtifact(), $_SERVER[RealTimeMessageSender::HTTP_CLIENT_UUID]);
+        $this->realtime_message_sender->sendCampaignUpdated($user, $campaign->getArtifact(), $_SERVER[RealTimeMessageSender::HTTP_CLIENT_UUID] ?? null);
 
         $this->sendAllowHeadersForCampaign($campaign);
 
