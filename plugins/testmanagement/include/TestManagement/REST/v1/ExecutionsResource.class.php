@@ -688,7 +688,7 @@ class ExecutionsResource
                 $campaign,
                 $execution_artifact,
                 $issue_artifact,
-                $_SERVER[RealTimeMessageSender::HTTP_CLIENT_UUID],
+                $_SERVER[RealTimeMessageSender::HTTP_CLIENT_UUID] ?? null,
                 MinimalTrackerRepresentation::build($issue_artifact->getTracker())
             );
         }
