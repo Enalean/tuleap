@@ -2,14 +2,14 @@
     "name": "testmanagement",
     "gettext-angularjs": {
         "testmanagement": {
-            "src": "scripts/testmanagement/src/",
+            "src": "scripts/testmanagement/src",
             "po": "scripts/testmanagement/po"
         }
     },
     "gettext-vue": {
         "step-definition-field": {
-            "src": "./scripts/step-definition-field",
-            "po": "./scripts/step-definition-field/po"
+            "src": "scripts/step-definition-field/src",
+            "po": "scripts/step-definition-field/po"
         }
     }
 }

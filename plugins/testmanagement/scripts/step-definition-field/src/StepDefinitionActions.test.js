@@ -27,22 +27,19 @@ import {
 } from "@tuleap/plugin-tracker-constants";
 import CommonmarkPreviewButton from "./CommonMark/CommonmarkPreviewButton.vue";
 import CommonmarkSyntaxHelper from "./CommonMark/CommonmarkSyntaxHelper.vue";
-import localVue from "./helpers/local-vue.js";
+import { createLocalVueForTests } from "./helpers/local-vue.js";
 
-let factory;
+const getWrapper = async (props = {}) => {
+    return shallowMount(StepDefinitionActions, {
+        localVue: await createLocalVueForTests(),
+        propsData: { ...props },
+    });
+};
 
 describe(`StepDefinitionActions`, () => {
-    beforeEach(() => {
-        factory = (props = {}) => {
-            return shallowMount(StepDefinitionActions, {
-                localVue,
-                propsData: { ...props },
-            });
-        };
-    });
     describe("Display of the CommonMark buttons", () => {
-        it(`displays the 'Preview' and the syntax helper buttons when the CommonMark/Markdown value is selected or not disabled`, () => {
-            const wrapper = factory({
+        it(`displays the 'Preview' and the syntax helper buttons when the CommonMark/Markdown value is selected or not disabled`, async () => {
+            const wrapper = await getWrapper({
                 value: TEXT_FORMAT_COMMONMARK,
                 disabled: false,
             });
@@ -51,8 +48,8 @@ describe(`StepDefinitionActions`, () => {
             expect(wrapper.findComponent(CommonmarkSyntaxHelper).exists()).toBe(true);
         });
 
-        it(`does not display the 'Preview' and the syntax helper buttons when the step is deleted even if the format is CommonMark/Markdown`, () => {
-            const wrapper = factory({
+        it(`does not display the 'Preview' and the syntax helper buttons when the step is deleted even if the format is CommonMark/Markdown`, async () => {
+            const wrapper = await getWrapper({
                 value: TEXT_FORMAT_COMMONMARK,
                 disabled: true,
             });
@@ -63,8 +60,8 @@ describe(`StepDefinitionActions`, () => {
 
         it.each([[TEXT_FORMAT_HTML], [TEXT_FORMAT_TEXT]])(
             `does not display the buttons when the selected format is %s`,
-            (selected_format) => {
-                const wrapper = factory({
+            async (selected_format) => {
+                const wrapper = await getWrapper({
                     value: selected_format,
                     disabled: false,
                 });
@@ -77,8 +74,8 @@ describe(`StepDefinitionActions`, () => {
     describe(`Selection of the right format`, () => {
         it.each([[TEXT_FORMAT_HTML], [TEXT_FORMAT_TEXT], [TEXT_FORMAT_COMMONMARK]])(
             `selects the '%s' format according the prop 'value' value`,
-            (value) => {
-                const wrapper = factory({
+            async (value) => {
+                const wrapper = await getWrapper({
                     value,
                 });
                 expect(
@@ -89,8 +86,8 @@ describe(`StepDefinitionActions`, () => {
         );
     });
     describe("Enabling of the selectbox", () => {
-        it(`Enable the selectbox when we are in edit mode AND if the step is not disabled`, () => {
-            const wrapper = factory({ disabled: false, is_in_preview_mode: false });
+        it(`Enable the selectbox when we are in edit mode AND if the step is not disabled`, async () => {
+            const wrapper = await getWrapper({ disabled: false, is_in_preview_mode: false });
 
             expect(
                 wrapper.find("[data-test=ttm-definition-step-description-format]").element.disabled,
@@ -103,8 +100,8 @@ describe(`StepDefinitionActions`, () => {
             [false, true],
         ])(
             `Disable the select box when the user is in preview mode OR if the step is disabled`,
-            (disabled, is_in_preview_mode) => {
-                const wrapper = factory({ disabled, is_in_preview_mode });
+            async (disabled, is_in_preview_mode) => {
+                const wrapper = await getWrapper({ disabled, is_in_preview_mode });
 
                 expect(
                     wrapper.find("[data-test=ttm-definition-step-description-format]").element
