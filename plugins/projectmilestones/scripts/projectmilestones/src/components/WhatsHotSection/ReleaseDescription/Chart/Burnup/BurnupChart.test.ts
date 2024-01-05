@@ -21,15 +21,15 @@ import type { MilestoneData } from "../../../../../type";
 import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createReleaseWidgetLocalVue } from "../../../../../helpers/local-vue-for-test";
-import Burnup from "./Burnup.vue";
+import BurnupChart from "./BurnupChart.vue";
 
-const component_options: ShallowMountOptions<Burnup> = {};
+const component_options: ShallowMountOptions<BurnupChart> = {};
 let release_data: MilestoneData;
 import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
 
-describe("Burnup", () => {
-    async function getPersonalWidgetInstance(): Promise<Wrapper<Burnup>> {
+describe("BurnupChart", () => {
+    async function getPersonalWidgetInstance(): Promise<Wrapper<BurnupChart>> {
         const useStore = defineStore("root", {
             state: () => ({}),
         });
@@ -38,7 +38,7 @@ describe("Burnup", () => {
 
         component_options.localVue = await createReleaseWidgetLocalVue();
 
-        return shallowMount(Burnup, component_options);
+        return shallowMount(BurnupChart, component_options);
     }
 
     beforeEach(() => {

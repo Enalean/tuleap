@@ -30,7 +30,7 @@
                 $gettext('Burnup is under calculation. It will be available in a few minutes.')
             "
         />
-        <burnup v-else v-bind:release_data="release_data" v-bind:burnup_data="burnup_data" />
+        <burnup-chart v-else v-bind:release_data="release_data" v-bind:burnup_data="burnup_data" />
     </div>
 </template>
 
@@ -39,10 +39,10 @@ import { Component, Prop } from "vue-property-decorator";
 import type { BurnupData, MilestoneData } from "../../../../../type";
 import Vue from "vue";
 import ChartError from "../ChartError.vue";
-import Burnup from "./Burnup.vue";
+import BurnupChart from "./BurnupChart.vue";
 import { useStore } from "../../../../../stores/root";
 @Component({
-    components: { Burnup, ChartError },
+    components: { BurnupChart, ChartError },
 })
 export default class BurnupDisplayer extends Vue {
     public root_store = useStore();

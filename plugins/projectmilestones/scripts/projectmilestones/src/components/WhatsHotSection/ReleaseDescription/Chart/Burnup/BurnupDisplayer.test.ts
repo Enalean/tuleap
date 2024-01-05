@@ -23,7 +23,7 @@ import { shallowMount } from "@vue/test-utils";
 import { createReleaseWidgetLocalVue } from "../../../../../helpers/local-vue-for-test";
 import ChartError from "../ChartError.vue";
 import BurnupDisplayer from "./BurnupDisplayer.vue";
-import Burnup from "./Burnup.vue";
+import BurnupChart from "./BurnupChart.vue";
 import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
 
@@ -216,7 +216,7 @@ describe("BurnupDisplayer", () => {
 
         const wrapper = await getPersonalWidgetInstance(start_date, end_date, burnup_data);
 
-        expect(wrapper.findComponent(Burnup).exists()).toBe(true);
+        expect(wrapper.findComponent(BurnupChart).exists()).toBe(true);
     });
 
     it("When the timeframe is not on duration field and end date field is null, Then there is an error", async () => {
