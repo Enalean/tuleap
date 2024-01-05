@@ -360,7 +360,7 @@ class pullrequestPlugin extends Plugin
     public function getReference(GetReferenceEvent $event): void
     {
         $keyword         = $event->getKeyword();
-        $pull_request_id = $event->getValue();
+        $pull_request_id = (int) $event->getValue();
 
         if ($this->isReferenceAPullRequestReference($keyword)) {
             $reference = (new ReferenceFactory(
