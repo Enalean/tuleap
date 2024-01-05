@@ -124,7 +124,7 @@ fetchPullRequestInfo(pull_request_id)
         },
     );
 
-function handleAPIFault(fault: Fault) {
+function handleAPIFault(fault: Fault): void {
     error.value = fault;
 }
 </script>

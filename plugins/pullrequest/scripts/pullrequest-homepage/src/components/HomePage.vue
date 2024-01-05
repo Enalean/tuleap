@@ -33,7 +33,7 @@ import PullRequestErrorModal from "./Error/PullRequestErrorModal.vue";
 
 const error = ref<Fault | null>(null);
 
-const handleAPIFault = (fault: Fault) => {
+const handleAPIFault = (fault: Fault): void => {
     error.value = fault;
 };
 

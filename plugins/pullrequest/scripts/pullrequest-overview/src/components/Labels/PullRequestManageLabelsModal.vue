@@ -116,11 +116,11 @@ const newly_selected_labels = ref<ProjectLabel[]>([]);
 const current_labels_ids = props.current_labels.map(({ id }) => id);
 const labels_creation_manager = LabelsCreationManager(props.project_labels);
 
-const cancel = () => {
+const cancel = (): void => {
     props.on_cancel_callback();
 };
 
-function saveLabels() {
+function saveLabels(): void {
     const newly_selected_labels_ids = newly_selected_labels.value.map(({ id }) => id);
     const added_labels_ids = newly_selected_labels_ids.filter(
         (id) => !current_labels_ids.includes(id),
@@ -184,10 +184,10 @@ function initlabelsAutocompleter(lazybox: Lazybox): void {
         placeholder: $gettext("Select labels"),
         templating_callback: getAssignableLabelsTemplate,
         selection_badge_callback: getAssignedLabelTemplate,
-        search_input_callback: (query) => {
+        search_input_callback: (query): void => {
             autocompleter.autocomplete(lazybox, project_labels, newly_selected_labels.value, query);
         },
-        selection_callback: (selected_labels) => {
+        selection_callback: (selected_labels): void => {
             const labels_in_selection = getSelectedLabels(selected_labels);
             labels_creation_manager.registerLabelsToCreate(labels_in_selection);
 
@@ -199,7 +199,7 @@ function initlabelsAutocompleter(lazybox: Lazybox): void {
             item_name !== ""
                 ? interpolate($gettext(`Create a new label "%{label}"`), { label: item_name })
                 : $gettext("Create a new label"),
-        new_item_clicked_callback: (item_name: string) => {
+        new_item_clicked_callback: (item_name: string): void => {
             if (!labels_creation_manager.canLabelBeCreated(item_name)) {
                 return;
             }

@@ -104,7 +104,7 @@ const is_merge_confirmation_required = computed(
     () => !(isFastForwardMerge(props.pull_request) && isCIHappy(props.pull_request)),
 );
 
-const processMerge = () => {
+const processMerge = (): void => {
     show_confirmation_modal.value = false;
     is_merge_in_progress.value = true;
 

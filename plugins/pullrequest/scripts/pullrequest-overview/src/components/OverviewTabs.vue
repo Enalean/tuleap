@@ -62,7 +62,7 @@ const is_tab_displayed = computed(
     () => props.pull_request !== null && props.pull_request.is_git_reference_broken === false,
 );
 
-const buildUrlForView = (view_name: string) => {
+const buildUrlForView = (view_name: string): string => {
     const view_url = new URL("", base_url.toString());
     view_url.hash = `#/pull-requests/${pull_request_id}/${view_name}`;
 
