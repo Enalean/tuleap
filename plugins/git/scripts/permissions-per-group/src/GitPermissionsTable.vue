@@ -104,7 +104,7 @@ watch(
     },
 );
 
-function togglePermission(event: { hidden: boolean }) {
+function togglePermission(event: { hidden: boolean }): void {
     if (event.hidden) {
         nb_repo_hidden.value++;
     }

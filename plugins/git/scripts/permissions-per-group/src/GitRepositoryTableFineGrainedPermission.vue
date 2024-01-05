@@ -20,12 +20,12 @@
 <template>
     <tr>
         <td></td>
-        <td>{{ fineGrainedPermissions.branch }}</td>
-        <td>{{ fineGrainedPermissions.tag }}</td>
+        <td>{{ fine_grained_permissions.branch }}</td>
+        <td>{{ fine_grained_permissions.tag }}</td>
         <td></td>
         <td>
             <git-permissions-badge
-                v-for="group in fineGrainedPermissions.writers"
+                v-for="group in fine_grained_permissions.writers"
                 v-bind:key="group.ugroup_name"
                 v-bind:is_project_admin="group.is_project_admin"
                 v-bind:is_static="group.is_static"
@@ -36,7 +36,7 @@
         </td>
         <td>
             <git-permissions-badge
-                v-for="group in fineGrainedPermissions.rewinders"
+                v-for="group in fine_grained_permissions.rewinders"
                 v-bind:key="group.ugroup_name"
                 v-bind:is_project_admin="group.is_project_admin"
                 v-bind:is_static="group.is_static"
@@ -51,5 +51,5 @@
 import GitPermissionsBadge from "@tuleap/vue3-permissions-per-group-badge";
 import type { FineGrainedPermission } from "./type";
 
-defineProps<{ fineGrainedPermissions: FineGrainedPermission }>();
+defineProps<{ fine_grained_permissions: FineGrainedPermission }>();
 </script>

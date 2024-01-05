@@ -48,7 +48,7 @@ describe("GitPermissionsTableRepository", () => {
         expect(
             wrapper
                 .findComponent(GitRepositoryTableSimplePermissions)
-                .props("repositoryPermission"),
+                .props("repository_permission"),
         ).toStrictEqual({ repository_id: 1, has_fined_grained_permissions: false });
         expect(
             wrapper.findComponent(GitRepositoryTableFineGrainedPermissionsRepository).exists(),
