@@ -274,6 +274,7 @@ module.exports = {
                 "plugins/roadmap/scripts/configure-widget/**/*.vue",
                 "plugins/document/scripts/**/*.vue",
                 "src/scripts/frs-permissions-per-group/**/*.vue",
+                "src/scripts/news-permissions-per-group/**/*.vue",
             ],
             extends: ["plugin:vue/vue3-recommended"],
             rules: {

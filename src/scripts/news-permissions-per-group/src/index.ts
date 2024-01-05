@@ -17,29 +17,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import { initVueGettextFromPoGettextPlugin, getPOFileFromLocale } from "@tuleap/vue2-gettext-init";
+import { createApp } from "vue";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
+import { createGettext } from "vue3-gettext";
 
 import NewsPermissions from "./BaseNewsPermissions.vue";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("news-permission-per-group");
-
     if (!vue_mount_point) {
         return;
     }
 
-    await initVueGettextFromPoGettextPlugin(
-        Vue,
-        (locale) =>
-            import(
-                /* webpackChunkName: "permissions-per-group-news-po-" */ "../po/" +
-                    getPOFileFromLocale(locale)
-            ),
-    );
-
-    const rootComponent = Vue.extend(NewsPermissions);
-    new rootComponent({
-        propsData: { ...vue_mount_point.dataset },
-    }).$mount(vue_mount_point);
+    const gettext = await initVueGettext(createGettext, (locale: string) => {
+        return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
+    });
+    const app = createApp(NewsPermissions, {
+        selected_project_id: vue_mount_point.dataset.selectedProjectId,
+        selected_ugroup_id: vue_mount_point.dataset.selectedUgroupId,
+        selected_ugroup_name: vue_mount_point.dataset.selectedUgroupName,
+    });
+    app.use(gettext);
+    app.mount(vue_mount_point);
 });
