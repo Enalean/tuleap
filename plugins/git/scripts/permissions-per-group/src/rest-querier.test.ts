@@ -17,19 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import * as fetch_result from "@tuleap/fetch-result";
 import { getGitPermissions } from "./rest-querier";
 import type { RepositoryFineGrainedPermissions } from "./type";
 import { okAsync } from "neverthrow";
 
-jest.mock("@tuleap/fetch-result");
+vi.mock("@tuleap/fetch-result");
 
 describe("API querier", () => {
     describe("getGitPermissions", () => {
         it("Given a project id and empty group id, Then it will get permission for git", async () => {
             const project_id = 101;
 
-            const get = jest.spyOn(fetch_result, "getJSON");
+            const get = vi.spyOn(fetch_result, "getJSON");
             get.mockReturnValue(
                 okAsync({
                     repositories: [{ name: "repo" } as RepositoryFineGrainedPermissions],

@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
+import { describe, it, expect } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import GitInlineFilter from "./GitInlineFilter.vue";
 import { createGettext } from "vue3-gettext";
@@ -31,7 +32,7 @@ describe("GitInlineFilter", () => {
                 plugins: [createGettext({ silent: true })],
             },
         });
-        wrapper.find("[data-test=git-inline-filter-input]").trigger("keyup");
+        wrapper.find("[data-test=git-inline-filter-input]").trigger("input");
         expect(wrapper.emitted("update:modelValue")).toBeTruthy();
     });
 });
