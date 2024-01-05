@@ -31,5 +31,6 @@ $application->add(new TuleapDev\TuleapDev\GerritSetupCommand());
 $application->add(new TuleapDev\TuleapDev\RegisterIPCommand());
 $application->add(new TuleapDev\TuleapDev\AddLDAPUserCommand());
 $application->add(new TuleapDev\TuleapDev\ModLdapUserCommand());
+$application->add(new TuleapDev\TuleapDev\AddLDAPGroupCommand());
 
 $application->run();
