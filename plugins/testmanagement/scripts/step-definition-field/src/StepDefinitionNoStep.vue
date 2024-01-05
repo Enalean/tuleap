@@ -24,7 +24,12 @@
             <translate>There isn't any step defined yet. Start by adding one.</translate>
         </p>
         <div>
-            <button type="button" class="btn btn-primary" v-on:click="addStep(0)">
+            <button
+                type="button"
+                class="btn btn-primary"
+                v-on:click="addStep(0)"
+                data-test="add-step"
+            >
                 <i class="fa fa-plus"></i>
                 <translate>Add step</translate>
             </button>
