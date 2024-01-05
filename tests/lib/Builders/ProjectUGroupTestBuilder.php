@@ -26,12 +26,13 @@ use Tuleap\User\UserGroup\NameTranslator;
 
 final class ProjectUGroupTestBuilder
 {
-    private string $name = 'My group';
-    /**
-     * @psalm-var list<\PFUser>
-     */
-    private array $users       = [];
+    private string $name       = 'My group';
     private ?\Project $project = null;
+    /**
+     * @var list<\PFUser>
+     */
+    private array $users         = [];
+    private ?string $description = null;
 
     private function __construct(private int $id)
     {
@@ -39,10 +40,6 @@ final class ProjectUGroupTestBuilder
 
     public static function aCustomUserGroup(int $user_group_id): self
     {
-        if ($user_group_id < 100) {
-            throw new \LogicException('User Group id must be >= 100 for custom user groups');
-        }
-
         return new self($user_group_id);
     }
 
@@ -129,9 +126,19 @@ final class ProjectUGroupTestBuilder
         return $this;
     }
 
+    public function withDescription(string $description): self
+    {
+        $this->description = $description;
+        return $this;
+    }
+
     public function build(): \ProjectUGroup
     {
-        $ugroup = new \ProjectUGroup(['ugroup_id' => $this->id, 'name' => $this->name]);
+        $ugroup = new \ProjectUGroup([
+            'ugroup_id'   => $this->id,
+            'name'        => $this->name,
+            'description' => $this->description,
+        ]);
         $ugroup->setMembers(...$this->users);
         if ($this->project !== null) {
             $ugroup->setProject($this->project);

@@ -20,57 +20,66 @@
  * phpcs:disable PSR1.Classes.ClassDeclaration
  */
 
-use Mockery as M;
-use Tuleap\Project\ProjectIsInactiveException;
+declare(strict_types=1);
+
+namespace Tuleap\Project;
+
+use EventManager;
+use PHPUnit\Framework\MockObject\MockObject;
+use ProjectUGroup;
+use ProjectXMLExporter;
+use Psr\Log\NullLogger;
+use Service;
+use Tuleap\Dashboard\Project\DashboardXMLExporter;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
+use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\Export\ExportOptions;
 use Tuleap\Test\Builders as B;
+use UGroupManager;
+use UserManager;
+use UserXMLExportedCollection;
+use UserXMLExporter;
+use XML_RNGValidator;
 
 final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    private $event_manager;
-    private $ugroup_manager;
-    private $project;
-    private $xml_exporter;
-    /**
-     * @var string
-     */
-    private $export_dir;
-    private $user;
-    private $options;
-    private $archive;
-    /**
-     * @var mixed|\PHPUnit\Framework\MockObject\MockObject|\Tuleap\Dashboard\Project\DashboardXMLExporter
-     */
-    private $dashboard_exporter;
+    private EventManager&MockObject $event_manager;
+    private UGroupManager&MockObject $ugroup_manager;
+    private \Project $project;
+    private ProjectXMLExporter $xml_exporter;
+    private string $export_dir;
+    private \PFUser $user;
+    private ExportOptions $options;
+    private ArchiveInterface&MockObject $archive;
+    private DashboardXMLExporter&MockObject $dashboard_exporter;
 
     protected function setUp(): void
     {
-        $this->event_manager  = M::spy(EventManager::class);
-        $this->ugroup_manager = M::spy(UGroupManager::class);
+        $this->event_manager  = $this->createMock(EventManager::class);
+        $this->ugroup_manager = $this->createMock(UGroupManager::class);
         $xml_validator        = new XML_RNGValidator();
-        $user_xml_exporter    = new UserXMLExporter(M::spy(UserManager::class), M::spy(UserXMLExportedCollection::class));
-        $this->project        = M::spy(Project::class, [
-            'getPublicName'           => 'Project01',
-            'getUnixName'             => 'project01',
-            'getDescription'          => 'Wonderfull project',
-            'getAccess'               => \Project::ACCESS_PRIVATE,
-            "isActive"                => true,
-            "getIconUnicodeCodepoint" => '"\ud83d\ude2c"',
-        ]);
+        $user_xml_exporter    = new UserXMLExporter($this->createMock(UserManager::class), $this->createPartialMock(UserXMLExportedCollection::class, []));
+        $this->project        = B\ProjectTestBuilder::aProject()
+            ->withPublicName('Project01')
+            ->withUnixName('project01')
+            ->withDescription('Wonderfull project')
+            ->withAccess(\Project::ACCESS_PRIVATE)
+            ->withIcon('😬')
+            ->withoutServices()
+            ->build();
 
-        $this->dashboard_exporter = $this->createMock(\Tuleap\Dashboard\Project\DashboardXMLExporter::class);
+        $this->dashboard_exporter = $this->createMock(DashboardXMLExporter::class);
 
+        $membership_detector = $this->createMock(SynchronizedProjectMembershipDetector::class);
+        $membership_detector->method('isSynchronizedWithProjectMembers')->willReturn(false);
         $this->xml_exporter = new ProjectXMLExporter(
             $this->event_manager,
             $this->ugroup_manager,
             $xml_validator,
             $user_xml_exporter,
             $this->dashboard_exporter,
-            M::mock(SynchronizedProjectMembershipDetector::class, ['isSynchronizedWithProjectMembers' => false]),
-            M::spy(\Psr\Log\LoggerInterface::class)
+            $membership_detector,
+            new NullLogger()
         );
 
         $this->options    = new ExportOptions(
@@ -80,8 +89,8 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->export_dir = "__fixtures";
 
-        $this->archive = M::spy(\Tuleap\Project\XML\Export\ArchiveInterface::class);
-        $this->user    = M::spy(PFUser::class);
+        $this->archive = $this->createMock(ArchiveInterface::class);
+        $this->user    = B\UserTestBuilder::buildWithDefaults();
     }
 
     public function testItDoesNotExportUsersIfWeOnlyWantProjectStructure(): void
@@ -91,40 +100,25 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_03 = B\UserTestBuilder::aUser()->withId(103)->withLdapId('ldap_03')->withUserName('user_03')->build();
         $user_04 = B\UserTestBuilder::aUser()->withId(104)->withUserName('user_04')->build();
 
-        $project_ugroup_project_admins  = M::spy(
-            ProjectUGroup::class,
-            [
-                'getNormalizedName' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_ADMIN],
-                'getMembers' => [$user_01],
-                'getTranslatedDescription' => 'descr01',
-            ]
-        );
-        $project_ugroup_project_members = M::spy(
-            ProjectUGroup::class,
-            [
-                'getNormalizedName' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS],
-                'getMembers' => [$user_01, $user_02, $user_03],
-                'getTranslatedDescription' => 'Project members',
-            ]
-        );
-        $project_ugroup_static          = M::spy(
-            ProjectUGroup::class,
-            [
-                'getNormalizedName' => 'Developers',
-                'getMembers' => [$user_01, $user_04],
-                'getTranslatedDescription' => 'Developers',
-            ]
-        );
+        $project_ugroup_project_admins  = B\ProjectUGroupTestBuilder::aCustomUserGroup(ProjectUGroup::PROJECT_ADMIN)
+            ->withUsers($user_01)
+            ->withDescription('descr01')
+            ->build();
+        $project_ugroup_project_members = B\ProjectUGroupTestBuilder::aCustomUserGroup(ProjectUGroup::PROJECT_MEMBERS)
+            ->withUsers($user_01, $user_02, $user_03)
+            ->withDescription('Project members')
+            ->build();
+        $project_ugroup_static          = B\ProjectUGroupTestBuilder::aCustomUserGroup(103)
+            ->withName('Developers')
+            ->withUsers($user_01, $user_04)
+            ->withDescription('Developers')
+            ->build();
 
+        $this->ugroup_manager->method('getProjectAdminsUGroup')->with($this->project)->willReturn($project_ugroup_project_admins);
+        $this->ugroup_manager->method('getProjectMembersUGroup')->with($this->project)->willReturn($project_ugroup_project_members);
+        $this->ugroup_manager->method('getStaticUGroups')->willReturn([$project_ugroup_static]);
 
-        $this->ugroup_manager->shouldReceive('getProjectAdminsUGroup')->with($this->project)->andReturns($project_ugroup_project_admins);
-        $this->ugroup_manager->shouldReceive('getProjectMembersUGroup')->with($this->project)->andReturns($project_ugroup_project_members);
-        $this->ugroup_manager->shouldReceive('getStaticUGroups')->andReturns([
-            $project_ugroup_static,
-        ]);
-
-        $this->project->shouldReceive('getServices')->andReturns([]);
-        $this->event_manager->shouldReceive('processEvent');
+        $this->event_manager->method('processEvent');
         $this->dashboard_exporter->method('exportDashboards');
 
         $xml = $this->xml_exporter->export(
@@ -137,14 +131,14 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $xml_objet = simplexml_load_string($xml);
 
-        $this->assertNotNull($xml_objet->ugroups);
-        $this->assertNotNull($xml_objet->ugroups->ugroup[0]);
-        $this->assertNotNull($xml_objet->ugroups->ugroup[1]);
-        $this->assertNotNull($xml_objet->ugroups->ugroup[2]);
+        self::assertNotNull($xml_objet->ugroups);
+        self::assertNotNull($xml_objet->ugroups->ugroup[0]);
+        self::assertNotNull($xml_objet->ugroups->ugroup[1]);
+        self::assertNotNull($xml_objet->ugroups->ugroup[2]);
 
-        $this->assertCount(0, $xml_objet->ugroups->ugroup[0]->members->member);
-        $this->assertCount(0, $xml_objet->ugroups->ugroup[1]->members->member);
-        $this->assertCount(0, $xml_objet->ugroups->ugroup[2]->members->member);
+        self::assertCount(0, $xml_objet->ugroups->ugroup[0]->members->member);
+        self::assertCount(0, $xml_objet->ugroups->ugroup[1]->members->member);
+        self::assertCount(0, $xml_objet->ugroups->ugroup[2]->members->member);
     }
 
     public function testItExportsStaticUgroupsForTheGivenProject(): void
@@ -154,87 +148,72 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_03 = B\UserTestBuilder::aUser()->withId(103)->withLdapId('ldap_03')->withUserName('user_03')->build();
         $user_04 = B\UserTestBuilder::aUser()->withId(104)->withUserName('user_04')->build();
 
-        $project_ugroup_members = M::spy(
-            ProjectUGroup::class,
-            [
-                'getNormalizedName' => 'ugroup_01',
-                'getMembers' => [$user_01, $user_02, $user_04],
-                'getTranslatedDescription' => 'descr01',
-            ]
-        );
+        $project_ugroup_members = B\ProjectUGroupTestBuilder::aCustomUserGroup(101)
+            ->withName('ugroup_01')
+            ->withUsers($user_01, $user_02, $user_04)
+            ->withDescription('descr01')
+            ->build();
 
-        $project_ugroup_members2 = M::spy(
-            ProjectUGroup::class,
-            [
-                'getNormalizedName' => 'ugroup_02',
-                'getMembers' => [$user_03],
-                'getTranslatedDescription' => 'descr02',
-            ]
-        );
+        $project_ugroup_members2 = B\ProjectUGroupTestBuilder::aCustomUserGroup(102)
+            ->withName('ugroup_02')
+            ->withUsers($user_03)
+            ->withDescription('descr02')
+            ->build();
 
-        $project_ugroup_members3 = M::spy(
-            ProjectUGroup::class,
-            [
-                'getNormalizedName' => 'ugroup_03',
-                'getMembers' => [],
-                'getTranslatedDescription' => 'descr03',
-            ]
-        );
+        $project_ugroup_members3 = B\ProjectUGroupTestBuilder::aCustomUserGroup(103)
+            ->withName('ugroup_03')
+            ->withDescription('descr03')
+            ->build();
 
-        $project_ugroup_dynamic = M::spy(
-            ProjectUGroup::class,
-            [
-                'getNormalizedName' => 'ugroup_dynamic',
-                'getMembers' => [],
-                'getTranslatedDescription' => 'dynamic',
-            ]
-        );
+        $project_ugroup_dynamic = B\ProjectUGroupTestBuilder::aCustomUserGroup(104)
+            ->withName('ugroup_dynamic')
+            ->withDescription('dynamic')
+            ->build();
 
-        $this->ugroup_manager->shouldReceive('getProjectAdminsUGroup')->with($this->project)->andReturns($project_ugroup_dynamic);
-        $this->ugroup_manager->shouldReceive('getProjectMembersUGroup')->with($this->project)->andReturns($project_ugroup_dynamic);
-        $this->ugroup_manager->shouldReceive('getStaticUGroups')->andReturns([
+        $this->ugroup_manager->method('getProjectAdminsUGroup')->with($this->project)->willReturn($project_ugroup_dynamic);
+        $this->ugroup_manager->method('getProjectMembersUGroup')->with($this->project)->willReturn($project_ugroup_dynamic);
+        $this->ugroup_manager->method('getStaticUGroups')->willReturn([
             $project_ugroup_members,
             $project_ugroup_members2,
             $project_ugroup_members3,
         ]);
 
-        $this->project->shouldReceive('getServices')->andReturns([]);
-        $this->event_manager->shouldReceive('processEvent')->once();
+        $this->event_manager->expects(self::once())->method('processEvent');
         $this->dashboard_exporter->method('exportDashboards');
 
         $xml       = $this->xml_exporter->export($this->project, $this->options, $this->user, $this->archive, $this->export_dir);
         $xml_objet = simplexml_load_string($xml);
 
-        $this->assertNotNull($xml_objet->ugroups);
-        $this->assertNotNull($xml_objet->ugroups->ugroup[0]);
-        $this->assertNotNull($xml_objet->ugroups->ugroup[1]);
-        $this->assertNotNull($xml_objet->ugroups->ugroup[2]);
-        $this->assertNotNull($xml_objet->ugroups->ugroup[3]);
-        $this->assertNotNull($xml_objet->ugroups->ugroup[4]);
+        self::assertNotNull($xml_objet->ugroups);
+        self::assertNotNull($xml_objet->ugroups->ugroup[0]);
+        self::assertNotNull($xml_objet->ugroups->ugroup[1]);
+        self::assertNotNull($xml_objet->ugroups->ugroup[2]);
+        self::assertNotNull($xml_objet->ugroups->ugroup[3]);
+        self::assertNotNull($xml_objet->ugroups->ugroup[4]);
 
-        $this->assertEquals((string) $xml_objet->ugroups->ugroup[2]['name'], 'ugroup_01');
-        $this->assertEquals((string) $xml_objet->ugroups->ugroup[2]['description'], 'descr01');
-        $this->assertNotNull($xml_objet->ugroups->ugroup[2]->members);
-        $this->assertEquals((string) $xml_objet->ugroups->ugroup[2]->members->member[0], 'ldap_01');
-        $this->assertEquals((string) $xml_objet->ugroups->ugroup[2]->members->member[0]['format'], 'ldap');
-        $this->assertEquals((string) $xml_objet->ugroups->ugroup[2]->members->member[1], 'ldap_02');
-        $this->assertEquals((string) $xml_objet->ugroups->ugroup[2]->members->member[1]['format'], 'ldap');
-        $this->assertEquals((string) $xml_objet->ugroups->ugroup[2]->members->member[2], 'user_04');
-        $this->assertEquals((string) $xml_objet->ugroups->ugroup[2]->members->member[2]['format'], 'username');
+        self::assertEquals('ugroup_01', (string) $xml_objet->ugroups->ugroup[2]['name']);
+        self::assertEquals('descr01', (string) $xml_objet->ugroups->ugroup[2]['description']);
+        self::assertNotNull($xml_objet->ugroups->ugroup[2]->members);
+        self::assertEquals('ldap_01', (string) $xml_objet->ugroups->ugroup[2]->members->member[0]);
+        self::assertEquals('ldap', (string) $xml_objet->ugroups->ugroup[2]->members->member[0]['format']);
+        self::assertEquals('ldap_02', (string) $xml_objet->ugroups->ugroup[2]->members->member[1]);
+        self::assertEquals('ldap', (string) $xml_objet->ugroups->ugroup[2]->members->member[1]['format']);
+        self::assertEquals('user_04', (string) $xml_objet->ugroups->ugroup[2]->members->member[2]);
+        self::assertEquals('username', (string) $xml_objet->ugroups->ugroup[2]->members->member[2]['format']);
 
-        $this->assertEquals((string) $xml_objet->ugroups->ugroup[3]['name'], 'ugroup_02');
-        $this->assertEquals((string) $xml_objet->ugroups->ugroup[3]['description'], 'descr02');
-        $this->assertNotNull($xml_objet->ugroups->ugroup[3]->members);
-        $this->assertEquals((string) $xml_objet->ugroups->ugroup[3]->members->member[0], 'ldap_03');
-        $this->assertEquals((string) $xml_objet->ugroups->ugroup[3]->members->member[0]['format'], 'ldap');
+        self::assertEquals('ugroup_02', (string) $xml_objet->ugroups->ugroup[3]['name']);
+        self::assertEquals('descr02', (string) $xml_objet->ugroups->ugroup[3]['description']);
+        self::assertNotNull($xml_objet->ugroups->ugroup[3]->members);
+        self::assertEquals('ldap_03', (string) $xml_objet->ugroups->ugroup[3]->members->member[0]);
+        self::assertEquals('ldap', (string) $xml_objet->ugroups->ugroup[3]->members->member[0]['format']);
 
-        $this->assertEquals((string) $xml_objet->ugroups->ugroup[4]['name'], 'ugroup_03');
-        $this->assertEquals((string) $xml_objet->ugroups->ugroup[4]['description'], 'descr03');
-        $this->assertNotNull($xml_objet->ugroups->ugroup[4]->members);
-        $this->assertNull($xml_objet->ugroups->ugroup[4]->members->member[0]);
+        self::assertEquals('ugroup_03', (string) $xml_objet->ugroups->ugroup[4]['name']);
+        self::assertEquals('descr03', (string) $xml_objet->ugroups->ugroup[4]['description']);
+        self::assertNotNull($xml_objet->ugroups->ugroup[4]->members);
+        self::assertNull($xml_objet->ugroups->ugroup[4]->members->member[0]);
 
         $attrs = $xml_objet->attributes();
-        $this->assertEquals("😬", (string) $attrs['icon-codepoint']);
+        self::assertEquals("😬", (string) $attrs['icon-codepoint']);
     }
 
     public function testItExportsDynamicUgroupsForTheGivenProject(): void
@@ -244,32 +223,22 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_2       = B\UserTestBuilder::aUser()->withId(103)->withLdapId('ldap_03')->withUserName('user_03')->build();
         $user_3       = B\UserTestBuilder::aUser()->withId(104)->withUserName('user_04')->build();
 
-        $project_ugroup_project_admins = M::spy(
-            ProjectUGroup::class,
-            [
-                'getNormalizedName' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_ADMIN],
-                'getMembers' => [$user_admin_1],
-                'getTranslatedDescription' => 'Project admin',
-            ]
-        );
+        $project_ugroup_project_admins = B\ProjectUGroupTestBuilder::aCustomUserGroup(ProjectUGroup::PROJECT_ADMIN)
+            ->withUsers($user_admin_1)
+            ->withDescription('Project admin')
+            ->build();
 
-        $project_ugroup_project_members = M::spy(
-            ProjectUGroup::class,
-            [
-                'getNormalizedName' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS],
-                'getMembers' => [$user_1, $user_2, $user_3],
-                'getTranslatedDescription' => 'Project member',
-            ]
-        );
+        $project_ugroup_project_members = B\ProjectUGroupTestBuilder::aCustomUserGroup(ProjectUGroup::PROJECT_MEMBERS)
+            ->withUsers($user_1, $user_2, $user_3)
+            ->withDescription('Project member')
+            ->build();
 
-        $this->ugroup_manager->shouldReceive('getProjectAdminsUGroup')->with($this->project)->andReturns($project_ugroup_project_admins);
-        $this->ugroup_manager->shouldReceive('getProjectMembersUGroup')->with($this->project)->andReturns($project_ugroup_project_members);
+        $this->ugroup_manager->method('getProjectAdminsUGroup')->with($this->project)->willReturn($project_ugroup_project_admins);
+        $this->ugroup_manager->method('getProjectMembersUGroup')->with($this->project)->willReturn($project_ugroup_project_members);
 
-        $this->ugroup_manager->shouldReceive('getStaticUGroups')->andReturns([]);
+        $this->ugroup_manager->method('getStaticUGroups')->willReturn([]);
 
-        $this->project->shouldReceive('getServices')->andReturns([]);
-
-        $this->event_manager->shouldReceive('processEvent')->once();
+        $this->event_manager->expects(self::once())->method('processEvent');
 
         $this->dashboard_exporter->method('exportDashboards');
 
@@ -277,29 +246,29 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $xml       = $this->xml_exporter->export($this->project, $this->options, $this->user, $this->archive, $this->export_dir);
         $xml_objet = simplexml_load_string($xml);
 
-        $this->assertNotNull($xml_objet->ugroups);
-        $this->assertNotNull($xml_objet->ugroups->ugroup[0]);
-        $this->assertNotNull($xml_objet->ugroups->ugroup[1]);
+        self::assertNotNull($xml_objet->ugroups);
+        self::assertNotNull($xml_objet->ugroups->ugroup[0]);
+        self::assertNotNull($xml_objet->ugroups->ugroup[1]);
 
-        $this->assertEquals(
-            (string) $xml_objet->ugroups->ugroup[0]['name'],
-            ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_ADMIN]
+        self::assertEquals(
+            ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_ADMIN],
+            (string) $xml_objet->ugroups->ugroup[0]['name']
         );
-        $this->assertNotNull($xml_objet->ugroups->ugroup[0]->members);
-        $this->assertEquals((string) $xml_objet->ugroups->ugroup[0]->members->member[0], 'ldap_01');
-        $this->assertEquals((string) $xml_objet->ugroups->ugroup[0]->members->member[0]['format'], 'ldap');
+        self::assertNotNull($xml_objet->ugroups->ugroup[0]->members);
+        self::assertEquals('ldap_01', (string) $xml_objet->ugroups->ugroup[0]->members->member[0]);
+        self::assertEquals('ldap', (string) $xml_objet->ugroups->ugroup[0]->members->member[0]['format']);
 
-        $this->assertEquals(
-            (string) $xml_objet->ugroups->ugroup[1]['name'],
-            ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS]
+        self::assertEquals(
+            ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS],
+            (string) $xml_objet->ugroups->ugroup[1]['name']
         );
-        $this->assertNotNull($xml_objet->ugroups->ugroup[1]->members);
-        $this->assertEquals((string) $xml_objet->ugroups->ugroup[1]->members->member[0], 'ldap_02');
-        $this->assertEquals((string) $xml_objet->ugroups->ugroup[1]->members->member[0]['format'], 'ldap');
-        $this->assertEquals((string) $xml_objet->ugroups->ugroup[1]->members->member[1], 'ldap_03');
-        $this->assertEquals((string) $xml_objet->ugroups->ugroup[1]->members->member[1]['format'], 'ldap');
-        $this->assertEquals((string) $xml_objet->ugroups->ugroup[1]->members->member[2], 'user_04');
-        $this->assertEquals((string) $xml_objet->ugroups->ugroup[1]->members->member[2]['format'], 'username');
+        self::assertNotNull($xml_objet->ugroups->ugroup[1]->members);
+        self::assertEquals('ldap_02', (string) $xml_objet->ugroups->ugroup[1]->members->member[0]);
+        self::assertEquals('ldap', (string) $xml_objet->ugroups->ugroup[1]->members->member[0]['format']);
+        self::assertEquals('ldap_03', (string) $xml_objet->ugroups->ugroup[1]->members->member[1]);
+        self::assertEquals('ldap', (string) $xml_objet->ugroups->ugroup[1]->members->member[1]['format']);
+        self::assertEquals('user_04', (string) $xml_objet->ugroups->ugroup[1]->members->member[2]);
+        self::assertEquals('username', (string) $xml_objet->ugroups->ugroup[1]->members->member[2]['format']);
     }
 
     public function testItExportsProjectInfo(): void
@@ -317,38 +286,44 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $service_01 = new Service($this->project, $data_01);
         $service_02 = new Service($this->project, $data_02);
 
-        $this->project->shouldReceive('getUnixName')->andReturns('myproject');
-        $this->project->shouldReceive('getDescription')->andReturns('my short desc');
-        $this->project->shouldReceive('getServices')->andReturns([$service_01, $service_02]);
-        $this->project->shouldReceive('getAccess')->andReturns('public');
-        $project_ugroup_dynamic = M::spy(ProjectUGroup::class, ['getNormalizedName' => 'ugroup_dynamic', 'getTranslatedDescription' => 'dynamic']);
-        $project_ugroup_dynamic->shouldReceive('getMembers')->andReturns([]);
-        $this->ugroup_manager->shouldReceive('getProjectAdminsUGroup')->with($this->project)->andReturns($project_ugroup_dynamic);
-        $this->ugroup_manager->shouldReceive('getProjectMembersUGroup')->with($this->project)->andReturns($project_ugroup_dynamic);
-        $this->ugroup_manager->shouldReceive('getStaticUGroups')->andReturns([]);
+        $project                = B\ProjectTestBuilder::aProject()
+            ->withPublicName('Project01')
+            ->withUnixName('myproject')
+            ->withDescription('my short desc')
+            ->withServices($service_01, $service_02)
+            ->withAccess(\Project::ACCESS_PUBLIC)
+            ->build();
+        $project_ugroup_dynamic = B\ProjectUGroupTestBuilder::aCustomUserGroup(101)
+            ->withName('ugroup_dynamic')
+            ->withDescription('dynamic')
+            ->build();
+        $this->ugroup_manager->method('getProjectAdminsUGroup')->with($project)->willReturn($project_ugroup_dynamic);
+        $this->ugroup_manager->method('getProjectMembersUGroup')->with($project)->willReturn($project_ugroup_dynamic);
+        $this->ugroup_manager->method('getStaticUGroups')->willReturn([]);
+        $this->event_manager->expects(self::once())->method('processEvent');
 
 
         $this->dashboard_exporter->method('exportDashboards');
 
-        $xml       = $this->xml_exporter->export($this->project, $this->options, $this->user, $this->archive, $this->export_dir);
+        $xml       = $this->xml_exporter->export($project, $this->options, $this->user, $this->archive, $this->export_dir);
         $xml_objet = simplexml_load_string($xml);
 
-        $this->assertEquals((string) $xml_objet['unix-name'], 'myproject');
-        $this->assertEquals((string) $xml_objet['full-name'], 'Project01');
-        $this->assertEquals((string) $xml_objet['description'], 'my short desc');
-        $this->assertEquals((string) $xml_objet['access'], 'public');
+        self::assertEquals('myproject', (string) $xml_objet['unix-name']);
+        self::assertEquals('Project01', (string) $xml_objet['full-name']);
+        self::assertEquals('my short desc', (string) $xml_objet['description']);
+        self::assertEquals('public', (string) $xml_objet['access']);
 
-        $this->assertNotNull($xml_objet->services);
-        $this->assertEquals((string) $xml_objet->services->service[0]['enabled'], '1');
-        $this->assertEquals((string) $xml_objet->services->service[0]['shortname'], 's01');
-        $this->assertEquals((string) $xml_objet->services->service[1]['enabled'], '0');
-        $this->assertEquals((string) $xml_objet->services->service[1]['shortname'], 's02');
+        self::assertNotNull($xml_objet->services);
+        self::assertEquals('1', (string) $xml_objet->services->service[0]['enabled']);
+        self::assertEquals('s01', (string) $xml_objet->services->service[0]['shortname']);
+        self::assertEquals('0', (string) $xml_objet->services->service[1]['enabled']);
+        self::assertEquals('s02', (string) $xml_objet->services->service[1]['shortname']);
     }
 
-    public function testItThrowExceptionIfProjectIsSuspended()
+    public function testItThrowExceptionIfProjectIsSuspended(): void
     {
-        $this->project->shouldReceive("isActive")->andReturn(false);
-        $this->expectException(ProjectIsInactiveException::class);
-        $this->xml_exporter->export($this->project, $this->options, $this->user, $this->archive, $this->export_dir);
+        $project = B\ProjectTestBuilder::aProject()->withStatusSuspended()->build();
+        self::expectException(ProjectIsInactiveException::class);
+        $this->xml_exporter->export($project, $this->options, $this->user, $this->archive, $this->export_dir);
     }
 }
