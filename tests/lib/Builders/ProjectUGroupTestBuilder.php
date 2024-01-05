@@ -115,6 +115,13 @@ final class ProjectUGroupTestBuilder
         return $this;
     }
 
+    public function withoutUsers()
+    {
+        $this->users = [];
+
+        return $this;
+    }
+
     public function withProject(\Project $project): self
     {
         $this->project = $project;

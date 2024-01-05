@@ -92,7 +92,10 @@ final class SvnAccessFileDefaultBlockGenerator implements SvnAccessFileDefaultBl
     {
         $ugroup_list = '';
         foreach ($default_block_plugin_override->getSVNUserGroups() as $svn_group) {
-            $ugroup_list .= sprintf("%s = %s\n", $svn_group->name, implode(', ', $this->getAllowedUserNamesFromSVNUserList($project, $svn_group->users)));
+            $members = $this->getAllowedUserNamesFromSVNUserList($project, $svn_group->users);
+            if (count($members) > 0) {
+                $ugroup_list .= sprintf("%s = %s\n", $svn_group->name, implode(', ', $members));
+            }
         }
 
         return <<<EOT

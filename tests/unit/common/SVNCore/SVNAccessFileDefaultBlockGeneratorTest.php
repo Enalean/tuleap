@@ -126,6 +126,16 @@ final class SVNAccessFileDefaultBlockGeneratorTest extends TestCase
                     Developers = csteven, disciplus_simplex
                     EOT,
             ],
+            'Empty user group should not be present' => [
+                'user_groups' => UGroupRetrieverStub::buildWithUserGroups(
+                    ProjectUGroupTestBuilder::buildProjectMembersWith($jmalko, $csteven, $disciplus),
+                    ProjectUGroupTestBuilder::aCustomUserGroup(230)->withName('Developers')->withoutUsers()->build()
+                ),
+                'plugin'  => $noop_plugin,
+                'expected' => <<<EOT
+                    members = jmalko, csteven, disciplus_simplex
+                    EOT,
+            ],
         ];
     }
 

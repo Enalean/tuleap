@@ -249,7 +249,7 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
      */
     public function getMembers()
     {
-        if (! $this->members) {
+        if ($this->members === null) {
             $this->members = $this->getStaticOrDynamicMembers($this->group_id);
         }
         return $this->members;
@@ -260,7 +260,7 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
      */
     public function getMembersIncludingSuspendedAndDeleted()
     {
-        if (! $this->members) {
+        if ($this->members === null) {
             $this->members = $this->getStaticOrDynamicMembersIncludingSuspendedAndDeleted($this->group_id);
         }
         return $this->members;
