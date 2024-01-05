@@ -34,29 +34,33 @@ class SmtpOptionsBuilder
      */
     public static function buildSmtpOptionFromForgeConfig(string $relay_host_config): SmtpOptions
     {
-        $url_parts = explode(self::PORT_SEPARATOR, $relay_host_config);
-        $options   = [
-            'host' => $url_parts[0],
-            'connection_config' => [],
-        ];
+        $smtp_options = new SmtpOptions();
+        $url_parts    = explode(self::PORT_SEPARATOR, $relay_host_config);
+        $smtp_options->setHost($url_parts[0]);
 
         if (isset($url_parts[1]) && strlen($url_parts[1]) > 0) {
-            $options['port'] = $url_parts[1];
+            $smtp_options->setPort((int) $url_parts[1]);
         }
+
+        $connection_config = [];
 
         $auth_username = (string) \ForgeConfig::get(MailTransportBuilder::RELAYHOST_SMTP_USERNAME);
         if ($auth_username !== '' && \ForgeConfig::exists(MailTransportBuilder::RELAYHOST_SMTP_PASSWORD)) {
-            $options['connection_class']  = \ForgeConfig::get(MailTransportBuilder::RELAYHOST_SMTP_AUTH_TYPE);
-            $options['connection_config'] = [
+            $smtp_options->setConnectionClass(\ForgeConfig::get(MailTransportBuilder::RELAYHOST_SMTP_AUTH_TYPE));
+            $connection_config = [
                 'username' => $auth_username,
                 'password' => \ForgeConfig::getSecretAsClearText(MailTransportBuilder::RELAYHOST_SMTP_PASSWORD)->getString(),
             ];
         }
 
         if (\ForgeConfig::getStringAsBool(MailTransportBuilder::RELAYHOST_SMTP_USE_TLS)) {
-            $options['connection_config']['ssl'] = 'tls';
+            $connection_config['ssl'] = 'tls';
         }
 
-        return new SmtpOptions($options);
+        if (count($connection_config) > 0) {
+            $smtp_options->setConnectionConfig($connection_config);
+        }
+
+        return $smtp_options;
     }
 }
