@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\PullRequest\Reference;
 
 use GitRepositoryFactory;
@@ -34,7 +36,7 @@ class ReferenceFactory
     ) {
     }
 
-    public function getReferenceByPullRequestId($keyword, $pull_request_id): ?\Reference
+    public function getReferenceByPullRequestId(string $keyword, int $pull_request_id): ?\Reference
     {
         return $this->pull_request_factory->getPullRequestById($pull_request_id)->match(
             function (PullRequest $pull_request) use ($keyword) {
