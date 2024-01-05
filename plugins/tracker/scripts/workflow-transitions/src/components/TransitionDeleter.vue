@@ -26,34 +26,21 @@
                 'tracker-workflow-transition-action-disabled': is_operation_running,
             }"
             v-on:click="deleteTransitionIfNothingElseIsRunning()"
-            data-test-action="delete-transition"
+            data-test="delete-transition-without-confirmation"
         >
             <i class="fas fa-level-up-alt"></i>
         </div>
-        <template v-else>
-            <div
-                class="tracker-workflow-transition-mark"
-                v-bind:class="{
-                    'tracker-workflow-transition-action-disabled': is_operation_running,
-                    'tracker-workflow-transition-action-updated': is_transition_updated,
-                }"
-                ref="transition_mark"
-                data-placement="top-start"
-                data-trigger="click"
-                data-test-action="confirm-delete-transition"
-            >
-                <i class="fas fa-level-up-alt"></i>
-            </div>
-            <transition-delete-popover
-                v-bind:delete-transition="deleteTransitionIfNothingElseIsRunning"
-                v-bind:is_workflow_advanced="is_workflow_advanced"
-            />
-        </template>
+        <transition-delete-popover
+            v-else
+            data-test="delete-transition"
+            v-on:deleteTransition="deleteTransitionIfNothingElseIsRunning"
+            v-bind:is_transition_updated="is_transition_updated"
+            v-bind:is_confirmation_needed="is_confirmation_needed"
+        />
     </div>
 </template>
 <script>
 import { mapState, mapGetters } from "vuex";
-import { createPopover } from "@tuleap/tlp-popovers";
 import TransitionDeletePopover from "./TransitionDeletePopover.vue";
 
 export default {
@@ -72,11 +59,6 @@ export default {
             type: Boolean,
             required: true,
         },
-    },
-    data() {
-        return {
-            popover: null,
-        };
     },
     computed: {
         ...mapState(["is_operation_running"]),
@@ -99,34 +81,7 @@ export default {
             );
         },
     },
-    watch: {
-        is_confirmation_needed(new_value) {
-            if (new_value === true) {
-                this.createPopoverIfNotExists();
-            }
-        },
-    },
-    mounted() {
-        if (this.is_confirmation_needed === true) {
-            this.createPopoverIfNotExists();
-        }
-    },
-    beforeDestroy() {
-        this.destroyPopoverIfExists();
-    },
     methods: {
-        async createPopoverIfNotExists() {
-            await this.$nextTick();
-            if (this.popover === null && this.$refs.transition_mark && this.$refs.popover) {
-                this.popover = createPopover(this.$refs.transition_mark, this.$refs.popover);
-            }
-        },
-        destroyPopoverIfExists() {
-            if (this.popover !== null) {
-                this.popover.destroy();
-                this.popover = null;
-            }
-        },
         deleteTransitionIfNothingElseIsRunning() {
             if (this.is_operation_running) {
                 return;

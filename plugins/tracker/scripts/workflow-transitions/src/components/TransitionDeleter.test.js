@@ -17,40 +17,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { mount } from "@vue/test-utils";
-import * as tlp_popovers from "@tuleap/tlp-popovers";
+import { shallowMount } from "@vue/test-utils";
 
 import TransitionDeleter from "./TransitionDeleter.vue";
-import TransitionDeletePopover from "./TransitionDeletePopover.vue";
 import { createLocalVueForTests } from "../support/local-vue.js";
-import store_options from "../store/index.js";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
-jest.useFakeTimers();
-
 describe("TransitionDeleter", () => {
-    let store, destroyPopover, transition, deleteTransition, is_transition_updated;
+    let store, transition, deleteTransition, is_transition_updated;
 
     beforeEach(() => {
-        destroyPopover = jest.fn();
-        jest.spyOn(tlp_popovers, "createPopover").mockImplementation(() => ({
-            destroy: destroyPopover,
-        }));
-
         transition = {
             from_id: 18,
             to_id: 83,
         };
         deleteTransition = jest.fn();
         is_transition_updated = false;
-        store = createStoreMock(store_options, { is_operation_running: false });
-        store.getters.current_workflow_transitions = [];
-        store.getters.is_workflow_advanced = true;
     });
 
-    const getWrapper = async () => {
-        //mount() is needed because we use a ref from a child functional component
-        return mount(TransitionDeleter, {
+    const getWrapper = async (
+        is_operation_running,
+        is_workflow_advanced,
+        current_workflow_transitions,
+    ) => {
+        const store_options = {
+            state: { is_operation_running },
+            getters: { current_workflow_transitions, is_workflow_advanced },
+        };
+
+        store = createStoreMock(store_options, {});
+
+        return shallowMount(TransitionDeleter, {
             mocks: {
                 $store: store,
             },
@@ -65,143 +62,39 @@ describe("TransitionDeleter", () => {
 
     afterEach(() => store.reset());
 
-    const confirm_delete_transition_selector = '[data-test-action="confirm-delete-transition"]';
-    const delete_transition_selector = '[data-test-action="delete-transition"]';
+    it("given workflow is advanced, then confirmation is always needed", async () => {
+        const wrapper = await getWrapper(false, true, []);
 
-    describe("when the workflow is in advanced mode", () => {
-        it("will ask for confirmation before deleting a transition", async () => {
-            const wrapper = await getWrapper();
-            expect(wrapper.find(confirm_delete_transition_selector).exists()).toBeTruthy();
-        });
-
-        it("will create a popover", async () => {
-            const createPopover = jest.spyOn(tlp_popovers, "createPopover");
-            const wrapper = await getWrapper();
-            expect(wrapper.findComponent(TransitionDeletePopover).exists()).toBeTruthy();
-            await jest.runOnlyPendingTimersAsync();
-            expect(createPopover).toHaveBeenCalled();
-        });
-
-        describe("on destroy", () => {
-            it("will destroy its popover", async () => {
-                const wrapper = await getWrapper();
-                await jest.runOnlyPendingTimersAsync();
-                wrapper.destroy();
-
-                expect(destroyPopover).toHaveBeenCalled();
-            });
-        });
-
-        describe("and another action is running", () => {
-            it("will disable deleting the transition", async () => {
-                store.state.is_operation_running = true;
-                const wrapper = await getWrapper();
-                await jest.runOnlyPendingTimersAsync();
-
-                const confirm_button = wrapper.get(confirm_delete_transition_selector);
-                expect(confirm_button.classes()).toContain(
-                    "tracker-workflow-transition-action-disabled",
-                );
-            });
-        });
-
-        describe("and the transition has just been updated", () => {
-            it("shows an animation", async () => {
-                const wrapper = await getWrapper();
-                wrapper.setProps({ is_transition_updated: true });
-                await jest.runOnlyPendingTimersAsync();
-
-                const confirm_button = wrapper.get(confirm_delete_transition_selector);
-                expect(confirm_button.classes()).toContain(
-                    "tracker-workflow-transition-action-updated",
-                );
-            });
-        });
+        expect(
+            wrapper.find("[data-test=delete-transition-without-confirmation]").exists(),
+        ).toBeFalsy();
     });
 
-    describe("when the workflow is in simple mode", () => {
-        beforeEach(() => {
-            store.getters.is_workflow_advanced = false;
-        });
+    it("given workflow is in simple mode and given there are many transition, then confirmation is NOT needed", async () => {
+        const transitions = [transition, { from_id: 35, to_id: 83 }];
+        const wrapper = await getWrapper(false, false, transitions);
+        expect(
+            wrapper.find("[data-test=delete-transition-without-confirmation]").exists(),
+        ).toBeTruthy();
+    });
 
-        describe("and the given transition is the last one of its column", () => {
-            beforeEach(() => {
-                store.getters.current_workflow_transitions = [
-                    transition,
-                    { from_id: 30, to_id: 19 },
-                ];
-            });
+    it("given workflow is in simple mode and given it's the last transition, then confirmation is needed", async () => {
+        const transitions = [transition];
+        const wrapper = await getWrapper(false, false, transitions);
+        expect(
+            wrapper.find("[data-test=delete-transition-without-confirmation]").exists(),
+        ).toBeFalsy();
+    });
 
-            it("will ask for confirmation before deleting a transition", async () => {
-                const wrapper = await getWrapper();
-                expect(wrapper.find(confirm_delete_transition_selector).exists()).toBeTruthy();
-            });
+    it("given there is no other operation running, then we can remove the transition", async () => {
+        const wrapper = await getWrapper(false, false, []);
+        wrapper.get("[data-test=delete-transition-without-confirmation]").trigger("click");
+        expect(deleteTransition).toHaveBeenCalled();
+    });
 
-            it("will create a popover", async () => {
-                const createPopover = jest.spyOn(tlp_popovers, "createPopover");
-                const wrapper = await getWrapper();
-                expect(wrapper.findComponent(TransitionDeletePopover).exists()).toBeTruthy();
-                await jest.runOnlyPendingTimersAsync();
-                expect(createPopover).toHaveBeenCalled();
-            });
-
-            describe("on destroy", () => {
-                it("will destroy its popover", async () => {
-                    const wrapper = await getWrapper();
-                    await jest.runOnlyPendingTimersAsync();
-                    wrapper.destroy();
-
-                    expect(destroyPopover).toHaveBeenCalled();
-                });
-            });
-        });
-
-        describe("and the given transition is NOT the last one of its column", () => {
-            beforeEach(() => {
-                store.getters.current_workflow_transitions = [
-                    transition,
-                    { from_id: 92, to_id: 83 },
-                ];
-            });
-
-            it("won't show a confirmation popover", async () => {
-                const wrapper = await getWrapper();
-                expect(wrapper.find(delete_transition_selector).exists()).toBeTruthy();
-            });
-
-            describe("and when user clicks the delete button", () => {
-                it("deletes the transition", async () => {
-                    const wrapper = await getWrapper();
-                    const delete_button = wrapper.get(delete_transition_selector);
-                    delete_button.trigger("click");
-
-                    expect(deleteTransition).toHaveBeenCalled();
-                });
-            });
-
-            describe("and another action is running", () => {
-                beforeEach(() => {
-                    store.state.is_operation_running = true;
-                });
-
-                it("will disable deleting the transition", async () => {
-                    const wrapper = await getWrapper();
-                    const delete_button = wrapper.get(delete_transition_selector);
-                    expect(delete_button.classes()).toContain(
-                        "tracker-workflow-transition-action-disabled",
-                    );
-                });
-
-                describe("and when user clicks the delete button", () => {
-                    it("does nothing", async () => {
-                        const wrapper = await getWrapper();
-                        const delete_button = wrapper.get(delete_transition_selector);
-                        delete_button.trigger("click");
-
-                        expect(deleteTransition).not.toHaveBeenCalled();
-                    });
-                });
-            });
-        });
+    it("given there is another operation running, then transition is not removed", async () => {
+        const wrapper = await getWrapper(true, false, []);
+        wrapper.get("[data-test=delete-transition-without-confirmation]").trigger("click");
+        expect(deleteTransition).not.toHaveBeenCalled();
     });
 });
