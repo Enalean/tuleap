@@ -21,18 +21,18 @@
     <tbody>
         <git-repository-table-simple-permissions
             v-if="!repository.has_fined_grained_permissions && !is_hidden"
-            v-bind:repository-permission="repository"
+            v-bind:repository_permission="repository"
         />
 
         <template v-if="repository.has_fined_grained_permissions && !is_hidden">
             <git-repository-table-fine-grained-permissions-repository
-                v-bind:repository-permission="repository"
+                v-bind:repository_permission="repository"
             />
 
             <git-repository-table-fine-grained-permission
                 v-for="fined_grained_permission in repository.fine_grained_permission"
                 v-bind:key="fined_grained_permission.id"
-                v-bind:fine-grained-permissions="fined_grained_permission"
+                v-bind:fine_grained_permissions="fined_grained_permission"
                 v-bind:data-test="`git-repository-fine-grained-permission-${fined_grained_permission.id}`"
             />
         </template>

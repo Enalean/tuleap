@@ -38,6 +38,8 @@
 import { computed } from "vue";
 import { useGettext } from "vue3-gettext";
 
+// modelValue in camel case is needed for v-model until vue 3.4 (replaced by defineModel)
+// eslint-disable-next-line vue/prop-name-casing
 defineProps<{ modelValue?: string }>();
 
 const { $gettext } = useGettext();

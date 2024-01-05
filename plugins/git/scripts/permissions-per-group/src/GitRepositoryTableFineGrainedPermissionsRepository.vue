@@ -20,14 +20,14 @@
 <template>
     <tr>
         <td>
-            <a data-test="git-permissions-repository-link" v-bind:href="repositoryPermission.url">
-                {{ repositoryPermission.name }}
+            <a data-test="git-permissions-repository-link" v-bind:href="repository_permission.url">
+                {{ repository_permission.name }}
             </a>
         </td>
         <td colspan="2"></td>
         <td>
             <git-permissions-badge
-                v-for="group in repositoryPermission.readers"
+                v-for="group in repository_permission.readers"
                 v-bind:key="group.ugroup_name"
                 v-bind:is_project_admin="group.is_project_admin"
                 v-bind:is_static="group.is_static"
@@ -44,5 +44,5 @@
 import GitPermissionsBadge from "@tuleap/vue3-permissions-per-group-badge";
 import type { RepositoryFineGrainedPermissions } from "./type";
 
-defineProps<{ repositoryPermission: RepositoryFineGrainedPermissions }>();
+defineProps<{ repository_permission: RepositoryFineGrainedPermissions }>();
 </script>

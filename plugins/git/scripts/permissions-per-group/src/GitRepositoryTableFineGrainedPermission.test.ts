@@ -28,7 +28,7 @@ describe("GitRepositoryTableFineGrainedPermission", () => {
                 plugins: [createGettext({ silent: true })],
             },
             props: {
-                fineGrainedPermissions: {
+                fine_grained_permissions: {
                     id: 100,
                     branch: "master",
                     tag: "",

@@ -29,7 +29,7 @@ describe("GitRepositoryTableFineGrainedPermissionsRepository", () => {
                 plugins: [createGettext({ silent: true })],
             },
             props: {
-                repositoryPermission: {
+                repository_permission: {
                     fine_grained_permission: [],
                     has_fined_grained_permissions: true,
                     name: "repo",
