@@ -65,5 +65,6 @@ $application->add(new \TuleapCfg\Command\SiteDeploy\Apache\SiteDeployApacheComma
 $application->add(new \TuleapCfg\Command\SiteDeploy\ForgeUpgrade\SiteDeployForgeUpgradeCommand());
 $application->add(new TuleapCfg\Command\SiteDeploy\Mercure\SiteDeployMercureCommand());
 $application->add(new TuleapCfg\Command\SiteDeploy\Realtime\SiteDeployRealtimeCommand());
+$application->add(new \TuleapCfg\Command\SiteDeploy\Locale\SiteDeployLocaleGenerationCommand());
 $application->add(new \TuleapCfg\Command\SiteDeploy\Plugins\SiteDeployPluginsCommand(new ProcessFactory()));
 $application->run();

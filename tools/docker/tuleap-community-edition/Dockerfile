@@ -20,7 +20,6 @@ RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     dnf install -y --setopt=skip_missing_names_on_install=False --setopt install_weak_deps=false --nodocs \
         --exclude='tuleap-plugin-tracker-encryption' \
     cronie \
-    glibc-locale-source \
     postfix \
     openssh-server \
     rsyslog \
@@ -28,8 +27,6 @@ RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     tuleap-plugin-* \
     tuleap-theme-* && \
     dnf clean all && \
-    localedef -i fr_FR -c -f UTF-8 fr_FR.UTF-8 && \
-    localedef -i pt_BR -c -f UTF-8 pt_BR.UTF-8 && \
     awk '$5 >= 3071' /etc/ssh/moduli > /etc/ssh/moduli.tmp && mv /etc/ssh/moduli.tmp /etc/ssh/moduli
 
 COPY docker/tuleap-community-edition/sshd_config /etc/ssh/sshd_config

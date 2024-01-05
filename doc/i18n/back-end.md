@@ -91,10 +91,6 @@ plugin. For example, for `tracker` plugin, in `trackerPlugin.class.php`:
 bindtextdomain('tuleap-tracker', __DIR__.'/../site-content');
 ```
 
-On our dev setup (tuleap-aio-dev) you must ensure that \"fr_FR\" locale
-is installed (`locale -a`). If it is not the case, run
-`localedef -i fr_FR -f UTF-8 fr_FR.UTF-8`.
-
 ## tab files
 
 This system is based on a key/value pair. PHP code references a key
