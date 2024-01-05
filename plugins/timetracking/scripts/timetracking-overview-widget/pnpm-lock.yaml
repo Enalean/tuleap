@@ -11,12 +11,12 @@ dependencies:
   '@tuleap/tlp-fetch':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-fetch
+  '@tuleap/vue2-gettext-init':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/vue2-gettext-init
   vue:
     specifier: ^2.7.4
     version: 2.7.4
-  vue-gettext:
-    specifier: ^2.1.12
-    version: 2.1.12
   vuex:
     specifier: ^3.6.2
     version: 3.6.2(vue@2.7.4)
@@ -31,6 +31,9 @@ devDependencies:
   '@tuleap/plugin-timetracking-time-formatters':
     specifier: workspace:*
     version: link:../lib/time-formatters
+  '@tuleap/po-gettext-plugin':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/po-gettext-plugin
   '@tuleap/vuex-store-wrapper-jest':
     specifier: workspace:*
     version: link:../../../../lib/frontend/vuex-store-wrapper-jest
@@ -287,11 +290,6 @@ packages:
   /to-fast-properties@2.0.0:
     resolution: {integrity: sha512-/OaKK0xYrs3DmxRYqL/yDc+FxFUVYhDlXMhRmv3z915w2HF1tnN1omB354j8VUGO/hbRzyD6Y3sA7v7GS/ceog==}
     engines: {node: '>=4'}
-
-  /vue-gettext@2.1.12:
-    resolution: {integrity: sha512-7Kw36xtKvARp8ZafQGPK9WR6EM+dhFUikR5f0+etSkiHuvUM3yf1HsRDLYoLLdJ0AMaXxKwgekumzvCk6KX8rA==}
-    engines: {npm: '>= 3.0.0'}
-    dev: false
 
   /vue@2.7.4:
     resolution: {integrity: sha512-8KGyyzFSj/FrKj1y7jyEpv8J4osgZx6Lk1lVzh1aP4BqsXZhATH1r0gdJNz00MMyBhK0/m2cNoPuOZ1NzeiUEw==}

@@ -20,26 +20,21 @@
 import Vue from "vue";
 import { createStore } from "./store/index.js";
 import TimeTrackingOverview from "./components/TimeTrackingOverview.vue";
-import GetTextPlugin from "vue-gettext";
-import french_translations from "../po/fr_FR.po";
+import { getPOFileFromLocale, initVueGettextFromPoGettextPlugin } from "@tuleap/vue2-gettext-init";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const widgets = document.querySelectorAll(".timetracking-overview-widget");
 
     if (widgets.length === 0) {
         return;
     }
-    Vue.use(GetTextPlugin, {
-        translations: {
-            fr: french_translations.messages,
-        },
-        silent: true,
-    });
+    await initVueGettextFromPoGettextPlugin(
+        Vue,
+        (locale) => import(`../po/${getPOFileFromLocale(locale)}`),
+    );
     const Widget = Vue.extend(TimeTrackingOverview);
 
-    const locale = document.body.dataset.userLocale;
     const user_id = parseInt(document.body.dataset.userId, 10);
-    Vue.config.language = locale;
 
     for (const widget_element of widgets) {
         const report_id = widget_element.dataset.reportId;
