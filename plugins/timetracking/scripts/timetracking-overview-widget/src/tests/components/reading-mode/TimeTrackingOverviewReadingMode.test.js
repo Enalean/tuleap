@@ -18,13 +18,13 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../helpers/local-vue.js";
+import { createLocalVueForTests } from "../../helpers/local-vue.js";
 import TimeTrackingOverviewReadingMode from "../../../components/reading-mode/TimeTrackingOverviewReadingMode.vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("Given a timetracking overview widget on reading mode", () => {
     let component_options, store_options, store;
-    beforeEach(() => {
+    beforeEach(async () => {
         store_options = {
             state: {
                 is_loading: false,
@@ -37,7 +37,7 @@ describe("Given a timetracking overview widget on reading mode", () => {
         store = createStoreMock(store_options);
 
         component_options = {
-            localVue,
+            localVue: await createLocalVueForTests(),
             mocks: { $store: store },
         };
     });

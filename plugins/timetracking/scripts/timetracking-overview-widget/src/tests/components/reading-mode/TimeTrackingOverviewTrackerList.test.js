@@ -20,12 +20,12 @@
 import { shallowMount } from "@vue/test-utils";
 import TimeTrackingOverviewTrackerList from "../../../components/reading-mode/TimeTrackingOverviewTrackerList.vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import localVue from "../../helpers/local-vue.js";
+import { createLocalVueForTests } from "../../helpers/local-vue.js";
 
 describe("TimeTrackingOverviewTrackerList tests", () => {
     describe("Given a timetracking overview widget on reading mode", () => {
         let component_options, store_options, store;
-        beforeEach(() => {
+        beforeEach(async () => {
             store_options = {
                 state: {
                     selected_trackers: [],
@@ -34,7 +34,7 @@ describe("TimeTrackingOverviewTrackerList tests", () => {
             store = createStoreMock(store_options);
 
             component_options = {
-                localVue,
+                localVue: await createLocalVueForTests(),
                 mocks: { $store: store },
             };
         });

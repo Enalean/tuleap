@@ -21,11 +21,11 @@ import { shallowMount } from "@vue/test-utils";
 import TimeTrackingOverviewWritingTrackers from "../../../components/writing-mode/TimeTrackingOverviewWritingTrackers.vue";
 import TimeTrackingOverviewTrackersOptions from "../../../components/writing-mode/TimeTrackingOverviewTrackersOptions.vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import localVue from "../../helpers/local-vue.js";
+import { createLocalVueForTests } from "../../helpers/local-vue.js";
 
 describe("Given a timetracking overview widget on writing mode", () => {
     let component_options, store_options, store;
-    beforeEach(() => {
+    beforeEach(async () => {
         store_options = {
             state: {
                 projects: ["leprojet"],
@@ -39,7 +39,7 @@ describe("Given a timetracking overview widget on writing mode", () => {
         store = createStoreMock(store_options);
 
         component_options = {
-            localVue,
+            localVue: await createLocalVueForTests(),
             mocks: { $store: store },
         };
     });

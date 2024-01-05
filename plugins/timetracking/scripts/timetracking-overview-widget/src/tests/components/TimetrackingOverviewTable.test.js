@@ -20,12 +20,12 @@
 import { shallowMount } from "@vue/test-utils";
 import TimeTrackingOverviewTable from "../../components/TimeTrackingOverviewTable.vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import localVue from "../helpers/local-vue.js";
+import { createLocalVueForTests } from "../helpers/local-vue.js";
 
-function getTimeTrackingOverviewTableInstance(store_options) {
+async function getTimeTrackingOverviewTableInstance(store_options) {
     const store = createStoreMock(store_options);
     const component_options = {
-        localVue,
+        localVue: await createLocalVueForTests(),
         mocks: { $store: store },
     };
     return shallowMount(TimeTrackingOverviewTable, component_options);
@@ -51,8 +51,8 @@ describe("Given a timetracking overview widget", () => {
         };
     });
 
-    it("When trackers times are available, then table is displayed", () => {
-        const wrapper = getTimeTrackingOverviewTableInstance(store_options);
+    it("When trackers times are available, then table is displayed", async () => {
+        const wrapper = await getTimeTrackingOverviewTableInstance(store_options);
         expect(wrapper.find("[data-test=alert-danger]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=timetracking-loader]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=overview-table]").exists()).toBeTruthy();
@@ -63,9 +63,9 @@ describe("Given a timetracking overview widget", () => {
         expect(wrapper.find("[data-test=tfoot]").exists()).toBeTruthy();
     });
 
-    it("When trackers times sum not equal zero, then table with rows is displayed and an error feedback is not displayed", () => {
+    it("When trackers times sum not equal zero, then table with rows is displayed and an error feedback is not displayed", async () => {
         store_options.getters.is_sum_of_times_equals_zero = false;
-        const wrapper = getTimeTrackingOverviewTableInstance(store_options);
+        const wrapper = await getTimeTrackingOverviewTableInstance(store_options);
 
         expect(wrapper.find("[data-test=alert-danger]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=timetracking-loader]").exists()).toBeFalsy();
@@ -76,10 +76,10 @@ describe("Given a timetracking overview widget", () => {
         expect(wrapper.find("[data-test=tfoot]").exists()).toBeTruthy();
     });
 
-    it("When trackers times sum equal zero and void trackers are hidden, then table with empty cell is displayed and an error feedback is not displayed", () => {
+    it("When trackers times sum equal zero and void trackers are hidden, then table with empty cell is displayed and an error feedback is not displayed", async () => {
         store_options.getters.is_sum_of_times_equals_zero = true;
         store_options.state.are_void_trackers_hidden = true;
-        const wrapper = getTimeTrackingOverviewTableInstance(store_options);
+        const wrapper = await getTimeTrackingOverviewTableInstance(store_options);
 
         expect(wrapper.find("[data-test=alert-danger]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=timetracking-loader]").exists()).toBeFalsy();
@@ -90,9 +90,9 @@ describe("Given a timetracking overview widget", () => {
         expect(wrapper.find("[data-test=tfoot]").exists()).toBeFalsy();
     });
 
-    it("When trackers times are not available, then table is displayed and an error feedback is not displayed", () => {
+    it("When trackers times are not available, then table is displayed and an error feedback is not displayed", async () => {
         store_options.state.trackers_times = [];
-        const wrapper = getTimeTrackingOverviewTableInstance(store_options);
+        const wrapper = await getTimeTrackingOverviewTableInstance(store_options);
 
         expect(wrapper.find("[data-test=alert-danger]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=timetracking-loader]").exists()).toBeFalsy();
@@ -103,35 +103,35 @@ describe("Given a timetracking overview widget", () => {
         expect(wrapper.find("[data-test=tfoot]").exists()).toBeFalsy();
     });
 
-    it("When widget is loading, then a spinner is displayed", () => {
+    it("When widget is loading, then a spinner is displayed", async () => {
         store_options.state.is_loading = true;
-        const wrapper = getTimeTrackingOverviewTableInstance(store_options);
+        const wrapper = await getTimeTrackingOverviewTableInstance(store_options);
 
         expect(wrapper.find("[data-test=alert-danger]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=timetracking-loader]").exists()).toBeTruthy();
     });
 
-    it("When results can't be displayed, then table is not displayed", () => {
+    it("When results can't be displayed, then table is not displayed", async () => {
         store_options.getters.can_results_be_displayed = false;
-        const wrapper = getTimeTrackingOverviewTableInstance(store_options);
+        const wrapper = await getTimeTrackingOverviewTableInstance(store_options);
 
         expect(wrapper.find("[data-test=alert-danger]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=overview-table]").exists()).toBeFalsy();
     });
 
-    it("When results can't be displayed, then danger's div is displayed and table is not displayed", () => {
+    it("When results can't be displayed, then danger's div is displayed and table is not displayed", async () => {
         store_options.state.error_message = "error";
         store_options.getters.can_results_be_displayed = false;
         store_options.getters.has_error = true;
-        const wrapper = getTimeTrackingOverviewTableInstance(store_options);
+        const wrapper = await getTimeTrackingOverviewTableInstance(store_options);
 
         expect(wrapper.find("[data-test=alert-danger]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=overview-table]").exists()).toBeFalsy();
     });
 
-    it("When no users, then user list is not displayed", () => {
+    it("When no users, then user list is not displayed", async () => {
         store_options.state.users = [];
-        const wrapper = getTimeTrackingOverviewTableInstance(store_options);
+        const wrapper = await getTimeTrackingOverviewTableInstance(store_options);
 
         expect(wrapper.find("[data-test=user-list-component]").exists()).toBeFalsy();
     });
