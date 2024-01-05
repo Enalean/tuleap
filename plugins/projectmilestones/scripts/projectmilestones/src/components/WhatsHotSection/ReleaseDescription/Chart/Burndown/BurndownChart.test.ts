@@ -18,33 +18,24 @@
  */
 
 import type { MilestoneData } from "../../../../../type";
-import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createReleaseWidgetLocalVue } from "../../../../../helpers/local-vue-for-test";
-import Burndown from "./Burndown.vue";
+import BurndownChart from "./BurndownChart.vue";
 
-const component_options: ShallowMountOptions<Burndown> = {};
-let release_data: MilestoneData;
-
-describe("Burndown", () => {
-    async function getPersonalWidgetInstance(): Promise<Wrapper<Burndown>> {
-        component_options.localVue = await createReleaseWidgetLocalVue();
-
-        return shallowMount(Burndown, component_options);
+describe("BurndownChart", () => {
+    async function getPersonalWidgetInstance(): Promise<Wrapper<Vue, Element>> {
+        return shallowMount(BurndownChart, {
+            propsData: {
+                release_data: {
+                    id: 2,
+                    burndown_data: null,
+                } as MilestoneData,
+                burndown_data: null,
+            },
+            localVue: await createReleaseWidgetLocalVue(),
+        });
     }
-
-    beforeEach(() => {
-        release_data = {
-            id: 2,
-        } as MilestoneData;
-
-        component_options.propsData = {
-            release_data,
-            burnup_data: null,
-        };
-
-        getPersonalWidgetInstance();
-    });
 
     it("When component is renderer, Then there is a svg element with id of release", async () => {
         const wrapper = await getPersonalWidgetInstance();

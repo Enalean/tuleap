@@ -26,67 +26,62 @@
             v-bind:has_error_start_date="has_error_start_date"
             v-bind:message_error_start_date="message_error_start_date"
             v-bind:is_under_calculation="is_under_calculation"
-            v-bind:message_error_under_calculation="
-                $gettext('Burndown is under calculation. It will be available in a few minutes.')
-            "
+            v-bind:message_error_under_calculation="burndown_under_calculation_label"
         />
-        <burndown v-else v-bind:release_data="release_data" v-bind:burndown_data="burndown_data" />
+        <burndown-chart
+            v-else
+            v-bind:release_data="release_data"
+            v-bind:burndown_data="burndown_data"
+        />
     </div>
 </template>
 
-<script lang="ts">
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
 import type { BurndownData, MilestoneData } from "../../../../../type";
-import Vue from "vue";
+import { computed } from "vue";
 import ChartError from "../ChartError.vue";
-import Burndown from "./Burndown.vue";
 import { useStore } from "../../../../../stores/root";
-@Component({
-    components: { ChartError, Burndown },
-})
-export default class BurndownDisplayer extends Vue {
-    @Prop()
-    readonly release_data!: MilestoneData;
-    @Prop()
-    readonly burndown_data!: BurndownData | null;
-    public root_store = useStore();
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import BurndownChart from "./BurndownChart.vue";
 
-    get message_error_duration(): string {
-        return this.$gettextInterpolate(
-            this.$gettext("'%{field_name}' field is empty or invalid."),
-            { field_name: this.root_store.label_timeframe },
-        );
+const props = defineProps<{ release_data: MilestoneData; burndown_data: BurndownData | null }>();
+
+const root_store = useStore();
+const { $gettext, interpolate } = useGettext();
+
+const burndown_under_calculation_label = $gettext(
+    "Burndown is under calculation. It will be available in a few minutes.",
+);
+
+const message_error_duration = computed((): string => {
+    return interpolate($gettext("'%{field_name}' field is empty or invalid."), {
+        field_name: root_store.label_timeframe,
+    });
+});
+const message_error_start_date = computed((): string => {
+    return interpolate($gettext("'%{field_name}' field is empty or invalid."), {
+        field_name: root_store.label_start_date,
+    });
+});
+const has_error_duration = computed((): boolean => {
+    if (!root_store.is_timeframe_duration) {
+        return !props.release_data.end_date;
     }
 
-    get message_error_start_date(): string {
-        return this.$gettextInterpolate(
-            this.$gettext("'%{field_name}' field is empty or invalid."),
-            { field_name: this.root_store.label_start_date },
-        );
+    if (!props.burndown_data) {
+        return true;
     }
 
-    get has_error_duration(): boolean {
-        if (!this.root_store.is_timeframe_duration) {
-            return !this.release_data.end_date;
-        }
-
-        if (!this.burndown_data) {
-            return true;
-        }
-
-        return this.burndown_data.duration === null || this.burndown_data.duration === 0;
+    return props.burndown_data.duration === null || props.burndown_data.duration === 0;
+});
+const has_error_start_date = computed((): boolean => {
+    return !props.release_data.start_date;
+});
+const is_under_calculation = computed((): boolean => {
+    if (!props.burndown_data) {
+        return false;
     }
 
-    get has_error_start_date(): boolean {
-        return !this.release_data.start_date;
-    }
-
-    get is_under_calculation(): boolean {
-        if (!this.burndown_data) {
-            return false;
-        }
-
-        return this.burndown_data.is_under_calculation;
-    }
-}
+    return props.burndown_data.is_under_calculation;
+});
 </script>

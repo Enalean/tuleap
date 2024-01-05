@@ -16,55 +16,47 @@
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
-
 <template>
     <div class="release-chart-container">
         <svg class="release-chart" v-bind:id="`chart-burndown-${release_data.id}`"></svg>
     </div>
 </template>
-
-<script lang="ts">
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
 import type { BurndownData, MilestoneData } from "../../../../../type";
-import Vue from "vue";
+import { onMounted } from "vue";
 import { createBurndownChart } from "../../../../../chart_builder/burndown_chart_builder/burndown-chart-drawer";
 import type { ChartPropsWithoutTooltip } from "@tuleap/chart-builder";
 
-@Component
-export default class Burndown extends Vue {
-    @Prop()
-    readonly release_data!: MilestoneData;
-    @Prop()
-    readonly burndown_data!: BurndownData | null;
+const props = defineProps<{ release_data: MilestoneData; burndown_data: BurndownData | null }>();
 
-    getChartProps(container_width: number, container_height: number): ChartPropsWithoutTooltip {
-        return {
-            graph_width: container_width,
-            graph_height: container_height,
-            margins: {
-                top: 10,
-                right: 30,
-                bottom: 20,
-                left: 25,
-            },
-        };
-    }
-
-    mounted(): void {
-        if (!this.burndown_data) {
-            return;
-        }
-
-        const chart_container = document.getElementById("chart-burndown-" + this.release_data.id);
-
-        if (chart_container) {
-            createBurndownChart(
-                chart_container,
-                this.getChartProps(chart_container.clientWidth, chart_container.clientHeight),
-                this.burndown_data,
-                this.release_data.id,
-            );
-        }
-    }
+function getChartProps(
+    container_width: number,
+    container_height: number,
+): ChartPropsWithoutTooltip {
+    return {
+        graph_width: container_width,
+        graph_height: container_height,
+        margins: {
+            top: 10,
+            right: 30,
+            bottom: 20,
+            left: 25,
+        },
+    };
 }
+
+onMounted((): void => {
+    if (!props.burndown_data) {
+        return;
+    }
+    const chart_container = document.getElementById("chart-burndown-" + props.release_data.id);
+    if (chart_container) {
+        createBurndownChart(
+            chart_container,
+            getChartProps(chart_container.clientWidth, chart_container.clientHeight),
+            props.burndown_data,
+            props.release_data.id,
+        );
+    }
+});
 </script>
