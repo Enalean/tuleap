@@ -22,8 +22,7 @@ namespace Tuleap\Project\XML\Import;
 
 class ImportConfig
 {
-    private $force  = [];
-    private $update = false;
+    private $force = [];
 
     /**
      * @var ImportExtraConfiguration[]
@@ -38,16 +37,6 @@ class ImportConfig
     public function isForce($value)
     {
         return isset($this->force[$value]);
-    }
-
-    public function isUpdate()
-    {
-        return $this->update;
-    }
-
-    public function setUpdate($update)
-    {
-        $this->update = $update;
     }
 
     public function addExtraConfiguration(ImportExtraConfiguration $extra_configuration)

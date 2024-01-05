@@ -22,7 +22,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\MoveImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
@@ -192,7 +191,6 @@ class Tracker_Migration_MigrationManager // phpcs:ignore PSR1.Classes.ClassDecla
             $xml                = \simplexml_load_string(\file_get_contents($xml_file_path));
             $xml_file_path      = "";
             $xml_field_mapping  = new TrackerXmlFieldsMapping_InSamePlatform();
-            $config             = new ImportConfig();
             $url_mapping        = new CreatedFileURLMapping();
             $date               = new DateTimeImmutable();
             $tracker_xml_config = new TrackerXmlImportConfig(
@@ -208,7 +206,6 @@ class Tracker_Migration_MigrationManager // phpcs:ignore PSR1.Classes.ClassDecla
                 $xml_file_path,
                 $xml_field_mapping,
                 $url_mapping,
-                $config,
                 $tracker_xml_config
             );
         }

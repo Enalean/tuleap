@@ -19,18 +19,14 @@
  */
 
 use Psr\Log\LoggerInterface;
-use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
-use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\XMLImport\TrackerPrivateCommentUGroupExtractor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
-use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
 use Tuleap\Tracker\Artifact\XMLImport\MoveImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
-use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
@@ -82,7 +78,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected $extraction_path;
     protected $john_doe;
-    protected $config;
     /**
      * @var \Mockery\MockInterface|CreatedFileURLMapping
      */
@@ -135,8 +130,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->xml_import_helper = new XMLImportHelper($this->user_manager);
 
-        $this->config = new \Tuleap\Project\XML\Import\ImportConfig();
-
         $this->artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $this->extraction_path = $this->getTmpDir();
@@ -170,11 +163,7 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->static_value_dao,
             $this->logger,
             false,
-            \Mockery::spy(\Tracker_ArtifactFactory::class),
             \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao::class),
-            Mockery::spy(XMLArtifactSourcePlatformExtractor::class),
-            Mockery::spy(\Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor::class),
-            Mockery::spy(\Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao::class),
             $this->external_field_extractor,
             $this->private_comment_extractor,
             $this->db_connection,
@@ -200,11 +189,7 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->static_value_dao,
                 $this->logger,
                 false,
-                \Mockery::spy(\Tracker_ArtifactFactory::class),
                 \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao::class),
-                Mockery::spy(XMLArtifactSourcePlatformExtractor::class),
-                Mockery::spy(\Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor::class),
-                Mockery::spy(\Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao::class),
                 $this->external_field_extractor,
                 $this->private_comment_extractor,
                 $this->db_connection,
@@ -214,9 +199,7 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             return is_a($element, SimpleXMLElement::class);
         }), $this->extraction_path, Mockery::on(function ($element) {
             return is_a($element, TrackerXmlFieldsMapping_InSamePlatform::class);
-        }), Mockery::type(CreatedFileURLMapping::class), Mockery::on(function ($element) {
-            return is_a($element, \Tuleap\Project\XML\Import\ImportConfig::class);
-        }), Mockery::type(TrackerXmlImportConfig::class))->once();
+        }), Mockery::type(CreatedFileURLMapping::class), Mockery::type(TrackerXmlImportConfig::class))->once();
 
         $user = Mockery::mock(PFUser::class);
         $user->shouldReceive('getId')->andReturn(1)->once();
@@ -239,7 +222,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -276,7 +258,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -297,7 +278,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -319,7 +299,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -414,7 +393,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -485,7 +463,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -619,7 +596,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -653,7 +629,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -694,7 +669,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -739,7 +713,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -784,7 +757,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -829,7 +801,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -878,7 +849,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -917,7 +887,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -952,7 +921,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -981,7 +949,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -1019,7 +986,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -1077,7 +1043,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -1198,7 +1163,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -1247,7 +1211,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -1292,7 +1255,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -1353,7 +1315,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -1400,7 +1361,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -1455,7 +1415,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -1534,7 +1493,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -1635,7 +1593,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -1681,7 +1638,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -1722,7 +1678,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -1776,7 +1731,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -1829,7 +1783,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -1911,7 +1864,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -1965,7 +1917,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -2027,7 +1978,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -2092,7 +2042,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -2153,7 +2102,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -2221,7 +2169,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -2273,7 +2220,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -2295,7 +2241,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -2346,7 +2291,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -2402,7 +2346,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -2435,7 +2378,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $this->tracker_xml_config
         );
     }
@@ -2456,11 +2398,7 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             Mockery::mock(BindStaticValueDao::class),
             Mockery::spy(LoggerInterface::class),
             false,
-            Mockery::mock(Tracker_ArtifactFactory::class),
             Mockery::mock(TypeDao::class),
-            Mockery::mock(XMLArtifactSourcePlatformExtractor::class),
-            Mockery::mock(ExistingArtifactSourceIdFromTrackerExtractor::class),
-            Mockery::mock(TrackerArtifactSourceIdDao::class),
             Mockery::mock(ExternalFieldsExtractor::class),
             $private_comment_extractor,
             $this->db_connection,
@@ -2512,7 +2450,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             new Tracker_XML_Importer_ArtifactImportedMapping(),
             new CreatedFileURLMapping(),
             [$artifact],
-            new ImportConfig(),
             $changeset_id_mapping,
             $this->tracker_xml_config
         );
@@ -2546,7 +2483,6 @@ final class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->extraction_path,
             new TrackerXmlFieldsMapping_InSamePlatform(),
             $this->url_mapping,
-            $this->config,
             $tracker_xml_config
         );
     }

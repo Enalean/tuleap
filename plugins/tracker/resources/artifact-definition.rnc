@@ -1,5 +1,5 @@
 artifacts =
-    attribute source_platform { xsd:string }?,
+    attribute source_platform { xsd:string }?, # Not used, Keeping it for backward compatibility
     element artifact {
         artifact
     }*

@@ -39,7 +39,6 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\TrackerColor;
-use Tuleap\Tracker\TrackerFromXmlImportCannotBeUpdatedException;
 use Tuleap\Tracker\TrackerIsInvalidException;
 use Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker;
 use Tuleap\Tracker\Webhook\WebhookDao;
@@ -312,10 +311,7 @@ class TrackerXmlImport
         $created_artifacts = $this->importBareArtifacts(
             $ordered_xml_trackers,
             $created_trackers_objects,
-            $extraction_path,
-            $xml_field_values_mapping,
             $artifacts_id_mapping,
-            $configuration,
             $tracker_import_config
         );
 
@@ -327,7 +323,6 @@ class TrackerXmlImport
             $artifacts_id_mapping,
             $url_mapping,
             $created_artifacts,
-            $configuration,
             $changeset_id_mapping,
             $tracker_import_config
         );
@@ -489,17 +484,13 @@ class TrackerXmlImport
     /**
      * @param array $xml_trackers
      * @param array $created_trackers_objects
-     * @param $extraction_path
      * @return array of created artifacts
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
     private function importBareArtifacts(
         array $xml_trackers,
         array $created_trackers_objects,
-        $extraction_path,
-        TrackerXmlFieldsMapping_FromAnotherPlatform $xml_mapping,
         Tracker_XML_Importer_ArtifactImportedMapping $artifacts_id_mapping,
-        ImportConfig $configuration,
         TrackerXmlImportConfig $tracker_import_config,
     ) {
         $created_artifacts = [];
@@ -508,10 +499,7 @@ class TrackerXmlImport
                 $created_artifacts[$xml_tracker_id] = $this->xml_import->importBareArtifactsFromXML(
                     $created_trackers_objects[$xml_tracker_id],
                     $xml_tracker->artifacts,
-                    $extraction_path,
-                    $xml_mapping,
                     $artifacts_id_mapping,
-                    $configuration,
                     $tracker_import_config
                 );
             }
@@ -530,7 +518,6 @@ class TrackerXmlImport
         Tracker_XML_Importer_ArtifactImportedMapping $artifacts_id_mapping,
         CreatedFileURLMapping $url_mapping,
         array $created_artifacts,
-        ImportConfig $configuration,
         ImportedChangesetMapping $changeset_id_mapping,
         TrackerXmlImportConfig $tracker_import_config,
     ): void {
@@ -544,7 +531,6 @@ class TrackerXmlImport
                     $artifacts_id_mapping,
                     $url_mapping,
                     $created_artifacts[$xml_tracker_id],
-                    $configuration,
                     $changeset_id_mapping,
                     $tracker_import_config
                 );
@@ -567,7 +553,6 @@ class TrackerXmlImport
      *
      * @throws TrackerFromXmlException
      * @throws TrackerFromXmlImportCannotBeCreatedException
-     * @throws TrackerFromXmlImportCannotBeUpdatedException
      * @throws Tracker_Exception
      * @throws XML_ParseException
      */
@@ -580,10 +565,6 @@ class TrackerXmlImport
         $tracker_existing = $this->getTrackerToReUse($project, $xml_tracker, $configuration);
         if ($tracker_existing !== null) {
             return $tracker_existing;
-        }
-
-        if ($configuration->isUpdate()) {
-            return $this->updateFromXML($project, $xml_tracker);
         }
 
         try {
@@ -635,24 +616,7 @@ class TrackerXmlImport
         return null;
     }
 
-    /**
-     * @return Tracker
-     * @throws TrackerFromXmlImportCannotBeUpdatedException
-     */
-    public function updateFromXML(Project $project, SimpleXMLElement $xml_tracker)
-    {
-        $tracker_existing = $this->tracker_factory->getTrackerByShortnameAndProjectId((string) $xml_tracker->item_name, (int) $project->getID());
-
-        if (! $tracker_existing) {
-            throw new TrackerFromXmlImportCannotBeUpdatedException((string) $xml_tracker->name);
-        }
-
-        $this->fillFieldMappingFromExistingTracker($tracker_existing, $xml_tracker);
-
-        return $tracker_existing;
-    }
-
-    private function fillFieldMappingFromExistingTracker(Tracker $tracker, SimpleXMLElement $xml_tracker)
+    public function fillFieldMappingFromExistingTracker(Tracker $tracker, SimpleXMLElement $xml_tracker)
     {
         $form_elements_existing   = $this->formelement_factory->getFields($tracker);
         $this->xml_fields_mapping = $this->existing_tracker_field_mapping->getXmlFieldsMapping(
@@ -684,14 +648,6 @@ class TrackerXmlImport
             $this->feedback_collector->addErrors($exception->getTranslatedMessage());
             $this->feedback_collector->displayErrors($this->logger);
             return null;
-        }
-    }
-
-    public function getTrackerItemNameFromXMLFile($filepath)
-    {
-        $tracker_xml = $this->loadXmlFile($filepath);
-        if ($tracker_xml !== false) {
-            return (string) $tracker_xml->item_name;
         }
     }
 

@@ -3666,14 +3666,6 @@ msgstr ""
 msgid "The tracker '%1$s' has been properly restored"
 msgstr "L'outil de suivi '%1$s' a été proprement restauré"
 
-#, php-format
-msgid ""
-"The tracker '%s' cannot be updated because it doesn't exist. Try again "
-"without \"--update\""
-msgstr ""
-"L'outil de suivi '%s' ne peut pas être mis à jour parce qu'il n'existe pas. "
-"Réessayez sans l'option '--update'"
-
 msgid ""
 "The tracker does not seem to have the create/reply by mail feature enabled."
 msgstr "Le tracker ne semble pas permettre l'édition d'artéfact par mail."
