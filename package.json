@@ -36,7 +36,7 @@
     "eslint-plugin-monorepo-cop": "^1.0.2",
     "eslint-plugin-no-only-tests": "^3.1.0",
     "eslint-plugin-no-unsanitized": "^4.0.2",
-    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-prettier": "^5.1.2",
     "eslint-plugin-vue": "^9.17.0",
     "eslint-plugin-you-dont-need-lodash-underscore": "^6.13.0",
     "fork-ts-checker-webpack-plugin": "^7.2.13",
