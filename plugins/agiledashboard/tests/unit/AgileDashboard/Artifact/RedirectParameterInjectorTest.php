@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Artifact;
 
 use AgileDashboard_PaneRedirectionExtractor;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use TemplateRendererFactory;
 use Tracker;
 use Tuleap\GlobalResponseMock;
@@ -35,36 +33,24 @@ use Tuleap\Tracker\TrackerColor;
 
 class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalResponseMock;
 
     /**
      * @var mixed
      */
     private $response;
-    /**
-     * @var RedirectParameterInjector
-     */
-    private $injector;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
-     */
-    private $user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
+    private RedirectParameterInjector $injector;
 
     protected function setUp(): void
     {
         $this->response = $GLOBALS['Response'];
 
-        $this->user = Mockery::mock(\PFUser::class);
+        $this->user = $this->createMock(\PFUser::class);
 
-        $this->artifact_factory = Mockery::mock(\Tracker_ArtifactFactory::class);
+        $this->artifact_factory = $this->createMock(\Tracker_ArtifactFactory::class);
 
-        $template_cache = \Mockery::mock(TemplateCache::class);
-        $template_cache->shouldReceive('getPath')->andReturnNull();
+        $template_cache = $this->createMock(TemplateCache::class);
+        $template_cache->method('getPath')->willReturn(null);
         $template_renderer_factory = new TemplateRendererFactory($template_cache);
 
         $this->injector = new RedirectParameterInjector(
@@ -111,23 +97,24 @@ class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withParam('link-to-milestone', '1')
             ->build();
 
-        $artifact = Mockery::mock(Artifact::class)
-            ->shouldReceive(
-                [
-                    'getUri'     => '/plugins/tracker/?aid=42',
-                    'getTitle'   => 'Some milestone',
-                    'getXref'    => 'rel #42',
-                    'getTracker' => Mockery::mock(Tracker::class)
-                        ->shouldReceive(['getColor' => TrackerColor::default()])
-                        ->getMock(),
-                ]
-            )->getMock();
+        $artifact = $this->createConfiguredMock(
+            Artifact::class,
+            [
+                'getUri'     => '/plugins/tracker/?aid=42',
+                'getTitle'   => 'Some milestone',
+                'getXref'    => 'rel #42',
+                'getTracker' => $this->createConfiguredMock(
+                    Tracker::class,
+                    ['getColor' => TrackerColor::default()]
+                ),
+            ]
+        );
 
         $this->artifact_factory
-            ->shouldReceive('getArtifactByIdUserCanView')
+            ->expects(self::once())
+            ->method('getArtifactByIdUserCanView')
             ->with($this->user, 101)
-            ->once()
-            ->andReturn($artifact);
+            ->willReturn($artifact);
 
         $this->response
             ->expects(self::once())

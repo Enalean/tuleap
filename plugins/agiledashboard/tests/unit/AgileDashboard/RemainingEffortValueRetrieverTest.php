@@ -22,7 +22,6 @@ namespace Tuleap\AgileDashboard;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-use Mockery;
 use Tracker_FormElementFactory;
 
 class RemainingEffortValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -48,25 +47,19 @@ class RemainingEffortValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->form_element_factory       = Mockery::mock(Tracker_FormElementFactory::class);
+        $this->form_element_factory       = $this->createMock(Tracker_FormElementFactory::class);
         $this->remaining_effort_retriever = new RemainingEffortValueRetriever($this->form_element_factory);
-        $this->user                       = Mockery::mock(\PFUser::class);
+        $this->user                       = $this->createMock(\PFUser::class);
 
-        $this->tracker  = Mockery::mock(\Tracker::class);
-        $this->artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
-    }
-
-    public function tearDown(): void
-    {
-        Mockery::close();
-        parent::tearDown();
+        $this->tracker  = $this->createMock(\Tracker::class);
+        $this->artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $this->artifact->method('getTracker')->willReturn($this->tracker);
     }
 
     public function testItReturnsTheRemainingEffortValue()
     {
-        $float_value = Mockery::mock(\Tracker_Artifact_ChangesetValue_Float::class);
-        $float_value->shouldReceive('getValue')->andReturn(6.7);
+        $float_value = $this->createMock(\Tracker_Artifact_ChangesetValue_Float::class);
+        $float_value->method('getValue')->willReturn(6.7);
         $this->setUpChangesetValue($float_value);
         $this->setUpField();
 
@@ -77,7 +70,7 @@ class RemainingEffortValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullWhenThereIsNoLastChangeset()
     {
-        $this->artifact->shouldReceive('getLastChangeset')->andReturnNull();
+        $this->artifact->method('getLastChangeset')->willReturn(null);
         $this->setUpField();
 
         $value = $this->remaining_effort_retriever->getRemainingEffortValue($this->user, $this->artifact);
@@ -97,7 +90,7 @@ class RemainingEffortValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullWhenThereIsNoField()
     {
-        $this->form_element_factory->shouldReceive('getNumericFieldByNameForUser')->andReturn(null);
+        $this->form_element_factory->method('getNumericFieldByNameForUser')->willReturn(null);
 
         $value = $this->remaining_effort_retriever->getRemainingEffortValue($this->user, $this->artifact);
 
@@ -106,18 +99,20 @@ class RemainingEffortValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function setUpField()
     {
-        $this->remaining_effort_field = Mockery::mock(\Tracker_FormElement_Field_Float::class);
-        $this->form_element_factory->shouldReceive('getNumericFieldByNameForUser')->withArgs(
-            [$this->tracker, $this->user, 'remaining_effort']
-        )->andReturn(
+        $this->remaining_effort_field = $this->createMock(\Tracker_FormElement_Field_Float::class);
+        $this->form_element_factory->method('getNumericFieldByNameForUser')->with(
+            $this->tracker,
+            $this->user,
+            'remaining_effort',
+        )->willReturn(
             $this->remaining_effort_field
         );
     }
 
     private function setUpChangesetValue($float_value)
     {
-        $changeset = Mockery::mock(\Tracker_Artifact_Changeset::class);
-        $changeset->shouldReceive('getValue')->andReturn($float_value);
-        $this->artifact->shouldReceive('getLastChangeset')->andReturn($changeset);
+        $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
+        $changeset->method('getValue')->willReturn($float_value);
+        $this->artifact->method('getLastChangeset')->willReturn($changeset);
     }
 }

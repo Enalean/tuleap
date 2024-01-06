@@ -22,43 +22,29 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use SimpleXMLElement;
 use TrackerFromXmlException;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 class CreateTrackerFromXMLCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var CreateTrackerFromXMLChecker
-     */
-    private $checker;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ExplicitBacklogDao
-     */
-    private $explicit_backlog_dao;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project;
+    private CreateTrackerFromXMLChecker $checker;
+    private Project $project;
+    private ExplicitBacklogDao|\PHPUnit\Framework\MockObject\MockObject $explicit_backlog_dao;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->explicit_backlog_dao = Mockery::mock(ExplicitBacklogDao::class);
+        $this->explicit_backlog_dao = $this->createMock(ExplicitBacklogDao::class);
 
         $this->checker = new CreateTrackerFromXMLChecker($this->explicit_backlog_dao);
 
-        $this->project = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn('101')->getMock();
+        $this->project = ProjectTestBuilder::aProject()->build();
     }
 
-    public function testItDoesNotThrowAnExceptionIfNoAddToTopBacklogTagProvided()
+    public function testItDoesNotThrowAnExceptionIfNoAddToTopBacklogTagProvided(): void
     {
         $xml = $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
             <tracker />
@@ -76,10 +62,11 @@ class CreateTrackerFromXMLCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $xml = $this->buildFullTrackerXML();
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao
+            ->expects(self::once())
+            ->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->once()
-            ->andReturnTrue();
+            ->willReturn(true);
 
         $this->checker->checkTrackerCanBeCreatedInTrackerCreationContext(
             $this->project,
@@ -91,10 +78,11 @@ class CreateTrackerFromXMLCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $xml = $this->buildFullTrackerXML();
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao
+            ->expects(self::once())
+            ->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->once()
-            ->andReturnFalse();
+            ->willReturn(false);
 
         $this->expectException(TrackerFromXmlException::class);
 

@@ -27,12 +27,10 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class AgileDashboard_ConfigurationManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testScrumCanBeInAEnabledState(): void
     {
-        $config_dao = Mockery::mock(AgileDashboard_ConfigurationDao::class);
-        $config_dao->shouldReceive('isScrumActivated')->andReturn(new \Tuleap\FakeDataAccessResult(['scrum' => '1']));
+        $config_dao = $this->createMock(AgileDashboard_ConfigurationDao::class);
+        $config_dao->method('isScrumActivated')->willReturn(new \Tuleap\FakeDataAccessResult(['scrum' => '1']));
         $event_dispatcher = new class implements \Psr\EventDispatcher\EventDispatcherInterface {
             public function dispatch(object $event)
             {
@@ -52,7 +50,7 @@ final class AgileDashboard_ConfigurationManagerTest extends \Tuleap\Test\PHPUnit
 
     public function testScrumIsConsideredDisabledWhenItsAccessIsBlocked(): void
     {
-        $config_dao       = Mockery::mock(AgileDashboard_ConfigurationDao::class);
+        $config_dao       = $this->createMock(AgileDashboard_ConfigurationDao::class);
         $event_dispatcher = new class implements \Psr\EventDispatcher\EventDispatcherInterface {
             public function dispatch(object $event)
             {
