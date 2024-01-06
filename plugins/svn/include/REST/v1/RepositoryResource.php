@@ -25,9 +25,9 @@ use Luracast\Restler\RestException;
 use PFUser;
 use Project;
 use ProjectHistoryDao;
-use ProjectUGroup;
 use SystemEvent;
 use SystemEventManager;
+use Tuleap\NeverThrow\Fault;
 use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -43,7 +43,6 @@ use Tuleap\SVN\Repository\Destructor;
 use Tuleap\SVN\Admin\ImmutableTagCreator;
 use Tuleap\SVN\Admin\ImmutableTagDao;
 use Tuleap\SVN\Admin\ImmutableTagFactory;
-use Tuleap\SVN\Admin\MailNotification;
 use Tuleap\SVN\Admin\MailNotificationDao;
 use Tuleap\SVN\Admin\MailNotificationManager;
 use Tuleap\SVN\Dao;
@@ -61,6 +60,7 @@ use Tuleap\SVN\Repository\HookConfigRetriever;
 use Tuleap\SVN\Repository\HookConfigSanitizer;
 use Tuleap\SVN\Repository\HookConfigUpdator;
 use Tuleap\SVN\Repository\HookDao;
+use Tuleap\SVN\Repository\SettingsBuilder;
 use Tuleap\SVN\Repository\SvnRepository;
 use Tuleap\SVN\Repository\ProjectHistoryFormatter;
 use Tuleap\SVNCore\Repository;
@@ -718,15 +718,12 @@ class RepositoryResource extends AuthenticatedResource
 
     private function getSettings(
         Repository $repository,
-        SettingsGETRepresentation | SettingsPOSTRepresentation | SettingsPUTRepresentation | null $settings = null,
+        SettingsPUTRepresentation $settings,
     ): Settings {
         return $this->extractSettingsFromRepresentation($repository, $settings);
     }
 
-    /**
-     * @return Settings
-     */
-    private function getPOSTSettings(Repository $repository, ?SettingsPOSTRepresentation $settings = null)
+    private function getPOSTSettings(Repository $repository, ?SettingsPOSTRepresentation $settings = null): Settings
     {
         return $this->extractSettingsFromRepresentation($repository, $settings);
     }
@@ -736,80 +733,25 @@ class RepositoryResource extends AuthenticatedResource
      */
     private function extractSettingsFromRepresentation(
         Repository $repository,
-        SettingsGETRepresentation | SettingsPOSTRepresentation | SettingsPUTRepresentation | null $settings = null,
+        SettingsPOSTRepresentation | SettingsPUTRepresentation | null $settings_representation = null,
     ): Settings {
-        $commit_rules = [];
-        if ($settings && $settings->commit_rules) {
-            $commit_rules = $settings->commit_rules->toArray();
-        }
+        $builder = new SettingsBuilder(
+            $this->immutable_tag_factory,
+            $this->user_manager,
+            $this->user_group_id_retriever,
+        );
 
-        $immutable_tag = $this->immutable_tag_factory->getEmpty($repository);
-        if ($settings && $settings->immutable_tags) {
-            $immutable_tag = $this->immutable_tag_factory->getFromRESTRepresentation(
-                $repository,
-                $settings->immutable_tags
-            );
-        }
-
-        $access_file = "";
-        if ($settings && $settings->access_file) {
-            $access_file = $settings->access_file;
-        }
-
-        $mail_notification = [];
-        if ($settings && $settings->email_notifications) {
-            foreach ($settings->email_notifications as $notification) {
-                $users_notification = [];
-                if ($notification->users) {
-                    foreach ($notification->users as $user_id) {
-                        $user = $this->user_manager->getUserById($user_id);
-                        if (! $user) {
-                            throw new RestException(400, "User $user_id not found");
-                        }
-                        $users_notification[] = $user;
-                    }
-                }
-
-                $user_groups_notification = [];
-                if ($notification->user_groups) {
-                    foreach ($notification->user_groups as $group_id) {
-                        $group = $this->user_group_id_retriever->getExistingUserGroup((string) $group_id);
-
-                        if (! $group->isStatic() && ! $this->isAnAuthorizedDynamicUgroup($group)) {
-                            throw new RestException(
-                                400,
-                                "Notifications can not be sent to ugroups Anonymous Authenticated and Registered"
-                            );
-                        }
-
-                        if ($group->getProject()->getId() != $repository->getProject()->getID()) {
-                            throw new RestException(
-                                400,
-                                "You can't add a user group from a different project"
-                            );
-                        }
-
-                        $user_groups_notification[] = $group;
-                    }
-                }
-
-                $mail_notification[] = new MailNotification(
-                    0,
-                    $repository,
-                    $notification->path,
-                    $notification->emails,
-                    $users_notification,
-                    $user_groups_notification
+        return $builder->buildFromPOSTPUTRESTRepresentation(
+            $repository,
+            $settings_representation,
+        )->match(
+            static fn (Settings $settings): Settings => $settings,
+            function (Fault $fault): void {
+                throw new RestException(
+                    400,
+                    (string) $fault,
                 );
             }
-        }
-
-        return new Settings($commit_rules, $immutable_tag, $access_file, $mail_notification, [], 1, false);
-    }
-
-    private function isAnAuthorizedDynamicUgroup(ProjectUGroup $group)
-    {
-        return $group->getId() == ProjectUGroup::PROJECT_MEMBERS ||
-            $group->getId() == ProjectUGroup::PROJECT_ADMIN;
+        );
     }
 }

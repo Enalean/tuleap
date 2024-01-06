@@ -144,7 +144,7 @@ final class RepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             HookConfig::COMMIT_MESSAGE_CAN_CHANGE => true,
             HookConfig::MANDATORY_REFERENCE       => true,
         ];
-        $immutable_tag       = new ImmutableTag($this->repository, [], []);
+        $immutable_tag       = new ImmutableTag($this->repository, '', '');
         $access_file         = "[/]\r\n* = rw \r\n@members = rw\r\n[/tags]\r\n@admins = rw";
         $access_file_history = [new AccessFileHistory($this->repository, 1, 1, $access_file, time())];
         $mail_notifications  = [];
@@ -185,7 +185,7 @@ final class RepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             HookConfig::COMMIT_MESSAGE_CAN_CHANGE => true,
             HookConfig::MANDATORY_REFERENCE       => true,
         ];
-        $immutable_tag       = new ImmutableTag($this->repository, [], []);
+        $immutable_tag       = new ImmutableTag($this->repository, '', '');
         $access_file         = "[/]\r\n* = rw \r\n@members = rw\r\n[/tags]\r\n@admins = rw";
         $access_file_history = [new AccessFileHistory($this->repository, 1, 1, $access_file, time())];
         $mail_notifications  = [];
@@ -229,7 +229,7 @@ final class RepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             HookConfig::COMMIT_MESSAGE_CAN_CHANGE => true,
             HookConfig::MANDATORY_REFERENCE       => true,
         ];
-        $immutable_tag      = new ImmutableTag($this->repository, [], []);
+        $immutable_tag      = new ImmutableTag($this->repository, '', '');
         $access_file        = "[/]\r\n* = rw \r\n@members = rw\r\n[/tags]\r\n@admins = rw";
         $mail_notifications = [];
         $settings           = new Settings(
@@ -258,7 +258,7 @@ final class RepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->method('doesRepositoryAlreadyExist')->willReturn(false);
 
         $commit_rules       = [];
-        $immutable_tag      = new ImmutableTag($this->repository, [], []);
+        $immutable_tag      = new ImmutableTag($this->repository, '', '');
         $access_file        = "";
         $mail_notifications = [];
         $settings           = new Settings(

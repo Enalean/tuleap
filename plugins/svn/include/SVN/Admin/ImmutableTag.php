@@ -18,21 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\SVN\Admin;
 
 use Tuleap\SVNCore\Repository;
 
 class ImmutableTag
 {
-    private $paths;
-    private $repository;
-    private $whitelist;
-
-    public function __construct(Repository $repository, $paths, $whitelist)
-    {
-        $this->repository = $repository;
-        $this->paths      = $paths;
-        $this->whitelist  = $whitelist;
+    public function __construct(
+        private readonly Repository $repository,
+        private readonly string $paths,
+        private readonly string $whitelist,
+    ) {
     }
 
     public static function buildEmptyImmutableTag(Repository $repository): self
@@ -40,32 +38,38 @@ class ImmutableTag
         return new self($repository, '', '');
     }
 
-    public function getRepository()
+    public function getRepository(): Repository
     {
         return $this->repository;
     }
 
-    public function getPathsAsString()
+    public function getPathsAsString(): string
     {
         return implode(PHP_EOL, $this->getPaths());
     }
 
-    public function getPaths()
+    /**
+     * @return string[]
+     */
+    public function getPaths(): array
     {
         return $this->convertToArray($this->paths);
     }
 
-    public function getWhitelist()
+    /**
+     * @return string[]
+     */
+    public function getWhitelist(): array
     {
         return $this->convertToArray($this->whitelist);
     }
 
-    public function getWhitelistAsString()
+    public function getWhitelistAsString(): string
     {
         return implode(PHP_EOL, $this->getWhitelist());
     }
 
-    private function convertToArray($path)
+    private function convertToArray(string $path): array
     {
         if (! $path) {
             return [];
