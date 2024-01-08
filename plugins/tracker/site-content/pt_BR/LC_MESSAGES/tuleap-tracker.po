@@ -1406,9 +1406,6 @@ msgstr ""
 msgid "Global Email Notification"
 msgstr ""
 
-msgid "Global Rules"
-msgstr ""
-
 msgid "Global Tracker Administrator"
 msgstr ""
 
@@ -3651,7 +3648,7 @@ msgstr ""
 msgid "Transition with id '%d' has no workflow"
 msgstr ""
 
-msgid "Transitions Rules"
+msgid "Transitions rules"
 msgstr ""
 
 msgid "Transitions updated"

@@ -113,6 +113,7 @@ use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowXMLExporter;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
+use Tuleap\Tracker\Workflow\WorkflowMenuPresenterBuilder;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
 use Tuleap\Tracker\XML\XMLTracker;
@@ -1331,14 +1332,11 @@ class Tracker implements Tracker_Dispatchable_Interface
         string $current_item,
         $title,
         array $params = [],
-    ) {
+    ): void {
         $this->buildAndDisplayAdministrationHeader($layout, $title, [], $params);
 
-        $items            = [];
-        $event_parameters = ["items" => &$items, "tracker_id" => $this->id];
-        EventManager::instance()->processEvent(self::TRACKER_EVENT_FETCH_ADMIN_BUTTONS, $event_parameters);
+        $presenter = $this->getAdminHeaderPresenter($current_item);
 
-        $presenter = new HeaderPresenter($this, $current_item, array_values($items));
         $this->renderer->renderToPage('admin-header', $presenter);
     }
 
@@ -1348,15 +1346,23 @@ class Tracker implements Tracker_Dispatchable_Interface
         $title,
         $breadcrumbs,
         array $params = [],
-    ) {
+    ): void {
         $this->buildAndDisplayAdministrationHeader($layout, $title, $breadcrumbs, $params);
 
+        $presenter = $this->getAdminHeaderPresenter($current_item);
+
+        $this->renderer->renderToPage('admin-header-bp', $presenter);
+    }
+
+    private function getAdminHeaderPresenter(string $current_item): HeaderPresenter
+    {
         $items            = [];
         $event_parameters = ["items" => &$items, "tracker_id" => $this->id];
         EventManager::instance()->processEvent(self::TRACKER_EVENT_FETCH_ADMIN_BUTTONS, $event_parameters);
 
-        $presenter = new HeaderPresenter($this, $current_item, array_values($items));
-        $this->renderer->renderToPage('admin-header-bp', $presenter);
+        $workflow_menu_presenter_builder = new WorkflowMenuPresenterBuilder();
+
+        return new HeaderPresenter($this, $current_item, array_values($items), $workflow_menu_presenter_builder->build($this));
     }
 
     private function buildAndDisplayAdministrationHeader(Tracker_IDisplayTrackerLayout $layout, $title, $breadcrumbs, array $params): void
@@ -2818,7 +2824,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         return ! $is_error;
     }
 
-     /**
+    /**
      * Get UserManager instance
      *
      * @return UserManager

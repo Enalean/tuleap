@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\Admin;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker;
+use Tuleap\Tracker\Workflow\WorkflowMenuPresenter;
 
 class HeaderPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -44,25 +45,25 @@ class HeaderPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItSetsTheActiveTabBasedOnCurrentItem()
     {
-        $presenter = new HeaderPresenter($this->tracker, 'editformElements', []);
+        $presenter = new HeaderPresenter($this->tracker, 'editformElements', [], new WorkflowMenuPresenter([]));
         $this->assertTrue($presenter->is_fields_tab_active);
 
-        $presenter = new HeaderPresenter($this->tracker, 'dependencies', []);
+        $presenter = new HeaderPresenter($this->tracker, 'dependencies', [], new WorkflowMenuPresenter([]));
         $this->assertTrue($presenter->is_fields_tab_active);
 
-        $presenter = new HeaderPresenter($this->tracker, 'editsemantic', []);
+        $presenter = new HeaderPresenter($this->tracker, 'editsemantic', [], new WorkflowMenuPresenter([]));
         $this->assertTrue($presenter->is_semantics_tab_active);
 
-        $presenter = new HeaderPresenter($this->tracker, 'editperms', []);
+        $presenter = new HeaderPresenter($this->tracker, 'editperms', [], new WorkflowMenuPresenter([]));
         $this->assertTrue($presenter->is_permissions_tab_active);
 
-        $presenter = new HeaderPresenter($this->tracker, 'editworkflow', []);
+        $presenter = new HeaderPresenter($this->tracker, 'editworkflow', [], new WorkflowMenuPresenter([]));
         $this->assertTrue($presenter->is_workflow_tab_active);
 
-        $presenter = new HeaderPresenter($this->tracker, 'editnotifications', []);
+        $presenter = new HeaderPresenter($this->tracker, 'editnotifications', [], new WorkflowMenuPresenter([]));
         $this->assertTrue($presenter->is_notification_tab_active);
 
-        $presenter = new HeaderPresenter($this->tracker, 'other', []);
+        $presenter = new HeaderPresenter($this->tracker, 'other', [], new WorkflowMenuPresenter([]));
         $this->assertTrue($presenter->is_other_tab_active);
     }
 }

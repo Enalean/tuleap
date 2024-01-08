@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\Admin;
 
 use Tracker;
+use Tuleap\Tracker\Workflow\WorkflowMenuPresenter;
 
 class HeaderPresenter
 {
@@ -58,8 +59,12 @@ class HeaderPresenter
      */
     public $is_other_tab_active = false;
 
-    public function __construct(Tracker $tracker, string $current_item, array $additional_items)
-    {
+    public function __construct(
+        Tracker $tracker,
+        string $current_item,
+        array $additional_items,
+        public readonly WorkflowMenuPresenter $workflow_menu,
+    ) {
         $this->tracker_id       = $tracker->getId();
         $this->tracker_name     = $tracker->getName();
         $this->additional_items = $additional_items;

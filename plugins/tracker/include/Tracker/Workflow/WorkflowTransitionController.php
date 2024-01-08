@@ -32,6 +32,7 @@ use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Tracker\Tracker\Workflow\WorkflowMountPointPresenter;
 use Tuleap\Tracker\Workflow\PostAction\GetExternalPostActionPluginsEvent;
 
 class WorkflowTransitionController implements DispatchableWithRequest, DispatchableWithBurningParrot
@@ -40,10 +41,6 @@ class WorkflowTransitionController implements DispatchableWithRequest, Dispatcha
     private $tracker_manager;
 
     /**
-     * @var WorkflowMenuTabPresenterBuilder
-     */
-    private $presenter_builder;
-    /**
      * @var EventManager
      */
     private $event_manager;
@@ -51,13 +48,11 @@ class WorkflowTransitionController implements DispatchableWithRequest, Dispatcha
     public function __construct(
         TrackerFactory $tracker_factory,
         TrackerManager $tracker_manager,
-        WorkflowMenuTabPresenterBuilder $presenter_builder,
         EventManager $event_manager,
     ) {
-        $this->tracker_factory   = $tracker_factory;
-        $this->tracker_manager   = $tracker_manager;
-        $this->presenter_builder = $presenter_builder;
-        $this->event_manager     = $event_manager;
+        $this->tracker_factory = $tracker_factory;
+        $this->tracker_manager = $tracker_manager;
+        $this->event_manager   = $event_manager;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -94,13 +89,8 @@ class WorkflowTransitionController implements DispatchableWithRequest, Dispatcha
         );
 
 
-        $renderer  = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/workflow-transitions');
-        $presenter = $this->presenter_builder->build(
-            $tracker,
-            WorkflowMenuTabPresenterBuilder::TAB_TRANSITIONS,
-            $event->getServiceNameUsed(),
-        );
-        $renderer->renderToPage('workflow-transitions', $presenter);
+        $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/workflow-transitions');
+        $renderer->renderToPage('workflow-transitions', new WorkflowMountPointPresenter($tracker->getId(), $event->getServiceNameUsed()));
 
         $tracker->displayFooter($this->tracker_manager);
     }

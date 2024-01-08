@@ -45,31 +45,15 @@
             <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
-            <li>
-                <a href="/plugins/tracker/workflow/{{ tracker_id }}/transitions" data-test="transitions">
-                    {{# dgettext }}tuleap-tracker | Transition rules{{/ dgettext }}
-                </a>
-            </li>
-            <li>
-                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-workflow" data-test="global-rules">
-                    {{# dgettext }}tuleap-tracker | Global rules{{/ dgettext }}
-                </a>
-            </li>
-            <li>
-                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-dependencies" data-test="field-dependencies">
-                {{# dgettext }}tuleap-tracker | Field dependencies{{/ dgettext }}
-                </a>
-            </li>
-            <li>
-                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-workflow-triggers">
-                    {{# dgettext }}tuleap-tracker | Triggers{{/ dgettext }}
-                </a>
-            </li>
-            <li>
-                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-webhooks">
-                    {{# dgettext }}tuleap-tracker | Webhooks{{/ dgettext }}
-                </a>
-            </li>
+            {{# workflow_menu }}
+                {{# items }}
+                    <li>
+                        <a href="{{ url }}" data-test="{{ data_test }}">
+                            {{ label }}
+                        </a>
+                    </li>
+                {{/ items }}
+            {{/ workflow_menu }}
         </ul>
     </li>
     <li {{# is_notification_tab_active }}class="active"{{/ is_notification_tab_active }}>
