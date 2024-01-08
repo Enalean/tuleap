@@ -65,13 +65,8 @@ final class SystemEvent_UGROUP_MODIFY_Test extends \Tuleap\Test\PHPUnit\TestCase
         $evt->method('processUgroupBinding')->willReturn(false);
 
         $project = $this->createMock(\Project::class);
-        $project->method('usesSVN')->willReturn(true);
-
-        $backendSVN = $this->createMock(\BackendSVN::class);
-        $backendSVN->expects(self::never())->method('updateSVNAccess');
 
         $evt->expects(self::never())->method('getProject')->with('1')->willReturn($project);
-        $evt->expects(self::never())->method('getBackend')->with('SVN')->willReturn($backendSVN);
         $evt->expects(self::never())->method('done');
         $evt->expects(self::once())->method('error')->with("Could not process binding to this user group (2)");
 

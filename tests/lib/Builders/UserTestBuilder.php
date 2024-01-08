@@ -33,6 +33,7 @@ class UserTestBuilder
     private ?array $user_group_data      = null;
     private string $avatar_url           = '';
     private array $project_ugroups       = [];
+    private ?array $all_projects         = [];
 
     public static function aUser(): self
     {
@@ -212,6 +213,13 @@ class UserTestBuilder
         return $this;
     }
 
+    public function withProjects(array $project_ids): self
+    {
+        $this->all_projects = $project_ids;
+
+        return $this;
+    }
+
     public function withRow(array $row): self
     {
         $this->params = array_merge($this->params, $row);
@@ -237,6 +245,9 @@ class UserTestBuilder
         }
         if ($this->is_site_administrator !== null) {
             $user->setIsSuperUser($this->is_site_administrator);
+        }
+        if ($this->all_projects !== null) {
+            $user->setAllProjects($this->all_projects);
         }
         $user->preferencesdao = new StoreUserPreferenceStub();
         return $user;

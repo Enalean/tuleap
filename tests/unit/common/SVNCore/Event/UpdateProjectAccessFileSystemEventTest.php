@@ -78,10 +78,6 @@ final class UpdateProjectAccessFileSystemEventTest extends \Tuleap\Test\PHPUnit\
         $project = $this->createMock(\Project::class);
         $this->project_manager->method('getProject')->with(self::PROJECT_ID)->willReturn($project);
 
-        $project->method('usesSVN')->willReturn(true);
-        $project->method('getSVNRootPath')->willReturn('/some/path/to/svn/root');
-        $this->backend_svn->expects(self::once())->method('updateSVNAccess');
-
         $this->event_dispatcher->expects(self::once())
             ->method('dispatch')
             ->with(self::isInstanceOf(UpdateProjectAccessFilesEvent::class));

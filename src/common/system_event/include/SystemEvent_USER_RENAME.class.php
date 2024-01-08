@@ -18,6 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\SVNCore\Event\UpdateProjectAccessFilesEvent;
+
 /**
  * Change User name
  *
@@ -69,11 +71,13 @@ class SystemEvent_USER_RENAME extends SystemEvent
                 $renameState = $renameState & false;
             }
 
-            //Rename SVN files
-            $backendSVN = $this->getBackend('SVN');
-            if (! $backendSVN->updateSVNAccessForGivenMember($user)) {
-                $this->error('Could not update SVN access files for the user (id:' . $user->getId() . ')');
-                $renameState = $renameState & false;
+            // Rename SVN files
+            $event_manager = EventManager::instance();
+            foreach ($user->getAllProjects() as $project_id) {
+                $project = $this->getProject($project_id);
+                if ($project) {
+                    $event_manager->dispatch(new UpdateProjectAccessFilesEvent($project));
+                }
             }
 
             $params                  = [];

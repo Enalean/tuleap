@@ -53,12 +53,16 @@ final class SystemEvent_USER_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
                 'getBackend',
                 'updateDB',
                 'done',
+                'getProject',
             ])
             ->getMock();
 
         // The user
-        $user = \Tuleap\Test\Builders\UserTestBuilder::aUser()->withId(142)->withUserName('mickey')->build();
+        $user = \Tuleap\Test\Builders\UserTestBuilder::aUser()->withId(142)->withUserName('mickey')->withProjects([133])->build();
         $evt->method('getUser')->with('142')->willReturn($user);
+
+        // The project
+        $evt->method('getProject')->with(133)->willReturn(\Tuleap\Test\Builders\ProjectTestBuilder::aProject()->withId(133)->build());
 
         // System
         $backendSystem = $this->createMock(\BackendSystem::class);
@@ -66,13 +70,8 @@ final class SystemEvent_USER_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
         // DB
         $evt->method('updateDB')->willReturn(true);
 
-        // SVN
-        $backendSVN = $this->createMock(\BackendSVN::class);
-        $backendSVN->method('updateSVNAccessForGivenMember')->willReturn(true);
-
         $evt->method('getBackend')->willReturnMap([
             ['System', $backendSystem],
-            ['SVN', $backendSVN],
         ]);
 
         // Expect everything went OK
@@ -80,61 +79,5 @@ final class SystemEvent_USER_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
 
         // Launch the event
         self::assertTrue($evt->process());
-    }
-
-    public function testUpdateSVNAccessFailure(): void
-    {
-        $now = (new DateTimeImmutable())->getTimestamp();
-
-        $evt = $this->getMockBuilder(\SystemEvent_USER_RENAME::class)
-            ->setConstructorArgs(
-                [
-                    '1',
-                    SystemEvent::TYPE_USER_RENAME,
-                    SystemEvent::OWNER_ROOT,
-                    '142' . SystemEvent::PARAMETER_SEPARATOR . 'tazmani',
-                    SystemEvent::PRIORITY_HIGH,
-                    SystemEvent::STATUS_RUNNING,
-                    $now,
-                    $now,
-                    $now,
-                    '',
-                ]
-            )
-            ->onlyMethods([
-                'getUser',
-                'getBackend',
-                'updateDB',
-                'done',
-            ])
-            ->getMock();
-
-        // The user
-        $user = \Tuleap\Test\Builders\UserTestBuilder::aUser()->withId(142)->withUserName('mickey')->build();
-        $evt->method('getUser')->with('142')->willReturn($user);
-
-        // System
-        $backendSystem = $this->createMock(\BackendSystem::class);
-
-        // DB
-        $evt->method('updateDB')->willReturn(true);
-
-        // SVN
-        $backendSVN = $this->createMock(\BackendSVN::class);
-        $backendSVN->method('updateSVNAccessForGivenMember')->willReturn(false);
-
-        $evt->method('getBackend')->willReturnMap([
-            ['System', $backendSystem],
-            ['SVN', $backendSVN],
-        ]);
-
-        // There is an error, the rename is not "done"
-        $evt->expects(self::never())->method('done');
-
-        self::assertFalse($evt->process());
-
-        // Check errors
-        self::assertEquals(SystemEvent::STATUS_ERROR, $evt->getStatus());
-        self::assertMatchesRegularExpression('/Could not update SVN access files for the user/i', $evt->getLog());
     }
 }

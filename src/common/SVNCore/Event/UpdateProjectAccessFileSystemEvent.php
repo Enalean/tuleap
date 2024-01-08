@@ -67,14 +67,6 @@ final class UpdateProjectAccessFileSystemEvent extends \SystemEvent
             return;
         }
 
-        if ($project->usesSVN()) {
-            $backend_svn = $this->getBackend(\BackendSVN::SVN);
-            assert($backend_svn instanceof \BackendSVN);
-            if (! $backend_svn->updateSVNAccess($project_id, $project->getSVNRootPath(), null, null)) {
-                $this->warning('Could not update SVN Core access');
-            }
-        }
-
         $this->event_dispatcher->dispatch(
             new UpdateProjectAccessFilesEvent($project)
         );

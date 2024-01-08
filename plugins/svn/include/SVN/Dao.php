@@ -306,17 +306,6 @@ class Dao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function getCoreLastCommitDate(Project $project): ?\DateTimeImmutable
-    {
-        $sql = sprintf('SELECT date FROM svn_commits WHERE group_id = %d ORDER BY date DESC LIMIT 1', $this->da->escapeInt($project->getID()));
-        $dar = $this->retrieve($sql);
-        if ($dar && count($dar) === 1) {
-            $row = $dar->getRow();
-            return new \DateTimeImmutable('@' . $row['date']);
-        }
-        return null;
-    }
-
     public function getCoreRepositoryId(Project $project): ?int
     {
         $sql = sprintf('SELECT id FROM plugin_svn_repositories WHERE project_id = %d and is_core = 1', $this->da->escapeInt($project->getID()));
@@ -326,20 +315,5 @@ class Dao extends DataAccessObject
             return (int) $row['id'];
         }
         return null;
-    }
-
-    /**
-     * @throws \DataAccessQueryException
-     */
-    public function getCoreRepositories(): \Generator
-    {
-        $sql = 'SELECT * FROM plugin_svn_repositories WHERE is_core = 1';
-        $dar = $this->retrieve($sql);
-        if (! $dar || $dar->isError()) {
-            return;
-        }
-        foreach ($dar as $row) {
-            yield (int) $row['project_id'];
-        }
     }
 }

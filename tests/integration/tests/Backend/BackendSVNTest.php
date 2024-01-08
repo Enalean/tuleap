@@ -198,38 +198,6 @@ final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertFalse($this->backend->setSVNPrivacy($project, false));
     }
 
-    public function testUpdateSVNAccessForGivenMember(): void
-    {
-        $backend = \Mockery::mock(\BackendSVN::class)->makePartial()->shouldAllowMockingProtectedMethods();
-
-        // The user
-        $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('getId')->andReturns([142]);
-
-        $project1 = \Mockery::spy(\Project::class);
-        $project1->shouldReceive('getId')->andReturns(102);
-
-        $project2 = \Mockery::spy(\Project::class);
-        $project2->shouldReceive('getId')->andReturns(101);
-
-        $projects =  [102, 101];
-        $user->shouldReceive('getAllProjects')->andReturns($projects);
-
-        $pm = \Mockery::spy(\ProjectManager::class);
-        $backend->shouldReceive('getProjectManager')->andReturns($pm);
-
-        $pm->shouldReceive('getProject')->with(102)->andReturns($project1);
-        $pm->shouldReceive('getProject')->with(101)->andReturns($project2);
-
-        $this->assertEquals($backend->updateSVNAccessForGivenMember($user), true);
-
-        $backend->shouldReceive('repositoryExists')->with($project1)->andReturn(true);
-        $backend->shouldReceive('repositoryExists')->with($project2)->andReturn(true);
-
-        $backend->shouldReceive('updateSVNAccess')->with(102)->andReturn(true);
-        $backend->shouldReceive('updateSVNAccess')->with(101)->andReturn(true);
-    }
-
     public function testItThrowsAnExceptionIfFileForSymlinkAlreadyExists(): void
     {
         $backend = \Mockery::mock(\BackendSVN::class)->makePartial()->shouldAllowMockingProtectedMethods();
