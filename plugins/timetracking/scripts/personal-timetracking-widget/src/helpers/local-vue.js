@@ -19,15 +19,15 @@
  */
 
 import { createLocalVue } from "@vue/test-utils";
-import GettextPlugin from "vue-gettext";
 import { PiniaVuePlugin } from "pinia";
+import { initVueGettext } from "@tuleap/vue2-gettext-init";
 
-const localVue = createLocalVue();
-localVue.use(PiniaVuePlugin);
+export const createLocalVueForTests = async () => {
+    const local_vue = createLocalVue();
+    local_vue.use(PiniaVuePlugin);
+    await initVueGettext(local_vue, () => {
+        throw new Error("Fallback to default");
+    });
 
-localVue.use(GettextPlugin, {
-    translations: {},
-    silent: true,
-});
-
-export default localVue;
+    return local_vue;
+};

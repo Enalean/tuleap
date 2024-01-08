@@ -19,14 +19,14 @@
 
 import { shallowMount } from "@vue/test-utils";
 import WidgetModalTimes from "./WidgetModalTimes.vue";
-import localVue from "../../helpers/local-vue.js";
+import { createLocalVueForTests } from "../../helpers/local-vue.js";
 
 describe("Given a personal timetracking widget modal", () => {
     let current_artifact;
 
-    function getWidgetModalTimesInstance() {
+    async function getWidgetModalTimesInstance() {
         const component_options = {
-            localVue,
+            localVue: await createLocalVueForTests(),
             propsData: {
                 artifact: current_artifact,
             },
@@ -34,15 +34,15 @@ describe("Given a personal timetracking widget modal", () => {
         return shallowMount(WidgetModalTimes, component_options);
     }
 
-    it("When current artifact is not empty, then modal content should be displayed", () => {
+    it("When current artifact is not empty, then modal content should be displayed", async () => {
         current_artifact = { artifact: "artifact" };
-        const wrapper = getWidgetModalTimesInstance();
+        const wrapper = await getWidgetModalTimesInstance();
         expect(wrapper.find("[data-test=modal-content]").exists()).toBeTruthy();
     });
 
-    it("When current artifact is empty, then modal content should not be displayed", () => {
+    it("When current artifact is empty, then modal content should not be displayed", async () => {
         current_artifact = null;
-        const wrapper = getWidgetModalTimesInstance();
+        const wrapper = await getWidgetModalTimesInstance();
         expect(wrapper.find("[data-test=modal-content]").exists()).toBeFalsy();
     });
 });

@@ -20,15 +20,15 @@
 
 import { shallowMount } from "@vue/test-utils";
 import WidgetModalEditTime from "./WidgetModalEditTime.vue";
-import localVue from "../../helpers/local-vue.js";
+import { createLocalVueForTests } from "../../helpers/local-vue.js";
 
 describe("Given a personal timetracking widget modal", () => {
     let current_artifact = { artifact: "artifact", id: 10 };
     let times = {};
 
-    function getWrapperInstance(time_data = {}) {
+    async function getWrapperInstance(time_data = {}) {
         const component_options = {
-            localVue,
+            localVue: await createLocalVueForTests(),
             propsData: {
                 timeData: time_data,
                 artifact: current_artifact,
@@ -38,15 +38,15 @@ describe("Given a personal timetracking widget modal", () => {
     }
 
     describe("Initialisation", () => {
-        it("When no date is given, then it should be initialized", () => {
+        it("When no date is given, then it should be initialized", async () => {
             times.date = undefined;
-            const wrapper = getWrapperInstance();
+            const wrapper = await getWrapperInstance();
             expect(wrapper.vm.date).toBeDefined();
         });
 
-        it("When a date is given, then it should use it", () => {
+        it("When a date is given, then it should use it", async () => {
             const date = "2023-10-30";
-            const wrapper = getWrapperInstance({
+            const wrapper = await getWrapperInstance({
                 date,
             });
 
@@ -55,8 +55,8 @@ describe("Given a personal timetracking widget modal", () => {
     });
 
     describe("Submit", () => {
-        it("Given a new time is not filled, then the time is invalid", () => {
-            const wrapper = getWrapperInstance();
+        it("Given a new time is not filled, then the time is invalid", async () => {
+            const wrapper = await getWrapperInstance();
             wrapper.setData({ time: null });
 
             wrapper.find("[data-test=timetracking-submit-time]").trigger("click");
@@ -64,16 +64,16 @@ describe("Given a personal timetracking widget modal", () => {
             expect(wrapper.vm.error_message).toBe("Time is required");
         });
 
-        it("Given a new time is submitted with an incorrect format, then the time is invalid", () => {
-            const wrapper = getWrapperInstance();
+        it("Given a new time is submitted with an incorrect format, then the time is invalid", async () => {
+            const wrapper = await getWrapperInstance();
             wrapper.setData({ time: "00" });
             wrapper.find("[data-test=timetracking-submit-time]").trigger("click");
 
             expect(wrapper.vm.error_message).toBe("Please check time's format (hh:mm)");
         });
 
-        it("Given a new time is submitted, then the submit button is disabled and a new event is sent", () => {
-            const wrapper = getWrapperInstance();
+        it("Given a new time is submitted, then the submit button is disabled and a new event is sent", async () => {
+            const wrapper = await getWrapperInstance();
 
             jest.spyOn(wrapper.vm, "$emit").mockImplementation(() => {});
 

@@ -24,14 +24,14 @@ import WidgetWritingMode from "./WidgetWritingMode.vue";
 import WidgetArtifactTable from "./WidgetArtifactTable.vue";
 import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
-import localVue from "../helpers/local-vue";
+import { createLocalVueForTests } from "../helpers/local-vue";
 
 const userId = 102;
 
 describe("Given a personal timetracking widget", () => {
     let reading_mode;
 
-    function getPersonalWidgetInstance() {
+    async function getPersonalWidgetInstance() {
         const useStore = defineStore("root", {
             state: () => ({
                 reading_mode: reading_mode,
@@ -48,23 +48,23 @@ describe("Given a personal timetracking widget", () => {
             propsData: {
                 userId,
             },
-            localVue,
+            localVue: await createLocalVueForTests(),
             pinia,
         };
         return shallowMount(TimetrackingWidget, component_options);
     }
 
-    it("When reading mode is true, then reading should be displayed but not writing mode", () => {
+    it("When reading mode is true, then reading should be displayed but not writing mode", async () => {
         reading_mode = true;
-        const wrapper = getPersonalWidgetInstance();
+        const wrapper = await getPersonalWidgetInstance();
         expect(wrapper.findComponent(WidgetReadingMode).exists()).toBeTruthy();
         expect(wrapper.findComponent(WidgetWritingMode).exists()).toBeFalsy();
         expect(wrapper.findComponent(WidgetArtifactTable).exists()).toBeTruthy();
     });
 
-    it("When reading mode is false, then writing should be displayed but not reading mode", () => {
+    it("When reading mode is false, then writing should be displayed but not reading mode", async () => {
         reading_mode = false;
-        const wrapper = getPersonalWidgetInstance();
+        const wrapper = await getPersonalWidgetInstance();
         expect(wrapper.findComponent(WidgetReadingMode).exists()).toBeFalsy();
         expect(wrapper.findComponent(WidgetWritingMode).exists()).toBeTruthy();
     });

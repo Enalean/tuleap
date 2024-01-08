@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import WidgetModalTable from "./WidgetModalTable.vue";
-import localVue from "../../helpers/local-vue.js";
+import { createLocalVueForTests } from "../../helpers/local-vue.js";
 import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
 
@@ -28,7 +28,7 @@ describe("Given a personal timetracking widget modal", () => {
     let current_times;
     let get_formatted_aggregated_time;
 
-    function getWidgetModalTableInstance() {
+    async function getWidgetModalTableInstance() {
         const useStore = defineStore("root", {
             state: () => ({
                 is_add_mode,
@@ -42,7 +42,7 @@ describe("Given a personal timetracking widget modal", () => {
         useStore(pinia);
 
         const component_options = {
-            localVue,
+            localVue: await createLocalVueForTests(),
             pinia,
         };
         return shallowMount(WidgetModalTable, component_options);
@@ -54,8 +54,8 @@ describe("Given a personal timetracking widget modal", () => {
         get_formatted_aggregated_time = "11:00";
     });
 
-    it("When add mode is false, then complete table should be displayed", () => {
-        const wrapper = getWidgetModalTableInstance();
+    it("When add mode is false, then complete table should be displayed", async () => {
+        const wrapper = await getWidgetModalTableInstance();
         expect(wrapper.find("[data-test=table-body-with-row]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=edit-time-with-row]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=table-body-without-row]").exists()).toBeFalsy();
@@ -63,9 +63,9 @@ describe("Given a personal timetracking widget modal", () => {
         expect(wrapper.find("[data-test=table-foot]").exists()).toBeTruthy();
     });
 
-    it("When add mode is true, then table edit and rows should be displayed", () => {
+    it("When add mode is true, then table edit and rows should be displayed", async () => {
         is_add_mode = true;
-        const wrapper = getWidgetModalTableInstance();
+        const wrapper = await getWidgetModalTableInstance();
         expect(wrapper.find("[data-test=table-body-with-row]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=edit-time-with-row]").exists()).toBeTruthy();
     });
@@ -75,15 +75,15 @@ describe("Given a personal timetracking widget modal", () => {
             current_times.length = 0;
         });
 
-        it("When add mode is false, then empty table should be displayed", () => {
-            const wrapper = getWidgetModalTableInstance();
+        it("When add mode is false, then empty table should be displayed", async () => {
+            const wrapper = await getWidgetModalTableInstance();
             expect(wrapper.find("[data-test=table-body-with-row]").exists()).toBeFalsy();
             expect(wrapper.find("[data-test=table-body-without-row]").exists()).toBeTruthy();
         });
 
-        it("When in add mode, then edit row should be displayed", () => {
+        it("When in add mode, then edit row should be displayed", async () => {
             is_add_mode = true;
-            const wrapper = getWidgetModalTableInstance();
+            const wrapper = await getWidgetModalTableInstance();
             expect(wrapper.find("[data-test=edit-time-without-row]").exists()).toBeTruthy();
             expect(wrapper.find("[data-test=table-foot]").exists()).toBeFalsy();
         });
