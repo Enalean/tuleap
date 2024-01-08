@@ -34,6 +34,29 @@
 # for the entire site
 
 INSERT INTO user SET \
+        user_id = 70, \
+        user_name = 'forge__cce', \
+        email = 'noreply@_DOMAIN_NAME_', \
+        realname = 'Automated custom code execution', \
+        register_purpose = NULL, \
+        status = 'S', \
+        ldap_id = NULL, \
+        add_date = 1704707115, \
+        confirm_hash = NULL, \
+        mail_siteupdates = 0, \
+        mail_va = 0, \
+        sticky_login = 0, \
+        authorized_keys = NULL, \
+        email_new = NULL, \
+        timezone = 'UTC', \
+        language_id = 'en_US', \
+        last_pwd_update = '0';
+
+INSERT INTO user_access SET \
+        user_id = 70, \
+        last_access_date = '0';
+
+INSERT INTO user SET \
         user_id = 100, \
         user_name = 'None', \
         email = 'noreply@_DOMAIN_NAME_', \
