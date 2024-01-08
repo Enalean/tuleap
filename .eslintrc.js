@@ -133,7 +133,6 @@ module.exports = {
                 escape: {
                     methods: [
                         "sanitize",
-                        "dompurify.sanitize",
                         "render",
                         "getPOFileFromLocale",
                         "getPOFileFromLocaleWithoutExtension",

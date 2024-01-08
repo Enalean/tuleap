@@ -30,8 +30,8 @@ dependencies:
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-fetch
   dompurify:
-    specifier: ^3.0.7
-    version: 3.0.7
+    specifier: ^3.0.8
+    version: 3.0.8
   lit-html:
     specifier: ^2.8.0
     version: 2.8.0
@@ -68,8 +68,8 @@ packages:
   /@types/trusted-types@2.0.4:
     resolution: {integrity: sha512-IDaobHimLQhjwsQ/NMwRVfa/yL7L/wriQPMhw1ZJall0KX6E1oxk29XMDeilW5qTIg5aoiqf5Udy8U/51aNoQQ==}
 
-  /dompurify@3.0.7:
-    resolution: {integrity: sha512-BViYTZoqP3ak/ULKOc101y+CtHDUvBsVgSxIF1ku0HmK6BRf+C03MC+tArMvOPtVtZp83DDh5puywKDu4sbVjQ==}
+  /dompurify@3.0.8:
+    resolution: {integrity: sha512-b7uwreMYL2eZhrSCRC4ahLTeZcPZxSmYfmcQGXGkXiZSNW1X85v+SDM5KsWcpivIiUBH47Ji7NtyUdpLeF5JZQ==}
     dev: false
 
   /lit-html@2.8.0:

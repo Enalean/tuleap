@@ -21,8 +21,8 @@ dependencies:
     specifier: ^7.3.0
     version: 7.8.2
   dompurify:
-    specifier: ^3.0.7
-    version: 3.0.7
+    specifier: ^3.0.8
+    version: 3.0.8
   sprintf-js:
     specifier: ^1.1.2
     version: 1.1.2
@@ -73,8 +73,8 @@ packages:
       xml-js: 1.6.11
     dev: false
 
-  /dompurify@3.0.7:
-    resolution: {integrity: sha512-BViYTZoqP3ak/ULKOc101y+CtHDUvBsVgSxIF1ku0HmK6BRf+C03MC+tArMvOPtVtZp83DDh5puywKDu4sbVjQ==}
+  /dompurify@3.0.8:
+    resolution: {integrity: sha512-b7uwreMYL2eZhrSCRC4ahLTeZcPZxSmYfmcQGXGkXiZSNW1X85v+SDM5KsWcpivIiUBH47Ji7NtyUdpLeF5JZQ==}
     dev: false
 
   /immediate@3.0.6:

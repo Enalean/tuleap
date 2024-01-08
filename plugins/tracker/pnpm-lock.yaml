@@ -75,8 +75,8 @@ dependencies:
     specifier: ^3.0.1
     version: 3.0.1
   dompurify:
-    specifier: ^3.0.7
-    version: 3.0.7
+    specifier: ^3.0.8
+    version: 3.0.8
   moment:
     specifier: ^2.29.4
     version: 2.29.4
@@ -173,8 +173,8 @@ packages:
       d3-path: 3.0.1
     dev: false
 
-  /dompurify@3.0.7:
-    resolution: {integrity: sha512-BViYTZoqP3ak/ULKOc101y+CtHDUvBsVgSxIF1ku0HmK6BRf+C03MC+tArMvOPtVtZp83DDh5puywKDu4sbVjQ==}
+  /dompurify@3.0.8:
+    resolution: {integrity: sha512-b7uwreMYL2eZhrSCRC4ahLTeZcPZxSmYfmcQGXGkXiZSNW1X85v+SDM5KsWcpivIiUBH47Ji7NtyUdpLeF5JZQ==}
     dev: false
 
   /internmap@2.0.1:
