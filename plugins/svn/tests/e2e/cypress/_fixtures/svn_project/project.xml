@@ -50,9 +50,6 @@
     <svn>
         <repository name="sample" dump-file="data/svn.dump">
             <access-file><![CDATA[
-[/]
-* =
-@members = r
 @Integrators = rw
 
 [/trunk]
