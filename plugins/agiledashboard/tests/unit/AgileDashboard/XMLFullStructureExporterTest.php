@@ -22,60 +22,53 @@ declare(strict_types=1);
 
 class XMLFullStructureExporterTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var EventManager|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $event_manager;
-    private $router;
-    /**
-     * @var AgileDashboard_XMLFullStructureExporter
-     */
-    private $xml_exporter;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project;
+    private AgileDashboard_XMLFullStructureExporter $xml_exporter;
+    private Project $project;
+    private EventManager|\PHPUnit\Framework\MockObject\MockObject $event_manager;
+    private AgileDashboardRouter|\PHPUnit\Framework\MockObject\MockObject $router;
 
     protected function setUp(): void
     {
-        $this->router = Mockery::spy(\AgileDashboardRouter::class);
+        $this->router = $this->createMock(\AgileDashboardRouter::class);
 
-        $this->event_manager = Mockery::mock(\EventManager::class);
-        $router_builder      = Mockery::spy(\AgileDashboardRouterBuilder::class)
-            ->shouldReceive('build')->andReturns($this->router)->getMock();
+        $this->event_manager = $this->createMock(\EventManager::class);
+
+        $router_builder = $this->createMock(\AgileDashboardRouterBuilder::class);
+        $router_builder->method('build')->willReturn($this->router);
 
         $this->xml_exporter = new AgileDashboard_XMLFullStructureExporter(
             $this->event_manager,
             $router_builder
         );
 
-        $this->project = Mockery::spy(\Project::class)->shouldReceive('getID')->andReturns(101)->getMock();
+        $this->project = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->build();
     }
 
     public function testItAsksToPluginToExportStuffForTheGivenProject(): void
     {
-        $this->event_manager->shouldReceive('processEvent')
-            ->with(
-                AgileDashboard_XMLFullStructureExporter::AGILEDASHBOARD_EXPORT_XML,
-                Mockery::on(
-                    function ($params) {
-                        return $params['project']->getID() === $this->project->getID() && isset($params['into_xml']);
-                    }
-                )
-            )->atLeast()->once();
+        $this->router->expects(self::once())->method('route');
+
+        $this->event_manager
+            ->expects(self::atLeast(1))
+            ->method('processEvent')
+            ->willReturnCallback(fn (string $event, array $params) => match (true) {
+                $event === AgileDashboard_XMLFullStructureExporter::AGILEDASHBOARD_EXPORT_XML
+                    && $params['project']->getID() === $this->project->getID()
+                    && isset($params['into_xml']) => true,
+            });
 
         $this->xml_exporter->export($this->project);
     }
 
     public function testAgileDashboardExportsItself(): void
     {
-        $this->router->shouldReceive('route')->once();
+        $this->router->expects(self::once())->method('route');
 
         $this->event_manager
-            ->shouldReceive('processEvent')
-            ->with(AgileDashboard_XMLFullStructureExporter::AGILEDASHBOARD_EXPORT_XML, Mockery::any());
+            ->method('processEvent')
+            ->willReturnCallback(fn (string $event) => match ($event) {
+AgileDashboard_XMLFullStructureExporter::AGILEDASHBOARD_EXPORT_XML => true
+            });
 
         $this->xml_exporter->export($this->project);
     }

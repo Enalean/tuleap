@@ -20,15 +20,12 @@
 
 namespace Tuleap\AgileDashboard\FormElement;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Date\DatePeriodWithoutWeekEnd;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
 class BurnupCacheDateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItGetsDaysToCacheWhenPeriodIsOngoing()
     {
         $start_date = \DateTime::createFromFormat('d-m-Y H:i', '18-12-2017 00:00');

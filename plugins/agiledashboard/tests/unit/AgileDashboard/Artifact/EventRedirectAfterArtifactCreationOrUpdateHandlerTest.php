@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Artifact;
 
 use AgileDashboard_PaneRedirectionExtractor;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Planning;
 use Planning_ArtifactLinker;
@@ -33,18 +31,19 @@ use Planning_MilestonePaneFactory;
 use PlanningFactory;
 use Project;
 use ProjectManager;
-use Tracker;
 use Tracker_Artifact_Redirect;
 use Tuleap\AgileDashboard\Planning\NotFoundException;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Milestone\PaneInfo;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalResponseMock;
 
     private const PROJECT_ID   = 101;
@@ -52,69 +51,28 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test
     private const PLANNING_ID  = 1;
     private const MILESTONE_ID = 666;
 
-    /**
-     * @var AgileDashboard_PaneRedirectionExtractor
-     */
-    private $params_extractor;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Planning_ArtifactLinker
-     */
-    private $artifact_linker;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningFactory
-     */
-    private $planning_factory;
-    /**
-     * @var RedirectParameterInjector
-     */
-    private $injector;
-    /**
-     * @var EventRedirectAfterArtifactCreationOrUpdateHandler
-     */
-    private $processor;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
-     */
-    private $artifact;
-    /**
-     * @var Planning
-     */
-    private $planning;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Planning_MilestoneFactory
-     */
-    private $milestone_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Planning_MilestonePaneFactory
-     */
-    private $pane_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|null
-     */
-    private $project;
-    /**
-     * @var HomeServiceRedirectionExtractor
-     */
-    private $home_service_redirection_extractor;
+    private AgileDashboard_PaneRedirectionExtractor $params_extractor;
+    private RedirectParameterInjector $injector;
+    private EventRedirectAfterArtifactCreationOrUpdateHandler $processor;
+    private Planning $planning;
+    private HomeServiceRedirectionExtractor $home_service_redirection_extractor;
+    private Project $project;
+    private PFUser|\PHPUnit\Framework\MockObject\MockObject $user;
 
     protected function setUp(): void
     {
         $this->params_extractor                   = new AgileDashboard_PaneRedirectionExtractor();
         $this->home_service_redirection_extractor = new HomeServiceRedirectionExtractor();
-        $this->artifact_linker                    = Mockery::mock(Planning_ArtifactLinker::class);
-        $this->planning_factory                   = Mockery::mock(PlanningFactory::class);
-        $this->milestone_factory                  = Mockery::mock(Planning_MilestoneFactory::class);
-        $this->pane_factory                       = Mockery::mock(Planning_MilestonePaneFactory::class);
+        $this->artifact_linker                    = $this->createMock(Planning_ArtifactLinker::class);
+        $this->planning_factory                   = $this->createMock(PlanningFactory::class);
+        $this->milestone_factory                  = $this->createMock(Planning_MilestoneFactory::class);
+        $this->pane_factory                       = $this->createMock(Planning_MilestonePaneFactory::class);
 
         $this->injector = new RedirectParameterInjector(
             $this->params_extractor,
-            Mockery::mock(\Tracker_ArtifactFactory::class),
+            $this->createMock(\Tracker_ArtifactFactory::class),
             $GLOBALS['Response'],
-            Mockery::spy(\TemplateRenderer::class),
+            $this->createMock(\TemplateRenderer::class),
         );
 
         $this->processor = new EventRedirectAfterArtifactCreationOrUpdateHandler(
@@ -127,35 +85,17 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test
             $this->pane_factory
         );
 
-        $this->user = Mockery::mock(PFUser::class);
+        $this->user = $this->createMock(PFUser::class);
 
-        $this->project = Mockery::mock(Project::class)
-            ->shouldReceive(['getID' => self::PROJECT_ID])
-            ->getMock();
+        $this->project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
 
-        $tracker = Mockery::mock(Tracker::class)
-            ->shouldReceive(['getProject' => $this->project])
-            ->getMock();
+        $tracker = TrackerTestBuilder::aTracker()->withProject($this->project)->build();
 
-        $tracker->shouldReceive('getGroupId')->andReturn(self::PROJECT_ID);
-
-        $this->artifact = Mockery::mock(Artifact::class)
-            ->shouldReceive(
-                [
-                    'getTracker' => $tracker,
-                    'getId'      => self::ARTIFACT_ID,
-                ]
-            )->getMock();
+        $this->artifact = ArtifactTestBuilder::anArtifact(self::ARTIFACT_ID)->inTracker($tracker)->build();
 
         $this->planning = PlanningBuilder::aPlanning(self::PROJECT_ID)
             ->withId(self::PLANNING_ID)
             ->build();
-
-        ProjectManager::setInstance(
-            Mockery::mock(ProjectManager::class)
-                ->shouldReceive(['getProject' => $this->project])
-                ->getMock()
-        );
     }
 
     protected function tearDown(): void
@@ -172,7 +112,8 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test
             ->build();
 
         $this->artifact_linker
-            ->shouldReceive('linkBacklogWithPlanningItems')
+            ->expects(self::once())
+            ->method('linkBacklogWithPlanningItems')
             ->with(
                 $request,
                 $this->artifact,
@@ -182,36 +123,35 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test
                     'aid'         => self::MILESTONE_ID,
                     'action'      => 'show',
                 ]
-            )->once();
+            );
 
         $this->planning_factory
-            ->shouldReceive('getPlanning')
+            ->expects(self::once())
+            ->method('getPlanning')
             ->with(self::PLANNING_ID)
-            ->once()
-            ->andReturn($this->planning);
+            ->willReturn($this->planning);
 
-        $milestone = Mockery::mock(\Planning_Milestone::class)
-            ->shouldReceive(['getArtifact' => Mockery::mock(Artifact::class)])
-            ->getMock();
+        $milestone = $this->createMock(\Planning_Milestone::class);
+        $milestone->method('getArtifact')->willReturn($this->createMock(Artifact::class));
 
         $this->milestone_factory
-            ->shouldReceive('getBareMilestone')
+            ->expects(self::once())
+            ->method('getBareMilestone')
             ->with($this->user, $this->project, self::PLANNING_ID, self::MILESTONE_ID)
-            ->once()
-            ->andReturn($milestone);
+            ->willReturn($milestone);
 
         $this->pane_factory
-            ->shouldReceive('getListOfPaneInfo')
-            ->once()
-            ->andReturn(
+            ->expects(self::once())
+            ->method('getListOfPaneInfo')
+            ->willReturn(
                 [
-                    Mockery::mock(PaneInfo::class)
-                        ->shouldReceive(
-                            [
-                                'getIdentifier' => 'details',
-                                'getUri'        => '/path/to/the/pane',
-                            ]
-                        )->getMock(),
+                    $this->createConfiguredMock(
+                        PaneInfo::class,
+                        [
+                            'getIdentifier' => 'details',
+                            'getUri'        => '/path/to/the/pane',
+                        ]
+                    ),
                 ]
             );
 
@@ -254,7 +194,8 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test
             ->build();
 
         $this->artifact_linker
-            ->shouldReceive('linkBacklogWithPlanningItems')
+            ->expects(self::once())
+            ->method('linkBacklogWithPlanningItems')
             ->with(
                 $request,
                 $this->artifact,
@@ -264,35 +205,34 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test
                     'aid'         => self::MILESTONE_ID,
                     'action'      => 'show',
                 ]
-            )->once();
+            );
 
         $this->planning_factory
-            ->shouldReceive('getPlanning')
+            ->expects(self::once())
+            ->method('getPlanning')
             ->with(self::PLANNING_ID)
-            ->once()
-            ->andReturn($this->planning);
+            ->willReturn($this->planning);
 
-        $milestone = Mockery::mock(\Planning_Milestone::class)
-            ->shouldReceive(['getArtifact' => Mockery::mock(Artifact::class)])
-            ->getMock();
+        $milestone = $this->createMock(\Planning_Milestone::class);
+        $milestone->method('getArtifact')->willReturn($this->createMock(Artifact::class));
 
         $this->milestone_factory
-            ->shouldReceive('getBareMilestone')
+            ->expects(self::once())
+            ->method('getBareMilestone')
             ->with($this->user, $this->project, self::PLANNING_ID, self::MILESTONE_ID)
-            ->once()
-            ->andReturn($milestone);
+            ->willReturn($milestone);
 
         $this->pane_factory
-            ->shouldReceive('getListOfPaneInfo')
-            ->once()
-            ->andReturn([
-                Mockery::mock(PaneInfo::class)
-                    ->shouldReceive(
-                        [
-                            'getIdentifier' => 'taskboard',
-                            'getUri' => '/path/to/the/pane',
-                        ]
-                    )->getMock(),
+            ->expects(self::once())
+            ->method('getListOfPaneInfo')
+            ->willReturn([
+                $this->createConfiguredMock(
+                    PaneInfo::class,
+                    [
+                        'getIdentifier' => 'taskboard',
+                        'getUri' => '/path/to/the/pane',
+                    ]
+                ),
             ]);
 
         $redirect       = new Tracker_Artifact_Redirect();
@@ -321,7 +261,8 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test
             ->build();
 
         $this->artifact_linker
-            ->shouldReceive('linkBacklogWithPlanningItems')
+            ->expects(self::once())
+            ->method('linkBacklogWithPlanningItems')
             ->with(
                 $request,
                 $this->artifact,
@@ -331,23 +272,22 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test
                     'aid'         => self::MILESTONE_ID,
                     'action'      => 'show',
                 ]
-            )->once();
+            );
 
         $this->planning_factory
-            ->shouldReceive('getPlanning')
+            ->expects(self::once())
+            ->method('getPlanning')
             ->with(self::PLANNING_ID)
-            ->once()
-            ->andReturn($this->planning);
+            ->willReturn($this->planning);
 
-        $milestone = Mockery::mock(\Planning_Milestone::class)
-            ->shouldReceive(['getArtifact' => null])
-            ->getMock();
+        $milestone = $this->createMock(\Planning_Milestone::class);
+        $milestone->method('getArtifact')->willReturn(null);
 
         $this->milestone_factory
-            ->shouldReceive('getBareMilestone')
+            ->expects(self::once())
+            ->method('getBareMilestone')
             ->with($this->user, $this->project, self::PLANNING_ID, self::MILESTONE_ID)
-            ->once()
-            ->andReturn($milestone);
+            ->willReturn($milestone);
 
         $redirect       = new Tracker_Artifact_Redirect();
         $redirect->mode = Tracker_Artifact_Redirect::STATE_SUBMIT;
@@ -375,7 +315,8 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test
             ->build();
 
         $this->artifact_linker
-            ->shouldReceive('linkBacklogWithPlanningItems')
+            ->expects(self::once())
+            ->method('linkBacklogWithPlanningItems')
             ->with(
                 $request,
                 $this->artifact,
@@ -385,20 +326,19 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test
                     'aid'         => self::MILESTONE_ID,
                     'action'      => 'show',
                 ]
-            )->once();
+            );
 
         $this->planning_factory
-            ->shouldReceive('getPlanning')
+            ->expects(self::once())
+            ->method('getPlanning')
             ->with(self::PLANNING_ID)
-            ->once()
-            ->andReturn($this->planning);
+            ->willReturn($this->planning);
 
-        $milestone = Mockery::mock(\Planning_Milestone::class);
         $this->milestone_factory
-            ->shouldReceive('getBareMilestone')
+            ->expects(self::once())
+            ->method('getBareMilestone')
             ->with($this->user, $this->project, self::PLANNING_ID, self::MILESTONE_ID)
-            ->once()
-            ->andThrow(new NotFoundException(self::PLANNING_ID));
+            ->willThrowException(new NotFoundException(self::PLANNING_ID));
 
         $redirect       = new Tracker_Artifact_Redirect();
         $redirect->mode = Tracker_Artifact_Redirect::STATE_SUBMIT;
@@ -425,7 +365,8 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test
             ->build();
 
         $this->artifact_linker
-            ->shouldReceive('linkBacklogWithPlanningItems')
+            ->expects(self::once())
+            ->method('linkBacklogWithPlanningItems')
             ->with(
                 $request,
                 $this->artifact,
@@ -435,14 +376,13 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test
                     'aid'         => self::MILESTONE_ID,
                     'action'      => 'show',
                 ]
-            )
-            ->once();
+            );
 
         $this->planning_factory
-            ->shouldReceive('getPlanning')
+            ->expects(self::once())
+            ->method('getPlanning')
             ->with(self::PLANNING_ID)
-            ->once()
-            ->andReturnNull();
+            ->willReturn(null);
 
         $redirect       = new Tracker_Artifact_Redirect();
         $redirect->mode = Tracker_Artifact_Redirect::STATE_SUBMIT;
@@ -468,7 +408,8 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test
             ->build();
 
         $this->artifact_linker
-            ->shouldReceive('linkBacklogWithPlanningItems')
+            ->expects(self::once())
+            ->method('linkBacklogWithPlanningItems')
             ->with(
                 $request,
                 $this->artifact,
@@ -478,14 +419,13 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test
                     'aid'         => self::MILESTONE_ID,
                     'action'      => 'show',
                 ]
-            )
-            ->once();
+            );
 
         $this->planning_factory
-            ->shouldReceive('getPlanning')
+            ->expects(self::once())
+            ->method('getPlanning')
             ->with(self::PLANNING_ID)
-            ->once()
-            ->andReturn($this->planning);
+            ->willReturn($this->planning);
 
         $redirect       = new Tracker_Artifact_Redirect();
         $redirect->mode = Tracker_Artifact_Redirect::STATE_CONTINUE;
@@ -508,12 +448,11 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test
             ->withParam('planning', ['details' => [(string) self::PLANNING_ID => (string) self::MILESTONE_ID]])
             ->build();
 
-        $last_milestone_artifact = Mockery::mock(Artifact::class)
-            ->shouldReceive(['getId' => 111])
-            ->getMock();
+        $last_milestone_artifact = ArtifactTestBuilder::anArtifact(111)->build();
 
         $this->artifact_linker
-            ->shouldReceive('linkBacklogWithPlanningItems')
+            ->expects(self::once())
+            ->method('linkBacklogWithPlanningItems')
             ->with(
                 $request,
                 $this->artifact,
@@ -524,14 +463,13 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test
                     'action'      => 'show',
                 ]
             )
-            ->once()
-            ->andReturn($last_milestone_artifact);
+            ->willReturn($last_milestone_artifact);
 
         $this->planning_factory
-            ->shouldReceive('getPlanning')
+            ->expects(self::once())
+            ->method('getPlanning')
             ->with(self::PLANNING_ID)
-            ->once()
-            ->andReturn($this->planning);
+            ->willReturn($this->planning);
 
         $redirect       = new Tracker_Artifact_Redirect();
         $redirect->mode = Tracker_Artifact_Redirect::STATE_CREATE_PARENT;

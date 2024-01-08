@@ -22,15 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Artifact;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Planning;
 use PlanningFactory;
 use PlanningPermissionsManager;
 use Project;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Tracker;
 use Tuleap\AgileDashboard\BlockScrumAccess;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
@@ -39,76 +37,33 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonAction;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class AdditionalArtifactActionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var AdditionalArtifactActionBuilder
-     */
-    private $builder;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ExplicitBacklogDao
-     */
-    private $explicit_backlog_dao;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningFactory
-     */
-    private $planning_factory;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningPermissionsManager
-     */
-    private $planning_permissions_manager;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ArtifactsInExplicitBacklogDao
-     */
-    private $artifacts_explicit_backlog_dao;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
-     */
-    private $artifact;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $root_planning;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlannedArtifactDao
-     */
-    private $planned_artifact_dao;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningTrackerBacklogChecker
-     */
-    private $planning_tracker_backlog_checker;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|EventDispatcherInterface
-     */
-    private $event_dispatcher;
+    private AdditionalArtifactActionBuilder $builder;
+    private ExplicitBacklogDao|MockObject $explicit_backlog_dao;
+    private PlanningFactory|MockObject $planning_factory;
+    private PlanningPermissionsManager|MockObject $planning_permissions_manager;
+    private MockObject|ArtifactsInExplicitBacklogDao $artifacts_explicit_backlog_dao;
+    private PlannedArtifactDao|MockObject $planned_artifact_dao;
+    private PlanningTrackerBacklogChecker|MockObject $planning_tracker_backlog_checker;
+    private EventDispatcherInterface|MockObject $event_dispatcher;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->explicit_backlog_dao             = Mockery::mock(ExplicitBacklogDao::class);
-        $this->planning_factory                 = Mockery::mock(PlanningFactory::class);
-        $this->planning_permissions_manager     = Mockery::mock(PlanningPermissionsManager::class);
-        $this->artifacts_explicit_backlog_dao   = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
-        $this->planned_artifact_dao             = Mockery::mock(PlannedArtifactDao::class);
-        $this->planning_tracker_backlog_checker = Mockery::mock(PlanningTrackerBacklogChecker::class);
-        $this->event_dispatcher                 = Mockery::mock(EventDispatcherInterface::class);
+        $this->explicit_backlog_dao             = $this->createMock(ExplicitBacklogDao::class);
+        $this->planning_factory                 = $this->createMock(PlanningFactory::class);
+        $this->planning_permissions_manager     = $this->createMock(PlanningPermissionsManager::class);
+        $this->artifacts_explicit_backlog_dao   = $this->createMock(ArtifactsInExplicitBacklogDao::class);
+        $this->planned_artifact_dao             = $this->createMock(PlannedArtifactDao::class);
+        $this->planning_tracker_backlog_checker = $this->createMock(PlanningTrackerBacklogChecker::class);
+        $this->event_dispatcher                 = $this->createMock(EventDispatcherInterface::class);
+
+        $assets = $this->createMock(IncludeAssets::class);
+        $assets->method('getFileURL');
 
         $this->builder = new AdditionalArtifactActionBuilder(
             $this->explicit_backlog_dao,
@@ -116,175 +71,199 @@ final class AdditionalArtifactActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             $this->planning_permissions_manager,
             $this->artifacts_explicit_backlog_dao,
             $this->planned_artifact_dao,
-            new JavascriptAsset(Mockery::mock(IncludeAssets::class)->shouldReceive('getFileURL')->getMock(), 'mock.js'),
+            new JavascriptAsset($assets, 'mock.js'),
             $this->planning_tracker_backlog_checker,
             $this->event_dispatcher,
         );
 
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturn('101');
+        $project = $this->createMock(Project::class);
+        $project->method('getID')->willReturn('101');
 
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getProject')->andReturn($project);
-        $tracker->shouldReceive('getId')->andReturn('148');
+        $tracker = TrackerTestBuilder::aTracker()->withId(148)->withProject($project)->build();
 
-        $this->artifact = Mockery::mock(Artifact::class);
-        $this->artifact->shouldReceive('getTracker')->andReturn($tracker);
-        $this->artifact->shouldReceive('getId')->andReturn('205');
+        $this->artifact = $this->createMock(Artifact::class);
+        $this->artifact->method('getTracker')->willReturn($tracker);
+        $this->artifact->method('getId')->willReturn('205');
 
-        $this->user = Mockery::mock(PFUser::class);
+        $this->user = $this->createMock(PFUser::class);
 
-        $this->root_planning = Mockery::mock(Planning::class);
-        $this->root_planning->shouldReceive('getId')->andReturn('1');
-        $this->root_planning->shouldReceive('getGroupId')->andReturn('101');
+        $this->root_planning = $this->createMock(Planning::class);
+        $this->root_planning->method('getId')->willReturn('1');
+        $this->root_planning->method('getGroupId')->willReturn(101);
     }
 
     public function testItReturnsNullIfProjectDoesNotUseExplicitBacklog(): void
     {
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
-            ->once()
+        $this->explicit_backlog_dao
+            ->expects(self::once())
+            ->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->andReturnFalse();
+            ->willReturn(false);
 
         $this->assertNull($this->builder->buildArtifactAction($this->artifact, $this->user));
     }
 
     public function testItReturnsNullIfProjectDoesNotHaveARootPlanning(): void
     {
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
-            ->once()
+        $this->explicit_backlog_dao
+            ->expects(self::once())
+            ->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->andReturnTrue();
-        $this->event_dispatcher->shouldReceive('dispatch');
+            ->willReturn(true);
+        $this->event_dispatcher->method('dispatch');
 
-        $this->planning_factory->shouldReceive('getRootPlanning')
-            ->once()
+        $this->planning_factory
+            ->expects(self::once())
+            ->method('getRootPlanning')
             ->with($this->user, 101)
-            ->andReturnFalse();
+            ->willReturn(false);
 
         $this->assertNull($this->builder->buildArtifactAction($this->artifact, $this->user));
     }
 
     public function testItReturnsNullScrumAccessIsBlockedForThisProject(): void
     {
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
-            ->once()
+        $this->explicit_backlog_dao
+            ->expects(self::once())
+            ->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->andReturnTrue();
-        $this->event_dispatcher->shouldReceive('dispatch')->andReturnUsing(function (object $event) {
-            if ($event instanceof BlockScrumAccess) {
-                $event->disableScrumAccess();
-            }
-            return $event;
-        });
+            ->willReturn(true);
+        $this->event_dispatcher
+            ->method('dispatch')
+            ->willReturnCallback(
+                function (object $event) {
+                    if ($event instanceof BlockScrumAccess) {
+                        $event->disableScrumAccess();
+                    }
+                    return $event;
+                }
+            );
 
         self::assertNull($this->builder->buildArtifactAction($this->artifact, $this->user));
     }
 
     public function testItReturnsNullIfArtifactNotInBacklogTrackerOfRootPlanning(): void
     {
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
-            ->once()
+        $this->explicit_backlog_dao
+            ->expects(self::once())
+            ->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->andReturnTrue();
-        $this->event_dispatcher->shouldReceive('dispatch');
+            ->willReturn(true);
+        $this->event_dispatcher->method('dispatch');
 
-        $this->planning_factory->shouldReceive('getRootPlanning')
-            ->once()
+        $this->planning_factory
+            ->expects(self::once())
+            ->method('getRootPlanning')
             ->with($this->user, 101)
-            ->andReturn($this->root_planning);
+            ->willReturn($this->root_planning);
 
-        $this->planning_tracker_backlog_checker->shouldReceive('isTrackerBacklogOfProjectPlanning')
-            ->once()
-            ->andReturnFalse();
+        $this->planning_tracker_backlog_checker
+            ->expects(self::once())
+            ->method('isTrackerBacklogOfProjectPlanning')
+            ->willReturn(false);
 
         $this->assertNull($this->builder->buildArtifactAction($this->artifact, $this->user));
     }
 
     public function testItReturnsNullIfUserCannotChangePriorityOnTopLevelPlanning(): void
     {
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
-            ->once()
+        $this->explicit_backlog_dao
+            ->expects(self::once())
+            ->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->andReturnTrue();
-        $this->event_dispatcher->shouldReceive('dispatch');
+            ->willReturn(true);
+        $this->event_dispatcher->method('dispatch');
 
-        $this->planning_factory->shouldReceive('getRootPlanning')
-            ->once()
+        $this->planning_factory
+            ->expects(self::once())
+            ->method('getRootPlanning')
             ->with($this->user, 101)
-            ->andReturn($this->root_planning);
+            ->willReturn($this->root_planning);
 
-        $this->planning_tracker_backlog_checker->shouldReceive('isTrackerBacklogOfProjectPlanning')
-            ->once()
-            ->andReturnTrue();
+        $this->planning_tracker_backlog_checker
+            ->expects(self::once())
+            ->method('isTrackerBacklogOfProjectPlanning')
+            ->willReturn(true);
 
-        $this->planning_permissions_manager->shouldReceive('userHasPermissionOnPlanning')
-            ->once()
+        $this->planning_permissions_manager
+            ->expects(self::once())
+            ->method('userHasPermissionOnPlanning')
             ->with('1', '101', $this->user, 'PLUGIN_AGILEDASHBOARD_PLANNING_PRIORITY_CHANGE')
-            ->andReturnFalse();
+            ->willReturn(false);
 
         $this->assertNull($this->builder->buildArtifactAction($this->artifact, $this->user));
     }
 
     public function testItReturnsNullIfArtifactIsPlannedInASubMilestone(): void
     {
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
-            ->once()
+        $this->explicit_backlog_dao
+            ->expects(self::once())
+            ->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->andReturnTrue();
-        $this->event_dispatcher->shouldReceive('dispatch');
+            ->willReturn(true);
+        $this->event_dispatcher->method('dispatch');
 
-        $this->planning_factory->shouldReceive('getRootPlanning')
-            ->once()
+        $this->planning_factory
+            ->expects(self::once())
+            ->method('getRootPlanning')
             ->with($this->user, 101)
-            ->andReturn($this->root_planning);
+            ->willReturn($this->root_planning);
 
-        $this->planning_tracker_backlog_checker->shouldReceive('isTrackerBacklogOfProjectPlanning')
-            ->once()
-            ->andReturnTrue();
+        $this->planning_tracker_backlog_checker
+            ->expects(self::once())
+            ->method('isTrackerBacklogOfProjectPlanning')
+            ->willReturn(true);
 
-        $this->planning_permissions_manager->shouldReceive('userHasPermissionOnPlanning')
-            ->once()
+        $this->planning_permissions_manager
+            ->expects(self::once())
+            ->method('userHasPermissionOnPlanning')
             ->with('1', '101', $this->user, 'PLUGIN_AGILEDASHBOARD_PLANNING_PRIORITY_CHANGE')
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $this->planned_artifact_dao->shouldReceive('isArtifactPlannedInAMilestoneOfTheProject')
-            ->once()
+        $this->planned_artifact_dao
+            ->expects(self::once())
+            ->method('isArtifactPlannedInAMilestoneOfTheProject')
             ->with(205, 101)
-            ->andReturnTrue();
+            ->willReturn(true);
 
         $this->assertNull($this->builder->buildArtifactAction($this->artifact, $this->user));
     }
 
     public function testItReturnsTheLinkToAddOrRemoveInTopBacklog(): void
     {
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
-            ->once()
+        $this->explicit_backlog_dao
+            ->expects(self::once())
+            ->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->andReturnTrue();
-        $this->event_dispatcher->shouldReceive('dispatch');
+            ->willReturn(true);
+        $this->event_dispatcher->method('dispatch');
 
-        $this->planning_factory->shouldReceive('getRootPlanning')
-            ->once()
+        $this->planning_factory
+            ->expects(self::once())
+            ->method('getRootPlanning')
             ->with($this->user, 101)
-            ->andReturn($this->root_planning);
+            ->willReturn($this->root_planning);
 
-        $this->planning_tracker_backlog_checker->shouldReceive('isTrackerBacklogOfProjectPlanning')
-            ->once()
-            ->andReturnTrue();
+        $this->planning_tracker_backlog_checker
+            ->expects(self::once())
+            ->method('isTrackerBacklogOfProjectPlanning')
+            ->willReturn(true);
 
-        $this->planning_permissions_manager->shouldReceive('userHasPermissionOnPlanning')
-            ->once()
+        $this->planning_permissions_manager
+            ->expects(self::once())
+            ->method('userHasPermissionOnPlanning')
             ->with('1', '101', $this->user, 'PLUGIN_AGILEDASHBOARD_PLANNING_PRIORITY_CHANGE')
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $this->planned_artifact_dao->shouldReceive('isArtifactPlannedInAMilestoneOfTheProject')
-            ->once()
+        $this->planned_artifact_dao
+            ->expects(self::once())
+            ->method('isArtifactPlannedInAMilestoneOfTheProject')
             ->with(205, 101)
-            ->andReturnFalse();
+            ->willReturn(false);
 
-        $this->artifacts_explicit_backlog_dao->shouldReceive('isArtifactInTopBacklogOfProject')
-            ->once();
+        $this->artifacts_explicit_backlog_dao
+            ->expects(self::once())
+            ->method('isArtifactInTopBacklogOfProject');
 
         $this->assertInstanceOf(
             AdditionalButtonAction::class,

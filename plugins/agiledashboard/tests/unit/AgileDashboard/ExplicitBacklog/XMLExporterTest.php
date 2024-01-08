@@ -22,48 +22,30 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use SimpleXMLElement;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var XMLExporter
-     */
-    private $exporter;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ExplicitBacklogDao
-     */
-    private $explicit_backlog_dao;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ArtifactsInExplicitBacklogDao
-     */
-    private $artifacts_in_explicit_backlog_dao;
+    private XMLExporter $exporter;
+    private Project $project;
+    private ExplicitBacklogDao|\PHPUnit\Framework\MockObject\MockObject $explicit_backlog_dao;
+    private ArtifactsInExplicitBacklogDao|\PHPUnit\Framework\MockObject\MockObject $artifacts_in_explicit_backlog_dao;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->explicit_backlog_dao              = Mockery::mock(ExplicitBacklogDao::class);
-        $this->artifacts_in_explicit_backlog_dao = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
+        $this->explicit_backlog_dao              = $this->createMock(ExplicitBacklogDao::class);
+        $this->artifacts_in_explicit_backlog_dao = $this->createMock(ArtifactsInExplicitBacklogDao::class);
 
         $this->exporter = new XMLExporter(
             $this->explicit_backlog_dao,
             $this->artifacts_in_explicit_backlog_dao
         );
 
-        $this->project = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn('101')->getMock();
+        $this->project = ProjectTestBuilder::aProject()->build();
     }
 
     public function testItExportsExplicitBacklogUsageIfUsed(): void
@@ -119,10 +101,11 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertExplicitBacklogIsUsed();
 
-        $this->artifacts_in_explicit_backlog_dao->shouldReceive('getAllTopBacklogItemsForProjectSortedByRank')
+        $this->artifacts_in_explicit_backlog_dao
+            ->expects(self::once())
+            ->method('getAllTopBacklogItemsForProjectSortedByRank')
             ->with(101)
-            ->once()
-            ->andReturn([]);
+            ->willReturn([]);
 
         $this->exporter->exportExplicitBacklogContent($this->project, $xml);
 
@@ -137,10 +120,11 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertExplicitBacklogIsUsed();
 
-        $this->artifacts_in_explicit_backlog_dao->shouldReceive('getAllTopBacklogItemsForProjectSortedByRank')
+        $this->artifacts_in_explicit_backlog_dao
+            ->expects(self::once())
+            ->method('getAllTopBacklogItemsForProjectSortedByRank')
             ->with(101)
-            ->once()
-            ->andReturn([
+            ->willReturn([
                 ['artifact_id' => 148],
                 ['artifact_id' => 158],
                 ['artifact_id' => 152],
@@ -158,15 +142,15 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function assertExplicitBacklogIsNotUsed(): void
     {
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->andReturnFalse();
+            ->willReturn(false);
     }
 
     private function assertExplicitBacklogIsUsed(): void
     {
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->andReturnTrue();
+            ->willReturn(true);
     }
 }

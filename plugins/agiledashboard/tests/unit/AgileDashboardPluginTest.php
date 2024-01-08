@@ -20,12 +20,8 @@
 
 declare(strict_types=1);
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-class AgileDashboardPluginTest extends \Tuleap\Test\PHPUnit\TestCase
+class AgileDashboardPluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    use MockeryPHPUnitIntegration;
-
     private $parameters;
 
     protected function setUp(): void
@@ -40,8 +36,8 @@ class AgileDashboardPluginTest extends \Tuleap\Test\PHPUnit\TestCase
 </semantic>'
         );
 
-        $xml_mapping = ['F13' => Mockery::spy(Tracker_FormElement_Field_Float::class)];
-        $tracker     = Mockery::spy(Tracker::class);
+        $xml_mapping = ['F13' => $this->createStub(Tracker_FormElement_Field_Float::class)];
+        $tracker     = $this->createStub(Tracker::class);
         $semantic    = null;
         $type        = AgileDashBoard_Semantic_InitialEffort::NAME;
 
@@ -62,8 +58,8 @@ class AgileDashboardPluginTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $effort_factory = AgileDashboard_Semantic_InitialEffortFactory::instance();
 
-        $plugin = Mockery::mock(AgileDashboardPlugin::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $plugin->shouldReceive('getSemanticInitialEffortFactory')->andReturns($effort_factory);
+        $plugin = $this->createPartialMock(AgileDashboardPlugin::class, ['getSemanticInitialEffortFactory']);
+        $plugin->method('getSemanticInitialEffortFactory')->willReturn($effort_factory);
 
         $plugin->tracker_event_semantic_from_xml($this->parameters);
 

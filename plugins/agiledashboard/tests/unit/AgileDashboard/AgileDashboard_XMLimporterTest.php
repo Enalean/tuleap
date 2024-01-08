@@ -20,10 +20,8 @@
 
 use Tuleap\AgileDashboard\Planning\XML\XMLExporter;
 
-final class AgileDashboard_XMLimporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class AgileDashboard_XMLimporterTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     /**
      * @var SimpleXMLElement
      */

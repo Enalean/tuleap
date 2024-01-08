@@ -24,7 +24,6 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalLanguageMock;
 
     /**
@@ -54,17 +53,14 @@ final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private $validator;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PlanningFactory
-     */
-    private $planning_factory;
-    /**
      * @var \PHPUnit\Framework\MockObject\MockObject&TrackerFactory
      */
     private $tracker_factory;
+    private PlanningFactory|\PHPUnit\Framework\MockObject\MockObject $planning_factory;
 
     protected function setUp(): void
     {
-        $this->planning_factory = \Mockery::spy(\PlanningFactory::class);
+        $this->planning_factory = $this->createMock(\PlanningFactory::class);
         $this->tracker_factory  = $this->createMock(TrackerFactory::class);
         $this->validator        = new Planning_RequestValidator(
             $this->planning_factory,
@@ -204,10 +200,10 @@ final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withMilestoneTracker($release_tracker)
             ->build();
 
-        $this->planning_factory->shouldReceive('getPlanning')->with($this->release_planning_id)->andReturns(
+        $this->planning_factory->method('getPlanning')->with($this->release_planning_id)->willReturn(
             $this->release_planning
         );
-        $this->planning_factory->shouldReceive('getPlanningTrackerIdsByGroupId')->with($group_id)->andReturns(
+        $this->planning_factory->method('getPlanningTrackerIdsByGroupId')->with($group_id)->willReturn(
             [
                 $this->releases_tracker_id,
                 $this->sprints_tracker_id,

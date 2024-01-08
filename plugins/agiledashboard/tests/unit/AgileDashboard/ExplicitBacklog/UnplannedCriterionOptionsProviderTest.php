@@ -22,47 +22,34 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class UnplannedCriterionOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var UnplannedCriterionOptionsProvider
-     */
-    private $provider;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ExplicitBacklogDao
-     */
-    private $explicit_backlog_dao;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project;
+    private UnplannedCriterionOptionsProvider $provider;
+    private ExplicitBacklogDao|\PHPUnit\Framework\MockObject\MockObject $explicit_backlog_dao;
+    private Project $project;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->explicit_backlog_dao = Mockery::mock(ExplicitBacklogDao::class);
+        $this->explicit_backlog_dao = $this->createMock(ExplicitBacklogDao::class);
         $this->provider             = new UnplannedCriterionOptionsProvider($this->explicit_backlog_dao);
 
-        $this->project = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn(101)->getMock();
+        $this->project = ProjectTestBuilder::aProject()->build();
     }
 
     public function testItReturnsAnEmptyStringIfExplicitBacklogIsNotUsed(): void
     {
         $selected_option = '0';
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao
+            ->expects(self::once())
+            ->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->once()
-            ->andReturnFalse();
+            ->willReturn(false);
 
         $this->assertEmpty($this->provider->formatUnplannedAsSelectboxOption($this->project, $selected_option));
     }
@@ -71,10 +58,11 @@ final class UnplannedCriterionOptionsProviderTest extends \Tuleap\Test\PHPUnit\T
     {
         $selected_option = '0';
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao
+            ->expects(self::once())
+            ->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->once()
-            ->andReturnTrue();
+            ->willReturn(true);
 
         $string_option = $this->provider->formatUnplannedAsSelectboxOption($this->project, $selected_option);
 
@@ -87,10 +75,11 @@ final class UnplannedCriterionOptionsProviderTest extends \Tuleap\Test\PHPUnit\T
     {
         $selected_option = '-1';
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
+        $this->explicit_backlog_dao
+            ->expects(self::once())
+            ->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->once()
-            ->andReturnTrue();
+            ->willReturn(true);
 
         $string_option = $this->provider->formatUnplannedAsSelectboxOption($this->project, $selected_option);
 

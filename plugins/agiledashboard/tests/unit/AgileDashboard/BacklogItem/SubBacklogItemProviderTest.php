@@ -19,97 +19,58 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PlanningFactory
-     */
-    private $planning_factory;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_ArtifactDao
-     */
-    private $dao;
-    /**
-     * @var MileStone|\Mockery\LegacyMockInterface|\Mockery\MockInterface|Planning_Milestone
-     */
-    private $milestone;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker
-     */
-    private $task_tracker;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker
-     */
-    private $backlog_tracker;
-    /**
-     * @var AgileDashboard_Milestone_Backlog_BacklogFactory|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $backlog_factory;
-    /**
-     * @var AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $backlog_item_collection_factory;
-    /**
-     * @var PFUser
-     */
-    private $user;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ExplicitBacklogDao
-     */
-    private $explicit_backlog_dao;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ArtifactsInExplicitBacklogDao
-     */
-    private $artifact_in_explicit_backlog_dao;
-
-    /**
-     * @var AgileDashboard_BacklogItem_SubBacklogItemProvider
-     */
-    private $provider;
+    private AgileDashboard_BacklogItem_SubBacklogItemProvider $provider;
+    private Tracker $backlog_tracker;
+    private Tracker|MockObject $task_tracker;
+    private MockObject|Planning_Milestone $milestone;
+    private Tracker_ArtifactDao|MockObject $dao;
+    private PFUser|MockObject $user;
+    private AgileDashboard_Milestone_Backlog_BacklogFactory|MockObject $backlog_factory;
+    private AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory|MockObject $backlog_item_collection_factory;
+    private PlanningFactory|MockObject $planning_factory;
+    private ExplicitBacklogDao|MockObject $explicit_backlog_dao;
+    private MockObject|ArtifactsInExplicitBacklogDao $artifact_in_explicit_backlog_dao;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->backlog_tracker = Mockery::mock(Tracker::class);
-        $this->backlog_tracker->shouldReceive("getId")->andReturn(35);
+        $this->backlog_tracker = \Tuleap\Tracker\Test\Builders\TrackerTestBuilder::aTracker()
+            ->withId(35)
+            ->build();
 
-        $this->task_tracker = Mockery::mock(Tracker::class);
-        $this->task_tracker->shouldReceive("getId")->andReturn(36);
-        $this->task_tracker->shouldReceive("getParent")->andReturn($this->backlog_tracker);
+        $this->task_tracker = $this->createMock(Tracker::class);
+        $this->task_tracker->method("getId")->willReturn(36);
+        $this->task_tracker->method("getParent")->willReturn($this->backlog_tracker);
 
-        $sprint_tracker = Mockery::mock(Tracker::class);
-        $sprint_tracker->shouldReceive("getId")->andReturn(106);
-        $sprint_tracker->shouldReceive("getPlanning")->andReturn($sprint_tracker);
-        $sprint_tracker->shouldReceive("getBacklogTracker")->andReturn($this->backlog_tracker);
+        $sprint_tracker = $this->createMock(Tracker::class);
+        $sprint_tracker->method("getId")->willReturn(106);
 
-        $sprint_planning = Mockery::mock(Planning::class);
-        $sprint_planning->shouldReceive('getPlanningTrackerId')->andReturn($sprint_tracker->getId());
-        $sprint_planning->shouldReceive('getBacklogTracker')->andReturn($this->backlog_tracker);
+        $sprint_planning = $this->createMock(Planning::class);
+        $sprint_planning->method('getPlanningTrackerId')->willReturn($sprint_tracker->getId());
 
-        $this->milestone = Mockery::mock(Planning_Milestone::class);
-        $this->milestone->shouldReceive('getArtifactId')->andReturn(3);
-        $this->milestone->shouldReceive('getPlanning')->andReturn($sprint_planning);
+        $this->milestone = $this->createMock(Planning_Milestone::class);
+        $this->milestone->method('getArtifactId')->willReturn(3);
+        $this->milestone->method('getPlanning')->willReturn($sprint_planning);
 
-        $this->dao = \Mockery::spy(\Tracker_ArtifactDao::class);
+        $this->dao = $this->createMock(\Tracker_ArtifactDao::class);
 
-        $this->user                            = Mockery::mock(PFUser::class);
-        $this->backlog_factory                 = \Mockery::spy(\AgileDashboard_Milestone_Backlog_BacklogFactory::class);
-        $this->backlog_item_collection_factory = \Mockery::spy(
+        $this->user                            = $this->createMock(PFUser::class);
+        $this->backlog_factory                 = $this->createMock(\AgileDashboard_Milestone_Backlog_BacklogFactory::class);
+        $this->backlog_item_collection_factory = $this->createMock(
             \AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory::class
         );
-        $this->planning_factory                = \Mockery::spy(PlanningFactory::class);
+        $this->planning_factory                = $this->createMock(PlanningFactory::class);
 
-        $this->explicit_backlog_dao             = Mockery::mock(ExplicitBacklogDao::class);
-        $this->artifact_in_explicit_backlog_dao = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
+        $this->explicit_backlog_dao             = $this->createMock(ExplicitBacklogDao::class);
+        $this->artifact_in_explicit_backlog_dao = $this->createMock(ArtifactsInExplicitBacklogDao::class);
 
         $this->provider = new AgileDashboard_BacklogItem_SubBacklogItemProvider(
             $this->dao,
@@ -120,24 +81,25 @@ final class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends \Tulea
             $this->artifact_in_explicit_backlog_dao
         );
 
-        $this->planning_factory->shouldReceive('getSubPlannings')->andReturn([$sprint_planning]);
-        $this->planning_factory->shouldReceive('isTrackerIdUsedInAPlanning')->with(35)->andReturn(false);
-        $this->planning_factory->shouldReceive('isTrackerIdUsedInAPlanning')->with(36)->andReturn(false);
-        $this->planning_factory->shouldReceive('isTrackerIdUsedInAPlanning')->with(105)->andReturn(true);
-        $this->planning_factory->shouldReceive('isTrackerIdUsedInAPlanning')->with(106)->andReturn(true);
+        $this->planning_factory->method('getSubPlannings')->willReturn([$sprint_planning]);
+        $this->planning_factory->method('isTrackerIdUsedInAPlanning')
+            ->willReturnCallback(static fn (int $id) => match ($id) {
+                35, 36 => false,
+                105, 106 => true,
+            });
     }
 
     public function testItReturnsTheMatchingIds(): void
     {
-        $this->dao->shouldReceive('getLinkedArtifactsByIds')->with([3], [3])
-            ->andReturns(
+        $this->dao->method('getLinkedArtifactsByIds')->with([3], [3])
+            ->willReturn(
                 \TestHelper::arrayToDar(
                     ['id' => 7, 'tracker_id' => 35],
                     ['id' => 8, 'tracker_id' => 35],
                     ['id' => 11, 'tracker_id' => 35]
                 )
             );
-        $this->dao->shouldReceive('getChildrenForArtifacts')->with([7, 8, 11])->andReturns(
+        $this->dao->method('getChildrenForArtifacts')->with([7, 8, 11])->willReturn(
             \TestHelper::emptyDar()
         );
 
@@ -148,18 +110,19 @@ final class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends \Tulea
 
     public function testItReturnsTheMatchingIdsInExplicitTopBacklogContext(): void
     {
-        $milestone           = Mockery::mock(Planning_VirtualTopMilestone::class)->shouldReceive(
-            'getArtifactId'
-        )->andReturnNull()->getMock();
-        $top_backlog_tracker = Mockery::mock(Tracker::class);
+        $milestone           = $this->createConfiguredMock(
+            Planning_VirtualTopMilestone::class,
+            ['getArtifactId' => null]
+        );
+        $top_backlog_tracker = $this->createMock(Tracker::class);
 
-        $project = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn(101)->getMock();
-        $milestone->shouldReceive('getProject')->andReturn($project);
+        $project = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->build();
+        $milestone->method('getProject')->willReturn($project);
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturnTrue();
-        $this->artifact_in_explicit_backlog_dao->shouldReceive(
+        $this->explicit_backlog_dao->method('isProjectUsingExplicitBacklog')->willReturn(true);
+        $this->artifact_in_explicit_backlog_dao->method(
             'getAllTopBacklogItemsForProjectSortedByRank'
-        )->andReturn(
+        )->willReturn(
             [
                 ['artifact_id' => 7],
                 ['artifact_id' => 8],
@@ -174,7 +137,7 @@ final class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends \Tulea
 
     public function testItReturnsAnEmptyResultIfThereIsNoMatchingId(): void
     {
-        $this->dao->shouldReceive('getLinkedArtifactsByIds')->andReturns(\TestHelper::emptyDar());
+        $this->dao->method('getLinkedArtifactsByIds')->willReturn(\TestHelper::emptyDar());
 
         $result = $this->provider->getMatchingIds($this->milestone, $this->backlog_tracker, $this->user);
         $this->assertEquals([], $result);
@@ -182,7 +145,7 @@ final class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends \Tulea
 
     public function testItDoesNotFilterFromArtifactsThatAreNotContentOfSubOrCurrentPlanning(): void
     {
-        $this->dao->shouldReceive('getLinkedArtifactsByIds')->with([3], [3])->andReturns(
+        $this->dao->method('getLinkedArtifactsByIds')->with([3], [3])->willReturn(
             \TestHelper::arrayToDar(
                 ['id' => 7, 'tracker_id' => 35],
                 ['id' => 8, 'tracker_id' => 35],
@@ -191,9 +154,9 @@ final class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends \Tulea
             )
         );
 
-        $this->dao->shouldReceive('getChildrenForArtifacts')->with(
+        $this->dao->method('getChildrenForArtifacts')->with(
             [7, 8, 11]
-        )->andReturns(\TestHelper::emptyDar());
+        )->willReturn(\TestHelper::emptyDar());
 
         $result = $this->provider->getMatchingIds($this->milestone, $this->backlog_tracker, $this->user);
         $this->assertEquals([7, 8, 11], array_keys($result));
@@ -201,34 +164,31 @@ final class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends \Tulea
 
     public function testItFiltersFromArtifactsThatAreChildOfContentOfSubOrCurrentPlanning(): void
     {
-        $this->dao->shouldReceive('getLinkedArtifactsByIds')->with([3], [3])->andReturns(
-            \TestHelper::arrayToDar(
-                ['id' => 7, 'tracker_id' => 35],
-                ['id' => 8, 'tracker_id' => 35],
-                ['id' => 11, 'tracker_id' => 35],
-                ['id' => 158, 'tracker_id' => 105],
-                ['id' => 148, 'tracker_id' => 106]
-            )
-        );
+        $this->dao->method('getLinkedArtifactsByIds')
+            ->willReturnCallback(
+                static fn (array $artifact_ids, array $excluded_ids) => match (true) {
+                    $artifact_ids === [3] && $excluded_ids === [3] => \TestHelper::arrayToDar(
+                        ['id' => 7, 'tracker_id' => 35],
+                        ['id' => 8, 'tracker_id' => 35],
+                        ['id' => 11, 'tracker_id' => 35],
+                        ['id' => 158, 'tracker_id' => 105],
+                        ['id' => 148, 'tracker_id' => 106]
+                    ),
+                    $artifact_ids === [148] && $excluded_ids === [3, 7, 8, 11, 158, 148] => \TestHelper::emptyDar(),
+                }
+            );
 
-        $this->dao->shouldReceive("getLinkedArtifactsByIds")->with([148], [3, 7, 8, 11, 158, 148])->andReturn(
-            \TestHelper::emptyDar()
-        );
-
-
-        $this->dao->shouldReceive('getChildrenForArtifacts')->with(
-            [7, 8, 11]
-        )->andReturns(
-            \TestHelper::arrayToDar(
-                ['id' => 200, 'tracker_id' => 36],
-                ['id' => 201, 'tracker_id' => 36],
-                ['id' => 159, 'tracker_id' => 105]
-            )
-        );
-
-        $this->dao->shouldReceive('getChildrenForArtifacts')->with(
-            [200, 201]
-        )->andReturns(\TestHelper::emptyDar());
+        $this->dao->method('getChildrenForArtifacts')
+            ->willReturnCallback(
+                static fn (array $artifact_ids) => match ($artifact_ids) {
+                    [7, 8, 11] => \TestHelper::arrayToDar(
+                        ['id' => 200, 'tracker_id' => 36],
+                        ['id' => 201, 'tracker_id' => 36],
+                        ['id' => 159, 'tracker_id' => 105]
+                    ),
+                    [200, 201] => \TestHelper::emptyDar(),
+                }
+            );
 
         $result = $this->provider->getMatchingIds($this->milestone, $this->task_tracker, $this->user);
         $this->assertEquals([200, 201], array_keys($result));
