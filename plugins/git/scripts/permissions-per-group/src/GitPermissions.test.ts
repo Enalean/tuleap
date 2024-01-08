@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import GitPermissions from "./GitPermissions.vue";
 import * as api from "./rest-querier";
@@ -39,7 +40,7 @@ describe("GitPermissions", () => {
                 plugins: [createGettext({ silent: true })],
             },
         });
-        jest.spyOn(api, "getGitPermissions").mockReturnValue(
+        vi.spyOn(api, "getGitPermissions").mockReturnValue(
             errAsync(Fault.fromMessage("Error during get permissions")),
         );
 
@@ -61,7 +62,7 @@ describe("GitPermissions", () => {
                 plugins: [createGettext({ silent: true })],
             },
         });
-        jest.spyOn(api, "getGitPermissions").mockReturnValue(okAsync({ repositories: [] }));
+        vi.spyOn(api, "getGitPermissions").mockReturnValue(okAsync({ repositories: [] }));
 
         wrapper.find("[data-test=git-permission-button-load]").trigger("click");
         await wrapper.vm.$nextTick();
@@ -84,7 +85,7 @@ describe("GitPermissions", () => {
                 plugins: [createGettext({ silent: true })],
             },
         });
-        jest.spyOn(api, "getGitPermissions").mockReturnValue(
+        vi.spyOn(api, "getGitPermissions").mockReturnValue(
             okAsync({ repositories: [{ id: 1 } as unknown as RepositoryFineGrainedPermissions] }),
         );
 

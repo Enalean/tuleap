@@ -26,8 +26,7 @@
                 class="tlp-search"
                 autocomplete="off"
                 v-bind:placeholder="placeholder"
-                v-bind:value="modelValue"
-                v-on:keyup="search"
+                v-model="model"
                 data-test="git-inline-filter-input"
             />
         </div>
@@ -38,21 +37,11 @@
 import { computed } from "vue";
 import { useGettext } from "vue3-gettext";
 
-// modelValue in camel case is needed for v-model until vue 3.4 (replaced by defineModel)
-// eslint-disable-next-line vue/prop-name-casing
-defineProps<{ modelValue?: string }>();
+// eslint doesn't know yet defineModel: https://github.com/vuejs/eslint-plugin-vue/issues/2130
+// eslint-disable-next-line no-undef
+const model = defineModel();
 
 const { $gettext } = useGettext();
 
 const placeholder = computed(() => $gettext("Repository name"));
-
-const emit = defineEmits<{
-    "update:modelValue": [value: string];
-}>();
-
-function search(event: Event): void {
-    if (event.target instanceof HTMLInputElement) {
-        emit("update:modelValue", event.target.value);
-    }
-}
 </script>

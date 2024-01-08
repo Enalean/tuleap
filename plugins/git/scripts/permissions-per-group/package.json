@@ -10,13 +10,13 @@
     "@tuleap/fetch-result": "workspace:*",
     "@tuleap/vue3-permissions-per-group-badge": "workspace:*",
     "@tuleap/vue3-gettext-init": "workspace:*",
-    "vue": "3.3.4",
+    "vue": "3.4.5",
     "vue3-gettext": "^2.4.0"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:*",
-    "@vitejs/plugin-vue": "^4.2.3",
+    "@vitejs/plugin-vue": "^5.0.2",
     "@vue/test-utils": "^2.2.10",
     "neverthrow": "6.0.0"
   },
@@ -24,6 +24,6 @@
     "typecheck": "vue-tsc --noEmit",
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false",
-    "test": "jest"
+    "test": "vitest"
   }
 }

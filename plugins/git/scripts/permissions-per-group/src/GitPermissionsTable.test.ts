@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
+import { describe, it, expect } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import GitPermissionsTable from "./GitPermissionsTable.vue";
 import { createGettext } from "vue3-gettext";
