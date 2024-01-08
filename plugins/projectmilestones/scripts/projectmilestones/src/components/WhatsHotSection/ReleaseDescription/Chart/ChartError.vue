@@ -35,28 +35,13 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-
-@Component
-export default class ChartError extends Vue {
-    @Prop({ required: true })
-    has_error_duration!: boolean;
-
-    @Prop({ required: true })
-    message_error_duration!: string;
-
-    @Prop({ required: true })
-    has_error_start_date!: boolean;
-
-    @Prop({ required: true })
-    message_error_start_date!: string;
-
-    @Prop({ required: true })
-    is_under_calculation!: boolean;
-
-    @Prop({ required: true })
-    message_error_under_calculation!: string;
-}
+<script setup lang="ts">
+defineProps<{
+    has_error_duration: boolean;
+    message_error_duration: string;
+    has_error_start_date: boolean;
+    message_error_start_date: string;
+    is_under_calculation: boolean;
+    message_error_under_calculation: string;
+}>();
 </script>

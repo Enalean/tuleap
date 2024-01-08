@@ -49,86 +49,92 @@
     </div>
 </template>
 
-<script lang="ts">
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
 import type { BurndownData, BurnupData, MilestoneData } from "../../../../type";
-import Vue from "vue";
+import type { Ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { getChartData } from "../../../../api/rest-querier";
 import { getBurndownDataFromType, getBurnupDataFromType } from "../../../../helpers/chart-helper";
 import BurndownDisplayer from "./Burndown/BurndownDisplayer.vue";
 import BurnupDisplayer from "./Burnup/BurnupDisplayer.vue";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-@Component({
-    components: { BurnupDisplayer, BurndownDisplayer },
-})
-export default class ChartDisplayer extends Vue {
-    @Prop()
-    readonly release_data!: MilestoneData;
+const props = defineProps<{ release_data: MilestoneData }>();
 
-    is_loading = true;
-    message_error_rest: string | null = null;
-    has_rest_error = false;
-    burndown_data: BurndownData | null = null;
-    burnup_data: BurnupData | null = null;
+const { $gettext } = useGettext();
 
-    get burndown_exists(): boolean {
-        if (this.burndown_data !== null) {
-            this.$emit("burndown-exists");
-            return true;
-        }
-        return false;
-    }
+let is_loading = ref(true);
+let message_error_rest: Ref<string | null> = ref(null);
+let has_rest_error = ref(false);
+let burndown_data: Ref<BurndownData | null> = ref(null);
+let burnup_data: Ref<BurnupData | null> = ref(null);
 
-    get burnup_exists(): boolean {
-        if (this.burnup_data !== null) {
-            this.$emit("burnup-exists");
-            return true;
-        }
-        return false;
-    }
-
-    get burndown_label(): string {
-        if (this.burndown_data && this.burndown_data.label) {
-            return this.burndown_data.label;
-        }
-
-        return this.$gettext("Burndown");
-    }
-
-    get burnup_label(): string {
-        if (this.burnup_data && this.burnup_data.label) {
-            return this.burnup_data.label;
-        }
-
-        return this.$gettext("Burnup");
-    }
-
-    async mounted(): Promise<void> {
+onMounted(async () => {
+    burndown_data.value = props.release_data.burndown_data;
+    burnup_data.value = props.release_data.burnup_data;
+    if (is_loading.value && (!burndown_data.value || !burnup_data.value)) {
         try {
-            const burndown_values = await getChartData(this.release_data.id);
-            this.burndown_data = getBurndownDataFromType(burndown_values);
-            this.burnup_data = getBurnupDataFromType(burndown_values);
+            const burndown_values = await getChartData(props.release_data.id);
+            burndown_data.value = getBurndownDataFromType(burndown_values);
+            burnup_data.value = getBurnupDataFromType(burndown_values);
         } catch (rest_error) {
-            this.has_rest_error = true;
-            await this.handle_error(rest_error);
+            has_rest_error.value = true;
+            await handle_error(rest_error);
         } finally {
-            this.is_loading = false;
+            is_loading.value = false;
         }
+    } else {
+        is_loading.value = false;
+    }
+});
+
+const emit = defineEmits<{
+    (e: "burndown-exists"): void;
+    (e: "burnup-exists"): void;
+}>();
+
+const burndown_exists = computed((): boolean => {
+    if (burndown_data.value !== null) {
+        emit("burndown-exists");
+        return true;
+    }
+    return false;
+});
+const burnup_exists = computed((): boolean => {
+    if (burnup_data.value !== null) {
+        emit("burnup-exists");
+        return true;
+    }
+    return false;
+});
+
+const burndown_label = computed((): string => {
+    if (burndown_data.value && burndown_data.value.label) {
+        return burndown_data.value.label;
     }
 
-    async handle_error(rest_error: unknown): Promise<void> {
-        try {
-            if (!(rest_error instanceof FetchWrapperError)) {
-                return;
-            }
-            const { error } = await rest_error.response.json();
-            this.message_error_rest = error.code + " " + error.message;
-        } catch (error) {
-            this.message_error_rest = this.$gettext("Oops, an error occurred!");
-        } finally {
-            this.is_loading = false;
+    return $gettext("Burndown");
+});
+const burnup_label = computed((): string => {
+    if (burnup_data.value && burnup_data.value.label) {
+        return burnup_data.value.label;
+    }
+
+    return $gettext("Burnup");
+});
+
+async function handle_error(rest_error: unknown): Promise<void> {
+    try {
+        if (!(rest_error instanceof FetchWrapperError)) {
+            return;
         }
+        const { error } = await rest_error.response.json();
+        message_error_rest.value = error.code + " " + error.message;
+    } catch (error) {
+        message_error_rest.value = $gettext("Oops, an error occurred!");
+    } finally {
+        is_loading.value = false;
     }
 }
 </script>

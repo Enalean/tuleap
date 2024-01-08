@@ -24,22 +24,31 @@ import type {
     PointsWithDateForBurndown,
     ArtifactMilestoneChartBurnup,
 } from "../../../../type";
-import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ChartDisplayer from "./ChartDisplayer.vue";
 import { createReleaseWidgetLocalVue } from "../../../../helpers/local-vue-for-test";
-import type { DefaultData } from "vue/types/options";
 import BurndownDisplayer from "./Burndown/BurndownDisplayer.vue";
 import * as rest_querier from "../../../../api/rest-querier";
 import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
-let release_data: MilestoneData;
-const component_options: ShallowMountOptions<ChartDisplayer> = {};
 const project_id = 102;
 
 describe("ChartDisplayer", () => {
-    async function getPersonalWidgetInstance(): Promise<Wrapper<ChartDisplayer>> {
+    async function getPersonalWidgetInstance(
+        burndown_data: BurndownData | null,
+        burnup_data: BurnupData | null,
+    ): Promise<Wrapper<Vue, Element>> {
+        const release_data = {
+            id: 2,
+            start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
+            burndown_data,
+            burnup_data,
+            resources: {},
+        } as MilestoneData;
+
         const useStore = defineStore("root", {
             state: () => ({
                 project_id,
@@ -49,43 +58,17 @@ describe("ChartDisplayer", () => {
         const pinia = createTestingPinia();
         useStore(pinia);
 
-        component_options.localVue = await createReleaseWidgetLocalVue();
-
-        return shallowMount(ChartDisplayer, component_options);
+        return shallowMount(ChartDisplayer, {
+            propsData: {
+                release_data,
+            },
+            localVue: await createReleaseWidgetLocalVue(),
+        });
     }
 
-    beforeEach(() => {
-        release_data = {
-            id: 2,
-            start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
-            burndown_data: {
-                start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
-                duration: 10,
-                capacity: 10,
-                points: [] as number[],
-                is_under_calculation: true,
-                opening_days: [] as number[],
-                points_with_date: [] as PointsWithDateForBurndown[],
-            } as BurndownData,
-            burnup_data: {} as BurnupData,
-            resources: {},
-        } as MilestoneData;
-
-        component_options.propsData = {
-            release_data,
-        };
-
-        getPersonalWidgetInstance();
-    });
-
     it("When the burndown can be created, Then component BurndownDisplayer is rendered", async () => {
-        component_options.propsData = {
-            release_data,
-            is_loading: false,
-        };
-
         const burndown_data = {
-            start_date: new Date().toString(),
+            start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
             duration: 10,
             capacity: 10,
             points: [] as number[],
@@ -108,7 +91,7 @@ describe("ChartDisplayer", () => {
             }),
         );
 
-        const wrapper = await getPersonalWidgetInstance();
+        const wrapper = await getPersonalWidgetInstance(burndown_data, {} as BurnupData);
         await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(BurndownDisplayer).exists()).toBe(true);
@@ -148,89 +131,40 @@ describe("ChartDisplayer", () => {
             }),
         );
 
-        release_data = {
-            id: 2,
-            start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
-            burndown_data: null,
-            resources: {},
-        } as MilestoneData;
-
-        component_options.data = (): DefaultData<ChartDisplayer> => {
-            return {
-                is_open: false,
-                is_loading: true,
-                error_message: null,
-            };
-        };
-
-        component_options.propsData = {
-            release_data,
-        };
-
-        const wrapper = await getPersonalWidgetInstance();
+        const wrapper = await getPersonalWidgetInstance(null, null);
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.findComponent(ChartDisplayer).exists()).toBe(true);
+        expect(wrapper.findComponent(BurndownDisplayer).exists()).toBe(true);
         expect(wrapper.find("[data-test=burnup-exists]").exists()).toBe(true);
     });
 
     it("When the burnup doesn't exist, Then there is nothing", async () => {
-        release_data = {
-            id: 2,
-            start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
-            burndown_data: null,
-            burnup_data: null,
-            resources: {},
-        } as MilestoneData;
-
-        component_options.data = (): DefaultData<ChartDisplayer> => {
-            return {
-                is_loading: false,
-            };
-        };
-
-        component_options.propsData = {
-            release_data,
-        };
-
-        const wrapper = await getPersonalWidgetInstance();
+        const wrapper = await getPersonalWidgetInstance(null, null);
 
         expect(wrapper.find("[data-test=burnup-exists]").exists()).toBe(false);
     });
 
     it("When the burndown doesn't yet exist, Then there is a spinner", async () => {
-        component_options.data = (): DefaultData<ChartDisplayer> => {
-            return {
-                is_open: false,
-                is_loading: true,
-                error_message: null,
-            };
-        };
-
-        component_options.propsData = {
-            release_data,
-        };
-
-        const wrapper = await getPersonalWidgetInstance();
-
+        const wrapper = await getPersonalWidgetInstance(null, null);
         expect(wrapper.find("[data-test=loading-data]").exists()).toBe(true);
+
+        await wrapper.vm.$nextTick();
+        expect(wrapper.find("[data-test=loading-data]").exists()).toBe(false);
     });
 
     it("When there is a rest error, Then the error is displayed", async () => {
-        component_options.data = (): DefaultData<ChartDisplayer> => {
-            return {
-                is_open: false,
-                is_loading: false,
-                message_error_rest: "404 Error",
-                has_rest_error: true,
-            };
-        };
+        const response = {
+            json(): Promise<Record<string, unknown>> {
+                return Promise.resolve({ error: { code: 404, message: "Error" } });
+            },
+        } as Response;
+        jest.spyOn(rest_querier, "getChartData").mockReturnValue(
+            Promise.reject(new FetchWrapperError("404 Error", response)),
+        );
 
-        component_options.propsData = {
-            release_data,
-        };
-
-        const wrapper = await getPersonalWidgetInstance();
+        const wrapper = await getPersonalWidgetInstance(null, null);
+        await wrapper.vm.$nextTick();
+        await wrapper.vm.$nextTick();
 
         expect(wrapper.get("[data-test=error-rest]").text()).toBe("404 Error");
     });
