@@ -29,6 +29,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilderVisitor;
+use Tuleap\CrossTracker\SearchOnDuckTypedFieldsConfig;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
@@ -136,6 +137,9 @@ class CrossTrackerArtifactReportFactory
         $limit,
         $offset,
     ) {
+        if (SearchOnDuckTypedFieldsConfig::isSearchOnDuckTypedFieldsEnabled()) {
+            \BackendLogger::getDefaultLogger()->debug('Search on duck-typed fields is enabled');
+        }
         $trackers     = $report->getTrackers();
         $expert_query = $report->getExpertQuery();
         $this->expert_query_validator->validateExpertQuery(
@@ -167,7 +171,7 @@ class CrossTrackerArtifactReportFactory
 
     /**
      * @param array $results
-     * @param int $total_size
+     * @param int   $total_size
      * @return ArtifactMatchingReportCollection
      */
     private function buildCollectionOfArtifacts(array $results, $total_size)
