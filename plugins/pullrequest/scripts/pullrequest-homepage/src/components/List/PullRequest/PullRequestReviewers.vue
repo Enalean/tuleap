@@ -86,7 +86,7 @@ const remaining_reviewers = props.pull_request.reviewers.slice(nb_max_displayed_
 const has_more_reviewers = props.pull_request.reviewers.length > nb_max_displayed_reviewers;
 const nb_reviewers_not_displayed = props.pull_request.reviewers.length - nb_max_displayed_reviewers;
 
-const preventClickInDropdownToTriggerRedirection = (dropdown: HTMLElement) => {
+const preventClickInDropdownToTriggerRedirection = (dropdown: HTMLElement): void => {
     dropdown.addEventListener("click", (event) => event.preventDefault());
 };
 

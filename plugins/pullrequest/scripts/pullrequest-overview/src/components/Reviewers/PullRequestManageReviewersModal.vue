@@ -124,7 +124,7 @@ const users_transformer = UsersToLazyboxItemsTransformer();
 const group_builder = GroupOfReviewersBuilder(users_transformer, $gettext);
 const autocompleter = ReviewersAutocompleter(group_builder);
 
-const cancel = () => {
+const cancel = (): void => {
     props.on_cancel_callback();
 };
 
@@ -155,10 +155,10 @@ function initReviewersAutocompleter(lazybox: Lazybox): void {
         is_multiple: true,
         placeholder: $gettext("Search users by their names"),
         templating_callback: getAssignableReviewerTemplate,
-        search_input_callback: (query) => {
+        search_input_callback: (query): void => {
             autocompleter.autocomplete(lazybox, currently_selected_users.value, query);
         },
-        selection_callback: (selected_users) => {
+        selection_callback: (selected_users): void => {
             currently_selected_users.value = getSelectedReviewers(selected_users);
         },
     };

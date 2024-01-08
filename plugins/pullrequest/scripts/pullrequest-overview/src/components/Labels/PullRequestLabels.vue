@@ -116,7 +116,7 @@ const openModal = (): void => {
     is_modal_shown.value = true;
 };
 
-const fetchAllLabels = (pull_request: PullRequest) => {
+const fetchAllLabels = (pull_request: PullRequest): void => {
     fetchProjectLabels(pull_request.repository.project.id)
         .match((result) => {
             project_labels.value = result;

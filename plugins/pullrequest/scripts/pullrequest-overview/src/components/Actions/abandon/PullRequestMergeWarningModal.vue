@@ -111,11 +111,11 @@ const props = defineProps<{
 const modal_element = ref<Element | undefined>();
 const modal_instance = ref<Modal | null>(null);
 
-const cancel = () => {
+const cancel = (): void => {
     props.cancel_callback();
 };
 
-const merge = () => {
+const merge = (): void => {
     props.merge_callback();
 };
 
@@ -144,7 +144,7 @@ const may_need_rebase = computed(
 );
 const is_missing_ci_validation = computed(() => !isCIHappy(props.pull_request));
 
-const getModalTitle = () => {
+const getModalTitle = (): string => {
     let nb_warnings = 0;
 
     if (may_need_rebase.value === true) {
