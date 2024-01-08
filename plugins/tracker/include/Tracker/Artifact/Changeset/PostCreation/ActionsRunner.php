@@ -22,11 +22,7 @@
 namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
 use ConfigNotificationAssignedTo;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\EventDatesRetriever;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\EventDescriptionRetriever;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\EventOrganizerRetriever;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\EventSummaryRetriever;
-use Tuleap\Tracker\Notifications\ConfigNotificationAssignedToDao;
+use EventManager;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Tracker_Artifact_Changeset;
@@ -45,8 +41,13 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\CachingTrackerPriva
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\EventDatesRetriever;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\EventDescriptionRetriever;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\EventOrganizerRetriever;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent\EventSummaryRetriever;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
+use Tuleap\Tracker\Notifications\ConfigNotificationAssignedToDao;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderDao;
 use Tuleap\Tracker\Notifications\InvolvedNotificationDao;
@@ -69,28 +70,31 @@ use WrapperLogger;
 
 class ActionsRunner
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var QueueFactory
-     */
-    private $queue_factory;
+    private LoggerInterface $logger;
+    private QueueFactory $queue_factory;
     /**
      * @var PostCreationTask[]
      */
-    private $post_creation_tasks;
+    private array $tasks_that_can_be_run_both_sync_and_async;
+    /**
+     * @var PostCreationTask[]
+     */
+    private array $tasks_that_can_be_run_only_async = [];
 
     public function __construct(
         LoggerInterface $logger,
         QueueFactory $queue_factory,
-        private IsAsyncTaskProcessingAvailable $worker_availability,
+        private readonly IsAsyncTaskProcessingAvailable $worker_availability,
         PostCreationTask ...$post_creation_tasks,
     ) {
-        $this->logger              = new WrapperLogger($logger, self::class);
-        $this->queue_factory       = $queue_factory;
-        $this->post_creation_tasks = $post_creation_tasks;
+        $this->logger                                    = new WrapperLogger($logger, self::class);
+        $this->queue_factory                             = $queue_factory;
+        $this->tasks_that_can_be_run_both_sync_and_async = $post_creation_tasks;
+    }
+
+    public function addAsyncPostCreationTasks(PostCreationTask ...$post_creation_tasks): void
+    {
+        $this->tasks_that_can_be_run_only_async = [...$this->tasks_that_can_be_run_only_async, ...$post_creation_tasks];
     }
 
     public static function build(LoggerInterface $logger): self
@@ -99,7 +103,10 @@ class ActionsRunner
         $user_manager         = UserManager::instance();
         $form_element_factory = Tracker_FormElementFactory::instance();
 
-        return new ActionsRunner(
+        $event_manager  = EventManager::instance();
+        $task_collector = $event_manager->dispatch(new PostCreationTaskCollectorEvent($logger));
+
+        $action_runner = new self(
             $logger,
             new QueueFactory($logger),
             new WorkerAvailability(),
@@ -153,8 +160,12 @@ class ActionsRunner
                         new PermissionChecker(new CachingTrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentUGroupEnabledDao())))
                     )
                 )
-            )
+            ),
         );
+
+        $action_runner->addAsyncPostCreationTasks(...($task_collector->getAsyncTasks()));
+
+        return $action_runner;
     }
 
     /**
@@ -166,7 +177,7 @@ class ActionsRunner
         if ($this->worker_availability->canProcessAsyncTasks()) {
             $this->queuePostCreationEvent($changeset, $send_notifications);
         } else {
-            $this->processPostCreationActions($changeset, $send_notifications);
+            $this->processPostCreationActions($changeset, $send_notifications, false);
         }
     }
 
@@ -176,7 +187,7 @@ class ActionsRunner
      */
     public function processAsyncPostCreationActions(Tracker_Artifact_Changeset $changeset, bool $send_notifications)
     {
-        $this->processPostCreationActions($changeset, $send_notifications);
+        $this->processPostCreationActions($changeset, $send_notifications, true);
     }
 
     private function queuePostCreationEvent(Tracker_Artifact_Changeset $changeset, bool $send_notifications)
@@ -186,21 +197,27 @@ class ActionsRunner
             $queue->pushSinglePersistentMessage(
                 AsynchronousActionsRunner::TOPIC,
                 [
-                    'artifact_id'  => (int) $changeset->getArtifact()->getId(),
-                    'changeset_id' => (int) $changeset->getId(),
+                    'artifact_id'        => (int) $changeset->getArtifact()->getId(),
+                    'changeset_id'       => (int) $changeset->getId(),
                     'send_notifications' => $send_notifications,
                 ]
             );
         } catch (Exception $exception) {
             $this->logger->error("Unable to queue notification for {$changeset->getId()}, fallback to online notif", ['exception' => $exception]);
-            $this->processPostCreationActions($changeset, $send_notifications);
+            $this->processPostCreationActions($changeset, $send_notifications, false);
         }
     }
 
-    private function processPostCreationActions(Tracker_Artifact_Changeset $changeset, bool $send_notifications)
+    private function processPostCreationActions(Tracker_Artifact_Changeset $changeset, bool $send_notifications, bool $execute_async)
     {
-        foreach ($this->post_creation_tasks as $notification_task) {
+        foreach ($this->tasks_that_can_be_run_both_sync_and_async as $notification_task) {
             $notification_task->execute($changeset, $send_notifications);
+        }
+
+        if ($execute_async) {
+            foreach ($this->tasks_that_can_be_run_only_async as $notification_task) {
+                $notification_task->execute($changeset, $send_notifications);
+            }
         }
     }
 }

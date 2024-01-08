@@ -27,6 +27,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerAvailability;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 
 final class ActionsRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -135,5 +136,38 @@ final class ActionsRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $actions_runner->executePostCreationActions($changeset, true);
         $this->assertSame($last_task_name, 'task_3');
+    }
+
+    public function testAsyncTasksAreNotRunWhenActionsRunnerRunSync(): void
+    {
+        $task_1 = $this->createMock(PostCreationTask::class);
+        $task_2 = $this->createMock(PostCreationTask::class);
+
+        $actions_runner = new ActionsRunner($this->logger, new QueueFactory($this->logger), $this->worker_availability, $task_1);
+        $actions_runner->addAsyncPostCreationTasks($task_2);
+
+        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+
+        $this->worker_availability->shouldReceive('canProcessAsyncTasks')->andReturn(false);
+        $task_1->expects(self::once())->method('execute')->with($changeset, true);
+        $task_2->expects(self::never())->method('execute');
+
+        $actions_runner->executePostCreationActions($changeset, true);
+    }
+
+    public function testAsyncTasksAreRanWhenActionsRunnerRunAsync(): void
+    {
+        $task_1 = $this->createMock(PostCreationTask::class);
+        $task_2 = $this->createMock(PostCreationTask::class);
+
+        $actions_runner = new ActionsRunner($this->logger, new QueueFactory($this->logger), $this->worker_availability, $task_1);
+        $actions_runner->addAsyncPostCreationTasks($task_2);
+
+        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+
+        $task_1->expects(self::once())->method('execute')->with($changeset, true);
+        $task_2->expects(self::once())->method('execute')->with($changeset, true);
+
+        $actions_runner->processAsyncPostCreationActions($changeset, true);
     }
 }
