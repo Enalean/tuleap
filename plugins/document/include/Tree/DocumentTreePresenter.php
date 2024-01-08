@@ -37,10 +37,10 @@ use Tuleap\Project\ProjectPrivacyPresenter;
 
 class DocumentTreePresenter
 {
-    #[FeatureFlagConfigKey('Do not display history in legacy docman interface')]
+    #[FeatureFlagConfigKey('Do not display logs in document')]
     #[ConfigKeyInt(0)]
     #[ConfigKeyHidden]
-    public const FEATURE_FLAG_HISTORY = 'display_history_in_document';
+    public const FEATURE_FLAG_HISTORY = 'do_not_display_logs_in_document';
 
     /**
      * @var int
@@ -212,7 +212,7 @@ class DocumentTreePresenter
 
         $this->can_user_switch_to_old_ui = SwitchToOldUi::isAllowed($user, $project);
 
-        $this->should_display_history_in_document = (int) \ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_HISTORY) === 1;
+        $this->should_display_history_in_document = (int) \ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_HISTORY) === 0;
 
         $this->create_new_item_alternatives = json_encode($create_new_item_alternatives, JSON_THROW_ON_ERROR);
     }
