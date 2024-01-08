@@ -19,8 +19,8 @@
 
 import Vue from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
-import { createStore } from "./store";
-import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
+import { createStore } from "./store/index.js";
+import { getPOFileFromLocale, initVueGettextFromPoGettextPlugin } from "@tuleap/vue2-gettext-init";
 import StepDefinitionField from "./StepDefinitionField.vue";
 import { setProjectId } from "./helpers/shared-properties.js";
 
@@ -28,7 +28,10 @@ const StepDefinitionFieldComponent = Vue.extend(StepDefinitionField);
 
 document.addEventListener("DOMContentLoaded", async () => {
     Vue.use(VueDOMPurifyHTML);
-    await initVueGettext(Vue, (locale) => import(`../po/${getPOFileFromLocale(locale)}`));
+    await initVueGettextFromPoGettextPlugin(
+        Vue,
+        (locale) => import(`../po/${getPOFileFromLocale(locale)}`),
+    );
 
     for (const mount_point of document.querySelectorAll(".ttm-definition-step-mount-point")) {
         const store = createStore();
