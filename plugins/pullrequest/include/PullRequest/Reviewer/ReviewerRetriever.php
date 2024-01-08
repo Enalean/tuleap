@@ -26,14 +26,14 @@ use Project_AccessException;
 use Tuleap\PullRequest\Authorization\CheckUserCanAccessPullRequest;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 use Tuleap\PullRequest\PullRequest;
-use Tuleap\PullRequest\PullRequest\Reviewer\RetrieveReviewers;
+use Tuleap\PullRequest\PullRequest\Reviewer\SearchReviewers;
 use Tuleap\User\ProvideUserFromRow;
 
-class ReviewerRetriever
+class ReviewerRetriever implements RetrieveReviewers
 {
     public function __construct(
         private readonly ProvideUserFromRow $user_manager,
-        private readonly RetrieveReviewers $reviewer_dao,
+        private readonly SearchReviewers $reviewer_dao,
         private readonly CheckUserCanAccessPullRequest $pull_request_permission_checker,
     ) {
     }

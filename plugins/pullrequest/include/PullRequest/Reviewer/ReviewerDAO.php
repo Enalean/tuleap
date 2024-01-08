@@ -24,9 +24,9 @@ namespace Tuleap\PullRequest\Reviewer;
 
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DataAccessObject;
-use Tuleap\PullRequest\PullRequest\Reviewer\RetrieveReviewers;
+use Tuleap\PullRequest\PullRequest\Reviewer\SearchReviewers;
 
-class ReviewerDAO extends DataAccessObject implements RetrieveReviewers
+class ReviewerDAO extends DataAccessObject implements SearchReviewers
 {
     /**
      * @psalm-return list<array{

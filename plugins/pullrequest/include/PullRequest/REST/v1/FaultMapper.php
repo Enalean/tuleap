@@ -29,6 +29,8 @@ use Tuleap\PullRequest\Authorization\GitRepositoryNotFoundFault;
 use Tuleap\PullRequest\Comment\CommentFormatNotAllowedFault;
 use Tuleap\PullRequest\Comment\CommentIsNotFromCurrentUserFault;
 use Tuleap\PullRequest\Comment\CommentNotFoundFault;
+use Tuleap\PullRequest\Criterion\MalformedQueryFault;
+use Tuleap\PullRequest\Criterion\MalformedStatusQueryParameterFault;
 use Tuleap\PullRequest\InlineComment\InlineCommentNotFoundFault;
 use Tuleap\PullRequest\PullRequestNotFoundFault;
 
@@ -40,6 +42,7 @@ final class FaultMapper
     public static function mapToRestException(Fault $fault): never
     {
         $status_code = match ($fault::class) {
+            MalformedQueryFault::class, MalformedStatusQueryParameterFault::class => 400,
             CommentIsNotFromCurrentUserFault::class, CommentFormatNotAllowedFault::class => 403,
             CommentNotFoundFault::class, CannotAccessToPullRequestFault::class, PullRequestNotFoundFault::class, InlineCommentNotFoundFault::class, GitRepositoryNotFoundFault::class => 404,
             default => 500,

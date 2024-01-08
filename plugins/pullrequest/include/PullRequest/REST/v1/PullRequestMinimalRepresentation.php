@@ -22,7 +22,7 @@ namespace Tuleap\PullRequest\REST\v1;
 
 use Codendi_HTMLPurifier;
 use GitRepository;
-use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
+use Tuleap\Git\Gitolite\GenerateGitoliteAccessURL;
 use Tuleap\PullRequest\GitReference\GitPullRequestReference;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\REST\JsonCast;
@@ -31,8 +31,6 @@ use Tuleap\User\REST\MinimalUserRepresentation;
 class PullRequestMinimalRepresentation
 {
     public const ROUTE = 'pull_requests';
-
-    private GitoliteAccessURLGenerator $gitolite_access_URL_generator;
 
     public int $id;
     public string $title;
@@ -52,9 +50,8 @@ class PullRequestMinimalRepresentation
      */
     public array $reviewers;
 
-    public function __construct(GitoliteAccessURLGenerator $gitolite_access_URL_generator)
+    public function __construct(private readonly GenerateGitoliteAccessURL $gitolite_access_URL_generator)
     {
-        $this->gitolite_access_URL_generator = $gitolite_access_URL_generator;
     }
 
     /**

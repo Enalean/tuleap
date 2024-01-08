@@ -20,9 +20,9 @@
 
 namespace Tuleap\PullRequest\Criterion;
 
-interface ISearchOnStatus
+interface SearchOnStatus
 {
-    public function shouldRetrieveOpenPullRequests();
+    public function shouldOnlyRetrieveOpenPullRequests(): bool;
 
-    public function shouldRetrieveClosedPullRequests();
+    public function shouldOnlyRetrieveClosedPullRequests(): bool;
 }

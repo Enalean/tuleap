@@ -37,7 +37,7 @@ use Tuleap\PullRequest\Reviewer\ReviewerRetriever;
 use Tuleap\PullRequest\ShortStat;
 use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
 use Tuleap\PullRequest\Tests\Stub\CheckUserCanAccessPullRequestStub;
-use Tuleap\PullRequest\Tests\Stub\RetrieveReviewersStub;
+use Tuleap\PullRequest\Tests\Stub\SearchReviewersStub;
 use Tuleap\PullRequest\Timeline\SearchAbandonEvent;
 use Tuleap\PullRequest\Timeline\SearchMergeEvent;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -108,7 +108,7 @@ final class PullRequestRepresentationFactoryTest extends TestCase
             $this->createMock(ContentInterpretor::class),
             new ReviewerRetriever(
                 ProvideUserFromRowStub::build(),
-                RetrieveReviewersStub::fromReviewers($first_reviewer, $second_reviewer),
+                SearchReviewersStub::fromReviewers($first_reviewer, $second_reviewer),
                 CheckUserCanAccessPullRequestStub::withAllowed()
             ),
             $this->user_retriever

@@ -28,7 +28,7 @@ use Tuleap\Config\ConfigKeyString;
 use Tuleap\ServerHostname;
 
 #[ConfigKeyCategory('Git')]
-class GitoliteAccessURLGenerator
+class GitoliteAccessURLGenerator implements GenerateGitoliteAccessURL
 {
     #[ConfigKey('Define a custom SSH URL to get access to the sources')]
     #[ConfigKeyHelp(<<<EOT

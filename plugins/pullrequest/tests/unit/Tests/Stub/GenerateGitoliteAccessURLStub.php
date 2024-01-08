@@ -18,14 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\PullRequest\Reviewer;
+declare(strict_types=1);
 
-use Tuleap\PullRequest\PullRequest;
+namespace Tuleap\PullRequest\Tests\Stub;
 
-interface RetrieveReviewers
+use GitRepository;
+use Tuleap\Git\Gitolite\GenerateGitoliteAccessURL;
+
+final class GenerateGitoliteAccessURLStub implements GenerateGitoliteAccessURL
 {
-    /**
-     * @return \PFUser[]
-     */
-    public function getReviewers(PullRequest $pull_request): array;
+    public function getSSHURL(GitRepository $repository): string
+    {
+        return "ssh://gitolit@example.com/my-project/" . $repository->getFullName() . ".git";
+    }
+
+    public function getHTTPURL(GitRepository $repository): string
+    {
+        return "https://example.com/plugins/git/my-project/" . $repository->getFullName() . ".git";
+    }
 }

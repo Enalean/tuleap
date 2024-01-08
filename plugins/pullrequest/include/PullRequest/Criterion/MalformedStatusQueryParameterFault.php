@@ -18,14 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\PullRequest\Reviewer;
+declare(strict_types=1);
 
-use Tuleap\PullRequest\PullRequest;
+namespace Tuleap\PullRequest\Criterion;
 
-interface RetrieveReviewers
+use Tuleap\NeverThrow\Fault;
+
+/**
+ * @psalm-immutable
+ */
+final class MalformedStatusQueryParameterFault extends Fault
 {
-    /**
-     * @return \PFUser[]
-     */
-    public function getReviewers(PullRequest $pull_request): array;
+    public static function build(): Fault
+    {
+        return new self('Query is malformed. Expecting {"status":"open"} or {"status":"closed"}.');
+    }
 }
