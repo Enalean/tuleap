@@ -1,0 +1,16 @@
+{
+  "name": "tuleap/plugin-tracker-cce",
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\TrackerCCE\\": ["include/", "include/TrackerCCE/"]
+    },
+    "classmap": ["include/"]
+  },
+  "tuleap": {
+    "preload": {
+      "include": [
+        "/include"
+      ]
+    }
+  }
+}
