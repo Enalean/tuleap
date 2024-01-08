@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\Comment;
 
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
-use Tuleap\PullRequest\REST\v1\Comment\ThreadColors;
 use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;

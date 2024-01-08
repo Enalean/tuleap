@@ -22,16 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\InlineComment;
 
+use Tuleap\PullRequest\Comment\ThreadColors;
+use Tuleap\PullRequest\Comment\ThreadCommentColorAssigner;
+use Tuleap\PullRequest\Comment\ThreadCommentColorRetriever;
 use Tuleap\PullRequest\InlineComment\Notification\PullRequestNewInlineCommentEvent;
 use Tuleap\PullRequest\Notification\EventSubjectToNotification;
-use Tuleap\PullRequest\REST\v1\Comment\ThreadColors;
-use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorAssigner;
-use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorRetriever;
 use Tuleap\PullRequest\Tests\Builders\NewInlineCommentTestBuilder;
 use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
+use Tuleap\PullRequest\Tests\Stub\CountThreadsStub;
 use Tuleap\PullRequest\Tests\Stub\CreateInlineCommentStub;
 use Tuleap\PullRequest\Tests\Stub\ParentCommentSearcherStub;
-use Tuleap\PullRequest\Tests\Stub\CountThreadsStub;
 use Tuleap\PullRequest\Tests\Stub\ThreadColorUpdaterStub;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Test\Stubs\ExtractAndSaveCrossReferencesStub;

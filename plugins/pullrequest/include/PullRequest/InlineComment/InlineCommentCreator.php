@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\InlineComment;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\PullRequest\Comment\ThreadCommentColorAssigner;
+use Tuleap\PullRequest\Comment\ThreadCommentColorRetriever;
 use Tuleap\PullRequest\InlineComment\Notification\PullRequestNewInlineCommentEvent;
-use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorAssigner;
-use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorRetriever;
 use Tuleap\Reference\ExtractAndSaveCrossReferences;
 
 final class InlineCommentCreator
