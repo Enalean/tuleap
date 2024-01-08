@@ -53,6 +53,11 @@ Requires: php81-php, php81-php-mysql, php81-php-xml, php81-php-mbstring, php81-p
 Requires: php81-php-intl, php81-php-process, php81-php-opcache, php81-php-fpm, php81-php-pecl-redis5, php81-php-sodium
 Requires: php81-php-pecl-zip
 Requires: php81-php-ffi
+Requires: php82-php-common
+Requires: php82-php, php82-php-mysql, php82-php-xml, php82-php-mbstring, php82-php-gd
+Requires: php82-php-intl, php82-php-process, php82-php-opcache, php82-php-fpm, php82-php-pecl-redis5, php82-php-sodium
+Requires: php82-php-pecl-zip
+Requires: php82-php-ffi
 %if "%{?dist}" == ".el9"
 Requires: mysql
 Requires: glibc-locale-source
@@ -160,6 +165,7 @@ Group: Development/Tools
 Summary: Tuleap plugin to manage LDAP integration
 Group: Development/Tools
 Requires: php81-php-ldap
+Requires: php82-php-ldap
 %description plugin-ldap
 LDAP Plugin for Tuleap. Provides LDAP information, LDAP
 authentication, user and group management.
@@ -196,7 +202,7 @@ Plugin to access to file releases & docman though WebDAV
 AutoReqProv: no
 Summary: Tracker v5 for Tuleap
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, libxslt, php81-php-pecl-mailparse
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, libxslt, php81-php-pecl-mailparse, php82-php-pecl-mailparse
 %description plugin-tracker
 New tracker generation for Tuleap.
 
@@ -643,6 +649,8 @@ done
 # PHP configuration
 %{__install} -d $RPM_BUILD_ROOT/etc/opt/remi/php81/php.d/
 %{__install} src/etc/php.d/99-tuleap.ini $RPM_BUILD_ROOT/etc/opt/remi/php81/php.d/
+%{__install} -d $RPM_BUILD_ROOT/etc/opt/remi/php82/php.d/
+%{__install} src/etc/php.d/99-tuleap.ini $RPM_BUILD_ROOT/etc/opt/remi/php82/php.d/
 
 # Data dir
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}
@@ -995,6 +1003,7 @@ fi
 
 %postun
 /usr/bin/systemctl unmask php81-php-fpm || :
+/usr/bin/systemctl unmask php82-php-fpm || :
 /usr/bin/systemctl daemon-reload &>/dev/null || :
 
 %postun core-subversion
@@ -1081,6 +1090,8 @@ fi
 # PHP Configuration
 %attr(00755,root,root) /etc/opt/remi/php81/php.d/
 %attr(00644,root,root) /etc/opt/remi/php81/php.d/99-tuleap.ini
+%attr(00755,root,root) /etc/opt/remi/php82/php.d/
+%attr(00644,root,root) /etc/opt/remi/php82/php.d/99-tuleap.ini
 
 # Data dir
 %dir %attr(755,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}
