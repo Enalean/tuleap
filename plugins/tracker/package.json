@@ -28,7 +28,7 @@
     "d3-array": "^3.0.1",
     "d3-selection": "^3.0.0",
     "d3-shape": "^3.0.1",
-    "dompurify": "^3.0.5",
+    "dompurify": "^3.0.7",
     "moment": "^2.29.4",
     "node-gettext": "^3.0.0",
     "sprintf-js": "^1.1.2"
@@ -39,7 +39,7 @@
     "@tuleap/cypress-configurator": "workspace:*",
     "@tuleap/cypress-utilities-support": "workspace:*",
     "@types/bootstrap": "^4.5.1",
-    "@types/dompurify": "^3.0.2",
+    "@types/dompurify": "^3.0.5",
     "@types/jquery": "^3.5.5",
     "@types/sprintf-js": "^1.1.2",
     "jquery": "^3.6.0"

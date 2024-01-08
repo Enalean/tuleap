@@ -9,8 +9,8 @@ dependencies:
     specifier: workspace:*
     version: link:../../../../../lib/frontend/tlp-swatch-colors
   dompurify:
-    specifier: ^3.0.5
-    version: 3.0.5
+    specifier: ^3.0.7
+    version: 3.0.7
   escape-string-regexp:
     specifier: ^5.0.0
     version: 5.0.0
@@ -23,8 +23,8 @@ devDependencies:
     specifier: workspace:*
     version: link:../../../../../lib/frontend/build-system-configurator
   '@types/dompurify':
-    specifier: ^3.0.2
-    version: 3.0.2
+    specifier: ^3.0.5
+    version: 3.0.5
   angular:
     specifier: ^1.8.2
     version: 1.8.2
@@ -34,8 +34,8 @@ devDependencies:
 
 packages:
 
-  /@types/dompurify@3.0.2:
-    resolution: {integrity: sha512-YBL4ziFebbbfQfH5mlC+QTJsvh0oJUrWbmxKMyEdL7emlHJqGR2Qb34TEFKj+VCayBvjKy3xczMFNhugThUsfQ==}
+  /@types/dompurify@3.0.5:
+    resolution: {integrity: sha512-1Wg0g3BtQF7sSb27fJQAKck1HECM6zV1EB66j8JH9i3LCjYabJa0FSdiSgsD5K/RbrsR0SiraKacLB+T8ZVYAg==}
     dependencies:
       '@types/trusted-types': 2.0.4
     dev: true
@@ -52,8 +52,8 @@ packages:
     resolution: {integrity: sha512-IauMOej2xEe7/7Ennahkbb5qd/HFADiNuLSESz9Q27inmi32zB0lnAsFeLEWcox3Gd1F6YhNd1CP7/9IukJ0Gw==}
     dev: true
 
-  /dompurify@3.0.5:
-    resolution: {integrity: sha512-F9e6wPGtY+8KNMRAVfxeCOHU0/NPWMSENNq4pQctuXRqqdEPW7q3CrLbR5Nse044WwacyjHGOMlvNsBe1y6z9A==}
+  /dompurify@3.0.7:
+    resolution: {integrity: sha512-BViYTZoqP3ak/ULKOc101y+CtHDUvBsVgSxIF1ku0HmK6BRf+C03MC+tArMvOPtVtZp83DDh5puywKDu4sbVjQ==}
     dev: false
 
   /escape-string-regexp@5.0.0:

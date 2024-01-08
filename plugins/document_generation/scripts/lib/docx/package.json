@@ -21,12 +21,12 @@
     "@tuleap/plugin-tracker-rest-api-types": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
     "docx": "^7.3.0",
-    "dompurify": "^3.0.5",
+    "dompurify": "^3.0.7",
     "sprintf-js": "^1.1.2"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
-    "@types/dompurify": "^3.0.2",
+    "@types/dompurify": "^3.0.5",
     "@types/sprintf-js": "^1.1.2"
   }
 }
