@@ -12,6 +12,12 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.2.2\n"
 
+msgid "Automated custom code execution"
+msgstr ""
+
+msgid "Custom code execution"
+msgstr ""
+
 msgid "Custom code execution as artifact post action"
 msgstr ""
 
