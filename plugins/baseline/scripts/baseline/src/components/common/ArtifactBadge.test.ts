@@ -19,14 +19,14 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../support/local-vue";
+import { createLocalVueForTests } from "../../support/local-vue";
 import ArtifactBadge from "./ArtifactBadge.vue";
 import type { Artifact, Tracker } from "../../type";
 
 describe("ArtifactBadge", () => {
-    it("shows tlp badge custom class", () => {
+    it("shows tlp badge custom class", async () => {
         const wrapper = shallowMount(ArtifactBadge, {
-            localVue,
+            localVue: await createLocalVueForTests(),
             propsData: {
                 artifact: {} as Artifact,
                 tracker: { color_name: "blue_cyan" } as Tracker,

@@ -19,7 +19,7 @@
 
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../support/local-vue";
+import { createLocalVueForTests } from "../../support/local-vue";
 import DeleteConfirmationModal from "./DeleteConfirmationModal.vue";
 
 describe("DeleteConfirmationModal", () => {
@@ -31,7 +31,7 @@ describe("DeleteConfirmationModal", () => {
 
     let wrapper: Wrapper<Vue>;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         confirm = jest.fn().mockReturnValue(
             new Promise((resolve) => {
                 confirmResolve = resolve;
@@ -44,7 +44,7 @@ describe("DeleteConfirmationModal", () => {
                 default_failed_message: "Failed message",
                 on_submit: confirm,
             },
-            localVue,
+            localVue: await createLocalVueForTests(),
         });
     });
 

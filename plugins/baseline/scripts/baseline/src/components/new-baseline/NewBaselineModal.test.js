@@ -20,7 +20,7 @@
 
 import Vue from "vue";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../support/local-vue.ts";
+import { createLocalVueForTests } from "../../support/local-vue.ts";
 import * as rest_querier from "../../api/rest-querier";
 import NewBaselineModal from "./NewBaselineModal.vue";
 import MilestonesSelect from "./MilestonesSelect.vue";
@@ -32,9 +32,7 @@ describe("NewBaselineModal", () => {
     const error_message_selector = '[data-test-type="error-message"]';
     const cancel_selector = '[data-test-action="cancel"]';
 
-    let createBaseline;
-    let $store;
-    let wrapper;
+    let createBaseline, $store, wrapper;
 
     const a_milestone = { id: 1 };
     const a_baseline = {
@@ -44,9 +42,7 @@ describe("NewBaselineModal", () => {
         snapshot_date: "2019-03-22T10:01:48+00:00",
         author_id: 3,
     };
-
-    let getOpenMilestonesResolve;
-    let getOpenMilestonesReject;
+    let getOpenMilestonesResolve, getOpenMilestonesReject;
 
     beforeEach(async () => {
         jest.spyOn(rest_querier, "getOpenMilestones").mockReturnValue(
@@ -64,7 +60,7 @@ describe("NewBaselineModal", () => {
 
         wrapper = shallowMount(NewBaselineModal, {
             propsData: { project_id: 1 },
-            localVue,
+            localVue: await createLocalVueForTests(),
             mocks: {
                 $store,
             },

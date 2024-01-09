@@ -21,7 +21,7 @@
 import HumanizedDate from "./HumanizedDate.vue";
 import type { Wrapper } from "@vue/test-utils";
 import { mount } from "@vue/test-utils";
-import localVue from "../../support/local-vue";
+import { createLocalVueForTests } from "../../support/local-vue";
 import DateFormatter from "../../support/date-utils";
 import moment from "moment";
 import "moment/locale/fr";
@@ -31,7 +31,7 @@ describe("HumanizedDate", () => {
 
     const now = moment("2019/02/23 09:37:20 +0001", "YYYY/MM/DD HH:mm:ss Z").toDate();
 
-    beforeEach(() => {
+    beforeEach(async () => {
         jest.spyOn(Date, "now").mockReturnValue(now.getTime());
 
         DateFormatter.setOptions({
@@ -42,7 +42,7 @@ describe("HumanizedDate", () => {
 
         wrapper = mount(HumanizedDate, {
             propsData: { date: "2019-03-22T10:01:48+00:00" },
-            localVue,
+            localVue: await createLocalVueForTests(),
         });
     });
 

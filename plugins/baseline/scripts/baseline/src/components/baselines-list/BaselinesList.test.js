@@ -19,7 +19,7 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../support/local-vue.ts";
+import { createLocalVueForTests } from "../../support/local-vue.ts";
 import BaselinesList from "./BaselinesList.vue";
 import BaselineSkeleton from "./BaselineSkeleton.vue";
 import BaselineListItem from "./BaselineListItem.vue";
@@ -28,10 +28,9 @@ import store_options from "../../store/store_options";
 
 describe("BaselinesList", () => {
     const empty_baseline_selector = '[data-test-type="empty-baseline"]';
-    let $store;
-    let wrapper;
+    let $store, wrapper;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         $store = createStoreMock({
             ...store_options,
             getters: {
@@ -43,7 +42,7 @@ describe("BaselinesList", () => {
             propsData: {
                 project_id: 102,
             },
-            localVue,
+            localVue: await createLocalVueForTests(),
             mocks: { $store },
         });
     });

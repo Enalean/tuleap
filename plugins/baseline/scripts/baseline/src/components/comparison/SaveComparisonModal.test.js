@@ -19,37 +19,40 @@
  */
 
 import Vue from "vue";
-import { createLocalVue, shallowMount } from "@vue/test-utils";
+import VueRouter from "vue-router";
+import { shallowMount } from "@vue/test-utils";
 import * as rest_querier from "../../api/rest-querier";
 import SaveComparisonModal from "./SaveComparisonModal.vue";
 import store_options from "../../store/store_options";
 import { createStoreMock } from "../../support/store-wrapper.test-helper";
-import GettextPlugin from "vue-gettext";
+import { createLocalVueForTests } from "../../support/local-vue";
 
 describe("SaveComparisonModal", () => {
     const error_message_selector = '[data-test-type="error-message"]';
+    let createComparison, $store, wrapper, router;
 
-    let createComparison;
-    let $router;
-    let $store;
-    let wrapper;
-
-    beforeEach(() => {
+    beforeEach(async () => {
         createComparison = jest.spyOn(rest_querier, "createComparison");
+        router = new VueRouter({
+            mode: "abstract", // Do not use hash or history that is shared between tests
+            routes: [
+                {
+                    path: "/",
+                },
+                {
+                    path: "/path/to/comparison",
+                    name: "ComparisonPage",
+                },
+            ],
+        });
 
         $store = createStoreMock(store_options);
-        $router = { push: jest.fn() };
-
-        const localVue = createLocalVue();
-        localVue.use(GettextPlugin, {
-            translations: {},
-            silent: true,
-        });
 
         wrapper = shallowMount(SaveComparisonModal, {
             propsData: { base_baseline_id: 1, compared_to_baseline_id: 2 },
-            localVue,
-            mocks: { $store, $router },
+            localVue: await createLocalVueForTests(),
+            router,
+            mocks: { $store },
         });
     });
 
@@ -58,8 +61,7 @@ describe("SaveComparisonModal", () => {
     });
 
     describe("saveComparison()", () => {
-        let createComparisonResolve;
-        let createComparisonReject;
+        let createComparisonResolve, createComparisonReject;
 
         beforeEach(() => {
             createComparison.mockReturnValue(
@@ -68,20 +70,18 @@ describe("SaveComparisonModal", () => {
                     createComparisonReject = reject;
                 }),
             );
-            wrapper.vm.saveComparison();
         });
 
-        it("shows spinner", () => {
+        it("shows spinner", async () => {
+            wrapper.vm.saveComparison();
+            await Vue.nextTick();
             expect(wrapper.find('[data-test-type="spinner"]').exists()).toBeTruthy();
         });
 
         describe("when createComparison() fail", () => {
-            beforeEach(async () => {
+            it("shows an error message", async () => {
                 createComparisonReject("rejection");
-                await Vue.nextTick();
-            });
-
-            it("shows an error message", () => {
+                await wrapper.vm.saveComparison();
                 expect(wrapper.find(error_message_selector).exists()).toBeTruthy();
             });
         });
@@ -95,16 +95,13 @@ describe("SaveComparisonModal", () => {
                     author_id: 1,
                     creation_date: "2019-03-22T10:01:48+00:00",
                 });
+                await wrapper.vm.saveComparison();
                 await Vue.nextTick();
             });
 
             it("Navigates to comparison page", () => {
-                expect($router.push).toHaveBeenCalledWith({
-                    name: "ComparisonPage",
-                    params: {
-                        comparison_id: 10,
-                    },
-                });
+                expect(router.currentRoute.name).toBe("ComparisonPage");
+                expect(router.currentRoute.params).toStrictEqual({ comparison_id: 10 });
             });
             it("notify user with successful message", () => {
                 expect($store.commit).toHaveBeenCalledWith(

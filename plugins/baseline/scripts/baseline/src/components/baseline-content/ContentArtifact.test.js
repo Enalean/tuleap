@@ -19,7 +19,7 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../support/local-vue.ts";
+import { createLocalVueForTests } from "../../support/local-vue.ts";
 import { createStoreMock } from "../../support/store-wrapper.test-helper.js";
 import store_options from "../../store/store_options";
 import DepthLimitReachedMessage from "../common/DepthLimitReachedMessage.vue";
@@ -46,10 +46,9 @@ describe("Artifact", () => {
         tracker_id: 1,
     };
 
-    let $store;
-    let wrapper;
+    let $store, wrapper;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         const linked_artifact = { id: 3, title: "Story" };
 
         isLimitReachedOnArtifact = jest.fn().mockImplementation((value) => {
@@ -78,7 +77,7 @@ describe("Artifact", () => {
                     linked_artifact_ids: [linked_artifact.id],
                 },
             },
-            localVue,
+            localVue: await createLocalVueForTests(),
             mocks: {
                 $store,
             },

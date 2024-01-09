@@ -18,17 +18,16 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../support/local-vue.ts";
+import { createLocalVueForTests } from "../../support/local-vue.ts";
 import { createStoreMock } from "../../support/store-wrapper.test-helper.js";
 import store_options from "../../store/store_options";
 import ContentBody from "./ContentBody.vue";
 import ArtifactsList from "./ArtifactsList.vue";
 
 describe("ContentBody", () => {
-    let $store;
-    let wrapper;
+    let $store, wrapper;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         $store = createStoreMock(
             {
                 ...store_options,
@@ -42,7 +41,7 @@ describe("ContentBody", () => {
         );
 
         wrapper = shallowMount(ContentBody, {
-            localVue,
+            localVue: await createLocalVueForTests(),
             mocks: {
                 $store,
             },

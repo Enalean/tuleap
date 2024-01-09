@@ -20,7 +20,7 @@
 
 import Vue from "vue";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../support/local-vue.ts";
+import { createLocalVueForTests } from "../../support/local-vue.ts";
 import MilestoneList from "./MilestonesSelect.vue";
 
 describe("MilestonesSelect", () => {
@@ -28,9 +28,9 @@ describe("MilestonesSelect", () => {
 
     let wrapper;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         wrapper = shallowMount(MilestoneList, {
-            localVue,
+            localVue: await createLocalVueForTests(),
             propsData: {
                 milestones: [],
             },
