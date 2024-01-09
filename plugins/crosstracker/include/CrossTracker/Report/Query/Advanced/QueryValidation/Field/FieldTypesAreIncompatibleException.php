@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+ * Copyright (c) Enalean 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,23 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata;
+declare(strict_types=1);
 
-use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorParameters;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ComparisonChecker;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field;
+
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-interface ICheckMetadataForAComparison
+final class FieldTypesAreIncompatibleException extends InvalidQueryException
 {
     /**
-     * @throws InvalidQueryException
+     * @param int[] $tracker_ids
      */
-    public function checkMetadataIsValid(
-        Metadata $metadata,
-        Comparison $comparison,
-        InvalidComparisonCollectorParameters $collector_parameters,
-        ComparisonChecker $checker,
-    );
+    public function __construct(string $field_name, array $tracker_ids)
+    {
+        parent::__construct(
+            sprintf(
+                dgettext(
+                    'tuleap-crosstracker',
+                    "Field '%s' is present in trackers '%s' but their types cannot be compared. Please refine your query or check the configuration of the trackers.",
+                ),
+                $field_name,
+                implode(',', $tracker_ids)
+            )
+        );
+    }
 }

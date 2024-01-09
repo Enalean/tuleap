@@ -2,7 +2,12 @@
   "name": "tuleap/plugin-crosstracker",
   "autoload": {
     "psr-4": {
-      "Tuleap\\CrossTracker\\": "include/CrossTracker/"
+      "Tuleap\\CrossTracker\\": ["include/CrossTracker/"]
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tuleap\\CrossTracker\\": ["tests/unit/CrossTracker/", "tests/integration/CrossTracker/"]
     }
   },
   "config": {

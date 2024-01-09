@@ -26,7 +26,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryExcept
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-final class MetadataChecker implements ICheckMetadataForAComparison
+final class MetadataChecker
 {
     /**
      * @var MetadataUsageChecker

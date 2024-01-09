@@ -63,6 +63,8 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\LesserT
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ListValueValidator;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotEqual\NotEqualComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotIn\NotInComparisonChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field\FieldUsageChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field\TrackerFieldDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataUsageChecker;
 use Tuleap\CrossTracker\Report\SimilarField\BindNameVisitor;
@@ -190,15 +192,19 @@ class crosstrackerPlugin extends Plugin implements PluginWithConfigKeys
         $form_element_factory = Tracker_FormElementFactory::instance();
 
         $invalid_comparisons_collector = new InvalidTermCollectorVisitor(
-            new InvalidSearchableCollectorVisitor(),
-            new MetadataChecker(
-                new MetadataUsageChecker(
-                    $form_element_factory,
-                    new Tracker_Semantic_TitleDao(),
-                    new Tracker_Semantic_DescriptionDao(),
-                    new Tracker_Semantic_StatusDao(),
-                    new Tracker_Semantic_ContributorDao()
-                )
+            new InvalidSearchableCollectorVisitor(
+                new MetadataChecker(
+                    new MetadataUsageChecker(
+                        $form_element_factory,
+                        new Tracker_Semantic_TitleDao(),
+                        new Tracker_Semantic_DescriptionDao(),
+                        new Tracker_Semantic_StatusDao(),
+                        new Tracker_Semantic_ContributorDao()
+                    )
+                ),
+                new FieldUsageChecker(
+                    new TrackerFieldDao()
+                ),
             ),
             new EqualComparisonChecker($date_validator, $list_value_validator),
             new NotEqualComparisonChecker($date_validator, $list_value_validator),

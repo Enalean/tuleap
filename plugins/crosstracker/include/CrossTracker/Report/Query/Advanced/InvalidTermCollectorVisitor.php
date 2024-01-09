@@ -32,8 +32,6 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\LesserT
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\LesserThan\LesserThanOrEqualComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotEqual\NotEqualComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotIn\NotInComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\ICheckMetadataForAComparison;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
@@ -74,9 +72,6 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor, 
     /** @var InvalidSearchableCollectorVisitor */
     private $invalid_searchable_collector_visitor;
 
-    /** @var MetadataChecker */
-    private $metadata_checker;
-
     /** @var EqualComparisonChecker */
     private $equal_comparison_checker;
 
@@ -106,7 +101,6 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor, 
 
     public function __construct(
         InvalidSearchableCollectorVisitor $invalid_searchable_collector_visitor,
-        MetadataChecker $metadata_checker,
         EqualComparisonChecker $equal_comparison_checker,
         NotEqualComparisonChecker $not_equal_comparison_checker,
         GreaterThanComparisonChecker $greater_than_comparison_checker,
@@ -119,7 +113,6 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor, 
         private readonly ArtifactLinkTypeChecker $artifact_link_type_checker,
     ) {
         $this->invalid_searchable_collector_visitor     = $invalid_searchable_collector_visitor;
-        $this->metadata_checker                         = $metadata_checker;
         $this->equal_comparison_checker                 = $equal_comparison_checker;
         $this->not_equal_comparison_checker             = $not_equal_comparison_checker;
         $this->greater_than_comparison_checker          = $greater_than_comparison_checker;
@@ -150,7 +143,6 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor, 
     {
         $this->visitComparison(
             $comparison,
-            $this->metadata_checker,
             $this->equal_comparison_checker,
             $parameters
         );
@@ -160,7 +152,6 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor, 
     {
         $this->visitComparison(
             $comparison,
-            $this->metadata_checker,
             $this->not_equal_comparison_checker,
             $parameters
         );
@@ -170,7 +161,6 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor, 
     {
         $this->visitComparison(
             $comparison,
-            $this->metadata_checker,
             $this->lesser_than_comparison_checker,
             $parameters
         );
@@ -180,7 +170,6 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor, 
     {
         $this->visitComparison(
             $comparison,
-            $this->metadata_checker,
             $this->greater_than_comparison_checker,
             $parameters
         );
@@ -190,7 +179,6 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor, 
     {
         $this->visitComparison(
             $comparison,
-            $this->metadata_checker,
             $this->lesser_than_or_equal_comparison_checker,
             $parameters
         );
@@ -200,7 +188,6 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor, 
     {
         $this->visitComparison(
             $comparison,
-            $this->metadata_checker,
             $this->greater_than_or_equal_comparison_checker,
             $parameters
         );
@@ -210,7 +197,6 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor, 
     {
         $this->visitComparison(
             $comparison,
-            $this->metadata_checker,
             $this->between_comparison_checker,
             $parameters
         );
@@ -220,7 +206,6 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor, 
     {
         $this->visitComparison(
             $comparison,
-            $this->metadata_checker,
             $this->in_comparison_checker,
             $parameters
         );
@@ -230,7 +215,6 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor, 
     {
         $this->visitComparison(
             $comparison,
-            $this->metadata_checker,
             $this->not_in_comparison_checker,
             $parameters
         );
@@ -238,7 +222,6 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor, 
 
     private function visitComparison(
         Comparison $comparison,
-        ICheckMetadataForAComparison $metadata_checker,
         ComparisonChecker $comparison_checker,
         InvalidComparisonCollectorParameters $parameters,
     ): void {
@@ -246,7 +229,6 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor, 
             $this->invalid_searchable_collector_visitor,
             new InvalidSearchableCollectorParameters(
                 $parameters,
-                $metadata_checker,
                 $comparison_checker,
                 $comparison
             )
