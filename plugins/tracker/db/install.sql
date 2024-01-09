@@ -870,15 +870,6 @@ CREATE TABLE IF NOT EXISTS plugin_tracker_webhook_log (
     INDEX idx(webhook_id)
 );
 
-DROP TABLE IF EXISTS plugin_tracker_source_artifact_id;
-CREATE TABLE IF NOT EXISTS plugin_tracker_source_artifact_id (
-    artifact_id INT(11) NOT NULL,
-    source_artifact_id INT(11) NOT NULL,
-    source_platform VARCHAR(100) NOT NULL,
-    PRIMARY KEY (artifact_id),
-    INDEX (source_platform)
-) ENGINE=InnoDB;
-
 DROP TABLE IF EXISTS plugin_tracker_workflow_postactions_frozen_fields;
 CREATE TABLE IF NOT EXISTS plugin_tracker_workflow_postactions_frozen_fields (
     id INT(11) UNSIGNED PRIMARY KEY AUTO_INCREMENT,

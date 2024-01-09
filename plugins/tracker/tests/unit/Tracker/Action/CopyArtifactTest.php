@@ -440,11 +440,6 @@ XML;
                 ),
                 Mockery::on(
                     function ($element) {
-                        return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class);
-                    }
-                ),
-                Mockery::on(
-                    function ($element) {
                         return is_a($element, \Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig::class);
                     }
                 )
@@ -456,11 +451,6 @@ XML;
                 Mockery::on(
                     function (SimpleXMLElement $val) {
                         return (int) $val['id'] === 456;
-                    }
-                ),
-                Mockery::on(
-                    function ($element) {
-                        return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class);
                     }
                 ),
                 Mockery::on(
@@ -480,11 +470,6 @@ XML;
                 ),
                 Mockery::on(
                     function ($element) {
-                        return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class);
-                    }
-                ),
-                Mockery::on(
-                    function ($element) {
                         return is_a($element, \Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig::class);
                     }
                 )
@@ -500,11 +485,6 @@ XML;
                     }
                 ),
                 Mockery::any(),
-                Mockery::on(
-                    function ($element) {
-                        return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class);
-                    }
-                ),
                 Mockery::type(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class),
                 Mockery::type(\Tuleap\Tracker\XML\Importer\ImportedChangesetMapping::class),
                 Mockery::type(\Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig::class)
@@ -518,11 +498,6 @@ XML;
                     }
                 ),
                 Mockery::any(),
-                Mockery::on(
-                    function ($element) {
-                        return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class);
-                    }
-                ),
                 Mockery::type(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class),
                 Mockery::type(\Tuleap\Tracker\XML\Importer\ImportedChangesetMapping::class),
                 Mockery::type(\Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig::class)
@@ -536,11 +511,6 @@ XML;
                     }
                 ),
                 Mockery::any(),
-                Mockery::on(
-                    function ($element) {
-                        return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class);
-                    }
-                ),
                 Mockery::type(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class),
                 Mockery::type(\Tuleap\Tracker\XML\Importer\ImportedChangesetMapping::class),
                 Mockery::type(\Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig::class)

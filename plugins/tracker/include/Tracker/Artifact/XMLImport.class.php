@@ -18,11 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
 use Tuleap\Tracker\Artifact\XMLImport\MoveImportConfig;
 use Tuleap\XML\SimpleXMLElementBuilder;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
-use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\XMLImport\TrackerPrivateCommentUGroupExtractor;
@@ -30,10 +28,8 @@ use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
-use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
-use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
@@ -65,33 +61,8 @@ class Tracker_Artifact_XMLImport
     /** @var WrapperLogger */
     private $logger;
 
-    /** @var Tracker_ArtifactFactory  */
-    private $tracker_artifact_factory;
-
     /** @var TypeDao  */
     private $type_dao;
-
-    private $source_platform;
-
-    /**
-     * @var XMLArtifactSourcePlatformExtractor
-     */
-    private $xml_artifact_source_platform_extractor;
-
-    /**
-     * @var array
-     */
-    private $existing_sources_artifact_ids = [];
-
-    /**
-     * @var ExistingArtifactSourceIdFromTrackerExtractor
-     */
-    private $existing_artifact_source_id_extractor;
-
-    /**
-     * @var TrackerArtifactSourceIdDao
-     */
-    private $tracker_artifact_source_id_dao;
 
     /**
      * @var ExternalFieldsExtractor
@@ -111,30 +82,22 @@ class Tracker_Artifact_XMLImport
         BindStaticValueDao $static_value_dao,
         \Psr\Log\LoggerInterface $logger,
         $send_notifications,
-        Tracker_ArtifactFactory $tracker_artifact_factory,
         TypeDao $type_dao,
-        XMLArtifactSourcePlatformExtractor $artifact_source_platform_extractor,
-        ExistingArtifactSourceIdFromTrackerExtractor $existing_artifact_source_id_extractor,
-        TrackerArtifactSourceIdDao $artifact_source_id_dao,
         ExternalFieldsExtractor $external_fields_extractor,
         TrackerPrivateCommentUGroupExtractor $private_comment_ugroup_extractor,
         private \Tuleap\DB\DBConnection $db_connection,
     ) {
-        $this->rng_validator                          = $rng_validator;
-        $this->artifact_creator                       = $artifact_creator;
-        $this->new_changeset_creator                  = $new_changeset_creator;
-        $this->formelement_factory                    = $formelement_factory;
-        $this->user_finder                            = $user_finder;
-        $this->static_value_dao                       = $static_value_dao;
-        $this->logger                                 = new WrapperLogger($logger, 'XML import');
-        $this->send_notifications                     = $send_notifications;
-        $this->tracker_artifact_factory               = $tracker_artifact_factory;
-        $this->type_dao                               = $type_dao;
-        $this->xml_artifact_source_platform_extractor = $artifact_source_platform_extractor;
-        $this->existing_artifact_source_id_extractor  = $existing_artifact_source_id_extractor;
-        $this->tracker_artifact_source_id_dao         = $artifact_source_id_dao;
-        $this->external_fields_extractor              = $external_fields_extractor;
-        $this->private_comment_ugroup_extractor       = $private_comment_ugroup_extractor;
+        $this->rng_validator                    = $rng_validator;
+        $this->artifact_creator                 = $artifact_creator;
+        $this->new_changeset_creator            = $new_changeset_creator;
+        $this->formelement_factory              = $formelement_factory;
+        $this->user_finder                      = $user_finder;
+        $this->static_value_dao                 = $static_value_dao;
+        $this->logger                           = new WrapperLogger($logger, 'XML import');
+        $this->send_notifications               = $send_notifications;
+        $this->type_dao                         = $type_dao;
+        $this->external_fields_extractor        = $external_fields_extractor;
+        $this->private_comment_ugroup_extractor = $private_comment_ugroup_extractor;
     }
 
     public function importFromArchive(Tracker $tracker, Tracker_Artifact_XMLImport_XMLImportZipArchive $archive, PFUser $user): void
@@ -145,11 +108,10 @@ class Tracker_Artifact_XMLImport
         $extraction_path    = $archive->getExtractionPath();
         $xml_field_mapping  = new TrackerXmlFieldsMapping_InSamePlatform();
         $url_mapping        = new CreatedFileURLMapping();
-        $config             = new ImportConfig();
         $date               = new DateTimeImmutable();
         $tracker_xml_config = new TrackerXmlImportConfig($user, $date, MoveImportConfig::buildForRegularImport(), false);
 
-        $this->importFromXML($tracker, $xml, $extraction_path, $xml_field_mapping, $url_mapping, $config, $tracker_xml_config);
+        $this->importFromXML($tracker, $xml, $extraction_path, $xml_field_mapping, $url_mapping, $tracker_xml_config);
 
         $archive->cleanUp();
     }
@@ -169,7 +131,6 @@ class Tracker_Artifact_XMLImport
         $extraction_path,
         TrackerXmlFieldsMapping $xml_fields_mapping,
         CreatedFileURLMapping $url_mapping,
-        ImportConfig $config,
         TrackerXmlImportConfig $tracker_xml_config,
     ): ?bool {
         $artifacts_id_mapping = new Tracker_XML_Importer_ArtifactImportedMapping();
@@ -181,10 +142,7 @@ class Tracker_Artifact_XMLImport
             $artifacts = $this->importBareArtifactsFromXML(
                 $tracker,
                 $xml_element,
-                $extraction_path,
-                $xml_fields_mapping,
                 $artifacts_id_mapping,
-                $config,
                 $tracker_xml_config
             );
 
@@ -196,7 +154,6 @@ class Tracker_Artifact_XMLImport
                 $artifacts_id_mapping,
                 $url_mapping,
                 $artifacts,
-                $config,
                 new ImportedChangesetMapping(),
                 $tracker_xml_config
             );
@@ -218,20 +175,14 @@ class Tracker_Artifact_XMLImport
     public function importBareArtifactsFromXML(
         Tracker $tracker,
         SimpleXMLElement $xml_element,
-        $extraction_path,
-        TrackerXmlFieldsMapping $xml_fields_mapping,
         Tracker_XML_Importer_ArtifactImportedMapping &$artifacts_id_mapping,
-        ImportConfig $configuration,
         TrackerXmlImportConfig $tracker_xml_config,
     ) {
         $tracker->getWorkflow()->disable();
         $artifacts = [];
 
-        $this->source_platform               = $this->xml_artifact_source_platform_extractor->getSourcePlatform($xml_element, $configuration);
-        $this->existing_sources_artifact_ids = $this->existing_artifact_source_id_extractor->getSourceArtifactIds($tracker, $this->source_platform);
-
         foreach (iterator_to_array($xml_element->artifact, false) as $i => $artifact_xml) {
-            $artifact = $this->importBareArtifact($tracker, $artifact_xml, $configuration, $tracker_xml_config);
+            $artifact = $this->importBareArtifact($tracker, $artifact_xml, $tracker_xml_config);
 
             if ($artifact) {
                 $artifacts[$i] = $artifact;
@@ -255,7 +206,6 @@ class Tracker_Artifact_XMLImport
         Tracker_XML_Importer_ArtifactImportedMapping $artifacts_id_mapping,
         CreatedFileURLMapping $url_mapping,
         array $artifacts,
-        ImportConfig $configuration,
         ImportedChangesetMapping $changeset_id_mapping,
         TrackerXmlImportConfig $tracker_import_config,
     ): bool {
@@ -275,7 +225,6 @@ class Tracker_Artifact_XMLImport
                     $artifacts[$i],
                     $artifact_xml,
                     $fields_data_builder,
-                    $configuration,
                     $url_mapping,
                     $changeset_id_mapping,
                     $tracker_import_config
@@ -318,56 +267,13 @@ class Tracker_Artifact_XMLImport
     public function importBareArtifact(
         Tracker $tracker,
         SimpleXMLElement $xml_artifact,
-        ImportConfig $configuration,
         TrackerXmlImportConfig $tracker_xml_config,
-    ) {
-        if ($configuration->isUpdate()) {
-            return $this->importBareArtifactInUpdateMode($tracker, $xml_artifact);
-        } else {
-            return $this->importBareArtifactInStandardMode($tracker, $xml_artifact, $tracker_xml_config);
-        }
-    }
-
-    /**
-     * @return null|Artifact
-     * @throws Tracker_Artifact_Exception_XMLImportException
-     */
-    private function importBareArtifactInUpdateMode(Tracker $tracker, SimpleXMLElement $xml_artifact)
-    {
-        $this->logger->info('art #' . (string) $xml_artifact['id'] . ' with ' . count($xml_artifact->changeset) . ' changesets ');
-
-        if (count($xml_artifact->changeset) === 0) {
-            return null;
-        }
-
-        if ($this->source_platform === null) {
-            return $this->importNewBareArtifact($tracker, $xml_artifact);
-        }
-
-        $xml_artifact_source_id = (int) $xml_artifact->attributes()['id'];
-
-        if (isset($this->existing_sources_artifact_ids[$xml_artifact_source_id])) {
-            $existing_artifact_id = $this->existing_sources_artifact_ids[$xml_artifact_source_id];
-            return $this->getExistingBareArtifact($existing_artifact_id);
-        }
-
-        $this->logger->warning("No correspondence between existings artifacts and the new XML artifact. New artifact created.");
-        return $this->importNewBareArtifact($tracker, $xml_artifact);
-    }
-
-    /**
-     * @return null|Artifact
-     * @throws Tracker_Artifact_Exception_XMLImportException
-     */
-    private function importBareArtifactInStandardMode(
-        Tracker $tracker,
-        SimpleXMLElement $xml_artifact,
-        TrackerXmlImportConfig $configuration,
     ) {
         $this->logger->info('art #' . (string) $xml_artifact['id'] . ' with ' . count($xml_artifact->changeset) . ' changesets ');
         if (count($xml_artifact->changeset) > 0) {
-            return $this->importNewBareArtifact($tracker, $xml_artifact, $configuration->isWithAllData());
+            return $this->importNewBareArtifact($tracker, $xml_artifact, $tracker_xml_config->isWithAllData());
         }
+        return null;
     }
 
     /**
@@ -408,17 +314,7 @@ class Tracker_Artifact_XMLImport
 
         $this->logger->info("--> new artifact {$artifact->getId()}");
 
-        if ($this->source_platform !== null) {
-            $this->tracker_artifact_source_id_dao->save($artifact->getId(), $artifact_id, $this->source_platform);
-        }
-
         return $artifact;
-    }
-
-    public function getExistingBareArtifact($artifact_id)
-    {
-        $this->logger->info("--> old artifact {$artifact_id}");
-        return $this->tracker_artifact_factory->getArtifactById($artifact_id);
     }
 
     /**
@@ -428,25 +324,18 @@ class Tracker_Artifact_XMLImport
         Artifact $artifact,
         SimpleXMLElement $xml_artifact,
         Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder $fields_data_builder,
-        ImportConfig $configuration,
         CreatedFileURLMapping $url_mapping,
         ImportedChangesetMapping $changeset_id_mapping,
         TrackerImportConfig $tracker_import_config,
     ): void {
         $this->logger->push('art #' . (string) $xml_artifact['id']);
         $nb_changesets = count($xml_artifact->changeset);
-
-        if ($configuration->isUpdate()) {
-            $this->logger->debug("Changeset(s) to update: " . $nb_changesets);
-        } else {
-            $this->logger->debug("Changeset(s) to create: " . $nb_changesets);
-        }
+        $this->logger->debug("Changeset(s) to create: " . $nb_changesets);
         if ($nb_changesets > 0) {
             $this->importAllChangesetsBySubmitionDate(
                 $artifact,
                 $xml_artifact->changeset,
                 $fields_data_builder,
-                $configuration,
                 $url_mapping,
                 $changeset_id_mapping,
                 $tracker_import_config
@@ -493,14 +382,13 @@ class Tracker_Artifact_XMLImport
         Artifact $artifact,
         SimpleXMLElement $xml_changesets,
         Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder $fields_data_builder,
-        ImportConfig $configuration,
         CreatedFileURLMapping $url_mapping,
         ImportedChangesetMapping $changeset_id_mapping,
         TrackerImportConfig $tracker_import_config,
     ): void {
         $xml_changesets = $this->getSortedBySubmittedOn($xml_changesets);
 
-        $count = $this->getCountChangeset($artifact, $configuration);
+        $count = 0;
         $this->logger->info('art #' . $artifact->getId());
         foreach ($xml_changesets as $xml_changeset) {
             try {
@@ -521,22 +409,6 @@ class Tracker_Artifact_XMLImport
             }
             $count++;
         }
-    }
-
-    /**
-     * @return int
-     */
-    private function getCountChangeset(Artifact $artifact, ImportConfig $configuration)
-    {
-        if (! $configuration->isUpdate()) {
-            return 0;
-        }
-
-        if ($this->source_platform === null) {
-            return 0;
-        }
-
-        return count($this->tracker_artifact_factory->getArtifactById($artifact->getId())->getChangesets());
     }
 
     /**
@@ -741,7 +613,6 @@ class Tracker_Artifact_XMLImport
                     $artifact,
                     $xml_artifact->changeset,
                     $fields_data_builder,
-                    new ImportConfig(),
                     new CreatedFileURLMapping(),
                     new ImportedChangesetMapping(),
                     $tracker_import_config

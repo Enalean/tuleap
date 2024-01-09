@@ -3227,12 +3227,6 @@ msgstr ""
 msgid "The tracker '%1$s' has been properly restored"
 msgstr ""
 
-#, php-format
-msgid ""
-"The tracker '%s' cannot be updated because it doesn't exist. Try again "
-"without \"--update\""
-msgstr ""
-
 msgid ""
 "The tracker does not seem to have the create/reply by mail feature enabled."
 msgstr ""

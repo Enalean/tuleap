@@ -60,32 +60,16 @@ class ImportProjectXMLCommand extends Command
             ->addOption("automap", "", InputOption::VALUE_OPTIONAL, "automap strategy")
             ->addOption("force")
             ->addOption("type", "", InputOption::VALUE_OPTIONAL)
-            ->addOption("use-lame-password")
-            ->addOption("update");
+            ->addOption("use-lame-password");
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        if ($input->getOption('project') === null && $input->getOption('update')) {
-            throw new \InvalidArgumentException(
-                "Can't use option --update\n" .
-                "If you want create a new project, retry without --update.\n" .
-                "If you want update an existing project, retry with option --project / -p instead of option --name / -s"
-            );
-        }
-
         if ($input->getOption('mapping-path') === null && $input->getOption('automap') === null) {
             throw new InvalidArgumentException("Need mapping-path (--mapping-path / -m) or automap (--automap)");
         }
 
         $configuration = new ImportConfig();
-
-        $update = false;
-        if ($input->getOption("update")) {
-            $update = true;
-        }
-
-        $configuration->setUpdate($update);
 
         $project_id            = $input->getOption("project");
         $project_name_override = (string) $input->getOption("name");

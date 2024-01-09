@@ -202,7 +202,6 @@ class Tracker_Action_CopyArtifact
         $new_artifacts = [];
         foreach ($xml_artifacts->children() as $xml_artifact) {
             $tracker            = $this->tracker_factory->getTrackerById((int) $xml_artifact['tracker_id']);
-            $config             = new \Tuleap\Project\XML\Import\ImportConfig();
             $tracker_xml_config = new \Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig(
                 $current_user,
                 $imported_at,
@@ -212,7 +211,7 @@ class Tracker_Action_CopyArtifact
             if ($tracker === null) {
                 return null;
             }
-            $artifact = $this->xml_importer->importBareArtifact($tracker, $xml_artifact, $config, $tracker_xml_config);
+            $artifact = $this->xml_importer->importBareArtifact($tracker, $xml_artifact, $tracker_xml_config);
             if (! $artifact) {
                 return null;
             } else {
@@ -245,7 +244,6 @@ class Tracker_Action_CopyArtifact
                 $new_artifacts[$i],
                 $xml_artifact,
                 $fields_data_builder,
-                $config,
                 new CreatedFileURLMapping(),
                 new \Tuleap\Tracker\XML\Importer\ImportedChangesetMapping(),
                 new TrackerNoXMLImportLoggedConfig()
