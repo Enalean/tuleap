@@ -20,6 +20,10 @@
 
 declare(strict_types=1);
 
+use Tuleap\Plugin\ListeningToEventClass;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationTaskCollectorEvent;
+use Tuleap\TrackerCCE\CustomCodeExecutionTask;
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -43,5 +47,11 @@ final class tracker_ccePlugin extends Plugin
     public function getDependencies(): array
     {
         return ['tracker'];
+    }
+
+    #[ListeningToEventClass]
+    public function collectPostCreationTask(PostCreationTaskCollectorEvent $event): void
+    {
+        $event->addAsyncTask(new CustomCodeExecutionTask($event->getLogger()));
     }
 }
