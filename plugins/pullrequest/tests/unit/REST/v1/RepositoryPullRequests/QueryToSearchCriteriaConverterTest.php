@@ -24,7 +24,6 @@ namespace Tuleap\PullRequest\REST\v1\RepositoryPullRequests;
 
 use Tuleap\NeverThrow\Result;
 use Tuleap\PullRequest\Criterion\MalformedQueryFault;
-use Tuleap\PullRequest\Criterion\MalformedStatusQueryParameterFault;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class QueryToSearchCriteriaConverterTest extends TestCase
@@ -50,6 +49,7 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
 
         self::assertTrue(Result::isOk($result));
         self::assertTrue($result->unwrapOr(null)->status->isNothing());
+        self::assertTrue($result->unwrapOr(null)->author->isNothing());
     }
 
     public function testItReturnsAnErrorWhenTheStatusToFilterOnIsInvalid(): void
@@ -57,7 +57,8 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
         $result = $this->converter->convert(json_encode(['status' => 'unknown'], JSON_THROW_ON_ERROR));
 
         self::assertTrue(Result::isErr($result));
-        self::assertInstanceOf(MalformedStatusQueryParameterFault::class, $result->error);
+        self::assertInstanceOf(MalformedQueryFault::class, $result->error);
+        self::assertStringContainsString("status", (string) $result->error);
     }
 
     public function testItWillFilterOnOpenPullRequestsOnly(): void
@@ -78,9 +79,61 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
 
         self::assertTrue(Result::isOk($result));
 
-        $status_criterion = $result->unwrapOr(null)->status;
+        $criteria         = $result->unwrapOr(null);
+        $status_criterion = $criteria->status->unwrapOr(null);
 
-        self::assertFalse($status_criterion->unwrapOr(null)->shouldOnlyRetrieveOpenPullRequests());
-        self::assertTrue($status_criterion->unwrapOr(null)->shouldOnlyRetrieveClosedPullRequests());
+        self::assertFalse($status_criterion->shouldOnlyRetrieveOpenPullRequests());
+        self::assertTrue($status_criterion->shouldOnlyRetrieveClosedPullRequests());
+    }
+
+    public function testItReturnsAnErrorWhenTheAuthorToFilterOnIsInvalid(): void
+    {
+        $result = $this->converter->convert(json_encode(['author' => 'myself'], JSON_THROW_ON_ERROR));
+
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(MalformedQueryFault::class, $result->error);
+        self::assertStringContainsString("author", (string) $result->error);
+    }
+
+    public function testItReturnsAnErrorWhenTheAuthorIdIsNotAnInt(): void
+    {
+        $result = $this->converter->convert(json_encode(['author' => ['id' => "one-hundred-and-two"]], JSON_THROW_ON_ERROR));
+
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(MalformedQueryFault::class, $result->error);
+        self::assertStringContainsString("author", (string) $result->error);
+    }
+
+    public function testItWillOnlyFilterOnAuthor(): void
+    {
+        $result = $this->converter->convert(json_encode(['author' => ['id' => 102]], JSON_THROW_ON_ERROR));
+
+        self::assertTrue(Result::isOk($result));
+
+        $criteria         = $result->unwrapOr(null);
+        $author_criterion = $criteria->author->unwrapOr(null);
+
+        self::assertEquals(102, $author_criterion->id);
+    }
+
+    public function testItWillApplyAllFilters(): void
+    {
+        $result = $this->converter->convert(
+            json_encode([
+                'status' => 'open',
+                'author' => ['id' => 102],
+            ], JSON_THROW_ON_ERROR)
+        );
+
+        self::assertTrue(Result::isOk($result));
+
+        $criteria         = $result->unwrapOr(null);
+        $status_criterion = $criteria->status->unwrapOr(null);
+        $author_criterion = $criteria->author->unwrapOr(null);
+
+        self::assertEquals(102, $author_criterion->id);
+
+        self::assertTrue($status_criterion->shouldOnlyRetrieveOpenPullRequests());
+        self::assertFalse($status_criterion->shouldOnlyRetrieveClosedPullRequests());
     }
 }

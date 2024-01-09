@@ -26,9 +26,7 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\PullRequest\Criterion\MalformedQueryFault;
-use Tuleap\PullRequest\Criterion\MalformedStatusQueryParameterFault;
 use Tuleap\PullRequest\Criterion\SearchCriteria;
-use Tuleap\PullRequest\Criterion\StatusCriterion;
 
 /**
  * I convert a json query string to a SearchCriteria.
@@ -62,15 +60,8 @@ class QueryToSearchCriteriaConverter
 
     private function buildFaultFromMappingError(MappingError $mapping_error): Fault
     {
-        $messages = \CuyZ\Valinor\Mapper\Tree\Message\Messages::flattenFromNode($mapping_error->node())->toArray();
-
-        if (empty($messages)) {
-            return MalformedQueryFault::build();
-        }
-
-        return match ($messages[0]->node()->name()) {
-            StatusCriterion::KEY => MalformedStatusQueryParameterFault::build(),
-            default => MalformedQueryFault::build(),
-        };
+        return MalformedQueryFault::buildFromMappingErrors(
+            \CuyZ\Valinor\Mapper\Tree\Message\Messages::flattenFromNode($mapping_error->node())->errors()
+        );
     }
 }

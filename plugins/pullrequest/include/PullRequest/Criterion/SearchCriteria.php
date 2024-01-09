@@ -34,8 +34,16 @@ final class SearchCriteria
      */
     public readonly Option $status;
 
-    public function __construct(?StatusCriterion $status = null)
-    {
+    /**
+     * @var Option<AuthorCriterion>
+     */
+    public readonly Option $author;
+
+    public function __construct(
+        ?StatusCriterion $status = null,
+        ?AuthorCriterion $author = null,
+    ) {
         $this->status = Option::fromNullable($status);
+        $this->author = Option::fromNullable($author);
     }
 }
