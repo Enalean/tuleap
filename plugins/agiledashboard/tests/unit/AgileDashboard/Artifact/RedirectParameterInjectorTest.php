@@ -28,10 +28,11 @@ use Tracker;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Templating\TemplateCache;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\TrackerColor;
 
-class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalResponseMock;
 
@@ -39,13 +40,15 @@ class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var mixed
      */
     private $response;
+    private \PFUser $user;
+    private \Tracker_ArtifactFactory&\PHPUnit\Framework\MockObject\MockObject $artifact_factory;
     private RedirectParameterInjector $injector;
 
     protected function setUp(): void
     {
         $this->response = $GLOBALS['Response'];
 
-        $this->user = $this->createMock(\PFUser::class);
+        $this->user = UserTestBuilder::anActiveUser()->build();
 
         $this->artifact_factory = $this->createMock(\Tracker_ArtifactFactory::class);
 
