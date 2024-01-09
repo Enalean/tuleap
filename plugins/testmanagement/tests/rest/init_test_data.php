@@ -20,6 +20,8 @@
 
 use Tuleap\TestManagement\TestManagementDataBuilder;
 
+require_once __DIR__ . '/../../../../src/www/include/pre.php';
+require_once __DIR__ . '/../../../../tests/rest/vendor/autoload.php';
 require_once dirname(__FILE__) . '/TestManagementDataBuilder.php';
 
 $data_builder = new TestManagementDataBuilder();

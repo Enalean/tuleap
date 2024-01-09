@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\REST;
 
-require_once __DIR__ . '/../../../../src/vendor/autoload.php';
+require_once __DIR__ . '/../../../../src/www/include/pre.php';
+require_once __DIR__ . '/../../../../tests/rest/vendor/autoload.php';
+require_once __DIR__ . '/../../include/program_managementPlugin.php';
 
 use Tuleap\ProgramManagement\REST\v1\Helper\ProgramDataBuilder;
 

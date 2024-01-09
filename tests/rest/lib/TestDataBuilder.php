@@ -97,7 +97,8 @@ class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLin
     public function initPlugins()
     {
         foreach (glob(__DIR__ . '/../../../plugins/*/tests/rest/init_test_data.php') as $init_file) {
-            require_once $init_file;
+            echo "Init data from $init_file\n";
+            (new \Symfony\Component\Process\Process([__DIR__ . '/../../../src/utils/php-launcher.sh', $init_file]))->mustRun();
         }
     }
 
