@@ -24,6 +24,8 @@ declare(strict_types=1);
 use Tuleap\Taskboard\AgileDashboard\TaskboardUsage;
 use Tuleap\Taskboard\AgileDashboard\TaskboardUsageDao;
 
+require_once __DIR__ . '/../../../../src/www/include/pre.php';
+require_once __DIR__ . '/../../../../tests/rest/vendor/autoload.php';
 require_once __DIR__ . '/../../include/taskboardPlugin.php';
 
 $project = ProjectManager::instance()->getProjectByUnixName(TestDataBuilder::PROJECT_PRIVATE_MEMBER_SHORTNAME);

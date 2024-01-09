@@ -20,7 +20,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../../../../src/vendor/autoload.php';
+require_once __DIR__ . '/../../../../src/www/include/pre.php';
+require_once __DIR__ . '/../../../../tests/rest/vendor/autoload.php';
+require_once __DIR__ . '/../../include/testplanPlugin.php';
 
 $plugin_manager = PluginManager::instance();
 $plugin_manager->installAndEnable('testplan');

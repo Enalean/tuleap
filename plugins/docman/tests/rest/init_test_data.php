@@ -18,7 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../../../../src/vendor/autoload.php';
+require_once __DIR__ . '/../../../../src/www/include/pre.php';
+require_once __DIR__ . '/../../../../tests/rest/vendor/autoload.php';
+require_once __DIR__ . '/../../include/docmanPlugin.php';
 
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 use Tuleap\Docman\Test\rest\DocmanForbidWritersDataBuilder;

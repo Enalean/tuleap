@@ -20,7 +20,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../../../../src/vendor/autoload.php';
+require_once __DIR__ . '/../../../../src/www/include/pre.php';
+require_once __DIR__ . '/../../../../tests/rest/vendor/autoload.php';
+require_once __DIR__ . '/../../include/ldapPlugin.php';
 
 $ldap = ldap_connect('ldap://ldap');
 ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
