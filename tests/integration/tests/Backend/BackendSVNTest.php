@@ -214,9 +214,9 @@ final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
             ForgeConfig::get('svn_prefix') . '/toto',
             true,
             ForgeConfig::get('codendi_bin_prefix'),
-            'commit-email.pl',
+            'svn_post_commit.php',
             "",
-            "codendi_svn_pre_commit.php"
+            "svn_pre_commit.php"
         );
     }
 
@@ -237,9 +237,9 @@ final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
             ForgeConfig::get('svn_prefix') . '/toto',
             true,
             ForgeConfig::get('codendi_bin_prefix'),
-            'commit-email.pl',
+            'svn_post_commit.php',
             "",
-            "codendi_svn_pre_commit.php"
+            "svn_pre_commit.php"
         );
     }
 }

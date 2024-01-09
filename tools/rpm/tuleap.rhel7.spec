@@ -65,7 +65,7 @@ Requires: glibc-locale-source
 Requires: rh-mysql80-mysql
 %endif
 
-Requires: perl-DBI, perl-DBD-MySQL, perl-LDAP, perl-JSON, sudo, openssh
+Requires: sudo, openssh
 Requires: perl(File::Copy)
 Requires: highlight, nginx, logrotate
 Requires: tuleap-realtime = @@VERSION@@
@@ -117,7 +117,6 @@ Requires: viewvc-tuleap, httpd, glibc-langpack-en
 Requires: viewvc >= 1.1.30, python
 %endif
 Requires: viewvc-theme-tuleap >= 1.0.8
-Requires: perl-libwww-perl, perl-LWP-Protocol-https
 Requires: tuleap-theme-flamingparrot
 Requires: sha1collisiondetector
 %description core-subversion
@@ -693,7 +692,6 @@ done
 
 %{__install} -d $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/gotohell $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-%{__install} src/utils/svn/commit-email.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/svn/codendi_svn_pre_commit.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/svn/pre-revprop-change.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/svn/post-revprop-change.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
@@ -1112,7 +1110,6 @@ fi
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIB_DIR}
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIBBIN_DIR}
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gotohell
-%attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/commit-email.pl
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/codendi_svn_pre_commit.php
 %attr(00755,root,root) %{APP_LIBBIN_DIR}/pre-revprop-change.php
 %attr(00755,root,root) %{APP_LIBBIN_DIR}/post-revprop-change.php
