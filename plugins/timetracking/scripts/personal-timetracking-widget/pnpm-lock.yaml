@@ -14,15 +14,15 @@ dependencies:
   '@tuleap/tlp-fetch':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-fetch
+  '@tuleap/vue2-gettext-init':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/vue2-gettext-init
   pinia:
     specifier: ^2.0.21
     version: 2.1.7(vue@2.7.14)
   vue:
     specifier: ^2.7.4
     version: 2.7.14
-  vue-gettext:
-    specifier: ^2.1.12
-    version: 2.1.12
 
 devDependencies:
   '@pinia/testing':
@@ -40,6 +40,9 @@ devDependencies:
   '@tuleap/plugin-timetracking-time-formatters':
     specifier: workspace:*
     version: link:../lib/time-formatters
+  '@tuleap/po-gettext-plugin':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/po-gettext-plugin
   '@vue/test-utils':
     specifier: ^1.3
     version: 1.3.6(vue@2.7.14)
@@ -346,11 +349,6 @@ packages:
         optional: true
     dependencies:
       vue: 2.7.14
-
-  /vue-gettext@2.1.12:
-    resolution: {integrity: sha512-7Kw36xtKvARp8ZafQGPK9WR6EM+dhFUikR5f0+etSkiHuvUM3yf1HsRDLYoLLdJ0AMaXxKwgekumzvCk6KX8rA==}
-    engines: {npm: '>= 3.0.0'}
-    dev: false
 
   /vue@2.7.14:
     resolution: {integrity: sha512-b2qkFyOM0kwqWFuQmgd4o+uHGU7T+2z3T+WQp8UBjADfEv2n4FEMffzBmCKNP0IGzOEEfYjvtcC62xaSKeQDrQ==}

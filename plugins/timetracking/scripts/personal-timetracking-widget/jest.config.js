@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const { defineJestConfiguration } = require("@tuleap/build-system-configurator");
-module.exports = {
+import { defineJestConfiguration } from "@tuleap/build-system-configurator";
+export default {
     ...defineJestConfiguration(),
     displayName: "personal-timetracking-widget",
 };

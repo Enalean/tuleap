@@ -16,31 +16,31 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-const path = require("path");
-const { webpack_configurator } = require("@tuleap/build-system-configurator");
 
-const context = __dirname;
-const output = webpack_configurator.configureOutput(
-    path.resolve(__dirname, "./frontend-assets"),
-    "/assets/timetracking/personal-timetracking-widget/",
-);
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { webpack_configurator } from "@tuleap/build-system-configurator";
+import POGettextPlugin from "@tuleap/po-gettext-plugin";
 
-let entry_points = {
-    "widget-timetracking": "./src/index.js",
-    "style-bp-personal": "./themes/style.scss",
-};
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-module.exports = [
+export default [
     {
-        entry: entry_points,
-        context,
-        output,
+        entry: {
+            "widget-timetracking": "./src/index.js",
+            "style-bp-personal": "./themes/style.scss",
+        },
+        context: __dirname,
+        output: webpack_configurator.configureOutput(
+            path.resolve(__dirname, "./frontend-assets"),
+            "/assets/timetracking/personal-timetracking-widget/",
+        ),
         externals: {
             tlp: "tlp",
         },
         module: {
             rules: [
-                webpack_configurator.rule_easygettext_loader,
                 webpack_configurator.rule_vue_loader,
                 webpack_configurator.rule_scss_loader,
                 webpack_configurator.rule_css_assets,
@@ -53,11 +53,9 @@ module.exports = [
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
+            POGettextPlugin.webpack(),
             webpack_configurator.getVueLoaderPlugin(),
             ...webpack_configurator.getCSSExtractionPlugins(),
         ],
-        resolveLoader: {
-            alias: webpack_configurator.easygettext_loader_alias,
-        },
     },
 ];

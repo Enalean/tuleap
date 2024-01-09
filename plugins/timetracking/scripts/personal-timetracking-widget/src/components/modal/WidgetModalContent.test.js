@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import WidgetModalContent from "./WidgetModalContent.vue";
-import localVue from "../../helpers/local-vue.js";
+import { createLocalVueForTests } from "../../helpers/local-vue.js";
 import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
 
@@ -29,7 +29,7 @@ describe("Given a personal timetracking widget modal", () => {
     let current_artifact;
     let setAddMode = jest.fn();
 
-    function getWidgetModalContentInstance() {
+    async function getWidgetModalContentInstance() {
         const useStore = defineStore("root", {
             state: () => ({
                 rest_feedback: rest_feedback,
@@ -46,7 +46,7 @@ describe("Given a personal timetracking widget modal", () => {
         useStore(pinia);
 
         const component_options = {
-            localVue,
+            localVue: await createLocalVueForTests(),
             pinia,
         };
         return shallowMount(WidgetModalContent, component_options);
@@ -58,19 +58,19 @@ describe("Given a personal timetracking widget modal", () => {
         current_artifact = { artifact: "artifact" };
     });
 
-    it("When there is no REST feedback, then feedback message should not be displayed", () => {
-        const wrapper = getWidgetModalContentInstance();
+    it("When there is no REST feedback, then feedback message should not be displayed", async () => {
+        const wrapper = await getWidgetModalContentInstance();
         expect(wrapper.find("[data-test=feedback]").exists()).toBeFalsy();
     });
 
-    it("When there is REST feedback, then feedback message should be displayed", () => {
+    it("When there is REST feedback, then feedback message should be displayed", async () => {
         rest_feedback = { type: "success" };
-        const wrapper = getWidgetModalContentInstance();
+        const wrapper = await getWidgetModalContentInstance();
         expect(wrapper.find("[data-test=feedback]").exists()).toBeTruthy();
     });
 
-    it("When add mode button is triggered, then setAddMode should be called", () => {
-        const wrapper = getWidgetModalContentInstance();
+    it("When add mode button is triggered, then setAddMode should be called", async () => {
+        const wrapper = await getWidgetModalContentInstance();
         wrapper.get("[data-test=button-set-add-mode]").trigger("click");
         expect(setAddMode).toHaveBeenCalledWith(true);
     });

@@ -4,13 +4,14 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
+  "type": "module",
   "dependencies": {
-    "@tuleap/core-rest-api-types": "workspace:*",
     "@tuleap/burningparrot-theme": "workspace:*",
+    "@tuleap/core-rest-api-types": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
+    "@tuleap/vue2-gettext-init": "workspace:^",
     "pinia": "^2.0.21",
-    "vue": "^2.7.4",
-    "vue-gettext": "^2.1.12"
+    "vue": "^2.7.4"
   },
   "devDependencies": {
     "@pinia/testing": "^0.1.3",
@@ -18,6 +19,7 @@
     "@tuleap/plugin-timetracking-constants": "workspace:*",
     "@tuleap/plugin-timetracking-rest-api-types": "workspace:*",
     "@tuleap/plugin-timetracking-time-formatters": "workspace:*",
+    "@tuleap/po-gettext-plugin": "workspace:^",
     "@vue/test-utils": "^1.3"
   },
   "scripts": {
