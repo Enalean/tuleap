@@ -20,7 +20,7 @@ services:
           - tuleap-web.tuleap-aio-dev.docker # Same as the default sys_default_domain setting in a dev setup
 
   web:
-    image: ghcr.io/enalean/tuleap-aio-dev:c7-php81-nginx
+    image: ghcr.io/enalean/tuleap-aio-dev:c7-php82
     hostname: web
     volumes:
       - .:/usr/share/tuleap:cached

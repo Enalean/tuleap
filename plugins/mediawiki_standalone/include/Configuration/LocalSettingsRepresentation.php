@@ -48,7 +48,7 @@ final class LocalSettingsRepresentation
     #[ConfigKeyValueValidator(MediaWikiCentralDatabaseParameterValidator::class)]
     public const CONFIG_CENTRAL_DATABASE = 'mediawiki_central_database';
 
-    public const MEDIAWIKI_PHP_CLI = '/opt/remi/php81/root/usr/bin/php';
+    public const MEDIAWIKI_PHP_CLI = '/opt/remi/php82/root/usr/bin/php';
 
     public string $php_cli_path             = self::MEDIAWIKI_PHP_CLI;
     public string $supported_languages_json = '';

@@ -1,3 +1,3 @@
 services:
     web:
-        image: ghcr.io/enalean/tuleap-aio-dev:el9-php81
+        image: ghcr.io/enalean/tuleap-aio-dev:el9-php82
