@@ -27,6 +27,7 @@ use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public const FUNC_ADMIN_RULES                           = 'admin-workflow';
+    public const FUNC_ADMIN_DEPENDENCIES                    = 'admin-dependencies';
     public const FUNC_ADMIN_TRANSITIONS                     = 'admin-workflow-transitions';
     public const FUNC_ADMIN_CROSS_TRACKER_TRIGGERS          = 'admin-workflow-triggers';
     public const FUNC_ADMIN_GET_TRIGGERS_RULES_BUILDER_DATA = 'admin-get-triggers-rules-builder-data';

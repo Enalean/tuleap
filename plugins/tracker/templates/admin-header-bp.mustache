@@ -19,21 +19,13 @@
         </div>
         <div class="tlp-tab {{# is_workflow_tab_active }}tlp-tab-active{{/ is_workflow_tab_active }}">{{# dgettext }}tuleap-tracker | Workflow{{/ dgettext }} <i class="fa fa-caret-down"></i>
             <nav class="tlp-tab-menu">
-                <a href="/plugins/tracker/workflow/{{ tracker_id }}/transitions" class="tlp-tab-menu-item">
-                    {{# dgettext }}tuleap-tracker | Transition rules{{/ dgettext }}
-                </a>
-                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-workflow" class="tlp-tab-menu-item">
-                    {{# dgettext }}tuleap-tracker | Global rules{{/ dgettext }}
-                </a>
-                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-dependencies" class="tlp-tab-menu-item">
-                    {{# dgettext }}tuleap-tracker | Field dependencies{{/ dgettext }}
-                </a>
-                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-workflow-triggers" class="tlp-tab-menu-item">
-                    {{# dgettext }}tuleap-tracker | Triggers{{/ dgettext }}
-                </a>
-                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-webhooks" class="tlp-tab-menu-item">
-                    {{# dgettext }}tuleap-tracker | Webhooks{{/ dgettext }}
-                </a>
+                {{# workflow_menu }}
+                    {{# items }}
+                        <a href="{{ url }}" class="tlp-tab-menu-item">
+                            {{ label }}
+                        </a>
+                    {{/ items }}
+                {{/ workflow_menu }}
             </nav>
         </div>
         <a href="/plugins/tracker/notifications/{{ tracker_id }}/" class="tlp-tab">

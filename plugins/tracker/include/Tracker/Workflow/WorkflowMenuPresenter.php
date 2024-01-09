@@ -20,15 +20,13 @@
 
 namespace Tuleap\Tracker\Workflow;
 
-class WorkflowMenuTabPresenter
+class WorkflowMenuPresenter
 {
-    public readonly string $used_services_names;
-
+    /**
+     * @param WorkflowMenuItem[] $items
+     */
     public function __construct(
-        public readonly array $tabs_menu,
-        public readonly int $tracker_id,
-        array $used_services_names,
+        public readonly array $items,
     ) {
-        $this->used_services_names = json_encode($used_services_names);
     }
 }

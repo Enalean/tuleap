@@ -267,7 +267,6 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\Trigger\TriggersDao;
 use Tuleap\Tracker\Workflow\ValidValuesAccordingToTransitionsRetriever;
-use Tuleap\Tracker\Workflow\WorkflowMenuTabPresenterBuilder;
 use Tuleap\Tracker\Workflow\WorkflowTransitionController;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
@@ -2001,8 +2000,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         return new WorkflowTransitionController(
             $this->getTrackerFactory(),
             new TrackerManager(),
-            new WorkflowMenuTabPresenterBuilder(),
-            EventManager::instance()
+            EventManager::instance(),
         );
     }
 

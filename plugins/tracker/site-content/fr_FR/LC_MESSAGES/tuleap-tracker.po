@@ -1587,9 +1587,6 @@ msgstr "Options générales"
 msgid "Global Email Notification"
 msgstr "Notification e-mail globale"
 
-msgid "Global Rules"
-msgstr "Règles Globales"
-
 msgid "Global Tracker Administrator"
 msgstr "Administrateur de trackers"
 
@@ -4158,8 +4155,8 @@ msgstr "Règles de transitions"
 msgid "Transition with id '%d' has no workflow"
 msgstr "La transition avec l'id '%d' n'est rattachée à aucun workflow"
 
-msgid "Transitions Rules"
-msgstr "Règles de Transitions"
+msgid "Transitions rules"
+msgstr "Règles de transitions"
 
 msgid "Transitions updated"
 msgstr "Transitions mises à jour"
