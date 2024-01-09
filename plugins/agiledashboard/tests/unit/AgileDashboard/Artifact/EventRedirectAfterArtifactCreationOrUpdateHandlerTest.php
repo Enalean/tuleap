@@ -37,12 +37,13 @@ use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Milestone\PaneInfo;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalResponseMock;
 
@@ -57,7 +58,12 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test
     private Planning $planning;
     private HomeServiceRedirectionExtractor $home_service_redirection_extractor;
     private Project $project;
-    private PFUser|\PHPUnit\Framework\MockObject\MockObject $user;
+    private PFUser $user;
+    private Planning_ArtifactLinker&\PHPUnit\Framework\MockObject\MockObject $artifact_linker;
+    private PlanningFactory&\PHPUnit\Framework\MockObject\MockObject $planning_factory;
+    private Planning_MilestoneFactory&\PHPUnit\Framework\MockObject\MockObject $milestone_factory;
+    private Planning_MilestonePaneFactory&\PHPUnit\Framework\MockObject\MockObject $pane_factory;
+    private Artifact $artifact;
 
     protected function setUp(): void
     {
@@ -85,7 +91,7 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test
             $this->pane_factory
         );
 
-        $this->user = $this->createMock(PFUser::class);
+        $this->user = UserTestBuilder::anActiveUser()->build();
 
         $this->project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
 

@@ -35,8 +35,10 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\Planning\PlanningTrackerBacklogChecker;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonAction;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class AdditionalArtifactActionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -49,6 +51,9 @@ final class AdditionalArtifactActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     private PlannedArtifactDao|MockObject $planned_artifact_dao;
     private PlanningTrackerBacklogChecker|MockObject $planning_tracker_backlog_checker;
     private EventDispatcherInterface|MockObject $event_dispatcher;
+    private Artifact $artifact;
+    private PFUser $user;
+    private Planning&MockObject $root_planning;
 
     protected function setUp(): void
     {
@@ -81,11 +86,9 @@ final class AdditionalArtifactActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
 
         $tracker = TrackerTestBuilder::aTracker()->withId(148)->withProject($project)->build();
 
-        $this->artifact = $this->createMock(Artifact::class);
-        $this->artifact->method('getTracker')->willReturn($tracker);
-        $this->artifact->method('getId')->willReturn('205');
+        $this->artifact = ArtifactTestBuilder::anArtifact(205)->inTracker($tracker)->build();
 
-        $this->user = $this->createMock(PFUser::class);
+        $this->user = UserTestBuilder::anActiveUser()->build();
 
         $this->root_planning = $this->createMock(Planning::class);
         $this->root_planning->method('getId')->willReturn('1');
