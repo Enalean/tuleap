@@ -21,7 +21,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize)]
 pub struct ExecConfig {
     pub wasm_module_path: String,
-    pub read_only_dir: Option<MountPoint>,
+    pub mount_points: Vec<MountPoint>,
     pub limits: Limitations,
 }
 

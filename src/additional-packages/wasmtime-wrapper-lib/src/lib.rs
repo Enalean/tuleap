@@ -67,7 +67,7 @@ pub unsafe extern "C" fn callWasmModule(
     match compile_and_exec(
         config_json.wasm_module_path,
         module_input_json,
-        &config_json.read_only_dir,
+        &config_json.mount_points,
         &config_json.limits,
     ) {
         Ok(out_struct) => match out_struct.result {
@@ -145,7 +145,7 @@ struct OutputAndStats {
 fn compile_and_exec(
     wasm_module_path: String,
     module_input_json: String,
-    read_only_dir: &Option<MountPoint>,
+    mount_points: &Vec<MountPoint>,
     limits: &Limitations,
 ) -> Result<OutputAndStats, anyhow::Error> {
     let stdin = ReadPipe::from(module_input_json);
@@ -172,22 +172,17 @@ fn compile_and_exec(
     let mut store = Store::new(&engine, my_state);
     store.limiter(|state| &mut state.limits);
 
-    if let Some(mountpoint) = read_only_dir {
+    for mount_point in mount_points {
         let cap_std_dir = cap_std::fs::Dir::open_ambient_dir(
-            &mountpoint.host_path,
+            &mount_point.host_path,
             cap_std::ambient_authority(),
         )?;
         let dir_host = Box::new(wasmtime_wasi::dir::Dir::from_cap_std(cap_std_dir));
         let read_only_dir_host = Box::new(preview1::ReadOnlyDir(dir_host));
-
-        if !mountpoint.guest_path.is_empty() {
-            store
-                .data_mut()
-                .wasi
-                .push_preopened_dir(read_only_dir_host, &mountpoint.guest_path)?;
-        } else {
-            return Err(anyhow!("wasmtime-wrapper-lib was called with a non empty 'host_path' but the 'guest_path' parameter is empty"));
-        }
+        store
+            .data_mut()
+            .wasi
+            .push_preopened_dir(read_only_dir_host, &mount_point.guest_path)?;
     }
 
     wasmtime_wasi::add_to_linker(&mut linker, |state: &mut StoreState| &mut state.wasi)?;

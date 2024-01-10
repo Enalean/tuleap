@@ -31,7 +31,7 @@ final class EmptyWASMCaller implements WASMCaller
     {
     }
 
-    public function call(string $wasm_path, string $module_input_json, string $read_only_dir_path, string $read_only_dir_guest_path): Option
+    public function call(string $wasm_path, string $module_input, array $mount_points): Option
     {
         return Option::nothing(Ok::class);
     }

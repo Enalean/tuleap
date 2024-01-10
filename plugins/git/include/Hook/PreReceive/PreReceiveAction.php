@@ -35,6 +35,7 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\WebAssembly\WASMCaller;
+use Tuleap\WebAssembly\WASMModuleMountPoint;
 
 final class PreReceiveAction
 {
@@ -57,6 +58,7 @@ final class PreReceiveAction
 
     /**
      * Analyze information related to a git object reference
+     * @psalm-param non-empty-string $repository_path
      * @psalm-return Ok<null>|Err<Fault>
      */
     public function preReceiveExecute(string $repository_path, string $input_data): Ok|Err
@@ -91,8 +93,9 @@ final class PreReceiveAction
                     if (empty($hook_result->updated_references)) {
                         return Result::ok(null);
                     }
-                    $json_in = json_encode($hook_result, JSON_THROW_ON_ERROR);
-                    return $this->wasm_caller->call($wasm_path, $json_in, $repository_path, $guest_dir_path)->mapOr(
+                    $json_in      = json_encode($hook_result, JSON_THROW_ON_ERROR);
+                    $mount_points = [new WASMModuleMountPoint($repository_path, $guest_dir_path)];
+                    return $this->wasm_caller->call($wasm_path, $json_in, $mount_points)->mapOr(
                         $this->processResponse(...),
                         Result::ok(null)
                     );

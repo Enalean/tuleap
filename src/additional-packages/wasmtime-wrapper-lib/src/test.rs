@@ -1,8 +1,7 @@
 #[cfg(test)]
 mod tests {
     use std::ffi::{CStr, CString};
-    use std::fs::File;
-    use std::io::Read;
+    use std::fs;
     use std::os::raw::c_char;
     use std::ptr;
 
@@ -13,6 +12,7 @@ mod tests {
     fn expected_output_normal() {
         let config_json = r#"{
             "wasm_module_path": "./test-wasm-modules/target/wasm32-wasi/release/happy-path.wasm",
+            "mount_points": [],
             "limits": {
                 "max_exec_time_in_ms": 80,
                 "max_memory_size_in_bytes": 4194304
@@ -38,13 +38,19 @@ mod tests {
     }
 
     #[test]
-    fn can_read_from_preopened_dir() {
+    fn can_read_from_preopened_dirs() {
         let config_json = r#"{
             "wasm_module_path": "./test-wasm-modules/target/wasm32-wasi/release/read-from-preopened-dir.wasm",
-            "read_only_dir": {
-                "host_path": "./test-wasm-modules/TryToReadWriteHere",
-                "guest_path": "/git-dir-0000/"
-            },
+            "mount_points": [
+                {
+                    "host_path": "./test-wasm-modules/TryToReadHere0",
+                    "guest_path": "/guest-dir-0000/"
+                },
+                {
+                    "host_path": "./test-wasm-modules/TryToReadHere1/",
+                    "guest_path": "/guest-dir-0001/"
+                }
+            ],
             "limits": {
                 "max_exec_time_in_ms": 80,
                 "max_memory_size_in_bytes": 4194304
@@ -63,54 +69,22 @@ mod tests {
         let str_out: &str = cstr_out.to_str().unwrap();
         let json_out: SuccessResponseJson = serde_json::from_str(str_out).unwrap();
 
-        let mut file = File::open("./test-wasm-modules/TryToReadWriteHere/ReadTest.txt").unwrap();
-        let mut contents = String::new();
-        file.read_to_string(&mut contents).unwrap();
+        let file0 = fs::read_to_string("./test-wasm-modules/TryToReadHere0/ReadTest.txt").unwrap();
+        let file1 = fs::read_to_string("./test-wasm-modules/TryToReadHere1/ReadTest.txt").unwrap();
 
-        assert_eq!(contents, json_out.data);
+        assert_eq!(file0 + &file1, json_out.data);
         assert!(json_out.stats.exec_time_as_seconds > 0.0);
         assert!(json_out.stats.memory_in_bytes == 1114112);
-    }
-
-    #[test]
-    fn readonlydirectory_argument_set_but_readonlydirectoryguest_empty_error() {
-        let config_json = r#"{
-            "wasm_module_path": "./test-wasm-modules/target/wasm32-wasi/release/read-from-preopened-dir.wasm",
-            "read_only_dir": {
-                "host_path": "./test-wasm-modules/TryToReadWriteHere",
-                "guest_path": ""
-            },
-            "limits": {
-                "max_exec_time_in_ms": 80,
-                "max_memory_size_in_bytes": 4194304
-            }
-        }"#;
-        let config_json_c_str = CString::new(config_json).unwrap();
-        let config_json_c_world: *const c_char = config_json_c_str.as_ptr() as *const c_char;
-
-        let module_input_json = "";
-        let module_input_json_c_str = CString::new(module_input_json).unwrap();
-        let module_input_json_c_world: *const c_char =
-            module_input_json_c_str.as_ptr() as *const c_char;
-
-        let c_out = unsafe { callWasmModule(config_json_c_world, module_input_json_c_world) };
-        let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
-        let str_out: &str = cstr_out.to_str().unwrap();
-
-        assert_eq!(
-            r#"{"internal_error":"wasmtime-wrapper-lib was called with a non empty 'host_path' but the 'guest_path' parameter is empty"}"#,
-            str_out
-        );
     }
 
     #[test]
     fn write_to_preopened_dir_fails() {
         let config_json = r#"{
             "wasm_module_path": "./test-wasm-modules/target/wasm32-wasi/release/write-to-preopened-dir.wasm",
-            "read_only_dir": {
-                "host_path": "./test-wasm-modules/TryToReadWriteHere",
+            "mount_points": [{
+                "host_path": "./test-wasm-modules/TryToReadHere0",
                 "guest_path": "/git-dir-7331/"
-            },
+            }],
             "limits": {
                 "max_exec_time_in_ms": 80,
                 "max_memory_size_in_bytes": 4194304
@@ -161,6 +135,7 @@ mod tests {
     fn module_input_json_ptr_is_null_error() {
         let config_json = r#"{
             "wasm_module_path": "./test-wasm-modules/target/wasm32-wasi/release/happy-path.wasm",
+            "mount_points": [],
             "limits": {
                 "max_exec_time_in_ms": 80,
                 "max_memory_size_in_bytes": 4194304
@@ -185,6 +160,7 @@ mod tests {
     fn module_not_found() {
         let config_json = r#"{
             "wasm_module_path": "./test-wasm-modules/target/wasm32-wasi/release/i-do-not-exist.wasm",
+            "mount_points": [],
             "limits": {
                 "max_exec_time_in_ms": 80,
                 "max_memory_size_in_bytes": 4194304
@@ -212,6 +188,7 @@ mod tests {
     fn module_exceeding_max_running_time_gets_killed() {
         let config_json = r#"{
             "wasm_module_path": "./test-wasm-modules/target/wasm32-wasi/release/running-time.wasm",
+            "mount_points": [],
             "limits": {
                 "max_exec_time_in_ms": 80,
                 "max_memory_size_in_bytes": 4194304
@@ -243,6 +220,7 @@ mod tests {
     fn wasm_module_allocate_too_much_memory() {
         let config_json = r#"{
             "wasm_module_path": "./test-wasm-modules/target/wasm32-wasi/release/memory-alloc-fail.wasm",
+            "mount_points": [],
             "limits": {
                 "max_exec_time_in_ms": 80,
                 "max_memory_size_in_bytes": 4194304
@@ -275,6 +253,7 @@ mod tests {
     fn wasm_module_allocate_okay_amount_of_memory() {
         let config_json = r#"{
             "wasm_module_path": "./test-wasm-modules/target/wasm32-wasi/release/memory-alloc-success.wasm",
+            "mount_points": [],
             "limits": {
                 "max_exec_time_in_ms": 80,
                 "max_memory_size_in_bytes": 4194304
