@@ -18,7 +18,7 @@
  */
 
 import Vue from "vue";
-import { getPOFileFromLocale, initVueGettextFromPoGettextPlugin } from "@tuleap/vue2-gettext-init";
+import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
 import App from "./components/App.vue";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    await initVueGettextFromPoGettextPlugin(
+    await initVueGettext(
         Vue,
         (locale: string) =>
             import(

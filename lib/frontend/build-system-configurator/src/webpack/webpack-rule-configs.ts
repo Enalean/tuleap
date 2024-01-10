@@ -78,12 +78,6 @@ export const rule_angular_gettext_loader = {
     ],
 };
 
-export const rule_easygettext_loader = {
-    test: /\.po$/,
-    exclude: /node_modules/,
-    use: [{ loader: "json-loader" }, { loader: "easygettext-loader" }],
-};
-
 export const rule_scss_loader = {
     test: /\.scss$/,
     use: [

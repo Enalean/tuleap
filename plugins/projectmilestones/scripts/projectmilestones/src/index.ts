@@ -21,10 +21,7 @@ import Vue from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import App from "./components/App.vue";
 import { setUserLocale } from "./helpers/user-locale-helper";
-import {
-    getPOFileFromLocaleWithoutExtension,
-    initVueGettextFromPoGettextPlugin,
-} from "@tuleap/vue2-gettext-init";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue2-gettext-init";
 import type { BurnupMode, State, TrackerAgileDashboard } from "./type";
 import { COUNT, EFFORT } from "./type";
 import { createPinia, PiniaVuePlugin } from "pinia";
@@ -39,7 +36,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         Vue.config.language = locale;
         setUserLocale(locale.replace("_", "-"));
     }
-    await initVueGettextFromPoGettextPlugin(
+    await initVueGettext(
         Vue,
         (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );

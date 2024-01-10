@@ -18,7 +18,7 @@
  */
 
 import Vue from "vue";
-import { getPOFileFromLocale, initVueGettextFromPoGettextPlugin } from "@tuleap/vue2-gettext-init";
+import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
 import TimetrackingWidget from "./components/TimetrackingWidget.vue";
 import { usePersonalTimetrackingWidgetStore } from "./store/root.ts";
 import { createPinia, PiniaVuePlugin } from "pinia";
@@ -27,10 +27,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("personal-timetracking-widget");
 
     if (vue_mount_point) {
-        await initVueGettextFromPoGettextPlugin(
-            Vue,
-            (locale) => import(`../po/${getPOFileFromLocale(locale)}`),
-        );
+        await initVueGettext(Vue, (locale) => import(`../po/${getPOFileFromLocale(locale)}`));
 
         Vue.use(PiniaVuePlugin);
         const pinia = createPinia();

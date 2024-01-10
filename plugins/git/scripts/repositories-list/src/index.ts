@@ -27,10 +27,7 @@ import App from "./components/App.vue";
 import "../themes/main.scss";
 import { setBreadcrumbSettings } from "./breadcrumb-presenter";
 import { build as buildRepositoryListPresenter } from "./repository-list-presenter";
-import {
-    getPOFileFromLocaleWithoutExtension,
-    initVueGettextFromPoGettextPlugin,
-} from "@tuleap/vue2-gettext-init";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue2-gettext-init";
 import { createStore } from "./store";
 import { ERROR_TYPE_NO_ERROR, PROJECT_KEY } from "./constants";
 import type { State, RepositoriesForOwner } from "./type";
@@ -46,7 +43,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         throw new Error("Unable to load user locale");
     }
 
-    await initVueGettextFromPoGettextPlugin(
+    await initVueGettext(
         Vue,
         (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );

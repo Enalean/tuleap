@@ -152,9 +152,6 @@ devDependencies:
   po-gettext-loader:
     specifier: ^1.0.0
     version: 1.0.0
-  pofile:
-    specifier: ^1.1.0
-    version: 1.1.1
   postcss:
     specifier: ^8.4.31
     version: 8.4.31
@@ -8555,10 +8552,6 @@ packages:
 
   /pofile@1.0.11:
     resolution: {integrity: sha512-Vy9eH1dRD9wHjYt/QqXcTz+RnX/zg53xK+KljFSX30PvdDMb2z+c6uDUeblUGqqJgz3QFsdlA0IJvHziPmWtQg==}
-    dev: true
-
-  /pofile@1.1.1:
-    resolution: {integrity: sha512-RVAzFGo1Mx9+YukVKSgTLut6r4ZVBW8IVrqGHAPfEsVJN93WSp5HRD6+qNa7av1q/joPKDNJd55m5AJl9GBQGA==}
     dev: true
 
   /postcss-html@1.5.0:

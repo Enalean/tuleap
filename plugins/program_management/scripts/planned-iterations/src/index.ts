@@ -19,10 +19,7 @@
 
 import Vue from "vue";
 import App from "./components/App.vue";
-import {
-    getPOFileFromLocaleWithoutExtension,
-    initVueGettextFromPoGettextPlugin,
-} from "@tuleap/vue2-gettext-init";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue2-gettext-init";
 import { createStore } from "./store";
 import { getDatasetItemOrThrow } from "@tuleap/dom";
 import "../themes/main.scss";
@@ -36,7 +33,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const user_locale = getDatasetItemOrThrow(document.body, "userLocale");
     Vue.config.language = user_locale;
 
-    await initVueGettextFromPoGettextPlugin(
+    await initVueGettext(
         Vue,
         (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );

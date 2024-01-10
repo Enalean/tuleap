@@ -19,13 +19,10 @@
 
 import Vue from "vue";
 import App from "./components/App.vue";
-import {
-    initVueGettextFromPoGettextPlugin,
-    getPOFileFromLocaleWithoutExtension,
-} from "@tuleap/vue2-gettext-init";
+import { initVueGettext, getPOFileFromLocaleWithoutExtension } from "@tuleap/vue2-gettext-init";
 
 export async function init(mount_point: HTMLDivElement, button: HTMLElement): Promise<void> {
-    await initVueGettextFromPoGettextPlugin(
+    await initVueGettext(
         Vue,
         (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );

@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as path from "path";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import webpack from "webpack";
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -168,10 +167,3 @@ export function extendProdConfiguration(webpack_configs: object[]): object {
         }),
     );
 }
-
-export const easygettext_loader_alias = {
-    "easygettext-loader": path.resolve(
-        __dirname,
-        "./../../../../../tools/utils/scripts/easygettext-loader.js",
-    ),
-};

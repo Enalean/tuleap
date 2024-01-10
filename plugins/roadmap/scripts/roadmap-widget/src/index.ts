@@ -21,7 +21,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import App from "./components/App.vue";
-import { getPOFileFromLocale, initVueGettextFromPoGettextPlugin } from "@tuleap/vue2-gettext-init";
+import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
 import { parseNatureLabels } from "./helpers/nature-labels-from-mountpoint";
 import { createStore } from "./store";
 import type { RootState } from "./store/type";
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    await initVueGettextFromPoGettextPlugin(
+    await initVueGettext(
         Vue,
         (locale: string) =>
             import(

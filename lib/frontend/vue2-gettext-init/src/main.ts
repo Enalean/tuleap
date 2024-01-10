@@ -24,13 +24,12 @@ import { sanitizePoData } from "./formatter";
 
 export { getPOFileFromLocale, getPOFileFromLocaleWithoutExtension } from "@tuleap/gettext";
 export type { GetText } from "@tuleap/gettext";
-export { sanitizePoData as formatPOFileToVueGettext } from "./formatter";
 
 interface GettextTranslationsMap {
     [locale: string]: VueGettextTranslationsFormat;
 }
 
-export interface VueGettextPOFile {
+interface VueGettextPOFile {
     readonly messages: VueGettextTranslationsFormat;
 }
 
@@ -54,18 +53,6 @@ const loadTranslations = (
     );
 };
 
-export async function initVueGettext(
-    vue_instance: VueConstructor,
-    load_translations_callback: (locale: string) => PromiseLike<VueGettextPOFile>,
-): Promise<void> {
-    const locale = document.body.dataset.userLocale;
-    const translations = await loadTranslations(locale, load_translations_callback);
-    vue_instance.use(VueGettext, { translations, silent: true });
-    if (locale) {
-        vue_instance.config.language = locale;
-    }
-}
-
 type POGettextTranslation = {
     readonly msgid: string;
     readonly msgstr: string[];
@@ -79,7 +66,7 @@ export type POGettextPluginPOFile = {
     };
 };
 
-export async function initVueGettextFromPoGettextPlugin(
+export async function initVueGettext(
     vue_instance: VueConstructor,
     load_translations_callback: (locale: string) => PromiseLike<POGettextPluginPOFile>,
 ): Promise<void> {

@@ -19,10 +19,7 @@
 
 import "../themes/project-registration/project-registration.scss";
 import Vue from "vue";
-import {
-    getPOFileFromLocaleWithoutExtension,
-    initVueGettextFromPoGettextPlugin,
-} from "@tuleap/vue2-gettext-init";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue2-gettext-init";
 import App from "./components/App.vue";
 import type { TemplateData, TroveCatData } from "./type";
 import { createStore } from "./store";
@@ -37,7 +34,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    await initVueGettextFromPoGettextPlugin(
+    await initVueGettext(
         Vue,
         (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );

@@ -19,10 +19,7 @@
 
 import Vue from "vue";
 import App from "./components/App.vue";
-import {
-    getPOFileFromLocaleWithoutExtension,
-    initVueGettextFromPoGettextPlugin,
-} from "@tuleap/vue2-gettext-init";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue2-gettext-init";
 import { createStore } from "./store";
 import type { ConfigurationState } from "./store/configuration";
 import VueDOMPurifyHTML from "vue-dompurify-html";
@@ -84,7 +81,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         tracker_iteration_label: iteration_label,
     };
 
-    await initVueGettextFromPoGettextPlugin(
+    await initVueGettext(
         Vue,
         (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );
