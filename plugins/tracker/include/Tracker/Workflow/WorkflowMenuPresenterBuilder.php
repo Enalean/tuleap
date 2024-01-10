@@ -19,43 +19,53 @@
 */
 namespace Tuleap\Tracker\Workflow;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker;
 use Tuleap\Tracker\Webhook\Actions\AdminWebhooks;
 use Workflow;
 
 final class WorkflowMenuPresenterBuilder
 {
+    public function __construct(private readonly EventDispatcherInterface $dispatcher)
+    {
+    }
+
     public function build(Tracker $tracker): WorkflowMenuPresenter
     {
-        $menu = [
-            new WorkflowMenuItem(
-                $this->buildFrontRouterUrl($tracker),
-                dgettext('tuleap-tracker', 'Transitions rules'),
-                'transitions',
+        $collection = $this->dispatcher->dispatch(
+            new WorkflowMenuItemCollection(
+                $tracker,
+                [
+                    new WorkflowMenuItem(
+                        $this->buildFrontRouterUrl($tracker),
+                        dgettext('tuleap-tracker', 'Transitions rules'),
+                        'transitions',
+                    ),
+                    new WorkflowMenuItem(
+                        $this->buildLegacyUrl(Workflow::FUNC_ADMIN_RULES, $tracker),
+                        dgettext('tuleap-tracker', 'Global rules'),
+                        'global-rules',
+                    ),
+                    new WorkflowMenuItem(
+                        $this->buildLegacyUrl(Workflow::FUNC_ADMIN_DEPENDENCIES, $tracker),
+                        dgettext('tuleap-tracker', 'Field dependencies'),
+                        'field-dependencies',
+                    ),
+                    new WorkflowMenuItem(
+                        $this->buildLegacyUrl(Workflow::FUNC_ADMIN_CROSS_TRACKER_TRIGGERS, $tracker),
+                        dgettext('tuleap-tracker', 'Triggers'),
+                        'triggers',
+                    ),
+                    new WorkflowMenuItem(
+                        $this->buildLegacyUrl(AdminWebhooks::FUNC_ADMIN_WEBHOOKS, $tracker),
+                        dgettext('tuleap-tracker', 'Webhooks'),
+                        'webhooks',
+                    ),
+                ],
             ),
-            new WorkflowMenuItem(
-                $this->buildLegacyUrl(Workflow::FUNC_ADMIN_RULES, $tracker),
-                dgettext('tuleap-tracker', 'Global rules'),
-                'global-rules',
-            ),
-            new WorkflowMenuItem(
-                $this->buildLegacyUrl(Workflow::FUNC_ADMIN_DEPENDENCIES, $tracker),
-                dgettext('tuleap-tracker', 'Field dependencies'),
-                'field-dependencies',
-            ),
-            new WorkflowMenuItem(
-                $this->buildLegacyUrl(Workflow::FUNC_ADMIN_CROSS_TRACKER_TRIGGERS, $tracker),
-                dgettext('tuleap-tracker', 'Triggers'),
-                'triggers',
-            ),
-            new WorkflowMenuItem(
-                $this->buildLegacyUrl(AdminWebhooks::FUNC_ADMIN_WEBHOOKS, $tracker),
-                dgettext('tuleap-tracker', 'Webhooks'),
-                'webhooks',
-            ),
-        ];
+        );
 
-        return new WorkflowMenuPresenter($menu);
+        return new WorkflowMenuPresenter($collection->getItems());
     }
 
     private function buildLegacyUrl(string $action, Tracker $tracker): string

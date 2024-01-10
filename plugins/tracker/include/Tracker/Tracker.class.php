@@ -1357,7 +1357,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $event_parameters = ["items" => &$items, "tracker_id" => $this->id];
         EventManager::instance()->processEvent(self::TRACKER_EVENT_FETCH_ADMIN_BUTTONS, $event_parameters);
 
-        $workflow_menu_presenter_builder = new WorkflowMenuPresenterBuilder();
+        $workflow_menu_presenter_builder = new WorkflowMenuPresenterBuilder(EventManager::instance());
 
         return new HeaderPresenter($this, $current_item, array_values($items), $workflow_menu_presenter_builder->build($this));
     }

@@ -23,8 +23,14 @@ declare(strict_types=1);
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationTaskCollectorEvent;
 use Tuleap\TrackerCCE\CustomCodeExecutionTask;
+use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Tracker\Workflow\WorkflowMenuItem;
+use Tuleap\Tracker\Workflow\WorkflowMenuItemCollection;
+use Tuleap\TrackerCCE\Administration\AdministrationController;
 
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../../tracker/vendor/autoload.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 final class tracker_ccePlugin extends Plugin
@@ -53,5 +59,28 @@ final class tracker_ccePlugin extends Plugin
     public function collectPostCreationTask(PostCreationTaskCollectorEvent $event): void
     {
         $event->addAsyncTask(new CustomCodeExecutionTask($event->getLogger()));
+    }
+
+    #[ListeningToEventClass]
+    public function workflowMenuItemCollection(WorkflowMenuItemCollection $collection): void
+    {
+        $collection->addItem(
+            new WorkflowMenuItem(
+                '/tracker_cce/' . urlencode((string) $collection->tracker->getId()) . '/admin',
+                dgettext('tuleap-tracker_cce', 'Custom code execution'),
+                'tracker-cce',
+            ),
+        );
+    }
+
+    #[ListeningToEventClass]
+    public function collectRoutesEvent(CollectRoutesEvent $event): void
+    {
+        $event->getRouteCollector()->get('/tracker_cce/{id:\d+}/admin', $this->getRouteHandler('routeTrackerAdministration'));
+    }
+
+    public function routeTrackerAdministration(): DispatchableWithRequest
+    {
+        return new AdministrationController(TrackerFactory::instance(), new TrackerManager(), TemplateRendererFactory::build());
     }
 }
