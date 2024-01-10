@@ -20,11 +20,13 @@
 
 <template>
     <div class="document-history-logs">
-        <h2 class="document-history-section-title">{{ $gettext("Logs") }}</h2>
+        <h2 class="document-history-section-title">
+            {{ $gettext("Logs") }}
+        </h2>
         <section class="tlp-pane">
             <div class="tlp-pane-container">
                 <section class="tlp-pane-section">
-                    <table class="tlp-table">
+                    <table class="tlp-table" data-test="table-test">
                         <thead>
                             <tr>
                                 <th>{{ $gettext("When") }}</th>
