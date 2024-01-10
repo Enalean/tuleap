@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Tests\Stub;
 
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field\DuckTypedFieldType;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field\SearchFieldTypes;
 
 final class SearchFieldTypesStub implements SearchFieldTypes
@@ -37,10 +38,10 @@ final class SearchFieldTypesStub implements SearchFieldTypes
 
     public function searchTypeByFieldNameAndTrackerList(string $field_name, array $tracker_ids): array
     {
-        $type_list = [];
-        foreach ($this->types as $type) {
-            $type_list[] = ["type" => $type];
+        $types = [];
+        foreach ($this->types as $type_names) {
+            $types[] = DuckTypedFieldType::fromString($type_names);
         }
-        return $type_list;
+        return $types;
     }
 }

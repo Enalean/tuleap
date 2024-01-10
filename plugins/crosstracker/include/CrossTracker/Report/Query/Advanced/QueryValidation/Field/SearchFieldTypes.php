@@ -22,11 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field;
 
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+
 interface SearchFieldTypes
 {
     /**
      * @param int[] $tracker_ids
-     * @psalm-return array<array{type: string}>
+     * @psalm-return list<Ok<DuckTypedFieldType>|Err<Fault>>
      */
     public function searchTypeByFieldNameAndTrackerList(string $field_name, array $tracker_ids): array;
 }

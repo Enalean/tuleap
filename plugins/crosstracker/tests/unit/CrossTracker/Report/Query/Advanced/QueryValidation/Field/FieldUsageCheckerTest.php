@@ -25,6 +25,10 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorParameters;
 use Tuleap\CrossTracker\Tests\Builders\InvalidSearchableCollectorParametersBuilder;
 use Tuleap\CrossTracker\Tests\Stub\SearchFieldTypesStub;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 
@@ -37,38 +41,46 @@ final class FieldUsageCheckerTest extends TestCase
         $this->visitor_parameters = InvalidSearchableCollectorParametersBuilder::aParameter()->build();
     }
 
-    public function testCheckWhenAllFieldsAreIntOrFloat(): void
-    {
-        $fields_type_stub = SearchFieldTypesStub::withTypes("int", "float");
-        $this->check($fields_type_stub);
-
-        $this->expectNotToPerformAssertions();
-    }
-
-    public function testCheckWhenAFieldIsString(): void
-    {
-        $fields_type_stub = SearchFieldTypesStub::withTypes("int", "string");
-        $this->expectException(FieldTypesAreIncompatibleException::class);
-        $this->check($fields_type_stub);
-    }
-
-    public function testCheckWhenFirstFieldIsString(): void
-    {
-        $fields_type_stub = SearchFieldTypesStub::withTypes("string", "int");
-        $this->expectException(FieldTypeIsNotSupportedException::class);
-        $this->check($fields_type_stub);
-    }
-
     /**
-     * @throws FieldTypeIsNotSupportedException
-     * @throws FieldTypesAreIncompatibleException
+     * @return Ok<null>|Err<Fault>
      */
-    private function check(SearchFieldTypes $fields_type): void
+    private function check(SearchFieldTypes $fields_type): Ok|Err
     {
         $checker = new FieldUsageChecker($fields_type);
-        $checker->checkFieldIsValid(
+        return $checker->checkFieldIsValid(
             new Field("toto"),
             $this->visitor_parameters
         );
+    }
+
+    public function testCheckWhenAllFieldsAreIntOrFloat(): void
+    {
+        $fields_type_stub = SearchFieldTypesStub::withTypes(
+            \Tracker_FormElementFactory::FIELD_INTEGER_TYPE,
+            \Tracker_FormElementFactory::FIELD_FLOAT_TYPE
+        );
+        self::assertTrue(Result::isOk($this->check($fields_type_stub)));
+    }
+
+    public function testCheckFailsWhenAFieldIsString(): void
+    {
+        $fields_type_stub = SearchFieldTypesStub::withTypes(
+            \Tracker_FormElementFactory::FIELD_INTEGER_TYPE,
+            \Tracker_FormElementFactory::FIELD_STRING_TYPE
+        );
+        $result           = $this->check($fields_type_stub);
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(FieldTypesAreIncompatibleFault::class, $result->error);
+    }
+
+    public function testCheckFailsWhenFirstFieldIsString(): void
+    {
+        $fields_type_stub = SearchFieldTypesStub::withTypes(
+            \Tracker_FormElementFactory::FIELD_STRING_TYPE,
+            \Tracker_FormElementFactory::FIELD_INTEGER_TYPE
+        );
+        $result           = $this->check($fields_type_stub);
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(FieldTypeIsNotSupportedFault::class, $result->error);
     }
 }

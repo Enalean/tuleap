@@ -57,10 +57,6 @@ msgid "Error while parsing the query"
 msgstr "Erreur pendant l'analyse de la requête"
 
 #, php-format
-msgid "Field '%s' is not supported"
-msgstr "Le champ '%s' n'est pas supporté"
-
-#, php-format
 msgid ""
 "Field '%s' is present in trackers '%s' but their types cannot be compared. "
 "Please refine your query or check the configuration of the trackers."

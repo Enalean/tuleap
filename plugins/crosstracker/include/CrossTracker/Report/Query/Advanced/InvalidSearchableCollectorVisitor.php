@@ -20,10 +20,12 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field\FieldTypeIsNotSupportedFault;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field\FieldUsageChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
 use Tuleap\CrossTracker\SearchOnDuckTypedFieldsConfig;
+use Tuleap\NeverThrow\Fault;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SearchableVisitor;
@@ -48,14 +50,20 @@ final class InvalidSearchableCollectorVisitor implements SearchableVisitor
             return;
         }
 
-        $invalid_searchables_collection = $parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection();
-        try {
-            $this->field_checker->checkFieldIsValid($searchable_field, $parameters);
-        } catch (InvalidQueryException $exception) {
-            $invalid_searchables_collection->addInvalidSearchableError(
-                $exception->getMessage()
+        $this->field_checker->checkFieldIsValid($searchable_field, $parameters)
+            ->match(
+                static function () {
+                    // Do nothing
+                },
+                static function (Fault $fault) use ($searchable_field, $parameters) {
+                    $invalid_searchables_collection = $parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection();
+                    if ($fault instanceof FieldTypeIsNotSupportedFault) {
+                        $invalid_searchables_collection->addNonExistentSearchable($searchable_field->getName());
+                        return;
+                    }
+                    $invalid_searchables_collection->addInvalidSearchableError((string) $fault);
+                }
             );
-        }
     }
 
     public function visitMetadata(Metadata $metadata, $parameters)

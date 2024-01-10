@@ -49,10 +49,6 @@ msgid "Error while parsing the query"
 msgstr ""
 
 #, php-format
-msgid "Field '%s' is not supported"
-msgstr ""
-
-#, php-format
 msgid ""
 "Field '%s' is present in trackers '%s' but their types cannot be compared. "
 "Please refine your query or check the configuration of the trackers."

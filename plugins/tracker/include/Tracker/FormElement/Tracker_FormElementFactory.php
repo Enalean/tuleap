@@ -37,29 +37,30 @@ require_once __DIR__ . '/../../tracker_permissions.php';
 
 class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValuesToFieldsData, RetrieveUsedArtifactLinkFields, RetrieveFormElementsForTracker, RetrieveFieldType, RetrieveAnArtifactLinkField //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const FIELD_STRING_TYPE           = 'string';
-    public const FIELD_TEXT_TYPE             = 'text';
-    public const FIELD_FLOAT_TYPE            = 'float';
-    public const FIELD_INTEGER_TYPE          = 'int';
-    public const FIELD_DATE_TYPE             = 'date';
-    public const FIELD_LAST_UPDATE_DATE_TYPE = 'lud';
-    public const FIELD_SUBMITTED_ON_TYPE     = 'subon';
-    public const FIELD_SUBMITTED_BY_TYPE     = 'subby';
-    public const FIELD_ARTIFACT_ID_TYPE      = 'aid';
-    public const FIELD_SELECT_BOX_TYPE       = 'sb';
-    public const FIELD_RADIO_BUTTON_TYPE     = 'rb';
-    public const FIELD_MULTI_SELECT_BOX_TYPE = 'msb';
-    public const FIELD_CHECKBOX_TYPE         = 'cb';
-    public const FIELD_OPEN_LIST_TYPE        = 'tbl';
-    public const FIELD_FILE_TYPE             = 'file';
-    public const FIELD_ARTIFACT_LINKS        = 'art_link';
-    public const FIELD_CROSS_REFERENCES      = 'cross';
-    public const FIELD_COMPUTED              = 'computed';
-    public const FIELD_BURNDOWN              = 'burndown';
-    public const FIELD_LAST_MODIFIED_BY      = 'luby';
-    public const FIELD_ARTIFACT_IN_TRACKER   = 'atid';
-    public const FIELD_RANK                  = 'priority';
-    public const FIELD_SHARED                = 'shared';
+    public const FIELD_STRING_TYPE                 = 'string';
+    public const FIELD_TEXT_TYPE                   = 'text';
+    public const FIELD_FLOAT_TYPE                  = 'float';
+    public const FIELD_INTEGER_TYPE                = 'int';
+    public const FIELD_DATE_TYPE                   = 'date';
+    public const FIELD_LAST_UPDATE_DATE_TYPE       = 'lud';
+    public const FIELD_SUBMITTED_ON_TYPE           = 'subon';
+    public const FIELD_SUBMITTED_BY_TYPE           = 'subby';
+    public const FIELD_ARTIFACT_ID_TYPE            = 'aid';
+    public const FIELD_SELECT_BOX_TYPE             = 'sb';
+    public const FIELD_RADIO_BUTTON_TYPE           = 'rb';
+    public const FIELD_MULTI_SELECT_BOX_TYPE       = 'msb';
+    public const FIELD_CHECKBOX_TYPE               = 'cb';
+    public const FIELD_OPEN_LIST_TYPE              = 'tbl';
+    public const FIELD_FILE_TYPE                   = 'file';
+    public const FIELD_ARTIFACT_LINKS              = 'art_link';
+    public const FIELD_CROSS_REFERENCES            = 'cross';
+    public const FIELD_COMPUTED                    = 'computed';
+    public const FIELD_BURNDOWN                    = 'burndown';
+    public const FIELD_LAST_MODIFIED_BY            = 'luby';
+    public const FIELD_ARTIFACT_IN_TRACKER         = 'atid';
+    public const FIELD_RANK                        = 'priority';
+    public const FIELD_SHARED                      = 'shared';
+    public const FIELD_PERMISSION_ON_ARTIFACT_TYPE = 'perm';
 
     public const CONTAINER_COLUMN_TYPE   = 'column';
     public const CONTAINER_FIELDSET_TYPE = 'fieldset';
@@ -94,7 +95,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         self::FIELD_INTEGER_TYPE => Tracker_FormElement_Field_Integer::class,
         self::FIELD_OPEN_LIST_TYPE => Tracker_FormElement_Field_OpenList::class,
         self::FIELD_ARTIFACT_LINKS => Tracker_FormElement_Field_ArtifactLink::class,
-        'perm' => Tracker_FormElement_Field_PermissionsOnArtifact::class,
+        self::FIELD_PERMISSION_ON_ARTIFACT_TYPE => Tracker_FormElement_Field_PermissionsOnArtifact::class,
         self::FIELD_SHARED => Tracker_FormElement_Shared::class,
     ];
 
