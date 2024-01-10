@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Configuration;
 
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\DB\DBConfig;
 use Tuleap\OAuth2ServerCore\App\ClientIdentifier;
 use Tuleap\ServerHostname;
 
@@ -39,6 +41,9 @@ final class LocalSettingsFactory implements LocalSettingsRepresentationBuilder
         $oauth2_secret = $this->oauth2_app_generator->generateOAuth2AppSecret();
 
         return new LocalSettingsRepresentation(
+            \ForgeConfig::get(DBConfig::CONF_HOST) . ':' . \ForgeConfig::getInt(DBConfig::CONF_PORT),
+            \ForgeConfig::get(DBConfig::CONF_DBUSER),
+            new ConcealedString(\ForgeConfig::get(DBConfig::CONF_DBPASSWORD)),
             $this->shared_secret_generator->generateSharedSecret(),
             ServerHostname::HTTPSUrl(),
             ClientIdentifier::fromLastGeneratedClientSecret($oauth2_secret)->toString(),

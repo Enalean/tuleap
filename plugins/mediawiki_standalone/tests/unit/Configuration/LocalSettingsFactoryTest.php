@@ -34,6 +34,11 @@ final class LocalSettingsFactoryTest extends TestCase
     public function testGeneratesRepresentation(): void
     {
         \ForgeConfig::set('sys_supported_languages', 'en_US,fr_FR');
+        \ForgeConfig::set('sys_dbhost', 'dbhost');
+        \ForgeConfig::set('sys_dbport', 3306);
+        \ForgeConfig::set('sys_dbuser', 'dbuser');
+        \ForgeConfig::set('sys_dbpasswd', 'dbpass');
+
         $factory = new LocalSettingsFactory(
             new class implements MediaWikiOAuth2AppSecretGenerator {
                 public function generateOAuth2AppSecret(): LastGeneratedClientSecret
@@ -59,6 +64,9 @@ final class LocalSettingsFactoryTest extends TestCase
 
         $representation = $factory->generateTuleapLocalSettingsRepresentation();
 
+        self::assertEquals('dbhost:3306', $representation->db_server_hostname);
+        self::assertEquals('dbuser', $representation->db_server_username);
+        self::assertEquals('dbpass', $representation->db_server_password->getString());
         self::assertStringContainsString('789', $representation->oauth2_client_id);
         self::assertEquals('random_oauth2_secret', $representation->oauth2_client_secret->getString());
         self::assertEquals('random_shared_secret', $representation->pre_shared_key->getString());

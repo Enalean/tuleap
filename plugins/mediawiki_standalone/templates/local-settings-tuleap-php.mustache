@@ -2,6 +2,10 @@
 // This file is deployed and managed by Tuleap.
 // DO NOT EDIT.
 
+$GLOBALS['wgDBserver'] = {{ db_server_hostname }};
+$GLOBALS['wgDBuser'] = {{ db_server_username }};
+$GLOBALS['wgDBpassword'] = {{ db_server_password }};
+
 $GLOBALS['wgTuleapPreSharedKey'] = {{ pre_shared_key }};
 
 $GLOBALS['wgTuleapUrl'] = {{ https_url }};

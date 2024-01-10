@@ -29,6 +29,9 @@ final class LocalSettingsRepresentationForTestBuilder implements LocalSettingsRe
     public function generateTuleapLocalSettingsRepresentation(): LocalSettingsRepresentation
     {
         return new LocalSettingsRepresentation(
+            'dbhost:3306',
+            'dbuser',
+            new ConcealedString('dbpass'),
             new ConcealedString('random_value'),
             'https://example.com',
             'tlp-client-id-test',

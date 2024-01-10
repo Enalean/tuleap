@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Configuration;
 
+use Psl\File\WriteMode;
 use Tuleap\MediawikiStandalone\Configuration\MustachePHPString\PHPStringMustacheRenderer;
 
 final class LocalSettingsPersistToPHPFile implements LocalSettingsPersist
@@ -35,13 +36,19 @@ final class LocalSettingsPersistToPHPFile implements LocalSettingsPersist
     public function persist(LocalSettingsRepresentation $representation): void
     {
         $path = $this->path_setting_directory . '/' . self::FILE_NAME;
-        $res  = @file_put_contents(
-            $path,
-            $this->renderer->renderToString('local-settings-tuleap-php', $representation),
-        );
-        if ($res === false) {
-            throw new CannotPersistLocalSettings(sprintf('Cannot write the LocalSettings to %s', $path));
+
+        try {
+            \Psl\Filesystem\create_file($path);
+            \Psl\Filesystem\change_permissions($path, 0600);
+            \Psl\File\write(
+                $path,
+                $this->renderer->renderToString('local-settings-tuleap-php', $representation),
+                WriteMode::TRUNCATE
+            );
+        } catch (\RuntimeException $ex) {
+            throw new CannotPersistLocalSettings(sprintf('Cannot write the LocalSettings to %s', $path), $ex);
         }
+
         $application_user_login = \ForgeConfig::getApplicationUserLogin();
         $chown_success          = chown($path, $application_user_login);
         if (! $chown_success) {
