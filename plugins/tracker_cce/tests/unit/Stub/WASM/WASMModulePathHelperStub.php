@@ -20,25 +20,25 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\TrackerCCE;
+namespace Tuleap\TrackerCCE\Stub\WASM;
 
-use ColinODell\PsrTestLogger\TestLogger;
-use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
-use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tracker;
+use Tuleap\TrackerCCE\WASM\WASMModulePathHelper;
 
-class CustomCodeExecutionTaskTest extends TestCase
+final class WASMModulePathHelperStub implements WASMModulePathHelper
 {
-    public function testItLogDebug(): void
-    {
-        $test_logger = new TestLogger();
-        $task        = new CustomCodeExecutionTask($test_logger);
-        $artifact    = ArtifactTestBuilder::anArtifact(45)->build();
-        $changeset   = ChangesetTestBuilder::aChangeset('1')
-            ->ofArtifact($artifact)
-            ->build();
+    private function __construct(
+        private readonly string $path,
+    ) {
+    }
 
-        $task->execute($changeset, false);
-        self::assertTrue($test_logger->hasDebug("CustomCodeExecutionTask called on artifact #45 for changeset #1"));
+    public static function withPath(string $path): self
+    {
+        return new self($path);
+    }
+
+    public function getPathForTracker(Tracker $tracker): string
+    {
+        return $this->path;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,45 +20,46 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\WebAssembly;
+namespace Tuleap\TrackerCCE\Stub\WASM;
 
+use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
-use Tuleap\Option\Option;
+use Tuleap\TrackerCCE\WASM\WASMModuleCaller;
+use Tuleap\TrackerCCE\WASM\WASMResponseRepresentation;
 
-final class WASMCallerStub implements WASMCaller
+final class WASMModuleCallerStub implements WASMModuleCaller
 {
     private bool $has_been_called = false;
 
     /**
-     * @psalm-param Option<Result<string, Fault>> $return_value
+     * @param Ok<WASMResponseRepresentation>|Err<Fault> $result
      */
-    private function __construct(private readonly Option $return_value)
-    {
+    private function __construct(
+        private readonly Ok | Err $result,
+    ) {
     }
 
-    public static function wasmCallUnavailable(): self
+    public static function withOkResult(WASMResponseRepresentation $response): self
     {
-        return new self(Option::nothing(Result::class));
+        return new self(Result::ok($response));
     }
 
-    public static function successfulWasmCall(string $response): self
+    public static function withErrResult(string $message): self
     {
-        return new self(Option::fromValue(Result::ok($response)));
+        return new self(Result::err(Fault::fromMessage($message)));
     }
 
-    public static function failingWasmCall(string $message): self
+    public static function withEmptyErrResult(): self
     {
-        return new self(Option::fromValue(Result::err(Fault::fromMessage($message))));
+        return self::withErrResult('');
     }
 
-    /**
-     * @psalm-return Option<Result<string, Fault>>
-     */
-    public function call(string $wasm_path, string $module_input, array $mount_points): Option
+    public function callWASMModule(string $wasm_module_path, string $payload): Ok | Err
     {
         $this->has_been_called = true;
-        return $this->return_value;
+        return $this->result;
     }
 
     public function hasBeenCalled(): bool

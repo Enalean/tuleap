@@ -82,7 +82,7 @@ final class PreReceiveActionTest extends \Tuleap\Test\PHPUnit\TestCase
         $git_repository = $this->createStub(GitRepository::class);
         $git_repository->method('getId')->willReturn(42);
 
-        $wasm_caller = WASMCallerStub::failingWasmCall();
+        $wasm_caller = WASMCallerStub::failingWasmCall('Some error');
 
         $action = $this->buildPreReceiveAction($git_repository, $wasm_caller, EventDispatcherStub::withIdentityCallback());
 
