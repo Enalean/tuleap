@@ -149,8 +149,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
     private $validator;
     /** @var InvalidTermCollectorVisitor */
     private $invalid_comparisons_collector;
-    /** @var CrossTrackerArtifactRepresentationFactory */
-    private $representation_factory;
+    private ArtifactRepresentationFactory $representation_factory;
 
     public function __construct()
     {

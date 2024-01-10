@@ -46,7 +46,7 @@ final class MetadataChecker
         Comparison $comparison,
         InvalidComparisonCollectorParameters $collector_parameters,
         ComparisonChecker $checker,
-    ) {
+    ): void {
         $this->semantic_usage_checker->checkMetadataIsUsedByAllTrackers($metadata, $collector_parameters);
         $checker->checkComparisonIsValid($metadata, $comparison);
     }

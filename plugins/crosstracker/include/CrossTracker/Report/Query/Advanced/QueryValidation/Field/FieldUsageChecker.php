@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorParameters;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 
 final class FieldUsageChecker
@@ -32,8 +33,7 @@ final class FieldUsageChecker
     }
 
     /**
-     * @throws FieldTypeIsNotSupportedException
-     * @throws FieldTypesAreIncompatibleException
+     * @throws InvalidQueryException
      */
     public function checkFieldIsValid(
         Field $field,
