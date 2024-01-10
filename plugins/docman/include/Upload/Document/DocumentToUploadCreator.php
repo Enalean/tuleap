@@ -57,7 +57,7 @@ class DocumentToUploadCreator
         int $obsolescence_date,
         ?array $formatted_metadata,
         ?DocmanItemPermissionsForGroupsSet $permissions_for_groups,
-    ) {
+    ): DocumentToUpload {
         if ($filesize > (int) \ForgeConfig::get(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)) {
             throw new UploadMaxSizeExceededException(
                 $filesize,
@@ -65,7 +65,7 @@ class DocumentToUploadCreator
             );
         }
 
-        $this->transaction_executor->execute(function () use (
+        $item_id = $this->transaction_executor->execute(function () use (
             $parent_item,
             $user,
             $current_time,
@@ -73,12 +73,11 @@ class DocumentToUploadCreator
             $description,
             $filename,
             $filesize,
-            &$item_id,
             $status,
             $obsolescence_date,
             $formatted_metadata,
             $permissions_for_groups
-        ) {
+        ): int {
             $rows = $this->dao->searchDocumentOngoingUploadByParentIDTitleAndExpirationDate(
                 $parent_item->getId(),
                 $title,
@@ -97,13 +96,12 @@ class DocumentToUploadCreator
                 if ($row['filename'] !== $filename || $filesize !== $row['filesize']) {
                     throw new UploadCreationFileMismatchException();
                 }
-                $item_id = $row['item_id'];
-                return;
+                return $row['item_id'];
             }
 
             $item_id = $this->dao->saveDocumentOngoingUpload(
                 $this->getExpirationDate($current_time)->getTimestamp(),
-                $parent_item->getId(),
+                (int) $parent_item->getId(),
                 $title,
                 $description,
                 (int) $user->getId(),
@@ -143,6 +141,8 @@ class DocumentToUploadCreator
                     $permissions_for_groups->toPermissionsPerUGroupIDAndTypeArray()
                 );
             }
+
+            return $item_id;
         });
 
         return new DocumentToUpload($item_id);

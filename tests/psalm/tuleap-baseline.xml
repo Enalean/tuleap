@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.16.0@2897ba636551a8cb61601cc26f6ccfbba6c36591">
+<files psalm-version="5.19.0@06b71be009a6bd6d81b9811855d6629b9fe90e1b">
   <file src="plugins/agiledashboard/include/AgileDashboard/AdminChartsPresenter.php">
     <PossiblyInvalidPropertyAssignmentValue>
       <code><![CDATA[$project->getID()]]></code>
@@ -9,12 +9,10 @@
     <MissingParamType>
       <code>$additional_content</code>
       <code>$can_create_planning</code>
-      <code>$can_scrum_mono_milestone_be_enabled</code>
       <code>$does_configuration_allows_planning_creation</code>
       <code>$group_id</code>
       <code>$root_planning_name</code>
       <code>$scrum_activated</code>
-      <code>$use_mono_milestone</code>
     </MissingParamType>
     <MissingPropertyType>
       <code>$additional_content</code>
@@ -24,7 +22,6 @@
     </MissingPropertyType>
     <MissingReturnType>
       <code>activate_scrum_label</code>
-      <code>activate_scrum_mono_milestone_label</code>
       <code>additional_content</code>
       <code>can_create_planning</code>
       <code>cannot_create_planning</code>
@@ -35,16 +32,13 @@
       <code>create_planning</code>
       <code>edit_action_label</code>
       <code>export_template</code>
-      <code>first_scrum_will_be_created</code>
       <code>general_settings_section</code>
       <code>getPlanningNamesHierarchy</code>
       <code>has_plannings</code>
       <code>import_export_section</code>
       <code>import_template</code>
       <code>planning_section</code>
-      <code>scrum_monomilestone_title</code>
       <code>token</code>
-      <code>warning_feature_under_construction</code>
     </MissingReturnType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/AgileDashboardXMLController.class.php">
@@ -248,14 +242,11 @@
       <code>escapeInt</code>
       <code>escapeInt</code>
       <code>escapeInt</code>
-      <code>escapeInt</code>
       <code>retrieve</code>
-      <code>retrieveFirstRow</code>
       <code>update</code>
       <code>update</code>
     </DeprecatedMethod>
     <MissingParamType>
-      <code>$project_id</code>
       <code>$project_id</code>
       <code>$project_id</code>
       <code>$project_id</code>
@@ -264,7 +255,6 @@
     </MissingParamType>
     <MissingReturnType>
       <code>duplicate</code>
-      <code>getScrumTitle</code>
       <code>isScrumActivated</code>
       <code>updateConfiguration</code>
     </MissingReturnType>
@@ -273,14 +263,9 @@
     <MissingParamType>
       <code>$project_id</code>
       <code>$project_id</code>
-      <code>$project_id</code>
       <code>$scrum_is_activated</code>
       <code>$template_id</code>
     </MissingParamType>
-    <MissingReturnType>
-      <code>duplicate</code>
-      <code>getScrumTitle</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Event/GetAdditionalScrumAdminPaneContent.php">
     <MissingParamType>
@@ -555,7 +540,6 @@
       <code>$offset</code>
       <code>$sub_milestone_ids</code>
       <code>$sub_milestone_ids</code>
-      <code>$sub_milestone_ids</code>
     </MissingParamType>
     <MissingPropertyType>
       <code>$backlog_size</code>
@@ -569,7 +553,6 @@
       <code>getMilestoneBacklogArtifactsTracker</code>
       <code>getTotalBacklogSize</code>
       <code>getTotalContentSize</code>
-      <code>getUnplannedArtifactsForMonoMilestoneConfiguration</code>
     </MissingReturnType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Backlog/BacklogFactory.class.php">
@@ -748,7 +731,6 @@
       <code>foundRows</code>
       <code>foundRows</code>
       <code>foundRows</code>
-      <code>foundRows</code>
     </DeprecatedMethod>
     <MissingParamType>
       <code>$children</code>
@@ -764,7 +746,6 @@
       <code>$offset</code>
       <code>$offset</code>
       <code>$offset</code>
-      <code>$sub_milestone_ids</code>
       <code>$sub_milestone_ids</code>
       <code>$sub_milestone_ids</code>
       <code>$sub_milestone_ids</code>
@@ -887,11 +868,8 @@
       <code>escapeInt</code>
       <code>escapeInt</code>
       <code>escapeInt</code>
-      <code>escapeInt</code>
       <code>quoteSmart</code>
       <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>retrieve</code>
       <code>retrieve</code>
       <code>retrieve</code>
       <code>retrieve</code>
@@ -926,7 +904,6 @@
       <code>searchPaginatedSiblingTopMilestones</code>
       <code>searchPaginatedSubMilestones</code>
       <code>searchPaginatedTopMilestones</code>
-      <code>searchPaginatedTopMilestonesForMonoMilestoneConfiguration</code>
       <code>searchSubMilestones</code>
     </MissingReturnType>
   </file>
@@ -1093,8 +1070,6 @@
   <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Pane/Planning/SubmilestoneFinder.class.php">
     <MissingReturnType>
       <code>findFirstSubmilestoneTracker</code>
-      <code>findTrackersForMonoMilestonesConfiguration</code>
-      <code>findTrackersForMultiMilestonesConfiguration</code>
     </MissingReturnType>
     <RedundantCast>
       <code><![CDATA[(int) $backlog_tracker_ancestor->getId()]]></code>
@@ -1115,79 +1090,6 @@
             $this->additional_criteria[self::FIELD_NAME]->getValue()
         )]]></code>
     </PossiblyNullPropertyAssignmentValue>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/MonoMilestone/MonoMilestoneBacklogItemDao.php">
-    <DeprecatedMethod>
-      <code>DataAccessObject</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeIntImplode</code>
-      <code>quoteSmart</code>
-      <code>retrieve</code>
-    </DeprecatedMethod>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/MonoMilestone/MonoMilestoneItemsFinder.php">
-    <DeprecatedMethod>
-      <code>$result</code>
-      <code>$result</code>
-      <code>foundRows</code>
-      <code>foundRows</code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code>$found_rows</code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/MonoMilestone/ScrumForMonoMilestoneChecker.php">
-    <MissingParamType>
-      <code>$maximum_planning_allowed_by_configuration</code>
-      <code>$project_id</code>
-      <code>$project_id</code>
-      <code>$project_id</code>
-      <code>$project_id</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>doesScrumMonoMilestoneConfigurationAllowsPlanningCreation</code>
-      <code>isMonoMilestoneEnabled</code>
-      <code>isOneOrLessPlanningDefined</code>
-      <code>isScrumMonoMilestoneAvailable</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/MonoMilestone/ScrumForMonoMilestoneDao.php">
-    <DeprecatedMethod>
-      <code>DataAccessObject</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>retrieveFirstRow</code>
-      <code>update</code>
-      <code>update</code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code>$project_id</code>
-      <code>$project_id</code>
-      <code>$project_id</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>disableScrumForMonoMilestones</code>
-      <code>enableScrumForMonoMilestones</code>
-      <code>isMonoMilestoneActivatedForProject</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/MonoMilestone/ScrumForMonoMilestoneDisabler.php">
-    <MissingParamType>
-      <code>$project_id</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>disableScrumForMonoMilestones</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/MonoMilestone/ScrumForMonoMilestoneEnabler.php">
-    <MissingParamType>
-      <code>$project_id</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>enableScrumForMonoMilestones</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/PaneIconLinkPresenter.class.php">
     <MissingParamType>
@@ -1577,7 +1479,6 @@
       <code>getIndexedBacklogItems</code>
       <code>getIndexedChildrenBacklogTrackers</code>
       <code>getIndexedLinkedArtifactIds</code>
-      <code>getIndexedMonomilestoneBacklogTracker</code>
       <code>getMilestoneBacklogItems</code>
       <code>getMilestoneDoneBacklogItems</code>
       <code>getMilestoneTodoBacklogItems</code>
@@ -2046,15 +1947,11 @@
       <code>$user</code>
     </MissingParamType>
     <MissingReturnType>
-      <code>acceptOnlySameTrackerInMonoMilestoneCofiguration</code>
       <code>addChildrenNodes</code>
       <code>getDaysSinceStart</code>
       <code>getDaysUntilEnd</code>
-      <code>hasUsableBurndownField</code>
       <code>setAncestors</code>
       <code>setCapacity</code>
-      <code>setHasUsableBurndownField</code>
-      <code>setPlannedArtifacts</code>
       <code>setRemainingEffort</code>
     </MissingReturnType>
     <PossiblyNullPropertyAssignmentValue>
@@ -2062,9 +1959,6 @@
       <code>null</code>
       <code>null</code>
     </PossiblyNullPropertyAssignmentValue>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(bool) $this->has_useable_burndown_field]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/agiledashboard/include/Planning/Milestone.class.php">
     <MissingParamType>
@@ -2115,24 +2009,20 @@
       <code>$artifact</code>
       <code>$field_name</code>
       <code>$parents</code>
-      <code>$quantity</code>
       <code>$user</code>
     </MissingParamType>
     <MissingReturnType>
       <code>addChildrenPlannedArtifacts</code>
       <code>getAllMilestonesWithoutCaching</code>
       <code>getComputedFieldValue</code>
-      <code>getMilestoneEndDate</code>
       <code>getRegularSubMilestoneIds</code>
       <code>getRegularSubMilestones</code>
       <code>getTopSubMilestoneArtifacts</code>
       <code>getTopSubMilestoneIds</code>
       <code>isMilestoneCurrent</code>
       <code>isMilestoneFuture</code>
-      <code>isMilestonePast</code>
       <code>makeNodeWithChildren</code>
       <code>milestoneHasStartDate</code>
-      <code>updateMilestoneWithPlannedArtifacts</code>
       <code>userCanChangePrioritiesInMilestone</code>
     </MissingReturnType>
     <NullableReturnStatement>
@@ -2150,12 +2040,6 @@
     <TypeDoesNotContainType>
       <code>$milestone_artifact == null</code>
     </TypeDoesNotContainType>
-    <UndefinedInterfaceMethod>
-      <code>setPlannedArtifacts</code>
-    </UndefinedInterfaceMethod>
-    <UndefinedMethod>
-      <code>removeSubMilestones</code>
-    </UndefinedMethod>
   </file>
   <file src="plugins/agiledashboard/include/Planning/MilestonePaneFactory.class.php">
     <MissingReturnType>
@@ -2251,21 +2135,9 @@
     <DeprecatedMethod>
       <code>userIsAdmin</code>
     </DeprecatedMethod>
-    <InvalidReturnStatement>
-      <code>$milestone_access_presenters</code>
-      <code>$presenters</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code>Planning_Presenter_MilestoneAccessPresenter</code>
-      <code>Planning_Presenter_MilestoneSummaryPresenter[]</code>
-    </InvalidReturnType>
     <InvalidScalarArgument>
       <code><![CDATA[$project->getID()]]></code>
     </InvalidScalarArgument>
-    <MissingParamType>
-      <code>$plannings</code>
-      <code>$plugin_path</code>
-    </MissingParamType>
     <MissingReturnType>
       <code>addBurnupWarning</code>
       <code>addOtherWarnings</code>
@@ -2273,13 +2145,8 @@
       <code>getFormPresenter</code>
       <code>getFullConfigurationAsXML</code>
       <code>getPlanning</code>
-      <code>getPlanningMilestonesByStatus</code>
-      <code>getPlanningMilestonesDependingOnTimePeriodOrStatus</code>
-      <code>hasCardwall</code>
       <code>importConfiguration</code>
-      <code>isScrumMonoMilestoneEnabled</code>
       <code>redirectNonAdmin</code>
-      <code>redirectToTopBacklogPlanningInMonoMilestoneWhenKanbanIsDisabled</code>
       <code>updateCardwallConfig</code>
     </MissingReturnType>
     <RedundantCastGivenDocblockType>
@@ -2288,9 +2155,6 @@
     <TooManyArguments>
       <code>userIsAdmin</code>
     </TooManyArguments>
-    <UndefinedInterfaceMethod>
-      <code>hasUsableBurndownField</code>
-    </UndefinedInterfaceMethod>
     <UndefinedMethod>
       <code>validFile</code>
     </UndefinedMethod>
@@ -2314,7 +2178,6 @@
       <code>$group_id</code>
       <code>$new_planning_id</code>
       <code>$planning_id</code>
-      <code>$planning_id</code>
       <code>$source_planning_id</code>
       <code>$ugroup</code>
       <code>$ugroups_mapping</code>
@@ -2324,7 +2187,6 @@
       <code>duplicatePlannings</code>
       <code>duplicatePriorityChangePermission</code>
       <code>getBacklogTrackerIdsByGroupId</code>
-      <code>getBacklogTrackersIdsIndexedByTrackerId</code>
       <code>getChildrenPlanning</code>
       <code>getPlanningTrackerIdsByGroupId</code>
       <code>getPlanningsOutOfRootPlanningHierarchy</code>
@@ -2404,131 +2266,8 @@
       <code>planningPlanTitle</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/agiledashboard/include/Planning/Presenters/BaseHomePresenter.class.php">
-    <MissingParamType>
-      <code>$group_id</code>
-      <code>$is_mono_milestone_enabled</code>
-      <code>$is_user_admin</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>activate_scrum_v2</code>
-      <code>come_back_later</code>
-      <code>create_scrum_url</code>
-      <code>getBaseParameters</code>
-      <code>nothing_set_up</code>
-      <code>nothing_set_up_admin_description</code>
-      <code>start_kanban</code>
-      <code>start_scrum</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/Planning/Presenters/HomePresenter.class.php">
-    <MissingParamType>
-      <code>$group_id</code>
-      <code>$is_mono_milestone_enabled</code>
-      <code>$is_user_admin</code>
-      <code>$kanban_activated</code>
-      <code>$last_level_milestone_presenters</code>
-      <code>$milestone_access_presenters</code>
-      <code>$period</code>
-      <code>$project_name</code>
-      <code>$scrum_activated</code>
-      <code>$scrum_is_configured</code>
-      <code>$scrum_title</code>
-      <code>$trackers</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$trackers</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>add_kanban</code>
-      <code>add_kanban_modal_title</code>
-      <code>are_trackers_available</code>
-      <code>btn_add_modal_label</code>
-      <code>btn_close_label</code>
-      <code>come_back_later</code>
-      <code>content</code>
-      <code>future</code>
-      <code>future_active</code>
-      <code>has_milestone_presenters</code>
-      <code>kanban_empty_message_must_be_displayed</code>
-      <code>kanban_name_label</code>
-      <code>kanban_nothing_set_up</code>
-      <code>no_tracker_available</code>
-      <code>now</code>
-      <code>now_active</code>
-      <code>past</code>
-      <code>past_active</code>
-      <code>project_backlog</code>
-      <code>scrum_nothing_set_up</code>
-      <code>top_backlog_planning</code>
-      <code>tracker_kanban_label</code>
-      <code>user_can_see_kanban</code>
-      <code>user_helper</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/Planning/Presenters/LastLevelMilestone.class.php">
-    <MissingParamType>
-      <code>$milestone_summary_presenters</code>
-      <code>$tracker_name</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>no_milestone</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/Planning/Presenters/MilestoneAccessPresenter.class.php">
-    <MissingParamType>
-      <code>$milestone_type</code>
-      <code>$milestones</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>content</code>
-      <code>edit_base_link</code>
-      <code>no_milestone</code>
-      <code>planning</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/Planning/Presenters/MilestoneBurndownSummaryPresenter.class.php">
-    <MissingParamType>
-      <code>$plugin_path</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>burndown_data</code>
-      <code>has_burndown</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/Planning/Presenters/MilestoneSummaryPresenter.class.php">
-    <MissingParamType>
-      <code>$plugin_path</code>
-      <code>$status_count</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>closed</code>
-      <code>count_closed_backlog_items</code>
-      <code>count_open_backlog_items</code>
-      <code>has_burndown</code>
-      <code>open</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/Planning/Presenters/MilestoneSummaryPresenterAbstract.class.php">
-    <MissingParamType>
-      <code>$plugin_path</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>artifact_id</code>
-      <code>breadcrumbs</code>
-      <code>content</code>
-      <code>edit_base_link</code>
-      <code>getMilestoneBreadcrumb</code>
-      <code>has_burndown</code>
-      <code>milestone_title</code>
-      <code>planning_id</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/agiledashboard/include/Planning/ScrumPlanningFilter.php">
     <MissingParamType>
-      <code>$project_id</code>
-      <code>$project_id</code>
-      <code>$project_id</code>
       <code>$project_id</code>
     </MissingParamType>
     <MissingReturnType>
@@ -2660,8 +2399,6 @@
       <code>addHook</code>
       <code>addHook</code>
       <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
     </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
@@ -2686,12 +2423,10 @@
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
     </MissingParamType>
     <MissingReturnType>
       <code>cardwall_event_get_swimline_tracker</code>
       <code>collectRoutesEvent</code>
-      <code>collect_errors_without_importing_xml_project</code>
       <code>cssfile</code>
       <code>getArtifactFactory</code>
       <code>getBacklogFactory</code>
@@ -2700,7 +2435,6 @@
       <code>getHierarchyFactory</code>
       <code>getHooksAndCallbacks</code>
       <code>getMessageFetcherAdditionalWarnings</code>
-      <code>getMonoMilestoneItemsFinder</code>
       <code>getPlanningIdFromParameters</code>
       <code>getPlanningPermissionsManager</code>
       <code>getSemanticInitialEffortFactory</code>
@@ -5264,7 +4998,6 @@
       <code>addHook</code>
       <code>addHook</code>
       <code>addHook</code>
-      <code>addHook</code>
     </DeprecatedMethod>
     <MissingParamType>
       <code>$cardwall</code>
@@ -5284,10 +5017,8 @@
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
     </MissingParamType>
     <MissingReturnType>
-      <code>agiledashboard_event_is_cardwall_enabled</code>
       <code>agiledashboard_event_milestone_selector_redirect</code>
       <code>agiledashboard_event_planning_config</code>
       <code>agiledashboard_event_planning_config_update</code>
@@ -11606,6 +11337,9 @@
       <code><![CDATA[$parent_item->getId()]]></code>
       <code><![CDATA[$parent_item->getId()]]></code>
     </PossiblyNullArgument>
+    <RedundantCastGivenDocblockType>
+      <code><![CDATA[(int) $document_to_upload->getItemId()]]></code>
+    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/docman/include/REST/v1/DocmanItemsRequestBuilder.php">
     <MissingReturnType>
@@ -12193,7 +11927,6 @@
       <code>deleteByItemID</code>
       <code>searchDocumentOngoingUploadByItemID</code>
       <code>searchDocumentOngoingUploadByItemIDUserIDAndExpirationDate</code>
-      <code>searchDocumentOngoingUploadByParentIDTitleAndExpirationDate</code>
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Upload/Document/DocumentOngoingUploadRetriever.php">
@@ -12208,14 +11941,6 @@
     <MissingPropertyType>
       <code>$item_id</code>
     </MissingPropertyType>
-  </file>
-  <file src="plugins/docman/include/Upload/Document/DocumentToUploadCreator.php">
-    <MissingReturnType>
-      <code>create</code>
-    </MissingReturnType>
-    <PossiblyNullArgument>
-      <code><![CDATA[$parent_item->getId()]]></code>
-    </PossiblyNullArgument>
   </file>
   <file src="plugins/docman/include/Upload/Document/DocumentUploadCleaner.php">
     <MissingReturnType>
@@ -12240,17 +11965,6 @@
       <code><![CDATA[$item->getId()]]></code>
       <code><![CDATA[$item->getId()]]></code>
     </PossiblyNullArgument>
-  </file>
-  <file src="plugins/docman/include/Upload/Version/VersionToUploadCreator.php">
-    <PossiblyNullArgument>
-      <code><![CDATA[$item->getId()]]></code>
-      <code><![CDATA[$item->getId()]]></code>
-    </PossiblyNullArgument>
-    <RedundantCast>
-      <code>(int) $file_size</code>
-      <code>(int) $file_size</code>
-      <code>(int) $filesize</code>
-    </RedundantCast>
   </file>
   <file src="plugins/docman/include/Upload/Version/VersionUploadCleaner.php">
     <MissingReturnType>
@@ -14273,6 +13987,12 @@
     <MissingParamType>
       <code>$current_time</code>
     </MissingParamType>
+  </file>
+  <file src="plugins/frs/include/FRS/Upload/FileToUploadCreator.php">
+    <UndefinedVariable>
+      <code>$id</code>
+      <code>$id</code>
+    </UndefinedVariable>
   </file>
   <file src="plugins/frs/include/FRS/Upload/FileUploadCleaner.php">
     <MissingReturnType>
@@ -16969,12 +16689,6 @@
     <MissingParamType>
       <code>$repository_url</code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code>$parent_project_id</code>
-      <code>$parent_repository_id</code>
-      <code>$parent_repository_name</code>
-      <code>$parent_repository_url</code>
-    </MissingPropertyType>
   </file>
   <file src="plugins/git/include/Git/Repository/View/RepositoryExternalNavigationTabsCollector.php">
     <MissingParamType>
@@ -17023,16 +16737,6 @@
       <code>getExternalsTabs</code>
       <code>getFilesTab</code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/Git/Repository/View/TabPresenter.php">
-    <MissingParamType>
-      <code>$count</code>
-      <code>$has_count_to_display</code>
-      <code>$html_id</code>
-      <code>$is_active</code>
-      <code>$label</code>
-      <code>$url</code>
-    </MissingParamType>
   </file>
   <file src="plugins/git/include/Git/RepositoryList/DaoByRepositoryPathSorter.php">
     <MissingParamType>
@@ -23863,7 +23567,6 @@
       <code>getSynchronizedProjects</code>
       <code>isProjectBindingSynchronized</code>
       <code>logInProjectHistory</code>
-      <code>synchronize</code>
     </MissingReturnType>
     <PossiblyNullReference>
       <code>isAdmin</code>
@@ -23943,57 +23646,6 @@
     <UndefinedThisPropertyFetch>
       <code><![CDATA[$this->ldapSyncMail]]></code>
     </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/ldap/include/LDAP_UserDao.class.php">
-    <DeprecatedFunction>
-      <code>db_ei($date)</code>
-      <code>db_ei($date)</code>
-      <code>db_ei($userId)</code>
-      <code>db_ei($userId)</code>
-      <code>db_es($ldap_uid)</code>
-    </DeprecatedFunction>
-    <DeprecatedMethod>
-      <code>DataAccessObject</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeIntImplode</code>
-      <code>isError</code>
-      <code>isError</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>rowCount</code>
-      <code>rowCount</code>
-      <code>rowCount</code>
-      <code>update</code>
-      <code>update</code>
-      <code>update</code>
-    </DeprecatedMethod>
-    <FalsableReturnStatement>
-      <code><![CDATA[$this->retrieve($sql)]]></code>
-    </FalsableReturnStatement>
-    <InvalidFalsableReturnType>
-      <code>LegacyDataAccessResultInterface</code>
-    </InvalidFalsableReturnType>
-    <MissingParamType>
-      <code>$ldap_uid</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getActiveUsers</code>
-      <code>getNbrActiveUsers</code>
-    </MissingReturnType>
-    <PossiblyFalseReference>
-      <code>rowCount</code>
-      <code>rowCount</code>
-    </PossiblyFalseReference>
   </file>
   <file src="plugins/ldap/include/LDAP_UserGroupDao.class.php">
     <DeprecatedFunction>
@@ -24092,12 +23744,6 @@
     </NullableReturnStatement>
   </file>
   <file src="plugins/ldap/include/LDAP_UserManager.class.php">
-    <DeprecatedMethod>
-      <code>getRow</code>
-    </DeprecatedMethod>
-    <InvalidArgument>
-      <code>$ldapUid</code>
-    </InvalidArgument>
     <MissingParamType>
       <code>$identifier</code>
       <code>$ldapId</code>
@@ -24116,9 +23762,6 @@
     <PossiblyFalseOperand>
       <code>$separator_position</code>
     </PossiblyFalseOperand>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$user->getId()]]></code>
-    </PossiblyInvalidArgument>
     <PossiblyNullArgument>
       <code>$user</code>
       <code>$user</code>
@@ -24174,12 +23817,6 @@
       <code>account_login_login_with_tuleap</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/ldap/include/SVN/SVNAccessFileDefaultBlockForLDAP.php">
-    <DeprecatedMethod>
-      <code>$dar</code>
-      <code>$dar</code>
-    </DeprecatedMethod>
-  </file>
   <file src="plugins/ldap/include/WelcomeDisplayController.php">
     <PossiblyInvalidArgument>
       <code><![CDATA[$request->getCurrentUser()->getId()]]></code>
@@ -24204,9 +23841,6 @@
       <code>db_es($ldapId)</code>
       <code><![CDATA[db_query("UPDATE user SET ldap_id='" . db_es($ldapId) . "' WHERE user_id=" . db_ei($params['user_id']))]]></code>
     </DeprecatedFunction>
-    <DeprecatedMethod>
-      <code>getRow</code>
-    </DeprecatedMethod>
     <InvalidArgument>
       <code><![CDATA[[
                 dirname(__FILE__) . '/../templates',
@@ -24253,15 +23887,12 @@
       <code>isLDAPGroupsUsageEnabled</code>
       <code>isLDAPUserManagementEnabled</code>
       <code>isLdapAuthType</code>
-      <code>synchronizeProjectMembers</code>
       <code>synchronizeStaticUgroupMembers</code>
       <code>updateAdministrationOptions</code>
     </MissingReturnType>
     <PossiblyInvalidArgument>
       <code><![CDATA[$account_information->getUser()->getId()]]></code>
       <code><![CDATA[$event->getProject()->getID()]]></code>
-      <code><![CDATA[$event->getProject()->getID()]]></code>
-      <code><![CDATA[$event->user->getId()]]></code>
     </PossiblyInvalidArgument>
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
@@ -24275,9 +23906,6 @@
       <code>injectDependencies</code>
       <code>process</code>
     </MissingReturnType>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$project->getId()]]></code>
-    </PossiblyInvalidArgument>
   </file>
   <file src="plugins/mediawiki/bin/identify_lost_databases.php">
     <DeprecatedMethod>
@@ -25225,25 +24853,12 @@
   <file src="plugins/mediawiki/include/XMLMediaWikiExporter.php">
     <MissingParamType>
       <code>$export_file</code>
-      <code>$export_file</code>
-      <code>$temporary_dump_path_on_filesystem</code>
       <code>$temporary_dump_path_on_filesystem</code>
     </MissingParamType>
-    <MissingReturnType>
-      <code>addFilesIntoArchive</code>
-      <code>addPicturesIntoArchive</code>
-      <code>exportMediawikiPermissions</code>
-      <code>exportToXml</code>
-      <code>getBaseDir</code>
-      <code>getLabelForUgroup</code>
-    </MissingReturnType>
     <PossiblyNullArgument>
       <code>$reader_node</code>
       <code>$writer_node</code>
     </PossiblyNullArgument>
-    <PossiblyNullReference>
-      <code>addAttribute</code>
-    </PossiblyNullReference>
   </file>
   <file src="plugins/mediawiki/include/events/SystemEvent_MEDIAWIKI_TO_CENTRAL_DB.php">
     <MissingReturnType>
@@ -25312,7 +24927,6 @@
     </DeprecatedMethod>
     <MissingParamType>
       <code>$group_id</code>
-      <code>$group_id</code>
       <code>$id</code>
       <code>$params</code>
       <code>$params</code>
@@ -25348,7 +24962,6 @@
       <code>getCleanUnused</code>
       <code>getDao</code>
       <code>getInstantiater</code>
-      <code>getMediaWikiExporter</code>
       <code>getMediawikiLanguageManager</code>
       <code>getMediawikiMigrator</code>
       <code>getMediawikiSearchURI</code>
@@ -27177,7 +26790,6 @@
       <code>$limit</code>
       <code>$offset</code>
       <code>$order</code>
-      <code>$project_id</code>
       <code>$pull_request_id</code>
     </MissingParamType>
     <MissingReturnType>
@@ -27294,7 +26906,6 @@
     <MissingParamType>
       <code>$branch_name</code>
       <code>$branch_name</code>
-      <code>$id</code>
       <code>$merge_status</code>
       <code>$new_rev</code>
       <code>$new_rev</code>
@@ -27719,17 +27330,6 @@
       <code>populate</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/pullrequest/include/PullRequest/REST/v1/CommentPOSTRepresentation.php">
-    <InvalidDocblock>
-      <code>public $format;</code>
-      <code>public $parent_id = 0;</code>
-      <code>public string $content;</code>
-    </InvalidDocblock>
-    <MissingPropertyType>
-      <code>$format</code>
-      <code>$parent_id</code>
-    </MissingPropertyType>
-  </file>
   <file src="plugins/pullrequest/include/PullRequest/REST/v1/GitRepositoryReference.php">
     <MissingReturnType>
       <code>build</code>
@@ -27838,35 +27438,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/REST/v1/PullRequestMinimalRepresentation.php">
-    <InvalidDocblock>
-      <code>public $branch_dest;</code>
-      <code>public $branch_src;</code>
-      <code>public $creation_date;</code>
-      <code>public $head;</code>
-      <code>public $id;</code>
-      <code>public $repository;</code>
-      <code>public $repository_dest;</code>
-      <code>public $status;</code>
-      <code>public $title;</code>
-      <code>public $uri;</code>
-      <code>public $user_id;</code>
-    </InvalidDocblock>
     <MissingParamType>
       <code>$status_acronym</code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code>$branch_dest</code>
-      <code>$branch_src</code>
-      <code>$creation_date</code>
-      <code>$head</code>
-      <code>$id</code>
-      <code>$repository</code>
-      <code>$repository_dest</code>
-      <code>$status</code>
-      <code>$title</code>
-      <code>$uri</code>
-      <code>$user_id</code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code>buildMinimal</code>
       <code>expandStatusName</code>
@@ -27894,58 +27468,10 @@
     </MissingPropertyType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/REST/v1/PullRequestRepresentation.php">
-    <InvalidDocblock>
-      <code>public $description;</code>
-      <code>public $last_build_date;</code>
-      <code>public $last_build_status;</code>
-      <code>public $merge_status;</code>
-      <code>public $parent_id;</code>
-      <code>public $raw_description;</code>
-      <code>public $raw_title;</code>
-      <code>public $reference_dest;</code>
-      <code>public $reference_src;</code>
-      <code>public $resources;</code>
-      <code>public $short_stat;</code>
-      <code>public $status;</code>
-      <code>public $user_can_abandon;</code>
-      <code>public $user_can_merge;</code>
-      <code>public $user_can_update_labels;</code>
-      <code>public ?PullRequestStatusInfoRepresentation $status_info;</code>
-      <code>public bool $user_can_reopen;</code>
-    </InvalidDocblock>
     <MissingParamType>
       <code>$last_build_date</code>
       <code>$last_build_status_name</code>
-      <code>$merge_status_acronym</code>
-      <code>$status_acronym</code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code>$description</code>
-      <code>$last_build_date</code>
-      <code>$last_build_status</code>
-      <code>$merge_status</code>
-      <code>$parent_id</code>
-      <code>$raw_description</code>
-      <code>$raw_title</code>
-      <code>$reference_dest</code>
-      <code>$reference_src</code>
-      <code>$resources</code>
-      <code>$short_stat</code>
-      <code>$status</code>
-      <code>$user_can_abandon</code>
-      <code>$user_can_merge</code>
-      <code>$user_can_update_labels</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>build</code>
-      <code>expandMergeStatusName</code>
-      <code>expandStatusName</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/pullrequest/include/PullRequest/REST/v1/PullRequestRepresentationFactory.php">
-    <MissingReturnType>
-      <code>getPullRequestRepresentation</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/REST/v1/PullRequestStatusInfoRepresentation.php">
     <InvalidDocblock>
@@ -27982,8 +27508,6 @@
       <code>$uri</code>
     </MissingParamType>
     <MissingPropertyType>
-      <code><![CDATA[$comment_data->format]]></code>
-      <code><![CDATA[$comment_data->parent_id]]></code>
       <code><![CDATA[$content->branch_dest]]></code>
       <code><![CDATA[$content->branch_src]]></code>
       <code><![CDATA[$content->repository_dest_id]]></code>
@@ -28030,21 +27554,6 @@
       <code>$offset</code>
       <code>$query</code>
     </MissingParamType>
-    <RedundantCast>
-      <code><![CDATA[(int) $this->pull_request_dao->foundRows()]]></code>
-    </RedundantCast>
-  </file>
-  <file src="plugins/pullrequest/include/PullRequest/REST/v1/Reviewer/ReviewerChangeTimelineEventRepresentation.php">
-    <InvalidDocblock>
-      <code>public $post_date;</code>
-    </InvalidDocblock>
-    <MissingPropertyType>
-      <code>$post_date</code>
-    </MissingPropertyType>
-    <PropertyTypeCoercion>
-      <code>self::transformToMinimalUserRepresentations(...$added_reviewers)</code>
-      <code>self::transformToMinimalUserRepresentations(...$removed_reviewers)</code>
-    </PropertyTypeCoercion>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/REST/v1/Reviewer/ReviewerRepresentationInformationExtractor.php">
     <MissingPropertyType>
@@ -28074,21 +27583,6 @@
       <code>getRepository</code>
       <code>patchStatus</code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/pullrequest/include/PullRequest/REST/v1/TimelineEventRepresentation.php">
-    <InvalidDocblock>
-      <code>public $event_type;</code>
-      <code>public $post_date;</code>
-      <code>public $type;</code>
-      <code>public $user;</code>
-      <code>public int $parent_id;</code>
-    </InvalidDocblock>
-    <MissingPropertyType>
-      <code>$event_type</code>
-      <code>$post_date</code>
-      <code>$type</code>
-      <code>$user</code>
-    </MissingPropertyType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/Reference/HTMLURLBuilder.php">
     <InvalidScalarArgument>
@@ -28124,12 +27618,6 @@
     <MissingReturnType>
       <code>searchByScopeAndKeywordAndGroupId</code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/pullrequest/include/PullRequest/Reference/ReferenceFactory.php">
-    <MissingParamType>
-      <code>$keyword</code>
-      <code>$pull_request_id</code>
-    </MissingParamType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/RepoManagement/RepoManagementController.php">
     <InvalidClass>
@@ -28247,41 +27735,6 @@
     </MissingParamType>
   </file>
   <file src="plugins/pullrequest/include/pullrequestPlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
     <MissingParamType>
       <code>$branch_name</code>
       <code>$dest_branch_name</code>
@@ -28299,46 +27752,16 @@
     </MissingPropertyType>
     <MissingReturnType>
       <code>abandonFromSourceBranch</code>
-      <code>additionalInformationRepresentationCache</code>
-      <code>additionalInformationRepresentationRetriever</code>
-      <code>afterRepositoryCreated</code>
-      <code>afterRepositoryForked</code>
-      <code>canProjectUseLabels</code>
-      <code>collectDefaultSettingsPanes</code>
-      <code>collectGlyphLocations</code>
-      <code>collectLabeledItems</code>
-      <code>collectPanes</code>
-      <code>collectionOfLabelableDao</code>
-      <code>dailyExecution</code>
       <code>getBranchNameFromRef</code>
       <code>getGitRestRouteAdditionaInformations</code>
       <code>getLogger</code>
-      <code>getProjectHistoryEntryValue</code>
-      <code>getProtectedGitReferences</code>
       <code>getPullRequestFactory</code>
       <code>getRepositoryFactory</code>
       <code>getTemplateRenderer</code>
       <code>getTimelineEventCreator</code>
-      <code>get_plugins_available_keywords_references</code>
-      <code>gitAdditionalAction</code>
-      <code>gitRepositoryDeletion</code>
-      <code>git_additional_body_classes</code>
-      <code>git_additional_permitted_actions</code>
       <code>isReferenceAPullRequestReference</code>
       <code>markManuallyMerged</code>
-      <code>markTechnicalReference</code>
-      <code>postInitGitRepositoryWithDataEvent</code>
-      <code>postReceiveExecuteEvent</code>
-      <code>referenceGetTooltipContentEvent</code>
-      <code>repositoryExternalNavigationTabsCollector</code>
-      <code>rest_git_pull_request_get_for_repository</code>
-      <code>rest_resources</code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/pullrequest/tests/unit/REST/v1/Reviewer/ReviewerChangeTimelineEventRepresentationTest.php">
-    <MissingPropertyType>
-      <code><![CDATA[$representation->post_date]]></code>
-    </MissingPropertyType>
   </file>
   <file src="plugins/roadmap/include/Roadmap/Widget/RoadmapConfigureAtXMLImport.php">
     <PossiblyNullArgument>
@@ -29736,34 +29159,6 @@
       <code>public $whitelist;</code>
     </InvalidDocblock>
   </file>
-  <file src="plugins/svn/include/REST/v1/NotificationPOSTPUTRepresentation.php">
-    <InvalidDocblock>
-      <code>public $emails;</code>
-      <code>public $path;</code>
-      <code>public $user_groups;</code>
-      <code>public $users;</code>
-    </InvalidDocblock>
-    <MissingPropertyType>
-      <code>$emails</code>
-      <code>$path</code>
-      <code>$user_groups</code>
-      <code>$users</code>
-    </MissingPropertyType>
-  </file>
-  <file src="plugins/svn/include/REST/v1/NotificationRepresentation.php">
-    <InvalidDocblock>
-      <code>public $emails;</code>
-      <code>public $path;</code>
-      <code>public $user_groups;</code>
-      <code>public $users;</code>
-    </InvalidDocblock>
-    <MissingPropertyType>
-      <code>$emails</code>
-      <code>$path</code>
-      <code>$user_groups</code>
-      <code>$users</code>
-    </MissingPropertyType>
-  </file>
   <file src="plugins/svn/include/REST/v1/NotificationUpdateChecker.php">
     <MissingReturnType>
       <code>sortNotification</code>
@@ -29799,12 +29194,7 @@
   <file src="plugins/svn/include/REST/v1/RepositoryResource.php">
     <MissingParamType>
       <code>$id</code>
-      <code>$name</code>
-      <code>$project_id</code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$settings->layout]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code>checkUserIsAdmin</code>
       <code>delete</code>
@@ -29814,12 +29204,6 @@
       <code>optionsId</code>
       <code>sendAllowHeaders</code>
     </MissingReturnType>
-    <NoInterfaceProperties>
-      <code><![CDATA[$settings->access_file]]></code>
-      <code><![CDATA[$settings->commit_rules]]></code>
-      <code><![CDATA[$settings->email_notifications]]></code>
-      <code><![CDATA[$settings->immutable_tags]]></code>
-    </NoInterfaceProperties>
   </file>
   <file src="plugins/svn/include/REST/v1/RepositoryResourceUpdater.php">
     <MissingReturnType>
@@ -29836,57 +29220,6 @@
       <code>getPathsAsString</code>
       <code>getWhitelistAsString</code>
     </PossiblyNullReference>
-  </file>
-  <file src="plugins/svn/include/REST/v1/SettingsPOSTRepresentation.php">
-    <InvalidDocblock>
-      <code>public $access_file;</code>
-      <code>public $commit_rules;</code>
-      <code>public $email_notifications;</code>
-      <code>public $immutable_tags;</code>
-      <code>public $layout;</code>
-    </InvalidDocblock>
-    <MissingPropertyType>
-      <code>$layout</code>
-    </MissingPropertyType>
-  </file>
-  <file src="plugins/svn/include/REST/v1/SettingsPUTRepresentation.php">
-    <InvalidDocblock>
-      <code>public $access_file;</code>
-      <code>public $commit_rules;</code>
-      <code>public $email_notifications;</code>
-      <code>public $immutable_tags;</code>
-    </InvalidDocblock>
-  </file>
-  <file src="plugins/svn/include/REST/v1/SettingsRepresentation.php">
-    <InvalidDocblock>
-      <code>public $access_file;</code>
-      <code>public $commit_rules;</code>
-      <code>public $email_notifications;</code>
-      <code>public $immutable_tags;</code>
-    </InvalidDocblock>
-  </file>
-  <file src="plugins/svn/include/REST/v1/SettingsRepresentationValidator.php">
-    <MissingPropertyType>
-      <code><![CDATA[$notification->emails]]></code>
-      <code><![CDATA[$notification->emails]]></code>
-      <code><![CDATA[$notification->path]]></code>
-      <code><![CDATA[$notification->path]]></code>
-      <code><![CDATA[$notification->path]]></code>
-      <code><![CDATA[$notification->user_groups]]></code>
-      <code><![CDATA[$notification->users]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>getNonUniqueEmail</code>
-      <code>isAccessFileKeySent</code>
-      <code>validateAtLeastOneNotificationSent</code>
-      <code>validateForPOSTRepresentation</code>
-      <code>validateForPUTRepresentation</code>
-      <code>validateMailAreUnique</code>
-      <code>validatePathAreUnique</code>
-    </MissingReturnType>
-    <TypeDoesNotContainType>
-      <code><![CDATA[isset($settings->email_notifications)]]></code>
-    </TypeDoesNotContainType>
   </file>
   <file src="plugins/svn/include/Reference/Extractor.php">
     <MissingReturnType>
@@ -29971,11 +29304,8 @@
       <code>$version_id</code>
     </MissingParamType>
     <MissingReturnType>
-      <code>checkAccessFileWriteError</code>
       <code>logHistory</code>
       <code>logUseAVersionHistory</code>
-      <code>saveAccessFile</code>
-      <code>saveAccessFileAndForceDefaultGeneration</code>
       <code>saveUsedVersion</code>
       <code>useAVersion</code>
       <code>useAVersionWithHistory</code>
@@ -30048,9 +29378,7 @@
       <code>getById</code>
       <code>getByRepository</code>
       <code>getByVersionNumber</code>
-      <code>getCurrentVersion</code>
       <code>getLastVersion</code>
-      <code>instantiateFromRowAndRepository</code>
     </MissingReturnType>
   </file>
   <file src="plugins/svn/include/SVN/Admin/AdminController.php">
@@ -30062,11 +29390,6 @@
       <code>$ugroups_not_added</code>
       <code>$users_not_added</code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code>$mail_header_manager</code>
-      <code>$mail_notification_manager</code>
-      <code>$repository_manager</code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code>addFeedbackPathError</code>
       <code>addFeedbackUgroupsNotAdded</code>
@@ -30075,7 +29398,6 @@
       <code>deleteMailingList</code>
       <code>deleteRepository</code>
       <code>displayHooksConfig</code>
-      <code>displayMailNotification</code>
       <code>displayRepositoryDelete</code>
       <code>generateToken</code>
       <code>generateTokenDeletion</code>
@@ -30088,7 +29410,6 @@
     </MissingReturnType>
     <TooManyArguments>
       <code>addFeedbackPathError</code>
-      <code>getNotificationsPresenter</code>
     </TooManyArguments>
     <UndefinedThisPropertyAssignment>
       <code><![CDATA[$this->logger]]></code>
@@ -30224,32 +29545,19 @@
       <code>$SO_MUCH_FOLDERS</code>
       <code>$exceeds_max_number_of_folders</code>
       <code>$existing_tree</code>
-      <code>$immutable_tag_configuration</code>
       <code>$immutable_tags_path</code>
       <code>$immutable_tags_whitelist</code>
-      <code>$impacted_svn</code>
-      <code>$impacted_svn_empty_state</code>
       <code>$loading</code>
-      <code>$my_tag</code>
       <code>$path</code>
       <code>$preview</code>
-      <code>$preview_description</code>
       <code>$project_id</code>
       <code>$repository_full_name</code>
       <code>$repository_id</code>
       <code>$repository_name</code>
       <code>$save</code>
       <code>$sections</code>
-      <code>$select_tag</code>
-      <code>$some_path</code>
-      <code>$sooo_fat</code>
-      <code>$svn_allow_tag_immutable_comment</code>
-      <code>$svn_allow_tag_immutable_title</code>
-      <code>$svn_status_style</code>
       <code>$title</code>
       <code>$tree</code>
-      <code>$tree_empty_state</code>
-      <code>$whitelist</code>
     </MissingPropertyType>
     <MissingReturnType>
       <code>addSlasheAsPrefix</code>
@@ -30769,7 +30077,6 @@
     </MissingParamType>
     <MissingPropertyType>
       <code>$help_command</code>
-      <code>$help_message</code>
       <code>$is_repository_created</code>
       <code>$is_user_admin</code>
       <code>$repository</code>
@@ -34732,6 +34039,19 @@
       <code>add</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/tracker/include/Tracker/Artifact/ChangesetValue/ArtifactLink/ChangeForwardLinksCommandFormatter.php">
+    <InvalidReturnStatement>
+      <code>$field_data</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[array{
+     *     new_values: string,
+     *     removed_values: array<int, array{0: int}>,
+     *     types?: array<int, string>,
+     *     parent?: array{0: int}
+     * }]]></code>
+    </InvalidReturnType>
+  </file>
   <file src="plugins/tracker/include/Tracker/Artifact/ChangesetValue/ArtifactLink/CollectionOfLinksFormatter.php">
     <MissingParamType>
       <code>$ignore_perms</code>
@@ -34785,11 +34105,6 @@
   <file src="plugins/tracker/include/Tracker/Artifact/Exception/FieldValueNotStoredException.class.php">
     <MissingParamType>
       <code>$message</code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/ExistingArtifactSourceIdFromTrackerExtractor.php">
-    <MissingParamType>
-      <code>$source_platform</code>
     </MissingParamType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/FileUploadData.php">
@@ -35265,7 +34580,6 @@
       <code>$reverse_order</code>
       <code>$row</code>
       <code>$tracker_id</code>
-      <code>$tracker_id</code>
     </MissingParamType>
     <MissingPropertyType>
       <code>$artifacts</code>
@@ -35275,7 +34589,6 @@
     <MissingReturnType>
       <code>clearInstance</code>
       <code>getArtifactIds</code>
-      <code>getClosedArtifactsByTrackerIdUserCanView</code>
       <code>getOpenArtifactsByTrackerIdUserCanView</code>
       <code>getTitleFromRowAsText</code>
       <code>setDao</code>
@@ -35927,12 +35240,6 @@
     </TooManyArguments>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/View/Edit.class.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[$status->canUpdateArtifactInInsecureMode($this->artifact->getTracker())]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code>Tracker_ArtifactByEmailStatus</code>
-    </InvalidReturnType>
     <MissingParamType>
       <code>$display_changes</code>
       <code>$invert_comments</code>
@@ -35957,14 +35264,6 @@
     <PossiblyNullReference>
       <code>addAttribute</code>
     </PossiblyNullReference>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/XMLArtifactSourcePlatformExtractor.php">
-    <MissingReturnType>
-      <code>getSourcePlatform</code>
-    </MissingReturnType>
-    <PossiblyNullArrayAccess>
-      <code><![CDATA[$xml_artifacts->attributes()['source_platform']]]></code>
-    </PossiblyNullArrayAccess>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/XMLExport.php">
     <MissingParamType>
@@ -35991,28 +35290,18 @@
       <code><![CDATA[$this->getSubmittedBy($first_changeset)->getId()]]></code>
     </InvalidScalarArgument>
     <MissingParamType>
-      <code>$artifact_id</code>
-      <code>$extraction_path</code>
       <code>$extraction_path</code>
       <code>$extraction_path</code>
       <code>$extraction_path</code>
       <code>$send_notifications</code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code>$source_platform</code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code>flattenChangesetArray</code>
-      <code>getExistingBareArtifact</code>
       <code>updateComments</code>
     </MissingReturnType>
     <PossiblyNullArrayAccess>
       <code><![CDATA[$xml_artifact->attributes()['id']]]></code>
-      <code><![CDATA[$xml_artifact->attributes()['id']]]></code>
     </PossiblyNullArrayAccess>
-    <PossiblyNullReference>
-      <code>getChangesets</code>
-    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/XMLImport/ArtifactFieldsDataBuilder.class.php">
     <InvalidArgument>
@@ -36182,18 +35471,6 @@
       <code>printf</code>
     </RedundantFunctionCall>
   </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/dao/TrackerArtifactSourceIdDao.php">
-    <MissingParamType>
-      <code>$artifact_id</code>
-      <code>$source_artifact_id</code>
-      <code>$source_platform</code>
-      <code>$source_platform</code>
-      <code>$tracker_id</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>save</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Artifact/dao/Tracker_ArtifactDao.class.php">
     <DeprecatedMethod>
       <code>count</code>
@@ -36260,10 +35537,6 @@
       <code>escapeInt</code>
       <code>escapeInt</code>
       <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeIntImplode</code>
-      <code>escapeIntImplode</code>
-      <code>escapeIntImplode</code>
       <code>escapeIntImplode</code>
       <code>escapeIntImplode</code>
       <code>escapeIntImplode</code>
@@ -36341,7 +35614,6 @@
       <code>retrieve</code>
       <code>retrieve</code>
       <code>retrieve</code>
-      <code>retrieve</code>
       <code>retrieveCount</code>
       <code>retrieveFirstRow</code>
       <code>retrieveFirstRow</code>
@@ -36372,7 +35644,6 @@
       <code>function () use ($tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions) {</code>
     </MissingClosureReturnType>
     <MissingParamType>
-      <code>$artifact_id</code>
       <code>$artifact_id</code>
       <code>$artifact_id</code>
       <code>$artifact_id</code>
@@ -36436,7 +35707,6 @@
       <code>deleteUnsubscribeNotification</code>
       <code>deleteUnsubscribeNotificationForArtifact</code>
       <code>doesUserHaveUnsubscribedFromArtifactNotifications</code>
-      <code>getArtifactsWithOpenStatusForSubmilestonesForMonoMilestoneConfiguration</code>
       <code>getChildren</code>
       <code>getChildrenForArtifacts</code>
       <code>getLinkedArtifactsOfTrackersConcatenatedToCustomList</code>
@@ -38447,6 +37717,18 @@
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(int) $field->getId()]]></code>
     </RedundantCastGivenDocblockType>
+  </file>
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/File/Upload/FileOngoingUploadDao.php">
+    <UndefinedVariable>
+      <code>$id</code>
+      <code>$id</code>
+    </UndefinedVariable>
+  </file>
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/File/Upload/FileToUploadCreator.php">
+    <UndefinedVariable>
+      <code>$id</code>
+      <code>$id</code>
+    </UndefinedVariable>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/File/Upload/FileUploadCleaner.php">
     <MissingReturnType>
@@ -44735,7 +44017,11 @@
                 ForgeConfig::get('codendi_dir') . '/src/templates/common',
             ]]]></code>
     </InvalidArgument>
+    <InvalidReturnStatement>
+      <code>$new_from_where</code>
+    </InvalidReturnStatement>
     <InvalidReturnType>
+      <code><![CDATA[Option<IProvideParametrizedFromAndWhereSQLFragments>]]></code>
       <code>ReportRenderer</code>
     </InvalidReturnType>
     <MissingParamType>
@@ -47118,8 +46404,6 @@
       <code>displayAdminFormElements</code>
       <code>displayAdminFormElementsHeader</code>
       <code>displayAdminFormElementsWarnings</code>
-      <code>displayAdminHeader</code>
-      <code>displayAdminHeaderBurningParrot</code>
       <code>displayAdminItemHeader</code>
       <code>displayAdminItemHeaderBurningParrot</code>
       <code>displayAdminOptions</code>
@@ -47740,25 +47024,6 @@
     <MissingReturnType>
       <code>getJavascriptDependencies</code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Workflow/WorkflowMenuTabPresenterBuilder.php">
-    <InvalidScalarArgument>
-      <code><![CDATA[$tracker->getId()]]></code>
-    </InvalidScalarArgument>
-    <MissingParamType>
-      <code>$action</code>
-      <code>$active_tab_name</code>
-      <code>$tracker_path</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>build</code>
-      <code>buildFrontRouterUrl</code>
-      <code>buildLegacyUrl</code>
-      <code>buildTabsMenu</code>
-    </MissingReturnType>
-    <RedundantCast>
-      <code><![CDATA[(int) $tracker->getId()]]></code>
-    </RedundantCast>
   </file>
   <file src="plugins/tracker/include/Tracker/Workflow/XML/XMLSimpleWorkflow.php">
     <PossiblyNullArgument>
@@ -48725,11 +47990,6 @@
       <code>$tracker_name</code>
     </MissingParamType>
   </file>
-  <file src="plugins/tracker/include/TrackerFromXmlImportCannotBeUpdatedException.php">
-    <MissingParamType>
-      <code>$tracker_name</code>
-    </MissingParamType>
-  </file>
   <file src="plugins/tracker/include/TrackerFromXmlInputNotWellFormedException.class.php">
     <MissingParamType>
       <code>$errors</code>
@@ -48863,8 +48123,6 @@
     <MissingParamType>
       <code>$att</code>
       <code>$extraction_path</code>
-      <code>$extraction_path</code>
-      <code>$filepath</code>
     </MissingParamType>
     <MissingPropertyType>
       <code><![CDATA[$tracker->cannedResponses]]></code>
@@ -48877,7 +48135,6 @@
       <code>disableArtifactLinkTypes</code>
       <code>displayWarnings</code>
       <code>fillFieldMappingFromExistingTracker</code>
-      <code>getTrackerItemNameFromXMLFile</code>
       <code>importHierarchy</code>
       <code>storeHierarchyInDB</code>
     </MissingReturnType>
@@ -51941,7 +51198,6 @@
     <MissingParamType>
       <code>$dashboard_id</code>
       <code>$dashboard_id</code>
-      <code>$dashboard_id</code>
       <code>$project_dashboards_presenter</code>
     </MissingParamType>
     <MissingReturnType>
@@ -51960,33 +51216,6 @@
     </PossiblyInvalidArgument>
   </file>
   <file src="src/common/Dashboard/Project/ProjectDashboardDao.php">
-    <DeprecatedMethod>
-      <code>commit</code>
-      <code>enableExceptionsOnError</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>parent::__construct()</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>rollBack</code>
-      <code>startTransaction</code>
-      <code>update</code>
-      <code>update</code>
-      <code>updateAndGetLastId</code>
-      <code>updateAndGetLastId</code>
-    </DeprecatedMethod>
     <MissingParamType>
       <code>$dashboard_id</code>
       <code>$dashboard_id</code>
@@ -52003,23 +51232,16 @@
       <code>$template_id</code>
     </MissingParamType>
     <MissingReturnType>
-      <code>delete</code>
-      <code>duplicateDashboard</code>
       <code>searchAllProjectDashboards</code>
     </MissingReturnType>
   </file>
   <file src="src/common/Dashboard/Project/ProjectDashboardDuplicator.php">
-    <DeprecatedMethod>
-      <code>commit</code>
-      <code>startTransaction</code>
-    </DeprecatedMethod>
     <MissingParamType>
       <code>$new_column_id</code>
       <code>$new_dashboard_id</code>
       <code>$new_line_id</code>
     </MissingParamType>
     <MissingReturnType>
-      <code>duplicate</code>
       <code>duplicateColumns</code>
       <code>duplicateDashboardContent</code>
       <code>duplicateWidgets</code>
@@ -52034,10 +51256,6 @@
     </MissingPropertyType>
   </file>
   <file src="src/common/Dashboard/Project/ProjectDashboardSaver.php">
-    <DeprecatedMethod>
-      <code>count</code>
-      <code>count</code>
-    </DeprecatedMethod>
     <MissingParamType>
       <code>$dashboard_id</code>
       <code>$dashboard_id</code>
@@ -52051,10 +51269,6 @@
       <code>checkUserCanSaveByDashboardName</code>
       <code>delete</code>
     </MissingReturnType>
-    <PossiblyFalseReference>
-      <code>count</code>
-      <code>count</code>
-    </PossiblyFalseReference>
     <PossiblyInvalidArgument>
       <code><![CDATA[$project->getID()]]></code>
       <code><![CDATA[$project->getID()]]></code>
@@ -58114,12 +57328,9 @@
       <code>getAccess</code>
       <code>getProjectsCreatedFrom</code>
       <code>getProjectsDescFieldsValue</code>
-      <code>getSVNMailingHeader</code>
-      <code>getSVNpreamble</code>
       <code>getTruncatedEmailsUsage</code>
       <code>getUGroupManager</code>
       <code>isSVNMandatoryRef</code>
-      <code>isSVNTracked</code>
       <code>isSuperPublic</code>
       <code>isSuspended</code>
       <code>projectsMustBeApprovedByAdmin</code>
@@ -59507,19 +58718,15 @@
   <file src="src/common/Project/XML/Import/ImportConfig.php">
     <MissingParamType>
       <code>$force</code>
-      <code>$update</code>
       <code>$value</code>
     </MissingParamType>
     <MissingPropertyType>
       <code>$force</code>
-      <code>$update</code>
     </MissingPropertyType>
     <MissingReturnType>
       <code>addExtraConfiguration</code>
       <code>isForce</code>
-      <code>isUpdate</code>
       <code>setForce</code>
-      <code>setUpdate</code>
     </MissingReturnType>
   </file>
   <file src="src/common/Project/XML/Import/ImportExtraConfiguration.php">
@@ -59977,11 +59184,10 @@
     </MissingReturnType>
   </file>
   <file src="src/common/Redis/RedisInitializer.php">
-    <InvalidArgument>
-      <code><![CDATA[function ($code, $message) use (&$error_message) {
-            $error_message = $message;
-        }]]></code>
-    </InvalidArgument>
+    <UndefinedVariable>
+      <code>$error_message</code>
+      <code>$error_message</code>
+    </UndefinedVariable>
   </file>
   <file src="src/common/Reference/CrossReference.php">
     <MissingPropertyType>
@@ -60306,7 +59512,6 @@
       <code>getRssLatestNews</code>
       <code>getRssLatestProjects</code>
       <code>getSlash</code>
-      <code>getSvnViewVC</code>
       <code>getUsersName</code>
       <code>getUsersNameAvatar</code>
       <code>getUsersNameAvatarHash</code>
@@ -60401,30 +59606,6 @@
       <code>getCurrentVersionNumber</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/SVNCore/SVN_AccessFile_Writer.class.php">
-    <MissingParamType>
-      <code>$contents</code>
-      <code>$contents</code>
-      <code>$display</code>
-      <code>$svnroot</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$accessfile</code>
-      <code>$err</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>filename</code>
-      <code>hasError</code>
-      <code>isErrorFile</code>
-      <code>isErrorWrite</code>
-      <code>read_defaults</code>
-      <code>write</code>
-      <code>write_with_defaults</code>
-    </MissingReturnType>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[str_replace("\r", '', $contents)]]></code>
-    </PossiblyInvalidArgument>
-  </file>
   <file src="src/common/SVNCore/SVN_DAO.class.php">
     <MissingReturnType>
       <code>searchSvnRepositories</code>
@@ -60466,14 +59647,6 @@
       <code>getRow</code>
     </PossiblyFalseReference>
   </file>
-  <file src="src/common/SVNCore/SVN_PermissionsManager.class.php">
-    <MissingParamType>
-      <code>$svnpath</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>userCanRead</code>
-    </MissingReturnType>
-  </file>
   <file src="src/common/SVNCore/SVN_Svnlook.class.php">
     <InvalidScalarArgument>
       <code>$revision</code>
@@ -60507,24 +59680,6 @@
       <code>$output</code>
       <code>$returnValue</code>
     </MissingPropertyType>
-  </file>
-  <file src="src/common/SVNCore/SvnNotification.class.php">
-    <DeprecatedMethod>
-      <code>current</code>
-      <code>isError</code>
-      <code>isError</code>
-      <code>rowCount</code>
-      <code>rowCount</code>
-    </DeprecatedMethod>
-    <InvalidNullableReturnType>
-      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code>null</code>
-    </NullableReturnStatement>
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->_dao]]></code>
-    </UndefinedThisPropertyAssignment>
   </file>
   <file src="src/common/SVNCore/Tokens/SVN_Token.class.php">
     <MissingParamType>
@@ -60577,39 +59732,6 @@
       <code>setDateForUser</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/SVNCore/ViewVC/ViewVCController.php">
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
-    </PossiblyUndefinedArrayOffset>
-  </file>
-  <file src="src/common/SVNCore/ViewVC/ViewVCProxy.php">
-    <InvalidScalarArgument>
-      <code><![CDATA[$user->getId()]]></code>
-    </InvalidScalarArgument>
-    <MissingParamType>
-      <code>$body</code>
-      <code>$command</code>
-      <code>$key</code>
-      <code>$location_line</code>
-      <code>$path</code>
-      <code>$path</code>
-      <code>$return_var</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>buildQueryString</code>
-      <code>display</code>
-      <code>displayContent</code>
-      <code>displayViewVcHeader</code>
-      <code>escapeStringFromServer</code>
-      <code>getPermissionDeniedError</code>
-      <code>getViewVcLocationHeader</code>
-      <code>setLocaleOnCommand</code>
-      <code>setLocaleOnFileName</code>
-    </MissingReturnType>
-    <PossiblyFalseArgument>
-      <code>strpos($content, $content_type_line)</code>
-    </PossiblyFalseArgument>
-  </file>
   <file src="src/common/SVNCore/hook/PostRevPropset.class.php">
     <MissingParamType>
       <code>$old_commit_message</code>
@@ -60656,97 +59778,26 @@
       <code>DataAccessObject</code>
       <code>escapeInt</code>
       <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
       <code>retrieve</code>
       <code>retrieve</code>
-      <code>update</code>
     </DeprecatedMethod>
     <MissingParamType>
-      <code>$path</code>
       <code>$project_id</code>
       <code>$project_id</code>
-      <code>$project_id</code>
-      <code>$whitelist</code>
     </MissingParamType>
     <MissingReturnType>
       <code>getImmutableTagsPathForProject</code>
       <code>getImmutableTagsWhitelistForProject</code>
-      <code>saveImmutableTagsForProject</code>
     </MissingReturnType>
   </file>
   <file src="src/common/SVNCore/immutable_tags/SVN_Immutable_Tags_Handler.php">
     <MissingParamType>
-      <code>$path</code>
       <code>$project_id</code>
       <code>$project_id</code>
-      <code>$project_id</code>
-      <code>$whitelist</code>
     </MissingParamType>
     <MissingReturnType>
       <code>doesProjectUsesImmutableTags</code>
       <code>getAllowedTagsFromWhiteList</code>
-      <code>saveImmutableTagsForProject</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/immutable_tags/SVN_Immutable_Tags_Presenter.php">
-    <InvalidPropertyAssignmentValue>
-      <code>json_encode($existing_tree)</code>
-    </InvalidPropertyAssignmentValue>
-    <MissingClosureParamType>
-      <code>$path</code>
-    </MissingClosureParamType>
-    <MissingParamType>
-      <code>$immutable_tags_path</code>
-      <code>$immutable_tags_whitelist</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$SO_MUCH_FOLDERS</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>immutable_tag_configuration</code>
-      <code>impacted_svn</code>
-      <code>impacted_svn_empty_state</code>
-      <code>loading</code>
-      <code>my_tag</code>
-      <code>path</code>
-      <code>preview</code>
-      <code>preview_description</code>
-      <code>project_id</code>
-      <code>save</code>
-      <code>select_tag</code>
-      <code>some_path</code>
-      <code>sooo_fat</code>
-      <code>svn_allow_tag_immutable_comment</code>
-      <code>svn_allow_tag_immutable_title</code>
-      <code>svn_status_style</code>
-      <code>tree</code>
-      <code>tree_empty_state</code>
-      <code>whitelist</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/intro/SVN_IntroPresenter.php">
-    <MissingParamType>
-      <code>$ldap_row</code>
-      <code>$svn_url</code>
-      <code>$uses_ldap_info</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$ldap_row</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>command_intro</code>
-      <code>more_info</code>
-      <code>password</code>
-      <code>svn_command</code>
-      <code>svn_intro_title</code>
-      <code>svn_user_username</code>
-      <code>user_is_loggedin</code>
-      <code>user_not_connected_username_helper</code>
-      <code>username_helper_lowercase</code>
-      <code>username_is_in_lowercase</code>
-      <code>warning_ldap</code>
     </MissingReturnType>
   </file>
   <file src="src/common/Search/Presenters/AdditionalSearchTabsPresenter.class.php">
@@ -62003,11 +61054,6 @@
       <code>addUserToForgeUserGroup</code>
       <code>removeUserFromForgeUserGroup</code>
       <code>userIsAlreadyInTheGroup</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/User/History/HistoryCleaner.php">
-    <MissingReturnType>
-      <code>clearHistory</code>
     </MissingReturnType>
   </file>
   <file src="src/common/User/IHaveAnSSHKey.php">
@@ -63462,34 +62508,6 @@
       <code>getTitle</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/Widget/Widget_MyLatestSvnCommits.class.php">
-    <DeprecatedFunction>
-      <code><![CDATA[user_set_preference('my_latests_svn_commits_nb_display', $this->_nb_svn_commits)]]></code>
-      <code><![CDATA[user_set_preference('my_latests_svn_commits_nb_display', $this->_nb_svn_commits)]]></code>
-    </DeprecatedFunction>
-    <MissingParamType>
-      <code>$commit_id</code>
-      <code>$commiter</code>
-      <code>$dashboard_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$owner_id</code>
-      <code>$owner_type</code>
-      <code>$widget_id</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>_getLinkToCommit</code>
-      <code>_getLinkToMore</code>
-      <code>getAjaxUrl</code>
-      <code>getCategory</code>
-      <code>getContent</code>
-      <code>getDescription</code>
-      <code>getTitle</code>
-      <code>hasPreferences</code>
-      <code>isAjax</code>
-      <code>updatePreferences</code>
-    </MissingReturnType>
-  </file>
   <file src="src/common/Widget/Widget_MyMonitoredForums.class.php">
     <DeprecatedFunction>
       <code>db_ei($group_id)</code>
@@ -63565,31 +62583,6 @@
       <code>getTitle</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/Widget/Widget_ProjectLatestCommits.class.php">
-    <DeprecatedFunction>
-      <code>db_fetch_array($latest_revisions)</code>
-    </DeprecatedFunction>
-    <MissingParamType>
-      <code>$data</code>
-      <code>$get_commits_callback</code>
-      <code>$id</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$commits_callback</code>
-      <code>$group_id</code>
-      <code>$latest_revisions</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>_getLinkToCommit</code>
-      <code>_getLinkToMore</code>
-      <code>canBeUsedByProject</code>
-      <code>getCategory</code>
-      <code>getContent</code>
-      <code>getLatestRevisions</code>
-      <code>isAjax</code>
-      <code>isAvailable</code>
-    </MissingReturnType>
-  </file>
   <file src="src/common/Widget/Widget_ProjectLatestFileReleases.class.php">
     <MissingPropertyType>
       <code>$content</code>
@@ -63607,19 +62600,6 @@
     <MissingPropertyType>
       <code>$content</code>
     </MissingPropertyType>
-  </file>
-  <file src="src/common/Widget/Widget_ProjectLatestSvnCommits.class.php">
-    <MissingParamType>
-      <code>$data</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>_getLinkToCommit</code>
-      <code>_getLinkToMore</code>
-      <code>canBeUsedByProject</code>
-      <code>getDescription</code>
-      <code>getLatestRevisions</code>
-      <code>getTitle</code>
-    </MissingReturnType>
   </file>
   <file src="src/common/Widget/Widget_ProjectPublicAreas.class.php">
     <DeprecatedFunction>
@@ -63653,33 +62633,6 @@
     <MissingReturnType>
       <code>getDescription</code>
     </MissingReturnType>
-  </file>
-  <file src="src/common/Widget/Widget_ProjectSvnStats.class.php">
-    <InvalidArgument>
-      <code>$chartHeigh</code>
-      <code>$chartWidth</code>
-    </InvalidArgument>
-    <MissingParamType>
-      <code>$a</code>
-      <code>$b</code>
-      <code>$owner_id</code>
-      <code>$owner_type</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$tmp_nb_of_commit</code>
-      <code><![CDATA[$widgetFormatter->legend_ratio]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>getCategory</code>
-      <code>getContent</code>
-      <code>getDescription</code>
-      <code>getTitle</code>
-      <code>process</code>
-      <code>sortByTop</code>
-    </MissingReturnType>
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
-    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/common/Widget/Widget_ProjectSvnStats_Layout.class.php">
     <InvalidReturnStatement>
@@ -64586,18 +63539,8 @@
       <code>$perms</code>
       <code>true</code>
     </InvalidArgument>
-    <InvalidReturnStatement>
-      <code><![CDATA[$this->updateSVNAccess($group_id, $project->getSVNRootPath())]]></code>
-      <code>false</code>
-      <code>false</code>
-      <code>true</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code>void</code>
-    </InvalidReturnType>
     <MissingParamType>
       <code>$can_change_svn_log</code>
-      <code>$contents</code>
       <code>$contents</code>
       <code>$contents</code>
       <code>$custom_perms</code>
@@ -64614,7 +63557,6 @@
       <code>$post_commit_file</code>
       <code>$post_commit_launcher</code>
       <code>$pre_commit_file</code>
-      <code>$project</code>
       <code>$project_id</code>
       <code>$project_id</code>
       <code>$project_id</code>
@@ -64624,9 +63566,6 @@
       <code>$project_svnroot</code>
       <code>$project_svnroot</code>
       <code>$source_tool</code>
-      <code>$svn_dir</code>
-      <code>$svn_dir</code>
-      <code>$svn_dir</code>
       <code>$svn_dir</code>
       <code>$svnroot</code>
       <code>$system_path</code>
@@ -64643,8 +63582,6 @@
       <code>$ugroup_name</code>
       <code>$ugroup_name</code>
       <code>$ugroup_name</code>
-      <code>$ugroup_name</code>
-      <code>$ugroup_old_name</code>
       <code>$ugroup_old_name</code>
       <code>$ugroup_old_name</code>
       <code>$ugroup_old_name</code>
@@ -64664,8 +63601,6 @@
       <code>enableCommitMessageUpdate</code>
       <code>enableHook</code>
       <code>forceUpdateApacheConf</code>
-      <code>getCustomPermission</code>
-      <code>getDefaultBlocEnd</code>
       <code>getHookPath</code>
       <code>getSvnAccessFile</code>
       <code>getSvnDao</code>
@@ -64683,13 +63618,7 @@
     </PossiblyFalseArgument>
     <PossiblyInvalidArgument>
       <code><![CDATA[$project->getID()]]></code>
-      <code><![CDATA[$project->getId()]]></code>
-      <code><![CDATA[$project->getId()]]></code>
     </PossiblyInvalidArgument>
-    <TypeDoesNotContainType>
-      <code>! $project</code>
-      <code>$project</code>
-    </TypeDoesNotContainType>
   </file>
   <file src="src/common/backend/BackendSVNFileForSimlinkAlreadyExistsException.class.php">
     <MissingParamType>
@@ -66176,13 +65105,11 @@
       <code>escapeInt</code>
       <code>escapeInt</code>
       <code>escapeInt</code>
-      <code>escapeInt</code>
       <code>foundRows</code>
       <code>foundRows</code>
       <code>getRow</code>
       <code>getRow</code>
       <code>isError</code>
-      <code>quoteSmart</code>
       <code>quoteSmart</code>
       <code>quoteSmart</code>
       <code>quoteSmart</code>
@@ -66274,7 +65201,6 @@
       <code>searchExplodeMatch</code>
       <code>searchExplodeMatch</code>
       <code>searchExplodeMatch</code>
-      <code>update</code>
       <code>update</code>
       <code>update</code>
       <code>update</code>
@@ -66797,22 +65723,16 @@
     <DeprecatedMethod>
       <code>escapeInt</code>
       <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
       <code>parent::__construct()</code>
       <code>quoteSmart</code>
-      <code>retrieve</code>
       <code>update</code>
     </DeprecatedMethod>
     <MissingParamType>
       <code>$description</code>
-      <code>$duration</code>
-      <code>$group_id</code>
       <code>$group_id</code>
       <code>$revision</code>
     </MissingParamType>
     <MissingReturnType>
-      <code>statsByGroupId</code>
       <code>updateCommitMessage</code>
     </MissingReturnType>
   </file>
@@ -66820,15 +65740,8 @@
     <DeprecatedMethod>
       <code>DataAccessObject</code>
       <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
       <code>quoteSmart</code>
       <code>retrieve</code>
-      <code>update</code>
-      <code>update</code>
     </DeprecatedMethod>
     <FalsableReturnStatement>
       <code><![CDATA[$this->retrieve($sql)]]></code>
@@ -69457,11 +68370,6 @@
     <MissingReturnType>
       <code>process</code>
       <code>purgeSystemEventsDataOlderThanOneYear</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/system_event/include/SystemEvent_SERVICE_USAGE_SWITCH.class.php">
-    <MissingReturnType>
-      <code>process</code>
     </MissingReturnType>
   </file>
   <file src="src/common/system_event/include/SystemEvent_SVN_AUTH_CACHE_CHANGE.class.php">
@@ -75878,11 +74786,6 @@
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyUndefinedArrayOffset>
   </file>
-  <file src="src/www/empty2.php">
-    <ForbiddenCode>
-      <code><![CDATA[var_dump(version_compare("1.39.5", "1.39", '>'))]]></code>
-    </ForbiddenCode>
-  </file>
   <file src="src/www/file/admin/editproc.php">
     <DeprecatedFunction>
       <code>db_ei($group_id)</code>
@@ -77083,34 +75986,6 @@
       <code>$systems</code>
     </PossiblyUndefinedVariable>
   </file>
-  <file src="src/www/include/viewvc_utils.php">
-    <DeprecatedFunction>
-      <code>db_ei($group_id)</code>
-      <code>db_ei($group_id)</code>
-      <code>db_ei($group_id)</code>
-      <code><![CDATA[db_ei(UserManager::instance()->getCurrentUser()->getId())]]></code>
-      <code>db_numrows($res)</code>
-      <code><![CDATA[db_query("INSERT INTO " . $table . " (group_id,user_id,day," . $browse_column . ") VALUES (" . db_ei($group_id) . "," . $db_escaped_user_id . ",'" . $db_day . "',1)")]]></code>
-      <code><![CDATA[db_query("UPDATE " . $table . " SET " . $browse_column . "=" . $browse_column . "+1 WHERE group_id = " . db_ei($group_id) . " AND user_id = " . $db_escaped_user_id . " AND day = '" . $db_day . "'")]]></code>
-      <code>db_query($sql)</code>
-    </DeprecatedFunction>
-    <MissingParamType>
-      <code>$group_id</code>
-      <code>$type</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>viewvc_utils_track_browsing</code>
-    </MissingReturnType>
-    <PossiblyUndefinedVariable>
-      <code>$browse_column</code>
-      <code>$browse_column</code>
-      <code>$browse_column</code>
-      <code>$browse_column</code>
-      <code>$table</code>
-      <code>$table</code>
-      <code>$table</code>
-    </PossiblyUndefinedVariable>
-  </file>
   <file src="src/www/my/bookmark_add.php">
     <UndefinedGlobalVariable>
       <code>$HTML</code>
@@ -78115,278 +76990,6 @@
       <code>$HTML</code>
     </UndefinedGlobalVariable>
   </file>
-  <file src="src/www/svn/admin/immutable_tags.php">
-    <UndefinedGlobalVariable>
-      <code>$Language</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-    </UndefinedGlobalVariable>
-  </file>
-  <file src="src/www/svn/admin/index.php">
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
-    </PossiblyUndefinedArrayOffset>
-  </file>
-  <file src="src/www/svn/admin/notification.php">
-    <DeprecatedMethod>
-      <code>$svnNotificationsDetails</code>
-      <code>$svnNotificationsDetails</code>
-    </DeprecatedMethod>
-    <UndefinedGlobalVariable>
-      <code>$Language</code>
-      <code>$Language</code>
-      <code>$Language</code>
-      <code>$Language</code>
-      <code>$Language</code>
-      <code>$Language</code>
-      <code>$Language</code>
-      <code>$Language</code>
-      <code>$Language</code>
-      <code>$Language</code>
-      <code>$Language</code>
-      <code>$Language</code>
-      <code>$Language</code>
-      <code>$Language</code>
-      <code>$Language</code>
-      <code>$Language</code>
-    </UndefinedGlobalVariable>
-  </file>
-  <file src="src/www/svn/browse_revision.php">
-    <DeprecatedFunction>
-      <code>db_error()</code>
-      <code>db_numrows($result)</code>
-      <code><![CDATA[user_set_preference('svn_commit_browse_order' . $group_id, $morder)]]></code>
-      <code><![CDATA[user_set_preference('svn_commits_browcust' . $group_id, $pref_)]]></code>
-    </DeprecatedFunction>
-    <InvalidScalarArgument>
-      <code>$_commiter</code>
-      <code>$chunksz</code>
-      <code>$chunksz</code>
-    </InvalidScalarArgument>
-    <UndefinedGlobalVariable>
-      <code>$Language</code>
-      <code>$Language</code>
-      <code>$Language</code>
-      <code>$Language</code>
-      <code>$Language</code>
-      <code>$Language</code>
-      <code>$Language</code>
-      <code>$Language</code>
-      <code>$Language</code>
-      <code>$Language</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-    </UndefinedGlobalVariable>
-  </file>
-  <file src="src/www/svn/detail_revision.php">
-    <DeprecatedFunction>
-      <code>db_numrows($result)</code>
-      <code><![CDATA[db_result($result, 0, 'revision')]]></code>
-    </DeprecatedFunction>
-    <UndefinedGlobalVariable>
-      <code>$Language</code>
-      <code>$Language</code>
-      <code>$Language</code>
-    </UndefinedGlobalVariable>
-  </file>
-  <file src="src/www/svn/index.php">
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
-    </PossiblyUndefinedArrayOffset>
-  </file>
-  <file src="src/www/svn/svn_data.php">
-    <DeprecatedFunction>
-      <code>db_ei($commit_id)</code>
-      <code>db_ei($group_id)</code>
-      <code>db_ei($group_id)</code>
-      <code>db_ei($group_id)</code>
-      <code>db_ei($rev_id)</code>
-      <code><![CDATA[db_ei((gmdate('U') - $period))]]></code>
-      <code>db_es(substr($no_access, 1))</code>
-      <code>db_query($query)</code>
-      <code>db_query($sql)</code>
-      <code>db_query($sql)</code>
-    </DeprecatedFunction>
-    <MissingParamType>
-      <code>$commit_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$order</code>
-      <code>$period</code>
-      <code>$rev_id</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>svn_data_get_revision_detail</code>
-      <code>svn_data_get_svn_history</code>
-      <code>svn_data_get_technicians</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/www/svn/svn_intro.php">
-    <UndefinedGlobalVariable>
-      <code>$HTML</code>
-      <code>$HTML</code>
-      <code>$Language</code>
-      <code>$Language</code>
-      <code>$Language</code>
-      <code>$Language</code>
-      <code>$Language</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-    </UndefinedGlobalVariable>
-  </file>
-  <file src="src/www/svn/svn_utils.php">
-    <DeprecatedFunction>
-      <code>db_ei($_rev_id)</code>
-      <code>db_ei($chunksz)</code>
-      <code>db_ei($offset)</code>
-      <code><![CDATA[db_ei($project->getGroupId())]]></code>
-      <code><![CDATA[db_ei($um->getUserByUserName($_commiter)->getId())]]></code>
-      <code>db_error()</code>
-      <code>db_es($_path)</code>
-      <code>db_es(htmlspecialchars($_srch))</code>
-      <code>db_es(substr($no_access, 1))</code>
-      <code>db_fetch_array($res_svnfullhist)</code>
-      <code>db_fetch_array($res_svnlasthist)</code>
-      <code>db_fetch_array($result)</code>
-      <code>db_fetch_array($result1)</code>
-      <code>db_numrows($res_svnfullhist)</code>
-      <code>db_numrows($result)</code>
-      <code>db_query($sql)</code>
-      <code>db_query($sql1)</code>
-      <code><![CDATA[db_result($result, $i, 'dir')]]></code>
-      <code><![CDATA[db_result($result, $i, 'file')]]></code>
-      <code><![CDATA[db_result($result, $i, 'type')]]></code>
-      <code><![CDATA[db_result($result, 0, 'date')]]></code>
-      <code><![CDATA[db_result($result, 0, 'description')]]></code>
-      <code><![CDATA[db_result($result, 0, 'revision')]]></code>
-      <code><![CDATA[html_build_select_box_from_arrays($userids, $usernames, $name, $checked, true, $text_100, false, '', false, '', CODENDI_PURIFIER_CONVERT_HTML)]]></code>
-    </DeprecatedFunction>
-    <MissingParamType>
-      <code>$_commiter</code>
-      <code>$_rev_id</code>
-      <code>$_srch</code>
-      <code>$checked</code>
-      <code>$chunksz</code>
-      <code>$chunksz</code>
-      <code>$commit_id</code>
-      <code>$commiter</code>
-      <code>$criteria_list</code>
-      <code>$criteria_list</code>
-      <code>$filename</code>
-      <code>$foundRows</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_name</code>
-      <code>$group_name</code>
-      <code>$morder</code>
-      <code>$msort</code>
-      <code>$msort</code>
-      <code>$name</code>
-      <code>$offset</code>
-      <code>$offset</code>
-      <code>$order</code>
-      <code>$params</code>
-      <code>$path</code>
-      <code>$project_svnroot</code>
-      <code>$project_svnroot</code>
-      <code>$project_svnroot</code>
-      <code>$pv</code>
-      <code>$result</code>
-      <code>$result</code>
-      <code>$set</code>
-      <code>$sortField</code>
-      <code>$text</code>
-      <code>$text_100</code>
-      <code>$total_rows</code>
-      <code>$url</code>
-      <code>$username</code>
-      <code>$view_params</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>svn_footer</code>
-      <code>svn_get_revisions</code>
-      <code>svn_header</code>
-      <code>svn_utils_add_sort_criteria</code>
-      <code>svn_utils_check_access</code>
-      <code>svn_utils_criteria_list_to_text</code>
-      <code>svn_utils_field_get_label</code>
-      <code>svn_utils_format_svn_history</code>
-      <code>svn_utils_get_forbidden_paths</code>
-      <code>svn_utils_is_there_specific_permission</code>
-      <code>svn_utils_make_viewlink</code>
-      <code>svn_utils_parse_access_file</code>
-      <code>svn_utils_read_svn_access_file</code>
-      <code>svn_utils_show_revision_detail</code>
-      <code>svn_utils_show_revision_list</code>
-      <code>svn_utils_technician_box</code>
-    </MissingReturnType>
-    <PossiblyFalseArgument>
-      <code>$idx</code>
-    </PossiblyFalseArgument>
-    <PossiblyNullReference>
-      <code>getId</code>
-    </PossiblyNullReference>
-    <PossiblyUndefinedVariable>
-      <code>$arr</code>
-      <code>$arr</code>
-      <code>$arr_text</code>
-      <code>$arr_text</code>
-      <code>$path</code>
-      <code>$path</code>
-      <code>$viewtype_url</code>
-    </PossiblyUndefinedVariable>
-    <TypeDoesNotContainNull>
-      <code>! isset($mdir)</code>
-    </TypeDoesNotContainNull>
-    <TypeDoesNotContainType>
-      <code><![CDATA[$SVNACCESS == "None"]]></code>
-    </TypeDoesNotContainType>
-    <UndefinedVariable>
-      <code>$pref_stg</code>
-    </UndefinedVariable>
-  </file>
   <file src="src/www/themes/FlamingParrot/FlamingParrot_Theme.class.php">
     <MissingParamType>
       <code>$params</code>
@@ -78843,9 +77446,6 @@
     </UndefinedGlobalVariable>
   </file>
   <file src="src/www/tracker/gotoid.php">
-    <DeprecatedFunction>
-      <code>db_numrows($res)</code>
-    </DeprecatedFunction>
     <MissingParamType>
       <code>$aid</code>
       <code>$art_group_id</code>
@@ -78861,7 +77461,6 @@
     <PossiblyUndefinedGlobalVariable>
       <code>$group_id</code>
       <code>$group_id</code>
-      <code>$group_id</code>
     </PossiblyUndefinedGlobalVariable>
     <PossiblyUndefinedVariable>
       <code>$aid</code>
@@ -78872,7 +77471,6 @@
       <code>$Language</code>
       <code>$Language</code>
       <code>$Language</code>
-      <code>$aid</code>
       <code>$aid</code>
       <code>$aid</code>
       <code>$aid</code>

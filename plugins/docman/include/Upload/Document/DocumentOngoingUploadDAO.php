@@ -25,12 +25,15 @@ use Tuleap\DB\DataAccessObject;
 
 class DocumentOngoingUploadDAO extends DataAccessObject
 {
+    /**
+     * @psalm-return array{user_id: int, filename: string, filesize: int, item_id: int}[]
+     */
     public function searchDocumentOngoingUploadByParentIDTitleAndExpirationDate(
         $parent_id,
         $title,
         $current_time,
-    ) {
-        $sql = 'SELECT *
+    ): array {
+        $sql = 'SELECT user_id, filename, filesize, item_id
                 FROM plugin_docman_new_document_upload
                 WHERE parent_id = ? AND title = ? AND expiration_date > ?';
 
