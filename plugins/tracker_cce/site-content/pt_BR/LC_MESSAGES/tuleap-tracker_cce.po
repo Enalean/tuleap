@@ -21,5 +21,38 @@ msgstr ""
 msgid "Custom code execution as artifact post action"
 msgstr ""
 
+msgid "Failed to write file to disk."
+msgstr ""
+
+msgid "File upload stopped by extension."
+msgstr ""
+
+msgid "Missing a temporary folder."
+msgstr ""
+
+msgid "No file was uploaded."
+msgstr ""
+
+msgid "No module has been uploaded"
+msgstr ""
+
+msgid "The module has been uploaded"
+msgstr ""
+
+msgid "The uploaded file exceeds the maximum allowed file size."
+msgstr ""
+
+msgid "The uploaded file was only partially uploaded."
+msgstr ""
+
 msgid "TrackerCCE"
+msgstr ""
+
+msgid "Unable to upload the module"
+msgstr ""
+
+msgid "Upload module"
+msgstr ""
+
+msgid "WebAssembly module"
 msgstr ""

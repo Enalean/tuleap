@@ -43,6 +43,7 @@ final class AdministrationControllerTest extends TestCase
             RetrieveTrackerStub::withoutTracker(),
             DisplayTrackerLayoutStub::build(),
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
+            new UpdateModuleCSRFTokenProvider(),
         );
 
         $this->expectException(NotFoundException::class);
@@ -62,6 +63,7 @@ final class AdministrationControllerTest extends TestCase
             ),
             DisplayTrackerLayoutStub::build(),
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
+            new UpdateModuleCSRFTokenProvider(),
         );
 
         $this->expectException(NotFoundException::class);
@@ -84,6 +86,7 @@ final class AdministrationControllerTest extends TestCase
             RetrieveTrackerStub::withTracker($tracker),
             DisplayTrackerLayoutStub::build(),
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
+            new UpdateModuleCSRFTokenProvider(),
         );
 
         $this->expectException(NotFoundException::class);
