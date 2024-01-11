@@ -39,7 +39,7 @@ pipeline {
         stage('Psalm taint analysis') {
             agent {
                 docker {
-                    image 'ghcr.io/enalean/tuleap-test-phpunit:c7-php81'
+                    image 'ghcr.io/enalean/tuleap-test-phpunit:c7-php82'
                     reuseNode true
                     args '--network none'
                 }

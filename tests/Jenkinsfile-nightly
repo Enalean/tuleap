@@ -37,7 +37,7 @@ pipeline {
         }
 
         stage('Unit tests PHP with coverage') {
-            steps { script { actions.runPHPUnitTests('81', true) } }
+            steps { script { actions.runPHPUnitTests('82', true) } }
             post { always { junit 'results/ut-phpunit/*/phpunit_tests_results.xml' } }
         }
 
@@ -73,19 +73,19 @@ pipeline {
                 }
             }
         }
-        stage ('PHP 8.2') {
+        stage ('PHP 8.1') {
             failFast false
             parallel {
                 stage('Unit tests') {
-                    steps { script { actions.runPHPUnitTests('82', false) } }
+                    steps { script { actions.runPHPUnitTests('81', false) } }
                     post { always { junit 'results/ut-phpunit/*/phpunit_tests_results.xml' } }
                 }
                 stage('DB/Integration') {
-                    steps { script { actions.runDBTests('mysql80', '82') } }
+                    steps { script { actions.runDBTests('mysql80', '81') } }
                     post { always { junit 'results/db/*/db_tests.xml' } }
                 }
                 stage('REST') {
-                    steps { script { actions.runRESTTests('mysql80', '82') } }
+                    steps { script { actions.runRESTTests('mysql80', '81') } }
                     post { always { junit 'results/api-rest/*/*' } }
                 }
             }
