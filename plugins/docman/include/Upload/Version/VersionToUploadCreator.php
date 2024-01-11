@@ -68,14 +68,13 @@ class VersionToUploadCreator
         string $description,
         ?string $approval_table_action,
     ): VersionToUpload {
-        $file_size = $filesize;
-        if ((int) $file_size > (int) \ForgeConfig::get(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)) {
+        if ($filesize > (int) \ForgeConfig::get(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)) {
             throw new UploadMaxSizeExceededException(
-                (int) $file_size,
+                $filesize,
                 (int) \ForgeConfig::get(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)
             );
         }
-        $this->transaction_executor->execute(
+        $version_id = $this->transaction_executor->execute(
             function () use (
                 $item,
                 $user,
@@ -87,13 +86,12 @@ class VersionToUploadCreator
                 $is_file_locked,
                 $status_id,
                 $obsolescence_date_timestamp,
-                &$version_id,
                 $title,
                 $description,
                 $approval_table_action
-            ) {
+            ): int {
                 $rows = $this->dao->searchDocumentVersionOngoingUploadByItemIdAndExpirationDate(
-                    $item->getId(),
+                    (int) $item->getId(),
                     $current_time->getTimestamp()
                 );
                 if (count($rows) > 1) {
@@ -106,16 +104,15 @@ class VersionToUploadCreator
                     if ($row['user_id'] !== (int) $user->getId()) {
                         throw new UploadCreationConflictException();
                     }
-                    if ($row['filename'] !== $filename || (int) $filesize !== $row['filesize']) {
+                    if ($row['filename'] !== $filename || $filesize !== $row['filesize']) {
                         throw new UploadCreationFileMismatchException();
                     }
-                    $version_id = $row['id'];
-                    return;
+                    return $row['id'];
                 }
 
-                $version_id = $this->dao->saveDocumentVersionOngoingUpload(
+                return $this->dao->saveDocumentVersionOngoingUpload(
                     $this->getExpirationDate($current_time)->getTimestamp(),
-                    $item->getId(),
+                    (int) $item->getId(),
                     $version_title,
                     $changelog,
                     (int) $user->getId(),

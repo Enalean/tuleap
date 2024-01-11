@@ -62,9 +62,12 @@ class DocumentOnGoingVersionToUploadDAO extends DataAccessObject
         return (int) $version_id;
     }
 
+    /**
+     * @psalm-return array{user_id: int, filename: string, filesize: int, id: int}[]
+     */
     public function searchDocumentVersionOngoingUploadByItemIdAndExpirationDate(int $id, int $timestamp): array
     {
-        $sql = 'SELECT *
+        $sql = 'SELECT user_id, filename, filesize, id
                 FROM plugin_docman_new_version_upload
                 WHERE item_id = ?  AND expiration_date > ?';
 

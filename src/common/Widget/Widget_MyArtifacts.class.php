@@ -206,9 +206,11 @@ class Widget_MyArtifacts extends Widget // phpcs:ignore PSR1.Classes.ClassDeclar
                     $at = $artifact_types[$group_id][$atid]['at'];
                     //Create ArtifactFieldFactory object
                     if (! isset($artifact_types[$group_id][$atid]['aff'])) {
-                        $artifact_types[$group_id][$atid]['aff'] = new ArtifactFieldFactory($at);
+                        $aff                                     = new ArtifactFieldFactory($at);
+                        $artifact_types[$group_id][$atid]['aff'] = $aff;
+                    } else {
+                        $aff = $artifact_types[$group_id][$atid]['aff'];
                     }
-                    $aff = $artifact_types[$group_id][$atid]['aff'];
                     //Retrieve artifact_id field
                     $field = $aff->getFieldFromName('artifact_id');
                     //Check if user can read it

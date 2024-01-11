@@ -22,26 +22,20 @@ namespace Tuleap\Docman\Upload\Document;
 
 final class DocumentToUpload
 {
-    private $item_id;
-
-    public function __construct($item_id)
+    public function __construct(private readonly int $item_id)
     {
-        $this->item_id = $item_id;
     }
 
-    /**
-     * @return int
-     */
-    public function getItemId()
+    public function getItemId(): int
     {
         return $this->item_id;
     }
 
     /**
-     * @return string
+     * @psalm-return non-empty-string
      */
-    public function getUploadHref()
+    public function getUploadHref(): string
     {
-        return '/uploads/docman/file/' . urlencode($this->item_id);
+        return '/uploads/docman/file/' . urlencode((string) $this->item_id);
     }
 }
