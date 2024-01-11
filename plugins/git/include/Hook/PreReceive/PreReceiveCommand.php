@@ -60,8 +60,13 @@ final class PreReceiveCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
+        $repository_path = (string) $input->getArgument('repository_path');
+        if ($repository_path === '') {
+            $output->writeln('The repository_path cannot be empty');
+            return self::FAILURE;
+        }
         return $this->action->preReceiveExecute(
-            $input->getArgument('repository_path'),
+            $repository_path,
             stream_get_contents(STDIN),
         )->match(
             fn(): int => self::SUCCESS,

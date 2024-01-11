@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,9 +17,23 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-use std::fs::read_to_string;
 
-fn main() -> Result<(), ()> {
-    print!("{}{}", read_to_string("/guest-dir-0000/ReadTest.txt").unwrap(), read_to_string("/guest-dir-0001/ReadTest.txt").unwrap());
-    Ok(())
+declare(strict_types=1);
+
+namespace Tuleap\WebAssembly;
+
+/**
+ * @psalm-readonly
+ */
+final class WASMModuleMountPoint
+{
+    /**
+     * @psalm-param non-empty-string $host_path
+     * @psalm-param non-empty-string $guest_path
+     */
+    public function __construct(
+        public readonly string $host_path,
+        public readonly string $guest_path,
+    ) {
+    }
 }
