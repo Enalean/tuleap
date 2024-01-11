@@ -353,21 +353,21 @@
         },
         {
             "name": "cuyz/valinor",
-            "version": "1.3.1",
+            "version": "1.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CuyZ/Valinor.git",
-                "reference": "eebd3141d89b1a5a7b6bd5388159bf736c89c8c6"
+                "reference": "daf8206d11b1cb6b308ecd2eb6b65657d2248544"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CuyZ/Valinor/zipball/eebd3141d89b1a5a7b6bd5388159bf736c89c8c6",
-                "reference": "eebd3141d89b1a5a7b6bd5388159bf736c89c8c6",
+                "url": "https://api.github.com/repos/CuyZ/Valinor/zipball/daf8206d11b1cb6b308ecd2eb6b65657d2248544",
+                "reference": "daf8206d11b1cb6b308ecd2eb6b65657d2248544",
                 "shasum": ""
             },
             "require": {
                 "composer-runtime-api": "^2.0",
-                "php": "~8.0.0 || ~8.1.0 || ~8.2.0",
+                "php": "~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0",
                 "psr/simple-cache": "^1.0 || ^2.0 || ^3.0"
             },
             "require-dev": {
@@ -379,7 +379,7 @@
                 "phpstan/phpstan-phpunit": "^1.0",
                 "phpstan/phpstan-strict-rules": "^1.0",
                 "phpunit/phpunit": "^9.5",
-                "rector/rector": "~0.15.0",
+                "rector/rector": "~0.17.0",
                 "vimeo/psalm": "^5.0"
             },
             "type": "library",
@@ -414,7 +414,7 @@
             ],
             "support": {
                 "issues": "https://github.com/CuyZ/Valinor/issues",
-                "source": "https://github.com/CuyZ/Valinor/tree/1.3.1"
+                "source": "https://github.com/CuyZ/Valinor/tree/1.8.2"
             },
             "funding": [
                 {
@@ -422,7 +422,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-02-13T05:55:55+00:00"
+            "time": "2024-01-08T20:31:48+00:00"
         },
         {
             "name": "dflydev/dot-access-data",
