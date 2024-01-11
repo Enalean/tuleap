@@ -43,7 +43,12 @@
                     v-bind:step="step"
                 />
                 <div v-show="!is_dragging" class="ttm-definition-step-add-bar">
-                    <button type="button" class="btn btn-primary" v-on:click="addStep(index + 1)">
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        v-on:click="addStep(index + 1)"
+                        data-test="add-step"
+                    >
                         <i class="fa fa-plus"></i>
                         <translate>Add step</translate>
                     </button>

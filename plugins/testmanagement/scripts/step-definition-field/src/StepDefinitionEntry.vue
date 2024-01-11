@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="ttm-definition-step">
+    <div class="ttm-definition-step" data-test="editable-step">
         <step-definition-draggable-component
             v-show="is_dragging"
             v-bind:step="step"

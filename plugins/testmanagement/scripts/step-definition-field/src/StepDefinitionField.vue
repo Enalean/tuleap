@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div>
+    <div data-test="step-definition-field">
         <div v-if="isThereAtLeastOneStep">
             <button
                 v-if="areThereAtLeastTwoSteps"
@@ -33,7 +33,12 @@
                 <translate v-else key="start-reordering">Reorder steps</translate>
             </button>
             <div class="ttm-definition-step-add-bar" v-show="!is_dragging">
-                <button type="button" class="btn btn-primary" v-on:click="addStep">
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    v-on:click="addStep"
+                    data-test="add-step"
+                >
                     <i class="fa fa-plus"></i>
                     <translate>Add step</translate>
                 </button>
