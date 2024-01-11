@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 use Tuleap\User\Account\RegistrationGuardEvent;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -28,8 +30,7 @@ class User_LoginPresenterBuilder
     ) {
     }
 
-    /** @return User_LoginPresenter */
-    public function build($return_to, $printer_version, $form_loginname, CSRFSynchronizerToken $login_csrf, string $prompt_param)
+    public function build(string $return_to, int $printer_version, string $form_loginname, CSRFSynchronizerToken $login_csrf, string $prompt_param): User_LoginPresenter
     {
         $additional_connectors = $this->event_manager->dispatch(new Tuleap\User\AdditionalConnectorsCollector($return_to));
         assert($additional_connectors instanceof Tuleap\User\AdditionalConnectorsCollector);
@@ -59,8 +60,7 @@ class User_LoginPresenterBuilder
         return $presenter;
     }
 
-    /** @return User_LoginPresenter */
-    public function buildForHomepage(CSRFSynchronizerToken $login_csrf)
+    public function buildForHomepage(CSRFSynchronizerToken $login_csrf): User_LoginPresenter
     {
         $return_to       = '';
         $printer_version = 0;
