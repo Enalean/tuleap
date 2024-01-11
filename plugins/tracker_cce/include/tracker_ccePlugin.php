@@ -20,14 +20,28 @@
 
 declare(strict_types=1);
 
+use Tuleap\Instrument\Prometheus\Prometheus;
+use Tuleap\Mapper\ValinorMapperBuilderFactory;
+use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Plugin\ListeningToEventClass;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationTaskCollectorEvent;
-use Tuleap\TrackerCCE\CustomCodeExecutionTask;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\CachingTrackerPrivateCommentInformationRetriever;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentInformationRetriever;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationTaskCollectorEvent;
+use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
+use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
+use Tuleap\Tracker\Webhook\ArtifactPayloadBuilder;
 use Tuleap\Tracker\Workflow\WorkflowMenuItem;
 use Tuleap\Tracker\Workflow\WorkflowMenuItemCollection;
 use Tuleap\TrackerCCE\Administration\AdministrationController;
+use Tuleap\TrackerCCE\CustomCodeExecutionTask;
+use Tuleap\TrackerCCE\WASM\CallWASMModule;
+use Tuleap\TrackerCCE\WASM\FindWASMModulePath;
+use Tuleap\TrackerCCE\WASM\ProcessWASMResponse;
+use Tuleap\WebAssembly\FFIWASMCaller;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/vendor/autoload.php';
@@ -58,7 +72,29 @@ final class tracker_ccePlugin extends Plugin
     #[ListeningToEventClass]
     public function collectPostCreationTask(PostCreationTaskCollectorEvent $event): void
     {
-        $event->addAsyncTask(new CustomCodeExecutionTask($event->getLogger()));
+        $mapper = ValinorMapperBuilderFactory::mapperBuilder()->mapper();
+
+        $event->addAsyncTask(new CustomCodeExecutionTask(
+            $event->getLogger(),
+            new ArtifactPayloadBuilder(
+                new ChangesetRepresentationBuilder(
+                    UserManager::instance(),
+                    Tracker_FormElementFactory::instance(),
+                    new CommentRepresentationBuilder(
+                        CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance())
+                    ),
+                    new PermissionChecker(new CachingTrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentUGroupEnabledDao()))),
+                )
+            ),
+            new FindWASMModulePath(),
+            new CallWASMModule(
+                new FFIWASMCaller($mapper, Prometheus::instance()),
+                new ProcessWASMResponse(
+                    $event->getLogger(),
+                    $mapper,
+                )
+            ),
+        ));
     }
 
     #[ListeningToEventClass]

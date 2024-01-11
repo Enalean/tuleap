@@ -23,18 +23,70 @@ declare(strict_types=1);
 namespace Tuleap\TrackerCCE;
 
 use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
+use Tracker;
 use Tracker_Artifact_Changeset;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationTask;
+use Tuleap\Tracker\Webhook\ArtifactPayloadBuilder;
+use Tuleap\TrackerCCE\WASM\WASMModuleCaller;
+use Tuleap\TrackerCCE\WASM\WASMModulePathHelper;
+use Tuleap\TrackerCCE\WASM\WASMResponseRepresentation;
+use Tuleap\User\CCEUser;
+use function Psl\Json\encode as psl_json_encode;
 
 final class CustomCodeExecutionTask implements PostCreationTask
 {
     public function __construct(
         private readonly LoggerInterface $logger,
+        private readonly ArtifactPayloadBuilder $payload_builder,
+        private readonly WASMModulePathHelper $module_path_helper,
+        private readonly WASMModuleCaller $module_caller,
     ) {
     }
 
     public function execute(Tracker_Artifact_Changeset $changeset, bool $send_notifications): void
     {
         $this->logger->debug("CustomCodeExecutionTask called on artifact #{$changeset->getArtifact()->getId()} for changeset #{$changeset->getId()}");
+
+        if ((int) $changeset->getSubmittedBy() === CCEUser::ID) {
+            $this->logger->debug('Changeset submitted by forge__cce -> skip');
+            return;
+        }
+
+        $payload = $this->payload_builder->buildPayload($changeset)->getPayload();
+        $this->getWASMModulePath($changeset->getTracker())
+            ->andThen(
+            /** @psalm-return Ok<WASMResponseRepresentation>|Err<Fault> */
+                function (string $wasm_module_path) use ($payload): Ok | Err {
+                    $this->logger->debug("Found module to execute: {$wasm_module_path}");
+                    return $this->module_caller->callWASMModule($wasm_module_path, psl_json_encode($payload));
+                }
+            )
+            ->match(
+                function (WASMResponseRepresentation $response): void {
+                    $this->logger->debug("Receive response from WASM module:\n" . psl_json_encode($response));
+                },
+                fn(Fault $fault) => Fault::writeToLogger($fault, $this->logger, LogLevel::WARNING),
+            );
+
+        $this->logger->debug('CustomCodeExecutionTask finished');
+    }
+
+    /**
+     * @return Ok<string>|Err<Fault>
+     */
+    private function getWASMModulePath(Tracker $tracker): Ok | Err
+    {
+        $wasm_module_path = $this->module_path_helper->getPathForTracker($tracker);
+
+        if (is_readable($wasm_module_path)) {
+            return Result::ok($wasm_module_path);
+        }
+
+        return Result::err(Fault::fromMessage("WASM module for tracker #{$tracker->getId()} not found or not readable"));
     }
 }
