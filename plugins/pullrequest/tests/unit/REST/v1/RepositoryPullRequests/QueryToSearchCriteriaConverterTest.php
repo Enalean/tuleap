@@ -49,7 +49,7 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
         $result = $this->converter->convert(json_encode([], JSON_THROW_ON_ERROR));
 
         self::assertTrue(Result::isOk($result));
-        self::assertTrue($result->unwrapOr(null)->getStatusCriterion()->isNothing());
+        self::assertTrue($result->unwrapOr(null)->status->isNothing());
     }
 
     public function testItReturnsAnErrorWhenTheStatusToFilterOnIsInvalid(): void
@@ -66,7 +66,7 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
 
         self::assertTrue(Result::isOk($result));
 
-        $status_criterion = $result->unwrapOr(null)->getStatusCriterion();
+        $status_criterion = $result->unwrapOr(null)->status;
 
         self::assertTrue($status_criterion->unwrapOr(null)->shouldOnlyRetrieveOpenPullRequests());
         self::assertFalse($status_criterion->unwrapOr(null)->shouldOnlyRetrieveClosedPullRequests());
@@ -78,7 +78,7 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
 
         self::assertTrue(Result::isOk($result));
 
-        $status_criterion = $result->unwrapOr(null)->getStatusCriterion();
+        $status_criterion = $result->unwrapOr(null)->status;
 
         self::assertFalse($status_criterion->unwrapOr(null)->shouldOnlyRetrieveOpenPullRequests());
         self::assertTrue($status_criterion->unwrapOr(null)->shouldOnlyRetrieveClosedPullRequests());
