@@ -30,9 +30,9 @@ use Tuleap\SVN\Admin\ImmutableTagFactory;
 use Tuleap\SVN\Admin\MailNotificationManager;
 use Tuleap\SVN\Repository\HookConfig;
 use Tuleap\SVN\Repository\HookConfigUpdator;
-use Tuleap\SVNCore\Repository;
-use Tuleap\SVN\Repository\Settings;
+use Tuleap\SVN\Repository\Settings\Settings;
 use Tuleap\SVNCore\CollectionOfSVNAccessFileFaults;
+use Tuleap\SVNCore\Repository;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase

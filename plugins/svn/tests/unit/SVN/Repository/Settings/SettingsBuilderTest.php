@@ -20,13 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\SVN\Repository;
+namespace Tuleap\SVN\Repository\Settings;
 
 use Tuleap\NeverThrow\Result;
 use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\SVN\Admin\ImmutableTag;
 use Tuleap\SVN\Admin\ImmutableTagDao;
 use Tuleap\SVN\Admin\ImmutableTagFactory;
+use Tuleap\SVN\Repository\HookConfig;
+use Tuleap\SVN\Repository\SvnRepository;
 use Tuleap\SVN\REST\v1\CommitRulesRepresentation;
 use Tuleap\SVN\REST\v1\ImmutableTagRepresentation;
 use Tuleap\SVN\REST\v1\NotificationPOSTPUTRepresentation;

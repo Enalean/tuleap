@@ -28,8 +28,8 @@ use Tuleap\SVN\AccessControl\AccessFileHistory;
 use Tuleap\SVN\Admin\ImmutableTag;
 use Tuleap\SVN\Admin\MailNotification;
 use Tuleap\SVN\Repository\HookConfig;
+use Tuleap\SVN\Repository\Settings\Settings;
 use Tuleap\SVNCore\Repository;
-use Tuleap\SVN\Repository\Settings;
 
 class SettingsRetriever
 {

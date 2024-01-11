@@ -35,6 +35,7 @@ use Tuleap\SVN\Events\SystemEvent_SVN_IMPORT_CORE_REPOSITORY;
 use Tuleap\SVN\Repository\Exception\CannotCreateRepositoryException;
 use Tuleap\SVN\Repository\Exception\RepositoryNameIsInvalidException;
 use Tuleap\SVN\Repository\Exception\UserIsNotSVNAdministratorException;
+use Tuleap\SVN\Repository\Settings\Settings;
 use Tuleap\SVN\SvnPermissionManager;
 use Tuleap\SVNCore\Repository;
 

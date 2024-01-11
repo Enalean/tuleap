@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\SVN\Repository;
+namespace Tuleap\SVN\Repository\Settings;
 
 use ProjectUGroup;
 use Tuleap\NeverThrow\Err;

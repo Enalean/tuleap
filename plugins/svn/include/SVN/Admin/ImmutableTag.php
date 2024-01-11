@@ -24,6 +24,9 @@ namespace Tuleap\SVN\Admin;
 
 use Tuleap\SVNCore\Repository;
 
+/**
+ * @psalm-immutable
+ */
 class ImmutableTag
 {
     public function __construct(
