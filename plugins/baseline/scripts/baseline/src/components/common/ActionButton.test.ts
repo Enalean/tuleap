@@ -20,7 +20,7 @@
 
 import type { Wrapper } from "@vue/test-utils";
 import { mount } from "@vue/test-utils";
-import localVue from "../../support/local-vue";
+import { createLocalVueForTests } from "../../support/local-vue";
 import ActionButton from "./ActionButton.vue";
 
 describe("ActionButton", () => {
@@ -28,9 +28,9 @@ describe("ActionButton", () => {
     const button_selector = '[data-test-type="button"]';
     let wrapper: Wrapper<Vue>;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         wrapper = mount(ActionButton, {
-            localVue,
+            localVue: await createLocalVueForTests(),
             propsData: {
                 icon: "delete",
             },

@@ -19,17 +19,16 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../support/local-vue.ts";
+import { createLocalVueForTests } from "../../../support/local-vue.ts";
 import ComparisonContent from "./ComparisonContent.vue";
 import { createStoreMock } from "../../../support/store-wrapper.test-helper";
 import store_options from "../../../store/store_options";
 import ArtifactsListComparison from "./ArtifactsListComparison.vue";
 
 describe("ComparisonContent", () => {
-    let $store;
-    let wrapper;
+    let $store, wrapper;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         $store = createStoreMock(
             {
                 ...store_options,
@@ -50,7 +49,7 @@ describe("ComparisonContent", () => {
         );
 
         wrapper = shallowMount(ComparisonContent, {
-            localVue,
+            localVue: await createLocalVueForTests(),
             mocks: { $store },
         });
     });

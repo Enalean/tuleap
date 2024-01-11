@@ -50,9 +50,6 @@ dependencies:
   vue-dompurify-html:
     specifier: ^4.0.0
     version: 4.0.0(vue@2.7.8)
-  vue-gettext:
-    specifier: ^2.1.12
-    version: 2.1.12
   vue-router:
     specifier: ^3.5.3
     version: 3.5.3(vue@2.7.8)
@@ -374,11 +371,6 @@ packages:
       vue-demi: 0.13.11(vue@2.7.8)
     transitivePeerDependencies:
       - '@vue/composition-api'
-    dev: false
-
-  /vue-gettext@2.1.12:
-    resolution: {integrity: sha512-7Kw36xtKvARp8ZafQGPK9WR6EM+dhFUikR5f0+etSkiHuvUM3yf1HsRDLYoLLdJ0AMaXxKwgekumzvCk6KX8rA==}
-    engines: {npm: '>= 3.0.0'}
     dev: false
 
   /vue-router@3.5.3(vue@2.7.8):

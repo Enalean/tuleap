@@ -19,7 +19,7 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../support/local-vue.ts";
+import { createLocalVueForTests } from "../../support/local-vue.ts";
 import TransientComparisonLabel from "./TransientComparisonLabel.vue";
 import { createStoreMock } from "../../support/store-wrapper.test-helper";
 import store_options from "../../store/store_options";
@@ -27,10 +27,9 @@ import SaveComparisonModal from "./SaveComparisonModal.vue";
 
 describe("TransientComparisonLabel", () => {
     const save_comparison_selector = '[data-test-action="save-comparison"]';
-    let $store;
-    let wrapper;
+    let $store, wrapper;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         $store = createStoreMock(store_options);
 
         wrapper = shallowMount(TransientComparisonLabel, {
@@ -38,7 +37,7 @@ describe("TransientComparisonLabel", () => {
                 base_baseline_id: 1,
                 compared_to_baseline_id: 2,
             },
-            localVue,
+            localVue: await createLocalVueForTests(),
             mocks: { $store },
         });
     });

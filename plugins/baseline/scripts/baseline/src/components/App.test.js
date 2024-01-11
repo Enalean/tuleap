@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import VueRouter from "vue-router";
-import localVue from "../support/local-vue.ts";
+import { createLocalVueForTests } from "../support/local-vue.ts";
 import App from "./App.vue";
 import { createStoreMock } from "../support/store-wrapper.test-helper";
 import store_options from "../store/store_options";
@@ -28,12 +28,12 @@ import NotificationAlert from "./NotificationAlert.vue";
 describe("App", () => {
     let $store, wrapper;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         $store = createStoreMock(store_options);
         const router = new VueRouter();
 
         wrapper = shallowMount(App, {
-            localVue,
+            localVue: await createLocalVueForTests(),
             router,
             mocks: {
                 $store,

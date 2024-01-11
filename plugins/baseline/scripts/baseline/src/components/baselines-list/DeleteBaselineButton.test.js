@@ -19,7 +19,7 @@
  */
 
 import { mount } from "@vue/test-utils";
-import localVue from "../../support/local-vue.ts";
+import { createLocalVueForTests } from "../../support/local-vue.ts";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import DeleteBaselineButton from "./DeleteBaselineButton.vue";
 import ActionButton from "../common/ActionButton.vue";
@@ -28,7 +28,7 @@ describe("DeleteBaselineButton", () => {
     const baseline = { id: 1 };
     let store;
 
-    function createWrapper(comparisons) {
+    async function createWrapper(comparisons) {
         store = createStoreMock({
             state: {
                 comparisons,
@@ -37,7 +37,7 @@ describe("DeleteBaselineButton", () => {
         });
 
         return mount(DeleteBaselineButton, {
-            localVue,
+            localVue: await createLocalVueForTests(),
             mocks: {
                 $store: store,
             },
@@ -48,8 +48,8 @@ describe("DeleteBaselineButton", () => {
         });
     }
 
-    it("should display delete button as disabled while comparisons are loading", () => {
-        const wrapper = createWrapper({ is_loading: true, comparisons: [] });
+    it("should display delete button as disabled while comparisons are loading", async () => {
+        const wrapper = await createWrapper({ is_loading: true, comparisons: [] });
 
         expect(wrapper.findComponent(ActionButton).props("disabled")).toBe(true);
     });
@@ -59,8 +59,8 @@ describe("DeleteBaselineButton", () => {
         [[{ base_baseline_id: 2, compared_to_baseline_id: 1 }]],
     ])(
         "should display delete button as disabled if baseline is part of a comparison %s",
-        (comparisons) => {
-            const wrapper = createWrapper({
+        async (comparisons) => {
+            const wrapper = await createWrapper({
                 is_loading: false,
                 comparisons,
             });
@@ -71,8 +71,8 @@ describe("DeleteBaselineButton", () => {
 
     it.each([[[]], [[{ base_baseline_id: 2, compared_to_baseline_id: 3 }]]])(
         "should display delete button as enabled if baseline is not part of comparison %s",
-        (comparisons) => {
-            const wrapper = createWrapper({
+        async (comparisons) => {
+            const wrapper = await createWrapper({
                 is_loading: false,
                 comparisons,
             });
@@ -82,7 +82,7 @@ describe("DeleteBaselineButton", () => {
     );
 
     it("shows modal on click", async () => {
-        const wrapper = createWrapper({
+        const wrapper = await createWrapper({
             is_loading: false,
             comparisons: [],
         });

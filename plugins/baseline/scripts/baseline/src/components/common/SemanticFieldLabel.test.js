@@ -19,7 +19,7 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../support/local-vue.ts";
+import { createLocalVueForTests } from "../../support/local-vue.ts";
 import { createStoreMock } from "../../support/store-wrapper.test-helper.js";
 import SemanticFieldLabel from "./SemanticFieldLabel.vue";
 import store_options from "../../store/store_options";
@@ -28,7 +28,7 @@ describe("SemanticFieldLabel", () => {
     let $store;
     let wrapper;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         $store = createStoreMock({
             ...store_options,
             getters: {
@@ -41,7 +41,7 @@ describe("SemanticFieldLabel", () => {
                 semantic: "description",
                 tracker_id: 1,
             },
-            localVue,
+            localVue: await createLocalVueForTests(),
             mocks: {
                 $store,
             },

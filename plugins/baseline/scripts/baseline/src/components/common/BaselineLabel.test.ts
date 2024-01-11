@@ -19,14 +19,14 @@
  */
 
 import { mount } from "@vue/test-utils";
-import localVue from "../../support/local-vue";
+import { createLocalVueForTests } from "../../support/local-vue";
 import BaselineLabel from "./BaselineLabel.vue";
 import DateFormatter from "../../support/date-utils";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Baseline, User } from "../../type";
 
 describe("BaselineLabel", () => {
-    it("shows baseline information", () => {
+    it("shows baseline information", async () => {
         DateFormatter.setOptions({
             user_locale: "en_EN",
             user_timezone: "Europe/London",
@@ -44,7 +44,7 @@ describe("BaselineLabel", () => {
                     author_id: 9,
                 } as Baseline,
             },
-            localVue,
+            localVue: await createLocalVueForTests(),
             mocks: {
                 $store: createStoreMock({
                     state: {

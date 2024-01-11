@@ -19,15 +19,15 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../support/local-vue.ts";
+import { createLocalVueForTests } from "../../support/local-vue.ts";
 import ArtifactField from "./ArtifactField.vue";
 
 describe("Field", () => {
     let wrapper;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         wrapper = shallowMount(ArtifactField, {
-            localVue,
+            localVue: await createLocalVueForTests(),
             propsData: { semantic: "description", tracker_id: 1, value: "My description" },
         });
     });

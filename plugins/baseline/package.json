@@ -21,7 +21,6 @@
     "sprintf-js": "^1.1.2",
     "vue": "^2.7.8",
     "vue-dompurify-html": "^4.0.0",
-    "vue-gettext": "^2.1.12",
     "vue-router": "^3.5.3",
     "vuex": "^3.6.2",
     "vuex-composition-helpers": "^1.2.0"

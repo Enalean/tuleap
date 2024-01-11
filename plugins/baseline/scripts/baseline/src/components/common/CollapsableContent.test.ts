@@ -20,7 +20,7 @@
 
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../support/local-vue";
+import { createLocalVueForTests } from "../../support/local-vue";
 import CollapsableContent from "./CollapsableContent.vue";
 
 describe("CollapsableContent", () => {
@@ -29,9 +29,9 @@ describe("CollapsableContent", () => {
 
     let wrapper: Wrapper<Vue>;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         wrapper = shallowMount(CollapsableContent, {
-            localVue,
+            localVue: await createLocalVueForTests(),
             slots: {
                 default: '<div data-test-type="default-slot">Default slot</div>',
                 header: '<div data-test-type="header-slot">Header slot</div>',

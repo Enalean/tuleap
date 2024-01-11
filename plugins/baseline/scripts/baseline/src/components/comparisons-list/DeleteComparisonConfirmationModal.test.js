@@ -18,23 +18,18 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../support/local-vue.ts";
+import { createLocalVueForTests } from "../../support/local-vue.ts";
 import { createStoreMock } from "../../support/store-wrapper.test-helper.js";
 import store_options from "../../store/store_options";
 import DeleteComparisonConfirmationModal from "./DeleteComparisonConfirmationModal.vue";
 import * as rest_querier from "../../api/rest-querier";
 
 describe("DeleteComparisonConfirmationModal", () => {
-    let deleteComparison;
-    let deleteComparisonResolve;
-    let deleteComparisonReject;
-
+    let deleteComparison, deleteComparisonResolve, deleteComparisonReject;
     const comparison = { id: 1 };
+    let $store, wrapper;
 
-    let $store;
-    let wrapper;
-
-    beforeEach(() => {
+    beforeEach(async () => {
         deleteComparison = jest.spyOn(rest_querier, "deleteComparison").mockReturnValue(
             new Promise((resolve, reject) => {
                 deleteComparisonResolve = resolve;
@@ -62,7 +57,7 @@ describe("DeleteComparisonConfirmationModal", () => {
                     author_id: 3,
                 },
             },
-            localVue,
+            localVue: await createLocalVueForTests(),
             mocks: {
                 $store,
             },

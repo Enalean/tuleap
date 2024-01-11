@@ -19,15 +19,15 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../support/local-vue.ts";
+import { createLocalVueForTests } from "../../../support/local-vue.ts";
 import FieldComparison from "./FieldComparison.vue";
 
 describe("FieldComparison", () => {
     let wrapper;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         wrapper = shallowMount(FieldComparison, {
-            localVue,
+            localVue: await createLocalVueForTests(),
             propsData: {
                 semantic: "description",
                 tracker_id: 1,

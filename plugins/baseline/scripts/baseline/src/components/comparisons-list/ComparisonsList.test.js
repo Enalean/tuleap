@@ -19,7 +19,7 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../support/local-vue.ts";
+import { createLocalVueForTests } from "../../support/local-vue.ts";
 import ComparisonsList from "./ComparisonsList.vue";
 import ComparisonSkeleton from "./ComparisonSkeleton.vue";
 import ComparisonItem from "./ComparisonItem.vue";
@@ -28,10 +28,9 @@ import store_options from "../../store/store_options";
 
 describe("ComparisonsList", () => {
     const empty_comparison_selector = '[data-test-type="empty-comparison"]';
-    let $store;
-    let wrapper;
+    let $store, wrapper;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         $store = createStoreMock({
             ...store_options,
             getters: {
@@ -43,7 +42,7 @@ describe("ComparisonsList", () => {
             propsData: {
                 project_id: 102,
             },
-            localVue,
+            localVue: await createLocalVueForTests(),
             mocks: { $store },
         });
     });

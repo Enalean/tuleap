@@ -19,23 +19,19 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../support/local-vue.ts";
+import { createLocalVueForTests } from "../../support/local-vue.ts";
 import { createStoreMock } from "../../support/store-wrapper.test-helper.js";
 import store_options from "../../store/store_options";
 import DeleteBaselineConfirmationModal from "./DeleteBaselineConfirmationModal.vue";
 import * as rest_querier from "../../api/rest-querier";
 
 describe("DeleteBaselineConfirmationModal", () => {
-    let deleteBaseline;
-    let deleteBaselineResolve;
-    let deleteBaselineReject;
+    let deleteBaseline, deleteBaselineResolve, deleteBaselineReject;
 
     const baseline = { id: 1, name: "Baseline" };
+    let $store, wrapper;
 
-    let $store;
-    let wrapper;
-
-    beforeEach(() => {
+    beforeEach(async () => {
         deleteBaseline = jest.spyOn(rest_querier, "deleteBaseline").mockReturnValue(
             new Promise((resolve, reject) => {
                 deleteBaselineResolve = resolve;
@@ -49,7 +45,7 @@ describe("DeleteBaselineConfirmationModal", () => {
             propsData: {
                 baseline,
             },
-            localVue,
+            localVue: await createLocalVueForTests(),
             mocks: {
                 $store,
             },

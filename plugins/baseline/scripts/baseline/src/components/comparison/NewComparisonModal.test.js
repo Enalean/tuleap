@@ -18,37 +18,33 @@
  *
  */
 
-import { createLocalVue, shallowMount } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
+import VueRouter from "vue-router";
 import NewComparisonModal from "./NewComparisonModal.vue";
-import GettextPlugin from "vue-gettext";
+import { createLocalVueForTests } from "../../support/local-vue.ts";
 
 describe("NewComparisonModal", () => {
-    let baseline_on_same_artifact;
+    let baseline_on_same_artifact, router, wrapper;
 
-    let $router;
-    let wrapper;
-
-    beforeEach(() => {
-        $router = { push: jest.fn() };
+    beforeEach(async () => {
+        router = new VueRouter({
+            mode: "abstract",
+            routes: [
+                { path: "/" },
+                { name: "TransientComparisonPage", path: "/path/to/comparison" },
+            ],
+        });
 
         const baseline = { id: 1, artifact_id: 10 };
         const baseline_on_other_artifact = { id: 2, artifact_id: 11 };
         baseline_on_same_artifact = { id: 3, artifact_id: 10 };
 
-        const localVue = createLocalVue();
-        localVue.use(GettextPlugin, {
-            translations: {},
-            silent: true,
-        });
-
         wrapper = shallowMount(NewComparisonModal, {
             propsData: {
                 baselines: [baseline, baseline_on_other_artifact, baseline_on_same_artifact],
             },
-            localVue,
-            mocks: {
-                $router,
-            },
+            localVue: await createLocalVueForTests(),
+            router,
         });
     });
 
@@ -105,7 +101,7 @@ describe("NewComparisonModal", () => {
                     beforeEach(() => wrapper.get("form").trigger("submit.prevent"));
 
                     it("navigates to comparison page", () => {
-                        expect($router.push).toHaveBeenCalledWith(expect.any(Object));
+                        expect(router.currentRoute.name).toBe("TransientComparisonPage");
                     });
                 });
             });

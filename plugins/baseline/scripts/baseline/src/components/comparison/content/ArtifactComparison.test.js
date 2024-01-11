@@ -19,18 +19,16 @@
 
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "../../../support/store-wrapper.test-helper";
-import localVue from "../../../support/local-vue";
+import { createLocalVueForTests } from "../../../support/local-vue";
 import ArtifactComparison from "./ArtifactComparison.vue";
 import ArtifactsListComparison from "./ArtifactsListComparison.vue";
 import DepthLimitReachedMessage from "../../common/DepthLimitReachedMessage.vue";
 import store_options from "../../../store/store_options";
 
 describe("ArtifactComparison", () => {
-    let wrapper;
-    let $store;
-    let linked_artifact;
+    let wrapper, $store, linked_artifact;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         $store = createStoreMock({
             ...store_options,
             getters: {
@@ -44,7 +42,7 @@ describe("ArtifactComparison", () => {
         linked_artifact = { id: 2 };
 
         wrapper = shallowMount(ArtifactComparison, {
-            localVue,
+            localVue: await createLocalVueForTests(),
             propsData: {
                 base: {
                     id: 1,

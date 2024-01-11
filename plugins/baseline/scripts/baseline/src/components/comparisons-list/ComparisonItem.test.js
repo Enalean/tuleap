@@ -18,19 +18,15 @@
  *
  */
 
-import { createLocalVue, shallowMount } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import ComparisonItem from "./ComparisonItem.vue";
 import { createStoreMock } from "../../support/store-wrapper.test-helper";
 import store_options from "../../store/store_options";
 import ArtifactLink from "../common/ArtifactLink.vue";
-import GettextPlugin from "vue-gettext";
+import { createLocalVueForTests } from "../../support/local-vue.ts";
 
 describe("Comparison", () => {
-    let $store;
-    let $router;
-    let localVue;
-
-    let wrapper;
+    let $store, wrapper;
 
     const base_baseline_artifact = {
         id: 1,
@@ -41,22 +37,15 @@ describe("Comparison", () => {
 
     beforeEach(() => {
         $store = createStoreMock(store_options);
-        $router = { push: jest.fn() };
         $store.getters = {
             findBaselineById: jest.fn(),
             findArtifactById: jest.fn(),
             findTrackerById: jest.fn(),
             findUserById: jest.fn(),
         };
-
-        localVue = createLocalVue();
-        localVue.use(GettextPlugin, {
-            translations: {},
-            silent: true,
-        });
     });
 
-    beforeEach(() => {
+    beforeEach(async () => {
         $store.getters.findBaselineById.mockImplementation((id) => {
             if (id === 11) {
                 return { artifact_id: 22 };
@@ -88,8 +77,8 @@ describe("Comparison", () => {
                     compared_to_baseline_id: 12,
                 },
             },
-            localVue,
-            mocks: { $store, $router },
+            localVue: await createLocalVueForTests(),
+            mocks: { $store },
         });
     });
 
