@@ -26,7 +26,7 @@ use Tuleap\PullRequest\Criterion\AuthorCriterion;
 use Tuleap\PullRequest\Criterion\SearchCriteria;
 use Tuleap\PullRequest\GitReference\GitPullRequestReference;
 
-class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginatedPullRequests
+class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginatedPullRequests, SearchPaginatedPullRequestsAuthors
 {
     /**
      * @psalm-return array{
@@ -316,5 +316,31 @@ class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginated
                 WHERE pr.repository_id = ?';
 
         $this->getDB()->run($sql, $repository_id);
+    }
+
+    public function getPaginatedPullRequestsAuthorsIds(int $repository_id, int $limit, int $offset): PullRequestsAuthorsIdsPage
+    {
+        return $this->getDB()->tryFlatTransaction(
+            function () use ($repository_id, $limit, $offset) {
+                $sql_total_authors = "
+                    SELECT COUNT(DISTINCT user_id)
+                    FROM plugin_pullrequest_review
+                    WHERE (repository_id = ? OR repo_dest_id = ?)
+                ";
+
+                $sql = "
+                    SELECT DISTINCT user_id
+                    FROM plugin_pullrequest_review
+                    WHERE (repository_id = ? OR repo_dest_id = ?)
+                    LIMIT ?
+                    OFFSET ?
+                ";
+
+                $total_authors = $this->getDB()->single($sql_total_authors, [$repository_id, $repository_id]);
+                $authors_ids   = $this->getDB()->column($sql, [$repository_id, $repository_id, $limit, $offset]);
+
+                return new PullRequestsAuthorsIdsPage($total_authors, $authors_ids);
+            }
+        );
     }
 }
