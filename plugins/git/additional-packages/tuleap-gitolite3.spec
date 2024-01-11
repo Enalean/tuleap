@@ -24,7 +24,7 @@ AutoReqProv: no
 Provides:       perl(%{original_name}) = %{gitolite_version}-%{release}
 Requires:       tuleap-git-bin
 Requires:       openssh-clients
-Requires:       /usr/bin/perl, perl-JSON, perl(FindBin), perl(lib), findutils
+Requires:       /usr/bin/perl, perl-JSON, perl(FindBin), perl(lib), findutils, perl-Data-Dumper
 # tlp-nix: tuleap-gitolite3 replaces gitolite3
 Obsoletes:      gitolite3
 Provides:       %{original_name} = %{gitolite_version}
