@@ -232,7 +232,7 @@ class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginated
     {
         $statement = EasyStatement::open();
 
-        $search_criteria->getStatusCriterion()->apply(function ($status_criterion) use ($statement) {
+        $search_criteria->status->apply(function ($status_criterion) use ($statement) {
             if ($status_criterion->shouldOnlyRetrieveOpenPullRequests()) {
                 $statement->andIn('status IN (?*)', [PullRequest::STATUS_REVIEW]);
             }

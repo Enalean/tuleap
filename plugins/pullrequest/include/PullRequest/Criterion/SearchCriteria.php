@@ -32,18 +32,10 @@ final class SearchCriteria
     /**
      * @var Option<StatusCriterion>
      */
-    private Option $status;
+    public readonly Option $status;
 
     public function __construct(?StatusCriterion $status = null)
     {
         $this->status = Option::fromNullable($status);
-    }
-
-    /**
-     * @return Option<StatusCriterion>
-     */
-    public function getStatusCriterion(): Option
-    {
-        return $this->status;
     }
 }
