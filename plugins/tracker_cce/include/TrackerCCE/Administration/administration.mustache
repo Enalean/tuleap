@@ -1,14 +1,28 @@
 <div class="tlp-framed">
     <section class="tlp-pane">
-        <div class="tlp-pane-container">
+        <form method="post" action="{{ post_url }}" enctype="multipart/form-data" class="tlp-pane-container">
             <div class="tlp-pane-header">
                 <h1 class="tlp-pane-title">
                     {{# dgettext }}tuleap-tracker_cce | Automated custom code execution{{/ dgettext }}
                 </h1>
             </div>
             <section class="tlp-pane-section">
-                <p>Not yet implemented</p>
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="wasm-module">
+                        {{# dgettext }}tuleap-tracker_cce | WebAssembly module{{/ dgettext }}
+                    </label>
+                    <input type="file" id="wasm-module" name="wasm-module">
+                </div>
             </section>
-        </div>
+            <section class="tlp-pane-section tlp-pane-section-submit">
+                {{# csrf }}
+                    {{> csrf_token_input }}
+                {{/ csrf }}
+                <button type="submit" class="tlp-button-primary">
+                    <i class="fa-solid fa-upload tlp-button-icon" aria-hidden="true"></i>
+                    {{# dgettext }}tuleap-tracker_cce | Upload module{{/ dgettext }}
+                </button>
+            </section>
+        </form>
     </section>
 </div>

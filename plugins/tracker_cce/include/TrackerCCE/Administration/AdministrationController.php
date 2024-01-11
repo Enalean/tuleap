@@ -24,6 +24,7 @@ namespace Tuleap\TrackerCCE\Administration;
 
 use HTTPRequest;
 use Project;
+use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
@@ -37,6 +38,7 @@ final class AdministrationController implements DispatchableWithRequest, Dispatc
         private readonly RetrieveTracker $retrieve_tracker,
         private readonly \Tracker_IDisplayTrackerLayout $tracker_layout,
         private readonly \TemplateRendererFactory $renderer_factory,
+        private readonly TrackerCSRFTokenProvider $token_provider,
     ) {
     }
 
@@ -56,9 +58,20 @@ final class AdministrationController implements DispatchableWithRequest, Dispatc
         );
 
         $renderer = $this->renderer_factory->getRenderer(__DIR__);
-        $renderer->renderToPage('administration', []);
+        $renderer->renderToPage(
+            'administration',
+            new AdministrationPresenter(
+                UpdateModuleController::getUrl($tracker),
+                CSRFSynchronizerTokenPresenter::fromToken($this->token_provider->getToken($tracker)),
+            )
+        );
 
         $tracker->displayFooter($this->tracker_layout);
+    }
+
+    public static function getUrl(\Tracker $tracker): string
+    {
+        return '/tracker_cce/' . urlencode((string) $tracker->getId()) . '/admin';
     }
 
     public function getProject(array $variables): Project

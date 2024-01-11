@@ -20,12 +20,26 @@
 
 declare(strict_types=1);
 
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Instrument\Prometheus\Prometheus;
+use Tuleap\Layout\Feedback\FeedbackSerializer;
 use Tuleap\Mapper\ValinorMapperBuilderFactory;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\TrackerCCE\Administration\ActiveTrackerRetrieverMiddleware;
+use Tuleap\TrackerCCE\Administration\AdministrationController;
+use Tuleap\TrackerCCE\Administration\CheckTrackerCSRFMiddleware;
+use Tuleap\TrackerCCE\Administration\RejectNonTrackerAdministratorMiddleware;
+use Tuleap\TrackerCCE\Administration\UpdateModuleCSRFTokenProvider;
+use Tuleap\TrackerCCE\Administration\UpdateModuleController;
+use Tuleap\TrackerCCE\CustomCodeExecutionTask;
+use Tuleap\TrackerCCE\WASM\CallWASMModule;
+use Tuleap\TrackerCCE\WASM\FindWASMModulePath;
+use Tuleap\TrackerCCE\WASM\ProcessWASMResponse;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\CachingTrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentInformationRetriever;
@@ -36,11 +50,6 @@ use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
 use Tuleap\Tracker\Webhook\ArtifactPayloadBuilder;
 use Tuleap\Tracker\Workflow\WorkflowMenuItem;
 use Tuleap\Tracker\Workflow\WorkflowMenuItemCollection;
-use Tuleap\TrackerCCE\Administration\AdministrationController;
-use Tuleap\TrackerCCE\CustomCodeExecutionTask;
-use Tuleap\TrackerCCE\WASM\CallWASMModule;
-use Tuleap\TrackerCCE\WASM\FindWASMModulePath;
-use Tuleap\TrackerCCE\WASM\ProcessWASMResponse;
 use Tuleap\WebAssembly\FFIWASMCaller;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -113,10 +122,27 @@ final class tracker_ccePlugin extends Plugin
     public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->get('/tracker_cce/{id:\d+}/admin', $this->getRouteHandler('routeTrackerAdministration'));
+        $event->getRouteCollector()->post('/tracker_cce/{id:\d+}/admin', $this->getRouteHandler('routePostTrackerAdministration'));
     }
 
     public function routeTrackerAdministration(): DispatchableWithRequest
     {
-        return new AdministrationController(TrackerFactory::instance(), new TrackerManager(), TemplateRendererFactory::build());
+        return new AdministrationController(TrackerFactory::instance(), new TrackerManager(), TemplateRendererFactory::build(), new UpdateModuleCSRFTokenProvider());
+    }
+
+    public function routePostTrackerAdministration(): DispatchableWithRequest
+    {
+        return new UpdateModuleController(
+            new RedirectWithFeedbackFactory(
+                HTTPFactoryBuilder::responseFactory(),
+                new FeedbackSerializer(new FeedbackDao()),
+            ),
+            BackendLogger::getDefaultLogger(),
+            new FindWASMModulePath(),
+            new SapiEmitter(),
+            new ActiveTrackerRetrieverMiddleware(TrackerFactory::instance()),
+            new RejectNonTrackerAdministratorMiddleware(UserManager::instance()),
+            new CheckTrackerCSRFMiddleware(new UpdateModuleCSRFTokenProvider()),
+        );
     }
 }
