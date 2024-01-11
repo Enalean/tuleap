@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\PullRequest\Exception;
+declare(strict_types=1);
 
-use Exception;
+namespace Tuleap\PullRequest\GitReference;
 
-class MalformedQueryParameterException extends Exception
+use Tuleap\NeverThrow\Fault;
+
+/**
+ * @psalm-immutable
+ */
+final class GitPullRequestReferenceNotFoundFault extends Fault
 {
-    public function __construct()
+    public static function build(): Fault
     {
-        parent::__construct('Query is malformed. Expecting {"status":"open"} or {"status":"closed"}.');
+        return new self('No Git reference is reserved for this pull request');
     }
 }

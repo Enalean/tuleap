@@ -18,14 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\PullRequest\Reviewer;
+declare(strict_types=1);
 
-use Tuleap\PullRequest\PullRequest;
+namespace Tuleap\PullRequest\Criterion;
 
-interface RetrieveReviewers
+use Tuleap\Option\Option;
+
+/**
+ * @psalm-readonly
+ */
+final class SearchCriteria
 {
     /**
-     * @return \PFUser[]
+     * @var Option<StatusCriterion>
      */
-    public function getReviewers(PullRequest $pull_request): array;
+    private Option $status;
+
+    public function __construct(?StatusCriterion $status = null)
+    {
+        $this->status = Option::fromNullable($status);
+    }
+
+    /**
+     * @return Option<StatusCriterion>
+     */
+    public function getStatusCriterion(): Option
+    {
+        return $this->status;
+    }
 }

@@ -22,10 +22,10 @@ namespace Tuleap\PullRequest;
 
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
-use Tuleap\PullRequest\Criterion\ISearchOnStatus;
+use Tuleap\PullRequest\Criterion\SearchCriteria;
 use Tuleap\PullRequest\GitReference\GitPullRequestReference;
 
-class Dao extends DataAccessObject implements SearchPullRequest
+class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginatedPullRequests
 {
     /**
      * @psalm-return array{
@@ -184,13 +184,31 @@ class Dao extends DataAccessObject implements SearchPullRequest
         $this->getDB()->run($sql, $merge_status, $pull_request_id);
     }
 
+    /**
+     * @psalm-return array<array{
+     *     id:int,
+     *     title:string,
+     *     description:string,
+     *     repository_id:int,
+     *     user_id:int,
+     *     creation_date: int,
+     *     branch_src: string,
+     *     sha1_src: string,
+     *     repo_dest_id: int,
+     *     branch_dest: string,
+     *     sha1_dest: int,
+     *     status: string,
+     *     merge_status: int,
+     *     description_format: string
+     * }>
+     */
     public function getPaginatedPullRequests(
-        $repository_id,
-        ISearchOnStatus $criterion,
-        $limit,
-        $offset,
-    ) {
-        $where_status_statement = $this->getStatusStatements($criterion);
+        int $repository_id,
+        SearchCriteria $criteria,
+        int $limit,
+        int $offset,
+    ): array {
+        $where_status_statement = $this->getStatusStatements($criteria);
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS *
                 FROM plugin_pullrequest_review
@@ -210,21 +228,19 @@ class Dao extends DataAccessObject implements SearchPullRequest
     /**
      * @return EasyStatement
      */
-    private function getStatusStatements(ISearchOnStatus $criterion)
+    private function getStatusStatements(SearchCriteria $search_criteria)
     {
         $statement = EasyStatement::open();
 
-        if ($criterion->shouldRetrieveOpenPullRequests() && $criterion->shouldRetrieveClosedPullRequests()) {
-            return $statement;
-        }
+        $search_criteria->getStatusCriterion()->apply(function ($status_criterion) use ($statement) {
+            if ($status_criterion->shouldOnlyRetrieveOpenPullRequests()) {
+                $statement->andIn('status IN (?*)', [PullRequest::STATUS_REVIEW]);
+            }
 
-        if ($criterion->shouldRetrieveOpenPullRequests()) {
-            $statement->andIn('status IN (?*)', [PullRequest::STATUS_REVIEW]);
-        }
-
-        if ($criterion->shouldRetrieveClosedPullRequests()) {
-            $statement->andIn('status IN (?*)', [PullRequest::STATUS_ABANDONED, PullRequest::STATUS_MERGED]);
-        }
+            if ($status_criterion->shouldOnlyRetrieveClosedPullRequests()) {
+                $statement->andIn('status IN (?*)', [PullRequest::STATUS_ABANDONED, PullRequest::STATUS_MERGED]);
+            }
+        });
 
         return $statement;
     }

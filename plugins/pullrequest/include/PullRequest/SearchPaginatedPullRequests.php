@@ -18,14 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\PullRequest\Reviewer;
+namespace Tuleap\PullRequest;
 
-use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\Criterion\SearchCriteria;
 
-interface RetrieveReviewers
+interface SearchPaginatedPullRequests
 {
-    /**
-     * @return \PFUser[]
-     */
-    public function getReviewers(PullRequest $pull_request): array;
+    public function getPaginatedPullRequests(int $repository_id, SearchCriteria $criteria, int $limit, int $offset): array;
+
+    public function foundRows(): int;
 }

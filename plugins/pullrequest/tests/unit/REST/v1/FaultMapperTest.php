@@ -25,11 +25,12 @@ namespace Tuleap\PullRequest\REST\v1;
 use GitRepoNotFoundException;
 use Luracast\Restler\RestException;
 use Tuleap\NeverThrow\Fault;
-use Tuleap\PullRequest\Authorization\GitRepositoryNotFoundFault;
 use Tuleap\PullRequest\Authorization\CannotAccessToPullRequestFault;
+use Tuleap\PullRequest\Authorization\GitRepositoryNotFoundFault;
 use Tuleap\PullRequest\Comment\CommentFormatNotAllowedFault;
 use Tuleap\PullRequest\Comment\CommentIsNotFromCurrentUserFault;
 use Tuleap\PullRequest\Comment\CommentNotFoundFault;
+use Tuleap\PullRequest\Criterion\MalformedQueryFault;
 use Tuleap\PullRequest\InlineComment\InlineCommentNotFoundFault;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -43,6 +44,7 @@ final class FaultMapperTest extends TestCase
         yield 'Cannot edit comment which is not in Markdown' => [CommentFormatNotAllowedFault::withGivenFormat("hehe"), 403];
         yield 'Inline comment not found' => [InlineCommentNotFoundFault::fromCommentId(785), 404];
         yield 'Source Git Repository not found' => [GitRepositoryNotFoundFault::fromRepositoryId(982), 404];
+        yield 'Malformed query parameter' => [MalformedQueryFault::build(), 400];
     }
 
     /**

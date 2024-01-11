@@ -21,16 +21,11 @@
 namespace Tuleap\PullRequest\REST\v1;
 
 use GitRepository;
-use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
+use Tuleap\Git\Gitolite\GenerateGitoliteAccessURL;
 use Tuleap\Project\REST\ProjectReference;
 
 class GitRepositoryReference extends \Tuleap\Git\REST\v1\GitRepositoryReference
 {
-    /**
-     * @var GitoliteAccessURLGenerator
-     */
-    private $gitolite_access_URL_generator;
-
     /** @var string */
     public $name;
     /** @var ProjectReference */
@@ -44,9 +39,8 @@ class GitRepositoryReference extends \Tuleap\Git\REST\v1\GitRepositoryReference
      */
     public $clone_ssh_url;
 
-    public function __construct(GitoliteAccessURLGenerator $gitolite_access_URL_generator)
+    public function __construct(private readonly GenerateGitoliteAccessURL $gitolite_access_URL_generator)
     {
-        $this->gitolite_access_URL_generator = $gitolite_access_URL_generator;
     }
 
     public function build(GitRepository $repository)

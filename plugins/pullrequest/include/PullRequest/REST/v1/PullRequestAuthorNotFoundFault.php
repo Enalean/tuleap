@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,17 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\PullRequest\Criterion;
+declare(strict_types=1);
 
-class StatusClosed implements ISearchOnStatus
+namespace Tuleap\PullRequest\PullRequest\REST\v1;
+
+use Tuleap\NeverThrow\Fault;
+use Tuleap\PullRequest\PullRequest;
+
+/**
+ * @psalm-immutable
+ */
+final class PullRequestAuthorNotFoundFault extends Fault
 {
-    public function shouldRetrieveOpenPullRequests()
+    public static function fromPullRequest(PullRequest $pull_request): Fault
     {
-        return false;
-    }
-
-    public function shouldRetrieveClosedPullRequests()
-    {
-        return true;
+        return new self(
+            sprintf(
+                'Could not find user #%d who created pull request #%d',
+                $pull_request->getUserId(),
+                $pull_request->getId()
+            )
+        );
     }
 }

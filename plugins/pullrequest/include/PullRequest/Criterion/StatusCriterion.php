@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,17 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\PullRequest\Criterion;
 
-class StatusAll implements ISearchOnStatus
+enum StatusCriterion: string implements SearchOnStatus
 {
-    public function shouldRetrieveOpenPullRequests()
+    public const KEY = "status";
+
+    case OPEN   = "open";
+    case CLOSED = "closed";
+
+    public function shouldOnlyRetrieveOpenPullRequests(): bool
     {
-        return true;
+        return $this === self::OPEN;
     }
 
-    public function shouldRetrieveClosedPullRequests()
+    public function shouldOnlyRetrieveClosedPullRequests(): bool
     {
-        return true;
+        return $this === self::CLOSED;
     }
 }

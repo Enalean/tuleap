@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\PullRequest\Reviewer;
+declare(strict_types=1);
 
-use Tuleap\PullRequest\PullRequest;
+namespace Tuleap\PullRequest\Criterion;
 
-interface RetrieveReviewers
+use Tuleap\NeverThrow\Fault;
+
+/**
+ * @psalm-immutable
+ */
+final class MalformedQueryFault extends Fault
 {
-    /**
-     * @return \PFUser[]
-     */
-    public function getReviewers(PullRequest $pull_request): array;
+    public static function build(): Fault
+    {
+        return new self('Query is malformed.');
+    }
 }

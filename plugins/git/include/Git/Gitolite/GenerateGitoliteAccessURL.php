@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,17 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\PullRequest\Criterion;
+namespace Tuleap\Git\Gitolite;
 
-class StatusOpen implements ISearchOnStatus
+use GitRepository;
+
+interface GenerateGitoliteAccessURL
 {
-    public function shouldRetrieveOpenPullRequests()
-    {
-        return true;
-    }
+    public function getSSHURL(GitRepository $repository): string;
 
-    public function shouldRetrieveClosedPullRequests()
-    {
-        return false;
-    }
+    public function getHTTPURL(GitRepository $repository): string;
 }
