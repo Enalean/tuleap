@@ -66,10 +66,10 @@ final class TrackerFieldDaoTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItFindsFieldTypes(): void
     {
         $tracker_ids = [self::TRACKER_ID, self::OTHER_TRACKER_ID];
-        $rows        = $this->dao->searchTypeByFieldNameAndTrackerList(self::FIELD_NAME, $tracker_ids);
+        $types       = $this->dao->searchTypeByFieldNameAndTrackerList(self::FIELD_NAME, $tracker_ids);
 
-        self::assertCount(2, $rows);
-        self::assertSame('float', $rows[0]['type']);
-        self::assertSame('int', $rows[1]['type']);
+        self::assertCount(2, $types);
+        self::assertSame('float', $types[0]->unwrapOr(null)?->type);
+        self::assertSame('int', $types[1]->unwrapOr(null)?->type);
     }
 }

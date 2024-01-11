@@ -22,19 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field;
 
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
+use Tuleap\NeverThrow\Fault;
 
-final class FieldTypeIsNotSupportedException extends InvalidQueryException
+/**
+ * @psalm-immutable
+ */
+final class FieldTypesAreIncompatibleFault extends Fault
 {
-    public function __construct(string $field_name)
+    public static function build(string $field_name, array $tracker_ids): Fault
     {
-        parent::__construct(
+        return new self(
             sprintf(
                 dgettext(
                     'tuleap-crosstracker',
-                    "Field '%s' is not supported",
+                    "Field '%s' is present in trackers '%s' but their types cannot be compared. Please refine your query or check the configuration of the trackers.",
                 ),
-                $field_name
+                $field_name,
+                implode(',', $tracker_ids)
             )
         );
     }

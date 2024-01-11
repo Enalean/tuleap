@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,24 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field;
 
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
+use Tuleap\NeverThrow\Fault;
 
-final class FieldTypesAreIncompatibleException extends InvalidQueryException
+/**
+ * @psalm-immutable
+ */
+final class FieldTypeIsNotSupportedFault extends Fault
 {
-    /**
-     * @param int[] $tracker_ids
-     */
-    public function __construct(string $field_name, array $tracker_ids)
+    public static function build(): Fault
     {
-        parent::__construct(
-            sprintf(
-                dgettext(
-                    'tuleap-crosstracker',
-                    "Field '%s' is present in trackers '%s' but their types cannot be compared. Please refine your query or check the configuration of the trackers.",
-                ),
-                $field_name,
-                implode(',', $tracker_ids)
-            )
-        );
+        return new self('Field type is not supported');
     }
 }
