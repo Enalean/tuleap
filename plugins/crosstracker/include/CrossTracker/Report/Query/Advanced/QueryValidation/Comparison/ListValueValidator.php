@@ -21,23 +21,15 @@
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison;
 
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringChecker;
-use UserManager;
+use Tuleap\User\RetrieveUserByUserName;
 
 final class ListValueValidator
 {
-    /** @var EmptyStringChecker */
-    private $empty_string_checker;
-
-    /** @var UserManager */
-    private $user_manager;
-
-    public function __construct(EmptyStringChecker $empty_string_checker, UserManager $user_manager)
+    public function __construct(private readonly EmptyStringChecker $empty_string_checker, private readonly RetrieveUserByUserName $retrieve_user_by_user_name)
     {
-        $this->empty_string_checker = $empty_string_checker;
-        $this->user_manager         = $user_manager;
     }
 
-    public function checkValueIsValid($value)
+    public function checkValueIsValid($value): void
     {
         if ($this->empty_string_checker->isEmptyStringAProblem($value)) {
             throw new ListToEmptyStringException();
@@ -45,7 +37,7 @@ final class ListValueValidator
             return;
         }
 
-        $user = $this->user_manager->getUserByUserName($value);
+        $user = $this->retrieve_user_by_user_name->getUserByUserName($value);
         if ($user === null) {
             throw new NonExistentListValueException($value);
         }

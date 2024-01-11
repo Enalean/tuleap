@@ -22,16 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field;
 
-use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorParameters;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorParameters;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ComparisonChecker;
+use Tuleap\CrossTracker\Tests\Builders\InvalidSearchableCollectorParametersBuilder;
 use Tuleap\CrossTracker\Tests\Stub\SearchFieldTypesStub;
-use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class FieldUsageCheckerTest extends TestCase
 {
@@ -39,15 +34,7 @@ final class FieldUsageCheckerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->visitor_parameters = new InvalidSearchableCollectorParameters(
-            new InvalidComparisonCollectorParameters(
-                new InvalidSearchablesCollection(),
-                [TrackerTestBuilder::aTracker()->withId(10)->build()],
-                UserTestBuilder::aUser()->build(),
-            ),
-            $this->createMock(ComparisonChecker::class),
-            $this->createMock(Comparison::class),
-        );
+        $this->visitor_parameters = InvalidSearchableCollectorParametersBuilder::aParameter()->build();
     }
 
     public function testCheckWhenAllFieldsAreIntOrFloat(): void
