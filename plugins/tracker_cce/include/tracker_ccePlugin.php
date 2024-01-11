@@ -24,6 +24,8 @@ use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Mapper\ValinorMapperBuilderFactory;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Plugin\ListeningToEventClass;
+use Tuleap\Plugin\MandatoryAsyncWorkerSetupPluginInstallRequirement;
+use Tuleap\Queue\WorkerAvailability;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\CachingTrackerPrivateCommentInformationRetriever;
@@ -54,6 +56,11 @@ final class tracker_ccePlugin extends Plugin
         parent::__construct($id);
         $this->setScope(self::SCOPE_SYSTEM);
         bindtextdomain('tuleap-tracker_cce', __DIR__ . '/../site-content');
+    }
+
+    public function getInstallRequirements(): array
+    {
+        return [new MandatoryAsyncWorkerSetupPluginInstallRequirement(new WorkerAvailability())];
     }
 
     public function getPluginInfo(): Tuleap\TrackerCCE\Plugin\PluginInfo
