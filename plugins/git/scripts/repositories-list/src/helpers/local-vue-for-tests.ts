@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,13 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { defineJestConfiguration } from "@tuleap/build-system-configurator";
-import { env } from "node:process";
+import type Vue from "vue";
+import { createLocalVue } from "@vue/test-utils";
+import Vuex from "vuex";
+import VueDOMPurifyHTML from "vue-dompurify-html";
+import { initVueGettext } from "@tuleap/vue2-gettext-init";
 
-env.DISABLE_TS_TYPECHECK = "true";
-
-const jest_base_config = defineJestConfiguration();
-export default {
-    ...jest_base_config,
-    displayName: "git-repositories-list",
+export const createLocalVueForTests = async (): Promise<typeof Vue> => {
+    const local_vue = createLocalVue();
+    local_vue.use(Vuex);
+    local_vue.use(VueDOMPurifyHTML);
+    await initVueGettext(local_vue, () => {
+        throw new Error("Fallback to default");
+    });
+    return local_vue;
 };

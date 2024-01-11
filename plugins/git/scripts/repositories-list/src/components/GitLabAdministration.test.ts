@@ -18,28 +18,20 @@
  *
  */
 
-import { createLocalVue, shallowMount } from "@vue/test-utils";
 import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import GitLabAdministration from "./GitLabAdministration.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import VueDOMPurifyHTML from "vue-dompurify-html";
-import GetTextPlugin from "vue-gettext";
-import type { Repository } from "../type";
 import type { Store } from "@tuleap/vuex-store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import type { Repository } from "../type";
+import { createLocalVueForTests } from "../helpers/local-vue-for-tests";
 
 jest.mock("tlp");
 
 describe("GitLabAdministration", () => {
-    let repository: Repository;
-    let store: Store;
-    function instantiateComponent(): Wrapper<GitLabAdministration> {
-        const localVue = createLocalVue();
-        localVue.use(VueDOMPurifyHTML);
-        localVue.use(GetTextPlugin, {
-            translations: {},
-            silent: true,
-        });
+    let repository: Repository, store: Store;
 
+    async function instantiateComponent(): Promise<Wrapper<GitLabAdministration>> {
         repository = {
             id: 1,
             normalized_path: "MyPath/MyRepo",
@@ -65,12 +57,12 @@ describe("GitLabAdministration", () => {
         return shallowMount(GitLabAdministration, {
             propsData,
             mocks: { $store: store },
-            localVue,
+            localVue: await createLocalVueForTests(),
         });
     }
 
-    it("When user is git admin but repository comes from Gitlab, Then admin icon is displayed", () => {
-        const wrapper = instantiateComponent();
+    it("When user is git admin but repository comes from Gitlab, Then admin icon is displayed", async () => {
+        const wrapper = await instantiateComponent();
 
         expect(wrapper.find("[data-test=git-repository-card-admin-link]").exists()).toBeFalsy();
         expect(
@@ -84,7 +76,7 @@ describe("GitLabAdministration", () => {
     });
 
     it("When repository is GitLab and user clicks to unlink, Then modal opens", async () => {
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
 
         wrapper.find("[data-test=unlink-gitlab-repository-1]").trigger("click");
 
@@ -97,7 +89,7 @@ describe("GitLabAdministration", () => {
     });
 
     it("When repository is GitLab and user clicks to edit token, Then modal opens", async () => {
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
 
         wrapper.find("[data-test=edit-access-token-gitlab-repository]").trigger("click");
 
@@ -110,7 +102,7 @@ describe("GitLabAdministration", () => {
     });
 
     it("When repository is GitLab and user clicks to regenerate webhook, Then modal opens", async () => {
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
 
         wrapper.find("[data-test=regenerate-webhook-gitlab-repository]").trigger("click");
 
@@ -123,7 +115,7 @@ describe("GitLabAdministration", () => {
     });
 
     it("When repository is GitLab and user clicks to update the allowing artifact closure value, Then modal opens", async () => {
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
 
         wrapper.find("[data-test=artifact-closure-gitlab-repository]").trigger("click");
 

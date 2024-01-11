@@ -17,20 +17,18 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
+import type { Store } from "@tuleap/vuex-store-wrapper-jest";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Wrapper } from "@vue/test-utils";
-import { createLocalVue, shallowMount } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import ConfirmReplaceTokenModal from "./ConfirmReplaceTokenModal.vue";
-import VueDOMPurifyHTML from "vue-dompurify-html";
-import GetTextPlugin from "vue-gettext";
-import type { Store } from "@tuleap/vuex-store-wrapper-jest";
 import * as gitlab_error_handler from "../../../gitlab/gitlab-error-handler";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
+import { createLocalVueForTests } from "../../../helpers/local-vue-for-tests";
 
 describe("ConfirmReplaceTokenModal", () => {
     let store_options = {},
         propsData = {},
-        localVue,
         store: Store;
 
     beforeEach(() => {
@@ -40,20 +38,13 @@ describe("ConfirmReplaceTokenModal", () => {
         };
     });
 
-    function instantiateComponent(): Wrapper<ConfirmReplaceTokenModal> {
-        localVue = createLocalVue();
-        localVue.use(VueDOMPurifyHTML);
-        localVue.use(GetTextPlugin, {
-            translations: {},
-            silent: true,
-        });
-
+    async function instantiateComponent(): Promise<Wrapper<ConfirmReplaceTokenModal>> {
         store = createStoreMock(store_options);
 
         return shallowMount(ConfirmReplaceTokenModal, {
             propsData,
             mocks: { $store: store },
-            localVue,
+            localVue: await createLocalVueForTests(),
         });
     }
 
@@ -70,7 +61,7 @@ describe("ConfirmReplaceTokenModal", () => {
             gitlab_new_token: "AZRERT123",
         };
 
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
         expect(wrapper.find("[data-test=icon-spin]").exists()).toBeFalsy();
 
         wrapper.find("[data-test=button-confirm-edit-token-gitlab]").trigger("click");
@@ -106,7 +97,7 @@ describe("ConfirmReplaceTokenModal", () => {
             gitlab_new_token: "AZRERT123",
         };
 
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
 
         wrapper.setData({
             message_error_rest: "Error message",
@@ -134,7 +125,7 @@ describe("ConfirmReplaceTokenModal", () => {
             gitlab_new_token: "AZRERT123",
         };
 
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
 
         wrapper.setData({
             message_error_rest: "Error message",
@@ -160,7 +151,7 @@ describe("ConfirmReplaceTokenModal", () => {
             gitlab_new_token: "AZRERT123",
         };
 
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
 
         jest.spyOn(store, "dispatch").mockRejectedValue(
             new FetchWrapperError("Not found", {
@@ -195,7 +186,7 @@ describe("ConfirmReplaceTokenModal", () => {
             gitlab_new_token: "AZRERT123",
         };
 
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
 
         wrapper.find("[data-test=button-gitlab-edit-token-back]").trigger("click");
         await wrapper.vm.$nextTick();

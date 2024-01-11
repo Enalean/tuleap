@@ -17,19 +17,17 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
+import type { Store } from "@tuleap/vuex-store-wrapper-jest";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Wrapper } from "@vue/test-utils";
-import { createLocalVue, shallowMount } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import GitlabRepositoryModal from "./GitlabRepositoryModal.vue";
 import ListRepositoriesModal from "./ListRepositoriesModal.vue";
 import CredentialsFormModal from "./CredentialsFormModal.vue";
-import type { Store } from "@tuleap/vuex-store-wrapper-jest";
-import VueDOMPurifyHTML from "vue-dompurify-html";
-import GetTextPlugin from "vue-gettext";
+import { createLocalVueForTests } from "../../../helpers/local-vue-for-tests";
 
 describe("GitlabRepositoryModal", () => {
     let store_options = {},
-        localVue,
         store: Store;
 
     beforeEach(() => {
@@ -39,23 +37,16 @@ describe("GitlabRepositoryModal", () => {
         };
     });
 
-    function instantiateComponent(): Wrapper<GitlabRepositoryModal> {
-        localVue = createLocalVue();
-        localVue.use(VueDOMPurifyHTML);
-        localVue.use(GetTextPlugin, {
-            translations: {},
-            silent: true,
-        });
-
+    async function instantiateComponent(): Promise<Wrapper<GitlabRepositoryModal>> {
         store = createStoreMock(store_options);
         return shallowMount(GitlabRepositoryModal, {
             mocks: { $store: store },
-            localVue,
+            localVue: await createLocalVueForTests(),
         });
     }
 
     it("When a user displays the modal ,then the CredentialsFormModal is displayed", async () => {
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
 
         wrapper.setData({
             gitlab_projects: null,
@@ -69,7 +60,7 @@ describe("GitlabRepositoryModal", () => {
     });
 
     it("When user have clicked on back button, Then CredentialsFormModal is displayed", async () => {
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
 
         wrapper.setData({
             gitlab_projects: [{ id: 10 }],
@@ -83,7 +74,7 @@ describe("GitlabRepositoryModal", () => {
     });
 
     it("When repositories have been retrieved, Then ListRepositoriesModal is displayed", async () => {
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
 
         wrapper.setData({
             gitlab_projects: [{ id: 10 }],
@@ -96,7 +87,7 @@ describe("GitlabRepositoryModal", () => {
     });
 
     it("When ListRepositoriesModal emit to-back-button, Then CredentialsFormModal is displayed", async () => {
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
 
         wrapper.setData({
             gitlab_projects: [{ id: 10 }],
@@ -114,7 +105,7 @@ describe("GitlabRepositoryModal", () => {
     });
 
     it("When CredentialsFormModal emit on-get-gitlab-repositories with repositories, Then ListRepositoriesModal is displayed", async () => {
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
 
         expect(wrapper.findComponent(ListRepositoriesModal).exists()).toBeFalsy();
         expect(wrapper.findComponent(CredentialsFormModal).exists()).toBeTruthy();
@@ -134,7 +125,7 @@ describe("GitlabRepositoryModal", () => {
     });
 
     it("When ListRepositoriesModal emits on-success-close-modal, Then success message is displayed", async () => {
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
 
         wrapper.setData({
             gitlab_projects: [
@@ -163,7 +154,7 @@ describe("GitlabRepositoryModal", () => {
     });
 
     it("When CredentialsFormModal emits on-close-modal, Then form and list of repositories are reset", async () => {
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
 
         wrapper.setData({
             gitlab_projects: null,
@@ -193,7 +184,7 @@ describe("GitlabRepositoryModal", () => {
     });
 
     it("When ListRepositoriesModal emits on-close-modal, Then form and list of repositories are reset", async () => {
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
 
         wrapper.setData({
             gitlab_projects: null,

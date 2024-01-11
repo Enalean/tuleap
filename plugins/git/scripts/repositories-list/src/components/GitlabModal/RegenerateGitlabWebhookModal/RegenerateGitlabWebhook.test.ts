@@ -17,20 +17,18 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
+import type { Store } from "@tuleap/vuex-store-wrapper-jest";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Wrapper } from "@vue/test-utils";
-import { createLocalVue, shallowMount } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import RegenerateGitlabWebhook from "./RegenerateGitlabWebhook.vue";
-import VueDOMPurifyHTML from "vue-dompurify-html";
-import GetTextPlugin from "vue-gettext";
-import type { Store } from "@tuleap/vuex-store-wrapper-jest";
 import type { GitLabData, Repository } from "../../../type";
 import * as gitlab_error_handler from "../../../gitlab/gitlab-error-handler";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
+import { createLocalVueForTests } from "../../../helpers/local-vue-for-tests";
 
 describe("RegenerateGitlabWebhook", () => {
     let store_options = {},
-        localVue,
         store: Store;
 
     beforeEach(() => {
@@ -40,24 +38,17 @@ describe("RegenerateGitlabWebhook", () => {
         };
     });
 
-    function instantiateComponent(): Wrapper<RegenerateGitlabWebhook> {
-        localVue = createLocalVue();
-        localVue.use(VueDOMPurifyHTML);
-        localVue.use(GetTextPlugin, {
-            translations: {},
-            silent: true,
-        });
-
+    async function instantiateComponent(): Promise<Wrapper<RegenerateGitlabWebhook>> {
         store = createStoreMock(store_options);
 
         return shallowMount(RegenerateGitlabWebhook, {
             mocks: { $store: store },
-            localVue,
+            localVue: await createLocalVueForTests(),
         });
     }
 
     it("When the user confirms new token, Then api is called", async () => {
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
         expect(wrapper.find("[data-test=icon-spin]").exists()).toBeFalsy();
 
         wrapper.setData({
@@ -85,7 +76,7 @@ describe("RegenerateGitlabWebhook", () => {
     });
 
     it("When user submit but there are errors, Then nothing happens", async () => {
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
 
         wrapper.setData({
             message_error_rest: "Error message",
@@ -107,7 +98,7 @@ describe("RegenerateGitlabWebhook", () => {
     });
 
     it("When api throws an error, Then error message is displayed", async () => {
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
 
         wrapper.setData({
             repository: {
@@ -146,7 +137,7 @@ describe("RegenerateGitlabWebhook", () => {
     });
 
     it("When user cancel, Then data are reset", async () => {
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
         wrapper.setData({
             repository: {
                 gitlab_data: {

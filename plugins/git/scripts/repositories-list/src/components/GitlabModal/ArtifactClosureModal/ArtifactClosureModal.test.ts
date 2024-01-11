@@ -19,26 +19,18 @@
  */
 
 import type { Wrapper } from "@vue/test-utils";
-import { createLocalVue, shallowMount } from "@vue/test-utils";
-import VueDOMPurifyHTML from "vue-dompurify-html";
-import GetTextPlugin from "vue-gettext";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { shallowMount } from "@vue/test-utils";
 import type { Store } from "@tuleap/vuex-store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import ArtifactClosureModal from "./ArtifactClosureModal.vue";
 import * as gitlab_error_handler from "../../../gitlab/gitlab-error-handler";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
+import { createLocalVueForTests } from "../../../helpers/local-vue-for-tests";
 
 describe("ArtifactClosureModal", () => {
-    let localVue, store: Store;
+    let store: Store;
 
-    function instantiateComponent(): Wrapper<ArtifactClosureModal> {
-        localVue = createLocalVue();
-        localVue.use(VueDOMPurifyHTML);
-        localVue.use(GetTextPlugin, {
-            translations: {},
-            silent: true,
-        });
-
+    async function instantiateComponent(): Promise<Wrapper<ArtifactClosureModal>> {
         store = createStoreMock(
             {},
             {
@@ -51,13 +43,13 @@ describe("ArtifactClosureModal", () => {
         return shallowMount(ArtifactClosureModal, {
             propsData: {},
             mocks: { $store: store },
-            localVue,
+            localVue: await createLocalVueForTests(),
         });
     }
 
     describe("The feedback display", () => {
         it("shows the error feedback if there is any REST error", async () => {
-            const wrapper = instantiateComponent();
+            const wrapper = await instantiateComponent();
 
             wrapper.setData({ message_error_rest: "error" });
             await wrapper.vm.$nextTick();
@@ -66,7 +58,7 @@ describe("ArtifactClosureModal", () => {
         });
 
         it("does not show the error feedback if there is no REST error", async () => {
-            const wrapper = instantiateComponent();
+            const wrapper = await instantiateComponent();
 
             wrapper.setData({ message_error_rest: "" });
             await wrapper.vm.$nextTick();
@@ -77,7 +69,7 @@ describe("ArtifactClosureModal", () => {
 
     describe("The 'Save' button display", () => {
         it("disables the button and displays the spinner during the Gitlab integration", async () => {
-            const wrapper = instantiateComponent();
+            const wrapper = await instantiateComponent();
 
             wrapper.setData({ is_updating_gitlab_repository: true, message_error_rest: "" });
             await wrapper.vm.$nextTick();
@@ -96,7 +88,7 @@ describe("ArtifactClosureModal", () => {
         });
 
         it("disables the button but does NOT display the spinner if the update failed", async () => {
-            const wrapper = instantiateComponent();
+            const wrapper = await instantiateComponent();
 
             wrapper.setData({ is_updating_gitlab_repository: false, message_error_rest: "error" });
             await wrapper.vm.$nextTick();
@@ -115,7 +107,7 @@ describe("ArtifactClosureModal", () => {
         });
 
         it("let enabled the button when everything are ok and there when is no update", async () => {
-            const wrapper = instantiateComponent();
+            const wrapper = await instantiateComponent();
 
             wrapper.setData({ is_updating_gitlab_repository: false, message_error_rest: "" });
             await wrapper.vm.$nextTick();
@@ -141,7 +133,7 @@ describe("ArtifactClosureModal", () => {
         ])(
             "updates and returns the '%s' artifact closure message",
             async (expected_keyword_message: string, allow_artifact_closure: boolean) => {
-                const wrapper = instantiateComponent();
+                const wrapper = await instantiateComponent();
 
                 await wrapper.vm.$nextTick();
 
@@ -161,7 +153,7 @@ describe("ArtifactClosureModal", () => {
         );
 
         it("set the message error and display this error in the console if there is error during the update", async () => {
-            const wrapper = instantiateComponent();
+            const wrapper = await instantiateComponent();
 
             wrapper.setData({
                 allow_artifact_closure: true,

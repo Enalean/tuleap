@@ -18,11 +18,11 @@
  *
  */
 
-import { createLocalVue, shallowMount } from "@vue/test-utils";
 import type { Wrapper } from "@vue/test-utils";
-import GetTextPlugin from "vue-gettext";
+import { shallowMount } from "@vue/test-utils";
 import FilterEmptyState from "./FilterEmptyState.vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { createLocalVueForTests } from "../helpers/local-vue-for-tests";
 
 interface StoreOption {
     getters?: {
@@ -34,22 +34,17 @@ interface StoreOption {
 }
 
 describe("FilterEmptyState", () => {
-    let localVue;
-    function instantiateComponent(store_options: StoreOption): Wrapper<FilterEmptyState> {
-        localVue = createLocalVue();
-        localVue.use(GetTextPlugin, {
-            translations: {},
-            silent: true,
-        });
-
+    async function instantiateComponent(
+        store_options: StoreOption,
+    ): Promise<Wrapper<FilterEmptyState>> {
         const store = createStoreMock(store_options);
         return shallowMount(FilterEmptyState, {
             mocks: { $store: store },
-            localVue,
+            localVue: await createLocalVueForTests(),
         });
     }
 
-    it("does not display empty state when we are not filtering", () => {
+    it("does not display empty state when we are not filtering", async () => {
         const store_options = {
             getters: {
                 isThereAResultInCurrentFilteredList: false,
@@ -59,11 +54,11 @@ describe("FilterEmptyState", () => {
             },
         };
 
-        const wrapper = instantiateComponent(store_options);
+        const wrapper = await instantiateComponent(store_options);
         expect(wrapper.find("[data-test=empty-state]").exists()).toBeFalsy();
     });
 
-    it("does not display empty state when initial load is ko", () => {
+    it("does not display empty state when initial load is ko", async () => {
         const store_options = {
             getters: {
                 isThereAResultInCurrentFilteredList: false,
@@ -73,11 +68,11 @@ describe("FilterEmptyState", () => {
             },
         };
 
-        const wrapper = instantiateComponent(store_options);
+        const wrapper = await instantiateComponent(store_options);
         expect(wrapper.find("[data-test=empty-state]").exists()).toBeFalsy();
     });
 
-    it("does not display empty state when current repository list is empty", () => {
+    it("does not display empty state when current repository list is empty", async () => {
         const store_options = {
             getters: {
                 isThereAResultInCurrentFilteredList: false,
@@ -87,11 +82,11 @@ describe("FilterEmptyState", () => {
             },
         };
 
-        const wrapper = instantiateComponent(store_options);
+        const wrapper = await instantiateComponent(store_options);
         expect(wrapper.find("[data-test=empty-state]").exists()).toBeFalsy();
     });
 
-    it("does not display empty state when there are no results in list", () => {
+    it("does not display empty state when there are no results in list", async () => {
         const store_options = {
             getters: {
                 isThereAResultInCurrentFilteredList: false,
@@ -101,11 +96,11 @@ describe("FilterEmptyState", () => {
             },
         };
 
-        const wrapper = instantiateComponent(store_options);
+        const wrapper = await instantiateComponent(store_options);
         expect(wrapper.find("[data-test=empty-state]").exists()).toBeFalsy();
     });
 
-    it("does display empty state when there are results in list", () => {
+    it("does display empty state when there are results in list", async () => {
         const store_options = {
             getters: {
                 isThereAResultInCurrentFilteredList: true,
@@ -115,7 +110,7 @@ describe("FilterEmptyState", () => {
             },
         };
 
-        const wrapper = instantiateComponent(store_options);
+        const wrapper = await instantiateComponent(store_options);
         expect(wrapper.find("[data-test=empty-state]").exists()).toBeFalsy();
     });
 });

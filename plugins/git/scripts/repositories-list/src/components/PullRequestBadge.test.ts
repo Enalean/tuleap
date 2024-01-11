@@ -18,22 +18,14 @@
  *
  */
 
-import { createLocalVue, shallowMount } from "@vue/test-utils";
-import VueDOMPurifyHTML from "vue-dompurify-html";
-import GetTextPlugin from "vue-gettext";
+import { shallowMount } from "@vue/test-utils";
 import PullRequestBadge from "./PullRequestBadge.vue";
+import { createLocalVueForTests } from "../helpers/local-vue-for-tests";
 
 describe("PullRequestBadge", () => {
-    it("displays a badge with pull request", () => {
-        const localVue = createLocalVue();
-        localVue.use(VueDOMPurifyHTML);
-        localVue.use(GetTextPlugin, {
-            translations: {},
-            silent: true,
-        });
-
+    it("displays a badge with pull request", async () => {
         const wrapper = shallowMount(PullRequestBadge, {
-            localVue,
+            localVue: await createLocalVueForTests(),
             propsData: {
                 numberPullRequest: 1,
                 repositoryId: 100,

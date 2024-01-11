@@ -19,26 +19,18 @@
  */
 
 import type { Wrapper } from "@vue/test-utils";
-import { createLocalVue, shallowMount } from "@vue/test-utils";
-import VueDOMPurifyHTML from "vue-dompurify-html";
-import GetTextPlugin from "vue-gettext";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { shallowMount } from "@vue/test-utils";
 import type { Store } from "@tuleap/vuex-store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import CreateBranchPrefixModal from "./CreateBranchPrefixModal.vue";
 import * as gitlab_error_handler from "../../../gitlab/gitlab-error-handler";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
+import { createLocalVueForTests } from "../../../helpers/local-vue-for-tests";
 
 describe("CreateBranchPrefixModal", () => {
-    let localVue, store: Store;
+    let store: Store;
 
-    function instantiateComponent(): Wrapper<CreateBranchPrefixModal> {
-        localVue = createLocalVue();
-        localVue.use(VueDOMPurifyHTML);
-        localVue.use(GetTextPlugin, {
-            translations: {},
-            silent: true,
-        });
-
+    async function instantiateComponent(): Promise<Wrapper<CreateBranchPrefixModal>> {
         store = createStoreMock(
             {},
             {
@@ -56,13 +48,13 @@ describe("CreateBranchPrefixModal", () => {
         return shallowMount(CreateBranchPrefixModal, {
             propsData: {},
             mocks: { $store: store },
-            localVue,
+            localVue: await createLocalVueForTests(),
         });
     }
 
     describe("The feedback display", () => {
         it("shows the error feedback if there is any REST error", async () => {
-            const wrapper = instantiateComponent();
+            const wrapper = await instantiateComponent();
 
             wrapper.setData({ message_error_rest: "error" });
             await wrapper.vm.$nextTick();
@@ -71,7 +63,7 @@ describe("CreateBranchPrefixModal", () => {
         });
 
         it("does not show the error feedback if there is no REST error", async () => {
-            const wrapper = instantiateComponent();
+            const wrapper = await instantiateComponent();
 
             wrapper.setData({ message_error_rest: "" });
             await wrapper.vm.$nextTick();
@@ -82,7 +74,7 @@ describe("CreateBranchPrefixModal", () => {
 
     describe("The 'Save' button display", () => {
         it("disables the button and displays the spinner during the Gitlab integration", async () => {
-            const wrapper = instantiateComponent();
+            const wrapper = await instantiateComponent();
 
             wrapper.setData({ is_updating_gitlab_repository: true, message_error_rest: "" });
             await wrapper.vm.$nextTick();
@@ -100,7 +92,7 @@ describe("CreateBranchPrefixModal", () => {
         });
 
         it("disables the button but does NOT display the spinner if the update failed", async () => {
-            const wrapper = instantiateComponent();
+            const wrapper = await instantiateComponent();
 
             wrapper.setData({ is_updating_gitlab_repository: false, message_error_rest: "error" });
             await wrapper.vm.$nextTick();
@@ -118,7 +110,7 @@ describe("CreateBranchPrefixModal", () => {
         });
 
         it("let enabled the button when everything are ok and there when is no update", async () => {
-            const wrapper = instantiateComponent();
+            const wrapper = await instantiateComponent();
 
             wrapper.setData({ is_updating_gitlab_repository: false, message_error_rest: "" });
             await wrapper.vm.$nextTick();
@@ -138,7 +130,7 @@ describe("CreateBranchPrefixModal", () => {
 
     describe("updateCreateBranchPrefix", () => {
         it("set the message error and display this error in the console if there is error during the update", async () => {
-            const wrapper = instantiateComponent();
+            const wrapper = await instantiateComponent();
 
             wrapper.setData({
                 create_branch_prefix: "dev-",
