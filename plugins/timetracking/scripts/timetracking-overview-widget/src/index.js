@@ -20,7 +20,7 @@
 import Vue from "vue";
 import { createStore } from "./store/index.js";
 import TimeTrackingOverview from "./components/TimeTrackingOverview.vue";
-import { getPOFileFromLocale, initVueGettextFromPoGettextPlugin } from "@tuleap/vue2-gettext-init";
+import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const widgets = document.querySelectorAll(".timetracking-overview-widget");
@@ -28,10 +28,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (widgets.length === 0) {
         return;
     }
-    await initVueGettextFromPoGettextPlugin(
-        Vue,
-        (locale) => import(`../po/${getPOFileFromLocale(locale)}`),
-    );
+    await initVueGettext(Vue, (locale) => import(`../po/${getPOFileFromLocale(locale)}`));
     const Widget = Vue.extend(TimeTrackingOverview);
 
     const user_id = parseInt(document.body.dataset.userId, 10);

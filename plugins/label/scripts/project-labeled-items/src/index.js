@@ -20,10 +20,7 @@
 import "../themes/label.scss";
 import Vue from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
-import {
-    getPOFileFromLocaleWithoutExtension,
-    initVueGettextFromPoGettextPlugin,
-} from "@tuleap/vue2-gettext-init";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue2-gettext-init";
 import LabeledItemsList from "./LabeledItemsList.vue";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -35,7 +32,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         },
     });
 
-    await initVueGettextFromPoGettextPlugin(
+    await initVueGettext(
         Vue,
         (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );

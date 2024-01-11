@@ -20,7 +20,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import store_options from "./store/index.js";
-import { getPOFileFromLocale, initVueGettextFromPoGettextPlugin } from "@tuleap/vue2-gettext-init";
+import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import BaseTrackerWorkflowTransitions from "./components/BaseTrackerWorkflowTransitions.vue";
 import "./tracker-email-copy-paste-bp.js";
@@ -39,10 +39,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const used_services_names = JSON.parse(service_name_list);
 
     Vue.use(Vuex);
-    await initVueGettextFromPoGettextPlugin(
-        Vue,
-        (locale) => import("../po/" + getPOFileFromLocale(locale)),
-    );
+    await initVueGettext(Vue, (locale) => import("../po/" + getPOFileFromLocale(locale)));
     Vue.use(VueDOMPurifyHTML);
 
     const RootComponent = Vue.extend(BaseTrackerWorkflowTransitions);

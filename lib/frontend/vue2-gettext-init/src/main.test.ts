@@ -20,8 +20,8 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import Vue from "vue";
 import GettextPlugin from "vue-gettext";
-import type { POGettextPluginPOFile, VueGettextPOFile } from "./main";
-import { initVueGettext, initVueGettextFromPoGettextPlugin } from "./main";
+import type { POGettextPluginPOFile } from "./main";
+import { initVueGettext } from "./main";
 import type { VueConfiguration } from "vue/types/vue";
 
 vi.mock("vue", () => {
@@ -43,68 +43,10 @@ describe(`vue-gettext-init`, () => {
     });
 
     describe(`initVueGettext()`, () => {
-        let callback: () => PromiseLike<VueGettextPOFile>;
-
-        const init = async (): Promise<void> => {
-            await initVueGettext(Vue, callback);
-        };
-
-        describe(`when a locale is defined on the document's body`, () => {
-            beforeEach(() => {
-                document.body.dataset.userLocale = "fr_FR";
-                callback = (): PromiseLike<VueGettextPOFile> =>
-                    Promise.resolve({ messages: { "Hello world": "Bonjour monde" } });
-            });
-
-            it(`loads the translations and gives them to vue-gettext`, async () => {
-                await init();
-                expect(Vue.use).toHaveBeenCalledWith(
-                    GettextPlugin,
-                    expect.objectContaining({
-                        translations: { fr_FR: { "Hello world": "Bonjour monde" } },
-                    }),
-                );
-            });
-
-            it(`sets vue-gettext's language config to the document locale`, async () => {
-                await init();
-                expect(Vue.config.language).toBe("fr_FR");
-            });
-
-            it(`when it fails to load the translations,
-                it will give an empty translations object to vue-gettext`, async () => {
-                callback = (): PromiseLike<never> => Promise.reject("404 Not found");
-                await init();
-                expect(Vue.use).toHaveBeenCalledWith(
-                    GettextPlugin,
-                    expect.objectContaining({ translations: {} }),
-                );
-            });
-        });
-
-        describe(`when a locale is NOT defined on the document's body`, () => {
-            beforeEach(async () => {
-                callback = vi
-                    .fn()
-                    .mockImplementation(() => Promise.reject("Should not have been called"));
-                await init();
-            });
-            it(`does not try to load translations`, () => expect(callback).not.toHaveBeenCalled());
-            it(`does not set vue-gettext's language config`, () =>
-                expect(Vue.config.language).toBeUndefined());
-            it(`gives an empty translations object to vue-gettext`, () =>
-                expect(Vue.use).toHaveBeenCalledWith(
-                    GettextPlugin,
-                    expect.objectContaining({ translations: {} }),
-                ));
-        });
-    });
-
-    describe(`initVueGettextFromPoGettextPlugin()`, () => {
         let callback: () => PromiseLike<POGettextPluginPOFile>;
 
         const init = async (): Promise<void> => {
-            await initVueGettextFromPoGettextPlugin(Vue, callback);
+            await initVueGettext(Vue, callback);
         };
 
         describe(`when a locale is defined on the document's body`, () => {

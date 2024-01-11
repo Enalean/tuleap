@@ -21,10 +21,7 @@ import Vue from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import { createStore } from "./store";
 import App from "./components/App.vue";
-import {
-    initVueGettextFromPoGettextPlugin,
-    getPOFileFromLocaleWithoutExtension,
-} from "@tuleap/vue2-gettext-init";
+import { initVueGettext, getPOFileFromLocaleWithoutExtension } from "@tuleap/vue2-gettext-init";
 import type { ColumnDefinition, Tracker } from "./type";
 import Vuex from "vuex";
 import type { UserState } from "./store/user/type";
@@ -60,7 +57,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             ? JSON.parse(vue_mount_point.dataset.trackers)
             : [];
 
-    await initVueGettextFromPoGettextPlugin(
+    await initVueGettext(
         Vue,
         (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );

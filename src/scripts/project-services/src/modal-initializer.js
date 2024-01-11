@@ -19,14 +19,14 @@
 
 import { createModal } from "@tuleap/tlp-modal";
 import Vue from "vue";
-import { getPOFileFromLocale, initVueGettextFromPoGettextPlugin } from "@tuleap/vue2-gettext-init";
+import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
 import { sanitize } from "dompurify";
 import { sprintf } from "sprintf-js";
 import { escaper } from "@tuleap/html-escaper";
 import { gettext_provider } from "./helpers/gettext_provider.js";
 
 export async function setupModalButtons(addModalCallback, editModalCallback) {
-    await initVueGettextFromPoGettextPlugin(
+    await initVueGettext(
         Vue,
         (locale) =>
             import(/* webpackChunkName: "services-po-" */ `../po/${getPOFileFromLocale(locale)}`),

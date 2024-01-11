@@ -19,7 +19,7 @@
  */
 
 import Vue from "vue";
-import { getPOFileFromLocale, initVueGettextFromPoGettextPlugin } from "@tuleap/vue2-gettext-init";
+import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import router from "./router/index";
 import App from "./components/App.vue";
@@ -28,10 +28,7 @@ import DateUtils from "./support/date-utils";
 
 document.addEventListener("DOMContentLoaded", async () => {
     Vue.use(VueDOMPurifyHTML);
-    await initVueGettextFromPoGettextPlugin(
-        Vue,
-        (locale) => import(`../po/${getPOFileFromLocale(locale)}`),
-    );
+    await initVueGettext(Vue, (locale) => import(`../po/${getPOFileFromLocale(locale)}`));
 
     let user_locale = document.body.dataset.userLocale;
 

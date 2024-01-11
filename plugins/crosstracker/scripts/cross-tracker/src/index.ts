@@ -25,10 +25,7 @@ import ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-repo
 import WritingCrossTrackerReport from "./writing-mode/writing-cross-tracker-report";
 import BackendCrossTrackerReport from "./backend-cross-tracker-report";
 import CrossTrackerWidget from "./CrossTrackerWidget.vue";
-import {
-    getPOFileFromLocaleWithoutExtension,
-    initVueGettextFromPoGettextPlugin,
-} from "@tuleap/vue2-gettext-init";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue2-gettext-init";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const locale = document.body.dataset.userLocale;
@@ -43,7 +40,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
     const Widget = Vue.extend(CrossTrackerWidget);
 
-    await initVueGettextFromPoGettextPlugin(
+    await initVueGettext(
         Vue,
         (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );

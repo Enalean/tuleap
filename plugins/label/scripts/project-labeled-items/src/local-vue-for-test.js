@@ -18,12 +18,12 @@
  */
 
 import { createLocalVue } from "@vue/test-utils";
-import { initVueGettextFromPoGettextPlugin } from "@tuleap/vue2-gettext-init";
+import { initVueGettext } from "@tuleap/vue2-gettext-init";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 
 export async function createProjectLabeledItemsLocalVue() {
     const local_vue = createLocalVue();
-    await initVueGettextFromPoGettextPlugin(local_vue, () => {
+    await initVueGettext(local_vue, () => {
         throw new Error("Fallback to default");
     });
     local_vue.use(VueDOMPurifyHTML);

@@ -20,7 +20,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import App from "./components/App.vue";
-import { getPOFileFromLocale, initVueGettextFromPoGettextPlugin } from "@tuleap/vue2-gettext-init";
+import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
 import { createStore } from "./store";
 import type {
     CSRFToken,
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    await initVueGettextFromPoGettextPlugin(
+    await initVueGettext(
         Vue,
         (locale: string) =>
             import(
