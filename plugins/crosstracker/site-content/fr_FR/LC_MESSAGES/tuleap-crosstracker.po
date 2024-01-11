@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #, php-format
 msgid "%s cannot be compared to '%s'."
@@ -55,6 +55,19 @@ msgstr "Recherche multi trackers"
 
 msgid "Error while parsing the query"
 msgstr "Erreur pendant l'analyse de la requête"
+
+#, php-format
+msgid "Field '%s' is not supported"
+msgstr "Le champ '%s' n'est pas supporté"
+
+#, php-format
+msgid ""
+"Field '%s' is present in trackers '%s' but their types cannot be compared. "
+"Please refine your query or check the configuration of the trackers."
+msgstr ""
+"Le champ '%s' est présent dans les outils de suivi '%s' mais leurs types ne "
+"peuvent pas être comparés. Veuillez modifier votre requête ou vérifier la "
+"configuration des outils de suivi."
 
 msgid "Invalid value for 'limit'. It must be an integer"
 msgstr "La valeur pour 'limit' est incorrecte. 'limit' doit être un entier"

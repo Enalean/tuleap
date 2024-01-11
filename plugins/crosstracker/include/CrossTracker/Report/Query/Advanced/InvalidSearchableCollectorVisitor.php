@@ -20,7 +20,10 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field\FieldUsageChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
+use Tuleap\CrossTracker\SearchOnDuckTypedFieldsConfig;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SearchableVisitor;
@@ -30,11 +33,29 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SearchableVisitor;
  */
 final class InvalidSearchableCollectorVisitor implements SearchableVisitor
 {
+    public function __construct(
+        private readonly MetadataChecker $metadata_checker,
+        private readonly FieldUsageChecker $field_checker,
+    ) {
+    }
+
     public function visitField(Field $searchable_field, $parameters)
     {
-        $parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection()->addNonexistentSearchable(
-            $searchable_field->getName()
-        );
+        if (! SearchOnDuckTypedFieldsConfig::isSearchOnDuckTypedFieldsEnabled()) {
+            $parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection()->addNonexistentSearchable(
+                $searchable_field->getName()
+            );
+            return;
+        }
+
+        $invalid_searchables_collection = $parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection();
+        try {
+            $this->field_checker->checkFieldIsValid($searchable_field, $parameters);
+        } catch (InvalidQueryException $exception) {
+            $invalid_searchables_collection->addInvalidSearchableError(
+                $exception->getMessage()
+            );
+        }
     }
 
     public function visitMetadata(Metadata $metadata, $parameters)
@@ -49,7 +70,7 @@ final class InvalidSearchableCollectorVisitor implements SearchableVisitor
         }
 
         try {
-            $parameters->getMetadataChecker()->checkMetadataIsValid(
+            $this->metadata_checker->checkMetadataIsValid(
                 $metadata,
                 $parameters->getComparison(),
                 $parameters->getInvalidSearchablesCollectorParameters(),
