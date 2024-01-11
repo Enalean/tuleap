@@ -23,7 +23,6 @@ use Tuleap\SVNCore\AccessFileReader;
 use Tuleap\SVNCore\GetAllRepositories;
 use Tuleap\SVNCore\SVNAccessFile;
 use Tuleap\SVNCore\SvnAccessFileDefaultBlockGenerator;
-use Tuleap\SVNCore\SvnCoreUsage;
 use Tuleap\SVNCore\Exception\SVNRepositoryCreationException;
 use Tuleap\SVNCore\Exception\SVNRepositoryLayoutInitializationException;
 use Tuleap\SVNCore\Cache\ParameterDao;
@@ -38,10 +37,6 @@ class BackendSVN extends Backend
     public const POST_REVPROP_CHANGE_HOOK = 'post-revprop-change';
 
     protected $SVNApacheConfNeedUpdate;
-    /**
-     * @var SvnCoreUsage
-     */
-    private $svn_core_usage;
 
     /**
       * Protected for testing purpose
@@ -59,19 +54,6 @@ class BackendSVN extends Backend
     protected function getConfig($var)
     {
         return ForgeConfig::get($var);
-    }
-
-    public function updateHooksForProjectRepository(Project $project)
-    {
-        return $this->updateHooks(
-            $project,
-            $project->getSVNRootPath(),
-            $project->canChangeSVNLog(),
-            ForgeConfig::get('codendi_bin_prefix'),
-            'commit-email.pl',
-            "",
-            "codendi_svn_pre_commit.php"
-        );
     }
 
     /**
@@ -445,67 +427,6 @@ class BackendSVN extends Backend
     }
 
     /**
-     * Rewrite the .SVNAccessFile if removed
-     */
-    public function checkSVNAccessPresence($group_id): bool
-    {
-        $project = $this->getProjectManager()->getProject($group_id);
-        if (! $project) {
-            return false;
-        }
-
-        if (! $this->repositoryExists($project)) {
-            $this->log("Can't update SVN Access file: project SVN repo is missing: " . $project->getSVNRootPath(), Backend::LOG_ERROR);
-            return false;
-        }
-
-        $svnaccess_file = $project->getSVNRootPath() . "/.SVNAccessFile";
-
-        if (! is_file($svnaccess_file)) {
-            return $this->updateSVNAccess($group_id, $project->getSVNRootPath());
-        }
-        return true;
-    }
-
-    /**
-     * Update SVN access files into all projects that a given user belongs to
-     *
-     * It includes:
-     * + projects the user is member of
-     * + projects that have user groups that contains the user
-     *
-     * @param PFUser $user
-     *
-     * @return bool
-     */
-    public function updateSVNAccessForGivenMember($user)
-    {
-        $projects = $user->getAllProjects();
-        if (isset($projects)) {
-            foreach ($projects as $groupId) {
-                $project = $this->getProjectManager()->getProject($groupId);
-                $this->updateProjectSVNAccessFile($project);
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Update SVNAccessFile of a project
-     *
-     * @param Project $project The project to update
-     *
-     * @return bool
-     */
-    public function updateProjectSVNAccessFile(Project $project)
-    {
-        if ($this->repositoryExists($project)) {
-            return $this->updateSVNAccess($project->getID(), $project->getSVNRootPath());
-        }
-        return true;
-    }
-
-    /**
      * Force apache conf update
      *
      * @return void
@@ -616,49 +537,6 @@ class BackendSVN extends Backend
         return is_dir($svnroot) && $this->chmod($svnroot, $perms);
     }
 
-    /**
-     * Check ownership/mode/privacy of repository
-     *
-     * @param Project $project The project to work on
-     *
-     * @return bool true if success
-     */
-    public function checkSVNMode(Project $project)
-    {
-        $svnroot    = $project->getSVNRootPath();
-        $is_private = ! $project->isPublic();
-        if ($is_private) {
-            $perms = fileperms($svnroot);
-            // 'others' should have no right on the repository
-            if (($perms & 0x0004) || ($perms & 0x0002) || ($perms & 0x0001) || ($perms & 0x0200)) {
-                $this->log("Restoring privacy on SVN dir: $svnroot", Backend::LOG_WARNING);
-                $this->setSVNPrivacy($project, $is_private);
-            }
-        }
-        // Sometimes, there might be a bad ownership on file (e.g. chmod failed, maintenance done as root...)
-        $files_to_check    = ['db/current', 'hooks/' . self::PRE_COMMIT_HOOK, 'hooks/' . self::POST_COMMIT_HOOK, 'db/rep-cache.db'];
-        $need_owner_update = false;
-        foreach ($files_to_check as $file) {
-            // Get file stat
-            if (file_exists("$svnroot/$file")) {
-                $stat = stat("$svnroot/$file");
-                if (
-                    ($stat['uid'] != $this->getHTTPUserUID())
-                     || ($stat['gid'] != $this->getSvnFilesUnixGroupId($project))
-                ) {
-                    $need_owner_update = true;
-                }
-            }
-        }
-        if ($need_owner_update) {
-            $this->log("Restoring ownership on SVN dir: $svnroot", Backend::LOG_INFO);
-            $this->setUserAndGroup($project, $svnroot);
-            system("chmod g+rw " . escapeshellarg($svnroot));
-        }
-
-        return true;
-    }
-
     public function setUserAndGroup(Project $project, $svnroot)
     {
         $group                    = $this->getSvnFilesUnixGroupName($project);
@@ -671,11 +549,6 @@ class BackendSVN extends Backend
     private function getSvnFilesUnixGroupName(Project $project)
     {
         return $this->getUnixGroupNameForProject($project);
-    }
-
-    private function getSvnFilesUnixGroupId(Project $project)
-    {
-        return $this->getHTTPUserGID();
     }
 
     /**
@@ -784,30 +657,9 @@ class BackendSVN extends Backend
 
     public function systemCheck(Project $project): void
     {
-        if ($project->usesSVN() && $this->getSvnCoreUsage()->isManagedByCore($project)) {
-            if ($this->repositoryExists($project)) {
-                $this->checkSVNAccessPresence($project->getId());
-            }
-
-            $this->updateHooksForProjectRepository($project);
-
-            // Check ownership/mode/access rights
-            $this->checkSVNMode($project);
-        }
-
         // If no codendi_svnroot.conf file, force recreate.
         if (! is_file(ForgeConfig::get('svn_root_file'))) {
             $this->setSVNApacheConfNeedUpdate();
         }
-    }
-
-    private function getSvnCoreUsage(): SvnCoreUsage
-    {
-        if (! $this->svn_core_usage) {
-            $svn_core_usage = EventManager::instance()->dispatch(new SvnCoreUsage());
-            assert($svn_core_usage instanceof SvnCoreUsage);
-            $this->svn_core_usage = $svn_core_usage;
-        }
-        return $this->svn_core_usage;
     }
 }

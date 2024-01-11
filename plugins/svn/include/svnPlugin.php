@@ -141,7 +141,6 @@ use Tuleap\SVN\SiteAdmin\UpdateMaxFileSizeController;
 use Tuleap\SVN\SiteAdmin\UpdateTuleapPMParamsController;
 use Tuleap\SVN\SvnAdmin;
 use Tuleap\SVNCore\SvnCoreAccess;
-use Tuleap\SVNCore\SvnCoreUsage;
 use Tuleap\SVN\SvnPermissionManager;
 use Tuleap\SVN\SvnRouter;
 use Tuleap\SVN\Admin\UpdateMigrateFromCoreController;
@@ -1265,12 +1264,6 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         }
 
         $collector->setSvnCommits($commits);
-    }
-
-    #[ListeningToEventClass]
-    public function svnCoreUsageEvent(SvnCoreUsage $svn_core_usage): void
-    {
-        $this->getRepositoryManager()->svnCoreUsage($svn_core_usage);
     }
 
     #[ListeningToEventClass]

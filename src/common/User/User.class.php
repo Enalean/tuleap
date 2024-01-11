@@ -194,6 +194,11 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     private bool $is_first_timer;
 
     /**
+     * @var int[]|null
+     */
+    private ?array $all_projects = null;
+
+    /**
      * Constructor
      *
      * You should not create new User directly.
@@ -853,15 +858,22 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      *
      * @return Array of Integer
      */
-    public function getAllProjects()
+    public function getAllProjects(): array
     {
-        $projects = [];
-        $dar      = $this->getUGroupDao()->searchGroupByUserId($this->user_id);
-        foreach ($dar as $row) {
-            $projects[] = $row['group_id'];
+        if ($this->all_projects === null) {
+            $projects = [];
+            $dar      = $this->getUGroupDao()->searchGroupByUserId($this->user_id);
+            foreach ($dar as $row) {
+                $projects[] = $row['group_id'];
+            }
+            $this->all_projects = array_unique(array_merge($projects, $this->getProjects()));
         }
-        $projects = array_unique(array_merge($projects, $this->getProjects()));
-        return $projects;
+        return $this->all_projects;
+    }
+
+    public function setAllProjects(array $ids): void
+    {
+        $this->all_projects = $ids;
     }
 
     /**

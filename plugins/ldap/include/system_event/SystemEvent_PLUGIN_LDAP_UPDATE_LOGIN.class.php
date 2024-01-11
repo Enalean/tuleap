@@ -19,6 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\SVNCore\Event\UpdateProjectAccessFilesEvent;
+
 /**
  * Manage rename of LDAP users in the whole platform.
  *
@@ -79,12 +81,10 @@ class SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN extends SystemEvent
         }
 
         // Update SVNAccessFile of projects
-        $backendSVN = $this->getBackendSVN();
+        $event_manager = EventManager::instance();
         foreach ($project_ids as $project_id) {
             $project = $this->project_manager->getProject($project_id);
-            if ($project && $this->ldap_project_manager->hasSVNLDAPAuth((int) $project->getId())) {
-                $backendSVN->updateProjectSVNAccessFile($project);
-            }
+            $event_manager->dispatch(new UpdateProjectAccessFilesEvent($project));
         }
 
         $this->done();
@@ -110,15 +110,5 @@ class SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN extends SystemEvent
     protected function getUserManager()
     {
         return $this->user_manager;
-    }
-
-    /**
-     * Wrapper for BackendSVN
-     *
-     * @return BackendSVN
-     */
-    protected function getBackendSVN()
-    {
-        return $this->backend_svn;
     }
 }

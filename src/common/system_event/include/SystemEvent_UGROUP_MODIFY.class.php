@@ -101,11 +101,6 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent
         }
 
         if ($ugroup_name !== null && $ugroup_old_name !== null) {
-            if ($project->usesSVN()) {
-                $backend_svn = $this->getBackend('SVN');
-                assert($backend_svn instanceof BackendSVN);
-                $backend_svn->updateSVNAccess($project_id, $project->getSVNRootPath(), $ugroup_name, $ugroup_old_name);
-            }
             EventManager::instance()->processEvent(
                 Event::UGROUP_RENAME,
                 [

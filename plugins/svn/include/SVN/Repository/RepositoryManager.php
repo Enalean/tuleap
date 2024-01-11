@@ -39,7 +39,6 @@ use Tuleap\SVN\Events\SystemEvent_SVN_RESTORE_REPOSITORY;
 use Tuleap\SVN\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\SVN\SvnAdmin;
 use Tuleap\SVNCore\Repository;
-use Tuleap\SVNCore\SvnCoreUsage;
 
 class RepositoryManager
 {
@@ -466,16 +465,6 @@ class RepositoryManager
                 $row,
                 $this->project_manager->getProjectFromDbRow($row)
             );
-        }
-    }
-
-    /**
-     * @throws \DataAccessQueryException
-     */
-    public function svnCoreUsage(SvnCoreUsage $svn_core_usage): void
-    {
-        foreach ($this->dao->getCoreRepositories() as $project_id) {
-            $svn_core_usage->addProjectId($project_id);
         }
     }
 }

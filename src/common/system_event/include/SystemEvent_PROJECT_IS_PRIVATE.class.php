@@ -71,18 +71,6 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
 
         $this->cleanRestrictedUsersIfNecessary($project);
 
-        if ($project->usesSVN()) {
-            $backendSVN = Backend::instanceSVN();
-            if (! $backendSVN->setSVNPrivacy($project, $project_is_private)) {
-                $this->error("Could not set svn privacy for project $group_id");
-                return false;
-            }
-            if (! $backendSVN->updateSVNAccess($group_id, $project->getSVNRootPath())) {
-                $this->error("Could not update svn access file for project $group_id");
-                return false;
-            }
-        }
-
         $should_notify_project_members = (bool) ForgeConfig::get(
             ProjectVisibilityConfigManager::SEND_MAIL_ON_PROJECT_VISIBILITY_CHANGE
         );
