@@ -27,7 +27,7 @@ use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use Tuleap\Config\ConfigSet;
+use Tuleap\Config\ConfigUpdater;
 use Tuleap\Config\InvalidConfigKeyValueException;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\FullTextSearchMeilisearch\Server\IProvideCurrentKeyForLocalServer;
@@ -43,13 +43,13 @@ use Tuleap\Request\ForbiddenException;
 final class MeilisearchSaveAdminSettingsController extends DispatchablePSR15Compatible
 {
     public function __construct(
-        private IProvideCurrentKeyForLocalServer $local_meilisearch_server,
-        private CSRFSynchronizerToken $csrf_token,
-        private ConfigSet $config_set,
-        private MeilisearchServerURLValidator $server_url_validator,
-        private MeilisearchAPIKeyValidator $api_key_validator,
-        private MeilisearchIndexNameValidator $index_name_validator,
-        private RedirectWithFeedbackFactory $redirect_with_feedback_factory,
+        private readonly IProvideCurrentKeyForLocalServer $local_meilisearch_server,
+        private readonly CSRFSynchronizerToken $csrf_token,
+        private readonly ConfigUpdater $config_set,
+        private readonly MeilisearchServerURLValidator $server_url_validator,
+        private readonly MeilisearchAPIKeyValidator $api_key_validator,
+        private readonly MeilisearchIndexNameValidator $index_name_validator,
+        private readonly RedirectWithFeedbackFactory $redirect_with_feedback_factory,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
     ) {

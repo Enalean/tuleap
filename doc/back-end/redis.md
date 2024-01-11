@@ -18,8 +18,8 @@ $redis_port = 6379;
 $redis_password = '';
 ```
 
-Edit the `/etc/tuleap/conf/local.inc` to have a number of backend worker
-greater than 0 (for example: `$sys_nb_backend_workers = 1;`). Then
+Set number of backend worker
+greater than 0 (for example: `tuleap config-set sys_nb_backend_workers 1`). Then
 restart tuleap deamon: `service tuleap restart`.
 
 # Inspect content on Redis server

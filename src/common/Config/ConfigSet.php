@@ -23,14 +23,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Config;
 
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Cryptography\ConcealedString;
 
-final class ConfigSet
+final class ConfigSet implements ConfigUpdater
 {
     public function __construct(
-        private EventDispatcherInterface $event_dispatcher,
-        private ConfigDao $config_dao,
+        private readonly KeyMetadataProvider & KeysThatCanBeModifiedProvider $config_keys,
+        private readonly ConfigDao $config_dao,
     ) {
     }
 
@@ -42,11 +41,9 @@ final class ConfigSet
      */
     public function set(string $key, string|ConcealedString $value): void
     {
-        $config_keys = $this->event_dispatcher->dispatch(new GetConfigKeys());
-
-        $key_metadata = $config_keys->getKeyMetadata($key);
+        $key_metadata = $this->config_keys->getKeyMetadata($key);
         if (! $key_metadata->can_be_modified) {
-            throw new InvalidConfigKeyException($config_keys);
+            throw new InvalidConfigKeyException($this->config_keys);
         }
 
         if ($key_metadata->is_secret) {

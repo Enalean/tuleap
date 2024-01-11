@@ -25,6 +25,16 @@ namespace Tuleap\Config;
 
 final class GetConfigKeysTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    protected function setUp(): void
+    {
+        \PluginManager::setInstance($this->createMock(\PluginManager::class));
+    }
+
+    protected function tearDown(): void
+    {
+        \PluginManager::clearInstance();
+    }
+
     public function testGetKeysWithAnnotationsOnClasses(): void
     {
         $get_config_keys = new GetConfigKeys();

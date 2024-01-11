@@ -23,9 +23,10 @@ use Tuleap\DAO\DBTablesDao;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Plugin\InvalidPluginNameException;
+use Tuleap\Plugin\RetrieveEnabledPlugins;
 use Tuleap\Plugin\UnableToCreatePluginException;
 
-class PluginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class PluginManager implements RetrieveEnabledPlugins // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
      * @var ContentInterpretor

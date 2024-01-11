@@ -42,6 +42,7 @@ use Tuleap\Log\LogToGraylog2;
 use Tuleap\Mail\Transport\MailTransportBuilder;
 use Tuleap\Project\Admin\Export\ProjectExportController;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
+use Tuleap\Queue\WorkerAvailability;
 use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\Request\RequestInstrumentation;
 use Tuleap\ServerHostname;
@@ -51,7 +52,7 @@ use Tuleap\User\UserSuspensionManager;
 use Tuleap\Widget\MyProjects;
 use User_UserStatusManager;
 
-final class GetConfigKeys implements Dispatchable, ConfigClassProvider
+final class GetConfigKeys implements Dispatchable, ConfigClassProvider, KeyMetadataProvider, KeysThatCanBeModifiedProvider
 {
     public const NAME = 'getConfigKeys';
 
@@ -86,6 +87,7 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider
         OutboundHTTPRequestProxy::class,
         FilteredOutboundHTTPResponseAlerter::class,
         RequestInstrumentation::class,
+        WorkerAvailability::class,
     ];
 
     /**
