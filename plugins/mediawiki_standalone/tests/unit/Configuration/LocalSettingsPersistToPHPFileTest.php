@@ -53,6 +53,7 @@ final class LocalSettingsPersistToPHPFileTest extends TestCase
         $writer->persist($this->representation);
 
         self::assertFileExists($settings_path . '/LocalSettings.local.php');
+        self::assertEquals('0600', substr(sprintf('%o', fileperms($settings_path . '/LocalSettings.local.php')), -4));
     }
 
     public function testThrowsAnErrorWhenTheFileCannotBePersisted(): void

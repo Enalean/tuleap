@@ -54,6 +54,9 @@ final class LocalSettingsRepresentation
     public string $supported_languages_json = '';
 
     public function __construct(
+        public readonly string $db_server_hostname,
+        public readonly string $db_server_username,
+        public readonly ConcealedString $db_server_password,
         public ConcealedString $pre_shared_key,
         public string $https_url,
         public string $oauth2_client_id,
