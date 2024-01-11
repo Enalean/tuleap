@@ -55,6 +55,7 @@ class ArtifactValuesRepresentation
     public $parent;
 
     /**
+     * @psalm-var bool|null
      * @var bool {@type boolean} {@required false}
      */
     public $is_autocomputed;

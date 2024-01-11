@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\TrackerCCE\WASM;
 
 use CuyZ\Valinor\Mapper\MappingError;
+use CuyZ\Valinor\Mapper\Source\Exception\InvalidSource;
 use CuyZ\Valinor\Mapper\Source\Source;
 use CuyZ\Valinor\Mapper\TreeMapper;
 use Psr\Log\LoggerInterface;
@@ -46,12 +47,13 @@ final class ProcessWASMResponse implements WASMResponseProcessor
         return $wasm_response->match(
         /** @return Ok<WASMResponseRepresentation>|Err<Fault> */
             function (string $json_response): Ok | Err {
+                $this->logger->debug("Got response from WASM module : {$json_response}");
                 try {
                     return Result::ok($this->mapper->map(
                         WASMResponseRepresentation::class,
                         Source::json($json_response)
                     ));
-                } catch (MappingError | RuntimeException $error) {
+                } catch (MappingError | RuntimeException | InvalidSource $error) {
                     return Result::err(Fault::fromThrowableWithMessage(
                         $error,
                         'An invalid response has been received from the artifact post action WASM module'
