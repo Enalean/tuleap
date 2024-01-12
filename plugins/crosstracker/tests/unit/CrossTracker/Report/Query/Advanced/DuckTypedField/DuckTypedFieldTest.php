@@ -27,10 +27,12 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class DuckTypedFieldTest extends TestCase
 {
+    private const NAME = 'initial_effort';
+
     public function testItBuildsWhenFieldHasCompatibleTypesInAllTrackers(): void
     {
         $result = DuckTypedField::build(
-            'initial_effort',
+            self::NAME,
             [14, 74, 27],
             [
                 DuckTypedFieldType::fromString(\Tracker_FormElementFactory::FIELD_FLOAT_TYPE),
@@ -39,12 +41,15 @@ final class DuckTypedFieldTest extends TestCase
             ]
         );
         self::assertTrue(Result::isOk($result));
-        self::assertSame(DuckTypedFieldType::NUMERIC, $result->value->type);
+        $field = $result->value;
+        self::assertInstanceOf(DuckTypedField::class, $field);
+        self::assertSame(self::NAME, $field->name);
+        self::assertSame(DuckTypedFieldType::NUMERIC, $field->type);
     }
 
     public function testItReturnsErrWhenFieldIsNotFoundInAnyTracker(): void
     {
-        $result = DuckTypedField::build('initial_effort', [], []);
+        $result = DuckTypedField::build(self::NAME, [], []);
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(FieldNotFoundInAnyTrackerFault::class, $result->error);
     }
@@ -52,7 +57,7 @@ final class DuckTypedFieldTest extends TestCase
     public function testItReturnsErrWhenFirstTypeIsNotSupported(): void
     {
         $result = DuckTypedField::build(
-            'initial_effort',
+            self::NAME,
             [25, 17],
             [
                 DuckTypedFieldType::fromString('invalid'),
@@ -66,7 +71,7 @@ final class DuckTypedFieldTest extends TestCase
     public function testItReturnsErrWhenFieldHasAnIncompatibleTypeInSecondTracker(): void
     {
         $result = DuckTypedField::build(
-            'initial_effort',
+            self::NAME,
             [68, 76],
             [
                 DuckTypedFieldType::fromString(\Tracker_FormElementFactory::FIELD_INTEGER_TYPE),

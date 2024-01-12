@@ -18,32 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
 use Tracker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ForwardLinkFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ReverseLinkFromWhereBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\BetweenComparisonFromWhereBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\EqualComparisonFromWhereBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\GreaterThanComparisonFromWhereBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\GreaterThanOrEqualComparisonFromWhereBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\InComparisonFromWhereBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\LesserThanComparisonFromWhereBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\LesserThanOrEqualComparisonFromWhereBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\NotEqualComparisonFromWhereBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\NotInComparisonFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\FromWhereSearchableVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\FromWhereSearchableVisitorParameters;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithForwardLink;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutForwardLink;
-use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
-use Tuleap\Tracker\Report\Query\ParametrizedAndFromWhere;
-use Tuleap\Tracker\Report\Query\ParametrizedOrFromWhere;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parenthesis;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\TermVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanOrEqualComparison;
@@ -56,8 +44,15 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parenthesis;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\TermVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithForwardLink;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutForwardLink;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutReverseLink;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithReverseLink;
+use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\ParametrizedAndFromWhere;
+use Tuleap\Tracker\Report\Query\ParametrizedOrFromWhere;
 
 /**
  * @template-implements LogicalVisitor<QueryBuilderVisitorParameters, IProvideParametrizedFromAndWhereSQLFragments>
@@ -67,17 +62,26 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
 {
     public function __construct(
         private readonly FromWhereSearchableVisitor $searchable_visitor,
-        private readonly EqualComparisonFromWhereBuilder $equal_comparison_from_where_builder,
-        private readonly NotEqualComparisonFromWhereBuilder $not_equal_comparison_from_where_builder,
-        private readonly GreaterThanComparisonFromWhereBuilder $greater_than_comparison_from_where_builder,
-        private readonly GreaterThanOrEqualComparisonFromWhereBuilder $greater_than_or_equal_comparison_from_where_builder,
-        private readonly LesserThanComparisonFromWhereBuilder $lesser_than_comparison_from_where_builder,
-        private readonly LesserThanOrEqualComparisonFromWhereBuilder $lesser_than_or_equal_comparison_from_where_builder,
-        private readonly BetweenComparisonFromWhereBuilder $between_comparison_from_where_builder,
-        private readonly InComparisonFromWhereBuilder $in_comparison_from_where_builder,
-        private readonly NotInComparisonFromWhereBuilder $not_in_comparison_from_where_builder,
+        private readonly Metadata\EqualComparisonFromWhereBuilder $metadata_equal_builder,
+        private readonly Metadata\NotEqualComparisonFromWhereBuilder $metadata_not_equal_builder,
+        private readonly Metadata\GreaterThanComparisonFromWhereBuilder $metadata_greater_than_builder,
+        private readonly Metadata\GreaterThanOrEqualComparisonFromWhereBuilder $metadata_greater_than_or_equal_builder,
+        private readonly Metadata\LesserThanComparisonFromWhereBuilder $metadata_lesser_than_builder,
+        private readonly Metadata\LesserThanOrEqualComparisonFromWhereBuilder $metadata_lesser_than_or_equal_builder,
+        private readonly Metadata\BetweenComparisonFromWhereBuilder $metadata_between_builder,
+        private readonly Metadata\InComparisonFromWhereBuilder $metadata_in_builder,
+        private readonly Metadata\NotInComparisonFromWhereBuilder $metadata_not_in_builder,
         private readonly ReverseLinkFromWhereBuilder $reverse_link_from_where_builder,
         private readonly ForwardLinkFromWhereBuilder $forward_link_from_where_builder,
+        private readonly Field\EqualComparisonFromWhereBuilder $field_equal_builder,
+        private readonly Field\NotEqualComparisonFromWhereBuilder $field_not_equal_builder,
+        private readonly Field\GreaterThanComparisonFromWhereBuilder $field_greater_than_builder,
+        private readonly Field\GreaterThanOrEqualComparisonFromWhereBuilder $field_greater_than_or_equal_builder,
+        private readonly Field\LesserThanComparisonFromWhereBuilder $field_lesser_than_builder,
+        private readonly Field\LesserThanOrEqualComparisonFromWhereBuilder $field_lesser_than_or_equal_builder,
+        private readonly Field\BetweenComparisonFromWhereBuilder $field_between_builder,
+        private readonly Field\InComparisonFromWhereBuilder $field_in_builder,
+        private readonly Field\NotInComparisonFromWhereBuilder $field_not_in_builder,
     ) {
     }
 
@@ -95,7 +99,8 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             $this->searchable_visitor,
             new FromWhereSearchableVisitorParameters(
                 $comparison,
-                $this->equal_comparison_from_where_builder,
+                $this->metadata_equal_builder,
+                $this->field_equal_builder,
                 $parameters->trackers
             )
         );
@@ -107,7 +112,8 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             $this->searchable_visitor,
             new FromWhereSearchableVisitorParameters(
                 $comparison,
-                $this->not_equal_comparison_from_where_builder,
+                $this->metadata_not_equal_builder,
+                $this->field_not_equal_builder,
                 $parameters->trackers
             )
         );
@@ -121,7 +127,8 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             $this->searchable_visitor,
             new FromWhereSearchableVisitorParameters(
                 $comparison,
-                $this->lesser_than_comparison_from_where_builder,
+                $this->metadata_lesser_than_builder,
+                $this->field_lesser_than_builder,
                 $parameters->trackers
             )
         );
@@ -135,7 +142,8 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             $this->searchable_visitor,
             new FromWhereSearchableVisitorParameters(
                 $comparison,
-                $this->greater_than_comparison_from_where_builder,
+                $this->metadata_greater_than_builder,
+                $this->field_greater_than_builder,
                 $parameters->trackers
             )
         );
@@ -149,7 +157,8 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             $this->searchable_visitor,
             new FromWhereSearchableVisitorParameters(
                 $comparison,
-                $this->lesser_than_or_equal_comparison_from_where_builder,
+                $this->metadata_lesser_than_or_equal_builder,
+                $this->field_lesser_than_or_equal_builder,
                 $parameters->trackers
             )
         );
@@ -163,7 +172,8 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             $this->searchable_visitor,
             new FromWhereSearchableVisitorParameters(
                 $comparison,
-                $this->greater_than_or_equal_comparison_from_where_builder,
+                $this->metadata_greater_than_or_equal_builder,
+                $this->field_greater_than_or_equal_builder,
                 $parameters->trackers
             )
         );
@@ -175,7 +185,8 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             $this->searchable_visitor,
             new FromWhereSearchableVisitorParameters(
                 $comparison,
-                $this->between_comparison_from_where_builder,
+                $this->metadata_between_builder,
+                $this->field_between_builder,
                 $parameters->trackers
             )
         );
@@ -187,7 +198,8 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             $this->searchable_visitor,
             new FromWhereSearchableVisitorParameters(
                 $comparison,
-                $this->in_comparison_from_where_builder,
+                $this->metadata_in_builder,
+                $this->field_in_builder,
                 $parameters->trackers
             )
         );
@@ -199,7 +211,8 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             $this->searchable_visitor,
             new FromWhereSearchableVisitorParameters(
                 $comparison,
-                $this->not_in_comparison_from_where_builder,
+                $this->metadata_not_in_builder,
+                $this->field_not_in_builder,
                 $parameters->trackers
             )
         );
