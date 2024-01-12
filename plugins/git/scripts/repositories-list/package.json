@@ -18,7 +18,6 @@
     "javascript-time-ago": "^2.3.4",
     "vue": "^2.7.8",
     "vue-dompurify-html": "^4.0.0",
-    "vue-gettext": "^2.1.12",
     "vuex": "^3.6.2"
   },
   "devDependencies": {

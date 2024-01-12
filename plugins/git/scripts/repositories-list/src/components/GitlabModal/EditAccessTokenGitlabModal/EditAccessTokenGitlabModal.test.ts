@@ -17,36 +17,28 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
+import type { Store } from "@tuleap/vuex-store-wrapper-jest";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Wrapper } from "@vue/test-utils";
-import { createLocalVue, shallowMount } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import EditAccessTokenGitlabModal from "./EditAccessTokenGitlabModal.vue";
-import VueDOMPurifyHTML from "vue-dompurify-html";
-import GetTextPlugin from "vue-gettext";
 import AccessTokenFormModal from "./AccessTokenFormModal.vue";
 import ConfirmReplaceTokenModal from "./ConfirmReplaceTokenModal.vue";
-import type { Store } from "@tuleap/vuex-store-wrapper-jest";
+import { createLocalVueForTests } from "../../../helpers/local-vue-for-tests";
 
 describe("EditAccessTokenGitlabModal", () => {
-    let store: Store, localVue;
+    let store: Store;
 
-    function instantiateComponent(): Wrapper<EditAccessTokenGitlabModal> {
+    async function instantiateComponent(): Promise<Wrapper<EditAccessTokenGitlabModal>> {
         store = createStoreMock({}, { gitlab: {} });
-        localVue = createLocalVue();
-        localVue.use(VueDOMPurifyHTML);
-        localVue.use(GetTextPlugin, {
-            translations: {},
-            silent: true,
-        });
-
         return shallowMount(EditAccessTokenGitlabModal, {
             mocks: { $store: store },
-            localVue,
+            localVue: await createLocalVueForTests(),
         });
     }
 
     it("When a user displays the modal ,then the AccessTokenFormModal is displayed", async () => {
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
 
         wrapper.setData({
             repository: {
@@ -60,7 +52,7 @@ describe("EditAccessTokenGitlabModal", () => {
     });
 
     it("When CredentialsFormModal emits on-close-modal, Then form is reset", async () => {
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
 
         wrapper.setData({
             repository: {
@@ -79,7 +71,7 @@ describe("EditAccessTokenGitlabModal", () => {
     });
 
     it("When CredentialsFormModal emits on-get-new-token-gitlab, Then ConfirmReplaceTokenModal is rendered", async () => {
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
 
         wrapper.setData({
             repository: {
@@ -103,7 +95,7 @@ describe("EditAccessTokenGitlabModal", () => {
     });
 
     it("When ConfirmReplaceTokenModal emits on-success-edit-token, Then data are reset and success message is displayed", async () => {
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
 
         wrapper.setData({
             repository: {
@@ -134,7 +126,7 @@ describe("EditAccessTokenGitlabModal", () => {
     });
 
     it("When ConfirmReplaceTokenModal emits on-back-button, Then CredentialsFormModal is displayed with token", async () => {
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
 
         const repository = {
             gitlab_data: {

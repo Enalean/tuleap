@@ -19,13 +19,12 @@
 
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Wrapper } from "@vue/test-utils";
-import { createLocalVue, shallowMount } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import NoRepositoryEmptyState from "./NoRepositoryEmptyState.vue";
 import DropdownActionButton from "./DropdownActionButton.vue";
 import * as repo_list from "../repository-list-presenter";
-import VueDOMPurifyHTML from "vue-dompurify-html";
-import GetTextPlugin from "vue-gettext";
 import type { State } from "../type";
+import { createLocalVueForTests } from "../helpers/local-vue-for-tests";
 
 describe("NoRepositoryEmptyState", () => {
     interface StoreOption {
@@ -53,37 +52,30 @@ describe("NoRepositoryEmptyState", () => {
         };
     });
 
-    function instantiateComponent(): Wrapper<NoRepositoryEmptyState> {
-        const localVue = createLocalVue();
-        localVue.use(VueDOMPurifyHTML);
-        localVue.use(GetTextPlugin, {
-            translations: {},
-            silent: true,
-        });
-
+    async function instantiateComponent(): Promise<Wrapper<NoRepositoryEmptyState>> {
         const store = createStoreMock(store_options);
         return shallowMount(NoRepositoryEmptyState, {
             mocks: { $store: store },
-            localVue,
+            localVue: await createLocalVueForTests(),
         });
     }
 
-    it("When there is no used externals services, Then there is a button to create a repo", () => {
-        const wrapper = instantiateComponent();
+    it("When there is no used externals services, Then there is a button to create a repo", async () => {
+        const wrapper = await instantiateComponent();
         expect(wrapper.findComponent(DropdownActionButton).exists()).toBeFalsy();
         expect(wrapper.find("[data-test=create-repository-button]").exists()).toBeTruthy();
     });
 
-    it("When Gitlab is an external service, Then dropdown is displayed the action is displayed", () => {
+    it("When Gitlab is an external service, Then dropdown is displayed the action is displayed", async () => {
         store_options.getters.areExternalUsedServices = true;
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
         expect(wrapper.findComponent(DropdownActionButton).exists()).toBeTruthy();
         expect(wrapper.find("[data-test=create-repository-button]").exists()).toBeFalsy();
     });
 
-    it("When the user is not git admin, Then there aren't any button", () => {
+    it("When the user is not git admin, Then there aren't any button", async () => {
         jest.spyOn(repo_list, "getUserIsAdmin").mockReturnValue(false);
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
         expect(wrapper.findComponent(DropdownActionButton).exists()).toBeFalsy();
         expect(wrapper.find("[data-test=create-repository-button]").exists()).toBeFalsy();
     });

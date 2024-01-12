@@ -19,20 +19,18 @@
 
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Wrapper } from "@vue/test-utils";
-import { createLocalVue, shallowMount } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import UnlinkRepositoryGitlabModal from "./UnlinkRepositoryGitlabModal.vue";
-import VueDOMPurifyHTML from "vue-dompurify-html";
-import GetTextPlugin from "vue-gettext";
 import * as api from "../../../gitlab/gitlab-api-querier";
 import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import type { State } from "../../../type";
+import { createLocalVueForTests } from "../../../helpers/local-vue-for-tests";
 
 describe("UnlinkRepositoryGitlabModal", () => {
     let store_options = {},
         store = {
             commit: jest.fn(),
-        },
-        localVue;
+        };
 
     beforeEach(() => {
         store_options = {
@@ -47,22 +45,16 @@ describe("UnlinkRepositoryGitlabModal", () => {
         };
     });
 
-    function instantiateComponent(): Wrapper<UnlinkRepositoryGitlabModal> {
+    async function instantiateComponent(): Promise<Wrapper<UnlinkRepositoryGitlabModal>> {
         store = createStoreMock(store_options);
-        localVue = createLocalVue();
-        localVue.use(VueDOMPurifyHTML);
-        localVue.use(GetTextPlugin, {
-            translations: {},
-            silent: true,
-        });
         return shallowMount(UnlinkRepositoryGitlabModal, {
             mocks: { $store: store },
-            localVue,
+            localVue: await createLocalVueForTests(),
         });
     }
 
     it("When the component is diplayed, Then confirmation message contains the label of repository", async () => {
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
 
         wrapper.setData({
             repository: {
@@ -79,7 +71,7 @@ describe("UnlinkRepositoryGitlabModal", () => {
     });
 
     it("When user confirm unlink, Then repository is removed and success message is displayed", async () => {
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
         mockFetchSuccess(jest.spyOn(api, "deleteIntegrationGitlab"));
 
         wrapper.setData({
@@ -105,7 +97,7 @@ describe("UnlinkRepositoryGitlabModal", () => {
     });
 
     it("When error is returned from API, Then error is set to data and button is disabled", async () => {
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
         mockFetchError(jest.spyOn(api, "deleteIntegrationGitlab"), {
             status: 404,
             error_json: { error: { code: 404, message: "Error during delete" } },
@@ -132,7 +124,7 @@ describe("UnlinkRepositoryGitlabModal", () => {
     });
 
     it("When there is a rest error and we click on submit, Then API is not queried", async () => {
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
         const api_delete = jest.spyOn(api, "deleteIntegrationGitlab");
 
         wrapper.setData({

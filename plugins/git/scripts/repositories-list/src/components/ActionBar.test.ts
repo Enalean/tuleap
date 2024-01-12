@@ -18,13 +18,13 @@
  */
 
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import { createLocalVue, shallowMount } from "@vue/test-utils";
 import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import ActionBar from "./ActionBar.vue";
 import DropdownActionButton from "./DropdownActionButton.vue";
 import * as repo_list from "../repository-list-presenter";
-import GetTextPlugin from "vue-gettext";
 import type { State } from "../type";
+import { createLocalVueForTests } from "../helpers/local-vue-for-tests";
 
 interface StoreOption {
     state: State;
@@ -36,27 +36,20 @@ interface StoreOption {
 }
 
 describe("ActionBar", () => {
-    let localVue;
     beforeEach(() => {
         jest.spyOn(repo_list, "getUserIsAdmin").mockReturnValue(true);
     });
 
-    function instantiateComponent(store_options: StoreOption): Wrapper<ActionBar> {
-        localVue = createLocalVue();
-        localVue.use(GetTextPlugin, {
-            translations: {},
-            silent: true,
-        });
-
+    async function instantiateComponent(store_options: StoreOption): Promise<Wrapper<ActionBar>> {
         const store = createStoreMock(store_options);
         return shallowMount(ActionBar, {
             mocks: { $store: store },
-            localVue,
+            localVue: await createLocalVueForTests(),
         });
     }
 
-    it("When there is no used externals services, Then there is a button to create a repo", () => {
-        const wrapper = instantiateComponent({
+    it("When there is no used externals services, Then there is a button to create a repo", async () => {
+        const wrapper = await instantiateComponent({
             state: {
                 is_first_load_done: true,
             } as unknown as State,
@@ -70,8 +63,8 @@ describe("ActionBar", () => {
         expect(wrapper.find("[data-test=create-repository-button]").exists()).toBeTruthy();
     });
 
-    it("When GitLab is an external service, Then dropdown is displayed the action is displayed", () => {
-        const wrapper = instantiateComponent({
+    it("When GitLab is an external service, Then dropdown is displayed the action is displayed", async () => {
+        const wrapper = await instantiateComponent({
             state: {
                 is_first_load_done: true,
             } as unknown as State,

@@ -18,23 +18,15 @@
  *
  */
 
-import { createLocalVue, shallowMount } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import SelectOwner from "./SelectOwner.vue";
-import VueDOMPurifyHTML from "vue-dompurify-html";
-import GetTextPlugin from "vue-gettext";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import * as repo_list from "../../repository-list-presenter";
 import type { RepositoryOwner } from "../../type";
+import { createLocalVueForTests } from "../../helpers/local-vue-for-tests";
 
 describe("SelectOwner", () => {
-    it("displays a dropdown with user forks", () => {
-        const localVue = createLocalVue();
-        localVue.use(VueDOMPurifyHTML);
-        localVue.use(GetTextPlugin, {
-            translations: {},
-            silent: true,
-        });
-
+    it("displays a dropdown with user forks", async () => {
         const forks: Array<RepositoryOwner> = [
             { id: 1, display_name: "Fork A" },
             { id: 2, display_name: "Fork B" },
@@ -43,7 +35,7 @@ describe("SelectOwner", () => {
         jest.spyOn(repo_list, "getRepositoriesOwners").mockReturnValue(forks);
 
         const wrapper = shallowMount(SelectOwner, {
-            localVue,
+            localVue: await createLocalVueForTests(),
             mocks: {
                 $store: createStoreMock({
                     state: { filter: "test" },

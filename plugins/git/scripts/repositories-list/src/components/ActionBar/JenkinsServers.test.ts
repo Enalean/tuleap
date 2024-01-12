@@ -18,24 +18,16 @@
  *
  */
 
-import { createLocalVue, shallowMount } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import JenkinsServer from "./JenkinsServers.vue";
-import VueDOMPurifyHTML from "vue-dompurify-html";
-import GetTextPlugin from "vue-gettext";
+import { createLocalVueForTests } from "../../helpers/local-vue-for-tests";
 
 jest.mock("@tuleap/tlp-popovers"); // ResizeObserver is not defined
 
 describe("JenkinsServer", () => {
-    it("displays the badge and a basic popover", () => {
-        const localVue = createLocalVue();
-        localVue.use(VueDOMPurifyHTML);
-        localVue.use(GetTextPlugin, {
-            translations: {},
-            silent: true,
-        });
-
+    it("displays the badge and a basic popover", async () => {
         const wrapper = shallowMount(JenkinsServer, {
-            localVue,
+            localVue: await createLocalVueForTests(),
             propsData: {
                 servers: [{ id: 1, url: "https://example.com" }],
             },

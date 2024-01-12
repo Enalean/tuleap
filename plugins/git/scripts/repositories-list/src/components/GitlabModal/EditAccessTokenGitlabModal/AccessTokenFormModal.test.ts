@@ -17,18 +17,16 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
+import type { Store } from "@tuleap/vuex-store-wrapper-jest";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Wrapper } from "@vue/test-utils";
-import { createLocalVue, shallowMount } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import AccessTokenFormModal from "./AccessTokenFormModal.vue";
-import VueDOMPurifyHTML from "vue-dompurify-html";
-import GetTextPlugin from "vue-gettext";
-import type { Store } from "@tuleap/vuex-store-wrapper-jest";
+import { createLocalVueForTests } from "../../../helpers/local-vue-for-tests";
 
 describe("AccessTokenFormModal", () => {
     let store_options = {},
         propsData = {},
-        localVue,
         store: Store;
 
     beforeEach(() => {
@@ -38,20 +36,13 @@ describe("AccessTokenFormModal", () => {
         };
     });
 
-    function instantiateComponent(): Wrapper<AccessTokenFormModal> {
-        localVue = createLocalVue();
-        localVue.use(VueDOMPurifyHTML);
-        localVue.use(GetTextPlugin, {
-            translations: {},
-            silent: true,
-        });
-
+    async function instantiateComponent(): Promise<Wrapper<AccessTokenFormModal>> {
         store = createStoreMock(store_options, { gitlab: {} });
 
         return shallowMount(AccessTokenFormModal, {
             propsData,
             mocks: { $store: store },
-            localVue,
+            localVue: await createLocalVueForTests(),
         });
     }
 
@@ -67,7 +58,7 @@ describe("AccessTokenFormModal", () => {
             gitlab_token: "",
         };
 
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
         expect(wrapper.find("[data-test=icon-spin]").exists()).toBeFalsy();
 
         wrapper.setData({
@@ -115,7 +106,7 @@ describe("AccessTokenFormModal", () => {
             gitlab_token: "",
         };
 
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
 
         wrapper.setData({
             error_message: "Error message",
@@ -140,7 +131,7 @@ describe("AccessTokenFormModal", () => {
             gitlab_token: "",
         };
 
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
         wrapper.setData({
             gitlab_new_token: "",
         });
@@ -165,7 +156,7 @@ describe("AccessTokenFormModal", () => {
             gitlab_token: "",
         };
 
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
 
         wrapper.setData({
             gitlab_new_token: "",
@@ -195,7 +186,7 @@ describe("AccessTokenFormModal", () => {
             gitlab_token: "",
         };
 
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
         jest.spyOn(store, "dispatch").mockReturnValue(Promise.reject());
 
         wrapper.setData({
@@ -225,7 +216,7 @@ describe("AccessTokenFormModal", () => {
             gitlab_token: "",
         };
 
-        const wrapper = instantiateComponent();
+        const wrapper = await instantiateComponent();
         wrapper.setData({
             gitlab_new_token: "AZERTY123",
             error_message: "Error",

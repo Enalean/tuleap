@@ -18,23 +18,15 @@
  *
  */
 
-import { createLocalVue, shallowMount } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import ListFilter from "./ListFilter.vue";
-import VueDOMPurifyHTML from "vue-dompurify-html";
-import GetTextPlugin from "vue-gettext";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { createLocalVueForTests } from "../../helpers/local-vue-for-tests";
 
 describe("ListFilter", () => {
-    it("displays a filter", () => {
-        const localVue = createLocalVue();
-        localVue.use(VueDOMPurifyHTML);
-        localVue.use(GetTextPlugin, {
-            translations: {},
-            silent: true,
-        });
-
+    it("displays a filter", async () => {
         const wrapper = shallowMount(ListFilter, {
-            localVue,
+            localVue: await createLocalVueForTests(),
             mocks: {
                 $store: createStoreMock({
                     state: { filter: "test" },

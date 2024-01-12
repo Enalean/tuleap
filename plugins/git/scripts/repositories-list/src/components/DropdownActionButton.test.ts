@@ -18,46 +18,29 @@
  *
  */
 
-import { createLocalVue, shallowMount } from "@vue/test-utils";
-import VueDOMPurifyHTML from "vue-dompurify-html";
-import GetTextPlugin from "vue-gettext";
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import DropdownActionButton from "./DropdownActionButton.vue";
+import { createLocalVueForTests } from "../helpers/local-vue-for-tests";
 
 jest.mock("@tuleap/tlp-dropdown"); // ResizeObserver is not defined
 
-describe("DropdownActionButton", () => {
-    it("displays a dropdown for empty state", () => {
-        const localVue = createLocalVue();
-        localVue.use(VueDOMPurifyHTML);
-        localVue.use(GetTextPlugin, {
-            translations: {},
-            silent: true,
-        });
+async function getWrapper(is_empty_state: boolean): Promise<Wrapper<DropdownActionButton>> {
+    return shallowMount(DropdownActionButton, {
+        localVue: await createLocalVueForTests(),
+        propsData: { is_empty_state },
+    });
+}
 
-        const wrapper = shallowMount(DropdownActionButton, {
-            localVue,
-            propsData: {
-                is_empty_state: true,
-            },
-        });
+describe("DropdownActionButton", () => {
+    it("displays a dropdown for empty state", async () => {
+        const wrapper = await getWrapper(true);
 
         expect(wrapper).toMatchSnapshot();
     });
 
-    it("displays a dropdown for repository list", () => {
-        const localVue = createLocalVue();
-        localVue.use(VueDOMPurifyHTML);
-        localVue.use(GetTextPlugin, {
-            translations: {},
-            silent: true,
-        });
-
-        const wrapper = shallowMount(DropdownActionButton, {
-            localVue,
-            propsData: {
-                is_empty_state: false,
-            },
-        });
+    it("displays a dropdown for repository list", async () => {
+        const wrapper = await getWrapper(false);
 
         expect(wrapper).toMatchSnapshot();
     });

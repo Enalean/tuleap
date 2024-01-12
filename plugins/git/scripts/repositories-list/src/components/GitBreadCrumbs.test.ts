@@ -18,21 +18,13 @@
  *
  */
 
-import { createLocalVue, shallowMount } from "@vue/test-utils";
-import VueDOMPurifyHTML from "vue-dompurify-html";
-import GetTextPlugin from "vue-gettext";
+import { shallowMount } from "@vue/test-utils";
 import GitBreadcrumbs from "./GitBreadcrumbs.vue";
 import { setBreadcrumbSettings } from "../breadcrumb-presenter";
+import { createLocalVueForTests } from "../helpers/local-vue-for-tests";
 
 describe("GitBreadcrumbs", () => {
-    it("displays breadcrumbs", () => {
-        const localVue = createLocalVue();
-        localVue.use(VueDOMPurifyHTML);
-        localVue.use(GetTextPlugin, {
-            translations: {},
-            silent: true,
-        });
-
+    it("displays breadcrumbs", async () => {
         setBreadcrumbSettings(
             "/admin/url",
             "/repositories/url",
@@ -53,7 +45,7 @@ describe("GitBreadcrumbs", () => {
         );
 
         const wrapper = shallowMount(GitBreadcrumbs, {
-            localVue,
+            localVue: await createLocalVueForTests(),
         });
 
         expect(wrapper).toMatchSnapshot();

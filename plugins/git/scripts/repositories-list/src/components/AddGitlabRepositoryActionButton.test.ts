@@ -18,11 +18,11 @@
  */
 
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import { createLocalVue, shallowMount } from "@vue/test-utils";
 import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import AddGitlabRepositoryActionButton from "./AddGitlabRepositoryActionButton.vue";
 import type { State } from "../type";
-import GetTextPlugin from "vue-gettext";
+import { createLocalVueForTests } from "../helpers/local-vue-for-tests";
 
 interface StoreOption {
     state: State;
@@ -32,24 +32,18 @@ interface StoreOption {
 }
 
 describe("AddGitlabRepositoryActionButton", () => {
-    let localVue;
-    function instantiateComponent(
+    async function instantiateComponent(
         store_option: StoreOption,
-    ): Wrapper<AddGitlabRepositoryActionButton> {
-        localVue = createLocalVue();
-        localVue.use(GetTextPlugin, {
-            translations: {},
-            silent: true,
-        });
+    ): Promise<Wrapper<AddGitlabRepositoryActionButton>> {
         const store = createStoreMock(store_option);
         return shallowMount(AddGitlabRepositoryActionButton, {
             mocks: { $store: store },
-            localVue,
+            localVue: await createLocalVueForTests(),
         });
     }
 
-    it("When there is no used externals services, Then there is no option GitLab", () => {
-        const wrapper = instantiateComponent({
+    it("When there is no used externals services, Then there is no option GitLab", async () => {
+        const wrapper = await instantiateComponent({
             state: {} as State,
             getters: {
                 isGitlabUsed: false,
@@ -58,8 +52,8 @@ describe("AddGitlabRepositoryActionButton", () => {
         expect(wrapper.find("[data-test=gitlab-project-button]").exists()).toBeFalsy();
     });
 
-    it("When GitLab is an external service, Then the action is displayed", () => {
-        const wrapper = instantiateComponent({
+    it("When GitLab is an external service, Then the action is displayed", async () => {
+        const wrapper = await instantiateComponent({
             state: {} as State,
             getters: {
                 isGitlabUsed: true,
