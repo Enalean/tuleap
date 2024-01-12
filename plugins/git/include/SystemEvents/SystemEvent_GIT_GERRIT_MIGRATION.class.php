@@ -64,7 +64,6 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent // phpcs:ignore PSR1.
             $server             = $this->server_factory->getServer($repository);
             $gerrit_template_id = $this->getParameter(2);
             $gerrit_project     = $this->project_creator->createGerritProject($server, $repository, $gerrit_template_id);
-            $this->project_creator->removeTemporaryDirectory();
             $this->project_creator->finalizeGerritProjectCreation($server, $repository, $gerrit_template_id);
             $this->dao->setGerritMigrationSuccess($repository->getId());
             $repository->setRemoteServerMigrationStatus(Git_Driver_Gerrit_ProjectCreatorStatus::DONE);
@@ -80,6 +79,8 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent // phpcs:ignore PSR1.
             $this->logError($repository, "gerrit: ", "Gerrit failure: ", $e);
         } catch (Exception $e) {
             $this->logError($repository, "", "An error occured while processing event: ", $e);
+        } finally {
+            $this->project_creator->removeTemporaryDirectory();
         }
     }
 
