@@ -33,6 +33,7 @@ use Tuleap\SVN\REST\v1\CommitRulesRepresentation;
 use Tuleap\SVN\REST\v1\ImmutableTagRepresentation;
 use Tuleap\SVN\REST\v1\NotificationPOSTPUTRepresentation;
 use Tuleap\SVN\REST\v1\SettingsPOSTRepresentation;
+use Tuleap\SVN\REST\v1\SettingsPUTRepresentation;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -41,17 +42,31 @@ use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 
 final class SettingsBuilderTest extends TestCase
 {
+    private UserGroupRetriever&\PHPUnit\Framework\MockObject\MockObject $ugroup_retriever;
+    private RetrieveUserByIdStub $user_manager;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->ugroup_retriever = $this->createMock(UserGroupRetriever::class);
+        $this->user_manager     = RetrieveUserByIdStub::withNoUser();
+    }
+
+    private function buildSettingsBuilder(): SettingsBuilder
+    {
+        return new SettingsBuilder(
+            new ImmutableTagFactory($this->createMock(ImmutableTagDao::class)),
+            $this->user_manager,
+            $this->ugroup_retriever,
+        );
+    }
+
     public function testItReturnsAnEmptyDefaultSettingsWhenRepresentationIsNULL(): void
     {
-        $builder = new SettingsBuilder(
-            new ImmutableTagFactory($this->createMock(ImmutableTagDao::class)),
-            RetrieveUserByIdStub::withNoUser(),
-            $this->createMock(UserGroupRetriever::class),
-        );
-
         $repository = SvnRepository::buildActiveRepository(1, 'repo01', ProjectTestBuilder::aProject()->build());
 
-        $result = $builder->buildFromPOSTPUTRESTRepresentation($repository, null);
+        $result = $this->buildSettingsBuilder()->buildFromPOSTPUTRESTRepresentation($repository, null);
 
         self::assertTrue(Result::isOk($result));
 
@@ -70,20 +85,16 @@ final class SettingsBuilderTest extends TestCase
 
     public function testItReturnsSettingsWithRepresentationDataWithUserNotifications(): void
     {
-        $builder = new SettingsBuilder(
-            new ImmutableTagFactory($this->createMock(ImmutableTagDao::class)),
-            RetrieveUserByIdStub::withUsers(
-                UserTestBuilder::anActiveUser()->withId(101)->withUserName('user01')->build(),
-                UserTestBuilder::anActiveUser()->withId(102)->withUserName('user02')->build(),
-            ),
-            $this->createMock(UserGroupRetriever::class),
+        $this->user_manager = RetrieveUserByIdStub::withUsers(
+            UserTestBuilder::anActiveUser()->withId(101)->withUserName('user01')->build(),
+            UserTestBuilder::anActiveUser()->withId(102)->withUserName('user02')->build(),
         );
 
         $repository = SvnRepository::buildActiveRepository(1, 'repo01', ProjectTestBuilder::aProject()->build());
 
         $settings_post_representation = $this->buildSettingsPOSTRepresentationWithUsersNotifications($repository);
 
-        $result = $builder->buildFromPOSTPUTRESTRepresentation($repository, $settings_post_representation);
+        $result = $this->buildSettingsBuilder()->buildFromPOSTPUTRESTRepresentation($repository, $settings_post_representation);
 
         self::assertTrue(Result::isOk($result));
 
@@ -123,23 +134,16 @@ final class SettingsBuilderTest extends TestCase
 
         $custom_ugroup = ProjectUGroupTestBuilder::aCustomUserGroup(201)->withName('ugroup01')->withProject($project)->build();
 
-        $user_group_retriever = $this->createMock(UserGroupRetriever::class);
-        $user_group_retriever->method('getExistingUserGroup')->willReturnMap([
+        $this->ugroup_retriever->method('getExistingUserGroup')->willReturnMap([
             ['101_3', $project_member_ugroup],
             ['201', $custom_ugroup],
         ]);
-
-        $builder = new SettingsBuilder(
-            new ImmutableTagFactory($this->createMock(ImmutableTagDao::class)),
-            RetrieveUserByIdStub::withNoUser(),
-            $user_group_retriever,
-        );
 
         $repository = SvnRepository::buildActiveRepository(1, 'repo01', $project);
 
         $settings_post_representation = $this->buildSettingsPOSTRepresentationWithUserGroupsNotifications($repository);
 
-        $result = $builder->buildFromPOSTPUTRESTRepresentation($repository, $settings_post_representation);
+        $result = $this->buildSettingsBuilder()->buildFromPOSTPUTRESTRepresentation($repository, $settings_post_representation);
 
         self::assertTrue(Result::isOk($result));
 
@@ -172,22 +176,18 @@ final class SettingsBuilderTest extends TestCase
 
     public function testItReturnsAnErrorIfAProvidedUserDoesNotExist(): void
     {
-        $builder = new SettingsBuilder(
-            new ImmutableTagFactory($this->createMock(ImmutableTagDao::class)),
-            RetrieveUserByIdStub::withUsers(
-                UserTestBuilder::anActiveUser()->withId(101)->withUserName('user01')->build(),
-            ),
-            $this->createMock(UserGroupRetriever::class),
+        $this->user_manager = RetrieveUserByIdStub::withUsers(
+            UserTestBuilder::anActiveUser()->withId(101)->withUserName('user01')->build(),
         );
 
         $repository = SvnRepository::buildActiveRepository(1, 'repo01', ProjectTestBuilder::aProject()->build());
 
         $settings_post_representation = $this->buildSettingsPOSTRepresentationWithUsersNotifications($repository);
 
-        $result = $builder->buildFromPOSTPUTRESTRepresentation($repository, $settings_post_representation);
+        $result = $this->buildSettingsBuilder()->buildFromPOSTPUTRESTRepresentation($repository, $settings_post_representation);
 
         self::assertTrue(Result::isErr($result));
-        self::assertSame("User 102 not found", (string) $result->error);
+        self::assertInstanceOf(UserInNotificationNotFoundFault::class, $result->error);
     }
 
     public function testItReturnsAnErrorIfAProvidedUserGroupIsForbidden(): void
@@ -200,23 +200,16 @@ final class SettingsBuilderTest extends TestCase
         ]);
         $project_svn_admins_ugroup->setProject($project);
 
-        $user_group_retriever = $this->createMock(UserGroupRetriever::class);
-        $user_group_retriever->method('getExistingUserGroup')->with('101_19')->willReturn($project_svn_admins_ugroup);
-
-        $builder = new SettingsBuilder(
-            new ImmutableTagFactory($this->createMock(ImmutableTagDao::class)),
-            RetrieveUserByIdStub::withNoUser(),
-            $user_group_retriever,
-        );
+        $this->ugroup_retriever->method('getExistingUserGroup')->with('101_19')->willReturn($project_svn_admins_ugroup);
 
         $repository = SvnRepository::buildActiveRepository(1, 'repo01', ProjectTestBuilder::aProject()->build());
 
         $settings_post_representation = $this->buildSettingsPOSTRepresentationWithForbiddenUserGroupsNotifications($repository);
 
-        $result = $builder->buildFromPOSTPUTRESTRepresentation($repository, $settings_post_representation);
+        $result = $this->buildSettingsBuilder()->buildFromPOSTPUTRESTRepresentation($repository, $settings_post_representation);
 
         self::assertTrue(Result::isErr($result));
-        self::assertSame("Notifications can not be sent to ugroups Anonymous Authenticated and Registered", (string) $result->error);
+        self::assertInstanceOf(NonAuthorizedDynamicUgroupFault::class, $result->error);
     }
 
     public function testItReturnsAnErrorIfAProvidedUserGroupComesFromAnotherProject(): void
@@ -231,92 +224,205 @@ final class SettingsBuilderTest extends TestCase
             ->withProject(ProjectTestBuilder::aProject()->withId(999)->build())
             ->build();
 
-        $user_group_retriever = $this->createMock(UserGroupRetriever::class);
-        $user_group_retriever->method('getExistingUserGroup')->willReturnMap([
+        $this->ugroup_retriever->method('getExistingUserGroup')->willReturnMap([
             ['101_3', $project_member_ugroup],
             ['201', $custom_ugroup],
         ]);
-
-        $builder = new SettingsBuilder(
-            new ImmutableTagFactory($this->createMock(ImmutableTagDao::class)),
-            RetrieveUserByIdStub::withNoUser(),
-            $user_group_retriever,
-        );
 
         $repository = SvnRepository::buildActiveRepository(1, 'repo01', $project);
 
         $settings_post_representation = $this->buildSettingsPOSTRepresentationWithUserGroupsNotifications($repository);
 
-        $result = $builder->buildFromPOSTPUTRESTRepresentation($repository, $settings_post_representation);
+        $result = $this->buildSettingsBuilder()->buildFromPOSTPUTRESTRepresentation($repository, $settings_post_representation);
 
         self::assertTrue(Result::isErr($result));
-        self::assertSame("You can't add a user group from a different project", (string) $result->error);
+        self::assertInstanceOf(UgroupNotInProjectFault::class, $result->error);
+    }
+
+    public function testItReturnsAnErrorIfASamePathIsProvidedMultipleTimes(): void
+    {
+        $project = ProjectTestBuilder::aProject()->build();
+
+        $this->user_manager = RetrieveUserByIdStub::withUsers(
+            UserTestBuilder::anActiveUser()->withId(101)->withUserName('user01')->build(),
+            UserTestBuilder::anActiveUser()->withId(102)->withUserName('user02')->build(),
+        );
+
+        $repository = SvnRepository::buildActiveRepository(1, 'repo01', $project);
+
+        $settings_post_representation = $this->buildSettingsPOSTRepresentationWithSameNotificationPath($repository);
+
+        $result = $this->buildSettingsBuilder()->buildFromPOSTPUTRESTRepresentation($repository, $settings_post_representation);
+
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(NonUniqueNotificationPathFault::class, $result->error);
+    }
+
+    public function testItReturnsAnErrorIfThereIsAnEmptyNotification(): void
+    {
+        $project = ProjectTestBuilder::aProject()->build();
+
+        $this->user_manager = $this->user_manager = RetrieveUserByIdStub::withUsers(
+            UserTestBuilder::anActiveUser()->withId(101)->withUserName('user01')->build(),
+            UserTestBuilder::anActiveUser()->withId(102)->withUserName('user02')->build(),
+        );
+
+        $repository = SvnRepository::buildActiveRepository(1, 'repo01', $project);
+
+        $settings_post_representation = $this->buildSettingsPOSTRepresentationWithEmptyNotification($repository);
+
+        $result = $this->buildSettingsBuilder()->buildFromPOSTPUTRESTRepresentation($repository, $settings_post_representation);
+
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(EmptyNotificationsFault::class, $result->error);
+    }
+
+    public function testItReturnsAnErrorIfThereIsADuplicatedMailNotification(): void
+    {
+        $project = ProjectTestBuilder::aProject()->build();
+
+        $this->user_manager = $this->user_manager = RetrieveUserByIdStub::withUsers(
+            UserTestBuilder::anActiveUser()->withId(101)->withUserName('user01')->build(),
+            UserTestBuilder::anActiveUser()->withId(102)->withUserName('user02')->build(),
+        );
+
+        $repository = SvnRepository::buildActiveRepository(1, 'repo01', $project);
+
+        $settings_post_representation = $this->buildSettingsPOSTRepresentationWithDuplicatedNotificationMails($repository);
+
+        $result = $this->buildSettingsBuilder()->buildFromPOSTPUTRESTRepresentation($repository, $settings_post_representation);
+
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(NonUniqueMailsFault::class, $result->error);
+    }
+
+    public function testItReturnsAnErrorIfThereIsAUserNotAlive(): void
+    {
+        $project = ProjectTestBuilder::aProject()->build();
+
+        $this->user_manager = RetrieveUserByIdStub::withUsers(
+            UserTestBuilder::anActiveUser()->withId(101)->withUserName('user01')->build(),
+            UserTestBuilder::aUser()->withId(102)->withStatus('S')->withUserName('user02')->build(),
+        );
+
+        $repository = SvnRepository::buildActiveRepository(1, 'repo01', $project);
+
+        $settings_post_representation = $this->buildSettingsPOSTRepresentationWithUsersNotifications($repository);
+
+        $result = $this->buildSettingsBuilder()->buildFromPOSTPUTRESTRepresentation($repository, $settings_post_representation);
+
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(UserNotAliveFault::class, $result->error);
+    }
+
+    public function testItReturnsAnErrorIfThereIsNoAccessFileContentInPUT(): void
+    {
+        $project = ProjectTestBuilder::aProject()->build();
+
+        $this->user_manager = RetrieveUserByIdStub::withUsers(
+            UserTestBuilder::anActiveUser()->withId(101)->withUserName('user01')->build(),
+            UserTestBuilder::anActiveUser()->withId(102)->withUserName('user02')->build(),
+        );
+
+        $repository = SvnRepository::buildActiveRepository(1, 'repo01', $project);
+
+        $settings_put_representation = $this->buildSettingsPUTRepresentationWithoutAccessFile($repository);
+
+        $result = $this->buildSettingsBuilder()->buildFromPOSTPUTRESTRepresentation($repository, $settings_put_representation);
+
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(MissingAccessFileFault::class, $result->error);
     }
 
     private function buildSettingsPOSTRepresentationWithUsersNotifications(SvnRepository $repository): SettingsPOSTRepresentation
     {
-        return new /** @psalm-immutable */ class ($repository) extends SettingsPOSTRepresentation {
-            public function __construct(SvnRepository $repository)
-            {
-                $this->commit_rules = CommitRulesRepresentation::build(
-                    new HookConfig(
-                        $repository,
-                        [
-                            HookConfig::MANDATORY_REFERENCE => false,
-                            HookConfig::COMMIT_MESSAGE_CAN_CHANGE => true,
-                        ]
-                    )
-                );
-
-                $this->immutable_tags = ImmutableTagRepresentation::build(
-                    new ImmutableTag($repository, '/path01', ''),
-                );
-
-                $this->access_file         = "Access file content";
-                $this->email_notifications = [
-                    new NotificationPOSTPUTRepresentation(
-                        ['emails' => [], 'users' => [101, 102], 'ugroups' => []],
-                        '/path01',
-                    ),
-                ];
-            }
-        };
+        return $this->buildParametrizedSettingsPOSTRepresentation(
+            $repository,
+            [
+                new NotificationPOSTPUTRepresentation(
+                    ['emails' => [], 'users' => [101, 102], 'ugroups' => []],
+                    '/path01',
+                ),
+            ],
+        );
     }
 
     private function buildSettingsPOSTRepresentationWithUserGroupsNotifications(SvnRepository $repository): SettingsPOSTRepresentation
     {
-        return new /** @psalm-immutable */ class ($repository) extends SettingsPOSTRepresentation {
-            public function __construct(SvnRepository $repository)
-            {
-                $this->commit_rules = CommitRulesRepresentation::build(
-                    new HookConfig(
-                        $repository,
-                        [
-                            HookConfig::MANDATORY_REFERENCE => false,
-                            HookConfig::COMMIT_MESSAGE_CAN_CHANGE => true,
-                        ]
-                    )
-                );
-
-                $this->immutable_tags = ImmutableTagRepresentation::build(
-                    new ImmutableTag($repository, '/path01', ''),
-                );
-
-                $this->access_file         = "Access file content";
-                $this->email_notifications = [
-                    new NotificationPOSTPUTRepresentation(
-                        ['emails' => [], 'users' => [], 'ugroups' => ['101_3', '201']],
-                        '/path01',
-                    ),
-                ];
-            }
-        };
+        return $this->buildParametrizedSettingsPOSTRepresentation(
+            $repository,
+            [
+                new NotificationPOSTPUTRepresentation(
+                    ['emails' => [], 'users' => [], 'ugroups' => ['101_3', '201']],
+                    '/path01',
+                ),
+            ],
+        );
     }
 
     private function buildSettingsPOSTRepresentationWithForbiddenUserGroupsNotifications(SvnRepository $repository): SettingsPOSTRepresentation
     {
-        return new /** @psalm-immutable */ class ($repository) extends SettingsPOSTRepresentation {
-            public function __construct(SvnRepository $repository)
+        return $this->buildParametrizedSettingsPOSTRepresentation(
+            $repository,
+            [
+                new NotificationPOSTPUTRepresentation(
+                    ['emails' => [], 'users' => [], 'ugroups' => ['101_19']],
+                    '/path01',
+                ),
+            ],
+        );
+    }
+
+    private function buildSettingsPOSTRepresentationWithSameNotificationPath(SvnRepository $repository): SettingsPOSTRepresentation
+    {
+        return $this->buildParametrizedSettingsPOSTRepresentation(
+            $repository,
+            [
+                new NotificationPOSTPUTRepresentation(
+                    ['emails' => [], 'users' => [101], 'ugroups' => []],
+                    '/path01',
+                ),
+                new NotificationPOSTPUTRepresentation(
+                    ['emails' => [], 'users' => [102], 'ugroups' => []],
+                    '/path01',
+                ),
+            ],
+        );
+    }
+
+    private function buildSettingsPOSTRepresentationWithEmptyNotification(SvnRepository $repository): SettingsPOSTRepresentation
+    {
+        return $this->buildParametrizedSettingsPOSTRepresentation(
+            $repository,
+            [
+                new NotificationPOSTPUTRepresentation(
+                    ['emails' => [], 'users' => [], 'ugroups' => []],
+                    '/path01',
+                ),
+            ],
+        );
+    }
+
+    private function buildSettingsPOSTRepresentationWithDuplicatedNotificationMails(SvnRepository $repository): SettingsPOSTRepresentation
+    {
+        return $this->buildParametrizedSettingsPOSTRepresentation(
+            $repository,
+            [
+                new NotificationPOSTPUTRepresentation(
+                    ['emails' => ['a@example.com', 'a@example.com'], 'users' => [], 'ugroups' => []],
+                    '/path01',
+                ),
+            ],
+        );
+    }
+
+    /**
+     * @param NotificationPOSTPUTRepresentation[] $email_notifications
+     */
+    private function buildParametrizedSettingsPOSTRepresentation(SvnRepository $repository, array $email_notifications): SettingsPOSTRepresentation
+    {
+        return new /** @psalm-immutable */ class ($repository, $email_notifications) extends SettingsPOSTRepresentation {
+            public function __construct(SvnRepository $repository, array $email_notifications)
             {
                 $this->commit_rules = CommitRulesRepresentation::build(
                     new HookConfig(
@@ -333,9 +439,33 @@ final class SettingsBuilderTest extends TestCase
                 );
 
                 $this->access_file         = "Access file content";
+                $this->email_notifications = $email_notifications;
+            }
+        };
+    }
+
+    private function buildSettingsPUTRepresentationWithoutAccessFile(SvnRepository $repository): SettingsPUTRepresentation
+    {
+        return new /** @psalm-immutable */ class ($repository) extends SettingsPUTRepresentation {
+            public function __construct(SvnRepository $repository)
+            {
+                $this->commit_rules = CommitRulesRepresentation::build(
+                    new HookConfig(
+                        $repository,
+                        [
+                            HookConfig::MANDATORY_REFERENCE => false,
+                            HookConfig::COMMIT_MESSAGE_CAN_CHANGE => true,
+                        ]
+                    )
+                );
+
+                $this->immutable_tags = ImmutableTagRepresentation::build(
+                    new ImmutableTag($repository, '/path01', ''),
+                );
+
                 $this->email_notifications = [
                     new NotificationPOSTPUTRepresentation(
-                        ['emails' => [], 'users' => [], 'ugroups' => ['101_19']],
+                        ['emails' => ['a@example.com'], 'users' => [], 'ugroups' => []],
                         '/path01',
                     ),
                 ];
