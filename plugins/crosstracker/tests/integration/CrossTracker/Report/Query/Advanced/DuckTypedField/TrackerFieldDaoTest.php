@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField;
 
 use Tuleap\DB\DBFactory;
 
@@ -69,7 +69,7 @@ final class TrackerFieldDaoTest extends \Tuleap\Test\PHPUnit\TestCase
         $types       = $this->dao->searchTypeByFieldNameAndTrackerList(self::FIELD_NAME, $tracker_ids);
 
         self::assertCount(2, $types);
-        self::assertSame('float', $types[0]->unwrapOr(null)?->type);
-        self::assertSame('int', $types[1]->unwrapOr(null)?->type);
+        self::assertSame(DuckTypedFieldType::NUMERIC, $types[0]->unwrapOr(null));
+        self::assertSame(DuckTypedFieldType::NUMERIC, $types[1]->unwrapOr(null));
     }
 }

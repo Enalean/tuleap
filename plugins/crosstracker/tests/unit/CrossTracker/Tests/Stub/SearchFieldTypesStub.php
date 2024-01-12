@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Tests\Stub;
 
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field\DuckTypedFieldType;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field\SearchFieldTypes;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\DuckTypedFieldType;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\SearchFieldTypes;
 
 final class SearchFieldTypesStub implements SearchFieldTypes
 {
@@ -34,6 +34,11 @@ final class SearchFieldTypesStub implements SearchFieldTypes
     public static function withTypes(string $first_type, string ...$other_types): self
     {
         return new self([$first_type, ...$other_types]);
+    }
+
+    public static function withNoTypeFound(): self
+    {
+        return new self([]);
     }
 
     public function searchTypeByFieldNameAndTrackerList(string $field_name, array $tracker_ids): array

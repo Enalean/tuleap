@@ -64,7 +64,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ListVal
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotEqual\NotEqualComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotIn\NotInComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field\FieldUsageChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field\TrackerFieldDao;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\TrackerFieldDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataUsageChecker;
 use Tuleap\CrossTracker\Report\SimilarField\BindNameVisitor;

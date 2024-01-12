@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,17 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField;
 
-use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
 
-interface SearchFieldTypes
+/**
+ * @psalm-immutable
+ */
+final class FieldNotFoundInAnyTrackerFault extends Fault
 {
-    /**
-     * @param int[] $tracker_ids
-     * @psalm-return list<Ok<DuckTypedFieldType>|Err<Fault>>
-     */
-    public function searchTypeByFieldNameAndTrackerList(string $field_name, array $tracker_ids): array;
+    public static function build(): Fault
+    {
+        return new self('The field could not be found in any of the given trackers');
+    }
 }

@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field\FieldUsageChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\CheckMetadataUsage;
 use Tuleap\CrossTracker\SearchOnDuckTypedFieldsConfig;
 use Tuleap\CrossTracker\Tests\Builders\InvalidSearchableCollectorParametersBuilder;
 use Tuleap\CrossTracker\Tests\Stub\MetadataCheckerStub;
@@ -32,98 +31,124 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Searchable;
 
 final class InvalidSearchableCollectorVisitorTest extends TestCase
 {
     use ForgeConfigSandbox;
 
-    private CheckMetadataUsage $metadata_checker;
-    private FieldUsageChecker $field_checker;
+    private MetadataCheckerStub $metadata_checker;
     private InvalidSearchableCollectorParameters $parameters;
+    private Searchable $searchable;
+    private SearchFieldTypesStub $field_searcher;
 
     protected function setUp(): void
     {
         $this->metadata_checker = MetadataCheckerStub::withValidMetadata();
-        $this->field_checker    = new FieldUsageChecker(SearchFieldTypesStub::withTypes('int'));
-        $this->parameters       = InvalidSearchableCollectorParametersBuilder::aParameter()->build();
+        $this->field_searcher   = SearchFieldTypesStub::withTypes('int');
+
+        $this->parameters = InvalidSearchableCollectorParametersBuilder::aParameter()->build();
+        $this->searchable = new Field("a_field");
+    }
+
+    private function check(): void
+    {
+        $visitor = new InvalidSearchableCollectorVisitor(
+            $this->metadata_checker,
+            new FieldUsageChecker($this->field_searcher)
+        );
+        $this->searchable->acceptSearchableVisitor($visitor, $this->parameters);
     }
 
     public function testItAddsFieldToInvalidCollectionWhenFFIsOff(): void
     {
-        $field   = new Field("a_field");
-        $visitor = new InvalidSearchableCollectorVisitor(
-            $this->metadata_checker,
-            $this->field_checker
+        $this->check();
+        self::assertNotEmpty(
+            $this->parameters
+                ->getInvalidSearchablesCollectorParameters()
+                ->getInvalidSearchablesCollection()
+                ->getNonexistentSearchables()
         );
-
-        $visitor->visitField($field, $this->parameters);
-        self::assertTrue($this->parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection()->hasInvalidSearchable());
     }
 
-    public function testItAddsInvalidFieldIntoCollection(): void
+    public function testItAddsNotSupportedFieldToInvalidCollection(): void
     {
         \ForgeConfig::set("feature_flag_" . SearchOnDuckTypedFieldsConfig::FEATURE_FLAG_SEARCH_DUCK_TYPED_FIELDS, '1');
+        $this->field_searcher = SearchFieldTypesStub::withTypes('invalid');
 
-        $invalid_field_checker = new FieldUsageChecker(SearchFieldTypesStub::withTypes('invalid'));
-        $field                 = new Field("a_field");
-        $visitor               = new InvalidSearchableCollectorVisitor(
-            $this->metadata_checker,
-            $invalid_field_checker
+        $this->check();
+        self::assertNotEmpty(
+            $this->parameters
+                ->getInvalidSearchablesCollectorParameters()
+                ->getInvalidSearchablesCollection()
+                ->getNonexistentSearchables()
         );
+    }
 
-        $visitor->visitField($field, $this->parameters);
-        self::assertTrue($this->parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection()->hasInvalidSearchable());
+    public function testItAddsFieldNotFoundToInvalidCollection(): void
+    {
+        \ForgeConfig::set("feature_flag_" . SearchOnDuckTypedFieldsConfig::FEATURE_FLAG_SEARCH_DUCK_TYPED_FIELDS, '1');
+        $this->field_searcher = SearchFieldTypesStub::withNoTypeFound();
+
+        $this->check();
+        self::assertNotEmpty(
+            $this->parameters
+                ->getInvalidSearchablesCollectorParameters()
+                ->getInvalidSearchablesCollection()
+                ->getNonexistentSearchables()
+        );
     }
 
     public function testItChecksFieldIsValid(): void
     {
         \ForgeConfig::set("feature_flag_" . SearchOnDuckTypedFieldsConfig::FEATURE_FLAG_SEARCH_DUCK_TYPED_FIELDS, '1');
 
-        $field   = new Field("a_field");
-        $visitor = new InvalidSearchableCollectorVisitor(
-            $this->metadata_checker,
-            $this->field_checker
+        $this->check();
+        self::assertFalse(
+            $this->parameters
+                ->getInvalidSearchablesCollectorParameters()
+                ->getInvalidSearchablesCollection()
+                ->hasInvalidSearchable()
         );
-
-        $visitor->visitField($field, $this->parameters);
-        self::assertFalse($this->parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection()->hasInvalidSearchable());
     }
 
     public function testItAddsUnknownMetadataToInvalidCollection(): void
     {
-        $metadata = new Metadata("unknown");
-        $visitor  = new InvalidSearchableCollectorVisitor(
-            $this->metadata_checker,
-            $this->field_checker
-        );
+        $this->searchable = new Metadata("unknown");
 
-        $visitor->visitMetadata($metadata, $this->parameters);
-        self::assertTrue($this->parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection()->hasInvalidSearchable());
+        $this->check();
+        self::assertNotEmpty(
+            $this->parameters
+                ->getInvalidSearchablesCollectorParameters()
+                ->getInvalidSearchablesCollection()
+                ->getNonexistentSearchables()
+        );
     }
 
     public function testItAllowsValidMetadata(): void
     {
-        $metadata = new Metadata("title");
-        $visitor  = new InvalidSearchableCollectorVisitor(
-            $this->metadata_checker,
-            $this->field_checker
-        );
+        $this->searchable = new Metadata("title");
 
-        $visitor->visitMetadata($metadata, $this->parameters);
-        self::assertFalse($this->parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection()->hasInvalidSearchable());
+        $this->check();
+        self::assertFalse(
+            $this->parameters
+                ->getInvalidSearchablesCollectorParameters()
+                ->getInvalidSearchablesCollection()
+                ->hasInvalidSearchable()
+        );
     }
 
     public function testItAddsInvalidMetadataToCollection(): void
     {
-        $invalid_metadata_checker = MetadataCheckerStub::withInvalidMetadata();
-        $metadata                 = new Metadata("title");
+        $this->searchable       = new Metadata("title");
+        $this->metadata_checker = MetadataCheckerStub::withInvalidMetadata();
 
-        $visitor = new InvalidSearchableCollectorVisitor(
-            $invalid_metadata_checker,
-            $this->field_checker
+        $this->check();
+        self::assertTrue(
+            $this->parameters
+                ->getInvalidSearchablesCollectorParameters()
+                ->getInvalidSearchablesCollection()
+                ->hasInvalidSearchable()
         );
-
-        $visitor->visitMetadata($metadata, $this->parameters);
-        self::assertTrue($this->parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection()->hasInvalidSearchable());
     }
 }

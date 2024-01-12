@@ -20,7 +20,8 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field\FieldTypeIsNotSupportedFault;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldNotFoundInAnyTrackerFault;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeIsNotSupportedFault;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field\FieldUsageChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\CheckMetadataUsage;
@@ -57,7 +58,7 @@ final class InvalidSearchableCollectorVisitor implements SearchableVisitor
                 },
                 static function (Fault $fault) use ($searchable_field, $parameters) {
                     $invalid_searchables_collection = $parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection();
-                    if ($fault instanceof FieldTypeIsNotSupportedFault) {
+                    if ($fault instanceof FieldTypeIsNotSupportedFault || $fault instanceof FieldNotFoundInAnyTrackerFault) {
                         $invalid_searchables_collection->addNonExistentSearchable($searchable_field->getName());
                         return;
                     }
