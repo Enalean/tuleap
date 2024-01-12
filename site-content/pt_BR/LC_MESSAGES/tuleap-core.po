@@ -4433,8 +4433,8 @@ msgstr[1] ""
 "Você está prestes a remover %s usuários restritos deste projeto. Por favor "
 "confirme sua ação. A remoção será feita alguns minutos após sua confirmação."
 
-msgid "You are going be redirected"
-msgstr "Você será redirecionado"
+msgid "You are going to be redirected"
+msgstr ""
 
 msgid ""
 "You are monitoring the whole forum. If you want to monitor only specific "
