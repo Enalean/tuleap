@@ -89,14 +89,12 @@ use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpRepositoryDao;
 use Tuleap\Git\Permissions\RegexpTemplateDao;
-use Tuleap\Git\PullRequestEndpointsAvailableChecker;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
 use Tuleap\Git\Repository\GitRepositoryNameIsInvalidException;
 use Tuleap\Git\Repository\RepositoryCreator;
 use Tuleap\Git\REST\v1\Branch\BranchCreator;
 use Tuleap\Git\XmlUgroupRetriever;
 use Tuleap\Http\HttpClientFactory;
-use Tuleap\PullRequest\REST\v1\RepositoryPullRequestRepresentation;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectStatusVerificator;
@@ -357,79 +355,6 @@ class RepositoryResource extends AuthenticatedResource
         $this->sendAllowHeaders();
 
         return $this->representation_builder->build($user, $repository, GitRepositoryRepresentation::FIELDS_ALL);
-    }
-
-    /**
-     * @url OPTIONS {id}/pull_requests
-     *
-     * @param int $id Id of the repository
-     *
-     * @throws RestException 404
-     */
-    public function optionsPullRequests($id)
-    {
-        $this->checkPullRequestEndpointsAvailable();
-        $this->sendAllowHeaders();
-    }
-
-    /**
-     * Get pull requests
-     *
-     * <p>Retrieve all git repository's pull requests.</p>
-     *
-     * <p>Pull requests are sorted by descending order of creation date.</p>
-     *
-     * <p>User is not able to see a pull request in a git repository where he is not able to READ.</p>
-     *
-     * <p>
-     *     <code>$query</code> parameter is optional, by default we return all pull requests.
-     * </p>
-     * <p>
-     *     You can filter on:
-     *     <p>
-     *         <b>Status</b>: <code>query={"status":"open"}</code> OR <code>query={"status":"closed"}</code>. When not specified, pull-requests with any statuses will be returned.
-     *     </p>
-     *     <p>
-     *         <b>Author</b>: <code>query={"author": {"id": int}}</code> where "id" is the user_id of the author.
-     *     </p>
-     * </p>
-     *
-     * <p>
-     *     All these filters are cumulative. For instance, <code>query={"status": "closed", "author": {"id": 102 }}</code>
-     *     will return all the closed pull-requests whose author is user 102.
-     * </p>
-     *
-     * <pre>
-     * /!\ PullRequest REST routes are under construction and subject to changes /!\
-     * </pre>
-     *
-     * @url GET {id}/pull_requests
-     *
-     * @access protected
-     *
-     * @param int    $id     Id of the repository
-     * @param string $query  JSON object of search criteria properties {@from path}
-     * @param int    $limit  Number of elements displayed per page {@from path} {@min 0} {@max 50}
-     * @param int    $offset Position of the first element to display {@from path} {@min 0}
-     *
-     * @return RepositoryPullRequestRepresentation
-     *
-     * @throws RestException 403
-     * @throws RestException 404
-     */
-    public function getPullRequests($id, $query = '', $limit = self::MAX_LIMIT, $offset = 0)
-    {
-        $this->checkAccess();
-        $this->checkPullRequestEndpointsAvailable();
-
-        $user       = $this->getCurrentUser();
-        $repository = $this->getRepository($user, $id);
-        $result     = $this->getPaginatedPullRequests($repository, $query, $limit, $offset);
-
-        $this->sendAllowHeaders();
-        $this->sendPaginationHeaders($limit, $offset, $result->total_size);
-
-        return $result;
     }
 
     /**
@@ -1178,34 +1103,6 @@ class RepositoryResource extends AuthenticatedResource
         }
 
         return $repository;
-    }
-
-    private function getPaginatedPullRequests(GitRepository $repository, $query, $limit, $offset)
-    {
-        $result = null;
-
-        EventManager::instance()->processEvent(
-            REST_GIT_PULL_REQUEST_GET_FOR_REPOSITORY,
-            [
-                'version'    => 'v1',
-                'repository' => $repository,
-                'query'      => $query,
-                'limit'      => $limit,
-                'offset'     => $offset,
-                'result'     => &$result,
-            ]
-        );
-
-        return $result;
-    }
-
-    private function checkPullRequestEndpointsAvailable()
-    {
-        $checker = new PullRequestEndpointsAvailableChecker(EventManager::instance());
-
-        if (! $checker->arePullRequestEndpointsAvailable()) {
-            throw new RestException(404, 'PullRequest plugin not activated');
-        }
     }
 
     private function sendAllowHeaders()

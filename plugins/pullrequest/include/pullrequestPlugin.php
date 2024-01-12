@@ -175,25 +175,6 @@ class pullrequestPlugin extends Plugin
         $event->endpointsAreAvailable();
     }
 
-    #[\Tuleap\Plugin\ListeningToEventName(REST_GIT_PULL_REQUEST_GET_FOR_REPOSITORY)]
-    public function restGitPullRequestGetForRepository($params): void
-    {
-        $version = $params['version'];
-        $class   = "\\Tuleap\\PullRequest\\REST\\$version\\RepositoryResource";
-        if (! class_exists($class)) {
-            throw new LogicException("$class does not exist");
-        }
-
-        $repository_resource = new $class();
-
-        $params['result'] = $repository_resource->getPaginatedPullRequests(
-            $params['repository'],
-            $params['query'],
-            $params['limit'],
-            $params['offset']
-        );
-    }
-
     #[\Tuleap\Plugin\ListeningToEventName(GIT_ADDITIONAL_BODY_CLASSES)]
     public function gitAdditionalBodyClasses($params): void
     {

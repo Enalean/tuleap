@@ -24,8 +24,6 @@ define('GIT_BASE_DIR', dirname(__FILE__));
 define('GIT_TEMPLATE_DIR', GIT_BASE_DIR . '/../templates');
 define('GITOLITE3_LOGS_PATH', '/var/lib/gitolite/.gitolite/logs/');
 
-define('REST_GIT_PULL_REQUEST_GET_FOR_REPOSITORY', 'rest_git_pull_request_get_for_repository');
-
 /**
  * Allow a plugin to append his own classes to the body DOM element in git views
  *
