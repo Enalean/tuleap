@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+ * Copyright (c) Enalean 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorParameters;
@@ -26,12 +28,8 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryExcept
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-final class MetadataChecker implements CheckMetadataUsage
+interface CheckMetadataUsage
 {
-    public function __construct(private readonly MetadataUsageChecker $semantic_usage_checker)
-    {
-    }
-
     /**
      * @throws InvalidQueryException
      */
@@ -40,8 +38,5 @@ final class MetadataChecker implements CheckMetadataUsage
         Comparison $comparison,
         InvalidComparisonCollectorParameters $collector_parameters,
         ComparisonChecker $checker,
-    ): void {
-        $this->semantic_usage_checker->checkMetadataIsUsedByAllTrackers($metadata, $collector_parameters);
-        $checker->checkComparisonIsValid($metadata, $comparison);
-    }
+    ): void;
 }
