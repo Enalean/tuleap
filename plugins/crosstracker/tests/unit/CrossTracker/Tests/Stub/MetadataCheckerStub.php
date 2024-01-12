@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+ * Copyright (c) Enalean 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,30 +18,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata;
+declare(strict_types=1);
+
+namespace Tuleap\CrossTracker\Tests\Stub;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorParameters;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ComparisonChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\CheckMetadataUsage;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\TitleIsMissingInAtLeastOneTrackerException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-final class MetadataChecker implements CheckMetadataUsage
+final class MetadataCheckerStub implements CheckMetadataUsage
 {
-    public function __construct(private readonly MetadataUsageChecker $semantic_usage_checker)
+    private function __construct(private readonly bool $is_valid)
     {
     }
 
-    /**
-     * @throws InvalidQueryException
-     */
-    public function checkMetadataIsValid(
-        Metadata $metadata,
-        Comparison $comparison,
-        InvalidComparisonCollectorParameters $collector_parameters,
-        ComparisonChecker $checker,
-    ): void {
-        $this->semantic_usage_checker->checkMetadataIsUsedByAllTrackers($metadata, $collector_parameters);
-        $checker->checkComparisonIsValid($metadata, $comparison);
+    public static function withValidMetadata(): self
+    {
+        return new self(true);
+    }
+
+    public static function withInvalidMetadata(): self
+    {
+        return new self(false);
+    }
+
+    public function checkMetadataIsValid(Metadata $metadata, Comparison $comparison, InvalidComparisonCollectorParameters $collector_parameters, ComparisonChecker $checker,): void
+    {
+        if (! $this->is_valid) {
+            throw new TitleIsMissingInAtLeastOneTrackerException(2);
+        }
     }
 }

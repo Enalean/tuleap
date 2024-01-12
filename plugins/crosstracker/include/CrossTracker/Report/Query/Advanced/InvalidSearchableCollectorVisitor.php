@@ -23,7 +23,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field\FieldTypeIsNotSupportedFault;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field\FieldUsageChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\CheckMetadataUsage;
 use Tuleap\CrossTracker\SearchOnDuckTypedFieldsConfig;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
@@ -36,7 +36,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SearchableVisitor;
 final class InvalidSearchableCollectorVisitor implements SearchableVisitor
 {
     public function __construct(
-        private readonly MetadataChecker $metadata_checker,
+        private readonly CheckMetadataUsage $metadata_checker,
         private readonly FieldUsageChecker $field_checker,
     ) {
     }
