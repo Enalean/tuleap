@@ -22,6 +22,7 @@ namespace Tuleap\PullRequest;
 
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\PullRequest\Criterion\AuthorCriterion;
 use Tuleap\PullRequest\Criterion\SearchCriteria;
 use Tuleap\PullRequest\GitReference\GitPullRequestReference;
 
@@ -240,6 +241,10 @@ class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginated
             if ($status_criterion->shouldOnlyRetrieveClosedPullRequests()) {
                 $statement->andIn('status IN (?*)', [PullRequest::STATUS_ABANDONED, PullRequest::STATUS_MERGED]);
             }
+        });
+
+        $search_criteria->author->apply(function (AuthorCriterion $author_criterion) use ($statement) {
+            $statement->with('user_id = ?', $author_criterion->id);
         });
 
         return $statement;

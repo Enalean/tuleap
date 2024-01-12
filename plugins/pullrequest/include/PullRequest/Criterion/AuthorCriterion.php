@@ -22,15 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Criterion;
 
-use Tuleap\NeverThrow\Fault;
-
-/**
- * @psalm-immutable
- */
-final class MalformedStatusQueryParameterFault extends Fault
+final class AuthorCriterion
 {
-    public static function build(): Fault
+    public function __construct(public readonly int $id)
     {
-        return new self('Query is malformed. Expecting {"status":"open"} or {"status":"closed"}.');
     }
 }

@@ -24,8 +24,6 @@ namespace Tuleap\PullRequest\Criterion;
 
 enum StatusCriterion: string implements SearchOnStatus
 {
-    public const KEY = "status";
-
     case OPEN   = "open";
     case CLOSED = "closed";
 

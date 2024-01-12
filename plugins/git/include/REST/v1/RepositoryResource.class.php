@@ -382,9 +382,21 @@ class RepositoryResource extends AuthenticatedResource
      * <p>User is not able to see a pull request in a git repository where he is not able to READ.</p>
      *
      * <p>
-     * <code>$query</code> parameter is optional, by default we return all pull requests. If
-     * <code>query={"status":"open"}</code> then only open pull requests are returned and if
-     * <code>query={"status":"closed"}</code> then only closed pull requests are returned.
+     *     <code>$query</code> parameter is optional, by default we return all pull requests.
+     * </p>
+     * <p>
+     *     You can filter on:
+     *     <p>
+     *         <b>Status</b>: <code>query={"status":"open"}</code> OR <code>query={"status":"closed"}</code>. When not specified, pull-requests with any statuses will be returned.
+     *     </p>
+     *     <p>
+     *         <b>Author</b>: <code>query={"author": {"id": int}}</code> where "id" is the user_id of the author.
+     *     </p>
+     * </p>
+     *
+     * <p>
+     *     All these filters are cumulative. For instance, <code>query={"status": "closed", "author": {"id": 102 }}</code>
+     *     will return all the closed pull-requests whose author is user 102.
      * </p>
      *
      * <pre>

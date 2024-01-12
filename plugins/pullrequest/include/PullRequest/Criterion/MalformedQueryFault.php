@@ -33,4 +33,15 @@ final class MalformedQueryFault extends Fault
     {
         return new self('Query is malformed.');
     }
+
+    public static function buildFromMappingErrors(\CuyZ\Valinor\Mapper\Tree\Message\Messages $errors): Fault
+    {
+        $all_error_messages = "Query is malformed.";
+
+        foreach ($errors as $error) {
+            $all_error_messages .= "\n" . $error->node()->path() . ": " . $error;
+        }
+
+        return new self($all_error_messages);
+    }
 }

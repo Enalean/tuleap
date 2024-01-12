@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest;
 
 use Tuleap\DB\DBFactory;
+use Tuleap\PullRequest\Criterion\AuthorCriterion;
 use Tuleap\PullRequest\Criterion\SearchCriteria;
 use Tuleap\PullRequest\Criterion\StatusCriterion;
 use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
@@ -33,6 +34,8 @@ final class DaoTest extends TestCase
     private const REPOSITORY_ID = 5;
     private const LIMIT         = 10;
     private const OFFSET        = 0;
+    private const BOB_USER_ID   = 102;
+    private const ALICE_USER_ID = 103;
 
     private Dao $dao;
 
@@ -95,17 +98,54 @@ final class DaoTest extends TestCase
         ]);
     }
 
+    public function testItFiltersOnASpecificAuthor(): void
+    {
+        $pull_requests = $this->dao->getPaginatedPullRequests(
+            self::REPOSITORY_ID,
+            new SearchCriteria(null, new AuthorCriterion(self::BOB_USER_ID)),
+            self::LIMIT,
+            self::OFFSET,
+        );
+
+        self::assertSame(array_column($pull_requests, "id"), [
+            $this->merged_pull_request_id,
+        ]);
+    }
+
+    public function testItAppliesAllTheFilters(): void
+    {
+        $pull_requests = $this->dao->getPaginatedPullRequests(
+            self::REPOSITORY_ID,
+            new SearchCriteria(
+                StatusCriterion::CLOSED,
+                new AuthorCriterion(self::ALICE_USER_ID)
+            ),
+            self::LIMIT,
+            self::OFFSET,
+        );
+
+        self::assertSame(array_column($pull_requests, "id"), [
+            $this->abandoned_pull_request_id,
+        ]);
+    }
+
     private function insertOpenPullRequest(): int
     {
         return $this->insertPullRequest(
-            PullRequestTestBuilder::aPullRequestInReview()->withRepositoryId(self::REPOSITORY_ID)->build(),
+            PullRequestTestBuilder::aPullRequestInReview()
+                ->createdBy(self::ALICE_USER_ID)
+                ->withRepositoryId(self::REPOSITORY_ID)
+                ->build(),
         );
     }
 
     private function insertMergedPullRequest(): int
     {
         $pull_request_id = $this->insertPullRequest(
-            PullRequestTestBuilder::aMergedPullRequest()->withRepositoryId(self::REPOSITORY_ID)->build(),
+            PullRequestTestBuilder::aMergedPullRequest()
+                ->createdBy(self::BOB_USER_ID)
+                ->withRepositoryId(self::REPOSITORY_ID)
+                ->build(),
         );
 
         $this->dao->markAsMerged($pull_request_id);
@@ -116,7 +156,10 @@ final class DaoTest extends TestCase
     private function insertAbandonedPullRequest(): int
     {
         $pull_request_id = $this->insertPullRequest(
-            PullRequestTestBuilder::anAbandonedPullRequest()->withRepositoryId(self::REPOSITORY_ID)->build()
+            PullRequestTestBuilder::anAbandonedPullRequest()
+                ->createdBy(self::ALICE_USER_ID)
+                ->withRepositoryId(self::REPOSITORY_ID)
+                ->build()
         );
 
         $this->dao->markAsAbandoned($pull_request_id);
