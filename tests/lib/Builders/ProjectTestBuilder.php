@@ -39,6 +39,7 @@ final class ProjectTestBuilder
     ];
 
     private ?array $used_service_short_names = null;
+    private ?array $used_services            = null;
 
     public function __construct()
     {
@@ -55,6 +56,8 @@ final class ProjectTestBuilder
         $project = new Project($this->data);
         if ($this->used_service_short_names !== null) {
             $project->addUsedServices(...$this->used_service_short_names);
+        } elseif ($this->used_services !== null) {
+            $project->addUsedServices(...$this->used_services);
         }
 
         return $project;
@@ -134,6 +137,19 @@ final class ProjectTestBuilder
         return $this;
     }
 
+    public function withServices(\Service ...$services): self
+    {
+        $this->used_services = [];
+        foreach ($services as $service) {
+            $this->used_services[] = [
+                $service->getShortName(),
+                $service,
+            ];
+        }
+
+        return $this;
+    }
+
     public function withoutServices(): self
     {
         $this->used_service_short_names = [];
@@ -143,6 +159,12 @@ final class ProjectTestBuilder
     public function withTypeTemplate(): self
     {
         $this->data['type'] = (string) TemplateSingleton::TEMPLATE;
+        return $this;
+    }
+
+    public function withDescription(string $description): self
+    {
+        $this->data['short_description'] = $description;
         return $this;
     }
 }
