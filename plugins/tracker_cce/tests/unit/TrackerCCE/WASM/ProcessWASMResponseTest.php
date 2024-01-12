@@ -27,6 +27,8 @@ use CuyZ\Valinor\MapperBuilder;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
+use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use function Psl\Json\encode as psl_json_encode;
 
 final class ProcessWASMResponseTest extends TestCase
@@ -37,7 +39,7 @@ final class ProcessWASMResponseTest extends TestCase
     protected function setUp(): void
     {
         $this->logger    = new TestLogger();
-        $this->processor = new ProcessWASMResponse($this->logger, (new MapperBuilder())->mapper());
+        $this->processor = new ProcessWASMResponse($this->logger, (new MapperBuilder())->allowPermissiveTypes()->enableFlexibleCasting()->mapper());
     }
 
     public function testItReturnsErrIfResponseIsErr(): void
@@ -55,7 +57,12 @@ final class ProcessWASMResponseTest extends TestCase
 
     public function testItReturnsOkIfResponseIsOkAndDataValid(): void
     {
-        $result = $this->processor->processResponse(Result::ok(psl_json_encode(new WASMResponseRepresentation([], null))));
+        $value           = new ArtifactValuesRepresentation();
+        $value->field_id = 254;
+        $value->value    = "Hello!";
+        $result          = $this->processor->processResponse(Result::ok(psl_json_encode(
+            new WASMResponseRepresentation([$value], new NewChangesetCommentRepresentation("My comment", "text"))
+        )));
         self::assertTrue(Result::isOk($result));
     }
 }

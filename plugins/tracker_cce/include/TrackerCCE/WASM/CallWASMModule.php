@@ -27,6 +27,7 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\WebAssembly\WASMCaller;
+use Tuleap\WebAssembly\WASMExecutionException;
 
 final class CallWASMModule implements WASMModuleCaller
 {
@@ -38,11 +39,15 @@ final class CallWASMModule implements WASMModuleCaller
 
     public function callWASMModule(string $wasm_module_path, string $payload): Ok | Err
     {
-        return $this->wasm_caller
-            ->call($wasm_module_path, $payload, [])
-            ->mapOr(
-                $this->response_processor->processResponse(...),
-                Result::err(Fault::fromMessage('WASM module returns nothing'))
-            );
+        try {
+            return $this->wasm_caller
+                ->call($wasm_module_path, $payload, [])
+                ->mapOr(
+                    $this->response_processor->processResponse(...),
+                    Result::err(Fault::fromMessage('WASM module returns nothing'))
+                );
+        } catch (WASMExecutionException $exception) {
+            return Result::err(Fault::fromThrowable($exception));
+        }
     }
 }

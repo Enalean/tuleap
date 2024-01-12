@@ -32,16 +32,6 @@ use Tuleap\Plugin\MandatoryAsyncWorkerSetupPluginInstallRequirement;
 use Tuleap\Queue\WorkerAvailability;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
-use Tuleap\TrackerCCE\Administration\ActiveTrackerRetrieverMiddleware;
-use Tuleap\TrackerCCE\Administration\AdministrationController;
-use Tuleap\TrackerCCE\Administration\CheckTrackerCSRFMiddleware;
-use Tuleap\TrackerCCE\Administration\RejectNonTrackerAdministratorMiddleware;
-use Tuleap\TrackerCCE\Administration\UpdateModuleCSRFTokenProvider;
-use Tuleap\TrackerCCE\Administration\UpdateModuleController;
-use Tuleap\TrackerCCE\CustomCodeExecutionTask;
-use Tuleap\TrackerCCE\WASM\CallWASMModule;
-use Tuleap\TrackerCCE\WASM\FindWASMModulePath;
-use Tuleap\TrackerCCE\WASM\ProcessWASMResponse;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\CachingTrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentInformationRetriever;
@@ -52,6 +42,16 @@ use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
 use Tuleap\Tracker\Webhook\ArtifactPayloadBuilder;
 use Tuleap\Tracker\Workflow\WorkflowMenuItem;
 use Tuleap\Tracker\Workflow\WorkflowMenuItemCollection;
+use Tuleap\TrackerCCE\Administration\ActiveTrackerRetrieverMiddleware;
+use Tuleap\TrackerCCE\Administration\AdministrationController;
+use Tuleap\TrackerCCE\Administration\CheckTrackerCSRFMiddleware;
+use Tuleap\TrackerCCE\Administration\RejectNonTrackerAdministratorMiddleware;
+use Tuleap\TrackerCCE\Administration\UpdateModuleController;
+use Tuleap\TrackerCCE\Administration\UpdateModuleCSRFTokenProvider;
+use Tuleap\TrackerCCE\CustomCodeExecutionTask;
+use Tuleap\TrackerCCE\WASM\CallWASMModule;
+use Tuleap\TrackerCCE\WASM\FindWASMModulePath;
+use Tuleap\TrackerCCE\WASM\ProcessWASMResponse;
 use Tuleap\WebAssembly\FFIWASMCaller;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -88,7 +88,7 @@ final class tracker_ccePlugin extends Plugin
     #[ListeningToEventClass]
     public function collectPostCreationTask(PostCreationTaskCollectorEvent $event): void
     {
-        $mapper = ValinorMapperBuilderFactory::mapperBuilder()->mapper();
+        $mapper = ValinorMapperBuilderFactory::mapperBuilder()->allowPermissiveTypes()->enableFlexibleCasting()->mapper();
 
         $event->addAsyncTask(new CustomCodeExecutionTask(
             $event->getLogger(),
