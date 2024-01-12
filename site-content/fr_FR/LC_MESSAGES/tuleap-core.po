@@ -4518,7 +4518,7 @@ msgstr[1] ""
 "confirmer votre action. La suppression sera effective quelques minutes après "
 "votre confirmation."
 
-msgid "You are going be redirected"
+msgid "You are going to be redirected"
 msgstr "Vous allez être redirigé(e)"
 
 msgid ""

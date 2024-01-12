@@ -88,7 +88,7 @@ setTimeout("return_to_url()",1000);
             </clipPath>
         </defs>
     </svg>
-    <h1 class="empty-state-title"><?php echo _('You are going be redirected'); ?></h1>
+    <h1 class="empty-state-title"><?php echo _('You are going to be redirected'); ?></h1>
     <p class="empty-state-text"><?php echo $redirect; ?></p>
 </section>
 
