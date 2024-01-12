@@ -84,10 +84,6 @@ class RepositoryResource extends AuthenticatedResource
      */
     private $ugroup_manager;
     /**
-     * @var SettingsRepresentationValidator
-     */
-    private $settings_representation_validator;
-    /**
      * @var NotificationsEmailsBuilder
      */
     private $emails_builder;
@@ -261,8 +257,6 @@ class RepositoryResource extends AuthenticatedResource
                 )
             )
         );
-
-        $this->settings_representation_validator = new SettingsRepresentationValidator(\UserManager::instance());
 
         $this->user_group_id_retriever = new UserGroupRetriever(new UGroupManager());
     }
@@ -445,12 +439,6 @@ class RepositoryResource extends AuthenticatedResource
         );
 
         $this->checkUserIsAdmin($repository->getProject(), $user);
-
-        try {
-            $this->settings_representation_validator->validateForPUTRepresentation($settings);
-        } catch (SettingsInvalidException $e) {
-            throw new RestException(400, $e->getMessage());
-        }
 
         $repository_settings = $this->getSettings($repository, $settings);
 
@@ -657,12 +645,6 @@ class RepositoryResource extends AuthenticatedResource
 
         if (! $project->usesService(\SvnPlugin::SERVICE_SHORTNAME)) {
             throw new RestException(400, "Project does not use SVN service");
-        }
-
-        try {
-            $this->settings_representation_validator->validateForPOSTRepresentation($settings);
-        } catch (SettingsInvalidException $e) {
-            throw new RestException(400, $e->getMessage());
         }
 
         ProjectAuthorization::userCanAccessProject(

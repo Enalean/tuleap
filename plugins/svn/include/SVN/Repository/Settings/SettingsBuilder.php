@@ -30,6 +30,7 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\SVN\Admin\ImmutableTagFactory;
 use Tuleap\SVN\Admin\MailNotification;
+use Tuleap\SVN\REST\v1\NotificationPOSTPUTRepresentation;
 use Tuleap\SVN\REST\v1\SettingsPOSTRepresentation;
 use Tuleap\SVN\REST\v1\SettingsPUTRepresentation;
 use Tuleap\SVNCore\Repository;
@@ -81,18 +82,42 @@ class SettingsBuilder
             );
         }
 
+        if ($settings instanceof SettingsPUTRepresentation) {
+            if (! isset($settings->access_file)) {
+                return Result::err(MissingAccessFileFault::build());
+            }
+        }
+
         if ($settings->access_file) {
             $access_file = $settings->access_file;
         }
 
         if ($settings->email_notifications) {
+            $non_unique_path = $this->getNonUniquePaths($settings->email_notifications);
+            if (! empty($non_unique_path)) {
+                return Result::err(NonUniqueNotificationPathFault::build($non_unique_path));
+            }
+
+            $empty_notifications = $this->getEmptyNotifications($settings->email_notifications);
+            if (! empty($empty_notifications)) {
+                return Result::err(EmptyNotificationsFault::build($empty_notifications));
+            }
+
+            $non_unique_mails = $this->getNonUniqueEmails($settings->email_notifications);
+            if (! empty($non_unique_mails)) {
+                return Result::err(NonUniqueMailsFault::build($non_unique_mails));
+            }
+
             foreach ($settings->email_notifications as $notification) {
                 $users_notification = [];
                 if ($notification->users) {
                     foreach ($notification->users as $user_id) {
                         $user = $this->user_manager->getUserById($user_id);
                         if (! $user) {
-                            return Result::err(Fault::fromMessage("User $user_id not found"));
+                            return Result::err(UserInNotificationNotFoundFault::build($user_id));
+                        }
+                        if (! $user->isAlive()) {
+                            return Result::err(UserNotAliveFault::build($user_id));
                         }
                         $users_notification[] = $user;
                     }
@@ -104,15 +129,11 @@ class SettingsBuilder
                         $user_group = $this->user_group_retriever->getExistingUserGroup($group_id);
 
                         if (! $user_group->isStatic() && ! $this->isAnAuthorizedDynamicUgroup($user_group)) {
-                            return Result::err(Fault::fromMessage(
-                                "Notifications can not be sent to ugroups Anonymous Authenticated and Registered"
-                            ));
+                            return Result::err(NonAuthorizedDynamicUgroupFault::build());
                         }
 
                         if ($user_group->getProject()->getId() != $repository->getProject()->getID()) {
-                            return Result::err(Fault::fromMessage(
-                                "You can't add a user group from a different project"
-                            ));
+                            return Result::err(UgroupNotInProjectFault::build());
                         }
 
                         $user_groups_notification[] = $user_group;
@@ -141,6 +162,58 @@ class SettingsBuilder
                 false,
             )
         );
+    }
+
+    /**
+     * @param NotificationPOSTPUTRepresentation[] $email_notifications
+     * @return list<string>
+     */
+    private function getNonUniquePaths(array $email_notifications): array
+    {
+        $non_unique_paths  = [];
+        $already_seen_path = [];
+
+        foreach ($email_notifications as $notification) {
+            if (isset($already_seen_path[$notification->path])) {
+                $non_unique_paths[] = $notification->path;
+            }
+
+            $already_seen_path[$notification->path] = true;
+        }
+
+        return $non_unique_paths;
+    }
+
+    /**
+     * @param NotificationPOSTPUTRepresentation[] $email_notifications
+     * @return list<string>
+     */
+    private function getEmptyNotifications(array $email_notifications): array
+    {
+        $empty_notifications = [];
+        foreach ($email_notifications as $notification) {
+            if (empty($notification->emails) && empty($notification->users) && empty($notification->user_groups)) {
+                $empty_notifications[] = $notification->path;
+            }
+        }
+
+        return $empty_notifications;
+    }
+
+    /**
+     * @param NotificationPOSTPUTRepresentation[] $email_notifications
+     */
+    private function getNonUniqueEmails(array $email_notifications): array
+    {
+        $non_unique_mails = [];
+        foreach ($email_notifications as $notification) {
+            $duplicated_values = array_diff_key($notification->emails, array_unique($notification->emails));
+            if (! empty($duplicated_values)) {
+                $non_unique_mails[$notification->path] = $duplicated_values;
+            }
+        }
+
+        return $non_unique_mails;
     }
 
     private function isAnAuthorizedDynamicUgroup(ProjectUGroup $project_user_group): bool
