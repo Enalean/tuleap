@@ -21,6 +21,9 @@
 declare(strict_types=1);
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Psr\Log\LoggerInterface;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Instrument\Prometheus\Prometheus;
@@ -32,16 +35,52 @@ use Tuleap\Plugin\MandatoryAsyncWorkerSetupPluginInstallRequirement;
 use Tuleap\Queue\WorkerAvailability;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Search\ItemToIndexQueueEventBased;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\CachingTrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
+use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationTaskCollectorEvent;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactForwardLinksRetriever;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksByChangesetCache;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLinkDao;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksDao;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksRetriever;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksToNewChangesetsConverter;
+use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
+use Tuleap\Tracker\Artifact\Link\ArtifactReverseLinksUpdater;
+use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
+use Tuleap\Tracker\REST\Artifact\ArtifactRestUpdateConditionsChecker;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
+use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
+use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
+use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
+use Tuleap\Tracker\REST\Artifact\PUTHandler;
 use Tuleap\Tracker\Webhook\ArtifactPayloadBuilder;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
+use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\WorkflowMenuItem;
 use Tuleap\Tracker\Workflow\WorkflowMenuItemCollection;
+use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use Tuleap\TrackerCCE\Administration\ActiveTrackerRetrieverMiddleware;
 use Tuleap\TrackerCCE\Administration\AdministrationController;
 use Tuleap\TrackerCCE\Administration\CheckTrackerCSRFMiddleware;
@@ -50,6 +89,7 @@ use Tuleap\TrackerCCE\Administration\UpdateModuleController;
 use Tuleap\TrackerCCE\Administration\UpdateModuleCSRFTokenProvider;
 use Tuleap\TrackerCCE\CustomCodeExecutionTask;
 use Tuleap\TrackerCCE\WASM\CallWASMModule;
+use Tuleap\TrackerCCE\WASM\ExecuteWASMResponse;
 use Tuleap\TrackerCCE\WASM\FindWASMModulePath;
 use Tuleap\TrackerCCE\WASM\ProcessWASMResponse;
 use Tuleap\WebAssembly\FFIWASMCaller;
@@ -110,6 +150,7 @@ final class tracker_ccePlugin extends Plugin
                     $mapper,
                 )
             ),
+            new ExecuteWASMResponse($event->getLogger(), $this->getPutHandler($event->getLogger())),
         ));
     }
 
@@ -150,6 +191,92 @@ final class tracker_ccePlugin extends Plugin
             new ActiveTrackerRetrieverMiddleware(TrackerFactory::instance()),
             new RejectNonTrackerAdministratorMiddleware(UserManager::instance()),
             new CheckTrackerCSRFMiddleware(new UpdateModuleCSRFTokenProvider()),
+        );
+    }
+
+    public function getPutHandler(LoggerInterface $logger): PUTHandler
+    {
+        $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
+
+        $usage_dao           = new ArtifactLinksUsageDao();
+        $formelement_factory = Tracker_FormElementFactory::instance();
+        $fields_retriever    = new FieldsToBeSavedInSpecificOrderRetriever($formelement_factory);
+        $event_manager       = EventManager::instance();
+
+        $artifact_factory  = Tracker_ArtifactFactory::instance();
+        $changeset_creator = new NewChangesetCreator(
+            new Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
+                $formelement_factory,
+                new ArtifactLinkValidator(
+                    $artifact_factory,
+                    new TypePresenterFactory(new TypeDao(), $usage_dao),
+                    $usage_dao,
+                    $event_manager,
+                ),
+                new WorkflowUpdateChecker(
+                    new FrozenFieldDetector(
+                        new TransitionRetriever(
+                            new StateFactory(TransitionFactory::instance(), new SimpleWorkflowDao()),
+                            new TransitionExtractor()
+                        ),
+                        FrozenFieldsRetriever::instance(),
+                    )
+                )
+            ),
+            $fields_retriever,
+            $event_manager,
+            new Tracker_Artifact_Changeset_ChangesetDataInitializator($formelement_factory),
+            $transaction_executor,
+            ArtifactChangesetSaver::build(),
+            new ParentLinkAction($artifact_factory),
+            new AfterNewChangesetHandler($artifact_factory, $fields_retriever),
+            ActionsQueuer::build($logger),
+            new ChangesetValueSaver(),
+            WorkflowFactory::instance(),
+            new CommentCreator(
+                new Tracker_Artifact_Changeset_CommentDao(),
+                ReferenceManager::instance(),
+                new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
+                new ChangesetCommentIndexer(
+                    new ItemToIndexQueueEventBased($event_manager),
+                    $event_manager,
+                    new Tracker_Artifact_Changeset_CommentDao(),
+                ),
+                new TextValueValidator(),
+            )
+        );
+
+        $fields_data_builder       = new FieldsDataBuilder(
+            $formelement_factory,
+            new NewArtifactLinkChangesetValueBuilder(
+                new ArtifactForwardLinksRetriever(
+                    new ArtifactLinksByChangesetCache(),
+                    new ChangesetValueArtifactLinkDao(),
+                    $artifact_factory
+                ),
+            ),
+            new NewArtifactLinkInitialChangesetValueBuilder()
+        );
+        $update_conditions_checker = new ArtifactRestUpdateConditionsChecker();
+        $artifact_factory          = Tracker_ArtifactFactory::instance();
+
+        $reverse_link_retriever = new ReverseLinksRetriever(
+            new ReverseLinksDao(),
+            $artifact_factory
+        );
+
+        return new PUTHandler(
+            $fields_data_builder,
+            new ArtifactReverseLinksUpdater(
+                $reverse_link_retriever,
+                new ReverseLinksToNewChangesetsConverter(
+                    $formelement_factory,
+                    $artifact_factory
+                ),
+                $changeset_creator
+            ),
+            $transaction_executor,
+            $update_conditions_checker,
         );
     }
 }

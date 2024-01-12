@@ -30,6 +30,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Tracker\Webhook\ArtifactPayloadBuilderStub;
 use Tuleap\TrackerCCE\Stub\WASM\WASMModuleCallerStub;
 use Tuleap\TrackerCCE\Stub\WASM\WASMModulePathHelperStub;
+use Tuleap\TrackerCCE\Stub\WASM\WASMResponseExecutorStub;
 use Tuleap\TrackerCCE\WASM\WASMResponseRepresentation;
 use Tuleap\User\CCEUser;
 
@@ -46,6 +47,7 @@ class CustomCodeExecutionTaskTest extends TestCase
             ArtifactPayloadBuilderStub::withEmptyPayload(),
             WASMModulePathHelperStub::withPath(''),
             $caller,
+            WASMResponseExecutorStub::buildOk(),
         );
         $changeset = ChangesetTestBuilder::aChangeset('1')
             ->submittedBy(CCEUser::ID)
@@ -65,6 +67,7 @@ class CustomCodeExecutionTaskTest extends TestCase
             ArtifactPayloadBuilderStub::withEmptyPayload(),
             WASMModulePathHelperStub::withPath('non-existing-file'),
             $caller,
+            WASMResponseExecutorStub::buildOk(),
         );
         $tracker   = TrackerTestBuilder::aTracker()->withId(23)->build();
         $artifact  = ArtifactTestBuilder::anArtifact(15)->inTracker($tracker)->build();
@@ -85,6 +88,7 @@ class CustomCodeExecutionTaskTest extends TestCase
             ArtifactPayloadBuilderStub::withEmptyPayload(),
             WASMModulePathHelperStub::withPath(self::WASM_FILE),
             WASMModuleCallerStub::withErrResult('Caller error'),
+            WASMResponseExecutorStub::buildOk(),
         );
         $tracker   = TrackerTestBuilder::aTracker()->withId(23)->build();
         $artifact  = ArtifactTestBuilder::anArtifact(15)->inTracker($tracker)->build();
@@ -96,7 +100,7 @@ class CustomCodeExecutionTaskTest extends TestCase
         self::assertTrue($logger->hasWarning('Caller error'));
     }
 
-    public function testItLogsDebugIfAllGoesWell(): void
+    public function testItFaultWhenWASMResponseExecutorReturnsErr(): void
     {
         $logger    = new TestLogger();
         $task      = new CustomCodeExecutionTask(
@@ -104,6 +108,7 @@ class CustomCodeExecutionTaskTest extends TestCase
             ArtifactPayloadBuilderStub::withEmptyPayload(),
             WASMModulePathHelperStub::withPath(self::WASM_FILE),
             WASMModuleCallerStub::withOkResult(new WASMResponseRepresentation([], null)),
+            WASMResponseExecutorStub::buildErr("Executor error"),
         );
         $tracker   = TrackerTestBuilder::aTracker()->withId(23)->build();
         $artifact  = ArtifactTestBuilder::anArtifact(15)->inTracker($tracker)->build();
@@ -112,6 +117,27 @@ class CustomCodeExecutionTaskTest extends TestCase
             ->build();
 
         $task->execute($changeset, true);
-        self::assertTrue($logger->hasDebug("Receive response from WASM module:\n{\"values\":[],\"comment\":null}"));
+        self::assertTrue($logger->hasWarning("Executor error"));
+    }
+
+    public function testItLogsDebugIfAllGoesWell(): void
+    {
+        $logger    = new TestLogger();
+        $task      = new CustomCodeExecutionTask(
+            $logger,
+            ArtifactPayloadBuilderStub::withEmptyPayload(),
+            WASMModulePathHelperStub::withPath(self::WASM_FILE),
+            WASMModuleCallerStub::withOkResult(new WASMResponseRepresentation([], null)),
+            WASMResponseExecutorStub::buildOk(),
+        );
+        $tracker   = TrackerTestBuilder::aTracker()->withId(23)->build();
+        $artifact  = ArtifactTestBuilder::anArtifact(15)->inTracker($tracker)->build();
+        $changeset = ChangesetTestBuilder::aChangeset('1')
+            ->ofArtifact($artifact)
+            ->build();
+
+        $task->execute($changeset, true);
+        self::assertFalse($logger->hasWarningRecords());
+        self::assertTrue($logger->hasDebug('CustomCodeExecutionTask finished'));
     }
 }

@@ -34,6 +34,7 @@ use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationTask;
 use Tuleap\Tracker\Webhook\ArtifactPayloadBuilder;
 use Tuleap\TrackerCCE\WASM\WASMModuleCaller;
 use Tuleap\TrackerCCE\WASM\WASMModulePathHelper;
+use Tuleap\TrackerCCE\WASM\WASMResponseExecutor;
 use Tuleap\TrackerCCE\WASM\WASMResponseRepresentation;
 use Tuleap\User\CCEUser;
 use function Psl\Json\encode as psl_json_encode;
@@ -45,6 +46,7 @@ final class CustomCodeExecutionTask implements PostCreationTask
         private readonly ArtifactPayloadBuilder $payload_builder,
         private readonly WASMModulePathHelper $module_path_helper,
         private readonly WASMModuleCaller $module_caller,
+        private readonly WASMResponseExecutor $response_executor,
     ) {
     }
 
@@ -66,12 +68,13 @@ final class CustomCodeExecutionTask implements PostCreationTask
                     return $this->module_caller->callWASMModule($wasm_module_path, psl_json_encode($payload));
                 }
             )
-            ->match(
-                function (WASMResponseRepresentation $response): void {
-                    $this->logger->debug("Receive response from WASM module:\n" . psl_json_encode($response));
-                },
-                fn(Fault $fault) => Fault::writeToLogger($fault, $this->logger, LogLevel::WARNING),
-            );
+            ->andThen(
+            /** @psalm-return Ok<null>|Err<Fault> */
+                function (WASMResponseRepresentation $response) use ($changeset): Ok | Err {
+                    return $this->response_executor->executeResponse($response, $changeset->getArtifact());
+                }
+            )
+            ->mapErr(fn(Fault $fault) => Fault::writeToLogger($fault, $this->logger, LogLevel::WARNING));
 
         $this->logger->debug('CustomCodeExecutionTask finished');
     }
