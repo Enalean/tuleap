@@ -30,7 +30,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionRetriever;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 
 require_once __DIR__ . '/../../../../../src/www/include/utils.php';
 
@@ -851,11 +851,11 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
     }
 
     /**
-     * @deprecated Use \Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner::executePostCreationActions instead
+     * @deprecated Use \Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer::processPostCreation instead
      */
-    public function executePostCreationActions(bool $send_notifications)
+    public function executePostCreationActions(bool $send_notifications): void
     {
-        ActionsRunner::build(BackendLogger::getDefaultLogger())->executePostCreationActions($this, $send_notifications);
+        ActionsQueuer::build(BackendLogger::getDefaultLogger())->queuePostCreation($this, $send_notifications);
     }
 
     /**

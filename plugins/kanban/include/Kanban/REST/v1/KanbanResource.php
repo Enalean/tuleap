@@ -78,7 +78,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
@@ -1680,7 +1680,7 @@ final class KanbanResource extends AuthenticatedResource
                 $tracker_artifact_factory
             ),
             new AfterNewChangesetHandler($tracker_artifact_factory, $fields_retriever),
-            ActionsRunner::build(\BackendLogger::getDefaultLogger()),
+            ActionsQueuer::build(\BackendLogger::getDefaultLogger()),
             new ChangesetValueSaver(),
             \WorkflowFactory::instance(),
             new CommentCreator(

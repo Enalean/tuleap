@@ -232,7 +232,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\Event\ArtifactDeleted;
@@ -953,7 +953,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             $artifact_changeset_saver,
             new ParentLinkAction($artifact_factory),
             $after_new_changeset_handler,
-            ActionsRunner::build(\BackendLogger::getDefaultLogger()),
+            ActionsQueuer::build(\BackendLogger::getDefaultLogger()),
             new ChangesetValueSaver(),
             $retrieve_workflow,
             new CommentCreator(

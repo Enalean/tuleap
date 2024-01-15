@@ -131,7 +131,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\CommentOnlyChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\Closure\ArtifactCloser;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
@@ -165,8 +165,8 @@ require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class gitlabPlugin extends Plugin
 {
-    public const SERVICE_NAME          = "gitlab";
-    public const LOG_IDENTIFIER        = "gitlab_syslog";
+    public const  SERVICE_NAME         = "gitlab";
+    public const  LOG_IDENTIFIER       = "gitlab_syslog";
     private const POST_PUSH_LOG_PREFIX = '|  |  |_ ';
 
     public function __construct(?int $id)
@@ -330,7 +330,7 @@ class gitlabPlugin extends Plugin
             ArtifactChangesetSaver::build(),
             new ParentLinkAction($artifact_factory),
             new AfterNewChangesetHandler($artifact_factory, $fields_retriever),
-            ActionsRunner::build(\BackendLogger::getDefaultLogger()),
+            ActionsQueuer::build(\BackendLogger::getDefaultLogger()),
             new ChangesetValueSaver(),
             \WorkflowFactory::instance(),
             new CommentCreator(
@@ -559,7 +559,7 @@ class gitlabPlugin extends Plugin
             ArtifactChangesetSaver::build(),
             new ParentLinkAction($artifact_factory),
             new AfterNewChangesetHandler($artifact_factory, $fields_retriever),
-            ActionsRunner::build(\BackendLogger::getDefaultLogger()),
+            ActionsQueuer::build(\BackendLogger::getDefaultLogger()),
             new ChangesetValueSaver(),
             \WorkflowFactory::instance(),
             new CommentCreator(

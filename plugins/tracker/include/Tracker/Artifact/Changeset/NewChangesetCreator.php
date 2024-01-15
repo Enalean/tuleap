@@ -26,7 +26,7 @@ use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreation;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationActionsQueuer;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\ChangesetValue\SaveChangesetValue;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
@@ -50,7 +50,7 @@ class NewChangesetCreator implements CreateNewChangeset
         private ArtifactChangesetSaver $artifact_changeset_saver,
         private ParentLinkAction $parent_link_action,
         private AfterNewChangesetHandler $after_new_changeset_handler,
-        private ActionsRunner $post_creation_runner,
+        private PostCreationActionsQueuer $post_creation_queuer,
         private SaveChangesetValue $changeset_value_saver,
         private RetrieveWorkflow $workflow_retriever,
         private CommentCreator $comment_creator,
@@ -156,7 +156,7 @@ class NewChangesetCreator implements CreateNewChangeset
                 return null;
             }
             if (! $context->getImportConfig()->isFromXml()) {
-                $this->post_creation_runner->executePostCreationActions(
+                $this->post_creation_queuer->queuePostCreation(
                     $new_changeset,
                     $context->shouldSendNotifications()
                 );

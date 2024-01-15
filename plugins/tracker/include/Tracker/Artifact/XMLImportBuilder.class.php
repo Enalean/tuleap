@@ -31,7 +31,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\XMLImport\TrackerPr
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\InitialChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaverIgnoringPermissions;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValueSaverIgnoringPermissions;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
@@ -102,7 +102,7 @@ class Tracker_Artifact_XMLImportBuilder // phpcs:ignore PSR1.Classes.ClassDeclar
                 $artifact_factory
             ),
             $after_new_changeset_handler,
-            ActionsRunner::build($logger),
+            ActionsQueuer::build($logger),
             new ChangesetValueSaverIgnoringPermissions(),
             $workflow_retriever,
             new CommentCreator(
