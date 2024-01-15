@@ -542,6 +542,13 @@ Allow users to register and use passkeys with WebAuthn protocol.
 
 %if %{with experimental}
 
+%package plugin-tracker-cce
+Summary: Tracker CCE plugin
+Group: Development/Tools
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+%description plugin-tracker-cce
+%{summary}.
+
 %endif
 
 #
@@ -593,7 +600,6 @@ done
 %{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/utils/DocmanLegacyDownloader.pl
 # No need of template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker_cce
 
 %if %{with enterprise}
 %else
@@ -625,6 +631,7 @@ done
 
 %if %{with experimental}
 %else
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker_cce
 %endif
 
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/composer.json
@@ -857,6 +864,9 @@ done
 %endif
 
 %if %{with experimental}
+
+# Plugin Tracker CCE
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/tracker_cce
 
 %endif
 
@@ -1447,6 +1457,10 @@ fi
 %endif
 
 %if %{with experimental}
+
+%files plugin-tracker-cce
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/tracker_cce
 
 %endif
 
