@@ -24,6 +24,7 @@ namespace Tuleap\PullRequest\Tests\Stub;
 
 use Tuleap\PullRequest\Criterion\SearchCriteria;
 use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\PullRequestsPage;
 use Tuleap\PullRequest\SearchPaginatedPullRequests;
 
 final class SearchPaginatedPullRequestsStub implements SearchPaginatedPullRequests
@@ -64,13 +65,11 @@ final class SearchPaginatedPullRequestsStub implements SearchPaginatedPullReques
         ];
     }
 
-    public function getPaginatedPullRequests(int $repository_id, SearchCriteria $criteria, int $limit, int $offset): array
+    public function getPaginatedPullRequests(int $repository_id, SearchCriteria $criteria, int $limit, int $offset): PullRequestsPage
     {
-        return $this->all_rows;
-    }
-
-    public function foundRows(): int
-    {
-        return count($this->all_rows);
+        return new PullRequestsPage(
+            count($this->all_rows),
+            $this->all_rows
+        );
     }
 }

@@ -18,11 +18,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\PullRequest;
 
-use Tuleap\PullRequest\Criterion\SearchCriteria;
-
-interface SearchPaginatedPullRequests
+/**
+ * @psalm-immutable
+ */
+final class PullRequestsPage
 {
-    public function getPaginatedPullRequests(int $repository_id, SearchCriteria $criteria, int $limit, int $offset): PullRequestsPage;
+    /**
+     * @psalm-param array<array{
+     *      id:int,
+     *      title:string,
+     *      description:string,
+     *      repository_id:int,
+     *      user_id:int,
+     *      creation_date: int,
+     *      branch_src: string,
+     *      sha1_src: string,
+     *      repo_dest_id: int,
+     *      branch_dest: string,
+     *      sha1_dest: int,
+     *      status: string,
+     *      merge_status: int,
+     *      description_format: string
+     *  }> $pull_requests
+     */
+    public function __construct(public readonly int $total_size, public readonly array $pull_requests)
+    {
+    }
 }

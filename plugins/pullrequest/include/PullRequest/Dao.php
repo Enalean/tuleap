@@ -185,45 +185,41 @@ class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginated
         $this->getDB()->run($sql, $merge_status, $pull_request_id);
     }
 
-    /**
-     * @psalm-return array<array{
-     *     id:int,
-     *     title:string,
-     *     description:string,
-     *     repository_id:int,
-     *     user_id:int,
-     *     creation_date: int,
-     *     branch_src: string,
-     *     sha1_src: string,
-     *     repo_dest_id: int,
-     *     branch_dest: string,
-     *     sha1_dest: int,
-     *     status: string,
-     *     merge_status: int,
-     *     description_format: string
-     * }>
-     */
     public function getPaginatedPullRequests(
         int $repository_id,
         SearchCriteria $criteria,
         int $limit,
         int $offset,
-    ): array {
-        $where_status_statement = $this->getStatusStatements($criteria);
+    ): PullRequestsPage {
+        return $this->getDB()->tryFlatTransaction(
+            function () use ($repository_id, $criteria, $limit, $offset) {
+                $where_status_statement = $this->getStatusStatements($criteria);
 
-        $sql = "SELECT SQL_CALC_FOUND_ROWS *
-                FROM plugin_pullrequest_review
-                WHERE (repository_id = ? OR repo_dest_id = ?)
-                AND $where_status_statement
-                ORDER BY creation_date DESC
-                LIMIT ?
-                OFFSET ?";
+                $sql_count_pull_requests = "
+                    SELECT COUNT(*)
+                    FROM plugin_pullrequest_review
+                    WHERE (repository_id = ? OR repo_dest_id = ?)
+                    AND $where_status_statement
+                ";
 
-        $parameters   =  array_merge([$repository_id, $repository_id], $where_status_statement->values());
-        $parameters[] = $limit;
-        $parameters[] = $offset;
+                $sql_get_pull_requests = "SELECT *
+                    FROM plugin_pullrequest_review
+                    WHERE (repository_id = ? OR repo_dest_id = ?)
+                    AND $where_status_statement
+                    ORDER BY creation_date DESC
+                    LIMIT ?
+                    OFFSET ?
+                ";
 
-        return $this->getDB()->safeQuery($sql, $parameters);
+
+                $parameters =  [$repository_id, $repository_id, ...$where_status_statement->values()];
+
+                return new PullRequestsPage(
+                    $this->getDB()->single($sql_count_pull_requests, $parameters),
+                    $this->getDB()->safeQuery($sql_get_pull_requests, [...$parameters, $limit, $offset])
+                );
+            }
+        );
     }
 
     /**
