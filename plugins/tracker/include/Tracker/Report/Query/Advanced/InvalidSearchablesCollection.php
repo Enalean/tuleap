@@ -19,13 +19,13 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
-class InvalidSearchablesCollection
+final class InvalidSearchablesCollection
 {
-    /** @var array */
-    private $searchables_not_exist;
+    /** @var string[] */
+    private array $searchables_not_exist;
 
-    /** @var array */
-    private $invalid_searchable_errors;
+    /** @var string[] */
+    private array $invalid_searchable_errors;
 
     public function __construct()
     {
@@ -33,15 +33,12 @@ class InvalidSearchablesCollection
         $this->invalid_searchable_errors = [];
     }
 
-    public function addNonexistentSearchable($searchable_name)
+    public function addNonexistentSearchable(string $searchable_name): void
     {
         $this->searchables_not_exist[] = $searchable_name;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasInvalidSearchable()
+    public function hasInvalidSearchable(): bool
     {
         return max(
             count($this->searchables_not_exist),
@@ -50,22 +47,22 @@ class InvalidSearchablesCollection
     }
 
     /**
-     * @return array
+     * @return string[]
      */
-    public function getNonexistentSearchables()
+    public function getNonexistentSearchables(): array
     {
         return $this->searchables_not_exist;
     }
 
     /**
-     * @return array
+     * @return string[]
      */
-    public function getInvalidSearchableErrors()
+    public function getInvalidSearchableErrors(): array
     {
         return $this->invalid_searchable_errors;
     }
 
-    public function addInvalidSearchableError($error_message)
+    public function addInvalidSearchableError(string $error_message): void
     {
         $this->invalid_searchable_errors[] = $error_message;
     }

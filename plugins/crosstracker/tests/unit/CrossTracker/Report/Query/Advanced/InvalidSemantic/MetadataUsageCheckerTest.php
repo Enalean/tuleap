@@ -67,10 +67,7 @@ final class MetadataUsageCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private MetadataUsageChecker $checker;
     private Tracker $tracker_101;
     private Tracker $tracker_102;
-    /**
-     * @var InvalidSearchablesCollection
-     */
-    private $invalid_searchable_collection;
+    private InvalidSearchablesCollection $invalid_searchable_collection;
     /**
      * @var Tracker_FormElement_Field_SubmittedOn&MockObject
      */
@@ -82,7 +79,7 @@ final class MetadataUsageCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function setUp(): void
     {
-        $this->invalid_searchable_collection = $this->createMock(InvalidSearchablesCollection::class);
+        $this->invalid_searchable_collection = new InvalidSearchablesCollection();
 
         $this->tracker_101 = TrackerTestBuilder::aTracker()->withId(101)->build();
         $this->tracker_102 = TrackerTestBuilder::aTracker()->withId(102)->build();
