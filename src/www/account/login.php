@@ -107,9 +107,9 @@ if ($_cVar['pv'] == 2) {
 
 $presenter_builder = new User_LoginPresenterBuilder($em);
 $presenter         = $presenter_builder->build(
-    $_rVar['return_to'],
-    $_cVar['pv'],
-    $_rVar['form_loginname'],
+    (string) $_rVar['return_to'],
+    (int) $_cVar['pv'],
+    (string) $_rVar['form_loginname'],
     $login_csrf,
     (string) $request->get('prompt')
 );
