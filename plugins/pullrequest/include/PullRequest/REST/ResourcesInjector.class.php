@@ -20,9 +20,11 @@
 
 namespace Tuleap\PullRequest\REST;
 
+use Tuleap\Git\REST\v1\GitRepositoryRepresentation;
 use Tuleap\PullRequest\REST\v1\PullRequestInlineCommentsResource;
 use Tuleap\PullRequest\REST\v1\PullRequestCommentsResource;
 use Tuleap\PullRequest\REST\v1\PullRequestRepresentation;
+use Tuleap\PullRequest\REST\v1\RepositoryResource;
 
 /**
  * Inject resource into restler
@@ -34,5 +36,6 @@ class ResourcesInjector
         $restler->addAPIClass('\\Tuleap\\PullRequest\\REST\\v1\\PullRequestsResource', PullRequestRepresentation::ROUTE);
         $restler->addAPIClass(PullRequestCommentsResource::class, PullRequestCommentsResource::ROUTE);
         $restler->addAPIClass(PullRequestInlineCommentsResource::class, PullRequestInlineCommentsResource::ROUTE);
+        $restler->addAPIClass(RepositoryResource::class, GitRepositoryRepresentation::ROUTE);
     }
 }

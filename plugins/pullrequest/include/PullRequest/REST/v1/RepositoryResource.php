@@ -20,7 +20,10 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
+use Exception;
 use GitDao;
+use GitRepoNotFoundException;
+use GitRepoNotReadableException;
 use GitRepository;
 use GitRepositoryFactory;
 use Luracast\Restler\RestException;
@@ -42,21 +45,85 @@ use Tuleap\PullRequest\PullRequest\REST\v1\RepositoryPullRequests\GETHandler;
 use Tuleap\PullRequest\REST\v1\RepositoryPullRequests\QueryToSearchCriteriaConverter;
 use Tuleap\PullRequest\Reviewer\ReviewerDAO;
 use Tuleap\PullRequest\Reviewer\ReviewerRetriever;
+use Tuleap\REST\AuthenticatedResource;
+use Tuleap\REST\Header;
 use UserManager;
 
-class RepositoryResource
+class RepositoryResource extends AuthenticatedResource
 {
+    public const MAX_LIMIT = 50;
+
     /**
-     * @throws RestException
+     * @url OPTIONS {id}/pull_requests
+     *
+     * @param int $id Id of the repository
      */
-    public function getPaginatedPullRequests(GitRepository $repository, $query, $limit, $offset): RepositoryPullRequestRepresentation
+    public function optionsPullRequests(int $id): void
     {
+        Header::allowOptionsGet();
+    }
+
+    /**
+     * Get pull requests
+     *
+     * <p>Retrieve all git repository's pull requests.</p>
+     *
+     * <p>Pull requests are sorted by descending order of creation date.</p>
+     *
+     * <p>User is not able to see a pull request in a git repository where he is not able to READ.</p>
+     *
+     * <p>
+     *     <code>$query</code> parameter is optional, by default we return all pull requests.
+     * </p>
+     * <p>
+     *     You can filter on:
+     *     <p>
+     *         <b>Status</b>: <code>query={"status":"open"}</code> OR <code>query={"status":"closed"}</code>. When not specified, pull-requests with any statuses will be returned.
+     *     </p>
+     *     <p>
+     *         <b>Author</b>: <code>query={"author": {"id": int}}</code> where "id" is the user_id of the author.
+     *     </p>
+     * </p>
+     *
+     * <p>
+     *     All these filters are cumulative. For instance, <code>query={"status": "closed", "author": {"id": 102 }}</code>
+     *     will return all the closed pull-requests whose author is user 102.
+     * </p>
+     *
+     * <pre>
+     * /!\ PullRequest REST routes are under construction and subject to changes /!\
+     * </pre>
+     *
+     * @url GET {id}/pull_requests
+     *
+     * @access protected
+     *
+     * @param int $id       Id of the repository
+     * @param string $query JSON object of search criteria properties {@from path}
+     * @param int $limit    Number of elements displayed per page {@from path} {@min 0} {@max 50}
+     * @param int $offset   Position of the first element to display {@from path} {@min 0}
+     *
+     *
+     * @throws RestException 403
+     * @throws RestException 404
+     */
+    public function getPullRequests(int $id, string $query = '', int $limit = self::MAX_LIMIT, int $offset = 0): RepositoryPullRequestRepresentation
+    {
+        $this->checkAccess();
+
+        $repository = $this->getRepositoryUserCanSee($id);
+
         return $this->getGETHandler()
             ->andThen(function ($get_handler) use ($repository, $query, $limit, $offset) {
                 return $get_handler->handle($repository, $query, $limit, $offset);
             })
             ->match(
-                static fn(RepositoryPullRequestRepresentation $representation) => $representation,
+                function (RepositoryPullRequestRepresentation $representation) use ($limit, $offset) {
+                    Header::allowOptionsGet();
+                    $this->sendPaginationHeaders($limit, $offset, $representation->total_size);
+
+                    return $representation;
+                },
                 FaultMapper::mapToRestException(...)
             );
     }
@@ -106,5 +173,41 @@ class RepositoryResource
         );
 
         return Result::ok($get_handler);
+    }
+
+    /**
+     * @throws RestException
+     */
+    private function getRepositoryUserCanSee(int $repository_id): GitRepository
+    {
+        $user_manager = UserManager::instance();
+        if ($user_manager === null) {
+            throw new RestException(500);
+        }
+
+        $repository_factory = new GitRepositoryFactory(
+            new GitDao(),
+            ProjectManager::instance()
+        );
+
+        try {
+            $repository = $repository_factory->getRepositoryByIdUserCanSee(
+                $user_manager->getCurrentUser(),
+                $repository_id
+            );
+        } catch (GitRepoNotReadableException $exception) {
+            throw new RestException(403, 'Git repository not accessible for user');
+        } catch (GitRepoNotFoundException $exception) {
+            throw new RestException(404, 'Git repository not found');
+        } catch (Exception $exception) {
+            throw new RestException(403, 'Project not accessible for user');
+        }
+
+        return $repository;
+    }
+
+    private function sendPaginationHeaders(int $limit, int $offset, int $size): void
+    {
+        Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
     }
 }
