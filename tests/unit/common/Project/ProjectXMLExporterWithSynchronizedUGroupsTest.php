@@ -24,14 +24,15 @@ declare(strict_types=1);
 namespace Tuleap\Project;
 
 use EventManager;
-use Mockery as M;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use ProjectUGroup;
 use ProjectXMLExporter;
-use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Tuleap\Dashboard\Project\DashboardXMLExporter;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
+use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\Export\ExportOptions;
 use Tuleap\Test\Builders as B;
 use UGroupManager;
@@ -42,133 +43,109 @@ use XML_RNGValidator;
 
 class ProjectXMLExporterWithSynchronizedUGroupsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    private $event_manager;
-    private $ugroup_manager;
-    private $project;
-    private $xml_exporter;
-    /**
-     * @var string
-     */
-    private $export_dir;
-    private $user;
-    private $options;
-    private $archive;
-    /**
-     * @var M\MockInterface|SynchronizedProjectMembershipDetector
-     */
-    private $synch_detector;
+    private EventManager&MockObject $event_manager;
+    private UGroupManager&MockObject $ugroup_manager;
+    private Project $project;
+    private ProjectXMLExporter $xml_exporter;
+    private string $export_dir;
+    private PFUser $user;
+    private ExportOptions $options;
+    private ArchiveInterface&MockObject $archive;
+    private SynchronizedProjectMembershipDetector&MockObject $synch_detector;
 
     protected function setUp(): void
     {
-        $this->event_manager  = M::spy(EventManager::class);
-        $this->ugroup_manager = M::spy(UGroupManager::class);
+        $this->event_manager  = $this->createMock(EventManager::class);
+        $this->ugroup_manager = $this->createMock(UGroupManager::class);
         $xml_validator        = new XML_RNGValidator();
-        $user_xml_exporter    = new UserXMLExporter(M::spy(UserManager::class), M::spy(UserXMLExportedCollection::class));
-        $this->project        = M::spy(Project::class, [
-            'getPublicName'  => 'Project01',
-            'isActive'       => true,
-            'getUnixName'    => 'project01',
-            'getDescription' => 'Project 01',
-            'getAccess'      => Project::ACCESS_PRIVATE,
-        ]);
-        $this->synch_detector = M::mock(SynchronizedProjectMembershipDetector::class);
+        $user_xml_exporter    = new UserXMLExporter($this->createMock(UserManager::class), $this->createPartialMock(UserXMLExportedCollection::class, []));
+        $this->project        = B\ProjectTestBuilder::aProject()
+            ->withPublicName('Project01')
+            ->withStatusActive()
+            ->withUnixName('project01')
+            ->withDescription('Project 01')
+            ->withAccess(Project::ACCESS_PRIVATE)
+            ->withoutServices()
+            ->build();
+        $this->synch_detector = $this->createMock(SynchronizedProjectMembershipDetector::class);
+
+        $dashboard_exporter = $this->createMock(DashboardXMLExporter::class);
+        $dashboard_exporter->method('exportDashboards');
 
         $this->xml_exporter = new ProjectXMLExporter(
             $this->event_manager,
             $this->ugroup_manager,
             $xml_validator,
             $user_xml_exporter,
-            M::spy(DashboardXMLExporter::class),
+            $dashboard_exporter,
             $this->synch_detector,
-            M::spy(LoggerInterface::class)
+            new NullLogger()
         );
 
         $this->options    = new ExportOptions("", false, ['tracker_id' => 10]);
         $this->export_dir = "__fixtures";
 
-        $this->archive = M::spy(\Tuleap\Project\XML\Export\ArchiveInterface::class);
-        $this->user    = M::spy(PFUser::class);
+        $this->archive = $this->createMock(\Tuleap\Project\XML\Export\ArchiveInterface::class);
+        $this->user    = B\UserTestBuilder::buildWithDefaults();
     }
 
     public function testItExportsThatUserGroupsAreSynchronizedWithProjectMembers(): void
     {
-        $this->synch_detector->shouldReceive('isSynchronizedWithProjectMembers')->with($this->project)->andReturnTrue();
+        $this->synch_detector->method('isSynchronizedWithProjectMembers')->with($this->project)->willReturn(true);
 
         $user_1 = B\UserTestBuilder::aUser()->withId(101)->withLdapId('ldap_01')->withUserName('user_01')->build();
 
-        $project_ugroup_project_admins = M::spy(
-            ProjectUGroup::class,
-            [
-                'getNormalizedName'        => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_ADMIN],
-                'getMembers'               => [$user_1],
-                'getTranslatedDescription' => 'Project admin',
-            ]
-        );
+        $project_ugroup_project_admins = B\ProjectUGroupTestBuilder::aCustomUserGroup(ProjectUGroup::PROJECT_ADMIN)
+            ->withUsers($user_1)
+            ->withDescription('Project admin')
+            ->build();
 
-        $project_ugroup_project_members = M::spy(
-            ProjectUGroup::class,
-            [
-                'getNormalizedName'        => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS],
-                'getMembers'               => [$user_1],
-                'getTranslatedDescription' => 'Project members',
-            ]
-        );
+        $project_ugroup_project_members = B\ProjectUGroupTestBuilder::aCustomUserGroup(ProjectUGroup::PROJECT_MEMBERS)
+            ->withUsers($user_1)
+            ->withDescription('Project members')
+            ->build();
 
-        $this->ugroup_manager->shouldReceive('getProjectAdminsUGroup')->with($this->project)->andReturns($project_ugroup_project_admins);
-        $this->ugroup_manager->shouldReceive('getProjectMembersUGroup')->with($this->project)->andReturns($project_ugroup_project_members);
+        $this->ugroup_manager->method('getProjectAdminsUGroup')->with($this->project)->willReturn($project_ugroup_project_admins);
+        $this->ugroup_manager->method('getProjectMembersUGroup')->with($this->project)->willReturn($project_ugroup_project_members);
 
-        $this->ugroup_manager->shouldReceive('getStaticUGroups')->andReturns([]);
+        $this->ugroup_manager->method('getStaticUGroups')->willReturn([]);
 
-        $this->project->shouldReceive('getServices')->andReturns([]);
-
-        $this->event_manager->shouldReceive('processEvent')->once();
+        $this->event_manager->expects(self::once())->method('processEvent');
 
         $xml       = $this->xml_exporter->export($this->project, $this->options, $this->user, $this->archive, $this->export_dir);
         $xml_objet = simplexml_load_string($xml);
 
-        $this->assertNotNull($xml_objet->ugroups);
-        $this->assertEquals('synchronized', (string) $xml_objet->ugroups['mode']);
+        self::assertNotNull($xml_objet->ugroups);
+        self::assertEquals('synchronized', (string) $xml_objet->ugroups['mode']);
     }
 
-    public function testItExportsThatUserGroupsAreNotSynchronizedWithProjectMembers()
+    public function testItExportsThatUserGroupsAreNotSynchronizedWithProjectMembers(): void
     {
-        $this->synch_detector->shouldReceive('isSynchronizedWithProjectMembers')->with($this->project)->andReturnFalse();
+        $this->synch_detector->method('isSynchronizedWithProjectMembers')->with($this->project)->willReturn(false);
 
         $user_1 = B\UserTestBuilder::aUser()->withId(101)->withLdapId('ldap_01')->withUserName('user_01')->build();
 
-        $project_ugroup_project_admins = M::spy(
-            ProjectUGroup::class,
-            [
-                'getNormalizedName'        => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_ADMIN],
-                'getMembers'               => [$user_1],
-                'getTranslatedDescription' => 'Project admin',
-            ]
-        );
+        $project_ugroup_project_admins = B\ProjectUGroupTestBuilder::aCustomUserGroup(ProjectUGroup::PROJECT_ADMIN)
+            ->withUsers($user_1)
+            ->withDescription('Project admin')
+            ->build();
 
-        $project_ugroup_project_members = M::spy(
-            ProjectUGroup::class,
-            [
-                'getNormalizedName'        => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS],
-                'getMembers'               => [$user_1],
-                'getTranslatedDescription' => 'Project members',
-            ]
-        );
+        $project_ugroup_project_members = B\ProjectUGroupTestBuilder::aCustomUserGroup(ProjectUGroup::PROJECT_MEMBERS)
+            ->withUsers($user_1)
+            ->withDescription('Project members')
+            ->build();
 
-        $this->ugroup_manager->shouldReceive('getProjectAdminsUGroup')->with($this->project)->andReturns($project_ugroup_project_admins);
-        $this->ugroup_manager->shouldReceive('getProjectMembersUGroup')->with($this->project)->andReturns($project_ugroup_project_members);
+        $this->ugroup_manager->method('getProjectAdminsUGroup')->with($this->project)->willReturn($project_ugroup_project_admins);
+        $this->ugroup_manager->method('getProjectMembersUGroup')->with($this->project)->willReturn($project_ugroup_project_members);
 
-        $this->ugroup_manager->shouldReceive('getStaticUGroups')->andReturns([]);
+        $this->ugroup_manager->method('getStaticUGroups')->willReturn([]);
 
-        $this->project->shouldReceive('getServices')->andReturns([]);
-
-        $this->event_manager->shouldReceive('processEvent');
+        $this->event_manager->method('processEvent');
 
         $xml       = $this->xml_exporter->export($this->project, $this->options, $this->user, $this->archive, $this->export_dir);
         $xml_objet = simplexml_load_string($xml);
 
-        $this->assertNotNull($xml_objet->ugroups);
-        $this->assertTrue(! isset($xml_objet->ugroups['mode']));
+        self::assertNotNull($xml_objet->ugroups);
+        self::assertTrue(! isset($xml_objet->ugroups['mode']));
     }
 }
