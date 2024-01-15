@@ -66,22 +66,6 @@ class SystemEvent_PROJECT_RENAME extends SystemEvent
         $renameState = true;
 
         if (($project = $this->getProject($group_id))) {
-            // Rename SVN
-            $backendSVN = $this->getBackend('SVN');
-            if ($backendSVN->repositoryExists($project)) {
-                if ($backendSVN->isNameAvailable($new_name)) {
-                    if (! $backendSVN->renameSVNRepository($project, $new_name)) {
-                        $this->error('Could not rename SVN repository (id:' . $project->getId() . ') from "' . $project->getUnixName() . '" to "' . $new_name . '"');
-                        $renameState = $renameState & false;
-                    } else {
-                        $backendSVN->setSVNApacheConfNeedUpdate();
-                    }
-                } else {
-                    $this->error('Could not rename SVN repository: Name ' . $new_name . ' not available');
-                    $renameState = $renameState & false;
-                }
-            }
-
             // Rename system home/groups
             $backendSystem = $this->getBackend('System');
 

@@ -103,15 +103,6 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
                 $deleteState = false;
             }
 
-            $backendSVN = $this->getBackend('SVN');
-            if ($backendSVN->repositoryExists($project)) {
-                if (! $backendSVN->archiveProjectSVN($groupId)) {
-                    $this->error("Could not archive project SVN repository");
-                    $deleteState = false;
-                } else {
-                    $backendSVN->setSVNApacheConfNeedUpdate();
-                }
-            }
             $this->svn_authentication_cache_invalidator->invalidateProjectCache($project);
 
             if ($deleteState) {
