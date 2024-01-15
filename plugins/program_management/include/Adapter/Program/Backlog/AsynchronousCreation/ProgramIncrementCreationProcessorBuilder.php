@@ -71,7 +71,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\InitialChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValueSaver;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
@@ -152,7 +152,7 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
             $artifact_changeset_saver,
             new ParentLinkAction($artifact_factory),
             $after_new_changeset_handler,
-            ActionsRunner::build(\BackendLogger::getDefaultLogger()),
+            ActionsQueuer::build(\BackendLogger::getDefaultLogger()),
             new ChangesetValueSaver(),
             $retrieve_workflow,
             new CommentCreator(

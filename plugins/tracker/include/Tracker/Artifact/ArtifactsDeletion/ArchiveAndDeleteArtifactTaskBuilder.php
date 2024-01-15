@@ -55,7 +55,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactForwardLinksRetriever;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksByChangesetCache;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLinkDao;
@@ -141,7 +141,7 @@ class ArchiveAndDeleteArtifactTaskBuilder
                 ArtifactChangesetSaver::build(),
                 new ParentLinkAction($tracker_artifact_factory),
                 new AfterNewChangesetHandler($tracker_artifact_factory, $fields_retriever),
-                ActionsRunner::build($logger),
+                ActionsQueuer::build($logger),
                 new ChangesetValueSaver(),
                 \WorkflowFactory::instance(),
                 new CommentCreator(

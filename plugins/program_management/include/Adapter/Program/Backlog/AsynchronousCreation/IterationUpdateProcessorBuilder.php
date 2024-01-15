@@ -54,7 +54,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
@@ -130,7 +130,7 @@ final class IterationUpdateProcessorBuilder implements BuildIterationUpdateProce
             ),
             new ParentLinkAction($artifact_factory),
             new AfterNewChangesetHandler($artifact_factory, $fields_retriever),
-            ActionsRunner::build(\BackendLogger::getDefaultLogger()),
+            ActionsQueuer::build(\BackendLogger::getDefaultLogger()),
             new ChangesetValueSaver(),
             \WorkflowFactory::instance(),
             new CommentCreator(

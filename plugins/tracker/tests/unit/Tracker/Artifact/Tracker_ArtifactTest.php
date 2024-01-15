@@ -43,7 +43,6 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
@@ -52,6 +51,7 @@ use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveWorkflowStub;
 use Tuleap\Tracker\Test\Stub\SaveArtifactStub;
+use Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation\PostCreationActionsQueuerStub;
 use UserXMLExporter;
 use Workflow;
 
@@ -246,7 +246,7 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
                 SaveArtifactStub::withSuccess(),
                 $fields_retriever,
             ),
-            Mockery::spy(ActionsRunner::class),
+            PostCreationActionsQueuerStub::doNothing(),
             new ChangesetValueSaver(),
             RetrieveWorkflowStub::withWorkflow($workflow),
             new CommentCreator(
@@ -321,7 +321,7 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         $artifact->shouldReceive('getTracker')->andReturns($tracker);
         $artifact->shouldReceive('getId')->andReturns(66);
         $artifact->shouldReceive('getLastChangeset')->andReturns($changeset);
-        $artifact->shouldReceive('getActionsRunner')->andReturns(\Mockery::spy(ActionsRunner::class));
+        $artifact->shouldReceive('getActionsQueuer')->andReturns(PostCreationActionsQueuerStub::doNothing());
 
         $workflow_checker = \Mockery::mock(\Tuleap\Tracker\Workflow\WorkflowUpdateChecker::class);
         $workflow_checker->shouldReceive('canFieldBeUpdated')->andReturnTrue();
@@ -428,7 +428,7 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         $artifact->shouldReceive('getArtifactFactory')->andReturns($art_factory);
         $artifact->shouldReceive('getHierarchyFactory')->andReturns($hierarchy_factory);
         $artifact->shouldReceive('getChangesetSaver')->andReturns($changeset_saver);
-        $artifact->shouldReceive('getActionsRunner')->andReturns(\Mockery::spy(ActionsRunner::class));
+        $artifact->shouldReceive('getActionsQueuer')->andReturns(PostCreationActionsQueuerStub::doNothing());
 
         $workflow_checker = \Mockery::mock(\Tuleap\Tracker\Workflow\WorkflowUpdateChecker::class);
         $workflow_checker->shouldReceive('canFieldBeUpdated')->andReturnTrue();
@@ -547,7 +547,7 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         $artifact->shouldReceive('getReferenceManager')->andReturns($reference_manager);
         $artifact->shouldReceive('getArtifactFactory')->andReturns($art_factory);
         $artifact->shouldReceive('getHierarchyFactory')->andReturns($hierarchy_factory);
-        $artifact->shouldReceive('getActionsRunner')->andReturns(\Mockery::spy(ActionsRunner::class));
+        $artifact->shouldReceive('getActionsQueuer')->andReturns(PostCreationActionsQueuerStub::doNothing());
 
         $workflow_checker = \Mockery::mock(\Tuleap\Tracker\Workflow\WorkflowUpdateChecker::class);
         $workflow_checker->shouldReceive('canFieldBeUpdated')->andReturnTrue();
@@ -677,7 +677,7 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         $artifact->shouldReceive('getArtifactFactory')->andReturns($art_factory);
         $artifact->shouldReceive('getHierarchyFactory')->andReturns($hierarchy_factory);
         $artifact->shouldReceive('getChangesetSaver')->andReturns($changeset_saver);
-        $artifact->shouldReceive('getActionsRunner')->andReturns(\Mockery::spy(ActionsRunner::class));
+        $artifact->shouldReceive('getActionsQueuer')->andReturns(PostCreationActionsQueuerStub::doNothing());
 
         $GLOBALS['Response']->method('getFeedbackErrors')->willReturn([]);
 

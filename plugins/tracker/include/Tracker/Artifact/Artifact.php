@@ -123,7 +123,8 @@ use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldsWithoutRequiredValidationValidator;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationActionsQueuer;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactForwardLinksRetriever;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksByChangesetCache;
@@ -402,8 +403,8 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      * This method returns the artifact mail rendering
      *
      * @param PFUser $recipient
-     * @param string $format       , the mail format text or html
-     * @param bool   $ignore_perms , indicates if we ignore various permissions
+     * @param string $format , the mail format text or html
+     * @param bool $ignore_perms , indicates if we ignore various permissions
      *
      * @return string
      */
@@ -440,8 +441,8 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      * Returns the artifact field for mail rendering
      *
      * @param PFUser $recipient
-     * @param string $format       , the mail format text or html
-     * @param bool   $ignore_perms , indicates if we ignore various permissions
+     * @param string $format , the mail format text or html
+     * @param bool $ignore_perms , indicates if we ignore various permissions
      *
      * @return String
      */
@@ -647,9 +648,9 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         $hp = Codendi_HTMLPurifier::instance();
 
         return '<span class="' . $hp->purify($this->getTracker()->getColor()->getName()) . ' xref-in-title">' .
-            $hp->purify($this->getXRef()) . "\n" .
-            '</span>' .
-            $hp->purify($this->getTitle());
+               $hp->purify($this->getXRef()) . "\n" .
+               '</span>' .
+               $hp->purify($this->getTitle());
     }
 
     public function fetchColoredXRef()
@@ -817,7 +818,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     /**
      *
      * @param PFUser $recipient
-     * @param bool   $ignore_perms
+     * @param bool $ignore_perms
      *
      * @return string
      */
@@ -854,9 +855,9 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     /**
      * Process the artifact functions
      *
-     * @param Tracker_IDisplayTrackerLayout $layout       Displays the page header and footer
-     * @param Codendi_Request               $request      The data from the user
-     * @param PFUser                        $current_user The current user
+     * @param Tracker_IDisplayTrackerLayout $layout Displays the page header and footer
+     * @param Codendi_Request $request The data from the user
+     * @param PFUser $current_user The current user
      *
      * @return void
      */
@@ -1235,11 +1236,11 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     /**
      * Update an artifact (means create a new changeset)
      *
-     * @param array  $fields_data       Artifact fields values
-     * @param string $comment           The comment (follow-up) associated with the artifact update
-     * @param PFUser $submitter         The user who is doing the update
-     * @param bool   $send_notification true if a notification must be sent, false otherwise
-     * @param string $comment_format    The comment (follow-up) type ("text" | "html" | "commonmark")
+     * @param array $fields_data Artifact fields values
+     * @param string $comment The comment (follow-up) associated with the artifact update
+     * @param PFUser $submitter The user who is doing the update
+     * @param bool $send_notification true if a notification must be sent, false otherwise
+     * @param string $comment_format The comment (follow-up) type ("text" | "html" | "commonmark")
      *
      * @return Tracker_Artifact_Changeset|null
      * @throws Tracker_NoChangeException In the validation
@@ -1673,7 +1674,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     /**
      * Get the value for this field in the changeset
      *
-     * @param Tracker_FormElement_Field  $field     The field
+     * @param Tracker_FormElement_Field $field The field
      * @param Tracker_Artifact_Changeset $changeset The changeset. if null given take the last changeset of the artifact
      *
      */
@@ -1746,8 +1747,8 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     /**
      * Return Workflow the artifact should respect
      *
-     * @deprecated Use \WorkflowFactory::getNonNullWorkflow() instead
      * @return Workflow|null
+     * @deprecated Use \WorkflowFactory::getNonNullWorkflow() instead
      */
     public function getWorkflow()
     {
@@ -1852,9 +1853,9 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     /**
      * Get artifacts linked to the current artifact
      *
-     * @param PFUser $user   The user who should see the artifacts
-     * @param int    $limit  The number of artifact to fetch
-     * @param int    $offset The offset
+     * @param PFUser $user The user who should see the artifacts
+     * @param int $limit The number of artifact to fetch
+     * @param int $offset The offset
      *
      * @return Tracker_Artifact_PaginatedArtifacts
      * @see Tracker_FormElement_Field_ArtifactLink::getSlicedLinkedArtifacts()
@@ -2184,8 +2185,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     /** @return string */
     public function getInsecureEmailAddress()
     {
-        return trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE . '+' . $this->getId(
-        ) . '@' . $this->getEmailDomain();
+        return trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE . '+' . $this->getId() . '@' . $this->getEmailDomain();
     }
 
     private function getEmailDomain()
@@ -2225,7 +2225,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                 $tracker_artifact_factory
             ),
             new AfterNewChangesetHandler($tracker_artifact_factory, $fields_retriever),
-            $this->getActionsRunner(),
+            $this->getActionsQueuer(),
             new ChangesetValueSaver(),
             $this->getWorkflowRetriever(),
             new CommentCreator(
@@ -2346,9 +2346,9 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     /**
      * for testing purpose
      */
-    protected function getActionsRunner(): ActionsRunner
+    protected function getActionsQueuer(): PostCreationActionsQueuer
     {
-        return ActionsRunner::build(\BackendLogger::getDefaultLogger());
+        return ActionsQueuer::build(\BackendLogger::getDefaultLogger());
     }
 
     /**

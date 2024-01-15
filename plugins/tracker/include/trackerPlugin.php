@@ -120,7 +120,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\CommentOnlyChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\AsynchronousActionsRunner;
 use Tuleap\Tracker\Artifact\Changeset\TextDiff\ChangesetsForDiffRetriever;
 use Tuleap\Tracker\Artifact\Changeset\TextDiff\DiffProcessor;
@@ -2646,7 +2646,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             ArtifactChangesetSaver::build(),
             new ParentLinkAction($artifact_factory),
             new AfterNewChangesetHandler($artifact_factory, $fields_retriever),
-            ActionsRunner::build($logger),
+            ActionsQueuer::build($logger),
             new ChangesetValueSaver(),
             \WorkflowFactory::instance(),
             new CommentCreator(

@@ -34,6 +34,7 @@ final class TrackerTestBuilder
     private ?Project $project    = null;
     private int $tracker_id      = 0;
     private ?int $deletion_date  = null;
+    private ?\Workflow $workflow = null;
 
     public static function aTracker(): self
     {
@@ -83,6 +84,13 @@ final class TrackerTestBuilder
         return $this;
     }
 
+    public function withWorkflow(\Workflow $workflow): self
+    {
+        $this->workflow = $workflow;
+
+        return $this;
+    }
+
     private function getProjectId(): int
     {
         if (! $this->project) {
@@ -125,7 +133,11 @@ final class TrackerTestBuilder
             $tracker->setProject($this->project);
         }
 
-         $tracker->setParent(Tracker::NO_PARENT);
+        if ($this->workflow) {
+            $tracker->setWorkflow($this->workflow);
+        }
+
+        $tracker->setParent(Tracker::NO_PARENT);
 
         return $tracker;
     }

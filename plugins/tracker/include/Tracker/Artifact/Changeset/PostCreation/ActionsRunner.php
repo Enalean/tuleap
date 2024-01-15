@@ -19,11 +19,13 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
+use Codendi_HTMLPurifier;
 use ConfigNotificationAssignedTo;
 use EventManager;
-use Exception;
 use Psr\Log\LoggerInterface;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_MailGateway_RecipientFactory;
@@ -33,10 +35,6 @@ use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Markdown\CommonMarkInterpreter;
-use Tuleap\Queue\IsAsyncTaskProcessingAvailable;
-use Tuleap\Queue\QueueFactory;
-use Tuleap\Queue\Worker;
-use Tuleap\Queue\WorkerAvailability;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\CachingTrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentInformationRetriever;
@@ -66,12 +64,9 @@ use Tuleap\Tracker\Webhook\WebhookStatusLogger;
 use Tuleap\Webhook\Emitter as WebhookEmitter;
 use UserHelper;
 use UserManager;
-use WrapperLogger;
 
 class ActionsRunner
 {
-    private LoggerInterface $logger;
-    private QueueFactory $queue_factory;
     /**
      * @var PostCreationTask[]
      */
@@ -82,13 +77,8 @@ class ActionsRunner
     private array $tasks_that_can_be_run_only_async = [];
 
     public function __construct(
-        LoggerInterface $logger,
-        QueueFactory $queue_factory,
-        private readonly IsAsyncTaskProcessingAvailable $worker_availability,
         PostCreationTask ...$post_creation_tasks,
     ) {
-        $this->logger                                    = new WrapperLogger($logger, self::class);
-        $this->queue_factory                             = $queue_factory;
         $this->tasks_that_can_be_run_both_sync_and_async = $post_creation_tasks;
     }
 
@@ -107,9 +97,6 @@ class ActionsRunner
         $task_collector = $event_manager->dispatch(new PostCreationTaskCollectorEvent($logger));
 
         $action_runner = new self(
-            $logger,
-            new QueueFactory($logger),
-            new WorkerAvailability(),
             new ClearArtifactChangesetCacheTask(),
             new EmailNotificationTask(
                 new MailLogger(),
@@ -155,7 +142,7 @@ class ActionsRunner
                         $user_manager,
                         $form_element_factory,
                         new CommentRepresentationBuilder(
-                            CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
+                            CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance())
                         ),
                         new PermissionChecker(new CachingTrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentUGroupEnabledDao())))
                     )
@@ -169,46 +156,23 @@ class ActionsRunner
     }
 
     /**
-     * Manage notification for a changeset
-     *
+     * Process actions in synchronous mode.
+     * Actions that must be run async will not be processed
      */
-    public function executePostCreationActions(Tracker_Artifact_Changeset $changeset, bool $send_notifications)
+    public function processSyncPostCreationActions(Tracker_Artifact_Changeset $changeset, bool $send_notifications): void
     {
-        if ($this->worker_availability->canProcessAsyncTasks()) {
-            $this->queuePostCreationEvent($changeset, $send_notifications);
-        } else {
-            $this->processPostCreationActions($changeset, $send_notifications, false);
-        }
+        $this->processPostCreationActions($changeset, $send_notifications, false);
     }
 
     /**
-     * Process notification when executed in background (should not be called by front-end)
-     *
+     * Process actions when executed in background (should not be called by front-end)
      */
-    public function processAsyncPostCreationActions(Tracker_Artifact_Changeset $changeset, bool $send_notifications)
+    public function processAsyncPostCreationActions(Tracker_Artifact_Changeset $changeset, bool $send_notifications): void
     {
         $this->processPostCreationActions($changeset, $send_notifications, true);
     }
 
-    private function queuePostCreationEvent(Tracker_Artifact_Changeset $changeset, bool $send_notifications)
-    {
-        try {
-            $queue = $this->queue_factory->getPersistentQueue(Worker::EVENT_QUEUE_NAME, QueueFactory::REDIS);
-            $queue->pushSinglePersistentMessage(
-                AsynchronousActionsRunner::TOPIC,
-                [
-                    'artifact_id'        => (int) $changeset->getArtifact()->getId(),
-                    'changeset_id'       => (int) $changeset->getId(),
-                    'send_notifications' => $send_notifications,
-                ]
-            );
-        } catch (Exception $exception) {
-            $this->logger->error("Unable to queue notification for {$changeset->getId()}, fallback to online notif", ['exception' => $exception]);
-            $this->processPostCreationActions($changeset, $send_notifications, false);
-        }
-    }
-
-    private function processPostCreationActions(Tracker_Artifact_Changeset $changeset, bool $send_notifications, bool $execute_async)
+    private function processPostCreationActions(Tracker_Artifact_Changeset $changeset, bool $send_notifications, bool $execute_async): void
     {
         foreach ($this->tasks_that_can_be_run_both_sync_and_async as $notification_task) {
             $notification_task->execute($changeset, $send_notifications);
