@@ -22,56 +22,44 @@ declare(strict_types=1);
 
 namespace Tuleap\Project;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use UGroupBinding;
 
 final class UGroupBindingTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
     use GlobalResponseMock;
 
-    /**
-     * @var UGroupBinding
-     */
-    private $binding;
-    /**
-     * @var Mockery\MockInterface|\UGroupUserDao
-     */
-    private $ugroup_user_dao;
-    /**
-     * @var Mockery\MockInterface|\UGroupManager
-     */
-    private $ugroup_manager;
+    private UGroupBinding $binding;
+    private \UGroupUserDao&MockObject $ugroup_user_dao;
+    private \UGroupManager&MockObject $ugroup_manager;
 
     protected function setUp(): void
     {
-        $this->ugroup_user_dao = Mockery::mock(\UGroupUserDao::class);
-        $this->ugroup_manager  = Mockery::mock(\UGroupManager::class);
+        $this->ugroup_user_dao = $this->createMock(\UGroupUserDao::class);
+        $this->ugroup_manager  = $this->createMock(\UGroupManager::class);
         $this->binding         = new UGroupBinding($this->ugroup_user_dao, $this->ugroup_manager);
     }
 
     public function testRemoveUgroupBinding(): void
     {
-        $this->ugroup_manager->shouldReceive('updateUgroupBinding')
-            ->once()
-            ->andReturnTrue();
+        $this->ugroup_manager->expects(self::once())->method('updateUgroupBinding')
+            ->willReturn(true);
         $GLOBALS['Language']->expects(self::once())->method('getText')
             ->with('project_ugroup_binding', 'binding_removed');
         $GLOBALS['Response']->expects(self::once())->method('addFeedback');
 
-        $this->assertTrue($this->binding->removeBinding(200));
+        self::assertTrue($this->binding->removeBinding(200));
     }
 
     public function testUpdateUGroupBinding(): void
     {
-        $this->ugroup_manager->shouldReceive('updateUgroupBinding')
-            ->once()
-            ->andReturnTrue();
+        $this->ugroup_manager->expects(self::once())->method('updateUgroupBinding')
+            ->willReturn(true);
 
         $this->binding->updateUgroupBinding(200, 300);
     }
@@ -79,51 +67,52 @@ final class UGroupBindingTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testRemoveAllUGroupsBindingReturnsFalseWhenNotAllUGroupsCouldBeUpdated(): void
     {
         $bound_ugroups = [300 => [], 400 => [], 500 => [], 600 => []];
-        $this->binding = Mockery::mock(UGroupBinding::class)->makePartial();
-        $this->binding->shouldReceive('getUGroupsByBindingSource')
+        $this->binding = $this->createPartialMock(UGroupBinding::class, [
+            'getUGroupsByBindingSource',
+            'getUGroupManager',
+        ]);
+        $this->binding->expects(self::once())->method('getUGroupsByBindingSource')
             ->with(200)
-            ->once()
-            ->andReturn($bound_ugroups);
-        $this->binding->shouldReceive('getUGroupManager')
-            ->andReturn($this->ugroup_manager);
+            ->willReturn($bound_ugroups);
+        $this->binding->method('getUGroupManager')
+            ->willReturn($this->ugroup_manager);
 
-        $this->ugroup_manager->shouldReceive('updateUgroupBinding')
-            ->times(4)
-            ->andReturn(true, true, false, false);
+        $this->ugroup_manager->expects(self::exactly(4))->method('updateUgroupBinding')
+            ->willReturnOnConsecutiveCalls(true, true, false, false);
 
-        $this->assertFalse($this->binding->removeAllUGroupsBinding(200));
+        self::assertFalse($this->binding->removeAllUGroupsBinding(200));
     }
 
     public function testRemoveAllUGroupsBindingReturnsTrueWhenNoBoundUGroups(): void
     {
-        $this->binding = Mockery::mock(UGroupBinding::class)->makePartial();
-        $this->binding->shouldReceive('getUGroupsByBindingSource')
-            ->andReturn([]);
+        $this->binding = $this->createPartialMock(UGroupBinding::class, [
+            'getUGroupsByBindingSource',
+        ]);
+        $this->binding->method('getUGroupsByBindingSource')
+            ->willReturn([]);
 
-        $this->ugroup_manager->shouldNotReceive('updateUgroupBinding');
+        $this->ugroup_manager->expects(self::never())->method('updateUgroupBinding');
 
-        $this->assertTrue($this->binding->removeAllUGroupsBinding(200));
+        self::assertTrue($this->binding->removeAllUGroupsBinding(200));
     }
 
     public function testGetUGroupsByBindingSourceReturnsAnEmptyArrayWhenDARisError(): void
     {
         $dar = $this->createMock(LegacyDataAccessResultInterface::class);
-        $this->ugroup_manager->shouldReceive('searchUGroupByBindingSource')
-            ->once()
+        $this->ugroup_manager->expects(self::once())->method('searchUGroupByBindingSource')
             ->with(200)
-            ->andReturn($dar);
+            ->willReturn($dar);
         $dar->expects(self::once())->method('isError')->willReturn(true);
 
-        $this->assertEmpty($this->binding->getUGroupsByBindingSource(200));
+        self::assertEmpty($this->binding->getUGroupsByBindingSource(200));
     }
 
     public function testGetUGroupsByBindingSourceReturnsAnArrayOfProjectIdsAndUGroupNames(): void
     {
         $dar = $this->createMock(LegacyDataAccessResultInterface::class);
-        $this->ugroup_manager->shouldReceive('searchUGroupByBindingSource')
-            ->once()
+        $this->ugroup_manager->expects(self::once())->method('searchUGroupByBindingSource')
             ->with(200)
-            ->andReturn($dar);
+            ->willReturn($dar);
 
         $dar->expects(self::once())->method('isError')->willReturn(false);
         $first_row  = [
@@ -144,27 +133,26 @@ final class UGroupBindingTest extends \Tuleap\Test\PHPUnit\TestCase
         $result = $this->binding->getUGroupsByBindingSource(200);
 
         $bound_ugroup_ids = array_keys($result);
-        $this->assertEquals([300, 400], $bound_ugroup_ids);
+        self::assertEquals([300, 400], $bound_ugroup_ids);
         $first_bound_ugroup = [
             'cloneName' => 'panicmongering',
             'group_id'  => 138,
         ];
-        $this->assertEquals($first_bound_ugroup, $result[300]);
+        self::assertEquals($first_bound_ugroup, $result[300]);
         $second_bound_ugroup = [
             'cloneName' => 'counteraverment',
             'group_id'  => 185,
         ];
-        $this->assertEquals($second_bound_ugroup, $result[400]);
+        self::assertEquals($second_bound_ugroup, $result[400]);
     }
 
     public function testCheckUGroupValidityDelegates(): void
     {
-        $this->ugroup_manager->shouldReceive('checkUGroupValidityByGroupId')
+        $this->ugroup_manager->expects(self::once())->method('checkUGroupValidityByGroupId')
             ->with(105, 200)
-            ->once()
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $this->assertTrue($this->binding->checkUGroupValidity(105, 200));
+        self::assertTrue($this->binding->checkUGroupValidity(105, 200));
     }
 
     public function testReloadUGroupBindingInProject(): void
@@ -179,21 +167,16 @@ final class UGroupBindingTest extends \Tuleap\Test\PHPUnit\TestCase
         $dar->method('rewind');
         $dar->method('next');
 
-        $project = Mockery::mock(\Project::class);
-        $this->ugroup_manager->shouldReceive('searchBindedUgroupsInProject')
+        $project = ProjectTestBuilder::aProject()->build();
+        $this->ugroup_manager->expects(self::once())->method('searchBindedUgroupsInProject')
             ->with($project)
-            ->once()
-            ->andReturn($dar);
-        $this->binding = Mockery::mock(
-            UGroupBinding::class,
-            [$this->ugroup_user_dao, $this->ugroup_manager]
-        )->makePartial();
-        $this->binding->shouldReceive('reloadUgroupBinding')
-            ->with(400, 200)
-            ->once();
-        $this->binding->shouldReceive('reloadUgroupBinding')
-            ->with(500, 200)
-            ->once();
+            ->willReturn($dar);
+        $this->binding = $this->getMockBuilder(UGroupBinding::class)
+            ->setConstructorArgs([$this->ugroup_user_dao, $this->ugroup_manager])
+            ->onlyMethods(['reloadUgroupBinding'])
+            ->getMock();
+        $this->binding->expects(self::exactly(2))->method('reloadUgroupBinding')
+            ->withConsecutive([400, 200], [500, 200]);
 
         $this->binding->reloadUgroupBindingInProject($project);
     }
@@ -201,41 +184,45 @@ final class UGroupBindingTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testUpdateBindedUGroups(): void
     {
         $bound_ugroups = [300 => [], 400 => [], 500 => [], 600 => []];
-        $this->binding = Mockery::mock(UGroupBinding::class)->makePartial();
-        $this->binding->shouldReceive('getUGroupsByBindingSource')
+        $this->binding = $this->createPartialMock(UGroupBinding::class, [
+            'getUGroupsByBindingSource',
+            'reloadUgroupBinding',
+        ]);
+        $this->binding->expects(self::once())->method('getUGroupsByBindingSource')
             ->with(200)
-            ->once()
-            ->andReturn($bound_ugroups);
+            ->willReturn($bound_ugroups);
 
-        $this->binding->shouldReceive('reloadUgroupBinding');
+        $this->binding->method('reloadUgroupBinding');
 
-        $this->assertTrue($this->binding->updateBindedUGroups(200));
+        self::assertTrue($this->binding->updateBindedUGroups(200));
     }
 
     public function testUpdateBindedUGroupsReturnsFalseWhenExceptionDuringReload(): void
     {
-        $this->binding = Mockery::mock(UGroupBinding::class)->makePartial();
-        $this->binding->shouldReceive('getUGroupsByBindingSource')
-            ->andReturn([300 => [], 400 => []]);
+        $this->binding = $this->createPartialMock(UGroupBinding::class, [
+            'getUGroupsByBindingSource',
+            'reloadUgroupBinding',
+        ]);
+        $this->binding->method('getUGroupsByBindingSource')
+            ->willReturn([300 => [], 400 => []]);
 
-        $this->binding->shouldReceive('reloadUgroupBinding')
+        $this->binding->expects(self::once())->method('reloadUgroupBinding')
             ->with(300, 200)
-            ->once()
-            ->andThrow(\Exception::class);
-        $this->binding->shouldNotReceive('reloadUgroupBinding')
-            ->with(400, 200);
+            ->willThrowException(new \Exception());
 
-        $this->assertFalse($this->binding->updateBindedUGroups(200));
+        self::assertFalse($this->binding->updateBindedUGroups(200));
     }
 
     public function testUpdateBindedUGroupsReturnsTrueWhenNoBoundUGroups(): void
     {
-        $this->binding = Mockery::mock(UGroupBinding::class)->makePartial();
-        $this->binding->shouldReceive('getUGroupsByBindingSource')
-            ->andReturn([]);
+        $this->binding = $this->createPartialMock(UGroupBinding::class, [
+            'getUGroupsByBindingSource',
+            'reloadUgroupBinding',
+        ]);
+        $this->binding->method('getUGroupsByBindingSource')->willReturn([]);
 
-        $this->binding->shouldNotReceive('reloadUgroupBinding');
+        $this->binding->expects(self::never())->method('reloadUgroupBinding');
 
-        $this->assertTrue($this->binding->updateBindedUGroups(200));
+        self::assertTrue($this->binding->updateBindedUGroups(200));
     }
 }
