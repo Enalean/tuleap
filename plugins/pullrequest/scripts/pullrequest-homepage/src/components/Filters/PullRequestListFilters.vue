@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2023 - present. All Rights Reserved.
+  - Copyright (c) Enalean, 2024 - present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -18,26 +18,19 @@
   -->
 
 <template>
-    <div class="tlp-framed">
-        <pull-request-list-filters />
-        <pull-requests-list />
-        <pull-request-error-modal v-bind:fault="error" />
+    <div class="tlp-framed-vertically">
+        <tuleap-selectors-dropdown
+            v-bind:button_text="$gettext('Add filter')"
+            v-bind:selectors_entries="selectors_entries"
+        />
     </div>
 </template>
 
 <script setup lang="ts">
-import { provide, ref } from "vue";
-import type { Fault } from "@tuleap/fault";
-import { DISPLAY_TULEAP_API_ERROR } from "../injection-symbols";
-import PullRequestsList from "./List/PullRequestsList.vue";
-import PullRequestErrorModal from "./Error/PullRequestErrorModal.vue";
-import PullRequestListFilters from "./Filters/PullRequestListFilters.vue";
+import { useGettext } from "vue3-gettext";
+import "@tuleap/plugin-pullrequest-selectors-dropdown";
 
-const error = ref<Fault | null>(null);
+const { $gettext } = useGettext();
 
-const handleAPIFault = (fault: Fault): void => {
-    error.value = fault;
-};
-
-provide(DISPLAY_TULEAP_API_ERROR, handleAPIFault);
+const selectors_entries = [{ entry_name: $gettext("Author") }];
 </script>
