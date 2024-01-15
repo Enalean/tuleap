@@ -328,6 +328,8 @@ class GitActions extends PluginActions
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, 'Cannot access Gerrit ' . $e->getTraceAsString());
             $GLOBALS['Response']->sendStatusCode(500);
             return;
+        } finally {
+            $this->project_creator->removeTemporaryDirectory();
         }
     }
 
