@@ -24,157 +24,146 @@ declare(strict_types=1);
 namespace Tuleap\Project;
 
 use Event;
-use Mockery as M;
 use EventManager;
+use PHPUnit\Framework\MockObject\MockObject;
 use ProjectUGroup;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
 use Tuleap\Project\UGroups\Membership\MemberAdder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use UGroupBinding;
 use UGroupDao;
 use UGroupManager;
 
-class UgroupDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UgroupDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
-    /**
-     * @var M\MockInterface|UGroupDao
-     */
-    private $dao;
-    /**
-     * @var M\MockInterface|UGroupManager
-     */
-    private $manager;
-    /**
-     * @var M\MockInterface|UGroupBinding
-     */
-    private $binding;
-    /**
-     * @var EventManager|M\MockInterface
-     */
-    private $event_manager;
-    /**
-     * @var UgroupDuplicator
-     */
-    private $ugroup_duplicator;
-    /**
-     * @var M\MockInterface|MemberAdder
-     */
-    private $member_adder;
+    private UGroupDao&MockObject $dao;
+    private UGroupManager&MockObject $manager;
+    private EventManager&MockObject $event_manager;
+    private UgroupDuplicator $ugroup_duplicator;
+    private MemberAdder&MockObject $member_adder;
 
     protected function setUp(): void
     {
-        $this->dao               = M::mock(UGroupDao::class);
-        $this->manager           = M::mock(UGroupManager::class);
-        $this->binding           = M::mock(UGroupBinding::class);
-        $this->member_adder      = M::mock(MemberAdder::class);
-        $this->event_manager     = M::mock(EventManager::class);
-        $this->ugroup_duplicator = new UgroupDuplicator($this->dao, $this->manager, $this->binding, $this->member_adder, $this->event_manager);
+        $this->dao               = $this->createMock(UGroupDao::class);
+        $this->manager           = $this->createMock(UGroupManager::class);
+        $binding                 = $this->createMock(UGroupBinding::class);
+        $this->member_adder      = $this->createMock(MemberAdder::class);
+        $this->event_manager     = $this->createMock(EventManager::class);
+        $this->ugroup_duplicator = new UgroupDuplicator($this->dao, $this->manager, $binding, $this->member_adder, $this->event_manager);
     }
 
-    public function testItDuplicatesOnlyStaticGroups()
+    public function testItDuplicatesOnlyStaticGroups(): void
     {
-        $template       = M::mock(\Project::class);
+        $template       = ProjectTestBuilder::aProject()->build();
         $new_project_id = 120;
         $ugroup_mapping = [];
 
-        $this->manager->shouldReceive('getStaticUGroups')->with($template)->once()->andReturns([]);
+        $this->manager->expects(self::once())->method('getStaticUGroups')->with($template)->willReturn([]);
 
         $this->ugroup_duplicator->duplicateOnProjectCreation($template, $new_project_id, $ugroup_mapping, UserTestBuilder::buildWithDefaults());
 
-        $this->assertEmpty($ugroup_mapping);
+        self::assertEmpty($ugroup_mapping);
     }
 
-    public function testItReturnsTheMappingBetweenSourceAndDestinationUGroups()
+    public function testItReturnsTheMappingBetweenSourceAndDestinationUGroups(): void
     {
-        $template       = M::mock(\Project::class);
+        $template       = ProjectTestBuilder::aProject()->build();
         $new_project_id = 120;
         $ugroup_mapping = [];
 
         $source_ugroup_id = 201;
-        $source_ugroup    = M::mock(ProjectUGroup::class, ['getId' => $source_ugroup_id, 'isStatic' => true, 'isBound' => false, 'getMembers' => [ ]]);
-        $this->manager->shouldReceive('getStaticUGroups')->with($template)->once()->andReturns(
-            [
-                $source_ugroup,
-            ]
-        );
+        $source_ugroup    = $this->createMock(ProjectUGroup::class);
+        $source_ugroup->method('getId')->willReturn($source_ugroup_id);
+        $source_ugroup->method('isStatic')->willReturn(true);
+        $source_ugroup->method('isBound')->willReturn(false);
+        $source_ugroup->method('getMembers')->willReturn([]);
+        $this->manager->expects(self::once())->method('getStaticUGroups')->with($template)->willReturn([$source_ugroup,]);
 
         $new_ugroup_id = 301;
-        $new_ugroup    = M::mock(ProjectUGroup::class, ['getId' => $new_ugroup_id]);
-        $this->dao->shouldReceive('createUgroupFromSourceUgroup')->with($source_ugroup_id, $new_project_id)->once()->andReturns($new_ugroup_id);
-        $this->manager->shouldReceive('getById')->with($new_ugroup_id)->once()->andReturn($new_ugroup);
+        $new_ugroup    = ProjectUGroupTestBuilder::aCustomUserGroup($new_ugroup_id)->build();
+        $this->dao->expects(self::once())->method('createUgroupFromSourceUgroup')->with($source_ugroup_id, $new_project_id)->willReturn($new_ugroup_id);
+        $this->manager->expects(self::once())->method('getById')->with($new_ugroup_id)->willReturn($new_ugroup);
 
-        $this->event_manager->shouldReceive('processEvent')->with(Event::UGROUP_DUPLICATION, ['source_ugroup' => $source_ugroup, 'new_ugroup_id' => $new_ugroup_id])->once();
+        $this->event_manager->expects(self::once())->method('processEvent')
+            ->with(Event::UGROUP_DUPLICATION, ['source_ugroup' => $source_ugroup, 'new_ugroup_id' => $new_ugroup_id]);
 
-        $this->dao->shouldReceive('createBinding')->with($new_project_id, $source_ugroup_id, $new_ugroup_id)->once();
+        $this->dao->expects(self::once())->method('createBinding')->with($new_project_id, $source_ugroup_id, $new_ugroup_id);
 
         $this->ugroup_duplicator->duplicateOnProjectCreation($template, $new_project_id, $ugroup_mapping, UserTestBuilder::buildWithDefaults());
-        $this->assertEquals([201 => 301], $ugroup_mapping);
+        self::assertEquals([201 => 301], $ugroup_mapping);
     }
 
-    public function testItAddUsersFromSourceGroup()
+    public function testItAddUsersFromSourceGroup(): void
     {
-        $template       = M::mock(\Project::class);
+        $template       = ProjectTestBuilder::aProject()->build();
         $new_project_id = 120;
-        $ugoup_mapping  = [];
+        $ugroup_mapping = [];
 
         $source_ugroup_id = 201;
-        $user1            = new \PFUser(['user_id' => 1]);
-        $user2            = new \PFUser(['user_id' => 2]);
-        $source_ugroup    = M::mock(ProjectUGroup::class, ['getId' => $source_ugroup_id, 'isStatic' => true, 'isBound' => false, 'getMembers' => [$user1, $user2]]);
-        $this->manager->shouldReceive('getStaticUGroups')->with($template)->once()->andReturns(
-            [
-                $source_ugroup,
-            ]
-        );
+        $user1            = UserTestBuilder::buildWithId(1);
+        $user2            = UserTestBuilder::buildWithId(2);
+        $source_ugroup    = $this->createMock(ProjectUGroup::class);
+        $source_ugroup->method('getId')->willReturn($source_ugroup_id);
+        $source_ugroup->method('isStatic')->willReturn(true);
+        $source_ugroup->method('isBound')->willReturn(false);
+        $source_ugroup->method('getMembers')->willReturn([$user1, $user2]);
+        $this->manager->expects(self::once())->method('getStaticUGroups')->with($template)->willReturn([$source_ugroup]);
 
         $new_ugroup_id = 301;
-        $new_ugroup    = M::mock(ProjectUGroup::class, ['getId' => $new_ugroup_id]);
-        $this->dao->shouldReceive('createUgroupFromSourceUgroup')->with($source_ugroup_id, $new_project_id)->once()->andReturns($new_ugroup_id);
-        $this->manager->shouldReceive('getById')->with($new_ugroup_id)->once()->andReturn($new_ugroup);
+        $new_ugroup    = ProjectUGroupTestBuilder::aCustomUserGroup($new_ugroup_id)->build();
+        $this->dao->expects(self::once())->method('createUgroupFromSourceUgroup')->with($source_ugroup_id, $new_project_id)->willReturn($new_ugroup_id);
+        $this->manager->expects(self::once())->method('getById')->with($new_ugroup_id)->willReturn($new_ugroup);
 
-        $this->event_manager->shouldReceive('processEvent')->with(Event::UGROUP_DUPLICATION, ['source_ugroup' => $source_ugroup, 'new_ugroup_id' => $new_ugroup_id])->once();
+        $this->event_manager->expects(self::once())->method('processEvent')
+            ->with(Event::UGROUP_DUPLICATION, ['source_ugroup' => $source_ugroup, 'new_ugroup_id' => $new_ugroup_id]);
 
-        $this->dao->shouldReceive('createBinding')->with($new_project_id, $source_ugroup_id, $new_ugroup_id)->once();
+        $this->dao->expects(self::once())->method('createBinding')->with($new_project_id, $source_ugroup_id, $new_ugroup_id);
 
         $project_admin = UserTestBuilder::buildWithDefaults();
 
-        $this->member_adder->shouldReceive('addMember')->with($user1, $new_ugroup, $project_admin)->once();
-        $this->member_adder->shouldReceive('addMember')->with($user2, $new_ugroup, $project_admin)->once();
+        $this->member_adder->expects(self::exactly(2))->method('addMember')
+            ->withConsecutive(
+                [$user1, $new_ugroup, $project_admin],
+                [$user2, $new_ugroup, $project_admin],
+            );
 
-        $this->ugroup_duplicator->duplicateOnProjectCreation($template, $new_project_id, $ugoup_mapping, $project_admin);
+        $this->ugroup_duplicator->duplicateOnProjectCreation($template, $new_project_id, $ugroup_mapping, $project_admin);
     }
 
-    public function testItAddUsersWithExceptionHandling()
+    public function testItAddUsersWithExceptionHandling(): void
     {
-        $template       = M::mock(\Project::class);
+        $template       = ProjectTestBuilder::aProject()->build();
         $new_project_id = 120;
-        $ugoup_mapping  = [];
+        $ugroup_mapping = [];
 
         $source_ugroup_id = 201;
-        $user1            = new \PFUser(['user_id' => 1]);
-        $user2            = new \PFUser(['user_id' => 2]);
-        $source_ugroup    = M::mock(ProjectUGroup::class, ['getId' => $source_ugroup_id, 'isStatic' => true, 'isBound' => false, 'getMembers' => [$user1, $user2]]);
-        $this->manager->shouldReceive('getStaticUGroups')->with($template)->once()->andReturns(
-            [
-                $source_ugroup,
-            ]
-        );
+        $user1            = UserTestBuilder::buildWithId(1);
+        $user2            = UserTestBuilder::buildWithId(2);
+        $source_ugroup    = $this->createMock(ProjectUGroup::class);
+        $source_ugroup->method('getId')->willReturn($source_ugroup_id);
+        $source_ugroup->method('isStatic')->willReturn(true);
+        $source_ugroup->method('isBound')->willReturn(false);
+        $source_ugroup->method('getMembers')->willReturn([$user1, $user2]);
+        $this->manager->expects(self::once())->method('getStaticUGroups')->with($template)->willReturn([$source_ugroup]);
 
         $new_ugroup_id = 301;
-        $new_ugroup    = M::mock(ProjectUGroup::class, ['getId' => $new_ugroup_id]);
-        $this->dao->shouldReceive('createUgroupFromSourceUgroup')->with($source_ugroup_id, $new_project_id)->once()->andReturns($new_ugroup_id);
-        $this->manager->shouldReceive('getById')->with($new_ugroup_id)->once()->andReturn($new_ugroup);
+        $new_ugroup    = ProjectUGroupTestBuilder::aCustomUserGroup($new_ugroup_id)->build();
+        $this->dao->expects(self::once())->method('createUgroupFromSourceUgroup')->with($source_ugroup_id, $new_project_id)->willReturn($new_ugroup_id);
+        $this->manager->expects(self::once())->method('getById')->with($new_ugroup_id)->willReturn($new_ugroup);
 
-        $this->event_manager->shouldReceive('processEvent')->with(Event::UGROUP_DUPLICATION, ['source_ugroup' => $source_ugroup, 'new_ugroup_id' => $new_ugroup_id])->once();
+        $this->event_manager->expects(self::once())->method('processEvent')
+            ->with(Event::UGROUP_DUPLICATION, ['source_ugroup' => $source_ugroup, 'new_ugroup_id' => $new_ugroup_id]);
 
-        $this->dao->shouldReceive('createBinding')->with($new_project_id, $source_ugroup_id, $new_ugroup_id)->once();
+        $this->dao->expects(self::once())->method('createBinding')->with($new_project_id, $source_ugroup_id, $new_ugroup_id);
 
-        $this->member_adder->shouldReceive('addMember')->andThrows(new CannotAddRestrictedUserToProjectNotAllowingRestricted($user1, M::mock(\Project::class, ['getID' => 505])));
+        $this->member_adder->method('addMember')
+            ->willThrowException(new CannotAddRestrictedUserToProjectNotAllowingRestricted($user1, ProjectTestBuilder::aProject()->withId(505)->build()));
 
-        $this->ugroup_duplicator->duplicateOnProjectCreation($template, $new_project_id, $ugoup_mapping, UserTestBuilder::buildWithDefaults());
+        $this->ugroup_duplicator->duplicateOnProjectCreation($template, $new_project_id, $ugroup_mapping, UserTestBuilder::buildWithDefaults());
     }
 }
