@@ -18,20 +18,26 @@
  */
 
 import { describe, it, expect, vi } from "vitest";
-import type { InternalSelectorsDropdown } from "./SelectorsDropdown";
+import { Option } from "@tuleap/option";
 import * as tlp_dropdown from "@tuleap/tlp-dropdown";
+import type { InternalSelectorsDropdown } from "./SelectorsDropdown";
 import { SelectorsDropdownController } from "./SelectorsDropdownController";
 
 vi.mock("@tuleap/tlp-dropdown");
 
 describe("SelectorsDropdownController", () => {
-    it(`initDropdown() should init a tlp-dropdown using the custom-element's button and menu`, () => {
+    const getHost = (): InternalSelectorsDropdown => {
         const doc = document.implementation.createHTMLDocument();
-        const host = {
+        return {
             dropdown_button_element: doc.createElement("button"),
             dropdown_content_element: doc.createElement("div"),
+            is_dropdown_shown: false,
+            active_selector: Option.nothing(),
         } as unknown as InternalSelectorsDropdown;
+    };
 
+    it(`initDropdown() should init a tlp-dropdown using the custom-element's button and menu`, () => {
+        const host = getHost();
         const createDropdown = vi.spyOn(tlp_dropdown, "createDropdown");
 
         SelectorsDropdownController().initDropdown(host);
@@ -39,5 +45,37 @@ describe("SelectorsDropdownController", () => {
         expect(createDropdown).toHaveBeenCalledWith(host.dropdown_button_element, {
             dropdown_menu: host.dropdown_content_element,
         });
+    });
+
+    it("onDropdownShown() should set is_dropdown_shown to true", () => {
+        const host = getHost();
+
+        SelectorsDropdownController().onDropdownShown(host);
+
+        expect(host.is_dropdown_shown).toBe(true);
+    });
+
+    it("openSidePanel() should assign active_selector", () => {
+        const host = getHost();
+        const selector = { entry_name: "Author" };
+        const controller = SelectorsDropdownController();
+
+        controller.onDropdownShown(host);
+        controller.openSidePanel(host, selector);
+
+        expect(host.active_selector.unwrapOr(null)).toBe(selector);
+    });
+
+    it("onDropdownHidden() should set is_dropdown_shown to false and clear the currently selected selector", () => {
+        const host = getHost();
+        const selector = { entry_name: "Author" };
+        const controller = SelectorsDropdownController();
+
+        controller.onDropdownShown(host);
+        controller.openSidePanel(host, selector);
+        controller.onDropdownHidden(host);
+
+        expect(host.is_dropdown_shown).toBe(false);
+        expect(host.active_selector.isValue()).toBe(false);
     });
 });

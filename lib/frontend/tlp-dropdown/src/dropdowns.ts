@@ -170,6 +170,7 @@ export class Dropdown {
         await this.updatePositionOfMenu();
 
         this.dispatchEvent(this.shown_event);
+        this.dropdown_menu.dispatchEvent(this.shown_event);
     }
 
     hide(): void {
@@ -179,6 +180,7 @@ export class Dropdown {
 
         setTimeout(() => {
             this.dispatchEvent(this.hidden_event);
+            this.dropdown_menu.dispatchEvent(this.hidden_event);
         }, TRANSITION_DURATION);
     }
 

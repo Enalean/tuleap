@@ -19,6 +19,7 @@
 
 import { define } from "hybrids";
 import { selectOrThrow } from "@tuleap/dom";
+import { Option } from "@tuleap/option";
 import type { ControlSelectorsDropdown } from "./SelectorsDropdownController";
 import { SelectorsDropdownController } from "./SelectorsDropdownController";
 import {
@@ -42,6 +43,8 @@ export type InternalSelectorsDropdown = Readonly<SelectorsDropdown> & {
     dropdown_button_element: Element;
     dropdown_content_element: Element;
     controller: ControlSelectorsDropdown;
+    active_selector: Option<SelectorEntry>;
+    is_dropdown_shown: boolean;
 };
 
 export type HostElement = InternalSelectorsDropdown & HTMLElement;
@@ -50,6 +53,11 @@ export const SelectorsDropdown = define<InternalSelectorsDropdown>({
     tag: TAG,
     button_text: "",
     selectors_entries: undefined,
+    is_dropdown_shown: false,
+    active_selector: {
+        get: (host, active_selector) => active_selector ?? Option.nothing(),
+        set: (host, active_selector) => active_selector,
+    },
     dropdown_button_element: {
         get: (host) => selectOrThrow(host, `.${DROPDOWN_BUTTON_CLASSNAME}`),
     },
