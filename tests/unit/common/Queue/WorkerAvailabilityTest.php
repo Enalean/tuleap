@@ -48,7 +48,7 @@ final class WorkerAvailabilityTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testProvidesTheNumberOfConfiguredWorkerWhenAsyncActionsCanBeExecuted(): void
     {
         \ForgeConfig::set('redis_server', 'redis.example.com');
-        \ForgeConfig::set('sys_nb_backend_workers', '5');
+        \ForgeConfig::set(WorkerAvailability::NB_BACKEND_WORKERS_CONFIG_KEY, '5');
 
         $worker_availability = new WorkerAvailability();
 

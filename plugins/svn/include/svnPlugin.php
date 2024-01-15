@@ -32,6 +32,7 @@ use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\Config\ConfigClassProvider;
 use Tuleap\Config\ConfigDao;
 use Tuleap\Config\ConfigSet;
+use Tuleap\Config\GetConfigKeys;
 use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\Error\ProjectAccessSuspendedController;
 use Tuleap\Event\Events\ExportXmlProject;
@@ -721,9 +722,11 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
 
     public function routeUpdateSiteAdminMaxFileSize(): DispatchableWithRequest
     {
+        $config_keys = EventManager::instance()->dispatch(new GetConfigKeys());
+        assert($config_keys instanceof GetConfigKeys);
         return new UpdateMaxFileSizeController(
             new ConfigSet(
-                EventManager::instance(),
+                $config_keys,
                 new ConfigDao()
             )
         );

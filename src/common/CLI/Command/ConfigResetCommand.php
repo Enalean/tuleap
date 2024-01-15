@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\CLI\Command;
 
 use ForgeConfig;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Formatter\OutputFormatter;
@@ -31,14 +30,14 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tuleap\Config\ConfigDao;
-use Tuleap\Config\GetConfigKeys;
+use Tuleap\Config\KeyMetadataProvider;
 
 final class ConfigResetCommand extends Command
 {
     public const NAME = 'config-reset';
 
     public function __construct(
-        private readonly EventDispatcherInterface $event_dispatcher,
+        private readonly KeyMetadataProvider $config_keys,
         private readonly ConfigDao $config_dao,
     ) {
         parent::__construct(self::NAME);
@@ -57,8 +56,7 @@ final class ConfigResetCommand extends Command
             throw new InvalidArgumentException("Invalid key $key");
         }
 
-        $config_keys  = $this->event_dispatcher->dispatch(new GetConfigKeys());
-        $key_metadata = $config_keys->getKeyMetadata($key);
+        $key_metadata = $this->config_keys->getKeyMetadata($key);
 
         if (! $key_metadata->can_be_modified) {
             throw new InvalidArgumentException("$key cannot be modified");

@@ -24,6 +24,7 @@ use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\Config\ConfigClassProvider;
+use Tuleap\Config\GetConfigKeys;
 use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\FullTextSearchCommon\CLI\IdentifyAllItemsToIndexCommand;
 use Tuleap\FullTextSearchCommon\FullTextSearchBackendPlugin;
@@ -198,10 +199,13 @@ final class fts_meilisearchPlugin extends FullTextSearchBackendPlugin implements
 
     public function routePostAdminSettings(): MeilisearchSaveAdminSettingsController
     {
+        $config_keys = EventManager::instance()->dispatch(new GetConfigKeys());
+        assert($config_keys instanceof GetConfigKeys);
+
         return new MeilisearchSaveAdminSettingsController(
             new LocalMeilisearchServer(),
             self::buildCSRFTokenAdmin(),
-            new \Tuleap\Config\ConfigSet(EventManager::instance(), new \Tuleap\Config\ConfigDao()),
+            new \Tuleap\Config\ConfigSet($config_keys, new \Tuleap\Config\ConfigDao()),
             \Tuleap\FullTextSearchMeilisearch\Server\MeilisearchServerURLValidator::buildSelf(),
             \Tuleap\FullTextSearchMeilisearch\Server\MeilisearchAPIKeyValidator::buildSelf(),
             \Tuleap\FullTextSearchMeilisearch\Server\MeilisearchIndexNameValidator::buildSelf(),

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,25 +16,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
-
-declare(strict_types=1);
 
 namespace Tuleap\Config;
 
-final class InvalidConfigKeyException extends \Exception
-{
-    public function __construct(private readonly KeysThatCanBeModifiedProvider $config_keys)
-    {
-        parent::__construct();
-    }
+use Tuleap\Cryptography\ConcealedString;
 
-    /**
-     * @return string[]
-     */
-    public function getConfigKeys(): array
-    {
-        return $this->config_keys->getKeysThatCanBeModified();
-    }
+interface ConfigUpdater
+{
+    public function set(string $key, string|ConcealedString $value): void;
 }

@@ -27,6 +27,7 @@ use BackendLogger;
 use Psr\Log\LoggerInterface;
 use Tuleap\Config\ConfigDao;
 use Tuleap\Config\ConfigSet;
+use Tuleap\Config\GetConfigKeys;
 use Tuleap\Log\LogToSyslog as LogToSyslogAlias;
 use Webimpress\SafeWriter\FileWriter;
 
@@ -58,7 +59,9 @@ final class LogToSyslog
     private function tuleap(): void
     {
         $this->logger->info('Syslog: configure tuleap');
-        $config_set = new ConfigSet(\EventManager::instance(), new ConfigDao());
+        $config_keys = \EventManager::instance()->dispatch(new GetConfigKeys());
+        assert($config_keys instanceof GetConfigKeys);
+        $config_set = new ConfigSet($config_keys, new ConfigDao());
         $config_set->set(BackendLogger::CONFIG_LOGGER, LogToSyslogAlias::CONFIG_LOGGER_SYSLOG);
     }
 

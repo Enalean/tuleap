@@ -41,6 +41,7 @@ use Tuleap\CLI\DelayExecution\ConditionalTuleapCronEnvExecutionDelayer;
 use Tuleap\CLI\DelayExecution\ExecutionDelayedLauncher;
 use Tuleap\CLI\DelayExecution\ExecutionDelayerRandomizedSleep;
 use Tuleap\Config\ConfigDao;
+use Tuleap\Config\GetConfigKeys;
 use Tuleap\DB\DBFactory;
 use Tuleap\FRS\CorrectFrsRepositoryPermissionsCommand;
 use Tuleap\InviteBuddy\InvitationCleaner;
@@ -99,9 +100,12 @@ $CLI_command_collector->addCommand(
 $CLI_command_collector->addCommand(
     ConfigSetCommand::NAME,
     static function () use ($event_manager): ConfigSetCommand {
+        $config_keys = $event_manager->dispatch(new GetConfigKeys());
+        assert($config_keys instanceof GetConfigKeys);
+
         return new ConfigSetCommand(
             new \Tuleap\Config\ConfigSet(
-                $event_manager,
+                $config_keys,
                 new ConfigDao(),
             ),
             $event_manager,
@@ -116,7 +120,15 @@ $CLI_command_collector->addCommand(
 
 $CLI_command_collector->addCommand(
     ConfigResetCommand::NAME,
-    static fn () => new ConfigResetCommand($event_manager, new ConfigDao())
+    static function () use ($event_manager) {
+        $config_keys = $event_manager->dispatch(new GetConfigKeys());
+        assert($config_keys instanceof GetConfigKeys);
+
+        return new ConfigResetCommand(
+            $config_keys,
+            new ConfigDao(),
+        );
+    }
 );
 
 $CLI_command_collector->addCommand(

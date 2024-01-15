@@ -24,9 +24,7 @@ namespace Tuleap\FullTextSearchMeilisearch\Server\Administration;
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use org\bovigo\vfs\vfsStream;
-use Tuleap\Config\ConfigDao;
-use Tuleap\Config\ConfigSet;
-use Tuleap\Config\GetConfigKeys;
+use Tuleap\Config\ConfigUpdater;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\FullTextSearchMeilisearch\Server\IProvideCurrentKeyForLocalServer;
@@ -41,7 +39,7 @@ use Tuleap\Layout\Feedback\FeedbackSerializer;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Test\Stubs\EventDispatcherStub;
+use Tuleap\Test\Stubs\Config\ConfigUpdaterStub;
 
 final class MeilisearchSaveAdminSettingsControllerTest extends TestCase
 {
@@ -49,28 +47,31 @@ final class MeilisearchSaveAdminSettingsControllerTest extends TestCase
 
     public function testSaveSettings(): void
     {
-        $config_dao = $this->createMock(ConfigDao::class);
+        $config_updater = ConfigUpdaterStub::build();
 
-        $controller = $this->buildController($config_dao, false);
+        $controller = $this->buildController($config_updater, false);
 
         $request = (new NullServerRequest())
             ->withAttribute(\PFUser::class, UserTestBuilder::anActiveUser()->build())
             ->withParsedBody(
                 ['server_url' => 'https://example.com', 'api_key' => 'some_secret', 'index_name' => 'fts_tuleap']
             );
-
-        $config_dao->expects($this->atLeastOnce())->method('save');
 
         $response = $controller->handle($request);
 
         self::assertEquals(302, $response->getStatusCode());
+        self::assertSame('https://example.com', $config_updater->getUpdatedConfig(RemoteMeilisearchServerSettings::URL));
+        $stored_api_key = $config_updater->getUpdatedConfig(RemoteMeilisearchServerSettings::API_KEY);
+        self::assertInstanceOf(ConcealedString::class, $stored_api_key);
+        self::assertTrue($stored_api_key->isIdenticalTo(new ConcealedString('some_secret')));
+        self::assertSame('fts_tuleap', $config_updater->getUpdatedConfig(RemoteMeilisearchServerSettings::INDEX_NAME));
     }
 
     public function testLocalServerDontHaveSettingsPage(): void
     {
-        $config_dao = $this->createMock(ConfigDao::class);
+        $config_updater = ConfigUpdaterStub::build();
 
-        $controller = $this->buildController($config_dao, true);
+        $controller = $this->buildController($config_updater, true);
 
         $request = (new NullServerRequest())
             ->withAttribute(\PFUser::class, UserTestBuilder::anActiveUser()->build())
@@ -78,10 +79,9 @@ final class MeilisearchSaveAdminSettingsControllerTest extends TestCase
                 ['server_url' => 'https://example.com', 'api_key' => 'some_secret', 'index_name' => 'fts_tuleap']
             );
 
-        $config_dao->expects($this->never())->method('save');
-
         $this->expectException(ForbiddenException::class);
-        $response = $controller->handle($request);
+        $controller->handle($request);
+        self::assertEmpty($config_updater->getAllUpdatedConfig());
     }
 
     /**
@@ -89,13 +89,15 @@ final class MeilisearchSaveAdminSettingsControllerTest extends TestCase
      */
     public function testRejectsInvalidSettings(array $body): void
     {
-        $controller = $this->buildController($this->createStub(ConfigDao::class), false);
+        $config_updater = ConfigUpdaterStub::build();
+        $controller     = $this->buildController($config_updater, false);
 
         $request = (new NullServerRequest())
             ->withParsedBody($body);
 
         $this->expectException(ForbiddenException::class);
         $controller->handle($request);
+        self::assertEmpty($config_updater->getAllUpdatedConfig());
     }
 
     public static function dataProviderInvalidSettings(): array
@@ -109,19 +111,12 @@ final class MeilisearchSaveAdminSettingsControllerTest extends TestCase
         ];
     }
 
-    private function buildController(ConfigDao $config_dao, bool $is_local_server): MeilisearchSaveAdminSettingsController
+    private function buildController(ConfigUpdater $config_updater, bool $is_local_server): MeilisearchSaveAdminSettingsController
     {
         $key = $is_local_server ? new ConcealedString("a") : null;
 
         $csrf_token = $this->createStub(\CSRFSynchronizerToken::class);
         $csrf_token->method('check');
-
-        $event_dispatcher = EventDispatcherStub::withCallback(
-            function (GetConfigKeys $event): GetConfigKeys {
-                $event->addConfigClass(RemoteMeilisearchServerSettings::class);
-                return $event;
-            }
-        );
 
         $feedback_serializer = $this->createStub(FeedbackSerializer::class);
         $feedback_serializer->method('serialize');
@@ -142,7 +137,7 @@ final class MeilisearchSaveAdminSettingsControllerTest extends TestCase
                 }
             },
             $csrf_token,
-            new ConfigSet($event_dispatcher, $config_dao),
+            $config_updater,
             MeilisearchServerURLValidator::buildSelf(),
             MeilisearchAPIKeyValidator::buildSelf(),
             MeilisearchIndexNameValidator::buildSelf(),

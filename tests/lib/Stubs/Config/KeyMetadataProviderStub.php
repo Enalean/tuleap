@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,25 +16,31 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Config;
+namespace Tuleap\Test\Stubs\Config;
 
-final class InvalidConfigKeyException extends \Exception
+use Tuleap\Config\ConfigKeyMetadata;
+use Tuleap\Config\KeyMetadataProvider;
+
+class KeyMetadataProviderStub implements KeyMetadataProvider
 {
-    public function __construct(private readonly KeysThatCanBeModifiedProvider $config_keys)
+    private function __construct(private readonly array $metadata)
     {
-        parent::__construct();
     }
 
     /**
-     * @return string[]
+     * @param array<string, ConfigKeyMetadata> $metadata
      */
-    public function getConfigKeys(): array
+    public static function buildWithMetadata(array $metadata): self
     {
-        return $this->config_keys->getKeysThatCanBeModified();
+        return new self($metadata);
+    }
+
+    public function getKeyMetadata(string $key): ConfigKeyMetadata
+    {
+        return $this->metadata[$key];
     }
 }

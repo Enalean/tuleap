@@ -23,9 +23,20 @@ declare(strict_types=1);
 namespace Tuleap\Queue;
 
 use ForgeConfig;
+use Tuleap\Config\ConfigKey;
+use Tuleap\Config\ConfigKeyInt;
+use Tuleap\Config\ConfigKeyValueValidator;
 
 class WorkerAvailability implements IsAsyncTaskProcessingAvailable
 {
+    #[ConfigKey(<<<'EOS'
+    Number of backend workers to process background jobs.
+    To be adapted based on your server workload. 2 is a good starting value, you can increase it if needed.
+    EOS)]
+    #[ConfigKeyInt(2)]
+    #[ConfigKeyValueValidator(NbBackendWorkersConfigValidator::class)]
+    public const NB_BACKEND_WORKERS_CONFIG_KEY = 'sys_nb_backend_workers';
+
     public function canProcessAsyncTasks(): bool
     {
         return $this->getWorkerCount() > 0;
@@ -37,8 +48,8 @@ class WorkerAvailability implements IsAsyncTaskProcessingAvailable
             return 0;
         }
 
-        if (ForgeConfig::exists('sys_nb_backend_workers')) {
-            return abs(ForgeConfig::getInt('sys_nb_backend_workers'));
+        if (ForgeConfig::exists(self::NB_BACKEND_WORKERS_CONFIG_KEY)) {
+            return abs(ForgeConfig::getInt(self::NB_BACKEND_WORKERS_CONFIG_KEY));
         }
 
         return 2;

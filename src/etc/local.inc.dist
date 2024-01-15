@@ -319,10 +319,3 @@ $sys_trusted_proxies = '';
 
 // When 0 mail sent to everybody can lead to information leak, non projects members can receive mails of private projects
 $sys_mail_secure_mode = 0;
-
-// Backend workers
-//
-// Number of backend workers to process background jobs.
-// To be adapted given your server workload.
-// 2 is a good starting value, you can increase it
-// $sys_nb_backend_workers = 0;

@@ -25,14 +25,12 @@ namespace Tuleap\CLI\Command;
 
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Tester\CommandTester;
-use Tuleap\Config\ConfigCannotBeModified;
 use Tuleap\Config\ConfigDao;
-use Tuleap\Config\ConfigKey;
-use Tuleap\Config\ConfigKeyString;
-use Tuleap\Config\GetConfigKeys;
+use Tuleap\Config\ConfigKeyMetadata;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Test\Builders\Config\ConfigKeyMetadataBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Test\Stubs\EventDispatcherStub;
+use Tuleap\Test\Stubs\Config\KeyMetadataProviderStub;
 
 final class ConfigResetCommandTest extends TestCase
 {
@@ -40,25 +38,16 @@ final class ConfigResetCommandTest extends TestCase
 
     public function testCanResetASetting(): void
     {
-        $event_dispatcher = EventDispatcherStub::withCallback(
-            static function (GetConfigKeys $config_keys): GetConfigKeys {
-                $class = new class {
-                    #[ConfigKey('summary')]
-                    #[ConfigKeyString('default')]
-                    public const SETTING = 'setting';
-                };
-
-                $config_keys->addConfigClass($class::class);
-                return $config_keys;
-            }
-        );
+        $config_keys = KeyMetadataProviderStub::buildWithMetadata([
+            'setting' => $this->getMetadataWithDefaultValue(),
+        ]);
 
         \ForgeConfig::set('setting', 'value');
         $config_dao = $this->createMock(ConfigDao::class);
 
         $config_dao->expects(self::atLeastOnce())->method('delete');
 
-        $exit_code = $this->executeCommand(new ConfigResetCommand($event_dispatcher, $config_dao));
+        $exit_code = $this->executeCommand(new ConfigResetCommand($config_keys, $config_dao));
 
         self::assertSame(0, $exit_code);
     }
@@ -66,53 +55,50 @@ final class ConfigResetCommandTest extends TestCase
     public function testDoesTryToResetASettingThatDoesNotExist(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->executeCommand(new ConfigResetCommand(EventDispatcherStub::withIdentityCallback(), $this->createStub(ConfigDao::class)));
+        $this->executeCommand(new ConfigResetCommand(KeyMetadataProviderStub::buildWithMetadata([]), $this->createStub(ConfigDao::class)));
     }
 
     public function testDoesTryToResetASettingWithNoDefaultValue(): void
     {
-        $event_dispatcher = EventDispatcherStub::withCallback(
-            static function (GetConfigKeys $config_keys): GetConfigKeys {
-                $class = new class {
-                    #[ConfigKey('summary')]
-                    public const SETTING = 'setting';
-                };
-
-                $config_keys->addConfigClass($class::class);
-                return $config_keys;
-            }
-        );
+        $config_keys = KeyMetadataProviderStub::buildWithMetadata([
+            'setting' => $this->getMetadataWithoutDefaultValue(),
+        ]);
 
         \ForgeConfig::set('setting', 'value');
 
         $this->expectException(InvalidArgumentException::class);
-        $this->executeCommand(new ConfigResetCommand($event_dispatcher, $this->createStub(ConfigDao::class)));
+        $this->executeCommand(new ConfigResetCommand($config_keys, $this->createStub(ConfigDao::class)));
     }
 
     public function testDoesTryToResetASettingThatCannotBeModified(): void
     {
-        $event_dispatcher = EventDispatcherStub::withCallback(
-            static function (GetConfigKeys $config_keys): GetConfigKeys {
-                $class = new class {
-                    #[ConfigKey('summary')]
-                    #[ConfigKeyString('default')]
-                    #[ConfigCannotBeModified]
-                    public const SETTING = 'setting';
-                };
-
-                $config_keys->addConfigClass($class::class);
-                return $config_keys;
-            }
-        );
+        $config_keys = KeyMetadataProviderStub::buildWithMetadata([
+            'setting' => $this->getMetadataNotModifiable(),
+        ]);
 
         \ForgeConfig::set('setting', 'value');
 
         $this->expectException(InvalidArgumentException::class);
-        $this->executeCommand(new ConfigResetCommand($event_dispatcher, $this->createStub(ConfigDao::class)));
+        $this->executeCommand(new ConfigResetCommand($config_keys, $this->createStub(ConfigDao::class)));
     }
 
     private function executeCommand(ConfigResetCommand $command): int
     {
         return (new CommandTester($command))->execute(['key' => 'setting']);
+    }
+
+    private function getMetadataWithDefaultValue(): ConfigKeyMetadata
+    {
+        return ConfigKeyMetadataBuilder::aModifiableMetadata()->withDefaultValue()->build();
+    }
+
+    private function getMetadataWithoutDefaultValue(): ConfigKeyMetadata
+    {
+        return ConfigKeyMetadataBuilder::aModifiableMetadata()->build();
+    }
+
+    private function getMetadataNotModifiable(): ConfigKeyMetadata
+    {
+        return ConfigKeyMetadataBuilder::aNonModifiableMetadata()->withDefaultValue()->build();
     }
 }
