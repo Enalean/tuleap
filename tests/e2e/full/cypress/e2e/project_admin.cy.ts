@@ -116,12 +116,16 @@ context("Disk usage", function () {
 });
 
 describe("Project admin", function () {
-    let public_project_name: string, private_project_name: string, now: number;
+    let public_project_name: string,
+        private_project_name: string,
+        project_visibility: string,
+        now: number;
 
     before(() => {
         now = Date.now();
         public_project_name = "public-admin-" + now;
         private_project_name = "private-admin-" + now;
+        project_visibility = `visibility-${now}`;
     });
 
     context("project basic administration", function () {
@@ -181,6 +185,42 @@ describe("Project admin", function () {
                 "SecondProjectAdministrator",
                 { timeout: 40000 },
             );
+        });
+
+        it("project visibilty can be changed", function () {
+            cy.siteAdministratorSession();
+            cy.visit("/admin/");
+            cy.get("[data-test=project-settings-link]").click();
+            cy.get("[data-test=project-visibility]").click();
+            cy.get("[data-test=project-admin-can-choose-visibility]").uncheck();
+            cy.get("[data-test=project-settings-submit]").click();
+
+            cy.projectAdministratorSession();
+
+            cy.createNewPrivateProject(project_visibility);
+
+            cy.projectAdministratorSession();
+            cy.visitProjectAdministration(project_visibility);
+            cy.get("[data-test=admin-nav-details]").click();
+            cy.get("[data-test=project-info-access-level]").contains("Private");
+            cy.get("[data-test=project-icon]", { includeShadowDom: true })
+                .eq(0)
+                .should("have.class", "fa-lock");
+
+            cy.siteAdministratorSession();
+            cy.visit("/admin/");
+            cy.get("[data-test=project-settings-link]").click();
+            cy.get("[data-test=project-visibility]").click();
+            cy.get("[data-test=project-admin-can-choose-visibility]").check();
+            cy.get("[data-test=project-settings-submit]").click();
+
+            cy.switchProjectVisibility(project_visibility, "public");
+            cy.projectAdministratorSession();
+            cy.visitProjectAdministration(project_visibility);
+            cy.get("[data-test=admin-nav-details]").click();
+            cy.get("[data-test=project-icon]", { includeShadowDom: true })
+                .eq(0)
+                .should("have.class", "fa-lock-open");
         });
     });
 });

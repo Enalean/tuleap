@@ -19,6 +19,7 @@
                                 <input
                                     type="checkbox"
                                     name="project_admin_can_choose_visibility"
+                                    data-test="project-admin-can-choose-visibility"
                                     value="1"
                                     {{# project_admin_can_choose }}checked{{/ project_admin_can_choose }}
                                 >
@@ -49,7 +50,7 @@
                             </select>
                         </div>
                         <div class="tlp-pane-section-submit">
-                            <button class="tlp-button-primary" type="submit">
+                            <button class="tlp-button-primary" type="submit" data-test="project-settings-submit">
                                 <i class="fa fa-save tlp-button-icon"></i>{{# gettext }}Save settings{{/gettext}}
                             </button>
                         </div>
