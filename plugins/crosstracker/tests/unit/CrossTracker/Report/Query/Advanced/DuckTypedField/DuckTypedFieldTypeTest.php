@@ -20,19 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField;
 
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class DuckTypedFieldTypeTest extends TestCase
 {
-    public function testIntAndFloatAreSupported(): void
+    public function testIntBecomesNumeric(): void
     {
-        $int_result   = DuckTypedFieldType::fromString(\Tracker_FormElementFactory::FIELD_INTEGER_TYPE);
-        $float_result = DuckTypedFieldType::fromString(\Tracker_FormElementFactory::FIELD_FLOAT_TYPE);
-        self::assertTrue(Result::isOk($int_result));
-        self::assertTrue(Result::isOk($float_result));
+        $result = DuckTypedFieldType::fromString(\Tracker_FormElementFactory::FIELD_INTEGER_TYPE);
+        self::assertSame(DuckTypedFieldType::NUMERIC, $result->unwrapOr(null));
+    }
+
+    public function testFloatBecomesNumeric(): void
+    {
+        $result = DuckTypedFieldType::fromString(\Tracker_FormElementFactory::FIELD_FLOAT_TYPE);
+        self::assertSame(DuckTypedFieldType::NUMERIC, $result->unwrapOr(null));
     }
 
     public static function generateTypes(): iterable

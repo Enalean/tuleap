@@ -20,21 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField;
 
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 
-/**
- * @psalm-immutable
- */
-final class DuckTypedFieldType
+enum DuckTypedFieldType
 {
-    private function __construct(public string $type)
-    {
-    }
+    case NUMERIC;
 
     /**
      * @return Ok<self>|Err<Fault>
@@ -43,7 +38,7 @@ final class DuckTypedFieldType
     {
         return match ($type_name) {
             \Tracker_FormElementFactory::FIELD_INTEGER_TYPE,
-            \Tracker_FormElementFactory::FIELD_FLOAT_TYPE => Result::ok(new self($type_name)),
+            \Tracker_FormElementFactory::FIELD_FLOAT_TYPE => Result::ok(self::NUMERIC),
             default => Result::err(FieldTypeIsNotSupportedFault::build())
         };
     }

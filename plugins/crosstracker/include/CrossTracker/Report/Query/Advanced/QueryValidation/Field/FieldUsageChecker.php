@@ -22,11 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field;
 
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\DuckTypedField;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\SearchFieldTypes;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorParameters;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
-use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 
 final class FieldUsageChecker
@@ -46,18 +47,6 @@ final class FieldUsageChecker
         $field_name  = $field->getName();
         $field_types = $this->field_dao->searchTypeByFieldNameAndTrackerList($field_name, $tracker_ids);
 
-        if (count($field_types) === 0) {
-            return Result::ok(null);
-        }
-        $other_results = array_slice($field_types, 1);
-
-        return $field_types[0]->andThen(static function () use ($tracker_ids, $field_name, $other_results) {
-            foreach ($other_results as $other_result) {
-                if (Result::isErr($other_result)) {
-                    return Result::err(FieldTypesAreIncompatibleFault::build($field_name, $tracker_ids));
-                }
-            }
-            return Result::ok(null);
-        });
+        return DuckTypedField::build($field_name, $tracker_ids, $field_types)->map(static fn() => null);
     }
 }
