@@ -133,7 +133,9 @@ class BackendSVN extends Backend
 
     private function createSVNAccessFile($group_id, $system_path)
     {
-        if (! $this->updateSVNAccess($group_id, $system_path)) {
+        $project = $this->getProjectManager()->getProject($group_id);
+
+        if (! $this->updateSVNAccessForRepository($project, $system_path, null, null)) {
             $this->log("Can't update SVN access file", Backend::LOG_ERROR);
             return false;
         }
@@ -144,15 +146,6 @@ class BackendSVN extends Backend
     private function forceUpdateApacheConf()
     {
         $this->setSVNApacheConfNeedUpdate();
-    }
-
-     /**
-     * Check if repository of given project exists
-     * @return bool true is repository already exists, false otherwise
-     */
-    public function repositoryExists(Project $project)
-    {
-        return is_dir($project->getSVNRootPath());
     }
 
     /**
@@ -307,22 +300,6 @@ class BackendSVN extends Backend
         }
 
         return true;
-    }
-
-    /**
-     * Update Subversion DAV access control file if needed
-     *
-     * @param int    $group_id        the id of the project
-     * @param String $ugroup_name     New name of the renamed ugroup (if any)
-     * @param String $ugroup_old_name Old name of the renamed ugroup (if any)
-     *
-     * @return bool true on success or false on failure
-     */
-    public function updateSVNAccess($group_id, $system_path, $ugroup_name = null, $ugroup_old_name = null)
-    {
-        $project = $this->getProjectManager()->getProject($group_id);
-
-        return $this->updateSVNAccessForRepository($project, $system_path, $ugroup_name, $ugroup_old_name);
     }
 
     public function updateSVNAccessForRepository(Project $project, $system_path, $ugroup_name, $ugroup_old_name)
@@ -496,33 +473,6 @@ class BackendSVN extends Backend
     }
 
     /**
-     * Archive SVN repository: stores a tgz in temp dir, and remove the directory
-     *
-     * @param int $group_id The id of the project to work on
-     *
-     * @return bool true on success or false on failure
-     */
-    public function archiveProjectSVN($group_id)
-    {
-        $project = $this->getProjectManager()->getProject($group_id);
-        if (! $project) {
-            return false;
-        }
-        $mydir      = $project->getSVNRootPath();
-        $repopath   = dirname($mydir);
-        $reponame   = basename($mydir);
-        $backupfile = ForgeConfig::get('sys_project_backup_path') . "/$reponame-svn.tgz";
-
-        if (is_dir($mydir)) {
-            system("cd $repopath; tar cfz $backupfile $reponame");
-            chmod($backupfile, 0600);
-            $this->recurseDeleteInDir($mydir);
-            rmdir($mydir);
-        }
-        return true;
-    }
-
-    /**
      * Make the svn repository of the project private or public
      *
      * @param Project $project    The project to work on
@@ -562,18 +512,6 @@ class BackendSVN extends Backend
     {
         $path = ForgeConfig::get('svn_prefix') . "/" . $name;
         return (! $this->fileExists($path));
-    }
-
-    /**
-     * Rename svn repository (following project unix_name change)
-     *
-     * @param String  $newName
-     *
-     * @return bool
-     */
-    public function renameSVNRepository(Project $project, $newName)
-    {
-        return rename($project->getSVNRootPath(), ForgeConfig::get('svn_prefix') . '/' . $newName);
     }
 
     private function enableCommitMessageUpdate($project_svnroot, $hooks_path)

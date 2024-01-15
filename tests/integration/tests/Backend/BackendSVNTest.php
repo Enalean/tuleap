@@ -114,31 +114,6 @@ final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertNotNull(BackendSVN::instance());
     }
 
-    public function testArchiveProjectSVN(): void
-    {
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('getUnixNameMixedCase')->andReturns('TestProj');
-        $project->shouldReceive('getSVNRootPath')->andReturns(ForgeConfig::get('svn_prefix') . '/TestProj');
-
-        $pm = \Mockery::spy(\ProjectManager::class);
-        $pm->shouldReceive('getProject')->with(142)->andReturns($project);
-
-        $this->backend->shouldReceive('getProjectManager')->andReturns($pm);
-
-        $projdir = ForgeConfig::get('svn_prefix') . "/TestProj";
-
-        // Setup test data
-        mkdir($projdir);
-        mkdir($projdir . "/db");
-
-        $this->assertEquals($this->backend->archiveProjectSVN(142), true);
-        $this->assertFalse(is_dir($projdir), "Project SVN repository should be deleted");
-        $this->assertTrue(is_file(ForgeConfig::get('sys_project_backup_path') . "/TestProj-svn.tgz"), "SVN Archive should be created");
-
-        // Check that a wrong project id does not raise an error
-        $this->assertEquals($this->backend->archiveProjectSVN(99999), false);
-    }
-
     public function testGenerateSVNApacheConf(): void
     {
         $svn_dao = \Mockery::spy(\SVN_DAO::class)->shouldReceive('searchSvnRepositories')->andReturns(\TestHelper::arrayToDar([

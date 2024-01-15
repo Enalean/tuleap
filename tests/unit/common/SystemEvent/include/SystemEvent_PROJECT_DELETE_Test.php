@@ -98,14 +98,7 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
         $wa->expects(self::once())->method('deleteProjectAttachments')->willReturn(true);
         $evt->method('getWikiAttachment')->willReturn($wa);
 
-        // SVN
-        $backendSVN = $this->createMock(\BackendSVN::class);
-        $backendSVN->method('repositoryExists')->willReturn(true);
-        $backendSVN->method('archiveProjectSVN')->willReturn(true);
-        $backendSVN->expects(self::once())->method('setSVNApacheConfNeedUpdate');
-
         $evt->method('getBackend')->willReturnMap([
-            ['SVN', $backendSVN],
             ['System', $backendSystem],
         ]);
 
@@ -190,14 +183,7 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
         $wa->expects(self::once())->method('deleteProjectAttachments')->willReturn(true);
         $evt->method('getWikiAttachment')->willReturn($wa);
 
-        // SVN
-        $backendSVN = $this->createMock(\BackendSVN::class);
-        $backendSVN->method('repositoryExists')->willReturn(true);
-        $backendSVN->method('archiveProjectSVN')->willReturn(true);
-        $backendSVN->expects(self::once())->method('setSVNApacheConfNeedUpdate');
-
         $evt->method('getBackend')->willReturnMap([
-            ['SVN', $backendSVN],
             ['System', $backendSystem],
         ]);
 
@@ -282,14 +268,7 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
         $wa->expects(self::once())->method('deleteProjectAttachments')->willReturn(true);
         $evt->method('getWikiAttachment')->willReturn($wa);
 
-        // SVN
-        $backendSVN = $this->createMock(\BackendSVN::class);
-        $backendSVN->method('repositoryExists')->willReturn(true);
-        $backendSVN->method('archiveProjectSVN')->willReturn(true);
-        $backendSVN->expects(self::once())->method('setSVNApacheConfNeedUpdate');
-
         $evt->method('getBackend')->willReturnMap([
-            ['SVN', $backendSVN],
             ['System', $backendSystem],
         ]);
 
@@ -374,14 +353,7 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
         $wa->expects(self::once())->method('deleteProjectAttachments')->willReturn(true);
         $evt->method('getWikiAttachment')->willReturn($wa);
 
-        // SVN
-        $backendSVN = $this->createMock(\BackendSVN::class);
-        $backendSVN->method('repositoryExists')->willReturn(true);
-        $backendSVN->method('archiveProjectSVN')->willReturn(true);
-        $backendSVN->expects(self::once())->method('setSVNApacheConfNeedUpdate');
-
         $evt->method('getBackend')->willReturnMap([
-            ['SVN', $backendSVN],
             ['System', $backendSystem],
         ]);
 
@@ -466,111 +438,12 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
         $wa->expects(self::once())->method('deleteProjectAttachments')->willReturn(false);
         $evt->method('getWikiAttachment')->willReturn($wa);
 
-        // SVN
-        $backendSVN = $this->createMock(\BackendSVN::class);
-        $backendSVN->method('repositoryExists')->willReturn(true);
-        $backendSVN->method('archiveProjectSVN')->willReturn(true);
-        $backendSVN->expects(self::once())->method('setSVNApacheConfNeedUpdate');
-
         $evt->method('getBackend')->willReturnMap([
-            ['SVN', $backendSVN],
             ['System', $backendSystem],
         ]);
 
         $evt->expects(self::never())->method('done');
         $evt->expects(self::once())->method('error')->with("Could not mark all wiki attachments as deleted");
-
-        $evt->method('getEventManager')->willReturn($this->createMock(EventManager::class));
-
-        // Launch the event
-        self::assertFalse($evt->process());
-    }
-
-    /**
-     * Project delete SVN fail
-     *
-     * @return Void
-     */
-    public function testProjectDeleteSVNFail(): void
-    {
-        $now = (new DateTimeImmutable())->getTimestamp();
-
-        $evt = $this->getMockBuilder(\SystemEvent_PROJECT_DELETE::class)
-            ->setConstructorArgs(
-                [
-                    '1',
-                    SystemEvent::TYPE_PROJECT_DELETE,
-                    SystemEvent::OWNER_ROOT,
-                    '142',
-                    SystemEvent::PRIORITY_HIGH,
-                    SystemEvent::STATUS_RUNNING,
-                    $now,
-                    $now,
-                    $now,
-                    '',
-                ]
-            )
-            ->onlyMethods([
-                'getProject',
-                'removeProjectMembers',
-                'deleteMembershipRequestNotificationEntries',
-                'cleanupProjectUgroupsBinding',
-                'cleanupProjectFRS',
-                'getArtifactTypeFactory',
-                'getBackend',
-                'getWikiAttachment',
-                'done',
-                'error',
-                'getEventManager',
-            ])
-            ->getMock();
-
-        $svn_authentication_cache_invalidator = $this->createMock(SVNAuthenticationCacheInvalidator::class);
-        $svn_authentication_cache_invalidator->method('invalidateProjectCache');
-        $evt->injectDependencies($svn_authentication_cache_invalidator);
-
-        // The project
-        $project = $this->createMock(\Project::class);
-        $project->method('usesSVN')->willReturn(true);
-        $evt->method('getProject')->with('142')->willReturn($project);
-
-        //Remove users from project
-        $evt->method('removeProjectMembers')->willReturn(true);
-
-        $evt->method('deleteMembershipRequestNotificationEntries')->willReturn(true);
-
-        //Cleanup ProjectUGroup binding
-        $evt->method('cleanupProjectUgroupsBinding')->willReturn(true);
-
-        //Cleanup FRS
-        $evt->method('cleanupProjectFRS')->willReturn(true);
-
-        //Delete all trackers
-        $atf = $this->createMock(\ArtifactTypeFactory::class);
-        $atf->method('preDeleteAllProjectArtifactTypes')->willReturn(true);
-        $evt->method('getArtifactTypeFactory')->with($project)->willReturn($atf);
-
-        // System
-        $backendSystem = $this->createMock(\BackendSystem::class);
-
-        // Wiki attachments
-        $wa = $this->createMock(\WikiAttachment::class);
-        $wa->expects(self::once())->method('deleteProjectAttachments')->willReturn(true);
-        $evt->method('getWikiAttachment')->willReturn($wa);
-
-        // SVN
-        $backendSVN = $this->createMock(\BackendSVN::class);
-        $backendSVN->method('repositoryExists')->willReturn(true);
-        $backendSVN->method('archiveProjectSVN')->willReturn(false);
-        $backendSVN->expects(self::never())->method('setSVNApacheConfNeedUpdate');
-
-        $evt->method('getBackend')->willReturnMap([
-            ['SVN', $backendSVN],
-            ['System', $backendSystem],
-        ]);
-
-        $evt->expects(self::never())->method('done');
-        $evt->expects(self::once())->method('error')->with("Could not archive project SVN repository");
 
         $evt->method('getEventManager')->willReturn($this->createMock(EventManager::class));
 
@@ -650,14 +523,7 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
         $wa->expects(self::once())->method('deleteProjectAttachments')->willReturn(true);
         $evt->method('getWikiAttachment')->willReturn($wa);
 
-        // SVN
-        $backendSVN = $this->createMock(\BackendSVN::class);
-        $backendSVN->method('repositoryExists')->willReturn(true);
-        $backendSVN->method('archiveProjectSVN')->willReturn(true);
-        $backendSVN->expects(self::once())->method('setSVNApacheConfNeedUpdate');
-
         $evt->method('getBackend')->willReturnMap([
-            ['SVN', $backendSVN],
             ['System', $backendSystem],
         ]);
 
@@ -742,14 +608,7 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
         $wa->expects(self::once())->method('deleteProjectAttachments')->willReturn(true);
         $evt->method('getWikiAttachment')->willReturn($wa);
 
-        // SVN
-        $backendSVN = $this->createMock(\BackendSVN::class);
-        $backendSVN->method('repositoryExists')->willReturn(true);
-        $backendSVN->method('archiveProjectSVN')->willReturn(true);
-        $backendSVN->expects(self::once())->method('setSVNApacheConfNeedUpdate');
-
         $evt->method('getBackend')->willReturnMap([
-            ['SVN', $backendSVN],
             ['System', $backendSystem],
         ]);
 
