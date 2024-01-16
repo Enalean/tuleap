@@ -17,30 +17,35 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\GlobalLanguageMock;
+declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class UGroupGetUsersTest extends \Tuleap\Test\PHPUnit\TestCase
+namespace Tuleap\Project;
+
+use ProjectUGroup;
+use Tuleap\GlobalLanguageMock;
+use UserManager;
+
+final class UGroupGetUsersTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
-    protected $garfield;
-    protected $goofy;
-    protected $garfield_incomplete_row = ['user_id' => 1234, 'user_name' => 'garfield'];
-    protected $goofy_incomplete_row    = ['user_id' => 5677, 'user_name' => 'goofy'];
+    private array $garfield_incomplete_row = ['user_id' => 1234, 'user_name' => 'garfield'];
+    private array $goofy_incomplete_row    = ['user_id' => 5677, 'user_name' => 'goofy'];
 
     protected function setUp(): void
     {
         parent::setUp();
-        $user_manager = \Mockery::spy(\UserManager::class);
+        $user_manager = $this->createMock(\UserManager::class);
         UserManager::setInstance($user_manager);
 
-        $this->garfield = new PFUser($this->garfield_incomplete_row);
-        $this->goofy    = new PFUser($this->goofy_incomplete_row);
-        $user_manager->shouldReceive('getUserById')->with($this->garfield_incomplete_row['user_id'])->andReturns($this->garfield);
-        $user_manager->shouldReceive('getUserById')->with($this->goofy_incomplete_row['user_id'])->andReturns($this->goofy);
+        $garfield = new \PFUser($this->garfield_incomplete_row);
+        $goofy    = new \PFUser($this->goofy_incomplete_row);
+        $user_manager->method('getUserById')
+            ->withConsecutive(
+                [$this->garfield_incomplete_row['user_id']],
+                [$this->goofy_incomplete_row['user_id']]
+            )
+            ->willReturnOnConsecutiveCalls($garfield, $goofy);
     }
 
     protected function tearDown(): void
@@ -54,8 +59,10 @@ class UGroupGetUsersTest extends \Tuleap\Test\PHPUnit\TestCase
         $id     = 333;
         $row    = ['ugroup_id' => $id, 'group_id' => 105];
         $ugroup = new ProjectUGroup($row);
-        $ugroup->setUGroupUserDao(\Mockery::spy(\UGroupUserDao::class)->shouldReceive('searchUserByStaticUGroupId')->with($id)->andReturns(\TestHelper::emptyDar())->getMock());
-        $this->assertEquals([], $ugroup->getUsers()->getNames());
+        $dao    = $this->createMock(\UGroupUserDao::class);
+        $dao->method('searchUserByStaticUGroupId')->with($id)->willReturn(\TestHelper::emptyDar());
+        $ugroup->setUGroupUserDao($dao);
+        self::assertEquals([], $ugroup->getUsers()->getNames());
     }
 
     public function testItReturnsTheMembersOfStaticGroups(): void
@@ -63,11 +70,11 @@ class UGroupGetUsersTest extends \Tuleap\Test\PHPUnit\TestCase
         $id     = 333;
         $row    = ['ugroup_id' => $id, 'group_id' => 105];
         $ugroup = new ProjectUGroup($row);
-        $ugroup->setUGroupUserDao(
-            \Mockery::spy(\UGroupUserDao::class)->shouldReceive('searchUserByStaticUGroupId')->with($id)->andReturns(\TestHelper::arrayToDar($this->garfield_incomplete_row, $this->goofy_incomplete_row))->getMock()
-        );
+        $dao    = $this->createMock(\UGroupUserDao::class);
+        $dao->method('searchUserByStaticUGroupId')->with($id)->willReturn(\TestHelper::arrayToDar($this->garfield_incomplete_row, $this->goofy_incomplete_row));
+        $ugroup->setUGroupUserDao($dao);
 
-        $this->assertEquals(['garfield', 'goofy'], $ugroup->getUsers()->getNames());
+        self::assertEquals(['garfield', 'goofy'], $ugroup->getUsers()->getNames());
     }
 
     public function testItReturnsTheMembersOfDynamicGroups(): void
@@ -76,10 +83,10 @@ class UGroupGetUsersTest extends \Tuleap\Test\PHPUnit\TestCase
         $group_id = 555;
         $row      = ['ugroup_id' => $id, 'group_id' => $group_id];
         $ugroup   = new ProjectUGroup($row);
-        $ugroup->setUGroupUserDao(
-            \Mockery::spy(\UGroupUserDao::class)->shouldReceive('searchUserByDynamicUGroupId')->with($id, $group_id)->andReturns(\TestHelper::arrayToDar($this->garfield_incomplete_row, $this->goofy_incomplete_row))->getMock()
-        );
+        $dao      = $this->createMock(\UGroupUserDao::class);
+        $dao->method('searchUserByDynamicUGroupId')->with($id, $group_id)->willReturn(\TestHelper::arrayToDar($this->garfield_incomplete_row, $this->goofy_incomplete_row));
+        $ugroup->setUGroupUserDao($dao);
 
-        $this->assertEquals(['garfield', 'goofy'], $ugroup->getUsers()->getNames());
+        self::assertEquals(['garfield', 'goofy'], $ugroup->getUsers()->getNames());
     }
 }
