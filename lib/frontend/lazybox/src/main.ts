@@ -31,6 +31,7 @@ export type { GroupCollection, GroupOfItems, LazyboxItem } from "./GroupCollecti
 export { TAG as LAZYBOX_TAG } from "./LazyboxElement";
 export type { Lazybox } from "./LazyboxElement";
 export { createLazybox } from "./CreateLazybox";
+export { createLazyAutocompleter } from "./CreateLazyAutocompleter";
 export { TAG as LAZYBOX_SELECTION_BADGE_TAG } from "./selection/SelectionBadge";
 export type { SelectionBadge } from "./selection/SelectionBadge";
 export { createSelectionBadge } from "./selection/CreateSelectionBadge";
