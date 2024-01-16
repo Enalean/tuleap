@@ -29,6 +29,9 @@ use TuleapCfg\Command\ProcessFactory;
 
 final class SSHDaemon
 {
+    private const SSHD_DATA_DIRECTORY          = '/data/etc/ssh';
+    private const SUPPORTED_SSHD_HOST_KEY_TYPE = ['ed25519', 'ecdsa', 'rsa'];
+
     private ?Process $process;
 
     public function __construct(private readonly ProcessFactory $process_factory)
@@ -39,6 +42,7 @@ final class SSHDaemon
     {
         $output->writeln("Start SSH Daemon");
         $this->generateSSHServerKeys();
+        $this->ensureHostPermissionsAndOwnership();
         $this->process = $this->process_factory->getProcess(['/usr/sbin/sshd', '-E', '/dev/stderr', '-D']);
         $this->process->start();
     }
@@ -53,15 +57,31 @@ final class SSHDaemon
 
     private function generateSSHServerKeys(): void
     {
-        if (! is_file('/etc/ssh/ssh_host_ecdsa_key')) {
-            if (is_executable('/usr/sbin/sshd-keygen')) {
-                $this->process_factory->getProcess(['/usr/sbin/sshd-keygen'])->mustRun();
-            } elseif (is_executable('/usr/libexec/openssh/sshd-keygen')) {
-                $this->process_factory->getProcess(['/usr/libexec/openssh/sshd-keygen', 'rsa'])->mustRun();
-                $this->process_factory->getProcess(['/usr/libexec/openssh/sshd-keygen', 'ecdsa'])->mustRun();
-                $this->process_factory->getProcess(['/usr/libexec/openssh/sshd-keygen', 'ed25519'])->mustRun();
-            } else {
-                throw new \RuntimeException('No valid sshd-keygen executable found');
+        \Psl\Filesystem\create_directory(self::SSHD_DATA_DIRECTORY, 0755);
+
+        foreach (self::SUPPORTED_SSHD_HOST_KEY_TYPE as $key_type) {
+            $host_key_path = self::SSHD_DATA_DIRECTORY . '/ssh_host_' . $key_type . '_key';
+
+            if (is_file($host_key_path)) {
+                continue;
+            }
+
+            $this->process_factory->getProcess(
+                ['/usr/bin/ssh-keygen', '-t', $key_type, '-f', $host_key_path, '-N', '', '-C', '']
+            )->mustRun();
+        }
+    }
+
+    private function ensureHostPermissionsAndOwnership(): void
+    {
+        foreach (self::SUPPORTED_SSHD_HOST_KEY_TYPE as $key_type) {
+            $host_key_path_private = self::SSHD_DATA_DIRECTORY . '/ssh_host_' . $key_type . '_key';
+            $host_key_path_public  = self::SSHD_DATA_DIRECTORY . '/ssh_host_' . $key_type . '_key.pub';
+
+            foreach ([$host_key_path_private, $host_key_path_public] as $key_part) {
+                \Psl\Filesystem\change_permissions($key_part, 0600);
+                \Psl\Filesystem\change_owner($key_part, 0);
+                \Psl\Filesystem\change_group($key_part, 0);
             }
         }
     }
