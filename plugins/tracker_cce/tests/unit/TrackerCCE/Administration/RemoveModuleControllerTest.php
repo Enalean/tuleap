@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\TrackerCCE\Administration;
 
 use org\bovigo\vfs\vfsStream;
-use Psr\Log\NullLogger;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
@@ -33,21 +32,19 @@ use Tuleap\Test\Helpers\NoopSapiEmitter;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\FeedbackSerializerStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use Tuleap\TrackerCCE\Stub\Administration\LogModuleUploadedStub;
-use Tuleap\TrackerCCE\Stubs\Administration\UploadedFileStub;
+use Tuleap\TrackerCCE\Stub\Administration\LogModuleRemovedStub;
 use Tuleap\TrackerCCE\WASM\FindWASMModulePath;
 
-final class UpdateModuleControllerTest extends TestCase
+final class RemoveModuleControllerTest extends TestCase
 {
     use ForgeConfigSandbox;
 
     public function testExceptionWhenNoTracker(): void
     {
-        $controller = new UpdateModuleController(
+        $controller = new RemoveModuleController(
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), FeedbackSerializerStub::buildSelf()),
-            new NullLogger(),
+            LogModuleRemovedStub::build(),
             new FindWASMModulePath(),
-            LogModuleUploadedStub::build(),
             new NoopSapiEmitter(),
         );
 
@@ -62,11 +59,10 @@ final class UpdateModuleControllerTest extends TestCase
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(101)->build();
 
-        $controller = new UpdateModuleController(
+        $controller = new RemoveModuleController(
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), FeedbackSerializerStub::buildSelf()),
-            new NullLogger(),
+            LogModuleRemovedStub::build(),
             new FindWASMModulePath(),
-            LogModuleUploadedStub::build(),
             new NoopSapiEmitter(),
         );
 
@@ -78,18 +74,19 @@ final class UpdateModuleControllerTest extends TestCase
         $controller->handle($request);
     }
 
-    public function testErrorWhenNoModuleParameter(): void
+    public function testErrorWhenModuleDoesNotExist(): void
     {
+        \ForgeConfig::set('sys_data_dir', vfsStream::setup('/')->url());
+
         $tracker = TrackerTestBuilder::aTracker()->withId(101)->build();
         $user    = UserTestBuilder::buildWithDefaults();
 
         $feedback_serializer = FeedbackSerializerStub::buildSelf();
 
-        $controller = new UpdateModuleController(
+        $controller = new RemoveModuleController(
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),
-            new NullLogger(),
+            LogModuleRemovedStub::build(),
             new FindWASMModulePath(),
-            LogModuleUploadedStub::build(),
             new NoopSapiEmitter(),
         );
 
@@ -103,104 +100,34 @@ final class UpdateModuleControllerTest extends TestCase
         self::assertSame(302, $response->getStatusCode());
     }
 
-    /**
-     * @dataProvider getUploadErrors
-     */
-    public function testErrorWhenErrorDuringUpload(int $error): void
-    {
-        $tracker = TrackerTestBuilder::aTracker()->withId(101)->build();
-        $user    = UserTestBuilder::buildWithDefaults();
-
-        $feedback_serializer = FeedbackSerializerStub::buildSelf();
-
-        $controller = new UpdateModuleController(
-            new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),
-            new NullLogger(),
-            new FindWASMModulePath(),
-            LogModuleUploadedStub::build(),
-            new NoopSapiEmitter(),
-        );
-
-        $request = (new NullServerRequest())
-            ->withAttribute(\Tracker::class, $tracker)
-            ->withAttribute(\PFUser::class, $user)
-            ->withUploadedFiles(['wasm-module' => UploadedFileStub::buildWithError($error)]);
-
-        $response = $controller->handle($request);
-
-        self::assertSame(\Feedback::ERROR, $feedback_serializer->getCapturedFeedbacks()[0]->getLevel());
-        self::assertSame(302, $response->getStatusCode());
-    }
-
-    private function getUploadErrors(): array
-    {
-        return [
-            [UPLOAD_ERR_INI_SIZE],
-            [UPLOAD_ERR_FORM_SIZE],
-            [UPLOAD_ERR_PARTIAL],
-            [UPLOAD_ERR_NO_FILE],
-            [UPLOAD_ERR_NO_TMP_DIR],
-            [UPLOAD_ERR_CANT_WRITE],
-            [UPLOAD_ERR_EXTENSION],
-        ];
-    }
-
-    public function testErrorWhenTheMoveToDestinationFails(): void
-    {
-        $tracker = TrackerTestBuilder::aTracker()->withId(101)->build();
-        $user    = UserTestBuilder::buildWithDefaults();
-
-        $feedback_serializer = FeedbackSerializerStub::buildSelf();
-
-        $controller = new UpdateModuleController(
-            new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),
-            new NullLogger(),
-            new FindWASMModulePath(),
-            LogModuleUploadedStub::build(),
-            new NoopSapiEmitter(),
-        );
-
-        $request = (new NullServerRequest())
-            ->withAttribute(\Tracker::class, $tracker)
-            ->withAttribute(\PFUser::class, $user)
-            ->withUploadedFiles(['wasm-module' => UploadedFileStub::buildWithExceptionOnMove()]);
-
-        $response = $controller->handle($request);
-
-        self::assertSame(\Feedback::ERROR, $feedback_serializer->getCapturedFeedbacks()[0]->getLevel());
-        self::assertSame(302, $response->getStatusCode());
-    }
-
-    public function testMoveModuleToDestination(): void
+    public function testItRemovesTheModule(): void
     {
         \ForgeConfig::set('sys_data_dir', vfsStream::setup('/')->url());
+        mkdir(\ForgeConfig::get('sys_data_dir') . '/tracker_cce/101', 0700, true);
+        touch(\ForgeConfig::get('sys_data_dir') . '/tracker_cce/101/post-action.wasm');
+        self::assertTrue(is_file(\ForgeConfig::get('sys_data_dir') . '/tracker_cce/101/post-action.wasm'));
 
         $tracker = TrackerTestBuilder::aTracker()->withId(101)->build();
         $user    = UserTestBuilder::buildWithDefaults();
 
         $feedback_serializer = FeedbackSerializerStub::buildSelf();
 
-        $project_history = LogModuleUploadedStub::build();
+        $project_history = LogModuleRemovedStub::build();
 
-        $controller = new UpdateModuleController(
+        $controller = new RemoveModuleController(
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),
-            new NullLogger(),
-            new FindWASMModulePath(),
             $project_history,
+            new FindWASMModulePath(),
             new NoopSapiEmitter(),
         );
 
-        $uploaded_file = UploadedFileStub::buildGreatSuccess();
-
         $request = (new NullServerRequest())
             ->withAttribute(\Tracker::class, $tracker)
-            ->withAttribute(\PFUser::class, $user)
-            ->withUploadedFiles(['wasm-module' => $uploaded_file]);
+            ->withAttribute(\PFUser::class, $user);
 
         $response = $controller->handle($request);
 
-        self::assertTrue(is_dir(\ForgeConfig::get('sys_data_dir') . '/tracker_cce/101'));
-        self::assertStringEndsWith('tracker_cce/101/post-action.wasm', (string) $uploaded_file->getCapturedMovedToPath());
+        self::assertFalse(is_file(\ForgeConfig::get('sys_data_dir') . '/tracker_cce/101/post-action.wasm'));
         self::assertSame(\Feedback::SUCCESS, $feedback_serializer->getCapturedFeedbacks()[0]->getLevel());
         self::assertSame(302, $response->getStatusCode());
         self::assertTrue($project_history->isLogged());

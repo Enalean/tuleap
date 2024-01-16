@@ -32,6 +32,7 @@ use Tuleap\Mapper\ValinorMapperBuilderFactory;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Plugin\MandatoryAsyncWorkerSetupPluginInstallRequirement;
+use Tuleap\Project\Admin\History\GetHistoryKeyLabel;
 use Tuleap\Queue\WorkerAvailability;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
@@ -84,9 +85,11 @@ use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use Tuleap\TrackerCCE\Administration\ActiveTrackerRetrieverMiddleware;
 use Tuleap\TrackerCCE\Administration\AdministrationController;
 use Tuleap\TrackerCCE\Administration\CheckTrackerCSRFMiddleware;
+use Tuleap\TrackerCCE\Administration\CustomCodeExecutionHistorySaver;
 use Tuleap\TrackerCCE\Administration\RejectNonTrackerAdministratorMiddleware;
+use Tuleap\TrackerCCE\Administration\RemoveModuleController;
 use Tuleap\TrackerCCE\Administration\UpdateModuleController;
-use Tuleap\TrackerCCE\Administration\UpdateModuleCSRFTokenProvider;
+use Tuleap\TrackerCCE\Administration\AdministrationCSRFTokenProvider;
 use Tuleap\TrackerCCE\CustomCodeExecutionTask;
 use Tuleap\TrackerCCE\WASM\CallWASMModule;
 use Tuleap\TrackerCCE\WASM\ExecuteWASMResponse;
@@ -166,16 +169,38 @@ final class tracker_ccePlugin extends Plugin
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function getHistoryKeyLabel(GetHistoryKeyLabel $event): void
+    {
+        $label = CustomCodeExecutionHistorySaver::getLabelFromKey($event->getKey());
+        if ($label) {
+            $event->setLabel($label);
+        }
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventName('fill_project_history_sub_events')]
+    public function fillProjectHistorySubEvents(array $params): void
+    {
+        CustomCodeExecutionHistorySaver::fillProjectHistorySubEvents($params);
+    }
+
     #[ListeningToEventClass]
     public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->get('/tracker_cce/{id:\d+}/admin', $this->getRouteHandler('routeTrackerAdministration'));
         $event->getRouteCollector()->post('/tracker_cce/{id:\d+}/admin', $this->getRouteHandler('routePostTrackerAdministration'));
+        $event->getRouteCollector()->post('/tracker_cce/{id:\d+}/admin/remove', $this->getRouteHandler('routeRemoveTrackerAdministration'));
     }
 
     public function routeTrackerAdministration(): DispatchableWithRequest
     {
-        return new AdministrationController(TrackerFactory::instance(), new TrackerManager(), TemplateRendererFactory::build(), new UpdateModuleCSRFTokenProvider());
+        return new AdministrationController(
+            TrackerFactory::instance(),
+            new TrackerManager(),
+            TemplateRendererFactory::build(),
+            new AdministrationCSRFTokenProvider(),
+            new FindWASMModulePath(),
+        );
     }
 
     public function routePostTrackerAdministration(): DispatchableWithRequest
@@ -187,14 +212,31 @@ final class tracker_ccePlugin extends Plugin
             ),
             BackendLogger::getDefaultLogger(),
             new FindWASMModulePath(),
+            new CustomCodeExecutionHistorySaver(new ProjectHistoryDao()),
             new SapiEmitter(),
             new ActiveTrackerRetrieverMiddleware(TrackerFactory::instance()),
             new RejectNonTrackerAdministratorMiddleware(UserManager::instance()),
-            new CheckTrackerCSRFMiddleware(new UpdateModuleCSRFTokenProvider()),
+            new CheckTrackerCSRFMiddleware(new AdministrationCSRFTokenProvider()),
         );
     }
 
-    public function getPutHandler(LoggerInterface $logger): PUTHandler
+    public function routeRemoveTrackerAdministration(): DispatchableWithRequest
+    {
+        return new RemoveModuleController(
+            new RedirectWithFeedbackFactory(
+                HTTPFactoryBuilder::responseFactory(),
+                new FeedbackSerializer(new FeedbackDao()),
+            ),
+            new CustomCodeExecutionHistorySaver(new ProjectHistoryDao()),
+            new FindWASMModulePath(),
+            new SapiEmitter(),
+            new ActiveTrackerRetrieverMiddleware(TrackerFactory::instance()),
+            new RejectNonTrackerAdministratorMiddleware(UserManager::instance()),
+            new CheckTrackerCSRFMiddleware(new AdministrationCSRFTokenProvider()),
+        );
+    }
+
+    private function getPutHandler(LoggerInterface $logger): PUTHandler
     {
         $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
 

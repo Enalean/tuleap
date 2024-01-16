@@ -20,17 +20,30 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\TrackerCCE\Administration;
+namespace Tuleap\TrackerCCE\Stub\Administration;
 
-use Tuleap\CSRFSynchronizerTokenPresenter;
+use Tuleap\TrackerCCE\Administration\LogModuleRemoved;
 
-final class AdministrationPresenter
+final class LogModuleRemovedStub implements LogModuleRemoved
 {
-    public function __construct(
-        public readonly string $post_url,
-        public readonly string $remove_url,
-        public readonly CSRFSynchronizerTokenPresenter $csrf,
-        public readonly bool $has_uploaded_module,
-    ) {
+    private bool $logged = false;
+
+    private function __construct()
+    {
+    }
+
+    public static function build(): self
+    {
+        return new self();
+    }
+
+    public function logModuleRemoved(\PFUser $user, \Tracker $tracker): void
+    {
+        $this->logged = true;
+    }
+
+    public function isLogged(): bool
+    {
+        return $this->logged;
     }
 }

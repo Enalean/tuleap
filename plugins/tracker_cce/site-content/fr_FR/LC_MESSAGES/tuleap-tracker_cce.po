@@ -12,8 +12,23 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+msgid "Action"
+msgstr "Action"
+
+msgid "Activated"
+msgstr "Activé"
+
 msgid "Automated custom code execution"
 msgstr "Exécution automatique de code personnalisé"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Change"
+msgstr "Changer"
+
+msgid "Close"
+msgstr "Fermer"
 
 msgid "Custom code execution"
 msgstr "Exécution de code personnalisé"
@@ -21,20 +36,56 @@ msgstr "Exécution de code personnalisé"
 msgid "Custom code execution as artifact post action"
 msgstr "Exécution de code personnalisé lors de la modification d'un artéfact"
 
+msgid "Date"
+msgstr "Date"
+
 msgid "Failed to write file to disk."
 msgstr "Échec de l'écriture du fichier sur le disque."
 
 msgid "File upload stopped by extension."
 msgstr "L'envoi de fichier est arrêté par une extension."
 
+msgid "Logs will also be deleted."
+msgstr "Les logs seront aussi supprimés."
+
 msgid "Missing a temporary folder."
 msgstr "Un dossier temporaire est manquant."
+
+msgid "Module does not exist, maybe it has already been removed?"
+msgstr "Le module n'existe pas, peut-être a-t-il déjà été supprimé ?"
+
+msgid "Module uploaded"
+msgstr "Module téléversé"
 
 msgid "No file was uploaded."
 msgstr "Aucun fichier téléversé."
 
 msgid "No module has been uploaded"
 msgstr "Aucun module n'a été téléversé"
+
+msgid "No module!"
+msgstr "Pas de module !"
+
+msgid "Please confirm your action."
+msgstr "Veuillez confirmer votre action."
+
+msgid "Please upload a WebAssembly module."
+msgstr "Merci de téléverser un module WebAssembly."
+
+msgid "Remove"
+msgstr "Supprimer"
+
+msgid "Remove WASM module"
+msgstr "Supprimer le module WASM"
+
+msgid "Remove module"
+msgstr "Supprimer le module"
+
+msgid "Status"
+msgstr "Statut"
+
+msgid "The module has been removed"
+msgstr "Le module a été supprimé"
 
 msgid "The module has been uploaded"
 msgstr "Le module a été téléversé"
@@ -45,14 +96,35 @@ msgstr "Le fichier est trop gros."
 msgid "The uploaded file was only partially uploaded."
 msgstr "Le fichier n'a été que partiellement téléversé."
 
+msgid "There isn't any activity yet"
+msgstr "Il n'y a pas encore d'activité"
+
+msgid "There isn't any uploaded module to execute."
+msgstr "Il n'y a aucun module à exécuter."
+
 msgid "TrackerCCE"
 msgstr "TrackerCCE"
 
+msgid "Unable to remove the module"
+msgstr "Impossible de supprimer le module"
+
 msgid "Unable to upload the module"
 msgstr "Impossible de téléverser le module"
+
+msgid "Upload WASM module"
+msgstr "Téléverser un module WASM"
+
+msgid "Upload a module"
+msgstr "Téléverser un module"
 
 msgid "Upload module"
 msgstr "Téléverser le module"
 
 msgid "WebAssembly module"
 msgstr "Module WebAssembly"
+
+msgid "You are about to remove the module from this tracker."
+msgstr "Vous êtes sur le point de supprimer le module de ce tracker."
+
+msgid "You will not be able to retrieve it."
+msgstr "Vous ne pourrez pas le retrouver."

@@ -12,7 +12,22 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.2.2\n"
 
+msgid "Action"
+msgstr ""
+
+msgid "Activated"
+msgstr ""
+
 msgid "Automated custom code execution"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Change"
+msgstr ""
+
+msgid "Close"
 msgstr ""
 
 msgid "Custom code execution"
@@ -21,19 +36,55 @@ msgstr ""
 msgid "Custom code execution as artifact post action"
 msgstr ""
 
+msgid "Date"
+msgstr ""
+
 msgid "Failed to write file to disk."
 msgstr ""
 
 msgid "File upload stopped by extension."
 msgstr ""
 
+msgid "Logs will also be deleted."
+msgstr ""
+
 msgid "Missing a temporary folder."
+msgstr ""
+
+msgid "Module does not exist, maybe it has already been removed?"
+msgstr ""
+
+msgid "Module uploaded"
 msgstr ""
 
 msgid "No file was uploaded."
 msgstr ""
 
 msgid "No module has been uploaded"
+msgstr ""
+
+msgid "No module!"
+msgstr ""
+
+msgid "Please confirm your action."
+msgstr ""
+
+msgid "Please upload a WebAssembly module."
+msgstr ""
+
+msgid "Remove"
+msgstr ""
+
+msgid "Remove WASM module"
+msgstr ""
+
+msgid "Remove module"
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "The module has been removed"
 msgstr ""
 
 msgid "The module has been uploaded"
@@ -45,14 +96,35 @@ msgstr ""
 msgid "The uploaded file was only partially uploaded."
 msgstr ""
 
+msgid "There isn't any activity yet"
+msgstr ""
+
+msgid "There isn't any uploaded module to execute."
+msgstr ""
+
 msgid "TrackerCCE"
 msgstr ""
 
+msgid "Unable to remove the module"
+msgstr ""
+
 msgid "Unable to upload the module"
+msgstr ""
+
+msgid "Upload WASM module"
+msgstr ""
+
+msgid "Upload a module"
 msgstr ""
 
 msgid "Upload module"
 msgstr ""
 
 msgid "WebAssembly module"
+msgstr ""
+
+msgid "You are about to remove the module from this tracker."
+msgstr ""
+
+msgid "You will not be able to retrieve it."
 msgstr ""
