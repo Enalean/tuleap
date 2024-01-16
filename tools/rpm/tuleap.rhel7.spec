@@ -699,9 +699,6 @@ done
 
 %{__install} -d $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/gotohell $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-%{__install} src/utils/svn/codendi_svn_pre_commit.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-%{__install} src/utils/svn/pre-revprop-change.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-%{__install} src/utils/svn/post-revprop-change.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/fileforge.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/fileforge
 
 #
@@ -1120,9 +1117,6 @@ fi
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIB_DIR}
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIBBIN_DIR}
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gotohell
-%attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/codendi_svn_pre_commit.php
-%attr(00755,root,root) %{APP_LIBBIN_DIR}/pre-revprop-change.php
-%attr(00755,root,root) %{APP_LIBBIN_DIR}/post-revprop-change.php
 %attr(04755,root,root) %{APP_LIBBIN_DIR}/fileforge
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_syslog
 %dir %attr(00750,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}
