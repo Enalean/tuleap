@@ -32,8 +32,10 @@ use Tuleap\NeverThrow\Result;
  */
 final class DuckTypedField
 {
-    private function __construct(public readonly DuckTypedFieldType $type)
-    {
+    private function __construct(
+        public readonly string $name,
+        public readonly DuckTypedFieldType $type,
+    ) {
     }
 
     /**
@@ -48,13 +50,15 @@ final class DuckTypedField
         }
         $other_results = array_slice($types, 1);
 
-        return $types[0]->andThen(static function (DuckTypedFieldType $first_type) use ($field_name, $tracker_ids, $other_results) {
-            foreach ($other_results as $other_result) {
-                if ($other_result->unwrapOr(null) !== $first_type) {
-                    return Result::err(FieldTypesAreIncompatibleFault::build($field_name, $tracker_ids));
+        return $types[0]->andThen(
+            static function (DuckTypedFieldType $first_type) use ($field_name, $tracker_ids, $other_results) {
+                foreach ($other_results as $other_result) {
+                    if ($other_result->unwrapOr(null) !== $first_type) {
+                        return Result::err(FieldTypesAreIncompatibleFault::build($field_name, $tracker_ids));
+                    }
                 }
+                return Result::ok(new self($field_name, $first_type));
             }
-            return Result::ok(new self($first_type));
-        });
+        );
     }
 }

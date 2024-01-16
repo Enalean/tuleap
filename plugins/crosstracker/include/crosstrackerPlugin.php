@@ -30,24 +30,18 @@ use Tuleap\CrossTracker\Report\CSV\CSVRepresentationFactory;
 use Tuleap\CrossTracker\Report\CSV\Format\BindToValueVisitor;
 use Tuleap\CrossTracker\Report\CSV\Format\CSVFormatterVisitor;
 use Tuleap\CrossTracker\Report\CSV\SimilarFieldsFormatter;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\TrackerFieldDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ForwardLinkFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ReverseLinkFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\FromWhereSearchableVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Date;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Users;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\BetweenComparisonFromWhereBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\EqualComparisonFromWhereBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\GreaterThanComparisonFromWhereBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\GreaterThanOrEqualComparisonFromWhereBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\InComparisonFromWhereBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\LesserThanComparisonFromWhereBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\LesserThanOrEqualComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\ListValueExtractor;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\NotEqualComparisonFromWhereBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\NotInComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\AssignedTo;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Description;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Status;
@@ -64,7 +58,6 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ListVal
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotEqual\NotEqualComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotIn\NotInComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field\FieldUsageChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\TrackerFieldDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataUsageChecker;
 use Tuleap\CrossTracker\Report\SimilarField\BindNameVisitor;
@@ -189,7 +182,8 @@ class crosstrackerPlugin extends Plugin implements PluginWithConfigKeys
         $list_value_validator           = new ListValueValidator(new EmptyStringAllowed(), $user_manager);
         $list_value_validator_not_empty = new ListValueValidator(new EmptyStringForbidden(), $user_manager);
 
-        $form_element_factory = Tracker_FormElementFactory::instance();
+        $form_element_factory    = Tracker_FormElementFactory::instance();
+        $cross_tracker_field_dao = new TrackerFieldDao();
 
         $invalid_comparisons_collector = new InvalidTermCollectorVisitor(
             new InvalidSearchableCollectorVisitor(
@@ -202,9 +196,7 @@ class crosstrackerPlugin extends Plugin implements PluginWithConfigKeys
                         new Tracker_Semantic_ContributorDao()
                     )
                 ),
-                new FieldUsageChecker(
-                    new TrackerFieldDao()
-                ),
+                new FieldUsageChecker($cross_tracker_field_dao),
             ),
             new EqualComparisonChecker($date_validator, $list_value_validator),
             new NotEqualComparisonChecker($date_validator, $list_value_validator),
@@ -233,7 +225,7 @@ class crosstrackerPlugin extends Plugin implements PluginWithConfigKeys
         $list_value_extractor    = new ListValueExtractor();
         $query_builder_visitor   = new QueryBuilderVisitor(
             new FromWhereSearchableVisitor(),
-            new EqualComparisonFromWhereBuilder(
+            new Metadata\EqualComparisonFromWhereBuilder(
                 new Title\EqualComparisonFromWhereBuilder(),
                 new Description\EqualComparisonFromWhereBuilder(),
                 new Status\EqualComparisonFromWhereBuilder(),
@@ -262,7 +254,7 @@ class crosstrackerPlugin extends Plugin implements PluginWithConfigKeys
                     $user_manager
                 )
             ),
-            new NotEqualComparisonFromWhereBuilder(
+            new Metadata\NotEqualComparisonFromWhereBuilder(
                 new Title\NotEqualComparisonFromWhereBuilder(),
                 new Description\NotEqualComparisonFromWhereBuilder(),
                 new Status\NotEqualComparisonFromWhereBuilder(),
@@ -291,7 +283,7 @@ class crosstrackerPlugin extends Plugin implements PluginWithConfigKeys
                     $user_manager
                 )
             ),
-            new GreaterThanComparisonFromWhereBuilder(
+            new Metadata\GreaterThanComparisonFromWhereBuilder(
                 new Date\GreaterThanComparisonFromWhereBuilder(
                     $date_value_extractor,
                     $date_time_value_rounder,
@@ -303,7 +295,7 @@ class crosstrackerPlugin extends Plugin implements PluginWithConfigKeys
                     $last_update_date_alias_field
                 )
             ),
-            new GreaterThanOrEqualComparisonFromWhereBuilder(
+            new Metadata\GreaterThanOrEqualComparisonFromWhereBuilder(
                 new Date\GreaterThanOrEqualComparisonFromWhereBuilder(
                     $date_value_extractor,
                     $date_time_value_rounder,
@@ -315,7 +307,7 @@ class crosstrackerPlugin extends Plugin implements PluginWithConfigKeys
                     $last_update_date_alias_field
                 )
             ),
-            new LesserThanComparisonFromWhereBuilder(
+            new Metadata\LesserThanComparisonFromWhereBuilder(
                 new Date\LesserThanComparisonFromWhereBuilder(
                     $date_value_extractor,
                     $date_time_value_rounder,
@@ -327,7 +319,7 @@ class crosstrackerPlugin extends Plugin implements PluginWithConfigKeys
                     $last_update_date_alias_field
                 )
             ),
-            new LesserThanOrEqualComparisonFromWhereBuilder(
+            new Metadata\LesserThanOrEqualComparisonFromWhereBuilder(
                 new Date\LesserThanOrEqualComparisonFromWhereBuilder(
                     $date_value_extractor,
                     $date_time_value_rounder,
@@ -339,7 +331,7 @@ class crosstrackerPlugin extends Plugin implements PluginWithConfigKeys
                     $last_update_date_alias_field
                 )
             ),
-            new BetweenComparisonFromWhereBuilder(
+            new Metadata\BetweenComparisonFromWhereBuilder(
                 new Date\BetweenComparisonFromWhereBuilder(
                     $date_value_extractor,
                     $date_time_value_rounder,
@@ -351,7 +343,7 @@ class crosstrackerPlugin extends Plugin implements PluginWithConfigKeys
                     $last_update_date_alias_field
                 )
             ),
-            new InComparisonFromWhereBuilder(
+            new Metadata\InComparisonFromWhereBuilder(
                 new Users\InComparisonFromWhereBuilder(
                     $list_value_extractor,
                     $user_manager,
@@ -367,7 +359,7 @@ class crosstrackerPlugin extends Plugin implements PluginWithConfigKeys
                     $user_manager
                 )
             ),
-            new NotInComparisonFromWhereBuilder(
+            new Metadata\NotInComparisonFromWhereBuilder(
                 new Users\NotInComparisonFromWhereBuilder(
                     $list_value_extractor,
                     $user_manager,
@@ -385,6 +377,18 @@ class crosstrackerPlugin extends Plugin implements PluginWithConfigKeys
             ),
             new ReverseLinkFromWhereBuilder(Tracker_ArtifactFactory::instance()),
             new ForwardLinkFromWhereBuilder(Tracker_ArtifactFactory::instance()),
+            new Field\EqualComparisonFromWhereBuilder(
+                $cross_tracker_field_dao,
+                new Field\Numeric\EqualComparisonFromWhereBuilder()
+            ),
+            new Field\NotEqualComparisonFromWhereBuilder(),
+            new Field\GreaterThanComparisonFromWhereBuilder(),
+            new Field\GreaterThanOrEqualComparisonFromWhereBuilder(),
+            new Field\LesserThanComparisonFromWhereBuilder(),
+            new Field\LesserThanOrEqualComparisonFromWhereBuilder(),
+            new Field\BetweenComparisonFromWhereBuilder(),
+            new Field\InComparisonFromWhereBuilder(),
+            new FIeld\NotInComparisonFromWhereBuilder()
         );
 
         $cross_tracker_artifact_factory = new CrossTrackerArtifactReportFactory(

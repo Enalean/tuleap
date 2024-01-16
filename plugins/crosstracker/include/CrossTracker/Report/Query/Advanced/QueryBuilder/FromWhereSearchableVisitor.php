@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder;
 
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
@@ -32,12 +34,16 @@ final class FromWhereSearchableVisitor implements SearchableVisitor
 {
     public function visitField(Field $field, $parameters)
     {
-        throw new \Exception($field->getName() . " is not supported in CrossTracker search");
+        return $parameters->getFieldFromWhereBuilder()->getFromWhere(
+            $field,
+            $parameters->getComparison(),
+            $parameters->getTrackers()
+        );
     }
 
     public function visitMetaData(Metadata $metadata, $parameters)
     {
-        return $parameters->getFromWhereBuilder()->getFromWhere(
+        return $parameters->getMetadataFromWhereBuilder()->getFromWhere(
             $metadata,
             $parameters->getComparison(),
             $parameters->getTrackers()

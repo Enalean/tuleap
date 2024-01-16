@@ -40,30 +40,23 @@ use Tuleap\CrossTracker\CrossTrackerReportNotFoundException;
 use Tuleap\CrossTracker\Permission\CrossTrackerPermissionGate;
 use Tuleap\CrossTracker\Permission\CrossTrackerUnauthorizedException;
 use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
-use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\TrackerFieldDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ForwardLinkFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ReverseLinkFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\FromWhereSearchableVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Date;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Users;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\BetweenComparisonFromWhereBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\EqualComparisonFromWhereBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\GreaterThanComparisonFromWhereBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\GreaterThanOrEqualComparisonFromWhereBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\InComparisonFromWhereBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\LesserThanComparisonFromWhereBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\LesserThanOrEqualComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\ListValueExtractor;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\NotEqualComparisonFromWhereBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\NotInComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\AssignedTo;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Description;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Status\EqualComparisonFromWhereBuilder as StatusEqualComparisonFromWhereBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Status\NotEqualComparisonFromWhereBuilder as StatusNotEqualComparisonFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Status;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Title;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\FromWhereSearchableVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Between\BetweenComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Equal\EqualComparisonChecker;
@@ -76,7 +69,6 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ListVal
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotEqual\NotEqualComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotIn\NotInComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field\FieldUsageChecker;
-use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\TrackerFieldDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataUsageChecker;
 use Tuleap\REST\AuthenticatedResource;
@@ -88,13 +80,11 @@ use Tuleap\REST\QueryParameterParser;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ArtifactLink\ArtifactLinkTypeChecker;
-use Tuleap\Tracker\Report\TrackerNotFoundException;
-use Tuleap\Tracker\Report\TrackerDuplicateException;
 use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ArtifactLink\ArtifactLinkTypeChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringAllowed;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringForbidden;
@@ -104,6 +94,8 @@ use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeValueRounder;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
+use Tuleap\Tracker\Report\TrackerDuplicateException;
+use Tuleap\Tracker\Report\TrackerNotFoundException;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
 use Tuleap\Tracker\Report\TrackerReportExtractor;
@@ -178,6 +170,8 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         $list_value_validator           = new ListValueValidator(new EmptyStringAllowed(), $this->user_manager);
         $list_value_validator_not_empty = new ListValueValidator(new EmptyStringForbidden(), $this->user_manager);
 
+        $cross_tracker_field_dao = new TrackerFieldDao();
+
         $this->invalid_comparisons_collector = new InvalidTermCollectorVisitor(
             new InvalidSearchableCollectorVisitor(
                 new MetadataChecker(
@@ -189,9 +183,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                         new Tracker_Semantic_ContributorDao()
                     )
                 ),
-                new FieldUsageChecker(
-                    new TrackerFieldDao()
-                ),
+                new FieldUsageChecker($cross_tracker_field_dao),
             ),
             new EqualComparisonChecker($date_validator, $list_value_validator),
             new NotEqualComparisonChecker($date_validator, $list_value_validator),
@@ -221,10 +213,10 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         $artifact_factory        = Tracker_ArtifactFactory::instance();
         $query_builder_visitor   = new QueryBuilderVisitor(
             new FromWhereSearchableVisitor(),
-            new EqualComparisonFromWhereBuilder(
+            new Metadata\EqualComparisonFromWhereBuilder(
                 new Title\EqualComparisonFromWhereBuilder(),
                 new Description\EqualComparisonFromWhereBuilder(),
-                new StatusEqualComparisonFromWhereBuilder(),
+                new Status\EqualComparisonFromWhereBuilder(),
                 new Date\EqualComparisonFromWhereBuilder(
                     $date_value_extractor,
                     $date_time_value_rounder,
@@ -245,15 +237,15 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                     $this->user_manager,
                     $last_update_by_alias_field
                 ),
-                new AssignedTo\EqualComparisonFromWhereBuilder(
+                new Metadata\Semantic\AssignedTo\EqualComparisonFromWhereBuilder(
                     $list_value_extractor,
                     $this->user_manager
                 )
             ),
-            new NotEqualComparisonFromWhereBuilder(
+            new Metadata\NotEqualComparisonFromWhereBuilder(
                 new Title\NotEqualComparisonFromWhereBuilder(),
                 new Description\NotEqualComparisonFromWhereBuilder(),
-                new StatusNotEqualComparisonFromWhereBuilder(),
+                new Status\NotEqualComparisonFromWhereBuilder(),
                 new Date\NotEqualComparisonFromWhereBuilder(
                     $date_value_extractor,
                     $date_time_value_rounder,
@@ -279,7 +271,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                     $this->user_manager
                 )
             ),
-            new GreaterThanComparisonFromWhereBuilder(
+            new Metadata\GreaterThanComparisonFromWhereBuilder(
                 new Date\GreaterThanComparisonFromWhereBuilder(
                     $date_value_extractor,
                     $date_time_value_rounder,
@@ -291,7 +283,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                     $last_update_date_alias_field
                 )
             ),
-            new GreaterThanOrEqualComparisonFromWhereBuilder(
+            new Metadata\GreaterThanOrEqualComparisonFromWhereBuilder(
                 new Date\GreaterThanOrEqualComparisonFromWhereBuilder(
                     $date_value_extractor,
                     $date_time_value_rounder,
@@ -303,7 +295,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                     $last_update_date_alias_field
                 )
             ),
-            new LesserThanComparisonFromWhereBuilder(
+            new Metadata\LesserThanComparisonFromWhereBuilder(
                 new Date\LesserThanComparisonFromWhereBuilder(
                     $date_value_extractor,
                     $date_time_value_rounder,
@@ -315,7 +307,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                     $last_update_date_alias_field
                 )
             ),
-            new LesserThanOrEqualComparisonFromWhereBuilder(
+            new Metadata\LesserThanOrEqualComparisonFromWhereBuilder(
                 new Date\LesserThanOrEqualComparisonFromWhereBuilder(
                     $date_value_extractor,
                     $date_time_value_rounder,
@@ -327,7 +319,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                     $last_update_date_alias_field
                 )
             ),
-            new BetweenComparisonFromWhereBuilder(
+            new Metadata\BetweenComparisonFromWhereBuilder(
                 new Date\BetweenComparisonFromWhereBuilder(
                     $date_value_extractor,
                     $date_time_value_rounder,
@@ -339,7 +331,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                     $last_update_date_alias_field
                 )
             ),
-            new InComparisonFromWhereBuilder(
+            new Metadata\InComparisonFromWhereBuilder(
                 new Users\InComparisonFromWhereBuilder(
                     $list_value_extractor,
                     $this->user_manager,
@@ -355,7 +347,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                     $this->user_manager
                 )
             ),
-            new NotInComparisonFromWhereBuilder(
+            new Metadata\NotInComparisonFromWhereBuilder(
                 new Users\NotInComparisonFromWhereBuilder(
                     $list_value_extractor,
                     $this->user_manager,
@@ -373,6 +365,18 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             ),
             new ReverseLinkFromWhereBuilder($artifact_factory),
             new ForwardLinkFromWhereBuilder($artifact_factory),
+            new Field\EqualComparisonFromWhereBuilder(
+                $cross_tracker_field_dao,
+                new Field\Numeric\EqualComparisonFromWhereBuilder()
+            ),
+            new Field\NotEqualComparisonFromWhereBuilder(),
+            new Field\GreaterThanComparisonFromWhereBuilder(),
+            new Field\GreaterThanOrEqualComparisonFromWhereBuilder(),
+            new Field\LesserThanComparisonFromWhereBuilder(),
+            new Field\LesserThanOrEqualComparisonFromWhereBuilder(),
+            new Field\BetweenComparisonFromWhereBuilder(),
+            new Field\InComparisonFromWhereBuilder(),
+            new FIeld\NotInComparisonFromWhereBuilder()
         );
 
         $this->cross_tracker_artifact_factory = new CrossTrackerArtifactReportFactory(
