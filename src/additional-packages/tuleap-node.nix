@@ -4,7 +4,7 @@
 }:
 
 let
-  version = "20.10.0";
+  version = "20.11.0";
   fetchNodeBin = { url, hash, name }: pkgs.fetchurl {
     inherit url hash name;
     downloadToTemp = true;
@@ -18,12 +18,12 @@ let
   el7NodeBin = fetchNodeBin rec {
     name = "node-v${version}-linux-x64-glibc-217";
     url = "https://unofficial-builds.nodejs.org/download/release/v${version}/${name}.tar.xz";
-    hash = "sha256-cI3BWRwWpaAg5ZR+S3dL9nNATAfEZgMqt/nJ4Q9XSRY=";
+    hash = "sha256-bJk+m6d+SHM1D5F5AoGcRqgXVvVnZsRfhlTvTd3NK2o=";
   };
   el9NodeBin = fetchNodeBin rec {
     name = "node-v${version}-linux-x64";
     url = "https://nodejs.org/dist/v${version}/${name}.tar.xz";
-    hash = "sha256-ljJsnIlMTqH+m/dCIMflHNknwFh2yG920JQyiUbjMTU=";
+    hash = "sha256-8S437R1wUE6bhSDA07kuWPR3zVukJffGDsseMyKWiOk=";
   };
   buildNodeRPM = { version, bin, dist, outputFolder }: pkgs.stdenvNoCC.mkDerivation {
     pname = "tuleap-node-rpm-package-${dist}";
