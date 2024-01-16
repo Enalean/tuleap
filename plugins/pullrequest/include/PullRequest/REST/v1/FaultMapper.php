@@ -31,6 +31,7 @@ use Tuleap\PullRequest\Comment\CommentIsNotFromCurrentUserFault;
 use Tuleap\PullRequest\Comment\CommentNotFoundFault;
 use Tuleap\PullRequest\Criterion\MalformedQueryFault;
 use Tuleap\PullRequest\InlineComment\InlineCommentNotFoundFault;
+use Tuleap\PullRequest\PullRequest\REST\v1\UserNotFoundFault;
 use Tuleap\PullRequest\PullRequestNotFoundFault;
 
 final class FaultMapper
@@ -43,7 +44,7 @@ final class FaultMapper
         $status_code = match ($fault::class) {
             MalformedQueryFault::class => 400,
             CommentIsNotFromCurrentUserFault::class, CommentFormatNotAllowedFault::class => 403,
-            CommentNotFoundFault::class, CannotAccessToPullRequestFault::class, PullRequestNotFoundFault::class, InlineCommentNotFoundFault::class, GitRepositoryNotFoundFault::class => 404,
+            CommentNotFoundFault::class, CannotAccessToPullRequestFault::class, PullRequestNotFoundFault::class, InlineCommentNotFoundFault::class, GitRepositoryNotFoundFault::class, UserNotFoundFault::class => 404,
             default => 500,
         };
         throw new RestException($status_code, (string) $fault);

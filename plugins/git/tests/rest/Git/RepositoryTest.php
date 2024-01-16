@@ -602,6 +602,12 @@ final class RepositoryTest extends TestBase
         $this->assertGETPullRequests($response);
     }
 
+    public function testOPTIONSGetPullRequests(): void
+    {
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/pull_requests'));
+        $this->assertEquals(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
+    }
+
     public function testGETPullRequests(): void
     {
         $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/pull_requests';
@@ -618,6 +624,23 @@ final class RepositoryTest extends TestBase
 
         $this->assertEquals(2, count($content['collection']));
         $this->assertEquals(2, $content['total_size']);
+    }
+
+    public function testOPTIONSGetPullRequestsAuthors(): void
+    {
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/pull_requests_authors'));
+        $this->assertEquals(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
+    }
+
+    public function testGETPullRequestsAuthors(): void
+    {
+        $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/pull_requests_authors';
+
+        $response = $this->getResponse($this->request_factory->createRequest('GET', $url));
+        $content  = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(1, count($content));
     }
 
     public function testOPTIONSGetCommits(): void

@@ -32,6 +32,7 @@ use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\PullRequest\REST\v1\Authors\RepositoryPullRequestsAuthorsRepresentation;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -47,6 +48,7 @@ use Tuleap\PullRequest\Reviewer\ReviewerDAO;
 use Tuleap\PullRequest\Reviewer\ReviewerRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
+use Tuleap\User\REST\MinimalUserRepresentation;
 use UserManager;
 
 class RepositoryResource extends AuthenticatedResource
@@ -173,6 +175,52 @@ class RepositoryResource extends AuthenticatedResource
         );
 
         return Result::ok($get_handler);
+    }
+
+    /**
+     * @url OPTIONS {id}/pull_requests_authors
+     *
+     * @param int $id Id of the repository
+     */
+    public function optionsPullRequestsAuthors(int $id): void
+    {
+        Header::allowOptionsGet();
+    }
+
+    /**
+     * Get pull requests authors in a given git repository
+     *
+     * @url GET {id}/pull_requests_authors
+     *
+     * @access protected
+     *
+     * @param int $id     Id of the repository
+     * @param int $limit  Number of elements displayed per page {@from path} {@min 0} {@max 50}
+     * @param int $offset Position of the first element to display {@from path} {@min 0}
+     *
+     * @return MinimalUserRepresentation[]
+     * @throws RestException
+     */
+    public function getPullRequestsAuthors(int $id, int $limit = self::MAX_LIMIT, int $offset = 0): array
+    {
+        $this->checkAccess();
+
+        $repository = $this->getRepositoryUserCanSee($id);
+
+        return (
+            new \Tuleap\PullRequest\REST\v1\Authors\GETHandler(
+                UserManager::instance(),
+                new PullRequestDao(),
+            )
+        )->handle($repository, $limit, $offset)->match(
+            function (RepositoryPullRequestsAuthorsRepresentation $representations) use ($limit, $offset) {
+                Header::allowOptionsGet();
+                $this->sendPaginationHeaders($limit, $offset, $representations->total_size);
+
+                return $representations->collection;
+            },
+            FaultMapper::mapToRestException(...)
+        );
     }
 
     /**
