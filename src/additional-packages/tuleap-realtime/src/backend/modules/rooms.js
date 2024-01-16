@@ -21,13 +21,12 @@ const _ = require("lodash");
 const Executions = require("../modules/executions");
 const MessageContentVerifier = require("../services/message-content-verifier");
 
-module.exports = function (rights, scores) {
+module.exports = function (rights) {
     var self = this;
 
     self.sockets_collection    = {};
     self.executions_collection = {};
     self.rights                = rights;
-    self.scores                = scores;
 
     /**
      * @access public
@@ -178,19 +177,6 @@ module.exports = function (rights, scores) {
             self.executions_collection[room_id].remove(message.data.artifact_id);
         } else if (MessageContentVerifier.hasPresencesOnExecutions(message.data)) {
             message.data = self.executions_collection[room_id].update(message.data.presence);
-            self.scores.addScoreByUserIdAndRoomId(message.data.user, room_id);
-            extendUserWithScore(room_id, message.data.user);
-            socket_sender.emit('user:score', {
-                user: message.data.user
-            });
-        } else if(MessageContentVerifier.hasChangeStatusOnExecutions(message.data)) {
-            self.scores.update(message.data.user, room_id, message.data);
-            extendUserWithScore(room_id, message.data.user);
-            extendUserWithScore(room_id, message.data.previous_user);
-            socket_sender.emit('user:score', {
-                user: message.data.user,
-                previous_user: message.data.previous_user
-            });
         }
         socketSenderBroadcasts(room, socket_sender, message, message.data);
     };
@@ -229,11 +215,9 @@ module.exports = function (rights, scores) {
      * @param socket (Object)
      */
     self.emitPresences = function(socket) {
-        var users_have_score     = self.scores.getAllUsersByRoomId(socket.room);
         var presences_collection = self.executions_collection[socket.room].presences_collection;
 
         socket.emit('presences', presences_collection);
-        socket.emit('users:score', users_have_score);
     };
 
     /**
@@ -256,27 +240,5 @@ module.exports = function (rights, scores) {
         }).forEach(function (socket) {
             socket_sender.to(socket.id).emit(message.cmd, data);
         });
-    }
-
-    /**
-     * @access private
-     *
-     * Function to put score
-     * on user
-     *
-     * @param room_id  (string)
-     * @param user     (Object)
-     */
-    function extendUserWithScore(room_id, user) {
-        if (user) {
-            var score = self.scores.getScoreByUserIdAndRoomId(user.id, room_id);
-            if (_.has(user, 'score')) {
-                user.score = score;
-            } else {
-                _.extend(user, {
-                    score: score
-                });
-            }
-        }
     }
 };

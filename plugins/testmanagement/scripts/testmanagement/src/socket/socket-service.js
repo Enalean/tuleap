@@ -54,7 +54,6 @@ function SocketService(
         },
         listenTokenExpired,
         listenNodeJSServer,
-        listenToUserScore,
         listenToExecutionViewed,
         listenToExecutionLeft,
         listenToExecutionCreated,
@@ -81,7 +80,6 @@ function SocketService(
         listenToDisconnect();
         listenToError();
         listenPresences();
-        listenToUsersScore();
         self.listenToArtifactLinked();
         return JWTService.getJWT().then((data) => {
             locker.put("token", data.token);
@@ -132,29 +130,10 @@ function SocketService(
         });
     }
 
-    function listenToUsersScore() {
-        SocketFactory.on("users:score", (data) => {
-            data.forEach((user) => {
-                ExecutionService.updatePresenceOnCampaign(user);
-            });
-        });
-    }
-
-    function listenToUserScore() {
-        SocketFactory.on("user:score", ({ user, previous_user }) => {
-            ExecutionService.updatePresenceOnCampaign(user);
-
-            if (previous_user) {
-                ExecutionService.updatePresenceOnCampaign(previous_user);
-            }
-        });
-    }
-
     function listenToExecutionViewed() {
         SocketFactory.on(
             "testmanagement_user:presence",
             ({
-                user,
                 execution_to_remove,
                 execution_presences_to_remove,
                 execution_to_add,
@@ -171,7 +150,7 @@ function SocketService(
                         execution_to_add,
                         execution_presences_to_add,
                     );
-                    ExecutionService.updatePresenceOnCampaign(user);
+                    ExecutionService.updatePresencesOnCampaign();
                 }
             },
         );
@@ -192,19 +171,12 @@ function SocketService(
     }
 
     function listenToExecutionUpdated() {
-        SocketFactory.on(
-            "testmanagement_execution:update",
-            ({ artifact_id, user, previous_user }) => {
-                ExecutionRestService.getExecution(artifact_id).then((execution) => {
-                    ExecutionService.updateTestExecution(execution, user);
-                    ExecutionService.updatePresenceOnCampaign(user);
-
-                    if (previous_user) {
-                        ExecutionService.updatePresenceOnCampaign(previous_user);
-                    }
-                });
-            },
-        );
+        SocketFactory.on("testmanagement_execution:update", ({ artifact_id, user }) => {
+            ExecutionRestService.getExecution(artifact_id).then((execution) => {
+                ExecutionService.updateTestExecution(execution, user);
+                ExecutionService.updatePresencesOnCampaign();
+            });
+        });
     }
 
     function listenToExecutionDeleted(callback) {

@@ -17,17 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// eslint-disable-next-line you-dont-need-lodash-underscore/for-each, you-dont-need-lodash-underscore/filter, you-dont-need-lodash-underscore/some
-import { extend, has, some, remove, forEach, filter } from "lodash-es";
-import CKEDITOR from "ckeditor4";
-import prettyKibibytes from "pretty-kibibytes";
-
 import {
-    isThereAnImageWithDataURI,
     buildFileUploadHandler,
+    isThereAnImageWithDataURI,
     MaxSizeUploadExceededError,
     UploadError,
 } from "@tuleap/ckeditor-image-upload";
+import CKEDITOR from "ckeditor4";
+// eslint-disable-next-line you-dont-need-lodash-underscore/for-each, you-dont-need-lodash-underscore/filter, you-dont-need-lodash-underscore/some
+import { extend, filter, forEach, has, remove, some } from "lodash-es";
+import prettyKibibytes from "pretty-kibibytes";
 
 export default ExecutionService;
 
@@ -57,7 +56,6 @@ function ExecutionService(
         getAllRemoteExecutions,
         getExecutionsByDefinitionId,
         updateExecutionToUseLatestVersionOfDefinition,
-        addPresenceCampaign,
         updateCampaign,
         addTestExecution,
         addTestExecutionWithoutUpdateCampaignStatus,
@@ -67,7 +65,7 @@ function ExecutionService(
         clearEditor,
         clearFilesUploadedThroughAttachmentArea,
         getUsedUploadedFilesIds,
-        updatePresenceOnCampaign,
+        updatePresencesOnCampaign,
         removeAllPresencesOnCampaign,
         viewTestExecution,
         viewTestExecutionIfRTEAlreadyExists,
@@ -143,9 +141,15 @@ function ExecutionService(
         self.loading[campaign_id] = true;
         self.executions_by_categories_by_campaigns[campaign_id] = {};
 
-        return getAllRemoteExecutions(campaign_id, limit, offset).finally(() => {
-            self.loading[campaign_id] = false;
-        });
+        return getAllRemoteExecutions(campaign_id, limit, offset)
+            .finally(() => {
+                self.loading[campaign_id] = false;
+            })
+            .then((executions) => {
+                updatePresencesOnCampaign();
+
+                return executions;
+            });
     }
 
     function getAllRemoteExecutions(campaign_id, limit, offset, remote_executions) {
@@ -326,39 +330,40 @@ function ExecutionService(
         self.campaign["nb_of_" + status]++;
         self.campaign["nb_of_" + previous_status]--;
 
+        updatePresencesOnCampaign();
+
         $rootScope.$broadcast("reload-comment-editor-view", execution);
     }
 
-    function updatePresenceOnCampaign(user) {
-        var user_on_campaign = self.presences_on_campaign.find(
-            (presence) => presence.id === user.id,
+    function updatePresencesOnCampaign() {
+        const score_per_user_id = new Map();
+
+        for (const execution of Object.values(self.executions)) {
+            if (!shouldExecutionBeUsedForUserScore(execution)) {
+                continue;
+            }
+            const user = execution.previous_result.submitted_by;
+            let user_with_score = score_per_user_id.get(user.id);
+            if (user_with_score === undefined) {
+                user_with_score = { ...user, score: 0 };
+            }
+            user_with_score.score++;
+            score_per_user_id.set(user.id, user_with_score);
+        }
+
+        self.presences_on_campaign = Array.from(score_per_user_id.values());
+    }
+
+    function shouldExecutionBeUsedForUserScore(execution) {
+        return (
+            execution.status !== "notrun" &&
+            execution.definition &&
+            execution.definition.automated_tests === ""
         );
-
-        if (user_on_campaign && !has(user_on_campaign, "score")) {
-            extend(user_on_campaign, user.score);
-        }
-
-        if (user_on_campaign && user_on_campaign.score !== user.score) {
-            user_on_campaign.score = user.score;
-        }
-
-        if (!user_on_campaign) {
-            addPresenceCampaign(user);
-        }
     }
 
     function updateCampaign(new_campaign) {
         self.campaign = new_campaign;
-    }
-
-    function addPresenceCampaign(user) {
-        var user_id_exists = self.presences_on_campaign.some((presence) => presence.id === user.id);
-
-        if (!user_id_exists) {
-            self.presences_on_campaign.push(user);
-        } else if (has(user, "score")) {
-            extend(user_id_exists, user.score);
-        }
     }
 
     function viewTestExecutionIfRTEAlreadyExists(execution_id, user) {
@@ -602,7 +607,6 @@ function ExecutionService(
             forEach(self.presences_by_execution, function (presences, execution_id) {
                 forEach(presences, function (presence) {
                     viewTestExecution(execution_id, presence);
-                    addPresenceCampaign(presence);
                 });
             });
         }
