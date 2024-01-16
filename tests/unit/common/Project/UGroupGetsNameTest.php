@@ -17,13 +17,15 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
+
+namespace Tuleap\Project;
+
+use ProjectUGroup;
 use Tuleap\GlobalLanguageMock;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class UGroupGetsNameTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UGroupGetsNameTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
     protected function setUp(): void
@@ -44,9 +46,9 @@ class UGroupGetsNameTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroup = new ProjectUGroup(
             ['ugroup_id' => ProjectUGroup::PROJECT_MEMBERS, 'name' => 'ugroup_project_members_name_key']
         );
-        $this->assertEquals('ugroup_project_members_name_key', $ugroup->getName());
-        $this->assertEquals('membre_de_projet', $ugroup->getTranslatedName());
-        $this->assertEquals('project_members', $ugroup->getNormalizedName());
+        self::assertEquals('ugroup_project_members_name_key', $ugroup->getName());
+        self::assertEquals('membre_de_projet', $ugroup->getTranslatedName());
+        self::assertEquals('project_members', $ugroup->getNormalizedName());
     }
 
     public function testItReturnsProjectAdmins(): void
@@ -54,16 +56,16 @@ class UGroupGetsNameTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroup = new ProjectUGroup(
             ['ugroup_id' => ProjectUGroup::PROJECT_ADMIN, 'name' => 'ugroup_project_admins_name_key']
         );
-        $this->assertEquals('ugroup_project_admins_name_key', $ugroup->getName());
-        $this->assertEquals('administrateur_de_le_projet', $ugroup->getTranslatedName());
-        $this->assertEquals('project_admins', $ugroup->getNormalizedName());
+        self::assertEquals('ugroup_project_admins_name_key', $ugroup->getName());
+        self::assertEquals('administrateur_de_le_projet', $ugroup->getTranslatedName());
+        self::assertEquals('project_admins', $ugroup->getNormalizedName());
     }
 
     public function testItReturnsAStaticGroup(): void
     {
         $ugroup = new ProjectUGroup(['ugroup_id' => 120, 'name' => 'Zoum_zoum_zen']);
-        $this->assertEquals('Zoum_zoum_zen', $ugroup->getName());
-        $this->assertEquals('Zoum_zoum_zen', $ugroup->getTranslatedName());
-        $this->assertEquals('Zoum_zoum_zen', $ugroup->getNormalizedName());
+        self::assertEquals('Zoum_zoum_zen', $ugroup->getName());
+        self::assertEquals('Zoum_zoum_zen', $ugroup->getTranslatedName());
+        self::assertEquals('Zoum_zoum_zen', $ugroup->getNormalizedName());
     }
 }
