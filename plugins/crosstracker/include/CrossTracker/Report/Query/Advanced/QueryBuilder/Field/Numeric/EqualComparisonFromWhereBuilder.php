@@ -43,10 +43,14 @@ final class EqualComparisonFromWhereBuilder
         LEFT JOIN tracker_changeset_value_float AS TCVF1 ON (TCVF1.changeset_value_id = CV1.id)
         EOSQL;
 
-        $from_parameters  = [$duck_typed_field->name];
+        $from_parameters = [$duck_typed_field->name];
+        if ($value === '') {
+            $where = '(TCVI1.value IS NULL OR TCVF1.value IS NULL)';
+            return new ParametrizedFromWhere($from, $where, $from_parameters, []);
+        }
+
         $where            = '(TCVI1.value = ? OR TCVF1.value = ?)';
         $where_parameters = [$value, $value];
-
         return new ParametrizedFromWhere($from, $where, $from_parameters, $where_parameters);
     }
 }
