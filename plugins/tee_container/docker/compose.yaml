@@ -33,8 +33,6 @@ services:
 #      - TULEAP_REDIS_PASSWORD=some_password
 #      - TULEAP_REDIS_USE_TLS=1
       - TULEAP_EMAIL_RELAYHOST=mailhog:1025
-#      - TULEAP_LOGGER=syslog
-#      - TULEAP_LOG_SERVER=some-server:514
 
   db:
     image: mysql:8.0

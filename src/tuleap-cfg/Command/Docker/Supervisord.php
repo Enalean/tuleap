@@ -32,7 +32,6 @@ final class Supervisord
     public const UNIT_HTTPD           = 'httpd';
     public const UNIT_NGINX           = 'nginx';
     public const UNIT_POSTFIX         = 'postfix';
-    public const UNIT_RSYSLOG         = 'rsyslog';
     public const UNIT_SSHD            = 'sshd';
     public const UNIT_BACKEND_WORKERS = 'backend_workers';
     public const UNIT_MEDIAWIKI_FPM   = 'mediawiki_fpm';
@@ -47,7 +46,6 @@ final class Supervisord
         self::UNIT_HTTPD,
         self::UNIT_NGINX,
         self::UNIT_POSTFIX,
-        self::UNIT_RSYSLOG,
         self::UNIT_SSHD,
         self::UNIT_BACKEND_WORKERS,
         self::UNIT_MEDIAWIKI_FPM,

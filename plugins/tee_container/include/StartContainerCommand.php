@@ -37,10 +37,8 @@ use Symfony\Component\Process\Process;
 use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
 use Tuleap\BuildVersion\VersionPresenter;
 use TuleapCfg\Command\Docker\DataPersistence;
-use TuleapCfg\Command\Docker\LogToSyslog;
 use TuleapCfg\Command\Docker\PluginsInstallClosureBuilder;
 use TuleapCfg\Command\Docker\Postfix;
-use TuleapCfg\Command\Docker\Rsyslog;
 use TuleapCfg\Command\Docker\Supervisord;
 use TuleapCfg\Command\Docker\Tuleap;
 use TuleapCfg\Command\Docker\VariableProviderInterface;
@@ -106,14 +104,8 @@ final class StartContainerCommand extends Command
 
             $console_logger = new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]);
 
-            $rsyslog = new Rsyslog();
-            $rsyslog->setup($output, $tuleap_fqdn);
-
             $postfix = new Postfix($this->process_factory);
             $postfix->setup($output, $tuleap_fqdn);
-
-            $log_to_syslog = new LogToSyslog($console_logger);
-            $log_to_syslog->configure();
 
             $supervisord = new Supervisord();
             $supervisord->configure($output);
