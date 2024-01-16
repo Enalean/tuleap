@@ -20,6 +20,51 @@
 const PROJECT_NAME = "conditional-notifications";
 const TRACKER_SHORTNAME = "cond_notif";
 
+function addToNotifications(label: string): void {
+    // ignore rule for select2
+    // eslint-disable-next-line cypress/require-data-selectors
+    cy.get(".select2-container").first().click();
+    // eslint-disable-next-line cypress/require-data-selectors
+    cy.get(".select2-input").first().type(`${label}{enter}`);
+    // eslint-disable-next-line cypress/require-data-selectors
+    cy.get(".select2-result-label").last().click();
+}
+
+function createAndUpdateArtifact(title: string, edited_title: string): void {
+    cy.get("[data-test=project-sidebar]")
+        .shadow()
+        .find("[data-test=artifact-quick-link-add]")
+        .click();
+
+    cy.get('[data-test="title"]').type(title);
+    cy.intercept(`*func=submit-artifact*`).as("createArtifact");
+
+    cy.get("[data-test=artifact-submit-options]").click();
+    cy.get("[data-test=artifact-submit-and-stay]").click();
+    cy.wait("@createArtifact", { timeout: 60000 });
+
+    cy.get("[data-test=edit-field-title]").click();
+    cy.get("[data-test=title]").clear().type(edited_title);
+    cy.get("[data-test=artifact-submit]").click();
+}
+
+function goToNotificationAdministration(): void {
+    cy.get("[data-test=link-to-current-tracker-administration]").click({ force: true });
+    cy.get("[data-test=notifications]").click();
+}
+
+function addUserToUnsusbscribeNotifications(user: string): void {
+    cy.get("[data-test=unsuscribe-notifification]").click();
+
+    // eslint-disable-next-line cypress/require-data-selectors
+    cy.get(".select2-container").last().click();
+    // eslint-disable-next-line cypress/require-data-selectors
+    cy.get(".select2-input").last().type(`${user}{enter}`);
+    // eslint-disable-next-line cypress/require-data-selectors
+    cy.get(".select2-result-label").last().click();
+    cy.get("[data-test=unsuscribe-notifification-button]").click();
+}
+
 describe("Tracker notifications", () => {
     let now: number;
     it("Sends calendar events", function () {
@@ -33,8 +78,7 @@ describe("Tracker notifications", () => {
             cy.log("Add project and configure calendar option");
             cy.visitProjectService(project_name, "Trackers");
             cy.get("[data-test=tracker-link-rel]").click();
-            cy.get("[data-test=link-to-current-tracker-administration]").click({ force: true });
-            cy.get("[data-test=notifications]").click();
+            goToNotificationAdministration();
             cy.get("[data-test=enable-calendar-events]").click();
             cy.get("[data-test=submit-changes]").click();
 
@@ -187,6 +231,105 @@ describe("Tracker notifications", () => {
             `My third conditional notification`,
         );
     });
+
+    it("Status change notifications", function () {
+        cy.projectAdministratorSession();
+        now = Date.now();
+        const project_name = `status-${now}`;
+        cy.createNewPublicProject(project_name, "issues");
+        cy.visitProjectAdministration(project_name);
+        cy.addProjectMember(project_name, "ProjectMember");
+        cy.addProjectMember(project_name, "ARegularUser");
+
+        cy.projectAdministratorSession();
+        cy.visitProjectAdministration(project_name);
+
+        cy.log("Add user group");
+        cy.get("[data-test=admin-nav-groups]").click();
+        cy.addUserGroupWithUsers("my_custom_group", ["ARegularUser"]);
+
+        cy.visitProjectService(project_name, "Trackers");
+        cy.get("[data-test=tracker-link-issue]").click();
+
+        cy.log("Configure tracker notifications");
+        goToNotificationAdministration();
+        cy.get("[data-test=status-change-level]").check();
+        cy.get("[data-test=submit-notifications-level]").click();
+
+        cy.log("Add user group and a random user to all_updates notifications");
+        cy.get("[data-test=add-notification]").click();
+        addToNotifications("my_custom_group");
+        addToNotifications("ProjectMember");
+        cy.get("[data-test=all-updates]").check();
+        cy.get("[data-test=save-notification-button]").click();
+
+        cy.log("When artifact is updated, all users must receive an email");
+        createAndUpdateArtifact("An artifact", "Edited artifact");
+
+        cy.assertEmailWithContentReceived("ProjectMember@example.com", "Edited artifact");
+        cy.assertEmailWithContentReceived("RegularUser@example.com", "Edited artifact");
+
+        cy.log("Add ProjectMember in unsubscribe member list");
+
+        goToNotificationAdministration();
+        addUserToUnsusbscribeNotifications("ProjectMember");
+
+        createAndUpdateArtifact("Artifact A", "Other artifact");
+
+        cy.log("When artifact is updated, project member no longer receive an email");
+        cy.assertNotEmailWithContentReceived("ProjectMember@example.com", "Other artifact");
+        cy.assertEmailWithContentReceived("RegularUser@example.com", "Other artifact");
+
+        goToNotificationAdministration();
+        cy.log("Uncheck all_updates");
+        cy.get("[data-test=edit-notification]").click();
+        cy.get("[data-test=global-notification-all-update-checkbox]").uncheck();
+        cy.get("[data-test=edit-notification-button]").click();
+
+        createAndUpdateArtifact("Artifact B", "AnOther artifact");
+        cy.log("When artifact is updated, nobody receive an email");
+        cy.assertNotEmailWithContentReceived("ProjectMember@example.com", "AnOther artifact");
+        cy.assertNotEmailWithContentReceived("RegularUser@example.com", "AnOther artifact");
+
+        cy.log("Add again all_updates otherwise users won't receive any notifications");
+        goToNotificationAdministration();
+        cy.get("[data-test=edit-notification]").click();
+        cy.get("[data-test=global-notification-all-update-checkbox]").check();
+        cy.get("[data-test=edit-notification-button]").click();
+
+        cy.get("[data-test=project-sidebar]")
+            .shadow()
+            .find("[data-test=artifact-quick-link-add]")
+            .click();
+
+        cy.get("[data-test=title]").type("Artifact");
+        cy.get("[data-test=artifact-submit-options]").click();
+        cy.get("[data-test=artifact-submit-and-stay]").click();
+        cy.wait("@createArtifact", { timeout: 60000 });
+
+        cy.get("[data-test=edit-field-title]").click();
+        cy.get("[data-test=title]").clear().type("Last artifact");
+        cy.get("[data-test=edit-field-status]").click();
+        selectLabelInListPickerDropdown("Under review", 0);
+        cy.get("[data-test=edit-field-assigned_to]").click();
+        selectLabelInListPickerDropdown("ProjectMember", 1);
+        cy.get("[data-test=artifact-submit]").click();
+
+        cy.assertNotEmailWithContentReceived("ProjectMember@example.com", "Last artifact");
+        cy.assertEmailWithContentReceived("RegularUser@example.com", "Last artifact");
+    });
+
+    function selectLabelInListPickerDropdown(
+        label: string,
+        position: number,
+    ): Cypress.Chainable<JQuery<HTMLHtmlElement>> {
+        cy.get("[data-test=list-picker-selection]").eq(position).click();
+        return cy.root().within(() => {
+            cy.get("[data-test-list-picker-dropdown-open]").within(() => {
+                cy.get("[data-test=list-picker-item]").contains(label).click();
+            });
+        });
+    }
 
     describe("Notification subscription", () => {
         before(function () {

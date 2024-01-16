@@ -64,12 +64,12 @@
             />
         </td>
         <td class="tracker-notification-edit">
-            <button type="submit" class="btn btn-primary">{{# gettext }} Save {{/ gettext }}</button>
+            <button type="submit" class="btn btn-primary" data-test="unsuscribe-notifification-button">{{# gettext }} Save {{/ gettext }}</button>
             <button type="button" name="submit" class="btn tracker-notification-edit-hide">{{# gettext }} Cancel {{/ gettext }}</button>
         </td>
     </tr>
 </table>
-<button type="button" class="btn" id="tracker-unsubcriber-add">
+<button type="button" class="btn" id="tracker-unsubcriber-add" data-test="unsuscribe-notifification">
     <i class="fa fa-plus"></i>
     {{# dgettext }} tuleap-tracker | Unsubscribe a user {{/ dgettext }}
 </button>

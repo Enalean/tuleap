@@ -51,7 +51,7 @@
     </label>
     {{# has_status_semantic_defined }}
         <label class="radio">
-            <input type="radio" name="notifications_level" value="{{ status_change_value }}"
+            <input type="radio" name="notifications_level" value="{{ status_change_value }}" data-test="status-change-level"
                    {{# is_status_change }}checked{{/ is_status_change }} />
             {{# dgettext }}
                 tuleap-tracker
@@ -73,7 +73,7 @@
         </label>
     </p>
 
-    <button name="submit_notifications_level" class="btn" type="submit">
+    <button name="submit_notifications_level" class="btn" type="submit" data-test="submit-notifications-level">
         {{# dgettext }} tuleap-tracker | Submit {{/ dgettext }}
     </button>
 {{/ is_disabled }}
