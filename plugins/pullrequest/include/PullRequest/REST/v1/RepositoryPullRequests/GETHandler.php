@@ -77,11 +77,10 @@ final class GETHandler
      */
     private function retrievePullRequests(GitRepository $repository, SearchCriteria $criteria, int $limit, int $offset): Ok | Err
     {
-        $result     = $this->pull_request_dao->getPaginatedPullRequests($repository->getId(), $criteria, $limit, $offset);
-        $total_size = $this->pull_request_dao->foundRows();
+        $result = $this->pull_request_dao->getPaginatedPullRequests($repository->getId(), $criteria, $limit, $offset);
 
         $collection = [];
-        foreach ($result as $row) {
+        foreach ($result->pull_requests as $row) {
             $pull_request         = PullRequest::fromRow($row);
             $pull_request_creator = $this->retrieve_user_by_id->getUserById($pull_request->getUserId());
             if (! $pull_request_creator) {
@@ -116,6 +115,6 @@ final class GETHandler
             }
         }
 
-        return Result::ok(new RepositoryPullRequestRepresentation($collection, $total_size));
+        return Result::ok(new RepositoryPullRequestRepresentation($collection, $result->total_size));
     }
 }

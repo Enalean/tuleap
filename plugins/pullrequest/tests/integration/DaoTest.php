@@ -60,61 +60,65 @@ final class DaoTest extends TestCase
 
     public function testItRetrievesOnlyOpenPullRequests(): void
     {
-        $pull_requests = $this->dao->getPaginatedPullRequests(
+        $result = $this->dao->getPaginatedPullRequests(
             self::REPOSITORY_ID,
             new SearchCriteria(StatusCriterion::OPEN),
             self::LIMIT,
             self::OFFSET,
         );
 
-        self::assertSame(array_column($pull_requests, "id"), [$this->open_pull_request_id]);
+        self::assertSame(array_column($result->pull_requests, "id"), [$this->open_pull_request_id]);
+        self::assertEquals(1, $result->total_size);
     }
 
     public function testItRetrievesOnlyClosedPullRequests(): void
     {
-        $pull_requests = $this->dao->getPaginatedPullRequests(
+        $result = $this->dao->getPaginatedPullRequests(
             self::REPOSITORY_ID,
             new SearchCriteria(StatusCriterion::CLOSED),
             self::LIMIT,
             self::OFFSET,
         );
 
-        self::assertSame(array_column($pull_requests, "id"), [$this->merged_pull_request_id, $this->abandoned_pull_request_id]);
+        self::assertSame(array_column($result->pull_requests, "id"), [$this->merged_pull_request_id, $this->abandoned_pull_request_id]);
+        self::assertEquals(2, $result->total_size);
     }
 
     public function testItRetrievesAllPullRequests(): void
     {
-        $pull_requests = $this->dao->getPaginatedPullRequests(
+        $result = $this->dao->getPaginatedPullRequests(
             self::REPOSITORY_ID,
             new SearchCriteria(),
             self::LIMIT,
             self::OFFSET,
         );
 
-        self::assertSame(array_column($pull_requests, "id"), [
+        self::assertSame(array_column($result->pull_requests, "id"), [
             $this->open_pull_request_id,
             $this->merged_pull_request_id,
             $this->abandoned_pull_request_id,
         ]);
+        self::assertEquals(3, $result->total_size);
     }
 
     public function testItFiltersOnASpecificAuthor(): void
     {
-        $pull_requests = $this->dao->getPaginatedPullRequests(
+        $result = $this->dao->getPaginatedPullRequests(
             self::REPOSITORY_ID,
             new SearchCriteria(null, new AuthorCriterion(self::BOB_USER_ID)),
             self::LIMIT,
             self::OFFSET,
         );
 
-        self::assertSame(array_column($pull_requests, "id"), [
+        self::assertSame(array_column($result->pull_requests, "id"), [
             $this->merged_pull_request_id,
         ]);
+        self::assertEquals(1, $result->total_size);
     }
 
     public function testItAppliesAllTheFilters(): void
     {
-        $pull_requests = $this->dao->getPaginatedPullRequests(
+        $result = $this->dao->getPaginatedPullRequests(
             self::REPOSITORY_ID,
             new SearchCriteria(
                 StatusCriterion::CLOSED,
@@ -124,7 +128,7 @@ final class DaoTest extends TestCase
             self::OFFSET,
         );
 
-        self::assertSame(array_column($pull_requests, "id"), [
+        self::assertSame(array_column($result->pull_requests, "id"), [
             $this->abandoned_pull_request_id,
         ]);
     }
