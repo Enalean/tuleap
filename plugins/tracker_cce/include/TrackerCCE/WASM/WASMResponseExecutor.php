@@ -20,16 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User;
+namespace Tuleap\TrackerCCE\WASM;
 
-final class CCEUser extends \PFUser
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\Tracker\Artifact\Artifact;
+
+interface WASMResponseExecutor
 {
-    public const ID = 70;
-
-    public function __construct()
-    {
-        parent::__construct([
-            'user_id' => self::ID,
-        ]);
-    }
+    /**
+     * @return Ok<null>|Err<Fault>
+     */
+    public function executeResponse(WASMResponseRepresentation $response, Artifact $artifact): Ok | Err;
 }
