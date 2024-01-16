@@ -65,60 +65,20 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithReverseLink;
  */
 final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
 {
-    /** @var EqualComparisonFromWhereBuilder */
-    private $equal_comparison_from_where_builder;
-
-    /** @var FromWhereSearchableVisitor */
-    private $searchable_visitor;
-
-    /** @var NotEqualComparisonFromWhereBuilder */
-    private $not_equal_comparison_from_where_builder;
-
-    /** @var GreaterThanComparisonFromWhereBuilder */
-    private $greater_than_comparison_from_where_builder;
-
-    /** @var GreaterThanOrEqualComparisonFromWhereBuilder */
-    private $greater_than_or_equal_comparison_from_where_builder;
-
-    /** @var LesserThanComparisonFromWhereBuilder */
-    private $lesser_than_comparison_from_where_builder;
-
-    /** @var LesserThanOrEqualComparisonFromWhereBuilder */
-    private $lesser_than_or_equal_comparison_from_where_builder;
-
-    /** @var BetweenComparisonFromWhereBuilder */
-    private $between_comparison_from_where_builder;
-
-    /** @var InComparisonFromWhereBuilder */
-    private $in_comparison_from_where_builder;
-
-    /** @var NotInComparisonFromWhereBuilder */
-    private $not_in_comparison_from_where_builder;
-
     public function __construct(
-        FromWhereSearchableVisitor $searchable_visitor,
-        EqualComparisonFromWhereBuilder $equal_comparison_from_where_builder,
-        NotEqualComparisonFromWhereBuilder $not_equal_comparison_from_where_builder,
-        GreaterThanComparisonFromWhereBuilder $greater_than_comparison_from_where_builder,
-        GreaterThanOrEqualComparisonFromWhereBuilder $greater_than_or_equal_comparison_from_where_builder,
-        LesserThanComparisonFromWhereBuilder $lesser_than_comparison_from_where_builder,
-        LesserThanOrEqualComparisonFromWhereBuilder $lesser_than_or_equal_comparison_from_where_builder,
-        BetweenComparisonFromWhereBuilder $between_comparison_from_where_builder,
-        InComparisonFromWhereBuilder $in_comparison_from_where_builder,
-        NotInComparisonFromWhereBuilder $not_in_comparison_from_where_builder,
+        private readonly FromWhereSearchableVisitor $searchable_visitor,
+        private readonly EqualComparisonFromWhereBuilder $equal_comparison_from_where_builder,
+        private readonly NotEqualComparisonFromWhereBuilder $not_equal_comparison_from_where_builder,
+        private readonly GreaterThanComparisonFromWhereBuilder $greater_than_comparison_from_where_builder,
+        private readonly GreaterThanOrEqualComparisonFromWhereBuilder $greater_than_or_equal_comparison_from_where_builder,
+        private readonly LesserThanComparisonFromWhereBuilder $lesser_than_comparison_from_where_builder,
+        private readonly LesserThanOrEqualComparisonFromWhereBuilder $lesser_than_or_equal_comparison_from_where_builder,
+        private readonly BetweenComparisonFromWhereBuilder $between_comparison_from_where_builder,
+        private readonly InComparisonFromWhereBuilder $in_comparison_from_where_builder,
+        private readonly NotInComparisonFromWhereBuilder $not_in_comparison_from_where_builder,
         private readonly ReverseLinkFromWhereBuilder $reverse_link_from_where_builder,
         private readonly ForwardLinkFromWhereBuilder $forward_link_from_where_builder,
     ) {
-        $this->searchable_visitor                                  = $searchable_visitor;
-        $this->equal_comparison_from_where_builder                 = $equal_comparison_from_where_builder;
-        $this->not_equal_comparison_from_where_builder             = $not_equal_comparison_from_where_builder;
-        $this->greater_than_comparison_from_where_builder          = $greater_than_comparison_from_where_builder;
-        $this->greater_than_or_equal_comparison_from_where_builder = $greater_than_or_equal_comparison_from_where_builder;
-        $this->lesser_than_comparison_from_where_builder           = $lesser_than_comparison_from_where_builder;
-        $this->lesser_than_or_equal_comparison_from_where_builder  = $lesser_than_or_equal_comparison_from_where_builder;
-        $this->between_comparison_from_where_builder               = $between_comparison_from_where_builder;
-        $this->in_comparison_from_where_builder                    = $in_comparison_from_where_builder;
-        $this->not_in_comparison_from_where_builder                = $not_in_comparison_from_where_builder;
     }
 
     /**
