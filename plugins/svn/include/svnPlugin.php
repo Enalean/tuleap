@@ -311,13 +311,12 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         $this->updateAllAccessFileOfProject($event->getProject(), null, null);
     }
 
-    private function updateAllAccessFileOfProject(Project $project, $new_ugroup_name, $old_ugroup_name)
+    private function updateAllAccessFileOfProject(Project $project, ?string $new_ugroup_name, ?string $old_ugroup_name): void
     {
         $list_repositories = $this->getRepositoryManager()->getRepositoriesInProject($project);
         foreach ($list_repositories as $repository) {
             $this->getBackendSVN()->updateSVNAccessForRepository(
-                $project,
-                $repository->getSystemPath(),
+                $repository,
                 $new_ugroup_name,
                 $old_ugroup_name,
             );

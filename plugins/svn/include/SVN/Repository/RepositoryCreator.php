@@ -131,18 +131,9 @@ class RepositoryCreator
         array $initial_repository_layout,
         $copy_from_core,
     ): ?SystemEvent_SVN_CREATE_REPOSITORY {
-        $repo_event['system_path']    = $svn_repository->getSystemPath();
-        $repo_event['project_id']     = $svn_repository->getProject()->getId();
-        $repo_event['name']           = $svn_repository->getProject()->getUnixNameMixedCase() . "/" .
-            $svn_repository->getName();
-        $repo_event['repository_id']  = $svn_repository->getId();
-        $repo_event['initial_layout'] = $initial_repository_layout;
-        $repo_event['user_id']        = $committer->getId();
-        $repo_event['copy_from_core'] = $copy_from_core;
-
         $event = $this->system_event_manager->createEvent(
             SystemEvent_SVN_CREATE_REPOSITORY::class,
-            SystemEvent_SVN_CREATE_REPOSITORY::serializeParameters($repo_event),
+            SystemEvent_SVN_CREATE_REPOSITORY::serializeParameters($svn_repository, $committer, $initial_repository_layout, (bool) $copy_from_core),
             SystemEvent::PRIORITY_HIGH
         );
         assert($event instanceof SystemEvent_SVN_CREATE_REPOSITORY || $event === null);

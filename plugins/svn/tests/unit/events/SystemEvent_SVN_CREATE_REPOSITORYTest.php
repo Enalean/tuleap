@@ -20,9 +20,12 @@
 
 namespace Tuleap\SVN\Events;
 
+use Tuleap\SVN\Repository\SvnRepository;
 use Tuleap\SVNCore\Repository;
 use Tuleap\SVNCore\Exception\SVNRepositoryCreationException;
 use Tuleap\SVNCore\Exception\SVNRepositoryLayoutInitializationException;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class SystemEvent_SVN_CREATE_REPOSITORYTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -53,12 +56,9 @@ final class SystemEvent_SVN_CREATE_REPOSITORYTest extends \Tuleap\Test\PHPUnit\T
 
     public function testItRetrievesParameters(): void
     {
-        $parameters            = [
-            'system_path' => '/var/lib/tuleap/svn_plugin/101/test',
-            'project_id'  => 101,
-            'name'        => 'project1/stuff',
-        ];
-        $serialized_parameters = SystemEvent_SVN_CREATE_REPOSITORY::serializeParameters($parameters);
+        $repository            = SvnRepository::buildActiveRepository(15, 'foo', ProjectTestBuilder::aProject()->withId(222)->build());
+        $committer             = UserTestBuilder::anActiveUser()->withId(777)->build();
+        $serialized_parameters = SystemEvent_SVN_CREATE_REPOSITORY::serializeParameters($repository, $committer, [], false);
 
         $system_event = new SystemEvent_SVN_CREATE_REPOSITORY(
             1,
@@ -73,45 +73,28 @@ final class SystemEvent_SVN_CREATE_REPOSITORYTest extends \Tuleap\Test\PHPUnit\T
             'Log'
         );
 
-        self::assertEquals(array_values($parameters), $system_event->getParametersAsArray());
-    }
-
-    public function testItRetrievesParametersInStandardFormat(): void
-    {
-        $parameters                            = [
-            'system_path' => '/var/lib/tuleap/svn_plugin/101/test',
-            'project_id'  => 101,
-            'name'        => 'project1/stuff',
-        ];
-        $serialized_parameters_standard_format = implode(\SystemEvent::PARAMETER_SEPARATOR, $parameters);
-
-        $system_event = new SystemEvent_SVN_CREATE_REPOSITORY(
-            1,
-            'Type',
-            \SystemEvent::OWNER_ROOT,
-            $serialized_parameters_standard_format,
-            \SystemEvent::PRIORITY_HIGH,
-            \SystemEvent::STATUS_NEW,
-            '2017-07-26 12:00:00',
-            '0000-00-00 00:00:00',
-            '0000-00-00 00:00:00',
-            'Log'
+        self::assertEquals(
+            [
+                15,
+                777,
+                [],
+                false,
+            ],
+            $system_event->getParametersAsArray()
         );
-
-        self::assertEquals(array_values($parameters), $system_event->getParametersAsArray());
     }
 
     public function testItMarksTheEventAsDoneWhenTheRepositoryIsSuccessfullyCreated(): void
     {
         $system_event = $this->getMockBuilder(SystemEvent_SVN_CREATE_REPOSITORY::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(['done', 'getRequiredParameter', 'getParameters'])
+            ->onlyMethods(['done'])
             ->getMock();
 
         $this->user_manager->method('getUserById')->willReturn($this->createMock(\PFUser::class));
-        $this->backend_svn->method('createRepositorySVN')->willReturn(true);
+        $this->backend_svn->expects($this->once())->method('createRepositorySVN');
         $this->access_file_history_creator->method('useAVersion')->willReturn(true);
-        $this->repository_manager->method('getRepositoryById')->willReturn($this->createMock(Repository::class));
+        $this->repository_manager->method('getRepositoryById')->with(15)->willReturn($this->createMock(Repository::class));
 
         $system_event->injectDependencies(
             $this->access_file_history_creator,
@@ -122,8 +105,15 @@ final class SystemEvent_SVN_CREATE_REPOSITORYTest extends \Tuleap\Test\PHPUnit\T
         );
 
         $system_event->expects(self::once())->method('done');
-        $system_event->method('getRequiredParameter')->willReturn(1);
-        $system_event->method('getParameters')->willReturn('');
+
+        $system_event->setParameters(
+            SystemEvent_SVN_CREATE_REPOSITORY::serializeParameters(
+                SvnRepository::buildActiveRepository(15, 'foo', ProjectTestBuilder::aProject()->build()),
+                UserTestBuilder::anActiveUser()->build(),
+                [],
+                false,
+            )
+        );
 
         $system_event->process();
     }
@@ -132,11 +122,12 @@ final class SystemEvent_SVN_CREATE_REPOSITORYTest extends \Tuleap\Test\PHPUnit\T
     {
         $system_event = $this->getMockBuilder(SystemEvent_SVN_CREATE_REPOSITORY::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(['done', 'error', 'getRequiredParameter', 'getParameters'])
+            ->onlyMethods(['done', 'error'])
             ->getMock();
 
         $this->user_manager->method('getUserById')->willReturn($this->createMock(\PFUser::class));
         $this->backend_svn->method('createRepositorySVN')->willThrowException(new SVNRepositoryCreationException());
+        $this->repository_manager->method('getRepositoryById')->willReturn(SvnRepository::buildActiveRepository(15, 'foo', ProjectTestBuilder::aProject()->build()));
 
         $system_event->injectDependencies(
             $this->access_file_history_creator,
@@ -148,8 +139,14 @@ final class SystemEvent_SVN_CREATE_REPOSITORYTest extends \Tuleap\Test\PHPUnit\T
 
         $system_event->expects(self::once())->method('error');
         $system_event->expects(self::never())->method('done');
-        $system_event->method('getRequiredParameter')->willReturn([]);
-        $system_event->method('getParameters')->willReturn('');
+        $system_event->setParameters(
+            SystemEvent_SVN_CREATE_REPOSITORY::serializeParameters(
+                SvnRepository::buildActiveRepository(15, 'foo', ProjectTestBuilder::aProject()->build()),
+                UserTestBuilder::anActiveUser()->build(),
+                [],
+                false,
+            )
+        );
 
         $system_event->process();
     }
@@ -158,11 +155,12 @@ final class SystemEvent_SVN_CREATE_REPOSITORYTest extends \Tuleap\Test\PHPUnit\T
     {
         $system_event = $this->getMockBuilder(SystemEvent_SVN_CREATE_REPOSITORY::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(['done', 'warning', 'getRequiredParameter', 'getParameters'])
+            ->onlyMethods(['done', 'warning'])
             ->getMock();
 
         $this->user_manager->method('getUserById')->willReturn($this->createMock(\PFUser::class));
         $this->backend_svn->method('createRepositorySVN')->willThrowException(new SVNRepositoryLayoutInitializationException());
+        $this->repository_manager->method('getRepositoryById')->willReturn(SvnRepository::buildActiveRepository(15, 'foo', ProjectTestBuilder::aProject()->build()));
 
         $system_event->injectDependencies(
             $this->access_file_history_creator,
@@ -174,8 +172,17 @@ final class SystemEvent_SVN_CREATE_REPOSITORYTest extends \Tuleap\Test\PHPUnit\T
 
         $system_event->expects(self::once())->method('warning');
         $system_event->expects(self::never())->method('done');
-        $system_event->method('getRequiredParameter')->willReturn([]);
-        $system_event->method('getParameters')->willReturn('');
+        $system_event->setParameters(
+            SystemEvent_SVN_CREATE_REPOSITORY::serializeParameters(
+                SvnRepository::buildActiveRepository(15, 'foo', ProjectTestBuilder::aProject()->build()),
+                UserTestBuilder::anActiveUser()->build(),
+                [
+                    '/trunk',
+                    '/tags',
+                ],
+                false,
+            )
+        );
 
         $system_event->process();
     }

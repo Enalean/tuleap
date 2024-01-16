@@ -21,12 +21,15 @@
 
 use Tuleap\SVNCore\AccessFileReader;
 use Tuleap\SVNCore\GetAllRepositories;
+use Tuleap\SVNCore\Repository;
 use Tuleap\SVNCore\SVNAccessFile;
+use Tuleap\SVNCore\SvnAccessFileContent;
 use Tuleap\SVNCore\SvnAccessFileDefaultBlockGenerator;
 use Tuleap\SVNCore\Exception\SVNRepositoryCreationException;
 use Tuleap\SVNCore\Exception\SVNRepositoryLayoutInitializationException;
 use Tuleap\SVNCore\Cache\ParameterDao;
 use Tuleap\SVNCore\Cache\ParameterRetriever;
+use Tuleap\SVNCore\SVNAccessFileWriter;
 use Tuleap\URI\URIModifier;
 
 class BackendSVN extends Backend
@@ -59,22 +62,23 @@ class BackendSVN extends Backend
     /**
      * @throws SVNRepositoryCreationException
      * @throws SVNRepositoryLayoutInitializationException
+     * @throws BackendSVNFileForSimlinkAlreadyExistsException
      */
-    public function createRepositorySVN($project_id, $svn_dir, $hook_commit_path, PFUser $user, array $initial_layout)
+    public function createRepositorySVN(Repository $repository, $hook_commit_path, PFUser $user, array $initial_layout): void
     {
-        if (! $this->createRepository($project_id, $svn_dir)) {
+        if (! $this->createRepository($repository->getProject()->getID(), $repository->getSystemPath())) {
             throw new SVNRepositoryCreationException(_('Could not create/initialize SVN repository'));
         }
 
         $exception = null;
         try {
-            $this->createDirectoryLayout($project_id, $svn_dir, $user, $initial_layout);
+            $this->createDirectoryLayout($repository->getProject()->getID(), $repository->getSystemPath(), $user, $initial_layout);
         } catch (SVNRepositoryLayoutInitializationException $layout_initialization_exception) {
             $exception = $layout_initialization_exception;
         }
 
         $params = [
-            'project_id' => $project_id,
+            'project_id' => $repository->getProject()->getID(),
         ];
 
         EventManager::instance()->processEvent(
@@ -82,12 +86,10 @@ class BackendSVN extends Backend
             $params
         );
 
-        $project = $this->getProjectManager()->getProject($project_id);
-
         if (
             ! $this->updateHooks(
-                $project,
-                $svn_dir,
+                $repository->getProject(),
+                $repository->getSystemPath(),
                 true,
                 $hook_commit_path,
                 'svn_post_commit.php',
@@ -98,7 +100,8 @@ class BackendSVN extends Backend
             throw new SVNRepositoryCreationException(_('Could not update hooks of the SVN repository'));
         }
 
-        if (! $this->createSVNAccessFile($project_id, $svn_dir)) {
+        if (! $this->updateSVNAccessForRepository($repository, null, null)) {
+            $this->log("Can't update SVN access file", Backend::LOG_ERROR);
             throw new SVNRepositoryCreationException(_('Could not the access file of the SVN repository'));
         }
 
@@ -126,18 +129,6 @@ class BackendSVN extends Backend
 
             $this->setUserAndGroup($project, $system_path);
             system("chmod g+rw " . escapeshellarg($system_path));
-        }
-
-        return true;
-    }
-
-    private function createSVNAccessFile($group_id, $system_path)
-    {
-        $project = $this->getProjectManager()->getProject($group_id);
-
-        if (! $this->updateSVNAccessForRepository($project, $system_path, null, null)) {
-            $this->log("Can't update SVN access file", Backend::LOG_ERROR);
-            return false;
         }
 
         return true;
@@ -302,105 +293,21 @@ class BackendSVN extends Backend
         return true;
     }
 
-    public function updateSVNAccessForRepository(Project $project, $system_path, $ugroup_name, $ugroup_old_name)
+    public function updateSVNAccessForRepository(Repository $repository, ?string $ugroup_name, ?string $ugroup_old_name): bool
     {
-        $contents = $this->getCustomPermission($system_path);
-
-        return $this->updateCustomSVNAccessForRepository($project, $system_path, $ugroup_name, $ugroup_old_name, $contents);
+        $reader      = new AccessFileReader(SvnAccessFileDefaultBlockGenerator::instance());
+        $access_file = $reader->getAccessFileContent($repository);
+        return $this->updateCustomSVNAccessForRepository($repository, $access_file, $ugroup_name, $ugroup_old_name);
     }
 
-    public function updateCustomSVNAccessForRepository(Project $project, $system_path, $ugroup_name, $ugroup_old_name, $contents)
+    public function updateCustomSVNAccessForRepository(Repository $repository, SvnAccessFileContent $access_file, ?string $ugroup_name, ?string $ugroup_old_name): bool
     {
-        $svn_access_file = new SVNAccessFile(SvnAccessFileDefaultBlockGenerator::instance()->getDefaultBlock($project));
-
-        $custom_perms = $this->getCustomPermissionForProject($svn_access_file, $contents, $ugroup_name, $ugroup_old_name);
-
-        return $this->updateSVNAccessFile($system_path, $custom_perms, $project);
-    }
-
-    private function getSvnAccessFile($system_path)
-    {
-        return $system_path . "/.SVNAccessFile";
-    }
-
-    private function getDefaultBlocEnd(): string
-    {
-        return AccessFileReader::END_MARKER . "\n";
-    }
-
-    private function getDefaultBlockStart(): string
-    {
-        // if you change these block markers also change them in src/www/svn/svn_utils.php
-        return AccessFileReader::BEGIN_MARKER . "\n";
-    }
-
-    private function getCustomPermission($system_path): string
-    {
-        $contents = '';
-        if (is_file($this->getSvnAccessFile($system_path))) {
-            $svnaccess_array = file($this->getSvnAccessFile($system_path));
-            $configlines     = false;
-
-            while ($line = array_shift($svnaccess_array)) {
-                if ($configlines) {
-                    $contents .= $line;
-                }
-                if (strcmp($line, $this->getDefaultBlocEnd()) == 0) {
-                    $configlines = 1;
-                }
-            }
-        }
-
-        return $contents;
-    }
-
-    private function getDefaultBlock(Project $project): string
-    {
-        return SvnAccessFileDefaultBlockGenerator::instance()->getDefaultBlock($project)->content;
-    }
-
-    private function getCustomPermissionForProject(SVNAccessFile $svn_access_file, $contents, $ugroup_name, $ugroup_old_name): string
-    {
-        $svn_access_file->setRenamedGroup($ugroup_name, $ugroup_old_name);
-        return $svn_access_file->parseGroupLines($contents)->contents;
-    }
-
-    private function updateSVNAccessFile($system_path, $custom_perms, Project $project)
-    {
-        if (! is_dir($system_path)) {
-            $this->log("Can't update SVN Access file: project SVN repo is missing: " . $system_path, Backend::LOG_ERROR);
-            return false;
-        }
-
-        $svnaccess_file     = $this->getSvnAccessFile($system_path);
-        $svnaccess_file_old = $this->getSvnAccessFile($system_path) . ".old";
-        $svnaccess_file_new = $this->getSvnAccessFile($system_path) . ".new";
-
-
-        // Retrieve custom permissions, if any
-        $fp = fopen($svnaccess_file_new, 'w');
-
-        // Codendi specifc
-        fwrite($fp, $this->getDefaultBlockStart());
-        fwrite($fp, $this->getDefaultBlock($project));
-        fwrite($fp, $this->getDefaultBlocEnd());
-
-        // Custom permissions
-        if ($custom_perms) {
-            fwrite($fp, $custom_perms);
-        }
-        fclose($fp);
-
-        // Backup existing file and install new one if they are different
-        $this->installNewFileVersion($svnaccess_file_new, $svnaccess_file, $svnaccess_file_old);
-
-        // set group ownership, admin user as owner so that
-        // PHP scripts can write to it directly
-        $this->chown($svnaccess_file, $this->getHTTPUser());
-        $this->chgrp($svnaccess_file, $this->getSvnFilesUnixGroupName($project));
-        chmod("$svnaccess_file", 0775);
-
-         return true;
+        $svn_access_file          = new SVNAccessFile();
+        $cleaned_content          = $svn_access_file->parseGroupLines($access_file, $ugroup_name, $ugroup_old_name)->contents;
+        $clean_svn_access_content = new SvnAccessFileContent($access_file->default, $cleaned_content);
+        $writer                   = new SVNAccessFileWriter();
+        $writer->writeWithDefaults($repository, $clean_svn_access_content);
+        return true;
     }
 
     /**

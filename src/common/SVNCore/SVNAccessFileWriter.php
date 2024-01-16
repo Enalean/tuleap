@@ -20,6 +20,7 @@
 
 namespace Tuleap\SVNCore;
 
+use ForgeConfig;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
@@ -30,12 +31,14 @@ class SVNAccessFileWriter
     /**
      * @psalm-return Ok<null>|Err<SVNAccessFileWriteFault>
      */
-    public function writeWithDefaults(Repository $repository, SvnAccessFileDefaultBlock $default_block, string $contents): Ok|Err
+    public function writeWithDefaults(Repository $repository, SvnAccessFileContent $svn_contents): Ok|Err
     {
         $accessfile = $repository->getSystemPath() . '/' . AccessFileReader::FILENAME;
         try {
-            $svn_contents = new SvnAccessFileContent($default_block->content, $contents);
             FileWriter::writeFile($accessfile, $svn_contents->formatForSave(), 0644);
+            chown($accessfile, ForgeConfig::getApplicationUserLogin());
+            chgrp($accessfile, ForgeConfig::getApplicationUserLogin());
+
             return Result::ok(null);
         } catch (\Throwable $e) {
             return Result::err(SVNAccessFileWriteFault::fromWriteError($accessfile, $e));
