@@ -29,6 +29,7 @@ use Tuleap\SVN\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\SVNCore\Exception\SVNRepositoryCreationException;
 use Tuleap\SVNCore\Exception\SVNRepositoryLayoutInitializationException;
+use Tuleap\SVNCore\Repository;
 
 class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent //phpcs:ignore
 {
@@ -70,76 +71,75 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent //phpcs:ignore
         $this->repository_copier           = $repository_copier;
     }
 
-    public function verbalizeParameters($with_link)
+    public function verbalizeParameters($with_link): string
     {
-        $path            = $this->getRequiredParameter(0);
-        $project_id      = $this->getRequiredParameter(1);
-        $repository_name = $this->getRequiredParameter(2);
-
-        $txt = 'project: ' . $this->verbalizeProjectId($project_id, $with_link) . ', path: ' . $path . ', name: ' . $repository_name;
-        return $txt;
+        return $this->parameters;
     }
 
-    public function process()
+    public function process(): bool
     {
-        $system_path    = $this->getRequiredParameter(0);
-        $project_id     = (int) $this->getRequiredParameter(1);
-        $repository_id  = $this->getRequiredParameter(3);
-        $initial_layout = $this->getParameter(4) ?: [];
-        $user           = $this->user_manager->getUserById($this->getParameter(5));
-        $copy_from_core = $this->getParameter(6);
-        if ($user === null) {
-            $user = $this->user_manager->getUserAnonymous();
-        }
-
         try {
+            $parameters = $this->getUnserializedParameters();
+
+            $user = $this->user_manager->getUserById($parameters['user_id']);
+            if ($user === null) {
+                $user = $this->user_manager->getUserAnonymous();
+            }
+
+            $repository = $this->repository_manager->getRepositoryById($parameters['repository_id']);
+
             $this->backend_svn->createRepositorySVN(
-                $project_id,
-                $system_path,
+                $repository,
                 ForgeConfig::get('tuleap_dir') . '/plugins/svn/bin/',
                 $user,
-                $initial_layout
+                $parameters['initial_layout'],
             );
-        } catch (SVNRepositoryLayoutInitializationException $exception) {
-            $this->warning($exception->getMessage());
-            return true;
-        } catch (SVNRepositoryCreationException $exception) {
-            $this->error($exception->getMessage());
-            return false;
-        }
 
-        try {
-            $repository = $this->repository_manager->getRepositoryById($repository_id);
-
-            if ($repository && $copy_from_core) {
+            if ($parameters['copy_from_core']) {
                 $this->repository_copier->copy($repository);
             } else {
                 $this->access_file_history_creator->useAVersion($repository, 1);
             }
-        } catch (CannotFindRepositoryException $e) {
-            //Do nothing
-        } catch (CannotCreateAccessFileHistoryException $e) {
-            //Do nothing
-        }
 
-        $this->done();
-        return true;
+            $this->done();
+            return true;
+        } catch (SVNRepositoryLayoutInitializationException | CannotCreateAccessFileHistoryException $exception) {
+            $this->warning($exception->getMessage());
+            return true;
+        } catch (SVNRepositoryCreationException | CannotFindRepositoryException $exception) {
+            $this->error($exception->getMessage());
+            return false;
+        }
     }
 
     /**
-     * @return string
+     * @return array{repository_id: int, initial_layout: array, user_id: int, copy_from_core: bool}
+     * @throws \JsonException
      */
-    public static function serializeParameters(array $parameters)
+    private function getUnserializedParameters(): array
     {
-        return json_encode($parameters);
+        return json_decode($this->getParameters(), true, 512, JSON_THROW_ON_ERROR);
+    }
+
+    /**
+     * @throws \JsonException
+     */
+    public static function serializeParameters(Repository $repository, \PFUser $committer, array $initial_repository_layout, bool $copy_from_core): string
+    {
+        return json_encode([
+            'repository_id'  => $repository->getId(),
+            'user_id'        => (int) $committer->getId(),
+            'initial_layout' => $initial_repository_layout,
+            'copy_from_core' => $copy_from_core,
+        ], JSON_THROW_ON_ERROR);
     }
 
     public function getParametersAsArray()
     {
-        $unserialized_parameters = json_decode($this->getParameters(), true);
-        if ($unserialized_parameters === null) {
-            return parent::getParametersAsArray();
+        try {
+            return array_values($this->getUnserializedParameters());
+        } catch (\JsonException) {
+            return [];
         }
-        return array_values($unserialized_parameters);
     }
 }

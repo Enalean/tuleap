@@ -18,7 +18,7 @@
  */
 
 use Tuleap\SVNCore\SVNAccessFile;
-use Tuleap\SVNCore\SvnAccessFileDefaultBlock;
+use Tuleap\SVNCore\SvnAccessFileContent;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 final class SVNAccessFileTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -28,25 +28,24 @@ final class SVNAccessFileTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testRenameGroup(string $old_group, string $new_group, string $source_access_file, string $expected_access_file): void
     {
-        $saf = new SVNAccessFile(
-            new SvnAccessFileDefaultBlock(
-                <<<EOT
-                    [groups]
-                    members = user1, user2
-                    ugroup1 = user1
-                    ugroup2 = user2
-                    ugroup3 = user1, user2
+        $saf = new SVNAccessFile();
 
-                    [/]
-                    * =
-                    @members = rw
-                    EOT
-            )
+        $access_file_content = new SvnAccessFileContent(
+            <<<EOT
+            [groups]
+            members = user1, user2
+            ugroup1 = user1
+            ugroup2 = user2
+            ugroup3 = user1, user2
+
+            [/]
+            * =
+            @members = rw
+            EOT,
+            $source_access_file,
         );
 
-        $saf->setRenamedGroup($new_group, $old_group);
-
-        $result = $saf->parseGroupLines($source_access_file);
+        $result = $saf->parseGroupLines($access_file_content, $new_group, $old_group);
         self::assertEquals($expected_access_file, $result->contents);
     }
 
@@ -101,21 +100,22 @@ final class SVNAccessFileTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testParseGroupLines(string $source, string $expected): void
     {
-        $saf = new SVNAccessFile(
-            new SvnAccessFileDefaultBlock(
-                <<<EOT
-                [groups]
-                members = user1, user2
-                uGroup1 = user3
+        $saf = new SVNAccessFile();
 
-                [/]
-                *=
-                @members=rw
-                EOT
-            )
+        $access_file_content = new SvnAccessFileContent(
+            <<<EOT
+            [groups]
+            members = user1, user2
+            uGroup1 = user3
+
+            [/]
+            *=
+            @members=rw
+            EOT,
+            $source,
         );
 
-        $this->assertEquals($expected, $saf->parseGroupLines($source)->contents);
+        $this->assertEquals($expected, $saf->parseGroupLines($access_file_content)->contents);
     }
 
     public static function getSvnAccessFileSamples(): iterable

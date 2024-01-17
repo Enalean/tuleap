@@ -55,9 +55,6 @@ class SVNAccessFile
      */
     private ?string $ugroupOldName = null;
 
-    public function __construct(private readonly SvnAccessFileDefaultBlock $platformBlock)
-    {
-    }
 
     /**
      * Detect if a line is correctly formatted and corresponds to a defined group
@@ -147,20 +144,22 @@ class SVNAccessFile
     /**
      * Update renamed ugroup line or comment invalid ugroup lines for all lines of .SVNAccessFile
      */
-    public function parseGroupLines(string $contents): SVNAccessFileContentAndFaults
+    public function parseGroupLines(SvnAccessFileContent $access_file_content, ?string $ugroup_name = null, ?string $ugroup_old_name = null): SVNAccessFileContentAndFaults
     {
-        $faults = new CollectionOfSVNAccessFileFaults();
-        return $this->parse($contents, $faults);
+        $faults              = new CollectionOfSVNAccessFileFaults();
+        $this->ugroupNewName = $ugroup_name;
+        $this->ugroupOldName = $ugroup_old_name;
+        return $this->parse($access_file_content, $faults);
     }
 
-    private function parse(string $contents, CollectionOfSVNAccessFileFaults $faults): SVNAccessFileContentAndFaults
+    private function parse(SvnAccessFileContent $access_file_content, CollectionOfSVNAccessFileFaults $faults): SVNAccessFileContentAndFaults
     {
-        return new SVNAccessFileContentAndFaults($this->parseGroup($contents, $faults), $faults);
+        return new SVNAccessFileContentAndFaults($this->parseGroup($access_file_content, $faults), $faults);
     }
 
-    private function parseGroup(string $contents, CollectionOfSVNAccessFileFaults $faults): string
+    private function parseGroup(SvnAccessFileContent $access_file_content, CollectionOfSVNAccessFileFaults $faults): string
     {
-        $defaultLines   = explode("\n", $this->platformBlock->content);
+        $defaultLines   = explode("\n", $access_file_content->default);
         $groups         = [];
         $currentSection = -1;
         foreach ($defaultLines as $line) {
@@ -169,7 +168,7 @@ class SVNAccessFile
                 $groups = $this->accumulateDefinedGroups($groups, $line, true);
             }
         }
-        $lines         = explode("\n", $contents);
+        $lines         = explode("\n", $access_file_content->project_defined);
         $validContents = '';
         foreach ($lines as $line) {
             $currentSection = $this->getCurrentSection($line, $currentSection);
@@ -226,15 +225,6 @@ class SVNAccessFile
             $currentSection = -1;
         }
         return $currentSection;
-    }
-
-    /**
-     * Set the group to rename
-     */
-    public function setRenamedGroup(?string $ugroupNewName, ?string $ugroupOldName): void
-    {
-        $this->ugroupNewName = $ugroupNewName;
-        $this->ugroupOldName = $ugroupOldName;
     }
 
     /**

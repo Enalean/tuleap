@@ -89,6 +89,7 @@ final class AccessFileHistoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->access_file_factory->method('getLastVersion')->with($this->repository)->willReturn($access_file_history);
 
         ForgeConfig::set('svn_root_file', 'svn_root_file');
+        ForgeConfig::set('sys_http_user', getmyuid());
     }
 
     public function testItUpdatesAccessFile(): void

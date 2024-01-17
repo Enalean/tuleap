@@ -20,6 +20,7 @@
 
 namespace Tuleap\SVN\AccessControl;
 
+use Tuleap\SVNCore\SvnAccessFileContent;
 use Tuleap\SVNCore\SVNAccessFileWriteFault;
 use Tuleap\SVNCore\SVNAccessFileWriter;
 use Tuleap\SVNCore\SVNAccessFile;
@@ -89,8 +90,12 @@ class AccessFileHistoryCreator
 
     private function cleanContent(Repository $repository, string $content): SVNAccessFileContentAndFaults
     {
-        $access_file = new SVNAccessFile($this->default_block_generator->getDefaultBlock($repository->getProject()));
-        return $access_file->parseGroupLines(trim($content));
+        $access_file         = new SVNAccessFile();
+        $access_file_content = new SvnAccessFileContent(
+            $this->default_block_generator->getDefaultBlock($repository->getProject())->content,
+            trim($content),
+        );
+        return $access_file->parseGroupLines($access_file_content);
     }
 
     /**
@@ -98,11 +103,14 @@ class AccessFileHistoryCreator
      */
     public function saveAccessFile(Repository $repository, AccessFileHistory $history): void
     {
-        $access_file_writer = new SVNAccessFileWriter();
+        $access_file_writer  = new SVNAccessFileWriter();
+        $access_file_content = new SvnAccessFileContent(
+            $this->default_block_generator->getDefaultBlock($repository->getProject())->content,
+            $history->getContent(),
+        );
         $access_file_writer->writeWithDefaults(
             $repository,
-            $this->default_block_generator->getDefaultBlock($repository->getProject()),
-            $history->getContent()
+            $access_file_content,
         )->mapErr(fn (SVNAccessFileWriteFault $fault) => throw new CannotCreateAccessFileHistoryException(
             sprintf(dgettext('tuleap-svn', 'Unable to write into file %1$s'), $fault->access_file)
         ));
