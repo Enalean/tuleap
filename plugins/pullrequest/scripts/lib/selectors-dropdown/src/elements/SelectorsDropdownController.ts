@@ -18,10 +18,14 @@
  */
 
 import { createDropdown } from "@tuleap/tlp-dropdown";
-import type { InternalSelectorsDropdown } from "./SelectorsDropdown";
+import { Option } from "@tuleap/option";
+import type { InternalSelectorsDropdown, SelectorEntry } from "./SelectorsDropdown";
 
 export type ControlSelectorsDropdown = {
     initDropdown(host: InternalSelectorsDropdown): void;
+    onDropdownShown(host: InternalSelectorsDropdown): void;
+    onDropdownHidden(host: InternalSelectorsDropdown): void;
+    openSidePanel(host: InternalSelectorsDropdown, selector: SelectorEntry): void;
 };
 
 export const SelectorsDropdownController = (): ControlSelectorsDropdown => ({
@@ -29,5 +33,15 @@ export const SelectorsDropdownController = (): ControlSelectorsDropdown => ({
         createDropdown(host.dropdown_button_element, {
             dropdown_menu: host.dropdown_content_element,
         });
+    },
+    onDropdownShown: (host): void => {
+        host.is_dropdown_shown = true;
+    },
+    onDropdownHidden: (host): void => {
+        host.is_dropdown_shown = false;
+        host.active_selector = Option.nothing();
+    },
+    openSidePanel: (host, selector): void => {
+        host.active_selector = Option.fromValue(selector);
     },
 });

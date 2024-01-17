@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@tuleap/dom": "workspace:*",
+    "@tuleap/option": "workspace:*",
     "@tuleap/tlp-dropdown": "workspace:*",
     "hybrids": "^8.2.2"
   },

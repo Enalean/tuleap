@@ -1,13 +1,12 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: false
-  excludeLinksFromLockfile: false
-
 dependencies:
   '@tuleap/dom':
     specifier: workspace:*
     version: link:../../../../../lib/frontend/dom
+  '@tuleap/option':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/option
   '@tuleap/tlp-dropdown':
     specifier: workspace:*
     version: link:../../../../../lib/frontend/tlp-dropdown
@@ -27,3 +26,7 @@ packages:
     engines: {node: '>=18.0.0'}
     hasBin: true
     dev: false
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false

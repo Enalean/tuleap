@@ -20,33 +20,76 @@
 import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import type { InternalSelectorsDropdown, SelectorEntry } from "./SelectorsDropdown";
+import dropdown_styles from "../../themes/style.scss?inline";
 
 export const DROPDOWN_BUTTON_CLASSNAME = "selectors-dropdown-button";
 export const DROPDOWN_CONTENT_CLASSNAME = "selectors-dropdown-content";
 
-const renderMenuItem = (entry: SelectorEntry): UpdateFunction<InternalSelectorsDropdown> => html`
-    <a href="#" class="tlp-dropdown-menu-item" role="menuitem" data-test="menu-item"
-        >${entry.entry_name}</a
+const renderMenuItem = (
+    host: InternalSelectorsDropdown,
+    selector: SelectorEntry,
+): UpdateFunction<InternalSelectorsDropdown> => html`
+    <a
+        href="#"
+        class="tlp-dropdown-menu-item selectors-dropdown-menu-item"
+        role="menuitem"
+        data-test="menu-item"
+        onclick="${(): void => host.controller.openSidePanel(host, selector)}"
+    >
+        ${selector.entry_name}</a
     >
 `;
 
-export const renderContent = (
+const renderSidePanel = (
     host: InternalSelectorsDropdown,
-): UpdateFunction<InternalSelectorsDropdown> => html`
-    <div class="tlp-dropdown">
-        <button
-            type="button"
-            class="tlp-button-primary tlp-button-outline ${DROPDOWN_BUTTON_CLASSNAME}"
-            data-test="dropdown-button"
-        >
-            <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>${host.button_text}
-        </button>
+): UpdateFunction<InternalSelectorsDropdown> => {
+    if (!host.is_dropdown_shown) {
+        return html``;
+    }
+
+    return host.active_selector.match(
+        () => html` <div class="selectors-dropdown-side-panel" data-test="side-panel"></div> `,
+        () => html``,
+    );
+};
+
+const renderDropdownMenu = (
+    host: InternalSelectorsDropdown,
+): UpdateFunction<InternalSelectorsDropdown> => {
+    const items_classes = {
+        "selectors-dropdown-menu-items": true,
+        "selectors-dropdown-menu-items-with-side-panel": host.active_selector.isValue(),
+    };
+
+    return html`
         <div
             class="tlp-dropdown-menu ${DROPDOWN_CONTENT_CLASSNAME}"
             role="menu"
             data-test="dropdown-menu"
+            ontlp-dropdown-shown="${(): void => host.controller.onDropdownShown(host)}"
+            ontlp-dropdown-hidden="${(): void => host.controller.onDropdownHidden(host)}"
         >
-            ${host.selectors_entries.map(renderMenuItem)}
+            <div class="${items_classes}">
+                ${host.selectors_entries.map((selector) => renderMenuItem(host, selector))}
+            </div>
+            ${renderSidePanel(host)}
         </div>
-    </div>
-`;
+    `;
+};
+
+export const renderContent = (
+    host: InternalSelectorsDropdown,
+): UpdateFunction<InternalSelectorsDropdown> =>
+    html`
+        <div class="tlp-dropdown">
+            <button
+                type="button"
+                class="tlp-button-primary tlp-button-outline ${DROPDOWN_BUTTON_CLASSNAME}"
+                data-test="dropdown-button"
+            >
+                <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i
+                >${host.button_text}
+            </button>
+            ${renderDropdownMenu(host)}
+        </div>
+    `.style(dropdown_styles);
