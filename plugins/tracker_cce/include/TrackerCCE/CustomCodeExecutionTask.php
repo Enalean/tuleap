@@ -32,6 +32,8 @@ use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationTask;
 use Tuleap\Tracker\Webhook\ArtifactPayloadBuilder;
+use Tuleap\TrackerCCE\Logs\ModuleLogLine;
+use Tuleap\TrackerCCE\Logs\SaveModuleLog;
 use Tuleap\TrackerCCE\WASM\WASMModuleCaller;
 use Tuleap\TrackerCCE\WASM\WASMModulePathHelper;
 use Tuleap\TrackerCCE\WASM\WASMResponseExecutor;
@@ -47,6 +49,7 @@ final class CustomCodeExecutionTask implements PostCreationTask
         private readonly WASMModulePathHelper $module_path_helper,
         private readonly WASMModuleCaller $module_caller,
         private readonly WASMResponseExecutor $response_executor,
+        private readonly SaveModuleLog $log_dao,
     ) {
     }
 
@@ -59,22 +62,40 @@ final class CustomCodeExecutionTask implements PostCreationTask
             return;
         }
 
-        $payload = $this->payload_builder->buildPayload($changeset)->getPayload();
+        $source_payload    = psl_json_encode($this->payload_builder->buildPayload($changeset)->getPayload());
+        $generated_payload = '';
         $this->getWASMModulePath($changeset->getTracker())
             ->andThen(
             /** @psalm-return Ok<WASMResponseRepresentation>|Err<Fault> */
-                function (string $wasm_module_path) use ($payload): Ok | Err {
+                function (string $wasm_module_path) use ($source_payload): Ok | Err {
                     $this->logger->debug("Found module to execute: {$wasm_module_path}");
-                    return $this->module_caller->callWASMModule($wasm_module_path, psl_json_encode($payload));
+                    return $this->module_caller->callWASMModule($wasm_module_path, $source_payload);
                 }
             )
             ->andThen(
             /** @psalm-return Ok<null>|Err<Fault> */
-                function (WASMResponseRepresentation $response) use ($changeset): Ok | Err {
+                function (WASMResponseRepresentation $response) use ($changeset, &$generated_payload): Ok | Err {
+                    $generated_payload = $response;
                     return $this->response_executor->executeResponse($response, $changeset->getArtifact());
                 }
             )
-            ->mapErr(fn(Fault $fault) => Fault::writeToLogger($fault, $this->logger, LogLevel::WARNING));
+            ->match(
+                fn() => $this->log_dao->saveModuleLogLine(ModuleLogLine::buildPassed(
+                    (int) $changeset->getId(),
+                    $source_payload,
+                    psl_json_encode($generated_payload),
+                    (new \DateTimeImmutable())->getTimestamp(),
+                )),
+                function (Fault $fault) use ($changeset, $source_payload, $generated_payload) {
+                    Fault::writeToLogger($fault, $this->logger, LogLevel::WARNING);
+                    $this->log_dao->saveModuleLogLine(ModuleLogLine::buildError(
+                        (int) $changeset->getId(),
+                        $source_payload,
+                        (string) $fault,
+                        (new \DateTimeImmutable())->getTimestamp(),
+                    ));
+                }
+            );
 
         $this->logger->debug('CustomCodeExecutionTask finished');
     }
