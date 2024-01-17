@@ -35,13 +35,13 @@ class Dao extends DataAccessObject
         $this->getDB()->commit();
     }
 
-    public function addGitReadAccess($day, $repository_id, $user_id, $count)
+    public function addGitReadAccess(string $day, int $repository_id, int $user_id, int $count, int $day_last_access_timestamp): void
     {
-        $sql = 'INSERT INTO plugin_git_log_read_daily (repository_id, user_id, day, git_read)
-                VALUES (?, ?, ?, ?)
-                ON DUPLICATE KEY UPDATE git_read = git_read + ?';
+        $sql = 'INSERT INTO plugin_git_log_read_daily (repository_id, user_id, day, git_read, day_last_access_timestamp)
+                VALUES (?, ?, ?, ?, ?)
+                ON DUPLICATE KEY UPDATE git_read = git_read + ?, day_last_access_timestamp = ?';
 
-        $this->getDB()->run($sql, $repository_id, $user_id, $day, $count, $count);
+        $this->getDB()->run($sql, $repository_id, $user_id, $day, $count, $day_last_access_timestamp, $count, $day_last_access_timestamp);
     }
 
     public function searchStatistics($start_date, $end_date, $project_id = null)

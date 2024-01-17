@@ -239,8 +239,10 @@ CREATE TABLE IF NOT EXISTS plugin_git_log_read_daily (
   user_id int(11) NOT NULL,
   day int(11) UNSIGNED NOT NULL,
   git_read int(11) UNSIGNED NOT NULL default 0,
+  day_last_access_timestamp int(11) UNSIGNED NOT NULL,
   PRIMARY KEY (repository_id, user_id, day),
-  INDEX time_idx(day, repository_id)
+  INDEX time_idx(day, repository_id),
+  INDEX last_access_timestamp_idx(day_last_access_timestamp, repository_id)
 );
 
 CREATE TABLE plugin_git_file_logs_parse (

@@ -88,7 +88,7 @@ class Gitolite3LogParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
 
-        $this->history_dao->shouldReceive('addGitReadAccess')->with(20161004, 1, 101, 2)->once();
+        $this->history_dao->shouldReceive('addGitReadAccess')->with(20161004, 1, 101, 2, 1475566423)->once();
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
     }
 
@@ -97,7 +97,7 @@ class Gitolite3LogParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
 
-        $this->history_dao->shouldReceive('addGitReadAccess')->with(20161004, 1, 101, 2)->once();
+        $this->history_dao->shouldReceive('addGitReadAccess')->with(20161004, 1, 101, 2, 1475566423)->once();
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-11.log');
     }
 
@@ -135,7 +135,7 @@ class Gitolite3LogParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns(null);
 
-        $this->history_dao->shouldReceive('addGitReadAccess')->with(20161004, 1, 0, 2)->once();
+        $this->history_dao->shouldReceive('addGitReadAccess')->with(20161004, 1, 0, 2, 1475566423)->once();
 
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
     }
@@ -145,7 +145,7 @@ class Gitolite3LogParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
 
-        $this->history_dao->shouldReceive('addGitReadAccess')->with(20161004, 1, 101, 2)->once();
+        $this->history_dao->shouldReceive('addGitReadAccess')->with(20161004, 1, 101, 2, 1475566423)->once();
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
     }
 
