@@ -20,6 +20,8 @@
  */
 
 use Tuleap\Http\Client\FilteredOutboundHTTPResponseAlerter;
+use Tuleap\Queue\NbBackendWorkersConfigValidator;
+use Tuleap\Queue\WorkerAvailability;
 
 /**
 * System Event classes
@@ -95,6 +97,10 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent
         $this->warnWhenOutboundHTTPRequestsHaveBeenFiltered($logger);
 
         try {
+            NbBackendWorkersConfigValidator::buildSelf()->checkIsValid(
+                ForgeConfig::get(WorkerAvailability::NB_BACKEND_WORKERS_CONFIG_KEY)
+            );
+
             EventManager::instance()->processEvent(
                 Event::PROCCESS_SYSTEM_CHECK,
                 [
