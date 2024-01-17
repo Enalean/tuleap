@@ -31,9 +31,9 @@ class SVNAccessFileWriter
     /**
      * @psalm-return Ok<null>|Err<SVNAccessFileWriteFault>
      */
-    public function writeWithDefaults(Repository $repository, SvnAccessFileContent $svn_contents): Ok|Err
+    public function writeWithDefaults(Repository $repository, SVNAccessFileContent $svn_contents): Ok|Err
     {
-        $accessfile = $repository->getSystemPath() . '/' . AccessFileReader::FILENAME;
+        $accessfile = $repository->getSystemPath() . '/' . SVNAccessFileReader::FILENAME;
         try {
             FileWriter::writeFile($accessfile, $svn_contents->formatForSave(), 0644);
             chown($accessfile, ForgeConfig::getApplicationUserLogin());

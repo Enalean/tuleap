@@ -35,11 +35,11 @@ use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\UGroupRetriever;
 use UGroupManager;
 
-final class SvnAccessFileDefaultBlockGenerator implements SvnAccessFileDefaultBlockGeneratorInterface
+final class SVNAccessFileDefaultBlockGenerator implements SVNAccessFileDefaultBlockGeneratorInterface
 {
     private static ?self $instance;
     /**
-     * @var array<int, SvnAccessFileDefaultBlock>
+     * @var array<int, SVNAccessFileDefaultBlock>
      */
     private array $project_default_blocks_cache = [];
 
@@ -64,12 +64,12 @@ final class SvnAccessFileDefaultBlockGenerator implements SvnAccessFileDefaultBl
         return self::$instance;
     }
 
-    public function getDefaultBlock(Project $project): SvnAccessFileDefaultBlock
+    public function getDefaultBlock(Project $project): SVNAccessFileDefaultBlock
     {
         $project_id = (int) $project->getID();
         if (! isset($this->project_default_blocks_cache[$project_id])) {
             $default_block_plugin_override                   = $this->getDefaultBlockPluginOverride($project);
-            $this->project_default_blocks_cache[$project_id] = new SvnAccessFileDefaultBlock(
+            $this->project_default_blocks_cache[$project_id] = new SVNAccessFileDefaultBlock(
                 $this->getSVNAccessGroups($project, $default_block_plugin_override) . "\n" . $this->getSVNAccessRootPathDef($project, $default_block_plugin_override)
             );
         }

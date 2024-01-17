@@ -41,13 +41,13 @@ final class SVNAccessFileDefaultBlockGeneratorTest extends TestCase
         $event_manager = new \EventManager();
         $event_manager->addListener(SVNAccessFileDefaultBlockOverride::class, null, $plugin, false);
 
-        $generator = new SvnAccessFileDefaultBlockGenerator(
+        $generator = new SVNAccessFileDefaultBlockGenerator(
             $user_group_retriever,
             CheckProjectAccessStub::withValidAccess(),
             $event_manager,
         );
         self::assertEquals(
-            new SvnAccessFileDefaultBlock(
+            new SVNAccessFileDefaultBlock(
                 <<<EOT
                 [groups]
                 $expected
@@ -157,13 +157,13 @@ final class SVNAccessFileDefaultBlockGeneratorTest extends TestCase
             ProjectUGroupTestBuilder::aCustomUserGroup(230)->withName('Developers')->withUsers($csteven, $disciplus)->build()
         );
 
-        $generator = new SvnAccessFileDefaultBlockGenerator(
+        $generator = new SVNAccessFileDefaultBlockGenerator(
             $default_user_groups,
             CheckProjectAccessStub::withValidAccess(),
             $event_manager,
         );
         self::assertEquals(
-            new SvnAccessFileDefaultBlock(
+            new SVNAccessFileDefaultBlock(
                 <<<EOT
                 [groups]
                 members = jmalko, csteven, disciplus_simplex

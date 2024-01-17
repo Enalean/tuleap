@@ -30,8 +30,8 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\SVN\Repository\SvnRepository;
 use Tuleap\SVN\Repository\ProjectHistoryFormatter;
 use Tuleap\SVNCore\Repository;
-use Tuleap\SVNCore\SvnAccessFileDefaultBlock;
-use Tuleap\SVNCore\SvnAccessFileDefaultBlockGeneratorInterface;
+use Tuleap\SVNCore\SVNAccessFileDefaultBlock;
+use Tuleap\SVNCore\SVNAccessFileDefaultBlockGeneratorInterface;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
@@ -63,10 +63,10 @@ final class AccessFileHistoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->access_file_factory       = $this->createMock(AccessFileHistoryFactory::class);
         $this->project_history_formatter = $this->createMock(ProjectHistoryFormatter::class);
         $this->project_history_dao       = $this->createMock(ProjectHistoryDao::class);
-        $default_block_generator         = new class implements SvnAccessFileDefaultBlockGeneratorInterface {
-            public function getDefaultBlock(Project $project): SvnAccessFileDefaultBlock
+        $default_block_generator         = new class implements SVNAccessFileDefaultBlockGeneratorInterface {
+            public function getDefaultBlock(Project $project): SVNAccessFileDefaultBlock
             {
-                return new SvnAccessFileDefaultBlock('');
+                return new SVNAccessFileDefaultBlock('');
             }
         };
 

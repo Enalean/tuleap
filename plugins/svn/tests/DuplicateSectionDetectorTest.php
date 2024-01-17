@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\SVN\AccessControl;
 
-use Tuleap\SVNCore\SvnAccessFileContent;
+use Tuleap\SVNCore\SVNAccessFileContent;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class DuplicateSectionDetectorTest extends TestCase
@@ -33,7 +33,7 @@ final class DuplicateSectionDetectorTest extends TestCase
      */
     public function testWarnWhenPathIsUsedTwice(string $source, int $nb_faults): void
     {
-        $svn_access_file = new SvnAccessFileContent(
+        $svn_access_file = new SVNAccessFileContent(
             <<<EOT
             [groups]
             members = user1, user2

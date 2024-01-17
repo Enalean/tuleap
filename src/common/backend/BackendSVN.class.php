@@ -19,17 +19,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\SVNCore\AccessFileReader;
+use Tuleap\SVNCore\SVNAccessFileReader;
 use Tuleap\SVNCore\GetAllRepositories;
 use Tuleap\SVNCore\Repository;
-use Tuleap\SVNCore\SVNAccessFile;
-use Tuleap\SVNCore\SvnAccessFileContent;
-use Tuleap\SVNCore\SvnAccessFileDefaultBlockGenerator;
+use Tuleap\SVNCore\SVNAccessFileContent;
+use Tuleap\SVNCore\SVNAccessFileDefaultBlockGenerator;
+use Tuleap\SVNCore\SVNAccessFileSectionParser;
+use Tuleap\SVNCore\SVNAccessFileWriter;
 use Tuleap\SVNCore\Exception\SVNRepositoryCreationException;
 use Tuleap\SVNCore\Exception\SVNRepositoryLayoutInitializationException;
 use Tuleap\SVNCore\Cache\ParameterDao;
 use Tuleap\SVNCore\Cache\ParameterRetriever;
-use Tuleap\SVNCore\SVNAccessFileWriter;
 use Tuleap\URI\URIModifier;
 
 class BackendSVN extends Backend
@@ -295,17 +295,19 @@ class BackendSVN extends Backend
 
     public function updateSVNAccessForRepository(Repository $repository, ?string $ugroup_name, ?string $ugroup_old_name): bool
     {
-        $reader      = new AccessFileReader(SvnAccessFileDefaultBlockGenerator::instance());
+        $reader = new SVNAccessFileReader(SVNAccessFileDefaultBlockGenerator::instance());
+
         $access_file = $reader->getAccessFileContent($repository);
         return $this->updateCustomSVNAccessForRepository($repository, $access_file, $ugroup_name, $ugroup_old_name);
     }
 
-    public function updateCustomSVNAccessForRepository(Repository $repository, SvnAccessFileContent $access_file, ?string $ugroup_name, ?string $ugroup_old_name): bool
+    public function updateCustomSVNAccessForRepository(Repository $repository, SVNAccessFileContent $access_file, ?string $ugroup_name, ?string $ugroup_old_name): bool
     {
-        $svn_access_file          = new SVNAccessFile();
-        $cleaned_content          = $svn_access_file->parseGroupLines($access_file, $ugroup_name, $ugroup_old_name)->contents;
-        $clean_svn_access_content = new SvnAccessFileContent($access_file->default, $cleaned_content);
-        $writer                   = new SVNAccessFileWriter();
+        $svn_access_file          = new SVNAccessFileSectionParser();
+        $cleaned_content          = $svn_access_file->parse($access_file, $ugroup_name, $ugroup_old_name)->contents;
+        $clean_svn_access_content = new SVNAccessFileContent($access_file->default, $cleaned_content);
+
+        $writer = new SVNAccessFileWriter();
         $writer->writeWithDefaults($repository, $clean_svn_access_content);
         return true;
     }

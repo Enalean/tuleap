@@ -23,9 +23,12 @@ declare(strict_types=1);
 
 namespace Tuleap\SVNCore;
 
-use Project;
-
-interface SvnAccessFileDefaultBlockGeneratorInterface
+/**
+ * @psalm-immutable
+ */
+final class SVNAccessFileDefaultBlock
 {
-    public function getDefaultBlock(Project $project): SvnAccessFileDefaultBlock;
+    public function __construct(public readonly string $content)
+    {
+    }
 }

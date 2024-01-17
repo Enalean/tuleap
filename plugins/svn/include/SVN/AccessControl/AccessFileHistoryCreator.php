@@ -20,15 +20,15 @@
 
 namespace Tuleap\SVN\AccessControl;
 
-use Tuleap\SVNCore\SvnAccessFileContent;
+use Tuleap\SVNCore\SVNAccessFileContent;
 use Tuleap\SVNCore\SVNAccessFileWriteFault;
 use Tuleap\SVNCore\SVNAccessFileWriter;
-use Tuleap\SVNCore\SVNAccessFile;
+use Tuleap\SVNCore\SVNAccessFileSectionParser;
 use Tuleap\SVN\Repository\ProjectHistoryFormatter;
 use Tuleap\SVNCore\Repository;
 use Tuleap\SVNCore\CollectionOfSVNAccessFileFaults;
 use Tuleap\SVNCore\SVNAccessFileContentAndFaults;
-use Tuleap\SVNCore\SvnAccessFileDefaultBlockGeneratorInterface;
+use Tuleap\SVNCore\SVNAccessFileDefaultBlockGeneratorInterface;
 
 class AccessFileHistoryCreator
 {
@@ -37,7 +37,7 @@ class AccessFileHistoryCreator
         private readonly AccessFileHistoryFactory $access_file_factory,
         private readonly \ProjectHistoryDao $project_history_dao,
         private readonly ProjectHistoryFormatter $project_history_formatter,
-        private readonly SvnAccessFileDefaultBlockGeneratorInterface $default_block_generator,
+        private readonly SVNAccessFileDefaultBlockGeneratorInterface $default_block_generator,
     ) {
     }
 
@@ -90,12 +90,12 @@ class AccessFileHistoryCreator
 
     private function cleanContent(Repository $repository, string $content): SVNAccessFileContentAndFaults
     {
-        $access_file         = new SVNAccessFile();
-        $access_file_content = new SvnAccessFileContent(
+        $access_file         = new SVNAccessFileSectionParser();
+        $access_file_content = new SVNAccessFileContent(
             $this->default_block_generator->getDefaultBlock($repository->getProject())->content,
             trim($content),
         );
-        return $access_file->parseGroupLines($access_file_content);
+        return $access_file->parse($access_file_content);
     }
 
     /**
@@ -104,7 +104,7 @@ class AccessFileHistoryCreator
     public function saveAccessFile(Repository $repository, AccessFileHistory $history): void
     {
         $access_file_writer  = new SVNAccessFileWriter();
-        $access_file_content = new SvnAccessFileContent(
+        $access_file_content = new SVNAccessFileContent(
             $this->default_block_generator->getDefaultBlock($repository->getProject())->content,
             $history->getContent(),
         );
