@@ -18,18 +18,15 @@
  */
 
 const CommunicationService = require("../services/communication-service");
-const ScoresService = require("../services/scores-service");
 const Rooms = require("../modules/rooms");
 const Rights = require("../modules/rights");
-const Scores = require("../modules/scores");
 const JWT = require("../modules/jwt");
 const express = require("express");
 
 module.exports = function (io, app, private_key) {
-    var rooms                = new Rooms(new Rights(), new Scores());
+    var rooms                = new Rooms(new Rights());
     var jwt                  = new JWT(private_key);
     var communicationService = new CommunicationService(rooms, jwt);
-    var scoresService        = new ScoresService(rooms.scores);
 
     /**
      * Connection Websocket on namespace testmanagement
@@ -48,7 +45,6 @@ module.exports = function (io, app, private_key) {
 
             if (socket.auth) {
                 communicationService.emitPresences(socket);
-                scoresService.clearScoresInSeveralDays();
             } else {
                 console.log('Disconnecting socket ', socket.id);
                 socket.disconnect('unauthorized');

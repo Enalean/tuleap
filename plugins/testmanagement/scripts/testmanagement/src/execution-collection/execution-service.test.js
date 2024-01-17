@@ -448,6 +448,9 @@ describe("ExecutionService", () => {
                     id: 4,
                     previous_result: {
                         status: "notrun",
+                        submitted_by: {
+                            id: 5,
+                        },
                     },
                 },
             };
@@ -984,57 +987,6 @@ describe("ExecutionService", () => {
         });
     });
 
-    describe("addPresenceCampaign() -", function () {
-        it("Given that presences on campaign, when I add user_two with a score, then user_two is on campaign", function () {
-            var user_one = {
-                id: 101,
-                real_name: "Test",
-                avatar_url: "url",
-                score: 0,
-            };
-
-            var user_two = {
-                id: 102,
-                real_name: "Test",
-                avatar_url: "url",
-                score: 0,
-            };
-
-            var presences_on_campaign = [user_one];
-
-            var results = [user_one, user_two];
-
-            ExecutionService.presences_on_campaign = presences_on_campaign;
-            ExecutionService.addPresenceCampaign(user_two);
-
-            expect(ExecutionService.presences_on_campaign).toEqual(results);
-        });
-
-        it("Given that presences on campaign, when I add user_two with no score, then user_two is on campaign with score 0", function () {
-            var user_one = {
-                id: 101,
-                real_name: "Test",
-                avatar_url: "url",
-                score: 0,
-            };
-
-            var user_two = {
-                id: 102,
-                real_name: "Test",
-                avatar_url: "url",
-            };
-
-            var presences_on_campaign = [user_one];
-
-            var results = [user_one, user_two];
-
-            ExecutionService.presences_on_campaign = presences_on_campaign;
-            ExecutionService.addPresenceCampaign(user_two);
-
-            expect(ExecutionService.presences_on_campaign).toEqual(results);
-        });
-    });
-
     describe("removeAllPresencesOnCampaign() -", function () {
         it("Given that executions with user_two on, when I remove all from campaign, then there is nobody on campaign", function () {
             var user_one = {
@@ -1056,20 +1008,13 @@ describe("ExecutionService", () => {
         });
     });
 
-    describe("updatePresenceOnCampaign() -", function () {
+    describe("updatePresencesOnCampaign() -", function () {
         it("Given that executions with user_one on, when I update user_one on campaign, then the score is updated", function () {
             var user_one = {
                 id: 101,
                 real_name: "Test",
                 avatar_url: "url",
                 score: 0,
-            };
-
-            var user_one_updated = {
-                id: 101,
-                real_name: "Test",
-                avatar_url: "url",
-                score: 1,
             };
 
             var executions = {
@@ -1081,6 +1026,11 @@ describe("ExecutionService", () => {
                         id: 3,
                         summary: "My first test",
                         uri: "testmanagement_definitions/3",
+                        automated_tests: "",
+                    },
+                    status: "passed",
+                    previous_result: {
+                        submitted_by: user_one,
                     },
                     viewed_by: [user_one],
                 },
@@ -1095,9 +1045,99 @@ describe("ExecutionService", () => {
 
             ExecutionService.executions = executions;
             ExecutionService.presences_on_campaign = [user_one];
-            ExecutionService.updatePresenceOnCampaign(user_one_updated);
+            ExecutionService.updatePresencesOnCampaign();
 
             expect(ExecutionService.presences_on_campaign[0]).toEqual(user_one_result);
+        });
+
+        it("Given that presences on campaign, when I add user_two with a score, then user_two is on campaign", function () {
+            var user_one = {
+                id: 101,
+                real_name: "Test",
+                avatar_url: "url",
+                score: 1,
+            };
+
+            var user_two = {
+                id: 102,
+                real_name: "Test",
+                avatar_url: "url",
+                score: 1,
+            };
+
+            var presences_on_campaign = [user_one];
+
+            var results = [user_one, user_two];
+
+            ExecutionService.executions = [
+                {
+                    status: "failed",
+                    previous_result: {
+                        submitted_by: user_one,
+                    },
+                    definition: {
+                        automated_tests: "",
+                    },
+                },
+                {
+                    status: "passed",
+                    previous_result: {
+                        submitted_by: user_two,
+                    },
+                    definition: {
+                        automated_tests: "",
+                    },
+                },
+            ];
+            ExecutionService.presences_on_campaign = presences_on_campaign;
+            ExecutionService.updatePresencesOnCampaign();
+
+            expect(ExecutionService.presences_on_campaign).toEqual(results);
+        });
+
+        it("Given that presences on campaign, when I add user_two with no score, then user_two is on campaign with score 0", function () {
+            var user_one = {
+                id: 101,
+                real_name: "Test",
+                avatar_url: "url",
+                score: 1,
+            };
+
+            var user_two = {
+                id: 102,
+                real_name: "Test",
+                avatar_url: "url",
+                score: 1,
+            };
+
+            var presences_on_campaign = [user_one];
+
+            var results = [user_one, user_two];
+
+            ExecutionService.executions = [
+                {
+                    status: "failed",
+                    previous_result: {
+                        submitted_by: user_one,
+                    },
+                    definition: {
+                        automated_tests: "",
+                    },
+                },
+                {
+                    status: "passed",
+                    previous_result: {
+                        submitted_by: user_two,
+                    },
+                    definition: {
+                        automated_tests: "",
+                    },
+                },
+            ];
+            ExecutionService.presences_on_campaign = presences_on_campaign;
+            ExecutionService.updatePresencesOnCampaign();
+
+            expect(ExecutionService.presences_on_campaign).toEqual(results);
         });
     });
 

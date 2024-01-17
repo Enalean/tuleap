@@ -123,7 +123,6 @@ function ExecutionListCtrl(
 
     SocketService.listenNodeJSServer().then(
         function () {
-            SocketService.listenToUserScore();
             SocketService.listenTokenExpired();
             SocketService.listenToExecutionViewed();
             SocketService.listenToExecutionCreated();
@@ -212,8 +211,6 @@ function ExecutionListCtrl(
     }
 
     function updateViewTestExecution(current_execution_id, old_execution_id) {
-        ExecutionService.addPresenceCampaign(SharedPropertiesService.getCurrentUser());
-
         return ExecutionRestService.changePresenceOnTestExecution(
             current_execution_id,
             old_execution_id,

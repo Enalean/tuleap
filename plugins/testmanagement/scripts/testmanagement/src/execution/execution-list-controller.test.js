@@ -87,7 +87,7 @@ describe("ExecutionListController -", () => {
             jest.spyOn(ExecutionService, "displayPresencesForAllExecutions").mockImplementation(
                 () => {},
             );
-            jest.spyOn(ExecutionService, "addPresenceCampaign").mockImplementation(() => {});
+            jest.spyOn(ExecutionService, "updatePresencesOnCampaign").mockImplementation(() => {});
             jest.spyOn(ExecutionService, "loadExecutions").mockImplementation(() => {});
             jest.spyOn(ExecutionRestService, "changePresenceOnTestExecution").mockImplementation(
                 () => {},
@@ -113,7 +113,7 @@ describe("ExecutionListController -", () => {
             expect(ExecutionService.executions_loaded).toBe(true);
             expect(ExecutionService.displayPresencesForAllExecutions).toHaveBeenCalled();
 
-            expect(ExecutionService.addPresenceCampaign).toHaveBeenCalledWith(current_user);
+            expect(ExecutionService.updatePresencesOnCampaign).not.toHaveBeenCalled();
             expect(ExecutionRestService.changePresenceOnTestExecution).toHaveBeenCalledWith(
                 execution_id,
                 "",
@@ -137,7 +137,7 @@ describe("ExecutionListController -", () => {
             expect(ExecutionService.executions_loaded).toBe(true);
             expect(ExecutionService.displayPresencesForAllExecutions).toHaveBeenCalled();
 
-            expect(ExecutionService.addPresenceCampaign).not.toHaveBeenCalled();
+            expect(ExecutionService.updatePresencesOnCampaign).not.toHaveBeenCalled();
             expect(ExecutionRestService.changePresenceOnTestExecution).not.toHaveBeenCalled();
         });
 

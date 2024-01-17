@@ -5,11 +5,8 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 var Rights = require('./rights');
 var rights = new Rights();
 
-var Scores = require('./scores');
-var scores = new Scores();
-
 var Rooms = require('./rooms');
-var rooms = new Rooms(rights, scores);
+var rooms = new Rooms(rights);
 
 var Executions = require('./executions');
 
@@ -88,8 +85,7 @@ describe("Module Rooms", function() {
             expect(console.error).not.toHaveBeenCalled();
         });
 
-        it("Given rights, socket sender and message to broadcast, when I broadcast data with correct rights and with presences on execution message then message data is transformed " +
-            "and socket sender emit user score", function () {
+        it("Given rights, socket sender and message to broadcast, when I broadcast data with correct rights and with presences on execution message then message data is transformed ", function () {
             var message = {
                 room_id : room_id,
                 rights: {
@@ -114,15 +110,13 @@ describe("Module Rooms", function() {
             var expect_data = {
                 user: {
                     id: user_id,
-                    uuid: '123',
-                    score: 0
+                    uuid: '123'
                 },
                 execution_to_add: '39',
                 execution_presences_to_add: [
                     {
                         id: user_id,
-                        uuid: '123',
-                        score: 0
+                        uuid: '123'
                     }
                 ]
             };
@@ -130,10 +124,9 @@ describe("Module Rooms", function() {
             rooms.broadcastData(socket, message);
             expect(message.data).toEqual(expect_data);
             expect(console.error).not.toHaveBeenCalled();
-            expect(socket.emit).toHaveBeenCalled();
         });
 
-        it("Given rights, socket sender and message to broadcast, when I broadcast data with correct rights and with status change execution message then score is calculated socket sender emit user score", function () {
+        it("Given rights, socket sender and message to broadcast, when I broadcast data with correct rights and with status change execution message", function () {
             var message = {
                 room_id : room_id,
                 rights: {
@@ -161,19 +154,16 @@ describe("Module Rooms", function() {
                 status: 'passed',
                 previous_status: 'failed',
                 previous_user: {
-                    id: user_id,
-                    score: 1
+                    id: user_id
                 },
                 user: {
-                    id: user_id,
-                    score: 1
+                    id: user_id
                 }
             };
 
             rooms.broadcastData(socket, message);
             expect(message.data).toEqual(expect_data);
             expect(console.error).not.toHaveBeenCalled();
-            expect(socket.emit).toHaveBeenCalled();
         });
     });
 
