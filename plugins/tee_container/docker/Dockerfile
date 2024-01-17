@@ -12,8 +12,6 @@ ARG RELEASE_CYCLE=dev
 COPY $YUM_REPO_PATH /etc/yum.repos.d/
 COPY $PACKAGES_PATH /rpms
 
-# initscripts is implicit dependency of openssh-server for ssh-keygen (/etc/rc.d/init.d/functions)
-
 RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     /usr/sbin/groupadd -g 902 -r gitolite && \
     /usr/sbin/groupadd -g 903 -r dummy && \
@@ -29,7 +27,6 @@ RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     yum update -y && \
     yum install -y --setopt=skip_missing_names_on_install=False \
     cronie \
-    initscripts \
     openssh-server \
     postfix \
     rsyslog \

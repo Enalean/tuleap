@@ -1,8 +1,8 @@
 # Mainly based on Mozilla's guidelines
 # https://infosec.mozilla.org/guidelines/openssh.html
-HostKey /etc/ssh/ssh_host_ed25519_key
-HostKey /etc/ssh/ssh_host_rsa_key
-HostKey /etc/ssh/ssh_host_ecdsa_key
+HostKey /data/etc/ssh/ssh_host_ed25519_key
+HostKey /data/etc/ssh/ssh_host_rsa_key
+HostKey /data/etc/ssh/ssh_host_ecdsa_key
 
 KexAlgorithms curve25519-sha256@libssh.org,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256
 Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr

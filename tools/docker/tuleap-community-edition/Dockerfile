@@ -3,8 +3,6 @@ FROM rockylinux/rockylinux:9.2@sha256:8cc691b7e360f484092c50411e45a2ec52eb70b1de
 COPY rpm/tuleap.repo /etc/yum.repos.d/
 COPY rpm/RPM-GPG-KEY-Tuleap /etc/pki/rpm-gpg/RPM-GPG-KEY-Tuleap
 
-# initscripts is implicit dependency of openssh-server for ssh-keygen (/etc/rc.d/init.d/functions)
-
 RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     /usr/sbin/groupadd -g 902 -r gitolite && \
     /usr/sbin/groupadd -g 903 -r dummy && \
