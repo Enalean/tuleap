@@ -1,28 +1,157 @@
 <div class="tlp-framed">
     <section class="tlp-pane">
-        <form method="post" action="{{ post_url }}" enctype="multipart/form-data" class="tlp-pane-container">
+        <div class="tlp-pane-container">
             <div class="tlp-pane-header">
                 <h1 class="tlp-pane-title">
                     {{# dgettext }}tuleap-tracker_cce | Automated custom code execution{{/ dgettext }}
                 </h1>
             </div>
-            <section class="tlp-pane-section">
-                <div class="tlp-form-element">
-                    <label class="tlp-label" for="wasm-module">
-                        {{# dgettext }}tuleap-tracker_cce | WebAssembly module{{/ dgettext }}
-                    </label>
-                    <input type="file" id="wasm-module" name="wasm-module">
-                </div>
-            </section>
-            <section class="tlp-pane-section tlp-pane-section-submit">
-                {{# csrf }}
-                    {{> csrf_token_input }}
-                {{/ csrf }}
-                <button type="submit" class="tlp-button-primary">
-                    <i class="fa-solid fa-upload tlp-button-icon" aria-hidden="true"></i>
-                    {{# dgettext }}tuleap-tracker_cce | Upload module{{/ dgettext }}
-                </button>
-            </section>
-        </form>
+            {{^ has_uploaded_module }}
+                <section class="tlp-pane-section">
+                    <section class="empty-state-page">
+                        <div class="empty-state-illustration">
+                            {{> svg-empty-state-tumbleweed }}
+                        </div>
+                        <h1 class="empty-state-title">
+                            {{# dgettext }}tuleap-tracker_cce | No module!{{/ dgettext }}
+                        </h1>
+                        <p class="empty-state-text">{{# dgettext }}tuleap-tracker_cce | There isn't any uploaded module to execute.{{/ dgettext }}</p>
+                        <button
+                            type="button"
+                            class="empty-state-action tlp-button-primary tracker-cce-admin-modal-trigger tracker-cce-admin-empty-state-cta"
+                            data-target-modal-id="tracker-cce-admin-upload-modal"
+                        >
+                            {{# dgettext }}tuleap-tracker_cce | Upload a module{{/ dgettext }}
+                        </button>
+                    </section>
+                </section>
+            {{/ has_uploaded_module }}
+            {{# has_uploaded_module }}
+                <section class="tlp-pane-section">
+                    <div class="tlp-form-element">
+                        <label class="tlp-label" for="wasm-status">
+                            {{# dgettext }}tuleap-tracker_cce | Activated{{/ dgettext }}
+                        </label>
+                        <div class="tlp-switch">
+                            <input type="checkbox" id="wasm-status" checked disabled class="tlp-switch-checkbox">
+                            <label for="wasm-status" class="tlp-switch-button"></label>
+                        </div>
+                    </div>
+
+                    <div class="tlp-property">
+                        <label class="tlp-label">
+                            {{# dgettext }}tuleap-tracker_cce | WebAssembly module{{/ dgettext }}
+                        </label>
+                        <span class="tlp-property-empty">
+                            {{# dgettext }}tuleap-tracker_cce | Module uploaded{{/ dgettext }}
+                        </span>
+
+                        <button type="button"
+                                class="tlp-button-primary tlp-button-outline tlp-button-small tracker-cce-admin-modal-trigger tracker-cce-admin-change-cta"
+                                data-target-modal-id="tracker-cce-admin-upload-modal"
+                        >
+                            <i class="fa-solid fa-sync tlp-button-icon" aria-hidden="true"></i>
+                            {{# dgettext }}tuleap-tracker_cce | Change{{/ dgettext }}
+                        </button>
+
+                        <button type="button"
+                                class="tlp-button-danger tlp-button-outline tlp-button-small tracker-cce-admin-modal-trigger tracker-cce-admin-remove-cta"
+                                data-target-modal-id="tracker-cce-admin-remove-modal"
+                        >
+                            <i class="fa-solid fa-trash tlp-button-icon" aria-hidden="true"></i>
+                            {{# dgettext }}tuleap-tracker_cce | Remove{{/ dgettext }}
+                        </button>
+                    </div>
+
+                    <table class="tlp-table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    {{# dgettext }}tuleap-tracker_cce | Date{{/ dgettext }}
+                                </th>
+                                <th>
+                                    {{# dgettext }}tuleap-tracker_cce | Action{{/ dgettext }}
+                                </th>
+                                <th>
+                                    {{# dgettext }}tuleap-tracker_cce | Status{{/ dgettext }}
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="4" class="tlp-table-cell-empty">
+                                    {{# dgettext }}tuleap-tracker_cce | There isn't any activity yet{{/ dgettext }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+            {{/ has_uploaded_module }}
+        </div>
     </section>
 </div>
+
+<form method="post" action="{{ post_url }}" enctype="multipart/form-data" class="tlp-modal" role="dialog" id="tracker-cce-admin-upload-modal" aria-labelledby="tracker-cce-admin-upload-modal-title">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="tracker-cce-admin-upload-modal-title">
+            {{# dgettext }}tuleap-tracker_cce | Upload WASM module{{/ dgettext }}
+
+        </h1>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# dgettext }}tuleap-tracker_cce | Close{{/ dgettext }}">
+            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="tlp-modal-body">
+        {{# csrf }}
+            {{> csrf_token_input }}
+        {{/ csrf }}
+        <p>{{# dgettext }}tuleap-tracker_cce | Please upload a WebAssembly module.{{/ dgettext }}</p>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="wasm-module">
+                {{# dgettext }}tuleap-tracker_cce | WebAssembly module{{/ dgettext }}
+            </label>
+            <input type="file" id="wasm-module" name="wasm-module">
+        </div>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{# dgettext }}tuleap-tracker_cce | Cancel{{/ dgettext }}
+        </button>
+        <button type="submit" class="tlp-button-primary tlp-modal-action">
+            <i class="fa-solid fa-upload tlp-button-icon" aria-hidden="true"></i>
+            {{# dgettext }}tuleap-tracker_cce | Upload module{{/ dgettext }}
+        </button>
+    </div>
+</form>
+
+<form method="post" action="{{ remove_url }}" class="tlp-modal tlp-modal-danger" role="dialog" id="tracker-cce-admin-remove-modal" aria-labelledby="tracker-cce-admin-remove-modal-title">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="tracker-cce-admin-remove-modal-title">
+            {{# dgettext }}tuleap-tracker_cce | Remove WASM module{{/ dgettext }}
+        </h1>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# dgettext }}tuleap-tracker_cce | Close{{/ dgettext }}">
+            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="tlp-modal-body">
+        {{# csrf }}
+            {{> csrf_token_input }}
+        {{/ csrf }}
+        <p>
+            {{# dgettext }}tuleap-tracker_cce | You are about to remove the module from this tracker. {{/ dgettext }}
+            {{# dgettext }}tuleap-tracker_cce | You will not be able to retrieve it. {{/ dgettext }}
+            {{# dgettext }}tuleap-tracker_cce | Logs will also be deleted. {{/ dgettext }}
+        </p>
+        <p>{{# dgettext }}tuleap-tracker_cce | Please confirm your action. {{/ dgettext }}</p>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{# dgettext }}tuleap-tracker_cce | Cancel{{/ dgettext }}
+        </button>
+        <button type="submit" class="tlp-button-danger tlp-modal-action">
+            <i class="fa-solid fa-trash tlp-button-icon" aria-hidden="true"></i>
+            {{# dgettext }}tuleap-tracker_cce | Remove module{{/ dgettext }}
+        </button>
+    </div>
+</form>

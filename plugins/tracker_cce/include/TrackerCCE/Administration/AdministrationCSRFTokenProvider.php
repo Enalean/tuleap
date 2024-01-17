@@ -24,10 +24,10 @@ namespace Tuleap\TrackerCCE\Administration;
 
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
-final class UpdateModuleCSRFTokenProvider implements TrackerCSRFTokenProvider
+final class AdministrationCSRFTokenProvider implements TrackerCSRFTokenProvider
 {
     public function getToken(\Tracker $tracker): CSRFSynchronizerTokenInterface
     {
-        return new \CSRFSynchronizerToken(UpdateModuleController::getUrl($tracker));
+        return new \CSRFSynchronizerToken(AdministrationController::getUrl($tracker));
     }
 }

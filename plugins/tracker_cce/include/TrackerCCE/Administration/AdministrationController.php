@@ -26,11 +26,14 @@ use HTTPRequest;
 use Project;
 use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Tracker\Artifact\RetrieveTracker;
+use Tuleap\TrackerCCE\WASM\WASMModulePathHelper;
 
 final class AdministrationController implements DispatchableWithRequest, DispatchableWithBurningParrot, DispatchableWithProject
 {
@@ -39,6 +42,7 @@ final class AdministrationController implements DispatchableWithRequest, Dispatc
         private readonly \Tracker_IDisplayTrackerLayout $tracker_layout,
         private readonly \TemplateRendererFactory $renderer_factory,
         private readonly TrackerCSRFTokenProvider $token_provider,
+        private readonly WASMModulePathHelper $module_path_helper,
     ) {
     }
 
@@ -51,18 +55,33 @@ final class AdministrationController implements DispatchableWithRequest, Dispatc
             throw new NotFoundException();
         }
 
+        $layout->addJavascriptAsset(
+            new JavascriptViteAsset(
+                new IncludeViteAssets(
+                    __DIR__ . '/../../../scripts/admin/frontend-assets',
+                    '/assets/tracker_cce/admin'
+                ),
+                'src/index.ts'
+            )
+        );
+
         $tracker->displayAdminItemHeaderBurningParrot(
             $this->tracker_layout,
             'editworkflow',
             dgettext('tuleap-tracker_cce', 'Custom code execution'),
         );
 
+        $wasm_module_path    = $this->module_path_helper->getPathForTracker($tracker);
+        $has_uploaded_module = is_readable($wasm_module_path);
+
         $renderer = $this->renderer_factory->getRenderer(__DIR__);
         $renderer->renderToPage(
             'administration',
             new AdministrationPresenter(
                 UpdateModuleController::getUrl($tracker),
+                RemoveModuleController::getUrl($tracker),
                 CSRFSynchronizerTokenPresenter::fromToken($this->token_provider->getToken($tracker)),
+                $has_uploaded_module,
             )
         );
 
