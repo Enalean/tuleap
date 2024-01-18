@@ -29,8 +29,10 @@ final class AdministrationPresenter
     public function __construct(
         public readonly string $post_url,
         public readonly string $remove_url,
+        public readonly string $activation_url,
         public readonly CSRFSynchronizerTokenPresenter $csrf,
         public readonly bool $has_uploaded_module,
+        public readonly bool $is_activated,
     ) {
     }
 }

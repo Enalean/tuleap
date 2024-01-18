@@ -45,6 +45,7 @@ final class UpdateModuleController extends DispatchablePSR15Compatible
         private readonly LoggerInterface $logger,
         private readonly WASMModulePathHelper $module_path_helper,
         private readonly LogModuleUploaded $history_saver,
+        private readonly UpdateModuleActivation $module_activation,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
     ) {
@@ -66,6 +67,7 @@ final class UpdateModuleController extends DispatchablePSR15Compatible
         return $this->getUploadedModule($request)
             ->andThen($this->getMovableModule(...))
             ->andThen(fn (UploadedFileInterface $file) => $this->moveFile($tracker, $file))
+            ->andThen(fn () => $this->activateModule($tracker))
             ->andThen(fn () => $this->logInProjectHistory($user, $tracker))
             ->match(
                 fn () => $this->redirectWithFeedback(
@@ -157,6 +159,16 @@ final class UpdateModuleController extends DispatchablePSR15Compatible
     private function logInProjectHistory(\PFUser $user, \Tracker $tracker): Ok
     {
         $this->history_saver->logModuleUploaded($user, $tracker);
+
+        return Result::ok(null);
+    }
+
+    /**
+     * @return Ok<null>
+     */
+    private function activateModule(\Tracker $tracker): Ok
+    {
+        $this->module_activation->activateModule($tracker->getId());
 
         return Result::ok(null);
     }

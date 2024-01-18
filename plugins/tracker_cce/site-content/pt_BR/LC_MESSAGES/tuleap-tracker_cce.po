@@ -36,6 +36,18 @@ msgstr ""
 msgid "Custom code execution as artifact post action"
 msgstr ""
 
+msgid "Custom code execution module activated"
+msgstr ""
+
+msgid "Custom code execution module deactivated"
+msgstr ""
+
+msgid "Custom code execution module removed"
+msgstr ""
+
+msgid "Custom code execution module uploaded"
+msgstr ""
+
 msgid "Date"
 msgstr ""
 
@@ -82,6 +94,12 @@ msgid "Remove module"
 msgstr ""
 
 msgid "Status"
+msgstr ""
+
+msgid "The module has been activated"
+msgstr ""
+
+msgid "The module has been deactivated"
 msgstr ""
 
 msgid "The module has been removed"

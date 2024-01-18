@@ -43,6 +43,7 @@ final class AdministrationController implements DispatchableWithRequest, Dispatc
         private readonly \TemplateRendererFactory $renderer_factory,
         private readonly TrackerCSRFTokenProvider $token_provider,
         private readonly WASMModulePathHelper $module_path_helper,
+        private readonly CheckModuleIsActivated $check_module_is_activated,
     ) {
     }
 
@@ -80,8 +81,10 @@ final class AdministrationController implements DispatchableWithRequest, Dispatc
             new AdministrationPresenter(
                 UpdateModuleController::getUrl($tracker),
                 RemoveModuleController::getUrl($tracker),
+                ActivateModuleController::getUrl($tracker),
                 CSRFSynchronizerTokenPresenter::fromToken($this->token_provider->getToken($tracker)),
                 $has_uploaded_module,
+                $this->check_module_is_activated->isModuleActivated($tracker->getId()),
             )
         );
 

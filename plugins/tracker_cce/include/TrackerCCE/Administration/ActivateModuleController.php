@@ -23,22 +23,20 @@ declare(strict_types=1);
 namespace Tuleap\TrackerCCE\Administration;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
-use PFUser;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Layout\Feedback\NewFeedback;
 use Tuleap\Request\DispatchablePSR15Compatible;
-use Tuleap\TrackerCCE\WASM\WASMModulePathHelper;
 
-final class RemoveModuleController extends DispatchablePSR15Compatible
+final class ActivateModuleController extends DispatchablePSR15Compatible
 {
     public function __construct(
         private readonly RedirectWithFeedbackFactory $redirect_with_feedback_factory,
-        private readonly LogModuleRemoved $history_saver,
-        private readonly WASMModulePathHelper $module_path_helper,
         private readonly UpdateModuleActivation $module_activation,
+        private readonly LogModuleActivated $activated_logs,
+        private readonly LogModuleDeactivated $deactivated_logs,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
     ) {
@@ -57,44 +55,31 @@ final class RemoveModuleController extends DispatchablePSR15Compatible
             throw new \LogicException('PFUser is missing');
         }
 
-        $path = $this->module_path_helper->getPathForTracker($tracker);
-        if (! is_readable($path)) {
-            return $this->redirectWithFeedback(
+        $parsed_body = $request->getParsedBody();
+
+        if (is_array($parsed_body) && isset($parsed_body['activate-module']) && $parsed_body['activate-module']) {
+            $this->module_activation->activateModule($tracker->getId());
+            $this->activated_logs->logModuleActivated($user, $tracker);
+
+            return $this->redirect_with_feedback_factory->createResponseForUser(
                 $user,
-                $tracker,
-                NewFeedback::error(dgettext('tuleap-tracker_cce', 'Module does not exist, maybe it has already been removed?'))
+                AdministrationController::getUrl($tracker),
+                NewFeedback::success(dgettext('tuleap-tracker_cce', 'The module has been activated')),
+            );
+        } else {
+            $this->module_activation->deactivateModule($tracker->getId());
+            $this->deactivated_logs->logModuleDeactivated($user, $tracker);
+
+            return $this->redirect_with_feedback_factory->createResponseForUser(
+                $user,
+                AdministrationController::getUrl($tracker),
+                NewFeedback::success(dgettext('tuleap-tracker_cce', 'The module has been deactivated')),
             );
         }
-
-        if (! unlink($path)) {
-            return $this->redirectWithFeedback(
-                $user,
-                $tracker,
-                NewFeedback::error(dgettext('tuleap-tracker_cce', 'Unable to remove the module'))
-            );
-        }
-
-        $this->module_activation->deactivateModule($tracker->getId());
-        $this->history_saver->logModuleRemoved($user, $tracker);
-
-        return $this->redirectWithFeedback(
-            $user,
-            $tracker,
-            NewFeedback::success(dgettext('tuleap-tracker_cce', 'The module has been removed'))
-        );
-    }
-
-    private function redirectWithFeedback(PFUser $user, \Tracker $tracker, NewFeedback $feedback): ResponseInterface
-    {
-        return $this->redirect_with_feedback_factory->createResponseForUser(
-            $user,
-            AdministrationController::getUrl($tracker),
-            $feedback,
-        );
     }
 
     public static function getUrl(\Tracker $tracker): string
     {
-        return '/tracker_cce/' . urlencode((string) $tracker->getId()) . '/admin/remove';
+        return '/tracker_cce/' . urlencode((string) $tracker->getId()) . '/admin/activate';
     }
 }

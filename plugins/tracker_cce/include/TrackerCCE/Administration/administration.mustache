@@ -28,15 +28,19 @@
             {{/ has_uploaded_module }}
             {{# has_uploaded_module }}
                 <section class="tlp-pane-section">
-                    <div class="tlp-form-element">
+                    <form method="post" action="{{ activation_url }}" class="tlp-form-element">
                         <label class="tlp-label" for="wasm-status">
                             {{# dgettext }}tuleap-tracker_cce | Activated{{/ dgettext }}
                         </label>
                         <div class="tlp-switch">
-                            <input type="checkbox" id="wasm-status" checked disabled class="tlp-switch-checkbox">
+                            {{# csrf }}
+                                {{> csrf_token_input }}
+                            {{/ csrf }}
+                            <input type="hidden" value="0" name="activate-module" class="tlp-switch-checkbox">
+                            <input type="checkbox" id="wasm-status" value="1" {{# is_activated }}checked{{/ is_activated }} name="activate-module" class="tlp-switch-checkbox">
                             <label for="wasm-status" class="tlp-switch-button"></label>
                         </div>
-                    </div>
+                    </form>
 
                     <div class="tlp-property">
                         <label class="tlp-label">

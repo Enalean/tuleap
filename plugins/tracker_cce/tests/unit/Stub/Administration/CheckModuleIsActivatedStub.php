@@ -1,4 +1,5 @@
-/*
+<?php
+/**
  * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,16 +18,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "./style.scss";
-import { openAllTargetModalsOnClick } from "@tuleap/tlp-modal";
+declare(strict_types=1);
 
-document.addEventListener("DOMContentLoaded", () => {
-    openAllTargetModalsOnClick(document, ".tracker-cce-admin-modal-trigger");
+namespace Tuleap\TrackerCCE\Stub\Administration;
 
-    const activation = document.getElementById("wasm-status");
-    if (activation instanceof HTMLInputElement) {
-        activation.addEventListener("change", () => {
-            activation.form?.submit();
-        });
+use Tuleap\TrackerCCE\Administration\CheckModuleIsActivated;
+
+final class CheckModuleIsActivatedStub implements CheckModuleIsActivated
+{
+    private function __construct(private readonly bool $activated)
+    {
     }
-});
+
+    public static function activated(): self
+    {
+        return new self(true);
+    }
+
+    public static function deactivated(): self
+    {
+        return new self(false);
+    }
+
+    public function isModuleActivated(int $tracker_id): bool
+    {
+        return $this->activated;
+    }
+}

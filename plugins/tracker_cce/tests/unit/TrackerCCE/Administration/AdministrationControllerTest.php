@@ -32,6 +32,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 use Tuleap\Tracker\Test\Stub\Tracker\DisplayTrackerLayoutStub;
+use Tuleap\TrackerCCE\Stub\Administration\CheckModuleIsActivatedStub;
 use Tuleap\TrackerCCE\WASM\FindWASMModulePath;
 
 final class AdministrationControllerTest extends TestCase
@@ -46,6 +47,7 @@ final class AdministrationControllerTest extends TestCase
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             new AdministrationCSRFTokenProvider(),
             new FindWASMModulePath(),
+            CheckModuleIsActivatedStub::activated(),
         );
 
         $this->expectException(NotFoundException::class);
@@ -67,6 +69,7 @@ final class AdministrationControllerTest extends TestCase
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             new AdministrationCSRFTokenProvider(),
             new FindWASMModulePath(),
+            CheckModuleIsActivatedStub::activated(),
         );
 
         $this->expectException(NotFoundException::class);
@@ -91,6 +94,7 @@ final class AdministrationControllerTest extends TestCase
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             new AdministrationCSRFTokenProvider(),
             new FindWASMModulePath(),
+            CheckModuleIsActivatedStub::activated(),
         );
 
         $this->expectException(NotFoundException::class);
