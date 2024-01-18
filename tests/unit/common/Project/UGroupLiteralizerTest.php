@@ -18,33 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Project;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PermissionsManager;
+use PHPUnit\Framework\MockObject\MockObject;
 use ProjectUGroup;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use UserManager;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class UGroupLiteralizerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UGroupLiteralizerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private \PFUser&MockObject $user;
+    private const PERMISSIONS_TYPE = 'PLUGIN_DOCMAN_%';
 
-    protected $membership;
-    protected $user;
-    public const PERMISSIONS_TYPE = 'PLUGIN_DOCMAN_%';
-
-    /**
-     * @var UGroupLiteralizer
-     */
-    private $ugroup_literalizer;
+    private UGroupLiteralizer $ugroup_literalizer;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user   = \Mockery::spy(\PFUser::class);
-        $user_manager = \Mockery::spy(\UserManager::class);
-        $user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
+        $this->user   = $this->createMock(\PFUser::class);
+        $user_manager = $this->createMock(\UserManager::class);
+        $user_manager->method('getUserByUserName')->willReturn($this->user);
         UserManager::setInstance($user_manager);
         $this->ugroup_literalizer = new UGroupLiteralizer();
     }
@@ -57,64 +53,64 @@ class UGroupLiteralizerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItIsProjectMember(): void
     {
-        $this->user->shouldReceive('getStatus')->andReturns('A');
+        $this->user->method('getStatus')->willReturn('A');
         $userProjects = [
             ['group_id' => 101, 'unix_group_name' => 'gpig1'],
         ];
-        $this->user->shouldReceive('getProjects')->andReturns($userProjects);
-        $this->user->shouldReceive('isMember')->andReturns(false);
-        $this->user->shouldReceive('getAllUgroups')->andReturns(\TestHelper::emptyDar());
+        $this->user->method('getProjects')->willReturn($userProjects);
+        $this->user->method('isMember')->willReturn(false);
+        $this->user->method('getAllUgroups')->willReturn(\TestHelper::emptyDar());
 
         $this->assertUserGroupsForUser(['site_active', 'gpig1_project_members']);
     }
 
     public function testItIsProjectAdmin(): void
     {
-        $this->user->shouldReceive('getStatus')->andReturns('A');
+        $this->user->method('getStatus')->willReturn('A');
         $userProjects = [
             ['group_id' => 102, 'unix_group_name' => 'gpig2'],
         ];
-        $this->user->shouldReceive('getProjects')->andReturns($userProjects);
-        $this->user->shouldReceive('isMember')->andReturns(true);
-        $this->user->shouldReceive('getAllUgroups')->andReturns(\TestHelper::emptyDar());
+        $this->user->method('getProjects')->willReturn($userProjects);
+        $this->user->method('isMember')->willReturn(true);
+        $this->user->method('getAllUgroups')->willReturn(\TestHelper::emptyDar());
 
         $this->assertUserGroupsForUser(['site_active', 'gpig2_project_members', 'gpig2_project_admin']);
     }
 
     public function testItIsMemberOfAStaticUgroup(): void
     {
-        $this->user->shouldReceive('getStatus')->andReturns('A');
-        $this->user->shouldReceive('getProjects')->andReturns([]);
-        $this->user->shouldReceive('isMember')->andReturns(false);
-        $this->user->shouldReceive('getAllUgroups')->andReturns(\TestHelper::arrayToDar(['ugroup_id' => 304]));
+        $this->user->method('getStatus')->willReturn('A');
+        $this->user->method('getProjects')->willReturn([]);
+        $this->user->method('isMember')->willReturn(false);
+        $this->user->method('getAllUgroups')->willReturn(\TestHelper::arrayToDar(['ugroup_id' => 304]));
 
         $this->assertUserGroupsForUser(['site_active', 'ug_304']);
     }
 
     public function testItIsRestricted(): void
     {
-        $this->user->shouldReceive('getStatus')->andReturns('R');
-        $this->user->shouldReceive('getProjects')->andReturns([]);
-        $this->user->shouldReceive('isMember')->andReturns(false);
-        $this->user->shouldReceive('getAllUgroups')->andReturns(\TestHelper::emptyDar());
+        $this->user->method('getStatus')->willReturn('R');
+        $this->user->method('getProjects')->willReturn([]);
+        $this->user->method('isMember')->willReturn(false);
+        $this->user->method('getAllUgroups')->willReturn(\TestHelper::emptyDar());
 
         $this->assertUserGroupsForUser(['site_restricted']);
     }
 
     public function testItIsNeitherRestrictedNorActive(): void
     {
-        $this->user->shouldReceive('getStatus')->andReturns('Not exists');
-        $this->user->shouldReceive('getProjects')->andReturns([]);
-        $this->user->shouldReceive('isMember')->andReturns(false);
-        $this->user->shouldReceive('getAllUgroups')->andReturns(\TestHelper::emptyDar());
+        $this->user->method('getStatus')->willReturn('Not exists');
+        $this->user->method('getProjects')->willReturn([]);
+        $this->user->method('isMember')->willReturn(false);
+        $this->user->method('getAllUgroups')->willReturn(\TestHelper::emptyDar());
 
         $this->assertUserGroupsForUser([]);
     }
 
     private function assertUserGroupsForUser(array $expected): void
     {
-        $this->assertEquals($expected, $this->ugroup_literalizer->getUserGroupsForUserName('john_do'));
-        $this->assertEquals($expected, $this->ugroup_literalizer->getUserGroupsForUser($this->user));
+        self::assertEquals($expected, $this->ugroup_literalizer->getUserGroupsForUserName('john_do'));
+        self::assertEquals($expected, $this->ugroup_literalizer->getUserGroupsForUser($this->user));
     }
 
     public function testItCanTransformAnArrayWithUGroupMembersConstantIntoString(): void
@@ -133,64 +129,65 @@ class UGroupLiteralizerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function assertUgroupIdsToString($ugroup_ids, $expected): void
     {
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('getUnixName')->andReturns('gpig');
+        $project = ProjectTestBuilder::aProject()
+            ->withUnixName('gpig')
+            ->build();
 
         $result = $this->ugroup_literalizer->ugroupIdsToString($ugroup_ids, $project);
-        $this->assertEquals($expected, $result);
+        self::assertEquals($expected, $result);
     }
 
     public function testItCanReturnUgroupIdsFromAnItemAndItsPermissionTypes(): void
     {
         $object_id           = 100;
         $expected            = [ProjectUGroup::PROJECT_MEMBERS];
-        $project             = \Mockery::spy(\Project::class);
-        $permissions_manager = \Mockery::spy(\PermissionsManager::class);
-        $permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($project, $object_id, self::PERMISSIONS_TYPE)->andReturns($expected);
+        $project             = ProjectTestBuilder::aProject()->build();
+        $permissions_manager = $this->createMock(\PermissionsManager::class);
+        $permissions_manager->method('getAuthorizedUGroupIdsForProject')->with($project, $object_id, self::PERMISSIONS_TYPE)->willReturn($expected);
         PermissionsManager::setInstance($permissions_manager);
         $result = $this->ugroup_literalizer->getUgroupIds($project, $object_id, self::PERMISSIONS_TYPE);
-        $this->assertEquals($expected, $result);
+        self::assertEquals($expected, $result);
         PermissionsManager::clearInstance();
     }
 
     public function testItReturnsOnlyProjectUserUgroups(): void
     {
-        $this->user->shouldReceive('getStatus')->andReturns('A');
+        $this->user->method('getStatus')->willReturn('A');
         $user_projects = [
             ['group_id' => 102, 'unix_group_name' => 'gpig2'],
         ];
         $user_groups   = [
             ['ugroup_id' => 105],
         ];
-        $this->user->shouldReceive('getProjects')->andReturns($user_projects);
-        $this->user->shouldReceive('isMember')->andReturns(true);
-        $this->user->shouldReceive('getAllUgroups')->andReturns($user_groups);
+        $this->user->method('getProjects')->willReturn($user_projects);
+        $this->user->method('isMember')->willReturn(true);
+        $this->user->method('getAllUgroups')->willReturn($user_groups);
 
         $ugroups = $this->ugroup_literalizer->getProjectUserGroupsForUser($this->user);
-        $this->assertContains('gpig2_project_members', $ugroups);
-        $this->assertContains('gpig2_project_admin', $ugroups);
-        $this->assertContains('ug_105', $ugroups);
-        $this->assertNotContains('site_active', $ugroups);
-        $this->assertEquals(3, sizeof($ugroups));
+        self::assertContains('gpig2_project_members', $ugroups);
+        self::assertContains('gpig2_project_admin', $ugroups);
+        self::assertContains('ug_105', $ugroups);
+        self::assertNotContains('site_active', $ugroups);
+        self::assertEquals(3, sizeof($ugroups));
     }
 
     public function testItReturnsOnlyProjectUserUgroupsIds(): void
     {
-        $this->user->shouldReceive('getStatus')->andReturns('A');
+        $this->user->method('getStatus')->willReturn('A');
         $user_projects = [
             ['group_id' => 102, 'unix_group_name' => 'gpig2'],
         ];
         $user_groups   = [
             ['ugroup_id' => 105],
         ];
-        $this->user->shouldReceive('getProjects')->andReturns($user_projects);
-        $this->user->shouldReceive('isMember')->andReturns(true);
-        $this->user->shouldReceive('getAllUgroups')->andReturns($user_groups);
+        $this->user->method('getProjects')->willReturn($user_projects);
+        $this->user->method('isMember')->willReturn(true);
+        $this->user->method('getAllUgroups')->willReturn($user_groups);
 
         $ugroups = $this->ugroup_literalizer->getProjectUserGroupsIdsForUser($this->user);
-        $this->assertContains('102_3', $ugroups);
-        $this->assertContains('102_4', $ugroups);
-        $this->assertContains('105', $ugroups);
-        $this->assertEquals(3, sizeof($ugroups));
+        self::assertContains('102_3', $ugroups);
+        self::assertContains('102_4', $ugroups);
+        self::assertContains('105', $ugroups);
+        self::assertEquals(3, sizeof($ugroups));
     }
 }
