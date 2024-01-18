@@ -34,6 +34,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\FeedbackSerializerStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\TrackerCCE\Stub\Administration\LogModuleUploadedStub;
+use Tuleap\TrackerCCE\Stub\Administration\UpdateModuleActivationStub;
 use Tuleap\TrackerCCE\Stubs\Administration\UploadedFileStub;
 use Tuleap\TrackerCCE\WASM\FindWASMModulePath;
 
@@ -48,6 +49,7 @@ final class UpdateModuleControllerTest extends TestCase
             new NullLogger(),
             new FindWASMModulePath(),
             LogModuleUploadedStub::build(),
+            UpdateModuleActivationStub::build(),
             new NoopSapiEmitter(),
         );
 
@@ -67,6 +69,7 @@ final class UpdateModuleControllerTest extends TestCase
             new NullLogger(),
             new FindWASMModulePath(),
             LogModuleUploadedStub::build(),
+            UpdateModuleActivationStub::build(),
             new NoopSapiEmitter(),
         );
 
@@ -90,6 +93,7 @@ final class UpdateModuleControllerTest extends TestCase
             new NullLogger(),
             new FindWASMModulePath(),
             LogModuleUploadedStub::build(),
+            UpdateModuleActivationStub::build(),
             new NoopSapiEmitter(),
         );
 
@@ -118,6 +122,7 @@ final class UpdateModuleControllerTest extends TestCase
             new NullLogger(),
             new FindWASMModulePath(),
             LogModuleUploadedStub::build(),
+            UpdateModuleActivationStub::build(),
             new NoopSapiEmitter(),
         );
 
@@ -157,6 +162,7 @@ final class UpdateModuleControllerTest extends TestCase
             new NullLogger(),
             new FindWASMModulePath(),
             LogModuleUploadedStub::build(),
+            UpdateModuleActivationStub::build(),
             new NoopSapiEmitter(),
         );
 
@@ -182,11 +188,14 @@ final class UpdateModuleControllerTest extends TestCase
 
         $project_history = LogModuleUploadedStub::build();
 
+        $update_module_activation = UpdateModuleActivationStub::build();
+
         $controller = new UpdateModuleController(
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),
             new NullLogger(),
             new FindWASMModulePath(),
             $project_history,
+            $update_module_activation,
             new NoopSapiEmitter(),
         );
 
@@ -204,5 +213,7 @@ final class UpdateModuleControllerTest extends TestCase
         self::assertSame(\Feedback::SUCCESS, $feedback_serializer->getCapturedFeedbacks()[0]->getLevel());
         self::assertSame(302, $response->getStatusCode());
         self::assertTrue($project_history->isLogged());
+        self::assertFalse($update_module_activation->hasBeenDeactivated());
+        self::assertTrue($update_module_activation->hasBeenActivated());
     }
 }

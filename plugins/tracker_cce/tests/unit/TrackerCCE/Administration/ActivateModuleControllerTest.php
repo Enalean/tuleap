@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\TrackerCCE\Administration;
 
-use org\bovigo\vfs\vfsStream;
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Http\Server\NullServerRequest;
@@ -32,21 +30,19 @@ use Tuleap\Test\Helpers\NoopSapiEmitter;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\FeedbackSerializerStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use Tuleap\TrackerCCE\Stub\Administration\LogModuleRemovedStub;
+use Tuleap\TrackerCCE\Stub\Administration\LogModuleActivatedStub;
+use Tuleap\TrackerCCE\Stub\Administration\LogModuleDeactivatedStub;
 use Tuleap\TrackerCCE\Stub\Administration\UpdateModuleActivationStub;
-use Tuleap\TrackerCCE\WASM\FindWASMModulePath;
 
-final class RemoveModuleControllerTest extends TestCase
+final class ActivateModuleControllerTest extends TestCase
 {
-    use ForgeConfigSandbox;
-
     public function testExceptionWhenNoTracker(): void
     {
-        $controller = new RemoveModuleController(
+        $controller = new ActivateModuleController(
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), FeedbackSerializerStub::buildSelf()),
-            LogModuleRemovedStub::build(),
-            new FindWASMModulePath(),
             UpdateModuleActivationStub::build(),
+            LogModuleActivatedStub::build(),
+            LogModuleDeactivatedStub::build(),
             new NoopSapiEmitter(),
         );
 
@@ -61,11 +57,11 @@ final class RemoveModuleControllerTest extends TestCase
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(101)->build();
 
-        $controller = new RemoveModuleController(
+        $controller = new ActivateModuleController(
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), FeedbackSerializerStub::buildSelf()),
-            LogModuleRemovedStub::build(),
-            new FindWASMModulePath(),
             UpdateModuleActivationStub::build(),
+            LogModuleActivatedStub::build(),
+            LogModuleDeactivatedStub::build(),
             new NoopSapiEmitter(),
         );
 
@@ -77,67 +73,72 @@ final class RemoveModuleControllerTest extends TestCase
         $controller->handle($request);
     }
 
-    public function testErrorWhenModuleDoesNotExist(): void
+    public function testItActivatesTheModule(): void
     {
-        \ForgeConfig::set('sys_data_dir', vfsStream::setup('/')->url());
-
         $tracker = TrackerTestBuilder::aTracker()->withId(101)->build();
         $user    = UserTestBuilder::buildWithDefaults();
 
         $feedback_serializer = FeedbackSerializerStub::buildSelf();
-
-        $controller = new RemoveModuleController(
-            new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),
-            LogModuleRemovedStub::build(),
-            new FindWASMModulePath(),
-            UpdateModuleActivationStub::build(),
-            new NoopSapiEmitter(),
-        );
-
-        $request = (new NullServerRequest())
-            ->withAttribute(\Tracker::class, $tracker)
-            ->withAttribute(\PFUser::class, $user);
-
-        $response = $controller->handle($request);
-
-        self::assertSame(\Feedback::ERROR, $feedback_serializer->getCapturedFeedbacks()[0]->getLevel());
-        self::assertSame(302, $response->getStatusCode());
-    }
-
-    public function testItRemovesTheModule(): void
-    {
-        \ForgeConfig::set('sys_data_dir', vfsStream::setup('/')->url());
-        mkdir(\ForgeConfig::get('sys_data_dir') . '/tracker_cce/101', 0700, true);
-        touch(\ForgeConfig::get('sys_data_dir') . '/tracker_cce/101/post-action.wasm');
-        self::assertTrue(is_file(\ForgeConfig::get('sys_data_dir') . '/tracker_cce/101/post-action.wasm'));
-
-        $tracker = TrackerTestBuilder::aTracker()->withId(101)->build();
-        $user    = UserTestBuilder::buildWithDefaults();
-
-        $feedback_serializer = FeedbackSerializerStub::buildSelf();
-
-        $project_history = LogModuleRemovedStub::build();
 
         $update_module_activation = UpdateModuleActivationStub::build();
 
-        $controller = new RemoveModuleController(
+        $activated_logs   = LogModuleActivatedStub::build();
+        $deactivated_logs = LogModuleDeactivatedStub::build();
+
+        $controller = new ActivateModuleController(
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),
-            $project_history,
-            new FindWASMModulePath(),
             $update_module_activation,
+            $activated_logs,
+            $deactivated_logs,
             new NoopSapiEmitter(),
         );
 
         $request = (new NullServerRequest())
             ->withAttribute(\Tracker::class, $tracker)
-            ->withAttribute(\PFUser::class, $user);
+            ->withAttribute(\PFUser::class, $user)
+            ->withParsedBody(['activate-module' => '1']);
 
         $response = $controller->handle($request);
 
-        self::assertFalse(is_file(\ForgeConfig::get('sys_data_dir') . '/tracker_cce/101/post-action.wasm'));
         self::assertSame(\Feedback::SUCCESS, $feedback_serializer->getCapturedFeedbacks()[0]->getLevel());
         self::assertSame(302, $response->getStatusCode());
-        self::assertTrue($project_history->isLogged());
+        self::assertTrue($activated_logs->isLogged());
+        self::assertFalse($deactivated_logs->isLogged());
+        self::assertTrue($update_module_activation->hasBeenActivated());
+        self::assertFalse($update_module_activation->hasBeenDeactivated());
+    }
+
+    public function testItDeactivatesTheModule(): void
+    {
+        $tracker = TrackerTestBuilder::aTracker()->withId(101)->build();
+        $user    = UserTestBuilder::buildWithDefaults();
+
+        $feedback_serializer = FeedbackSerializerStub::buildSelf();
+
+        $update_module_activation = UpdateModuleActivationStub::build();
+
+        $activated_logs   = LogModuleActivatedStub::build();
+        $deactivated_logs = LogModuleDeactivatedStub::build();
+
+        $controller = new ActivateModuleController(
+            new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),
+            $update_module_activation,
+            $activated_logs,
+            $deactivated_logs,
+            new NoopSapiEmitter(),
+        );
+
+        $request = (new NullServerRequest())
+            ->withAttribute(\Tracker::class, $tracker)
+            ->withAttribute(\PFUser::class, $user)
+            ->withParsedBody(['activate-module' => '0']);
+
+        $response = $controller->handle($request);
+
+        self::assertSame(\Feedback::SUCCESS, $feedback_serializer->getCapturedFeedbacks()[0]->getLevel());
+        self::assertSame(302, $response->getStatusCode());
+        self::assertFalse($activated_logs->isLogged());
+        self::assertTrue($deactivated_logs->isLogged());
         self::assertFalse($update_module_activation->hasBeenActivated());
         self::assertTrue($update_module_activation->hasBeenDeactivated());
     }

@@ -36,6 +36,18 @@ msgstr "Exécution de code personnalisé"
 msgid "Custom code execution as artifact post action"
 msgstr "Exécution de code personnalisé lors de la modification d'un artéfact"
 
+msgid "Custom code execution module activated"
+msgstr "Activation du module d'exécution de code personnalisé"
+
+msgid "Custom code execution module deactivated"
+msgstr "Désactivation du module d'exécution de code personnalisé"
+
+msgid "Custom code execution module removed"
+msgstr "Suppression du module d'exécution de code personnalisé"
+
+msgid "Custom code execution module uploaded"
+msgstr "Téléversement du module d'exécution de code personnalisé"
+
 msgid "Date"
 msgstr "Date"
 
@@ -83,6 +95,12 @@ msgstr "Supprimer le module"
 
 msgid "Status"
 msgstr "Statut"
+
+msgid "The module has been activated"
+msgstr "Le module a été activé"
+
+msgid "The module has been deactivated"
+msgstr "Le module a été désactivé"
 
 msgid "The module has been removed"
 msgstr "Le module a été supprimé"

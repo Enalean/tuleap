@@ -22,22 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\TrackerCCE;
 
-use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+use Psr\Log\LoggerInterface;
 use Tracker;
 use Tracker_Artifact_Changeset;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationTask;
-use Tuleap\Tracker\Webhook\ArtifactPayloadBuilder;
+use Tuleap\TrackerCCE\Administration\CheckModuleIsActivated;
 use Tuleap\TrackerCCE\Logs\ModuleLogLine;
 use Tuleap\TrackerCCE\Logs\SaveModuleLog;
 use Tuleap\TrackerCCE\WASM\WASMModuleCaller;
 use Tuleap\TrackerCCE\WASM\WASMModulePathHelper;
 use Tuleap\TrackerCCE\WASM\WASMResponseExecutor;
 use Tuleap\TrackerCCE\WASM\WASMResponseRepresentation;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationTask;
+use Tuleap\Tracker\Webhook\ArtifactPayloadBuilder;
 use Tuleap\User\CCEUser;
 use function Psl\Json\encode as psl_json_encode;
 
@@ -50,6 +51,7 @@ final class CustomCodeExecutionTask implements PostCreationTask
         private readonly WASMModuleCaller $module_caller,
         private readonly WASMResponseExecutor $response_executor,
         private readonly SaveModuleLog $log_dao,
+        private readonly CheckModuleIsActivated $check_module_is_activated,
     ) {
     }
 
@@ -59,6 +61,11 @@ final class CustomCodeExecutionTask implements PostCreationTask
 
         if ((int) $changeset->getSubmittedBy() === CCEUser::ID) {
             $this->logger->debug('Changeset submitted by forge__cce -> skip');
+            return;
+        }
+
+        if (! $this->check_module_is_activated->isModuleActivated($changeset->getTracker()->getId())) {
+            $this->logger->debug('Module is deactivated -> skip');
             return;
         }
 

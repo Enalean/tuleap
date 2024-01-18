@@ -24,16 +24,17 @@ namespace Tuleap\TrackerCCE;
 
 use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
-use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use Tuleap\Tracker\Test\Stub\Tracker\Webhook\ArtifactPayloadBuilderStub;
 use Tuleap\TrackerCCE\Logs\ModuleLogLine;
+use Tuleap\TrackerCCE\Stub\Administration\CheckModuleIsActivatedStub;
 use Tuleap\TrackerCCE\Stub\Logs\SaveModuleLogStub;
 use Tuleap\TrackerCCE\Stub\WASM\WASMModuleCallerStub;
 use Tuleap\TrackerCCE\Stub\WASM\WASMModulePathHelperStub;
 use Tuleap\TrackerCCE\Stub\WASM\WASMResponseExecutorStub;
 use Tuleap\TrackerCCE\WASM\WASMResponseRepresentation;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Tracker\Webhook\ArtifactPayloadBuilderStub;
 use Tuleap\User\CCEUser;
 
 class CustomCodeExecutionTaskTest extends TestCase
@@ -51,6 +52,7 @@ class CustomCodeExecutionTaskTest extends TestCase
             $caller,
             WASMResponseExecutorStub::buildOk(),
             SaveModuleLogStub::build(),
+            CheckModuleIsActivatedStub::activated(),
         );
         $changeset = ChangesetTestBuilder::aChangeset('1')
             ->submittedBy(CCEUser::ID)
@@ -58,6 +60,27 @@ class CustomCodeExecutionTaskTest extends TestCase
 
         $task->execute($changeset, true);
         self::assertTrue($logger->hasDebug('Changeset submitted by forge__cce -> skip'));
+        self::assertFalse($caller->hasBeenCalled());
+    }
+
+    public function testItReturnsIfModuleIsNotActivated(): void
+    {
+        $logger    = new TestLogger();
+        $caller    = WASMModuleCallerStub::withEmptyErrResult();
+        $task      = new CustomCodeExecutionTask(
+            $logger,
+            ArtifactPayloadBuilderStub::withEmptyPayload(),
+            WASMModulePathHelperStub::withPath(''),
+            $caller,
+            WASMResponseExecutorStub::buildOk(),
+            SaveModuleLogStub::build(),
+            CheckModuleIsActivatedStub::deactivated(),
+        );
+        $changeset = ChangesetTestBuilder::aChangeset('1')
+            ->build();
+
+        $task->execute($changeset, true);
+        self::assertTrue($logger->hasDebug('Module is deactivated -> skip'));
         self::assertFalse($caller->hasBeenCalled());
     }
 
@@ -72,6 +95,7 @@ class CustomCodeExecutionTaskTest extends TestCase
             $caller,
             WASMResponseExecutorStub::buildOk(),
             SaveModuleLogStub::build(),
+            CheckModuleIsActivatedStub::activated(),
         );
         $tracker   = TrackerTestBuilder::aTracker()->withId(23)->build();
         $artifact  = ArtifactTestBuilder::anArtifact(15)->inTracker($tracker)->build();
@@ -94,6 +118,7 @@ class CustomCodeExecutionTaskTest extends TestCase
             WASMModuleCallerStub::withErrResult('Caller error'),
             WASMResponseExecutorStub::buildOk(),
             SaveModuleLogStub::build(),
+            CheckModuleIsActivatedStub::activated(),
         );
         $tracker   = TrackerTestBuilder::aTracker()->withId(23)->build();
         $artifact  = ArtifactTestBuilder::anArtifact(15)->inTracker($tracker)->build();
@@ -116,6 +141,7 @@ class CustomCodeExecutionTaskTest extends TestCase
             WASMModuleCallerStub::withOkResult(new WASMResponseRepresentation([], null)),
             WASMResponseExecutorStub::buildErr("Executor error"),
             $dao,
+            CheckModuleIsActivatedStub::activated(),
         );
         $tracker   = TrackerTestBuilder::aTracker()->withId(23)->build();
         $artifact  = ArtifactTestBuilder::anArtifact(15)->inTracker($tracker)->build();
@@ -141,6 +167,7 @@ class CustomCodeExecutionTaskTest extends TestCase
             WASMModuleCallerStub::withOkResult(new WASMResponseRepresentation([], null)),
             WASMResponseExecutorStub::buildOk(),
             $dao,
+            CheckModuleIsActivatedStub::activated(),
         );
         $tracker   = TrackerTestBuilder::aTracker()->withId(23)->build();
         $artifact  = ArtifactTestBuilder::anArtifact(15)->inTracker($tracker)->build();

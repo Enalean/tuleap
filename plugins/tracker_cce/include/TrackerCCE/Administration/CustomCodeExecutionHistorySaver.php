@@ -23,10 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\TrackerCCE\Administration;
 
 
-final class CustomCodeExecutionHistorySaver implements LogModuleRemoved, LogModuleUploaded
+final class CustomCodeExecutionHistorySaver implements LogModuleRemoved, LogModuleUploaded, LogModuleDeactivated, LogModuleActivated
 {
-    private const MODULE_REMOVED  = 'plugin_tracker_cce_module_removed';
-    private const MODULE_UPLOADED = 'plugin_tracker_cce_module_uploaded';
+    private const MODULE_REMOVED     = 'plugin_tracker_cce_module_removed';
+    private const MODULE_UPLOADED    = 'plugin_tracker_cce_module_uploaded';
+    private const MODULE_ACTIVATED   = 'plugin_tracker_cce_module_activated';
+    private const MODULE_DEACTIVATED = 'plugin_tracker_cce_module_deactivated';
 
     public function __construct(private readonly \ProjectHistoryDao $dao)
     {
@@ -36,12 +38,20 @@ final class CustomCodeExecutionHistorySaver implements LogModuleRemoved, LogModu
     {
         return match ($key) {
             self::MODULE_REMOVED => dgettext(
-                'tuleap-baseline',
+                'tuleap-tracker_cce',
                 'Custom code execution module removed'
             ),
             self::MODULE_UPLOADED => dgettext(
-                'tuleap-baseline',
+                'tuleap-tracker_cce',
                 'Custom code execution module uploaded'
+            ),
+            self::MODULE_ACTIVATED => dgettext(
+                'tuleap-tracker_cce',
+                'Custom code execution module activated'
+            ),
+            self::MODULE_DEACTIVATED => dgettext(
+                'tuleap-tracker_cce',
+                'Custom code execution module deactivated'
             ),
             default => null,
         };
@@ -51,26 +61,40 @@ final class CustomCodeExecutionHistorySaver implements LogModuleRemoved, LogModu
     {
         $params['subEvents']['event_others'][] = self::MODULE_REMOVED;
         $params['subEvents']['event_others'][] = self::MODULE_UPLOADED;
+        $params['subEvents']['event_others'][] = self::MODULE_ACTIVATED;
+        $params['subEvents']['event_others'][] = self::MODULE_DEACTIVATED;
     }
 
     public function logModuleRemoved(\PFUser $user, \Tracker $tracker): void
     {
-        $this->dao->addHistory(
-            $tracker->getProject(),
-            $user,
-            new \DateTimeImmutable(),
-            self::MODULE_REMOVED,
-            $tracker->getName() . " (" . $tracker->getItemName() . ")",
-        );
+        $this->logActionOnTracker(self::MODULE_REMOVED, $user, $tracker);
     }
 
     public function logModuleUploaded(\PFUser $user, \Tracker $tracker): void
+    {
+        $this->logActionOnTracker(self::MODULE_UPLOADED, $user, $tracker);
+    }
+
+    public function logModuleActivated(\PFUser $user, \Tracker $tracker): void
+    {
+        $this->logActionOnTracker(self::MODULE_ACTIVATED, $user, $tracker);
+    }
+
+    public function logModuleDeactivated(\PFUser $user, \Tracker $tracker): void
+    {
+        $this->logActionOnTracker(self::MODULE_DEACTIVATED, $user, $tracker);
+    }
+
+    /**
+     * @param self::MODULE_* $action
+     */
+    private function logActionOnTracker(string $action, \PFUser $user, \Tracker $tracker): void
     {
         $this->dao->addHistory(
             $tracker->getProject(),
             $user,
             new \DateTimeImmutable(),
-            self::MODULE_UPLOADED,
+            $action,
             $tracker->getName() . " (" . $tracker->getItemName() . ")",
         );
     }
