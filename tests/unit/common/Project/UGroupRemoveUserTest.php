@@ -17,13 +17,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+namespace Tuleap\Project;
+
+use PFUser;
+use ProjectUGroup;
+use UGroup_Invalid_Exception;
+
 final class UGroupRemoveUserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private int $user_id = 400;
     private PFUser $user;
     private PFUser $project_administrator;
@@ -40,11 +43,16 @@ final class UGroupRemoveUserTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroup_id = 200;
         $group_id  = 300;
 
-        $ugroup = \Mockery::mock(\ProjectUGroup::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $ugroup->shouldReceive('exists')->andReturns(true);
-        $ugroup->__construct(['ugroup_id' => $ugroup_id, 'group_id' => $group_id]);
+        $ugroup = $this->getMockBuilder(\ProjectUGroup::class)
+            ->setConstructorArgs([['ugroup_id' => $ugroup_id, 'group_id' => $group_id]])
+            ->onlyMethods([
+                'exists',
+                'removeUserFromStaticGroup',
+            ])
+            ->getMock();
+        $ugroup->method('exists')->willReturn(true);
 
-        $ugroup->shouldReceive('removeUserFromStaticGroup')->with($group_id, $ugroup_id, $this->user_id)->once();
+        $ugroup->expects(self::once())->method('removeUserFromStaticGroup')->with($group_id, $ugroup_id, $this->user_id);
 
         $ugroup->removeUser($this->user, $this->project_administrator);
     }
@@ -54,11 +62,13 @@ final class UGroupRemoveUserTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroup_id = 200;
         $group_id  = 300;
 
-        $ugroup = \Mockery::mock(\ProjectUGroup::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $ugroup->shouldReceive('exists')->andReturns(false);
-        $ugroup->__construct(['ugroup_id' => $ugroup_id, 'group_id' => $group_id]);
+        $ugroup = $this->getMockBuilder(\ProjectUGroup::class)
+            ->setConstructorArgs([['ugroup_id' => $ugroup_id, 'group_id' => $group_id]])
+            ->onlyMethods(['exists'])
+            ->getMock();
+        $ugroup->method('exists')->willReturn(false);
 
-        $this->expectException(UGroup_Invalid_Exception::class);
+        self::expectException(UGroup_Invalid_Exception::class);
 
         $ugroup->removeUser($this->user, $this->project_administrator);
     }
@@ -68,10 +78,11 @@ final class UGroupRemoveUserTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroup_id = $GLOBALS['UGROUP_WIKI_ADMIN'];
         $group_id  = 300;
 
-        $ugroup = Mockery::mock(ProjectUGroup::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $ugroup->shouldReceive('removeUserFromDynamicGroup')->with($this->user, $this->project_administrator)->once();
-
-        $ugroup->__construct(['ugroup_id' => $ugroup_id, 'group_id' => $group_id]);
+        $ugroup = $this->getMockBuilder(\ProjectUGroup::class)
+            ->setConstructorArgs([['ugroup_id' => $ugroup_id, 'group_id' => $group_id]])
+            ->onlyMethods(['removeUserFromDynamicGroup'])
+            ->getMock();
+        $ugroup->expects(self::once())->method('removeUserFromDynamicGroup')->with($this->user, $this->project_administrator);
 
         $ugroup->removeUser($this->user, $this->project_administrator);
     }
@@ -82,7 +93,7 @@ final class UGroupRemoveUserTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $ugroup = new ProjectUGroup(['ugroup_id' => $ugroup_id]);
 
-        $this->expectException(Exception::class);
+        self::expectException(\Exception::class);
 
         $ugroup->removeUser($this->user, $this->project_administrator);
     }
@@ -93,7 +104,7 @@ final class UGroupRemoveUserTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $ugroup = new ProjectUGroup(['group_id' => $group_id]);
 
-        $this->expectException(UGroup_Invalid_Exception::class);
+        self::expectException(UGroup_Invalid_Exception::class);
 
         $ugroup->removeUser($this->user, $this->project_administrator);
     }
@@ -105,7 +116,7 @@ final class UGroupRemoveUserTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $ugroup = new ProjectUGroup(['group_id' => $group_id, 'ugroup_id' => $ugroup_id]);
 
-        $this->expectException(Exception::class);
+        self::expectException(\Exception::class);
 
         $user = new PFUser(['user_id' => 0, 'language_id' => 'en_US']);
 

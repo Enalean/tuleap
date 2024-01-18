@@ -18,35 +18,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class UGroupManagerUpdateUgroupBindingDaoTest extends \Tuleap\Test\PHPUnit\TestCase
+namespace Tuleap\Project;
+
+use PHPUnit\Framework\MockObject\MockObject;
+use UGroupManager;
+
+final class UGroupManagerUpdateUgroupBindingDaoTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var UGroupDao&\Mockery\MockInterface
-     */
-    private $dao;
+    private \UGroupDao&MockObject $dao;
     private UGroupManager $ugroup_manager;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dao            = \Mockery::spy(\UGroupDao::class);
+        $this->dao = $this->createMock(\UGroupDao::class);
+        $this->dao->method('searchByUGroupId');
         $this->ugroup_manager = new UGroupManager($this->dao);
     }
 
     public function testItCallsDaoToRemoveABinding(): void
     {
-        $this->dao->shouldReceive('updateUgroupBinding')->with(12, null)->once();
+        $this->dao->expects(self::once())->method('updateUgroupBinding')->with(12, null);
         $this->ugroup_manager->updateUgroupBinding(12);
     }
 
     public function testItCallsDaoToAddABinding(): void
     {
-        $this->dao->shouldReceive('updateUgroupBinding')->with(12, 24)->once();
+        $this->dao->expects(self::once())->method('updateUgroupBinding')->with(12, 24);
         $this->ugroup_manager->updateUgroupBinding(12, 24);
     }
 }

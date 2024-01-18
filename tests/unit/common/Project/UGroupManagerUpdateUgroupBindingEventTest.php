@@ -18,61 +18,51 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class UGroupManagerUpdateUgroupBindingEventTest extends \Tuleap\Test\PHPUnit\TestCase
+namespace Tuleap\Project;
+
+use PHPUnit\Framework\MockObject\MockObject;
+use ProjectUGroup;
+
+final class UGroupManagerUpdateUgroupBindingEventTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var a|\Mockery\MockInterface|EventManager
-     */
-    private $event_manager;
-    /**
-     * @var ProjectUGroup
-     */
-    private $ugroup_12;
-    /**
-     * @var ProjectUGroup
-     */
-    private $ugroup_24;
-    /**
-     * @var UGroupDao&\Mockery\MockInterface
-     */
-    private $dao;
-    /**
-     * @var \Mockery\MockInterface&UGroupManager
-     */
-    private $ugroup_manager;
+    private \EventManager&MockObject $event_manager;
+    private ProjectUGroup $ugroup_12;
+    private ProjectUGroup $ugroup_24;
+    private \UGroupDao&MockObject $dao;
+    private \UGroupManager&MockObject $ugroup_manager;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dao            = \Mockery::spy(\UGroupDao::class);
-        $this->event_manager  = \Mockery::spy(\EventManager::class);
-        $this->ugroup_manager = \Mockery::mock(
-            \UGroupManager::class,
-            [$this->dao, $this->event_manager]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $this->dao = $this->createMock(\UGroupDao::class);
+        $this->dao->method('updateUgroupBinding');
+        $this->event_manager  = $this->createMock(\EventManager::class);
+        $this->ugroup_manager = $this->getMockBuilder(\UGroupManager::class)
+            ->setConstructorArgs([$this->dao, $this->event_manager])
+            ->onlyMethods([
+                'getById',
+            ])
+            ->getMock();
 
         $this->ugroup_12 = new ProjectUGroup(['ugroup_id' => 12]);
         $this->ugroup_24 = new ProjectUGroup(['ugroup_id' => 24]);
-        $this->ugroup_manager->shouldReceive('getById')->with(12)->andReturns($this->ugroup_12);
-        $this->ugroup_manager->shouldReceive('getById')->with(24)->andReturns($this->ugroup_24);
+        $this->ugroup_manager->method('getById')->withConsecutive([12], [24])
+            ->willReturnOnConsecutiveCalls($this->ugroup_12, $this->ugroup_24);
     }
 
     public function testItRaiseAnEventWithGroupsWhenOneIsAdded(): void
     {
-        $this->event_manager->shouldReceive('processEvent')->with('ugroup_manager_update_ugroup_binding_add', ['ugroup' => $this->ugroup_12, 'source' => $this->ugroup_24])->once();
+        $this->event_manager->expects(self::once())->method('processEvent')
+            ->with('ugroup_manager_update_ugroup_binding_add', ['ugroup' => $this->ugroup_12, 'source' => $this->ugroup_24]);
         $this->ugroup_manager->updateUgroupBinding(12, 24);
     }
 
     public function testItRaiseAnEventWithGroupsWhenOneIsRemoved(): void
     {
-        $this->event_manager->shouldReceive('processEvent')->with('ugroup_manager_update_ugroup_binding_remove', ['ugroup' => $this->ugroup_12])->once();
+        $this->event_manager->expects(self::once())->method('processEvent')
+            ->with('ugroup_manager_update_ugroup_binding_remove', ['ugroup' => $this->ugroup_12]);
         $this->ugroup_manager->updateUgroupBinding(12);
     }
 }
