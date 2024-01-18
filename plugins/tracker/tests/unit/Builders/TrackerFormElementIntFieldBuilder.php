@@ -22,9 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders;
 
+
 final class TrackerFormElementIntFieldBuilder
 {
-    private string $name = 'initial_effort';
+    private string $name                        = 'initial_effort';
+    private bool $read_permission               = false;
+    private ?\PFUser $user_with_read_permission = null;
     private \Tracker $tracker;
 
     private function __construct(private readonly int $id)
@@ -49,6 +52,13 @@ final class TrackerFormElementIntFieldBuilder
         return $this;
     }
 
+    public function withReadPermission(\PFUser $user, bool $user_can_read): self
+    {
+        $this->user_with_read_permission = $user;
+        $this->read_permission           = $user_can_read;
+        return $this;
+    }
+
     public function build(): \Tracker_FormElement_Field_Integer
     {
         $field = new \Tracker_FormElement_Field_Integer(
@@ -66,6 +76,9 @@ final class TrackerFormElementIntFieldBuilder
             null
         );
         $field->setTracker($this->tracker);
+        if ($this->user_with_read_permission !== null) {
+            $field->setUserCanRead($this->user_with_read_permission, $this->read_permission);
+        }
         return $field;
     }
 }

@@ -34,6 +34,7 @@ interface FromWhereBuilder
     public function getFromWhere(
         Field $field,
         Comparison $comparison,
+        \PFUser $user,
         array $trackers,
     ): IProvideParametrizedFromAndWhereSQLFragments;
 }

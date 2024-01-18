@@ -51,6 +51,7 @@ final class FieldUsageChecker
             $this->retrieve_field_type,
             $field->getName(),
             $collector_parameters->getInvalidSearchablesCollectorParameters()->getTrackerIds(),
+            $collector_parameters->getInvalidSearchablesCollectorParameters()->getUser(),
         )->map(static fn() => null);
     }
 }

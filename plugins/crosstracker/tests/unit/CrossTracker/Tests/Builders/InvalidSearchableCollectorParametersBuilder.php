@@ -65,6 +65,12 @@ final class InvalidSearchableCollectorParametersBuilder
         return new self();
     }
 
+    public function withUser(\PFUser $user): self
+    {
+        $this->user = $user;
+        return $this;
+    }
+
     /**
      * @no-named-arguments
      */

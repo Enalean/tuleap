@@ -31,6 +31,7 @@ final class GreaterThanComparisonFromWhereBuilder implements FromWhereBuilder
     public function getFromWhere(
         Field $field,
         Comparison $comparison,
+        \PFUser $user,
         array $trackers,
     ): IProvideParametrizedFromAndWhereSQLFragments {
         throw new \LogicException('Between comparison for fields is not implemented yet');

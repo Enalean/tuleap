@@ -53,11 +53,12 @@ final class DuckTypedField
         RetrieveFieldType $retrieve_field_type,
         string $field_name,
         array $tracker_ids,
+        \PFUser $user,
     ): Ok|Err {
         $fields_user_can_read = [];
         foreach ($tracker_ids as $tracker_id) {
             $used_field = $retrieve_used_fields->getUsedFieldByName($tracker_id, $field_name);
-            if ($used_field) {
+            if ($used_field && $used_field->userCanRead($user)) {
                 $fields_user_can_read[] = DuckTypedFieldType::fromString($retrieve_field_type->getType($used_field))
                     ->map(static fn(DuckTypedFieldType $type) => new FieldIdentifierProperties($used_field->getId(), $type));
             }

@@ -26,7 +26,9 @@ use Tracker_FormElement_Field_Float;
 
 final class TrackerFormElementFloatFieldBuilder
 {
-    private string $name = 'float';
+    private string $name                        = 'float';
+    private ?\PFUser $user_with_read_permission = null;
+    private bool $read_permission               = false;
     private \Tracker $tracker;
 
     private function __construct(private readonly int $id)
@@ -51,6 +53,13 @@ final class TrackerFormElementFloatFieldBuilder
         return $this;
     }
 
+    public function withReadPermission(\PFUser $user, bool $user_can_read): self
+    {
+        $this->user_with_read_permission = $user;
+        $this->read_permission           = $user_can_read;
+        return $this;
+    }
+
     public function build(): Tracker_FormElement_Field_Float
     {
         $field = new Tracker_FormElement_Field_Float(
@@ -68,6 +77,9 @@ final class TrackerFormElementFloatFieldBuilder
             null
         );
         $field->setTracker($this->tracker);
+        if ($this->user_with_read_permission !== null) {
+            $field->setUserCanRead($this->user_with_read_permission, $this->read_permission);
+        }
         return $field;
     }
 }
