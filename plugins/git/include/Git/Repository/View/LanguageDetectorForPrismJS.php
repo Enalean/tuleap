@@ -58,6 +58,8 @@ class LanguageDetectorForPrismJS
         'hh'             => 'cpp',
         'hpp'            => 'cpp',
         'hxx'            => 'cpp',
+        'tpp'            => 'cpp',
+        'ipp'            => 'cpp',
         'f'              => 'fortran',
         'for'            => 'fortran',
         'f90'            => 'fortran',
