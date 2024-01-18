@@ -56,13 +56,23 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     private \Tracker_FormElement_Field_String $string_field;
     private \Tracker_FormElement_Field_Text $text_field;
     private RetrieveUsedFieldsStub $fields_retriever;
+    private \Tracker $tracker;
 
     protected function setUp(): void
     {
-        $this->int_field    = TrackerFormElementIntFieldBuilder::anIntField(self::INT_FIELD_ID)->build();
-        $this->float_field  = TrackerFormElementFloatFieldBuilder::aFloatField(self::FLOAT_FIELD_ID)->build();
-        $this->string_field = TrackerFormElementStringFieldBuilder::aStringField(self::STRING_FIELD_ID)->build();
-        $this->text_field   = TrackerFormElementTextFieldBuilder::aTextField(self::TEXT_FIELD_ID)->build();
+        $this->tracker      = TrackerTestBuilder::aTracker()->withId(self::TRACKER_ID)->build();
+        $this->int_field    = TrackerFormElementIntFieldBuilder::anIntField(self::INT_FIELD_ID)
+            ->inTracker($this->tracker)
+            ->build();
+        $this->float_field  = TrackerFormElementFloatFieldBuilder::aFloatField(self::FLOAT_FIELD_ID)
+            ->inTracker($this->tracker)
+            ->build();
+        $this->string_field = TrackerFormElementStringFieldBuilder::aStringField(self::STRING_FIELD_ID)
+            ->inTracker($this->tracker)
+            ->build();
+        $this->text_field   = TrackerFormElementTextFieldBuilder::aTextField(self::TEXT_FIELD_ID)
+            ->inTracker($this->tracker)
+            ->build();
 
         $this->fields_retriever = RetrieveUsedFieldsStub::withNoFields();
     }
@@ -72,8 +82,7 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private function getFieldsDataOnUpdate(array $payload): ChangesetValuesContainer
     {
-        $tracker  = TrackerTestBuilder::aTracker()->withId(self::TRACKER_ID)->build();
-        $artifact = ArtifactTestBuilder::anArtifact(2)->inTracker($tracker)->build();
+        $artifact = ArtifactTestBuilder::anArtifact(2)->inTracker($this->tracker)->build();
         $user     = UserTestBuilder::buildWithDefaults();
 
         $builder = new FieldsDataBuilder(
@@ -141,7 +150,10 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $changeset_values = $this->getFieldsDataOnUpdate([$link_representation]);
         $artifact_link    = $changeset_values->getArtifactLinkValue();
-        $new_links        = $artifact_link->unwrapOr(null)?->getChangeForwardLinksCommand()->getLinksToAdd()->getTargetArtifactIds();
+        $new_links        = $artifact_link->unwrapOr(null)
+            ?->getChangeForwardLinksCommand()
+            ->getLinksToAdd()
+            ->getTargetArtifactIds();
         self::assertCount(2, $new_links);
         self::assertContains($first_linked_artifact_id, $new_links);
         self::assertContains($second_linked_artifact_id, $new_links);

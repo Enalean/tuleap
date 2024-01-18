@@ -26,14 +26,16 @@ use Tracker_FormElement_Field_List_Bind;
 
 final class TrackerFormElementListFieldBuilder
 {
-    private string $label                              = "A list field";
-    private string $name                               = "list";
+    private string $label                              = 'A list field';
+    private string $name                               = 'list';
     private bool $is_required                          = false;
     private bool $is_multiple                          = false;
     private ?Tracker_FormElement_Field_List_Bind $bind = null;
+    private \Tracker $tracker;
 
     private function __construct(private readonly int $id)
     {
+        $this->tracker = TrackerTestBuilder::aTracker()->withId(10)->build();
     }
 
     public static function aListField(int $id): self
@@ -65,6 +67,18 @@ final class TrackerFormElementListFieldBuilder
         return $this;
     }
 
+    public function inTracker(\Tracker $tracker): self
+    {
+        $this->tracker = $tracker;
+        return $this;
+    }
+
+    public function thatIsRequired(): self
+    {
+        $this->is_required = true;
+        return $this;
+    }
+
     public function build(): \Tracker_FormElement_Field_Selectbox|\Tracker_FormElement_Field_MultiSelectbox
     {
         $selectbox = $this->buildSelectBox();
@@ -75,9 +89,9 @@ final class TrackerFormElementListFieldBuilder
     private function buildSelectBox(): \Tracker_FormElement_Field_Selectbox|\Tracker_FormElement_Field_MultiSelectbox
     {
         if ($this->is_multiple) {
-            return new \Tracker_FormElement_Field_MultiSelectbox(
+            $field = new \Tracker_FormElement_Field_MultiSelectbox(
                 $this->id,
-                10,
+                $this->tracker->getId(),
                 15,
                 $this->name,
                 $this->label,
@@ -89,10 +103,12 @@ final class TrackerFormElementListFieldBuilder
                 10,
                 null
             );
+            $field->setTracker($this->tracker);
+            return $field;
         }
-        return new \Tracker_FormElement_Field_Selectbox(
+        $field = new \Tracker_FormElement_Field_Selectbox(
             $this->id,
-            10,
+            $this->tracker->getId(),
             15,
             $this->name,
             $this->label,
@@ -104,5 +120,7 @@ final class TrackerFormElementListFieldBuilder
             10,
             null
         );
+        $field->setTracker($this->tracker);
+        return $field;
     }
 }

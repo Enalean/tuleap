@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Test\Builders;
 
 final class ArtifactLinkFieldBuilder
 {
-    private int $tracker_id       = 86;
     private int $parent_id        = 0;
     private string $shortname     = 'overjoy';
     private string $label         = 'Overjoy';
@@ -34,9 +33,11 @@ final class ArtifactLinkFieldBuilder
     private bool $is_required     = false;
     private string $notifications = '';
     private int $rank             = 1;
+    private \Tracker $tracker;
 
     private function __construct(private int $id)
     {
+        $this->tracker = TrackerTestBuilder::aTracker()->withId(86)->build();
     }
 
     public static function anArtifactLinkField(int $id): self
@@ -64,15 +65,21 @@ final class ArtifactLinkFieldBuilder
 
     public function withTrackerId(int $tracker_id): self
     {
-        $this->tracker_id = $tracker_id;
+        $this->tracker = TrackerTestBuilder::aTracker()->withId($tracker_id)->build();
+        return $this;
+    }
+
+    public function inTracker(\Tracker $tracker): self
+    {
+        $this->tracker = $tracker;
         return $this;
     }
 
     public function build(): \Tracker_FormElement_Field_ArtifactLink
     {
-        return new \Tracker_FormElement_Field_ArtifactLink(
+        $field = new \Tracker_FormElement_Field_ArtifactLink(
             $this->id,
-            $this->tracker_id,
+            $this->tracker->getId(),
             $this->parent_id,
             $this->shortname,
             $this->label,
@@ -83,5 +90,7 @@ final class ArtifactLinkFieldBuilder
             $this->notifications,
             $this->rank
         );
+        $field->setTracker($this->tracker);
+        return $field;
     }
 }

@@ -26,10 +26,12 @@ use Tracker_FormElement_Field_Float;
 
 final class TrackerFormElementFloatFieldBuilder
 {
-    private string $name = "float";
+    private string $name = 'float';
+    private \Tracker $tracker;
 
     private function __construct(private readonly int $id)
     {
+        $this->tracker = TrackerTestBuilder::aTracker()->withId(10)->build();
     }
 
     public static function aFloatField(int $id): self
@@ -43,15 +45,21 @@ final class TrackerFormElementFloatFieldBuilder
         return $this;
     }
 
+    public function inTracker(\Tracker $tracker): self
+    {
+        $this->tracker = $tracker;
+        return $this;
+    }
+
     public function build(): Tracker_FormElement_Field_Float
     {
-        return new Tracker_FormElement_Field_Float(
+        $field = new Tracker_FormElement_Field_Float(
             $this->id,
-            10,
+            $this->tracker->getId(),
             15,
             $this->name,
-            "",
-            "",
+            '',
+            '',
             true,
             'P',
             false,
@@ -59,5 +67,7 @@ final class TrackerFormElementFloatFieldBuilder
             10,
             null
         );
+        $field->setTracker($this->tracker);
+        return $field;
     }
 }

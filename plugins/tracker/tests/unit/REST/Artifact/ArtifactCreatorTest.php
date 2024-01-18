@@ -127,7 +127,7 @@ final class ArtifactCreatorTest extends TestCase
         ];
 
         $this->all_fields_retriever = RetrieveUsedFieldsStub::withFields(
-            TrackerFormElementStringFieldBuilder::aStringField($string_field_id)->build()
+            TrackerFormElementStringFieldBuilder::aStringField($string_field_id)->inTracker($this->tracker)->build()
         );
 
         $newly_created_artifact = ArtifactTestBuilder::anArtifact(27)->inTracker($this->tracker)->build();
@@ -153,7 +153,7 @@ final class ArtifactCreatorTest extends TestCase
         ];
 
         $this->all_fields_retriever = RetrieveUsedFieldsStub::withFields(
-            ArtifactLinkFieldBuilder::anArtifactLinkField(self::ARTIFACT_LINK_FIELD_ID)->build(),
+            ArtifactLinkFieldBuilder::anArtifactLinkField(self::ARTIFACT_LINK_FIELD_ID)->inTracker($this->tracker)->build(),
         );
 
         $newly_created_artifact = ArtifactTestBuilder::anArtifact(1)->inTracker($this->tracker)->build();
@@ -198,7 +198,7 @@ final class ArtifactCreatorTest extends TestCase
         ];
 
         $this->all_fields_retriever = RetrieveUsedFieldsStub::withFields(
-            ArtifactLinkFieldBuilder::anArtifactLinkField(self::ARTIFACT_LINK_FIELD_ID)->build(),
+            ArtifactLinkFieldBuilder::anArtifactLinkField(self::ARTIFACT_LINK_FIELD_ID)->inTracker($this->tracker)->build(),
         );
 
         $newly_created_artifact = ArtifactTestBuilder::anArtifact(1)->inTracker($this->tracker)->build();
@@ -242,7 +242,10 @@ final class ArtifactCreatorTest extends TestCase
         ];
 
         $this->all_fields_retriever = RetrieveUsedFieldsStub::withFields(
-            TrackerFormElementStringFieldBuilder::aStringField($string_field_id)->withName($string_field_name)->build()
+            TrackerFormElementStringFieldBuilder::aStringField($string_field_id)
+                ->withName($string_field_name)
+                ->inTracker($this->tracker)
+                ->build()
         );
 
         $newly_created_artifact = ArtifactTestBuilder::anArtifact(42)->inTracker($this->tracker)->build();
@@ -271,6 +274,7 @@ final class ArtifactCreatorTest extends TestCase
         $this->all_fields_retriever = RetrieveUsedFieldsStub::withFields(
             ArtifactLinkFieldBuilder::anArtifactLinkField(self::ARTIFACT_LINK_FIELD_ID)
                 ->withName($link_field_name)
+                ->inTracker($this->tracker)
                 ->build(),
         );
 

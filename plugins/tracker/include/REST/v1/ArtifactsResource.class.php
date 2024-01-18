@@ -1201,7 +1201,6 @@ class ArtifactsResource extends AuthenticatedResource
         $collector = new DryRunDuckTypingFieldCollector(
             EventManager::instance(),
             $this->formelement_factory,
-            $this->formelement_factory,
             new FieldCanBeEasilyMigratedVerifier(
                 $this->formelement_factory,
                 $this->formelement_factory,

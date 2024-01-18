@@ -26,12 +26,14 @@ use Tracker_FormElement_Field_String;
 
 final class TrackerFormElementStringFieldBuilder
 {
-    private string $label     = "Title";
-    private string $name      = "title";
+    private string $label     = 'Title';
+    private string $name      = 'title';
     private bool $is_required = false;
+    private \Tracker $tracker;
 
     private function __construct(private readonly int $id)
     {
+        $this->tracker = TrackerTestBuilder::aTracker()->withId(10)->build();
     }
 
     public static function aStringField(int $id): self
@@ -39,9 +41,9 @@ final class TrackerFormElementStringFieldBuilder
         return new self($id);
     }
 
-    public function thatIsRequired(): self
+    public function withName(string $name): self
     {
-        $this->is_required = true;
+        $this->name = $name;
         return $this;
     }
 
@@ -51,17 +53,23 @@ final class TrackerFormElementStringFieldBuilder
         return $this;
     }
 
-    public function withName(string $name): self
+    public function inTracker(\Tracker $tracker): self
     {
-        $this->name = $name;
+        $this->tracker = $tracker;
+        return $this;
+    }
+
+    public function thatIsRequired(): self
+    {
+        $this->is_required = true;
         return $this;
     }
 
     public function build(): Tracker_FormElement_Field_String
     {
-        return new Tracker_FormElement_Field_String(
+        $field = new Tracker_FormElement_Field_String(
             $this->id,
-            10,
+            $this->tracker->getId(),
             15,
             $this->name,
             $this->label,
@@ -73,5 +81,7 @@ final class TrackerFormElementStringFieldBuilder
             10,
             null
         );
+        $field->setTracker($this->tracker);
+        return $field;
     }
 }

@@ -54,20 +54,26 @@ final class FieldsDataFromValuesByFieldBuilderTest extends \Tuleap\Test\PHPUnit\
     private \Tracker_FormElement_Field_Float $float_field;
     private \Tracker_FormElement_Field_String $string_field;
     private \Tracker_FormElement_Field_Text $text_field;
+    private \Tracker $tracker;
 
     protected function setUp(): void
     {
+        $this->tracker      = TrackerTestBuilder::aTracker()->withId(self::TRACKER_ID)->build();
         $this->int_field    = TrackerFormElementIntFieldBuilder::anIntField(self::INT_FIELD_ID)
             ->withName(self::INT_FIELD_NAME)
+            ->inTracker($this->tracker)
             ->build();
         $this->float_field  = TrackerFormElementFloatFieldBuilder::aFloatField(self::FLOAT_FIELD_ID)
             ->withName(self::FLOAT_FIELD_NAME)
+            ->inTracker($this->tracker)
             ->build();
         $this->string_field = TrackerFormElementStringFieldBuilder::aStringField(self::STRING_FIELD_ID)
             ->withName(self::STRING_FIELD_NAME)
+            ->inTracker($this->tracker)
             ->build();
         $this->text_field   = TrackerFormElementTextFieldBuilder::aTextField(self::TEXT_FIELD_ID)
             ->withName(self::TEXT_FIELD_NAME)
+            ->inTracker($this->tracker)
             ->build();
 
         $this->fields_retriever = RetrieveUsedFieldsStub::withNoFields();
@@ -79,13 +85,11 @@ final class FieldsDataFromValuesByFieldBuilderTest extends \Tuleap\Test\PHPUnit\
      */
     private function buildFromValuesByField(array $payload): InitialChangesetValuesContainer
     {
-        $tracker = TrackerTestBuilder::aTracker()->withId(self::TRACKER_ID)->build();
-
         $builder = new FieldsDataFromValuesByFieldBuilder(
             $this->fields_retriever,
             new NewArtifactLinkInitialChangesetValueBuilder()
         );
-        return $builder->getFieldsDataOnCreate($payload, $tracker);
+        return $builder->getFieldsDataOnCreate($payload, $this->tracker);
     }
 
     public function testItGeneratesFieldDataFromRestValuesByField(): void
@@ -154,6 +158,7 @@ final class FieldsDataFromValuesByFieldBuilderTest extends \Tuleap\Test\PHPUnit\
         $msb_field = TrackerFormElementListFieldBuilder::aListField(484)
             ->withName('msb')
             ->withMultipleField()
+            ->inTracker($this->tracker)
             ->build();
 
         $payload = [

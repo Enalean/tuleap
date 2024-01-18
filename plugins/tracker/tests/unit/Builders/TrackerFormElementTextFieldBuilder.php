@@ -26,10 +26,12 @@ use Tracker_FormElement_Field_Text;
 
 final class TrackerFormElementTextFieldBuilder
 {
-    private string $name = "text";
+    private string $name = 'text';
+    private \Tracker $tracker;
 
     private function __construct(private readonly int $id)
     {
+        $this->tracker = TrackerTestBuilder::aTracker()->withId(10)->build();
     }
 
     public static function aTextField(int $id): self
@@ -43,15 +45,21 @@ final class TrackerFormElementTextFieldBuilder
         return $this;
     }
 
+    public function inTracker(\Tracker $tracker): self
+    {
+        $this->tracker = $tracker;
+        return $this;
+    }
+
     public function build(): Tracker_FormElement_Field_Text
     {
-        return new Tracker_FormElement_Field_Text(
+        $field = new Tracker_FormElement_Field_Text(
             $this->id,
             10,
             15,
             $this->name,
-            "",
-            "",
+            '',
+            '',
             true,
             'P',
             false,
@@ -59,5 +67,7 @@ final class TrackerFormElementTextFieldBuilder
             10,
             null
         );
+        $field->setTracker($this->tracker);
+        return $field;
     }
 }
