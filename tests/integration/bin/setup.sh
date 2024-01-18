@@ -87,7 +87,8 @@ seed_data() {
         fts_meilisearch \
         baseline \
         gitlab \
-        roadmap
+        roadmap \
+        tracker_cce
 }
 
 seed_plugin_data() {

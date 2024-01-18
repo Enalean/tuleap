@@ -15,7 +15,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Tuleap\\TrackerCCE\\": ["tests/unit/TrackerCCE", "tests/unit/"]
+      "Tuleap\\TrackerCCE\\": ["tests/unit/TrackerCCE", "tests/unit/", "tests/integration/TrackerCCE"]
     }
   }
 }

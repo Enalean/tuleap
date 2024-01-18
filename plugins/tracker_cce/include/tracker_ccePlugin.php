@@ -91,6 +91,7 @@ use Tuleap\TrackerCCE\Administration\RemoveModuleController;
 use Tuleap\TrackerCCE\Administration\UpdateModuleController;
 use Tuleap\TrackerCCE\Administration\AdministrationCSRFTokenProvider;
 use Tuleap\TrackerCCE\CustomCodeExecutionTask;
+use Tuleap\TrackerCCE\Logs\ModuleLogDao;
 use Tuleap\TrackerCCE\WASM\CallWASMModule;
 use Tuleap\TrackerCCE\WASM\ExecuteWASMResponse;
 use Tuleap\TrackerCCE\WASM\FindWASMModulePath;
@@ -154,6 +155,7 @@ final class tracker_ccePlugin extends Plugin
                 )
             ),
             new ExecuteWASMResponse($event->getLogger(), $this->getPutHandler($event->getLogger())),
+            new ModuleLogDao(),
         ));
     }
 
