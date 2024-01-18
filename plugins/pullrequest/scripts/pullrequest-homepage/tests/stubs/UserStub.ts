@@ -17,8 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export { SelectorsDropdown } from "./elements/SelectorsDropdown";
-export type {
-    SelectorEntry,
-    SelectorsDropdownLoadItemsCallback,
-} from "./elements/SelectorsDropdown";
+import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
+
+export const UserStub = {
+    withIdAndName: (id: number, name: string): User => ({
+        id,
+        display_name: name,
+        user_url: `url/to/${name}.html`,
+        avatar_url: `url/to/${name}.png`,
+    }),
+};

@@ -22,7 +22,13 @@ import { okAsync } from "neverthrow";
 import { uri } from "@tuleap/fetch-result";
 import * as fetch_result from "@tuleap/fetch-result";
 import { PullRequestStub } from "@tuleap/plugin-pullrequest-stub";
-import { fetchAllPullRequests, fetchPullRequestLabels } from "./tuleap-rest-querier";
+import {
+    fetchAllPullRequests,
+    fetchPullRequestLabels,
+    fetchPullRequestsAuthors,
+} from "./tuleap-rest-querier";
+import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
+import { UserStub } from "../../tests/stubs/UserStub";
 
 const repository_id = 10;
 const pull_request_id = 2;
@@ -44,6 +50,12 @@ const labels_collection = [
             { id: 3, label: "Oignons", is_outline: false, color: "plum-crazy" },
         ],
     },
+];
+
+const users_collection: User[] = [
+    UserStub.withIdAndName(101, "Joe l'asticot (jolasti)"),
+    UserStub.withIdAndName(102, "John Doe (jdoe)"),
+    UserStub.withIdAndName(5, "Johann Zarco (jz5)"),
 ];
 
 describe("tuleap-rest-querier", () => {
@@ -90,6 +102,28 @@ describe("tuleap-rest-querier", () => {
             );
 
             expect(result.value).toStrictEqual(labels_collection);
+        });
+    });
+
+    describe("fetchPullRequestsAuthors", () => {
+        it("should query all the pull-requests authors in a given repository", async () => {
+            vi.spyOn(fetch_result, "getAllJSON").mockReturnValue(okAsync(users_collection));
+
+            const result = await fetchPullRequestsAuthors(repository_id);
+            if (!result.isOk()) {
+                throw new Error("Expected an OK");
+            }
+
+            expect(fetch_result.getAllJSON).toHaveBeenCalledWith(
+                uri`/api/v1/git/${repository_id}/pull_requests_authors`,
+                {
+                    params: {
+                        limit: 50,
+                    },
+                },
+            );
+
+            expect(result.value).toStrictEqual(users_collection);
         });
     });
 });

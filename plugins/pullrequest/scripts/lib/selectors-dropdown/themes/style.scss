@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "@tuleap/lazybox/style";
+
 .selectors-dropdown-content {
     flex-direction: row;
     padding: 0;
@@ -48,7 +50,6 @@
 
 .selectors-dropdown-side-panel {
     width: 280px;
-    min-height: 180px;
     padding: var(--tlp-small-spacing);
     border-left: 1px solid var(--tlp-neutral-light-color);
 }

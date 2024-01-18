@@ -24,24 +24,13 @@ import type { VueWrapper } from "@vue/test-utils";
 import * as tlp_dropdown from "@tuleap/tlp-dropdown";
 import { PullRequestStub } from "@tuleap/plugin-pullrequest-stub";
 import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
+import { UserStub } from "../../../../tests/stubs/UserStub";
 import PullRequestReviewers from "./PullRequestReviewers.vue";
 
 const reviewers: User[] = [
-    {
-        id: 101,
-        display_name: "Joe l'asticot (jolasti)",
-        avatar_url: "url/to/jolasti.png",
-    } as User,
-    {
-        id: 102,
-        display_name: "John Doe (jdoe)",
-        avatar_url: "url/to/jdoe.png",
-    } as User,
-    {
-        id: 5,
-        display_name: "Johann Zarco (jz5)",
-        avatar_url: "url/to/jz5.png",
-    } as User,
+    UserStub.withIdAndName(101, "Joe l'asticot (jolasti)"),
+    UserStub.withIdAndName(102, "John Doe (jdoe)"),
+    UserStub.withIdAndName(5, "Johann Zarco (jz5)"),
 ];
 
 vi.mock("@tuleap/tlp-dropdown", () => ({

@@ -17,8 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export { SelectorsDropdown } from "./elements/SelectorsDropdown";
-export type {
-    SelectorEntry,
-    SelectorsDropdownLoadItemsCallback,
-} from "./elements/SelectorsDropdown";
+import type { Autocompleter } from "../src/elements/SelectorsDropdownAutocompleter";
+
+export const AutocompleterStub = (): Autocompleter => ({
+    start: (): Promise<void> => {
+        return Promise.resolve();
+    },
+});

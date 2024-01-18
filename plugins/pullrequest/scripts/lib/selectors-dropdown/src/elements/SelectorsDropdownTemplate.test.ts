@@ -29,6 +29,7 @@ import {
     DROPDOWN_CONTENT_CLASSNAME,
     renderContent,
 } from "./SelectorsDropdownTemplate";
+import { SelectorEntryStub } from "../../tests/SelectorEntryStub";
 
 describe("SelectorsDropdownTemplate", () => {
     let host: HostElement,
@@ -43,10 +44,10 @@ describe("SelectorsDropdownTemplate", () => {
         host = {
             button_text: "Add filter",
             selectors_entries: [
-                { entry_name: "Author" },
-                { entry_name: "Reviewer" },
-                { entry_name: "Branch" },
-                { entry_name: "Label" },
+                SelectorEntryStub.withEntryName("Author"),
+                SelectorEntryStub.withEntryName("Reviewer"),
+                SelectorEntryStub.withEntryName("Branch"),
+                SelectorEntryStub.withEntryName("Label"),
             ],
             active_selector,
             is_dropdown_shown,

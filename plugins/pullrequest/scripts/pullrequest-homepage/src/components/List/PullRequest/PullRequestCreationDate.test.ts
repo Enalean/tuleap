@@ -27,6 +27,7 @@ import {
     injected_user_locale,
     StubInjectionSymbols,
 } from "../../../../tests/injection-symbols-stub";
+import { UserStub } from "../../../../tests/stubs/UserStub";
 import { getGlobalTestOptions } from "../../../../tests/global-options-for-tests";
 import PullRequestCreationDate from "./PullRequestCreationDate.vue";
 
@@ -53,12 +54,7 @@ describe("PullRequestCreationDate", () => {
 
     beforeEach(() => {
         creation_date = "2023-12-18T12:30:00Z";
-        creator = {
-            id: 102,
-            display_name: "Joe l'asticot (jolasti)",
-            avatar_url: "/url/to/jolasti.png",
-            user_url: "/url/to/jolasti_profile.html",
-        };
+        creator = UserStub.withIdAndName(102, "Joe l'asticot (jolasti)");
         pull_request = PullRequestStub.buildOpenPullRequest({
             creation_date,
             creator,

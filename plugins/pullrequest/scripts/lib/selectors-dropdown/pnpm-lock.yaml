@@ -4,6 +4,9 @@ dependencies:
   '@tuleap/dom':
     specifier: workspace:*
     version: link:../../../../../lib/frontend/dom
+  '@tuleap/lazybox':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/lazybox
   '@tuleap/option':
     specifier: workspace:*
     version: link:../../../../../lib/frontend/option

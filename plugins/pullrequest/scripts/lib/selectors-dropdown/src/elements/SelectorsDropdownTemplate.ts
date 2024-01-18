@@ -48,7 +48,11 @@ const renderSidePanel = (
     }
 
     return host.active_selector.match(
-        () => html` <div class="selectors-dropdown-side-panel" data-test="side-panel"></div> `,
+        () => html`
+            <div class="selectors-dropdown-side-panel" data-test="side-panel">
+                <span class="selectors-dropdown-auto-completer"></span>
+            </div>
+        `,
         () => html``,
     );
 };

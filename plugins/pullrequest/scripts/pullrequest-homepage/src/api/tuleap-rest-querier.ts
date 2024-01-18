@@ -23,6 +23,7 @@ import type {
     ProjectLabel,
     ProjectLabelsCollection,
     PullRequest,
+    User,
 } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { uri, getAllJSON } from "@tuleap/fetch-result";
 
@@ -58,4 +59,12 @@ export const fetchPullRequestLabels = (
             },
         },
     );
+};
+
+export const fetchPullRequestsAuthors = (
+    repository_id: number,
+): ResultAsync<readonly User[], Fault> => {
+    return getAllJSON(uri`/api/v1/git/${repository_id}/pull_requests_authors`, {
+        params: { limit: 50 },
+    });
 };
