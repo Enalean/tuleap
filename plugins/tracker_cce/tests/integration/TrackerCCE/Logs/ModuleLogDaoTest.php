@@ -27,33 +27,62 @@ use Tuleap\DB\DBFactory;
 final class ModuleLogDaoTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ModuleLogDao $dao;
+    private int $tracker_id;
+    private int $other_tracker_id;
+    private int $artifact_id;
+    private int $other_artifact_id;
+    private int $changeset_id;
+    private int $other_changeset_id;
 
     protected function setUp(): void
     {
-        $this->dao = new ModuleLogDao();
+        $this->dao                = new ModuleLogDao();
+        $db                       = DBFactory::getMainTuleapDBConnection()->getDB();
+        $this->tracker_id         = (int) $db->insertReturnId('tracker', ['group_id' => 100]);
+        $this->artifact_id        = (int) $db->insertReturnId('tracker_artifact', [
+            'tracker_id'              => $this->tracker_id,
+            'last_changeset_id'       => 1,
+            'submitted_by'            => 101,
+            'submitted_on'            => 123456790,
+            'per_tracker_artifact_id' => 1,
+        ]);
+        $this->changeset_id       = (int) $db->insertReturnId('tracker_changeset', [
+            'artifact_id'  => $this->artifact_id,
+            'submitted_on' => 1234567890,
+        ]);
+        $this->other_tracker_id   = (int) $db->insertReturnId('tracker', ['group_id' => 100]);
+        $this->other_artifact_id  = (int) $db->insertReturnId('tracker_artifact', [
+            'tracker_id'              => $this->other_tracker_id,
+            'last_changeset_id'       => 1,
+            'submitted_by'            => 101,
+            'submitted_on'            => 123456790,
+            'per_tracker_artifact_id' => 1,
+        ]);
+        $this->other_changeset_id = (int) $db->insertReturnId('tracker_changeset', [
+            'artifact_id'  => $this->other_artifact_id,
+            'submitted_on' => 1234567890,
+        ]);
     }
 
     protected function tearDown(): void
     {
-        DBFactory::getMainTuleapDBConnection()->getDB()
-            ->run('DELETE FROM plugin_tracker_cce_module_log');
+        $db = DBFactory::getMainTuleapDBConnection()->getDB();
+        $db->run('DELETE FROM plugin_tracker_cce_module_log');
+        $db->run('DELETE FROM tracker WHERE id IN (?, ?)', $this->tracker_id, $this->other_tracker_id);
+        $db->run('DELETE FROM tracker_artifact WHERE id IN (?, ?)', $this->artifact_id, $this->other_artifact_id);
+        $db->run('DELETE FROM tracker_changeset WHERE id IN (?, ?)', $this->changeset_id, $this->other_changeset_id);
     }
 
     public function testItCanInsertANewPassedEntry(): void
     {
-        $this->dao->saveModuleLogLine(ModuleLogLine::buildPassed(
-            856,
-            '{"source": "payload"}',
-            '{"generated": "payload"}',
-            1234567890,
-        ));
+        $this->dao->saveModuleLogLine($this->createLogForChangeset($this->changeset_id, true));
 
         $result = DBFactory::getMainTuleapDBConnection()->getDB()
-            ->row('SELECT * FROM plugin_tracker_cce_module_log WHERE changeset_id = ?', 856);
+            ->row('SELECT * FROM plugin_tracker_cce_module_log WHERE changeset_id = ?', $this->changeset_id);
 
         self::assertIsArray($result);
         self::assertEquals(ModuleLogLine::STATUS_PASSED, $result['status']);
-        self::assertEquals(856, $result['changeset_id']);
+        self::assertEquals($this->changeset_id, $result['changeset_id']);
         self::assertEquals('{"source": "payload"}', $result['source_payload_json']);
         self::assertEquals('{"generated": "payload"}', $result['generated_payload_json']);
         self::assertNull($result['error_message']);
@@ -62,22 +91,48 @@ final class ModuleLogDaoTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCanInsertANewErrorEntry(): void
     {
-        $this->dao->saveModuleLogLine(ModuleLogLine::buildError(
-            856,
-            '{"source": "payload"}',
-            'Error message',
-            1234567890,
-        ));
+        $this->dao->saveModuleLogLine($this->createLogForChangeset($this->changeset_id, false));
 
         $result = DBFactory::getMainTuleapDBConnection()->getDB()
-            ->row('SELECT * FROM plugin_tracker_cce_module_log WHERE changeset_id = ?', 856);
+            ->row('SELECT * FROM plugin_tracker_cce_module_log WHERE changeset_id = ?', $this->changeset_id);
 
         self::assertIsArray($result);
         self::assertEquals(ModuleLogLine::STATUS_ERROR, $result['status']);
-        self::assertEquals(856, $result['changeset_id']);
+        self::assertEquals($this->changeset_id, $result['changeset_id']);
         self::assertEquals('{"source": "payload"}', $result['source_payload_json']);
         self::assertNull($result['generated_payload_json']);
         self::assertEquals('Error message', $result['error_message']);
         self::assertEquals(1234567890, $result['execution_date']);
+    }
+
+    public function testItKeepsOnly50LogsMaxPerTracker(): void
+    {
+        for ($i = 0; $i < 100; $i++) {
+            $this->dao->saveModuleLogLine($this->createLogForChangeset($this->changeset_id, true));
+        }
+        $this->dao->saveModuleLogLine($this->createLogForChangeset($this->other_changeset_id, true));
+
+        $db = DBFactory::getMainTuleapDBConnection()->getDB();
+        self::assertEquals(50, $db->cell('SELECT count(id) FROM plugin_tracker_cce_module_log WHERE changeset_id = ?', $this->changeset_id));
+        self::assertEquals(1, $db->cell('SELECT count(id) FROM plugin_tracker_cce_module_log WHERE changeset_id = ?', $this->other_changeset_id));
+    }
+
+    private function createLogForChangeset(int $changeset_id, bool $passed): ModuleLogLine
+    {
+        if ($passed) {
+            return ModuleLogLine::buildPassed(
+                $changeset_id,
+                '{"source": "payload"}',
+                '{"generated": "payload"}',
+                1234567890,
+            );
+        } else {
+            return ModuleLogLine::buildError(
+                $changeset_id,
+                '{"source": "payload"}',
+                'Error message',
+                1234567890,
+            );
+        }
     }
 }
