@@ -38,6 +38,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactValuesRepresentationBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\LinkWithDirectionRepresentationBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\CheckArtifactRestUpdateConditionsStub;
 use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
 use Tuleap\Tracker\Test\Stub\RetrieveForwardLinksStub;
@@ -74,11 +75,14 @@ final class PUTHandlerTest extends TestCase
      */
     private function handle(): void
     {
-        $artifact = ArtifactTestBuilder::anArtifact(1)->build();
+        $tracker  = TrackerTestBuilder::aTracker()->withId(26)->build();
+        $artifact = ArtifactTestBuilder::anArtifact(1)->inTracker($tracker)->build();
         $user     = UserTestBuilder::buildWithDefaults();
 
         $all_fields_retriever = RetrieveUsedFieldsStub::withFields(
-            ArtifactLinkFieldBuilder::anArtifactLinkField(self::ARTIFACT_LINK_FIELD_ID)->build()
+            ArtifactLinkFieldBuilder::anArtifactLinkField(self::ARTIFACT_LINK_FIELD_ID)
+                ->inTracker($tracker)
+                ->build()
         );
 
         $put_handler = new PUTHandler(

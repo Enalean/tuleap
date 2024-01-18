@@ -35,10 +35,12 @@ use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
 final class TrackerExternalFormElementBuilder
 {
-    private string $name = "external_field";
+    private string $name = 'external_field';
+    private \Tracker $tracker;
 
     private function __construct(private readonly int $id)
     {
+        $this->tracker = TrackerTestBuilder::aTracker()->withId(10)->build();
     }
 
     public static function anExternalField(int $id): self
@@ -49,15 +51,20 @@ final class TrackerExternalFormElementBuilder
     public function withName(string $name): self
     {
         $this->name = $name;
+        return $this;
+    }
 
+    public function inTracker(\Tracker $tracker): self
+    {
+        $this->tracker = $tracker;
         return $this;
     }
 
     public function build(): Tracker_FormElement_Field
     {
-        return new class (
+        $field = new class (
             $this->id,
-            10,
+            $this->tracker->getId(),
             15,
             $this->name,
             "",
@@ -118,12 +125,17 @@ final class TrackerExternalFormElementBuilder
             {
             }
 
-            protected function fetchArtifactValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value, array $submitted_values,)
-            {
+            protected function fetchArtifactValue(
+                Artifact $artifact,
+                ?Tracker_Artifact_ChangesetValue $value,
+                array $submitted_values,
+            ) {
             }
 
-            public function fetchArtifactValueReadOnly(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
-            {
+            public function fetchArtifactValueReadOnly(
+                Artifact $artifact,
+                ?Tracker_Artifact_ChangesetValue $value = null,
+            ) {
             }
 
             protected function fetchSubmitValue(array $submitted_values)
@@ -150,18 +162,30 @@ final class TrackerExternalFormElementBuilder
             {
             }
 
-            protected function saveValue($artifact, $changeset_value_id, $value, ?Tracker_Artifact_ChangesetValue $previous_changesetvalue, CreatedFileURLMapping $url_mapping,)
-            {
+            protected function saveValue(
+                $artifact,
+                $changeset_value_id,
+                $value,
+                ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
+                CreatedFileURLMapping $url_mapping,
+            ) {
             }
 
             public function getChangesetValue($changeset, $value_id, $has_changed)
             {
             }
 
-            public function fetchChangesetValue(int $artifact_id, int $changeset_id, mixed $value, ?Tracker_Report $report = null, ?int $from_aid = null,): string
-            {
+            public function fetchChangesetValue(
+                int $artifact_id,
+                int $changeset_id,
+                mixed $value,
+                ?Tracker_Report $report = null,
+                ?int $from_aid = null,
+            ): string {
                 return "";
             }
         };
+        $field->setTracker($this->tracker);
+        return $field;
     }
 }

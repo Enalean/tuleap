@@ -25,9 +25,11 @@ namespace Tuleap\Tracker\Test\Builders;
 final class TrackerFormElementIntFieldBuilder
 {
     private string $name = 'initial_effort';
+    private \Tracker $tracker;
 
     private function __construct(private readonly int $id)
     {
+        $this->tracker = TrackerTestBuilder::aTracker()->withId(10)->build();
     }
 
     public static function anIntField(int $id): self
@@ -41,11 +43,17 @@ final class TrackerFormElementIntFieldBuilder
         return $this;
     }
 
+    public function inTracker(\Tracker $tracker): self
+    {
+        $this->tracker = $tracker;
+        return $this;
+    }
+
     public function build(): \Tracker_FormElement_Field_Integer
     {
-        return new \Tracker_FormElement_Field_Integer(
+        $field = new \Tracker_FormElement_Field_Integer(
             $this->id,
-            10,
+            $this->tracker->getId(),
             15,
             $this->name,
             $this->name,
@@ -57,5 +65,7 @@ final class TrackerFormElementIntFieldBuilder
             10,
             null
         );
+        $field->setTracker($this->tracker);
+        return $field;
     }
 }

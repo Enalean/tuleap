@@ -34,9 +34,6 @@ final class RetrieveUsedFieldsStub implements RetrieveUsedFields
     {
     }
 
-    /**
-     * @no-named-arguments
-     */
     public static function withFields(
         \Tracker_FormElement_Field $first_field,
         \Tracker_FormElement_Field ...$other_fields,
@@ -51,7 +48,13 @@ final class RetrieveUsedFieldsStub implements RetrieveUsedFields
 
     public function getUsedFields(\Tracker $tracker): array
     {
-        return $this->fields;
+        $fields_of_tracker = [];
+        foreach ($this->fields as $field) {
+            if ($field->getTrackerId() === $tracker->getId()) {
+                $fields_of_tracker[] = $field;
+            }
+        }
+        return $fields_of_tracker;
     }
 
     public function getUsedFormElementFieldById(int $id): ?Tracker_FormElement_Field
@@ -68,7 +71,7 @@ final class RetrieveUsedFieldsStub implements RetrieveUsedFields
     public function getUsedFieldByName(int $tracker_id, string $field_name): ?Tracker_FormElement_Field
     {
         foreach ($this->fields as $field) {
-            if ($field->getName() === $field_name) {
+            if ($field->getName() === $field_name && $field->getTrackerId() === $tracker_id) {
                 return $field;
             }
         }

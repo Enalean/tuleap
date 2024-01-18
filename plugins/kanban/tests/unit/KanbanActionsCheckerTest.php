@@ -24,14 +24,16 @@ namespace Tuleap\Kanban;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
-use Tracker_FormElement_Field_Integer;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_String;
-use Tracker_FormElement_Field_Text;
 use Tracker_Semantic_Status;
 use Tracker_Semantic_Title;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementTextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
@@ -39,34 +41,38 @@ use Tuleap\Tracker\Test\Stub\VerifySubmissionPermissionStub;
 
 final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private Tracker_FormElement_Field_String&MockObject $field_string;
-    private Tracker_FormElement_Field_Text&MockObject $field_text;
-    private Tracker_FormElement_Field_Integer&MockObject $field_int;
-    private Tracker_FormElement_Field_List&MockObject $field_list;
+    private const STRING_FIELD_ID = 201;
+    private const LIST_FIELD_ID   = 40;
+    private Tracker_FormElement_Field_String $field_string;
+    private Tracker_FormElement_Field_List $field_list;
     private Tracker $tracker;
-    private \Project $project;
     private MockObject&Tracker_Semantic_Title $semantic_title;
     private Tracker_Semantic_Status&MockObject $semantic_status;
+    private VerifySubmissionPermissionStub $verify_submission_permissions;
+    private \PFUser $user;
 
     protected function setUp(): void
     {
-        $this->field_string = $this->createMock(Tracker_FormElement_Field_String::class);
-        $this->field_string->method('getId')->willReturn(201);
-        $this->field_text = $this->createMock(Tracker_FormElement_Field_Text::class);
-        $this->field_text->method('getId')->willReturn(20);
-        $this->field_int = $this->createMock(Tracker_FormElement_Field_Integer::class);
-        $this->field_int->method('getId')->willReturn(30);
-        $this->field_list = $this->createMock(Tracker_FormElement_Field_List::class);
-        $this->field_list->method('getId')->willReturn(40);
-
-        $this->project = ProjectTestBuilder::aProject()->build();
-        $this->tracker = TrackerTestBuilder::aTracker()->withId(888)->withProject($this->project)->build();
+        $project            = ProjectTestBuilder::aProject()->build();
+        $this->tracker      = TrackerTestBuilder::aTracker()->withId(888)->withProject($project)->build();
+        $this->field_string = TrackerFormElementStringFieldBuilder::aStringField(self::STRING_FIELD_ID)
+            ->inTracker($this->tracker)
+            ->build();
+        $this->field_list   = TrackerFormElementListFieldBuilder::aListField(self::LIST_FIELD_ID)
+            ->inTracker($this->tracker)
+            ->build();
 
         $this->semantic_title  = $this->createMock(\Tracker_Semantic_Title::class);
         $this->semantic_status = $this->createMock(\Tracker_Semantic_Status::class);
 
         Tracker_Semantic_Title::setInstance($this->semantic_title, $this->tracker);
         Tracker_Semantic_Status::setInstance($this->semantic_status, $this->tracker);
+        $this->verify_submission_permissions = VerifySubmissionPermissionStub::withSubmitPermission();
+
+        $this->user = UserTestBuilder::anActiveUser()
+            ->withMemberOf($this->tracker->getProject())
+            ->withAdministratorOf($this->tracker->getProject())
+            ->build();
     }
 
     protected function tearDown(): void
@@ -76,58 +82,66 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         parent::tearDown();
     }
 
-    public function testItRaisesAnExceptionIfAnotherFieldIsRequired(): void
+    /**
+     * @throws KanbanUserCantAddArtifactException
+     * @throws KanbanSemanticTitleNotDefinedException
+     * @throws KanbanUserCantAddInPlaceException
+     * @throws KanbanTrackerNotDefinedException
+     */
+    private function checkUserCanAddInPlace(): void
     {
-        $this->field_string->method('isRequired')->willReturn(true);
-        $this->field_text->method('isRequired')->willReturn(false);
-        $this->field_int->method('isRequired')->willReturn(false);
-        $this->field_list->method('isRequired')->willReturn(true);
+        $field_text = TrackerFormElementTextFieldBuilder::aTextField(20)
+            ->inTracker($this->tracker)
+            ->build();
+        $field_int  = TrackerFormElementIntFieldBuilder::anIntField(30)
+            ->inTracker($this->tracker)
+            ->build();
 
-        $tracker_factory      = RetrieveTrackerStub::withTracker($this->tracker);
         $form_element_factory = RetrieveUsedFieldsStub::withFields(
             $this->field_string,
-            $this->field_text,
-            $this->field_int,
+            $field_text,
+            $field_int,
             $this->field_list,
         );
 
-        $kanban = new Kanban(123, $this->tracker, false, 'My kanban');
-        $user   = UserTestBuilder::buildWithDefaults();
+        $kanban  = new Kanban(123, $this->tracker, false, 'My kanban');
+        $user    = UserTestBuilder::buildWithDefaults();
+        $checker = new KanbanActionsChecker(
+            RetrieveTrackerStub::withTracker($this->tracker),
+            new \Tuleap\Kanban\KanbanPermissionsManager(),
+            $form_element_factory,
+            $this->verify_submission_permissions,
+        );
+        $checker->checkUserCanAddInPlace($user, $kanban);
+    }
 
-        $this->semantic_title->method('getFieldId')->willReturn(201);
+    public function testItRaisesAnExceptionIfAnotherFieldIsRequired(): void
+    {
+        $this->field_string = TrackerFormElementStringFieldBuilder::aStringField(self::STRING_FIELD_ID)
+            ->inTracker($this->tracker)
+            ->thatIsRequired()
+            ->build();
+        $this->field_list   = TrackerFormElementListFieldBuilder::aListField(self::LIST_FIELD_ID)
+            ->inTracker($this->tracker)
+            ->thatIsRequired()
+            ->build();
+
+        $this->semantic_title->method('getFieldId')->willReturn(self::STRING_FIELD_ID);
         $this->semantic_status->method('getFieldId')->willReturn(202);
         $status_field = $this->createMock(Tracker_FormElement_Field_List::class);
         $status_field->method('userCanSubmit')->willReturn(true);
         $this->semantic_status->method('getField')->willReturn($status_field);
 
         $this->expectException(\Tuleap\Kanban\KanbanUserCantAddInPlaceException::class);
-
-        $checker = new KanbanActionsChecker(
-            $tracker_factory,
-            new \Tuleap\Kanban\KanbanPermissionsManager(),
-            $form_element_factory,
-            VerifySubmissionPermissionStub::withSubmitPermission(),
-        );
-        $checker->checkUserCanAddInPlace($user, $kanban);
+        $this->checkUserCanAddInPlace();
     }
 
     public function testItRaisesAnExceptionIfNoSemanticTitle(): void
     {
-        $this->field_string->method('isRequired')->willReturn(true);
-        $this->field_text->method('isRequired')->willReturn(false);
-        $this->field_int->method('isRequired')->willReturn(false);
-        $this->field_list->method('isRequired')->willReturn(false);
-
-        $tracker_factory      = RetrieveTrackerStub::withTracker($this->tracker);
-        $form_element_factory = RetrieveUsedFieldsStub::withFields(
-            $this->field_string,
-            $this->field_text,
-            $this->field_int,
-            $this->field_list,
-        );
-
-        $kanban = new Kanban(123, $this->tracker, false, 'My kanban');
-        $user   = UserTestBuilder::buildWithDefaults();
+        $this->field_string = TrackerFormElementStringFieldBuilder::aStringField(self::STRING_FIELD_ID)
+            ->inTracker($this->tracker)
+            ->thatIsRequired()
+            ->build();
 
         $this->semantic_title->method('getFieldId')->willReturn(null);
         $this->semantic_status->method('getFieldId')->willReturn(202);
@@ -136,171 +150,94 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->semantic_status->method('getField')->willReturn($status_field);
 
         $this->expectException(\Tuleap\Kanban\KanbanSemanticTitleNotDefinedException::class);
-
-        $checker = new KanbanActionsChecker(
-            $tracker_factory,
-            new \Tuleap\Kanban\KanbanPermissionsManager(),
-            $form_element_factory,
-            VerifySubmissionPermissionStub::withSubmitPermission(),
-        );
-        $checker->checkUserCanAddInPlace($user, $kanban);
+        $this->checkUserCanAddInPlace();
     }
 
     public function testItRaisesAnExceptionIfTheMandatoryFieldIsNotTheSemanticTitle(): void
     {
-        $this->field_string->method('isRequired')->willReturn(false);
-        $this->field_text->method('isRequired')->willReturn(false);
-        $this->field_int->method('isRequired')->willReturn(false);
-        $this->field_list->method('isRequired')->willReturn(true);
+        $this->field_list = TrackerFormElementListFieldBuilder::aListField(self::LIST_FIELD_ID)
+            ->inTracker($this->tracker)
+            ->thatIsRequired()
+            ->build();
 
-        $tracker_factory      = RetrieveTrackerStub::withTracker($this->tracker);
-        $form_element_factory = RetrieveUsedFieldsStub::withFields(
-            $this->field_string,
-            $this->field_text,
-            $this->field_int,
-            $this->field_list,
-        );
-
-        $kanban = new Kanban(123, $this->tracker, false, 'My kanban');
-        $user   = UserTestBuilder::buildWithDefaults();
-
-        $this->semantic_title->method('getFieldId')->willReturn(201);
+        $this->semantic_title->method('getFieldId')->willReturn(self::STRING_FIELD_ID);
         $this->semantic_status->method('getFieldId')->willReturn(202);
         $status_field = $this->createMock(Tracker_FormElement_Field_List::class);
         $status_field->method('userCanSubmit')->willReturn(true);
         $this->semantic_status->method('getField')->willReturn($status_field);
 
         $this->expectException(\Tuleap\Kanban\KanbanUserCantAddInPlaceException::class);
-
-        $checker = new KanbanActionsChecker(
-            $tracker_factory,
-            new \Tuleap\Kanban\KanbanPermissionsManager(),
-            $form_element_factory,
-            VerifySubmissionPermissionStub::withSubmitPermission(),
-        );
-        $checker->checkUserCanAddInPlace($user, $kanban);
+        $this->checkUserCanAddInPlace();
     }
 
     public function testItRaisesAnExceptionIfTheUserCannotSubmitArtifact(): void
     {
-        $this->field_string->method('isRequired')->willReturn(true);
-        $this->field_text->method('isRequired')->willReturn(false);
-        $this->field_int->method('isRequired')->willReturn(false);
-        $this->field_list->method('isRequired')->willReturn(false);
+        $this->field_string                  = TrackerFormElementStringFieldBuilder::aStringField(self::STRING_FIELD_ID)
+            ->inTracker($this->tracker)
+            ->thatIsRequired()
+            ->build();
+        $this->verify_submission_permissions = VerifySubmissionPermissionStub::withoutSubmitPermission();
 
-        $tracker_factory      = RetrieveTrackerStub::withTracker($this->tracker);
-        $form_element_factory = RetrieveUsedFieldsStub::withFields(
-            $this->field_string,
-            $this->field_text,
-            $this->field_int,
-            $this->field_list,
-        );
-
-        $kanban = new Kanban(123, $this->tracker, false, 'My kanban');
-        $user   = UserTestBuilder::buildWithDefaults();
-
-        $this->semantic_title->method('getFieldId')->willReturn(201);
+        $this->semantic_title->method('getFieldId')->willReturn(self::STRING_FIELD_ID);
         $this->semantic_status->method('getFieldId')->willReturn(202);
         $status_field = $this->createMock(Tracker_FormElement_Field_List::class);
         $status_field->method('userCanSubmit')->willReturn(true);
         $this->semantic_status->method('getField')->willReturn($status_field);
 
         $this->expectException(KanbanUserCantAddArtifactException::class);
-
-        $checker = new KanbanActionsChecker(
-            $tracker_factory,
-            new \Tuleap\Kanban\KanbanPermissionsManager(),
-            $form_element_factory,
-            VerifySubmissionPermissionStub::withoutSubmitPermission(),
-        );
-        $checker->checkUserCanAddInPlace($user, $kanban);
+        $this->checkUserCanAddInPlace();
     }
 
     public function testItRaisesAnExceptionIfTheUserCannotSubmitStatusField(): void
     {
-        $this->field_string->method('isRequired')->willReturn(true);
-        $this->field_text->method('isRequired')->willReturn(false);
-        $this->field_int->method('isRequired')->willReturn(false);
-        $this->field_list->method('isRequired')->willReturn(false);
+        $this->field_string = TrackerFormElementStringFieldBuilder::aStringField(self::STRING_FIELD_ID)
+            ->inTracker($this->tracker)
+            ->thatIsRequired()
+            ->build();
 
-        $tracker_factory      = RetrieveTrackerStub::withTracker($this->tracker);
-        $form_element_factory = RetrieveUsedFieldsStub::withFields(
-            $this->field_string,
-            $this->field_text,
-            $this->field_int,
-            $this->field_list,
-        );
-
-        $kanban = new Kanban(123, $this->tracker, false, 'My kanban');
-        $user   = UserTestBuilder::buildWithDefaults();
-
-        $this->semantic_title->method('getFieldId')->willReturn(201);
+        $this->semantic_title->method('getFieldId')->willReturn(self::STRING_FIELD_ID);
         $this->semantic_status->method('getFieldId')->willReturn(202);
         $status_field = $this->createMock(Tracker_FormElement_Field_List::class);
         $status_field->method('userCanSubmit')->willReturn(false);
         $this->semantic_status->method('getField')->willReturn($status_field);
 
         $this->expectException(KanbanUserCantAddArtifactException::class);
+        $this->checkUserCanAddInPlace();
+    }
 
+    /**
+     * @throws KanbanUserNotAdminException
+     */
+    private function checkUserCanAdministrate(): void
+    {
+        $form_element_factory = RetrieveUsedFieldsStub::withFields(
+            $this->field_string,
+            $this->field_list,
+        );
+
+        $kanban  = new Kanban(123, $this->tracker, false, 'My kanban');
         $checker = new KanbanActionsChecker(
-            $tracker_factory,
+            RetrieveTrackerStub::withTracker($this->tracker),
             new \Tuleap\Kanban\KanbanPermissionsManager(),
             $form_element_factory,
             VerifySubmissionPermissionStub::withSubmitPermission(),
         );
-        $checker->checkUserCanAddInPlace($user, $kanban);
+        $checker->checkUserCanAdministrate($this->user, $kanban);
     }
 
     public function testUserCanAdministrate(): void
     {
-        $tracker_factory      = RetrieveTrackerStub::withTracker($this->tracker);
-        $form_element_factory = RetrieveUsedFieldsStub::withFields(
-            $this->field_string,
-            $this->field_text,
-            $this->field_int,
-            $this->field_list,
-        );
-
-        $kanban = new Kanban(123, $this->tracker, false, 'My kanban');
-        $user   = UserTestBuilder::anActiveUser()
-            ->withMemberOf($this->tracker->getProject())
-            ->withAdministratorOf($this->tracker->getProject())
-            ->build();
-
-        $checker = new KanbanActionsChecker(
-            $tracker_factory,
-            new \Tuleap\Kanban\KanbanPermissionsManager(),
-            $form_element_factory,
-            VerifySubmissionPermissionStub::withSubmitPermission(),
-        );
-
         $this->expectNotToPerformAssertions();
-        $checker->checkUserCanAdministrate($user, $kanban);
+        $this->checkUserCanAdministrate();
     }
 
     public function testUserCannotAdministrate(): void
     {
-        $tracker_factory      = RetrieveTrackerStub::withTracker($this->tracker);
-        $form_element_factory = RetrieveUsedFieldsStub::withFields(
-            $this->field_string,
-            $this->field_text,
-            $this->field_int,
-            $this->field_list,
-        );
-
-        $kanban = new Kanban(123, $this->tracker, false, 'My kanban');
-        $user   = UserTestBuilder::anActiveUser()
+        $this->user = UserTestBuilder::anActiveUser()
             ->withMemberOf($this->tracker->getProject())
             ->build();
 
-        $checker = new KanbanActionsChecker(
-            $tracker_factory,
-            new \Tuleap\Kanban\KanbanPermissionsManager(),
-            $form_element_factory,
-            VerifySubmissionPermissionStub::withSubmitPermission(),
-        );
-
         $this->expectException(KanbanUserNotAdminException::class);
-        $checker->checkUserCanAdministrate($user, $kanban);
+        $this->checkUserCanAdministrate();
     }
 }

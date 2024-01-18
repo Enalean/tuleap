@@ -38,27 +38,34 @@ final class ArtifactCannotBeCreatedReasonsGetterTest extends TestCase
     private RetrieveUsedFieldsStub $used_fields_retriever;
     private GetTitleSemanticStub $semantic_title_factory;
     private Tracker_FormElement_Field_Text $semantic_title_field;
+    private \Tracker $tracker;
 
     protected function setUp(): void
     {
+        $this->tracker                      = TrackerTestBuilder::aTracker()->withId(3000)->build();
         $this->can_submit_artifact_verifier = VerifySubmissionPermissionStub::withSubmitPermission();
-        $this->semantic_title_field         = TrackerFormElementStringFieldBuilder::aStringField(3)->thatIsRequired()->build();
+        $this->semantic_title_field         = TrackerFormElementStringFieldBuilder::aStringField(3)
+            ->thatIsRequired()
+            ->inTracker($this->tracker)
+            ->build();
         $this->used_fields_retriever        = RetrieveUsedFieldsStub::withFields($this->semantic_title_field);
         $this->semantic_title_factory       = GetTitleSemanticStub::withTextField($this->semantic_title_field);
     }
 
-    private function getReasons(CollectionOfCreationSemanticToCheck $semantics_to_check): CollectionOfCannotCreateArtifactReason
+    private function getReasons(CollectionOfCreationSemanticToCheck $semantics_to_check,): CollectionOfCannotCreateArtifactReason
     {
-        $user    = UserTestBuilder::buildSiteAdministrator();
-        $tracker = TrackerTestBuilder::aTracker()->withId(3000)->build();
-
+        $user                                    = UserTestBuilder::buildSiteAdministrator();
         $artifact_creation_from_semantic_checker = new ArtifactCannotBeCreatedReasonsGetter(
             $this->can_submit_artifact_verifier,
             $this->used_fields_retriever,
             $this->semantic_title_factory
         );
 
-        return $artifact_creation_from_semantic_checker->getCannotCreateArtifactReasons($semantics_to_check, $tracker, $user);
+        return $artifact_creation_from_semantic_checker->getCannotCreateArtifactReasons(
+            $semantics_to_check,
+            $this->tracker,
+            $user
+        );
     }
 
     public function testItReturnsEmptyArrayOfReasonIfThereIsNoSemanticsGiven(): void
@@ -79,7 +86,7 @@ final class ArtifactCannotBeCreatedReasonsGetterTest extends TestCase
         $cannot_create_reasons = $this->getReasons($semantics_to_check);
 
         self::assertNotEmpty($cannot_create_reasons->getReasons());
-        self::assertSame(1, count($cannot_create_reasons->getReasons()));
+        self::assertCount(1, $cannot_create_reasons->getReasons());
         self::assertNotEmpty($cannot_create_reasons->getReasons()[0]->reason);
     }
 
@@ -88,17 +95,21 @@ final class ArtifactCannotBeCreatedReasonsGetterTest extends TestCase
         $this->semantic_title_factory = GetTitleSemanticStub::withoutTextField();
         $semantics_to_check           = CollectionOfCreationSemanticToCheck::fromREST(['title'])->value;
         $cannot_create_reasons        = $this->getReasons($semantics_to_check);
-        self::assertSame(1, count($cannot_create_reasons->getReasons()));
+        self::assertCount(1, $cannot_create_reasons->getReasons());
         self::assertNotEmpty($cannot_create_reasons->getReasons()[0]->reason);
     }
 
     public function testItFillsTheReasonCollectionWhenTheTrackerHasSeveralMandatoryFields(): void
     {
-        $other_required_field        = TrackerFormElementStringFieldBuilder::aStringField(151)->withLabel("Other label")->thatIsRequired()->build();
+        $other_required_field        = TrackerFormElementStringFieldBuilder::aStringField(151)
+            ->withLabel("Other label")
+            ->thatIsRequired()
+            ->inTracker($this->tracker)
+            ->build();
         $this->used_fields_retriever = RetrieveUsedFieldsStub::withFields($this->semantic_title_field, $other_required_field);
         $semantics_to_check          = CollectionOfCreationSemanticToCheck::fromREST(['title'])->value;
         $cannot_create_reasons       = $this->getReasons($semantics_to_check);
-        self::assertSame(1, count($cannot_create_reasons->getReasons()));
+        self::assertCount(1, $cannot_create_reasons->getReasons());
         self::assertNotEmpty($cannot_create_reasons->getReasons()[0]->reason);
     }
 
@@ -108,24 +119,29 @@ final class ArtifactCannotBeCreatedReasonsGetterTest extends TestCase
         $form_element->method('userCanSubmit')->willReturn(false);
         $form_element->method('getLabel')->willReturn("Title");
         $form_element->method('getId')->willReturn(15);
+        $form_element->method('getTrackerId')->willReturn($this->tracker->getId());
         $form_element->method('isRequired')->willReturn(false);
         $this->semantic_title_factory = GetTitleSemanticStub::withTextField($form_element);
         $this->used_fields_retriever  = RetrieveUsedFieldsStub::withFields($form_element);
         $semantics_to_check           = CollectionOfCreationSemanticToCheck::fromREST(['title'])->value;
         $cannot_create_reasons        = $this->getReasons($semantics_to_check);
-        self::assertSame(1, count($cannot_create_reasons->getReasons()));
+        self::assertCount(1, $cannot_create_reasons->getReasons());
         self::assertNotEmpty($cannot_create_reasons->getReasons()[0]->reason);
     }
 
     public function testItFillsTheReasonCollectionWithSeveralReason(): void
     {
         $this->can_submit_artifact_verifier = VerifySubmissionPermissionStub::withoutSubmitPermission();
-        $other_required_field               = TrackerFormElementStringFieldBuilder::aStringField(151)->withLabel("Other label")->thatIsRequired()->build();
+        $other_required_field               = TrackerFormElementStringFieldBuilder::aStringField(151)
+            ->withLabel("Other label")
+            ->thatIsRequired()
+            ->inTracker($this->tracker)
+            ->build();
 
         $this->used_fields_retriever = RetrieveUsedFieldsStub::withFields($this->semantic_title_field, $other_required_field);
         $semantics_to_check          = CollectionOfCreationSemanticToCheck::fromREST(['title'])->value;
         $cannot_create_reasons       = $this->getReasons($semantics_to_check);
-        self::assertSame(2, count($cannot_create_reasons->getReasons()));
+        self::assertCount(2, $cannot_create_reasons->getReasons());
         self::assertNotEmpty($cannot_create_reasons->getReasons()[0]->reason);
         self::assertNotEmpty($cannot_create_reasons->getReasons()[1]->reason);
     }

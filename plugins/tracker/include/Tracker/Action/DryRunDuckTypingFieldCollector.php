@@ -48,8 +48,7 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
 
     public function __construct(
         private readonly EventDispatcherInterface $event_dispatcher,
-        private readonly RetrieveUsedFields $retrieve_source_tracker_used_fields,
-        private readonly RetrieveUsedFields $retrieve_destination_tracker_used_fields,
+        private readonly RetrieveUsedFields $retrieve_used_fields,
         private readonly VerifyFieldCanBeEasilyMigrated $verify_field_can_be_easily_migrated,
         private readonly VerifyIsStaticListField $verify_is_static_list_field,
         private readonly VerifyListFieldsAreCompatible $verify_list_fields_are_compatible,
@@ -70,8 +69,8 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
 
     public function collect(\Tracker $source_tracker, \Tracker $destination_tracker, Artifact $artifact, \PFUser $user, LoggerInterface $logger): DuckTypedMoveFieldCollection
     {
-        foreach ($this->retrieve_source_tracker_used_fields->getUsedFields($source_tracker) as $source_field) {
-            $destination_field = $this->retrieve_destination_tracker_used_fields->getUsedFieldByName($destination_tracker->getId(), $source_field->getName());
+        foreach ($this->retrieve_used_fields->getUsedFields($source_tracker) as $source_field) {
+            $destination_field = $this->retrieve_used_fields->getUsedFieldByName($destination_tracker->getId(), $source_field->getName());
             if ($destination_field === null) {
                 $this->addFieldToNotMigrateableList($source_field);
                 continue;
