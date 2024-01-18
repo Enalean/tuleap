@@ -55,7 +55,7 @@ final class EqualComparisonFromWhereBuilder
         $from_parameters = [$duck_typed_field->name];
 
         if ($value === '') {
-            $where = "($changeset_value_int_alias.value IS NULL OR $changeset_value_float_alias.value IS NULL)";
+            $where = "($changeset_value_int_alias.value IS NULL AND $changeset_value_float_alias.value IS NULL)";
             return new ParametrizedFromWhere($from, $where, $from_parameters, []);
         }
 
