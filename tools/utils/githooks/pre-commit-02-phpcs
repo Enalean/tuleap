@@ -68,7 +68,7 @@ main() {
     then
       PHP=$(command -v php)
     fi
-    $PHP ./src/vendor/bin/phpcs --standard=./tests/phpcs/tuleap-ruleset-minimal.xml --encoding=utf-8 -s ${files_list}
+    $PHP ./src/vendor/bin/phpcs --standard=./tests/phpcs/tuleap-ruleset-minimal.xml --encoding=utf-8 --runtime-set php_version 80100 -s ${files_list}
     local status_strict=$?
     if [[ ${status_strict} -ne 0 ]]
     then
@@ -82,7 +82,7 @@ main() {
     if [[ -n ${files_psr2_mandatory} ]]
     then
         local phpcs_output
-        phpcs_output=$($PHP ./src/vendor/bin/phpcs --standard=./tests/phpcs/tuleap-ruleset.xml --encoding=utf-8 -s -p ${files_psr2_mandatory})
+        phpcs_output=$($PHP ./src/vendor/bin/phpcs --standard=./tests/phpcs/tuleap-ruleset.xml --encoding=utf-8 --runtime-set php_version 80100 -s -p ${files_psr2_mandatory})
         local status=$?
         if [[ ${status} -ne 0 ]]
         then
