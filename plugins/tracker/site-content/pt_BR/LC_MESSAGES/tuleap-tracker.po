@@ -1206,6 +1206,9 @@ msgstr "Vazio"
 msgid "Enable custom sender fields for email notifications"
 msgstr ""
 
+msgid "Enable move of artifacts in this tracker"
+msgstr ""
+
 msgid "Enable multisort"
 msgstr ""
 
@@ -1770,6 +1773,19 @@ msgid "Missing value on a required field: %1$s"
 msgstr ""
 
 msgid "Modify Canned Response"
+msgstr ""
+
+#, php-format
+msgid "Move action is not enabled for tracker %s"
+msgstr ""
+
+msgid "Move artifacts"
+msgstr ""
+
+msgid "Move of artifacts successfully enabled in tracker."
+msgstr ""
+
+msgid "Move of artifacts successfully forbidden in tracker."
 msgstr ""
 
 msgid "Move this artifact"

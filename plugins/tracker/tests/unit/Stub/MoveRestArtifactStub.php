@@ -40,7 +40,6 @@ final class MoveRestArtifactStub implements MoveRestArtifact
     private int $call_count = 0;
 
     private function __construct(
-        public int $remaining_deletions,
         public bool $move_artifact_not_done,
         public bool $move_semantic_exception,
         public bool $target_project_not_active,
@@ -50,30 +49,30 @@ final class MoveRestArtifactStub implements MoveRestArtifact
 
     public static function andReturnRemainingDeletions(): self
     {
-        return new self(9, false, false, false, false);
+        return new self(false, false, false, false);
     }
 
     public static function andThrowMoveArtifactNotDone(): self
     {
-        return new self(10, true, false, false, false);
+        return new self(true, false, false, false);
     }
 
     public static function andThrowMoveArtifactSemanticsException(): self
     {
-        return new self(10, false, true, false, false);
+        return new self(false, true, false, false);
     }
 
     public static function andMoveArtifactTargetProjectNotActiveException(): self
     {
-        return new self(10, false, false, true, false);
+        return new self(false, false, true, false);
     }
 
     public static function andMoveArtifactNoValuesToProcessException(): self
     {
-        return new self(10, false, false, false, true);
+        return new self(false, false, false, true);
     }
 
-    public function move(Tracker $source_tracker, Tracker $target_tracker, Artifact $artifact, PFUser $user, bool $should_populate_feedback_on_success, LoggerInterface $logger): int
+    public function move(Tracker $source_tracker, Tracker $target_tracker, Artifact $artifact, PFUser $user, bool $should_populate_feedback_on_success, LoggerInterface $logger): void
     {
         if ($this->move_artifact_not_done) {
             throw new MoveArtifactNotDoneException();
@@ -92,7 +91,6 @@ final class MoveRestArtifactStub implements MoveRestArtifact
         }
 
         $this->call_count++;
-        return $this->remaining_deletions;
     }
 
     public function getCallCount(): int

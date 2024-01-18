@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2023 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,15 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\REST\v1\Move;
+namespace Tuleap\Tracker\Admin\MoveArtifacts;
 
-use Tuleap\REST\Header;
-
-class HeaderForMoveSender
+/**
+ * @psalm-immutable
+ */
+final class MoveArtifactsAdminPresenter
 {
-    public function sendHeader(int $limit, int $remaining_deletions): void
-    {
-        Header::sendRateLimitHeaders($limit, $remaining_deletions);
-        Header::allowOptionsGetPutDeletePatch();
+    public function __construct(
+        public readonly int $tracker_id,
+        public readonly \CSRFSynchronizerToken $csrf_token,
+        public readonly bool $is_enabled,
+    ) {
     }
 }

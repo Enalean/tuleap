@@ -74,16 +74,6 @@ class ArtifactsActionsTest extends TrackerBase
     {
         $this->assertEquals(200, $response->getStatusCode());
 
-        $this->assertEquals(
-            "2",
-            $response->getHeader('x-ratelimit-limit')[0]
-        );
-
-        $this->assertEquals(
-            "2",
-            $response->getHeader('x-ratelimit-remaining')[0]
-        );
-
         $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertArrayHasKey("dry_run", $json);
@@ -164,16 +154,6 @@ class ArtifactsActionsTest extends TrackerBase
     private function assertMoveArtifact(\Psr\Http\Message\ResponseInterface $response, $artifact_id): void
     {
         $this->assertEquals(200, $response->getStatusCode());
-
-        $this->assertEquals(
-            "2",
-            $response->getHeader('x-ratelimit-limit')[0]
-        );
-
-        $this->assertEquals(
-            "1",
-            $response->getHeader('x-ratelimit-remaining')[0]
-        );
 
         $artifact_response = $this->getResponse(
             $this->request_factory->createRequest('GET', "artifacts/$artifact_id?values_format=all")

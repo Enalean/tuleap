@@ -34,13 +34,13 @@ final class MoveArtifactByDuckTypingStub implements MoveArtifactByDuckTyping
 {
     private int $call_count = 0;
 
-    private function __construct(private int $limit)
+    private function __construct()
     {
     }
 
-    public static function withReturnRandomLimit(): self
+    public static function build(): self
     {
-        return new self(random_int(1, 1000));
+        return new self();
     }
 
     public function move(
@@ -51,10 +51,8 @@ final class MoveArtifactByDuckTypingStub implements MoveArtifactByDuckTyping
         DuckTypedMoveFieldCollection $field_collection,
         Tracker_XML_Importer_ArtifactImportedMapping $artifacts_links_collection,
         LoggerInterface $logger,
-    ): int {
+    ): void {
         $this->call_count++;
-
-        return $this->limit;
     }
 
     public function getCallCount(): int

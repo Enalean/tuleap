@@ -1371,6 +1371,9 @@ msgstr ""
 "Permettre la personnalisation des champs émetteurs pour les notifications "
 "par e-mail"
 
+msgid "Enable move of artifacts in this tracker"
+msgstr "Activer le déplacement des artéfacts dans cet outil de suivi"
+
 msgid "Enable multisort"
 msgstr "Activer le tri multi-colonnes"
 
@@ -1990,6 +1993,19 @@ msgstr "Il manque une valeur sur un champ obligatoire : %1$s"
 
 msgid "Modify Canned Response"
 msgstr "Modifier la réponse type"
+
+#, php-format
+msgid "Move action is not enabled for tracker %s"
+msgstr "L'outil de suivi %s n'autorise pas l'action de déplacement."
+
+msgid "Move artifacts"
+msgstr "Déplacement d'artéfacts"
+
+msgid "Move of artifacts successfully enabled in tracker."
+msgstr "Le déplacement des artéfacts a été activé avec succès."
+
+msgid "Move of artifacts successfully forbidden in tracker."
+msgstr "Le déplacement des artéfacts a été interdit avec succès."
 
 msgid "Move this artifact"
 msgstr "Déplacer l'artéfact"

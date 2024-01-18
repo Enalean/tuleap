@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2023 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,23 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Action;
-
-use PFUser;
-use Psr\Log\LoggerInterface;
-use Tracker;
-use Tracker_XML_Importer_ArtifactImportedMapping;
-use Tuleap\Tracker\Artifact\Artifact;
-
-interface MoveArtifactByDuckTyping
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class b202401161010_add_forbidden_move_action extends \Tuleap\ForgeUpgrade\Bucket
 {
-    public function move(
-        Artifact $artifact,
-        Tracker $source_tracker,
-        Tracker $destination_tracker,
-        PFUser $user,
-        DuckTypedMoveFieldCollection $field_collection,
-        Tracker_XML_Importer_ArtifactImportedMapping $artifacts_links_collection,
-        LoggerInterface $logger,
-    ): void;
+    public function description(): string
+    {
+        return "Add tracker forbidden move action table";
+    }
+
+    public function up(): void
+    {
+        $this->api->createTable(
+            "plugin_tracker_forbidden_move_action",
+            <<<EOS
+            CREATE TABLE IF NOT EXISTS plugin_tracker_forbidden_move_action(
+                tracker_id INT(11) PRIMARY KEY
+            ) ENGINE=InnoDB
+            EOS
+        );
+    }
 }

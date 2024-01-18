@@ -24,14 +24,19 @@ namespace Tuleap\Tracker\REST\v1\Move;
 
 use Luracast\Restler\RestException;
 use Tracker;
+use Tuleap\NeverThrow\Fault;
 use Tuleap\REST\ProjectStatusVerificator;
+use Tuleap\Tracker\Admin\MoveArtifacts\MoveActionAllowedChecker;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
 
 final class BeforeMoveChecker implements CheckBeforeMove
 {
-    public function __construct(private readonly \EventManager $event_manager, private readonly ProjectStatusVerificator $status_verificator)
-    {
+    public function __construct(
+        private readonly \EventManager $event_manager,
+        private readonly ProjectStatusVerificator $status_verificator,
+        private readonly MoveActionAllowedChecker $move_action_allowed_checker,
+    ) {
     }
 
     /**
@@ -43,6 +48,12 @@ final class BeforeMoveChecker implements CheckBeforeMove
             $source_tracker->getProject()
         );
 
+        $this->move_action_allowed_checker->checkMoveActionIsAllowedInTracker($source_tracker)
+            ->orElse(
+                function (Fault $move_action_forbidden_fault): void {
+                    throw new RestException(404, (string) $move_action_forbidden_fault);
+                }
+            );
 
         if ($target_tracker->isDeleted()) {
             throw new RestException(404, "Target tracker not found");

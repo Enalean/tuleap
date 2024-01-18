@@ -124,6 +124,7 @@ DROP TABLE IF EXISTS plugin_tracker_private_comment_disabled_tracker;
 DROP TABLE IF EXISTS plugin_tracker_private_comment_permission;
 DROP TABLE IF EXISTS plugin_tracker_semantic_done;
 DROP TABLE IF EXISTS plugin_tracker_calendar_event_config;
+DROP TABLE IF EXISTS plugin_tracker_forbidden_move_action;
 
 DELETE FROM permissions WHERE permission_type LIKE 'PLUGIN_TRACKER_%';
 DELETE FROM permissions_values WHERE permission_type LIKE 'PLUGIN_TRACKER_%';

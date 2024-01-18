@@ -56,7 +56,7 @@ final class RestArtifactMoverTest extends TestCase
     protected function setUp(): void
     {
         $this->post_move_action = AddPostMoveArtifactFeedbackStub::build();
-        $this->mega_mover       = MoveArtifactByDuckTypingStub::withReturnRandomLimit();
+        $this->mega_mover       = MoveArtifactByDuckTypingStub::build();
 
         $source_title_field      = TrackerFormElementStringFieldBuilder::aStringField(1)->withName("title")->build();
         $destination_title_field = TrackerFormElementStringFieldBuilder::aStringField(2)->withName("title")->build();

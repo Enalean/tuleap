@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2023 - Present. All Rights Reserved.
+ * Copyright (c) Enalean 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,23 +20,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Action;
+namespace Tuleap\Tracker\Admin\MoveArtifacts;
 
-use PFUser;
-use Psr\Log\LoggerInterface;
 use Tracker;
-use Tracker_XML_Importer_ArtifactImportedMapping;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 
-interface MoveArtifactByDuckTyping
+final class MoveActionAllowedChecker
 {
-    public function move(
-        Artifact $artifact,
-        Tracker $source_tracker,
-        Tracker $destination_tracker,
-        PFUser $user,
-        DuckTypedMoveFieldCollection $field_collection,
-        Tracker_XML_Importer_ArtifactImportedMapping $artifacts_links_collection,
-        LoggerInterface $logger,
-    ): void;
+    public function __construct(private readonly MoveActionAllowedDAO $dao)
+    {
+    }
+
+    /**
+     * @return Ok<null>|Err<Fault>
+     */
+    public function checkMoveActionIsAllowedInTracker(Tracker $tracker): Ok|Err
+    {
+        if ($this->dao->isMoveActionAllowedInTracker($tracker->getId())) {
+            return Result::ok(null);
+        }
+
+        return Result::err(MoveActionForbiddenFault::build($tracker));
+    }
 }

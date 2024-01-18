@@ -103,7 +103,7 @@ final class MegaMoverArtifactByDuckTypingTest extends TestCase
         $this->xml_exporter->expects(self::once())->method('exportFullHistory');
         $this->xml_import->expects(self::once())->method('importArtifactWithAllDataFromXMLContentInAMoveContext')->willReturn(null);
         $this->artifact_priority_manager->expects(self::once())->method('getGlobalRank')->willReturn(86);
-        $this->artifacts_deletion_manager->expects(self::once())->method('deleteArtifactBeforeMoveOperation')->willReturn(102);
+        $this->artifacts_deletion_manager->expects(self::once())->method('deleteArtifactBeforeMoveOperation');
 
         $this->expectException(MoveArtifactNotDoneException::class);
 
@@ -125,9 +125,9 @@ final class MegaMoverArtifactByDuckTypingTest extends TestCase
         $this->xml_import->expects(self::once())->method('importArtifactWithAllDataFromXMLContentInAMoveContext')->willReturn($exported_artifact);
         $this->artifact_priority_manager->expects(self::once())->method('putArtifactAtAGivenRank');
         $this->artifact_priority_manager->expects(self::once())->method('getGlobalRank')->willReturn(86);
-        $this->artifacts_deletion_manager->expects(self::once())->method('deleteArtifactBeforeMoveOperation')->willReturn(102);
+        $this->artifacts_deletion_manager->expects(self::once())->method('deleteArtifactBeforeMoveOperation');
 
-        self::assertSame(102, $this->artifact_mover->move($this->artifact, $this->source_tracker, $target_tracker, $this->user, $this->fields, $this->artifacts_mapping, new NullLogger()));
+        $this->artifact_mover->move($this->artifact, $this->source_tracker, $target_tracker, $this->user, $this->fields, $this->artifacts_mapping, new NullLogger());
         $this->assertSame(1, $this->xml_updater->getCallCount());
     }
 }

@@ -53,15 +53,15 @@ final class RestArtifactMover implements MoveRestArtifact
      * @throws ArtifactsDeletionLimitReachedException
      * @throws MoveArtifactNoValuesToProcessException
      */
-    public function move(Tracker $source_tracker, Tracker $target_tracker, Artifact $artifact, \PFUser $user, bool $should_populate_feedback_on_success, LoggerInterface $logger): int
+    public function move(Tracker $source_tracker, Tracker $target_tracker, Artifact $artifact, \PFUser $user, bool $should_populate_feedback_on_success, LoggerInterface $logger): void
     {
-        return $this->performMoveBasedOnDuckTyping($source_tracker, $target_tracker, $artifact, $user, $should_populate_feedback_on_success, $logger);
+        $this->performMoveBasedOnDuckTyping($source_tracker, $target_tracker, $artifact, $user, $should_populate_feedback_on_success, $logger);
     }
 
     /**
      * @throws MoveArtifactNoValuesToProcessException
      */
-    private function performMoveBasedOnDuckTyping(Tracker $source_tracker, Tracker $target_tracker, Artifact $artifact, \PFUser $user, bool $should_populate_feedback_on_success, LoggerInterface $logger): int
+    private function performMoveBasedOnDuckTyping(Tracker $source_tracker, Tracker $target_tracker, Artifact $artifact, \PFUser $user, bool $should_populate_feedback_on_success, LoggerInterface $logger): void
     {
         $field_collection           = $this->collector->collect($source_tracker, $target_tracker, $artifact, $user, $logger);
         $artifacts_links_collection = $this->collect_artifact_links_for_duck_typed_move->buildMapping($source_tracker, $artifact, $user);
@@ -70,9 +70,8 @@ final class RestArtifactMover implements MoveRestArtifact
             throw new MoveArtifactNoValuesToProcessException();
         }
 
-        $remaining_deletions = $this->duck_typing_move->move($artifact, $source_tracker, $target_tracker, $user, $field_collection, $artifacts_links_collection, $logger);
+        $this->duck_typing_move->move($artifact, $source_tracker, $target_tracker, $user, $field_collection, $artifacts_links_collection, $logger);
         $this->populateFeedBackIfNeeded($should_populate_feedback_on_success, $source_tracker, $target_tracker, $artifact, $user);
-        return $remaining_deletions;
     }
 
     private function populateFeedBackIfNeeded(bool $should_populate_feedback_on_success, Tracker $source_tracker, Tracker $target_tracker, Artifact $artifact, \PFUser $user): void

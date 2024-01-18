@@ -21,119 +21,95 @@
 namespace Tuleap\Tracker\Artifact\ActionButtons;
 
 use EventManager;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Tracker;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Admin\MoveArtifacts\MoveActionAllowedChecker;
+use Tuleap\Tracker\Admin\MoveArtifacts\MoveActionAllowedDAO;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Test\Stub\RetrieveActionDeletionLimitStub;
-
-require_once __DIR__ . '/../../bootstrap.php';
 
 final class ArtifactMoveButtonPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     private PFUser $user;
-    /**
-     * @var EventManager|(EventManager&Mockery\LegacyMockInterface)|(EventManager&Mockery\MockInterface)|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private EventManager|Mockery\LegacyMockInterface|Mockery\MockInterface $event_manager;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact|(Artifact&Mockery\LegacyMockInterface)|(Artifact&Mockery\MockInterface)
-     */
-    private Artifact|Mockery\MockInterface|Mockery\LegacyMockInterface $artifact;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker|(Tracker&Mockery\LegacyMockInterface)|(Tracker&Mockery\MockInterface)
-     */
-    private Tracker|Mockery\MockInterface|Mockery\LegacyMockInterface $tracker;
+    private EventManager&\PHPUnit\Framework\MockObject\MockObject $event_manager;
+    private Artifact&\PHPUnit\Framework\MockObject\MockObject $artifact;
+    private Tracker&\PHPUnit\Framework\MockObject\MockObject $tracker;
 
     public function setUp(): void
     {
-        $this->event_manager = Mockery::mock(EventManager::class);
+        $this->event_manager = $this->createMock(EventManager::class);
 
         $this->user     = UserTestBuilder::anActiveUser()->build();
-        $this->artifact = Mockery::mock(Artifact::class);
-        $this->tracker  = Mockery::mock(Tracker::class);
-        $this->tracker->shouldReceive('getGroupId')->andReturn(101);
-        $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
+        $this->artifact = $this->createMock(Artifact::class);
+        $this->tracker  = $this->createMock(Tracker::class);
+
+        $this->tracker->method('getGroupId')->willReturn(101);
+        $this->tracker->method('getId')->willReturn(999);
+        $this->tracker->method('getName')->willReturn('tracker01');
+        $this->artifact->method('getTracker')->willReturn($this->tracker);
     }
 
     public function testItDontCollectAnythingIfUserIsNotAdministrator(): void
     {
-        $this->tracker->shouldReceive('userIsAdmin')->andReturn(false);
+        $this->tracker->method('userIsAdmin')->willReturn(false);
 
-        $deletion_limit_retriever = RetrieveActionDeletionLimitStub::retrieveRandomLimit();
-        $move_button_builder      = new ArtifactMoveButtonPresenterBuilder(
-            $deletion_limit_retriever,
-            $this->event_manager
+        $move_button_builder = new ArtifactMoveButtonPresenterBuilder(
+            $this->event_manager,
+            new MoveActionAllowedChecker($this->createMock(MoveActionAllowedDAO::class)),
         );
 
         $built_presenter = $move_button_builder->getMoveArtifactButton($this->user, $this->artifact);
 
-        $this->assertNull($built_presenter);
+        self::assertNull($built_presenter);
     }
 
-    public function testItCollectsErrorWhenLimitIsSetToZero(): void
+    public function testItCollectsErrorWhenMoveActionIsForbidden(): void
     {
-        $this->tracker->shouldReceive('userIsAdmin')->andReturn(true);
-        $this->event_manager->shouldReceive('processEvent');
-        $this->tracker->shouldReceive('hasSemanticsTitle')->andReturn(true);
-        $this->artifact->shouldReceive('getLinkedAndReverseArtifacts')->andReturns([]);
+        $this->tracker->method('userIsAdmin')->willReturn(true);
+        $this->event_manager->method('processEvent');
 
-        $deletion_limit_retriever = RetrieveActionDeletionLimitStub::andThrowDeletionIsNotAllowed();
-        $move_button_builder      = new ArtifactMoveButtonPresenterBuilder(
-            $deletion_limit_retriever,
-            $this->event_manager
+        $move_button_builder = new ArtifactMoveButtonPresenterBuilder(
+            $this->event_manager,
+            new MoveActionAllowedChecker(
+                new class extends MoveActionAllowedDAO {
+                    public function isMoveActionAllowedInTracker(int $tracker_id): bool
+                    {
+                        return false;
+                    }
+                }
+            ),
         );
 
         $expected_presenter = new ArtifactMoveButtonPresenter(
             dgettext('plugin-tracker', "Move this artifact"),
-            ["Deletion of artifacts is not allowed"]
+            ["Move action is not enabled for tracker tracker01"],
         );
 
         $built_presenter = $move_button_builder->getMoveArtifactButton($this->user, $this->artifact);
 
-        $this->assertEquals($built_presenter, $expected_presenter);
-    }
-
-    public function testItCollectsErrorWhenLimitIsReached(): void
-    {
-        $this->tracker->shouldReceive('userIsAdmin')->andReturn(true);
-        $this->event_manager->shouldReceive('processEvent');
-        $this->tracker->shouldReceive('hasSemanticsTitle')->andReturn(true);
-        $this->artifact->shouldReceive('getLinkedAndReverseArtifacts')->andReturns([]);
-
-        $deletion_limit_retriever = RetrieveActionDeletionLimitStub::andThrowLimitIsReached();
-        $move_button_builder      = new ArtifactMoveButtonPresenterBuilder(
-            $deletion_limit_retriever,
-            $this->event_manager
-        );
-
-        $expected_presenter = new ArtifactMoveButtonPresenter(
-            dgettext('plugin-tracker', "Move this artifact"),
-            ["The limit of artifacts deletions has been reached for the previous 24 hours."]
-        );
-
-        $built_presenter = $move_button_builder->getMoveArtifactButton($this->user, $this->artifact);
-
-        $this->assertEquals($built_presenter, $expected_presenter);
+        self::assertEquals($built_presenter, $expected_presenter);
     }
 
     public function testItReturnAButtonWhenUserCanPerformTheMove(): void
     {
-        $this->tracker->shouldReceive('userIsAdmin')->andReturn(true);
-        $this->event_manager->shouldReceive('processEvent');
-        $this->tracker->shouldReceive('hasSemanticsTitle')->andReturn(true);
-        $this->artifact->shouldReceive('getLinkedAndReverseArtifacts')->andReturns([]);
+        $this->tracker->method('userIsAdmin')->willReturn(true);
+        $this->event_manager->method('processEvent');
+        $this->tracker->method('hasSemanticsTitle')->willReturn(true);
+        $this->artifact->method('getLinkedAndReverseArtifacts')->willReturn([]);
 
-        $deletion_limit_retriever = RetrieveActionDeletionLimitStub::retrieveRandomLimit();
-        $move_button_builder      = new ArtifactMoveButtonPresenterBuilder(
-            $deletion_limit_retriever,
-            $this->event_manager
+        $move_button_builder = new ArtifactMoveButtonPresenterBuilder(
+            $this->event_manager,
+            new MoveActionAllowedChecker(
+                new class extends MoveActionAllowedDAO {
+                    public function isMoveActionAllowedInTracker(int $tracker_id): bool
+                    {
+                        return true;
+                    }
+                }
+            ),
         );
 
         $expected_presenter = new ArtifactMoveButtonPresenter(
@@ -143,24 +119,29 @@ final class ArtifactMoveButtonPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
 
         $built_presenter = $move_button_builder->getMoveArtifactButton($this->user, $this->artifact);
 
-        $this->assertEquals($built_presenter, $expected_presenter);
+        self::assertEquals($built_presenter, $expected_presenter);
     }
 
     public function testItReturnAButtonWhenUserCanPerformTheMoveBasedOnDuckTypingEvenIfNoSemanticIsDefined(): void
     {
-        $this->tracker->shouldReceive('userIsAdmin')->andReturn(true);
-        $this->event_manager->shouldReceive('processEvent');
-        $this->tracker->shouldReceive('hasSemanticsTitle')->andReturn(false);
-        $this->tracker->shouldReceive('hasSemanticsDescription')->andReturn(false);
-        $this->tracker->shouldReceive('hasSemanticsStatus')->andReturn(false);
-        $this->tracker->shouldReceive('getContributorField')->andReturn(null);
+        $this->tracker->method('userIsAdmin')->willReturn(true);
+        $this->event_manager->method('processEvent');
+        $this->tracker->method('hasSemanticsTitle')->willReturn(false);
+        $this->tracker->method('hasSemanticsDescription')->willReturn(false);
+        $this->tracker->method('hasSemanticsStatus')->willReturn(false);
+        $this->tracker->method('getContributorField')->willReturn(null);
+        $this->artifact->method('getLinkedAndReverseArtifacts')->willReturn([]);
 
-        $this->artifact->shouldReceive('getLinkedAndReverseArtifacts')->andReturns([]);
-
-        $deletion_limit_retriever = RetrieveActionDeletionLimitStub::retrieveRandomLimit();
-        $move_button_builder      = new ArtifactMoveButtonPresenterBuilder(
-            $deletion_limit_retriever,
-            $this->event_manager
+        $move_button_builder = new ArtifactMoveButtonPresenterBuilder(
+            $this->event_manager,
+            new MoveActionAllowedChecker(
+                new class extends MoveActionAllowedDAO {
+                    public function isMoveActionAllowedInTracker(int $tracker_id): bool
+                    {
+                        return true;
+                    }
+                }
+            ),
         );
 
         $expected_presenter = new ArtifactMoveButtonPresenter(
@@ -169,6 +150,6 @@ final class ArtifactMoveButtonPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
         );
         $built_presenter    = $move_button_builder->getMoveArtifactButton($this->user, $this->artifact);
 
-        $this->assertEquals($built_presenter, $expected_presenter);
+        self::assertEquals($built_presenter, $expected_presenter);
     }
 }
