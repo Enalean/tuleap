@@ -18,19 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class UGroupManagerGetUGroupWithMembersTest extends \Tuleap\Test\PHPUnit\TestCase
+namespace Tuleap\Project;
+
+use PHPUnit\Framework\MockObject\MockObject;
+
+final class UGroupManagerGetUGroupWithMembersTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private int $ugroup_id;
-    private Project $project;
-    /**
-     * @var \Mockery\Mock&\Mockery\MockInterface&UGroupManager
-     */
-    private $ugroup_manager;
+    private \Project $project;
+    private \UGroupManager&MockObject $ugroup_manager;
 
     protected function setUp(): void
     {
@@ -39,17 +37,19 @@ class UGroupManagerGetUGroupWithMembersTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->ugroup_id = 112;
         $this->project   = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->build();
 
-        $this->ugroup_manager = \Mockery::mock(\UGroupManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->ugroup_manager = $this->createPartialMock(\UGroupManager::class, [
+            'getUGroup',
+        ]);
     }
 
     public function testItReturnsAUGroupWithMembers(): void
     {
-        $ugroup = \Mockery::spy(\ProjectUGroup::class);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, $this->ugroup_id)->andReturns($ugroup);
+        $ugroup = $this->createMock(\ProjectUGroup::class);
+        $this->ugroup_manager->method('getUGroup')->with($this->project, $this->ugroup_id)->willReturn($ugroup);
 
-        $ugroup->shouldReceive('getMembers')->once();
+        $ugroup->expects(self::once())->method('getMembers');
 
         $ugroup_with_members = $this->ugroup_manager->getUGroupWithMembers($this->project, $this->ugroup_id);
-        $this->assertSame($ugroup_with_members, $ugroup);
+        self::assertSame($ugroup_with_members, $ugroup);
     }
 }

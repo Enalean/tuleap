@@ -18,19 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class UGroupManagerGetUGroupTest extends \Tuleap\Test\PHPUnit\TestCase
+namespace Tuleap\Project;
+
+use ProjectUGroup;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use UGroupManager;
+
+final class UGroupManagerGetUGroupTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private int $non_existent_ugroup_id;
     private int $integrators_ugroup_id;
-    /**
-     * @var \Mockery\MockInterface&Project
-     */
-    private $project;
+    private \Project $project;
     private UGroupManager $ugroup_manager;
 
     protected function setUp(): void
@@ -39,30 +39,48 @@ class UGroupManagerGetUGroupTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->non_existent_ugroup_id = 102;
         $this->integrators_ugroup_id  = 103;
 
-        $this->project = \Mockery::spy(\Project::class)->shouldReceive('getID')->andReturns(123)->getMock();
-        $dao           = \Mockery::spy(\UGroupDao::class);
+        $this->project = ProjectTestBuilder::aProject()->withId(123)->build();
+        $dao           = $this->createMock(\UGroupDao::class);
 
         $ugroup_definitions = [
-            ['ugroup_id' => "1",   'name' => "ugroup_anonymous_users_name_key",    'description' => "ugroup_anonymous_users_desc_key",     'group_id' => "100"],
-            ['ugroup_id' => "2",   'name' => "ugroup_registered_users_name_key",   'description' => "ugroup_registered_users_desc_key",    'group_id' => "100"],
-            ['ugroup_id' => "3",   'name' => "ugroup_project_members_name_key",    'description' => "ugroup_project_members_desc_key",     'group_id' => "100"],
-            ['ugroup_id' => "4",   'name' => "ugroup_project_admins_name_key",     'description' => "ugroup_project_admins_desc_key",      'group_id' => "100"],
-            ['ugroup_id' => "11",  'name' => "ugroup_file_manager_admin_name_key", 'description' => "ugroup_file_manager_admin_desc_key",  'group_id' => "100"],
-            ['ugroup_id' => "12",  'name' => "ugroup_document_tech_name_key",      'description' => "ugroup_document_tech_desc_key",       'group_id' => "100"],
-            ['ugroup_id' => "13",  'name' => "ugroup_document_admin_name_key",     'description' => "ugroup_document_admin_desc_key",      'group_id' => "100"],
-            ['ugroup_id' => "14",  'name' => "ugroup_wiki_admin_name_key",         'description' => "ugroup_wiki_admin_desc_key",          'group_id' => "100"],
-            ['ugroup_id' => "15",  'name' => "ugroup_tracker_admins_name_key",     'description' => "ugroup_tracker_admins_desc_key",      'group_id' => "100"],
-            ['ugroup_id' => "100", 'name' => "ugroup_nobody_name_key",             'description' => "ugroup_nobody_desc_key",              'group_id' => "100"],
-            ['ugroup_id' => "103", 'name' => "Integrators",                        'description' => "",                                    'group_id' => "123"],
-            ['ugroup_id' => "103", 'name' => "ugroup_supra_name_key",              'description' => "",                                    'group_id' => "123"],
+            ['ugroup_id' => "1", 'name' => "ugroup_anonymous_users_name_key", 'description' => "ugroup_anonymous_users_desc_key", 'group_id' => "100"],
+            ['ugroup_id' => "2", 'name' => "ugroup_registered_users_name_key", 'description' => "ugroup_registered_users_desc_key", 'group_id' => "100"],
+            ['ugroup_id' => "3", 'name' => "ugroup_project_members_name_key", 'description' => "ugroup_project_members_desc_key", 'group_id' => "100"],
+            ['ugroup_id' => "4", 'name' => "ugroup_project_admins_name_key", 'description' => "ugroup_project_admins_desc_key", 'group_id' => "100"],
+            ['ugroup_id' => "11", 'name' => "ugroup_file_manager_admin_name_key", 'description' => "ugroup_file_manager_admin_desc_key", 'group_id' => "100"],
+            ['ugroup_id' => "12", 'name' => "ugroup_document_tech_name_key", 'description' => "ugroup_document_tech_desc_key", 'group_id' => "100"],
+            ['ugroup_id' => "13", 'name' => "ugroup_document_admin_name_key", 'description' => "ugroup_document_admin_desc_key", 'group_id' => "100"],
+            ['ugroup_id' => "14", 'name' => "ugroup_wiki_admin_name_key", 'description' => "ugroup_wiki_admin_desc_key", 'group_id' => "100"],
+            ['ugroup_id' => "15", 'name' => "ugroup_tracker_admins_name_key", 'description' => "ugroup_tracker_admins_desc_key", 'group_id' => "100"],
+            ['ugroup_id' => "100", 'name' => "ugroup_nobody_name_key", 'description' => "ugroup_nobody_desc_key", 'group_id' => "100"],
+            ['ugroup_id' => "103", 'name' => "Integrators", 'description' => "", 'group_id' => "123"],
+            ['ugroup_id' => "103", 'name' => "ugroup_supra_name_key", 'description' => "", 'group_id' => "123"],
         ];
-        foreach ($ugroup_definitions as $def) {
-            $dao->shouldReceive('searchByGroupIdAndUGroupId')->with((int) $def['group_id'], (int) $def['ugroup_id'])->andReturns(\TestHelper::arrayToDar($def));
-            $dao->shouldReceive('searchByGroupIdAndName')->with((int) $def['group_id'], $def['name'])->andReturns(\TestHelper::arrayToDar($def));
-        }
-        $dao->shouldReceive('searchByGroupIdAndUGroupId')->andReturns(\TestHelper::emptyDar());
-        $dao->shouldReceive('searchByGroupIdAndName')->andReturns(\TestHelper::emptyDar());
-        $dao->shouldReceive('searchDynamicAndStaticByGroupId')->with(123)->andReturns(TestHelper::argListToDar($ugroup_definitions));
+        $dao->method('searchByGroupIdAndUGroupId')->willReturnCallback(function (string|int $group_id, int $ugroup_id) use ($ugroup_definitions) {
+            foreach ($ugroup_definitions as $def) {
+                if (
+                    (int) $def['group_id'] === (int) $group_id &&
+                    (int) $def['ugroup_id'] === $ugroup_id
+                ) {
+                    return \TestHelper::arrayToDar($def);
+                }
+            }
+
+            return \TestHelper::emptyDar();
+        });
+        $dao->method('searchByGroupIdAndName')->willReturnCallback(function (string|int $group_id, string $name) use ($ugroup_definitions) {
+            foreach ($ugroup_definitions as $def) {
+                if (
+                    (int) $def['group_id'] === (int) $group_id &&
+                    $def['name'] === $name
+                ) {
+                    return \TestHelper::arrayToDar($def);
+                }
+            }
+
+            return \TestHelper::emptyDar();
+        });
+        $dao->method('searchDynamicAndStaticByGroupId')->with(123)->willReturn(\TestHelper::argListToDar($ugroup_definitions));
 
         $this->ugroup_manager = new UGroupManager($dao);
     }
@@ -70,58 +88,58 @@ class UGroupManagerGetUGroupTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsNullIfNoMatch(): void
     {
         $ugroup = $this->ugroup_manager->getUGroup($this->project, $this->non_existent_ugroup_id);
-        $this->assertNull($ugroup);
+        self::assertNull($ugroup);
     }
 
     public function testItReturnsStaticUgroupForAGivenProject(): void
     {
         $ugroup = $this->ugroup_manager->getUGroup($this->project, $this->integrators_ugroup_id);
-        $this->assertEquals('Integrators', $ugroup->getName());
+        self::assertEquals('Integrators', $ugroup->getName());
     }
 
     public function testItReturnsDynamicUgroupForAGivenProject(): void
     {
         $ugroup = $this->ugroup_manager->getUGroup($this->project, ProjectUGroup::PROJECT_MEMBERS);
-        $this->assertEquals('ugroup_project_members_name_key', $ugroup->getName());
+        self::assertEquals('ugroup_project_members_name_key', $ugroup->getName());
     }
 
     public function testItReturnsAllUgroupsOfAProject(): void
     {
         $ugroups = $this->ugroup_manager->getUGroups($this->project);
-        $this->assertCount(12, $ugroups);
+        self::assertCount(12, $ugroups);
     }
 
     public function testItExcludesGivenUgroups(): void
     {
         $ugroups = $this->ugroup_manager->getUGroups($this->project, [ProjectUGroup::NONE, ProjectUGroup::ANONYMOUS]);
-        $this->assertCount(10, $ugroups);
+        self::assertCount(10, $ugroups);
     }
 
     public function testItReturnsAStaticUGroupOfAProject(): void
     {
         $ugroup = $this->ugroup_manager->getUGroupByName($this->project, 'Integrators');
-        $this->assertEquals('Integrators', $ugroup->getName());
+        self::assertEquals('Integrators', $ugroup->getName());
     }
 
     public function testItReturnsASpecialNamedStaticUGroupOfAProject(): void
     {
         $ugroup = $this->ugroup_manager->getUGroupByName($this->project, 'ugroup_supra_name_key');
-        $this->assertEquals('ugroup_supra_name_key', $ugroup->getName());
+        self::assertEquals('ugroup_supra_name_key', $ugroup->getName());
     }
 
     public function testItReturnsADynamicUGroupOfAProject(): void
     {
         $ugroup = $this->ugroup_manager->getUGroupByName($this->project, 'ugroup_project_members_name_key');
-        $this->assertEquals('ugroup_project_members_name_key', $ugroup->getName());
+        self::assertEquals('ugroup_project_members_name_key', $ugroup->getName());
     }
 
     public function testItReturnsNullIfNoDynamicMatch(): void
     {
-        $this->assertNull($this->ugroup_manager->getUGroupByName($this->project, 'ugroup_BLA_name_key'));
+        self::assertNull($this->ugroup_manager->getUGroupByName($this->project, 'ugroup_BLA_name_key'));
     }
 
     public function testItReturnsNullIfNoStaticMatch(): void
     {
-        $this->assertNull($this->ugroup_manager->getUGroupByName($this->project, 'BLA'));
+        self::assertNull($this->ugroup_manager->getUGroupByName($this->project, 'BLA'));
     }
 }
