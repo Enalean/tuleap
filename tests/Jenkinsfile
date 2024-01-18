@@ -64,16 +64,16 @@ pipeline {
         stage('Tests') {
             failFast false
             parallel {
-                stage('UT PHPUnit PHP 8.1') {
-                    steps { script { execTestWithLimitedConcurrency({ actions.runPHPUnitTests('81') }) } }
+                stage('UT PHPUnit PHP 8.2') {
+                    steps { script { execTestWithLimitedConcurrency({ actions.runPHPUnitTests('82') }) } }
                     post { always { junit 'results/ut-phpunit/*/phpunit_tests_results.xml' } }
                 }
-                stage('REST PHP 8.1 MySQL 8.0') {
-                    steps { script { execTestWithLimitedConcurrency({ actions.runRESTTests('mysql80', '81') }) } }
+                stage('REST PHP 8.2 MySQL 8.0') {
+                    steps { script { execTestWithLimitedConcurrency({ actions.runRESTTests('mysql80', '82') }) } }
                     post { always { junit 'results/api-rest/*/*' } }
                 }
-                stage('DB/Integration CentOS 7 PHP 8.1 MySQL 8.0') {
-                    steps { script { execTestWithLimitedConcurrency({ actions.runDBTests('mysql80', '81') }) } }
+                stage('DB/Integration CentOS 7 PHP 8.2 MySQL 8.0') {
+                    steps { script { execTestWithLimitedConcurrency({ actions.runDBTests('mysql80', '82') }) } }
                     post { always { junit 'results/db/*/db_tests.xml' } }
                 }
                 stage('Build and run CentOS 7') { steps { script { execTestWithLimitedConcurrency({ actions.runBuildAndRun('centos7') }) } } }
@@ -115,7 +115,7 @@ pipeline {
                 stage('Psalm static analysis') {
                     agent {
                         docker {
-                            image 'ghcr.io/enalean/tuleap-test-phpunit:c7-php81'
+                            image 'ghcr.io/enalean/tuleap-test-phpunit:c7-php82'
                             reuseNode true
                             args '--network none'
                         }
@@ -135,7 +135,7 @@ pipeline {
                 stage('Architecture: deptrac') {
                     agent {
                         docker {
-                            image 'ghcr.io/enalean/tuleap-test-phpunit:c7-php81'
+                            image 'ghcr.io/enalean/tuleap-test-phpunit:c7-php82'
                             reuseNode true
                             args '--network none'
                         }

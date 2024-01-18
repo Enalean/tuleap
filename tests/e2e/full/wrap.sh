@@ -58,7 +58,7 @@ $TIMEOUT "$MAX_TEST_EXECUTION_TIME" docker wait "$test_phpunit_container_id" "$t
 
 mkdir -p "$test_results_folder/logs"
 $DOCKERCOMPOSE cp tuleap:/var/log/ "$test_results_folder/logs"
-$DOCKERCOMPOSE cp tuleap:/var/opt/remi/php81/log/php-fpm/ "$test_results_folder/logs"
+$DOCKERCOMPOSE cp tuleap:/var/opt/remi/php82/log/php-fpm/ "$test_results_folder/logs"
 $DOCKERCOMPOSE logs tuleap > "$test_results_folder/logs/tuleap.log"
 
 $DOCKERCOMPOSE logs test-phpunit > "$test_results_folder/logs/test-phpunit.log"

@@ -7,7 +7,7 @@ Conflicts=php81-php-fpm.service php82-php-fpm.service
 
 [Service]
 Type=notify
-ExecStart=/opt/remi/php81/root/usr/sbin/php-fpm --nodaemonize
+ExecStart=/opt/remi/php82/root/usr/sbin/php-fpm --nodaemonize
 ExecReload=/bin/kill -USR2 $MAINPID
 PrivateTmp=false
 

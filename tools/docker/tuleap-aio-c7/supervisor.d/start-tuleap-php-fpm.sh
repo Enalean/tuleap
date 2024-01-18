@@ -5,4 +5,4 @@ do
     unset "$env_var"
 done
 
-exec /opt/remi/php81/root/usr/sbin/php-fpm --nodaemonize
+exec /opt/remi/php82/root/usr/sbin/php-fpm --nodaemonize

@@ -52,7 +52,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $base_dir                       = $this->getTmpDir();
-        $this->php_configuration_folder = $base_dir . '/etc/opt/remi/php81';
+        $this->php_configuration_folder = $base_dir . '/etc/opt/remi/php82';
         mkdir($this->php_configuration_folder . '/php-fpm.d', 0755, true);
         $this->temp_dir = $base_dir . '/var/tmp';
         mkdir($this->temp_dir, 0755, true);
@@ -62,7 +62,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->current_user           = posix_getpwuid(posix_geteuid())['name'];
     }
 
-    public function testDeployphp81Prod(): void
+    public function testDeployphp82Prod(): void
     {
         $deploy = new SiteDeployFPM(
             $this->buildAlwaysSuccessfulProcessFactory(),
@@ -72,7 +72,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
             new FPMSessionFiles(),
             ['php-fpm.service'],
             $this->php_configuration_folder,
-            __DIR__ . '/../../../../../src/etc/fpm81',
+            __DIR__ . '/../../../../../src/etc/fpm82',
             [],
             $this->temp_dir,
         );
@@ -214,7 +214,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertStringContainsString('user = ' . $this->current_user, file_get_contents($this->php_configuration_folder . '/php-fpm.d/tuleap_common.part'));
     }
 
-    public function testDeployphp81WithSimpleRedisSession(): void
+    public function testDeployphp82WithSimpleRedisSession(): void
     {
         $deploy = new SiteDeployFPM(
             $this->buildAlwaysSuccessfulProcessFactory(),
@@ -240,7 +240,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals('', $redis_password);
     }
 
-    public function testDeployphp81WithAuthenticatedRedisSession(): void
+    public function testDeployphp82WithAuthenticatedRedisSession(): void
     {
         $deploy = new SiteDeployFPM(
             $this->buildAlwaysSuccessfulProcessFactory(),
@@ -266,7 +266,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals('this_is_secure,really', $redis_password);
     }
 
-    public function testDeployphp81WithAuthenticatedRedisSessionWithTLS(): void
+    public function testDeployphp82WithAuthenticatedRedisSessionWithTLS(): void
     {
         $deploy = new SiteDeployFPM(
             $this->buildAlwaysSuccessfulProcessFactory(),

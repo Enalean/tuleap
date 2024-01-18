@@ -25,6 +25,7 @@ Requires: php81-php-cli php81-php-xml php81-php-intl php81-php-json php81-php-ld
 Requires: php82-php-cli php82-php-xml php82-php-intl php82-php-json php82-php-ldap php82-php-mbstring php82-php-mysqlnd php82-php-process php82-php-pdo php82-php-opcache php82-php-fpm php82-php-cli php82-php-sodium
 # Used by the mdpf extension
 Requires: php81-php-gd
+Requires: php82-php-gd
 
 %description
 %{summary}.
