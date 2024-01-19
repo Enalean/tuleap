@@ -20,6 +20,7 @@
 
 namespace Tuleap\TestManagement;
 
+use Psr\Http\Message\ResponseInterface;
 use RestBase;
 use Tuleap\TestManagement\Tests\Rest\Cache;
 
@@ -39,7 +40,7 @@ abstract class TestManagementRESTTestCase extends RestBase
      */
     private $ttm_cache;
 
-    protected function getResponse($request, $user_name = TestManagementDataBuilder::USER_TESTER_NAME)
+    protected function getResponse($request, $user_name = TestManagementDataBuilder::USER_TESTER_NAME): ResponseInterface
     {
         return parent::getResponse($request, $user_name);
     }

@@ -35,6 +35,8 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\Admin\HeaderPresenter;
+use Tuleap\Tracker\Admin\MoveArtifacts\MoveActionAllowedChecker;
+use Tuleap\Tracker\Admin\MoveArtifacts\MoveActionAllowedDAO;
 use Tuleap\Tracker\Admin\TrackerGeneralSettingsChecker;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
@@ -112,8 +114,8 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\WorkflowMenuPresenterBuilder;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
+use Tuleap\Tracker\XML\Exporter\TrackerStructureXMLExporter;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
-use Tuleap\Tracker\XML\XMLTracker;
 
 class Tracker implements Tracker_Dispatchable_Interface
 {
@@ -145,10 +147,6 @@ class Tracker implements Tracker_Dispatchable_Interface
     public const MAXIMUM_RECENT_ARTIFACTS_TO_DISPLAY = 6;
 
     public const GLOBAL_ADMIN_URL = 'global-admin';
-
-    private const TRACKER_NOT_USE_PRIVATE_COMMENTS_EXPORT_XML = "0";
-
-    private const TRACKER_SHOULD_SEND_EVENT_IN_NOTIFICATION_EXPORT_XML = '1';
 
     /**
      * Event emitted to check if a tracker can be deleted
@@ -2092,128 +2090,41 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     /**
      * Exports the tracker to an XML file.
-     *
-     * @return SimpleXMLElement
      */
     private function exportTrackerToXML(
         SimpleXMLElement $xmlElem,
         UserXMLExporter $user_xml_exporter,
         array &$xmlMapping,
-        $project_export_context,
-    ) {
-        if ($project_export_context) {
-            $xml_tracker = XMLTracker::fromTracker($this);
-        } else {
-            $xml_tracker = XMLTracker::fromTrackerInProjectContext($this);
-        }
-        $xmlElem = $xml_tracker->exportTracker($xmlElem);
-
-        // only add attributes which are different from the default value
-        if ($this->enable_emailgateway) {
-            $xmlElem->addAttribute('enable_emailgateway', $this->enable_emailgateway);
-        }
-        if ($this->allow_copy) {
-            $xmlElem->addAttribute('allow_copy', $this->allow_copy);
-        }
-        if ($this->instantiate_for_new_projects) {
-            $xmlElem->addAttribute('instantiate_for_new_projects', (string) $this->instantiate_for_new_projects);
-        }
-        if ($this->log_priority_changes) {
-            $xmlElem->addAttribute('log_priority_changes', (string) $this->log_priority_changes);
-        }
-        if ($this->notifications_level) {
-            $xmlElem->addAttribute('notifications_level', $this->notifications_level);
-        }
-
-        if ($this->getDropDownDao()->isContaining($this->id)) {
-            $xmlElem->addAttribute('is_displayed_in_new_dropdown', (string) true);
-        }
-
-        if (! $this->getPrivateCommentEnabledDao()->isTrackerEnabledPrivateComment($this->id)) {
-            $xmlElem->addAttribute('use_private_comments', self::TRACKER_NOT_USE_PRIVATE_COMMENTS_EXPORT_XML);
-        }
-
-        if ($this->getCalendarEventConfig()->shouldSendEventInNotification($this->id)) {
-            $xmlElem->addAttribute('should_send_event_in_notification', self::TRACKER_SHOULD_SEND_EVENT_IN_NOTIFICATION_EXPORT_XML);
-        }
-
-        if ($responses = $this->getCannedResponseFactory()->getCannedResponses($this)) {
-            foreach ($responses as $response) {
-                $grandchild = $xmlElem->cannedResponses->addChild('cannedResponse');
-                $response->exportToXML($grandchild);
-            }
-        }
-
-        foreach ($this->getFormElementFactory()->getUsedFormElementForTracker($this) as $formElement) {
-            $formElement->exportToXML($xmlElem->formElements, $xmlMapping, $project_export_context, $user_xml_exporter);
-        }
-
-        // semantic
-        $tsm   = $this->getTrackerSemanticManager();
-        $child = $xmlElem->addChild('semantics');
-        $tsm->exportToXML($child, $xmlMapping);
-
-        // rules
-        $child = $xmlElem->addChild('rules');
-        $this->getGlobalRulesManager()->exportToXML($child, $xmlMapping);
-
-        // only the reports with project scope are exported
-        $reports = $this->getReportFactory()->getReportsByTrackerId($this->id, null);
-        if ($reports) {
-            $child = $xmlElem->addChild('reports');
-            foreach ($this->getReportFactory()->getReportsByTrackerId($this->id, null) as $report) {
-                $report->exportToXML($child, $xmlMapping);
-            }
-        }
-
-        // workflow
-        $workflow = $this->getWorkflowFactory()->getWorkflowByTrackerId($this->id);
-        if (! empty($workflow)) {
-            if (! $workflow->isAdvanced()) {
-                $child    = $xmlElem->addChild('simple_workflow');
-                $exporter = new SimpleWorkflowXMLExporter(
-                    new SimpleWorkflowDao(),
-                    new StateFactory(
-                        TransitionFactory::instance(),
-                        new SimpleWorkflowDao()
-                    ),
-                    new TransitionExtractor()
-                );
-                $exporter->exportToXML($workflow, $child, $xmlMapping);
-            } else {
-                $child = $xmlElem->addChild('workflow');
-                $workflow->exportToXML($child, $xmlMapping);
-            }
-        }
-
-        $webhook_xml_exporter = $this->getWebhookXMLExporter();
-        $webhook_xml_exporter->exportTrackerWebhooksInXML($xmlElem, $this);
-
-        // permissions
-        $node_perms      = $xmlElem->addChild('permissions');
-        $project_ugroups = $this->getUGroupRetrieverWithLegacy()->getProjectUgroupIds($this->getProject());
-        // tracker permissions
-        if ($permissions = $this->getPermissionsByUgroupId()) {
-            foreach ($permissions as $ugroup_id => $permission_types) {
-                if (($ugroup = array_search($ugroup_id, $project_ugroups)) !== false) {
-                    foreach ($permission_types as $permission_type) {
-                        $node_perm = $node_perms->addChild('permission');
-                        $node_perm->addAttribute('scope', 'tracker');
-                        $node_perm->addAttribute('ugroup', $ugroup);
-                        $node_perm->addAttribute('type', $permission_type);
-                        unset($node_perm);
-                    }
-                }
-            }
-        }
-        // fields permission
-        if ($formelements = $this->getFormElementFactory()->getUsedFormElementForTracker($this)) {
-            foreach ($formelements as $formelement) {
-                $formelement->exportPermissionsToXML($node_perms, $project_ugroups, $xmlMapping);
-            }
-        }
-
-        return $xmlElem;
+        bool $project_export_context,
+    ): SimpleXMLElement {
+        return (new TrackerStructureXMLExporter(
+            $this->getDropDownDao(),
+            $this->getPrivateCommentEnabledDao(),
+            $this->getCalendarEventConfig(),
+            $this->getCannedResponseFactory(),
+            $this->getFormElementFactory(),
+            $this->getGlobalRulesManager(),
+            $this->getReportFactory(),
+            $this->getWorkflowFactory(),
+            new SimpleWorkflowXMLExporter(
+                new SimpleWorkflowDao(),
+                new StateFactory(
+                    TransitionFactory::instance(),
+                    new SimpleWorkflowDao()
+                ),
+                new TransitionExtractor()
+            ),
+            $this->getWebhookXMLExporter(),
+            new MoveActionAllowedChecker(
+                new MoveActionAllowedDAO(),
+            ),
+        ))->exportTrackerStructureToXML(
+            $this,
+            $xmlElem,
+            $user_xml_exporter,
+            $xmlMapping,
+            $project_export_context,
+        );
     }
 
     /**
@@ -3476,5 +3387,10 @@ class Tracker implements Tracker_Dispatchable_Interface
             '/assets/trackers/artifact'
         );
         $GLOBALS['HTML']->includeFooterJavascriptFile($assets->getFileURL('mass-change.js'));
+    }
+
+    public function isCopyAllowed(): bool
+    {
+        return (bool) $this->allow_copy;
     }
 }

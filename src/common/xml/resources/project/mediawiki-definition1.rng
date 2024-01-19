@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+  <define name="mediawiki-standalone">
+    <interleave>
+      <optional>
+        <element name="read-access">
+          <oneOrMore>
+            <element name="ugroup">
+              <ref name="ugroup_name"/>
+            </element>
+          </oneOrMore>
+        </element>
+      </optional>
+      <optional>
+        <element name="write-access">
+          <oneOrMore>
+            <element name="ugroup">
+              <ref name="ugroup_name"/>
+            </element>
+          </oneOrMore>
+        </element>
+      </optional>
+      <optional>
+        <element name="admin-access">
+          <oneOrMore>
+            <element name="ugroup">
+              <ref name="ugroup_name"/>
+            </element>
+          </oneOrMore>
+        </element>
+      </optional>
+    </interleave>
+  </define>
+</grammar>

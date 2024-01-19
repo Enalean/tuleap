@@ -21,6 +21,7 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Project\MappingRegistry;
+use Tuleap\Tracker\Admin\MoveArtifacts\MoveActionAllowedDAO;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\Artifact\RetrieveTracker;
 use Tuleap\Tracker\Creation\PostCreationProcessor;
@@ -472,7 +473,11 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByProjectIdUser
         }
         $this->duplicateWebhooks($source_tracker, $tracker);
 
-        $builder = new TrackerCreationSettingsBuilder(new PromotedTrackerDao(), new TrackerPrivateCommentUGroupEnabledDao());
+        $builder = new TrackerCreationSettingsBuilder(
+            new PromotedTrackerDao(),
+            new TrackerPrivateCommentUGroupEnabledDao(),
+            new MoveActionAllowedDAO(),
+        );
         $this->postCreateActions($tracker, $builder->build($source_tracker));
 
         return [
@@ -858,7 +863,7 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByProjectIdUser
             $migration_v3 = new Tracker_Migration_V3($this);
             $tracker      = $migration_v3->createTV5FromTV3($project, $name, $description, $itemname, $tv3);
 
-            $settings = new TrackerCreationSettings(false, true);
+            $settings = new TrackerCreationSettings(false, true, true);
             $this->postCreateActions($tracker, $settings);
 
             return $tracker;

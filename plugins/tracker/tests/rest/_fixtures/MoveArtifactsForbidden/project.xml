@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) Enalean, 2024-Present. All Rights Reserved.
+  ~
+  ~ This file is a part of Tuleap.
+  ~
+  ~ Tuleap is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Tuleap is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<project unix-name="tracker-move-forbidden" full-name="Tests Move Artifacts Forbidden" description="For test" access="public">
+    <long-description/>
+    <services>
+    </services>
+    <ugroups>
+        <ugroup name="project_members" description="">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+            </members>
+        </ugroup>
+        <ugroup name="project_admins" description="">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+            </members>
+        </ugroup>
+    </ugroups>
+    <trackers>
+        <tracker id="T105" parent_id="0" instantiate_for_new_projects="1" enable_move_artifacts="0">
+          <name>
+            <![CDATA[ Move tracker Forbidden ]]>
+          </name>
+          <item_name>move_tracker_forbidden</item_name>
+          <description>
+            <![CDATA[ Move tracker Forbidden ]]>
+          </description>
+          <color>inca_silver</color>
+          <cannedResponses/>
+          <formElements>
+            <formElement type="string" ID="F9" rank="0" required="1">
+              <name>summary</name>
+              <label>Summary</label>
+              <properties size="50"/>
+            </formElement>
+          </formElements>
+          <semantics>
+            <semantic type="title">
+              <shortname>title</shortname>
+              <label>Title</label>
+              <description>Define the title of an artifact</description>
+              <field REF="F9"/>
+            </semantic>
+          </semantics>
+          <rules/>
+          <reports/>
+          <workflow/>
+          <permissions>
+            <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+            <permission scope="tracker" ugroup="ugroup_tracker_admin" type="PLUGIN_TRACKER_ADMIN"/>
+            <permission scope="field" REF="F9" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+            <permission scope="field" REF="F9" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+            <permission scope="field" REF="F9" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+          </permissions>
+          <artifacts>
+            <artifact id="2">
+              <changeset>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601">2024-01-29T09:00:00+01:00</submitted_on>
+                <comments/>
+                <field_change field_name="summary" type="string">
+                  <value><![CDATA[I submitted this one]]></value>
+                </field_change>
+              </changeset>
+            </artifact>
+          </artifacts>
+        </tracker>
+        <tracker id="T106" parent_id="0" instantiate_for_new_projects="1">
+          <name>
+            <![CDATA[ Destination tracker ]]>
+          </name>
+          <item_name>destination_tracker</item_name>
+          <description>
+            <![CDATA[ Destination tracker ]]>
+          </description>
+          <color>inca_silver</color>
+          <cannedResponses/>
+          <formElements>
+            <formElement type="string" ID="F10" rank="0" required="1">
+              <name>summary</name>
+              <label>Summary</label>
+              <properties size="50"/>
+            </formElement>
+          </formElements>
+          <semantics>
+            <semantic type="title">
+              <shortname>title</shortname>
+              <label>Title</label>
+              <description>Define the title of an artifact</description>
+              <field REF="F10"/>
+            </semantic>
+          </semantics>
+          <rules/>
+          <reports/>
+          <workflow/>
+          <permissions>
+            <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+            <permission scope="tracker" ugroup="ugroup_tracker_admin" type="PLUGIN_TRACKER_ADMIN"/>
+            <permission scope="field" REF="F10" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+            <permission scope="field" REF="F10" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+            <permission scope="field" REF="F10" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+          </permissions>
+        </tracker>
+      </trackers>
+</project>

@@ -105,7 +105,7 @@ final class BeforeMoveCheckerTest extends TestCase
         $this->move_dao->method("isMoveActionAllowedInTracker")->willReturn(false);
 
         $this->expectException(RestException::class);
-        $this->expectExceptionCode(404);
+        $this->expectExceptionCode(400);
 
         $this->before_move_checker->check($source_tracker, $target_tracker, $this->user, $artifact, $event);
     }
