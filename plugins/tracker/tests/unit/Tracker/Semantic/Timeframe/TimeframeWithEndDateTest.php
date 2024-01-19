@@ -482,7 +482,7 @@ final class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withTitle('title')
             ->inTracker(TrackerTestBuilder::aTracker()->build())
             ->withChangesets($changeset)
-            ->userCanView(true)
+            ->userCanView($this->user)
             ->withParent(null)
             ->isOpen(true)
             ->build();
@@ -503,7 +503,7 @@ final class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withTitle('title')
             ->inTracker(TrackerTestBuilder::aTracker()->build())
             ->withChangesets($changeset)
-            ->userCanView(true)
+            ->userCanView($this->user)
             ->withParent(null)
             ->isOpen(true)
             ->build();
@@ -524,7 +524,7 @@ final class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withTitle('title')
             ->inTracker(TrackerTestBuilder::aTracker()->build())
             ->withChangesets($changeset)
-            ->userCanView(true)
+            ->userCanView($this->user)
             ->withParent(null)
             ->isOpen(true)
             ->build();
@@ -540,7 +540,7 @@ final class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withTitle('title')
             ->inTracker(TrackerTestBuilder::aTracker()->build())
             ->withChangesets($changeset)
-            ->userCanView(true)
+            ->userCanView($this->user)
             ->withParent(null)
             ->isOpen(true)
             ->build();

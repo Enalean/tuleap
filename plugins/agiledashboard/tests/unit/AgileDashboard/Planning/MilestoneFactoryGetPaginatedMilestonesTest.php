@@ -397,7 +397,7 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
             ->withTitle('title')
             ->inTracker($milestone_tracker)
             ->withChangesets($changeset)
-            ->userCanView(true)
+            ->userCanView($this->user)
             ->withParent(null)
             ->isOpen(true)
             ->withAncestors([])

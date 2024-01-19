@@ -117,18 +117,20 @@ final class TimeframeNotConfiguredTest extends TestCase
 
     public function testItReturnsAnEmptyDatePeriodWithAnErrorMessageForArtifactREST(): void
     {
+        $user = UserTestBuilder::anActiveUser()->build();
+
         $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
         $artifact  = ArtifactTestBuilder::anArtifact(1)
             ->withTitle('release_1_0')
             ->withChangesets($changeset)
-            ->userCanView(true)
+            ->userCanView($user)
             ->build();
         $tracker   = TrackerTestBuilder::aTracker()->withName('User story')->build();
         $changeset->expects(self::once())->method('getTracker')->willReturn($tracker);
 
         $date_period = $this->timeframe->buildDatePeriodWithoutWeekendForChangesetForREST(
             $artifact->getLastChangeset(),
-            UserTestBuilder::anActiveUser()->build(),
+            $user,
             new NullLogger()
         );
 
@@ -143,11 +145,13 @@ final class TimeframeNotConfiguredTest extends TestCase
 
     public function testItThrowsAnExceptionWhenInChartContext(): void
     {
+        $user = UserTestBuilder::anActiveUser()->build();
+
         $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
         $artifact  = ArtifactTestBuilder::anArtifact(1)
             ->withTitle('release_1_0')
             ->withChangesets($changeset)
-            ->userCanView(true)
+            ->userCanView($user)
             ->build();
         $tracker   = TrackerTestBuilder::aTracker()->withName('User story')->build();
 
@@ -157,7 +161,7 @@ final class TimeframeNotConfiguredTest extends TestCase
 
         $this->timeframe->buildDatePeriodWithoutWeekendForChangesetChartRendering(
             $artifact->getLastChangeset(),
-            UserTestBuilder::anActiveUser()->build(),
+            $user,
             new NullLogger()
         );
     }

@@ -209,7 +209,7 @@ class MilestoneFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         return ArtifactTestBuilder::anArtifact($id)
             ->inTracker($tracker)
             ->withChangesets(ChangesetTestBuilder::aChangeset('1')->build())
-            ->userCanView(true)
+            ->userCanView($this->user)
             ->withParent(null)
             ->withStatus($status)
             ->isOpen($is_open)

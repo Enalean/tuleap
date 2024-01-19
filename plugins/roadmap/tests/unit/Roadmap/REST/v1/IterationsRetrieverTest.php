@@ -922,7 +922,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 )
             );
 
-        $iteration = $this->anArtifactWithoutChangesetValue(201, 'Title', $this->tracker, true);
+        $iteration = $this->anArtifactWithoutChangesetValue(201, 'Title', $this->tracker);
 
         $this->artifact_factory
             ->expects(self::once())
@@ -1293,7 +1293,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 )
             );
 
-        $iteration = $this->anArtifact(123, "Sprint W42", $this->tracker, true);
+        $iteration = $this->anArtifact(123, "Sprint W42", $this->tracker);
 
         $this->artifact_factory
             ->expects(self::once())
@@ -1353,7 +1353,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn($db_result);
     }
 
-    private function anArtifact(int $id, string $title, Tracker $tracker, bool $readable): Artifact
+    private function anArtifact(int $id, string $title, Tracker $tracker): Artifact
     {
         $changeset       = $this->createMock(\Tracker_Artifact_Changeset::class);
         $changeset_value = $this->createMock(\Tracker_Artifact_ChangesetValue_Date::class);
@@ -1364,13 +1364,13 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withTitle($title)
             ->inTracker($tracker)
             ->withChangesets($changeset)
-            ->userCanView($readable)
+            ->userCanView($this->user)
             ->withParent(null)
             ->isOpen(true)
             ->build();
     }
 
-    private function anArtifactWithoutChangesetValue(int $id, string $title, Tracker $tracker, bool $readable): Artifact
+    private function anArtifactWithoutChangesetValue(int $id, string $title, Tracker $tracker): Artifact
     {
         $changeset       = $this->createMock(\Tracker_Artifact_Changeset::class);
         $changeset_value = $this->createMock(\Tracker_Artifact_ChangesetValue_Date::class);
@@ -1381,7 +1381,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withTitle($title)
             ->inTracker($tracker)
             ->withChangesets($changeset)
-            ->userCanView($readable)
+            ->userCanView($this->user)
             ->withParent(null)
             ->isOpen(true)
             ->build();
