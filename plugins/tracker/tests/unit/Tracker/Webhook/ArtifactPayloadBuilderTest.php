@@ -18,31 +18,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Webhook;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentation;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\HTMLOrTextCommentRepresentation;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\User\CCEUser;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 final class ArtifactPayloadBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var ArtifactPayloadBuilder
-     */
-    private $builder;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ChangesetRepresentationBuilder
-     */
-    private $changeset_representation_builder;
+    private ArtifactPayloadBuilder $builder;
+    private ChangesetRepresentationBuilder&MockObject $changeset_representation_builder;
 
     protected function setUp(): void
     {
-        \UserHelper::setInstance(\Mockery::spy(\UserHelper::class));
-        $this->changeset_representation_builder = \Mockery::mock(ChangesetRepresentationBuilder::class);
+        $user_helper = $this->createMock(\UserHelper::class);
+        \UserHelper::setInstance($user_helper);
+        $user_helper->method('getUserUrl');
+        $user_helper->method('getDisplayNameFromUser');
+        $this->changeset_representation_builder = $this->createMock(ChangesetRepresentationBuilder::class);
         $this->builder                          = new ArtifactPayloadBuilder($this->changeset_representation_builder);
     }
 
@@ -53,30 +53,52 @@ final class ArtifactPayloadBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCreationIsIdentified(): void
     {
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturns(101);
-        $user->shouldReceive('isAnonymous')->andReturns(false);
-        $user->shouldReceive('getRealName')->andReturns('Real Name');
-        $user->shouldReceive('getUserName')->andReturns('username');
-        $user->shouldReceive('getLdapId')->andReturns(null);
-        $user->shouldReceive('getAvatarUrl')->andReturns('');
-        $user->shouldReceive('hasAvatar')->andReturns(false);
+        $user = UserTestBuilder::aUser()
+            ->withId(101)
+            ->withRealName('Real Name')
+            ->withUserName('username')
+            ->withAvatarUrl('')
+            ->build();
 
-        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->shouldReceive('getPreviousChangeset')->andReturns(null);
-        $artifact->shouldReceive('getId')->andReturns(103);
-        $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
-        $changeset->shouldReceive('getId')->andReturns(1);
-        $changeset->shouldReceive('getSubmitter')->andReturns($user);
-        $changeset->shouldReceive('getArtifact')->andReturns($artifact);
-        $this->changeset_representation_builder->shouldReceive('buildWithFieldValuesWithoutPermissions')
-            ->once()
-            ->andReturn($this->buildChangesetRepresentation($user));
+        $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
+        $artifact  = ArtifactTestBuilder::anArtifact(103)
+            ->withChangesets($changeset)
+            ->build();
+        $changeset->method('getId')->willReturn(1);
+        $changeset->method('getSubmitter')->willReturn($user);
+        $changeset->method('getArtifact')->willReturn($artifact);
+        $this->changeset_representation_builder->expects(self::once())->method('buildWithFieldValuesWithoutPermissions')
+            ->willReturn($this->buildChangesetRepresentation($user));
 
         $payload = $this->builder->buildPayload($changeset);
 
-        $this->assertSame('create', $payload->getPayload()['action']);
-        $this->assertNull($payload->getPayload()['previous']);
+        self::assertSame('create', $payload->getPayload()['action']);
+        self::assertNull($payload->getPayload()['previous']);
+        self::assertFalse($payload->getPayload()['is_custom_code_execution']);
+    }
+
+    public function testItSetWASMUpdateToTrueIfCCEUser(): void
+    {
+        $user = UserTestBuilder::aUser()
+            ->withId(CCEUser::ID)
+            ->withRealName('Real Name')
+            ->withUserName('username')
+            ->withAvatarUrl('')
+            ->build();
+
+        $changeset = $this->createMock(\Tracker_Artifact_Changeset::class);
+        $artifact  = ArtifactTestBuilder::anArtifact(103)
+            ->withChangesets($changeset)
+            ->build();
+        $changeset->method('getId')->willReturn(1);
+        $changeset->method('getSubmitter')->willReturn($user);
+        $changeset->method('getArtifact')->willReturn($artifact);
+        $this->changeset_representation_builder->expects(self::once())->method('buildWithFieldValuesWithoutPermissions')
+            ->willReturn($this->buildChangesetRepresentation($user));
+
+        $payload = $this->builder->buildPayload($changeset);
+
+        self::assertTrue($payload->getPayload()['is_custom_code_execution']);
     }
 
     private function buildChangesetRepresentation(\PFUser $user): ChangesetRepresentation
