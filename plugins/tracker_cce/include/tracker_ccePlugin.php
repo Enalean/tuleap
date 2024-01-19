@@ -151,7 +151,7 @@ final class tracker_ccePlugin extends Plugin
             ),
             new FindWASMModulePath(),
             new CallWASMModule(
-                new FFIWASMCaller($mapper, Prometheus::instance()),
+                new FFIWASMCaller($mapper, Prometheus::instance(), 'tracker_cce_plugin'),
                 new ProcessWASMResponse(
                     $event->getLogger(),
                     $mapper,

@@ -2743,7 +2743,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             PreReceiveCommand::NAME,
             function (): PreReceiveCommand {
                 $mapper      = \Tuleap\Mapper\ValinorMapperBuilderFactory::mapperBuilder()->mapper();
-                $wasm_caller = new FFIWASMCaller($mapper, Prometheus::instance());
+                $wasm_caller = new FFIWASMCaller($mapper, Prometheus::instance(), 'git_plugin');
 
                 return new PreReceiveCommand(
                     new PreReceiveAction(
