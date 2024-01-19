@@ -36,7 +36,7 @@ final class ModuleLogDaoTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->dao                = new ModuleLogDao();
+        $this->dao                = new ModuleLogDao(\Tracker_ArtifactFactory::instance());
         $db                       = DBFactory::getMainTuleapDBConnection()->getDB();
         $this->tracker_id         = (int) $db->insertReturnId('tracker', ['group_id' => 100]);
         $this->artifact_id        = (int) $db->insertReturnId('tracker_artifact', [
@@ -77,10 +77,8 @@ final class ModuleLogDaoTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->dao->saveModuleLogLine($this->createLogForChangeset($this->changeset_id, true));
 
-        $result = DBFactory::getMainTuleapDBConnection()->getDB()
-            ->row('SELECT * FROM plugin_tracker_cce_module_log WHERE changeset_id = ?', $this->changeset_id);
+        $result = $this->dao->searchLogsByTrackerId($this->tracker_id)[0]->log_line->toArray();
 
-        self::assertIsArray($result);
         self::assertEquals(ModuleLogLine::STATUS_PASSED, $result['status']);
         self::assertEquals($this->changeset_id, $result['changeset_id']);
         self::assertEquals('{"source": "payload"}', $result['source_payload_json']);
@@ -93,8 +91,7 @@ final class ModuleLogDaoTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->dao->saveModuleLogLine($this->createLogForChangeset($this->changeset_id, false));
 
-        $result = DBFactory::getMainTuleapDBConnection()->getDB()
-            ->row('SELECT * FROM plugin_tracker_cce_module_log WHERE changeset_id = ?', $this->changeset_id);
+        $result = $this->dao->searchLogsByTrackerId($this->tracker_id)[0]->log_line->toArray();
 
         self::assertIsArray($result);
         self::assertEquals(ModuleLogLine::STATUS_ERROR, $result['status']);
@@ -113,8 +110,8 @@ final class ModuleLogDaoTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->saveModuleLogLine($this->createLogForChangeset($this->other_changeset_id, true));
 
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        self::assertEquals(50, $db->cell('SELECT count(id) FROM plugin_tracker_cce_module_log WHERE changeset_id = ?', $this->changeset_id));
-        self::assertEquals(1, $db->cell('SELECT count(id) FROM plugin_tracker_cce_module_log WHERE changeset_id = ?', $this->other_changeset_id));
+        self::assertCount(50, $this->dao->searchLogsByTrackerId($this->tracker_id));
+        self::assertCount(1, $this->dao->searchLogsByTrackerId($this->other_tracker_id));
     }
 
     private function createLogForChangeset(int $changeset_id, bool $passed): ModuleLogLine

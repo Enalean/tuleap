@@ -20,24 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\TrackerCCE\Administration;
+namespace Tuleap\TrackerCCE\Logs;
 
-use Tuleap\CSRFSynchronizerTokenPresenter;
-use Tuleap\TrackerCCE\Logs\LogLinePresenter;
+use Tuleap\Tracker\Artifact\Artifact;
 
-final class AdministrationPresenter
+final class ModuleLogLineWithArtifact
 {
-    /**
-     * @param LogLinePresenter[] $logs
-     */
     public function __construct(
-        public readonly string $post_url,
-        public readonly string $remove_url,
-        public readonly string $activation_url,
-        public readonly CSRFSynchronizerTokenPresenter $csrf,
-        public readonly bool $has_uploaded_module,
-        public readonly bool $is_activated,
-        public readonly array $logs,
+        public readonly int $id,
+        public readonly ModuleLogLine $log_line,
+        public readonly Artifact $artifact,
     ) {
     }
 }

@@ -12,11 +12,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
-msgid "Action"
-msgstr "Action"
-
 msgid "Activated"
 msgstr "Activé"
+
+msgid "Artifact"
+msgstr "Artéfact"
 
 msgid "Automated custom code execution"
 msgstr "Exécution automatique de code personnalisé"
@@ -29,6 +29,21 @@ msgstr "Changer"
 
 msgid "Close"
 msgstr "Fermer"
+
+msgid "Copied!"
+msgstr "Copié !"
+
+msgid "Copy"
+msgstr "Copier"
+
+msgid "Copy the input payload"
+msgstr "Copier les données d'entrée"
+
+msgid "Copy the output payload"
+msgstr "Copier les données de sortie"
+
+msgid "Creation"
+msgstr "Création"
 
 msgid "Custom code execution"
 msgstr "Exécution de code personnalisé"
@@ -51,11 +66,29 @@ msgstr "Téléversement du module d'exécution de code personnalisé"
 msgid "Date"
 msgstr "Date"
 
+msgid "Details"
+msgstr "Détails"
+
+msgid "Error"
+msgstr "Erreur"
+
+msgid "Error message"
+msgstr "Message d'erreur"
+
+msgid "Execution date"
+msgstr "Date d'exécution"
+
+msgid "Execution details"
+msgstr "Détails d'exécution"
+
 msgid "Failed to write file to disk."
 msgstr "Échec de l'écriture du fichier sur le disque."
 
 msgid "File upload stopped by extension."
 msgstr "L'envoi de fichier est arrêté par une extension."
+
+msgid "Input payload"
+msgstr "Données d'entrée"
 
 msgid "Logs will also be deleted."
 msgstr "Les logs seront aussi supprimés."
@@ -69,6 +102,9 @@ msgstr "Le module n'existe pas, peut-être a-t-il déjà été supprimé ?"
 msgid "Module uploaded"
 msgstr "Module téléversé"
 
+msgid "No error message"
+msgstr "Pas de message d'erreur"
+
 msgid "No file was uploaded."
 msgstr "Aucun fichier téléversé."
 
@@ -77,6 +113,9 @@ msgstr "Aucun module n'a été téléversé"
 
 msgid "No module!"
 msgstr "Pas de module !"
+
+msgid "Output payload"
+msgstr "Données de sortie"
 
 msgid "Please confirm your action."
 msgstr "Veuillez confirmer votre action."
@@ -95,6 +134,9 @@ msgstr "Supprimer le module"
 
 msgid "Status"
 msgstr "Statut"
+
+msgid "Success"
+msgstr "Succès"
 
 msgid "The module has been activated"
 msgstr "Le module a été activé"
@@ -123,11 +165,17 @@ msgstr "Il n'y a aucun module à exécuter."
 msgid "TrackerCCE"
 msgstr "TrackerCCE"
 
+msgid "Type"
+msgstr "Type"
+
 msgid "Unable to remove the module"
 msgstr "Impossible de supprimer le module"
 
 msgid "Unable to upload the module"
 msgstr "Impossible de téléverser le module"
+
+msgid "Update"
+msgstr "Mise à jour"
 
 msgid "Upload WASM module"
 msgstr "Téléverser un module WASM"
