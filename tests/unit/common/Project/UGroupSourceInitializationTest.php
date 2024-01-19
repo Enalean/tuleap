@@ -17,47 +17,48 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,
-class UGroupSourceInitializationTest extends \Tuleap\Test\PHPUnit\TestCase
+namespace Tuleap\Project;
+
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
+
+final class UGroupSourceInitializationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\Mock&\Mockery\MockInterface&ProjectUGroup
-     */
-    private $ugroup;
+    private \ProjectUGroup&MockObject $ugroup;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->ugroup = \Mockery::mock(\ProjectUGroup::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->ugroup = $this->createPartialMock(\ProjectUGroup::class, [
+            'getUgroupBindingSource',
+        ]);
     }
 
-    public function testItQueriesTheDatabaseWhenDefaultValueIsFalse()
+    public function testItQueriesTheDatabaseWhenDefaultValueIsFalse(): void
     {
-        $this->ugroup->shouldReceive('getUgroupBindingSource')->once();
+        $this->ugroup->expects(self::once())->method('getUgroupBindingSource');
         $this->ugroup->isBound();
     }
 
-    public function testItQueriesTheDatabaseOnlyOnce()
+    public function testItQueriesTheDatabaseOnlyOnce(): void
     {
-        $this->ugroup->shouldReceive('getUgroupBindingSource')->once();
-        $this->ugroup->shouldReceive('getUgroupBindingSource')->andReturns(null);
+        $this->ugroup->expects(self::once())->method('getUgroupBindingSource');
         $this->ugroup->isBound();
         $this->ugroup->isBound();
     }
 
-    public function testItReturnsTrueWhenTheGroupIsBound()
+    public function testItReturnsTrueWhenTheGroupIsBound(): void
     {
-        $this->ugroup->shouldReceive('getUgroupBindingSource')->andReturns(\Mockery::spy(\ProjectUGroup::class)->shouldReceive('getId')->andReturns(666)->getMock());
-        $this->assertTrue($this->ugroup->isBound());
+        $this->ugroup->method('getUgroupBindingSource')
+            ->willReturn(ProjectUGroupTestBuilder::aCustomUserGroup(666)->build());
+        self::assertTrue($this->ugroup->isBound());
     }
 
-    public function testItReturnsFalseWhenTheGroupIsNotBound()
+    public function testItReturnsFalseWhenTheGroupIsNotBound(): void
     {
-        $this->ugroup->shouldReceive('getUgroupBindingSource')->andReturns(null);
-        $this->assertFalse($this->ugroup->isBound());
+        $this->ugroup->method('getUgroupBindingSource')->willReturn(null);
+        self::assertFalse($this->ugroup->isBound());
     }
 }
