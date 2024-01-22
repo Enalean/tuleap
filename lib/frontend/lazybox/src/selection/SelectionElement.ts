@@ -28,15 +28,14 @@ import type { SearchInput } from "../SearchInput";
 import { getClearSelectionButton } from "./ClearSelectionTemplate";
 import type { LazyboxItem } from "../GroupCollection";
 import "./SelectionBadge";
+import type { HandleSelection } from "./HandleSelection";
 
 export const TAG = "tuleap-lazybox-selection";
 
-export type SelectionElement = {
+export type SelectionElement = HandleSelection & {
     multiple: boolean;
     placeholder_text: string;
-    selectItem(item: LazyboxItem): void;
     clearSelection(): void;
-    isSelected(item: LazyboxItem): boolean;
     onSelection: LazyboxSelectionCallback;
     replaceSelection(items: ReadonlyArray<LazyboxItem>): void;
     selection_badge_callback: LazyboxSelectionBadgeCallback;

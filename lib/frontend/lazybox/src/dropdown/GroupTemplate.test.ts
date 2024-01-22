@@ -23,7 +23,6 @@ import type { GroupCollection, LazyboxItem } from "../GroupCollection";
 import { TemplatingCallbackStub } from "../../tests/stubs/TemplatingCallbackStub";
 import { getAllGroupsTemplate, getItemTemplate } from "./GroupTemplate";
 import type { HostElement } from "./DropdownElement";
-import type { SelectionElement } from "../selection/SelectionElement";
 import { LazyboxItemStub } from "../../tests/stubs/LazyboxItemStub";
 import { selectOrThrow } from "@tuleap/dom";
 import * as tuleap_focus from "@tuleap/focus-navigation";
@@ -53,7 +52,7 @@ describe("GroupTemplate", () => {
             selection: {
                 selectItem: noopSelectItem,
                 isSelected: (item) => (item ? false : false),
-            } as SelectionElement & HTMLElement,
+            },
             templating_callback: TemplatingCallbackStub.build(),
         }) as HostElement;
 
