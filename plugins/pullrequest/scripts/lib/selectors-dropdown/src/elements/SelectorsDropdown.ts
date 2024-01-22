@@ -33,12 +33,17 @@ import { SelectorsDropdownAutocompleter } from "./SelectorsDropdownAutocompleter
 export const TAG = "tuleap-selectors-dropdown";
 
 export type SelectorsDropdownLoadItemsCallback = () => Promise<LazyboxItem[]>;
+export type SelectorsDropdownFilterItemsCallback = (
+    query: string,
+    items: LazyboxItem[],
+) => LazyboxItem[];
 
 type AutocompleterConfig = {
     templating_callback: LazyboxTemplatingCallback;
     group: GroupOfItems;
     placeholder: string;
     loadItems: SelectorsDropdownLoadItemsCallback;
+    filterItems: SelectorsDropdownFilterItemsCallback;
 };
 
 export type SelectorEntry = {

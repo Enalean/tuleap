@@ -19,6 +19,7 @@
 
 import { html } from "hybrids";
 import type { SelectorEntry } from "../src/elements/SelectorsDropdown";
+import type { LazyboxItem } from "@tuleap/lazybox";
 
 export const SelectorEntryStub = {
     withEntryName: (entry_name: string): SelectorEntry => ({
@@ -35,6 +36,9 @@ export const SelectorEntryStub = {
             templating_callback: () => html``,
             loadItems(): Promise<[]> {
                 return Promise.resolve([]);
+            },
+            filterItems(query: string, items: LazyboxItem[]): LazyboxItem[] {
+                return items;
             },
         },
     }),

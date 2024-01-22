@@ -17,23 +17,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { HTMLTemplateStringProcessor, HTMLTemplateResult, LazyboxItem } from "@tuleap/lazybox";
-import { isUser } from "./AuthorSelectorEntry";
-
-export const AuthorTemplatingCallback = (
-    html: typeof HTMLTemplateStringProcessor,
-    item: LazyboxItem,
-): HTMLTemplateResult => {
-    if (!isUser(item.value)) {
-        return html``;
+const isTargetEditable = (target: EventTarget | null): boolean => {
+    if (!(target instanceof HTMLElement)) {
+        return false;
     }
 
-    return html`
-        <span class="pull-request-autocompleter-avatar" data-test="pull-request-author">
-            <div class="tlp-avatar-mini">
-                <img src="${item.value.avatar_url}" data-test="pull-request-author-avatar" />
-            </div>
-            ${item.value.display_name}
-        </span>
-    `;
+    return (
+        target.isContentEditable ||
+        target instanceof HTMLInputElement ||
+        target instanceof HTMLTextAreaElement ||
+        target instanceof HTMLSelectElement
+    );
+};
+
+export const ignoreInputsEvenThoseInCustomElementsShadowDOM = (event: KeyboardEvent): boolean => {
+    const target = event.composedPath()[0];
+    if (event.composedPath().length === 0 || !isTargetEditable(target)) {
+        return true;
+    }
+
+    return (
+        (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) &&
+        target.readOnly
+    );
 };

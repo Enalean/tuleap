@@ -19,6 +19,7 @@
 
 import { createLazyAutocompleter } from "@tuleap/lazybox";
 import type { SelectorEntry } from "./SelectorsDropdown";
+import type { LazyboxItem } from "@tuleap/lazybox/src/GroupCollection";
 
 export type Autocompleter = {
     start(selector: SelectorEntry, container: Element): Promise<void>;
@@ -31,13 +32,22 @@ const noop = (): void => {
 export const SelectorsDropdownAutocompleter = (doc: Document): Autocompleter => ({
     start: async (selector: SelectorEntry, container: Element): Promise<void> => {
         const lazy_autocompleter = createLazyAutocompleter(doc);
-        const { templating_callback, group, placeholder, loadItems } = selector.config;
+        const { templating_callback, group, placeholder, loadItems, filterItems } = selector.config;
+
+        let items: LazyboxItem[] = [];
 
         lazy_autocompleter.options = {
             placeholder,
             templating_callback,
             selection_callback: noop,
-            search_input_callback: noop,
+            search_input_callback: (query): void => {
+                lazy_autocompleter.replaceContent([
+                    {
+                        ...group,
+                        items: filterItems(query, items),
+                    },
+                ]);
+            },
         };
 
         const selector_group = { ...group, is_loading: true };
@@ -45,7 +55,7 @@ export const SelectorsDropdownAutocompleter = (doc: Document): Autocompleter => 
         lazy_autocompleter.replaceContent([selector_group]);
         container.appendChild(lazy_autocompleter);
 
-        const items = await loadItems();
+        items = await loadItems();
         selector_group.is_loading = false;
         selector_group.items = items;
         lazy_autocompleter.replaceContent([selector_group]);

@@ -22,6 +22,7 @@ import hotkeys from "hotkeys-js";
 import { addShortcutsGroupToShortcutsModal } from "./help-modal/add-to-modal";
 import { removeShortcutsGroupFromShortcutsModal } from "./help-modal/remove-from-modal";
 import { isWildCardAndNotQuestionMark } from "./wildcards/handle-wildcards";
+import { ignoreInputsEvenThoseInCustomElementsShadowDOM } from "./filter/hotkeys-filter";
 import { HOTKEYS_SCOPE_NO_MODAL } from "./modals-events/handle-modals-events";
 import { GLOBAL_SCOPE, PLUGIN_SCOPE } from "./type";
 import type { Shortcut, ShortcutsGroup } from "./type";
@@ -32,6 +33,7 @@ export function addShortcutsGroup(doc: Document, shortcuts_group: ShortcutsGroup
 }
 
 export function addGlobalShortcutsGroup(doc: Document, shortcuts_group: ShortcutsGroup): void {
+    hotkeys.filter = ignoreInputsEvenThoseInCustomElementsShadowDOM;
     shortcuts_group.shortcuts.forEach(createShortcut);
     addShortcutsGroupToShortcutsModal(doc, shortcuts_group, GLOBAL_SCOPE);
 }

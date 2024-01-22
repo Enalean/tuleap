@@ -17,23 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { HTMLTemplateStringProcessor, HTMLTemplateResult, LazyboxItem } from "@tuleap/lazybox";
+import type { LazyboxItem } from "@tuleap/lazybox";
 import { isUser } from "./AuthorSelectorEntry";
+import type { SelectorsDropdownFilterItemsCallback } from "@tuleap/plugin-pullrequest-selectors-dropdown";
 
-export const AuthorTemplatingCallback = (
-    html: typeof HTMLTemplateStringProcessor,
-    item: LazyboxItem,
-): HTMLTemplateResult => {
-    if (!isUser(item.value)) {
-        return html``;
+export const AuthorFilteringCallback: SelectorsDropdownFilterItemsCallback = (
+    query: string,
+    items: LazyboxItem[],
+): LazyboxItem[] => {
+    const lowercase_query = query.toLowerCase();
+    if (lowercase_query === "") {
+        return items;
     }
 
-    return html`
-        <span class="pull-request-autocompleter-avatar" data-test="pull-request-author">
-            <div class="tlp-avatar-mini">
-                <img src="${item.value.avatar_url}" data-test="pull-request-author-avatar" />
-            </div>
-            ${item.value.display_name}
-        </span>
-    `;
+    return items.filter(
+        (author) =>
+            isUser(author.value) &&
+            author.value.display_name.toLowerCase().includes(lowercase_query),
+    );
 };
