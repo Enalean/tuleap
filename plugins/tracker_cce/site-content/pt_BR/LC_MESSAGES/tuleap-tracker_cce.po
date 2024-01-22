@@ -12,10 +12,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.2.2\n"
 
-msgid "Action"
+msgid "Activated"
 msgstr ""
 
-msgid "Activated"
+msgid "Artifact"
 msgstr ""
 
 msgid "Automated custom code execution"
@@ -28,6 +28,21 @@ msgid "Change"
 msgstr ""
 
 msgid "Close"
+msgstr ""
+
+msgid "Copied!"
+msgstr ""
+
+msgid "Copy"
+msgstr ""
+
+msgid "Copy the input payload"
+msgstr ""
+
+msgid "Copy the output payload"
+msgstr ""
+
+msgid "Creation"
 msgstr ""
 
 msgid "Custom code execution"
@@ -51,10 +66,28 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
+msgid "Details"
+msgstr ""
+
+msgid "Error"
+msgstr ""
+
+msgid "Error message"
+msgstr ""
+
+msgid "Execution date"
+msgstr ""
+
+msgid "Execution details"
+msgstr ""
+
 msgid "Failed to write file to disk."
 msgstr ""
 
 msgid "File upload stopped by extension."
+msgstr ""
+
+msgid "Input payload"
 msgstr ""
 
 msgid "Logs will also be deleted."
@@ -69,6 +102,9 @@ msgstr ""
 msgid "Module uploaded"
 msgstr ""
 
+msgid "No error message"
+msgstr ""
+
 msgid "No file was uploaded."
 msgstr ""
 
@@ -76,6 +112,9 @@ msgid "No module has been uploaded"
 msgstr ""
 
 msgid "No module!"
+msgstr ""
+
+msgid "Output payload"
 msgstr ""
 
 msgid "Please confirm your action."
@@ -94,6 +133,9 @@ msgid "Remove module"
 msgstr ""
 
 msgid "Status"
+msgstr ""
+
+msgid "Success"
 msgstr ""
 
 msgid "The module has been activated"
@@ -123,10 +165,16 @@ msgstr ""
 msgid "TrackerCCE"
 msgstr ""
 
+msgid "Type"
+msgstr ""
+
 msgid "Unable to remove the module"
 msgstr ""
 
 msgid "Unable to upload the module"
+msgstr ""
+
+msgid "Update"
 msgstr ""
 
 msgid "Upload WASM module"

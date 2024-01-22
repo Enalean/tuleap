@@ -25,14 +25,21 @@ namespace Tuleap\TrackerCCE\Administration;
 use HTTPRequest;
 use Project;
 use Tuleap\CSRFSynchronizerTokenPresenter;
+use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\IncludeCoreAssets;
 use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Tracker\Artifact\RetrieveTracker;
+use Tuleap\TrackerCCE\Logs\LogLinePresenterBuilder;
+use Tuleap\TrackerCCE\Logs\ModuleLogLineWithArtifact;
+use Tuleap\TrackerCCE\Logs\RetrieveLogsForTracker;
 use Tuleap\TrackerCCE\WASM\WASMModulePathHelper;
 
 final class AdministrationController implements DispatchableWithRequest, DispatchableWithBurningParrot, DispatchableWithProject
@@ -44,6 +51,8 @@ final class AdministrationController implements DispatchableWithRequest, Dispatc
         private readonly TrackerCSRFTokenProvider $token_provider,
         private readonly WASMModulePathHelper $module_path_helper,
         private readonly CheckModuleIsActivated $check_module_is_activated,
+        private readonly RetrieveLogsForTracker $logs_for_tracker,
+        private readonly LogLinePresenterBuilder $log_line_presenter_builder,
     ) {
     }
 
@@ -66,6 +75,18 @@ final class AdministrationController implements DispatchableWithRequest, Dispatc
             )
         );
 
+        $logs = $this->logs_for_tracker->searchLogsByTrackerId($tracker->getId());
+        if (count($logs) > 0) {
+            $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons(new IncludeCoreAssets(), 'syntax-highlight'));
+            $layout->addJavascriptAsset(
+                new JavascriptAsset(
+                    new IncludeCoreAssets(),
+                    'syntax-highlight.js'
+                )
+            );
+            $layout->includeFooterJavascriptFile(RelativeDatesAssetsRetriever::retrieveAssetsUrl());
+        }
+
         $tracker->displayAdminItemHeaderBurningParrot(
             $this->tracker_layout,
             'editworkflow',
@@ -85,6 +106,10 @@ final class AdministrationController implements DispatchableWithRequest, Dispatc
                 CSRFSynchronizerTokenPresenter::fromToken($this->token_provider->getToken($tracker)),
                 $has_uploaded_module,
                 $this->check_module_is_activated->isModuleActivated($tracker->getId()),
+                array_map(
+                    fn (ModuleLogLineWithArtifact $log) => $this->log_line_presenter_builder->getPresenter($log, $current_user),
+                    $logs,
+                ),
             )
         );
 

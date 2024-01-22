@@ -20,24 +20,25 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\TrackerCCE\Administration;
+namespace Tuleap\TrackerCCE\Logs;
 
-use Tuleap\CSRFSynchronizerTokenPresenter;
-use Tuleap\TrackerCCE\Logs\LogLinePresenter;
+use Tuleap\Date\TlpRelativeDatePresenter;
 
-final class AdministrationPresenter
+final class LogLinePresenter
 {
-    /**
-     * @param LogLinePresenter[] $logs
-     */
     public function __construct(
-        public readonly string $post_url,
-        public readonly string $remove_url,
-        public readonly string $activation_url,
-        public readonly CSRFSynchronizerTokenPresenter $csrf,
-        public readonly bool $has_uploaded_module,
-        public readonly bool $is_activated,
-        public readonly array $logs,
+        public readonly int $id,
+        public readonly bool $is_error,
+        public readonly TlpRelativeDatePresenter $execution_date_block,
+        public readonly TlpRelativeDatePresenter $execution_date_inline,
+        public readonly string $type,
+        public readonly string $url,
+        public readonly string $xref,
+        public readonly string $title,
+        public readonly string $color,
+        public readonly string $source_payload_json,
+        public readonly ?string $generated_payload_json,
+        public readonly ?string $error_message,
     ) {
     }
 }

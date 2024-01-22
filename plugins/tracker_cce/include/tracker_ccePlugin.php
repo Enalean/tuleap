@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Psr\Log\LoggerInterface;
+use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -49,6 +50,7 @@ use Tuleap\TrackerCCE\Administration\RejectNonTrackerAdministratorMiddleware;
 use Tuleap\TrackerCCE\Administration\RemoveModuleController;
 use Tuleap\TrackerCCE\Administration\UpdateModuleController;
 use Tuleap\TrackerCCE\CustomCodeExecutionTask;
+use Tuleap\TrackerCCE\Logs\LogLinePresenterBuilder;
 use Tuleap\TrackerCCE\Logs\ModuleLogDao;
 use Tuleap\TrackerCCE\WASM\CallWASMModule;
 use Tuleap\TrackerCCE\WASM\ExecuteWASMResponse;
@@ -158,7 +160,7 @@ final class tracker_ccePlugin extends Plugin
                 )
             ),
             new ExecuteWASMResponse($event->getLogger(), $this->getPutHandler($event->getLogger())),
-            new ModuleLogDao(),
+            new ModuleLogDao(Tracker_ArtifactFactory::instance()),
             new ModuleDao(),
         ));
     }
@@ -227,6 +229,8 @@ final class tracker_ccePlugin extends Plugin
             new AdministrationCSRFTokenProvider(),
             new FindWASMModulePath(),
             new ModuleDao(),
+            new ModuleLogDao(Tracker_ArtifactFactory::instance()),
+            new LogLinePresenterBuilder(new TlpRelativeDatePresenterBuilder()),
         );
     }
 

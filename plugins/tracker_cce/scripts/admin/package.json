@@ -6,6 +6,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@tuleap/copy-to-clipboard": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*"
   },
   "devDependencies": {

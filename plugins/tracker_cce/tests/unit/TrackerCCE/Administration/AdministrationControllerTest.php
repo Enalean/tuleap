@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\TrackerCCE\Administration;
 
+use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\Request\NotFoundException;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
@@ -32,7 +33,9 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 use Tuleap\Tracker\Test\Stub\Tracker\DisplayTrackerLayoutStub;
+use Tuleap\TrackerCCE\Logs\LogLinePresenterBuilder;
 use Tuleap\TrackerCCE\Stub\Administration\CheckModuleIsActivatedStub;
+use Tuleap\TrackerCCE\Stub\Logs\RetrieveLogsForTrackerStub;
 use Tuleap\TrackerCCE\WASM\FindWASMModulePath;
 
 final class AdministrationControllerTest extends TestCase
@@ -48,6 +51,8 @@ final class AdministrationControllerTest extends TestCase
             new AdministrationCSRFTokenProvider(),
             new FindWASMModulePath(),
             CheckModuleIsActivatedStub::activated(),
+            RetrieveLogsForTrackerStub::withoutLogs(),
+            new LogLinePresenterBuilder(new TlpRelativeDatePresenterBuilder()),
         );
 
         $this->expectException(NotFoundException::class);
@@ -70,6 +75,8 @@ final class AdministrationControllerTest extends TestCase
             new AdministrationCSRFTokenProvider(),
             new FindWASMModulePath(),
             CheckModuleIsActivatedStub::activated(),
+            RetrieveLogsForTrackerStub::withoutLogs(),
+            new LogLinePresenterBuilder(new TlpRelativeDatePresenterBuilder()),
         );
 
         $this->expectException(NotFoundException::class);
@@ -95,6 +102,8 @@ final class AdministrationControllerTest extends TestCase
             new AdministrationCSRFTokenProvider(),
             new FindWASMModulePath(),
             CheckModuleIsActivatedStub::activated(),
+            RetrieveLogsForTrackerStub::withoutLogs(),
+            new LogLinePresenterBuilder(new TlpRelativeDatePresenterBuilder()),
         );
 
         $this->expectException(NotFoundException::class);

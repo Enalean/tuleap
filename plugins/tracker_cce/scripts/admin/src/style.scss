@@ -25,3 +25,64 @@
 .tracker-cce-admin-remove-cta {
     margin-left: var(--tlp-medium-spacing);
 }
+
+.tracker-cce-admin-logs-title {
+    width: 100%;
+}
+
+.tracker-cce-admin-logs-date {
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+.tracker-cce-admin-logs-badge {
+    margin: 0 5px 0 0;
+}
+
+.tracker-cce-admin-logs-details-row {
+    display: flex;
+    gap: var(--tlp-x-large-spacing);
+    margin: 0 0 var(--tlp-medium-spacing);
+
+    > .tlp-property {
+        margin: 0;
+    }
+}
+
+.tracker-cce-admin-logs-details-payload-container {
+    position: relative;
+}
+
+.tracker-cce-admin-logs-details-payload-copy {
+    position: absolute;
+    top: var(--tlp-medium-spacing);
+    right: var(--tlp-medium-spacing);
+
+    > .tracker-cce-admin-logs-details-payload-copy-button
+        > .tracker-cce-admin-logs-details-payload-copy-feedback {
+        display: none;
+    }
+
+    > .tracker-cce-admin-logs-details-payload-copy-button
+        > .tracker-cce-admin-logs-details-payload-copy-default {
+        display: inline;
+    }
+
+    &.tracker-cce-admin-logs-details-payload-copy-copied {
+        > .tracker-cce-admin-logs-details-payload-copy-button
+            > .tracker-cce-admin-logs-details-payload-copy-feedback {
+            display: inline;
+        }
+
+        > .tracker-cce-admin-logs-details-payload-copy-button
+            > .tracker-cce-admin-logs-details-payload-copy-default {
+            display: none;
+        }
+    }
+}
+
+.tracker-cce-admin-logs-details-payload {
+    display: block;
+    max-height: 300px;
+    overflow: auto;
+}

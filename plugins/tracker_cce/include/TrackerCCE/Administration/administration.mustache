@@ -74,20 +74,62 @@
                                     {{# dgettext }}tuleap-tracker_cce | Date{{/ dgettext }}
                                 </th>
                                 <th>
-                                    {{# dgettext }}tuleap-tracker_cce | Action{{/ dgettext }}
+                                    {{# dgettext }}tuleap-tracker_cce | Status{{/ dgettext }}
                                 </th>
                                 <th>
-                                    {{# dgettext }}tuleap-tracker_cce | Status{{/ dgettext }}
+                                    {{# dgettext }}tuleap-tracker_cce | Type{{/ dgettext }}
+                                </th>
+                                <th class="tracker-cce-admin-logs-title">
+                                    {{# dgettext }}tuleap-tracker_cce | Artifact{{/ dgettext }}
                                 </th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td colspan="4" class="tlp-table-cell-empty">
-                                    {{# dgettext }}tuleap-tracker_cce | There isn't any activity yet{{/ dgettext }}
-                                </td>
-                            </tr>
+                            {{^ logs }}
+                                <tr>
+                                    <td colspan="5" class="tlp-table-cell-empty">
+                                        {{# dgettext }}tuleap-tracker_cce | There isn't any activity yet{{/ dgettext }}
+                                    </td>
+                                </tr>
+                            {{/ logs }}
+                            {{# logs }}
+                                <tr>
+                                    <td class="tracker-cce-admin-logs-date">
+                                        {{# execution_date_block }}
+                                            {{> tlp_relative_date }}
+                                        {{/ execution_date_block }}
+                                    </td>
+                                    <td>
+                                        {{# is_error }}
+                                            <div class="tlp-badge-danger">
+                                                {{# dgettext }}tuleap-tracker_cce | Error{{/ dgettext }}
+                                            </div>
+                                        {{/ is_error }}
+                                        {{^ is_error }}
+                                            <div class="tlp-badge-success">
+                                                {{# dgettext }}tuleap-tracker_cce | Success{{/ dgettext }}
+                                            </div>
+                                        {{/ is_error }}
+                                    </td>
+                                    <td>{{ type }}</td>
+                                    <td>
+                                        <a href="{{ url }}">
+                                            <span class="tracker-cce-admin-logs-badge cross-ref-badge tlp-swatch-{{ color }}">{{ xref }}</span><!--
+                                            -->{{ title }}
+                                        </a>
+                                    </td>
+                                    <td class="tlp-table-cell-actions">
+                                        <button type="button"
+                                                class="tlp-button-primary tlp-button-outline tlp-button-small tlp-table-cell-actions-button tracker-cce-admin-logs-details-trigger"
+                                                data-target-modal-id="tracker-cce-admin-logs-details-{{ id }}"
+                                        >
+                                            <i class="fa fa-list tlp-button-icon"></i>
+                                            {{# dgettext }}tuleap-tracker_cce | Details{{/ dgettext }}
+                                        </button>
+                                    </td>
+                                </tr>
+                            {{/ logs }}
                         </tbody>
                     </table>
                 </section>
@@ -95,6 +137,156 @@
         </div>
     </section>
 </div>
+
+{{# logs }}
+    <div class="tlp-modal tlp-modal-medium-sized"
+         role="dialog"
+         id="tracker-cce-admin-logs-details-{{ id }}"
+         aria-labelledby="tracker-cce-admin-logs-details-{{ id }}-title"
+    >
+        <div class="tlp-modal-header">
+            <h1 class="tlp-modal-title" id="tracker-cce-admin-logs-details-{{ id }}-title">
+                {{# dgettext }}tuleap-tracker_cce | Execution details{{/ dgettext }}
+            </h1>
+            <button class="tlp-modal-close"
+                    type="button"
+                    data-dismiss="modal"
+                    aria-label="{{# dgettext }}tuleap-tracker_cce | Close{{/ dgettext }}"
+            >
+                <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div class="tlp-modal-body">
+            <div class="tracker-cce-admin-logs-details-row">
+                <div class="tlp-property">
+                    <label class="tlp-label">{{# dgettext }}tuleap-tracker_cce | Artifact{{/ dgettext }}</label>
+                    <p>
+                        <a href="{{ url }}">
+                            <span class="tracker-cce-admin-logs-badge cross-ref-badge tlp-swatch-{{ color }}">{{ xref }}</span><!--
+                            -->{{ title }}
+                        </a>
+                    </p>
+                </div>
+                <div class="tlp-property">
+                    <label class="tlp-label">{{# dgettext }}tuleap-tracker_cce | Type{{/ dgettext }}</label>
+                    <p>{{ type }}</p>
+                </div>
+            </div>
+            <div class="tracker-cce-admin-logs-details-row">
+                <div class="tlp-property">
+                    <label class="tlp-label">
+                        {{# dgettext }}tuleap-tracker_cce | Execution date{{/ dgettext }}
+                    </label>
+                    <p>
+                        {{# execution_date_inline }}
+                            {{> tlp_relative_date }}
+                        {{/ execution_date_inline }}
+                    </p>
+                </div>
+
+                <div class="tlp-property">
+                    <label class="tlp-label">
+                        {{# dgettext }}tuleap-tracker_cce | Status{{/ dgettext }}
+                    </label>
+                    {{# is_error }}
+                        <div class="tlp-badge-danger">
+                            {{# dgettext }}tuleap-tracker_cce | Error{{/ dgettext }}
+                        </div>
+                    {{/ is_error }}
+                    {{^ is_error }}
+                        <div class="tlp-badge-success">
+                            {{# dgettext }}tuleap-tracker_cce | Success{{/ dgettext }}
+                        </div>
+                    {{/ is_error }}
+                </div>
+            </div>
+
+
+            {{# is_error }}
+                <div class="tlp-property">
+                    <label class="tlp-label">
+                        {{# dgettext }}tuleap-tracker_cce | Error message{{/ dgettext }}
+                    </label>
+                    {{# error_message }}
+                        <div class="tlp-alert-danger">{{ . }}</div>
+                    {{/ error_message }}
+                    {{^ error_message }}
+                        <p class="tlp-property-empty">
+                            {{# dgettext }}tuleap-tracker_cce | No error message{{/ dgettext }}
+                        </p>
+                    {{/ error_message }}
+                </div>
+            {{/ is_error }}
+
+            <div class="tlp-property">
+                <label class="tlp-label">
+                    {{# dgettext }}tuleap-tracker_cce | Input payload{{/ dgettext }}
+                </label>
+                <div class="tracker-cce-admin-logs-details-payload-container">
+                    <copy-to-clipboard
+                        value="{{ source_payload_json }}"
+                        class="tracker-cce-admin-logs-details-payload-copy"
+                        aria-label="{{# dgettext }}tuleap-tracker_cce | Copy the input payload{{/ dgettext }}"
+                    >
+                        <button type="button"
+                                class="tlp-button-small tlp-button-outline tlp-button-secondary tlp-tooltip tlp-tooltip-left tracker-cce-admin-logs-details-payload-copy-button"
+                                data-tlp-tooltip="{{# dgettext }}tuleap-tracker_cce | Copy the input payload{{/ dgettext }}"
+                        >
+                            <span class="tracker-cce-admin-logs-details-payload-copy-default">
+                                <i class="fa-solid fa-fw fa-copy tlp-button-icon" aria-hidden="true"></i>
+                                {{# dgettext }}tuleap-tracker_cce | Copy {{/ dgettext }}
+                            </span>
+                            <span class="tracker-cce-admin-logs-details-payload-copy-feedback">
+                                <i class="fa-solid fa-fw fa-check tlp-button-icon" aria-hidden="true"></i>
+                                {{# dgettext }}tuleap-tracker_cce | Copied! {{/ dgettext }}
+                            </span>
+                        </button>
+                    </copy-to-clipboard>
+                    <tlp-syntax-highlighting class="tracker-cce-admin-logs-details-payload">
+                        <pre><code class="language-json">{{ source_payload_json }}</code></pre>
+                    </tlp-syntax-highlighting>
+                </div>
+            </div>
+
+            {{^ is_error }}
+                <div class="tlp-property">
+                    <label class="tlp-label">
+                        {{# dgettext }}tuleap-tracker_cce | Output payload{{/ dgettext }}
+                    </label>
+                    <div class="tracker-cce-admin-logs-details-payload-container">
+                        <copy-to-clipboard
+                            value="{{ generated_payload_json }}"
+                            class="tracker-cce-admin-logs-details-payload-copy"
+                            aria-label="{{# dgettext }}tuleap-tracker_cce | Copy the output payload{{/ dgettext }}"
+                        >
+                            <button type="button"
+                                    class="tlp-button-small tlp-button-outline tlp-button-secondary tlp-tooltip tlp-tooltip-left tracker-cce-admin-logs-details-payload-copy-button"
+                                    data-tlp-tooltip="{{# dgettext }}tuleap-tracker_cce | Copy the output payload{{/ dgettext }}"
+                            >
+                                <span class="tracker-cce-admin-logs-details-payload-copy-default">
+                                    <i class="fa-solid fa-fw fa-copy tlp-button-icon" aria-hidden="true"></i>
+                                    {{# dgettext }}tuleap-tracker_cce | Copy {{/ dgettext }}
+                                </span>
+                                <span class="tracker-cce-admin-logs-details-payload-copy-feedback">
+                                    <i class="fa-solid fa-fw fa-check tlp-button-icon" aria-hidden="true"></i>
+                                    {{# dgettext }}tuleap-tracker_cce | Copied! {{/ dgettext }}
+                                </span>
+                            </button>
+                        </copy-to-clipboard>
+                        <tlp-syntax-highlighting class="tracker-cce-admin-logs-details-payload">
+                            <pre><code class="language-json">{{ generated_payload_json }}</code></pre>
+                        </tlp-syntax-highlighting>
+                    </div>
+                </div>
+            {{/ is_error }}
+        </div>
+        <div class="tlp-modal-footer">
+            <button type="button" class="tlp-button-primary tlp-modal-action" data-dismiss="modal">
+                {{# dgettext }}tuleap-tracker_cce | Close{{/ dgettext }}
+            </button>
+        </div>
+    </div>
+{{/ logs }}
 
 <form method="post" action="{{ post_url }}" enctype="multipart/form-data" class="tlp-modal" role="dialog" id="tracker-cce-admin-upload-modal" aria-labelledby="tracker-cce-admin-upload-modal-title">
     <div class="tlp-modal-header">

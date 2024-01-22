@@ -20,24 +20,27 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\TrackerCCE\Administration;
+namespace Tuleap\TrackerCCE\Stub\Logs;
 
-use Tuleap\CSRFSynchronizerTokenPresenter;
-use Tuleap\TrackerCCE\Logs\LogLinePresenter;
+use Tuleap\TrackerCCE\Logs\ModuleLogLineWithArtifact;
+use Tuleap\TrackerCCE\Logs\RetrieveLogsForTracker;
 
-final class AdministrationPresenter
+final class RetrieveLogsForTrackerStub implements RetrieveLogsForTracker
 {
     /**
-     * @param LogLinePresenter[] $logs
+     * @param ModuleLogLineWithArtifact[] $logs
      */
-    public function __construct(
-        public readonly string $post_url,
-        public readonly string $remove_url,
-        public readonly string $activation_url,
-        public readonly CSRFSynchronizerTokenPresenter $csrf,
-        public readonly bool $has_uploaded_module,
-        public readonly bool $is_activated,
-        public readonly array $logs,
-    ) {
+    private function __construct(private readonly array $logs)
+    {
+    }
+
+    public static function withoutLogs(): self
+    {
+        return new self([]);
+    }
+
+    public function searchLogsByTrackerId(int $tracker_id): array
+    {
+        return $this->logs;
     }
 }

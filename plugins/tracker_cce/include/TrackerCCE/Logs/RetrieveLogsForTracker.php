@@ -18,26 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\TrackerCCE\Logs;
 
-namespace Tuleap\TrackerCCE\Administration;
-
-use Tuleap\CSRFSynchronizerTokenPresenter;
-use Tuleap\TrackerCCE\Logs\LogLinePresenter;
-
-final class AdministrationPresenter
+interface RetrieveLogsForTracker
 {
     /**
-     * @param LogLinePresenter[] $logs
+     * @return ModuleLogLineWithArtifact[]
      */
-    public function __construct(
-        public readonly string $post_url,
-        public readonly string $remove_url,
-        public readonly string $activation_url,
-        public readonly CSRFSynchronizerTokenPresenter $csrf,
-        public readonly bool $has_uploaded_module,
-        public readonly bool $is_activated,
-        public readonly array $logs,
-    ) {
-    }
+    public function searchLogsByTrackerId(int $tracker_id): array;
 }
