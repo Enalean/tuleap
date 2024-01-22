@@ -22,40 +22,52 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field;
 
-use Tuleap\CrossTracker\Tests\Stub\SearchFieldTypesStub;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
+use Tuleap\Tracker\Test\Builders\TrackerExternalFormElementBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
+use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 
 final class EqualComparisonFromWhereBuilderTest extends TestCase
 {
-    private SearchFieldTypesStub $types_searcher;
+    private const FIELD_NAME = 'my_field';
+    private RetrieveUsedFieldsStub $fields_retriever;
+    private \Tracker $first_tracker;
+    private \Tracker $second_tracker;
 
     protected function setUp(): void
     {
-        $this->types_searcher = SearchFieldTypesStub::withTypes(
-            \Tracker_FormElementFactory::FIELD_INTEGER_TYPE,
-            \Tracker_FormElementFactory::FIELD_INTEGER_TYPE,
+        $this->first_tracker    = TrackerTestBuilder::aTracker()->withId(38)->build();
+        $this->second_tracker   = TrackerTestBuilder::aTracker()->withId(4)->build();
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
+            TrackerFormElementIntFieldBuilder::anIntField(134)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->first_tracker)
+                ->build(),
+            TrackerFormElementIntFieldBuilder::anIntField(859)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->second_tracker)
+                ->build()
         );
     }
 
     private function getFromWhere(): IProvideParametrizedFromAndWhereSQLFragments
     {
         $builder = new EqualComparisonFromWhereBuilder(
-            $this->types_searcher,
-            new Numeric\EqualComparisonFromWhereBuilder()
+            $this->fields_retriever,
+            RetrieveFieldTypeStub::withDetectionOfType(),
+            new Numeric\EqualComparisonFromWhereBuilder(),
         );
-        $field   = new Field('my_field');
+        $field   = new Field(self::FIELD_NAME);
         return $builder->getFromWhere(
             $field,
             new EqualComparison($field, new SimpleValueWrapper(5)),
-            [
-                TrackerTestBuilder::aTracker()->withId(38)->build(),
-                TrackerTestBuilder::aTracker()->withId(4)->build(),
-            ]
+            [$this->first_tracker, $this->second_tracker]
         );
     }
 
@@ -67,11 +79,13 @@ final class EqualComparisonFromWhereBuilderTest extends TestCase
 
     public function testItReturnsEmptySQLForInvalidDuckTypedField(): void
     {
-        $this->types_searcher = SearchFieldTypesStub::withTypes(
-            \Tracker_FormElementFactory::FIELD_INTEGER_TYPE,
-            \Tracker_FormElementFactory::FIELD_STRING_TYPE,
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
+            TrackerExternalFormElementBuilder::anExternalField(231)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->first_tracker)
+                ->build()
         );
-        $from_where           = $this->getFromWhere();
+        $from_where             = $this->getFromWhere();
         self::assertEmpty($from_where->getFrom());
         self::assertEmpty($from_where->getWhere());
         self::assertEmpty($from_where->getFromParameters());

@@ -27,9 +27,14 @@ use Tuleap\Tracker\FormElement\RetrieveFieldType;
 
 final class RetrieveFieldTypeStub implements RetrieveFieldType
 {
-    private const NO_TYPE = "notype";
+    private const TRACKER_FIELDS = [
+        \Tracker_FormElementFactory::FIELD_STRING_TYPE => \Tracker_FormElement_Field_String::class,
+        \Tracker_FormElementFactory::FIELD_INTEGER_TYPE => \Tracker_FormElement_Field_Integer::class,
+        \Tracker_FormElementFactory::FIELD_FLOAT_TYPE => \Tracker_FormElement_Field_Float::class,
+    ];
 
-    private function __construct(private string $type)
+
+    private function __construct(private string $predefined_type)
     {
     }
 
@@ -38,17 +43,16 @@ final class RetrieveFieldTypeStub implements RetrieveFieldType
         return new self($type);
     }
 
-    public static function withNoType(): self
+    public static function withDetectionOfType(): self
     {
-        return new self(self::NO_TYPE);
+        return new self('');
     }
 
     public function getType(Tracker_FormElement $form_element): string
     {
-        if ($this->type === self::NO_TYPE) {
-            throw new \RuntimeException("getType was called while the stub RetrieveFieldTypeStub is not configured to return a specific type.");
+        if ($this->predefined_type !== '') {
+            return $this->predefined_type;
         }
-
-        return $this->type;
+        return (string) array_search($form_element::class, self::TRACKER_FIELDS, true);
     }
 }

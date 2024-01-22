@@ -22,62 +22,115 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField;
 
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\TrackerExternalFormElementBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementFloatFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
+use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 
 final class DuckTypedFieldTest extends TestCase
 {
-    private const NAME = 'initial_effort';
+    private const FIELD_NAME        = 'initial_effort';
+    private const FIRST_TRACKER_ID  = 14;
+    private const SECOND_TRACKER_ID = 74;
+    private const INT_FIELD_ID      = 459;
+    private const FLOAT_FIELD_ID    = 643;
+    private RetrieveUsedFieldsStub $retrieve_used_fields;
+    private \Tracker $first_tracker;
+    private \Tracker $second_tracker;
+
+    protected function setUp(): void
+    {
+        $this->first_tracker  = TrackerTestBuilder::aTracker()->withId(self::FIRST_TRACKER_ID)->build();
+        $this->second_tracker = TrackerTestBuilder::aTracker()->withId(self::SECOND_TRACKER_ID)->build();
+
+        $this->retrieve_used_fields = RetrieveUsedFieldsStub::withFields(
+            TrackerFormElementIntFieldBuilder::anIntField(self::INT_FIELD_ID)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->first_tracker)
+                ->build(),
+            TrackerFormElementFloatFieldBuilder::aFloatField(self::FLOAT_FIELD_ID)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->second_tracker)
+                ->build(),
+        );
+    }
+
+    /**
+     * @return Ok<DuckTypedField>|Err<Fault>
+     */
+    private function build(): Ok|Err
+    {
+        return DuckTypedField::build(
+            $this->retrieve_used_fields,
+            RetrieveFieldTypeStub::withDetectionOfType(),
+            self::FIELD_NAME,
+            [self::FIRST_TRACKER_ID, self::SECOND_TRACKER_ID],
+        );
+    }
 
     public function testItBuildsWhenFieldHasCompatibleTypesInAllTrackers(): void
     {
-        $result = DuckTypedField::build(
-            self::NAME,
-            [14, 74, 27],
-            [
-                DuckTypedFieldType::fromString(\Tracker_FormElementFactory::FIELD_FLOAT_TYPE),
-                DuckTypedFieldType::fromString(\Tracker_FormElementFactory::FIELD_INTEGER_TYPE),
-                DuckTypedFieldType::fromString(\Tracker_FormElementFactory::FIELD_FLOAT_TYPE),
-            ]
-        );
+        $result = $this->build();
+
         self::assertTrue(Result::isOk($result));
         $field = $result->value;
         self::assertInstanceOf(DuckTypedField::class, $field);
-        self::assertSame(self::NAME, $field->name);
+        self::assertSame(self::FIELD_NAME, $field->name);
         self::assertSame(DuckTypedFieldType::NUMERIC, $field->type);
+        self::assertSame([self::INT_FIELD_ID, self::FLOAT_FIELD_ID], $field->field_ids);
     }
 
     public function testItReturnsErrWhenFieldIsNotFoundInAnyTracker(): void
     {
-        $result = DuckTypedField::build(self::NAME, [], []);
+        $this->retrieve_used_fields = RetrieveUsedFieldsStub::withNoFields();
+
+        $result = $this->build();
+
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(FieldNotFoundInAnyTrackerFault::class, $result->error);
     }
 
     public function testItReturnsErrWhenFirstTypeIsNotSupported(): void
     {
-        $result = DuckTypedField::build(
-            self::NAME,
-            [25, 17],
-            [
-                DuckTypedFieldType::fromString('invalid'),
-                DuckTypedFieldType::fromString(\Tracker_FormElementFactory::FIELD_INTEGER_TYPE),
-            ]
+        $this->retrieve_used_fields = RetrieveUsedFieldsStub::withFields(
+            TrackerExternalFormElementBuilder::anExternalField(91)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->first_tracker)
+                ->build(),
+            TrackerFormElementFloatFieldBuilder::aFloatField(self::FLOAT_FIELD_ID)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->second_tracker)
+                ->build(),
         );
+
+        $result = $this->build();
+
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(FieldTypeIsNotSupportedFault::class, $result->error);
     }
 
     public function testItReturnsErrWhenFieldHasAnIncompatibleTypeInSecondTracker(): void
     {
-        $result = DuckTypedField::build(
-            self::NAME,
-            [68, 76],
-            [
-                DuckTypedFieldType::fromString(\Tracker_FormElementFactory::FIELD_INTEGER_TYPE),
-                DuckTypedFieldType::fromString(\Tracker_FormElementFactory::FIELD_STRING_TYPE),
-            ]
+        $this->retrieve_used_fields = RetrieveUsedFieldsStub::withFields(
+            TrackerFormElementIntFieldBuilder::anIntField(self::INT_FIELD_ID)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->first_tracker)
+                ->build(),
+            TrackerExternalFormElementBuilder::anExternalField(91)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->second_tracker)
+                ->build(),
         );
+
+        $result = $this->build();
+
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(FieldTypesAreIncompatibleFault::class, $result->error);
     }

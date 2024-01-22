@@ -24,7 +24,6 @@ namespace Tuleap\CrossTracker\Tests\Builders;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorParameters;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorParameters;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Equal\EqualComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ListValueValidator;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -42,31 +41,20 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class InvalidSearchableCollectorParametersBuilder
 {
-    private InvalidComparisonCollectorParameters $comparison_parameters;
-    private ComparisonChecker $comparison_checker;
     private Comparison $comparison;
+    private \PFUser $user;
+    /** @var list<\Tracker> */
+    private array $trackers;
 
     private function __construct()
     {
-        $trackers = [
+        $this->trackers = [
             TrackerTestBuilder::aTracker()->withId(73)->build(),
             TrackerTestBuilder::aTracker()->withId(36)->build(),
         ];
-        $user     = UserTestBuilder::buildWithId(161);
+        $this->user     = UserTestBuilder::buildWithId(161);
 
-        $this->comparison_parameters = new InvalidComparisonCollectorParameters(
-            new InvalidSearchablesCollection(),
-            $trackers,
-            $user
-        );
-        $this->comparison_checker    = new EqualComparisonChecker(
-            new DateFormatValidator(new EmptyStringForbidden(), DateFormat::DATETIME),
-            new ListValueValidator(
-                new EmptyStringAllowed(),
-                ProvideAndRetrieveUserStub::build($user)
-            )
-        );
-        $this->comparison            = new EqualComparison(
+        $this->comparison = new EqualComparison(
             new Field('romeo'),
             new SimpleValueWrapper(12)
         );
@@ -77,11 +65,32 @@ final class InvalidSearchableCollectorParametersBuilder
         return new self();
     }
 
+    /**
+     * @no-named-arguments
+     */
+    public function onTrackers(\Tracker $tracker, \Tracker ...$other_trackers): self
+    {
+        $this->trackers = [$tracker, ...$other_trackers];
+        return $this;
+    }
+
     public function build(): InvalidSearchableCollectorParameters
     {
+        $comparison_parameters = new InvalidComparisonCollectorParameters(
+            new InvalidSearchablesCollection(),
+            $this->trackers,
+            $this->user
+        );
+        $comparison_checker    = new EqualComparisonChecker(
+            new DateFormatValidator(new EmptyStringForbidden(), DateFormat::DATETIME),
+            new ListValueValidator(
+                new EmptyStringAllowed(),
+                ProvideAndRetrieveUserStub::build($this->user)
+            )
+        );
         return new InvalidSearchableCollectorParameters(
-            $this->comparison_parameters,
-            $this->comparison_checker,
+            $comparison_parameters,
+            $comparison_checker,
             $this->comparison
         );
     }

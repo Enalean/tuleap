@@ -24,7 +24,8 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\DuckTypedField;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\DuckTypedFieldType;
-use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\SearchFieldTypes;
+use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
+use Tuleap\Tracker\FormElement\RetrieveFieldType;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
@@ -33,7 +34,8 @@ use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 final class EqualComparisonFromWhereBuilder implements FromWhereBuilder
 {
     public function __construct(
-        private readonly SearchFieldTypes $field_types_searcher,
+        private readonly RetrieveUsedFields $retrieve_used_fields,
+        private readonly RetrieveFieldType $retrieve_field_type,
         private readonly Numeric\EqualComparisonFromWhereBuilder $numeric_builder,
     ) {
     }
@@ -45,8 +47,12 @@ final class EqualComparisonFromWhereBuilder implements FromWhereBuilder
     ): IProvideParametrizedFromAndWhereSQLFragments {
         $field_name  = $field->getName();
         $tracker_ids = array_map(static fn(\Tracker $tracker) => $tracker->getId(), $trackers);
-        $types       = $this->field_types_searcher->searchTypeByFieldNameAndTrackerList($field_name, $tracker_ids);
-        return DuckTypedField::build($field_name, $tracker_ids, $types)->match(
+        return DuckTypedField::build(
+            $this->retrieve_used_fields,
+            $this->retrieve_field_type,
+            $field_name,
+            $tracker_ids
+        )->match(
             fn(DuckTypedField $duck_typed_field) => $this->matchTypeToBuilder($duck_typed_field, $comparison),
             static fn() => new ParametrizedFromWhere('', '', [], [])
         );
