@@ -27,8 +27,8 @@ use CuyZ\Valinor\Mapper\Source\Source;
 use CuyZ\Valinor\Mapper\TreeMapper;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Option\Option;
 
@@ -60,6 +60,7 @@ final class FFIWASMCaller implements WASMCaller
     public function __construct(
         private readonly TreeMapper $mapper,
         private readonly Prometheus $prometheus,
+        private readonly string $caller_name,
     ) {
     }
 
@@ -67,9 +68,9 @@ final class FFIWASMCaller implements WASMCaller
     {
         $config      = [
             "wasm_module_path" => $wasm_path,
-            "mount_points" => $mount_points,
-            "limits" => [
-                "max_exec_time_in_ms" => self::MAX_EXEC_TIME_IN_MS,
+            "mount_points"     => $mount_points,
+            "limits"           => [
+                "max_exec_time_in_ms"      => self::MAX_EXEC_TIME_IN_MS,
                 "max_memory_size_in_bytes" => self::MAX_MEMORY_SIZE_IN_BYTES,
             ],
         ];
@@ -83,11 +84,11 @@ final class FFIWASMCaller implements WASMCaller
 
         $end_time = microtime(true);
 
-        Prometheus::instance()->histogram(
+        $this->prometheus->histogram(
             self::EXEC_TIME_FULL_NAME,
             self::EXEC_TIME_FULL_HELP,
             ($end_time - $start_time),
-            [],
+            ['caller_name' => $this->caller_name],
             self::EXEC_TIME_FULL_BUCKETS
         );
 
@@ -103,7 +104,7 @@ final class FFIWASMCaller implements WASMCaller
         $value = match ($wasm_response::class) {
             WASMInternalErrorResponse::class => $this->processInternalErrorResponse($wasm_response),
             WASMUserCodeErrorResponse::class => $this->processUserCodeErrorResponse($wasm_response),
-            WASMValidResponse::class => $this->processValidResponse($wasm_response),
+            WASMValidResponse::class         => $this->processValidResponse($wasm_response),
         };
 
         return Option::fromValue($value);
@@ -115,7 +116,10 @@ final class FFIWASMCaller implements WASMCaller
      */
     private function processInternalErrorResponse(WASMInternalErrorResponse $wasm_response): never
     {
-        $this->prometheus->increment(self::RESPONSE_TYPE_NAME, self::RESPONSE_TYPE_HELP, ['type' => 'InternalErrorResponse']);
+        $this->prometheus->increment(self::RESPONSE_TYPE_NAME, self::RESPONSE_TYPE_HELP, [
+            'type'        => 'InternalErrorResponse',
+            'caller_name' => $this->caller_name,
+        ]);
         throw WASMExecutionException::internalError($wasm_response);
     }
 
@@ -124,7 +128,10 @@ final class FFIWASMCaller implements WASMCaller
      */
     private function processUserCodeErrorResponse(WASMUserCodeErrorResponse $wasm_response): Err
     {
-        $this->prometheus->increment(self::RESPONSE_TYPE_NAME, self::RESPONSE_TYPE_HELP, ['type' => 'UserCodeErrorResponse']);
+        $this->prometheus->increment(self::RESPONSE_TYPE_NAME, self::RESPONSE_TYPE_HELP, [
+            'type'        => 'UserCodeErrorResponse',
+            'caller_name' => $this->caller_name,
+        ]);
         $this->processStats($wasm_response->stats);
         return Result::err(Fault::fromMessage($wasm_response->user_error));
     }
@@ -134,26 +141,29 @@ final class FFIWASMCaller implements WASMCaller
      */
     private function processValidResponse(WASMValidResponse $wasm_response): Ok
     {
-        $this->prometheus->increment(self::RESPONSE_TYPE_NAME, self::RESPONSE_TYPE_HELP, ['type' => 'ValidResponse']);
+        $this->prometheus->increment(self::RESPONSE_TYPE_NAME, self::RESPONSE_TYPE_HELP, [
+            'type'        => 'ValidResponse',
+            'caller_name' => $this->caller_name,
+        ]);
         $this->processStats($wasm_response->stats);
         return Result::ok($wasm_response->data);
     }
 
     private function processStats(WASMStatistics $wasm_stats): void
     {
-        Prometheus::instance()->histogram(
+        $this->prometheus->histogram(
             self::EXEC_TIME_NAME,
             self::EXEC_TIME_HELP,
             $wasm_stats->exec_time_as_seconds,
-            [],
+            ['caller_name' => $this->caller_name],
             self::EXEC_TIME_BUCKETS
         );
 
-        Prometheus::instance()->histogram(
+        $this->prometheus->histogram(
             self::MEMORY_CONSUMPTION_NAME,
             self::MEMORY_CONSUMPTION_HELP,
             $wasm_stats->memory_in_bytes,
-            [],
+            ['caller_name' => $this->caller_name],
             self::MEMORY_CONSUMPTION_BUCKETS
         );
     }
