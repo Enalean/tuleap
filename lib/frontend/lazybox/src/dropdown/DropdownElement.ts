@@ -19,12 +19,12 @@
 
 import { define, dispatch, html } from "hybrids";
 import type { LazyboxTemplatingCallback } from "../Options";
-import type { SelectionElement } from "../selection/SelectionElement";
 import { getAllGroupsTemplate } from "./GroupTemplate";
 import type { GroupCollection } from "../GroupCollection";
 import { isArrowDown, isArrowUp } from "../helpers/keys-helper";
 import { moveFocus } from "@tuleap/focus-navigation";
 import type { SearchInput } from "../SearchInput";
+import type { HandleSelection } from "../selection/HandleSelection";
 
 export const TAG = "tuleap-lazybox-dropdown";
 
@@ -36,7 +36,7 @@ export type DropdownElement = {
     new_item_button_label: string;
     templating_callback: LazyboxTemplatingCallback;
     search_input: SearchInput & HTMLElement;
-    selection: SelectionElement & HTMLElement;
+    selection: HandleSelection;
 };
 type InternalDropdownElement = Readonly<DropdownElement> & {
     content(): HTMLElement;
