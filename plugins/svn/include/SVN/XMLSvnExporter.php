@@ -24,7 +24,7 @@ use Psr\Log\LoggerInterface;
 use Project;
 use SimpleXMLElement;
 use Tuleap\Project\XML\Export\ArchiveInterface;
-use Tuleap\SVNCore\AccessFileReader;
+use Tuleap\SVNCore\SVNAccessFileReader;
 use Tuleap\SVN\Admin\MailNotificationManager;
 use Tuleap\SVNCore\Repository;
 use Tuleap\SVN\Repository\RepositoryManager;
@@ -62,7 +62,7 @@ class XMLSvnExporter
      */
     private $logger;
     /**
-     * @var AccessFileReader
+     * @var SVNAccessFileReader
      */
     private $access_file_reader;
 
@@ -73,7 +73,7 @@ class XMLSvnExporter
         XML_SimpleXMLCDATAFactory $cdata_section_factory,
         MailNotificationManager $mail_notification_manager,
         LoggerInterface $logger,
-        AccessFileReader $access_file_reader,
+        SVNAccessFileReader $access_file_reader,
     ) {
         $this->repository_manager        = $repository_manager;
         $this->project                   = $project;

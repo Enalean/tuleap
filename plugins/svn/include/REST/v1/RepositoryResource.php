@@ -191,7 +191,7 @@ class RepositoryResource extends AuthenticatedResource
             $access_file_history_factory,
             $project_history_dao,
             $project_history_formatter,
-            \Tuleap\SVNCore\SvnAccessFileDefaultBlockGenerator::instance(),
+            \Tuleap\SVNCore\SVNAccessFileDefaultBlockGenerator::instance(),
         );
 
         $this->ugroup_manager = new UGroupManager();

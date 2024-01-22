@@ -70,7 +70,7 @@ use Tuleap\SVN\AccessControl\AccessControlController;
 use Tuleap\SVN\AccessControl\AccessFileHistoryCreator;
 use Tuleap\SVN\AccessControl\AccessFileHistoryDao;
 use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
-use Tuleap\SVNCore\AccessFileReader;
+use Tuleap\SVNCore\SVNAccessFileReader;
 use Tuleap\SVN\AccessControl\SVNRefreshAllAccessFilesCommand;
 use Tuleap\SVN\Admin\AdminController;
 use Tuleap\SVN\Admin\GlobalAdministratorsUpdater;
@@ -216,7 +216,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             new XML_SimpleXMLCDATAFactory(),
             $this->getMailNotificationManager(),
             self::getLogger(),
-            new AccessFileReader(\Tuleap\SVNCore\SvnAccessFileDefaultBlockGenerator::instance())
+            new SVNAccessFileReader(\Tuleap\SVNCore\SVNAccessFileDefaultBlockGenerator::instance())
         );
     }
 
@@ -425,7 +425,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                 $this->getAccessFileHistoryFactory(),
                 $this->getProjectHistoryDao(),
                 $this->getProjectHistoryFormatter(),
-                \Tuleap\SVNCore\SvnAccessFileDefaultBlockGenerator::instance(),
+                \Tuleap\SVNCore\SVNAccessFileDefaultBlockGenerator::instance(),
             );
         }
 

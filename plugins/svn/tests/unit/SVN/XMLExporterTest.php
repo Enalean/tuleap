@@ -26,7 +26,7 @@ use Psr\Log\NullLogger;
 use SimpleXMLElement;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Project\XML\Export\ZipArchive;
-use Tuleap\SVNCore\AccessFileReader;
+use Tuleap\SVNCore\SVNAccessFileReader;
 use Tuleap\SVN\Admin\MailNotification;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use XML_SimpleXMLCDATAFactory;
@@ -35,7 +35,7 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 
-    private AccessFileReader&MockObject $access_file_reader;
+    private SVNAccessFileReader&MockObject $access_file_reader;
     private XMLSvnExporter $xml_exporter;
     private ZipArchive&MockObject $zip;
     private SimpleXMLElement $xml_tree;
@@ -49,7 +49,7 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $repository_manager        = $this->createMock(\Tuleap\SVN\Repository\RepositoryManager::class);
         $mail_notification_manager = $this->createMock(\Tuleap\SVN\Admin\MailNotificationManager::class);
 
-        $this->access_file_reader = $this->createMock(AccessFileReader::class);
+        $this->access_file_reader = $this->createMock(SVNAccessFileReader::class);
         $this->svn_admin          = $this->createMock(SvnAdmin::class);
 
         $this->xml_exporter = new XMLSvnExporter(

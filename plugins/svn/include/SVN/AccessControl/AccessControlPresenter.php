@@ -25,7 +25,7 @@ use Tuleap\SVNCore\Repository;
 use Tuleap\SVN\Admin\SectionsPresenter;
 use Tuleap\SVN\Admin\BaseAdminPresenter;
 use CSRFSynchronizerToken;
-use Tuleap\SVNCore\SvnAccessFileContent;
+use Tuleap\SVNCore\SVNAccessFileContent;
 
 class AccessControlPresenter extends BaseAdminPresenter
 {
@@ -54,7 +54,7 @@ class AccessControlPresenter extends BaseAdminPresenter
         CSRFSynchronizerToken $token,
         Repository $repository,
         string $title,
-        SvnAccessFileContent $contents,
+        SVNAccessFileContent $contents,
         array $versions,
         $current_version_number,
         $last_version_number,

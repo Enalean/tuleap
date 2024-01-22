@@ -22,12 +22,12 @@ namespace Tuleap\SVN\AccessControl;
 
 use Tuleap\SVN\ServiceSvn;
 use HTTPRequest;
-use Tuleap\SVNCore\AccessFileReader;
+use Tuleap\SVNCore\SVNAccessFileReader;
 use Tuleap\SVNCore\Repository;
 use Tuleap\SVN\Repository\RepositoryManager;
 use CSRFSynchronizerToken;
-use Tuleap\SVNCore\SvnAccessFileContent;
-use Tuleap\SVNCore\SvnAccessFileDefaultBlockGenerator;
+use Tuleap\SVNCore\SVNAccessFileContent;
+use Tuleap\SVNCore\SVNAccessFileDefaultBlockGenerator;
 
 class AccessControlController
 {
@@ -82,10 +82,10 @@ class AccessControlController
 
         $title = $GLOBALS['Language']->getText('global', 'Administration');
 
-        $accessfile_reader       = new AccessFileReader(SvnAccessFileDefaultBlockGenerator::instance());
+        $accessfile_reader       = new SVNAccessFileReader(SVNAccessFileDefaultBlockGenerator::instance());
         $svn_access_file_content = $accessfile_reader->getAccessFileContent($repository);
         if ($request->exist('form_accessfile')) {
-            $svn_access_file_content = SvnAccessFileContent::fromSubmittedContent($svn_access_file_content, $request->get('form_accessfile'));
+            $svn_access_file_content = SVNAccessFileContent::fromSubmittedContent($svn_access_file_content, $request->get('form_accessfile'));
         }
 
         $duplicate_path_detector = new DuplicateSectionDetector();

@@ -28,7 +28,7 @@ use Tuleap\Option\Option;
  * When updating .SVNAccessFile this class verifies ugroup permission lines.
  * It comments lines with invalid syntax, non-existent or empty ugroups.
  */
-class SVNAccessFile
+class SVNAccessFileSectionParser
 {
     /**
      * Value in $groups when the group is (re)defined by user
@@ -144,20 +144,15 @@ class SVNAccessFile
     /**
      * Update renamed ugroup line or comment invalid ugroup lines for all lines of .SVNAccessFile
      */
-    public function parseGroupLines(SvnAccessFileContent $access_file_content, ?string $ugroup_name = null, ?string $ugroup_old_name = null): SVNAccessFileContentAndFaults
+    public function parse(SVNAccessFileContent $access_file_content, ?string $ugroup_name = null, ?string $ugroup_old_name = null): SVNAccessFileContentAndFaults
     {
         $faults              = new CollectionOfSVNAccessFileFaults();
         $this->ugroupNewName = $ugroup_name;
         $this->ugroupOldName = $ugroup_old_name;
-        return $this->parse($access_file_content, $faults);
-    }
-
-    private function parse(SvnAccessFileContent $access_file_content, CollectionOfSVNAccessFileFaults $faults): SVNAccessFileContentAndFaults
-    {
         return new SVNAccessFileContentAndFaults($this->parseGroup($access_file_content, $faults), $faults);
     }
 
-    private function parseGroup(SvnAccessFileContent $access_file_content, CollectionOfSVNAccessFileFaults $faults): string
+    private function parseGroup(SVNAccessFileContent $access_file_content, CollectionOfSVNAccessFileFaults $faults): string
     {
         $defaultLines   = explode("\n", $access_file_content->default);
         $groups         = [];
@@ -229,6 +224,8 @@ class SVNAccessFile
 
     /**
      * Match the pattern of a line defining permission on a group
+     *
+     * @psalm-return non-empty-string
      */
     private function getGroupMatcher(string $groupPattern): string
     {

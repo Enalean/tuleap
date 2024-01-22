@@ -26,12 +26,12 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\SVN\Repository\SvnRepository;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
-final class AccessFileReaderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SVNAccessFileReaderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 
     private Repository $repository;
-    private AccessFileReader $reader;
+    private SVNAccessFileReader $reader;
 
     protected function setUp(): void
     {
@@ -42,10 +42,10 @@ final class AccessFileReaderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->repository = SvnRepository::buildActiveRepository(-1, 'foo', ProjectTestBuilder::aProject()->build());
 
-        $default_block_generator = new class implements SvnAccessFileDefaultBlockGeneratorInterface {
-            public function getDefaultBlock(Project $project): SvnAccessFileDefaultBlock
+        $default_block_generator = new class implements SVNAccessFileDefaultBlockGeneratorInterface {
+            public function getDefaultBlock(Project $project): SVNAccessFileDefaultBlock
             {
-                return new SvnAccessFileDefaultBlock(<<<EOT
+                return new SVNAccessFileDefaultBlock(<<<EOT
 
                 le default
 
@@ -53,7 +53,7 @@ final class AccessFileReaderTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         };
 
-        $this->reader = new AccessFileReader($default_block_generator);
+        $this->reader = new SVNAccessFileReader($default_block_generator);
     }
 
     public function testItReadsTheDefaultBlock(): void

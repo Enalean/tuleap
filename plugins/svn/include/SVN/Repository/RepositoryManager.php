@@ -39,8 +39,8 @@ use Tuleap\SVN\Events\SystemEvent_SVN_RESTORE_REPOSITORY;
 use Tuleap\SVN\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\SVN\SvnAdmin;
 use Tuleap\SVNCore\Repository;
-use Tuleap\SVNCore\SvnAccessFileContent;
-use Tuleap\SVNCore\SvnAccessFileDefaultBlockGenerator;
+use Tuleap\SVNCore\SVNAccessFileContent;
+use Tuleap\SVNCore\SVNAccessFileDefaultBlockGenerator;
 
 class RepositoryManager
 {
@@ -381,8 +381,8 @@ class RepositoryManager
 
         $new_ugroup_name         = null;
         $old_ugroup_name         = null;
-        $svn_access_file_content = new SvnAccessFileContent(
-            SvnAccessFileDefaultBlockGenerator::instance()->getDefaultBlock($repository->getProject())->content,
+        $svn_access_file_content = new SVNAccessFileContent(
+            SVNAccessFileDefaultBlockGenerator::instance()->getDefaultBlock($repository->getProject())->content,
             $this->access_file_history_factory->getCurrentVersion($repository)->getContent(),
         );
         $this->backend->updateCustomSVNAccessForRepository(

@@ -26,9 +26,24 @@ namespace Tuleap\SVNCore;
 /**
  * @psalm-immutable
  */
-final class SvnAccessFileDefaultBlock
+final class SVNAccessFileContent
 {
-    public function __construct(public readonly string $content)
+    public function __construct(public readonly string $default, public readonly string $project_defined)
     {
+    }
+
+    public static function fromSubmittedContent(SVNAccessFileContent $original, string $new_content): self
+    {
+        return new self($original->default, $new_content);
+    }
+
+    public function getFullContent(): string
+    {
+        return $this->default . "\n" . $this->project_defined;
+    }
+
+    public function formatForSave(): string
+    {
+        return SVNAccessFileReader::BEGIN_MARKER . "\n" . $this->default . SVNAccessFileReader::END_MARKER . "\n" . str_replace("\r", '', $this->project_defined) . "\n";
     }
 }

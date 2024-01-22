@@ -25,13 +25,13 @@ namespace Tuleap\SVN\AccessControl;
 
 use Tuleap\NeverThrow\Fault;
 use Tuleap\SVNCore\CollectionOfSVNAccessFileFaults;
-use Tuleap\SVNCore\SvnAccessFileContent;
+use Tuleap\SVNCore\SVNAccessFileContent;
 
 final class DuplicateSectionDetector
 {
     private const GROUPS = 'groups';
 
-    public function inspect(SvnAccessFileContent $svn_access_file): CollectionOfSVNAccessFileFaults
+    public function inspect(SVNAccessFileContent $svn_access_file): CollectionOfSVNAccessFileFaults
     {
         $faults  = new CollectionOfSVNAccessFileFaults();
         $matches = [];

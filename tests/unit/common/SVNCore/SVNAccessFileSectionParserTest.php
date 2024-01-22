@@ -17,20 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\SVNCore\SVNAccessFile;
-use Tuleap\SVNCore\SvnAccessFileContent;
+use Tuleap\SVNCore\SVNAccessFileSectionParser;
+use Tuleap\SVNCore\SVNAccessFileContent;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-final class SVNAccessFileTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SVNAccessFileSectionParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @dataProvider getRenameData
      */
     public function testRenameGroup(string $old_group, string $new_group, string $source_access_file, string $expected_access_file): void
     {
-        $saf = new SVNAccessFile();
+        $saf = new SVNAccessFileSectionParser();
 
-        $access_file_content = new SvnAccessFileContent(
+        $access_file_content = new SVNAccessFileContent(
             <<<EOT
             [groups]
             members = user1, user2
@@ -45,7 +45,7 @@ final class SVNAccessFileTest extends \Tuleap\Test\PHPUnit\TestCase
             $source_access_file,
         );
 
-        $result = $saf->parseGroupLines($access_file_content, $new_group, $old_group);
+        $result = $saf->parse($access_file_content, $new_group, $old_group);
         self::assertEquals($expected_access_file, $result->contents);
     }
 
@@ -100,9 +100,9 @@ final class SVNAccessFileTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testParseGroupLines(string $source, string $expected): void
     {
-        $saf = new SVNAccessFile();
+        $saf = new SVNAccessFileSectionParser();
 
-        $access_file_content = new SvnAccessFileContent(
+        $access_file_content = new SVNAccessFileContent(
             <<<EOT
             [groups]
             members = user1, user2
@@ -115,7 +115,7 @@ final class SVNAccessFileTest extends \Tuleap\Test\PHPUnit\TestCase
             $source,
         );
 
-        $this->assertEquals($expected, $saf->parseGroupLines($access_file_content)->contents);
+        $this->assertEquals($expected, $saf->parse($access_file_content)->contents);
     }
 
     public static function getSvnAccessFileSamples(): iterable
