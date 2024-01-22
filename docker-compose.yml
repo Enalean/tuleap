@@ -26,13 +26,14 @@ services:
       - .:/usr/share/tuleap:cached
       - tuleap-data:/data
       - reverse-proxy-cert:/front-cert:ro
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
       - .env:/root/.tuleap_env:ro
     tmpfs: /run
     env_file:
     - .env
     environment:
     - TULEAP_SYS_DBHOST=db
+    cgroup: host
     depends_on:
     - ldap
     - db
