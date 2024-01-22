@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField;
 
+use Tracker;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tracker_Semantic_ContributorDao;
@@ -66,6 +67,7 @@ use Tuleap\CrossTracker\Tests\Builders\DatabaseBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
@@ -78,6 +80,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringForbidden;
 use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeValueRounder;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
+use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
@@ -85,86 +88,120 @@ use UserManager;
 
 final class EqualComparisonTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private int $release_id;
-    private int $sprint_id;
+    private DatabaseBuilder $database_builder;
+    private Tracker $release_tracker;
+    private Tracker $sprint_tracker;
+    private Tracker $task_tracker;
+    private \PFUser $user;
+    private int $release_initial_effort_field_id;
+    private int $sprint_initial_effort_field_id;
+    private \ParagonIE\EasyDB\EasyDB $db;
 
-    public static function tearDownAfterClass(): void
+    public function tearDown(): void
     {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->run('DELETE FROM tracker_artifact');
-        $db->run('DELETE FROM tracker_field');
-        $db->run('DELETE FROM tracker_field_float');
-        $db->run('DELETE FROM tracker_field_int');
-        $db->run('DELETE FROM tracker_field_computed');
-        $db->run('DELETE FROM tracker_changeset');
-        $db->run('DELETE FROM tracker_changeset_value');
-        $db->run('DELETE FROM tracker_changeset_value_int');
-        $db->run('DELETE FROM tracker_changeset_value_float');
+        $database_builder = new DatabaseBuilder($this->db);
+        $database_builder->cleanUp();
     }
 
     protected function setUp(): void
     {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
+        $this->db = DBFactory::getMainTuleapDBConnection()->getDB();
         \ForgeConfig::set("feature_flag_" . SearchOnDuckTypedFieldsConfig::FEATURE_FLAG_SEARCH_DUCK_TYPED_FIELDS, '1');
-        $builder = new DatabaseBuilder($db);
+        $this->database_builder = new DatabaseBuilder($this->db);
 
-        $project_id         = $builder->buildProject();
-        $release_tracker_id = $builder->buildTracker($project_id, "Release");
-        $sprint_tracker_id  = $builder->buildTracker($project_id, "Sprint");
-        $task_tracker_id    = $builder->buildTracker($project_id, "Task");
+        $project_id = $this->database_builder->buildProject();
 
-        $initial_effort_int_field   = $builder->buildIntField($release_tracker_id);
-        $initial_effort_float_field = $builder->buildFloatField($sprint_tracker_id);
-        $builder->buildComputedField($task_tracker_id);
+        $release_tracker_id = $this->database_builder->buildTracker($project_id, "Release");
+        $sprint_tracker_id  = $this->database_builder->buildTracker($project_id, "Sprint");
+        $task_tracker_id    = $this->database_builder->buildTracker($project_id, "Task");
 
-        $this->release_id = $builder->buildArtifact($release_tracker_id);
-        $this->sprint_id  = $builder->buildArtifact($sprint_tracker_id);
-        $task             = $builder->buildArtifact($task_tracker_id);
+        $this->release_initial_effort_field_id = $this->database_builder->buildIntField(
+            $release_tracker_id,
+            'initial_effort'
+        );
+        $this->sprint_initial_effort_field_id  = $this->database_builder->buildFloatField(
+            $sprint_tracker_id,
+            'initial_effort'
+        );
+        $this->database_builder->buildComputedField(
+            $task_tracker_id,
+            'initial_effort'
+        );
 
-        $release_changeset_id = $builder->buildLastChangeset($this->release_id);
-        $sprint_changeset_id  = $builder->buildLastChangeset($this->sprint_id);
-        $builder->buildLastChangeset($task);
 
-        $builder->buildIntValue($release_changeset_id, $initial_effort_int_field, 50);
-        $builder->buildFloatValue($sprint_changeset_id, $initial_effort_float_field, 50);
+        $this->release_tracker = $this->getTracker($release_tracker_id);
+        $this->sprint_tracker  = $this->getTracker($sprint_tracker_id);
+        $this->task_tracker    = $this->getTracker($task_tracker_id);
 
-        $tracker_factory        = TrackerFactory::instance();
-        $this->valid_trackers   =
-            [
-                $tracker_factory->getTrackerById($release_tracker_id),
-                $tracker_factory->getTrackerById($sprint_tracker_id),
-            ];
-        $this->invalid_trackers =
-            [
-                $tracker_factory->getTrackerById($release_tracker_id),
-                $tracker_factory->getTrackerById($task_tracker_id),
-            ];
-    }
+        $user_id = $this->database_builder->buildUser('janwar', 'Jorge Anwar', 'janwar@example.com');
+        $this->database_builder->addUserToProjectMembers($user_id, $project_id);
+        $user_manager = UserManager::instance();
+        $user         = $user_manager->getUserById($user_id);
+        if (! $user) {
+            throw new \Exception("USer $user_id not found");
+        }
 
-    public function testEqualNothingComparison(): void
-    {
-        $report    = new CrossTrackerReport(1, "initial_effort=''", $this->valid_trackers);
-        $user      = UserTestBuilder::aUser()->withId(105)->build();
-        $artifacts = $this->getFactory()->getArtifactsMatchingReport($report, $user, 5, 0);
-
-        self::assertEmpty($artifacts->getArtifacts());
+        $this->user = $user;
     }
 
     public function testEqualComparison(): void
     {
-        $report    = new CrossTrackerReport(2, "initial_effort=50", $this->valid_trackers);
-        $user      = UserTestBuilder::aUser()->withId(105)->build();
-        $artifacts = $this->getFactory()->getArtifactsMatchingReport($report, $user, 5, 0);
+        $release_empty_id      = $this->database_builder->buildArtifact($this->release_tracker->getId());
+        $sprint_empty_id       = $this->database_builder->buildArtifact($this->sprint_tracker->getId());
+        $release_with_value_id = $this->database_builder->buildArtifact($this->release_tracker->getId());
+        $sprint_with_value_id  = $this->database_builder->buildArtifact($this->sprint_tracker->getId());
 
-        self::assertSame($this->release_id, $artifacts->getArtifacts()[1]->getId());
-        self::assertSame($this->sprint_id, $artifacts->getArtifacts()[0]->getId());
+        $this->database_builder->buildLastChangeset($release_empty_id);
+        $this->database_builder->buildLastChangeset($sprint_empty_id);
+        $release_changeset_id = $this->database_builder->buildLastChangeset($release_with_value_id);
+        $sprint_changeset_id  = $this->database_builder->buildLastChangeset($sprint_with_value_id);
+
+        $this->database_builder->buildIntValue($release_changeset_id, $this->release_initial_effort_field_id, 5);
+        $this->database_builder->buildFloatValue($sprint_changeset_id, $this->sprint_initial_effort_field_id, 5);
+
+        $empty_artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "initial_effort=''",
+                [$this->release_tracker, $this->sprint_tracker]
+            )
+        );
+
+        self::assertCount(2, $empty_artifacts);
+        self::assertNotContains($release_with_value_id, $empty_artifacts);
+        self::assertNotContains($sprint_with_value_id, $empty_artifacts);
+        self::assertEqualsCanonicalizing([$release_empty_id, $sprint_empty_id], $empty_artifacts);
+
+        $artifacts_with_value = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                2,
+                'initial_effort=5',
+                [$this->release_tracker, $this->sprint_tracker]
+            )
+        );
+
+        self::assertCount(2, $artifacts_with_value);
+        self::assertNotContains($release_empty_id, $artifacts_with_value);
+        self::assertNotContains($sprint_empty_id, $artifacts_with_value);
+        self::assertEqualsCanonicalizing([$release_with_value_id, $sprint_with_value_id], $artifacts_with_value);
+    }
+
+    /**
+     * @return int[]
+     * @throws SearchablesDoNotExistException
+     * @throws SearchablesAreInvalidException
+     */
+    private function getMatchingArtifactIds(CrossTrackerReport $report): array
+    {
+        $artifacts = $this->getFactory()->getArtifactsMatchingReport($report, $this->user, 5, 0)->getArtifacts();
+        return array_map(static fn(Artifact $artifact) => $artifact->getId(), $artifacts);
     }
 
     public function testInvalidFieldComparison(): void
     {
-        $report = new CrossTrackerReport(3, "initial_effort=''", $this->invalid_trackers);
+        $report = new CrossTrackerReport(3, "initial_effort=''", [$this->task_tracker]);
         $user   = UserTestBuilder::aUser()->withId(105)->build();
-        $this->expectException(SearchablesAreInvalidException::class);
+        $this->expectException(SearchablesDoNotExistException::class);
         $this->getFactory()->getArtifactsMatchingReport($report, $user, 5, 0);
     }
 
@@ -406,5 +443,17 @@ final class EqualComparisonTest extends \Tuleap\Test\PHPUnit\TestCase
             new CrossTrackerExpertQueryReportDao(),
             $invalid_comparisons_collector
         );
+    }
+
+    private function getTracker(int $tracker_id): Tracker
+    {
+        $tracker_factory = TrackerFactory::instance();
+        $tracker         = $tracker_factory->getTrackerById($tracker_id);
+
+        if (! $tracker) {
+            throw new \Exception("Tracker $tracker_id not found");
+        }
+
+        return $tracker;
     }
 }

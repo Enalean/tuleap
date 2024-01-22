@@ -23,27 +23,62 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Tests\Builders;
 
 use ParagonIE\EasyDB\EasyDB;
+use Tuleap\Project\UserPermissionsDao;
 
 final class DatabaseBuilder
 {
+    private UserPermissionsDao $user_permissions_dao;
+
     public function __construct(private readonly EasyDB $db)
     {
+        $this->user_permissions_dao = new UserPermissionsDao();
     }
 
-    private static int $counter = 0;
+    public function cleanUp(): void
+    {
+        $this->db->run('DELETE FROM tracker_artifact');
+        $this->db->run('DELETE FROM tracker_field');
+        $this->db->run('DELETE FROM tracker_field_float');
+        $this->db->run('DELETE FROM tracker_field_int');
+        $this->db->run('DELETE FROM tracker_field_computed');
+        $this->db->run('DELETE FROM tracker_changeset');
+        $this->db->run('DELETE FROM tracker_changeset_value');
+        $this->db->run('DELETE FROM tracker_changeset_value_int');
+        $this->db->run('DELETE FROM tracker_changeset_value_float');
+        $this->db->run('DELETE FROM user WHERE user_id > 101');
+        $this->db->run('DELETE FROM user_group WHERE user_id > 101');
+        $this->db->run('DELETE FROM `groups` WHERE group_id > 100');
+        $this->db->run('DELETE FROM tracker');
+    }
 
     public function buildProject(): int
     {
-        $count = self::$counter++;
         return (int) $this->db->insertReturnId(
             'groups',
             [
                 'group_name' => "cross tracker",
                 'access' => "public",
                 'status' => 'A',
-                "unix_group_name" => "xtracker-" . $count,
+                "unix_group_name" => "cross-tracker-comparison",
             ]
         );
+    }
+
+    public function buildUser(string $user_name, string $real_name, string $email): int
+    {
+        return (int) $this->db->insertReturnId(
+            'user',
+            [
+                'user_name' => $user_name,
+                'email' => $email,
+                'realname' => $real_name,
+            ]
+        );
+    }
+
+    public function addUserToProjectMembers(int $user_id, int $project_id): void
+    {
+        $this->user_permissions_dao->addUserAsProjectMember($project_id, $user_id);
     }
 
     public function buildTracker(int $project_id, string $name): int
@@ -58,15 +93,15 @@ final class DatabaseBuilder
         );
     }
 
-    public function buildIntField(int $tracker_id): int
+    public function buildIntField(int $tracker_id, string $name): int
     {
         $tracker_field_id = (int) $this->db->insertReturnId(
             'tracker_field',
             [
                 'tracker_id' => $tracker_id,
                 'formElement_type' => "int",
-                'name' => "initial_effort",
-                'label' => "initial_effort",
+                'name' => $name,
+                'label' => $name,
                 'use_it' => true,
                 'scope' => "P",
             ]
@@ -82,15 +117,15 @@ final class DatabaseBuilder
         return $tracker_field_id;
     }
 
-    public function buildFloatField(int $tracker_id): int
+    public function buildFloatField(int $tracker_id, string $name): int
     {
         $tracker_field_id = (int) $this->db->insertReturnId(
             'tracker_field',
             [
                 'tracker_id' => $tracker_id,
                 'formElement_type' => "float",
-                'name' => "initial_effort",
-                'label' => "initial_effort",
+                'name' => $name,
+                'label' => $name,
                 'use_it' => true,
                 'scope' => "P",
             ]
@@ -106,15 +141,15 @@ final class DatabaseBuilder
         return $tracker_field_id;
     }
 
-    public function buildComputedField(int $tracker_id): int
+    public function buildComputedField(int $tracker_id, string $name): int
     {
         $tracker_field_id = (int) $this->db->insertReturnId(
             'tracker_field',
             [
                 'tracker_id' => $tracker_id,
                 'formElement_type' => "computed",
-                'name' => "initial_effort",
-                'label' => "initial_effort",
+                'name' => $name,
+                'label' => $name,
                 'use_it' => true,
                 'scope' => "P",
             ]
