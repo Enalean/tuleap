@@ -30,6 +30,7 @@ use Tuleap\Test\Builders\LayoutInspector;
 use Tuleap\Test\Builders\TemplateRendererFactoryBuilder;
 use Tuleap\Test\Builders\TestLayout;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 use Tuleap\Tracker\Test\Stub\Tracker\DisplayTrackerLayoutStub;
@@ -53,6 +54,7 @@ final class AdministrationControllerTest extends TestCase
             CheckModuleIsActivatedStub::activated(),
             RetrieveLogsForTrackerStub::withoutLogs(),
             new LogLinePresenterBuilder(new TlpRelativeDatePresenterBuilder()),
+            EventDispatcherStub::withIdentityCallback(),
         );
 
         $this->expectException(NotFoundException::class);
@@ -77,6 +79,7 @@ final class AdministrationControllerTest extends TestCase
             CheckModuleIsActivatedStub::activated(),
             RetrieveLogsForTrackerStub::withoutLogs(),
             new LogLinePresenterBuilder(new TlpRelativeDatePresenterBuilder()),
+            EventDispatcherStub::withIdentityCallback(),
         );
 
         $this->expectException(NotFoundException::class);
@@ -104,6 +107,7 @@ final class AdministrationControllerTest extends TestCase
             CheckModuleIsActivatedStub::activated(),
             RetrieveLogsForTrackerStub::withoutLogs(),
             new LogLinePresenterBuilder(new TlpRelativeDatePresenterBuilder()),
+            EventDispatcherStub::withIdentityCallback(),
         );
 
         $this->expectException(NotFoundException::class);

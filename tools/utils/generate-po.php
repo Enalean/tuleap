@@ -260,9 +260,9 @@ function gettextAngularJS(string $translated_plugin, string $path, array $manife
     foreach ($manifest_json['gettext-angularjs'] as $component => $gettext) {
         $gettext_step_header = sprintf("[%s][angularjs][%s]", $translated_plugin, $component);
         info("$gettext_step_header Generating default .pot file");
-        $src      = escapeshellarg("$path/${gettext['src']}");
-        $po       = escapeshellarg("$path/${gettext['po']}");
-        $template = escapeshellarg("$path/${gettext['po']}/template.pot");
+        $src      = escapeshellarg("$path/{$gettext['src']}");
+        $po       = escapeshellarg("$path/{$gettext['po']}");
+        $template = escapeshellarg("$path/{$gettext['po']}/template.pot");
 
         executeCommandAndExitIfStderrNotEmpty("node_modules/.bin/angular-gettext-cli --files '$src/**/*.+(js|html|ts)' --exclude '**/*.+(test.js|test.ts|d.ts)' --dest $template");
         executeCommandAndExitIfStderrNotEmpty("msgcat --no-location --sort-output -o $template $template");
@@ -280,9 +280,9 @@ function gettextVue($translated_plugin, $path, $manifest_json)
 
     foreach ($manifest_json['gettext-vue'] as $component => $gettext) {
         info("[$translated_plugin][vue][$component] Generating default .pot file");
-        $src      = escapeshellarg("$path/${gettext['src']}");
-        $po       = escapeshellarg("$path/${gettext['po']}");
-        $template = escapeshellarg("$path/${gettext['po']}/template.pot");
+        $src      = escapeshellarg("$path/{$gettext['src']}");
+        $po       = escapeshellarg("$path/{$gettext['po']}");
+        $template = escapeshellarg("$path/{$gettext['po']}/template.pot");
 
         executeCommandAndExitIfStderrNotEmpty("tools/utils/scripts/vue-typescript-gettext-extractor-cli.js \
         $(find $src  \
@@ -308,9 +308,9 @@ function gettextVue3(string $translated_plugin, string $path, array $manifest_js
 
     foreach ($manifest_json['gettext-vue3'] as $component => $gettext) {
         info("[$translated_plugin][vue][$component] Generating default .pot file");
-        $src      = escapeshellarg("$path/${gettext['src']}");
-        $po       = escapeshellarg("$path/${gettext['po']}");
-        $template = escapeshellarg("$path/${gettext['po']}/template.pot");
+        $src      = escapeshellarg("$path/{$gettext['src']}");
+        $po       = escapeshellarg("$path/{$gettext['po']}");
+        $template = escapeshellarg("$path/{$gettext['po']}/template.pot");
 
         executeCommandAndExitIfStderrNotEmpty("tools/utils/scripts/vue3-typescript-gettext-extractor-cli.js \
         $(find $src  \
@@ -336,9 +336,9 @@ function gettextTS($translated_plugin, $path, $manifest_json)
 
     foreach ($manifest_json['gettext-ts'] as $component => $gettext) {
         info("[$translated_plugin][ts][$component] Generating default .pot file");
-        $src      = escapeshellarg("$path/${gettext['src']}");
-        $po       = escapeshellarg("$path/${gettext['po']}");
-        $template = escapeshellarg("$path/${gettext['po']}/template.pot");
+        $src      = escapeshellarg("$path/{$gettext['src']}");
+        $po       = escapeshellarg("$path/{$gettext['po']}");
+        $template = escapeshellarg("$path/{$gettext['po']}/template.pot");
 
         executeCommandAndExitIfStderrNotEmpty("tools/utils/scripts/vue3-typescript-gettext-extractor-cli.js \
         $(find $src \
@@ -364,14 +364,14 @@ function gettextSmarty($translated_plugin, $path, $manifest_json)
 
     foreach ($manifest_json['gettext-smarty'] as $component => $gettext) {
         info("[$translated_plugin][smarty][$component] Generating default .pot file");
-        $smarty_to_gettext   = escapeshellarg("$path/${gettext['smarty_to_gettext']}");
-        $scripts_php         = escapeshellarg("$path/${gettext['scripts-php']}");
-        $scripts_templates   = escapeshellarg("$path/${gettext['scripts-templates']}");
-        $po                  = escapeshellarg("$path/${gettext['po']}");
-        $template_php        = escapeshellarg("$path/${gettext['po']}/$component-php.pot");
-        $template_php_plural = escapeshellarg("$path/${gettext['po']}/$component-php-plural.pot");
-        $template_smarty     = escapeshellarg("$path/${gettext['po']}/$component-smarty.pot");
-        $template            = escapeshellarg("$path/${gettext['po']}/$component.pot");
+        $smarty_to_gettext   = escapeshellarg("$path/{$gettext['smarty_to_gettext']}");
+        $scripts_php         = escapeshellarg("$path/{$gettext['scripts-php']}");
+        $scripts_templates   = escapeshellarg("$path/{$gettext['scripts-templates']}");
+        $po                  = escapeshellarg("$path/{$gettext['po']}");
+        $template_php        = escapeshellarg("$path/{$gettext['po']}/$component-php.pot");
+        $template_php_plural = escapeshellarg("$path/{$gettext['po']}/$component-php-plural.pot");
+        $template_smarty     = escapeshellarg("$path/{$gettext['po']}/$component-smarty.pot");
+        $template            = escapeshellarg("$path/{$gettext['po']}/$component.pot");
         $domain              = escapeshellarg($component);
         executeCommandAndExitIfStderrNotEmpty("(cd $scripts_templates && $smarty_to_gettext -d=$domain -o $template_smarty .)");
         executeCommandAndExitIfStderrNotEmpty("find $scripts_php -name '*.php' \

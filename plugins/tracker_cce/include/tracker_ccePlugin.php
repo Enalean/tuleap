@@ -304,6 +304,7 @@ final class tracker_ccePlugin extends Plugin
             new ModuleDao(),
             new ModuleLogDao(Tracker_ArtifactFactory::instance()),
             new LogLinePresenterBuilder(new TlpRelativeDatePresenterBuilder()),
+            EventManager::instance(),
         );
     }
 

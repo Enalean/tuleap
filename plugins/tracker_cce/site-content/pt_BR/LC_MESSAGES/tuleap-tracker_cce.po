@@ -99,6 +99,9 @@ msgstr ""
 msgid "File upload stopped by extension."
 msgstr ""
 
+msgid "For more information please %ssee the dedicated documentation%s."
+msgstr ""
+
 msgid "Input payload"
 msgstr ""
 
@@ -144,6 +147,10 @@ msgstr ""
 msgid "Remove module"
 msgstr ""
 
+msgid ""
+"Run your own code on artifact updates to automate any kind of computation."
+msgstr ""
+
 msgid "See details: %s"
 msgstr ""
 
@@ -151,6 +158,11 @@ msgid "Status"
 msgstr ""
 
 msgid "Success"
+msgstr ""
+
+msgid ""
+"The artifact will be updated with this output payload (update fields and/or "
+"add a follow-up comment) with a dedicated \"Custom Code Execution\" user."
 msgstr ""
 
 #, php-format
@@ -167,6 +179,16 @@ msgid "The module has been removed"
 msgstr ""
 
 msgid "The module has been uploaded"
+msgstr ""
+
+msgid ""
+"The module must output (stdout) a payload identical to the one that is used "
+"by REST API to update an artifact (%sSee <code>PUT /artifact/:id</code>%s)."
+msgstr ""
+
+msgid ""
+"The payload sent to the module via stdin is the same as the one for %sthe "
+"tracker webhook%s."
 msgstr ""
 
 msgid "The uploaded file exceeds the maximum allowed file size."
@@ -199,7 +221,7 @@ msgstr ""
 msgid "Upload WASM module"
 msgstr ""
 
-msgid "Upload a module"
+msgid "Upload a WebAssembly module"
 msgstr ""
 
 msgid "Upload module"
@@ -209,6 +231,12 @@ msgid "WebAssembly module"
 msgstr ""
 
 msgid "You are about to remove the module from this tracker."
+msgstr ""
+
+msgid ""
+"You can upload here a %sWebAssembly%s (WASM) module (built with WASI Preview "
+"1 support) that will be executed asynchronously after each artifact update "
+"(or creation)."
 msgstr ""
 
 msgid "You will not be able to retrieve it."
