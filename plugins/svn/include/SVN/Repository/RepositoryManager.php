@@ -382,7 +382,7 @@ class RepositoryManager
         $new_ugroup_name         = null;
         $old_ugroup_name         = null;
         $svn_access_file_content = new SVNAccessFileContent(
-            SVNAccessFileDefaultBlockGenerator::instance()->getDefaultBlock($repository->getProject())->content,
+            SVNAccessFileDefaultBlockGenerator::instance()->getDefaultBlock($repository)->content,
             $this->access_file_history_factory->getCurrentVersion($repository)->getContent(),
         );
         $this->backend->updateCustomSVNAccessForRepository(

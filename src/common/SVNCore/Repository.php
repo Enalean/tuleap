@@ -59,4 +59,6 @@ interface Repository
     public function setDeletionDate(int $deletion_date): void;
 
     public function isDeleted(): bool;
+
+    public function hasDefaultPermissions(): bool;
 }

@@ -21,9 +21,7 @@
 
 namespace Tuleap\SVNCore;
 
-use Project;
 use Tuleap\ForgeConfigSandbox;
-use Tuleap\SVN\Repository\SvnRepository;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class SVNAccessFileReaderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -36,14 +34,11 @@ final class SVNAccessFileReaderTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $fixtures_dir = __DIR__ . '/_fixtures';
 
-        \ForgeConfig::set('sys_data_dir', $fixtures_dir);
-
-        $this->repository = SvnRepository::buildActiveRepository(-1, 'foo', ProjectTestBuilder::aProject()->build());
+        $this->repository = RepositoryStub::buildSelf(ProjectTestBuilder::aProject()->build())->withSystemPath(__DIR__ . '/_fixtures/svn_plugin/101/foo');
 
         $default_block_generator = new class implements SVNAccessFileDefaultBlockGeneratorInterface {
-            public function getDefaultBlock(Project $project): SVNAccessFileDefaultBlock
+            public function getDefaultBlock(Repository $repository): SVNAccessFileDefaultBlock
             {
                 return new SVNAccessFileDefaultBlock(<<<EOT
 

@@ -58,7 +58,7 @@ final class SVNAccessFileDefaultBlockGeneratorTest extends TestCase
 
                 EOT
             ),
-            $generator->getDefaultBlock(ProjectTestBuilder::aProject()->build())
+            $generator->getDefaultBlock(RepositoryStub::buildSelf(ProjectTestBuilder::aProject()->build())),
         );
     }
 
@@ -142,7 +142,7 @@ final class SVNAccessFileDefaultBlockGeneratorTest extends TestCase
     /**
      * @dataProvider permissionsDataProvider
      */
-    public function testPermissions(\Project $project, callable $plugin, string $expected): void
+    public function testPermissions(Repository $repository, callable $plugin, string $expected): void
     {
         $event_manager = new \EventManager();
         $event_manager->addListener(SVNAccessFileDefaultBlockOverride::class, null, $plugin, false);
@@ -169,13 +169,10 @@ final class SVNAccessFileDefaultBlockGeneratorTest extends TestCase
                 members = jmalko, csteven, disciplus_simplex
                 Developers = csteven, disciplus_simplex
 
-                [/]
                 $expected
-                @members = rw
-
                 EOT
             ),
-            $generator->getDefaultBlock($project)
+            $generator->getDefaultBlock($repository)
         );
     }
 
@@ -185,20 +182,99 @@ final class SVNAccessFileDefaultBlockGeneratorTest extends TestCase
         $public_project = ProjectTestBuilder::aProject()->withAccessPublic()->build();
         return [
             'Despite public project, plugin forbid access' => [
-                'project' => $public_project,
+                'repository' => RepositoryStub::buildSelf($public_project),
                 'plugin'  => fn (SVNAccessFileDefaultBlockOverride $event) => $event->disableWorldAccess(),
-                'expected' => '* =',
+                'expected' => <<<EOT
+                    [/]
+                    * =
+                    @members = rw
+
+                    EOT,
             ],
             'Public projects are world readable' => [
-                'project' => $public_project,
+                'repository' => RepositoryStub::buildSelf($public_project),
                 'plugin'  => $noop_plugin,
-                'expected' => '* = r',
+                'expected' => <<<EOT
+                    [/]
+                    * = r
+                    @members = rw
+
+                    EOT,
             ],
             'Private project means no access' => [
-                'project' => ProjectTestBuilder::aProject()->withAccessPrivate()->build(),
+                'repository' => RepositoryStub::buildSelf(ProjectTestBuilder::aProject()->withAccessPrivate()->build()),
                 'plugin'  => $noop_plugin,
-                'expected' => '* =',
+                'expected' => <<<EOT
+                    [/]
+                    * =
+                    @members = rw
+
+                    EOT,
+            ],
+            'Repository that does not make use of default permissions' => [
+                'repository' => RepositoryStub::buildSelf(ProjectTestBuilder::aProject()->withAccessPrivate()->build())->withoutDefaultPermissions(),
+                'plugin'  => $noop_plugin,
+                'expected' => '',
             ],
         ];
+    }
+
+    public function testCacheOfGroupGeneration(): void
+    {
+        $plugin = new class {
+            public int $call = 0;
+            public function svnAccessFileDefaultBlockOverride(SVNAccessFileDefaultBlockOverride $event): void
+            {
+                $this->call++;
+            }
+        };
+
+        $event_manager = new \EventManager();
+        $event_manager->addListener(SVNAccessFileDefaultBlockOverride::class, $plugin, 'svnAccessFileDefaultBlockOverride', false);
+
+        $jmalko    = UserTestBuilder::anActiveUser()->withId(120)->withUserName('jmalko')->build();
+        $csteven   = UserTestBuilder::anActiveUser()->withId(121)->withUserName('csteven')->build();
+        $disciplus = UserTestBuilder::anActiveUser()->withId(122)->withUserName('disciplus_simplex')->build();
+
+        $default_user_groups = UGroupRetrieverStub::buildWithUserGroups(
+            ProjectUGroupTestBuilder::buildProjectMembersWith($jmalko, $csteven, $disciplus),
+            ProjectUGroupTestBuilder::buildProjectAdmins(),
+            ProjectUGroupTestBuilder::aCustomUserGroup(230)->withName('Developers')->withUsers($csteven, $disciplus)->build()
+        );
+
+        $generator = new SVNAccessFileDefaultBlockGenerator(
+            $default_user_groups,
+            CheckProjectAccessStub::withValidAccess(),
+            $event_manager,
+        );
+
+        $content_1 = $generator->getDefaultBlock(RepositoryStub::buildSelf(ProjectTestBuilder::aProject()->build()));
+        self::assertEquals(
+            <<<EOT
+            [groups]
+            members = jmalko, csteven, disciplus_simplex
+            Developers = csteven, disciplus_simplex
+
+            [/]
+            * = r
+            @members = rw
+
+            EOT,
+            $content_1->content
+        );
+
+        $content_2 = $generator->getDefaultBlock(RepositoryStub::buildSelf(ProjectTestBuilder::aProject()->build())->withoutDefaultPermissions());
+        self::assertEquals(
+            <<<EOT
+            [groups]
+            members = jmalko, csteven, disciplus_simplex
+            Developers = csteven, disciplus_simplex
+
+
+            EOT,
+            $content_2->content
+        );
+
+        self::assertEquals(1, $plugin->call, "Plugin is called only once because group definition is cached");
     }
 }

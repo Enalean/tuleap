@@ -39,7 +39,7 @@ final class SVNAccessFileDefaultBlockGenerator implements SVNAccessFileDefaultBl
 {
     private static ?self $instance;
     /**
-     * @var array<int, SVNAccessFileDefaultBlock>
+     * @var array<int, SVNAccessFileDefaultBlockForCache>
      */
     private array $project_default_blocks_cache = [];
 
@@ -64,17 +64,18 @@ final class SVNAccessFileDefaultBlockGenerator implements SVNAccessFileDefaultBl
         return self::$instance;
     }
 
-    public function getDefaultBlock(Project $project): SVNAccessFileDefaultBlock
+    public function getDefaultBlock(Repository $repository): SVNAccessFileDefaultBlock
     {
-        $project_id = (int) $project->getID();
+        $project_id = (int) $repository->getProject()->getID();
         if (! isset($this->project_default_blocks_cache[$project_id])) {
-            $default_block_plugin_override                   = $this->getDefaultBlockPluginOverride($project);
-            $this->project_default_blocks_cache[$project_id] = new SVNAccessFileDefaultBlock(
-                $this->getSVNAccessGroups($project, $default_block_plugin_override) . "\n" . $this->getSVNAccessRootPathDef($project, $default_block_plugin_override)
+            $default_block_plugin_override                   = $this->getDefaultBlockPluginOverride($repository->getProject());
+            $this->project_default_blocks_cache[$project_id] = new SVNAccessFileDefaultBlockForCache(
+                $this->getSVNAccessGroups($repository->getProject(), $default_block_plugin_override),
+                $default_block_plugin_override,
             );
         }
 
-        return $this->project_default_blocks_cache[$project_id];
+        return new SVNAccessFileDefaultBlock($this->project_default_blocks_cache[$project_id]->groups . "\n" . $this->getSVNAccessRootPathDef($repository, $this->project_default_blocks_cache[$project_id]->default_block_override));
     }
 
     private function getDefaultBlockPluginOverride(Project $project): SVNAccessFileDefaultBlockOverride
@@ -122,11 +123,14 @@ final class SVNAccessFileDefaultBlockGenerator implements SVNAccessFileDefaultBl
         return $allowed;
     }
 
-    private function getSVNAccessRootPathDef(Project $project, SVNAccessFileDefaultBlockOverride $default_block_plugin_override): string
+    private function getSVNAccessRootPathDef(Repository $repository, SVNAccessFileDefaultBlockOverride $default_block_plugin_override): string
     {
+        if (! $repository->hasDefaultPermissions()) {
+            return '';
+        }
         if ($default_block_plugin_override->isWorldAccessForbidden()) {
             $world_access = '* =';
-        } elseif ($project->isPublic()) {
+        } elseif ($repository->getProject()->isPublic()) {
             $world_access = '* = r';
         } else {
             $world_access = '* =';
@@ -135,10 +139,10 @@ final class SVNAccessFileDefaultBlockGenerator implements SVNAccessFileDefaultBl
         $members_access = '@' . SVNUserGroup::MEMBERS . ' = rw';
 
         return <<<EOT
-        [/]
-        $world_access
-        $members_access
+            [/]
+            $world_access
+            $members_access
 
-        EOT;
+            EOT;
     }
 }

@@ -28,44 +28,24 @@ final class SvnRepository implements Repository
 {
     private const TO_BE_CREATED_REPOSITORY_ID = -1;
 
-    /**
-     * @var int
-     */
-    private $id;
-    /**
-     * @var string
-     */
-    private $name;
-    /**
-     * @var Project
-     */
-    private $project;
-    /**
-     * @var string|null
-     */
-    private $backup_path;
-    /**
-     * @var int|null
-     */
-    private $deletion_date;
-
-    private function __construct(int $id, string $name, ?string $backup_path, ?int $deletion_date, Project $project)
-    {
-        $this->id            = $id;
-        $this->project       = $project;
-        $this->name          = $name;
-        $this->deletion_date = $deletion_date;
-        $this->backup_path   = $backup_path;
+    private function __construct(
+        private int $id,
+        private readonly string $name,
+        private readonly ?string $backup_path,
+        private ?int $deletion_date,
+        private readonly Project $project,
+        private readonly bool $has_default_permissions,
+    ) {
     }
 
     public static function buildToBeCreatedRepository(string $name, Project $project): self
     {
-        return new self(self::TO_BE_CREATED_REPOSITORY_ID, $name, null, null, $project);
+        return new self(self::TO_BE_CREATED_REPOSITORY_ID, $name, null, null, $project, true);
     }
 
     public static function buildActiveRepository(int $id, string $name, Project $project): self
     {
-        return new self($id, $name, null, null, $project);
+        return new self($id, $name, null, null, $project, true);
     }
 
     public static function buildFromDatabase(array $row, Project $project): self
@@ -75,7 +55,8 @@ final class SvnRepository implements Repository
             (string) $row['name'],
             $row['backup_path'],
             $row['repository_deletion_date'] !== null ? (int) $row['repository_deletion_date'] : null,
-            $project
+            $project,
+            true,
         );
     }
 
@@ -191,5 +172,10 @@ final class SvnRepository implements Repository
     public function isDeleted(): bool
     {
         return ! empty($this->deletion_date);
+    }
+
+    public function hasDefaultPermissions(): bool
+    {
+        return $this->has_default_permissions;
     }
 }

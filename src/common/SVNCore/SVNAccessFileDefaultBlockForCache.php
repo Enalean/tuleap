@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,8 +23,12 @@ declare(strict_types=1);
 
 namespace Tuleap\SVNCore;
 
-
-interface SVNAccessFileDefaultBlockGeneratorInterface
+/**
+ * @psalm-immutable
+ */
+final class SVNAccessFileDefaultBlockForCache
 {
-    public function getDefaultBlock(Repository $repository): SVNAccessFileDefaultBlock;
+    public function __construct(public readonly string $groups, public readonly SVNAccessFileDefaultBlockOverride $default_block_override)
+    {
+    }
 }

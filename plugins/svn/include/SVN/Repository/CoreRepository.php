@@ -162,4 +162,9 @@ final class CoreRepository implements Repository
     {
         return false;
     }
+
+    public function hasDefaultPermissions(): bool
+    {
+        return true;
+    }
 }
