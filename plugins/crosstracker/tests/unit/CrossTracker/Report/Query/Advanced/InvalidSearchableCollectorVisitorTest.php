@@ -26,36 +26,57 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field\FieldUsageCh
 use Tuleap\CrossTracker\SearchOnDuckTypedFieldsConfig;
 use Tuleap\CrossTracker\Tests\Builders\InvalidSearchableCollectorParametersBuilder;
 use Tuleap\CrossTracker\Tests\Stub\MetadataCheckerStub;
-use Tuleap\CrossTracker\Tests\Stub\SearchFieldTypesStub;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Searchable;
+use Tuleap\Tracker\Test\Builders\TrackerExternalFormElementBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementFloatFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
+use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 
 final class InvalidSearchableCollectorVisitorTest extends TestCase
 {
     use ForgeConfigSandbox;
 
+    private const FIELD_NAME = 'a_field';
     private MetadataCheckerStub $metadata_checker;
     private InvalidSearchableCollectorParameters $parameters;
     private Searchable $searchable;
-    private SearchFieldTypesStub $field_searcher;
+    private \Tracker $first_tracker;
+    private RetrieveUsedFieldsStub $fields_retriever;
 
     protected function setUp(): void
     {
-        $this->metadata_checker = MetadataCheckerStub::withValidMetadata();
-        $this->field_searcher   = SearchFieldTypesStub::withTypes('int');
+        $this->first_tracker = TrackerTestBuilder::aTracker()->withId(67)->build();
+        $second_tracker      = TrackerTestBuilder::aTracker()->withId(21)->build();
 
-        $this->parameters = InvalidSearchableCollectorParametersBuilder::aParameter()->build();
-        $this->searchable = new Field("a_field");
+        $this->metadata_checker = MetadataCheckerStub::withValidMetadata();
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
+            TrackerFormElementIntFieldBuilder::anIntField(628)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->first_tracker)
+                ->build(),
+            TrackerFormElementFloatFieldBuilder::aFloatField(274)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($second_tracker)
+                ->build()
+        );
+
+        $this->parameters = InvalidSearchableCollectorParametersBuilder::aParameter()
+            ->onTrackers($this->first_tracker, $second_tracker)
+            ->build();
+        $this->searchable = new Field(self::FIELD_NAME);
     }
 
     private function check(): void
     {
         $visitor = new InvalidSearchableCollectorVisitor(
             $this->metadata_checker,
-            new FieldUsageChecker($this->field_searcher)
+            new FieldUsageChecker($this->fields_retriever, RetrieveFieldTypeStub::withDetectionOfType())
         );
         $this->searchable->acceptSearchableVisitor($visitor, $this->parameters);
     }
@@ -74,7 +95,12 @@ final class InvalidSearchableCollectorVisitorTest extends TestCase
     public function testItAddsNotSupportedFieldToInvalidCollection(): void
     {
         \ForgeConfig::set("feature_flag_" . SearchOnDuckTypedFieldsConfig::FEATURE_FLAG_SEARCH_DUCK_TYPED_FIELDS, '1');
-        $this->field_searcher = SearchFieldTypesStub::withTypes('invalid');
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
+            TrackerExternalFormElementBuilder::anExternalField(900)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->first_tracker)
+                ->build()
+        );
 
         $this->check();
         self::assertNotEmpty(
@@ -88,7 +114,7 @@ final class InvalidSearchableCollectorVisitorTest extends TestCase
     public function testItAddsFieldNotFoundToInvalidCollection(): void
     {
         \ForgeConfig::set("feature_flag_" . SearchOnDuckTypedFieldsConfig::FEATURE_FLAG_SEARCH_DUCK_TYPED_FIELDS, '1');
-        $this->field_searcher = SearchFieldTypesStub::withNoTypeFound();
+        $this->fields_retriever = RetrieveUsedFieldsStub::withNoFields();
 
         $this->check();
         self::assertNotEmpty(

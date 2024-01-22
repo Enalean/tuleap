@@ -24,65 +24,97 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeIsNotSupportedFault;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypesAreIncompatibleFault;
-use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\SearchFieldTypes;
-use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorParameters;
 use Tuleap\CrossTracker\Tests\Builders\InvalidSearchableCollectorParametersBuilder;
-use Tuleap\CrossTracker\Tests\Stub\SearchFieldTypesStub;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
+use Tuleap\Tracker\Test\Builders\TrackerExternalFormElementBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementFloatFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
+use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 
 final class FieldUsageCheckerTest extends TestCase
 {
-    private InvalidSearchableCollectorParameters $visitor_parameters;
+    private const FIELD_NAME = 'toto';
+    private \Tracker $first_tracker;
+    private \Tracker $second_tracker;
+    private RetrieveUsedFieldsStub $fields_retriever;
 
     protected function setUp(): void
     {
-        $this->visitor_parameters = InvalidSearchableCollectorParametersBuilder::aParameter()->build();
+        $this->first_tracker    = TrackerTestBuilder::aTracker()->withId(86)->build();
+        $this->second_tracker   = TrackerTestBuilder::aTracker()->withId(94)->build();
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
+            TrackerFormElementIntFieldBuilder::anIntField(841)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->first_tracker)
+                ->build(),
+            TrackerFormElementFloatFieldBuilder::aFloatField(805)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->second_tracker)
+                ->build()
+        );
     }
 
     /**
      * @return Ok<null>|Err<Fault>
      */
-    private function check(SearchFieldTypes $fields_type): Ok|Err
+    private function check(): Ok|Err
     {
-        $checker = new FieldUsageChecker($fields_type);
+        $visitor_parameters = InvalidSearchableCollectorParametersBuilder::aParameter()
+            ->onTrackers($this->first_tracker, $this->second_tracker)
+            ->build();
+
+        $checker = new FieldUsageChecker($this->fields_retriever, RetrieveFieldTypeStub::withDetectionOfType());
         return $checker->checkFieldIsValid(
-            new Field("toto"),
-            $this->visitor_parameters
+            new Field(self::FIELD_NAME),
+            $visitor_parameters
         );
     }
 
     public function testCheckWhenAllFieldsAreIntOrFloat(): void
     {
-        $fields_type_stub = SearchFieldTypesStub::withTypes(
-            \Tracker_FormElementFactory::FIELD_INTEGER_TYPE,
-            \Tracker_FormElementFactory::FIELD_FLOAT_TYPE
-        );
-        self::assertTrue(Result::isOk($this->check($fields_type_stub)));
+        self::assertTrue(Result::isOk($this->check()));
     }
 
-    public function testCheckFailsWhenAFieldIsString(): void
+    public function testCheckFailsWhenFieldsAreIncompatible(): void
     {
-        $fields_type_stub = SearchFieldTypesStub::withTypes(
-            \Tracker_FormElementFactory::FIELD_INTEGER_TYPE,
-            \Tracker_FormElementFactory::FIELD_STRING_TYPE
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
+            TrackerFormElementIntFieldBuilder::anIntField(308)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->first_tracker)
+                ->build(),
+            TrackerFormElementStringFieldBuilder::aStringField(358)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->second_tracker)
+                ->build()
         );
-        $result           = $this->check($fields_type_stub);
+
+        $result = $this->check();
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(FieldTypesAreIncompatibleFault::class, $result->error);
     }
 
-    public function testCheckFailsWhenFirstFieldIsString(): void
+    public function testCheckFailsWhenFirstFieldIsNotSupported(): void
     {
-        $fields_type_stub = SearchFieldTypesStub::withTypes(
-            \Tracker_FormElementFactory::FIELD_STRING_TYPE,
-            \Tracker_FormElementFactory::FIELD_INTEGER_TYPE
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
+            TrackerExternalFormElementBuilder::anExternalField(569)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->first_tracker)
+                ->build(),
+            TrackerFormElementIntFieldBuilder::anIntField(308)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->second_tracker)
+                ->build(),
         );
-        $result           = $this->check($fields_type_stub);
+
+        $result = $this->check();
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(FieldTypeIsNotSupportedFault::class, $result->error);
     }

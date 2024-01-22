@@ -22,23 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField;
 
-use ParagonIE\EasyDB\EasyStatement;
-use Tuleap\DB\DataAccessObject;
-
-final class TrackerFieldDao extends DataAccessObject implements SearchFieldTypes
+/**
+ * @psalm-immutable
+ */
+final class FieldIdentifierProperties
 {
-    public function searchTypeByFieldNameAndTrackerList(string $field_name, array $tracker_ids): array
-    {
-        $tracker_ids_statement = EasyStatement::open()->in('?*', $tracker_ids);
-
-        $sql = "SELECT formElement_type AS type
-                FROM tracker_field WHERE name=? AND tracker_id IN ($tracker_ids_statement)";
-
-        $rows  = $this->getDB()->q($sql, $field_name, ...$tracker_ids_statement->values());
-        $types = [];
-        foreach ($rows as $row) {
-            $types[] = DuckTypedFieldType::fromString($row['type']);
-        }
-        return $types;
+    public function __construct(
+        public readonly int $id,
+        public readonly DuckTypedFieldType $type,
+    ) {
     }
 }

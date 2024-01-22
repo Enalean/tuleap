@@ -224,8 +224,6 @@ final class EqualComparisonTest extends \Tuleap\Test\PHPUnit\TestCase
         $list_value_validator           = new ListValueValidator(new EmptyStringAllowed(), $user_manager);
         $list_value_validator_not_empty = new ListValueValidator(new EmptyStringForbidden(), $user_manager);
 
-        $cross_tracker_field_dao = new TrackerFieldDao();
-
         $form_element_factory          = Tracker_FormElementFactory::instance();
         $invalid_comparisons_collector = new InvalidTermCollectorVisitor(
             new InvalidSearchableCollectorVisitor(
@@ -238,7 +236,7 @@ final class EqualComparisonTest extends \Tuleap\Test\PHPUnit\TestCase
                         new Tracker_Semantic_ContributorDao()
                     )
                 ),
-                new FieldUsageChecker($cross_tracker_field_dao),
+                new FieldUsageChecker($form_element_factory, $form_element_factory),
             ),
             new EqualComparisonChecker($date_validator, $list_value_validator),
             new NotEqualComparisonChecker($date_validator, $list_value_validator),
@@ -421,7 +419,8 @@ final class EqualComparisonTest extends \Tuleap\Test\PHPUnit\TestCase
             new ReverseLinkFromWhereBuilder($artifact_factory),
             new ForwardLinkFromWhereBuilder($artifact_factory),
             new Field\EqualComparisonFromWhereBuilder(
-                $cross_tracker_field_dao,
+                $form_element_factory,
+                $form_element_factory,
                 new Field\Numeric\EqualComparisonFromWhereBuilder(),
             ),
             new Field\NotEqualComparisonFromWhereBuilder(),

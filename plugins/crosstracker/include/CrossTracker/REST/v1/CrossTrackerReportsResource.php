@@ -40,7 +40,6 @@ use Tuleap\CrossTracker\CrossTrackerReportNotFoundException;
 use Tuleap\CrossTracker\Permission\CrossTrackerPermissionGate;
 use Tuleap\CrossTracker\Permission\CrossTrackerUnauthorizedException;
 use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
-use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\TrackerFieldDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
@@ -170,20 +169,19 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         $list_value_validator           = new ListValueValidator(new EmptyStringAllowed(), $this->user_manager);
         $list_value_validator_not_empty = new ListValueValidator(new EmptyStringForbidden(), $this->user_manager);
 
-        $cross_tracker_field_dao = new TrackerFieldDao();
-
+        $form_element_factory                = Tracker_FormElementFactory::instance();
         $this->invalid_comparisons_collector = new InvalidTermCollectorVisitor(
             new InvalidSearchableCollectorVisitor(
                 new MetadataChecker(
                     new MetadataUsageChecker(
-                        Tracker_FormElementFactory::instance(),
+                        $form_element_factory,
                         new Tracker_Semantic_TitleDao(),
                         new Tracker_Semantic_DescriptionDao(),
                         new Tracker_Semantic_StatusDao(),
                         new Tracker_Semantic_ContributorDao()
                     )
                 ),
-                new FieldUsageChecker($cross_tracker_field_dao),
+                new FieldUsageChecker($form_element_factory, $form_element_factory),
             ),
             new EqualComparisonChecker($date_validator, $list_value_validator),
             new NotEqualComparisonChecker($date_validator, $list_value_validator),
@@ -366,7 +364,8 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             new ReverseLinkFromWhereBuilder($artifact_factory),
             new ForwardLinkFromWhereBuilder($artifact_factory),
             new Field\EqualComparisonFromWhereBuilder(
-                $cross_tracker_field_dao,
+                $form_element_factory,
+                $form_element_factory,
                 new Field\Numeric\EqualComparisonFromWhereBuilder()
             ),
             new Field\NotEqualComparisonFromWhereBuilder(),
