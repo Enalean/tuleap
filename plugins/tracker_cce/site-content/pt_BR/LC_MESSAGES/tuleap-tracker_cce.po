@@ -12,6 +12,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.2.2\n"
 
+msgid "%sSee details%s"
+msgstr ""
+
 msgid "Activated"
 msgstr ""
 
@@ -51,6 +54,12 @@ msgstr ""
 msgid "Custom code execution as artifact post action"
 msgstr ""
 
+msgid "Custom code execution failed"
+msgstr ""
+
+msgid "Custom code execution failed for artifact #%s"
+msgstr ""
+
 msgid "Custom code execution module activated"
 msgstr ""
 
@@ -76,6 +85,9 @@ msgid "Error message"
 msgstr ""
 
 msgid "Execution date"
+msgstr ""
+
+msgid "Execution date: %s"
 msgstr ""
 
 msgid "Execution details"
@@ -130,6 +142,9 @@ msgid "Remove WASM module"
 msgstr ""
 
 msgid "Remove module"
+msgstr ""
+
+msgid "See details: %s"
 msgstr ""
 
 msgid "Status"

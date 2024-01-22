@@ -20,24 +20,30 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User;
+namespace Tuleap\TrackerCCE\Stub\Notification;
 
-use Tuleap\ServerHostname;
+use Tuleap\TrackerCCE\Notification\TrackerAdministratorNotificationSender;
 
-final class CCEUser extends \PFUser
+final class TrackerAdministratorNotificationSenderStub implements TrackerAdministratorNotificationSender
 {
-    public const ID = 70;
+    private bool $called = false;
 
-    public function __construct()
+    private function __construct()
     {
-        $email_domain = \ForgeConfig::get('sys_default_mail_domain');
-        if (! $email_domain) {
-            $email_domain = ServerHostname::rawHostname();
-        }
+    }
 
-        parent::__construct([
-            'user_id' => self::ID,
-            'email'   => 'noreply@' . $email_domain,
-        ]);
+    public static function build(): self
+    {
+        return new self();
+    }
+
+    public function sendNotificationToTrackerAdministrator(\Tracker_Artifact_Changeset $changeset): void
+    {
+        $this->called = true;
+    }
+
+    public function hasBeenCalled(): bool
+    {
+        return $this->called;
     }
 }

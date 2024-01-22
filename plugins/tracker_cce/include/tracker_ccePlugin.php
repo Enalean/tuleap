@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Psr\Log\LoggerInterface;
+use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
-use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Instrument\Prometheus\Prometheus;
@@ -39,32 +39,7 @@ use Tuleap\Queue\WorkerAvailability;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Search\ItemToIndexQueueEventBased;
-use Tuleap\TrackerCCE\Administration\ActivateModuleController;
-use Tuleap\TrackerCCE\Administration\ActiveTrackerRetrieverMiddleware;
-use Tuleap\TrackerCCE\Administration\AdministrationCSRFTokenProvider;
-use Tuleap\TrackerCCE\Administration\AdministrationController;
-use Tuleap\TrackerCCE\Administration\CheckTrackerCSRFMiddleware;
-use Tuleap\TrackerCCE\Administration\CustomCodeExecutionHistorySaver;
-use Tuleap\TrackerCCE\Administration\MaxSize10Mb;
-use Tuleap\TrackerCCE\Administration\ModuleDao;
-use Tuleap\TrackerCCE\Administration\RejectNonTrackerAdministratorMiddleware;
-use Tuleap\TrackerCCE\Administration\RemoveModuleController;
-use Tuleap\TrackerCCE\Administration\UpdateModuleController;
-use Tuleap\TrackerCCE\CustomCodeExecutionTask;
-use Tuleap\TrackerCCE\Logs\LogLinePresenterBuilder;
-use Tuleap\TrackerCCE\Logs\ModuleLogDao;
-use Tuleap\TrackerCCE\WASM\CallWASMModule;
-use Tuleap\TrackerCCE\WASM\ExecuteWASMResponse;
-use Tuleap\TrackerCCE\WASM\FindWASMModulePath;
-use Tuleap\TrackerCCE\WASM\ProcessWASMResponse;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactForwardLinksRetriever;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksByChangesetCache;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLinkDao;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksDao;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksRetriever;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksToNewChangesetsConverter;
-use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
@@ -78,25 +53,33 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\MailSender;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationTaskCollectorEvent;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactForwardLinksRetriever;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksByChangesetCache;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLinkDao;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksDao;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksRetriever;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksToNewChangesetsConverter;
+use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\Link\ArtifactReverseLinksUpdater;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
-use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
+use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\REST\Artifact\ArtifactRestUpdateConditionsChecker;
+use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
+use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
-use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
-use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\PUTHandler;
-use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
+use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\PermissionsExporter;
 use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
 use Tuleap\Tracker\REST\WorkflowRestBuilder;
@@ -114,6 +97,28 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\WorkflowMenuItem;
 use Tuleap\Tracker\Workflow\WorkflowMenuItemCollection;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
+use Tuleap\TrackerCCE\Administration\ActivateModuleController;
+use Tuleap\TrackerCCE\Administration\ActiveTrackerRetrieverMiddleware;
+use Tuleap\TrackerCCE\Administration\AdministrationController;
+use Tuleap\TrackerCCE\Administration\AdministrationCSRFTokenProvider;
+use Tuleap\TrackerCCE\Administration\CheckTrackerCSRFMiddleware;
+use Tuleap\TrackerCCE\Administration\CustomCodeExecutionHistorySaver;
+use Tuleap\TrackerCCE\Administration\MaxSize10Mb;
+use Tuleap\TrackerCCE\Administration\ModuleDao;
+use Tuleap\TrackerCCE\Administration\RejectNonTrackerAdministratorMiddleware;
+use Tuleap\TrackerCCE\Administration\RemoveModuleController;
+use Tuleap\TrackerCCE\Administration\UpdateModuleController;
+use Tuleap\TrackerCCE\CustomCodeExecutionTask;
+use Tuleap\TrackerCCE\Logs\LogLinePresenterBuilder;
+use Tuleap\TrackerCCE\Logs\ModuleLogDao;
+use Tuleap\TrackerCCE\Notification\BuildMessagesForAdmins;
+use Tuleap\TrackerCCE\Notification\RetrieveTrackerAdminRecipients;
+use Tuleap\TrackerCCE\Notification\SendMessagesForAdmins;
+use Tuleap\TrackerCCE\Notification\SendNotificationToTrackerAdministrator;
+use Tuleap\TrackerCCE\WASM\CallWASMModule;
+use Tuleap\TrackerCCE\WASM\ExecuteWASMResponse;
+use Tuleap\TrackerCCE\WASM\FindWASMModulePath;
+use Tuleap\TrackerCCE\WASM\ProcessWASMResponse;
 use Tuleap\WebAssembly\FFIWASMCaller;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -151,6 +156,8 @@ final class tracker_ccePlugin extends Plugin
     public function collectPostCreationTask(PostCreationTaskCollectorEvent $event): void
     {
         $mapper                        = ValinorMapperBuilderFactory::mapperBuilder()->allowPermissiveTypes()->mapper();
+        $logger                        = $event->getLogger();
+        $user_manager                  = UserManager::instance();
         $form_element_factory          = Tracker_FormElementFactory::instance();
         $transition_retriever          = new TransitionRetriever(
             new StateFactory(
@@ -170,11 +177,11 @@ final class tracker_ccePlugin extends Plugin
         $permissions_functions_wrapper = new PermissionsFunctionsWrapper();
 
         $event->addAsyncTask(new CustomCodeExecutionTask(
-            $event->getLogger(),
+            $logger,
             new ArtifactPayloadBuilder(
                 new ChangesetRepresentationBuilder(
-                    UserManager::instance(),
-                    Tracker_FormElementFactory::instance(),
+                    $user_manager,
+                    $form_element_factory,
                     new CommentRepresentationBuilder(
                         CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance())
                     ),
@@ -216,14 +223,17 @@ final class tracker_ccePlugin extends Plugin
             new FindWASMModulePath(),
             new CallWASMModule(
                 new FFIWASMCaller($mapper, Prometheus::instance(), 'tracker_cce_plugin'),
-                new ProcessWASMResponse(
-                    $event->getLogger(),
-                    $mapper,
-                )
+                new ProcessWASMResponse($logger, $mapper)
             ),
-            new ExecuteWASMResponse($event->getLogger(), $this->getPutHandler($event->getLogger())),
+            new ExecuteWASMResponse($logger, $this->getPutHandler($logger)),
             new ModuleLogDao(Tracker_ArtifactFactory::instance()),
             new ModuleDao(),
+            new SendNotificationToTrackerAdministrator(
+                new RetrieveTrackerAdminRecipients($ugroup_manager, $ugroup_manager),
+                new BuildMessagesForAdmins(TemplateRendererFactory::build()),
+                new SendMessagesForAdmins(new MailSender()),
+                $logger,
+            ),
         ));
     }
 

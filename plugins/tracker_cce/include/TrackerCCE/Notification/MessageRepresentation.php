@@ -20,24 +20,27 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User;
+namespace Tuleap\TrackerCCE\Notification;
 
-use Tuleap\ServerHostname;
+use Tuleap\Mail\MailAttachment;
 
-final class CCEUser extends \PFUser
+/**
+ * @psalm-immutable
+ */
+final class MessageRepresentation
 {
-    public const ID = 70;
-
-    public function __construct()
-    {
-        $email_domain = \ForgeConfig::get('sys_default_mail_domain');
-        if (! $email_domain) {
-            $email_domain = ServerHostname::rawHostname();
-        }
-
-        parent::__construct([
-            'user_id' => self::ID,
-            'email'   => 'noreply@' . $email_domain,
-        ]);
+    /**
+     * @param string[] $recipients
+     * @param MailAttachment[] $attachments
+     */
+    public function __construct(
+        public readonly array $recipients,
+        public readonly array $headers,
+        public readonly string $from,
+        public readonly string $subject,
+        public readonly string $htmlBody,
+        public readonly string $txtBody,
+        public readonly array $attachments,
+    ) {
     }
 }

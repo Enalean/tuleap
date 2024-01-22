@@ -20,24 +20,31 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User;
+namespace Tuleap\Tracker\Test\Stub\Tracker\Artifact\Changeset\PostCreation;
 
-use Tuleap\ServerHostname;
+use Tracker_Artifact_Changeset;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\SendMail;
 
-final class CCEUser extends \PFUser
+final class SendMailStub implements SendMail
 {
-    public const ID = 70;
+    private int $call_counter = 0;
 
-    public function __construct()
+    private function __construct()
     {
-        $email_domain = \ForgeConfig::get('sys_default_mail_domain');
-        if (! $email_domain) {
-            $email_domain = ServerHostname::rawHostname();
-        }
+    }
 
-        parent::__construct([
-            'user_id' => self::ID,
-            'email'   => 'noreply@' . $email_domain,
-        ]);
+    public static function build(): self
+    {
+        return new self();
+    }
+
+    public function send(Tracker_Artifact_Changeset $changeset, array $recipients, array $headers, string $from, string $subject, string $htmlBody, string $txtBody, ?string $message_id, array $attachments): void
+    {
+        $this->call_counter++;
+    }
+
+    public function getCallCounter(): int
+    {
+        return $this->call_counter;
     }
 }
