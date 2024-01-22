@@ -242,10 +242,13 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      * @var DBTransactionExecutor
      */
     private $transaction_executor;
-    private bool | null $user_permission_cache = null;
-    private ?Artifact $parent                  = null;
-    private bool $has_set_parent               = false;
-    private bool | null $is_open               = null;
+    /**
+     * @var array<int, bool>
+     */
+    private array $user_permission_cache = [];
+    private ?Artifact $parent            = null;
+    private bool $has_set_parent         = false;
+    private bool | null $is_open         = null;
 
     /**
      * Constructor
@@ -309,7 +312,10 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         return $this->use_artifact_permissions;
     }
 
-    public function setUserCanView(bool $user_can_view): void
+    /**
+     * @param array<int, bool> $user_can_view
+     */
+    public function setUserCanView(array $user_can_view): void
     {
         $this->user_permission_cache = $user_can_view;
     }
@@ -323,8 +329,8 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      */
     public function userCanView(?PFUser $user = null)
     {
-        if ($this->user_permission_cache !== null) {
-            return $this->user_permission_cache;
+        if ($user && isset($this->user_permission_cache[(int) $user->getId()])) {
+            return $this->user_permission_cache[(int) $user->getId()];
         }
 
         $user_manager       = $this->getUserManager();
@@ -342,10 +348,11 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         if ($user === null) {
             $user = $user_manager->getCurrentUser();
         }
+        if (! isset($this->user_permission_cache[(int) $user->getId()])) {
+            $this->user_permission_cache[(int) $user->getId()] = PermissionsCache::userCanView($this, $user, $permission_checker);
+        }
 
-        $this->user_permission_cache = PermissionsCache::userCanView($this, $user, $permission_checker);
-
-        return $this->user_permission_cache;
+        return $this->user_permission_cache[(int) $user->getId()];
     }
 
     public function userCanUpdate(PFUser $user): bool

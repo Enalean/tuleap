@@ -67,7 +67,7 @@ final class PromotedMilestoneBuilderTest extends TestCase
         $this->tracker     = TrackerTestBuilder::aTracker()->build();
         $this->artifact    = ArtifactTestBuilder::anArtifact(1)
             ->inTracker($this->tracker)
-            ->userCanView(true)
+            ->userCanView($this->user)
             ->withChangesets($this->changeset)
             ->build();
         $this->title_field = TrackerFormElementStringFieldBuilder::aStringField(301)->build();
@@ -93,7 +93,7 @@ final class PromotedMilestoneBuilderTest extends TestCase
     {
         $artifact = ArtifactTestBuilder::anArtifact(1)
             ->inTracker($this->tracker)
-            ->userCanView(false)
+            ->userCannotView($this->user)
             ->build();
 
         self::assertTrue($this->builder->build($artifact, $this->user, $this->project)->isNothing());

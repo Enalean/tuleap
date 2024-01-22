@@ -47,7 +47,11 @@ final class ArtifactTestBuilder
      * @var \Tracker_ArtifactFactory | null
      */
     private $artifact_factory;
-    private bool|null $user_can_view = null;
+
+    /**
+     * @var array<int, bool>
+     */
+    private array $user_can_view = [];
 
     /**
      * @var \Project|null
@@ -136,9 +140,15 @@ final class ArtifactTestBuilder
         return $this;
     }
 
-    public function userCanView(bool $user_can_view): self
+    public function userCanView(PFUser $user): self
     {
-        $this->user_can_view = $user_can_view;
+        $this->user_can_view[$user->getId()] = true;
+        return $this;
+    }
+
+    public function userCannotView(PFUser $user): self
+    {
+        $this->user_can_view[$user->getId()] = false;
         return $this;
     }
 
@@ -206,9 +216,7 @@ final class ArtifactTestBuilder
         if ($this->last_changeset) {
             $artifact->setLastChangeset($this->last_changeset);
         }
-        if ($this->user_can_view !== null) {
-            $artifact->setUserCanView($this->user_can_view);
-        }
+        $artifact->setUserCanView($this->user_can_view);
         if ($this->has_parent) {
             $artifact->setParent($this->parent);
         }

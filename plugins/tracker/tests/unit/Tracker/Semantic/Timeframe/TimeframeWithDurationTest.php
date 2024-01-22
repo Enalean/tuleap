@@ -482,7 +482,7 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withTitle('title')
             ->inTracker($this->tracker)
             ->withChangesets($changeset)
-            ->userCanView(true)
+            ->userCanView($this->user)
             ->withParent(null)
             ->isOpen(true)
             ->build();
@@ -503,7 +503,7 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withTitle('title')
             ->inTracker($this->tracker)
             ->withChangesets($changeset)
-            ->userCanView(true)
+            ->userCanView($this->user)
             ->withParent(null)
             ->isOpen(true)
             ->build();
@@ -524,7 +524,7 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withTitle('title')
             ->inTracker($this->tracker)
             ->withChangesets($changeset)
-            ->userCanView(true)
+            ->userCanView($this->user)
             ->withParent(null)
             ->isOpen(true)
             ->build();
@@ -540,7 +540,7 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withTitle('title')
             ->inTracker($this->tracker)
             ->withChangesets($changeset)
-            ->userCanView(true)
+            ->userCanView($this->user)
             ->withParent(null)
             ->isOpen(true)
             ->build();

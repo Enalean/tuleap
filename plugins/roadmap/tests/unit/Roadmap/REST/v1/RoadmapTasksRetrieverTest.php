@@ -666,7 +666,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $task_201 = $this->anArtifact(201, 'Do this', $tracker, true, $semantic_timeframe);
         $task_202 = $this->anArtifact(202, 'Do that', $tracker, false, $semantic_timeframe);
-        $task_203 = $this->anArtifactWithoutStartDate(203, 'Do those', $tracker, true, $semantic_timeframe);
+        $task_203 = $this->anArtifactWithoutStartDate(203, 'Do those', $tracker, $semantic_timeframe);
         $task_204 = $this->anArtifact(204, 'Done more than 1 year ago', $tracker, true, $semantic_timeframe);
 
         $this->mockEffort($total_effort_field, [201 => 8, 203 => 3]);
@@ -806,7 +806,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $task_201 = $this->anArtifact(201, 'Do this', $tracker, true, $semantic_timeframe);
         $task_202 = $this->anArtifact(202, 'Do that', $tracker, false, $semantic_timeframe);
-        $task_203 = $this->anArtifactWithoutStartDate(203, 'Do those', $tracker, true, $semantic_timeframe);
+        $task_203 = $this->anArtifactWithoutStartDate(203, 'Do those', $tracker, $semantic_timeframe);
         $task_204 = $this->anArtifact(204, 'Done more than 1 year ago', $tracker, true, $semantic_timeframe);
 
         $this->mockEffort($total_effort_field, [201 => 8, 203 => 3]);
@@ -1079,7 +1079,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             });
 
         $task_201 = $this->anArtifact(201, 'Do this', $tracker, true, $semantic_timeframe_tracker);
-        $task_203 = $this->anArtifactWithoutStartDate(203, 'Do those', $another_tracker, true, $semantic_timeframe_another_tracker);
+        $task_203 = $this->anArtifactWithoutStartDate(203, 'Do those', $another_tracker, $semantic_timeframe_another_tracker);
 
 
         $artifacts = [$task_201, $task_203];
@@ -1222,17 +1222,19 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             );
         }
 
-        return ArtifactTestBuilder::anArtifact($id)
+        $artifact_test_builder = ArtifactTestBuilder::anArtifact($id)
             ->withTitle($title)
             ->inTracker($tracker)
             ->withChangesets($changeset)
-            ->userCanView($readable)
             ->withParent(null)
-            ->isOpen(true)
-            ->build();
+            ->isOpen(true);
+
+        return $readable
+            ? $artifact_test_builder->userCanView($this->user)->build()
+            : $artifact_test_builder->userCannotView($this->user)->build();
     }
 
-    private function anArtifactWithoutStartDate(int $id, string $title, Tracker $tracker, bool $readable, SemanticTimeframe $semantic_timeframe): Artifact
+    private function anArtifactWithoutStartDate(int $id, string $title, Tracker $tracker, SemanticTimeframe $semantic_timeframe): Artifact
     {
         $changeset   = ChangesetTestBuilder::aChangeset('1')->build();
         $start_field = $semantic_timeframe->getStartDateField();
@@ -1252,7 +1254,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withTitle($title)
             ->inTracker($tracker)
             ->withChangesets($changeset)
-            ->userCanView($readable)
+            ->userCanView($this->user)
             ->withParent(null)
             ->isOpen(true)
             ->build();

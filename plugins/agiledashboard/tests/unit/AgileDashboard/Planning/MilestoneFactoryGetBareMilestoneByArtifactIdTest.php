@@ -118,7 +118,7 @@ final class MilestoneFactoryGetBareMilestoneByArtifactIdTest extends \Tuleap\Tes
             ->withTitle('title')
             ->inTracker($planning_tracker)
             ->withChangesets($changeset)
-            ->userCanView(true)
+            ->userCanView($this->user)
             ->withParent(null)
             ->isOpen(true)
             ->withAncestors([])
