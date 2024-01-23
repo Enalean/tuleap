@@ -39,7 +39,6 @@ use Tuleap\Option\Option;
 use TuleapCfg\Command\Docker\DataPersistence;
 use TuleapCfg\Command\Docker\PluginsInstallClosureBuilder;
 use TuleapCfg\Command\Docker\Postfix;
-use TuleapCfg\Command\Docker\Rsyslog;
 use TuleapCfg\Command\Docker\Supervisord;
 use TuleapCfg\Command\Docker\Tuleap;
 use TuleapCfg\Command\Docker\VariableProviderInterface;
@@ -106,9 +105,6 @@ final class StartCommunityEditionContainerCommand extends Command
                 $this->variable_provider,
                 $post_install,
             );
-
-            $rsyslog = new Rsyslog();
-            $rsyslog->setup($output, $tuleap_fqdn);
 
             $postfix = new Postfix($this->process_factory);
             $postfix->setup($output, $tuleap_fqdn);

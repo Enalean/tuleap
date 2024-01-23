@@ -20,7 +20,6 @@ RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     cronie \
     postfix \
     openssh-server \
-    rsyslog \
     supervisor \
     tuleap-plugin-* \
     tuleap-theme-* && \

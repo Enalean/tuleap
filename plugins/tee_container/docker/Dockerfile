@@ -29,7 +29,6 @@ RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     cronie \
     openssh-server \
     postfix \
-    rsyslog \
     supervisor \
     tuleap-plugin-agiledashboard \
     tuleap-plugin-api-explorer \
