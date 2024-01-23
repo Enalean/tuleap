@@ -538,16 +538,16 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description plugin-webauthn
 Allow users to register and use passkeys with WebAuthn protocol.
 
-%endif
-
-%if %{with experimental}
-
 %package plugin-tracker-cce
 Summary: Tracker CCE plugin
 Group: Development/Tools
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description plugin-tracker-cce
 %{summary}.
+
+%endif
+
+%if %{with experimental}
 
 %endif
 
@@ -627,11 +627,11 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mytuleap_contact_support
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/enalean_licensemanager
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/webauthn
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker_cce
 %endif
 
 %if %{with experimental}
 %else
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker_cce
 %endif
 
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/composer.json
@@ -858,12 +858,12 @@ done
 %{__sed} -i "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_program_management
 %{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_program_management
 
+# Plugin Tracker CCE
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/tracker_cce
+
 %endif
 
 %if %{with experimental}
-
-# Plugin Tracker CCE
-%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/tracker_cce
 
 %endif
 
@@ -1448,13 +1448,13 @@ fi
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/webauthn
 
-%endif
-
-%if %{with experimental}
-
 %files plugin-tracker-cce
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/tracker_cce
+
+%endif
+
+%if %{with experimental}
 
 %endif
 
