@@ -29,11 +29,13 @@ final class LinkWithDirectionRepresentation
 {
     /**
      * @var int $id {@min 1}
+     * @psalm-var int<1,max>
      */
     public int $id;
 
     /**
      * @var string $direction {@choice reverse,forward}
+     * @psalm-var 'reverse'|'forward'
      */
     public string $direction;
 

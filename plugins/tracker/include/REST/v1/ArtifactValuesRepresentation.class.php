@@ -34,12 +34,12 @@ class ArtifactValuesRepresentation
     public $value;
 
     /**
-     * @var array {@required false}
+     * @var array | null {@required false}
      */
     public $bind_value_ids;
 
     /**
-     * @var array {@required false}
+     * @var array | null {@required false}
      */
     public $links;
 
@@ -50,7 +50,7 @@ class ArtifactValuesRepresentation
     public ?array $all_links = null;
 
     /**
-     * @var array {@required false}
+     * @var array | null {@required false}
      */
     public $parent;
 
