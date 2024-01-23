@@ -34,6 +34,7 @@ import {
 } from "./select2";
 import { initMultipleListPickers, initSingleListPickers } from "./list-picker.js";
 import { initMultipleLazybox, initSingleLazybox } from "./lazybox.js";
+import { initLazyAutocompleter } from "./lazy-autocompleter.js";
 import { initModals } from "./modal.js";
 
 (function loadCodeMirrorEditors() {
@@ -85,6 +86,10 @@ import { initModals } from "./modal.js";
             if (example.id === "example-lazybox-") {
                 initSingleLazybox();
                 initMultipleLazybox();
+            }
+
+            if (example.id === "example-lazy-autocompleter-") {
+                initLazyAutocompleter();
             }
 
             const example_links = example.querySelectorAll('a[href="#"]');

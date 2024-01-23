@@ -63,3 +63,12 @@ export type LazyboxOptions = (LazyboxWithSingleSelection | LazyboxWithMultipleSe
         readonly selection_callback: LazyboxSelectionCallback;
         readonly search_input_callback: LazyboxSearchInputCallback;
     };
+
+type LazyAutocompleterSelectionCallback = (item: unknown) => void;
+
+export type LazyAutocompleterOptions = {
+    readonly placeholder: string;
+    readonly templating_callback: LazyboxTemplatingCallback;
+    readonly selection_callback: LazyAutocompleterSelectionCallback;
+    readonly search_input_callback: LazyboxSearchInputCallback;
+};

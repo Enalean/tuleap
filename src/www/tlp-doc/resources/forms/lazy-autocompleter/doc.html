@@ -1,0 +1,62 @@
+<p>
+    LazyAutocompleter is a lighter version of the regular Lazybox component:
+    <br>
+    <ul>
+        <li>It does not look like a select-box</li>
+        <li>It won't show/hide a dropdown</li>
+        <li>It won't handle multiple values</li>
+        <li>It won't display any selected value. It is up to you to handle the selected values through the <code>selection_callback</code></li>
+    </ul>
+
+    It is basically an autocompleted list based on an input.
+    <br>
+    <br>
+    Options:
+    <ul>
+        <li>
+            <code class="code-inline">placeholder: string</code>: A (translated) text that will be shown in the search input. Its purpose is to tell the user what kind of items they will search using this field. For example "Search for an artifact…"
+        </li>
+        <li>
+            <code class="code-inline">templating_callback: (html: HTMLTemplateStringProcessor, item: LazyboxItem) => HTMLTemplateResult</code>: A callback function returning a hybrids update function to customize item templates.
+            <br>
+            It takes two parameters:
+            <ul>
+                <li><code class="code-inline">html: HTMLTemplateStringProcessor</code> The hybrids tag function to help the developer build a secure HTMLTemplateResult.</li>
+                <li><code class="code-inline">item: LazyboxItem</code> The item for which to build the template. See below for its definition.</li>
+            </ul>
+        </li>
+        <li>
+            <code class="code-inline">selection_callback: (selected_value: unknown) => void</code>: A callback function to be executed each time the user selects a value.
+            <br>
+            It takes one parameter: <code class="code-inline">selected_value</code>.
+            It returns the value of the selected item.
+        </li>
+        <li>
+            <code class="code-inline">search_input_callback: (query: string) => void</code>: A callback to be executed each time the user types a query in the search input.
+            <br>
+            It takes one parameter: <code class="code-inline">query: string</code>: The query typed by the user.
+        </li>
+    </ul>
+    <br>
+    <br>
+    Methods:
+    <ul>
+        <li>
+            <code class="code-inline">replaceContent(groups: GroupsOfItems[]) => void</code>: replaces the contents of the list with the given list of <code class="code-inline">GroupOfItems</code>.
+            <br>
+            Each <code class="code-inline">GroupOfItems</code> has these properties:
+            <ul>
+                <li><code class="code-inline">label: string</code>: The label of the group. Think of it as the text content of an &lt;optgroup&gt;.</li>
+                <li><code class="code-inline">empty_message: string</code>: The translated message that will be shown when there are no items. It is the "empty state" of the group.</li>
+                <li><code class="code-inline">is_loading: boolean</code>: Show a spinner next to the group's label if true.</li>
+                <li><code class="code-inline">items: LazyboxItem[]</code>: the items of the group.</li>
+                <li><code class="code-inline">footer_message: string</code>: a message to display below the group of items.</li>
+            </ul>
+            Each <code class="code-inline">LazyboxItem</code> has these properties:
+            <ul>
+                <li><code class="code-inline">value: unknown</code>: The value that will be passed to <code class="code-inline">selection_callback</code>. It can be any type, usually it's an object.</li>
+                <li><code class="code-inline">is_disabled: boolean</code>: the item cannot be selected if it's true.</li>
+            </ul>
+        </li>
+    </ul>
+</p>

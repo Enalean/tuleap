@@ -26,6 +26,16 @@ tuleap-lazybox {
     width: 100%;
 }
 
+.lazybox-autocompleter {
+    display: flex;
+    flex-direction: column;
+
+    > tuleap-lazybox-search {
+        display: flex;
+        padding: 0;
+    }
+}
+
 .lazybox-placeholder {
     @include common.placeholder;
 

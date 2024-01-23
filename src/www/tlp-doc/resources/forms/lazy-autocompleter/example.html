@@ -1,0 +1,45 @@
+<div>
+    <p>Selected values: <span id="lazy-autocompleter-links-value"></span></p>
+    <span id="lazy-autocompleter-links"></span>
+    <p class="tlp-text-info"><i class="fa-solid fa-circle-question" aria-hidden="true"></i>
+        In this live example, type <code class="code-inline">105</code> in the search field to simulate some content fetched from a remote endpoint.
+    </p>
+    <script type="text/javascript">
+        import { createLazyAutocompleter } from "@tuleap/lazybox";
+
+        const mount_point = document.getElementById("lazy-autocompleter-links");
+        const lazy_autocompleter = createLazyAutocompleter(document);
+
+        lazy_autocompleter.options = {
+            placeholder: "Type an id",
+            templating_callback: (html, item) =>
+                html`<span class="tlp-badge-${item.value.color} doc-link-selector-badge">
+                    ${item.value.xref}
+                </span>
+                ${item.value.title}`,
+            selection_callback: (selected_value) => {
+                values_display.textContent = `${selected_value.xref} - ${selected_value.title}`;
+            },
+            search_input_callback: (query) => {
+                if (query === "") {
+                    lazy_autocompleter.replaceDropdownContent([items_group]);
+                    return;
+                }
+                const lowercase_query = query.toLowerCase();
+
+                if (lowercase_query === String(ADDITIONAL_ITEM_ID)) {
+                    lazy_autocompleter.replaceDropdownContent([{ ...items_group, items: [item_105] }]);
+                    return;
+                }
+                const matching_items = items.filter(
+                    (item) =>
+                        String(item.value.id).includes(lowercase_query) ||
+                        item.value.title.toLowerCase().includes(lowercase_query),
+                );
+                const matching_items_group = { ...items_group, items: matching_items };
+                lazy_autocompleter.replaceDropdownContent([matching_items_group]);
+            },
+        };
+        mount_point.replaceWith(lazy_autocompleter);
+    </script>
+</div>
