@@ -138,6 +138,10 @@ msgstr "Statut"
 msgid "Success"
 msgstr "Succès"
 
+#, php-format
+msgid "The maximum file size for the module is %sMB."
+msgstr "La taille maximum du fichier pour le module est de %sMo."
+
 msgid "The module has been activated"
 msgstr "Le module a été activé"
 

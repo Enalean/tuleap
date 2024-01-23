@@ -28,23 +28,23 @@ final class UploadedFileStub implements UploadedFileInterface
 {
     private ?string $captured_moved_to_path = null;
 
-    private function __construct(private readonly int $error, private readonly bool $should_raise_exception_on_move)
+    private function __construct(private readonly int $error, private readonly bool $should_raise_exception_on_move, private readonly int $size)
     {
     }
 
     public static function buildWithError(int $error): self
     {
-        return new self($error, true);
+        return new self($error, true, 0);
     }
 
     public static function buildWithExceptionOnMove(): self
     {
-        return new self(UPLOAD_ERR_OK, true);
+        return new self(UPLOAD_ERR_OK, true, 0);
     }
 
     public static function buildGreatSuccess(): self
     {
-        return new self(UPLOAD_ERR_OK, false);
+        return new self(UPLOAD_ERR_OK, false, 123);
     }
 
     public function getStream()
@@ -63,7 +63,7 @@ final class UploadedFileStub implements UploadedFileInterface
 
     public function getSize()
     {
-        // Not needed yet
+        return $this->size;
     }
 
     public function getError()

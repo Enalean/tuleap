@@ -50,6 +50,7 @@ final class UpdateModuleControllerTest extends TestCase
             new FindWASMModulePath(),
             LogModuleUploadedStub::build(),
             UpdateModuleActivationStub::build(),
+            new MaxSize10Mb(),
             new NoopSapiEmitter(),
         );
 
@@ -70,6 +71,7 @@ final class UpdateModuleControllerTest extends TestCase
             new FindWASMModulePath(),
             LogModuleUploadedStub::build(),
             UpdateModuleActivationStub::build(),
+            new MaxSize10Mb(),
             new NoopSapiEmitter(),
         );
 
@@ -94,6 +96,7 @@ final class UpdateModuleControllerTest extends TestCase
             new FindWASMModulePath(),
             LogModuleUploadedStub::build(),
             UpdateModuleActivationStub::build(),
+            new MaxSize10Mb(),
             new NoopSapiEmitter(),
         );
 
@@ -123,6 +126,7 @@ final class UpdateModuleControllerTest extends TestCase
             new FindWASMModulePath(),
             LogModuleUploadedStub::build(),
             UpdateModuleActivationStub::build(),
+            new MaxSize10Mb(),
             new NoopSapiEmitter(),
         );
 
@@ -163,6 +167,7 @@ final class UpdateModuleControllerTest extends TestCase
             new FindWASMModulePath(),
             LogModuleUploadedStub::build(),
             UpdateModuleActivationStub::build(),
+            new MaxSize10Mb(),
             new NoopSapiEmitter(),
         );
 
@@ -174,6 +179,37 @@ final class UpdateModuleControllerTest extends TestCase
         $response = $controller->handle($request);
 
         self::assertSame(\Feedback::ERROR, $feedback_serializer->getCapturedFeedbacks()[0]->getLevel());
+        self::assertSame(302, $response->getStatusCode());
+    }
+
+    public function testErrorWhenTheModuleIsTooBig(): void
+    {
+        \ForgeConfig::set('sys_data_dir', vfsStream::setup('/')->url());
+
+        $tracker = TrackerTestBuilder::aTracker()->withId(101)->build();
+        $user    = UserTestBuilder::buildWithDefaults();
+
+        $feedback_serializer = FeedbackSerializerStub::buildSelf();
+
+        $controller = new UpdateModuleController(
+            new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),
+            new NullLogger(),
+            new FindWASMModulePath(),
+            LogModuleUploadedStub::build(),
+            UpdateModuleActivationStub::build(),
+            new MaxSize0Mb(),
+            new NoopSapiEmitter(),
+        );
+
+        $request = (new NullServerRequest())
+            ->withAttribute(\Tracker::class, $tracker)
+            ->withAttribute(\PFUser::class, $user)
+            ->withUploadedFiles(['wasm-module' => UploadedFileStub::buildGreatSuccess()]);
+
+        $response = $controller->handle($request);
+
+        self::assertSame(\Feedback::ERROR, $feedback_serializer->getCapturedFeedbacks()[0]->getLevel());
+        self::assertSame('The maximum file size for the module is 0MB.', $feedback_serializer->getCapturedFeedbacks()[0]->getMessage());
         self::assertSame(302, $response->getStatusCode());
     }
 
@@ -196,6 +232,7 @@ final class UpdateModuleControllerTest extends TestCase
             new FindWASMModulePath(),
             $project_history,
             $update_module_activation,
+            new MaxSize10Mb(),
             new NoopSapiEmitter(),
         );
 
