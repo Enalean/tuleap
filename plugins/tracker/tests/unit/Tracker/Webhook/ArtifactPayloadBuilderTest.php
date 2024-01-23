@@ -23,11 +23,14 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Webhook;
 
 use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentation;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\HTMLOrTextCommentRepresentation;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\BuildCompleteTrackerRESTRepresentationStub;
 use Tuleap\User\CCEUser;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
@@ -43,7 +46,10 @@ final class ArtifactPayloadBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_helper->method('getUserUrl');
         $user_helper->method('getDisplayNameFromUser');
         $this->changeset_representation_builder = $this->createMock(ChangesetRepresentationBuilder::class);
-        $this->builder                          = new ArtifactPayloadBuilder($this->changeset_representation_builder);
+        $this->builder                          = new ArtifactPayloadBuilder(
+            $this->changeset_representation_builder,
+            BuildCompleteTrackerRESTRepresentationStub::build(),
+        );
     }
 
     protected function tearDown(): void
@@ -67,6 +73,9 @@ final class ArtifactPayloadBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $changeset->method('getId')->willReturn(1);
         $changeset->method('getSubmitter')->willReturn($user);
         $changeset->method('getArtifact')->willReturn($artifact);
+        $changeset->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()
+            ->withProject(ProjectTestBuilder::aProject()->build())
+            ->build());
         $this->changeset_representation_builder->expects(self::once())->method('buildWithFieldValuesWithoutPermissions')
             ->willReturn($this->buildChangesetRepresentation($user));
 
@@ -93,6 +102,9 @@ final class ArtifactPayloadBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $changeset->method('getId')->willReturn(1);
         $changeset->method('getSubmitter')->willReturn($user);
         $changeset->method('getArtifact')->willReturn($artifact);
+        $changeset->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()
+            ->withProject(ProjectTestBuilder::aProject()->build())
+            ->build());
         $this->changeset_representation_builder->expects(self::once())->method('buildWithFieldValuesWithoutPermissions')
             ->willReturn($this->buildChangesetRepresentation($user));
 
