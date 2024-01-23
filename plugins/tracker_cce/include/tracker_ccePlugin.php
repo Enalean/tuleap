@@ -39,31 +39,7 @@ use Tuleap\Queue\WorkerAvailability;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Search\ItemToIndexQueueEventBased;
-use Tuleap\TrackerCCE\Administration\ActivateModuleController;
-use Tuleap\TrackerCCE\Administration\ActiveTrackerRetrieverMiddleware;
-use Tuleap\TrackerCCE\Administration\AdministrationCSRFTokenProvider;
-use Tuleap\TrackerCCE\Administration\AdministrationController;
-use Tuleap\TrackerCCE\Administration\CheckTrackerCSRFMiddleware;
-use Tuleap\TrackerCCE\Administration\CustomCodeExecutionHistorySaver;
-use Tuleap\TrackerCCE\Administration\ModuleDao;
-use Tuleap\TrackerCCE\Administration\RejectNonTrackerAdministratorMiddleware;
-use Tuleap\TrackerCCE\Administration\RemoveModuleController;
-use Tuleap\TrackerCCE\Administration\UpdateModuleController;
-use Tuleap\TrackerCCE\CustomCodeExecutionTask;
-use Tuleap\TrackerCCE\Logs\LogLinePresenterBuilder;
-use Tuleap\TrackerCCE\Logs\ModuleLogDao;
-use Tuleap\TrackerCCE\WASM\CallWASMModule;
-use Tuleap\TrackerCCE\WASM\ExecuteWASMResponse;
-use Tuleap\TrackerCCE\WASM\FindWASMModulePath;
-use Tuleap\TrackerCCE\WASM\ProcessWASMResponse;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactForwardLinksRetriever;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksByChangesetCache;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLinkDao;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksDao;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksRetriever;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksToNewChangesetsConverter;
-use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
@@ -78,22 +54,41 @@ use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationTaskCollectorEvent;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactForwardLinksRetriever;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksByChangesetCache;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLinkDao;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksDao;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksRetriever;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksToNewChangesetsConverter;
+use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\Link\ArtifactReverseLinksUpdater;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
+use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
+use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
+use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\REST\Artifact\ArtifactRestUpdateConditionsChecker;
+use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
+use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
-use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
-use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\PUTHandler;
+use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
+use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
+use Tuleap\Tracker\REST\PermissionsExporter;
+use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
+use Tuleap\Tracker\REST\WorkflowRestBuilder;
 use Tuleap\Tracker\Webhook\ArtifactPayloadBuilder;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsRetriever;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
@@ -101,6 +96,23 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\WorkflowMenuItem;
 use Tuleap\Tracker\Workflow\WorkflowMenuItemCollection;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
+use Tuleap\TrackerCCE\Administration\ActivateModuleController;
+use Tuleap\TrackerCCE\Administration\ActiveTrackerRetrieverMiddleware;
+use Tuleap\TrackerCCE\Administration\AdministrationController;
+use Tuleap\TrackerCCE\Administration\AdministrationCSRFTokenProvider;
+use Tuleap\TrackerCCE\Administration\CheckTrackerCSRFMiddleware;
+use Tuleap\TrackerCCE\Administration\CustomCodeExecutionHistorySaver;
+use Tuleap\TrackerCCE\Administration\ModuleDao;
+use Tuleap\TrackerCCE\Administration\RejectNonTrackerAdministratorMiddleware;
+use Tuleap\TrackerCCE\Administration\RemoveModuleController;
+use Tuleap\TrackerCCE\Administration\UpdateModuleController;
+use Tuleap\TrackerCCE\CustomCodeExecutionTask;
+use Tuleap\TrackerCCE\Logs\LogLinePresenterBuilder;
+use Tuleap\TrackerCCE\Logs\ModuleLogDao;
+use Tuleap\TrackerCCE\WASM\CallWASMModule;
+use Tuleap\TrackerCCE\WASM\ExecuteWASMResponse;
+use Tuleap\TrackerCCE\WASM\FindWASMModulePath;
+use Tuleap\TrackerCCE\WASM\ProcessWASMResponse;
 use Tuleap\WebAssembly\FFIWASMCaller;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -137,7 +149,24 @@ final class tracker_ccePlugin extends Plugin
     #[ListeningToEventClass]
     public function collectPostCreationTask(PostCreationTaskCollectorEvent $event): void
     {
-        $mapper = ValinorMapperBuilderFactory::mapperBuilder()->allowPermissiveTypes()->mapper();
+        $mapper                        = ValinorMapperBuilderFactory::mapperBuilder()->allowPermissiveTypes()->mapper();
+        $form_element_factory          = Tracker_FormElementFactory::instance();
+        $transition_retriever          = new TransitionRetriever(
+            new StateFactory(
+                TransitionFactory::instance(),
+                new SimpleWorkflowDao()
+            ),
+            new TransitionExtractor()
+        );
+        $frozen_fields_detector        = new FrozenFieldDetector(
+            $transition_retriever,
+            new FrozenFieldsRetriever(
+                new FrozenFieldsDao(),
+                Tracker_FormElementFactory::instance()
+            )
+        );
+        $ugroup_manager                = new UGroupManager();
+        $permissions_functions_wrapper = new PermissionsFunctionsWrapper();
 
         $event->addAsyncTask(new CustomCodeExecutionTask(
             $event->getLogger(),
@@ -149,7 +178,39 @@ final class tracker_ccePlugin extends Plugin
                         CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance())
                     ),
                     new PermissionChecker(new CachingTrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentUGroupEnabledDao()))),
-                )
+                ),
+                new Tracker_REST_TrackerRestBuilder(
+                    $form_element_factory,
+                    new FormElementRepresentationsBuilder(
+                        $form_element_factory,
+                        new PermissionsExporter($frozen_fields_detector),
+                        new HiddenFieldsetChecker(
+                            new HiddenFieldsetsDetector(
+                                $transition_retriever,
+                                new HiddenFieldsetsRetriever(
+                                    new HiddenFieldsetsDao(),
+                                    $form_element_factory,
+                                ),
+                                $form_element_factory,
+                            ),
+                            new FieldsExtractor(),
+                        ),
+                        new PermissionsForGroupsBuilder(
+                            $ugroup_manager,
+                            $frozen_fields_detector,
+                            $permissions_functions_wrapper,
+                        ),
+                        new TypePresenterFactory(
+                            new TypeDao(),
+                            new ArtifactLinksUsageDao(),
+                        ),
+                    ),
+                    new PermissionsRepresentationBuilder(
+                        $ugroup_manager,
+                        $permissions_functions_wrapper,
+                    ),
+                    new WorkflowRestBuilder(),
+                ),
             ),
             new FindWASMModulePath(),
             new CallWASMModule(

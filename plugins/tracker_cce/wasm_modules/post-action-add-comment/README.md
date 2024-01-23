@@ -79,7 +79,239 @@ for [Tracker webhooks](https://docs.tuleap.org/user-guide/integration/webhook.ht
         ],
         "last_modified_date": "2024-01-22T09:04:43+00:00"
     },
-    "is_custom_code_execution": false
+    "is_custom_code_execution": false,
+    "tracker": {
+        "id": 10,
+        "uri": "trackers/10",
+        "html_url": "/plugins/tracker/?tracker=10",
+        "project": {
+            "id": 101,
+            "uri": "projects/101",
+            "label": "Project 1",
+            "icon": "1️⃣"
+        },
+        "label": "Tracker Tests 1",
+        "description": "",
+        "item_name": "test",
+        "fields": [
+            {
+                "field_id": 297,
+                "label": "field_a",
+                "name": "field_a",
+                "type": "int",
+                "values": null,
+                "required": false,
+                "collapsed": false,
+                "bindings": {
+                    "type": null,
+                    "list": []
+                },
+                "permissions": [
+                    "read",
+                    "update",
+                    "create"
+                ],
+                "permissions_for_groups": {
+                    "can_submit": [
+                        {
+                            "id": "2",
+                            "uri": "user_groups/2",
+                            "label": "Registered users",
+                            "users_uri": "user_groups/2/users",
+                            "short_name": "registered_users",
+                            "key": "ugroup_registered_users_name_key"
+                        }
+                    ],
+                    "can_read": [
+                        {
+                            "id": "1",
+                            "uri": "user_groups/1",
+                            "label": "Anonymous",
+                            "users_uri": "user_groups/1/users",
+                            "short_name": "all_users",
+                            "key": "ugroup_anonymous_users_name_key"
+                        }
+                    ],
+                    "can_update": [
+                        {
+                            "id": "101_3",
+                            "uri": "user_groups/101_3",
+                            "label": "Project members",
+                            "users_uri": "user_groups/101_3/users",
+                            "short_name": "project_members",
+                            "key": "ugroup_project_members_name_key"
+                        }
+                    ]
+                },
+                "default_value": "0"
+            },
+            {
+                "field_id": 299,
+                "label": "field_b",
+                "name": "field_b",
+                "type": "int",
+                "values": null,
+                "required": false,
+                "collapsed": false,
+                "bindings": {
+                    "type": null,
+                    "list": []
+                },
+                "permissions": [
+                    "read",
+                    "update",
+                    "create"
+                ],
+                "permissions_for_groups": {
+                    "can_submit": [
+                        {
+                            "id": "2",
+                            "uri": "user_groups/2",
+                            "label": "Registered users",
+                            "users_uri": "user_groups/2/users",
+                            "short_name": "registered_users",
+                            "key": "ugroup_registered_users_name_key"
+                        }
+                    ],
+                    "can_read": [
+                        {
+                            "id": "1",
+                            "uri": "user_groups/1",
+                            "label": "Anonymous",
+                            "users_uri": "user_groups/1/users",
+                            "short_name": "all_users",
+                            "key": "ugroup_anonymous_users_name_key"
+                        }
+                    ],
+                    "can_update": [
+                        {
+                            "id": "101_3",
+                            "uri": "user_groups/101_3",
+                            "label": "Project members",
+                            "users_uri": "user_groups/101_3/users",
+                            "short_name": "project_members",
+                            "key": "ugroup_project_members_name_key"
+                        }
+                    ]
+                },
+                "default_value": "0"
+            },
+            {
+                "field_id": 333,
+                "label": "field_sum",
+                "name": "field_sum_11",
+                "type": "string",
+                "values": null,
+                "required": false,
+                "collapsed": false,
+                "bindings": {
+                    "type": null,
+                    "list": []
+                },
+                "permissions": [
+                    "read",
+                    "update",
+                    "create"
+                ],
+                "permissions_for_groups": {
+                    "can_submit": [
+                        {
+                            "id": "2",
+                            "uri": "user_groups/2",
+                            "label": "Registered users",
+                            "users_uri": "user_groups/2/users",
+                            "short_name": "registered_users",
+                            "key": "ugroup_registered_users_name_key"
+                        }
+                    ],
+                    "can_read": [
+                        {
+                            "id": "1",
+                            "uri": "user_groups/1",
+                            "label": "Anonymous",
+                            "users_uri": "user_groups/1/users",
+                            "short_name": "all_users",
+                            "key": "ugroup_anonymous_users_name_key"
+                        }
+                    ],
+                    "can_update": [
+                        {
+                            "id": "101_3",
+                            "uri": "user_groups/101_3",
+                            "label": "Project members",
+                            "users_uri": "user_groups/101_3/users",
+                            "short_name": "project_members",
+                            "key": "ugroup_project_members_name_key"
+                        }
+                    ]
+                },
+                "default_value": ""
+            }
+        ],
+        "structure": [
+            {
+                "id": 298,
+                "content": [
+                    {
+                        "id": 297,
+                        "content": null
+                    },
+                    {
+                        "id": 299,
+                        "content": null
+                    },
+                    {
+                        "id": 333,
+                        "content": null
+                    }
+                ]
+            }
+        ],
+        "semantics": {},
+        "workflow": {
+            "field_id": 0,
+            "is_used": "",
+            "is_legacy": false,
+            "is_advanced": true,
+            "rules": {
+                "dates": [],
+                "lists": []
+            },
+            "transitions": []
+        },
+        "permissions_for_groups": {
+            "can_access": [],
+            "can_access_submitted_by_user": [
+                {
+                    "id": "2",
+                    "uri": "user_groups/2",
+                    "label": "Registered users",
+                    "users_uri": "user_groups/2/users",
+                    "short_name": "registered_users",
+                    "key": "ugroup_registered_users_name_key"
+                },
+                {
+                    "id": "101_3",
+                    "uri": "user_groups/101_3",
+                    "label": "Project members",
+                    "users_uri": "user_groups/101_3/users",
+                    "short_name": "project_members",
+                    "key": "ugroup_project_members_name_key"
+                }
+            ],
+            "can_access_assigned_to_group": [],
+            "can_access_submitted_by_group": [],
+            "can_admin": []
+        },
+        "parent": null,
+        "resources": [
+            {
+                "type": "reports",
+                "uri": "trackers/10/tracker_reports"
+            }
+        ],
+        "color_name": "inca-silver"
+    }
 }
 ```
 

@@ -23,19 +23,16 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Webhook;
 
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
+use Tuleap\Tracker\REST\v1\BuildCompleteTrackerRESTRepresentation;
 use Tuleap\User\CCEUser;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 class ArtifactPayloadBuilder
 {
-    /**
-     * @var ChangesetRepresentationBuilder
-     */
-    private $changeset_representation_builder;
-
-    public function __construct(ChangesetRepresentationBuilder $changeset_representation_builder)
-    {
-        $this->changeset_representation_builder = $changeset_representation_builder;
+    public function __construct(
+        private readonly ChangesetRepresentationBuilder $changeset_representation_builder,
+        private readonly BuildCompleteTrackerRESTRepresentation $tracker_representation_builder,
+    ) {
     }
 
     public function buildPayload(\Tracker_Artifact_Changeset $last_changeset): ArtifactPayload
@@ -67,6 +64,10 @@ class ArtifactPayloadBuilder
                 'current'                  => $last_changeset_content,
                 'previous'                 => $previous_changeset_content,
                 'is_custom_code_execution' => $user->getId() === CCEUser::ID,
+                'tracker'                  => $this->tracker_representation_builder->getTrackerRepresentationInTrackerContext(
+                    $user,
+                    $last_changeset->getTracker()
+                ),
             ]
         );
     }
