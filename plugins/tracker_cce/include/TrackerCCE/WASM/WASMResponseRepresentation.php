@@ -32,7 +32,7 @@ final class WASMResponseRepresentation
      */
     public function __construct(
         public readonly array $values,
-        public readonly ?NewChangesetCommentRepresentation $comment,
+        public readonly ?NewChangesetCommentRepresentation $comment = null,
     ) {
     }
 }

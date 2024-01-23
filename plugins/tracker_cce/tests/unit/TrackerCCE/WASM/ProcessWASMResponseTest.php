@@ -39,7 +39,7 @@ final class ProcessWASMResponseTest extends TestCase
     protected function setUp(): void
     {
         $this->logger    = new TestLogger();
-        $this->processor = new ProcessWASMResponse($this->logger, (new MapperBuilder())->allowPermissiveTypes()->enableFlexibleCasting()->mapper());
+        $this->processor = new ProcessWASMResponse($this->logger, (new MapperBuilder())->allowPermissiveTypes()->mapper());
     }
 
     public function testItReturnsErrIfResponseIsErr(): void

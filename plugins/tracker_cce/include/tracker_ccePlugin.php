@@ -137,7 +137,7 @@ final class tracker_ccePlugin extends Plugin
     #[ListeningToEventClass]
     public function collectPostCreationTask(PostCreationTaskCollectorEvent $event): void
     {
-        $mapper = ValinorMapperBuilderFactory::mapperBuilder()->allowPermissiveTypes()->enableFlexibleCasting()->mapper();
+        $mapper = ValinorMapperBuilderFactory::mapperBuilder()->allowPermissiveTypes()->mapper();
 
         $event->addAsyncTask(new CustomCodeExecutionTask(
             $event->getLogger(),
