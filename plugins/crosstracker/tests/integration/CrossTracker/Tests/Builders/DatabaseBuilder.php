@@ -23,7 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Tests\Builders;
 
 use ParagonIE\EasyDB\EasyDB;
+use Project;
+use Tracker;
 use Tuleap\Project\UserPermissionsDao;
+use UserManager;
 
 final class DatabaseBuilder
 {
@@ -51,22 +54,26 @@ final class DatabaseBuilder
         $this->db->run('DELETE FROM tracker');
     }
 
-    public function buildProject(): int
+    public function buildProject(): Project
     {
-        return (int) $this->db->insertReturnId(
+        $row         = [
+            'group_name' => "cross tracker",
+            'access' => "public",
+            'status' => 'A',
+            "unix_group_name" => "cross-tracker-comparison",
+        ];
+        $project_id  = (int) $this->db->insertReturnId(
             'groups',
-            [
-                'group_name' => "cross tracker",
-                'access' => "public",
-                'status' => 'A',
-                "unix_group_name" => "cross-tracker-comparison",
-            ]
+            $row
         );
+        $dao         = new \ProjectDao();
+        $project_row = $dao->searchById($project_id);
+        return new Project($project_row->getRow());
     }
 
-    public function buildUser(string $user_name, string $real_name, string $email): int
+    public function buildUser(string $user_name, string $real_name, string $email): \PFUser
     {
-        return (int) $this->db->insertReturnId(
+        $user_id = $this->db->insertReturnId(
             'user',
             [
                 'user_name' => $user_name,
@@ -74,6 +81,14 @@ final class DatabaseBuilder
                 'realname' => $real_name,
             ]
         );
+
+        $user_manager = UserManager::instance();
+        $user         = $user_manager->getUserById($user_id);
+        if (! $user) {
+            throw new \Exception("USer $user_id not found");
+        }
+
+        return $user;
     }
 
     public function addUserToProjectMembers(int $user_id, int $project_id): void
@@ -81,9 +96,10 @@ final class DatabaseBuilder
         $this->user_permissions_dao->addUserAsProjectMember($project_id, $user_id);
     }
 
-    public function buildTracker(int $project_id, string $name): int
+    public function buildTracker(int $project_id, string $name): Tracker
     {
-        return (int) $this->db->insertReturnId(
+        $factory    = \TrackerFactory::instance();
+        $tracker_id = (int) $this->db->insertReturnId(
             'tracker',
             [
                 'group_id' => $project_id,
@@ -91,6 +107,12 @@ final class DatabaseBuilder
                 'status' => 'A',
             ]
         );
+        $tracker    = $factory->getTrackerById($tracker_id);
+        if (! $tracker) {
+            throw new \Exception("tracker not found");
+        }
+
+        return $tracker;
     }
 
     public function buildIntField(int $tracker_id, string $name): int

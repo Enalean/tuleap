@@ -29,7 +29,6 @@ use Tracker_Semantic_ContributorDao;
 use Tracker_Semantic_DescriptionDao;
 use Tracker_Semantic_StatusDao;
 use Tracker_Semantic_TitleDao;
-use TrackerFactory;
 use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
 use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
@@ -109,39 +108,30 @@ final class EqualComparisonTest extends \Tuleap\Test\PHPUnit\TestCase
         \ForgeConfig::set("feature_flag_" . SearchOnDuckTypedFieldsConfig::FEATURE_FLAG_SEARCH_DUCK_TYPED_FIELDS, '1');
         $this->database_builder = new DatabaseBuilder($this->db);
 
-        $project_id = $this->database_builder->buildProject();
+        $project    = $this->database_builder->buildProject();
+        $project_id = (int) $project->getID();
 
-        $release_tracker_id = $this->database_builder->buildTracker($project_id, "Release");
-        $sprint_tracker_id  = $this->database_builder->buildTracker($project_id, "Sprint");
-        $task_tracker_id    = $this->database_builder->buildTracker($project_id, "Task");
+        $this->release_tracker = $this->database_builder->buildTracker($project_id, "Release");
+        $this->release_tracker->setProject($project);
+        $this->sprint_tracker = $this->database_builder->buildTracker($project_id, "Sprint");
+        $this->sprint_tracker->setProject($project);
+        $this->task_tracker = $this->database_builder->buildTracker($project_id, "Task");
 
         $this->release_initial_effort_field_id = $this->database_builder->buildIntField(
-            $release_tracker_id,
+            $this->release_tracker->getId(),
             'initial_effort'
         );
         $this->sprint_initial_effort_field_id  = $this->database_builder->buildFloatField(
-            $sprint_tracker_id,
+            $this->sprint_tracker->getId(),
             'initial_effort'
         );
         $this->database_builder->buildComputedField(
-            $task_tracker_id,
+            $this->task_tracker->getId(),
             'initial_effort'
         );
 
-
-        $this->release_tracker = $this->getTracker($release_tracker_id);
-        $this->sprint_tracker  = $this->getTracker($sprint_tracker_id);
-        $this->task_tracker    = $this->getTracker($task_tracker_id);
-
-        $user_id = $this->database_builder->buildUser('janwar', 'Jorge Anwar', 'janwar@example.com');
-        $this->database_builder->addUserToProjectMembers($user_id, $project_id);
-        $user_manager = UserManager::instance();
-        $user         = $user_manager->getUserById($user_id);
-        if (! $user) {
-            throw new \Exception("USer $user_id not found");
-        }
-
-        $this->user = $user;
+        $this->user = $this->database_builder->buildUser('janwar', 'Jorge Anwar', 'janwar@example.com');
+        $this->database_builder->addUserToProjectMembers((int) $this->user->getId(), $project_id);
     }
 
     public function testEqualComparison(): void
@@ -442,17 +432,5 @@ final class EqualComparisonTest extends \Tuleap\Test\PHPUnit\TestCase
             new CrossTrackerExpertQueryReportDao(),
             $invalid_comparisons_collector
         );
-    }
-
-    private function getTracker(int $tracker_id): Tracker
-    {
-        $tracker_factory = TrackerFactory::instance();
-        $tracker         = $tracker_factory->getTrackerById($tracker_id);
-
-        if (! $tracker) {
-            throw new \Exception("Tracker $tracker_id not found");
-        }
-
-        return $tracker;
     }
 }
