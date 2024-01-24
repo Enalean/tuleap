@@ -18,7 +18,11 @@
  */
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { HostElement } from "./LazyAutocompleterElement";
-import { buildReplaceContent, getSearchInput } from "./LazyAutocompleterElement";
+import {
+    buildObserveDisabled,
+    buildReplaceContent,
+    getSearchInput,
+} from "./LazyAutocompleterElement";
 import type { GroupCollection, LazyboxItem } from "./GroupCollection";
 import { GroupCollectionBuilder } from "../tests/builders/GroupCollectionBuilder";
 import { OptionsAutocompleterBuilder } from "../tests/builders/OptionsAutocompleterBuilder";
@@ -94,6 +98,41 @@ describe("LazyAutocompleterElement", () => {
             const search_input = getSearchInput(getHost());
 
             expect(search_input.placeholder).toBe(PLACEHOLDER);
+        });
+    });
+
+    describe("disabled attribute", () => {
+        const getHost = (): HostElement =>
+            Object.assign(doc.createElement("span"), {
+                options: OptionsAutocompleterBuilder.someOptions().build(),
+                search_input_element: {
+                    disabled: false,
+                    clear: () => {
+                        // do nothing
+                    },
+                },
+            }) as HostElement;
+
+        it("When the disabled attribute changes from false to true, then it should update the search-input disabled attribute and clear its query", () => {
+            const host = getHost();
+
+            vi.spyOn(host.search_input_element, "clear");
+
+            buildObserveDisabled(host, true, false);
+
+            expect(host.search_input_element.disabled).toBe(true);
+            expect(host.search_input_element.clear).toHaveBeenCalledOnce();
+        });
+
+        it("When the disabled attribute changes from true to false, then it should not clear its query", () => {
+            const host = getHost();
+
+            vi.spyOn(host.search_input_element, "clear");
+
+            buildObserveDisabled(host, false, true);
+
+            expect(host.search_input_element.disabled).toBe(false);
+            expect(host.search_input_element.clear).not.toHaveBeenCalledOnce();
         });
     });
 });

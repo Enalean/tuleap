@@ -74,7 +74,7 @@ describe("SelectorsDropdownController", () => {
         vi.advanceTimersToNextTimer();
 
         expect(host.active_selector.unwrapOr(null)).toBe(selector);
-        expect(autocompleter.start).toHaveBeenCalledWith(selector, host.auto_completer_element);
+        expect(autocompleter.start).toHaveBeenCalledWith(selector, host);
     });
 
     it("onDropdownHidden() should set is_dropdown_shown to false and clear the currently selected selector", () => {

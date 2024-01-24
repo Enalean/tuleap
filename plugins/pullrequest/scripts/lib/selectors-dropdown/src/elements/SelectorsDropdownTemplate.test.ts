@@ -41,10 +41,14 @@ describe("SelectorsDropdownTemplate", () => {
         active_selector = Option.nothing();
         is_dropdown_shown = false;
         controller = ControlSelectorsDropdownStub();
+
+        const author_selector = SelectorEntryStub.withEntryName("Author");
+        vi.spyOn(author_selector, "isDisabled").mockReturnValue(true);
+
         host = {
             button_text: "Add filter",
             selectors_entries: [
-                SelectorEntryStub.withEntryName("Author"),
+                author_selector,
                 SelectorEntryStub.withEntryName("Reviewer"),
                 SelectorEntryStub.withEntryName("Branch"),
                 SelectorEntryStub.withEntryName("Label"),
@@ -82,9 +86,15 @@ describe("SelectorsDropdownTemplate", () => {
         expect(Array.from(dropdown_menu.classList)).toContain(DROPDOWN_CONTENT_CLASSNAME);
         expect(menu_items).toHaveLength(host.selectors_entries.length);
 
-        menu_items.forEach((item, index) =>
-            expect(item.textContent?.trim()).toBe(host.selectors_entries[index].entry_name),
-        );
+        menu_items.forEach((item, index) => {
+            const current_selector = host.selectors_entries[index];
+
+            expect(item.textContent?.trim()).toBe(current_selector.entry_name);
+
+            if (current_selector.isDisabled()) {
+                expect(item.classList).toContain("tlp-dropdown-menu-item-disabled");
+            }
+        });
     });
 
     describe("side panel", () => {

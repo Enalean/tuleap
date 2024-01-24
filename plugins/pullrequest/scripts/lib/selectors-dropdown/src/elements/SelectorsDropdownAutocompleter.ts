@@ -18,46 +18,50 @@
  */
 
 import { createLazyAutocompleter } from "@tuleap/lazybox";
-import type { SelectorEntry } from "./SelectorsDropdown";
-import type { LazyboxItem } from "@tuleap/lazybox/src/GroupCollection";
+import type { InternalSelectorsDropdown, SelectorEntry } from "./SelectorsDropdown";
+import type { LazyboxItem } from "@tuleap/lazybox";
+import { ContentGroupBuilder } from "./autocompleter/ContentGroupBuilder";
+import { OnSelectionCallback } from "./autocompleter/OnSelectionCallback";
 
 export type Autocompleter = {
-    start(selector: SelectorEntry, container: Element): Promise<void>;
-};
-
-const noop = (): void => {
-    // Do nothing for the moment
+    start(selector: SelectorEntry, host: InternalSelectorsDropdown): Promise<void>;
 };
 
 export const SelectorsDropdownAutocompleter = (doc: Document): Autocompleter => ({
-    start: async (selector: SelectorEntry, container: Element): Promise<void> => {
+    start: async (selector: SelectorEntry, host: InternalSelectorsDropdown): Promise<void> => {
+        const group_builder = ContentGroupBuilder(selector.config);
         const lazy_autocompleter = createLazyAutocompleter(doc);
-        const { templating_callback, group, placeholder, loadItems, filterItems } = selector.config;
 
         let items: LazyboxItem[] = [];
 
         lazy_autocompleter.options = {
-            placeholder,
-            templating_callback,
-            selection_callback: noop,
+            placeholder: selector.config.placeholder,
+            templating_callback: selector.config.templating_callback,
+            selection_callback: OnSelectionCallback(
+                host,
+                lazy_autocompleter,
+                group_builder,
+                selector,
+            ),
             search_input_callback: (query): void => {
                 lazy_autocompleter.replaceContent([
-                    {
-                        ...group,
-                        items: filterItems(query, items),
-                    },
+                    group_builder.buildWithItems(selector.config.filterItems(query, items)),
                 ]);
             },
         };
 
-        const selector_group = { ...group, is_loading: true };
+        host.auto_completer_element.appendChild(lazy_autocompleter);
 
-        lazy_autocompleter.replaceContent([selector_group]);
-        container.appendChild(lazy_autocompleter);
+        if (selector.isDisabled()) {
+            lazy_autocompleter.disabled = selector.isDisabled();
+            lazy_autocompleter.replaceContent([group_builder.buildEmptyAndDisabled()]);
 
-        items = await loadItems();
-        selector_group.is_loading = false;
-        selector_group.items = items;
-        lazy_autocompleter.replaceContent([selector_group]);
+            return;
+        }
+
+        lazy_autocompleter.replaceContent([group_builder.buildLoading()]);
+
+        items = await selector.config.loadItems();
+        lazy_autocompleter.replaceContent([group_builder.buildWithItems(items)]);
     },
 });

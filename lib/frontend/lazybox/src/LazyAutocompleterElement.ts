@@ -31,6 +31,7 @@ export const TAG = "tuleap-lazy-autocompleter";
 
 export type LazyAutocompleter = {
     options: LazyAutocompleterOptions;
+    disabled: boolean;
     replaceContent(groups: GroupCollection): void;
 };
 
@@ -53,6 +54,22 @@ export const buildReplaceContent =
     (groups: GroupCollection): void => {
         host.dropdown_element.groups = groups;
     };
+
+export const buildObserveDisabled = (
+    host: InternalLazyAutocompleter,
+    is_disabled: boolean,
+    was_disabled = false,
+): void => {
+    if (is_disabled === was_disabled) {
+        return;
+    }
+
+    host.search_input_element.disabled = is_disabled;
+
+    if (is_disabled) {
+        host.search_input_element.clear();
+    }
+};
 
 export const getSearchInput = (host: HostElement): SearchInput & HTMLElement => {
     const element = host.ownerDocument.createElement(SEARCH_TAG);
@@ -95,6 +112,10 @@ export const getDropdownElement = (host: HostElement): DropdownElement & HTMLEle
 
 define<InternalLazyAutocompleter>({
     tag: TAG,
+    disabled: {
+        value: false,
+        observe: buildObserveDisabled,
+    },
     options: undefined,
     replaceContent: { get: buildReplaceContent },
     search_input_element: { get: getSearchInput },

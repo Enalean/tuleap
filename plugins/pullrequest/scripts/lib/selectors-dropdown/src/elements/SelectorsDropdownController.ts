@@ -51,7 +51,7 @@ export const SelectorsDropdownController = (
                 host.active_selector = Option.fromValue(selector);
 
                 setTimeout(() => {
-                    autocompleter.start(selector, host.auto_completer_element);
+                    autocompleter.start(selector, host);
                 });
             },
         );

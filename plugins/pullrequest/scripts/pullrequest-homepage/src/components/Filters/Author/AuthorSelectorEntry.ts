@@ -23,6 +23,8 @@ import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { AuthorTemplatingCallback } from "./AuthorTemplatingCallback";
 import { AuthorsLoader } from "./AuthorsLoader";
 import { AuthorFilteringCallback } from "./AuthorFilteringCallback";
+import { AuthorFilterBuilder, TYPE_FILTER_AUTHOR } from "./AuthorFilter";
+import type { StoreListFilters } from "../ListFiltersStore";
 
 export const isUser = (item_value: unknown): item_value is User =>
     typeof item_value === "object" && item_value !== null && "id" in item_value;
@@ -30,20 +32,25 @@ export const isUser = (item_value: unknown): item_value is User =>
 export const AuthorSelectorEntry = (
     $gettext: (string: string) => string,
     on_error_callback: (fault: Fault) => void,
+    filters_store: StoreListFilters,
     repository_id: number,
 ): SelectorEntry => ({
     entry_name: $gettext("Author"),
+    isDisabled: (): boolean => filters_store.hasAFilterWithType(TYPE_FILTER_AUTHOR),
     config: {
         placeholder: $gettext("Name"),
-        group: {
-            label: $gettext("Matching users"),
-            empty_message: $gettext("No matching user"),
-            is_loading: false,
-            footer_message: "",
-            items: [],
-        },
+        label: $gettext("Matching users"),
+        empty_message: $gettext("No matching user"),
+        disabled_message: $gettext("You can only filter on one author"),
         templating_callback: AuthorTemplatingCallback,
         loadItems: AuthorsLoader(on_error_callback, repository_id),
         filterItems: AuthorFilteringCallback,
+        onItemSelection: (item: unknown): void => {
+            if (!isUser(item)) {
+                return;
+            }
+
+            filters_store.storeFilter(AuthorFilterBuilder($gettext).fromAuthor(item));
+        },
     },
 });

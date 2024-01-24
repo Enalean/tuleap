@@ -27,7 +27,7 @@ import {
     DROPDOWN_CONTENT_CLASSNAME,
     renderContent,
 } from "./SelectorsDropdownTemplate";
-import type { LazyboxTemplatingCallback, GroupOfItems, LazyboxItem } from "@tuleap/lazybox";
+import type { LazyboxTemplatingCallback, LazyboxItem } from "@tuleap/lazybox";
 import { SelectorsDropdownAutocompleter } from "./SelectorsDropdownAutocompleter";
 
 export const TAG = "tuleap-selectors-dropdown";
@@ -38,16 +38,22 @@ export type SelectorsDropdownFilterItemsCallback = (
     items: LazyboxItem[],
 ) => LazyboxItem[];
 
-type AutocompleterConfig = {
+export type SelectorsDropdownOnItemSelectionCallback = (item: unknown) => void;
+
+export type AutocompleterConfig = {
     templating_callback: LazyboxTemplatingCallback;
-    group: GroupOfItems;
+    label: string;
     placeholder: string;
+    empty_message: string;
+    disabled_message: string;
     loadItems: SelectorsDropdownLoadItemsCallback;
     filterItems: SelectorsDropdownFilterItemsCallback;
+    onItemSelection: SelectorsDropdownOnItemSelectionCallback;
 };
 
 export type SelectorEntry = {
     readonly entry_name: string;
+    readonly isDisabled: () => boolean;
     readonly config: AutocompleterConfig;
 };
 

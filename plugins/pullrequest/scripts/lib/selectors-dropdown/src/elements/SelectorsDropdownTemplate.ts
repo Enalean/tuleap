@@ -28,17 +28,25 @@ export const DROPDOWN_CONTENT_CLASSNAME = "selectors-dropdown-content";
 const renderMenuItem = (
     host: InternalSelectorsDropdown,
     selector: SelectorEntry,
-): UpdateFunction<InternalSelectorsDropdown> => html`
-    <a
-        href="#"
-        class="tlp-dropdown-menu-item selectors-dropdown-menu-item"
-        role="menuitem"
-        data-test="menu-item"
-        onclick="${(): void => host.controller.openSidePanel(host, selector)}"
-    >
-        ${selector.entry_name}</a
-    >
-`;
+): UpdateFunction<InternalSelectorsDropdown> => {
+    const classes = {
+        "tlp-dropdown-menu-item": true,
+        "tlp-dropdown-menu-item-disabled": selector.isDisabled(),
+        "selectors-dropdown-menu-item": true,
+    };
+
+    return html`
+        <a
+            href="#"
+            class="${classes}"
+            role="menuitem"
+            data-test="menu-item"
+            onclick="${(): void => host.controller.openSidePanel(host, selector)}"
+        >
+            ${selector.entry_name}</a
+        >
+    `;
+};
 
 const renderSidePanel = (
     host: InternalSelectorsDropdown,
@@ -48,11 +56,13 @@ const renderSidePanel = (
     }
 
     return host.active_selector.match(
-        () => html`
-            <div class="selectors-dropdown-side-panel" data-test="side-panel">
-                <span class="selectors-dropdown-auto-completer"></span>
-            </div>
-        `,
+        () => {
+            return html`
+                <div class="selectors-dropdown-side-panel" data-test="side-panel">
+                    <span class="selectors-dropdown-auto-completer"></span>
+                </div>
+            `;
+        },
         () => html``,
     );
 };
