@@ -46,6 +46,7 @@ final class UpdateModuleController extends DispatchablePSR15Compatible
         private readonly WASMModulePathHelper $module_path_helper,
         private readonly LogModuleUploaded $history_saver,
         private readonly UpdateModuleActivation $module_activation,
+        private readonly MaxSizeProvider $max_size_provider,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
     ) {
@@ -66,6 +67,7 @@ final class UpdateModuleController extends DispatchablePSR15Compatible
 
         return $this->getUploadedModule($request)
             ->andThen($this->getMovableModule(...))
+            ->andThen(fn (UploadedFileInterface $file) => $this->checkModuleSize($file))
             ->andThen(fn (UploadedFileInterface $file) => $this->moveFile($tracker, $file))
             ->andThen(fn () => $this->activateModule($tracker))
             ->andThen(fn () => $this->logInProjectHistory($user, $tracker))
@@ -171,5 +173,24 @@ final class UpdateModuleController extends DispatchablePSR15Compatible
         $this->module_activation->activateModule($tracker->getId());
 
         return Result::ok(null);
+    }
+
+    /**
+     * @return Ok<UploadedFileInterface>|Err<Fault>
+     */
+    private function checkModuleSize(UploadedFileInterface $file): Ok | Err
+    {
+        $max_module_size_in_mb = $this->max_size_provider->getMaxSizeForModuleInMb();
+
+        if ($file->getSize() > $max_module_size_in_mb * (1024 ** 2)) {
+            return Result::err(Fault::fromMessage(
+                sprintf(
+                    dgettext('tuleap-tracker_cce', 'The maximum file size for the module is %sMB.'),
+                    $max_module_size_in_mb,
+                )
+            ));
+        }
+
+        return Result::ok($file);
     }
 }
