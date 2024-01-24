@@ -24,10 +24,10 @@ namespace integration\tests\WebAuthn\Challenge;
 
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DBFactory;
-use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Tuleap\WebAuthn\Challenge\WebAuthnChallengeDao;
 
-final class WebAuthnOptionsDaoTest extends TestCase
+final class WebAuthnOptionsDaoTest extends TestIntegrationTestCase
 {
     private WebAuthnChallengeDao $dao;
     private EasyDB $db;
@@ -40,13 +40,6 @@ final class WebAuthnOptionsDaoTest extends TestCase
     {
         $this->dao = new WebAuthnChallengeDao();
         $this->db  = DBFactory::getMainTuleapDBConnection()->getDB();
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-
-        $db->run('DELETE FROM webauthn_challenge');
     }
 
     public function testItCanSaveThenRetrieve(): void

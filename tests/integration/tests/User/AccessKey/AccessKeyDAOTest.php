@@ -23,9 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\User\AccessKey;
 
 use Tuleap\DB\DBFactory;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
 
-final class AccessKeyDAOTest extends \Tuleap\Test\PHPUnit\TestCase
+final class AccessKeyDAOTest extends TestIntegrationTestCase
 {
     /**
      * @var AccessKeyDAO
@@ -40,13 +41,6 @@ final class AccessKeyDAOTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->access_key_dao       = new AccessKeyDAO();
         $this->access_key_scope_dao = new AccessKeyScopeDAO();
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-
-        $db->run('DELETE user_access_key, user_access_key_scope FROM user_access_key, user_access_key_scope');
     }
 
     public function testKeyAndAssociatedScopesAreRemoved(): void

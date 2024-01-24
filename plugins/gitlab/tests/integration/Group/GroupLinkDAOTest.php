@@ -22,14 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Group;
 
-use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DBFactory;
 use Tuleap\Gitlab\API\Group\GitlabGroupApiDataRepresentation;
 use Tuleap\Gitlab\Group\Token\GroupLinkApiTokenDAO;
 use Tuleap\Test\Builders\ProjectTestBuilder;
-use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class GroupLinkDAOTest extends TestCase
+final class GroupLinkDAOTest extends TestIntegrationTestCase
 {
     private const GITLAB_GROUP_ID                = 99;
     private const NAME                           = 'lamany';
@@ -54,18 +53,6 @@ final class GroupLinkDAOTest extends TestCase
         $this->integrations_dao = new GroupLinkRepositoryIntegrationDAO();
         $this->token_dao        = new GroupLinkApiTokenDAO();
         $this->project          = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
-    }
-
-    protected function tearDown(): void
-    {
-        $this->getDB()->run('DELETE FROM plugin_gitlab_group_token');
-        $this->getDB()->run('DELETE FROM plugin_gitlab_group_repository_integration');
-        $this->getDB()->run('DELETE FROM plugin_gitlab_group');
-    }
-
-    private function getDB(): EasyDB
-    {
-        return DBFactory::getMainTuleapDBConnection()->getDB();
     }
 
     public function testCRUD(): void
@@ -149,11 +136,12 @@ final class GroupLinkDAOTest extends TestCase
 
     private function deleteGroupLink(GroupLink $group_link): void
     {
+        $db = DBFactory::getMainTuleapDBConnection()->getDB();
         $this->group_dao->deleteGroupLink($group_link);
         self::assertSame(0, $this->integrations_dao->countIntegratedRepositories($group_link));
         self::assertCount(
             0,
-            $this->getDB()->run('SELECT NULL FROM plugin_gitlab_group_token WHERE group_id = ?', $group_link->id)
+            $db->run('SELECT NULL FROM plugin_gitlab_group_token WHERE group_id = ?', $group_link->id)
         );
         self::assertFalse($this->group_dao->isGroupAlreadyLinked($group_link->gitlab_group_id));
         self::assertFalse($this->group_dao->isProjectAlreadyLinked($group_link->project_id));

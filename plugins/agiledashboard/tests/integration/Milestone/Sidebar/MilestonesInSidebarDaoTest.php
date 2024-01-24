@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Milestone\Sidebar;
 
-use Tuleap\DB\DBFactory;
-use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class MilestonesInSidebarDaoTest extends TestCase
+final class MilestonesInSidebarDaoTest extends TestIntegrationTestCase
 {
     private MilestonesInSidebarDao $dao;
     private const ACME_PROJECT_ID                = 1;
@@ -40,10 +39,7 @@ final class MilestonesInSidebarDaoTest extends TestCase
 
     public function tearDown(): void
     {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->query('TRUNCATE TABLE plugin_agiledashboard_milestones_in_sidebar_config');
         \ForgeConfig::clearFeatureFlag(MilestonesInSidebarDao::FEATURE_FLAG);
-        $db->run('DELETE FROM forgeconfig where name = CONCAT("feature_flag_", ?)', MilestonesInSidebarDao::FEATURE_FLAG);
     }
 
     public function testShouldSidebarDisplayLastMilestonesWhenFeatureFlagIsNotSet(): void

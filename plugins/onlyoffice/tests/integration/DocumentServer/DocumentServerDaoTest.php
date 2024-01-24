@@ -26,8 +26,9 @@ use org\bovigo\vfs\vfsStream;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\DB\DBFactory;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class DocumentServerDaoTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DocumentServerDaoTest extends TestIntegrationTestCase
 {
     private DocumentServerDao $dao;
     private DocumentServerKeyEncryption $encryption;
@@ -59,11 +60,6 @@ final class DocumentServerDaoTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function tearDown(): void
     {
-        $this->db->run('DELETE FROM plugin_onlyoffice_document_server');
-        $this->db->run('DELETE FROM plugin_onlyoffice_document_server_project_restriction');
-        $this->db->delete('groups', ['group_id' => $this->project_a_id]);
-        $this->db->delete('groups', ['group_id' => $this->project_b_id]);
-
         \ForgeConfig::set('sys_custom_dir', $this->old_sys_custom_dir);
     }
 

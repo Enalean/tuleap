@@ -26,25 +26,17 @@ namespace Tuleap\Tracker;
 use Tracker_Artifact_Exception_CannotRankWithMyself;
 use Tracker_Artifact_PriorityDao;
 use Tuleap\DB\DBFactory;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-class PriorityDaoTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PriorityDaoTest extends TestIntegrationTestCase
 {
-    /** @var Tracker_Artifact_PriorityDao */
-    private $dao;
-    /**
-     * @var \ParagonIE\EasyDB\EasyDB
-     */
-    private $db;
+    private Tracker_Artifact_PriorityDao $dao;
+    private \ParagonIE\EasyDB\EasyDB $db;
 
     protected function setUp(): void
     {
-        $this->dao = new Tracker_Artifact_PriorityDao();
         $this->db  = DBFactory::getMainTuleapDBConnection()->getDB();
-    }
-
-    protected function tearDown(): void
-    {
-        $this->db->run('TRUNCATE TABLE tracker_artifact_priority_rank');
+        $this->dao = new Tracker_Artifact_PriorityDao();
     }
 
     public function testItStartsWithEmptyTable()

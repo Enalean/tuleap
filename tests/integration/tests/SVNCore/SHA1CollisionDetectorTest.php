@@ -20,8 +20,9 @@
 
 namespace Tuleap\SVNCore;
 
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class SHA1CollisionDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SHA1CollisionDetectorTest extends TestIntegrationTestCase
 {
     public function testDetectsKnownCollision(): void
     {

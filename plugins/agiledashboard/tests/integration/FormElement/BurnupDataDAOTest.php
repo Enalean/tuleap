@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\FormElement;
 
-use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class BurnupDataDAOTest extends TestCase
+final class BurnupDataDAOTest extends TestIntegrationTestCase
 {
     private BurnupDataDAO $dao;
 

@@ -22,8 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Password\Reset;
 
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class LostPasswordDAOTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LostPasswordDAOTest extends TestIntegrationTestCase
 {
     private const TEST_USER_ID = 102;
 
@@ -35,11 +36,6 @@ final class LostPasswordDAOTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->dao = new LostPasswordDAO();
-    }
-
-    protected function tearDown(): void
-    {
-        $this->dao->deleteTokensByUserId(self::TEST_USER_ID);
     }
 
     public function testTokenCreationIsRateLimitedSoWeGetAnExceptionIfWeDontWaitEnoughTimeBetweenTwoCreationsForTheSameUser(): void

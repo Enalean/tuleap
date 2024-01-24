@@ -23,8 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\TrackerCCE\Logs;
 
 use Tuleap\DB\DBFactory;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class ModuleLogDaoTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ModuleLogDaoTest extends TestIntegrationTestCase
 {
     private ModuleLogDao $dao;
     private int $tracker_id;
@@ -36,8 +37,8 @@ final class ModuleLogDaoTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->dao                = new ModuleLogDao(\Tracker_ArtifactFactory::instance());
         $db                       = DBFactory::getMainTuleapDBConnection()->getDB();
+        $this->dao                = new ModuleLogDao(\Tracker_ArtifactFactory::instance());
         $this->tracker_id         = (int) $db->insertReturnId('tracker', ['group_id' => 100]);
         $this->artifact_id        = (int) $db->insertReturnId('tracker_artifact', [
             'tracker_id'              => $this->tracker_id,
@@ -62,15 +63,6 @@ final class ModuleLogDaoTest extends \Tuleap\Test\PHPUnit\TestCase
             'artifact_id'  => $this->other_artifact_id,
             'submitted_on' => 1234567890,
         ]);
-    }
-
-    protected function tearDown(): void
-    {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->run('DELETE FROM plugin_tracker_cce_module_log');
-        $db->run('DELETE FROM tracker WHERE id IN (?, ?)', $this->tracker_id, $this->other_tracker_id);
-        $db->run('DELETE FROM tracker_artifact WHERE id IN (?, ?)', $this->artifact_id, $this->other_artifact_id);
-        $db->run('DELETE FROM tracker_changeset WHERE id IN (?, ?)', $this->changeset_id, $this->other_changeset_id);
     }
 
     public function testItCanInsertANewPassedEntry(): void

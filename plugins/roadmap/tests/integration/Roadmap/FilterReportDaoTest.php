@@ -23,18 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Roadmap;
 
 use Tuleap\DB\DBFactory;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class FilterReportDaoTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FilterReportDaoTest extends TestIntegrationTestCase
 {
-    protected function tearDown(): void
-    {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-
-        $db->run('DELETE FROM plugin_roadmap_widget_filter');
-        $db->run('DELETE FROM plugin_roadmap_widget_trackers');
-        $db->run('DELETE FROM tracker_report');
-    }
-
     public function testSaveReportId(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();

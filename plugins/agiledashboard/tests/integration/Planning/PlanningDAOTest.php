@@ -23,8 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Planning;
 
 use Tuleap\DB\DBFactory;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class PlanningDAOTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PlanningDAOTest extends TestIntegrationTestCase
 {
     private PlanningDao $dao;
     private static int $not_milestone_tracker_id;
@@ -46,13 +47,6 @@ final class PlanningDAOTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->dao = new PlanningDao();
-    }
-
-    protected function tearDown(): void
-    {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->run('DELETE FROM plugin_agiledashboard_planning');
-        $db->run('DELETE FROM plugin_agiledashboard_planning_backlog_tracker');
     }
 
     public static function tearDownAfterClass(): void

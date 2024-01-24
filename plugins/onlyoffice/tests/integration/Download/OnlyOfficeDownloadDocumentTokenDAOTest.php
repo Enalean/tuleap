@@ -22,22 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\OnlyOffice\Download;
 
-use Tuleap\DB\DBFactory;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class OnlyOfficeDownloadDocumentTokenDAOTest extends \Tuleap\Test\PHPUnit\TestCase
+final class OnlyOfficeDownloadDocumentTokenDAOTest extends TestIntegrationTestCase
 {
     private OnlyOfficeDownloadDocumentTokenDAO $dao;
 
     protected function setUp(): void
     {
         $this->dao = new OnlyOfficeDownloadDocumentTokenDAO();
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-
-        $db->run('DELETE FROM plugin_onlyoffice_download_document_token');
     }
 
     public function testCanProcessANonExpiredToken(): void

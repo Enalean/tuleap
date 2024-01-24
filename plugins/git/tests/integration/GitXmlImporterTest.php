@@ -54,11 +54,12 @@ use Tuleap\Git\Permissions\FineGrainedPermission;
 use Tuleap\Git\Repository\Settings\ArtifactClosure\ConfigureAllowArtifactClosure;
 use Tuleap\Git\Tests\Stub\DefaultBranch\DefaultBranchUpdateExecutorStub;
 use Tuleap\TemporaryTestDirectory;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use UGroupManager;
 use UserManager;
 use XMLImportHelper;
 
-final class GitXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GitXmlImporterTest extends TestIntegrationTestCase
 {
     use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;
@@ -140,7 +141,6 @@ final class GitXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->old_cwd        = getcwd();
         $this->system_command = new System_Command();
-        parent::setUp();
 
         $sys_data_dir = $this->getTmpDir();
         ForgeConfig::set('sys_data_dir', $sys_data_dir);

@@ -25,44 +25,36 @@ namespace Tuleap\ProgramManagement\Adapter\Program;
 use Tuleap\DB\DBFactory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementHasNoProgramException;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class ProgramDaoTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProgramDaoTest extends TestIntegrationTestCase
 {
     private const PROGRAM_INCREMENT_TRACKER_ID = 60;
     private const PROGRAM_ID                   = 115;
     private static int $valid_artifact_id;
     private ProgramDaoProject $dao;
 
-    public static function setUpBeforeClass(): void
+    protected function setUp(): void
     {
-        $db                      = DBFactory::getMainTuleapDBConnection()->getDB();
+        $db = DBFactory::getMainTuleapDBConnection()->getDB();
+
+        $this->dao = new ProgramDaoProject();
+
         self::$valid_artifact_id = (int) $db->insertReturnId(
             'tracker_artifact',
             [
-                'tracker_id'               => self::PROGRAM_INCREMENT_TRACKER_ID,
-                'last_changeset_id'        => 3987,
-                'submitted_by'             => 143,
-                'submitted_on'             => 1234567890,
+                'tracker_id' => self::PROGRAM_INCREMENT_TRACKER_ID,
+                'last_changeset_id' => 3987,
+                'submitted_by' => 143,
+                'submitted_on' => 1234567890,
                 'use_artifact_permissions' => 0,
-                'per_tracker_artifact_id'  => 1,
+                'per_tracker_artifact_id' => 1,
             ]
         );
         $db->insert('plugin_program_management_program', [
-            'program_project_id'           => self::PROGRAM_ID,
+            'program_project_id' => self::PROGRAM_ID,
             'program_increment_tracker_id' => self::PROGRAM_INCREMENT_TRACKER_ID,
         ]);
-    }
-
-    protected function setUp(): void
-    {
-        $this->dao = new ProgramDaoProject();
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->delete('tracker_artifact', ['id' => self::$valid_artifact_id]);
-        $db->run('DELETE FROM plugin_program_management_program');
     }
 
     public function testItRetrievesProgramOfProgramIncrement(): void

@@ -36,9 +36,10 @@ use GitRepositoryFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use Tuleap\TemporaryTestDirectory;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use UserManager;
 
-abstract class GitoliteTestCase extends \Tuleap\Test\PHPUnit\TestCase
+abstract class GitoliteTestCase extends TestIntegrationTestCase
 {
     use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;
@@ -92,7 +93,6 @@ abstract class GitoliteTestCase extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        parent::setUp();
         $this->cwd                = getcwd();
         $this->fixtures_dir       = __DIR__ . '/_fixtures';
         $tmpDir                   = $this->getTmpDir();
@@ -153,7 +153,6 @@ abstract class GitoliteTestCase extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function tearDown(): void
     {
-        parent::tearDown();
         chdir($this->cwd);
         \ForgeConfig::set('sys_data_dir', $this->backup_sys_data_dir);
     }

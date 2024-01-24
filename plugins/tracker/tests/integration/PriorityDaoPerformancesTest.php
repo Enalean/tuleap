@@ -25,19 +25,16 @@ namespace Tuleap\Tracker;
 
 use Tracker_Artifact_PriorityDao;
 use Tuleap\DB\DBFactory;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
 /**
  * Also need to increase the memory limit to execute properly
  * @group ToFatToRun
  */
-class PriorityDaoPerformancesTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PriorityDaoPerformancesTest extends TestIntegrationTestCase
 {
-    /** @var Tracker_Artifact_PriorityDao */
-    private $dao;
-    /**
-     * @var \ParagonIE\EasyDB\EasyDB
-     */
-    private $db;
+    private Tracker_Artifact_PriorityDao $dao;
+    private \ParagonIE\EasyDB\EasyDB $db;
 
     public function setUp(): void
     {
@@ -184,7 +181,6 @@ class PriorityDaoPerformancesTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function generateRandomArtifactPriorities($n)
     {
-        $this->db->run('TRUNCATE TABLE tracker_artifact_priority_rank');
         $artifact_ids = range(1, $n);
         shuffle($artifact_ids);
 

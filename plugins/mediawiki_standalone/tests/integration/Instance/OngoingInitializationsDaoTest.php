@@ -25,9 +25,9 @@ namespace Tuleap\MediawikiStandalone\Instance;
 use Tuleap\DB\DBFactory;
 use Tuleap\MediawikiStandalone\Service\MediawikiFlavorUsageDao;
 use Tuleap\Test\Builders\ProjectTestBuilder;
-use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class OngoingInitializationsDaoTest extends TestCase
+final class OngoingInitializationsDaoTest extends TestIntegrationTestCase
 {
     private OngoingInitializationsDao $dao;
     private \Project $project;
@@ -36,14 +36,6 @@ final class OngoingInitializationsDaoTest extends TestCase
     {
         $this->dao     = new OngoingInitializationsDao(new MediawikiFlavorUsageDao());
         $this->project = ProjectTestBuilder::aProject()->build();
-    }
-
-    protected function tearDown(): void
-    {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-
-        $db->run('DELETE FROM plugin_mediawiki_standalone_ongoing_initializations');
-        $db->run('DELETE FROM plugin_mediawiki_database');
     }
 
     public function testStartOngoingMigration(): void

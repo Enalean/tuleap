@@ -27,8 +27,9 @@ use Tuleap\DB\DBFactory;
 use Tuleap\OAuth2ServerCore\App\AppDao;
 use Tuleap\OAuth2ServerCore\App\NewOAuth2App;
 use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCodeDAO;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class OAuth2RefreshTokenDAOTest extends \Tuleap\Test\PHPUnit\TestCase
+final class OAuth2RefreshTokenDAOTest extends TestIntegrationTestCase
 {
     /**
      * @var int
@@ -113,12 +114,6 @@ final class OAuth2RefreshTokenDAOTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->dao = new OAuth2RefreshTokenDAO();
-    }
-
-    protected function tearDown(): void
-    {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->run('DELETE FROM oauth2_refresh_token');
     }
 
     public static function tearDownAfterClass(): void

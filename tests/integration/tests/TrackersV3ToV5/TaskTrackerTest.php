@@ -46,9 +46,10 @@ use Tracker_SemanticFactory;
 use TrackerFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Tuleap\Tracker\DateReminder\DateReminderDao;
 
-class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
+class TaskTrackerTest extends TestIntegrationTestCase
 {
     use GlobalLanguageMock;
 

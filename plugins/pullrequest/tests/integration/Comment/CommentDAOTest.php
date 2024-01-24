@@ -22,25 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Comment;
 
-use Tuleap\DB\DBFactory;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class CommentDAOTest extends TestCase
+final class CommentDAOTest extends TestIntegrationTestCase
 {
     private Dao $dao;
-
     protected function setUp(): void
     {
         $this->dao = new Dao();
-    }
-
-    protected function tearDown(): void
-    {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->run('DELETE FROM plugin_pullrequest_comments');
     }
 
     public function testItInsertsAndUpdatesContentAndLastEditionDate(): void

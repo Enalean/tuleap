@@ -22,11 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Reviewer\Change;
 
-use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DBFactory;
 use Tuleap\PullRequest\Reviewer\ReviewerDAO;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class ReviewerChangeDAOTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ReviewerChangeDAOTest extends TestIntegrationTestCase
 {
     /** @var int */
     private static $pr_reviewer_1_id;
@@ -35,40 +35,22 @@ final class ReviewerChangeDAOTest extends \Tuleap\Test\PHPUnit\TestCase
     /** @var int */
     private static $pr_reviewer_3_id;
 
-    public static function setUpBeforeClass(): void
+    protected function setUp(): void
     {
-        self::$pr_reviewer_1_id = self::createUser('pr_reviewer_1');
-        self::$pr_reviewer_2_id = self::createUser('pr_reviewer_2');
-        self::$pr_reviewer_3_id = self::createUser('pr_reviewer_3');
+        self::$pr_reviewer_1_id = $this->createUser('pr_reviewer_1');
+        self::$pr_reviewer_2_id = $this->createUser('pr_reviewer_2');
+        self::$pr_reviewer_3_id = $this->createUser('pr_reviewer_3');
     }
 
-    private static function createUser(string $username): int
-    {
-        return (int) DBFactory::getMainTuleapDBConnection()->getDB()->insertReturnId(
-            'user',
-            [
-                'user_name' => 'pr_reviewer_1',
-                'email' => 'pr_reviewer_1@example.com',
-            ]
-        );
-    }
-
-    protected function tearDown(): void
+    private function createUser(string $username): int
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->run('DELETE FROM plugin_pullrequest_reviewer_change');
-        $db->run('DELETE FROM plugin_pullrequest_reviewer_change_user');
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        $user_to_delete_condition = EasyStatement::open()->in(
-            'user_id IN (?*)',
-            [self::$pr_reviewer_1_id, self::$pr_reviewer_2_id, self::$pr_reviewer_3_id]
-        );
-        DBFactory::getMainTuleapDBConnection()->getDB()->safeQuery(
-            "DELETE FROM user WHERE $user_to_delete_condition",
-            $user_to_delete_condition->values()
+        return (int) $db->insertReturnId(
+            'user',
+            [
+                'user_name' => $username,
+                'email' => 'pr_reviewer_1@example.com',
+            ]
         );
     }
 

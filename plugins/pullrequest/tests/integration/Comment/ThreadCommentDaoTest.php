@@ -23,14 +23,15 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\Comment;
 
 use Tuleap\DB\DBFactory;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class ThreadCommentDaoTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ThreadCommentDaoTest extends TestIntegrationTestCase
 {
     private const PULL_REQUEST_1_ID = 1;
     private const FIRST_COMMENT_ID  = 1;
     private const SECOND_COMMENT_ID = 2;
 
-    public static function setUpBeforeClass(): void
+    protected function setUp(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
         $db->insert(
@@ -66,16 +67,6 @@ final class ThreadCommentDaoTest extends \Tuleap\Test\PHPUnit\TestCase
                 'parent_id' => '0',
             ]
         );
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-
-        $db->safeQuery("DELETE FROM plugin_pullrequest_git_reference WHERE pr_id=1");
-
-        $db->safeQuery("DELETE FROM plugin_pullrequest_comments WHERE pull_request_id=1");
-        $db->safeQuery("DELETE FROM plugin_pullrequest_inline_comments WHERE pull_request_id=1");
     }
 
     public function testItRetrievesThreads(): void

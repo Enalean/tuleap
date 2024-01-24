@@ -23,12 +23,11 @@ declare(strict_types=1);
 namespace integration\tests\Project\Admin\History;
 
 use ProjectHistoryDao;
-use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-class ProjectHistoryDaoTest extends TestCase
+class ProjectHistoryDaoTest extends TestIntegrationTestCase
 {
     private \Project $project;
     private \PFUser $project_admin;
@@ -44,12 +43,6 @@ class ProjectHistoryDaoTest extends TestCase
         $this->project_admin = UserTestBuilder::aUser()->withId($project_admin_id)->build();
         $this->another_admin = UserTestBuilder::aUser()->withId($another_admin_id)->build();
         $this->now           = new \DateTimeImmutable('now');
-    }
-
-    protected function tearDown(): void
-    {
-        DBFactory::getMainTuleapDBConnection()->getDB()->run('DELETE FROM group_history');
-        DBFactory::getMainTuleapDBConnection()->getDB()->delete('user', ['user_id' => $this->project_admin->getId()]);
     }
 
     public function testAddHistory(): void

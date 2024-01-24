@@ -24,9 +24,9 @@ namespace Tuleap\AgileDashboard\Milestone\Sidebar;
 
 use Tuleap\AgileDashboard\Builders\DatabaseBuilder;
 use Tuleap\DB\DBFactory;
-use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class MilestoneDaoTest extends TestCase
+final class MilestoneDaoTest extends TestIntegrationTestCase
 {
     private MilestoneDao $dao;
 
@@ -54,22 +54,6 @@ final class MilestoneDaoTest extends TestCase
      * }
      */
     private array $sprint_status_values = ['open' => [], 'closed' => []];
-
-    public static function setUpBeforeClass(): void
-    {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->run('DELETE FROM plugin_agiledashboard_planning');
-        $db->run('DELETE FROM tracker_artifact');
-        $db->run('DELETE FROM tracker_hierarchy');
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->run('DELETE FROM plugin_agiledashboard_planning');
-        $db->run('DELETE FROM tracker_artifact');
-        $db->run('DELETE FROM tracker_hierarchy');
-    }
 
     protected function setUp(): void
     {
