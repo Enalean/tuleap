@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField;
 
+use ProjectManager;
 use Tracker;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
@@ -104,6 +105,8 @@ final class EqualComparisonTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
+        ProjectManager::clearInstance();
+
         $this->db = DBFactory::getMainTuleapDBConnection()->getDB();
         \ForgeConfig::set("feature_flag_" . SearchOnDuckTypedFieldsConfig::FEATURE_FLAG_SEARCH_DUCK_TYPED_FIELDS, '1');
         $this->database_builder = new DatabaseBuilder($this->db);
