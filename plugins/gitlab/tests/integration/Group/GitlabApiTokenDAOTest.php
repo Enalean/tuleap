@@ -83,16 +83,18 @@ final class GitlabApiTokenDAOTest extends TestCase
 
     private function buildGroupLink(): GroupLink
     {
-        $row['id']                        = self::GROUP_LINK_ID;
-        $row['gitlab_group_id']           = 10;
-        $row['project_id']                = 102;
-        $row['name']                      = "Troublemaker";
-        $row['full_path']                 = "https://gitlab.example.com/Troublemaker/";
-        $row['web_url']                   = "https://gitlab.example.com/Troublemaker/";
-        $row['avatar_url']                = "https://gitlab.example.com/Troublemaker/avatar";
-        $row['last_synchronization_date'] = (new DateTimeImmutable())->getTimestamp();
-        $row['allow_artifact_closure']    = false;
-        $row['create_branch_prefix']      = "lol-";
+        $row = [
+            'id'                        => self::GROUP_LINK_ID,
+            'gitlab_group_id'           => 10,
+            'project_id'                => 102,
+            'name'                      => 'Troublemaker',
+            'full_path'                 => 'https://gitlab.example.com/Troublemaker/',
+            'web_url'                   => 'https://gitlab.example.com/Troublemaker/',
+            'avatar_url'                => 'https://gitlab.example.com/Troublemaker/avatar',
+            'last_synchronization_date' => (new DateTimeImmutable())->getTimestamp(),
+            'allow_artifact_closure'    => 0,
+            'create_branch_prefix'      => 'lol-',
+        ];
         return GroupLink::buildGroupLinkFromRow($row);
     }
 }

@@ -165,6 +165,6 @@ final class GroupLinkDAOTest extends TestCase
         $new_last_sync_date = 1685106363;
         $this->group_dao->updateSynchronizationDate($group_link, new \DateTimeImmutable('@' . $new_last_sync_date));
         $updated_group_link = $this->group_dao->retrieveGroupLink($group_link->id);
-        self::assertSame($new_last_sync_date, $updated_group_link->last_synchronization_date->getTimestamp());
+        self::assertSame($new_last_sync_date, $updated_group_link?->last_synchronization_date->getTimestamp());
     }
 }

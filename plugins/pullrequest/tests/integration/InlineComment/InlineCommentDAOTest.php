@@ -86,6 +86,7 @@ final class InlineCommentDAOTest extends TestCase
 
         $this->dao->saveUpdatedComment($updated_comment);
         $updated_row = $this->dao->searchByCommentID($inline_comment_id);
+        self::assertNotNull($updated_row);
         self::assertSame($new_content, $updated_row['content']);
         self::assertSame($edition_date->getTimestamp(), $updated_row['last_edition_date']);
     }
@@ -154,13 +155,13 @@ final class InlineCommentDAOTest extends TestCase
     /** @psalm-return list<int> */
     private function mapRowsToIds(array $rows): array
     {
-        return array_map(static fn(array $row) => $row['id'], $rows);
+        return array_values(array_map(static fn(array $row): int => $row['id'], $rows));
     }
 
     /** @psalm-return list<int> */
     private function mapCommentsToIds(array $comments): array
     {
-        return array_map(static fn(InlineComment $comment) => $comment->getId(), $comments);
+        return array_values(array_map(static fn(InlineComment $comment) => $comment->getId(), $comments));
     }
 
     private function markCommentAsOutdated(int $comment_id, int $unidiff_offset): void

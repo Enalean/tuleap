@@ -182,6 +182,7 @@ class NotificationSettingsDuplicatorTest extends TestCase
 
         $new_notification_id = $db->column('SELECT * FROM tracker_global_notification WHERE tracker_id = ?', [$new_tracker_id]);
         $users               = $db->safeQuery('SELECT * FROM tracker_global_notification_users WHERE notification_id = ?', $new_notification_id);
+        self::assertIsArray($users);
         self::assertCount(1, $users);
         self::assertEquals(777, $users[0]['user_id']);
     }

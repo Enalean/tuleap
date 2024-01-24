@@ -107,7 +107,10 @@ final class GitlabRepositoryIntegrationDaoTest extends \Tuleap\Test\PHPUnit\Test
 
     private function retrieveIntegration(int $integration_id): GitlabRepositoryIntegration
     {
-        $row     = $this->repository_dao->searchIntegrationById($integration_id);
+        $row = $this->repository_dao->searchIntegrationById($integration_id);
+        if ($row === null) {
+            throw new \Exception("Expected to retrieve integration #{$integration_id}");
+        }
         $project = ProjectTestBuilder::aProject()->withId($row['project_id'])->build();
         return new GitlabRepositoryIntegration(
             $row['id'],

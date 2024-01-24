@@ -26,14 +26,8 @@ use Tuleap\DB\DBFactory;
 
 final class PlanningDAOTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var PlanningDao
-     */
-    private $dao;
-    /**
-     * @var int
-     */
-    private static $not_milestone_tracker_id;
+    private PlanningDao $dao;
+    private static int $not_milestone_tracker_id;
 
     public static function setUpBeforeClass(): void
     {
@@ -173,16 +167,17 @@ final class PlanningDAOTest extends \Tuleap\Test\PHPUnit\TestCase
         $planning_id               = $this->dao->createPlanning($project_id, $planning);
 
         $planning_rows_by_project = $this->dao->searchByProjectId($project_id);
-        assert(count($planning_rows_by_project) > 0);
+        self::assertCount(1, $planning_rows_by_project);
         $this->assertContains($planning_id, $planning_rows_by_project[0]);
 
         $planning_row_by_milestone_tracker = $this->dao->searchByMilestoneTrackerId($milestone_tracker_id);
+        self::assertNotNull($planning_row_by_milestone_tracker);
         $this->assertContains($planning_id, $planning_row_by_milestone_tracker);
 
         $planning_rows_by_multiple_milestone_trackers = $this->dao->searchByMilestoneTrackerIds(
             [$milestone_tracker_id, 404]
         );
-        assert(count($planning_rows_by_multiple_milestone_trackers) > 0);
+        self::assertCount(1, $planning_rows_by_multiple_milestone_trackers);
         $this->assertContains($planning_id, $planning_rows_by_multiple_milestone_trackers[0]);
 
         $milestone_tracker_row = $this->dao->searchMilestoneTrackerIdsByProjectId($project_id);
@@ -190,18 +185,18 @@ final class PlanningDAOTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $not_milestone_tracker_rows = [];
         $non_planning_rows          = $this->dao->searchNonPlanningTrackersByGroupId($project_id);
-        assert($non_planning_rows !== false);
+        self::assertNotFalse($non_planning_rows);
         foreach ($non_planning_rows as $row) {
             $not_milestone_tracker_rows[] = $row['id'];
         }
         $this->assertContains((string) self::$not_milestone_tracker_id, $not_milestone_tracker_rows);
 
         $planning_rows_by_backlog_tracker = $this->dao->searchByBacklogTrackerId($first_backlog_tracker_id);
-        assert(count($planning_rows_by_backlog_tracker) > 0);
+        self::assertCount(1, $planning_rows_by_backlog_tracker);
         $this->assertContains($planning_id, $planning_rows_by_backlog_tracker[0]);
 
         $backlog_tracker_rows = $this->dao->searchBacklogTrackersByTrackerId($first_backlog_tracker_id);
-        assert(count($backlog_tracker_rows) > 0);
+        self::assertCount(1, $backlog_tracker_rows);
         $this->assertContains($first_backlog_tracker_id, $backlog_tracker_rows[0]);
 
         $backlog_tracker_rows_by_project = $this->dao->searchBacklogTrackerIdsByProjectId($project_id);

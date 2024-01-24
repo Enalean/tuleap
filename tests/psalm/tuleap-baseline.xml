@@ -2480,34 +2480,11 @@
       <code>$result</code>
     </PossiblyUndefinedVariable>
   </file>
-  <file src="plugins/agiledashboard/tests/integration/Milestone/Sidebar/MilestoneDaoTest.php">
-    <InvalidPropertyAssignmentValue>
-      <code>[]</code>
-      <code>[]</code>
-    </InvalidPropertyAssignmentValue>
-  </file>
-  <file src="plugins/agiledashboard/tests/integration/Milestone/Sidebar/MilestonesInSidebarDaoTest.php">
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->dao]]></code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch>
-      <code><![CDATA[$this->dao]]></code>
-      <code><![CDATA[$this->dao]]></code>
-      <code><![CDATA[$this->dao]]></code>
-      <code><![CDATA[$this->dao]]></code>
-      <code><![CDATA[$this->dao]]></code>
-      <code><![CDATA[$this->dao]]></code>
-      <code><![CDATA[$this->dao]]></code>
-    </UndefinedThisPropertyFetch>
-  </file>
   <file src="plugins/agiledashboard/tests/integration/Planning/PlanningDAOTest.php">
     <DeprecatedMethod>
       <code>$non_planning_rows</code>
       <code>$non_planning_rows</code>
     </DeprecatedMethod>
-    <PossiblyNullArgument>
-      <code>$planning_row_by_milestone_tracker</code>
-    </PossiblyNullArgument>
   </file>
   <file src="plugins/api_explorer/include/Specification/Swagger/SwaggerJsonPathsAndDefinitions.php">
     <PossiblyInvalidArgument>
@@ -2724,11 +2701,6 @@
     <MissingReturnType>
       <code>getPluginInfo</code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/baseline/tests/integration/Adapter/RoleAssignmentRepositoryAdapterTest.php">
-    <MissingImmutableAnnotation>
-      <code>class implements ProjectIdentifier {</code>
-    </MissingImmutableAnnotation>
   </file>
   <file src="plugins/botmattermost/include/BotMattermost/Bot/BotDao.php">
     <InvalidReturnStatement>
@@ -20282,42 +20254,6 @@
       <code>$references_collections</code>
     </NamedArgumentNotAllowed>
   </file>
-  <file src="plugins/gitlab/tests/integration/Group/GitlabApiTokenDAOTest.php">
-    <InvalidArgument>
-      <code>$row</code>
-    </InvalidArgument>
-    <PossiblyUndefinedVariable>
-      <code>$row</code>
-    </PossiblyUndefinedVariable>
-  </file>
-  <file src="plugins/gitlab/tests/integration/Group/GroupLinkDAOTest.php">
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$updated_group_link->last_synchronization_date]]></code>
-    </PossiblyNullPropertyFetch>
-    <PossiblyNullReference>
-      <code>getTimestamp</code>
-    </PossiblyNullReference>
-  </file>
-  <file src="plugins/gitlab/tests/integration/Repository/GitlabRepositoryIntegrationDaoTest.php">
-    <PossiblyNullArgument>
-      <code><![CDATA[$row['description']]]></code>
-      <code><![CDATA[$row['gitlab_repository_id']]]></code>
-      <code><![CDATA[$row['gitlab_repository_url']]]></code>
-      <code><![CDATA[$row['id']]]></code>
-      <code><![CDATA[$row['name']]]></code>
-      <code><![CDATA[$row['project_id']]]></code>
-    </PossiblyNullArgument>
-    <PossiblyNullArrayAccess>
-      <code><![CDATA[$row['allow_artifact_closure']]]></code>
-      <code><![CDATA[$row['description']]]></code>
-      <code><![CDATA[$row['gitlab_repository_id']]]></code>
-      <code><![CDATA[$row['gitlab_repository_url']]]></code>
-      <code><![CDATA[$row['id']]]></code>
-      <code><![CDATA[$row['last_push_date']]]></code>
-      <code><![CDATA[$row['name']]]></code>
-      <code><![CDATA[$row['project_id']]]></code>
-    </PossiblyNullArrayAccess>
-  </file>
   <file src="plugins/gitlfs/include/Admin/AdminDao.php">
     <MissingParamType>
       <code>$new_max_file_value</code>
@@ -28102,43 +28038,6 @@
       <code>isReferenceAPullRequestReference</code>
       <code>markManuallyMerged</code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/pullrequest/tests/integration/Comment/CommentDAOTest.php">
-    <PossiblyNullArgument>
-      <code>$comment_row</code>
-    </PossiblyNullArgument>
-    <PossiblyNullArrayAccess>
-      <code><![CDATA[$updated_row['content']]]></code>
-      <code><![CDATA[$updated_row['last_edition_date']]]></code>
-    </PossiblyNullArrayAccess>
-  </file>
-  <file src="plugins/pullrequest/tests/integration/InlineComment/InlineCommentDAOTest.php">
-    <LessSpecificReturnStatement>
-      <code><![CDATA[array_map(static fn(InlineComment $comment) => $comment->getId(), $comments)]]></code>
-      <code><![CDATA[array_map(static fn(array $row) => $row['id'], $rows)]]></code>
-    </LessSpecificReturnStatement>
-    <MissingClosureReturnType>
-      <code><![CDATA[static fn(array $row) => $row['id']]]></code>
-    </MissingClosureReturnType>
-    <MoreSpecificReturnType>
-      <code><![CDATA[list<int>]]></code>
-      <code><![CDATA[list<int>]]></code>
-    </MoreSpecificReturnType>
-    <PossiblyNullArrayAccess>
-      <code><![CDATA[$updated_row['content']]]></code>
-      <code><![CDATA[$updated_row['last_edition_date']]]></code>
-    </PossiblyNullArrayAccess>
-  </file>
-  <file src="plugins/pullrequest/tests/integration/PullRequestUpdaterTest.php">
-    <PossiblyNullArrayAccess>
-      <code><![CDATA[$pr1['sha1_src']]]></code>
-      <code><![CDATA[$pr1['sha1_src']]]></code>
-      <code><![CDATA[$pr1['sha1_src']]]></code>
-      <code><![CDATA[$pr2['sha1_src']]]></code>
-      <code><![CDATA[$pr2['sha1_src']]]></code>
-      <code><![CDATA[$pr2['sha1_src']]]></code>
-      <code><![CDATA[$pr3['sha1_src']]]></code>
-    </PossiblyNullArrayAccess>
   </file>
   <file src="plugins/roadmap/include/Roadmap/Widget/RoadmapConfigureAtXMLImport.php">
     <PossiblyNullArgument>
@@ -50199,23 +50098,6 @@
       <code>$field_mapping</code>
       <code>$field_mapping</code>
     </PossiblyUndefinedVariable>
-  </file>
-  <file src="plugins/tracker/tests/integration/Tracker/Notifications/Settings/CalendarEventConfigDaoTest.php">
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->dao]]></code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch>
-      <code><![CDATA[$this->dao]]></code>
-      <code><![CDATA[$this->dao]]></code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/tests/integration/Tracker/Notifications/Settings/NotificationSettingsDuplicatorTest.php">
-    <PossiblyInvalidArgument>
-      <code>$users</code>
-    </PossiblyInvalidArgument>
-    <PossiblyInvalidArrayAccess>
-      <code>$users[0]</code>
-    </PossiblyInvalidArrayAccess>
   </file>
   <file src="plugins/tracker_date_reminder/include/ArtifactDateReminder.class.php">
     <DeprecatedFunction>
@@ -78092,17 +77974,6 @@
       <code>andReturns</code>
     </UndefinedMagicMethod>
   </file>
-  <file src="tests/integration/tests/Project/Admin/History/ProjectHistoryDaoTest.php">
-    <TooManyArguments>
-      <code>create</code>
-    </TooManyArguments>
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->another_admin]]></code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch>
-      <code><![CDATA[$this->another_admin]]></code>
-    </UndefinedThisPropertyFetch>
-  </file>
   <file src="tests/integration/tests/TrackersV3ToV5/DefectTrackerTest.php">
     <MissingParamType>
       <code>$columns</code>
@@ -78205,11 +78076,6 @@
       <code>getLabel</code>
       <code>getListValueById</code>
     </PossiblyNullReference>
-  </file>
-  <file src="tests/integration/tests/dao/UserDaoTest.php">
-    <TooManyArguments>
-      <code>create</code>
-    </TooManyArguments>
   </file>
   <file src="tests/lib/Stubs/ExtractReferencesStub.php">
     <LessSpecificReturnStatement>

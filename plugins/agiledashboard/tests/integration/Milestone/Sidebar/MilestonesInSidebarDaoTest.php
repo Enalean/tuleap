@@ -27,6 +27,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class MilestonesInSidebarDaoTest extends TestCase
 {
+    private MilestonesInSidebarDao $dao;
     private const ACME_PROJECT_ID                = 1;
     private const DUNDER_MIFFLIN_PROJECT_ID      = 2;
     private const SKYNET_PROJECT_ID              = 3;

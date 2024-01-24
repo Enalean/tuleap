@@ -60,6 +60,7 @@ final class CommentDAOTest extends TestCase
         $comment_id = $this->dao->create($new_comment);
 
         $comment_row = $this->dao->searchByCommentID($comment_id);
+        self::assertNotNull($comment_row);
         self::assertEquals([
             'id'                => $comment_id,
             'pull_request_id'   => $new_comment->pull_request->getId(),
@@ -79,6 +80,7 @@ final class CommentDAOTest extends TestCase
 
         $this->dao->updateComment($updated_comment);
         $updated_row = $this->dao->searchByCommentID($comment_id);
+        self::assertNotNull($updated_row);
         self::assertSame($new_content, $updated_row['content']);
         self::assertSame($edition_date->getTimestamp(), $updated_row['last_edition_date']);
     }
