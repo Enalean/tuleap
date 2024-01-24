@@ -135,7 +135,7 @@ services:
       - prom-data:/prometheus
 
   meilisearch:
-    image: getmeili/meilisearch:v0.29.2
+    image: getmeili/meilisearch:v1.6.0@sha256:5d43759296bfd10786bc08fce9df04792baae1ab7484710c1f635492087762c7
     volumes:
       - meilisearch-data:/meili_data
     environment:
