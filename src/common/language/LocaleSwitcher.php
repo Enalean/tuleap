@@ -22,8 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Language;
 
-final class LocaleSwitcher
+use Tuleap\Disposable\Disposable;
+use Tuleap\Disposable\Dispose;
+
+final class LocaleSwitcher implements Disposable
 {
+    private string $previous_locale = '';
+
     public function setLocale(string $locale): void
     {
         $this->setLocaleFromFullLocale("$locale.UTF-8");
@@ -36,13 +41,17 @@ final class LocaleSwitcher
      */
     public function setLocaleForSpecificExecutionContext(string $locale, callable $execution_context): mixed
     {
-        $current_locale = $this->currentLocale();
-
-        try {
+        $this->previous_locale = $this->currentLocale();
+        return Dispose::using($this, function () use ($locale, $execution_context) {
             $this->setLocale($locale);
             return $execution_context();
-        } finally {
-            $this->setLocaleFromFullLocale($current_locale);
+        });
+    }
+
+    public function dispose(): void
+    {
+        if ($this->previous_locale !== '') {
+            $this->setLocaleFromFullLocale($this->previous_locale);
         }
     }
 

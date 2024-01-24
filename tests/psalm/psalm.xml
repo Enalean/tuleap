@@ -25,6 +25,7 @@
         <directory name="tests/phpcs/TuleapCodingStandard/" />
         <directory name="tests/integration/tests/*/" />
         <directory name="tests/unit/Tuleap/" />
+        <directory name="tests/unit/common/Disposable/" />
         <directory name="tests/unit/common/NeverThrow/" />
         <directory name="tests/unit/common/Option/" />
         <directory name="tests/unit/common/Project/Registration/" />

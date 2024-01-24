@@ -25,7 +25,7 @@ namespace Tuleap\NeverThrow;
 final class Result
 {
     /**
-     * Intentionally private. This class should not have instances. All methods are static so that the file can be autoloaded.
+     * Intentionally private. This class should not have instances.
      */
     private function __construct()
     {
