@@ -29,8 +29,22 @@
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
 import "@tuleap/plugin-pullrequest-selectors-dropdown";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { DISPLAY_TULEAP_API_ERROR, REPOSITORY_ID } from "../../injection-symbols";
+import { AuthorSelectorEntry } from "./Author/AuthorSelectorEntry";
 
 const { $gettext } = useGettext();
 
-const selectors_entries = [{ entry_name: $gettext("Author") }];
+const repository_id = strictInject(REPOSITORY_ID);
+const displayTuleapAPIFault = strictInject(DISPLAY_TULEAP_API_ERROR);
+
+const selectors_entries = [AuthorSelectorEntry($gettext, displayTuleapAPIFault, repository_id)];
 </script>
+
+<style lang="scss">
+.pull-request-autocompleter-avatar {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+</style>

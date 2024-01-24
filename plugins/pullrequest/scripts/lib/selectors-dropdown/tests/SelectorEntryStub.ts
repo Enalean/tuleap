@@ -17,8 +17,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export { SelectorsDropdown } from "./elements/SelectorsDropdown";
-export type {
-    SelectorEntry,
-    SelectorsDropdownLoadItemsCallback,
-} from "./elements/SelectorsDropdown";
+import { html } from "hybrids";
+import type { SelectorEntry } from "../src/elements/SelectorsDropdown";
+
+export const SelectorEntryStub = {
+    withEntryName: (entry_name: string): SelectorEntry => ({
+        entry_name,
+        config: {
+            placeholder: "Hold the place",
+            group: {
+                label: "Test",
+                empty_message: "Nothing to see here",
+                is_loading: false,
+                footer_message: "",
+                items: [],
+            },
+            templating_callback: () => html``,
+            loadItems(): Promise<[]> {
+                return Promise.resolve([]);
+            },
+        },
+    }),
+};

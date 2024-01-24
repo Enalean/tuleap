@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
 dependencies:
   '@tuleap/date-helper':
     specifier: workspace:*
@@ -13,6 +17,9 @@ dependencies:
   '@tuleap/fetch-result':
     specifier: workspace:*
     version: link:../../../../lib/frontend/fetch-result
+  '@tuleap/lazybox':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/lazybox
   '@tuleap/plugin-pullrequest-constants':
     specifier: workspace:*
     version: link:../lib/constants
@@ -43,6 +50,9 @@ dependencies:
   '@tuleap/vue3-gettext-init':
     specifier: workspace:*
     version: link:../../../../lib/frontend/vue3-gettext-init
+  hybrids:
+    specifier: ^8.2.2
+    version: 8.2.2
   moment:
     specifier: ^2.29.4
     version: 2.29.4
@@ -520,6 +530,12 @@ packages:
     engines: {node: '>=8'}
     dev: false
 
+  /hybrids@8.2.2:
+    resolution: {integrity: sha512-xCangE3oItxeWMNKHLa0yn0MHi0MHBtGLIz0Ty7PwdcBBN2sQ0mrBvVSf4lLMyBFNO7x47/2lO13FSJB/SkPyw==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
+    dev: false
+
   /import-fresh@3.3.0:
     resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}
     engines: {node: '>=6'}
@@ -918,7 +934,3 @@ packages:
     resolution: {integrity: sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==}
     engines: {node: '>= 6'}
     dev: false
-
-settings:
-  autoInstallPeers: false
-  excludeLinksFromLockfile: false

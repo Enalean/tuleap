@@ -36,6 +36,15 @@ msgstr "Erreur"
 msgid "Error details"
 msgstr "Détails de l'erreur"
 
+msgid "Matching users"
+msgstr "Utilisateurs correspondant"
+
+msgid "Name"
+msgstr "Nom"
+
+msgid "No matching user"
+msgstr "Aucun utilisateur"
+
 msgid "OK"
 msgstr "OK"
 

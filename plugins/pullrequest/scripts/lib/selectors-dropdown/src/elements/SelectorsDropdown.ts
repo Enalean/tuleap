@@ -27,11 +27,23 @@ import {
     DROPDOWN_CONTENT_CLASSNAME,
     renderContent,
 } from "./SelectorsDropdownTemplate";
+import type { LazyboxTemplatingCallback, GroupOfItems, LazyboxItem } from "@tuleap/lazybox";
+import { SelectorsDropdownAutocompleter } from "./SelectorsDropdownAutocompleter";
 
 export const TAG = "tuleap-selectors-dropdown";
 
+export type SelectorsDropdownLoadItemsCallback = () => Promise<LazyboxItem[]>;
+
+type AutocompleterConfig = {
+    templating_callback: LazyboxTemplatingCallback;
+    group: GroupOfItems;
+    placeholder: string;
+    loadItems: SelectorsDropdownLoadItemsCallback;
+};
+
 export type SelectorEntry = {
     readonly entry_name: string;
+    readonly config: AutocompleterConfig;
 };
 
 export type SelectorsDropdown = {
@@ -42,9 +54,11 @@ export type SelectorsDropdown = {
 export type InternalSelectorsDropdown = Readonly<SelectorsDropdown> & {
     dropdown_button_element: Element;
     dropdown_content_element: Element;
+    auto_completer_element: Element;
     controller: ControlSelectorsDropdown;
     active_selector: Option<SelectorEntry>;
     is_dropdown_shown: boolean;
+    content(): HTMLElement;
 };
 
 export type HostElement = InternalSelectorsDropdown & HTMLElement;
@@ -64,9 +78,12 @@ export const SelectorsDropdown = define<InternalSelectorsDropdown>({
     dropdown_content_element: {
         get: (host) => selectOrThrow(host, `.${DROPDOWN_CONTENT_CLASSNAME}`),
     },
+    auto_completer_element: {
+        get: (host) => selectOrThrow(host.content(), ".selectors-dropdown-auto-completer"),
+    },
     controller: {
         get: (host: InternalSelectorsDropdown, controller: ControlSelectorsDropdown | undefined) =>
-            controller ?? SelectorsDropdownController(),
+            controller ?? SelectorsDropdownController(SelectorsDropdownAutocompleter(document)),
         connect: (host) => {
             setTimeout(() => host.controller.initDropdown(host));
         },

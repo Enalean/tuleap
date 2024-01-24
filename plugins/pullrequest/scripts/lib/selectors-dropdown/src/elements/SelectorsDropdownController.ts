@@ -20,6 +20,7 @@
 import { createDropdown } from "@tuleap/tlp-dropdown";
 import { Option } from "@tuleap/option";
 import type { InternalSelectorsDropdown, SelectorEntry } from "./SelectorsDropdown";
+import type { Autocompleter } from "./SelectorsDropdownAutocompleter";
 
 export type ControlSelectorsDropdown = {
     initDropdown(host: InternalSelectorsDropdown): void;
@@ -28,7 +29,9 @@ export type ControlSelectorsDropdown = {
     openSidePanel(host: InternalSelectorsDropdown, selector: SelectorEntry): void;
 };
 
-export const SelectorsDropdownController = (): ControlSelectorsDropdown => ({
+export const SelectorsDropdownController = (
+    autocompleter: Autocompleter,
+): ControlSelectorsDropdown => ({
     initDropdown: (host): void => {
         createDropdown(host.dropdown_button_element, {
             dropdown_menu: host.dropdown_content_element,
@@ -42,6 +45,15 @@ export const SelectorsDropdownController = (): ControlSelectorsDropdown => ({
         host.active_selector = Option.nothing();
     },
     openSidePanel: (host, selector): void => {
-        host.active_selector = Option.fromValue(selector);
+        host.active_selector.match(
+            () => {},
+            () => {
+                host.active_selector = Option.fromValue(selector);
+
+                setTimeout(() => {
+                    autocompleter.start(selector, host.auto_completer_element);
+                });
+            },
+        );
     },
 });

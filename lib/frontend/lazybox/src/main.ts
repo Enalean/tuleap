@@ -24,6 +24,7 @@ export type { html as HTMLTemplateStringProcessor } from "hybrids";
 export type {
     LazyboxSelectionCallback,
     LazyboxSearchInputCallback,
+    LazyboxTemplatingCallback,
     HTMLTemplateResult,
     LazyboxOptions,
 } from "./Options";
@@ -33,5 +34,6 @@ export type { Lazybox } from "./LazyboxElement";
 export { createLazybox } from "./CreateLazybox";
 export { createLazyAutocompleter } from "./CreateLazyAutocompleter";
 export { TAG as LAZYBOX_SELECTION_BADGE_TAG } from "./selection/SelectionBadge";
+export type { LazyAutocompleter } from "./LazyAutocompleterElement";
 export type { SelectionBadge } from "./selection/SelectionBadge";
 export { createSelectionBadge } from "./selection/CreateSelectionBadge";
