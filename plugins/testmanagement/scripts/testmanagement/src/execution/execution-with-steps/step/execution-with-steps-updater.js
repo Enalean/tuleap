@@ -18,17 +18,24 @@
  */
 
 import {
-    PASSED_STATUS,
-    FAILED_STATUS,
     BLOCKED_STATUS,
+    FAILED_STATUS,
     NOT_RUN_STATUS,
+    PASSED_STATUS,
 } from "../../execution-constants.js";
 
-function updateStatusWithStepResults(execution) {
-    execution.status = computeTestStatusFromStepStatus(
+function updateStatusWithStepResults(execution, ExecutionService) {
+    const previous_status = execution.status;
+    const new_status = computeTestStatusFromStepStatus(
         execution.definition.steps,
         Object.values(execution.steps_results),
     );
+    if (ExecutionService) {
+        ExecutionService.campaign["nb_of_" + previous_status]--;
+        ExecutionService.campaign["nb_of_" + new_status]++;
+    }
+
+    execution.status = new_status;
 }
 
 function updateStepResults(execution, step_id, status) {

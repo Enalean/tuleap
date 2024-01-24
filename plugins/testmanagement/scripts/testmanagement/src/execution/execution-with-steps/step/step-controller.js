@@ -9,9 +9,21 @@ import { resetError, setError } from "../../../feedback-state.js";
 import { updateStatusWithStepResults, updateStepResults } from "./execution-with-steps-updater.js";
 import { sanitize } from "dompurify";
 
-controller.$inject = ["$sce", "$element", "gettextCatalog", "ExecutionRestService"];
+controller.$inject = [
+    "$sce",
+    "$element",
+    "gettextCatalog",
+    "ExecutionRestService",
+    "ExecutionService",
+];
 
-export default function controller($sce, $element, gettextCatalog, ExecutionRestService) {
+export default function controller(
+    $sce,
+    $element,
+    gettextCatalog,
+    ExecutionRestService,
+    ExecutionService,
+) {
     const self = this;
     Object.assign(self, {
         saving: false,
@@ -68,7 +80,8 @@ export default function controller($sce, $element, gettextCatalog, ExecutionRest
                 () => {
                     updateStepResults(self.execution, self.step.id, status);
                     self.step_result.status = status;
-                    updateStatusWithStepResults(self.execution);
+                    updateStatusWithStepResults(self.execution, ExecutionService);
+                    ExecutionService.updatePresencesOnCampaign();
                 },
                 (error) =>
                     setError(
