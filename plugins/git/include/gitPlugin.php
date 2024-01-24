@@ -213,6 +213,7 @@ use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 use Tuleap\User\PasswordVerifier;
+use Tuleap\WebAssembly\WasmtimeCacheConfigurationBuilder;
 
 require_once 'constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -2743,7 +2744,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             PreReceiveCommand::NAME,
             function (): PreReceiveCommand {
                 $mapper      = \Tuleap\Mapper\ValinorMapperBuilderFactory::mapperBuilder()->mapper();
-                $wasm_caller = new FFIWASMCaller($mapper, Prometheus::instance(), 'git_plugin');
+                $wasm_caller = new FFIWASMCaller(new WasmtimeCacheConfigurationBuilder(), $mapper, Prometheus::instance(), 'git_plugin');
 
                 return new PreReceiveCommand(
                     new PreReceiveAction(

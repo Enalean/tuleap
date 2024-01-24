@@ -22,6 +22,7 @@ use serde::{Deserialize, Serialize};
 pub struct ExecConfig {
     pub wasm_module_path: String,
     pub mount_points: Vec<MountPoint>,
+    pub cache: Option<String>,
     pub limits: Limitations,
 }
 

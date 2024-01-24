@@ -38,6 +38,7 @@ class SiteCache
         $this->invalidatePlugin();
         $this->invalidateCustomizedLogoCache();
         $this->invalidateValinorCache();
+        $this->invalidateWasmtimeCache();
     }
 
     private function invalidateTemplateEngine()
@@ -141,5 +142,11 @@ class SiteCache
     {
         $this->logger->info('Invalidate Valinor cache');
         \Tuleap\Mapper\ValinorMapperBuilderFactory::invalidateCache();
+    }
+
+    private function invalidateWasmtimeCache(): void
+    {
+        $this->logger->info('Invalidate Wasmtime cache');
+        \Tuleap\WebAssembly\WasmtimeCacheConfigurationBuilder::invalidateCache();
     }
 }

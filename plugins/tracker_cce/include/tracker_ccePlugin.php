@@ -120,6 +120,7 @@ use Tuleap\TrackerCCE\WASM\ExecuteWASMResponse;
 use Tuleap\TrackerCCE\WASM\FindWASMModulePath;
 use Tuleap\TrackerCCE\WASM\ProcessWASMResponse;
 use Tuleap\WebAssembly\FFIWASMCaller;
+use Tuleap\WebAssembly\WasmtimeCacheConfigurationBuilder;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/vendor/autoload.php';
@@ -222,7 +223,7 @@ final class tracker_ccePlugin extends Plugin
             ),
             new FindWASMModulePath(),
             new CallWASMModule(
-                new FFIWASMCaller($mapper, Prometheus::instance(), 'tracker_cce_plugin'),
+                new FFIWASMCaller(new WasmtimeCacheConfigurationBuilder(), $mapper, Prometheus::instance(), 'tracker_cce_plugin'),
                 new ProcessWASMResponse($logger, $mapper)
             ),
             new ExecuteWASMResponse($logger, $this->getPutHandler($logger)),

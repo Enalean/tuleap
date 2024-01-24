@@ -58,6 +58,7 @@ final class FFIWASMCaller implements WASMCaller
     private const MEMORY_CONSUMPTION_BUCKETS = [1114112, 2228224, 3342336, 4194304];
 
     public function __construct(
+        private WASMCacheConfigurationBuilder $cache_configuration_builder,
         private readonly TreeMapper $mapper,
         private readonly Prometheus $prometheus,
         private readonly string $caller_name,
@@ -66,7 +67,7 @@ final class FFIWASMCaller implements WASMCaller
 
     public function call(string $wasm_path, string $module_input, array $mount_points): Option
     {
-        $config      = [
+        $config = [
             "wasm_module_path" => $wasm_path,
             "mount_points"     => $mount_points,
             "limits"           => [
@@ -74,7 +75,17 @@ final class FFIWASMCaller implements WASMCaller
                 "max_memory_size_in_bytes" => self::MAX_MEMORY_SIZE_IN_BYTES,
             ],
         ];
-        $config_json = json_encode($config, JSON_THROW_ON_ERROR);
+
+        $config_with_cache = $this->cache_configuration_builder->buildCacheConfiguration()
+            ->mapOr(
+                function (mixed $cache) use ($config): array {
+                    $config['cache'] = $cache;
+                    return $config;
+                },
+                $config
+            );
+
+        $config_json = json_encode($config_with_cache, JSON_THROW_ON_ERROR);
 
         $start_time = microtime(true);
 

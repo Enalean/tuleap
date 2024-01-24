@@ -29,6 +29,7 @@ use wire::{
     ExecConfig, InternalErrorJson, Limitations, MountPoint, Stats, SuccessResponseJson,
     UserErrorJson,
 };
+use std::path::Path;
 
 mod preview1;
 mod wire;
@@ -67,6 +68,7 @@ pub unsafe extern "C" fn callWasmModule(
     match compile_and_exec(
         config_json.wasm_module_path,
         module_input_json,
+        &config_json.cache,
         &config_json.mount_points,
         &config_json.limits,
     ) {
@@ -145,6 +147,7 @@ struct OutputAndStats {
 fn compile_and_exec(
     wasm_module_path: String,
     module_input_json: String,
+    possible_cache_config_file: &Option<String>,
     mount_points: &Vec<MountPoint>,
     limits: &Limitations,
 ) -> Result<OutputAndStats, anyhow::Error> {
@@ -165,6 +168,12 @@ fn compile_and_exec(
 
     let mut config = Config::new();
     config.epoch_interruption(true);
+
+    if let Some(cache_config_file) = possible_cache_config_file {
+        config.cache_config_load(Path::new(cache_config_file))?;
+        config.cranelift_opt_level(OptLevel::Speed);
+    }
+
     let engine = Arc::new(Engine::new(&config)?);
 
     let mut linker = Linker::new(&engine);
