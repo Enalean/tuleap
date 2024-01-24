@@ -22,20 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\RealTime;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
 
 final class NodeJSClientTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     public function testMessageIsTransmittedToRealTimeNodeJSServer(): void
     {
         $http_client   = new \Http\Mock\Client();
-        $logger        = Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $logger        = new TestLogger();
         $nodejs_client = new NodeJSClient(
             $http_client,
             HTTPFactoryBuilder::requestFactory(),
@@ -43,23 +41,22 @@ final class NodeJSClientTest extends \Tuleap\Test\PHPUnit\TestCase
             $logger
         );
 
-        $logger->shouldNotReceive('error');
-
         $nodejs_client->sendMessage(
             new MessageDataPresenter(
                 '101',
                 'uuid',
                 '1',
-                Mockery::mock(MessageRightsPresenter::class),
+                $this->createMock(MessageRightsPresenter::class),
                 'cmd',
                 'data'
             )
         );
 
         $requests = $http_client->getRequests();
-        $this->assertCount(1, $requests);
+        self::assertCount(1, $requests);
         $request = $requests[0];
-        $this->assertEquals('POST', $request->getMethod());
-        $this->assertStringStartsWith('http://localhost:2999', (string) $request->getUri());
+        self::assertEquals('POST', $request->getMethod());
+        self::assertStringStartsWith('http://localhost:2999', (string) $request->getUri());
+        self::assertFalse($logger->hasErrorRecords());
     }
 }
