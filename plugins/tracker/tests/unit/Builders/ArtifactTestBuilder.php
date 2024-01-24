@@ -185,13 +185,32 @@ final class ArtifactTestBuilder
 
     public function build(): Artifact
     {
-        $artifact = new Artifact(
+        $artifact = new class (
             $this->id,
             $this->tracker->getId(),
-            102,
             $this->submission_timestamp,
-            false,
-        );
+            $this->user_can_view,
+        ) extends Artifact {
+            /**
+             * @param array<int, bool> $user_can_view
+             */
+            public function __construct(
+                int $id,
+                int $tracker_id,
+                int $submitted_on,
+                private readonly array $user_can_view,
+            ) {
+                parent::__construct($id, $tracker_id, 102, $submitted_on, false);
+            }
+
+            public function userCanView(?PFUser $user = null): bool
+            {
+                if ($user && isset($this->user_can_view[(int) $user->getId()])) {
+                    return $this->user_can_view[(int) $user->getId()];
+                }
+                return parent::userCanView($user);
+            }
+        };
 
         $artifact->setTracker($this->tracker);
         $artifact->setTitle($this->title);
@@ -216,7 +235,6 @@ final class ArtifactTestBuilder
         if ($this->last_changeset) {
             $artifact->setLastChangeset($this->last_changeset);
         }
-        $artifact->setUserCanView($this->user_can_view);
         if ($this->has_parent) {
             $artifact->setParent($this->parent);
         }
