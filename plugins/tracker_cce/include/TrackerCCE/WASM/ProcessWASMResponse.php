@@ -56,7 +56,7 @@ final class ProcessWASMResponse implements WASMResponseProcessor
                 } catch (MappingError | RuntimeException | InvalidSource $error) {
                     return Result::err(Fault::fromThrowableWithMessage(
                         $error,
-                        'An invalid response has been received from the artifact post action WASM module'
+                        'An invalid response has been received from the artifact post action WASM module: ' . $error->getMessage()
                     ));
                 }
             },
