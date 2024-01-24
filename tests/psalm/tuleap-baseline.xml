@@ -2480,6 +2480,35 @@
       <code>$result</code>
     </PossiblyUndefinedVariable>
   </file>
+  <file src="plugins/agiledashboard/tests/integration/Milestone/Sidebar/MilestoneDaoTest.php">
+    <InvalidPropertyAssignmentValue>
+      <code>[]</code>
+      <code>[]</code>
+    </InvalidPropertyAssignmentValue>
+  </file>
+  <file src="plugins/agiledashboard/tests/integration/Milestone/Sidebar/MilestonesInSidebarDaoTest.php">
+    <UndefinedThisPropertyAssignment>
+      <code><![CDATA[$this->dao]]></code>
+    </UndefinedThisPropertyAssignment>
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->dao]]></code>
+      <code><![CDATA[$this->dao]]></code>
+      <code><![CDATA[$this->dao]]></code>
+      <code><![CDATA[$this->dao]]></code>
+      <code><![CDATA[$this->dao]]></code>
+      <code><![CDATA[$this->dao]]></code>
+      <code><![CDATA[$this->dao]]></code>
+    </UndefinedThisPropertyFetch>
+  </file>
+  <file src="plugins/agiledashboard/tests/integration/Planning/PlanningDAOTest.php">
+    <DeprecatedMethod>
+      <code>$non_planning_rows</code>
+      <code>$non_planning_rows</code>
+    </DeprecatedMethod>
+    <PossiblyNullArgument>
+      <code>$planning_row_by_milestone_tracker</code>
+    </PossiblyNullArgument>
+  </file>
   <file src="plugins/api_explorer/include/Specification/Swagger/SwaggerJsonPathsAndDefinitions.php">
     <PossiblyInvalidArgument>
       <code>$method</code>
@@ -2695,6 +2724,11 @@
     <MissingReturnType>
       <code>getPluginInfo</code>
     </MissingReturnType>
+  </file>
+  <file src="plugins/baseline/tests/integration/Adapter/RoleAssignmentRepositoryAdapterTest.php">
+    <MissingImmutableAnnotation>
+      <code>class implements ProjectIdentifier {</code>
+    </MissingImmutableAnnotation>
   </file>
   <file src="plugins/botmattermost/include/BotMattermost/Bot/BotDao.php">
     <InvalidReturnStatement>
@@ -5374,9 +5408,6 @@
     <InvalidDocblock>
       <code>array {@max 25}</code>
     </InvalidDocblock>
-    <InvalidPropertyAssignmentValue>
-      <code>new ArtifactRepresentationFactory()</code>
-    </InvalidPropertyAssignmentValue>
     <MissingParamType>
       <code>$expert_query</code>
       <code>$id</code>
@@ -5394,10 +5425,6 @@
       <code>sendAllowHeaders</code>
       <code>sendPaginationHeaders</code>
     </MissingReturnType>
-    <UndefinedDocblockClass>
-      <code><![CDATA[$this->representation_factory]]></code>
-      <code>CrossTrackerArtifactRepresentationFactory</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="plugins/crosstracker/include/CrossTracker/Report/CSV/CSVRepresentation.php">
     <MissingReturnType>
@@ -5674,9 +5701,6 @@
     <MissingParamType>
       <code>$value</code>
     </MissingParamType>
-    <MissingReturnType>
-      <code>checkValueIsValid</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/crosstracker/include/CrossTracker/Report/Query/Advanced/QueryValidation/Comparison/OperatorNotAllowedForMetadataException.php">
     <MissingParamType>
@@ -5703,11 +5727,6 @@
       <code>$count</code>
     </MissingParamType>
   </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/Query/Advanced/QueryValidation/Metadata/ICheckMetadataForAComparison.php">
-    <MissingReturnType>
-      <code>checkMetadataIsValid</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/crosstracker/include/CrossTracker/Report/Query/Advanced/QueryValidation/Metadata/LastUpdateByIsMissingInAtLeastOneTrackerException.php">
     <MissingParamType>
       <code>$count</code>
@@ -5717,11 +5736,6 @@
     <MissingParamType>
       <code>$count</code>
     </MissingParamType>
-  </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/Query/Advanced/QueryValidation/Metadata/MetadataChecker.php">
-    <MissingReturnType>
-      <code>checkMetadataIsValid</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/crosstracker/include/CrossTracker/Report/Query/Advanced/QueryValidation/Metadata/MetadataUsageChecker.php">
     <MissingParamType>
@@ -11337,9 +11351,6 @@
       <code><![CDATA[$parent_item->getId()]]></code>
       <code><![CDATA[$parent_item->getId()]]></code>
     </PossiblyNullArgument>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $document_to_upload->getItemId()]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/docman/include/REST/v1/DocmanItemsRequestBuilder.php">
     <MissingReturnType>
@@ -11933,14 +11944,6 @@
     <MissingParamType>
       <code>$title</code>
     </MissingParamType>
-  </file>
-  <file src="plugins/docman/include/Upload/Document/DocumentToUpload.php">
-    <MissingParamType>
-      <code>$item_id</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$item_id</code>
-    </MissingPropertyType>
   </file>
   <file src="plugins/docman/include/Upload/Document/DocumentUploadCleaner.php">
     <MissingReturnType>
@@ -19241,12 +19244,9 @@
       <code>$id</code>
       <code>$id</code>
       <code>$limit</code>
-      <code>$limit</code>
       <code>$name</code>
       <code>$offset</code>
-      <code>$offset</code>
       <code>$project_id</code>
-      <code>$query</code>
       <code>$repository_id</code>
       <code>$size</code>
     </MissingParamType>
@@ -19255,18 +19255,15 @@
       <code><![CDATA[$migrate_to_gerrit->server]]></code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code>checkPullRequestEndpointsAvailable</code>
       <code>disconnect</code>
       <code>getBranches</code>
       <code>getCurrentUser</code>
-      <code>getPaginatedPullRequests</code>
       <code>getTags</code>
       <code>options</code>
       <code>optionsCommitStatus</code>
       <code>optionsGetFileContent</code>
       <code>optionsGetTags</code>
       <code>optionsId</code>
-      <code>optionsPullRequests</code>
       <code>patchId</code>
       <code>post</code>
       <code>postCommitStatus</code>
@@ -19842,6 +19839,357 @@
       <code><![CDATA[$this->user]]></code>
     </UndefinedThisPropertyAssignment>
   </file>
+  <file src="plugins/git/tests/integration/GitXmlImporterTest.php">
+    <ForbiddenCode>
+      <code><![CDATA[shell_exec("cd $sys_data_dir_arg/gitolite/repositories/test_project/stable.git && " . \Git_Exec::getGitCommand() . " log --oneline| wc -l")]]></code>
+      <code><![CDATA[shell_exec("cd $sys_data_dir_arg/gitolite/repositories/test_project/stable.git && " . \Git_Exec::getGitCommand() . " log --oneline| wc -l")]]></code>
+      <code><![CDATA[shell_exec("cd $sys_data_dir_arg/gitolite/repositories/test_project/stable2.git && " . \Git_Exec::getGitCommand() . " log --oneline| wc -l")]]></code>
+      <code><![CDATA[shell_exec(\Git_Exec::getGitCommand() . " config --global --add safe.directory $sys_data_dir_arg/gitolite/repositories/test_project/stable.git")]]></code>
+      <code><![CDATA[shell_exec(\Git_Exec::getGitCommand() . " config --global --add safe.directory $sys_data_dir_arg/gitolite/repositories/test_project/stable.git")]]></code>
+      <code><![CDATA[shell_exec(\Git_Exec::getGitCommand() . " config --global --add safe.directory $sys_data_dir_arg/gitolite/repositories/test_project/stable2.git")]]></code>
+    </ForbiddenCode>
+    <InvalidArgument>
+      <code>$plugin_dao</code>
+      <code>$restricted_plugin_dao</code>
+      <code><![CDATA[$this->event_manager]]></code>
+      <code><![CDATA[$this->event_manager]]></code>
+      <code><![CDATA[$this->fine_grained_factory]]></code>
+      <code><![CDATA[$this->fine_grained_saver]]></code>
+      <code><![CDATA[$this->fine_grained_updater]]></code>
+      <code><![CDATA[$this->git_dao]]></code>
+      <code><![CDATA[$this->git_dao]]></code>
+      <code><![CDATA[$this->git_dao]]></code>
+      <code><![CDATA[$this->git_dao]]></code>
+      <code><![CDATA[$this->git_systemeventmanager]]></code>
+      <code><![CDATA[$this->git_systemeventmanager]]></code>
+      <code><![CDATA[$this->logger]]></code>
+      <code><![CDATA[$this->logger]]></code>
+      <code><![CDATA[$this->logger]]></code>
+      <code><![CDATA[$this->logger]]></code>
+      <code><![CDATA[$this->logger]]></code>
+      <code><![CDATA[$this->regexp_fine_grained_enabler]]></code>
+      <code><![CDATA[$this->regexp_fine_grained_retriever]]></code>
+      <code><![CDATA[$this->ugroup_dao]]></code>
+      <code><![CDATA[$this->user_finder]]></code>
+      <code>\Mockery::spy(GitoliteAccessURLGenerator::class)</code>
+      <code>\Mockery::spy(\EventManager::class)</code>
+      <code>\Mockery::spy(\Git_GitRepositoryUrlManager::class)</code>
+      <code>\Mockery::spy(\Git_Gitolite_ConfigPermissionsSerializer::class)</code>
+      <code>\Mockery::spy(\PFUser::class)</code>
+      <code>\Mockery::spy(\PFUser::class)</code>
+      <code>\Mockery::spy(\PFUser::class)</code>
+      <code>\Mockery::spy(\PFUser::class)</code>
+      <code>\Mockery::spy(\PFUser::class)</code>
+      <code>\Mockery::spy(\PFUser::class)</code>
+      <code>\Mockery::spy(\ProjectHistoryDao::class)</code>
+      <code>\Mockery::spy(\Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager::class)</code>
+      <code>\Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionReplicator::class)</code>
+      <code>\Mockery::spy(\Tuleap\Git\Permissions\HistoryValueFormatter::class)</code>
+    </InvalidArgument>
+    <InvalidPropertyAssignmentValue>
+      <code>\Mockery::spy(GitDao::class)</code>
+      <code>\Mockery::spy(XMLImportHelper::class)</code>
+      <code>\Mockery::spy(\EventManager::class)</code>
+      <code>\Mockery::spy(\Git_SystemEventManager::class)</code>
+      <code>\Mockery::spy(\PermissionsDao::class)</code>
+      <code>\Mockery::spy(\UGroupDao::class)</code>
+    </InvalidPropertyAssignmentValue>
+    <MissingParamType>
+      <code>$xml</code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code>$backup_access_config</code>
+      <code>$backup_sys_data_dir</code>
+      <code>$backup_tmp_dir</code>
+      <code>$old_cwd</code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code>import</code>
+    </MissingReturnType>
+    <PossiblyNullReference>
+      <code>getDescription</code>
+      <code>getDescription</code>
+      <code>getDescription</code>
+      <code>getName</code>
+    </PossiblyNullReference>
+    <PossiblyUndefinedMethod>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>shouldReceive</code>
+      <code>shouldReceive</code>
+      <code>shouldReceive</code>
+    </PossiblyUndefinedMethod>
+    <TooManyArguments>
+      <code>andReturns</code>
+      <code>andReturns</code>
+      <code>andReturns</code>
+      <code>andReturns</code>
+      <code>andReturns</code>
+      <code>andReturns</code>
+      <code>andReturns</code>
+    </TooManyArguments>
+    <UndefinedDocblockClass>
+      <code><![CDATA[$this->event_manager]]></code>
+      <code><![CDATA[$this->git_systemeventmanager]]></code>
+      <code><![CDATA[$this->permission_dao]]></code>
+      <code><![CDATA[$this->permission_dao]]></code>
+      <code><![CDATA[$this->permission_dao]]></code>
+      <code><![CDATA[$this->permission_dao]]></code>
+      <code><![CDATA[$this->permission_dao]]></code>
+      <code><![CDATA[$this->permission_dao]]></code>
+      <code><![CDATA[$this->permission_dao]]></code>
+      <code><![CDATA[$this->permission_dao]]></code>
+      <code><![CDATA[$this->permission_dao]]></code>
+      <code><![CDATA[$this->ugroup_dao]]></code>
+      <code><![CDATA[$this->ugroup_dao]]></code>
+      <code><![CDATA[$this->ugroup_dao]]></code>
+      <code><![CDATA[$this->ugroup_dao]]></code>
+      <code><![CDATA[$this->ugroup_dao]]></code>
+      <code><![CDATA[$this->ugroup_dao]]></code>
+      <code><![CDATA[$this->ugroup_dao]]></code>
+      <code><![CDATA[$this->ugroup_dao]]></code>
+      <code><![CDATA[$this->ugroup_dao]]></code>
+      <code><![CDATA[$this->ugroup_dao]]></code>
+      <code><![CDATA[$this->ugroup_dao]]></code>
+      <code><![CDATA[$this->ugroup_dao]]></code>
+      <code>EventManager</code>
+      <code>Git_SystemEventManager</code>
+      <code>PermissionsDAO</code>
+      <code>UGroupDao</code>
+    </UndefinedDocblockClass>
+    <UndefinedInterfaceMethod>
+      <code>with</code>
+    </UndefinedInterfaceMethod>
+    <UndefinedMagicMethod>
+      <code>andReturns</code>
+      <code>andReturns</code>
+      <code>andReturns</code>
+      <code>andReturns</code>
+      <code>andReturns</code>
+      <code>andReturns</code>
+      <code>andReturns</code>
+      <code>with</code>
+    </UndefinedMagicMethod>
+    <UndefinedMethod>
+      <code>shouldReceive</code>
+      <code>shouldReceive</code>
+    </UndefinedMethod>
+    <UndefinedThisPropertyAssignment>
+      <code><![CDATA[$this->fine_grained_factory]]></code>
+      <code><![CDATA[$this->fine_grained_saver]]></code>
+      <code><![CDATA[$this->fine_grained_updater]]></code>
+      <code><![CDATA[$this->project]]></code>
+      <code><![CDATA[$this->regexp_fine_grained_enabler]]></code>
+      <code><![CDATA[$this->regexp_fine_grained_retriever]]></code>
+      <code><![CDATA[$this->xml_ugroup_retriever]]></code>
+    </UndefinedThisPropertyAssignment>
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->fine_grained_factory]]></code>
+      <code><![CDATA[$this->fine_grained_factory]]></code>
+      <code><![CDATA[$this->fine_grained_factory]]></code>
+      <code><![CDATA[$this->fine_grained_saver]]></code>
+      <code><![CDATA[$this->fine_grained_saver]]></code>
+      <code><![CDATA[$this->fine_grained_saver]]></code>
+      <code><![CDATA[$this->fine_grained_updater]]></code>
+      <code><![CDATA[$this->fine_grained_updater]]></code>
+      <code><![CDATA[$this->fine_grained_updater]]></code>
+      <code><![CDATA[$this->fine_grained_updater]]></code>
+      <code><![CDATA[$this->fine_grained_updater]]></code>
+      <code><![CDATA[$this->project]]></code>
+      <code><![CDATA[$this->project]]></code>
+      <code><![CDATA[$this->project]]></code>
+      <code><![CDATA[$this->project]]></code>
+      <code><![CDATA[$this->project]]></code>
+      <code><![CDATA[$this->project]]></code>
+      <code><![CDATA[$this->project]]></code>
+      <code><![CDATA[$this->project]]></code>
+      <code><![CDATA[$this->regexp_fine_grained_enabler]]></code>
+      <code><![CDATA[$this->regexp_fine_grained_enabler]]></code>
+      <code><![CDATA[$this->regexp_fine_grained_enabler]]></code>
+      <code><![CDATA[$this->regexp_fine_grained_enabler]]></code>
+      <code><![CDATA[$this->regexp_fine_grained_enabler]]></code>
+      <code><![CDATA[$this->regexp_fine_grained_retriever]]></code>
+      <code><![CDATA[$this->regexp_fine_grained_retriever]]></code>
+      <code><![CDATA[$this->regexp_fine_grained_retriever]]></code>
+      <code><![CDATA[$this->regexp_fine_grained_retriever]]></code>
+      <code><![CDATA[$this->regexp_fine_grained_retriever]]></code>
+      <code><![CDATA[$this->regexp_fine_grained_retriever]]></code>
+    </UndefinedThisPropertyFetch>
+  </file>
+  <file src="plugins/git/tests/integration/Gitolite/GitoliteDriverTest.php">
+    <InvalidArgument>
+      <code><![CDATA[$this->another_git_exec]]></code>
+      <code><![CDATA[$this->gitoliterc_reader]]></code>
+      <code><![CDATA[$this->project_manager]]></code>
+      <code><![CDATA[$this->project_manager]]></code>
+      <code><![CDATA[$this->project_manager]]></code>
+      <code>\Mockery::mock(GitDao::class)</code>
+      <code>\Mockery::mock(GitDao::class)</code>
+      <code>\Mockery::mock(GitPlugin::class)</code>
+      <code>\Mockery::mock(GitPlugin::class)</code>
+      <code>\Mockery::spy(EventManager::class)</code>
+      <code>\Mockery::spy(\Git_Driver_Gerrit_ProjectCreatorStatus::class)</code>
+      <code>\Mockery::spy(\Psr\Log\LoggerInterface::class)</code>
+      <code>\Mockery::spy(\Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager::class)</code>
+      <code>\Mockery::spy(\Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager::class)</code>
+      <code>\Mockery::spy(\Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager::class)</code>
+      <code>\Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionFactory::class)</code>
+      <code>\Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class)</code>
+      <code>\Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class)</code>
+    </InvalidArgument>
+    <InvalidPropertyAssignmentValue>
+      <code>\Mockery::spy(\Git_Exec::class)</code>
+      <code>\Mockery::spy(\Git_Gitolite_GitoliteRCReader::class)</code>
+      <code>\Mockery::spy(\ProjectManager::class)</code>
+    </InvalidPropertyAssignmentValue>
+    <MissingParamType>
+      <code>$filename</code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code>$backup_codendi_cache_dir</code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code>getFileConf</code>
+      <code>getGitoliteConf</code>
+    </MissingReturnType>
+    <UndefinedInterfaceMethod>
+      <code>once</code>
+      <code>times</code>
+    </UndefinedInterfaceMethod>
+    <UndefinedMagicMethod>
+      <code>andReturn</code>
+      <code>andReturn</code>
+      <code>andReturn</code>
+      <code>times</code>
+    </UndefinedMagicMethod>
+    <UndefinedMethod>
+      <code>shouldReceive</code>
+      <code>shouldReceive</code>
+      <code>shouldReceive</code>
+      <code>shouldReceive</code>
+      <code>shouldReceive</code>
+      <code>shouldReceive</code>
+      <code>shouldReceive</code>
+    </UndefinedMethod>
+  </file>
+  <file src="plugins/git/tests/integration/Gitolite/GitoliteTestCase.php">
+    <InvalidArgument>
+      <code>$git_plugin</code>
+      <code><![CDATA[$this->git_exec]]></code>
+      <code><![CDATA[$this->git_exec]]></code>
+      <code><![CDATA[$this->logger]]></code>
+      <code><![CDATA[$this->repository_factory]]></code>
+      <code>\Mockery::mock(GitPlugin::class)</code>
+      <code>\Mockery::spy(EventManager::class)</code>
+      <code>\Mockery::spy(GitDao::class)</code>
+      <code>\Mockery::spy(\Git_Driver_Gerrit_ProjectCreatorStatus::class)</code>
+      <code>\Mockery::spy(\Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager::class)</code>
+      <code>\Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionFactory::class)</code>
+      <code>\Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class)</code>
+      <code>\Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class)</code>
+    </InvalidArgument>
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[\Mockery::mock(\Git_Exec::class)->makePartial()->shouldAllowMockingProtectedMethods()]]></code>
+      <code>\Mockery::spy(\GitRepositoryFactory::class)</code>
+      <code>\Mockery::spy(\Git_SystemEventManager::class)</code>
+      <code>\Mockery::spy(\Psr\Log\LoggerInterface::class)</code>
+      <code>\Mockery::spy(\UserManager::class)</code>
+    </InvalidPropertyAssignmentValue>
+    <MissingPropertyType>
+      <code>$backup_sys_data_dir</code>
+    </MissingPropertyType>
+    <PossiblyFalseArgument>
+      <code><![CDATA[$this->cwd]]></code>
+    </PossiblyFalseArgument>
+    <TooManyArguments>
+      <code>andReturns</code>
+    </TooManyArguments>
+    <UndefinedInterfaceMethod>
+      <code>__construct</code>
+      <code>setLocalCommiter</code>
+    </UndefinedInterfaceMethod>
+    <UndefinedMagicMethod>
+      <code>andReturns</code>
+    </UndefinedMagicMethod>
+  </file>
+  <file src="plugins/git/tests/integration/Gitolite/SSHKeyDumperTest.php">
+    <InvalidArgument>
+      <code>$invalid_keys_collector</code>
+      <code>$invalid_keys_collector</code>
+      <code>$invalid_keys_collector</code>
+      <code>$invalid_keys_collector</code>
+      <code>$invalid_keys_collector</code>
+      <code>$invalid_keys_collector</code>
+      <code>$invalid_keys_collector</code>
+      <code>$invalid_keys_collector</code>
+      <code>$invalid_keys_collector</code>
+      <code>$invalid_keys_collector</code>
+    </InvalidArgument>
+    <MissingPropertyType>
+      <code>$key1</code>
+      <code>$key2</code>
+    </MissingPropertyType>
+    <UndefinedInterfaceMethod>
+      <code>once</code>
+      <code>once</code>
+      <code>times</code>
+    </UndefinedInterfaceMethod>
+    <UndefinedMagicMethod>
+      <code>andReturn</code>
+      <code>andReturn</code>
+      <code>andReturn</code>
+      <code>andReturn</code>
+      <code>andReturn</code>
+      <code>andReturn</code>
+    </UndefinedMagicMethod>
+  </file>
+  <file src="plugins/git/tests/integration/Gitolite/SSHKeyMassDumperTest.php">
+    <MissingPropertyType>
+      <code>$key1</code>
+      <code>$key2</code>
+      <code>$mass_dumper</code>
+    </MissingPropertyType>
+    <TooManyArguments>
+      <code>andReturns</code>
+    </TooManyArguments>
+    <UndefinedInterfaceMethod>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>times</code>
+    </UndefinedInterfaceMethod>
+    <UndefinedMagicMethod>
+      <code>andReturn</code>
+      <code>andReturn</code>
+      <code>andReturn</code>
+      <code>andReturn</code>
+      <code>andReturns</code>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>times</code>
+    </UndefinedMagicMethod>
+  </file>
   <file src="plugins/gitlab/include/API/ClientWrapper.php">
     <InvalidReturnStatement>
       <code><![CDATA[preg_replace("/[<>]/", "", $next_link_entity[0][0])]]></code>
@@ -19933,6 +20281,42 @@
     <NamedArgumentNotAllowed>
       <code>$references_collections</code>
     </NamedArgumentNotAllowed>
+  </file>
+  <file src="plugins/gitlab/tests/integration/Group/GitlabApiTokenDAOTest.php">
+    <InvalidArgument>
+      <code>$row</code>
+    </InvalidArgument>
+    <PossiblyUndefinedVariable>
+      <code>$row</code>
+    </PossiblyUndefinedVariable>
+  </file>
+  <file src="plugins/gitlab/tests/integration/Group/GroupLinkDAOTest.php">
+    <PossiblyNullPropertyFetch>
+      <code><![CDATA[$updated_group_link->last_synchronization_date]]></code>
+    </PossiblyNullPropertyFetch>
+    <PossiblyNullReference>
+      <code>getTimestamp</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/gitlab/tests/integration/Repository/GitlabRepositoryIntegrationDaoTest.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$row['description']]]></code>
+      <code><![CDATA[$row['gitlab_repository_id']]]></code>
+      <code><![CDATA[$row['gitlab_repository_url']]]></code>
+      <code><![CDATA[$row['id']]]></code>
+      <code><![CDATA[$row['name']]]></code>
+      <code><![CDATA[$row['project_id']]]></code>
+    </PossiblyNullArgument>
+    <PossiblyNullArrayAccess>
+      <code><![CDATA[$row['allow_artifact_closure']]]></code>
+      <code><![CDATA[$row['description']]]></code>
+      <code><![CDATA[$row['gitlab_repository_id']]]></code>
+      <code><![CDATA[$row['gitlab_repository_url']]]></code>
+      <code><![CDATA[$row['id']]]></code>
+      <code><![CDATA[$row['last_push_date']]]></code>
+      <code><![CDATA[$row['name']]]></code>
+      <code><![CDATA[$row['project_id']]]></code>
+    </PossiblyNullArrayAccess>
   </file>
   <file src="plugins/gitlfs/include/Admin/AdminDao.php">
     <MissingParamType>
@@ -26796,30 +27180,6 @@
       <code>getPaginatedCommentsByPullRequestId</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/pullrequest/include/PullRequest/Criterion/ISearchOnStatus.php">
-    <MissingReturnType>
-      <code>shouldRetrieveClosedPullRequests</code>
-      <code>shouldRetrieveOpenPullRequests</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/pullrequest/include/PullRequest/Criterion/StatusAll.php">
-    <MissingReturnType>
-      <code>shouldRetrieveClosedPullRequests</code>
-      <code>shouldRetrieveOpenPullRequests</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/pullrequest/include/PullRequest/Criterion/StatusClosed.php">
-    <MissingReturnType>
-      <code>shouldRetrieveClosedPullRequests</code>
-      <code>shouldRetrieveOpenPullRequests</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/pullrequest/include/PullRequest/Criterion/StatusOpen.php">
-    <MissingReturnType>
-      <code>shouldRetrieveClosedPullRequests</code>
-      <code>shouldRetrieveOpenPullRequests</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/pullrequest/include/PullRequest/Dao.php">
     <MissingParamType>
       <code>$branch_dest</code>
@@ -26828,17 +27188,14 @@
       <code>$branch_src</code>
       <code>$creation_date</code>
       <code>$description</code>
-      <code>$limit</code>
       <code>$merge_status</code>
       <code>$merge_status</code>
-      <code>$offset</code>
       <code>$pull_request_id</code>
       <code>$pull_request_id</code>
       <code>$pull_request_id</code>
       <code>$pull_request_id</code>
       <code>$pull_request_id</code>
       <code>$repo_dest_id</code>
-      <code>$repository_id</code>
       <code>$repository_id</code>
       <code>$repository_id</code>
       <code>$repository_id</code>
@@ -26855,7 +27212,6 @@
     <MissingReturnType>
       <code>create</code>
       <code>deleteAllPullRequestsOfRepository</code>
-      <code>getPaginatedPullRequests</code>
       <code>markAsAbandoned</code>
       <code>markAsMerged</code>
       <code>searchNbOfOpenedPullRequestsForRepositoryId</code>
@@ -27540,21 +27896,6 @@
       <code>PathToHash</code>
     </PossiblyNullReference>
   </file>
-  <file src="plugins/pullrequest/include/PullRequest/REST/v1/QueryToCriterionConverter.php">
-    <MissingParamType>
-      <code>$query</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>convert</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/pullrequest/include/PullRequest/REST/v1/RepositoryResource.php">
-    <MissingParamType>
-      <code>$limit</code>
-      <code>$offset</code>
-      <code>$query</code>
-    </MissingParamType>
-  </file>
   <file src="plugins/pullrequest/include/PullRequest/REST/v1/Reviewer/ReviewerRepresentationInformationExtractor.php">
     <MissingPropertyType>
       <code><![CDATA[$representation->users]]></code>
@@ -27744,7 +28085,6 @@
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
       <code>$refname</code>
     </MissingParamType>
     <MissingPropertyType>
@@ -27762,6 +28102,43 @@
       <code>isReferenceAPullRequestReference</code>
       <code>markManuallyMerged</code>
     </MissingReturnType>
+  </file>
+  <file src="plugins/pullrequest/tests/integration/Comment/CommentDAOTest.php">
+    <PossiblyNullArgument>
+      <code>$comment_row</code>
+    </PossiblyNullArgument>
+    <PossiblyNullArrayAccess>
+      <code><![CDATA[$updated_row['content']]]></code>
+      <code><![CDATA[$updated_row['last_edition_date']]]></code>
+    </PossiblyNullArrayAccess>
+  </file>
+  <file src="plugins/pullrequest/tests/integration/InlineComment/InlineCommentDAOTest.php">
+    <LessSpecificReturnStatement>
+      <code><![CDATA[array_map(static fn(InlineComment $comment) => $comment->getId(), $comments)]]></code>
+      <code><![CDATA[array_map(static fn(array $row) => $row['id'], $rows)]]></code>
+    </LessSpecificReturnStatement>
+    <MissingClosureReturnType>
+      <code><![CDATA[static fn(array $row) => $row['id']]]></code>
+    </MissingClosureReturnType>
+    <MoreSpecificReturnType>
+      <code><![CDATA[list<int>]]></code>
+      <code><![CDATA[list<int>]]></code>
+    </MoreSpecificReturnType>
+    <PossiblyNullArrayAccess>
+      <code><![CDATA[$updated_row['content']]]></code>
+      <code><![CDATA[$updated_row['last_edition_date']]]></code>
+    </PossiblyNullArrayAccess>
+  </file>
+  <file src="plugins/pullrequest/tests/integration/PullRequestUpdaterTest.php">
+    <PossiblyNullArrayAccess>
+      <code><![CDATA[$pr1['sha1_src']]]></code>
+      <code><![CDATA[$pr1['sha1_src']]]></code>
+      <code><![CDATA[$pr1['sha1_src']]]></code>
+      <code><![CDATA[$pr2['sha1_src']]]></code>
+      <code><![CDATA[$pr2['sha1_src']]]></code>
+      <code><![CDATA[$pr2['sha1_src']]]></code>
+      <code><![CDATA[$pr3['sha1_src']]]></code>
+    </PossiblyNullArrayAccess>
   </file>
   <file src="plugins/roadmap/include/Roadmap/Widget/RoadmapConfigureAtXMLImport.php">
     <PossiblyNullArgument>
@@ -29082,6 +29459,28 @@
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyUndefinedArrayOffset>
   </file>
+  <file src="plugins/statistics/tests/integration/DiskUsagePurgerIntegrationTest.php">
+    <DeprecatedMethod>
+      <code>retrieve</code>
+    </DeprecatedMethod>
+    <MissingParamType>
+      <code>$date</code>
+      <code>$date</code>
+      <code>$table</code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code>clearData</code>
+      <code>insertData</code>
+      <code>testItCanBeRexecutedTheSameDayWithoutDeletingExtraData</code>
+      <code>testItDailyPurgeAllStatisticsTablesFromApr15ToApr23</code>
+      <code>testItDailyPurgeAllStatisticsTablesOnJun22</code>
+      <code>testItDailyPurgeAllStatisticsTablesOnMay02</code>
+      <code>testItFirstPurgeAllStatisticsTablesOnApr14</code>
+    </MissingReturnType>
+    <PossiblyFalseIterator>
+      <code>$dar</code>
+    </PossiblyFalseIterator>
+  </file>
   <file src="plugins/svn/bin/migrate_to_plugin.php">
     <MissingReturnType>
       <code>usage</code>
@@ -29103,7 +29502,6 @@
     <MissingReturnType>
       <code>getParametersAsArray</code>
       <code>injectDependencies</code>
-      <code>process</code>
     </MissingReturnType>
   </file>
   <file src="plugins/svn/include/Events/SystemEvent_SVN_DELETE_REPOSITORY.class.php">
@@ -29198,7 +29596,6 @@
     <MissingReturnType>
       <code>checkUserIsAdmin</code>
       <code>delete</code>
-      <code>isAnAuthorizedDynamicUgroup</code>
       <code>isDeletionAlreadyQueued</code>
       <code>options</code>
       <code>optionsId</code>
@@ -29210,16 +29607,6 @@
       <code>hasImmutableTagChanged</code>
       <code>update</code>
     </MissingReturnType>
-    <PossiblyNullArgument>
-      <code><![CDATA[$settings->getCommitRules()]]></code>
-      <code><![CDATA[$settings->getImmutableTag()]]></code>
-      <code><![CDATA[$settings->getMailNotification()]]></code>
-      <code><![CDATA[$settings->getMailNotification()]]></code>
-    </PossiblyNullArgument>
-    <PossiblyNullReference>
-      <code>getPathsAsString</code>
-      <code>getWhitelistAsString</code>
-    </PossiblyNullReference>
   </file>
   <file src="plugins/svn/include/Reference/Extractor.php">
     <MissingReturnType>
@@ -29468,25 +29855,6 @@
     <UndefinedThisPropertyAssignment>
       <code><![CDATA[$this->commit_rule_active]]></code>
     </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="plugins/svn/include/SVN/Admin/ImmutableTag.php">
-    <MissingParamType>
-      <code>$path</code>
-      <code>$paths</code>
-      <code>$whitelist</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$paths</code>
-      <code>$whitelist</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>convertToArray</code>
-      <code>getPaths</code>
-      <code>getPathsAsString</code>
-      <code>getRepository</code>
-      <code>getWhitelist</code>
-      <code>getWhitelistAsString</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/svn/include/SVN/Admin/ImmutableTagController.php">
     <MissingReturnType>
@@ -29927,8 +30295,6 @@
   </file>
   <file src="plugins/svn/include/SVN/Dao.php">
     <DeprecatedMethod>
-      <code>$dar</code>
-      <code>$dar</code>
       <code>DataAccessObject</code>
       <code>commit</code>
       <code>escapeInt</code>
@@ -29949,12 +30315,9 @@
       <code>escapeInt</code>
       <code>escapeInt</code>
       <code>escapeInt</code>
-      <code>escapeInt</code>
       <code>getRow</code>
       <code>getRow</code>
       <code>getRow</code>
-      <code>getRow</code>
-      <code>isError</code>
       <code>quoteLikeValuePrefix</code>
       <code>quoteSmart</code>
       <code>quoteSmart</code>
@@ -29966,8 +30329,6 @@
       <code>quoteSmart</code>
       <code>quoteSmart</code>
       <code>quoteSmart</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
       <code>retrieve</code>
       <code>retrieve</code>
       <code>retrieve</code>
@@ -30722,9 +31083,6 @@
       <code><![CDATA[$repository->getProject()->getID()]]></code>
       <code><![CDATA[$repository->getProject()->getID()]]></code>
     </PossiblyInvalidArgument>
-    <PossiblyUndefinedVariable>
-      <code>$repo_event</code>
-    </PossiblyUndefinedVariable>
   </file>
   <file src="plugins/svn/include/SVN/Repository/RepositoryDeleter.php">
     <DeprecatedMethod>
@@ -30788,17 +31146,6 @@
     <MissingReturnType>
       <code>doesNameAlreadyExisting</code>
       <code>getErrorRepositoryExists</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/svn/include/SVN/Repository/Settings.php">
-    <MissingParamType>
-      <code>$access_file</code>
-      <code>$is_access_file_already_purged</code>
-      <code>$used_version</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getUsedVersion</code>
-      <code>hasSettings</code>
     </MissingReturnType>
   </file>
   <file src="plugins/svn/include/SVN/Service/ServiceActivator.php">
@@ -31098,8 +31445,6 @@
     <MissingParamType>
       <code>$id</code>
       <code>$keyword</code>
-      <code>$new_ugroup_name</code>
-      <code>$old_ugroup_name</code>
     </MissingParamType>
     <MissingReturnType>
       <code>getApacheConfGenerator</code>
@@ -31108,7 +31453,6 @@
       <code>getTypes</code>
       <code>lastMonthStatisticsCollectorSVN</code>
       <code>statisticsCollectorSVN</code>
-      <code>updateAllAccessFileOfProject</code>
     </MissingReturnType>
     <PossiblyNullArgument>
       <code>$user</code>
@@ -31120,6 +31464,11 @@
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyUndefinedArrayOffset>
+  </file>
+  <file src="plugins/svn/tests/integration/SVN/Commit/_fixtures/pre-commit.php">
+    <InvalidArgument>
+      <code>$filesize</code>
+    </InvalidArgument>
   </file>
   <file src="plugins/taskboard/include/Admin/ScrumBoardTypeSelectorController.php">
     <MissingParamType>
@@ -33460,11 +33809,6 @@
       <code>getIncomingEmailButton</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/ActionButtons/ArtifactMoveButtonPresenterBuilder.php">
-    <MissingReturnType>
-      <code>getMoveArtifactModal</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Artifact/ActionButtons/ArtifactMoveModalPresenter.php">
     <PossiblyInvalidPropertyAssignmentValue>
       <code><![CDATA[$artifact->getTracker()->getProject()->getID()]]></code>
@@ -33950,17 +34294,6 @@
     <MissingParamType>
       <code>$submitted_value</code>
     </MissingParamType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/Changeset/PostCreation/ActionsRunner.php">
-    <MissingReturnType>
-      <code>executePostCreationActions</code>
-      <code>processAsyncPostCreationActions</code>
-      <code>processPostCreationActions</code>
-      <code>queuePostCreationEvent</code>
-    </MissingReturnType>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $changeset->getArtifact()->getId()]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Changeset/PostCreation/AsynchronousActionsRunner.php">
     <MissingReturnType>
@@ -34673,7 +35006,6 @@
       <code>deleteValues</code>
       <code>diffToPreviousArtifactView</code>
       <code>displayDiff</code>
-      <code>executePostCreationActions</code>
       <code>fetchChangesetActionButtons</code>
       <code>fetchEditButton</code>
       <code>fetchIncomingMailButton</code>
@@ -35104,7 +35436,6 @@
     </MissingParamType>
     <MissingReturnType>
       <code>displayDiff</code>
-      <code>executePostCreationActions</code>
       <code>getTracker</code>
     </MissingReturnType>
     <NullableReturnStatement>
@@ -43134,16 +43465,6 @@
       <code>checkMetaDataIsValid</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/InvalidSearchablesCollection.php">
-    <MissingParamType>
-      <code>$error_message</code>
-      <code>$searchable_name</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>addInvalidSearchableError</code>
-      <code>addNonexistentSearchable</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/ListFieldBindValueNormalizer.php">
     <MissingParamType>
       <code>$value</code>
@@ -49775,6 +50096,126 @@
     <RedundantCast>
       <code><![CDATA[(string) 'ugroup_nobody_name_key']]></code>
     </RedundantCast>
+  </file>
+  <file src="plugins/tracker/tests/integration/PriorityDaoPerformancesTest.php">
+    <ArgumentTypeCoercion>
+      <code>$times</code>
+      <code>$times</code>
+    </ArgumentTypeCoercion>
+    <DeprecatedMethod>
+      <code>getRow</code>
+      <code>getRow</code>
+      <code>getRow</code>
+      <code>retrieve</code>
+      <code>retrieve</code>
+      <code>retrieve</code>
+      <code>retrieve</code>
+    </DeprecatedMethod>
+    <MissingParamType>
+      <code>$done</code>
+      <code>$n</code>
+      <code>$n</code>
+      <code>$n</code>
+      <code>$n</code>
+      <code>$n</code>
+      <code>$n</code>
+      <code>$n</code>
+      <code>$n</code>
+      <code>$new_rank</code>
+      <code>$new_rank</code>
+      <code>$times</code>
+      <code>$total</code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code>addToCSV</code>
+      <code>benchmarkMove10Before1rank</code>
+      <code>benchmarkMove10BeforeRank</code>
+      <code>benchmarkMoveBefore1rank</code>
+      <code>benchmarkMoveBeforeAll</code>
+      <code>benchmarkMoveBeforeMiddle</code>
+      <code>benchmarkMoveBeforeRank</code>
+      <code>benchmarkPutAtTheEnd</code>
+      <code>displayStats</code>
+      <code>generateRandomArtifactPriorities</code>
+      <code>progress</code>
+      <code>testBenchmark</code>
+    </MissingReturnType>
+    <PossiblyFalseIterator>
+      <code><![CDATA[$this->dao->retrieve("SELECT artifact_id FROM tracker_artifact_priority_rank WHERE `rank` >= $n - 10")]]></code>
+    </PossiblyFalseIterator>
+    <PossiblyFalseReference>
+      <code>getRow</code>
+      <code>getRow</code>
+      <code>getRow</code>
+    </PossiblyFalseReference>
+  </file>
+  <file src="plugins/tracker/tests/integration/PriorityDaoTest.php">
+    <MissingReturnType>
+      <code>assertOrder</code>
+      <code>setInitialOrder</code>
+      <code>test1HasAGreaterPriorityThan101</code>
+      <code>test1HasAnHigherPriorityThan123</code>
+      <code>test42HasALowerPriorityThan1</code>
+      <code>test42HasAnHigherPriorityThan1</code>
+      <code>test42HasAnHigherPriorityThan101</code>
+      <code>testItDeletes123</code>
+      <code>testItDoesntRelyOnMysqlInsertOrder</code>
+      <code>testItHasThreeMoreElementsAddedAtTheEnd</code>
+      <code>testItInsertAnElementAtTheEnd</code>
+      <code>testItInsertOneElement</code>
+      <code>testItMovesExtremitiesAtTheMiddle</code>
+      <code>testItMovesManyArtifactsAtOnceAfter66</code>
+      <code>testItMovesManyArtifactsAtOnceAtTheBeforeLastPosition</code>
+      <code>testItMovesManyArtifactsAtOnceAtTheBeginning</code>
+      <code>testItMovesManyArtifactsAtOnceAtTheSamePosition</code>
+      <code>testItMovesManyArtifactsAtOnceAtTheSecondPosition</code>
+      <code>testItMovesManyArtifactsAtOnceAtTheVeryEnd</code>
+      <code>testItMovesManyArtifactsAtOnceBefore42</code>
+      <code>testItRaisesAnExceptionIfWeWantToMove1Before1</code>
+      <code>testItStartsWithEmptyTable</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/tests/integration/ReportCriteriaDaoTest.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$this->db->insertReturnId('tracker_report_criteria', [
+            'report_id' => $report_id,
+            'field_id' => $field_id,
+            'rank' => $rank,
+            'is_advanced' => $is_advanced,
+        ])]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code>int</code>
+    </InvalidReturnType>
+    <InvalidScalarArgument>
+      <code>3</code>
+    </InvalidScalarArgument>
+    <PossiblyUndefinedVariable>
+      <code>$field_mapping</code>
+      <code>$field_mapping</code>
+      <code>$field_mapping</code>
+      <code>$field_mapping</code>
+      <code>$field_mapping</code>
+      <code>$field_mapping</code>
+      <code>$field_mapping</code>
+    </PossiblyUndefinedVariable>
+  </file>
+  <file src="plugins/tracker/tests/integration/Tracker/Notifications/Settings/CalendarEventConfigDaoTest.php">
+    <UndefinedThisPropertyAssignment>
+      <code><![CDATA[$this->dao]]></code>
+    </UndefinedThisPropertyAssignment>
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->dao]]></code>
+      <code><![CDATA[$this->dao]]></code>
+    </UndefinedThisPropertyFetch>
+  </file>
+  <file src="plugins/tracker/tests/integration/Tracker/Notifications/Settings/NotificationSettingsDuplicatorTest.php">
+    <PossiblyInvalidArgument>
+      <code>$users</code>
+    </PossiblyInvalidArgument>
+    <PossiblyInvalidArrayAccess>
+      <code>$users[0]</code>
+    </PossiblyInvalidArrayAccess>
   </file>
   <file src="plugins/tracker_date_reminder/include/ArtifactDateReminder.class.php">
     <DeprecatedFunction>
@@ -59556,14 +59997,6 @@
       <code>save</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/SVNCore/CommitMessageValidator.class.php">
-    <MissingParamType>
-      <code>$commit_message</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>assertCommitMessageIsValid</code>
-    </MissingReturnType>
-  </file>
   <file src="src/common/SVNCore/Event/GetSVNLoginNameEvent.php">
     <MissingParamType>
       <code>$username</code>
@@ -59576,12 +60009,6 @@
     <MissingParamType>
       <code>$handle_resource</code>
     </MissingParamType>
-  </file>
-  <file src="src/common/SVNCore/SVNAccessFile.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$this->getGroupMatcher($this->ugroupOldName)]]></code>
-      <code><![CDATA[$this->getGroupMatcher(self::GROUPNAME_PATTERN)]]></code>
-    </ArgumentTypeCoercion>
   </file>
   <file src="src/common/SVNCore/SVNAuthenticationCacheInvalidator.php">
     <MissingReturnType>
@@ -59611,14 +60038,6 @@
       <code>searchSvnRepositories</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/SVNCore/SVN_Hooks.class.php">
-    <MissingParamType>
-      <code>$parameters</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getMessageFromSvnLook</code>
-    </MissingReturnType>
-  </file>
   <file src="src/common/SVNCore/SVN_LogDao.class.php">
     <DeprecatedMethod>
       <code>DataAccessObject</code>
@@ -59646,40 +60065,6 @@
       <code>getRow</code>
       <code>getRow</code>
     </PossiblyFalseReference>
-  </file>
-  <file src="src/common/SVNCore/SVN_Svnlook.class.php">
-    <InvalidScalarArgument>
-      <code>$revision</code>
-      <code>$transaction</code>
-    </InvalidScalarArgument>
-    <MissingParamType>
-      <code>$command</code>
-      <code>$filename</code>
-      <code>$svn_path</code>
-      <code>$svn_path</code>
-      <code>$transaction</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$svnlook</code>
-      <code>$timeout</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>execute</code>
-      <code>getDirectoryListing</code>
-      <code>getTree</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/SVN_SvnlookException.class.php">
-    <MissingParamType>
-      <code>$command</code>
-      <code>$output</code>
-      <code>$return_value</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$command</code>
-      <code>$output</code>
-      <code>$returnValue</code>
-    </MissingPropertyType>
   </file>
   <file src="src/common/SVNCore/Tokens/SVN_Token.class.php">
     <MissingParamType>
@@ -59732,47 +60117,6 @@
       <code>setDateForUser</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/SVNCore/hook/PostRevPropset.class.php">
-    <MissingParamType>
-      <code>$old_commit_message</code>
-      <code>$revision</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>removePreviousCrossReferences</code>
-      <code>update</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/hook/PreCommit.class.php">
-    <MissingParamType>
-      <code>$immutable_path</code>
-      <code>$immutable_path</code>
-      <code>$path</code>
-      <code>$path</code>
-      <code>$path</code>
-      <code>$repository</code>
-      <code>$transaction</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>assertCommitDoesNotContainSHA1Collision</code>
-      <code>assertCommitMessageIsValid</code>
-      <code>assertCommitToTagIsAllowed</code>
-      <code>getWellFormedRegexImmutablePath</code>
-      <code>isCommitDoneOnWhitelistElement</code>
-      <code>isCommitForbidden</code>
-      <code>optionDoesNotAllowEmptyCommitMessage</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/hook/PreRevPropset.class.php">
-    <MissingParamType>
-      <code>$action</code>
-      <code>$propname</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>assertCanBeModified</code>
-      <code>assertCommitMessageCanBeModified</code>
-      <code>assertPropsetIsOnLog</code>
-    </MissingReturnType>
-  </file>
   <file src="src/common/SVNCore/immutable_tags/SVN_Immutable_Tags_DAO.php">
     <DeprecatedMethod>
       <code>DataAccessObject</code>
@@ -59788,16 +60132,6 @@
     <MissingReturnType>
       <code>getImmutableTagsPathForProject</code>
       <code>getImmutableTagsWhitelistForProject</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/immutable_tags/SVN_Immutable_Tags_Handler.php">
-    <MissingParamType>
-      <code>$project_id</code>
-      <code>$project_id</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>doesProjectUsesImmutableTags</code>
-      <code>getAllowedTagsFromWhiteList</code>
     </MissingReturnType>
   </file>
   <file src="src/common/Search/Presenters/AdditionalSearchTabsPresenter.class.php">
@@ -61161,13 +61495,6 @@
       <code>pv</code>
       <code>return_to</code>
     </MissingReturnType>
-  </file>
-  <file src="src/common/User/LoginPresenterBuilder.php">
-    <MissingParamType>
-      <code>$form_loginname</code>
-      <code>$printer_version</code>
-      <code>$return_to</code>
-    </MissingParamType>
   </file>
   <file src="src/common/User/MutableInfoPresenter.class.php">
     <MissingParamType>
@@ -63541,11 +63868,6 @@
     </InvalidArgument>
     <MissingParamType>
       <code>$can_change_svn_log</code>
-      <code>$contents</code>
-      <code>$contents</code>
-      <code>$custom_perms</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
       <code>$group_id</code>
       <code>$hook_commit_path</code>
       <code>$hook_commit_path</code>
@@ -63559,32 +63881,17 @@
       <code>$pre_commit_file</code>
       <code>$project_id</code>
       <code>$project_id</code>
-      <code>$project_id</code>
       <code>$project_svnroot</code>
       <code>$project_svnroot</code>
       <code>$project_svnroot</code>
       <code>$project_svnroot</code>
       <code>$project_svnroot</code>
       <code>$source_tool</code>
-      <code>$svn_dir</code>
       <code>$svnroot</code>
       <code>$system_path</code>
       <code>$system_path</code>
       <code>$system_path</code>
-      <code>$system_path</code>
-      <code>$system_path</code>
-      <code>$system_path</code>
-      <code>$system_path</code>
-      <code>$system_path</code>
-      <code>$system_path</code>
-      <code>$system_path</code>
       <code>$tool_reference_path</code>
-      <code>$ugroup_name</code>
-      <code>$ugroup_name</code>
-      <code>$ugroup_name</code>
-      <code>$ugroup_old_name</code>
-      <code>$ugroup_old_name</code>
-      <code>$ugroup_old_name</code>
       <code>$var</code>
     </MissingParamType>
     <MissingPropertyType>
@@ -63594,31 +63901,17 @@
       <code>buildExceptionMessage</code>
       <code>createDirectoryLayout</code>
       <code>createRepository</code>
-      <code>createRepositorySVN</code>
-      <code>createSVNAccessFile</code>
       <code>deleteHook</code>
       <code>disableCommitMessageUpdate</code>
       <code>enableCommitMessageUpdate</code>
       <code>enableHook</code>
       <code>forceUpdateApacheConf</code>
       <code>getHookPath</code>
-      <code>getSvnAccessFile</code>
       <code>getSvnDao</code>
-      <code>getSvnFilesUnixGroupId</code>
       <code>getSvnFilesUnixGroupName</code>
       <code>isLinkToTool</code>
       <code>setUserAndGroup</code>
-      <code>updateCustomSVNAccessForRepository</code>
-      <code>updateHooksForProjectRepository</code>
-      <code>updateSVNAccessFile</code>
-      <code>updateSVNAccessForRepository</code>
     </MissingReturnType>
-    <PossiblyFalseArgument>
-      <code>$svnaccess_array</code>
-    </PossiblyFalseArgument>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$project->getID()]]></code>
-    </PossiblyInvalidArgument>
   </file>
   <file src="src/common/backend/BackendSVNFileForSimlinkAlreadyExistsException.class.php">
     <MissingParamType>
@@ -65718,23 +66011,6 @@
       <code>$user_id</code>
       <code>$user_id</code>
     </MissingParamType>
-  </file>
-  <file src="src/common/dao/SvnCommitsDao.class.php">
-    <DeprecatedMethod>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>parent::__construct()</code>
-      <code>quoteSmart</code>
-      <code>update</code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code>$description</code>
-      <code>$group_id</code>
-      <code>$revision</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>updateCommitMessage</code>
-    </MissingReturnType>
   </file>
   <file src="src/common/dao/SvnNotificationDao.class.php">
     <DeprecatedMethod>
@@ -68328,11 +68604,6 @@
       <code>getIdFromParam</code>
       <code>getIdFromParam</code>
     </TooManyArguments>
-    <UndefinedMethod>
-      <code>archiveProjectSVN</code>
-      <code>repositoryExists</code>
-      <code>setSVNApacheConfNeedUpdate</code>
-    </UndefinedMethod>
   </file>
   <file src="src/common/system_event/include/SystemEvent_PROJECT_IS_PRIVATE.class.php">
     <MissingReturnType>
@@ -68348,8 +68619,6 @@
     <FalseOperand>
       <code>false</code>
       <code>false</code>
-      <code>false</code>
-      <code>false</code>
     </FalseOperand>
     <MissingReturnType>
       <code>addProjectHistory</code>
@@ -68359,11 +68628,7 @@
       <code><![CDATA[$project->getId()]]></code>
     </PossiblyInvalidArgument>
     <UndefinedMethod>
-      <code>isNameAvailable</code>
       <code>renameFileReleasedDirectory</code>
-      <code>renameSVNRepository</code>
-      <code>repositoryExists</code>
-      <code>setSVNApacheConfNeedUpdate</code>
     </UndefinedMethod>
   </file>
   <file src="src/common/system_event/include/SystemEvent_ROOT_DAILY.class.php">
@@ -68400,11 +68665,7 @@
   <file src="src/common/system_event/include/SystemEvent_USER_RENAME.class.php">
     <FalseOperand>
       <code>false</code>
-      <code>false</code>
     </FalseOperand>
-    <UndefinedMethod>
-      <code>updateSVNAccessForGivenMember</code>
-    </UndefinedMethod>
   </file>
   <file src="src/common/templating/TemplateRenderer.class.php">
     <MissingParamType>
@@ -74531,15 +74792,21 @@
       <code><![CDATA[$_SERVER['argv']]]></code>
     </PossiblyUndefinedArrayOffset>
   </file>
-  <file src="src/utils/svn/codendi_svn_pre_commit.php">
-    <InvalidArgument>
-      <code>$txn</code>
-    </InvalidArgument>
-  </file>
-  <file src="src/utils/svn/force_refresh_svnaccessfile.php">
-    <UndefinedMethod>
-      <code>updateProjectSVNAccessFile</code>
-    </UndefinedMethod>
+  <file src="src/vendor/mockery/mockery/library/Mockery/Adapter/Phpunit/MockeryPHPUnitIntegration.php">
+    <InternalMethod>
+      <code>addToAssertionCount</code>
+    </InternalMethod>
+    <MissingPropertyType>
+      <code>$mockeryOpen</code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code>addMockeryExpectationsToAssertionCount</code>
+      <code>checkMockeryExceptions</code>
+      <code>closeMockery</code>
+      <code>mockeryAssertPostConditions</code>
+      <code>purgeMockeryContainer</code>
+      <code>startMockery</code>
+    </MissingReturnType>
   </file>
   <file src="src/vendor/symfony/console/Command/Command.php">
     <PossiblyNullArgument>
@@ -77710,6 +77977,239 @@
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyUndefinedArrayOffset>
+  </file>
+  <file src="tests/integration/tests/Backend/BackendSVNTest.php">
+    <InvalidArgument>
+      <code>$project</code>
+      <code>$project</code>
+      <code>$project</code>
+      <code>$project</code>
+    </InvalidArgument>
+    <MissingPropertyType>
+      <code>$bin_dir</code>
+      <code>$cache_parameters</code>
+      <code>$fake_revprop</code>
+      <code>$initial_codendi_bin_prefix</code>
+      <code>$initial_http_user</code>
+      <code>$initial_svn_prefix</code>
+      <code>$initial_svn_root_file</code>
+      <code>$initial_svnadmin_cmd</code>
+      <code>$initial_sys_name</code>
+      <code>$initial_sys_project_backup_path</code>
+      <code>$initial_tmp_dir</code>
+      <code>$tmp_dir</code>
+    </MissingPropertyType>
+    <PossiblyUndefinedMethod>
+      <code>generateSVNApacheConf</code>
+      <code>setSVNPrivacy</code>
+      <code>setSVNPrivacy</code>
+      <code>setSVNPrivacy</code>
+      <code>setSVNPrivacy</code>
+      <code>shouldReceive</code>
+      <code>shouldReceive</code>
+      <code>shouldReceive</code>
+      <code>shouldReceive</code>
+      <code>shouldReceive</code>
+      <code>shouldReceive</code>
+      <code>shouldReceive</code>
+    </PossiblyUndefinedMethod>
+    <PropertyTypeCoercion>
+      <code><![CDATA[\Mockery::mock(\BackendSVN::class)->makePartial()->shouldAllowMockingProtectedMethods()]]></code>
+    </PropertyTypeCoercion>
+    <TooManyArguments>
+      <code><![CDATA[\TestHelper::arrayToDar([
+            "group_id"        => "101",
+            "group_name"      => "Guinea Pig",
+            "unix_group_name" => "gpig",
+        ], [
+            "group_id"        => "102",
+            "group_name"      => "Guinea Pig is \"back\"",
+            "unix_group_name" => "gpig2",
+        ], [
+            "group_id"        => "103",
+            "group_name"      => "Guinea Pig is 'angry'",
+            "unix_group_name" => "gpig3",
+        ])]]></code>
+      <code>andReturns</code>
+      <code>andReturns</code>
+      <code>andReturns</code>
+      <code>andReturns</code>
+      <code>andReturns</code>
+      <code>andReturns</code>
+      <code>andReturns</code>
+      <code>andReturns</code>
+      <code>andReturns</code>
+      <code>andReturns</code>
+      <code>andReturns</code>
+    </TooManyArguments>
+    <UndefinedInterfaceMethod>
+      <code>never</code>
+      <code>once</code>
+      <code>updateHooks</code>
+      <code>updateHooks</code>
+    </UndefinedInterfaceMethod>
+    <UndefinedMagicMethod>
+      <code>andReturns</code>
+      <code>andReturns</code>
+      <code>andReturns</code>
+      <code>andReturns</code>
+      <code>andReturns</code>
+      <code>andReturns</code>
+      <code>andReturns</code>
+      <code>andReturns</code>
+      <code>andReturns</code>
+      <code>andReturns</code>
+      <code>andReturns</code>
+      <code>never</code>
+      <code>once</code>
+    </UndefinedMagicMethod>
+  </file>
+  <file src="tests/integration/tests/Backend/BackendSystemTest.php">
+    <MissingPropertyType>
+      <code>$initial_codendi_log</code>
+      <code>$initial_ftp_anon_dir_prefix</code>
+      <code>$initial_ftp_frs_dir_prefix</code>
+      <code>$initial_sys_custom_incdir</code>
+      <code>$initial_sys_file_deletion_delay</code>
+      <code>$initial_sys_incdir</code>
+      <code>$initial_sys_project_backup_path</code>
+      <code>$initial_tmp_dir</code>
+    </MissingPropertyType>
+    <TooManyArguments>
+      <code>andReturns</code>
+      <code>andReturns</code>
+      <code>andReturns</code>
+    </TooManyArguments>
+    <UndefinedInterfaceMethod>
+      <code>cleanupFRS</code>
+      <code>renameFileReleasedDirectory</code>
+    </UndefinedInterfaceMethod>
+    <UndefinedMagicMethod>
+      <code>andReturn</code>
+      <code>andReturn</code>
+      <code>andReturns</code>
+      <code>andReturns</code>
+      <code>andReturns</code>
+    </UndefinedMagicMethod>
+  </file>
+  <file src="tests/integration/tests/Project/Admin/History/ProjectHistoryDaoTest.php">
+    <TooManyArguments>
+      <code>create</code>
+    </TooManyArguments>
+    <UndefinedThisPropertyAssignment>
+      <code><![CDATA[$this->another_admin]]></code>
+    </UndefinedThisPropertyAssignment>
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->another_admin]]></code>
+    </UndefinedThisPropertyFetch>
+  </file>
+  <file src="tests/integration/tests/TrackersV3ToV5/DefectTrackerTest.php">
+    <MissingParamType>
+      <code>$columns</code>
+      <code>$columns</code>
+      <code>$field_label</code>
+      <code>$field_label</code>
+      <code>$field_labels</code>
+      <code>$name</code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code>$backup_codendi_log</code>
+      <code><![CDATA[$report->name]]></code>
+      <code><![CDATA[$this->bugs_report->name]]></code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code>columnsContainOneColumnForField</code>
+      <code>compareValuesToLabel</code>
+      <code>criteriaContainOneCriterionForField</code>
+      <code>getReportByName</code>
+      <code>resetForgeConfig</code>
+      <code>testItCreatedTrackerV5WithDefaultParameters</code>
+      <code>testItGivesFullAccessToAllUsers</code>
+      <code>testItHasAListFieldResolutionWithValues</code>
+      <code>testItHasAReportNamedBugs</code>
+      <code>testItHasAStatusSemantic</code>
+      <code>testItHasATableRenderer</code>
+      <code>testItHasATextFieldDescription</code>
+      <code>testItHasATitleSemantic</code>
+      <code>testItHasAnAssignedToSemantic</code>
+      <code>testItHasAnUnusedDateFieldCloseDate</code>
+      <code>testItHasAnUnusedField</code>
+      <code>testItHasFourCriteria</code>
+      <code>testItHasNoParent</code>
+      <code>testItHasOnlyOneOpenValueForStatusSemantic</code>
+      <code>testItHasSubmittedBy</code>
+      <code>testItHasTwoReports</code>
+      <code>thereAreColumnsForFields</code>
+      <code>thereAreCriteriaForFields</code>
+    </MissingReturnType>
+    <PossiblyNullPropertyAssignmentValue>
+      <code><![CDATA[$this->tracker_factory->getTrackerById(self::$defect_tracker_id)]]></code>
+    </PossiblyNullPropertyAssignmentValue>
+    <PossiblyNullReference>
+      <code>getLabel</code>
+      <code>getListValueById</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="tests/integration/tests/TrackersV3ToV5/TaskTrackerTest.php">
+    <MissingParamType>
+      <code>$columns</code>
+      <code>$columns</code>
+      <code>$field_label</code>
+      <code>$field_label</code>
+      <code>$field_labels</code>
+      <code>$name</code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code>$backup_codendi_log</code>
+      <code><![CDATA[$report->name]]></code>
+      <code><![CDATA[$this->tasks_report->name]]></code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code>columnsContainOneColumnForField</code>
+      <code>compareValuesToLabel</code>
+      <code>convertTaskTracker</code>
+      <code>criteriaContainOneCriterionForField</code>
+      <code>getReportByName</code>
+      <code>resetForgeConfig</code>
+      <code>testItCreateReminderWhenTheListOfUgroupsIsEmptyButNotTheTrackerRoles</code>
+      <code>testItCreatedTrackerV5WithDefaultParameters</code>
+      <code>testItGivesFullAccessToAllUsers</code>
+      <code>testItHasADateFieldStartDate</code>
+      <code>testItHasAListFieldResolutionWithValues</code>
+      <code>testItHasAReportNamedBugs</code>
+      <code>testItHasAStatusSemantic</code>
+      <code>testItHasATableRenderer</code>
+      <code>testItHasATextFieldDescription</code>
+      <code>testItHasATitleSemantic</code>
+      <code>testItHasAnAssignedToSemantic</code>
+      <code>testItHasAnUnusedField</code>
+      <code>testItHasNoParent</code>
+      <code>testItHasOnlyOneOpenValueForStatusSemantic</code>
+      <code>testItHasSubmittedBy</code>
+      <code>testItHasThreeCriteria</code>
+      <code>testItHasTwoReports</code>
+      <code>testItSendsASecondEmailOnStartDate</code>
+      <code>testItSendsASecondEmailThreeDaysAfterDueDate</code>
+      <code>testItSendsAnEmailToProjectAndTrackerAdminsTwoDaysBeforeStartDate</code>
+      <code>testItSendsAnEmailToProjectMembersAndSubmitterOneDayAfterEndDate</code>
+      <code>testItSendsAnEmailToProjectMembersAndSubmitterThreeDaysAfterEndDate</code>
+      <code>testItSendsAnEmailToSubmitterOneDaysAfterDueDate</code>
+      <code>testItSendsTheLastEmailTwoDaysAfterStartDate</code>
+      <code>thereAreColumnsForFields</code>
+      <code>thereAreCriteriaForFields</code>
+    </MissingReturnType>
+    <PossiblyNullPropertyAssignmentValue>
+      <code><![CDATA[$this->tracker_factory->getTrackerById(self::$task_tracker_id)]]></code>
+    </PossiblyNullPropertyAssignmentValue>
+    <PossiblyNullReference>
+      <code>getLabel</code>
+      <code>getListValueById</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="tests/integration/tests/dao/UserDaoTest.php">
+    <TooManyArguments>
+      <code>create</code>
+    </TooManyArguments>
   </file>
   <file src="tests/lib/Stubs/ExtractReferencesStub.php">
     <LessSpecificReturnStatement>
