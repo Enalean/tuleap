@@ -65,7 +65,7 @@ class SVNAccessFileReader
             }
         }
 
-        return new SVNAccessFileContent($this->default_block_generator->getDefaultBlock($repository->getProject())->content, $content);
+        return new SVNAccessFileContent($this->default_block_generator->getDefaultBlock($repository)->content, $content);
     }
 
     private function isDefaultBlockStarting(string $line): bool

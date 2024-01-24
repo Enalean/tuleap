@@ -92,7 +92,7 @@ class AccessFileHistoryCreator
     {
         $access_file         = new SVNAccessFileSectionParser();
         $access_file_content = new SVNAccessFileContent(
-            $this->default_block_generator->getDefaultBlock($repository->getProject())->content,
+            $this->default_block_generator->getDefaultBlock($repository)->content,
             trim($content),
         );
         return $access_file->parse($access_file_content);
@@ -105,7 +105,7 @@ class AccessFileHistoryCreator
     {
         $access_file_writer  = new SVNAccessFileWriter();
         $access_file_content = new SVNAccessFileContent(
-            $this->default_block_generator->getDefaultBlock($repository->getProject())->content,
+            $this->default_block_generator->getDefaultBlock($repository)->content,
             $history->getContent(),
         );
         $access_file_writer->writeWithDefaults(

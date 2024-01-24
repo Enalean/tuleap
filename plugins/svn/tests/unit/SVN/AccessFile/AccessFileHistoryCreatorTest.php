@@ -23,7 +23,6 @@ namespace Tuleap\SVN\AccessControl;
 
 use ForgeConfig;
 use PHPUnit\Framework\MockObject\MockObject;
-use Project;
 use ProjectHistoryDao;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
@@ -64,7 +63,7 @@ final class AccessFileHistoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_history_formatter = $this->createMock(ProjectHistoryFormatter::class);
         $this->project_history_dao       = $this->createMock(ProjectHistoryDao::class);
         $default_block_generator         = new class implements SVNAccessFileDefaultBlockGeneratorInterface {
-            public function getDefaultBlock(Project $project): SVNAccessFileDefaultBlock
+            public function getDefaultBlock(Repository $repository): SVNAccessFileDefaultBlock
             {
                 return new SVNAccessFileDefaultBlock('');
             }
