@@ -19,7 +19,7 @@
 
 import { describe, it, expect, vi } from "vitest";
 import * as lazy_autocompleter from "@tuleap/lazybox";
-import type { LazyAutocompleter, LazyboxOptions } from "@tuleap/lazybox";
+import type { LazyAutocompleter, LazyboxOptions, LazyboxItem } from "@tuleap/lazybox";
 import { SelectorsDropdownAutocompleter } from "./SelectorsDropdownAutocompleter";
 
 const noop = (): void => {
@@ -57,6 +57,7 @@ describe("SelectorsDropdownAutocompleter", () => {
             templating_callback: vi.fn(),
             placeholder: "Hold the place",
             loadItems: vi.fn().mockReturnValue([]),
+            filterItems: (): LazyboxItem[] => [],
         };
 
         autocompleter.start(

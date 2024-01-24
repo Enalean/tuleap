@@ -21,4 +21,5 @@ export { SelectorsDropdown } from "./elements/SelectorsDropdown";
 export type {
     SelectorEntry,
     SelectorsDropdownLoadItemsCallback,
+    SelectorsDropdownFilterItemsCallback,
 } from "./elements/SelectorsDropdown";
