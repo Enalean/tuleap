@@ -16,23 +16,20 @@
         <directory name="src/utils/" />
         <directory name="src/tuleap-cfg/" />
         <directory name="plugins/*/include/" />
+        <directory name="plugins/*/tests/integration/"/>
         <directory name="plugins/*/tests/unit/" />
-      <directory name="plugins/crosstracker/tests/integration/"/>
-        <directory name="plugins/onlyoffice/tests/integration/" />
         <directory name="plugins/git/tests/unit/REST/" />
         <directory name="plugins/tracker/tests/unit/Builders" />
         <directory name="plugins/*/bin/" />
         <directory name="tests/lib/Stubs/" />
         <directory name="tests/phpcs/TuleapCodingStandard/" />
+        <directory name="tests/integration/tests/*/" />
         <directory name="tests/unit/Tuleap/" />
         <directory name="tests/unit/common/NeverThrow/" />
         <directory name="tests/unit/common/Option/" />
         <directory name="tests/unit/common/Project/Registration/" />
         <directory name="tests/unit/common/xml/" />
         <directory name="tests/unit/common/WebAuthn" />
-        <directory name="tests/integration/tests/SVNCore/" />
-        <directory name="tests/integration/tests/InviteBuddy/" />
-        <directory name="tests/integration/tests/WebAuthn" />
       <ignoreFiles>
             <directory name="tests/unit/Tuleap/Tools"/>
             <directory name="src/common/wiki/phpwiki/"/>

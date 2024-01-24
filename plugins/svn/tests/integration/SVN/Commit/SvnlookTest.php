@@ -25,7 +25,6 @@ namespace Tuleap\SVN\Commit;
 
 use ForgeConfig;
 use Symfony\Component\Process\Process;
-use Tuleap\SVN\Repository\SvnRepository;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use function PHPUnit\Framework\assertEquals;
@@ -38,7 +37,6 @@ final class SvnlookTest extends \Tuleap\Test\PHPUnit\TestCase
     // It will break in other tests as soon as you try to access something with CodendiDataAccess
     // use ForgeConfigSandbox;
 
-    private SvnRepository $repository;
     private string $working_copy;
     private string $svnrepo;
     private string|bool $initial_sys_data_dir;
@@ -61,8 +59,6 @@ final class SvnlookTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->initial_sys_data_dir = ForgeConfig::get('sys_data_dir');
         ForgeConfig::set('sys_data_dir', $this->getTmpDir());
-
-        $this->repository = SvnRepository::buildActiveRepository(2, $repository_name, $project);
     }
 
     protected function tearDown(): void
