@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink;
 
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Test\Stub\ArtifactUserCanViewStub;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 use Tuleap\Tracker\Test\Stub\SearchReverseLinksStub;
 
@@ -40,7 +40,9 @@ final class ReverseLinksRetrieverTest extends TestCase
             $linked_artifact_2
         );
 
-        $artifact          = ArtifactUserCanViewStub::buildUserCanViewArtifact(12);
+        $user = UserTestBuilder::buildWithDefaults();
+
+        $artifact          = ArtifactTestBuilder::anArtifact(12)->userCanView($user)->build();
         $retrieve_artifact = RetrieveArtifactStub::withArtifacts($artifact);
 
         $reverse_link_retriever = new ReverseLinksRetriever(
@@ -48,14 +50,12 @@ final class ReverseLinksRetrieverTest extends TestCase
             $retrieve_artifact
         );
 
-        $user = UserTestBuilder::buildWithDefaults();
-
         $reverse_link = $reverse_link_retriever->retrieveReverseLinks(
             $artifact,
             $user
         );
 
-        $expected_artifact          = ArtifactUserCanViewStub::buildUserCanViewArtifact(12);
+        $expected_artifact          = ArtifactTestBuilder::anArtifact(12)->userCanView($user)->build();
         $expected_retrieve_artifact = RetrieveArtifactStub::withArtifacts($expected_artifact);
         $expected_reverse_links     = new CollectionOfReverseLinks([StoredReverseLink::fromRow($expected_retrieve_artifact, $user, $linked_artifact_1)]);
 
