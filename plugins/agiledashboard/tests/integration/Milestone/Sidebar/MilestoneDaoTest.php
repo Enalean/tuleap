@@ -46,14 +46,14 @@ final class MilestoneDaoTest extends TestCase
      *     closed: array<int>,
      * }
      */
-    private array $release_status_values = [];
+    private array $release_status_values = ['open' => [], 'closed' => []];
     /**
      * @var array{
      *     open: array<int>,
      *     closed: array<int>,
      * }
      */
-    private array $sprint_status_values = [];
+    private array $sprint_status_values = ['open' => [], 'closed' => []];
 
     public static function setUpBeforeClass(): void
     {

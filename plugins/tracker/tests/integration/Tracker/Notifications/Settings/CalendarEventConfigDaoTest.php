@@ -31,6 +31,7 @@ final class CalendarEventConfigDaoTest extends TestCase
     private const BUG_TRACKER_ID   = 1;
     private const TASK_TRACKER_ID  = 2;
     private const STORY_TRACKER_ID = 3;
+    private CalendarEventConfigDao $dao;
 
     protected function setUp(): void
     {

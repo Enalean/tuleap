@@ -66,10 +66,6 @@ final class UserDaoTest extends TestCase
             null,
             null,
             null,
-            null,
-            null,
-            null,
-            null,
         );
     }
 }

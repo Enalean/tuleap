@@ -128,8 +128,11 @@ final class PullRequestUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $pr2 = $this->dao->searchByPullRequestId($pr2_id);
         $pr3 = $this->dao->searchByPullRequestId($pr3_id);
 
+        self::assertNotNull($pr1);
         self::assertEquals('sha1new', $pr1['sha1_src']);
+        self::assertNotNull($pr2);
         self::assertEquals('sha1new', $pr2['sha1_src']);
+        self::assertNotNull($pr3);
         self::assertEquals('sha1', $pr3['sha1_src']);
     }
 
@@ -158,7 +161,9 @@ final class PullRequestUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $pr1 = $this->dao->searchByPullRequestId($pr1_id);
         $pr2 = $this->dao->searchByPullRequestId($pr2_id);
 
+        self::assertNotNull($pr1);
         self::assertEquals('sha1', $pr1['sha1_src']);
+        self::assertNotNull($pr2);
         self::assertEquals('sha1', $pr2['sha1_src']);
     }
 
@@ -190,7 +195,9 @@ final class PullRequestUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $pr1 = $this->dao->searchByPullRequestId($pr1_id);
         $pr2 = $this->dao->searchByPullRequestId($pr2_id);
 
+        self::assertNotNull($pr1);
         self::assertEquals('sha1', $pr1['sha1_src']);
+        self::assertNotNull($pr2);
         self::assertEquals('sha1', $pr2['sha1_src']);
     }
 }

@@ -32,6 +32,7 @@ class ProjectHistoryDaoTest extends TestCase
 {
     private \Project $project;
     private \PFUser $project_admin;
+    private \PFUser $another_admin;
     private \DateTimeImmutable $now;
 
     protected function setUp(): void
@@ -188,10 +189,6 @@ class ProjectHistoryDaoTest extends TestCase
     {
         return (new \UserDao())->create(
             $user_name,
-            null,
-            null,
-            null,
-            null,
             null,
             null,
             null,

@@ -49,7 +49,8 @@ final class RoleAssignmentRepositoryAdapterTest extends TestCase
                 ProjectUGroupTestBuilder::aCustomUserGroup(103)->build()
             )
         );
-        $this->project    = new class implements ProjectIdentifier {
+
+        $this->project = new /** @psalm-immutable */ class implements ProjectIdentifier {
             public function getID(): int
             {
                 return 101;
