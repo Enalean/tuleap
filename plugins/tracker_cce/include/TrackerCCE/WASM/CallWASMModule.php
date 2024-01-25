@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\TrackerCCE\WASM;
 
+use Psr\Log\LoggerInterface;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -34,6 +35,7 @@ final class CallWASMModule implements WASMModuleCaller
     public function __construct(
         private readonly WASMCaller $wasm_caller,
         private readonly WASMResponseProcessor $response_processor,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -47,7 +49,8 @@ final class CallWASMModule implements WASMModuleCaller
                     Result::err(Fault::fromMessage('WASM module returns nothing'))
                 );
         } catch (WASMExecutionException $exception) {
-            return Result::err(Fault::fromThrowable($exception));
+            Fault::writeToLogger(Fault::fromThrowable($exception), $this->logger);
+            return Result::err(Fault::fromMessage('WASM execution failed'));
         }
     }
 }

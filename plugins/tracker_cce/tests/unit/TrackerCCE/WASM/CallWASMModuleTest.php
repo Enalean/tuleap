@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\TrackerCCE\WASM;
 
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\NullLogger;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\WebAssembly\WASMCaller;
@@ -55,6 +56,6 @@ final class CallWASMModuleTest extends TestCase
 
     private function buildWASMModuleCaller(WASMCaller $wasm_caller): CallWASMModule
     {
-        return new CallWASMModule($wasm_caller, $this->response_processor);
+        return new CallWASMModule($wasm_caller, $this->response_processor, new NullLogger());
     }
 }

@@ -96,7 +96,7 @@ final class CustomCodeExecutionTask implements PostCreationTask
                     (new \DateTimeImmutable())->getTimestamp(),
                 )),
                 function (Fault $fault) use ($changeset, $source_payload) {
-                    Fault::writeToLogger($fault, $this->logger, LogLevel::WARNING);
+                    Fault::writeToLogger($fault, $this->logger, LogLevel::DEBUG);
                     $this->log_dao->saveModuleLogLine(ModuleLogLine::buildError(
                         (int) $changeset->getId(),
                         $source_payload,
