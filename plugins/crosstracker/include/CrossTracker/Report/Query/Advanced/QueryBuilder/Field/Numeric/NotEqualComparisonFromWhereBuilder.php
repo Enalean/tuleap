@@ -29,7 +29,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
-final class EqualComparisonFromWhereBuilder
+final class NotEqualComparisonFromWhereBuilder
 {
     public function getFromWhere(DuckTypedField $duck_typed_field, Comparison $comparison): IProvideParametrizedFromAndWhereSQLFragments
     {
@@ -42,7 +42,6 @@ final class EqualComparisonFromWhereBuilder
         $changeset_value_alias       = "CV_{$suffix}";
         $changeset_value_int_alias   = "CVInt_{$suffix}";
         $changeset_value_float_alias = "CVFloat_{$suffix}";
-
 
         $fields_id_statement = EasyStatement::open()->in("$tracker_field_alias.id IN (?*)", $duck_typed_field->field_ids);
         $from                = <<<EOSQL
@@ -58,11 +57,18 @@ final class EqualComparisonFromWhereBuilder
         $from_parameters     = $fields_id_statement->values();
 
         if ($value === '') {
-            $where = "($changeset_value_int_alias.value IS NULL AND $changeset_value_float_alias.value IS NULL AND $tracker_field_alias.id IS NOT NULL)";
+            $where = <<<EOSQL
+            ($changeset_value_int_alias.value IS NOT NULL OR $changeset_value_float_alias.value IS NOT NULL)
+            AND $tracker_field_alias.id IS NOT NULL
+            EOSQL;
             return new ParametrizedFromWhere($from, $where, $from_parameters, []);
         }
 
-        $where            = "($changeset_value_int_alias.value = ? OR $changeset_value_float_alias.value = ?) AND $tracker_field_alias.id IS NOT NULL";
+        $where            = <<<EOSQL
+        ($changeset_value_int_alias.value IS NULL OR $changeset_value_int_alias.value != ?)
+        AND ($changeset_value_float_alias.value IS NULL OR $changeset_value_float_alias.value != ?)
+        AND $tracker_field_alias.id IS NOT NULL
+        EOSQL;
         $where_parameters = [$value, $value];
         return new ParametrizedFromWhere($from, $where, $from_parameters, $where_parameters);
     }
