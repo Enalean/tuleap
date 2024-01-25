@@ -59,7 +59,7 @@ export const ListFiltersStore = (filters: Ref<PullRequestsListFilter[]>): StoreL
         filters.value.splice(index, 1);
     },
     clearAllFilters: (): void => {
-        filters.value = [];
+        filters.value.splice(0, filters.value.length);
     },
     hasAFilterWithType: (type: PullRequestsListFilterType): boolean => {
         return filters.value.some((filter) => filter.type === type);

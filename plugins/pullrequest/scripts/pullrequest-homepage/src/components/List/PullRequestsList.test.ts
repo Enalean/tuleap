@@ -18,22 +18,31 @@
  */
 
 import { describe, beforeEach, it, expect, vi } from "vitest";
+import { ref } from "vue";
 import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import { okAsync, errAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import * as strict_inject from "@tuleap/vue-strict-inject";
 import { PullRequestStub } from "@tuleap/plugin-pullrequest-stub";
-import { StubInjectionSymbols } from "../../../tests/injection-symbols-stub";
+import {
+    injected_repository_id,
+    StubInjectionSymbols,
+} from "../../../tests/injection-symbols-stub";
 import type { DisplayErrorCallback } from "../../injection-symbols";
 import * as tuleap_api from "../../api/tuleap-rest-querier";
 import PullRequestsList from "./PullRequestsList.vue";
+import type { StoreListFilters } from "../Filters/ListFiltersStore";
+import { ListFiltersStore } from "../Filters/ListFiltersStore";
+import { AuthorFilterStub } from "../../../tests/stubs/AuthorFilterStub";
+import { UserStub } from "../../../tests/stubs/UserStub";
 
 describe("PullRequestsList", () => {
-    let tuleap_api_error_callback: DisplayErrorCallback;
+    let tuleap_api_error_callback: DisplayErrorCallback, filters_store: StoreListFilters;
 
     beforeEach(() => {
         tuleap_api_error_callback = vi.fn();
+        filters_store = ListFiltersStore(ref([]));
     });
 
     const getWrapper = (): VueWrapper => {
@@ -41,7 +50,11 @@ describe("PullRequestsList", () => {
             StubInjectionSymbols.withTuleapApiErrorCallback(tuleap_api_error_callback),
         );
 
-        return shallowMount(PullRequestsList);
+        return shallowMount(PullRequestsList, {
+            props: {
+                filters_store,
+            },
+        });
     };
 
     it("should load all the pull-requests of the repository and display them", async () => {
@@ -58,6 +71,34 @@ describe("PullRequestsList", () => {
         await wrapper.vm.$nextTick();
 
         expect(wrapper.findAll("[data-test=pull-request-card]").length).toBe(3);
+    });
+
+    it("When filters are added/removed of the filter store, then it should reload the list of pull-requests with the current filters list", async () => {
+        vi.spyOn(tuleap_api, "fetchAllPullRequests").mockReturnValue(okAsync([]));
+
+        const wrapper = getWrapper();
+        await wrapper.vm.$nextTick();
+
+        expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledOnce();
+        expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledWith(injected_repository_id, []);
+
+        const filter = AuthorFilterStub.fromAuthor(UserStub.withIdAndName(102, "John doe"));
+        filters_store.storeFilter(filter);
+        await wrapper.vm.$nextTick();
+
+        expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledTimes(2);
+        expect(tuleap_api.fetchAllPullRequests).toHaveBeenLastCalledWith(injected_repository_id, [
+            filter,
+        ]);
+
+        filters_store.deleteFilter(filter);
+        await wrapper.vm.$nextTick();
+
+        expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledTimes(3);
+        expect(tuleap_api.fetchAllPullRequests).toHaveBeenLastCalledWith(
+            injected_repository_id,
+            [],
+        );
     });
 
     it("should call the tuleap_api_error_callback when an error occurres while the pull-requests are being retrieved", async () => {

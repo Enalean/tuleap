@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import type { Ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
@@ -42,6 +42,7 @@ import { fetchAllPullRequests } from "../../api/tuleap-rest-querier";
 import { DISPLAY_TULEAP_API_ERROR, REPOSITORY_ID } from "../../injection-symbols";
 import PullRequestCard from "./PullRequest/PullRequestCard.vue";
 import PullRequestsCardsSkeletons from "./PullRequestsCardsSkeletons.vue";
+import type { StoreListFilters } from "../Filters/ListFiltersStore";
 
 const repository_id = strictInject(REPOSITORY_ID);
 const displayTuleapAPIFault = strictInject(DISPLAY_TULEAP_API_ERROR);
@@ -49,9 +50,24 @@ const displayTuleapAPIFault = strictInject(DISPLAY_TULEAP_API_ERROR);
 const pull_requests: Ref<readonly PullRequest[]> = ref([]);
 const is_loading_pull_requests = ref(true);
 
-fetchAllPullRequests(repository_id).match((all_pull_requests) => {
-    pull_requests.value = all_pull_requests;
+const props = defineProps<{
+    filters_store: StoreListFilters;
+}>();
 
-    is_loading_pull_requests.value = false;
-}, displayTuleapAPIFault);
+const loadPullRequests = (): void => {
+    is_loading_pull_requests.value = true;
+
+    fetchAllPullRequests(repository_id, props.filters_store.getFilters().value).match(
+        (all_pull_requests) => {
+            pull_requests.value = all_pull_requests;
+
+            is_loading_pull_requests.value = false;
+        },
+        displayTuleapAPIFault,
+    );
+};
+
+loadPullRequests();
+
+watch(props.filters_store.getFilters().value, loadPullRequests);
 </script>
