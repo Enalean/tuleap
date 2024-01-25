@@ -43,6 +43,7 @@ final class EqualComparisonFromWhereBuilder implements FromWhereBuilder
     public function getFromWhere(
         Field $field,
         Comparison $comparison,
+        \PFUser $user,
         array $trackers,
     ): IProvideParametrizedFromAndWhereSQLFragments {
         $field_name  = $field->getName();
@@ -51,7 +52,8 @@ final class EqualComparisonFromWhereBuilder implements FromWhereBuilder
             $this->retrieve_used_fields,
             $this->retrieve_field_type,
             $field_name,
-            $tracker_ids
+            $tracker_ids,
+            $user
         )->match(
             fn(DuckTypedField $duck_typed_field) => $this->matchTypeToBuilder($duck_typed_field, $comparison),
             static fn() => new ParametrizedFromWhere('', '', [], [])

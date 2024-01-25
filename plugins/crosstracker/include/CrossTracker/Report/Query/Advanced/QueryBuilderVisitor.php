@@ -88,8 +88,11 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
     /**
      * @param Tracker[] $trackers
      */
-    public function buildFromWhere(Logical $parsed_query, array $trackers, \PFUser $user): IProvideParametrizedFromAndWhereSQLFragments
-    {
+    public function buildFromWhere(
+        Logical $parsed_query,
+        array $trackers,
+        \PFUser $user,
+    ): IProvideParametrizedFromAndWhereSQLFragments {
         return $parsed_query->acceptLogicalVisitor($this, new QueryBuilderVisitorParameters($trackers, $user));
     }
 
@@ -101,6 +104,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
                 $comparison,
                 $this->metadata_equal_builder,
                 $this->field_equal_builder,
+                $parameters->user,
                 $parameters->trackers
             )
         );
@@ -114,6 +118,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
                 $comparison,
                 $this->metadata_not_equal_builder,
                 $this->field_not_equal_builder,
+                $parameters->user,
                 $parameters->trackers
             )
         );
@@ -129,6 +134,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
                 $comparison,
                 $this->metadata_lesser_than_builder,
                 $this->field_lesser_than_builder,
+                $parameters->user,
                 $parameters->trackers
             )
         );
@@ -144,6 +150,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
                 $comparison,
                 $this->metadata_greater_than_builder,
                 $this->field_greater_than_builder,
+                $parameters->user,
                 $parameters->trackers
             )
         );
@@ -159,6 +166,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
                 $comparison,
                 $this->metadata_lesser_than_or_equal_builder,
                 $this->field_lesser_than_or_equal_builder,
+                $parameters->user,
                 $parameters->trackers
             )
         );
@@ -174,6 +182,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
                 $comparison,
                 $this->metadata_greater_than_or_equal_builder,
                 $this->field_greater_than_or_equal_builder,
+                $parameters->user,
                 $parameters->trackers
             )
         );
@@ -187,6 +196,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
                 $comparison,
                 $this->metadata_between_builder,
                 $this->field_between_builder,
+                $parameters->user,
                 $parameters->trackers
             )
         );
@@ -200,6 +210,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
                 $comparison,
                 $this->metadata_in_builder,
                 $this->field_in_builder,
+                $parameters->user,
                 $parameters->trackers
             )
         );
@@ -213,6 +224,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
                 $comparison,
                 $this->metadata_not_in_builder,
                 $this->field_not_in_builder,
+                $parameters->user,
                 $parameters->trackers
             )
         );
@@ -259,8 +271,11 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
         return $this->buildAndClause($parameters, $tail, $from_where_expression);
     }
 
-    private function buildAndClause(QueryBuilderVisitorParameters $parameters, OrOperand | AndOperand | null $tail, $from_where_expression)
-    {
+    private function buildAndClause(
+        QueryBuilderVisitorParameters $parameters,
+        OrOperand|AndOperand|null $tail,
+        $from_where_expression,
+    ) {
         if (! $tail) {
             return $from_where_expression;
         }
@@ -270,8 +285,11 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
         return new ParametrizedAndFromWhere($from_where_expression, $from_where_tail);
     }
 
-    private function buildOrClause(QueryBuilderVisitorParameters $parameters, OrOperand | AndOperand | null $tail, $from_where_expression)
-    {
+    private function buildOrClause(
+        QueryBuilderVisitorParameters $parameters,
+        OrOperand|AndOperand|null $tail,
+        $from_where_expression,
+    ) {
         if (! $tail) {
             return $from_where_expression;
         }

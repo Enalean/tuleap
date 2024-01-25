@@ -39,6 +39,7 @@ final class DatabaseBuilder
 
     public function cleanUp(): void
     {
+        $this->db->run('DELETE permissions.* FROM permissions INNER JOIN tracker_field WHERE object_id = tracker_field.id');
         $this->db->run('DELETE FROM tracker_artifact');
         $this->db->run('DELETE FROM tracker_field');
         $this->db->run('DELETE FROM tracker_field_float');
@@ -185,6 +186,18 @@ final class DatabaseBuilder
         );
 
         return $tracker_field_id;
+    }
+
+    public function setReadPermission(int $field_id, int $user_group_id): void
+    {
+        $this->db->insert(
+            'permissions',
+            [
+                'permission_type' => \Tracker_FormElement::PERMISSION_READ,
+                'object_id' => (string) $field_id,
+                'ugroup_id' => $user_group_id,
+            ]
+        );
     }
 
     public function buildArtifact(int $tracker_id): int

@@ -35,7 +35,9 @@ use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
 final class TrackerExternalFormElementBuilder
 {
-    private string $name = 'external_field';
+    private string $name                        = 'external_field';
+    private ?\PFUser $user_with_read_permission = null;
+    private bool $read_permission               = false;
     private \Tracker $tracker;
 
     private function __construct(private readonly int $id)
@@ -60,6 +62,13 @@ final class TrackerExternalFormElementBuilder
         return $this;
     }
 
+    public function withReadPermission(\PFUser $user, bool $user_can_read): self
+    {
+        $this->user_with_read_permission = $user;
+        $this->read_permission           = $user_can_read;
+        return $this;
+    }
+
     public function build(): Tracker_FormElement_Field
     {
         $field = new class (
@@ -67,10 +76,10 @@ final class TrackerExternalFormElementBuilder
             $this->tracker->getId(),
             15,
             $this->name,
-            "",
-            "",
+            '',
+            '',
             true,
-            "",
+            '',
             false,
             false,
             10,
@@ -186,6 +195,9 @@ final class TrackerExternalFormElementBuilder
             }
         };
         $field->setTracker($this->tracker);
+        if ($this->user_with_read_permission !== null) {
+            $field->setUserCanRead($this->user_with_read_permission, $this->read_permission);
+        }
         return $field;
     }
 }

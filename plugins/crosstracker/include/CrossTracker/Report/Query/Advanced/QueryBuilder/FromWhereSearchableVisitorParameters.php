@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder;
 
-use Tracker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\FromWhereBuilder as FieldFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\FromWhereBuilder as MetadataFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
@@ -30,32 +29,15 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
 
 final class FromWhereSearchableVisitorParameters implements VisitorParameters
 {
+    /**
+     * @param \Tracker[] $trackers
+     */
     public function __construct(
-        private readonly Comparison $comparison,
-        private readonly MetadataFromWhereBuilder $metadata_from_where_builder,
-        private readonly FieldFromWhereBuilder $field_from_where_builder,
-        private readonly array $trackers,
+        public readonly Comparison $comparison,
+        public readonly MetadataFromWhereBuilder $metadata_from_where_builder,
+        public readonly FieldFromWhereBuilder $field_from_where_builder,
+        public readonly \PFUser $user,
+        public readonly array $trackers,
     ) {
-    }
-
-    public function getMetadataFromWhereBuilder(): MetadataFromWhereBuilder
-    {
-        return $this->metadata_from_where_builder;
-    }
-
-    public function getFieldFromWhereBuilder(): FieldFromWhereBuilder
-    {
-        return $this->field_from_where_builder;
-    }
-
-    public function getComparison(): Comparison
-    {
-        return $this->comparison;
-    }
-
-    /** @return Tracker[] */
-    public function getTrackers(): array
-    {
-        return $this->trackers;
     }
 }

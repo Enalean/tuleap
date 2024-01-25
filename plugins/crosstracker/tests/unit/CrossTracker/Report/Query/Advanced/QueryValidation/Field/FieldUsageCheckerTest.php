@@ -29,6 +29,7 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Test\Builders\TrackerExternalFormElementBuilder;
@@ -44,20 +45,24 @@ final class FieldUsageCheckerTest extends TestCase
     private const FIELD_NAME = 'toto';
     private \Tracker $first_tracker;
     private \Tracker $second_tracker;
+    private \PFUser $user;
     private RetrieveUsedFieldsStub $fields_retriever;
 
     protected function setUp(): void
     {
         $this->first_tracker    = TrackerTestBuilder::aTracker()->withId(86)->build();
         $this->second_tracker   = TrackerTestBuilder::aTracker()->withId(94)->build();
+        $this->user             = UserTestBuilder::buildWithId(103);
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
             TrackerFormElementIntFieldBuilder::anIntField(841)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
+                ->withReadPermission($this->user, true)
                 ->build(),
             TrackerFormElementFloatFieldBuilder::aFloatField(805)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->second_tracker)
+                ->withReadPermission($this->user, true)
                 ->build()
         );
     }
@@ -68,6 +73,7 @@ final class FieldUsageCheckerTest extends TestCase
     private function check(): Ok|Err
     {
         $visitor_parameters = InvalidSearchableCollectorParametersBuilder::aParameter()
+            ->withUser($this->user)
             ->onTrackers($this->first_tracker, $this->second_tracker)
             ->build();
 
@@ -89,10 +95,12 @@ final class FieldUsageCheckerTest extends TestCase
             TrackerFormElementIntFieldBuilder::anIntField(308)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
+                ->withReadPermission($this->user, true)
                 ->build(),
             TrackerFormElementStringFieldBuilder::aStringField(358)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->second_tracker)
+                ->withReadPermission($this->user, true)
                 ->build()
         );
 
@@ -107,10 +115,12 @@ final class FieldUsageCheckerTest extends TestCase
             TrackerExternalFormElementBuilder::anExternalField(569)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
+                ->withReadPermission($this->user, true)
                 ->build(),
             TrackerFormElementIntFieldBuilder::anIntField(308)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->second_tracker)
+                ->withReadPermission($this->user, true)
                 ->build(),
         );
 

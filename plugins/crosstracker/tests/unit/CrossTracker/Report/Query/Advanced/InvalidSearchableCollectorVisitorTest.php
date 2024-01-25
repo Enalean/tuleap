@@ -27,6 +27,7 @@ use Tuleap\CrossTracker\SearchOnDuckTypedFieldsConfig;
 use Tuleap\CrossTracker\Tests\Builders\InvalidSearchableCollectorParametersBuilder;
 use Tuleap\CrossTracker\Tests\Stub\MetadataCheckerStub;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
@@ -46,6 +47,7 @@ final class InvalidSearchableCollectorVisitorTest extends TestCase
     private MetadataCheckerStub $metadata_checker;
     private InvalidSearchableCollectorParameters $parameters;
     private Searchable $searchable;
+    private \PFUser $user;
     private \Tracker $first_tracker;
     private RetrieveUsedFieldsStub $fields_retriever;
 
@@ -53,20 +55,24 @@ final class InvalidSearchableCollectorVisitorTest extends TestCase
     {
         $this->first_tracker = TrackerTestBuilder::aTracker()->withId(67)->build();
         $second_tracker      = TrackerTestBuilder::aTracker()->withId(21)->build();
+        $this->user          = UserTestBuilder::buildWithId(443);
 
         $this->metadata_checker = MetadataCheckerStub::withValidMetadata();
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
             TrackerFormElementIntFieldBuilder::anIntField(628)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
+                ->withReadPermission($this->user, true)
                 ->build(),
             TrackerFormElementFloatFieldBuilder::aFloatField(274)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($second_tracker)
+                ->withReadPermission($this->user, true)
                 ->build()
         );
 
         $this->parameters = InvalidSearchableCollectorParametersBuilder::aParameter()
+            ->withUser($this->user)
             ->onTrackers($this->first_tracker, $second_tracker)
             ->build();
         $this->searchable = new Field(self::FIELD_NAME);
@@ -99,6 +105,7 @@ final class InvalidSearchableCollectorVisitorTest extends TestCase
             TrackerExternalFormElementBuilder::anExternalField(900)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
+                ->withReadPermission($this->user, true)
                 ->build()
         );
 
@@ -115,6 +122,26 @@ final class InvalidSearchableCollectorVisitorTest extends TestCase
     {
         \ForgeConfig::set("feature_flag_" . SearchOnDuckTypedFieldsConfig::FEATURE_FLAG_SEARCH_DUCK_TYPED_FIELDS, '1');
         $this->fields_retriever = RetrieveUsedFieldsStub::withNoFields();
+
+        $this->check();
+        self::assertNotEmpty(
+            $this->parameters
+                ->getInvalidSearchablesCollectorParameters()
+                ->getInvalidSearchablesCollection()
+                ->getNonexistentSearchables()
+        );
+    }
+
+    public function testItAddsFieldUserCanNotReadToInvalidCollection(): void
+    {
+        \ForgeConfig::set("feature_flag_" . SearchOnDuckTypedFieldsConfig::FEATURE_FLAG_SEARCH_DUCK_TYPED_FIELDS, '1');
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
+            TrackerFormElementIntFieldBuilder::anIntField(628)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->first_tracker)
+                ->withReadPermission($this->user, false)
+                ->build()
+        );
 
         $this->check();
         self::assertNotEmpty(

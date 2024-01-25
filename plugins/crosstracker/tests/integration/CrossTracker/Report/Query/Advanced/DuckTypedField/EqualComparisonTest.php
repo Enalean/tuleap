@@ -65,7 +65,6 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataU
 use Tuleap\CrossTracker\SearchOnDuckTypedFieldsConfig;
 use Tuleap\CrossTracker\Tests\Builders\DatabaseBuilder;
 use Tuleap\DB\DBFactory;
-use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
@@ -84,6 +83,7 @@ use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use UserManager;
 
 final class EqualComparisonTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -96,8 +96,10 @@ final class EqualComparisonTest extends \Tuleap\Test\PHPUnit\TestCase
     private int $release_initial_effort_field_id;
     private int $sprint_initial_effort_field_id;
     private \ParagonIE\EasyDB\EasyDB $db;
+    private \PFUser $outsider_user;
+    private Tracker $epic_tracker;
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         $database_builder = new DatabaseBuilder($this->db);
         $database_builder->cleanUp();
@@ -119,6 +121,7 @@ final class EqualComparisonTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->sprint_tracker = $this->database_builder->buildTracker($project_id, "Sprint");
         $this->sprint_tracker->setProject($project);
         $this->task_tracker = $this->database_builder->buildTracker($project_id, "Task");
+        $this->epic_tracker = $this->database_builder->buildTracker($project_id, "Epic");
 
         $this->release_initial_effort_field_id = $this->database_builder->buildIntField(
             $this->release_tracker->getId(),
@@ -128,13 +131,53 @@ final class EqualComparisonTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->sprint_tracker->getId(),
             'initial_effort'
         );
-        $this->database_builder->buildComputedField(
+        $initial_effort_computed_field_id      = $this->database_builder->buildComputedField(
             $this->task_tracker->getId(),
             'initial_effort'
         );
+        $initial_effort_read_field_id          = $this->database_builder->buildFloatField(
+            $this->epic_tracker->getId(),
+            'initial_effort'
+        );
 
-        $this->user = $this->database_builder->buildUser('janwar', 'Jorge Anwar', 'janwar@example.com');
+        $this->outsider_user = $this->database_builder->buildUser('outsider', 'User OutsideProject', 'outsider@example.com');
+        $this->user          = $this->database_builder->buildUser('janwar', 'Jorge Anwar', 'janwar@example.com');
         $this->database_builder->addUserToProjectMembers((int) $this->user->getId(), $project_id);
+        $this->database_builder->addUserToProjectMembers((int) $this->outsider_user->getId(), $project_id);
+
+        $this->database_builder->setReadPermission(
+            $this->release_initial_effort_field_id,
+            \ProjectUGroup::PROJECT_MEMBERS
+        );
+        $this->database_builder->setReadPermission(
+            $this->sprint_initial_effort_field_id,
+            \ProjectUGroup::PROJECT_MEMBERS
+        );
+        $this->database_builder->setReadPermission(
+            $initial_effort_computed_field_id,
+            \ProjectUGroup::PROJECT_MEMBERS
+        );
+        $this->database_builder->setReadPermission(
+            $initial_effort_read_field_id,
+            \ProjectUGroup::PROJECT_ADMIN
+        );
+
+        $this->release_tracker = TrackerTestBuilder::aTracker()
+            ->withId($this->release_tracker->getId())
+            ->withProject($project)
+            ->build();
+        $this->sprint_tracker  = TrackerTestBuilder::aTracker()
+            ->withId($this->sprint_tracker->getId())
+            ->withProject($project)
+            ->build();
+        $this->task_tracker    = TrackerTestBuilder::aTracker()
+            ->withId($this->task_tracker->getId())
+            ->withProject($project)
+            ->build();
+        $this->epic_tracker    = TrackerTestBuilder::aTracker()
+            ->withId($this->epic_tracker->getId())
+            ->withProject($project)
+            ->build();
     }
 
     public function testEqualComparison(): void
@@ -157,7 +200,8 @@ final class EqualComparisonTest extends \Tuleap\Test\PHPUnit\TestCase
                 1,
                 "initial_effort=''",
                 [$this->release_tracker, $this->sprint_tracker]
-            )
+            ),
+            $this->user
         );
 
         self::assertCount(2, $empty_artifacts);
@@ -170,7 +214,8 @@ final class EqualComparisonTest extends \Tuleap\Test\PHPUnit\TestCase
                 2,
                 'initial_effort=5',
                 [$this->release_tracker, $this->sprint_tracker]
-            )
+            ),
+            $this->user
         );
 
         self::assertCount(2, $artifacts_with_value);
@@ -184,18 +229,57 @@ final class EqualComparisonTest extends \Tuleap\Test\PHPUnit\TestCase
      * @throws SearchablesDoNotExistException
      * @throws SearchablesAreInvalidException
      */
-    private function getMatchingArtifactIds(CrossTrackerReport $report): array
+    private function getMatchingArtifactIds(CrossTrackerReport $report, \PFUser $user): array
     {
-        $artifacts = $this->getFactory()->getArtifactsMatchingReport($report, $this->user, 5, 0)->getArtifacts();
+        $artifacts = $this->getFactory()->getArtifactsMatchingReport($report, $user, 5, 0)->getArtifacts();
         return array_map(static fn(Artifact $artifact) => $artifact->getId(), $artifacts);
     }
 
     public function testInvalidFieldComparison(): void
     {
-        $report = new CrossTrackerReport(3, "initial_effort=''", [$this->task_tracker]);
-        $user   = UserTestBuilder::aUser()->withId(105)->build();
+        $this->expectException(SearchablesAreInvalidException::class);
+        $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                3,
+                "initial_effort=''",
+                [$this->release_tracker, $this->task_tracker]
+            ),
+            $this->user
+        );
+    }
+
+    public function testUserCanNotReadField(): void
+    {
         $this->expectException(SearchablesDoNotExistException::class);
-        $this->getFactory()->getArtifactsMatchingReport($report, $user, 5, 0);
+        $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                3,
+                "initial_effort=''",
+                [$this->epic_tracker]
+            ),
+            $this->user
+        );
+    }
+
+    public function testUserCanNotReadEpicField(): void
+    {
+        $release_empty_id = $this->database_builder->buildArtifact($this->release_tracker->getId());
+        $this->database_builder->buildLastChangeset($release_empty_id);
+
+        $epic_empty_id = $this->database_builder->buildArtifact($this->epic_tracker->getId());
+        $this->database_builder->buildLastChangeset($epic_empty_id);
+
+        $artifact_user_can_read = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                3,
+                "initial_effort=''",
+                [$this->epic_tracker, $this->release_tracker]
+            ),
+            $this->user
+        );
+
+        self::assertCount(1, $artifact_user_can_read);
+        self::assertEqualsCanonicalizing([$release_empty_id], $artifact_user_can_read);
     }
 
     private function getFactory(): CrossTrackerArtifactReportFactory

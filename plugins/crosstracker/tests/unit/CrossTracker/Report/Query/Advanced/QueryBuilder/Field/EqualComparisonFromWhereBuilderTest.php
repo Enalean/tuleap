@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field;
 
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
@@ -37,21 +38,25 @@ final class EqualComparisonFromWhereBuilderTest extends TestCase
 {
     private const FIELD_NAME = 'my_field';
     private RetrieveUsedFieldsStub $fields_retriever;
+    private \PFUser $user;
     private \Tracker $first_tracker;
     private \Tracker $second_tracker;
 
     protected function setUp(): void
     {
+        $this->user             = UserTestBuilder::buildWithId(133);
         $this->first_tracker    = TrackerTestBuilder::aTracker()->withId(38)->build();
         $this->second_tracker   = TrackerTestBuilder::aTracker()->withId(4)->build();
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
             TrackerFormElementIntFieldBuilder::anIntField(134)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
+                ->withReadPermission($this->user, true)
                 ->build(),
             TrackerFormElementIntFieldBuilder::anIntField(859)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->second_tracker)
+                ->withReadPermission($this->user, true)
                 ->build()
         );
     }
@@ -67,6 +72,7 @@ final class EqualComparisonFromWhereBuilderTest extends TestCase
         return $builder->getFromWhere(
             $field,
             new EqualComparison($field, new SimpleValueWrapper(5)),
+            $this->user,
             [$this->first_tracker, $this->second_tracker]
         );
     }
@@ -83,6 +89,7 @@ final class EqualComparisonFromWhereBuilderTest extends TestCase
             TrackerExternalFormElementBuilder::anExternalField(231)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
+                ->withReadPermission($this->user, true)
                 ->build()
         );
         $from_where             = $this->getFromWhere();

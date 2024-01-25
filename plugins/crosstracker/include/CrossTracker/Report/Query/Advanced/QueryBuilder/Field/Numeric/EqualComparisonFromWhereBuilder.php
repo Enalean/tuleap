@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\Numeric;
 
+use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\DuckTypedField;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
@@ -42,9 +43,11 @@ final class EqualComparisonFromWhereBuilder
         $changeset_value_int_alias   = "CVInt_{$suffix}";
         $changeset_value_float_alias = "CVFloat_{$suffix}";
 
-        $from            = <<<EOSQL
+
+        $fields_id_statement = EasyStatement::open()->in("$tracker_field_alias.id IN (?*)", $duck_typed_field->field_ids);
+        $from                = <<<EOSQL
         LEFT JOIN tracker_field AS $tracker_field_alias
-            ON (tracker.id = $tracker_field_alias.tracker_id AND $tracker_field_alias.name = ?)
+            ON (tracker.id = $tracker_field_alias.tracker_id AND $fields_id_statement)
         LEFT JOIN tracker_changeset_value AS $changeset_value_alias
             ON ($tracker_field_alias.id = $changeset_value_alias.field_id AND last_changeset.id = $changeset_value_alias.changeset_id)
         LEFT JOIN tracker_changeset_value_int AS $changeset_value_int_alias
@@ -52,14 +55,15 @@ final class EqualComparisonFromWhereBuilder
         LEFT JOIN tracker_changeset_value_float AS $changeset_value_float_alias
             ON $changeset_value_float_alias.changeset_value_id = $changeset_value_alias.id
         EOSQL;
-        $from_parameters = [$duck_typed_field->name];
+        $from_parameters     = $fields_id_statement->values();
+
 
         if ($value === '') {
-            $where = "($changeset_value_int_alias.value IS NULL AND $changeset_value_float_alias.value IS NULL)";
+            $where = "($changeset_value_int_alias.value IS NULL AND $changeset_value_float_alias.value IS NULL AND $tracker_field_alias.id IS NOT NULL)";
             return new ParametrizedFromWhere($from, $where, $from_parameters, []);
         }
 
-        $where            = "($changeset_value_int_alias.value = ? OR $changeset_value_float_alias.value = ?)";
+        $where            = "($changeset_value_int_alias.value = ? OR $changeset_value_float_alias.value = ?) AND $tracker_field_alias.id IS NOT NULL";
         $where_parameters = [$value, $value];
         return new ParametrizedFromWhere($from, $where, $from_parameters, $where_parameters);
     }

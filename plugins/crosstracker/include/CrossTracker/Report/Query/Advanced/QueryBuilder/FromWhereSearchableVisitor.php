@@ -34,19 +34,20 @@ final class FromWhereSearchableVisitor implements SearchableVisitor
 {
     public function visitField(Field $field, $parameters)
     {
-        return $parameters->getFieldFromWhereBuilder()->getFromWhere(
+        return $parameters->field_from_where_builder->getFromWhere(
             $field,
-            $parameters->getComparison(),
-            $parameters->getTrackers()
+            $parameters->comparison,
+            $parameters->user,
+            $parameters->trackers
         );
     }
 
     public function visitMetaData(Metadata $metadata, $parameters)
     {
-        return $parameters->getMetadataFromWhereBuilder()->getFromWhere(
+        return $parameters->metadata_from_where_builder->getFromWhere(
             $metadata,
-            $parameters->getComparison(),
-            $parameters->getTrackers()
+            $parameters->comparison,
+            $parameters->trackers
         );
     }
 }
