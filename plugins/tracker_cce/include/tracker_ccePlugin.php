@@ -335,6 +335,7 @@ final class tracker_ccePlugin extends Plugin
             new CustomCodeExecutionHistorySaver(new ProjectHistoryDao()),
             new FindWASMModulePath(),
             new ModuleDao(),
+            new ModuleLogDao(Tracker_ArtifactFactory::instance()),
             new SapiEmitter(),
             new ActiveTrackerRetrieverMiddleware(TrackerFactory::instance()),
             new RejectNonTrackerAdministratorMiddleware(UserManager::instance()),

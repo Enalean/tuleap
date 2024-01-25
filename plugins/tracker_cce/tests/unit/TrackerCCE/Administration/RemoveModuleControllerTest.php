@@ -34,6 +34,7 @@ use Tuleap\Test\Stubs\FeedbackSerializerStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\TrackerCCE\Stub\Administration\LogModuleRemovedStub;
 use Tuleap\TrackerCCE\Stub\Administration\UpdateModuleActivationStub;
+use Tuleap\TrackerCCE\Stub\Logs\DeleteLogsPerTrackerStub;
 use Tuleap\TrackerCCE\WASM\FindWASMModulePath;
 
 final class RemoveModuleControllerTest extends TestCase
@@ -47,6 +48,7 @@ final class RemoveModuleControllerTest extends TestCase
             LogModuleRemovedStub::build(),
             new FindWASMModulePath(),
             UpdateModuleActivationStub::build(),
+            DeleteLogsPerTrackerStub::build(),
             new NoopSapiEmitter(),
         );
 
@@ -66,6 +68,7 @@ final class RemoveModuleControllerTest extends TestCase
             LogModuleRemovedStub::build(),
             new FindWASMModulePath(),
             UpdateModuleActivationStub::build(),
+            DeleteLogsPerTrackerStub::build(),
             new NoopSapiEmitter(),
         );
 
@@ -91,6 +94,7 @@ final class RemoveModuleControllerTest extends TestCase
             LogModuleRemovedStub::build(),
             new FindWASMModulePath(),
             UpdateModuleActivationStub::build(),
+            DeleteLogsPerTrackerStub::build(),
             new NoopSapiEmitter(),
         );
 
@@ -119,12 +123,14 @@ final class RemoveModuleControllerTest extends TestCase
         $project_history = LogModuleRemovedStub::build();
 
         $update_module_activation = UpdateModuleActivationStub::build();
+        $delete_logs              = DeleteLogsPerTrackerStub::build();
 
         $controller = new RemoveModuleController(
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),
             $project_history,
             new FindWASMModulePath(),
             $update_module_activation,
+            $delete_logs,
             new NoopSapiEmitter(),
         );
 
@@ -140,5 +146,6 @@ final class RemoveModuleControllerTest extends TestCase
         self::assertTrue($project_history->isLogged());
         self::assertFalse($update_module_activation->hasBeenActivated());
         self::assertTrue($update_module_activation->hasBeenDeactivated());
+        self::assertTrue($delete_logs->hasBeenCalled());
     }
 }
