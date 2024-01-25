@@ -1,6 +1,6 @@
-@use "execution-list-campaign-header";
-@use "link_issue_modal";
-@use "current-execution";
+@use "./execution-list-campaign-header";
+@use "./link-issue-modal";
+@use "./current-execution";
 
 .test-campaign {
     display: flex;

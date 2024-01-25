@@ -9,6 +9,7 @@
     "@tuleap/plugin-tracker-artifact-ckeditor-image-upload": "workspace:*",
     "@tuleap/plugin-tracker-constants": "workspace:*",
     "@tuleap/plugin-tracker-rich-text-editor": "workspace:*",
+    "@tuleap/tlp": "workspace:^",
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/vue2-gettext-init": "workspace:^",
     "uuid": "^8.3.2",

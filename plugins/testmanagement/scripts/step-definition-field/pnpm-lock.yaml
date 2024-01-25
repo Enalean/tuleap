@@ -14,6 +14,9 @@ dependencies:
   '@tuleap/plugin-tracker-rich-text-editor':
     specifier: workspace:*
     version: link:../../../tracker/scripts/lib/rich-text-editor
+  '@tuleap/tlp':
+    specifier: workspace:^
+    version: link:../../../../src/scripts/tlp
   '@tuleap/tlp-fetch':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-fetch

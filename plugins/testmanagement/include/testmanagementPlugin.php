@@ -147,14 +147,6 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
         }
     }
 
-    private function getAssets(): IncludeAssets
-    {
-        return new IncludeAssets(
-            __DIR__ . '/../frontend-assets',
-            '/assets/testmanagement'
-        );
-    }
-
     public function getDependencies()
     {
         return ['tracker'];
@@ -527,7 +519,10 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
 
         return new LegacyRoutingController(
             $router,
-            $this->getAssets(),
+            new IncludeAssets(
+                __DIR__ . '/../scripts/testmanagement/frontend-assets',
+                '/assets/testmanagement/testmanagement'
+            ),
             new \Tuleap\Layout\IncludeCoreAssets()
         );
     }

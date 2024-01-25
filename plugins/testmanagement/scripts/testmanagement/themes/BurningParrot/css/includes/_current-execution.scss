@@ -1,5 +1,5 @@
-@use "steps";
-@use "attachments_dnd";
+@use "./steps";
+@use "./attachments_dnd";
 
 $attachments-gap: var(--tlp-small-spacing) / 2;
 $attachment-height: var(--tlp-large-spacing);
