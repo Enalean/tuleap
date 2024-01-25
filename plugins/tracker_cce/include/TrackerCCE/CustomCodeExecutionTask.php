@@ -22,23 +22,24 @@ declare(strict_types=1);
 
 namespace Tuleap\TrackerCCE;
 
-use Psr\Log\LogLevel;
 use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 use Tracker;
 use Tracker_Artifact_Changeset;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationTask;
+use Tuleap\Tracker\Webhook\ArtifactPayloadBuilder;
 use Tuleap\TrackerCCE\Administration\CheckModuleIsActivated;
 use Tuleap\TrackerCCE\Logs\ModuleLogLine;
 use Tuleap\TrackerCCE\Logs\SaveModuleLog;
+use Tuleap\TrackerCCE\Notification\TrackerAdministratorNotificationSender;
 use Tuleap\TrackerCCE\WASM\WASMModuleCaller;
 use Tuleap\TrackerCCE\WASM\WASMModulePathHelper;
 use Tuleap\TrackerCCE\WASM\WASMResponseExecutor;
 use Tuleap\TrackerCCE\WASM\WASMResponseRepresentation;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationTask;
-use Tuleap\Tracker\Webhook\ArtifactPayloadBuilder;
 use Tuleap\User\CCEUser;
 use function Psl\Json\encode as psl_json_encode;
 
@@ -52,6 +53,7 @@ final class CustomCodeExecutionTask implements PostCreationTask
         private readonly WASMResponseExecutor $response_executor,
         private readonly SaveModuleLog $log_dao,
         private readonly CheckModuleIsActivated $check_module_is_activated,
+        private readonly TrackerAdministratorNotificationSender $administrator_notification_sender,
     ) {
     }
 
@@ -93,7 +95,7 @@ final class CustomCodeExecutionTask implements PostCreationTask
                     psl_json_encode($generated_payload),
                     (new \DateTimeImmutable())->getTimestamp(),
                 )),
-                function (Fault $fault) use ($changeset, $source_payload, $generated_payload) {
+                function (Fault $fault) use ($changeset, $source_payload) {
                     Fault::writeToLogger($fault, $this->logger, LogLevel::WARNING);
                     $this->log_dao->saveModuleLogLine(ModuleLogLine::buildError(
                         (int) $changeset->getId(),
@@ -101,6 +103,7 @@ final class CustomCodeExecutionTask implements PostCreationTask
                         (string) $fault,
                         (new \DateTimeImmutable())->getTimestamp(),
                     ));
+                    $this->administrator_notification_sender->sendNotificationToTrackerAdministrator($changeset);
                 }
             );
 

@@ -20,24 +20,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User;
+namespace Tuleap\TrackerCCE\Notification;
 
-use Tuleap\ServerHostname;
+use PFUser;
+use Tracker;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
 
-final class CCEUser extends \PFUser
+interface TrackerAdminRecipientsRetriever
 {
-    public const ID = 70;
-
-    public function __construct()
-    {
-        $email_domain = \ForgeConfig::get('sys_default_mail_domain');
-        if (! $email_domain) {
-            $email_domain = ServerHostname::rawHostname();
-        }
-
-        parent::__construct([
-            'user_id' => self::ID,
-            'email'   => 'noreply@' . $email_domain,
-        ]);
-    }
+    /**
+     * @return Ok<non-empty-array<PFUser>> | Err<Fault>
+     */
+    public function retrieveRecipients(Tracker $tracker): Ok | Err;
 }

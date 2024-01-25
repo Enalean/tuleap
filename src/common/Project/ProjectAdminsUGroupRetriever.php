@@ -20,24 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User;
+namespace Tuleap\Project;
 
-use Tuleap\ServerHostname;
+use Project;
+use ProjectUGroup;
 
-final class CCEUser extends \PFUser
+interface ProjectAdminsUGroupRetriever
 {
-    public const ID = 70;
-
-    public function __construct()
-    {
-        $email_domain = \ForgeConfig::get('sys_default_mail_domain');
-        if (! $email_domain) {
-            $email_domain = ServerHostname::rawHostname();
-        }
-
-        parent::__construct([
-            'user_id' => self::ID,
-            'email'   => 'noreply@' . $email_domain,
-        ]);
-    }
+    public function getProjectAdminsUGroup(Project $project): ProjectUGroup;
 }

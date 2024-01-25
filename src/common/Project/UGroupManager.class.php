@@ -21,6 +21,8 @@
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
+use Tuleap\Project\ProjectAdminsUGroupRetriever;
+use Tuleap\Project\UGroupRetriever;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\DynamicUGroupMembersUpdater;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
@@ -31,7 +33,7 @@ use Tuleap\User\UserGroup\NameTranslator;
 
 require_once __DIR__ . '/../../www/include/account.php';
 
-class UGroupManager implements \Tuleap\Project\UGroupRetriever // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class UGroupManager implements UGroupRetriever, ProjectAdminsUGroupRetriever // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     private const FAKE_PROJECT_ID_FOR_DYNAMIC_GROUPS = 100;
 
@@ -126,10 +128,7 @@ class UGroupManager implements \Tuleap\Project\UGroupRetriever // phpcs:ignore P
         return null;
     }
 
-    /**
-     * @return ProjectUGroup
-     */
-    public function getProjectAdminsUGroup(Project $project)
+    public function getProjectAdminsUGroup(Project $project): ProjectUGroup
     {
         $row = $this->getDao()->searchByGroupIdAndUGroupId(self::FAKE_PROJECT_ID_FOR_DYNAMIC_GROUPS, ProjectUGroup::PROJECT_ADMIN)->getRow();
         return $this->instanciateGroupForProject($project, $row);

@@ -29,7 +29,6 @@ use MailNotificationBuilder;
 use TemplateRendererFactory;
 use Tracker_Artifact_Changeset;
 use trackerPlugin;
-use Tuleap\Mail\MailAttachment;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Project\ProjectAccessChecker;
@@ -37,25 +36,19 @@ use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Tracker\Artifact\Artifact;
 use UserManager;
 
-class MailSender
+class MailSender implements SendMail
 {
-    /**
-     * Send a notification
-     *
-     * @param Tracker_Artifact_Changeset $changeset changeset
-     * @param array  $recipients the list of recipients
-     * @param array  $headers    the additional headers
-     * @param string $from       the mail of the sender
-     * @param string $subject    the subject of the message
-     * @param string $htmlBody   the html content of the message
-     * @param string $txtBody    the text content of the message
-     * @param string $message_id the id of the message
-     * @param MailAttachment[] $attachments
-     *
-     * @return void
-     */
-    public function send(Tracker_Artifact_Changeset $changeset, $recipients, $headers, $from, $subject, $htmlBody, $txtBody, $message_id, array $attachments)
-    {
+    public function send(
+        Tracker_Artifact_Changeset $changeset,
+        array $recipients,
+        array $headers,
+        string $from,
+        string $subject,
+        string $htmlBody,
+        string $txtBody,
+        ?string $message_id,
+        array $attachments,
+    ): void {
         $hp                = Codendi_HTMLPurifier::instance();
         $breadcrumbs       = [];
         $tracker           = $changeset->getTracker();

@@ -20,24 +20,33 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User;
+namespace Tuleap\TrackerCCE\Stub\Notification;
 
-use Tuleap\ServerHostname;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
+use Tuleap\TrackerCCE\Notification\MessageBuilder;
 
-final class CCEUser extends \PFUser
+final class MessageBuilderStub implements MessageBuilder
 {
-    public const ID = 70;
+    private function __construct(
+        private readonly Ok | Err $result,
+    ) {
+    }
 
-    public function __construct()
+    public static function buildWithOkResult(): self
     {
-        $email_domain = \ForgeConfig::get('sys_default_mail_domain');
-        if (! $email_domain) {
-            $email_domain = ServerHostname::rawHostname();
-        }
+        return new self(Result::ok([]));
+    }
 
-        parent::__construct([
-            'user_id' => self::ID,
-            'email'   => 'noreply@' . $email_domain,
-        ]);
+    public static function buildWithErrResult(string $message): self
+    {
+        return new self(Result::err(Fault::fromMessage($message)));
+    }
+
+    public function buildMessagesForAdmins(array $admins, \Tracker_Artifact_Changeset $changeset): Ok | Err
+    {
+        return $this->result;
     }
 }
