@@ -63,7 +63,7 @@ final class SiteAdminWarnings
             \ForgeConfig::get(FilteredOutboundHTTPResponseAlerter::ALERT_FILTERED_OUTBOUND_HTTP_REQUEST) === FilteredOutboundHTTPResponseAlerter::ALERT_FILTERED_OUTBOUND_HTTP_REQUEST_SYSTEM_CHECK_VALUE
             && $this->filtered_outbound_HTTP_response_alerter_dao->hasAnOutboundHTTPRequestBeenFilteredRecently()
         ) {
-            $warnings[] = '<div class="tlp-alert-warning alert alert-warning alert-block">' . _('<p>An outbound HTTP request has been filtered recently in order to prevent a possible Server Side Request Forgery (SSRF) attack. You might want to adjust your configuration. Please check <a href="/doc/en/administration-guide/system-administration/filtering-outbound-requests.html">the documentation for more information</a>.</p>') . '</div>';
+            $warnings[] = '<div class="tlp-alert-warning alert alert-warning alert-block">' . _('<p>An outbound HTTP request has been filtered in the last 24 hours in order to prevent a possible Server Side Request Forgery (SSRF) attack. You might want to adjust your configuration. Please check <a href="/doc/en/administration-guide/system-administration/filtering-outbound-requests.html">the documentation for more information</a>.</p>') . '</div>';
         }
 
         return implode('', $warnings);

@@ -54,7 +54,7 @@ class FilteredOutboundHTTPResponseAlerterDAO extends DataAccessObject
 
     public function hasAnOutboundHTTPRequestBeenFilteredRecently(): bool
     {
-        $rows = $this->getDB()->run('SELECT 1 FROM filtered_outbound_http_requests WHERE FROM_UNIXTIME(last_blocked) < (NOW() + INTERVAL 1 DAY)');
+        $rows = $this->getDB()->run('SELECT 1 FROM filtered_outbound_http_requests WHERE NOW() < (FROM_UNIXTIME(last_blocked) + INTERVAL 1 DAY)');
 
         return count($rows) !== 0;
     }
