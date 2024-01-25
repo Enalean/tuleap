@@ -25,6 +25,11 @@ reason = "Angular is EOL. Nothing in the codebase can trigger this ReDoS issue."
 id = "GHSA-rp65-9cf3-cjxr" # CVE-2021-3803
 reason = "Angular and associated tools are EOL. Only used at build time. ReDoS."
 
+## lodash.pick
+[[IgnoredVulns]]
+id = "GHSA-p6mc-m468-83gw" # CVE-2020-8203
+reason = "Angular and associated tools are EOL. Only used at build time. Prototype Pollution cannot be exploited in our context."
+
 # src/additional-packages/wasmtime-wrapper-lib/Cargo.lock
 ## atty
 [[IgnoredVulns]]
