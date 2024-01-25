@@ -22,18 +22,50 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field;
 
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\DuckTypedField;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\DuckTypedFieldType;
+use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
+use Tuleap\Tracker\FormElement\RetrieveFieldType;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
 final class LesserThanComparisonFromWhereBuilder implements FromWhereBuilder
 {
+    public function __construct(
+        private readonly RetrieveUsedFields $retrieve_used_fields,
+        private readonly RetrieveFieldType $retrieve_field_type,
+        private readonly Numeric\LesserThanComparisonFromWhereBuilder $numeric_builder,
+    ) {
+    }
+
     public function getFromWhere(
         Field $field,
         Comparison $comparison,
         \PFUser $user,
         array $trackers,
     ): IProvideParametrizedFromAndWhereSQLFragments {
-        throw new \LogicException('Between comparison for fields is not implemented yet');
+        $field_name  = $field->getName();
+        $tracker_ids = array_map(static fn(\Tracker $tracker) => $tracker->getId(), $trackers);
+        return DuckTypedField::build(
+            $this->retrieve_used_fields,
+            $this->retrieve_field_type,
+            $field_name,
+            $tracker_ids,
+            $user
+        )->match(
+            fn(DuckTypedField $duck_typed_field) => $this->matchTypeToBuilder($duck_typed_field, $comparison),
+            static fn() => new ParametrizedFromWhere('', '', [], [])
+        );
+    }
+
+    private function matchTypeToBuilder(
+        DuckTypedField $field,
+        Comparison $comparison,
+    ): IProvideParametrizedFromAndWhereSQLFragments {
+        return match ($field->type) {
+            DuckTypedFieldType::NUMERIC => $this->numeric_builder->getFromWhere($field, $comparison)
+        };
     }
 }

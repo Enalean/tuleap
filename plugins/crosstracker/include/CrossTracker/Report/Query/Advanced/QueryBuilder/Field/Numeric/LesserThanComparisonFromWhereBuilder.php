@@ -29,10 +29,12 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
-final class EqualComparisonFromWhereBuilder
+final class LesserThanComparisonFromWhereBuilder
 {
-    public function getFromWhere(DuckTypedField $duck_typed_field, Comparison $comparison): IProvideParametrizedFromAndWhereSQLFragments
-    {
+    public function getFromWhere(
+        DuckTypedField $duck_typed_field,
+        Comparison $comparison,
+    ): IProvideParametrizedFromAndWhereSQLFragments {
         $suffix  = spl_object_hash($comparison);
         $wrapper = $comparison->getValueWrapper();
         assert($wrapper instanceof SimpleValueWrapper);
@@ -56,16 +58,8 @@ final class EqualComparisonFromWhereBuilder
         EOSQL;
         $from_parameters     = $fields_id_statement->values();
 
-        if ($value === '') {
-            $where = <<<EOSQL
-            $changeset_value_int_alias.value IS NULL AND $changeset_value_float_alias.value IS NULL
-            AND $tracker_field_alias.id IS NOT NULL
-            EOSQL;
-            return new ParametrizedFromWhere($from, $where, $from_parameters, []);
-        }
-
         $where            = <<<EOSQL
-        ($changeset_value_int_alias.value = ? OR $changeset_value_float_alias.value = ?)
+        ($changeset_value_int_alias.value < ? OR $changeset_value_float_alias.value < ?)
         AND $tracker_field_alias.id IS NOT NULL
         EOSQL;
         $where_parameters = [$value, $value];

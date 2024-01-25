@@ -193,15 +193,15 @@ final class NumericDuckTypedFieldTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testEqualComparison(): void
     {
-        $release_empty_id      = $this->database_builder->buildArtifact($this->release_tracker->getId());
-        $sprint_empty_id       = $this->database_builder->buildArtifact($this->sprint_tracker->getId());
-        $release_with_value_id = $this->database_builder->buildArtifact($this->release_tracker->getId());
-        $sprint_with_value_id  = $this->database_builder->buildArtifact($this->sprint_tracker->getId());
+        $release_empty_id  = $this->database_builder->buildArtifact($this->release_tracker->getId());
+        $sprint_empty_id   = $this->database_builder->buildArtifact($this->sprint_tracker->getId());
+        $release_with_5_id = $this->database_builder->buildArtifact($this->release_tracker->getId());
+        $sprint_with_5_id  = $this->database_builder->buildArtifact($this->sprint_tracker->getId());
 
         $this->database_builder->buildLastChangeset($release_empty_id);
         $this->database_builder->buildLastChangeset($sprint_empty_id);
-        $release_changeset_id = $this->database_builder->buildLastChangeset($release_with_value_id);
-        $sprint_changeset_id  = $this->database_builder->buildLastChangeset($sprint_with_value_id);
+        $release_changeset_id = $this->database_builder->buildLastChangeset($release_with_5_id);
+        $sprint_changeset_id  = $this->database_builder->buildLastChangeset($sprint_with_5_id);
 
         $this->database_builder->buildIntValue($release_changeset_id, $this->release_initial_effort_field_id, 5);
         $this->database_builder->buildFloatValue($sprint_changeset_id, $this->sprint_initial_effort_field_id, 5);
@@ -216,8 +216,8 @@ final class NumericDuckTypedFieldTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         self::assertCount(2, $empty_artifacts);
-        self::assertNotContains($release_with_value_id, $empty_artifacts);
-        self::assertNotContains($sprint_with_value_id, $empty_artifacts);
+        self::assertNotContains($release_with_5_id, $empty_artifacts);
+        self::assertNotContains($sprint_with_5_id, $empty_artifacts);
         self::assertEqualsCanonicalizing([$release_empty_id, $sprint_empty_id], $empty_artifacts);
 
         $artifacts_with_value = $this->getMatchingArtifactIds(
@@ -232,7 +232,22 @@ final class NumericDuckTypedFieldTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertCount(2, $artifacts_with_value);
         self::assertNotContains($release_empty_id, $artifacts_with_value);
         self::assertNotContains($sprint_empty_id, $artifacts_with_value);
-        self::assertEqualsCanonicalizing([$release_with_value_id, $sprint_with_value_id], $artifacts_with_value);
+        self::assertEqualsCanonicalizing([$release_with_5_id, $sprint_with_5_id], $artifacts_with_value);
+
+        $or_artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                3,
+                "initial_effort = '' OR initial_effort = 5",
+                [$this->release_tracker, $this->sprint_tracker]
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(4, $or_artifacts);
+        self::assertEqualsCanonicalizing(
+            [$release_empty_id, $sprint_empty_id, $release_with_5_id, $sprint_with_5_id],
+            $or_artifacts
+        );
     }
 
     public function testNotEqualComparison(): void
@@ -285,6 +300,65 @@ final class NumericDuckTypedFieldTest extends \Tuleap\Test\PHPUnit\TestCase
             [$release_empty_id, $sprint_empty_id, $release_with_3_id, $sprint_with_3_id],
             $artifacts_with_value_different
         );
+
+        $or_artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                3,
+                "initial_effort != 5 OR initial_effort != ''",
+                [$this->release_tracker, $this->sprint_tracker]
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(5, $or_artifacts);
+        self::assertEqualsCanonicalizing(
+            [$release_empty_id, $sprint_empty_id, $release_with_5_id, $release_with_3_id, $sprint_with_3_id],
+            $or_artifacts
+        );
+    }
+
+    public function testLesserThanComparison(): void
+    {
+        $release_with_3_id = $this->database_builder->buildArtifact($this->release_tracker->getId());
+        $release_with_5_id = $this->database_builder->buildArtifact($this->release_tracker->getId());
+        $sprint_with_3_id  = $this->database_builder->buildArtifact($this->sprint_tracker->getId());
+        $sprint_empty_id   = $this->database_builder->buildArtifact($this->sprint_tracker->getId());
+
+        $release_with_3_changeset_id = $this->database_builder->buildLastChangeset($release_with_3_id);
+        $release_with_5_changeset_id = $this->database_builder->buildLastChangeset($release_with_5_id);
+        $sprint_changeset_id         = $this->database_builder->buildLastChangeset($sprint_with_3_id);
+        $this->database_builder->buildLastChangeset($sprint_empty_id);
+
+        $this->database_builder->buildIntValue($release_with_3_changeset_id, $this->release_initial_effort_field_id, 3);
+        $this->database_builder->buildIntValue($release_with_5_changeset_id, $this->release_initial_effort_field_id, 5);
+        $this->database_builder->buildFloatValue($sprint_changeset_id, $this->sprint_initial_effort_field_id, 3);
+
+        $lesser_than_artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                'initial_effort < 5',
+                [$this->release_tracker, $this->sprint_tracker]
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(2, $lesser_than_artifacts);
+        self::assertNotContains($release_with_5_id, $lesser_than_artifacts);
+        self::assertNotContains($sprint_empty_id, $lesser_than_artifacts);
+        self::assertEqualsCanonicalizing([$release_with_3_id, $sprint_with_3_id], $lesser_than_artifacts);
+
+        $or_artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                2,
+                'initial_effort < 5 OR initial_effort < 8',
+                [$this->release_tracker, $this->sprint_tracker]
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(3, $or_artifacts);
+        self::assertNotContains($sprint_empty_id, $or_artifacts);
+        self::assertEqualsCanonicalizing([$release_with_5_id, $release_with_3_id, $sprint_with_3_id], $or_artifacts);
     }
 
     public function testInvalidFieldComparison(): void
@@ -559,7 +633,11 @@ final class NumericDuckTypedFieldTest extends \Tuleap\Test\PHPUnit\TestCase
             ),
             new Field\GreaterThanComparisonFromWhereBuilder(),
             new Field\GreaterThanOrEqualComparisonFromWhereBuilder(),
-            new Field\LesserThanComparisonFromWhereBuilder(),
+            new Field\LesserThanComparisonFromWhereBuilder(
+                $form_element_factory,
+                $form_element_factory,
+                new Field\Numeric\LesserThanComparisonFromWhereBuilder()
+            ),
             new Field\LesserThanOrEqualComparisonFromWhereBuilder(),
             new Field\BetweenComparisonFromWhereBuilder(),
             new Field\InComparisonFromWhereBuilder(),
