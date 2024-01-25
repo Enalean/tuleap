@@ -86,13 +86,13 @@ use Tuleap\Tracker\Report\TrackerReportConfigDao;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use UserManager;
 
-final class EqualComparisonTest extends \Tuleap\Test\PHPUnit\TestCase
+final class NumericDuckTypedFieldTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private DatabaseBuilder $database_builder;
     private Tracker $release_tracker;
     private Tracker $sprint_tracker;
     private Tracker $task_tracker;
-    private \PFUser $user;
+    private \PFUser $project_member;
     private int $release_initial_effort_field_id;
     private int $sprint_initial_effort_field_id;
     private \ParagonIE\EasyDB\EasyDB $db;
@@ -103,6 +103,7 @@ final class EqualComparisonTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $database_builder = new DatabaseBuilder($this->db);
         $database_builder->cleanUp();
+        \ForgeConfig::clearFeatureFlag(SearchOnDuckTypedFieldsConfig::FEATURE_FLAG_SEARCH_DUCK_TYPED_FIELDS);
     }
 
     protected function setUp(): void
@@ -110,7 +111,7 @@ final class EqualComparisonTest extends \Tuleap\Test\PHPUnit\TestCase
         ProjectManager::clearInstance();
 
         $this->db = DBFactory::getMainTuleapDBConnection()->getDB();
-        \ForgeConfig::set("feature_flag_" . SearchOnDuckTypedFieldsConfig::FEATURE_FLAG_SEARCH_DUCK_TYPED_FIELDS, '1');
+        \ForgeConfig::setFeatureFlag(SearchOnDuckTypedFieldsConfig::FEATURE_FLAG_SEARCH_DUCK_TYPED_FIELDS, '1');
         $this->database_builder = new DatabaseBuilder($this->db);
 
         $project    = $this->database_builder->buildProject();
@@ -140,10 +141,9 @@ final class EqualComparisonTest extends \Tuleap\Test\PHPUnit\TestCase
             'initial_effort'
         );
 
-        $this->outsider_user = $this->database_builder->buildUser('outsider', 'User OutsideProject', 'outsider@example.com');
-        $this->user          = $this->database_builder->buildUser('janwar', 'Jorge Anwar', 'janwar@example.com');
-        $this->database_builder->addUserToProjectMembers((int) $this->user->getId(), $project_id);
-        $this->database_builder->addUserToProjectMembers((int) $this->outsider_user->getId(), $project_id);
+        $this->outsider_user  = $this->database_builder->buildUser('outsider', 'User OutsideProject', 'outsider@example.com');
+        $this->project_member = $this->database_builder->buildUser('janwar', 'Jorge Anwar', 'janwar@example.com');
+        $this->database_builder->addUserToProjectMembers((int) $this->project_member->getId(), $project_id);
 
         $this->database_builder->setReadPermission(
             $this->release_initial_effort_field_id,
@@ -180,6 +180,17 @@ final class EqualComparisonTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
     }
 
+    /**
+     * @return list<int>
+     * @throws SearchablesDoNotExistException
+     * @throws SearchablesAreInvalidException
+     */
+    private function getMatchingArtifactIds(CrossTrackerReport $report, \PFUser $user): array
+    {
+        $artifacts = $this->getFactory()->getArtifactsMatchingReport($report, $user, 5, 0)->getArtifacts();
+        return array_values(array_map(static fn(Artifact $artifact) => $artifact->getId(), $artifacts));
+    }
+
     public function testEqualComparison(): void
     {
         $release_empty_id      = $this->database_builder->buildArtifact($this->release_tracker->getId());
@@ -201,7 +212,7 @@ final class EqualComparisonTest extends \Tuleap\Test\PHPUnit\TestCase
                 "initial_effort=''",
                 [$this->release_tracker, $this->sprint_tracker]
             ),
-            $this->user
+            $this->project_member
         );
 
         self::assertCount(2, $empty_artifacts);
@@ -215,7 +226,7 @@ final class EqualComparisonTest extends \Tuleap\Test\PHPUnit\TestCase
                 'initial_effort=5',
                 [$this->release_tracker, $this->sprint_tracker]
             ),
-            $this->user
+            $this->project_member
         );
 
         self::assertCount(2, $artifacts_with_value);
@@ -224,15 +235,56 @@ final class EqualComparisonTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEqualsCanonicalizing([$release_with_value_id, $sprint_with_value_id], $artifacts_with_value);
     }
 
-    /**
-     * @return int[]
-     * @throws SearchablesDoNotExistException
-     * @throws SearchablesAreInvalidException
-     */
-    private function getMatchingArtifactIds(CrossTrackerReport $report, \PFUser $user): array
+    public function testNotEqualComparison(): void
     {
-        $artifacts = $this->getFactory()->getArtifactsMatchingReport($report, $user, 5, 0)->getArtifacts();
-        return array_map(static fn(Artifact $artifact) => $artifact->getId(), $artifacts);
+        $release_empty_id  = $this->database_builder->buildArtifact($this->release_tracker->getId());
+        $sprint_empty_id   = $this->database_builder->buildArtifact($this->sprint_tracker->getId());
+        $release_with_5_id = $this->database_builder->buildArtifact($this->release_tracker->getId());
+        $release_with_3_id = $this->database_builder->buildArtifact($this->release_tracker->getId());
+        $sprint_with_3_id  = $this->database_builder->buildArtifact($this->sprint_tracker->getId());
+
+        $this->database_builder->buildLastChangeset($release_empty_id);
+        $this->database_builder->buildLastChangeset($sprint_empty_id);
+        $release_with_5_changeset_id = $this->database_builder->buildLastChangeset($release_with_5_id);
+        $release_with_3_changeset_id = $this->database_builder->buildLastChangeset($release_with_3_id);
+        $sprint_changeset_id         = $this->database_builder->buildLastChangeset($sprint_with_3_id);
+
+        $this->database_builder->buildIntValue($release_with_5_changeset_id, $this->release_initial_effort_field_id, 5);
+        $this->database_builder->buildIntValue($release_with_3_changeset_id, $this->release_initial_effort_field_id, 3);
+        $this->database_builder->buildFloatValue($sprint_changeset_id, $this->sprint_initial_effort_field_id, 3);
+
+        $not_empty_artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "initial_effort != ''",
+                [$this->release_tracker, $this->sprint_tracker]
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(3, $not_empty_artifacts);
+        self::assertNotContains($release_empty_id, $not_empty_artifacts);
+        self::assertNotContains($sprint_empty_id, $not_empty_artifacts);
+        self::assertEqualsCanonicalizing(
+            [$release_with_5_id, $release_with_3_id, $sprint_with_3_id],
+            $not_empty_artifacts
+        );
+
+        $artifacts_with_value_different = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                2,
+                'initial_effort != 5',
+                [$this->release_tracker, $this->sprint_tracker]
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(4, $artifacts_with_value_different);
+        self::assertNotContains($release_with_5_id, $artifacts_with_value_different);
+        self::assertEqualsCanonicalizing(
+            [$release_empty_id, $sprint_empty_id, $release_with_3_id, $sprint_with_3_id],
+            $artifacts_with_value_different
+        );
     }
 
     public function testInvalidFieldComparison(): void
@@ -244,20 +296,20 @@ final class EqualComparisonTest extends \Tuleap\Test\PHPUnit\TestCase
                 "initial_effort=''",
                 [$this->release_tracker, $this->task_tracker]
             ),
-            $this->user
+            $this->project_member
         );
     }
 
-    public function testUserCanNotReadField(): void
+    public function testUserCanNotReadAnyField(): void
     {
         $this->expectException(SearchablesDoNotExistException::class);
         $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 3,
                 "initial_effort=''",
-                [$this->epic_tracker]
+                [$this->release_tracker, $this->sprint_tracker]
             ),
-            $this->user
+            $this->outsider_user
         );
     }
 
@@ -275,7 +327,7 @@ final class EqualComparisonTest extends \Tuleap\Test\PHPUnit\TestCase
                 "initial_effort=''",
                 [$this->epic_tracker, $this->release_tracker]
             ),
-            $this->user
+            $this->project_member
         );
 
         self::assertCount(1, $artifact_user_can_read);
@@ -500,7 +552,11 @@ final class EqualComparisonTest extends \Tuleap\Test\PHPUnit\TestCase
                 $form_element_factory,
                 new Field\Numeric\EqualComparisonFromWhereBuilder(),
             ),
-            new Field\NotEqualComparisonFromWhereBuilder(),
+            new Field\NotEqualComparisonFromWhereBuilder(
+                $form_element_factory,
+                $form_element_factory,
+                new Field\Numeric\NotEqualComparisonFromWhereBuilder()
+            ),
             new Field\GreaterThanComparisonFromWhereBuilder(),
             new Field\GreaterThanOrEqualComparisonFromWhereBuilder(),
             new Field\LesserThanComparisonFromWhereBuilder(),
