@@ -49,4 +49,9 @@ class SettingsPOSTRepresentation
      * @var NotificationPOSTPUTRepresentation[] notifications representations {@type \Tuleap\SVN\REST\v1\NotificationPOSTPUTRepresentation} {@required false}
      */
     public $email_notifications;
+
+    /**
+     * @var bool If true, Tuleap generates default permissions for [/] {@required false}
+     */
+    public $has_default_permissions;
 }

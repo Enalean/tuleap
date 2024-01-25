@@ -40,7 +40,6 @@ class AccessControlPresenter extends BaseAdminPresenter
     public $versions;
     public $current_version_title;
     public $saved_on;
-    public $use_version;
     public $select_version;
     public $saved_versions;
     public $repository_id;
@@ -49,6 +48,7 @@ class AccessControlPresenter extends BaseAdminPresenter
     public $title;
     public $csrf;
     public $sections;
+    public readonly bool $has_default_permissions;
 
     public function __construct(
         CSRFSynchronizerToken $token,
@@ -63,16 +63,17 @@ class AccessControlPresenter extends BaseAdminPresenter
 
         $this->default_content = $contents->default;
 
-        $this->csrf                  = $token->fetchHTMLInput();
-        $this->repository            = $repository;
-        $this->project_id            = $repository->getProject()->getID();
-        $this->auth_file             = $contents->project_defined;
-        $this->versions              = $versions;
-        $this->repository_id         = $this->repository->getId();
-        $this->repository_name       = $this->repository->getName();
-        $this->repository_full_name  = $repository->getFullName();
-        $this->title                 = $title;
-        $this->access_control_active = true;
+        $this->csrf                    = $token->fetchHTMLInput();
+        $this->repository              = $repository;
+        $this->project_id              = $repository->getProject()->getID();
+        $this->auth_file               = $contents->project_defined;
+        $this->versions                = $versions;
+        $this->repository_id           = $this->repository->getId();
+        $this->repository_name         = $this->repository->getName();
+        $this->repository_full_name    = $repository->getFullName();
+        $this->has_default_permissions = $repository->hasDefaultPermissions();
+        $this->title                   = $title;
+        $this->access_control_active   = true;
 
         $this->edit_access_file_title   = dgettext('tuleap-svn', 'Edit access control file');
         $this->default_text             = sprintf(dgettext('tuleap-svn', 'The default policy is to allow read-write access to all project members on the entire repository and read-only access to all other %1$s users. You can tune or even redefine the access permissions below to suit your needs.'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME));
@@ -80,7 +81,6 @@ class AccessControlPresenter extends BaseAdminPresenter
         $this->button_new_version_label = dgettext('tuleap-svn', 'Save a new version');
         $this->select_version           = dgettext('tuleap-svn', 'Select a version');
         $this->saved_on                 = dgettext('tuleap-svn', 'saved on');
-        $this->use_version              = dgettext('tuleap-svn', 'Use this selected version');
         $this->saved_versions           = dgettext('tuleap-svn', 'Saved versions:');
 
         $this->sections = new SectionsPresenter($repository);

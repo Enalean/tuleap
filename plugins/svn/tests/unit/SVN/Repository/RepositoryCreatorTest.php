@@ -156,7 +156,8 @@ final class RepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $mail_notifications,
             $access_file_history,
             1,
-            false
+            false,
+            true,
         );
         $initial_layout      = [];
 
@@ -197,7 +198,8 @@ final class RepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $mail_notifications,
             $access_file_history,
             1,
-            true
+            true,
+            true,
         );
         $initial_layout      = [];
 
@@ -240,7 +242,8 @@ final class RepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $mail_notifications,
             [],
             1,
-            false
+            false,
+            true,
         );
         $initial_layout     = [];
 
@@ -269,7 +272,8 @@ final class RepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $mail_notifications,
             [],
             1,
-            false
+            false,
+            true,
         );
         $initial_layout     = [];
 

@@ -23,7 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\SVN\Repository;
 
-use Tuleap\SVN\Dao;
+use Tuleap\SVN\Repository\Exception\CannotFindRepositoryException;
+use Tuleap\SVNCore\Repository;
 
 final class SvnCoreAccess
 {
@@ -36,43 +37,40 @@ final class SvnCoreAccess
         'notification'     => 'settings',
     ];
 
-    /**
-     * @var Dao
-     */
-    private $dao;
-
-    public function __construct(Dao $dao)
+    public function __construct(private readonly RepositoryManager $repository_manager)
     {
-        $this->dao = $dao;
     }
 
     public function process(\Tuleap\SVNCore\SvnCoreAccess $svn_core_access): void
     {
-        $repo_id = $this->dao->getCoreRepositoryId($svn_core_access->project);
-        if ($repo_id !== null && ($uri = $this->getMatchingUri($svn_core_access, $repo_id))) {
-            $svn_core_access->setRedirectUri($uri);
+        try {
+            $repository = $this->repository_manager->getCoreRepository($svn_core_access->project);
+            if ($uri = $this->getMatchingUri($svn_core_access, $repository)) {
+                $svn_core_access->setRedirectUri($uri);
+            }
+        } catch (CannotFindRepositoryException) {
         }
     }
 
-    private function getMatchingUri(\Tuleap\SVNCore\SvnCoreAccess $svn_core_access, int $repo_id): ?string
+    private function getMatchingUri(\Tuleap\SVNCore\SvnCoreAccess $svn_core_access, Repository $repository): ?string
     {
         $url = parse_url($svn_core_access->requested_uri);
         if (isset($url['path'], $url['query']) && $url['path'] === '/svn/admin/') {
             parse_str($url['query'], $query);
-            return $this->getMatchingUriAdmin($query, $svn_core_access, $repo_id);
+            return $this->getMatchingUriAdmin($query, $svn_core_access, $repository->getId());
         }
         if (isset($url['path'], $url['query']) && strpos($url['path'], self::CORE_VIEWVC_URI_BASE_PATH) === 0) {
             return $this->getMatchingUriViewVc($svn_core_access, $url['path'], $url['query']);
         }
         if (isset($url['path']) && $url['path'] === '/svn/') {
-            return $this->getMatchingUriView($svn_core_access, $repo_id);
+            return $this->getMatchingUriView($repository);
         }
         return null;
     }
 
-    private function getMatchingUriView(\Tuleap\SVNCore\SvnCoreAccess $svn_core_access, int $repo_id): string
+    private function getMatchingUriView(Repository $repository): string
     {
-        return (CoreRepository::buildActiveRepository($svn_core_access->project, $repo_id))->getHtmlPath();
+        return $repository->getHtmlPath();
     }
 
     private function getMatchingUriAdmin(array $query, \Tuleap\SVNCore\SvnCoreAccess $svn_core_access, int $repo_id): ?string

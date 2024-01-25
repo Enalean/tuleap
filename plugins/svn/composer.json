@@ -6,6 +6,11 @@
     },
     "classmap": ["include/"]
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Tuleap\\SVN\\": ["./tests/unit/"]
+    }
+  },
   "config": {
     "sort-packages": true
   },

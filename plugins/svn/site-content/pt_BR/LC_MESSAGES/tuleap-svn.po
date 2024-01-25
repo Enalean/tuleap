@@ -84,13 +84,15 @@ msgstr ""
 msgid "Core"
 msgstr ""
 
-msgid "Core repository cannot be managed by plugin"
-msgstr ""
-
 msgid "Create a new SVN repository"
 msgstr ""
 
 msgid "Create repository"
+msgstr ""
+
+msgid ""
+"Default permissions means that Tuleap will generate [/] permissions for "
+"members according to project visibility."
 msgstr ""
 
 msgid "Delete"
@@ -544,7 +546,7 @@ msgstr ""
 msgid "Update successful"
 msgstr "Atualizado com sucesso"
 
-msgid "Use this selected version"
+msgid "Use default permissions"
 msgstr ""
 
 #, php-format

@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\SVN\Repository;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tuleap\SVN\Dao;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -32,17 +31,34 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 final class SvnCoreAccessTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \Project $project;
-    private MockObject&Dao $dao;
+    private MockObject&RepositoryManager $repository_manager;
     private SvnCoreAccess $plugin_svn_access;
 
     public function setUp(): void
     {
         $this->project = ProjectTestBuilder::aProject()->build();
 
-        $this->dao = $this->createMock(Dao::class);
-        $this->dao->method('getCoreRepositoryId')->with($this->project)->willReturn(29);
+        $this->repository_manager = $this->createMock(RepositoryManager::class);
+        $this->repository_manager
+            ->method('getCoreRepository')
+            ->with($this->project)
+            ->willReturn(
+                CoreRepository::buildActiveRepository(
+                    [
+                        'id' => '29',
+                        'name' => 'foo',
+                        'project_id' => '101',
+                        'is_core' => '1',
+                        'has_default_permissions' => '1',
+                        'accessfile_id' => '1001',
+                        'repository_deletion_date' => null,
+                        'backup_path' => null,
+                    ],
+                    $this->project
+                )
+            );
 
-        $this->plugin_svn_access = new SvnCoreAccess($this->dao);
+        $this->plugin_svn_access = new SvnCoreAccess($this->repository_manager);
     }
 
     public function testItRedirectsAccessToCoreSubversionIntro(): void

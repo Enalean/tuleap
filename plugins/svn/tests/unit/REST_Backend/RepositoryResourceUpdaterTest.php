@@ -31,6 +31,7 @@ use Tuleap\SVN\Admin\MailNotificationManager;
 use Tuleap\SVN\Repository\HookConfig;
 use Tuleap\SVN\Repository\HookConfigUpdator;
 use Tuleap\SVN\Repository\Settings\Settings;
+use Tuleap\SVN\Repository\SvnRepository;
 use Tuleap\SVNCore\CollectionOfSVNAccessFileFaults;
 use Tuleap\SVNCore\Repository;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -38,7 +39,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 final class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private MailNotificationManager&MockObject $mail_notification_manager;
-    private Repository&MockObject $repository;
+    private Repository $repository;
     private ImmutableTagFactory&MockObject $immutable_tag_factory;
     private AccessFileHistoryFactory&MockObject $access_file_factory;
     private AccessFileHistoryCreator&MockObject $access_file_creator;
@@ -69,11 +70,8 @@ final class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->notification_updater_checker,
         );
 
-        $this->repository = $this->createMock(\Tuleap\SVNCore\Repository::class);
         $project          = ProjectTestBuilder::aProject()->withId(101)->build();
-
-        $this->repository->method('getProject')->willReturn($project);
-        $this->repository->method('getSystemPath')->willReturn('');
+        $this->repository = SvnRepository::buildActiveRepository(12, 'foo', $project);
     }
 
     public function testItUpdatesRepositorySettings(): void
@@ -93,7 +91,7 @@ final class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $mail_notifications = [];
 
-        $settings = new Settings($commit_rules, $immutable_tag, $access_file, $mail_notifications, [], 1, false);
+        $settings = new Settings($commit_rules, $immutable_tag, $access_file, $mail_notifications, [], 1, false, true);
 
         $current_access_file = new AccessFileHistory(
             $this->repository,
@@ -140,7 +138,7 @@ final class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $mail_notifications = [];
 
-        $settings = new Settings($commit_rules, $immutable_tag, $access_file, $mail_notifications, [], 1, false);
+        $settings = new Settings($commit_rules, $immutable_tag, $access_file, $mail_notifications, [], 1, false, true);
 
         $current_access_file = new AccessFileHistory(
             $this->repository,
@@ -187,7 +185,7 @@ final class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $mail_notifications = [];
 
-        $settings = new Settings($commit_rules, $immutable_tag, $access_file, $mail_notifications, [], 1, false);
+        $settings = new Settings($commit_rules, $immutable_tag, $access_file, $mail_notifications, [], 1, false, true);
 
         $current_access_file = new AccessFileHistory(
             $this->repository,
@@ -234,7 +232,7 @@ final class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $mail_notifications = [];
 
-        $settings = new Settings($commit_rules, $immutable_tag, $access_file, $mail_notifications, [], 1, false);
+        $settings = new Settings($commit_rules, $immutable_tag, $access_file, $mail_notifications, [], 1, false, true);
 
         $current_access_file = new AccessFileHistory(
             $this->repository,
@@ -257,5 +255,49 @@ final class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->access_file_creator->expects(self::once())->method('create')->willReturn(new CollectionOfSVNAccessFileFaults());
 
         $this->updater->update($this->repository, $settings);
+    }
+
+    public function testItUpdatesDefaultPermissionsOnRepository(): void
+    {
+        $commit_rules = [
+            HookConfig::MANDATORY_REFERENCE       => false,
+            HookConfig::COMMIT_MESSAGE_CAN_CHANGE => false,
+        ];
+
+        $immutable_tag = new ImmutableTag(
+            $this->repository,
+            "/tags",
+            "/white"
+        );
+
+        $access_file = "[/] * = rw";
+
+        $mail_notifications = [];
+
+        $settings = new Settings($commit_rules, $immutable_tag, $access_file, $mail_notifications, [], 1, false, false);
+
+        $current_access_file = new AccessFileHistory(
+            $this->repository,
+            1,
+            1,
+            $access_file,
+            time()
+        );
+
+        $existing_tags = new ImmutableTag($this->repository, "/tags", "/whitelist");
+        $this->immutable_tag_factory->method('getByRepositoryId')->willReturn($existing_tags);
+        $this->access_file_factory->method('getCurrentVersion')->with($this->repository)->willReturn(
+            $current_access_file
+        );
+
+        $this->notification_updater_checker->method('hasNotificationChanged')->willReturn(false);
+
+        $this->hook_config_updater->expects(self::once())->method('updateHookConfig');
+        $this->immutable_tag_creator->expects(self::once())->method('save');
+        $this->access_file_creator->expects(self::once())->method('create')->willReturn(new CollectionOfSVNAccessFileFaults());
+
+        self::assertTrue($this->repository->hasDefaultPermissions());
+        $this->updater->update($this->repository, $settings);
+        self::assertFalse($this->repository->hasDefaultPermissions());
     }
 }

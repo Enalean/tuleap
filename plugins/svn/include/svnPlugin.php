@@ -426,6 +426,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                 $this->getProjectHistoryDao(),
                 $this->getProjectHistoryFormatter(),
                 \Tuleap\SVNCore\SVNAccessFileDefaultBlockGenerator::instance(),
+                new \Tuleap\SVN\Repository\DefaultPermissionsDao(),
             );
         }
 
@@ -583,7 +584,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             new AccessControlController(
                 $repository_manager,
                 $this->getAccessFileHistoryFactory(),
-                $this->getAccessFileHistoryCreator()
+                $this->getAccessFileHistoryCreator(),
             ),
             new AdminController(
                 new MailHeaderManager(new MailHeaderDao()),
@@ -1271,7 +1272,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
     #[ListeningToEventClass]
     public function svnCoreAccess(SvnCoreAccess $svn_core_access): void
     {
-        (new \Tuleap\SVN\Repository\SvnCoreAccess(new Dao()))->process($svn_core_access);
+        (new \Tuleap\SVN\Repository\SvnCoreAccess($this->getRepositoryManager()))->process($svn_core_access);
     }
 
     public function getConfigKeys(ConfigClassProvider $config_keys): void

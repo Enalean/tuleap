@@ -29,7 +29,7 @@ use Tuleap\SVN\Admin\MailNotification;
 /**
  * @psalm-immutable
  */
-class Settings
+final class Settings
 {
     /**
      * @var MailNotification[]
@@ -40,7 +40,6 @@ class Settings
      */
     private readonly array $access_file_history;
 
-
     public function __construct(
         private readonly array $commit_rules,
         private readonly ImmutableTag $immutable_tag,
@@ -49,6 +48,7 @@ class Settings
         array $access_file_history,
         private readonly int $used_version,
         private readonly bool $is_access_file_already_purged,
+        public readonly bool $has_default_permissions,
     ) {
         $this->mail_notification   = $mail_notification;
         $this->access_file_history = $access_file_history;

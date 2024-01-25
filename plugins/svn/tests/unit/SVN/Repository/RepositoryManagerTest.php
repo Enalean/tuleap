@@ -100,6 +100,7 @@ final class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                     'repository_deletion_date' => null,
                     'backup_path'              => null,
                     'is_core'                  => '0',
+                    'has_default_permissions'  => '1',
                 ]
             );
 
@@ -154,6 +155,7 @@ final class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                     'repository_deletion_date' => null,
                     'backup_path'              => null,
                     'is_core'                  => '0',
+                    'has_default_permissions'  => '1',
                 ]
             );
 
@@ -170,7 +172,7 @@ final class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->request->method('get')->willReturn('projectname');
         $this->request->method('getProject')->willReturn($this->project);
 
-        $this->dao->method('getCoreRepositoryId')->willReturn(15);
+        $this->dao->method('getCoreRepository')->willReturn(['id' => '15', 'has_default_permissions' => '1']);
 
         $repository = $this->manager->getRepositoryFromPublicPath($this->request);
         self::assertEquals('projectname', $repository->getName());
@@ -198,6 +200,7 @@ final class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                     'backup_path'              => '/tmp/102',
                     'repository_deletion_date' => null,
                     'is_core'                  => '0',
+                    'has_default_permissions'  => '1',
                 ],
                 [
                     'project_id'               => '102',
@@ -206,6 +209,7 @@ final class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                     'backup_path'              => '/tmp/102',
                     'repository_deletion_date' => null,
                     'is_core'                  => '0',
+                    'has_default_permissions'  => '1',
                 ],
                 [
                     'project_id'               => '103',
@@ -214,6 +218,7 @@ final class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                     'backup_path'              => '/tmp/103',
                     'repository_deletion_date' => null,
                     'is_core'                  => '0',
+                    'has_default_permissions'  => '1',
                 ],
             ]
         );
@@ -231,10 +236,10 @@ final class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $collection          = $this->manager->getRepositoriesOfNonDeletedProjects();
         $expected_collection = [
             RepositoryByProjectCollection::build($project_A, [
-                SvnRepository::buildFromDatabase(['id' => '1', 'name' => 'repo A', 'backup_path' => '/tmp/102', 'repository_deletion_date' => null, 'is_core' => '0'], $project_A),
-                SvnRepository::buildFromDatabase(['id' => '2', 'name' => 'repo B', 'backup_path' => '/tmp/102', 'repository_deletion_date' => null, 'is_core' => '0'], $project_A),
+                SvnRepository::buildFromDatabase(['id' => '1', 'name' => 'repo A', 'backup_path' => '/tmp/102', 'repository_deletion_date' => null, 'is_core' => '0', 'has_default_permissions'  => '1', 'project_id' => '102', 'accessfile_id' => '1',], $project_A),
+                SvnRepository::buildFromDatabase(['id' => '2', 'name' => 'repo B', 'backup_path' => '/tmp/102', 'repository_deletion_date' => null, 'is_core' => '0', 'has_default_permissions'  => '1', 'project_id' => '102', 'accessfile_id' => '1',], $project_A),
             ]),
-            RepositoryByProjectCollection::build($project_B, [SvnRepository::buildFromDatabase(['id' => '3', 'name' => 'repo D', 'backup_path' => '/tmp/103', 'repository_deletion_date' => null, 'is_core' => '0'], $project_B)]),
+            RepositoryByProjectCollection::build($project_B, [SvnRepository::buildFromDatabase(['id' => '3', 'name' => 'repo D', 'backup_path' => '/tmp/103', 'repository_deletion_date' => null, 'is_core' => '0', 'has_default_permissions'  => '1', 'project_id' => '103', 'accessfile_id' => '1',], $project_B)]),
         ];
 
         self::assertEquals($expected_collection, $collection);
@@ -248,7 +253,7 @@ final class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         \ForgeConfig::set('svn_prefix', $tmp_dir . '/svnroot');
 
         $this->project_manager->method('getProjectByCaseInsensitiveUnixName')->with('ProjectName')->willReturn(ProjectTestBuilder::aProject()->build());
-        $this->dao->method('getCoreRepositoryId')->willReturn(67);
+        $this->dao->method('getCoreRepository')->willReturn(['id' => '67', 'has_default_permissions'  => '1',]);
 
         $repository = $this->manager->getRepositoryFromSystemPath($tmp_dir . '/svnroot/ProjectName');
         self::assertInstanceOf(CoreRepository::class, $repository);
@@ -264,7 +269,7 @@ final class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $project = ProjectTestBuilder::aProject()->build();
         $this->project_manager->method('getProject')->with('101')->willReturn($project);
-        $this->dao->method('searchRepositoryByName')->with($project, 'FooBar')->willReturn(['id' => 670, 'name' => 'FooBar', 'is_core' => '0', 'backup_path' => null, 'repository_deletion_date' => null]);
+        $this->dao->method('searchRepositoryByName')->with($project, 'FooBar')->willReturn(['id' => 670, 'name' => 'FooBar', 'is_core' => '0', 'backup_path' => null, 'repository_deletion_date' => null, 'has_default_permissions'  => '1',]);
 
         $repository = $this->manager->getRepositoryFromSystemPath($tmp_dir . '/svnplugin/101/FooBar');
         self::assertInstanceOf(SvnRepository::class, $repository);

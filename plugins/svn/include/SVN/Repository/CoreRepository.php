@@ -31,29 +31,21 @@ final class CoreRepository implements Repository
 {
     public const TO_BE_CREATED_REPOSITORY_ID = -1;
 
-    /**
-     * @var \Project
-     */
-    private $project;
-    /**
-     * @var int
-     */
-    private $id;
-
-    private function __construct(\Project $project, int $repository_id)
+    private function __construct(private readonly \Project $project, private int $id, private bool $has_default_permissions)
     {
-        $this->project = $project;
-        $this->id      = $repository_id;
     }
 
-    public static function buildActiveRepository(Project $project, int $repository_id): self
+    /**
+     * @psalm-param array{id: string, name?: string, project_id?: string, is_core?: string, has_default_permissions: string, accessfile_id?: string, repository_deletion_date?: string|null, backup_path?: string|null} $row
+     */
+    public static function buildActiveRepository(array $row, Project $project): self
     {
-        return new self($project, $repository_id);
+        return new self($project, (int) $row['id'], $row['has_default_permissions'] === '1');
     }
 
     public static function buildToBeCreatedRepository(Project $project): self
     {
-        return new self($project, self::TO_BE_CREATED_REPOSITORY_ID);
+        return new self($project, self::TO_BE_CREATED_REPOSITORY_ID, true);
     }
 
     public function getSettingUrl(): string
@@ -165,6 +157,11 @@ final class CoreRepository implements Repository
 
     public function hasDefaultPermissions(): bool
     {
-        return true;
+        return $this->has_default_permissions;
+    }
+
+    public function setDefaultPermissions(bool $use_it): void
+    {
+        $this->has_default_permissions = $use_it;
     }
 }

@@ -79,6 +79,9 @@ class Dao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
+    /**
+     * @psalm-return array{id: string, name: string, project_id: string, is_core: string, has_default_permissions: string, accessfile_id: string, repository_deletion_date: string, backup_path: string}|false
+     */
     public function searchByRepositoryIdAndProjectId($id, Project $project)
     {
         $id         = $this->da->escapeInt($id);
@@ -125,7 +128,7 @@ class Dao extends DataAccessObject
         $name         = $this->da->quoteSmart($name);
 
         $sql = "SELECT `groups`.*, id, name, CONCAT(unix_group_name, '/', name) AS repository_name,
-                    backup_path, repository_deletion_date, is_core
+                    backup_path, repository_deletion_date, is_core, has_default_permissions
                 FROM `groups`, plugin_svn_repositories
                 WHERE project_id = `groups`.group_id
                 AND `groups`.unix_group_name = $project_name
@@ -136,12 +139,13 @@ class Dao extends DataAccessObject
 
     public function create(Repository $repository)
     {
-        $name       = $this->da->quoteSmart($repository->getName());
-        $project_id = $this->da->escapeInt($repository->getProject()->getId());
-        $is_core    = $repository instanceof CoreRepository ? '1' : '0';
+        $name                    = $this->da->quoteSmart($repository->getName());
+        $project_id              = $this->da->escapeInt($repository->getProject()->getId());
+        $is_core                 = $repository instanceof CoreRepository ? '1' : '0';
+        $has_default_permissions = $repository->hasDefaultPermissions() ? '1' : '0';
 
         $query = "INSERT INTO plugin_svn_repositories
-            (name,  project_id, is_core) values ($name, $project_id, $is_core)";
+            (name,  project_id, is_core, has_default_permissions) values ($name, $project_id, $is_core, $has_default_permissions)";
 
         return $this->updateAndGetLastId($query);
     }
@@ -306,13 +310,15 @@ class Dao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function getCoreRepositoryId(Project $project): ?int
+    /**
+     * @psalm-return array{id: string, name: string, project_id: string, is_core: string, has_default_permissions: string, accessfile_id: string, repository_deletion_date: string|null, backup_path: string|null}
+     */
+    public function getCoreRepository(Project $project): ?array
     {
-        $sql = sprintf('SELECT id FROM plugin_svn_repositories WHERE project_id = %d and is_core = 1', $this->da->escapeInt($project->getID()));
+        $sql = sprintf('SELECT * FROM plugin_svn_repositories WHERE project_id = %d and is_core = 1', $this->da->escapeInt($project->getID()));
         $dar = $this->retrieve($sql);
         if ($dar && count($dar) === 1) {
-            $row = $dar->getRow();
-            return (int) $row['id'];
+            return $dar->getRow();
         }
         return null;
     }

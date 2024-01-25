@@ -153,6 +153,7 @@ class RepositoryCreator
         $copy_from_core,
     ): ?SystemEvent_SVN_CREATE_REPOSITORY {
         $this->checkUserHasAdministrationPermissions($repository, $user);
+        $repository->setDefaultPermissions($settings->has_default_permissions);
         $repository = $this->createRepository($repository);
 
         if ($settings->hasSettings()) {

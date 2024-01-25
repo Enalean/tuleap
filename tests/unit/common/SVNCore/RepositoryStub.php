@@ -155,4 +155,9 @@ final class RepositoryStub implements Repository
     {
         return $this->has_default_permissions;
     }
+
+    public function setDefaultPermissions(bool $use_it): void
+    {
+        $this->has_default_permissions = $use_it;
+    }
 }
