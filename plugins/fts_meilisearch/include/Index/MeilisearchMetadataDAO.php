@@ -66,7 +66,7 @@ class MeilisearchMetadataDAO extends DataAccessObject
         $metadata_statement_filter = $this->getFilterSearchIDFromMetadata($item->metadata);
 
         return $this->getDB()->column(
-            "SELECT id FROM plugin_fts_meilisearch_item WHERE type=? AND $metadata_statement_filter",
+            "SELECT id FROM plugin_fts_meilisearch_item WHERE type=? AND $metadata_statement_filter FOR SHARE",
             array_merge([$item->type], $metadata_statement_filter->values())
         );
     }
@@ -77,7 +77,7 @@ class MeilisearchMetadataDAO extends DataAccessObject
     public function searchMatchingEntriesByProjectID(int $project_id): array
     {
         return $this->getDB()->column(
-            "SELECT id FROM plugin_fts_meilisearch_item WHERE project_id = ?",
+            "SELECT id FROM plugin_fts_meilisearch_item WHERE project_id = ? FOR SHARE",
             [$project_id]
         );
     }
