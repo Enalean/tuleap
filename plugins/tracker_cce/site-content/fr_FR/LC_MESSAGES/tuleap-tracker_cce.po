@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Poedit 3.0.1\n"
 
 msgid "%sSee details%s"
 msgstr "%sVoir les détails%s"
@@ -99,6 +99,10 @@ msgstr "Échec de l'écriture du fichier sur le disque."
 msgid "File upload stopped by extension."
 msgstr "L'envoi de fichier est arrêté par une extension."
 
+msgid "For more information please %ssee the dedicated documentation%s."
+msgstr ""
+"Pour plus d'information merci de %sconsulter la documentation dédiée%s."
+
 msgid "Input payload"
 msgstr "Données d'entrée"
 
@@ -144,6 +148,12 @@ msgstr "Supprimer le module WASM"
 msgid "Remove module"
 msgstr "Supprimer le module"
 
+msgid ""
+"Run your own code on artifact updates to automate any kind of computation."
+msgstr ""
+"Exécuter votre propre code sur les mises à jour d'artéfact afin "
+"d'automatiser toute sorte de calculs."
+
 msgid "See details: %s"
 msgstr "Voir les détails : %s"
 
@@ -152,6 +162,14 @@ msgstr "Statut"
 
 msgid "Success"
 msgstr "Succès"
+
+msgid ""
+"The artifact will be updated with this output payload (update fields and/or "
+"add a follow-up comment) with a dedicated \"Custom Code Execution\" user."
+msgstr ""
+"L'artéfact sera mis à jour par ces données de sortie (mis à jour des champs "
+"et/ou ajout d'un commentaire) par un utilisateur dédié \"Custom Code "
+"Execution\"."
 
 #, php-format
 msgid "The maximum file size for the module is %sMB."
@@ -168,6 +186,21 @@ msgstr "Le module a été supprimé"
 
 msgid "The module has been uploaded"
 msgstr "Le module a été téléversé"
+
+msgid ""
+"The module must output (stdout) a payload identical to the one that is used "
+"by REST API to update an artifact (%sSee <code>PUT /artifact/:id</code>%s)."
+msgstr ""
+"Le module doit sortir (stdout) un jeu de données identique à celui utilisé "
+"par l'API REST pour mettre à jour un artéfact (%sVoir <code>PUT /artifact/:"
+"id</code>%s)."
+
+msgid ""
+"The payload sent to the module via stdin is the same as the one for %sthe "
+"tracker webhook%s."
+msgstr ""
+"Les données envoyé en entrée du module via stdin sont les mêmes que pour "
+"%sle webhook de tracker%s."
 
 msgid "The uploaded file exceeds the maximum allowed file size."
 msgstr "Le fichier est trop gros."
@@ -199,8 +232,8 @@ msgstr "Mise à jour"
 msgid "Upload WASM module"
 msgstr "Téléverser un module WASM"
 
-msgid "Upload a module"
-msgstr "Téléverser un module"
+msgid "Upload a WebAssembly module"
+msgstr "Téléverser un module WebAssembly"
 
 msgid "Upload module"
 msgstr "Téléverser le module"
@@ -210,6 +243,15 @@ msgstr "Module WebAssembly"
 
 msgid "You are about to remove the module from this tracker."
 msgstr "Vous êtes sur le point de supprimer le module de ce tracker."
+
+msgid ""
+"You can upload here a %sWebAssembly%s (WASM) module (built with WASI Preview "
+"1 support) that will be executed asynchronously after each artifact update "
+"(or creation)."
+msgstr ""
+"Vous pouvez téléverser ici un module %sWebAssembly%s (WASM, construit avec "
+"le support de WASI Preview 1) qui sera exécuté de manière asynchrone après "
+"chaque mise à jour (ou création) d'artéfact."
 
 msgid "You will not be able to retrieve it."
 msgstr "Vous ne pourrez pas le retrouver."

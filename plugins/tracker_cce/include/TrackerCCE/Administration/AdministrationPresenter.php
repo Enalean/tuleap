@@ -38,6 +38,7 @@ final class AdministrationPresenter
         public readonly bool $has_uploaded_module,
         public readonly bool $is_activated,
         public readonly array $logs,
+        public readonly ?string $explorer_url,
     ) {
     }
 }

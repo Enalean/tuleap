@@ -6,8 +6,62 @@
                     {{# dgettext }}tuleap-tracker_cce | Automated custom code execution{{/ dgettext }}
                 </h1>
             </div>
-            {{^ has_uploaded_module }}
-                <section class="tlp-pane-section">
+            <section class="tlp-pane-section">
+                <p>
+                    {{# dgettext }}tuleap-tracker_cce | Run your own code on artifact updates to automate any kind of computation. {{/ dgettext }}
+                </p>
+                <p>
+                    {{# dgettext }}
+                        tuleap-tracker_cce |
+                        You can upload here a %sWebAssembly%s (WASM) module (built with WASI Preview 1 support) that will be executed asynchronously after each artifact update (or creation). |
+                        <a href="https://webassembly.org/"> |
+                        </a>
+                    {{/ dgettext }}
+                </p>
+
+                <ul>
+                    <li>
+                        {{# dgettext }}
+                            tuleap-tracker_cce |
+                            The payload sent to the module via stdin is the same as the one for %sthe tracker webhook%s. |
+                            <a href="/doc/en/user-guide/integration/webhook.html#tracker"> |
+                            </a>
+                        {{/ dgettext }}
+                    </li>
+                    <li>
+                        {{# explorer_url }}
+                            {{# dgettext }}
+                                tuleap-tracker_cce |
+                                The module must output (stdout) a payload identical to the one that is used by REST API to update an artifact (%sSee <code>PUT /artifact/:id</code>%s). |
+                                <a href="{{ explorer_url }}#/artifacts/tuleap\Tracker\REST\v1\ArtifactsResourceUpdateId"> |
+                                </a>
+                            {{/ dgettext }}
+                        {{/ explorer_url }}
+                        {{^ explorer_url }}
+                            {{# dgettext }}
+                                tuleap-tracker_cce |
+                                The module must output (stdout) a payload identical to the one that is used by REST API to update an artifact (%sSee <code>PUT /artifact/:id</code>%s). | |
+                            {{/ dgettext }}
+                        {{/ explorer_url }}
+                    </li>
+                    <li>
+                        {{# dgettext }}
+                            tuleap-tracker_cce |
+                            The artifact will be updated with this output payload (update fields and/or add a follow-up comment) with a dedicated "Custom Code Execution" user.
+                        {{/ dgettext }}
+                    </li>
+                </ul>
+
+                <p>
+                    {{# dgettext }}
+                        tuleap-tracker_cce |
+                        For more information please %ssee the dedicated documentation%s. |
+                        <a href="/doc/en/user-guide/trackers/administration/configuration/cce.html"> |
+                        </a>
+                    {{/ dgettext }}
+                </p>
+
+                {{^ has_uploaded_module }}
                     <section class="empty-state-page">
                         <div class="empty-state-illustration">
                             {{> svg-empty-state-tumbleweed }}
@@ -21,13 +75,11 @@
                             class="empty-state-action tlp-button-primary tracker-cce-admin-modal-trigger tracker-cce-admin-empty-state-cta"
                             data-target-modal-id="tracker-cce-admin-upload-modal"
                         >
-                            {{# dgettext }}tuleap-tracker_cce | Upload a module{{/ dgettext }}
+                            {{# dgettext }}tuleap-tracker_cce | Upload a WebAssembly module{{/ dgettext }}
                         </button>
                     </section>
-                </section>
-            {{/ has_uploaded_module }}
-            {{# has_uploaded_module }}
-                <section class="tlp-pane-section">
+                {{/ has_uploaded_module }}
+                {{# has_uploaded_module }}
                     <form method="post" action="{{ activation_url }}" class="tlp-form-element">
                         <label class="tlp-label" for="wasm-status">
                             {{# dgettext }}tuleap-tracker_cce | Activated{{/ dgettext }}
@@ -132,8 +184,8 @@
                             {{/ logs }}
                         </tbody>
                     </table>
-                </section>
-            {{/ has_uploaded_module }}
+                {{/ has_uploaded_module }}
+            </section>
         </div>
     </section>
 </div>

@@ -24,6 +24,7 @@ namespace Tuleap\TrackerCCE\Administration;
 
 use HTTPRequest;
 use Project;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Tuleap\Layout\BaseLayout;
@@ -36,6 +37,7 @@ use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
+use Tuleap\REST\ExplorerEndpointAvailableEvent;
 use Tuleap\Tracker\Artifact\RetrieveTracker;
 use Tuleap\TrackerCCE\Logs\LogLinePresenterBuilder;
 use Tuleap\TrackerCCE\Logs\ModuleLogLineWithArtifact;
@@ -53,6 +55,7 @@ final class AdministrationController implements DispatchableWithRequest, Dispatc
         private readonly CheckModuleIsActivated $check_module_is_activated,
         private readonly RetrieveLogsForTracker $logs_for_tracker,
         private readonly LogLinePresenterBuilder $log_line_presenter_builder,
+        private readonly EventDispatcherInterface $event_dispatcher,
     ) {
     }
 
@@ -110,6 +113,7 @@ final class AdministrationController implements DispatchableWithRequest, Dispatc
                     fn (ModuleLogLineWithArtifact $log) => $this->log_line_presenter_builder->getPresenter($log, $current_user),
                     $logs,
                 ),
+                $this->event_dispatcher->dispatch(new ExplorerEndpointAvailableEvent())->getEndpointURL(),
             )
         );
 
