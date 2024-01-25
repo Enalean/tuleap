@@ -108,7 +108,7 @@ class CustomCodeExecutionTaskTest extends TestCase
             ->build();
 
         $task->execute($changeset, true);
-        self::assertTrue($logger->hasWarning('WASM module for tracker #23 not found or not readable'));
+        self::assertTrue($logger->hasDebug('WASM module for tracker #23 not found or not readable'));
         self::assertFalse($caller->hasBeenCalled());
     }
 
@@ -132,7 +132,7 @@ class CustomCodeExecutionTaskTest extends TestCase
             ->build();
 
         $task->execute($changeset, true);
-        self::assertTrue($logger->hasWarning('Caller error'));
+        self::assertTrue($logger->hasDebug('Caller error'));
     }
 
     public function testItFaultWhenWASMResponseExecutorReturnsErr(): void
@@ -157,7 +157,7 @@ class CustomCodeExecutionTaskTest extends TestCase
             ->build();
 
         $task->execute($changeset, true);
-        self::assertTrue($logger->hasWarning("Executor error"));
+        self::assertTrue($logger->hasDebug("Executor error"));
         $line_saved = $dao->getLineSaved();
         self::assertNotNull($line_saved);
         self::assertEquals(ModuleLogLine::STATUS_ERROR, $line_saved->status);
