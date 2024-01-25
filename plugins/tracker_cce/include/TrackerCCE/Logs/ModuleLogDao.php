@@ -24,7 +24,7 @@ namespace Tuleap\TrackerCCE\Logs;
 
 use Tuleap\DB\DataAccessObject;
 
-final class ModuleLogDao extends DataAccessObject implements SaveModuleLog, RetrieveLogsForTracker
+final class ModuleLogDao extends DataAccessObject implements SaveModuleLog, RetrieveLogsForTracker, DeleteLogsPerTracker
 {
     private const TABLE_NAME = 'plugin_tracker_cce_module_log';
 
@@ -33,6 +33,20 @@ final class ModuleLogDao extends DataAccessObject implements SaveModuleLog, Retr
     public function __construct(private readonly \Tracker_ArtifactFactory $artifact_factory)
     {
         parent::__construct();
+    }
+
+    public function deleteLogsPerTracker(int $tracker_id): void
+    {
+        $this->getDB()->run(
+            <<<SQL
+            DELETE rm_log
+            FROM plugin_tracker_cce_module_log AS rm_log
+                INNER JOIN tracker_changeset AS changeset ON rm_log.changeset_id = changeset.id
+                INNER JOIN tracker_artifact AS artifact ON changeset.artifact_id = artifact.id
+            WHERE artifact.tracker_id = ?
+            SQL,
+            $tracker_id
+        );
     }
 
     /**
@@ -50,7 +64,7 @@ final class ModuleLogDao extends DataAccessObject implements SaveModuleLog, Retr
                         $row['generated_payload_json'],
                         $row['execution_date'],
                     ),
-                    ModuleLogLine::STATUS_ERROR => ModuleLogLine::buildError(
+                    ModuleLogLine::STATUS_ERROR  => ModuleLogLine::buildError(
                         $row['changeset_id'],
                         $row['source_payload_json'],
                         $row['error_message'],

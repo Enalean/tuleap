@@ -30,6 +30,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Layout\Feedback\NewFeedback;
 use Tuleap\Request\DispatchablePSR15Compatible;
+use Tuleap\TrackerCCE\Logs\DeleteLogsPerTracker;
 use Tuleap\TrackerCCE\WASM\WASMModulePathHelper;
 
 final class RemoveModuleController extends DispatchablePSR15Compatible
@@ -39,6 +40,7 @@ final class RemoveModuleController extends DispatchablePSR15Compatible
         private readonly LogModuleRemoved $history_saver,
         private readonly WASMModulePathHelper $module_path_helper,
         private readonly UpdateModuleActivation $module_activation,
+        private readonly DeleteLogsPerTracker $delete_logs,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
     ) {
@@ -76,6 +78,7 @@ final class RemoveModuleController extends DispatchablePSR15Compatible
 
         $this->module_activation->deactivateModule($tracker->getId());
         $this->history_saver->logModuleRemoved($user, $tracker);
+        $this->delete_logs->deleteLogsPerTracker($tracker->getId());
 
         return $this->redirectWithFeedback(
             $user,

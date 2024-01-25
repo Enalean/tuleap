@@ -114,6 +114,17 @@ final class ModuleLogDaoTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertCount(1, $this->dao->searchLogsByTrackerId($this->other_tracker_id));
     }
 
+    public function testItDeleteLogs(): void
+    {
+        $this->dao->saveModuleLogLine($this->createLogForChangeset($this->changeset_id, true));
+        $this->dao->saveModuleLogLine($this->createLogForChangeset($this->other_changeset_id, true));
+
+        $this->dao->deleteLogsPerTracker($this->tracker_id);
+
+        self::assertCount(0, $this->dao->searchLogsByTrackerId($this->tracker_id));
+        self::assertCount(1, $this->dao->searchLogsByTrackerId($this->other_tracker_id));
+    }
+
     private function createLogForChangeset(int $changeset_id, bool $passed): ModuleLogLine
     {
         if ($passed) {
