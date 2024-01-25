@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference\ByNature\Forum;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project;
 use ProjectManager;
 use Tuleap\Forum\Forum;
 use Tuleap\Forum\ForumRetriever;
@@ -35,34 +34,24 @@ use Tuleap\Forum\PermissionToAccessForumException;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\CrossReferencePresenter;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class CrossReferenceForumOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CrossReferenceForumOrganizerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|MessageRetriever
-     */
-    private $message_retriever;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ForumRetriever
-     */
-    private $forum_retriever;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Project
-     */
-    private $project;
-    /**
-     * @var CrossReferenceForumOrganizer
-     */
-    private $organizer;
+    private MessageRetriever&MockObject $message_retriever;
+    private ForumRetriever&MockObject $forum_retriever;
+    private Project $project;
+    private CrossReferenceForumOrganizer $organizer;
 
     protected function setUp(): void
     {
-        $this->project           = Mockery::mock(\Project::class);
-        $project_manager         = Mockery::mock(ProjectManager::class, ['getProject' => $this->project]);
-        $this->message_retriever = Mockery::mock(MessageRetriever::class);
-        $this->forum_retriever   = Mockery::mock(ForumRetriever::class);
+        $this->project   = ProjectTestBuilder::aProject()->build();
+        $project_manager = $this->createMock(ProjectManager::class);
+        $project_manager->method('getProject')->willReturn($this->project);
+        $this->message_retriever = $this->createMock(MessageRetriever::class);
+        $this->forum_retriever   = $this->createMock(ForumRetriever::class);
 
         $this->organizer = new CrossReferenceForumOrganizer(
             $project_manager,
@@ -78,15 +67,15 @@ class CrossReferenceForumOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
 
         $this->message_retriever
-            ->shouldReceive('getMessage')
+            ->method('getMessage')
             ->with(123)
-            ->andThrow(MessageNotFoundException::class);
+            ->willThrowException(new MessageNotFoundException());
 
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
         $by_nature_organizer
-            ->shouldReceive('removeUnreadableCrossReference')
-            ->with($ref)
-            ->once();
+            ->expects(self::once())
+            ->method('removeUnreadableCrossReference')
+            ->with($ref);
 
         $this->organizer->organizeMessageReference($ref, $by_nature_organizer);
     }
@@ -98,15 +87,15 @@ class CrossReferenceForumOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
 
         $this->message_retriever
-            ->shouldReceive('getMessage')
+            ->method('getMessage')
             ->with(123)
-            ->andThrow(PermissionToAccessForumException::class);
+            ->willThrowException(new PermissionToAccessForumException());
 
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
         $by_nature_organizer
-            ->shouldReceive('removeUnreadableCrossReference')
-            ->with($ref)
-            ->once();
+            ->expects(self::once())
+            ->method('removeUnreadableCrossReference')
+            ->with($ref);
 
         $this->organizer->organizeMessageReference($ref, $by_nature_organizer);
     }
@@ -118,87 +107,82 @@ class CrossReferenceForumOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
 
         $this->message_retriever
-            ->shouldReceive('getMessage')
+            ->method('getMessage')
             ->with(123)
-            ->andReturn(
-                new Message(
-                    'Not able to access SVN repo',
-                    'whatever',
-                    'jdoe',
-                    1234567890,
-                    1,
-                    2,
-                    3,
-                    "Open Discussions",
-                )
-            );
+            ->willReturn(new Message(
+                'Not able to access SVN repo',
+                'whatever',
+                'jdoe',
+                1234567890,
+                1,
+                2,
+                3,
+                "Open Discussions",
+            ));
 
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
         $by_nature_organizer
-            ->shouldReceive('moveCrossReferenceToSection')
+            ->expects(self::once())
+            ->method('moveCrossReferenceToSection')
             ->with(
-                Mockery::on(
-                    function (CrossReferencePresenter $presenter): bool {
-                        return $presenter->id === 1
-                            && $presenter->title === 'Not able to access SVN repo';
-                    }
-                ),
+                self::callback(function (CrossReferencePresenter $presenter): bool {
+                    return $presenter->id === 1
+                           && $presenter->title === 'Not able to access SVN repo';
+                }),
                 ''
-            )
-            ->once();
+            );
 
         $this->organizer->organizeMessageReference($ref, $by_nature_organizer);
     }
 
     public function testItRemovesCrossReferenceIfForumCannotBeFound(): void
     {
-        $user = Mockery::mock(PFUser::class);
+        $user = UserTestBuilder::buildWithDefaults();
 
         $ref = CrossReferencePresenterBuilder::get(1)
             ->withValue("123")
             ->build();
 
         $this->forum_retriever
-            ->shouldReceive('getForumUserCanView')
+            ->method('getForumUserCanView')
             ->with(123, $this->project, $user)
-            ->andReturnNull();
+            ->willReturn(null);
 
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class, ['getCurrentUser' => $user]);
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer->method('getCurrentUser')->willReturn($user);
         $by_nature_organizer
-            ->shouldReceive('removeUnreadableCrossReference')
-            ->with($ref)
-            ->once();
+            ->expects(self::once())
+            ->method('removeUnreadableCrossReference')
+            ->with($ref);
 
         $this->organizer->organizeForumReference($ref, $by_nature_organizer);
     }
 
     public function testItOrganizesForumCrossReferenceToUnlabelledSection(): void
     {
-        $user = Mockery::mock(PFUser::class);
+        $user = UserTestBuilder::buildWithDefaults();
 
         $ref = CrossReferencePresenterBuilder::get(1)
             ->withValue("123")
             ->build();
 
         $this->forum_retriever
-            ->shouldReceive('getForumUserCanView')
+            ->method('getForumUserCanView')
             ->with(123, $this->project, $user)
-            ->andReturn(new Forum('Open Discussions'));
+            ->willReturn(new Forum('Open Discussions'));
 
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class, ['getCurrentUser' => $user]);
-
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer->method('getCurrentUser')->willReturn($user);
         $by_nature_organizer
-            ->shouldReceive('moveCrossReferenceToSection')
+            ->expects(self::once())
+            ->method('moveCrossReferenceToSection')
             ->with(
-                Mockery::on(
-                    function (CrossReferencePresenter $presenter): bool {
-                        return $presenter->id === 1
-                            && $presenter->title === 'Open Discussions';
-                    }
-                ),
+                self::callback(function (CrossReferencePresenter $presenter): bool {
+                    return $presenter->id === 1
+                           && $presenter->title === 'Open Discussions';
+                }),
                 ''
-            )
-            ->once();
+            );
 
         $this->organizer->organizeForumReference($ref, $by_nature_organizer);
     }
