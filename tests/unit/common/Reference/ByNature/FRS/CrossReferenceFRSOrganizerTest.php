@@ -22,43 +22,33 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference\ByNature\FRS;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery;
+use FRSFile;
+use FRSFileFactory;
+use FRSPackage;
+use FRSPackageFactory;
+use FRSRelease;
+use FRSReleaseFactory;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class CrossReferenceFRSOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CrossReferenceFRSOrganizerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \FRSPackageFactory|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $package_factory;
-    /**
-     * @var \FRSReleaseFactory|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $release_factory;
-    /**
-     * @var CrossReferenceFRSOrganizer
-     */
-    private $organizer;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
-    /**
-     * @var \FRSFileFactory|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $file_factory;
+    private FRSPackageFactory&MockObject $package_factory;
+    private FRSReleaseFactory&MockObject $release_factory;
+    private CrossReferenceFRSOrganizer $organizer;
+    private PFUser $user;
+    private FRSFileFactory&MockObject $file_factory;
 
     protected function setUp(): void
     {
-        $this->package_factory = Mockery::mock(\FRSPackageFactory::class);
-        $this->release_factory = Mockery::mock(\FRSReleaseFactory::class);
-        $this->file_factory    = Mockery::mock(\FRSFileFactory::class);
-        $this->user            = Mockery::mock(PFUser::class, ['getId' => 115]);
+        $this->package_factory = $this->createMock(FRSPackageFactory::class);
+        $this->release_factory = $this->createMock(FRSReleaseFactory::class);
+        $this->file_factory    = $this->createMock(FRSFileFactory::class);
+        $this->user            = UserTestBuilder::buildWithId(115);
 
         $this->organizer = new CrossReferenceFRSOrganizer(
             $this->package_factory,
@@ -71,13 +61,12 @@ class CrossReferenceFRSOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $cross_reference = CrossReferencePresenterBuilder::get(1)->withType('release')->withValue("1")->withProjectId(101)->build();
 
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
-            ->shouldReceive(['getCurrentUser' => $this->user])
-            ->getMock();
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer->method('getCurrentUser')->willReturn($this->user);
 
-        $this->release_factory->shouldReceive("getFRSReleaseFromDb")->with(1)->andReturnNull();
-        $by_nature_organizer->shouldReceive('removeUnreadableCrossReference')->once()->with($cross_reference);
-        $by_nature_organizer->shouldReceive('moveCrossReferenceToSection')->never();
+        $this->release_factory->method("getFRSReleaseFromDb")->with(1)->willReturn(null);
+        $by_nature_organizer->expects(self::once())->method('removeUnreadableCrossReference')->with($cross_reference);
+        $by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
 
         $this->organizer->organizeFRSReleaseReference($cross_reference, $by_nature_organizer);
     }
@@ -86,33 +75,32 @@ class CrossReferenceFRSOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $cross_reference = CrossReferencePresenterBuilder::get(1)->withType('release')->withValue("1")->withProjectId(101)->build();
 
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
-            ->shouldReceive(['getCurrentUser' => $this->user])
-            ->getMock();
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer->method('getCurrentUser')->willReturn($this->user);
 
-        $release = Mockery::mock(\FRSRelease::class)
-            ->shouldReceive("getPackageID")
-            ->andReturn(18)
-            ->getMock();
-        $release->shouldReceive("isHidden")->andReturn(false);
-        $release->shouldReceive("getPackage")->andReturn(Mockery::mock(\FRSPackage::class, ["isHidden" => false]));
+        $release = $this->createMock(FRSRelease::class);
+        $release->method("getPackageID")->willReturn(18);
+        $release->method("isHidden")->willReturn(false);
+        $package = $this->createMock(FRSPackage::class);
+        $package->method('isHidden')->willReturn(false);
+        $release->method("getPackage")->willReturn($package);
 
         $this->release_factory
-            ->shouldReceive("getFRSReleaseFromDb")
+            ->method("getFRSReleaseFromDb")
             ->with(1)
-            ->andReturn($release);
+            ->willReturn($release);
         $this->release_factory
-            ->shouldReceive("userCanRead")
+            ->method("userCanRead")
             ->with(101, 18, 1, 115)
-            ->andReturn(true);
+            ->willReturn(true);
 
         $this->package_factory
-            ->shouldReceive("userCanRead")
+            ->method("userCanRead")
             ->with(101, 18, 115)
-            ->andReturn(false);
+            ->willReturn(false);
 
-        $by_nature_organizer->shouldReceive('removeUnreadableCrossReference')->once()->with($cross_reference);
-        $by_nature_organizer->shouldReceive('moveCrossReferenceToSection')->never();
+        $by_nature_organizer->expects(self::once())->method('removeUnreadableCrossReference')->with($cross_reference);
+        $by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
 
         $this->organizer->organizeFRSReleaseReference($cross_reference, $by_nature_organizer);
     }
@@ -121,33 +109,32 @@ class CrossReferenceFRSOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $cross_reference = CrossReferencePresenterBuilder::get(1)->withType('release')->withValue("1")->withProjectId(101)->build();
 
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
-            ->shouldReceive(['getCurrentUser' => $this->user])
-            ->getMock();
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer->method('getCurrentUser')->willReturn($this->user);
 
-        $release = Mockery::mock(\FRSRelease::class)
-            ->shouldReceive("getPackageID")
-            ->andReturn(18)
-            ->getMock();
-        $release->shouldReceive("isHidden")->andReturn(false);
-        $release->shouldReceive("getPackage")->andReturn(Mockery::mock(\FRSPackage::class, ["isHidden" => false]));
+        $release = $this->createMock(FRSRelease::class);
+        $release->method("getPackageID")->willReturn(18);
+        $release->method("isHidden")->willReturn(false);
+        $package = $this->createMock(FRSPackage::class);
+        $package->method('isHidden')->willReturn(false);
+        $release->method("getPackage")->willReturn($package);
 
         $this->release_factory
-            ->shouldReceive("getFRSReleaseFromDb")
+            ->method("getFRSReleaseFromDb")
             ->with(1)
-            ->andReturn($release);
+            ->willReturn($release);
         $this->release_factory
-            ->shouldReceive("userCanRead")
+            ->method("userCanRead")
             ->with(101, 18, 1, 115)
-            ->andReturn(false);
+            ->willReturn(false);
 
         $this->package_factory
-            ->shouldReceive("userCanRead")
+            ->method("userCanRead")
             ->with(101, 18, 115)
-            ->andReturn(true);
+            ->willReturn(true);
 
-        $by_nature_organizer->shouldReceive('removeUnreadableCrossReference')->once()->with($cross_reference);
-        $by_nature_organizer->shouldReceive('moveCrossReferenceToSection')->never();
+        $by_nature_organizer->expects(self::once())->method('removeUnreadableCrossReference')->with($cross_reference);
+        $by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
 
         $this->organizer->organizeFRSReleaseReference($cross_reference, $by_nature_organizer);
     }
@@ -156,33 +143,32 @@ class CrossReferenceFRSOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $cross_reference = CrossReferencePresenterBuilder::get(1)->withType('release')->withValue("1")->withProjectId(101)->build();
 
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
-            ->shouldReceive(['getCurrentUser' => $this->user])
-            ->getMock();
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer->method('getCurrentUser')->willReturn($this->user);
 
-        $release = Mockery::mock(\FRSRelease::class)
-            ->shouldReceive("getPackageID")
-            ->andReturn(18)
-            ->getMock();
-        $release->shouldReceive("isHidden")->andReturn(true);
-        $release->shouldReceive("getPackage")->andReturn(Mockery::mock(\FRSPackage::class, ["isHidden" => false]));
+        $release = $this->createMock(FRSRelease::class);
+        $release->method("getPackageID")->willReturn(18);
+        $release->method("isHidden")->willReturn(true);
+        $package = $this->createMock(FRSPackage::class);
+        $package->method('isHidden')->willReturn(false);
+        $release->method("getPackage")->willReturn($package);
 
         $this->release_factory
-            ->shouldReceive("getFRSReleaseFromDb")
+            ->method("getFRSReleaseFromDb")
             ->with(1)
-            ->andReturn($release);
+            ->willReturn($release);
         $this->release_factory
-            ->shouldReceive("userCanRead")
+            ->method("userCanRead")
             ->with(101, 18, 1, 115)
-            ->andReturn(true);
+            ->willReturn(true);
 
         $this->package_factory
-            ->shouldReceive("userCanRead")
+            ->method("userCanRead")
             ->with(101, 18, 115)
-            ->andReturn(true);
+            ->willReturn(true);
 
-        $by_nature_organizer->shouldReceive('removeUnreadableCrossReference')->once()->with($cross_reference);
-        $by_nature_organizer->shouldReceive('moveCrossReferenceToSection')->never();
+        $by_nature_organizer->expects(self::once())->method('removeUnreadableCrossReference')->with($cross_reference);
+        $by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
 
         $this->organizer->organizeFRSReleaseReference($cross_reference, $by_nature_organizer);
     }
@@ -191,33 +177,32 @@ class CrossReferenceFRSOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $cross_reference = CrossReferencePresenterBuilder::get(1)->withType('release')->withValue("1")->withProjectId(101)->build();
 
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
-            ->shouldReceive(['getCurrentUser' => $this->user])
-            ->getMock();
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer->method('getCurrentUser')->willReturn($this->user);
 
-        $release = Mockery::mock(\FRSRelease::class)
-            ->shouldReceive("getPackageID")
-            ->andReturn(18)
-            ->getMock();
-        $release->shouldReceive("isHidden")->andReturn(false);
-        $release->shouldReceive("getPackage")->andReturn(Mockery::mock(\FRSPackage::class, ["isHidden" => true]));
+        $release = $this->createMock(FRSRelease::class);
+        $release->method("getPackageID")->willReturn(18);
+        $release->method("isHidden")->willReturn(false);
+        $package = $this->createMock(FRSPackage::class);
+        $package->method('isHidden')->willReturn(true);
+        $release->method("getPackage")->willReturn($package);
 
         $this->release_factory
-            ->shouldReceive("getFRSReleaseFromDb")
+            ->method("getFRSReleaseFromDb")
             ->with(1)
-            ->andReturn($release);
+            ->willReturn($release);
         $this->release_factory
-            ->shouldReceive("userCanRead")
+            ->method("userCanRead")
             ->with(101, 18, 1, 115)
-            ->andReturn(true);
+            ->willReturn(true);
 
         $this->package_factory
-            ->shouldReceive("userCanRead")
+            ->method("userCanRead")
             ->with(101, 18, 115)
-            ->andReturn(true);
+            ->willReturn(true);
 
-        $by_nature_organizer->shouldReceive('removeUnreadableCrossReference')->once()->with($cross_reference);
-        $by_nature_organizer->shouldReceive('moveCrossReferenceToSection')->never();
+        $by_nature_organizer->expects(self::once())->method('removeUnreadableCrossReference')->with($cross_reference);
+        $by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
 
         $this->organizer->organizeFRSReleaseReference($cross_reference, $by_nature_organizer);
     }
@@ -226,39 +211,35 @@ class CrossReferenceFRSOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $cross_reference = CrossReferencePresenterBuilder::get(1)->withType('release')->withValue("1")->withProjectId(101)->build();
 
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
-            ->shouldReceive(['getCurrentUser' => $this->user])
-            ->getMock();
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer->method('getCurrentUser')->willReturn($this->user);
 
-        $release = Mockery::mock(\FRSRelease::class)
-            ->shouldReceive("getPackageID")
-            ->andReturn(18)
-            ->getMock();
-        $release->shouldReceive("isHidden")->andReturn(false);
-        $release->shouldReceive("getPackage")->andReturn(Mockery::mock(\FRSPackage::class, ["isHidden" => false]));
+        $release = $this->createMock(FRSRelease::class);
+        $release->method("getPackageID")->willReturn(18);
+        $release->method("isHidden")->willReturn(false);
+        $package = $this->createMock(FRSPackage::class);
+        $package->method('isHidden')->willReturn(false);
+        $release->method("getPackage")->willReturn($package);
 
         $this->release_factory
-            ->shouldReceive("getFRSReleaseFromDb")
+            ->method("getFRSReleaseFromDb")
             ->with(1)
-            ->andReturn($release);
+            ->willReturn($release);
         $this->release_factory
-            ->shouldReceive("userCanRead")
+            ->method("userCanRead")
             ->with(101, 18, 1, 115)
-            ->andReturn(true);
+            ->willReturn(true);
 
         $this->package_factory
-            ->shouldReceive("userCanRead")
+            ->method("userCanRead")
             ->with(101, 18, 115)
-            ->andReturn(true);
+            ->willReturn(true);
 
-        $by_nature_organizer->shouldReceive('removeUnreadableCrossReference')->never();
+        $by_nature_organizer->expects(self::never())->method('removeUnreadableCrossReference');
         $by_nature_organizer
-            ->shouldReceive('moveCrossReferenceToSection')
-            ->once()
-            ->with(
-                $cross_reference,
-                ""
-            );
+            ->expects(self::once())
+            ->method('moveCrossReferenceToSection')
+            ->with($cross_reference, "");
 
         $this->organizer->organizeFRSReleaseReference($cross_reference, $by_nature_organizer);
     }
@@ -267,13 +248,12 @@ class CrossReferenceFRSOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $cross_reference = CrossReferencePresenterBuilder::get(1)->withType('release')->withValue("1")->withProjectId(101)->build();
 
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
-            ->shouldReceive(['getCurrentUser' => $this->user])
-            ->getMock();
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer->method('getCurrentUser')->willReturn($this->user);
 
-        $this->file_factory->shouldReceive("getFRSFileFromDb")->with(1)->andReturnNull();
-        $by_nature_organizer->shouldReceive('removeUnreadableCrossReference')->once()->with($cross_reference);
-        $by_nature_organizer->shouldReceive('moveCrossReferenceToSection')->never();
+        $this->file_factory->method("getFRSFileFromDb")->with(1)->willReturn(null);
+        $by_nature_organizer->expects(self::once())->method('removeUnreadableCrossReference')->with($cross_reference);
+        $by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
 
         $this->organizer->organizeFRSFileReference($cross_reference, $by_nature_organizer);
     }
@@ -282,19 +262,17 @@ class CrossReferenceFRSOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $cross_reference = CrossReferencePresenterBuilder::get(1)->withType('release')->withValue("1")->withProjectId(101)->build();
 
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
-            ->shouldReceive(['getCurrentUser' => $this->user])
-            ->getMock();
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer->method('getCurrentUser')->willReturn($this->user);
 
-        $file = Mockery::mock(\FRSFile::class)
-            ->shouldReceive("userCanDownload")
+        $file = $this->createMock(FRSFile::class);
+        $file->method("userCanDownload")
             ->with($this->user)
-            ->andReturn(false)
-            ->getMock();
+            ->willReturn(false);
 
-        $this->file_factory->shouldReceive("getFRSFileFromDb")->with(1)->andReturn($file);
-        $by_nature_organizer->shouldReceive('removeUnreadableCrossReference')->once()->with($cross_reference);
-        $by_nature_organizer->shouldReceive('moveCrossReferenceToSection')->never();
+        $this->file_factory->method("getFRSFileFromDb")->with(1)->willReturn($file);
+        $by_nature_organizer->expects(self::once())->method('removeUnreadableCrossReference')->with($cross_reference);
+        $by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
 
         $this->organizer->organizeFRSFileReference($cross_reference, $by_nature_organizer);
     }
@@ -303,26 +281,21 @@ class CrossReferenceFRSOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $cross_reference = CrossReferencePresenterBuilder::get(1)->withType('release')->withValue("1")->withProjectId(101)->build();
 
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
-            ->shouldReceive(['getCurrentUser' => $this->user])
-            ->getMock();
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer->method('getCurrentUser')->willReturn($this->user);
 
-        $file = Mockery::mock(\FRSFile::class)
-            ->shouldReceive("userCanDownload")
+        $file = $this->createMock(FRSFile::class);
+        $file->method("userCanDownload")
             ->with($this->user)
-            ->andReturn(true)
-            ->getMock();
+            ->willReturn(true);
 
-        $this->file_factory->shouldReceive("getFRSFileFromDb")->with(1)->andReturn($file);
+        $this->file_factory->method("getFRSFileFromDb")->with(1)->willReturn($file);
 
-        $by_nature_organizer->shouldReceive('removeUnreadableCrossReference')->never();
+        $by_nature_organizer->expects(self::never())->method('removeUnreadableCrossReference');
         $by_nature_organizer
-            ->shouldReceive('moveCrossReferenceToSection')
-            ->once()
-            ->with(
-                $cross_reference,
-                ""
-            );
+            ->expects(self::once())
+            ->method('moveCrossReferenceToSection')
+            ->with($cross_reference, "");
 
         $this->organizer->organizeFRSFileReference($cross_reference, $by_nature_organizer);
     }
