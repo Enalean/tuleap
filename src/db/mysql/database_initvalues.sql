@@ -35,9 +35,9 @@
 
 INSERT INTO user SET \
         user_id = 70, \
-        user_name = 'forge__cce', \
+        user_name = 'forge__function', \
         email = 'noreply@_DOMAIN_NAME_', \
-        realname = 'Automated custom code execution', \
+        realname = 'Tuleap Functions', \
         register_purpose = NULL, \
         status = 'S', \
         ldap_id = NULL, \

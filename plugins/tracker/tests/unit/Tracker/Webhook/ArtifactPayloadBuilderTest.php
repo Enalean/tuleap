@@ -31,7 +31,7 @@ use Tuleap\Tracker\REST\Artifact\Changeset\Comment\HTMLOrTextCommentRepresentati
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\BuildCompleteTrackerRESTRepresentationStub;
-use Tuleap\User\CCEUser;
+use Tuleap\User\TuleapFunctionsUser;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 final class ArtifactPayloadBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -89,7 +89,7 @@ final class ArtifactPayloadBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItSetWASMUpdateToTrueIfCCEUser(): void
     {
         $user = UserTestBuilder::aUser()
-            ->withId(CCEUser::ID)
+            ->withId(TuleapFunctionsUser::ID)
             ->withRealName('Real Name')
             ->withUserName('username')
             ->withAvatarUrl('')

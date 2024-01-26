@@ -88,7 +88,7 @@ seed_data() {
         baseline \
         gitlab \
         roadmap \
-        tracker_cce
+        tracker_functions
 }
 
 seed_plugin_data() {
