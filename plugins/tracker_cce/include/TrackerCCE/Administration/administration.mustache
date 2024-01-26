@@ -74,6 +74,7 @@
                             type="button"
                             class="empty-state-action tlp-button-primary tracker-cce-admin-modal-trigger tracker-cce-admin-empty-state-cta"
                             data-target-modal-id="tracker-cce-admin-upload-modal"
+                            data-test="tracker-functions-admin-upload-modal-trigger"
                         >
                             {{# dgettext }}tuleap-tracker_cce | Upload a WebAssembly module{{/ dgettext }}
                         </button>
@@ -98,7 +99,7 @@
                         <label class="tlp-label">
                             {{# dgettext }}tuleap-tracker_cce | WebAssembly module{{/ dgettext }}
                         </label>
-                        <span class="tlp-property-empty">
+                        <span class="tlp-property-empty" data-test="tracker-functions-uploaded">
                             {{# dgettext }}tuleap-tracker_cce | Module uploaded{{/ dgettext }}
                         </span>
 
@@ -359,14 +360,14 @@
             <label class="tlp-label" for="wasm-module">
                 {{# dgettext }}tuleap-tracker_cce | WebAssembly module{{/ dgettext }}
             </label>
-            <input type="file" id="wasm-module" name="wasm-module">
+            <input type="file" id="wasm-module" name="wasm-module" data-test="tracker-functions-upload-file">
         </div>
     </div>
     <div class="tlp-modal-footer">
         <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
             {{# dgettext }}tuleap-tracker_cce | Cancel{{/ dgettext }}
         </button>
-        <button type="submit" class="tlp-button-primary tlp-modal-action">
+        <button type="submit" class="tlp-button-primary tlp-modal-action" data-test="tracker-functions-upload-submit">
             <i class="fa-solid fa-upload tlp-button-icon" aria-hidden="true"></i>
             {{# dgettext }}tuleap-tracker_cce | Upload module{{/ dgettext }}
         </button>

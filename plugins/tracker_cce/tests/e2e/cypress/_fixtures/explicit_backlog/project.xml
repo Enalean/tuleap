@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+  ~
+  ~ This file is a part of Tuleap.
+  ~
+  ~ Tuleap is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Tuleap is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -->
+<project unix-name="tracker-functions-template" full-name="Tracker Functions Template" description="" access="public">
+  <long-description/>
+  <services>
+    <service shortname="summary" enabled="1"/>
+    <service shortname="admin" enabled="1"/>
+    <service shortname="plugin_tracker" enabled="1"/>
+  </services>
+  <ugroups>
+    <ugroup name="project_members" description="">
+      <members>
+        <member format="username">ProjectAdministrator</member>
+        <member format="username">ProjectMember</member>
+      </members>
+    </ugroup>
+    <ugroup name="project_admins" description="">
+      <members>
+        <member format="username">ProjectAdministrator</member>
+      </members>
+    </ugroup>
+  </ugroups>
+  <trackers use-natures="true">
+    <tracker id="T932" parent_id="0" instantiate_for_new_projects="1" notifications_level="1" is_displayed_in_new_dropdown="1">
+      <name><![CDATA[Functions]]></name>
+      <item_name><![CDATA[functions]]></item_name>
+      <description><![CDATA[]]></description>
+      <color><![CDATA[flamingo-pink]]></color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="int" ID="F22983" rank="0" id="22983" tracker_id="932" parent_id="0">
+          <name><![CDATA[field_a]]></name>
+          <label><![CDATA[field_a]]></label>
+          <properties size="5"/>
+        </formElement>
+        <formElement type="int" ID="F22982" rank="28" id="22982" tracker_id="932" parent_id="0">
+          <name><![CDATA[field_b]]></name>
+          <label><![CDATA[field_b]]></label>
+          <properties size="5"/>
+        </formElement>
+        <formElement type="text" ID="F22980" rank="487" id="22980" tracker_id="932" parent_id="0">
+          <name><![CDATA[field_sum]]></name>
+          <label><![CDATA[field_sum]]></label>
+          <properties rows="10" cols="50"/>
+        </formElement>
+      </formElements>
+      <reports>
+        <report id="REPORT_2352" is_default="0" is_in_expert_mode="1">
+          <name><![CDATA[Functions]]></name>
+          <description><![CDATA[Functions Report]]></description>
+          <criterias/>
+          <renderers>
+            <renderer ID="R3522" type="table" rank="0" chunksz="15">
+              <name><![CDATA[Functions]]></name>
+              <columns/>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F22983" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F22983" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F22983" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F22982" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F22982" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F22982" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F22980" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+      </permissions>
+    </tracker>
+  </trackers>
+</project>

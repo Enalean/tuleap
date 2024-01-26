@@ -137,6 +137,36 @@ Cypress.Commands.add(
     },
 );
 
+Cypress.Commands.add(
+    "createNewPublicProjectFromAnotherOne",
+    (project_name: string, project_template: string): Cypress.Chainable<number> => {
+        const get_project_template_url =
+            "https://tuleap/api/projects?query=" +
+            encodeURIComponent(JSON.stringify({ shortname: project_template }));
+
+        return cy.getFromTuleapAPI(get_project_template_url).then((response) => {
+            const template_id = Number.parseInt(response.body[0].id, 10);
+
+            const payload = {
+                shortname: project_name,
+                description: "",
+                label: project_name,
+                is_public: true,
+                categories: [],
+                fields: [],
+                template_id,
+                allow_restricted: false,
+            };
+
+            return cy
+                .postFromTuleapApi("https://tuleap/api/projects/", payload)
+                .then((response) => {
+                    return Number.parseInt(response.body.id, 10);
+                });
+        });
+    },
+);
+
 Cypress.Commands.add("createNewPrivateProject", (project_name: string): void => {
     const payload = {
         shortname: project_name,
