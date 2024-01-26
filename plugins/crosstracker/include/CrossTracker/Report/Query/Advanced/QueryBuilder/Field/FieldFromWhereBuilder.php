@@ -27,19 +27,25 @@ use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\DuckTypedFieldType;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\FormElement\RetrieveFieldType;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonType;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
-final class LesserThanComparisonFromWhereBuilder implements FromWhereBuilder
+final class FieldFromWhereBuilder
 {
     public function __construct(
         private readonly RetrieveUsedFields $retrieve_used_fields,
         private readonly RetrieveFieldType $retrieve_field_type,
-        private readonly Numeric\LesserThanComparisonFromWhereBuilder $numeric_builder,
+        private readonly Numeric\EqualComparisonFromWhereBuilder $numeric_equal_builder,
+        private readonly Numeric\NotEqualComparisonFromWhereBuilder $numeric_not_equal_builder,
+        private readonly Numeric\LesserThanComparisonFromWhereBuilder $numeric_lesser_builder,
     ) {
     }
 
+    /**
+     * @param \Tracker[] $trackers
+     */
     public function getFromWhere(
         Field $field,
         Comparison $comparison,
@@ -65,7 +71,21 @@ final class LesserThanComparisonFromWhereBuilder implements FromWhereBuilder
         Comparison $comparison,
     ): IProvideParametrizedFromAndWhereSQLFragments {
         return match ($field->type) {
-            DuckTypedFieldType::NUMERIC => $this->numeric_builder->getFromWhere($field, $comparison)
+            DuckTypedFieldType::NUMERIC => match ($comparison->getType()) {
+                ComparisonType::Equal => $this->numeric_equal_builder->getFromWhere($field, $comparison),
+                ComparisonType::NotEqual => $this->numeric_not_equal_builder->getFromWhere($field, $comparison),
+                ComparisonType::LesserThan => $this->numeric_lesser_builder->getFromWhere($field, $comparison),
+                ComparisonType::GreaterThan => throw new \LogicException(
+                    'Greater Than comparison for fields is not implemented yet'
+                ),
+                ComparisonType::LesserThanOrEqual => throw new \LogicException(
+                    'Lesser Than Or Equal comparison for fields is not implemented yet'
+                ),
+                ComparisonType::GreaterThanOrEqual => throw new \LogicException(
+                    'Greater Than Or Equal comparison for fields is not implemented yet'
+                ),
+                default => throw new \LogicException('Other comparison types are invalid for Numeric fields'),
+            }
         };
     }
 }

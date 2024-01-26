@@ -73,15 +73,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
         private readonly Metadata\NotInComparisonFromWhereBuilder $metadata_not_in_builder,
         private readonly ReverseLinkFromWhereBuilder $reverse_link_from_where_builder,
         private readonly ForwardLinkFromWhereBuilder $forward_link_from_where_builder,
-        private readonly Field\EqualComparisonFromWhereBuilder $field_equal_builder,
-        private readonly Field\NotEqualComparisonFromWhereBuilder $field_not_equal_builder,
-        private readonly Field\GreaterThanComparisonFromWhereBuilder $field_greater_than_builder,
-        private readonly Field\GreaterThanOrEqualComparisonFromWhereBuilder $field_greater_than_or_equal_builder,
-        private readonly Field\LesserThanComparisonFromWhereBuilder $field_lesser_than_builder,
-        private readonly Field\LesserThanOrEqualComparisonFromWhereBuilder $field_lesser_than_or_equal_builder,
-        private readonly Field\BetweenComparisonFromWhereBuilder $field_between_builder,
-        private readonly Field\InComparisonFromWhereBuilder $field_in_builder,
-        private readonly Field\NotInComparisonFromWhereBuilder $field_not_in_builder,
+        private readonly Field\FieldFromWhereBuilder $field_from_where_builder,
     ) {
     }
 
@@ -103,7 +95,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             new FromWhereSearchableVisitorParameters(
                 $comparison,
                 $this->metadata_equal_builder,
-                $this->field_equal_builder,
+                $this->field_from_where_builder,
                 $parameters->user,
                 $parameters->trackers
             )
@@ -117,7 +109,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             new FromWhereSearchableVisitorParameters(
                 $comparison,
                 $this->metadata_not_equal_builder,
-                $this->field_not_equal_builder,
+                $this->field_from_where_builder,
                 $parameters->user,
                 $parameters->trackers
             )
@@ -133,7 +125,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             new FromWhereSearchableVisitorParameters(
                 $comparison,
                 $this->metadata_lesser_than_builder,
-                $this->field_lesser_than_builder,
+                $this->field_from_where_builder,
                 $parameters->user,
                 $parameters->trackers
             )
@@ -149,7 +141,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             new FromWhereSearchableVisitorParameters(
                 $comparison,
                 $this->metadata_greater_than_builder,
-                $this->field_greater_than_builder,
+                $this->field_from_where_builder,
                 $parameters->user,
                 $parameters->trackers
             )
@@ -165,7 +157,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             new FromWhereSearchableVisitorParameters(
                 $comparison,
                 $this->metadata_lesser_than_or_equal_builder,
-                $this->field_lesser_than_or_equal_builder,
+                $this->field_from_where_builder,
                 $parameters->user,
                 $parameters->trackers
             )
@@ -181,7 +173,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             new FromWhereSearchableVisitorParameters(
                 $comparison,
                 $this->metadata_greater_than_or_equal_builder,
-                $this->field_greater_than_or_equal_builder,
+                $this->field_from_where_builder,
                 $parameters->user,
                 $parameters->trackers
             )
@@ -195,7 +187,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             new FromWhereSearchableVisitorParameters(
                 $comparison,
                 $this->metadata_between_builder,
-                $this->field_between_builder,
+                $this->field_from_where_builder,
                 $parameters->user,
                 $parameters->trackers
             )
@@ -209,7 +201,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             new FromWhereSearchableVisitorParameters(
                 $comparison,
                 $this->metadata_in_builder,
-                $this->field_in_builder,
+                $this->field_from_where_builder,
                 $parameters->user,
                 $parameters->trackers
             )
@@ -223,7 +215,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             new FromWhereSearchableVisitorParameters(
                 $comparison,
                 $this->metadata_not_in_builder,
-                $this->field_not_in_builder,
+                $this->field_from_where_builder,
                 $parameters->user,
                 $parameters->trackers
             )

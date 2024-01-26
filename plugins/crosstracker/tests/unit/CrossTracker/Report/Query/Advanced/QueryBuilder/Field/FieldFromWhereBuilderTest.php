@@ -34,7 +34,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 
-final class EqualComparisonFromWhereBuilderTest extends TestCase
+final class FieldFromWhereBuilderTest extends TestCase
 {
     private const FIELD_NAME = 'my_field';
     private RetrieveUsedFieldsStub $fields_retriever;
@@ -63,10 +63,12 @@ final class EqualComparisonFromWhereBuilderTest extends TestCase
 
     private function getFromWhere(): IProvideParametrizedFromAndWhereSQLFragments
     {
-        $builder = new EqualComparisonFromWhereBuilder(
+        $builder = new FieldFromWhereBuilder(
             $this->fields_retriever,
             RetrieveFieldTypeStub::withDetectionOfType(),
             new Numeric\EqualComparisonFromWhereBuilder(),
+            new Numeric\NotEqualComparisonFromWhereBuilder(),
+            new Numeric\LesserThanComparisonFromWhereBuilder()
         );
         $field   = new Field(self::FIELD_NAME);
         return $builder->getFromWhere(

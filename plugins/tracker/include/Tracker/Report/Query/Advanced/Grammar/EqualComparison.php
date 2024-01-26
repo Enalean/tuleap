@@ -39,4 +39,9 @@ class EqualComparison implements Comparison
     {
         return $this->value_wrapper;
     }
+
+    public function getType(): ComparisonType
+    {
+        return ComparisonType::Equal;
+    }
 }
