@@ -21,9 +21,9 @@
 namespace Tuleap\Timetracking\Widget;
 
 use TemplateRendererFactory;
-use Tuleap\Layout\CssAssetCollection;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptAssetGeneric;
+use Tuleap\Layout\JavascriptViteAsset;
 use Widget;
 
 class UserWidget extends Widget
@@ -72,23 +72,19 @@ class UserWidget extends Widget
         return "fa-clock-o";
     }
 
-    public function getJavascriptDependencies(): array
+    /**
+     * @return JavascriptAssetGeneric[]
+     */
+    public function getJavascriptAssets(): array
     {
         return [
-            ['file' => $this->getAssets()->getFileURL('widget-timetracking.js')],
+            new JavascriptViteAsset(
+                new IncludeViteAssets(
+                    __DIR__ . '/../../../scripts/personal-timetracking-widget/frontend-assets',
+                    '/assets/timetracking/personal-timetracking-widget'
+                ),
+                "src/index.js"
+            ),
         ];
-    }
-
-    public function getStylesheetDependencies(): CssAssetCollection
-    {
-        return new CssAssetCollection([new CssAssetWithoutVariantDeclinaisons($this->getAssets(), 'style-bp-personal')]);
-    }
-
-    private function getAssets(): IncludeAssets
-    {
-        return new IncludeAssets(
-            __DIR__ . '/../../../scripts/personal-timetracking-widget/frontend-assets',
-            '/assets/timetracking/personal-timetracking-widget'
-        );
     }
 }
