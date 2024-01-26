@@ -17,8 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import "../themes/style.scss";
+
 import Vue from "vue";
-import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue2-gettext-init";
 import TimetrackingWidget from "./components/TimetrackingWidget.vue";
 import { usePersonalTimetrackingWidgetStore } from "./store/root.ts";
 import { createPinia, PiniaVuePlugin } from "pinia";
@@ -27,7 +29,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("personal-timetracking-widget");
 
     if (vue_mount_point) {
-        await initVueGettext(Vue, (locale) => import(`../po/${getPOFileFromLocale(locale)}`));
+        await initVueGettext(
+            Vue,
+            (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
+        );
 
         Vue.use(PiniaVuePlugin);
         const pinia = createPinia();
