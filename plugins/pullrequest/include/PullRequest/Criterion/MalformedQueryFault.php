@@ -34,6 +34,11 @@ final class MalformedQueryFault extends Fault
         return new self('Query is malformed.');
     }
 
+    public static function onlyOneItemAccepted(string $item_type): Fault
+    {
+        return new self('Query is malformed. Only one ' . $item_type . ' can be selected.');
+    }
+
     public static function buildFromMappingErrors(\CuyZ\Valinor\Mapper\Tree\Message\Messages $errors): Fault
     {
         $all_error_messages = "Query is malformed.";

@@ -49,7 +49,7 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
 
         self::assertTrue(Result::isOk($result));
         self::assertTrue($result->unwrapOr(null)->status->isNothing());
-        self::assertTrue($result->unwrapOr(null)->author->isNothing());
+        self::assertEmpty($result->unwrapOr(null)->authors);
     }
 
     public function testItReturnsAnErrorWhenTheStatusToFilterOnIsInvalid(): void
@@ -88,32 +88,41 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
 
     public function testItReturnsAnErrorWhenTheAuthorToFilterOnIsInvalid(): void
     {
-        $result = $this->converter->convert(json_encode(['author' => 'myself'], JSON_THROW_ON_ERROR));
+        $result = $this->converter->convert(json_encode(['authors' => 'myself'], JSON_THROW_ON_ERROR));
 
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(MalformedQueryFault::class, $result->error);
-        self::assertStringContainsString("author", (string) $result->error);
+        self::assertStringContainsString("authors", (string) $result->error);
     }
 
     public function testItReturnsAnErrorWhenTheAuthorIdIsNotAnInt(): void
     {
-        $result = $this->converter->convert(json_encode(['author' => ['id' => "one-hundred-and-two"]], JSON_THROW_ON_ERROR));
+        $result = $this->converter->convert(json_encode(['authors' => [['id' => "one-hundred-and-two"]]], JSON_THROW_ON_ERROR));
 
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(MalformedQueryFault::class, $result->error);
-        self::assertStringContainsString("author", (string) $result->error);
+        self::assertStringContainsString("authors", (string) $result->error);
+    }
+
+    public function testItReturnsAnErrorWhenTryingToFilterMultipleAuthors(): void
+    {
+        $result = $this->converter->convert(json_encode(['authors' => [['id' => 102], ['id' => 103]]], JSON_THROW_ON_ERROR));
+
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(MalformedQueryFault::class, $result->error);
+        self::assertStringContainsString("authors", (string) $result->error);
     }
 
     public function testItWillOnlyFilterOnAuthor(): void
     {
-        $result = $this->converter->convert(json_encode(['author' => ['id' => 102]], JSON_THROW_ON_ERROR));
+        $result = $this->converter->convert(json_encode(['authors' => [['id' => 102]]], JSON_THROW_ON_ERROR));
 
         self::assertTrue(Result::isOk($result));
 
-        $criteria         = $result->unwrapOr(null);
-        $author_criterion = $criteria->author->unwrapOr(null);
+        $criteria = $result->unwrapOr(null);
 
-        self::assertEquals(102, $author_criterion->id);
+        self::assertCount(1, $criteria->authors);
+        self::assertEquals(102, $criteria->authors[0]->id);
     }
 
     public function testItWillApplyAllFilters(): void
@@ -121,7 +130,7 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
         $result = $this->converter->convert(
             json_encode([
                 'status' => 'open',
-                'author' => ['id' => 102],
+                'authors' => [['id' => 102]],
             ], JSON_THROW_ON_ERROR)
         );
 
@@ -129,9 +138,8 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
 
         $criteria         = $result->unwrapOr(null);
         $status_criterion = $criteria->status->unwrapOr(null);
-        $author_criterion = $criteria->author->unwrapOr(null);
 
-        self::assertEquals(102, $author_criterion->id);
+        self::assertEquals(102, $criteria->authors[0]->id);
 
         self::assertTrue($status_criterion->shouldOnlyRetrieveOpenPullRequests());
         self::assertFalse($status_criterion->shouldOnlyRetrieveClosedPullRequests());

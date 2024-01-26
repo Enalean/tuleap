@@ -50,6 +50,10 @@ class QueryToSearchCriteriaConverter
                     new \CuyZ\Valinor\Mapper\Source\JsonSource(stripslashes($query))
                 );
 
+            if (count($search_criteria->authors) > 1) {
+                return Result::err(MalformedQueryFault::onlyOneItemAccepted('authors'));
+            }
+
             return Result::ok($search_criteria);
         } catch (MappingError $mapping_error) {
             return Result::err($this->buildFaultFromMappingError($mapping_error));

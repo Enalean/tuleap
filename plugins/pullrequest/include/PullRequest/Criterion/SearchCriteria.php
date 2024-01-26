@@ -35,15 +35,12 @@ final class SearchCriteria
     public readonly Option $status;
 
     /**
-     * @var Option<AuthorCriterion>
+     * @psalm-param list<AuthorCriterion> $authors
      */
-    public readonly Option $author;
-
     public function __construct(
         ?StatusCriterion $status = null,
-        ?AuthorCriterion $author = null,
+        public readonly array $authors = [],
     ) {
         $this->status = Option::fromNullable($status);
-        $this->author = Option::fromNullable($author);
     }
 }
