@@ -24,4 +24,6 @@ interface Comparison extends Term
     public function getValueWrapper(): ValueWrapper;
 
     public function getSearchable(): Searchable;
+
+    public function getType(): ComparisonType;
 }

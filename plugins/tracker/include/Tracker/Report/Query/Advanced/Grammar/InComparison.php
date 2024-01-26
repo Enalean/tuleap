@@ -39,4 +39,9 @@ final class InComparison implements Comparison
     {
         return $this->value_wrapper;
     }
+
+    public function getType(): ComparisonType
+    {
+        return ComparisonType::In;
+    }
 }

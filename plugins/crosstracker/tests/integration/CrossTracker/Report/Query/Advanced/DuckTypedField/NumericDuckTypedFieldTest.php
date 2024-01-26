@@ -621,27 +621,13 @@ final class NumericDuckTypedFieldTest extends \Tuleap\Test\PHPUnit\TestCase
             ),
             new ReverseLinkFromWhereBuilder($artifact_factory),
             new ForwardLinkFromWhereBuilder($artifact_factory),
-            new Field\EqualComparisonFromWhereBuilder(
+            new Field\FieldFromWhereBuilder(
                 $form_element_factory,
                 $form_element_factory,
                 new Field\Numeric\EqualComparisonFromWhereBuilder(),
-            ),
-            new Field\NotEqualComparisonFromWhereBuilder(
-                $form_element_factory,
-                $form_element_factory,
-                new Field\Numeric\NotEqualComparisonFromWhereBuilder()
-            ),
-            new Field\GreaterThanComparisonFromWhereBuilder(),
-            new Field\GreaterThanOrEqualComparisonFromWhereBuilder(),
-            new Field\LesserThanComparisonFromWhereBuilder(
-                $form_element_factory,
-                $form_element_factory,
+                new Field\Numeric\NotEqualComparisonFromWhereBuilder(),
                 new Field\Numeric\LesserThanComparisonFromWhereBuilder()
             ),
-            new Field\LesserThanOrEqualComparisonFromWhereBuilder(),
-            new Field\BetweenComparisonFromWhereBuilder(),
-            new Field\InComparisonFromWhereBuilder(),
-            new Field\NotInComparisonFromWhereBuilder()
         );
 
         return new CrossTrackerArtifactReportFactory(
