@@ -17,16 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "~@tuleap/plugin-tracker-artifact-modal";
-@use "includes/socket";
-@use "includes/artifact-links-graph";
-@use "includes/graph";
-@use "includes/campaign";
-@use "includes/execution-list";
-@use "includes/campaign-progression";
-@use "includes/presence";
-@use "includes/administration";
-@use "includes/project-header-background";
+@use "@tuleap/plugin-tracker-artifact-modal";
+@use "./includes/socket";
+@use "./includes/artifact-links-graph";
+@use "./includes/graph";
+@use "./includes/campaign";
+@use "./includes/execution-list";
+@use "./includes/campaign-progression";
+@use "./includes/presence";
+@use "./includes/administration";
+@use "./includes/project-header-background";
 
 /* stylelint-disable selector-no-qualifying-type */
 body.testmanagement {

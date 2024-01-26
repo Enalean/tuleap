@@ -4,5 +4,5 @@
         "types": ["jest"],
         "skipLibCheck": true
     },
-    "include": ["scripts/testmanagement/**/*"]
+    "include": ["src/**/*"]
 }

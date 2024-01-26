@@ -1,5 +1,5 @@
 {
-  "name": "@tuleap/plugin-testmanagement",
+  "name": "@tuleap/plugin-testmanagement-app",
   "author": "Enalean",
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
@@ -16,7 +16,6 @@
     "@tuleap/plugin-docgen-docx": "workspace:*",
     "@tuleap/plugin-tracker-artifact-modal": "workspace:*",
     "@tuleap/project-background": "workspace:*",
-    "@tuleap/tlp": "workspace:*",
     "@tuleap/tlp-dropdown": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-swatch-colors": "workspace:*",
@@ -48,8 +47,6 @@
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
-    "@tuleap/cypress-configurator": "workspace:*",
-    "@tuleap/cypress-utilities-support": "workspace:*",
     "@types/node": "^14.14.31",
     "@types/sprintf-js": "^1.1.2",
     "angular-mocks": "^1.8.2",
@@ -57,8 +54,8 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "build": "rm -rf ./frontend-assets && webpack --config webpack.prod.js",
+    "build": "webpack --config webpack.prod.js",
     "watch": "webpack --config webpack.dev.js --watch",
-    "test": "jest --config ./scripts/testmanagement/jest.config.js"
+    "test": "jest"
   }
 }

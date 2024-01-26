@@ -31,6 +31,6 @@ module.exports = {
         ...jest_base_config.moduleNameMapper,
         "^.+\\.html$": "identity-obj-proxy",
         // The artifact modal module causes lots of WARNING: Tried to load AngularJS more than once.
-        "^angular$": "<rootDir>/../../node_modules/angular/index.js",
+        "^angular$": "<rootDir>/node_modules/angular/index.js",
     },
 };

@@ -7,52 +7,49 @@ settings:
 dependencies:
   '@tuleap/angular-tlp':
     specifier: workspace:*
-    version: link:../../lib/frontend/angular-tlp
+    version: link:../../../../lib/frontend/angular-tlp
   '@tuleap/burningparrot-theme':
     specifier: workspace:*
-    version: link:../../src/themes/BurningParrot
+    version: link:../../../../src/themes/BurningParrot
   '@tuleap/ckeditor-image-upload':
     specifier: workspace:*
-    version: link:../../lib/frontend/ckeditor-image-upload
+    version: link:../../../../lib/frontend/ckeditor-image-upload
   '@tuleap/concurrency-limit-pool':
     specifier: workspace:*
-    version: link:../../lib/frontend/concurrency-limit-pool
+    version: link:../../../../lib/frontend/concurrency-limit-pool
   '@tuleap/filter-inline-table':
     specifier: workspace:*
-    version: link:../../lib/frontend/filter-table
+    version: link:../../../../lib/frontend/filter-table
   '@tuleap/gettext':
     specifier: workspace:*
-    version: link:../../lib/frontend/gettext
+    version: link:../../../../lib/frontend/gettext
   '@tuleap/keyboard-shortcuts':
     specifier: workspace:*
-    version: link:../../lib/frontend/keyboard-shortcuts
+    version: link:../../../../lib/frontend/keyboard-shortcuts
   '@tuleap/list-picker':
     specifier: workspace:*
-    version: link:../../lib/frontend/list-picker
+    version: link:../../../../lib/frontend/list-picker
   '@tuleap/plugin-docgen-docx':
     specifier: workspace:*
-    version: link:../document_generation/scripts/lib/docx
+    version: link:../../../document_generation/scripts/lib/docx
   '@tuleap/plugin-tracker-artifact-modal':
     specifier: workspace:*
-    version: link:../tracker/scripts/lib/artifact-modal
+    version: link:../../../tracker/scripts/lib/artifact-modal
   '@tuleap/project-background':
     specifier: workspace:*
-    version: link:../../lib/frontend/project-background
-  '@tuleap/tlp':
-    specifier: workspace:*
-    version: link:../../src/scripts/tlp
+    version: link:../../../../lib/frontend/project-background
   '@tuleap/tlp-dropdown':
     specifier: workspace:*
-    version: link:../../lib/frontend/tlp-dropdown
+    version: link:../../../../lib/frontend/tlp-dropdown
   '@tuleap/tlp-fetch':
     specifier: workspace:*
-    version: link:../../lib/frontend/tlp-fetch
+    version: link:../../../../lib/frontend/tlp-fetch
   '@tuleap/tlp-swatch-colors':
     specifier: workspace:*
-    version: link:../../lib/frontend/tlp-swatch-colors
+    version: link:../../../../lib/frontend/tlp-swatch-colors
   '@tuleap/tooltip':
     specifier: workspace:*
-    version: link:../../lib/frontend/tooltip
+    version: link:../../../../lib/frontend/tooltip
   '@uirouter/angularjs':
     specifier: ^1.0.29
     version: 1.0.29(angular@1.8.2)
@@ -129,13 +126,7 @@ dependencies:
 devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
-    version: link:../../lib/frontend/build-system-configurator
-  '@tuleap/cypress-configurator':
-    specifier: workspace:*
-    version: link:../../lib/test-utils/cypress-configurator
-  '@tuleap/cypress-utilities-support':
-    specifier: workspace:*
-    version: link:../../lib/test-utils/cypress-utilities-support
+    version: link:../../../../lib/frontend/build-system-configurator
   '@types/node':
     specifier: ^14.14.31
     version: 14.14.31
