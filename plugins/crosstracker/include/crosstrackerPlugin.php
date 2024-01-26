@@ -387,7 +387,11 @@ class crosstrackerPlugin extends Plugin implements PluginWithConfigKeys
             ),
             new Field\GreaterThanComparisonFromWhereBuilder(),
             new Field\GreaterThanOrEqualComparisonFromWhereBuilder(),
-            new Field\LesserThanComparisonFromWhereBuilder(),
+            new Field\LesserThanComparisonFromWhereBuilder(
+                $form_element_factory,
+                $form_element_factory,
+                new Field\Numeric\LesserThanComparisonFromWhereBuilder()
+            ),
             new Field\LesserThanOrEqualComparisonFromWhereBuilder(),
             new Field\BetweenComparisonFromWhereBuilder(),
             new Field\InComparisonFromWhereBuilder(),
