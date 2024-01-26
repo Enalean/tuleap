@@ -30,6 +30,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\DB\DBConfig;
+use Tuleap\Option\Option;
 use TuleapCfg\Command\SetupMysql\ConnectionManagerInterface;
 use TuleapCfg\Command\SetupMysql\DatabaseConfigurator;
 use TuleapCfg\Command\SetupMysql\DBSetupParameters;
@@ -98,7 +99,7 @@ final class SetupMysqlInitCommand extends Command
         $this
             ->setDescription('Initialize database (users, database, permissions)')
             ->addOption(self::OPT_ADMIN_USER, '', InputOption::VALUE_REQUIRED, 'MySQL admin user', 'root')
-            ->addOption(self::OPT_ADMIN_PASSWORD, '', InputOption::VALUE_REQUIRED, 'MySQL admin password')
+            ->addOption(self::OPT_ADMIN_PASSWORD, '', InputOption::VALUE_OPTIONAL, 'MySQL admin password')
             ->addOption(self::OPT_APP_DBNAME, '', InputOption::VALUE_REQUIRED, 'Name of the DB name to host Tuleap tables (`tuleap` by default)', DBConfig::DEFAULT_MYSQL_TULEAP_DB_NAME)
             ->addOption(self::OPT_APP_USER, '', InputOption::VALUE_REQUIRED, 'Name of the DB user to be used for Tuleap (`tuleapadm`) by default', DBConfig::DEFAULT_MYSQL_TULEAP_USER_NAME)
             ->addOption(self::OPT_GRANT_HOSTNAME, '', InputOption::VALUE_REQUIRED, 'Hostname value for mysql grant. This is the right hand side of `user`@`hostname`. Default is `%`', '%')
@@ -119,8 +120,7 @@ final class SetupMysqlInitCommand extends Command
 
         $admin_password = $input->getOption(self::OPT_ADMIN_PASSWORD);
         if (! $admin_password) {
-            $io->getErrorStyle()->writeln(sprintf('<error>Missing mysql password for admin user `%s`</error>', $admin_user));
-            return 1;
+            $admin_password = '';
         }
         assert(is_string($admin_password));
 
@@ -225,14 +225,19 @@ final class SetupMysqlInitCommand extends Command
         $db_params = $db_params->withTuleapFQDN($input->getOption(self::OPT_TULEAP_FQDN));
         $db_params = $db_params->withSiteAdminPassword($this->getSiteAdminPassword($input));
 
+        $generated_admin_db_password = Option::nothing(ConcealedString::class);
+
         if ($db_params->canSetup()) {
-            $this->database_configurator->setupDatabase($output, $db_params, $this->base_directory);
+            $generated_admin_db_password = $this->database_configurator->setupDatabase($output, $db_params, $this->base_directory);
         } else {
             $this->database_configurator->initializeDatabase($output, $db, $dbname, $db_params->grant_hostname);
         }
 
         $log_password = $input->getOption(self::OPT_LOG_PASSWORD);
         if (is_string($log_password)) {
+            $generated_admin_db_password->apply(
+                fn (ConcealedString $db_password) => file_put_contents($log_password, sprintf("MySQL system user (%s): %s\n", $db_params->admin_user, $db_password->getString()), FILE_APPEND)
+            );
             file_put_contents($log_password, sprintf("MySQL application user (%s): %s\n", \ForgeConfig::get(DBConfig::CONF_DBUSER), \ForgeConfig::get(DBConfig::CONF_DBPASSWORD)), FILE_APPEND);
         }
     }

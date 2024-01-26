@@ -54,10 +54,7 @@ Requires: php82-php-intl, php82-php-process, php82-php-opcache, php82-php-fpm, p
 Requires: php82-php-pecl-zip
 Requires: php82-php-ffi
 %if "%{?dist}" == ".el9"
-Requires: mysql
 Requires: glibc-locale-source
-%else
-Requires: rh-mysql80-mysql
 %endif
 
 Requires: sudo, openssh

@@ -133,18 +133,6 @@ final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals('1', $sys_db_ssl_verify_cert);
     }
 
-    public function testNoConfigurationFileWrittenIfPasswordNotProvided(): void
-    {
-        $this->command_tester->execute([
-            '--host'           => '192.0.2.1',
-            '--app-password'   => 'a complex password',
-            '--tuleap-fqdn'    => 'localhost',
-        ]);
-
-        $this->assertEquals(1, $this->command_tester->getStatusCode());
-        $this->assertFileDoesNotExist($this->base_dir . '/etc/tuleap/conf/database.inc');
-    }
-
     /**
      * @dataProvider getEnvironmentIsNotOverrideByCLIDefaults
      */

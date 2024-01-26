@@ -61,6 +61,7 @@ mkdir -p "$WORKSPACE/results/build-and-run-$OS"
 
 docker cp "$UNIQUE_NAME-rpm-installer":/var/log "$WORKSPACE/results/build-and-run-$OS" || true
 docker cp "$UNIQUE_NAME-rpm-installer":/var/opt/remi/php82/log/php-fpm "$WORKSPACE/results/build-and-run-$OS/fpm" || true
+docker cp "$UNIQUE_NAME-rpm-installer":/root/.tuleap_passwd "$WORKSPACE/results/build-and-run-$OS/tuleap_passwd" || true
 
 docker cp "$UNIQUE_NAME-rpm-installer":/output/api-version.json "$WORKSPACE/results/build-and-run-$OS"
 grep "$(cat "$WORKSPACE"/sources/VERSION)" "$WORKSPACE/results/build-and-run-$OS/api-version.json"

@@ -61,29 +61,12 @@ if [ ${tuleap_installed:-false} = "false" ] || \
         admin_password="$(_setupRandomPassword)"
         sys_db_password="$(_setupRandomPassword)"
 
-        if [ "${mysql_password:-NULL}" = "NULL" -a "${mysql_server,,}" = "localhost" ] || \
-            [ "${mysql_password:-NULL}" = "NULL" -a "${mysql_server}" = "127.0.0.1" ]; then
-
-            if ! ${mysql} ${my_opt} --host=${mysql_server} \
-                --user=${mysql_user} --execute=";" 2> >(_logCatcher); then
-                _errorMessage "Your database already have a password"
-                _errorMessage "You need to use the '--mysql-password' option"
-                exit 1
-            fi
-
-            _infoMessage "Generate MySQL password"
-            mysql_password="$(_setupRandomPassword)"
-            _infoMessage "Set MySQL password for ${mysql_user}"
-            _setupMysqlPassword "${mysql_user}" ${mysql_password}
-            _logPassword "MySQL system user password (${mysql_user}): ${mysql_password}"
-        fi
-
         _logPassword "Site admin password (${project_admin}): ${admin_password}"
 
         ${tuleapcfg} setup:mysql-init \
             --host="${mysql_server}" \
             --admin-user="${mysql_user}" \
-            --admin-password="${mysql_password}" \
+            --admin-password="${mysql_password:-}" \
             --db-name="${sys_db_name}" \
             --app-password="${sys_db_password}" \
             --tuleap-fqdn="${server_name}" \
