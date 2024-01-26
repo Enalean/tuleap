@@ -50,13 +50,14 @@ final class SearchDAO extends DataAccessObject implements InsertPlaintextItemsIn
 
     private function indexItem(PlaintextItemToIndex $item): void
     {
-        $existing_entries = $this->searchMatchingEntries($item);
-        if (mb_strlen(trim($item->content)) < self::DEFAULT_MIN_LENGTH_FOR_FTS) {
-            $this->deleteIndexedItemsFromIDs($existing_entries);
-            return;
-        }
         $this->getDB()->tryFlatTransaction(
-            function (EasyDB $db) use ($item, $existing_entries): void {
+            function (EasyDB $db) use ($item): void {
+                $existing_entries = $this->searchMatchingEntries($item);
+                if (mb_strlen(trim($item->content)) < self::DEFAULT_MIN_LENGTH_FOR_FTS) {
+                    $this->deleteIndexedItemsFromIDs($existing_entries);
+                    return;
+                }
+
                 if (count($existing_entries) === 0) {
                     $this->createNewEntry($item);
                     return;
@@ -82,7 +83,7 @@ final class SearchDAO extends DataAccessObject implements InsertPlaintextItemsIn
         $metadata_statement_filter = $this->getFilterSearchIDFromMetadata($item->metadata);
 
         return $this->getDB()->column(
-            "SELECT id FROM plugin_fts_db_search WHERE type=? AND $metadata_statement_filter",
+            "SELECT id FROM plugin_fts_db_search WHERE type=? AND $metadata_statement_filter FOR SHARE",
             array_merge([$item->type], $metadata_statement_filter->values())
         );
     }
