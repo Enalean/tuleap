@@ -87,6 +87,11 @@ declare global {
 
             createNewPublicProject(project_name: string, xml_template: string): Chainable<number>;
 
+            createNewPublicProjectFromAnotherOne(
+                project_name: string,
+                project_template: string,
+            ): Chainable<number>;
+
             createNewPrivateProject(project_name: string): void;
 
             addProjectMember(project_unix_name: string, user_name: string): void;
