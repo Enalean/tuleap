@@ -19,7 +19,7 @@
 
 <template>
     <div class="tlp-framed">
-        <pull-request-list-filters />
+        <pull-request-list-filters v-bind:filters_store="filters_manager" />
         <pull-requests-list />
         <pull-request-error-modal v-bind:fault="error" />
     </div>
@@ -32,8 +32,10 @@ import { DISPLAY_TULEAP_API_ERROR } from "../injection-symbols";
 import PullRequestsList from "./List/PullRequestsList.vue";
 import PullRequestErrorModal from "./Error/PullRequestErrorModal.vue";
 import PullRequestListFilters from "./Filters/PullRequestListFilters.vue";
+import { ListFiltersStore } from "./Filters/ListFiltersStore";
 
 const error = ref<Fault | null>(null);
+const filters_manager = ListFiltersStore(ref([]));
 
 const handleAPIFault = (fault: Fault): void => {
     error.value = fault;

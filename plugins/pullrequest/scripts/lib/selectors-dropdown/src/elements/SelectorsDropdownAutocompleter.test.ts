@@ -19,8 +19,10 @@
 
 import { describe, it, expect, vi } from "vitest";
 import * as lazy_autocompleter from "@tuleap/lazybox";
-import type { LazyAutocompleter, LazyboxOptions, LazyboxItem } from "@tuleap/lazybox";
+import type { LazyAutocompleter, LazyboxOptions } from "@tuleap/lazybox";
 import { SelectorsDropdownAutocompleter } from "./SelectorsDropdownAutocompleter";
+import { SelectorEntryStub } from "../../tests/SelectorEntryStub";
+import type { InternalSelectorsDropdown } from "./SelectorsDropdown";
 
 const noop = (): void => {
     // Do nothing
@@ -37,8 +39,7 @@ describe("SelectorsDropdownAutocompleter", () => {
         const autocompleter = SelectorsDropdownAutocompleter(doc);
         const autocompleter_element = Object.assign(doc.createElement("div"), {
             replaceContent: noop,
-            clearSelection: noop,
-            replaceSelection: noop,
+            disabled: false,
             options: {} as LazyboxOptions,
         }) as HTMLElement & LazyAutocompleter;
 
@@ -46,31 +47,18 @@ describe("SelectorsDropdownAutocompleter", () => {
             .spyOn(lazy_autocompleter, "createLazyAutocompleter")
             .mockReturnValue(autocompleter_element);
 
-        const config = {
-            group: {
-                items: [],
-                is_loading: false,
-                label: "matching authors",
-                footer_message: "",
-                empty_message: "Nothing to see here",
-            },
-            templating_callback: vi.fn(),
-            placeholder: "Hold the place",
-            loadItems: vi.fn().mockReturnValue([]),
-            filterItems: (): LazyboxItem[] => [],
-        };
+        const selector = SelectorEntryStub.withEntryName("test");
+        vi.spyOn(selector.config, "loadItems");
 
-        autocompleter.start(
-            {
-                entry_name: "Author",
-                config,
-            },
-            container,
-        );
+        autocompleter.start(selector, {
+            auto_completer_element: container,
+        } as unknown as InternalSelectorsDropdown);
 
         expect(createLazyAutocompleter).toHaveBeenCalledWith(doc);
-        expect(autocompleter_element.options.placeholder).toBe(config.placeholder);
-        expect(autocompleter_element.options.templating_callback).toBe(config.templating_callback);
-        expect(config.loadItems).toHaveBeenCalledOnce();
+        expect(autocompleter_element.options.placeholder).toBe(selector.config.placeholder);
+        expect(autocompleter_element.options.templating_callback).toBe(
+            selector.config.templating_callback,
+        );
+        expect(selector.config.loadItems).toHaveBeenCalledOnce();
     });
 });

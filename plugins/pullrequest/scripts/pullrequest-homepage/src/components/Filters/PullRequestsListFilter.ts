@@ -17,10 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export { SelectorsDropdown } from "./elements/SelectorsDropdown";
-export type {
-    SelectorEntry,
-    SelectorsDropdownLoadItemsCallback,
-    SelectorsDropdownFilterItemsCallback,
-    SelectorsDropdownOnItemSelectionCallback,
-} from "./elements/SelectorsDropdown";
+import type { AuthorFilter, PullRequestAuthorFilter } from "./Author/AuthorFilter";
+
+export type PullRequestsListFilterType = AuthorFilter;
+
+export type BasePullRequestsListFilter<TypeOfFilterValue> = {
+    id: number;
+    type: PullRequestsListFilterType;
+    label: string;
+    value: TypeOfFilterValue;
+};
+
+export type PullRequestsListFilter = PullRequestAuthorFilter;

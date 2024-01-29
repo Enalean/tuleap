@@ -31,6 +31,10 @@
 }
 
 .selectors-dropdown-menu-item {
+    &.tlp-dropdown-menu-item-disabled {
+        cursor: pointer;
+    }
+
     &:first-child {
         border-radius: var(--tlp-large-radius) var(--tlp-large-radius) 0 0;
     }

@@ -17,10 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export { SelectorsDropdown } from "./elements/SelectorsDropdown";
-export type {
-    SelectorEntry,
-    SelectorsDropdownLoadItemsCallback,
-    SelectorsDropdownFilterItemsCallback,
-    SelectorsDropdownOnItemSelectionCallback,
-} from "./elements/SelectorsDropdown";
+import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
+import type {
+    BuildAuthorFilter,
+    PullRequestAuthorFilter,
+} from "../../src/components/Filters/Author/AuthorFilter";
+import { TYPE_FILTER_AUTHOR } from "../../src/components/Filters/Author/AuthorFilter";
+
+export const AuthorFilterStub: BuildAuthorFilter = {
+    fromAuthor: (author: User): PullRequestAuthorFilter => ({
+        id: author.id,
+        type: TYPE_FILTER_AUTHOR,
+        label: `Author: ${author.id}`,
+        value: author,
+    }),
+};

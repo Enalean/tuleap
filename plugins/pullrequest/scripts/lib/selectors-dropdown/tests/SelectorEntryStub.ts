@@ -24,21 +24,23 @@ import type { LazyboxItem } from "@tuleap/lazybox";
 export const SelectorEntryStub = {
     withEntryName: (entry_name: string): SelectorEntry => ({
         entry_name,
+        isDisabled: () => false,
         config: {
             placeholder: "Hold the place",
-            group: {
-                label: "Test",
-                empty_message: "Nothing to see here",
-                is_loading: false,
-                footer_message: "",
-                items: [],
-            },
+            label: "Test",
+            empty_message: "Nothing to see here",
+            disabled_message: "Disabled. Nothing can be selected",
             templating_callback: () => html``,
             loadItems(): Promise<[]> {
                 return Promise.resolve([]);
             },
             filterItems(query: string, items: LazyboxItem[]): LazyboxItem[] {
                 return items;
+            },
+            onItemSelection(item: unknown): void {
+                if (item) {
+                    // Do nothing
+                }
             },
         },
     }),
