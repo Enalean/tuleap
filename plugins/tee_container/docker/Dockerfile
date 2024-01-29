@@ -77,10 +77,10 @@ RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     tuleap-plugin-document_generation \
     tuleap-plugin-tracker-cce \
     tuleap-plugin-securitytxt \
+    tuleap-plugin-mediawiki-standalone \
     tuleap-theme-burningparrot \
     tuleap-theme-flamingparrot \
     tuleap-realtime && \
-    if [ "$RELEASE_CYCLE" == "dev" ]; then yum install -y tuleap-plugin-mediawiki-standalone; fi && \
     yum clean all && \
     /bin/rm -rf /rpms $YUM_REPO_PATH && \
     awk '$5 >= 3071' /etc/ssh/moduli > /etc/ssh/moduli.tmp && mv /etc/ssh/moduli.tmp /etc/ssh/moduli
@@ -92,7 +92,7 @@ FROM scratch
 EXPOSE 22 80 443
 
 ENV TLP_SYSTEMCTL=docker-centos7
-ENV TLP_INSTALL_PLUGINS_TO_ENABLE='agiledashboard api_explorer baseline cardwall docman document_generation embed frs fts_db git gitlab gitlfs graphontrackersv5 hudson_git hudson_svn jira_import kanban label oauth2_server onlyoffice openidconnectclient program_management projectmilestones pullrequest roadmap svn taskboard tracker testmanagement testplan timetracking velocity'
+ENV TLP_INSTALL_PLUGINS_TO_ENABLE='agiledashboard api_explorer baseline cardwall docman document_generation embed frs fts_db mediawiki_standalone git gitlab gitlfs graphontrackersv5 hudson_git hudson_svn jira_import kanban label oauth2_server onlyoffice openidconnectclient program_management projectmilestones pullrequest roadmap svn taskboard tracker testmanagement testplan timetracking velocity'
 
 COPY --from=0 / /
 
