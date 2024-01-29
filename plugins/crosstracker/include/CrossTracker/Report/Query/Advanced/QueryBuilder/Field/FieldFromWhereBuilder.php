@@ -40,6 +40,7 @@ final class FieldFromWhereBuilder
         private readonly Numeric\EqualComparisonFromWhereBuilder $numeric_equal_builder,
         private readonly Numeric\NotEqualComparisonFromWhereBuilder $numeric_not_equal_builder,
         private readonly Numeric\LesserThanComparisonFromWhereBuilder $numeric_lesser_builder,
+        private readonly Numeric\GreaterThanComparisonFromWhereBuilder $numeric_greater_builder,
     ) {
     }
 
@@ -75,9 +76,7 @@ final class FieldFromWhereBuilder
                 ComparisonType::Equal => $this->numeric_equal_builder->getFromWhere($field, $comparison),
                 ComparisonType::NotEqual => $this->numeric_not_equal_builder->getFromWhere($field, $comparison),
                 ComparisonType::LesserThan => $this->numeric_lesser_builder->getFromWhere($field, $comparison),
-                ComparisonType::GreaterThan => throw new \LogicException(
-                    'Greater Than comparison for fields is not implemented yet'
-                ),
+                ComparisonType::GreaterThan => $this->numeric_greater_builder->getFromWhere($field, $comparison),
                 ComparisonType::LesserThanOrEqual => throw new \LogicException(
                     'Lesser Than Or Equal comparison for fields is not implemented yet'
                 ),

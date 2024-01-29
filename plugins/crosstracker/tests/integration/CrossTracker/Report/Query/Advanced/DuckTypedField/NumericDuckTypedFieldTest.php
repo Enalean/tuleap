@@ -360,6 +360,50 @@ final class NumericDuckTypedFieldTest extends TestIntegrationTestCase
         self::assertEqualsCanonicalizing([$release_with_5_id, $release_with_3_id, $sprint_with_3_id], $or_artifacts);
     }
 
+    public function testGreaterThanComparison(): void
+    {
+        $release_with_8_id = $this->database_builder->buildArtifact($this->release_tracker->getId());
+        $release_with_5_id = $this->database_builder->buildArtifact($this->release_tracker->getId());
+        $sprint_with_8_id  = $this->database_builder->buildArtifact($this->sprint_tracker->getId());
+        $sprint_empty_id   = $this->database_builder->buildArtifact($this->sprint_tracker->getId());
+
+        $release_with_8_changeset_id = $this->database_builder->buildLastChangeset($release_with_8_id);
+        $release_with_5_changeset_id = $this->database_builder->buildLastChangeset($release_with_5_id);
+        $sprint_changeset_id         = $this->database_builder->buildLastChangeset($sprint_with_8_id);
+        $this->database_builder->buildLastChangeset($sprint_empty_id);
+
+        $this->database_builder->buildIntValue($release_with_8_changeset_id, $this->release_initial_effort_field_id, 8);
+        $this->database_builder->buildIntValue($release_with_5_changeset_id, $this->release_initial_effort_field_id, 5);
+        $this->database_builder->buildFloatValue($sprint_changeset_id, $this->sprint_initial_effort_field_id, 8);
+
+        $greater_than_artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                'initial_effort > 5',
+                [$this->release_tracker, $this->sprint_tracker]
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(2, $greater_than_artifacts);
+        self::assertNotContains($release_with_5_id, $greater_than_artifacts);
+        self::assertNotContains($sprint_empty_id, $greater_than_artifacts);
+        self::assertEqualsCanonicalizing([$release_with_8_id, $sprint_with_8_id], $greater_than_artifacts);
+
+        $or_artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                2,
+                'initial_effort > 3 OR initial_effort > 5',
+                [$this->release_tracker, $this->sprint_tracker]
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(3, $or_artifacts);
+        self::assertNotContains($sprint_empty_id, $or_artifacts);
+        self::assertEqualsCanonicalizing([$release_with_5_id, $release_with_8_id, $sprint_with_8_id], $or_artifacts);
+    }
+
     public function testInvalidFieldComparison(): void
     {
         $this->expectException(SearchablesAreInvalidException::class);
@@ -625,7 +669,8 @@ final class NumericDuckTypedFieldTest extends TestIntegrationTestCase
                 $form_element_factory,
                 new Field\Numeric\EqualComparisonFromWhereBuilder(),
                 new Field\Numeric\NotEqualComparisonFromWhereBuilder(),
-                new Field\Numeric\LesserThanComparisonFromWhereBuilder()
+                new Field\Numeric\LesserThanComparisonFromWhereBuilder(),
+                new Field\Numeric\GreaterThanComparisonFromWhereBuilder()
             ),
         );
 
