@@ -98,7 +98,7 @@ final class DaoTest extends TestIntegrationTestCase
     {
         $result = $this->dao->getPaginatedPullRequests(
             self::REPOSITORY_ID,
-            new SearchCriteria(null, new AuthorCriterion(self::BOB_USER_ID)),
+            new SearchCriteria(null, [new AuthorCriterion(self::BOB_USER_ID)]),
             self::LIMIT,
             self::OFFSET,
         );
@@ -115,7 +115,7 @@ final class DaoTest extends TestIntegrationTestCase
             self::REPOSITORY_ID,
             new SearchCriteria(
                 StatusCriterion::CLOSED,
-                new AuthorCriterion(self::ALICE_USER_ID)
+                [new AuthorCriterion(self::ALICE_USER_ID)]
             ),
             self::LIMIT,
             self::OFFSET,
