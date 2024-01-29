@@ -14,6 +14,7 @@
         }"
         data-column-id="{{ $ctrl.column.id }}"
         esc-key="$ctrl.cancelDrag()"
+        data-test="kanban-items-{{$ctrl.slugifyLabel($ctrl.column.label)}}"
     >
         <li
             ng-repeat="item in $ctrl.column.filtered_content track by $id(item)"
