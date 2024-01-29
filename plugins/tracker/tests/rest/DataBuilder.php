@@ -60,7 +60,7 @@ class DataBuilder extends REST_TestDataBuilder
 
     private function setUpDeletableArtifactsLimit()
     {
-        $this->config_dao->updateDeletableArtifactsLimit(2);
+        $this->config_dao->updateDeletableArtifactsLimit(1);
     }
 
     private function createUser()

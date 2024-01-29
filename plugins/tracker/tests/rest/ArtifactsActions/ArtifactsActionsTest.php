@@ -67,28 +67,28 @@ class ArtifactsActionsTest extends TrackerBase
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(403, $response->getStatusCode());
+        self::assertEquals(403, $response->getStatusCode());
     }
 
     private function assertMoveDryRun(\Psr\Http\Message\ResponseInterface $response)
     {
-        $this->assertEquals(200, $response->getStatusCode());
+        self::assertEquals(200, $response->getStatusCode());
 
         $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertArrayHasKey("dry_run", $json);
-        $this->assertArrayHasKey("fields", $json['dry_run']);
+        self::assertArrayHasKey("dry_run", $json);
+        self::assertArrayHasKey("fields", $json['dry_run']);
 
         $migrated_fields = $json['dry_run']['fields']['fields_migrated'];
-        $this->assertCount(38, $migrated_fields);
+        self::assertCount(38, $migrated_fields);
 
         $not_migrated_fields = $json['dry_run']['fields']['fields_not_migrated'];
-        $this->assertCount(1, $not_migrated_fields);
+        self::assertCount(1, $not_migrated_fields);
 
-        $this->assertTrue($this->isFieldInArrayByLabel($not_migrated_fields, 'step exec'));
+        self::assertTrue($this->isFieldInArrayByLabel($not_migrated_fields, 'step exec'));
 
         $partially_migrated_fields = $json['dry_run']['fields']['fields_partially_migrated'];
-        $this->assertCount(0, $partially_migrated_fields);
+        self::assertCount(0, $partially_migrated_fields);
     }
 
     private function isFieldInArrayByLabel(array $fields, $label)
@@ -121,7 +121,7 @@ class ArtifactsActionsTest extends TrackerBase
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(403, $response->getStatusCode());
+        self::assertEquals(403, $response->getStatusCode());
     }
 
     /**
@@ -153,22 +153,22 @@ class ArtifactsActionsTest extends TrackerBase
 
     private function assertMoveArtifact(\Psr\Http\Message\ResponseInterface $response, $artifact_id): void
     {
-        $this->assertEquals(200, $response->getStatusCode());
+        self::assertEquals(200, $response->getStatusCode());
 
         $artifact_response = $this->getResponse(
             $this->request_factory->createRequest('GET', "artifacts/$artifact_id?values_format=all")
         );
 
-        $this->assertEquals($artifact_response->getStatusCode(), 200);
+        self::assertEquals($artifact_response->getStatusCode(), 200);
     }
 
     private function assertMoveChangeset(\Psr\Http\Message\ResponseInterface $changeset_response): void
     {
-        $this->assertEquals(200, $changeset_response->getStatusCode());
+        self::assertEquals(200, $changeset_response->getStatusCode());
         $changeset_json = json_decode($changeset_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertCount(1, $changeset_json);
-        $this->assertEquals($changeset_json[0]['last_comment']['body'], "Artifact was moved from 'tracker source' tracker in 'Move artifact' project.");
+        self::assertCount(1, $changeset_json);
+        self::assertEquals($changeset_json[0]['last_comment']['body'], "Artifact was moved from 'tracker source' tracker in 'Move artifact' project.");
     }
 
     /**
@@ -181,38 +181,37 @@ class ArtifactsActionsTest extends TrackerBase
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(403, $response->getStatusCode());
+        self::assertEquals(403, $response->getStatusCode());
     }
 
     /**
      * @depends testMoveArtifact
      */
-    public function testDeleteArtifacts()
+    public function testDeleteArtifacts(): void
     {
         $response = $this->performArtifactDeletion($this->delete_artifact_ids[1]);
 
-        $this->assertEquals($response->getStatusCode(), 200);
+        self::assertEquals($response->getStatusCode(), 200);
 
-        $this->assertEquals(
+        self::assertEquals(
+            "1",
             $response->getHeader('x-ratelimit-limit')[0],
-            "2"
         );
 
-        $this->assertEquals(
+        self::assertEquals(
+            "0",
             $response->getHeader('x-ratelimit-remaining')[0],
-            "0"
         );
     }
 
     /**
      * @depends testDeleteArtifacts
      */
-    public function itThrowsAnErrorWhenUserReachesTheLimitOfDeletedArtifacts()
+    public function testItThrowsAnErrorWhenUserReachesTheLimitOfDeletedArtifacts(): void
     {
-        $this->expectExceptionCode(429);
-        $this->expectExceptionMessage('Too many requests: The limit of artifacts deletions has been reached for the previous 24 hours.');
+        $response = $this->performArtifactDeletion($this->delete_artifact_ids[2]);
 
-        $this->performArtifactDeletion($this->delete_artifact_ids[2]);
+        self::assertEquals(429, $response->getStatusCode());
     }
 
     private function performArtifactDeletion($artifact_id, $user_name = REST_TestDataBuilder::TEST_USER_1_NAME)
