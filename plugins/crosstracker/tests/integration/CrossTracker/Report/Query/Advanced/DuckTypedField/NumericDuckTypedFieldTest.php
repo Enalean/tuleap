@@ -96,7 +96,6 @@ final class NumericDuckTypedFieldTest extends TestIntegrationTestCase
     private \PFUser $project_member;
     private int $release_initial_effort_field_id;
     private int $sprint_initial_effort_field_id;
-    private \ParagonIE\EasyDB\EasyDB $db;
     private \PFUser $outsider_user;
     private Tracker $epic_tracker;
 
@@ -104,9 +103,9 @@ final class NumericDuckTypedFieldTest extends TestIntegrationTestCase
     {
         ProjectManager::clearInstance();
 
-        $this->db = DBFactory::getMainTuleapDBConnection()->getDB();
+        $db = DBFactory::getMainTuleapDBConnection()->getDB();
         \ForgeConfig::setFeatureFlag(SearchOnDuckTypedFieldsConfig::FEATURE_FLAG_SEARCH_DUCK_TYPED_FIELDS, '1');
-        $this->database_builder = new DatabaseBuilder($this->db);
+        $this->database_builder = new DatabaseBuilder($db);
 
         $project    = $this->database_builder->buildProject();
         $project_id = (int) $project->getID();
@@ -667,10 +666,7 @@ final class NumericDuckTypedFieldTest extends TestIntegrationTestCase
             new Field\FieldFromWhereBuilder(
                 $form_element_factory,
                 $form_element_factory,
-                new Field\Numeric\EqualComparisonFromWhereBuilder(),
-                new Field\Numeric\NotEqualComparisonFromWhereBuilder(),
-                new Field\Numeric\LesserThanComparisonFromWhereBuilder(),
-                new Field\Numeric\GreaterThanComparisonFromWhereBuilder()
+                new Field\Numeric\NumericFromWhereBuilder()
             ),
         );
 
