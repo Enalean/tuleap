@@ -368,7 +368,8 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                 $form_element_factory,
                 new Field\Numeric\EqualComparisonFromWhereBuilder(),
                 new Field\Numeric\NotEqualComparisonFromWhereBuilder(),
-                new Field\Numeric\LesserThanComparisonFromWhereBuilder()
+                new Field\Numeric\LesserThanComparisonFromWhereBuilder(),
+                new Field\Numeric\GreaterThanComparisonFromWhereBuilder()
             ),
         );
 

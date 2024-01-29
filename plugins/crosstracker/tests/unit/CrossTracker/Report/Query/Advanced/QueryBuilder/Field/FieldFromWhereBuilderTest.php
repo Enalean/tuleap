@@ -68,7 +68,8 @@ final class FieldFromWhereBuilderTest extends TestCase
             RetrieveFieldTypeStub::withDetectionOfType(),
             new Numeric\EqualComparisonFromWhereBuilder(),
             new Numeric\NotEqualComparisonFromWhereBuilder(),
-            new Numeric\LesserThanComparisonFromWhereBuilder()
+            new Numeric\LesserThanComparisonFromWhereBuilder(),
+            new Numeric\GreaterThanComparisonFromWhereBuilder()
         );
         $field   = new Field(self::FIELD_NAME);
         return $builder->getFromWhere(
