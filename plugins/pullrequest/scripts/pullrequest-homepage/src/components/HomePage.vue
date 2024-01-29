@@ -20,7 +20,7 @@
 <template>
     <div class="tlp-framed">
         <pull-request-list-filters v-bind:filters_store="filters_manager" />
-        <pull-requests-list />
+        <pull-requests-list v-bind:filters_store="filters_manager" />
         <pull-request-error-modal v-bind:fault="error" />
     </div>
 </template>

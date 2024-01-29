@@ -61,15 +61,17 @@ describe("LazyAutocompleterElement", () => {
     });
 
     describe(`Search Input`, () => {
-        let options: LazyAutocompleterOptions;
+        let options: LazyAutocompleterOptions, disabled: boolean;
         beforeEach(() => {
             options = OptionsAutocompleterBuilder.someOptions().build();
+            disabled = false;
         });
 
         const getHost = (): HostElement =>
             Object.assign(doc.createElement("span"), {
                 options,
                 dropdown_element: { open: false },
+                disabled,
             }) as HostElement;
 
         it(`makes the element focusable`, () => {
@@ -88,6 +90,22 @@ describe("LazyAutocompleterElement", () => {
             search_input.dispatchEvent(new CustomEvent("search-input"));
 
             expect(search_input_callback).toHaveBeenCalledWith(query);
+        });
+
+        it(`when it receives "search-input" event,
+            and the autocompleter is disabled,
+            then it won't call the search_input_callback`, () => {
+            disabled = true;
+
+            const search_input_callback = vi.spyOn(options, "search_input_callback");
+            const host = getHost();
+            const search_input = getSearchInput(host);
+            const query = "stepfatherly";
+            search_input.getQuery = (): string => query;
+
+            search_input.dispatchEvent(new CustomEvent("search-input"));
+
+            expect(search_input_callback).not.toHaveBeenCalled();
         });
 
         it(`assigns the placeholder from options`, () => {

@@ -25,6 +25,7 @@ export const TYPE_FILTER_AUTHOR: AuthorFilter = "author";
 
 export type PullRequestAuthorFilter = BasePullRequestsListFilter<User> & {
     type: AuthorFilter;
+    value: User;
 };
 
 export type BuildAuthorFilter = {

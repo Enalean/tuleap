@@ -83,6 +83,10 @@ export const getSearchInput = (host: HostElement): SearchInput & HTMLElement => 
     element.classList.add(classname);
     element.setAttribute("tabindex", "0");
     element.addEventListener("search-input", () => {
+        if (host.disabled) {
+            return;
+        }
+
         host.options.search_input_callback(element.getQuery());
     });
     return element;

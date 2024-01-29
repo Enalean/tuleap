@@ -26,6 +26,8 @@ import type {
     User,
 } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { uri, getAllJSON } from "@tuleap/fetch-result";
+import type { PullRequestsListFilter } from "../components/Filters/PullRequestsListFilter";
+import { buildQueryFromFilters } from "./get-pull-requests-query-builder";
 
 type PullRequestCollection = {
     readonly collection: PullRequest[];
@@ -33,17 +35,18 @@ type PullRequestCollection = {
 
 export const fetchAllPullRequests = (
     repository_id: number,
-): ResultAsync<readonly PullRequest[], Fault> => {
-    return getAllJSON<PullRequest, PullRequestCollection>(
+    filters: PullRequestsListFilter[],
+): ResultAsync<readonly PullRequest[], Fault> =>
+    getAllJSON<PullRequest, PullRequestCollection>(
         uri`/api/v1/git/${repository_id}/pull_requests`,
         {
             params: {
                 limit: 50,
+                query: buildQueryFromFilters(filters),
             },
             getCollectionCallback: (payload) => payload.collection,
         },
     );
-};
 
 export const fetchPullRequestLabels = (
     pull_request_id: number,
