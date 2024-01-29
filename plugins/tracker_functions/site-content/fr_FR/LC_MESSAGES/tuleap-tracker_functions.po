@@ -1,0 +1,254 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.4.2\n"
+
+msgid "%sSee details%s"
+msgstr "%sVoir les détails%s"
+
+msgid "Activated"
+msgstr "Activé"
+
+msgid "Artifact"
+msgstr "Artéfact"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Change"
+msgstr "Changer"
+
+msgid "Close"
+msgstr "Fermer"
+
+msgid "Copied!"
+msgstr "Copié !"
+
+msgid "Copy"
+msgstr "Copier"
+
+msgid "Copy the input payload"
+msgstr "Copier les données d'entrée"
+
+msgid "Copy the output payload"
+msgstr "Copier les données de sortie"
+
+msgid "Creation"
+msgstr "Création"
+
+msgid "Date"
+msgstr "Date"
+
+msgid "Details"
+msgstr "Détails"
+
+msgid "Error"
+msgstr "Erreur"
+
+msgid "Error message"
+msgstr "Message d'erreur"
+
+msgid "Execution date"
+msgstr "Date d'exécution"
+
+msgid "Execution date: %s"
+msgstr "Date d'exécution : %s"
+
+msgid "Execution details"
+msgstr "Détails d'exécution"
+
+msgid "Failed to write file to disk."
+msgstr "Échec de l'écriture du fichier sur le disque."
+
+msgid "File upload stopped by extension."
+msgstr "L'envoie de fichier est arrêté par une extension."
+
+msgid "For more information please %ssee the dedicated documentation%s."
+msgstr ""
+"Pour plus d'informations merci de %sconsulter la documentation dédiée%s."
+
+msgid "Function does not exist, maybe it has already been removed?"
+msgstr "La fonction n'existe pas, peut-être a-t-elle déjà été supprimé ?"
+
+msgid "Function uploaded"
+msgstr "Fonction téléversé"
+
+msgid "Input payload"
+msgstr "Données d'entrée"
+
+msgid "Logs will also be deleted."
+msgstr "Les logs seront aussi supprimés."
+
+msgid "Missing a temporary folder."
+msgstr "Un dossier temporaire est manquant."
+
+msgid "No error message"
+msgstr "Pas de message d'erreur"
+
+msgid "No file was uploaded."
+msgstr "Aucun fichier téléversé."
+
+msgid "No function has been uploaded"
+msgstr "Aucune fonction n'a été téléversé"
+
+msgid "No function!"
+msgstr "Pas de fonction !"
+
+msgid "Output payload"
+msgstr "Données de sortie"
+
+msgid "Please confirm your action."
+msgstr "Veuillez confirmer votre action."
+
+msgid "Please upload a WebAssembly function."
+msgstr "Merci de téléverser une fonction WebAssembly."
+
+msgid "Remove"
+msgstr "Supprimer"
+
+msgid "Remove WASM functions"
+msgstr "Supprimer la fonction WASM"
+
+msgid "Remove function"
+msgstr "Supprimer la fonction"
+
+msgid ""
+"Run your own code on artifact updates to automate any kind of computation."
+msgstr ""
+"Exécuter votre propre code sur les mises à jour d'artéfact afin "
+"d'automatiser toute sorte de calculs."
+
+msgid "See details: %s"
+msgstr "Voir les détails : %s"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Success"
+msgstr "Succès"
+
+msgid ""
+"The artifact will be updated with this output payload (update fields and/or "
+"add a follow-up comment) with a dedicated \"Tuleap Functions\" user."
+msgstr ""
+"L'artéfact sera mis à jour par ces données de sortie (mise à jour des champs "
+"et/ou ajout d'un commentaire) par un utilisateur dédié \"Tuleap Functions\"."
+
+msgid "The function has been activated"
+msgstr "La fonction a été activée"
+
+msgid "The function has been removed"
+msgstr "La fonction a été désactivée"
+
+msgid "The function has been uploaded"
+msgstr "La fonction a été téléversée"
+
+msgid ""
+"The function must output (stdout) a payload identical to the one that is "
+"used by REST API to update an artifact (%sSee <code>PUT /artifact/:id</"
+"code>%s)."
+msgstr ""
+"La fonction doit sortir (stdout) un jeu de données identique à celui utilisé "
+"par l'API REST pour mettre à jour un artéfact (%sVoir <code>PUT /artifact/:"
+"id</code>%s)."
+
+#, php-format
+msgid "The maximum file size for the function is %sMB."
+msgstr "La taille maximum pour le fichier de la fonction est %sMo."
+
+msgid ""
+"The payload sent to the function via stdin is the same as the one for %sthe "
+"tracker webhook%s."
+msgstr ""
+"Les données envoyées en entrée de la fonction via stdin sont les mêmes que "
+"pour %sle webhook de tracker%s."
+
+msgid "The uploaded file exceeds the maximum allowed file size."
+msgstr "Le fichier est trop gros."
+
+msgid "The uploaded file was only partially uploaded."
+msgstr "Le fichier n'a été que partiellement téléversé."
+
+msgid "There isn't any activity yet"
+msgstr "Il n'y a pas encore d'activité"
+
+msgid "There isn't any uploaded function to execute."
+msgstr "Il n'y a aucune fonction a exécuter."
+
+msgid "Tracker Functions"
+msgstr "Tracker Functions"
+
+msgid "Tuleap Functions"
+msgstr "Tuleap Functions"
+
+msgid "Tuleap Functions for Trackers"
+msgstr "Tuleap Functions pour les Trackers"
+
+msgid "Tuleap function activated"
+msgstr "La fonction Tuleap est activée"
+
+msgid "Tuleap function deactivated"
+msgstr "La fonction Tuleap est désactivée"
+
+msgid "Tuleap function failed"
+msgstr "La fonction Tuleap a échoué"
+
+msgid "Tuleap function failed for artifact #%s"
+msgstr "La fonction Tuleap a échoué pour l'artéfact #%s"
+
+msgid "Tuleap function removed"
+msgstr "La fonction Tuleap est supprimée"
+
+msgid "Tuleap function uploaded"
+msgstr "La fonction Tuleap est téléversée"
+
+msgid "Tuleap functions as artifact post action"
+msgstr "Tuleap function lors de la modification d'un artéfact"
+
+msgid "Type"
+msgstr "Type"
+
+msgid "Unable to remove the function"
+msgstr "Impossible de supprimer la fonction"
+
+msgid "Unable to upload the function"
+msgstr "Impossible de téléverser la fonction"
+
+msgid "Update"
+msgstr "Mise à jour"
+
+msgid "Upload WASM function"
+msgstr "Téléverser une fonction WASM"
+
+msgid "Upload a WebAssembly function"
+msgstr "Téléverser une fonction WebAssembly"
+
+msgid "Upload function"
+msgstr "Téléverser une fonction"
+
+msgid "WebAssembly function"
+msgstr "Fonction WebAssembly"
+
+msgid "You are about to remove the function from this tracker."
+msgstr "Vous êtes sur le point de supprimer la fonction de ce tracker."
+
+msgid ""
+"You can upload here a %sWebAssembly%s (WASM) function (built with WASI "
+"Preview 1 support) that will be executed asynchronously after each artifact "
+"update (or creation)."
+msgstr ""
+"Vous pouvez téléverser ici une fonction %sWebAssembly%s (WASM, construit "
+"avec le support de WASI Preview 1) qui sera exécuté de manière asynchrone "
+"après chaque mise à jour (ou création) d'artéfact."
+
+msgid "You will not be able to retrieve it."
+msgstr "Vous ne pourrez pas la retrouver."

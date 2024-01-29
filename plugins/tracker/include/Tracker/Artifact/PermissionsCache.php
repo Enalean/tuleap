@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Artifact;
 use PFUser;
 use Tracker_Permission_PermissionChecker;
 use Tracker_UserWithReadAllPermission;
-use Tuleap\User\CCEUser;
+use Tuleap\User\TuleapFunctionsUser;
 
 class PermissionsCache
 {
@@ -41,7 +41,7 @@ class PermissionsCache
             return true;
         }
 
-        if ($user instanceof CCEUser) {
+        if ($user instanceof TuleapFunctionsUser) {
             return true;
         }
 

@@ -1,0 +1,406 @@
+<div class="tlp-framed">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    {{# dgettext }}tuleap-tracker_functions | Tuleap Functions for Trackers{{/ dgettext }}
+                </h1>
+            </div>
+            <section class="tlp-pane-section">
+                <p>
+                    {{# dgettext }}tuleap-tracker_functions | Run your own code on artifact updates to automate any kind of computation. {{/ dgettext }}
+                </p>
+                <p>
+                    {{# dgettext }}
+                        tuleap-tracker_functions |
+                        You can upload here a %sWebAssembly%s (WASM) function (built with WASI Preview 1 support) that will be executed asynchronously after each artifact update (or creation). |
+                        <a href="https://webassembly.org/"> |
+                        </a>
+                    {{/ dgettext }}
+                </p>
+
+                <ul>
+                    <li>
+                        {{# dgettext }}
+                            tuleap-tracker_functions |
+                            The payload sent to the function via stdin is the same as the one for %sthe tracker webhook%s. |
+                            <a href="/doc/en/user-guide/integration/webhook.html#tracker"> |
+                            </a>
+                        {{/ dgettext }}
+                    </li>
+                    <li>
+                        {{# explorer_url }}
+                            {{# dgettext }}
+                                tuleap-tracker_functions |
+                                The function must output (stdout) a payload identical to the one that is used by REST API to update an artifact (%sSee <code>PUT /artifact/:id</code>%s). |
+                                <a href="{{ explorer_url }}#/artifacts/tuleap\Tracker\REST\v1\ArtifactsResourceUpdateId"> |
+                                </a>
+                            {{/ dgettext }}
+                        {{/ explorer_url }}
+                        {{^ explorer_url }}
+                            {{# dgettext }}
+                                tuleap-tracker_functions |
+                                The function must output (stdout) a payload identical to the one that is used by REST API to update an artifact (%sSee <code>PUT /artifact/:id</code>%s). | |
+                            {{/ dgettext }}
+                        {{/ explorer_url }}
+                    </li>
+                    <li>
+                        {{# dgettext }}
+                            tuleap-tracker_functions |
+                            The artifact will be updated with this output payload (update fields and/or add a follow-up comment) with a dedicated "Tuleap Functions" user.
+                        {{/ dgettext }}
+                    </li>
+                </ul>
+
+                <p>
+                    {{# dgettext }}
+                        tuleap-tracker_functions |
+                        For more information please %ssee the dedicated documentation%s. |
+                        <a href="/doc/en/user-guide/trackers/administration/configuration/cce.html"> |
+                        </a>
+                    {{/ dgettext }}
+                </p>
+
+                {{^ has_uploaded_function }}
+                    <section class="empty-state-page">
+                        <div class="empty-state-illustration">
+                            {{> svg-empty-state-tumbleweed }}
+                        </div>
+                        <h1 class="empty-state-title">
+                            {{# dgettext }}tuleap-tracker_functions | No function!{{/ dgettext }}
+                        </h1>
+                        <p class="empty-state-text">{{# dgettext }}tuleap-tracker_functions | There isn't any uploaded function to execute.{{/ dgettext }}</p>
+                        <button
+                            type="button"
+                            class="empty-state-action tlp-button-primary tracker-functions-admin-modal-trigger tracker-functions-admin-empty-state-cta"
+                            data-target-modal-id="tracker-functions-admin-upload-modal"
+                            data-test="tracker-functions-admin-upload-modal-trigger"
+                        >
+                            {{# dgettext }}tuleap-tracker_functions | Upload a WebAssembly function{{/ dgettext }}
+                        </button>
+                    </section>
+                {{/ has_uploaded_function }}
+                {{# has_uploaded_function }}
+                    <form method="post" action="{{ activation_url }}" class="tlp-form-element">
+                        <label class="tlp-label" for="wasm-status">
+                            {{# dgettext }}tuleap-tracker_functions | Activated{{/ dgettext }}
+                        </label>
+                        <div class="tlp-switch">
+                            {{# csrf }}
+                                {{> csrf_token_input }}
+                            {{/ csrf }}
+                            <input type="hidden" value="0" name="activate-function" class="tlp-switch-checkbox">
+                            <input type="checkbox" id="wasm-status" value="1" {{# is_activated }}checked{{/ is_activated }} name="activate-function" class="tlp-switch-checkbox">
+                            <label for="wasm-status" class="tlp-switch-button"></label>
+                        </div>
+                    </form>
+
+                    <div class="tlp-property">
+                        <label class="tlp-label">
+                            {{# dgettext }}tuleap-tracker_functions | WebAssembly function{{/ dgettext }}
+                        </label>
+                        <span class="tlp-property-empty" data-test="tracker-functions-uploaded">
+                            {{# dgettext }}tuleap-tracker_functions | Function uploaded{{/ dgettext }}
+                        </span>
+
+                        <button type="button"
+                                class="tlp-button-primary tlp-button-outline tlp-button-small tracker-functions-admin-modal-trigger tracker-functions-admin-change-cta"
+                                data-target-modal-id="tracker-functions-admin-upload-modal"
+                        >
+                            <i class="fa-solid fa-sync tlp-button-icon" aria-hidden="true"></i>
+                            {{# dgettext }}tuleap-tracker_functions | Change{{/ dgettext }}
+                        </button>
+
+                        <button type="button"
+                                class="tlp-button-danger tlp-button-outline tlp-button-small tracker-functions-admin-modal-trigger tracker-functions-admin-remove-cta"
+                                data-target-modal-id="tracker-functions-admin-remove-modal"
+                        >
+                            <i class="fa-solid fa-trash tlp-button-icon" aria-hidden="true"></i>
+                            {{# dgettext }}tuleap-tracker_functions | Remove{{/ dgettext }}
+                        </button>
+                    </div>
+
+                    <table class="tlp-table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    {{# dgettext }}tuleap-tracker_functions | Date{{/ dgettext }}
+                                </th>
+                                <th>
+                                    {{# dgettext }}tuleap-tracker_functions | Status{{/ dgettext }}
+                                </th>
+                                <th>
+                                    {{# dgettext }}tuleap-tracker_functions | Type{{/ dgettext }}
+                                </th>
+                                <th class="tracker-functions-admin-logs-title">
+                                    {{# dgettext }}tuleap-tracker_functions | Artifact{{/ dgettext }}
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{^ logs }}
+                                <tr>
+                                    <td colspan="5" class="tlp-table-cell-empty">
+                                        {{# dgettext }}tuleap-tracker_functions | There isn't any activity yet{{/ dgettext }}
+                                    </td>
+                                </tr>
+                            {{/ logs }}
+                            {{# logs }}
+                                <tr>
+                                    <td class="tracker-functions-admin-logs-date">
+                                        {{# execution_date_block }}
+                                            {{> tlp_relative_date }}
+                                        {{/ execution_date_block }}
+                                    </td>
+                                    <td>
+                                        {{# is_error }}
+                                            <div class="tlp-badge-danger">
+                                                {{# dgettext }}tuleap-tracker_functions | Error{{/ dgettext }}
+                                            </div>
+                                        {{/ is_error }}
+                                        {{^ is_error }}
+                                            <div class="tlp-badge-success">
+                                                {{# dgettext }}tuleap-tracker_functions | Success{{/ dgettext }}
+                                            </div>
+                                        {{/ is_error }}
+                                    </td>
+                                    <td>{{ type }}</td>
+                                    <td>
+                                        <a href="{{ url }}">
+                                            <span class="tracker-functions-admin-logs-badge cross-ref-badge tlp-swatch-{{ color }}">{{ xref }}</span><!--
+                                            -->{{ title }}
+                                        </a>
+                                    </td>
+                                    <td class="tlp-table-cell-actions">
+                                        <button type="button"
+                                                class="tlp-button-primary tlp-button-outline tlp-button-small tlp-table-cell-actions-button tracker-functions-admin-logs-details-trigger"
+                                                data-target-modal-id="tracker-functions-admin-logs-details-{{ id }}"
+                                        >
+                                            <i class="fa fa-list tlp-button-icon"></i>
+                                            {{# dgettext }}tuleap-tracker_functions | Details{{/ dgettext }}
+                                        </button>
+                                    </td>
+                                </tr>
+                            {{/ logs }}
+                        </tbody>
+                    </table>
+                {{/ has_uploaded_function }}
+            </section>
+        </div>
+    </section>
+</div>
+
+{{# logs }}
+    <div class="tlp-modal tlp-modal-medium-sized"
+         role="dialog"
+         id="tracker-functions-admin-logs-details-{{ id }}"
+         aria-labelledby="tracker-functions-admin-logs-details-{{ id }}-title"
+    >
+        <div class="tlp-modal-header">
+            <h1 class="tlp-modal-title" id="tracker-functions-admin-logs-details-{{ id }}-title">
+                {{# dgettext }}tuleap-tracker_functions | Execution details{{/ dgettext }}
+            </h1>
+            <button class="tlp-modal-close"
+                    type="button"
+                    data-dismiss="modal"
+                    aria-label="{{# dgettext }}tuleap-tracker_functions | Close{{/ dgettext }}"
+            >
+                <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div class="tlp-modal-body">
+            <div class="tracker-functions-admin-logs-details-row">
+                <div class="tlp-property">
+                    <label class="tlp-label">{{# dgettext }}tuleap-tracker_functions | Artifact{{/ dgettext }}</label>
+                    <p>
+                        <a href="{{ url }}">
+                            <span class="tracker-functions-admin-logs-badge cross-ref-badge tlp-swatch-{{ color }}">{{ xref }}</span><!--
+                            -->{{ title }}
+                        </a>
+                    </p>
+                </div>
+                <div class="tlp-property">
+                    <label class="tlp-label">{{# dgettext }}tuleap-tracker_functions | Type{{/ dgettext }}</label>
+                    <p>{{ type }}</p>
+                </div>
+            </div>
+            <div class="tracker-functions-admin-logs-details-row">
+                <div class="tlp-property">
+                    <label class="tlp-label">
+                        {{# dgettext }}tuleap-tracker_functions | Execution date{{/ dgettext }}
+                    </label>
+                    <p>
+                        {{# execution_date_inline }}
+                            {{> tlp_relative_date }}
+                        {{/ execution_date_inline }}
+                    </p>
+                </div>
+
+                <div class="tlp-property">
+                    <label class="tlp-label">
+                        {{# dgettext }}tuleap-tracker_functions | Status{{/ dgettext }}
+                    </label>
+                    {{# is_error }}
+                        <div class="tlp-badge-danger">
+                            {{# dgettext }}tuleap-tracker_functions | Error{{/ dgettext }}
+                        </div>
+                    {{/ is_error }}
+                    {{^ is_error }}
+                        <div class="tlp-badge-success">
+                            {{# dgettext }}tuleap-tracker_functions | Success{{/ dgettext }}
+                        </div>
+                    {{/ is_error }}
+                </div>
+            </div>
+
+
+            {{# is_error }}
+                <div class="tlp-property">
+                    <label class="tlp-label">
+                        {{# dgettext }}tuleap-tracker_functions | Error message{{/ dgettext }}
+                    </label>
+                    {{# error_message }}
+                        <div class="tlp-alert-danger">{{ . }}</div>
+                    {{/ error_message }}
+                    {{^ error_message }}
+                        <p class="tlp-property-empty">
+                            {{# dgettext }}tuleap-tracker_functions | No error message{{/ dgettext }}
+                        </p>
+                    {{/ error_message }}
+                </div>
+            {{/ is_error }}
+
+            <div class="tlp-property">
+                <label class="tlp-label">
+                    {{# dgettext }}tuleap-tracker_functions | Input payload{{/ dgettext }}
+                </label>
+                <div class="tracker-functions-admin-logs-details-payload-container">
+                    <copy-to-clipboard
+                        value="{{ source_payload_json }}"
+                        class="tracker-functions-admin-logs-details-payload-copy"
+                        aria-label="{{# dgettext }}tuleap-tracker_functions | Copy the input payload{{/ dgettext }}"
+                    >
+                        <button type="button"
+                                class="tlp-button-small tlp-button-outline tlp-button-secondary tlp-tooltip tlp-tooltip-left tracker-functions-admin-logs-details-payload-copy-button"
+                                data-tlp-tooltip="{{# dgettext }}tuleap-tracker_functions | Copy the input payload{{/ dgettext }}"
+                        >
+                            <span class="tracker-functions-admin-logs-details-payload-copy-default">
+                                <i class="fa-solid fa-fw fa-copy tlp-button-icon" aria-hidden="true"></i>
+                                {{# dgettext }}tuleap-tracker_functions | Copy {{/ dgettext }}
+                            </span>
+                            <span class="tracker-functions-admin-logs-details-payload-copy-feedback">
+                                <i class="fa-solid fa-fw fa-check tlp-button-icon" aria-hidden="true"></i>
+                                {{# dgettext }}tuleap-tracker_functions | Copied! {{/ dgettext }}
+                            </span>
+                        </button>
+                    </copy-to-clipboard>
+                    <tlp-syntax-highlighting class="tracker-functions-admin-logs-details-payload">
+                        <pre><code class="language-json">{{ source_payload_json }}</code></pre>
+                    </tlp-syntax-highlighting>
+                </div>
+            </div>
+
+            {{^ is_error }}
+                <div class="tlp-property">
+                    <label class="tlp-label">
+                        {{# dgettext }}tuleap-tracker_functions | Output payload{{/ dgettext }}
+                    </label>
+                    <div class="tracker-functions-admin-logs-details-payload-container">
+                        <copy-to-clipboard
+                            value="{{ generated_payload_json }}"
+                            class="tracker-functions-admin-logs-details-payload-copy"
+                            aria-label="{{# dgettext }}tuleap-tracker_functions | Copy the output payload{{/ dgettext }}"
+                        >
+                            <button type="button"
+                                    class="tlp-button-small tlp-button-outline tlp-button-secondary tlp-tooltip tlp-tooltip-left tracker-functions-admin-logs-details-payload-copy-button"
+                                    data-tlp-tooltip="{{# dgettext }}tuleap-tracker_functions | Copy the output payload{{/ dgettext }}"
+                            >
+                                <span class="tracker-functions-admin-logs-details-payload-copy-default">
+                                    <i class="fa-solid fa-fw fa-copy tlp-button-icon" aria-hidden="true"></i>
+                                    {{# dgettext }}tuleap-tracker_functions | Copy {{/ dgettext }}
+                                </span>
+                                <span class="tracker-functions-admin-logs-details-payload-copy-feedback">
+                                    <i class="fa-solid fa-fw fa-check tlp-button-icon" aria-hidden="true"></i>
+                                    {{# dgettext }}tuleap-tracker_functions | Copied! {{/ dgettext }}
+                                </span>
+                            </button>
+                        </copy-to-clipboard>
+                        <tlp-syntax-highlighting class="tracker-functions-admin-logs-details-payload">
+                            <pre><code class="language-json">{{ generated_payload_json }}</code></pre>
+                        </tlp-syntax-highlighting>
+                    </div>
+                </div>
+            {{/ is_error }}
+        </div>
+        <div class="tlp-modal-footer">
+            <button type="button" class="tlp-button-primary tlp-modal-action" data-dismiss="modal">
+                {{# dgettext }}tuleap-tracker_functions | Close{{/ dgettext }}
+            </button>
+        </div>
+    </div>
+{{/ logs }}
+
+<form method="post" action="{{ post_url }}" enctype="multipart/form-data" class="tlp-modal" role="dialog" id="tracker-functions-admin-upload-modal" aria-labelledby="tracker-functions-admin-upload-modal-title">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="tracker-functions-admin-upload-modal-title">
+            {{# dgettext }}tuleap-tracker_functions | Upload WASM function{{/ dgettext }}
+
+        </h1>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# dgettext }}tuleap-tracker_functions | Close{{/ dgettext }}">
+            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="tlp-modal-body">
+        {{# csrf }}
+            {{> csrf_token_input }}
+        {{/ csrf }}
+        <p>{{# dgettext }}tuleap-tracker_functions | Please upload a WebAssembly function.{{/ dgettext }}</p>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="wasm-function">
+                {{# dgettext }}tuleap-tracker_functions | WebAssembly function{{/ dgettext }}
+            </label>
+            <input type="file" id="wasm-function" name="wasm-function" data-test="tracker-functions-upload-file">
+        </div>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{# dgettext }}tuleap-tracker_functions | Cancel{{/ dgettext }}
+        </button>
+        <button type="submit" class="tlp-button-primary tlp-modal-action" data-test="tracker-functions-upload-submit">
+            <i class="fa-solid fa-upload tlp-button-icon" aria-hidden="true"></i>
+            {{# dgettext }}tuleap-tracker_functions | Upload function{{/ dgettext }}
+        </button>
+    </div>
+</form>
+
+<form method="post" action="{{ remove_url }}" class="tlp-modal tlp-modal-danger" role="dialog" id="tracker-functions-admin-remove-modal" aria-labelledby="tracker-functions-admin-remove-modal-title">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="tracker-functions-admin-remove-modal-title">
+            {{# dgettext }}tuleap-tracker_functions | Remove WASM functions{{/ dgettext }}
+        </h1>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# dgettext }}tuleap-tracker_functions | Close{{/ dgettext }}">
+            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="tlp-modal-body">
+        {{# csrf }}
+            {{> csrf_token_input }}
+        {{/ csrf }}
+        <p>
+            {{# dgettext }}tuleap-tracker_functions | You are about to remove the function from this tracker. {{/ dgettext }}
+            {{# dgettext }}tuleap-tracker_functions | You will not be able to retrieve it. {{/ dgettext }}
+            {{# dgettext }}tuleap-tracker_functions | Logs will also be deleted. {{/ dgettext }}
+        </p>
+        <p>{{# dgettext }}tuleap-tracker_functions | Please confirm your action. {{/ dgettext }}</p>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{# dgettext }}tuleap-tracker_functions | Cancel{{/ dgettext }}
+        </button>
+        <button type="submit" class="tlp-button-danger tlp-modal-action">
+            <i class="fa-solid fa-trash tlp-button-icon" aria-hidden="true"></i>
+            {{# dgettext }}tuleap-tracker_functions | Remove function{{/ dgettext }}
+        </button>
+    </div>
+</form>

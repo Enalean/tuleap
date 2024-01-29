@@ -1,0 +1,230 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "%sSee details%s"
+msgstr ""
+
+msgid "Activated"
+msgstr ""
+
+msgid "Artifact"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Change"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "Copied!"
+msgstr ""
+
+msgid "Copy"
+msgstr ""
+
+msgid "Copy the input payload"
+msgstr ""
+
+msgid "Copy the output payload"
+msgstr ""
+
+msgid "Creation"
+msgstr ""
+
+msgid "Date"
+msgstr ""
+
+msgid "Details"
+msgstr ""
+
+msgid "Error"
+msgstr ""
+
+msgid "Error message"
+msgstr ""
+
+msgid "Execution date"
+msgstr ""
+
+msgid "Execution date: %s"
+msgstr ""
+
+msgid "Execution details"
+msgstr ""
+
+msgid "Failed to write file to disk."
+msgstr ""
+
+msgid "File upload stopped by extension."
+msgstr ""
+
+msgid "For more information please %ssee the dedicated documentation%s."
+msgstr ""
+
+msgid "Function does not exist, maybe it has already been removed?"
+msgstr ""
+
+msgid "Function uploaded"
+msgstr ""
+
+msgid "Input payload"
+msgstr ""
+
+msgid "Logs will also be deleted."
+msgstr ""
+
+msgid "Missing a temporary folder."
+msgstr ""
+
+msgid "No error message"
+msgstr ""
+
+msgid "No file was uploaded."
+msgstr ""
+
+msgid "No function has been uploaded"
+msgstr ""
+
+msgid "No function!"
+msgstr ""
+
+msgid "Output payload"
+msgstr ""
+
+msgid "Please confirm your action."
+msgstr ""
+
+msgid "Please upload a WebAssembly function."
+msgstr ""
+
+msgid "Remove"
+msgstr ""
+
+msgid "Remove WASM functions"
+msgstr ""
+
+msgid "Remove function"
+msgstr ""
+
+msgid ""
+"Run your own code on artifact updates to automate any kind of computation."
+msgstr ""
+
+msgid "See details: %s"
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "Success"
+msgstr ""
+
+msgid ""
+"The artifact will be updated with this output payload (update fields and/or "
+"add a follow-up comment) with a dedicated \"Tuleap Functions\" user."
+msgstr ""
+
+msgid "The function has been activated"
+msgstr ""
+
+msgid "The function has been removed"
+msgstr ""
+
+msgid "The function has been uploaded"
+msgstr ""
+
+msgid ""
+"The function must output (stdout) a payload identical to the one that is "
+"used by REST API to update an artifact (%sSee <code>PUT /artifact/:id</"
+"code>%s)."
+msgstr ""
+
+#, php-format
+msgid "The maximum file size for the function is %sMB."
+msgstr ""
+
+msgid ""
+"The payload sent to the function via stdin is the same as the one for %sthe "
+"tracker webhook%s."
+msgstr ""
+
+msgid "The uploaded file exceeds the maximum allowed file size."
+msgstr ""
+
+msgid "The uploaded file was only partially uploaded."
+msgstr ""
+
+msgid "There isn't any activity yet"
+msgstr ""
+
+msgid "There isn't any uploaded function to execute."
+msgstr ""
+
+msgid "Tracker Functions"
+msgstr ""
+
+msgid "Tuleap Functions"
+msgstr ""
+
+msgid "Tuleap Functions for Trackers"
+msgstr ""
+
+msgid "Tuleap function activated"
+msgstr ""
+
+msgid "Tuleap function deactivated"
+msgstr ""
+
+msgid "Tuleap function failed"
+msgstr ""
+
+msgid "Tuleap function failed for artifact #%s"
+msgstr ""
+
+msgid "Tuleap function removed"
+msgstr ""
+
+msgid "Tuleap function uploaded"
+msgstr ""
+
+msgid "Tuleap functions as artifact post action"
+msgstr ""
+
+msgid "Type"
+msgstr ""
+
+msgid "Unable to remove the function"
+msgstr ""
+
+msgid "Unable to upload the function"
+msgstr ""
+
+msgid "Update"
+msgstr ""
+
+msgid "Upload WASM function"
+msgstr ""
+
+msgid "Upload a WebAssembly function"
+msgstr ""
+
+msgid "Upload function"
+msgstr ""
+
+msgid "WebAssembly function"
+msgstr ""
+
+msgid "You are about to remove the function from this tracker."
+msgstr ""
+
+msgid ""
+"You can upload here a %sWebAssembly%s (WASM) function (built with WASI "
+"Preview 1 support) that will be executed asynchronously after each artifact "
+"update (or creation)."
+msgstr ""
+
+msgid "You will not be able to retrieve it."
+msgstr ""

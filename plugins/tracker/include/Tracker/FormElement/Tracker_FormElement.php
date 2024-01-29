@@ -1160,7 +1160,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             return true;
         }
 
-        if ($user instanceof \Tuleap\User\CCEUser) {
+        if ($user instanceof \Tuleap\User\TuleapFunctionsUser) {
             return true;
         }
 

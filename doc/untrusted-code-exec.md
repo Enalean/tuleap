@@ -28,7 +28,7 @@ must return if it accepts them or not. For example, it can check tags and will r
 
 ## Artifact post-action
 
-This feature need to have plugin `tracker-cce` installed and enabled.
+This feature need to have plugin `tracker-functions` installed and enabled.
 
 When an artifact is created or updated, some actions are run: send webhooks, send mails, ... And also execute custom
 code.
@@ -38,5 +38,4 @@ As for [pre-receive git hook](#pre-receive-git-hook), this action need a WASM mo
 - The module receives as input a payload same as [Tracker webhooks](https://docs.tuleap.org/user-guide/integration/webhook.html#tracker)
 - The module must output a payload identical to the one for REST API `PUT /api/artifacts/:id`
 
-An example module is available in [plugins/tracker_cce/wasm_modules/post-action-add-comment](../plugins/tracker_cce/wasm_modules/post-action-add-comment).
-More details are available in its [README](../plugins/tracker_cce/wasm_modules/post-action-add-comment/README.md).
+An example module is available in https://github.com/Enalean/tuleap-functions-for-tracker-example.

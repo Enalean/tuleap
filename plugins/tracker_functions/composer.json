@@ -1,0 +1,21 @@
+{
+  "name": "tuleap/plugin-tracker-functions",
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\TrackerFunctions\\": ["include/", "include/TrackerFunctions/"]
+    },
+    "classmap": ["include/"]
+  },
+  "tuleap": {
+    "preload": {
+      "include": [
+        "/include"
+      ]
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tuleap\\TrackerFunctions\\": ["tests/unit/TrackerFunctions", "tests/unit/", "tests/integration/TrackerFunctions"]
+    }
+  }
+}

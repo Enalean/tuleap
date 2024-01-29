@@ -538,11 +538,13 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description plugin-webauthn
 Allow users to register and use passkeys with WebAuthn protocol.
 
-%package plugin-tracker-cce
-Summary: Tracker CCE plugin
+%package plugin-tracker-functions
+Summary: Tracker Functions plugin
 Group: Development/Tools
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
-%description plugin-tracker-cce
+Obsoletes: tuleap-plugin-tracker-cce < 15.5
+Provides: tuleap-plugin-tracker-cce
+%description plugin-tracker-functions
 %{summary}.
 
 %endif
@@ -627,7 +629,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mytuleap_contact_support
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/enalean_licensemanager
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/webauthn
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker_cce
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker_functions
 %endif
 
 %if %{with experimental}
@@ -859,7 +861,7 @@ done
 %{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_program_management
 
 # Plugin Tracker CCE
-%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/tracker_cce
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/tracker_functions
 
 %endif
 
@@ -1448,9 +1450,9 @@ fi
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/webauthn
 
-%files plugin-tracker-cce
+%files plugin-tracker-functions
 %defattr(-,root,root,-)
-%{APP_DIR}/plugins/tracker_cce
+%{APP_DIR}/plugins/tracker_functions
 
 %endif
 

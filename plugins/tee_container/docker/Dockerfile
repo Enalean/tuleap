@@ -75,7 +75,7 @@ RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     tuleap-plugin-jira-import \
     tuleap-plugin-program_management \
     tuleap-plugin-document_generation \
-    tuleap-plugin-tracker-cce \
+    tuleap-plugin-tracker-functions \
     tuleap-plugin-securitytxt \
     tuleap-plugin-mediawiki-standalone \
     tuleap-theme-burningparrot \
