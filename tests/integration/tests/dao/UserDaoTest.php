@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\dao;
 
-use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class UserDaoTest extends TestCase
+final class UserDaoTest extends TestIntegrationTestCase
 {
     private \UserDao $dao;
 

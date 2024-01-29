@@ -54,11 +54,13 @@ final class LegacyMediawikiCreateMissingUsersDBTest extends TestCase
             sprintf('INSERT INTO %s (user_name) VALUES (?)', $db->escapeIdentifier(self::MW_USER_TABLE)),
             ucfirst(self::TEST_USER_NAME),
         );
+        parent::setUp();
     }
 
     protected function tearDown(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
+        parent::tearDown();
         $db->run('DELETE FROM plugin_mediawiki_database');
         $db->run(sprintf('DROP TABLE %s', $db->escapeIdentifier(self::MW_USER_TABLE)));
         $db->run(sprintf('DROP TABLE %s', $db->escapeIdentifier(self::MW_REVISION_TABLE)));

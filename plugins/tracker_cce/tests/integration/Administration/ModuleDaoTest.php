@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\TrackerCCE\Administration;
 
-use Tuleap\DB\DBFactory;
-use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class ModuleDaoTest extends TestCase
+final class ModuleDaoTest extends TestIntegrationTestCase
 {
     private const BUG_TRACKER_ID  = 1;
     private const TASK_TRACKER_ID = 2;
@@ -35,12 +34,6 @@ final class ModuleDaoTest extends TestCase
     protected function setUp(): void
     {
         $this->dao = new ModuleDao();
-    }
-
-    public function tearDown(): void
-    {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->query('TRUNCATE TABLE plugin_tracker_cce_module');
     }
 
     public function testActivation(): void

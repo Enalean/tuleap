@@ -22,31 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\FullTextSearchMeilisearch\Index;
 
-use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DBFactory;
 use Tuleap\FullTextSearchCommon\Index\PlaintextItemToIndex;
 use Tuleap\Search\IndexedItemFound;
 use Tuleap\Search\IndexedItemsToRemove;
-use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class MeilisearchMetadataDAOTest extends TestCase
+final class MeilisearchMetadataDAOTest extends TestIntegrationTestCase
 {
     private MeilisearchMetadataDAO $dao;
 
     protected function setUp(): void
     {
         $this->dao = new MeilisearchMetadataDAO();
-    }
-
-    public function tearDown(): void
-    {
-        $this->getDB()->run('DELETE FROM plugin_fts_meilisearch_item');
-        $this->getDB()->run('DELETE FROM plugin_fts_meilisearch_metadata');
-    }
-
-    private function getDB(): EasyDB
-    {
-        return DBFactory::getMainTuleapDBConnection()->getDB();
     }
 
     public function testCanInsertMetadataAndRetrieveThem(): void
@@ -84,7 +72,8 @@ final class MeilisearchMetadataDAOTest extends TestCase
 
         $this->dao->deleteIndexedItemsFromIDs([$item_1_id, $item_3_id]);
 
-        self::assertEquals(0, $this->getDB()->single('SELECT COUNT(id) FROM plugin_fts_meilisearch_item'));
-        self::assertEquals(0, $this->getDB()->single('SELECT COUNT(item_id) FROM plugin_fts_meilisearch_metadata'));
+        $db = DBFactory::getMainTuleapDBConnection()->getDB();
+        self::assertEquals(0, $db->single('SELECT COUNT(id) FROM plugin_fts_meilisearch_item'));
+        self::assertEquals(0, $db->single('SELECT COUNT(item_id) FROM plugin_fts_meilisearch_metadata'));
     }
 }

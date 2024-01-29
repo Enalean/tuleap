@@ -22,23 +22,16 @@ declare(strict_types=1);
 
 namespace integration\Version;
 
-use Tuleap\DB\DBFactory;
 use Tuleap\Docman\Version\CoAuthorDao;
-use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class CoAuthorDaoTest extends TestCase
+final class CoAuthorDaoTest extends TestIntegrationTestCase
 {
     private CoAuthorDao $co_author_dao;
 
     protected function setUp(): void
     {
         $this->co_author_dao = new CoAuthorDao();
-    }
-
-    protected function tearDown(): void
-    {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->run('DELETE FROM plugin_docman_version_coauthor');
     }
 
     public function testCanSavesCoAuthors(): void

@@ -33,8 +33,9 @@ use Tuleap\PullRequest\InlineComment\InlineCommentUpdater;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\Timeline\TimelineEventCreator;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class PullRequestUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PullRequestUpdaterTest extends TestIntegrationTestCase
 {
     private PullRequestUpdater $pull_request_updater;
     private Dao $dao;

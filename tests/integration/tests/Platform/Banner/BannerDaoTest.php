@@ -22,23 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Platform\Banner;
 
-use Tuleap\DB\DBFactory;
-use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class BannerDaoTest extends TestCase
+final class BannerDaoTest extends TestIntegrationTestCase
 {
     private BannerDao $dao;
 
     public function setUp(): void
     {
         $this->dao = new BannerDao();
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-
-        $db->run('DELETE FROM platform_banner');
     }
 
     public function testCreatesABanner(): void

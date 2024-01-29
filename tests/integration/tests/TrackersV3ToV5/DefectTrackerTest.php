@@ -42,8 +42,9 @@ use Tracker_SemanticFactory;
 use TrackerFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-class DefectTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
+class DefectTrackerTest extends TestIntegrationTestCase
 {
     use GlobalLanguageMock;
 

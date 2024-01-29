@@ -25,9 +25,9 @@ namespace Tuleap\MediawikiStandalone\Permissions;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
-use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class MediawikiPermissionsDaoTest extends TestCase
+final class MediawikiPermissionsDaoTest extends TestIntegrationTestCase
 {
     private const PROJECT_ID     = 1001;
     private const DEVELOPERS_ID  = 101;
@@ -56,14 +56,6 @@ final class MediawikiPermissionsDaoTest extends TestCase
         $this->developers_ugroup  = ProjectUGroupTestBuilder::aCustomUserGroup(self::DEVELOPERS_ID)->build();
         $this->qa_ugroup          = ProjectUGroupTestBuilder::aCustomUserGroup(self::QA_ID)->build();
         $this->integrators_ugroup = ProjectUGroupTestBuilder::aCustomUserGroup(self::INTEGRATORS_ID)->build();
-    }
-
-    protected function tearDown(): void
-    {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->run('DELETE FROM plugin_mediawiki_standalone_permissions');
-        $db->run('DELETE FROM plugin_mediawiki_ugroup_mapping');
-        $db->run('DELETE FROM plugin_mediawiki_access_control');
     }
 
     public function testSaveAndGetPermissions(): void

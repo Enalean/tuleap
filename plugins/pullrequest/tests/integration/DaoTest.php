@@ -22,14 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest;
 
-use Tuleap\DB\DBFactory;
 use Tuleap\PullRequest\Criterion\AuthorCriterion;
 use Tuleap\PullRequest\Criterion\SearchCriteria;
 use Tuleap\PullRequest\Criterion\StatusCriterion;
 use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
-use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class DaoTest extends TestCase
+final class DaoTest extends TestIntegrationTestCase
 {
     private const REPOSITORY_ID = 5;
     private const LIMIT         = 10;
@@ -50,12 +49,6 @@ final class DaoTest extends TestCase
         $this->open_pull_request_id      = $this->insertOpenPullRequest();
         $this->merged_pull_request_id    = $this->insertMergedPullRequest();
         $this->abandoned_pull_request_id = $this->insertAbandonedPullRequest();
-    }
-
-    protected function tearDown(): void
-    {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->run('DELETE FROM plugin_pullrequest_review');
     }
 
     public function testItRetrievesOnlyOpenPullRequests(): void

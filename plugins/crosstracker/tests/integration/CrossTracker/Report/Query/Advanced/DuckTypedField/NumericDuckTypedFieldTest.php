@@ -65,6 +65,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataU
 use Tuleap\CrossTracker\SearchOnDuckTypedFieldsConfig;
 use Tuleap\CrossTracker\Tests\Builders\DatabaseBuilder;
 use Tuleap\DB\DBFactory;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
@@ -86,7 +87,7 @@ use Tuleap\Tracker\Report\TrackerReportConfigDao;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use UserManager;
 
-final class NumericDuckTypedFieldTest extends \Tuleap\Test\PHPUnit\TestCase
+final class NumericDuckTypedFieldTest extends TestIntegrationTestCase
 {
     private DatabaseBuilder $database_builder;
     private Tracker $release_tracker;
@@ -98,13 +99,6 @@ final class NumericDuckTypedFieldTest extends \Tuleap\Test\PHPUnit\TestCase
     private \ParagonIE\EasyDB\EasyDB $db;
     private \PFUser $outsider_user;
     private Tracker $epic_tracker;
-
-    protected function tearDown(): void
-    {
-        $database_builder = new DatabaseBuilder($this->db);
-        $database_builder->cleanUp();
-        \ForgeConfig::clearFeatureFlag(SearchOnDuckTypedFieldsConfig::FEATURE_FLAG_SEARCH_DUCK_TYPED_FIELDS);
-    }
 
     protected function setUp(): void
     {
@@ -178,6 +172,11 @@ final class NumericDuckTypedFieldTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withId($this->epic_tracker->getId())
             ->withProject($project)
             ->build();
+    }
+
+    protected function tearDown(): void
+    {
+        \ForgeConfig::clearFeatureFlag(SearchOnDuckTypedFieldsConfig::FEATURE_FLAG_SEARCH_DUCK_TYPED_FIELDS);
     }
 
     /**

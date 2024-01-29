@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
+ * Copyright (c) Enalean 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,25 +20,34 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Roadmap;
+namespace Tuleap\Test\PHPUnit;
 
 use Tuleap\DB\DBFactory;
-use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class RoadmapWidgetDaoTest extends TestIntegrationTestCase
+abstract class TestIntegrationTestCase extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testWidgetDeletionDeleteAssociatedData(): void
+    private string $savepoint_id = "";
+
+    /**
+     * @before
+     */
+    public function setUpData(): void
     {
-        $dao = new RoadmapWidgetDao(new FilterReportDao());
-        $id  = $dao->insertContent(101, 'g', 'My Roadmap', [666], 0, 'month', null, null);
+        parent::setUp();
+        $this->savepoint_id = "save" . random_int(0, 99999999999);
+        $db                 = DBFactory::getMainTuleapDBConnection()->getDB();
+        $db->beginTransaction();
+        $db->run("SAVEPOINT " . $this->savepoint_id);
+    }
 
+    /**
+     * @after
+     */
+    public function tearDownData(): void
+    {
+        parent::tearDown();
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->run("INSERT INTO plugin_roadmap_widget_filter(widget_id, report_id) VALUES (?, 979)", $id);
-
-        self::assertNotEmpty($db->run('SELECT * FROM plugin_roadmap_widget_filter WHERE widget_id = ?', $id));
-
-        $dao->delete($id, 101, 'g');
-
-        self::assertEmpty($db->run('SELECT * FROM plugin_roadmap_widget_filter WHERE widget_id = ?', $id));
+        $db->run("ROLLBACK TO " . $this->savepoint_id);
+        $db->rollBack();
     }
 }

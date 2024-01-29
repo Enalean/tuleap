@@ -22,11 +22,10 @@ declare(strict_types=1);
 
 namespace Notifications\Settings;
 
-use Tuleap\DB\DBFactory;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Tuleap\Tracker\Notifications\Settings\CalendarEventConfigDao;
-use Tuleap\Test\PHPUnit\TestCase;
 
-final class CalendarEventConfigDaoTest extends TestCase
+final class CalendarEventConfigDaoTest extends TestIntegrationTestCase
 {
     private const BUG_TRACKER_ID   = 1;
     private const TASK_TRACKER_ID  = 2;
@@ -36,12 +35,6 @@ final class CalendarEventConfigDaoTest extends TestCase
     protected function setUp(): void
     {
         $this->dao = new CalendarEventConfigDao();
-    }
-
-    public function tearDown(): void
-    {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->query('TRUNCATE TABLE plugin_tracker_calendar_event_config');
     }
 
     public function testShouldSendEventInNotification(): void

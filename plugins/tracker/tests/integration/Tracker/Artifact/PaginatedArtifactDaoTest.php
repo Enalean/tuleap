@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact;
 
 use Tuleap\DB\DBFactory;
-use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class PaginatedArtifactDaoTest extends TestCase
+class PaginatedArtifactDaoTest extends TestIntegrationTestCase
 {
     private int $stories_id;
     private int $tasks_id;
@@ -43,13 +43,6 @@ final class PaginatedArtifactDaoTest extends TestCase
         $db->run("INSERT INTO tracker_artifact(id, tracker_id) VALUES (2, ?)", $this->tasks_id);
         $db->run("INSERT INTO tracker_artifact(id, tracker_id) VALUES (3, ?)", $this->bugs_id);
         $db->run("INSERT INTO tracker_artifact(id, tracker_id) VALUES (4, ?)", $this->stories_id);
-    }
-
-    protected function tearDown(): void
-    {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->run("DELETE FROM tracker_artifact");
-        $db->run("DELETE FROM tracker");
     }
 
     public function testSearchPaginatedByListOfTrackerIds(): void

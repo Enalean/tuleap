@@ -22,29 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\AgileDashboard\Milestone\Backlog;
 
-use Tuleap\DB\DBFactory;
-use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class RecentlyVisitedTopBacklogDaoTest extends TestCase
+final class RecentlyVisitedTopBacklogDaoTest extends TestIntegrationTestCase
 {
-    protected function tearDown(): void
-    {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->run("DELETE FROM plugin_agiledashboard_top_backlog_recently_visited");
-    }
-
     public function testDeleteOldEntriesPerUser(): void
     {
         $dao = new RecentlyVisitedTopBacklogDao();
-        $db  = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->tryFlatTransaction(function () use ($dao): void {
-            $i = 1;
-            while ($i <= 60) {
-                $dao->save(102, $i, $i);
-                $dao->save(103, $i, $i);
-                $i++;
-            }
-        });
+
+        $i = 1;
+        while ($i <= 60) {
+            $dao->save(102, $i, $i);
+            $dao->save(103, $i, $i);
+            $i++;
+        }
         self::assertCount(60, $dao->searchVisitByUserId(102, 100));
         self::assertCount(60, $dao->searchVisitByUserId(103, 100));
 

@@ -27,9 +27,9 @@ use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DBFactory;
 use Tuleap\Gitlab\Group\GroupLink;
 use Tuleap\Gitlab\Group\Token\GroupLinkApiTokenDAO;
-use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class GitlabApiTokenDAOTest extends TestCase
+final class GitlabApiTokenDAOTest extends TestIntegrationTestCase
 {
     private GroupLinkApiTokenDAO $token_dao;
 
@@ -40,11 +40,6 @@ final class GitlabApiTokenDAOTest extends TestCase
     protected function setUp(): void
     {
         $this->token_dao = new GroupLinkApiTokenDAO();
-    }
-
-    protected function tearDown(): void
-    {
-        $this->getDB()->run('DELETE FROM plugin_gitlab_group_token');
     }
 
     private function getDB(): EasyDB

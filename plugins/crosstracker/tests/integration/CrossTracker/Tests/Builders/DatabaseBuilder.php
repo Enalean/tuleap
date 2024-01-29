@@ -37,24 +37,6 @@ final class DatabaseBuilder
         $this->user_permissions_dao = new UserPermissionsDao();
     }
 
-    public function cleanUp(): void
-    {
-        $this->db->run('DELETE permissions.* FROM permissions INNER JOIN tracker_field WHERE object_id = tracker_field.id');
-        $this->db->run('DELETE FROM tracker_artifact');
-        $this->db->run('DELETE FROM tracker_field');
-        $this->db->run('DELETE FROM tracker_field_float');
-        $this->db->run('DELETE FROM tracker_field_int');
-        $this->db->run('DELETE FROM tracker_field_computed');
-        $this->db->run('DELETE FROM tracker_changeset');
-        $this->db->run('DELETE FROM tracker_changeset_value');
-        $this->db->run('DELETE FROM tracker_changeset_value_int');
-        $this->db->run('DELETE FROM tracker_changeset_value_float');
-        $this->db->run('DELETE FROM user WHERE user_id > 101');
-        $this->db->run('DELETE FROM user_group WHERE user_id > 101');
-        $this->db->run('DELETE FROM `groups` WHERE group_id > 100');
-        $this->db->run('DELETE FROM tracker');
-    }
-
     public function buildProject(): Project
     {
         $row         = [

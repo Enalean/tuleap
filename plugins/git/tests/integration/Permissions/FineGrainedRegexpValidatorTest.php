@@ -20,8 +20,9 @@
 
 namespace Tuleap\Git\Permissions;
 
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class FineGrainedRegexpValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FineGrainedRegexpValidatorTest extends TestIntegrationTestCase
 {
     public function testValidatesPattern(): void
     {

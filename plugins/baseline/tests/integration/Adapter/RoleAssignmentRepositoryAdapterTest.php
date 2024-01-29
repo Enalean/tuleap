@@ -32,9 +32,9 @@ use Tuleap\Baseline\Domain\RoleBaselineReader;
 use Tuleap\Baseline\Stub\RetrieveBaselineUserGroupStub;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
-use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class RoleAssignmentRepositoryAdapterTest extends TestCase
+final class RoleAssignmentRepositoryAdapterTest extends TestIntegrationTestCase
 {
     private RoleAssignmentRepositoryAdapter $repository;
     private ProjectIdentifier $project;
@@ -56,11 +56,6 @@ final class RoleAssignmentRepositoryAdapterTest extends TestCase
                 return 101;
             }
         };
-    }
-
-    public function tearDown(): void
-    {
-        $this->getDB()->run('DELETE FROM plugin_baseline_role_assignment');
     }
 
     private function getDB(): EasyDB

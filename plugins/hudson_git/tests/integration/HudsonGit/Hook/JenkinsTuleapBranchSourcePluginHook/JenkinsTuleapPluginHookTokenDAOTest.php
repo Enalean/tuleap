@@ -22,23 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook;
 
-use Tuleap\DB\DBFactory;
-use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class JenkinsTuleapPluginHookTokenDAOTest extends TestCase
+final class JenkinsTuleapPluginHookTokenDAOTest extends TestIntegrationTestCase
 {
     private JenkinsTuleapPluginHookTokenDAO $dao;
 
     public function setUp(): void
     {
         $this->dao = new JenkinsTuleapPluginHookTokenDAO();
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-
-        $db->run('DELETE FROM plugin_hudson_git_trigger_hook_token');
     }
 
     public function testCanProcessANonExpiredToken(): void

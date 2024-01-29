@@ -23,13 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\WebAuthn\Source;
 
 use Symfony\Component\Uid\Uuid;
-use Tuleap\DB\DBFactory;
-use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Webauthn\PublicKeyCredentialSource;
 use Webauthn\PublicKeyCredentialUserEntity;
 use Webauthn\TrustPath\TrustPathLoader;
 
-final class WebAuthnCredentialSourceDaoTest extends TestCase
+final class WebAuthnCredentialSourceDaoTest extends TestIntegrationTestCase
 {
     private WebAuthnCredentialSourceDao $dao;
 
@@ -38,13 +37,6 @@ final class WebAuthnCredentialSourceDaoTest extends TestCase
     protected function setUp(): void
     {
         $this->dao = new WebAuthnCredentialSourceDao();
-    }
-
-    protected function tearDown(): void
-    {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-
-        $db->run('DELETE FROM webauthn_credential_source');
     }
 
     public function testSaveAndRetrieve(): void

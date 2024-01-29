@@ -26,9 +26,9 @@ use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\DB\DBFactory;
-use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-class InvitationDaoTest extends TestCase
+class InvitationDaoTest extends TestIntegrationTestCase
 {
     private const CREATED_ON_TIMESTAMP = 1234567890;
 
@@ -42,11 +42,6 @@ class InvitationDaoTest extends TestCase
             new SplitTokenVerificationStringHasher(),
             $this->instrumentation,
         );
-    }
-
-    protected function tearDown(): void
-    {
-        DBFactory::getMainTuleapDBConnection()->getDB()->run("DELETE FROM invitations");
     }
 
     public function testSavesInvitationWithVerifier(): void

@@ -23,22 +23,15 @@ declare(strict_types=1);
 namespace Tuleap\OnlyOffice\Save;
 
 use Tuleap\DB\DBFactory;
-use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class OnlyOfficeSaveDocumentTokenDAOTest extends TestCase
+final class OnlyOfficeSaveDocumentTokenDAOTest extends TestIntegrationTestCase
 {
     private OnlyOfficeSaveDocumentTokenDAO $dao;
 
     protected function setUp(): void
     {
         $this->dao = new OnlyOfficeSaveDocumentTokenDAO();
-    }
-
-    protected function tearDown(): void
-    {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-
-        $db->run('DELETE FROM plugin_onlyoffice_save_document_token');
     }
 
     public function testCanProcessANonExpiredToken(): void

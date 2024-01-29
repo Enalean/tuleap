@@ -22,13 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository;
 
-use ParagonIE\EasyDB\EasyDB;
-use Tuleap\DB\DBFactory;
 use Tuleap\Gitlab\Group\GroupLinkRepositoryIntegrationDAO;
 use Tuleap\Gitlab\Group\NewRepositoryIntegrationLinkedToAGroup;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class GitlabRepositoryIntegrationDaoTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GitlabRepositoryIntegrationDaoTest extends TestIntegrationTestCase
 {
     private const GITLAB_REPOSITORY_ID = 23;
     private const NAME                 = 'sloeberry';
@@ -45,17 +44,6 @@ final class GitlabRepositoryIntegrationDaoTest extends \Tuleap\Test\PHPUnit\Test
     {
         $this->repository_dao         = new GitlabRepositoryIntegrationDao();
         $this->group_repositories_dao = new GroupLinkRepositoryIntegrationDAO();
-    }
-
-    protected function tearDown(): void
-    {
-        $this->getDB()->run('DELETE FROM plugin_gitlab_group_repository_integration');
-        $this->getDB()->run('DELETE FROM plugin_gitlab_repository_integration');
-    }
-
-    private function getDB(): EasyDB
-    {
-        return DBFactory::getMainTuleapDBConnection()->getDB();
     }
 
     public function testCRUD(): void

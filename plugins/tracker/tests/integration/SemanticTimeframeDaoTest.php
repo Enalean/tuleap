@@ -22,106 +22,57 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
-use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DBFactory;
+use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class SemanticTimeframeDaoTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SemanticTimeframeDaoTest extends TestIntegrationTestCase
 {
-    /**
-     * @var int
-     */
-    private static $first_timeframe_using_end_date_tracker_id;
-    /**
-     * @var int
-     */
-    private static $second_timeframe_using_end_date_tracker_id;
-    /**
-     * @var int
-     */
-    private static $first_timeframe_using_duration_tracker_id;
-    /**
-     * @var int
-     */
-    private static $second_timeframe_using_duration_tracker_id;
-    /**
-     * @var SemanticTimeframeDao
-     */
-    private $dao;
+    private static int $first_timeframe_using_end_date_tracker_id;
+    private static int $second_timeframe_using_end_date_tracker_id;
+    private static int $first_timeframe_using_duration_tracker_id;
+    private static int $second_timeframe_using_duration_tracker_id;
+    private SemanticTimeframeDao $dao;
 
-    public static function setUpBeforeClass(): void
+    protected function setUp(): void
     {
+        $this->dao                                        = new SemanticTimeframeDao();
         $db                                               = DBFactory::getMainTuleapDBConnection()->getDB();
         self::$first_timeframe_using_end_date_tracker_id  = (int) $db->insertReturnId(
             'tracker',
             [
-                'group_id'    => 105,
-                'name'        => 'End date Timeframe',
+                'group_id' => 105,
+                'name' => 'End date Timeframe',
                 'description' => 'First tracker with timeframe using end date',
-                'item_name'   => 'end_date_timeframe',
+                'item_name' => 'end_date_timeframe',
             ]
         );
         self::$second_timeframe_using_end_date_tracker_id = (int) $db->insertReturnId(
             'tracker',
             [
-                'group_id'    => 105,
-                'name'        => 'End date Timeframe 2',
+                'group_id' => 105,
+                'name' => 'End date Timeframe 2',
                 'description' => 'Second tracker with timeframe using end date',
-                'item_name'   => 'end_date_timeframe_2',
+                'item_name' => 'end_date_timeframe_2',
             ]
         );
         self::$first_timeframe_using_duration_tracker_id  = (int) $db->insertReturnId(
             'tracker',
             [
-                'group_id'    => 105,
-                'name'        => 'Duration Timeframe',
+                'group_id' => 105,
+                'name' => 'Duration Timeframe',
                 'description' => 'Tracker with timeframe using duration',
-                'item_name'   => 'duration_timeframe',
+                'item_name' => 'duration_timeframe',
             ]
         );
         self::$second_timeframe_using_duration_tracker_id = (int) $db->insertReturnId(
             'tracker',
             [
-                'group_id'    => 105,
-                'name'        => 'Duration Timeframe 2',
+                'group_id' => 105,
+                'name' => 'Duration Timeframe 2',
                 'description' => 'Second tracker with timeframe using duration',
-                'item_name'   => 'duration_timeframe_2',
+                'item_name' => 'duration_timeframe_2',
             ]
         );
-    }
-
-    protected function setUp(): void
-    {
-        $this->dao = new SemanticTimeframeDao();
-    }
-
-    public function tearDown(): void
-    {
-        $db                    = DBFactory::getMainTuleapDBConnection()->getDB();
-        $tracker_ids_statement = EasyStatement::open()->in(
-            'tracker_id IN (?*)',
-            [
-                self::$first_timeframe_using_end_date_tracker_id,
-                self::$second_timeframe_using_end_date_tracker_id,
-                self::$first_timeframe_using_duration_tracker_id,
-                self::$second_timeframe_using_duration_tracker_id,
-            ]
-        );
-        $db->delete('tracker_semantic_timeframe', $tracker_ids_statement);
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        $db                    = DBFactory::getMainTuleapDBConnection()->getDB();
-        $tracker_ids_statement = EasyStatement::open()->in(
-            'id IN (?*)',
-            [
-                self::$first_timeframe_using_duration_tracker_id,
-                self::$second_timeframe_using_duration_tracker_id,
-                self::$first_timeframe_using_end_date_tracker_id,
-                self::$second_timeframe_using_end_date_tracker_id,
-            ]
-        );
-        $db->delete('tracker', $tracker_ids_statement);
     }
 
     public function testAreTimeFrameSemanticsUsingSameTypeOfField(): void
