@@ -95,8 +95,9 @@ final class NumericFromWhereBuilder
                 "$changeset_value_int_alias.value > ? OR $changeset_value_float_alias.value > ?",
                 [$value, $value]
             ),
-            ComparisonType::LesserThanOrEqual => throw new \LogicException(
-                'Lesser Than Or Equal comparison for fields is not implemented yet'
+            ComparisonType::LesserThanOrEqual => new ParametrizedWhere(
+                "$changeset_value_int_alias.value <= ? OR $changeset_value_float_alias.value <= ?",
+                [$value, $value]
             ),
             ComparisonType::GreaterThanOrEqual => throw new \LogicException(
                 'Greater Than Or Equal comparison for fields is not implemented yet'
