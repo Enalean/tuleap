@@ -17,139 +17,66 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createReleaseWidgetLocalVue } from "../../../../helpers/local-vue-for-test";
 import ChartError from "./ChartError.vue";
 
-const component_options: ShallowMountOptions<ChartError> = {};
 const message_error_duration = "'duration' field is empty or invalid.";
 const message_error_start_date = "'start_date' field is empty or invalid.";
 const message_error_under_calculation =
     "Burndown is under calculation. It will be available in a few minutes.";
 
 describe("ChartError", () => {
-    async function getPersonalWidgetInstance(): Promise<Wrapper<ChartError>> {
-        component_options.localVue = await createReleaseWidgetLocalVue();
-
-        return shallowMount(ChartError, component_options);
+    async function getPersonalWidgetInstance(
+        has_error_duration: boolean,
+        has_error_start_date: boolean,
+        is_under_calculation: boolean,
+    ): Promise<Wrapper<Vue, Element>> {
+        return shallowMount(ChartError, {
+            propsData: {
+                has_error_duration,
+                has_error_start_date,
+                is_under_calculation,
+                message_error_duration,
+                message_error_start_date,
+                message_error_under_calculation,
+            },
+            localVue: await createReleaseWidgetLocalVue(),
+        });
     }
 
-    beforeEach(() => {
-        component_options.propsData = {
-            has_error_duration: true,
-            has_error_start_date: true,
-            is_under_calculation: true,
-            message_error_duration,
-            message_error_start_date,
-            message_error_under_calculation,
-        };
+    it.each([
+        [true, true, true, true, true, false],
+        [false, true, true, false, true, false],
+        [true, false, true, true, false, false],
+        [true, true, false, true, true, false],
+        [false, false, false, false, false, false],
+    ])(
+        `Error message %s`,
+        async (
+            has_error_duration: boolean,
+            has_error_start_date: boolean,
+            is_under_calculation: boolean,
+            display_error_duration: boolean,
+            display_start_date_error: boolean,
+            display_calculation_error: boolean,
+        ) => {
+            const wrapper = await getPersonalWidgetInstance(
+                has_error_duration,
+                has_error_start_date,
+                is_under_calculation,
+            );
 
-        getPersonalWidgetInstance();
-    });
-
-    it("When there are 3 errors, Then error caused by 'under calculation' is not displayed", async () => {
-        const wrapper = await getPersonalWidgetInstance();
-
-        expect(wrapper.find("[data-test=error-duration]").exists()).toBe(true);
-        expect(wrapper.find("[data-test=error-calculation]").exists()).toBe(false);
-        expect(wrapper.find("[data-test=error-start-date]").exists()).toBe(true);
-    });
-
-    it("When there are an error on start date and duration, Then they are displayed", async () => {
-        component_options.propsData = {
-            has_error_duration: true,
-            has_error_start_date: true,
-            is_under_calculation: false,
-            message_error_duration,
-            message_error_start_date,
-            message_error_under_calculation,
-        };
-        const wrapper = await getPersonalWidgetInstance();
-
-        expect(wrapper.find("[data-test=error-duration]").exists()).toBe(true);
-        expect(wrapper.find("[data-test=error-calculation]").exists()).toBe(false);
-        expect(wrapper.find("[data-test=error-start-date]").exists()).toBe(true);
-    });
-
-    it("When there are an error on start date and calculation, Then only error on start date is displayed", async () => {
-        component_options.propsData = {
-            has_error_duration: false,
-            has_error_start_date: true,
-            is_under_calculation: true,
-            message_error_duration,
-            message_error_start_date,
-            message_error_under_calculation,
-        };
-
-        const wrapper = await getPersonalWidgetInstance();
-
-        expect(wrapper.find("[data-test=error-duration]").exists()).toBe(false);
-        expect(wrapper.find("[data-test=error-calculation]").exists()).toBe(false);
-        expect(wrapper.find("[data-test=error-start-date]").exists()).toBe(true);
-    });
-
-    it("When there are an error on duration and calculation, Then only error on duration is displayed", async () => {
-        component_options.propsData = {
-            has_error_duration: true,
-            has_error_start_date: false,
-            is_under_calculation: true,
-            message_error_duration,
-            message_error_start_date,
-            message_error_under_calculation,
-        };
-        const wrapper = await getPersonalWidgetInstance();
-
-        expect(wrapper.find("[data-test=error-duration]").exists()).toBe(true);
-        expect(wrapper.find("[data-test=error-calculation]").exists()).toBe(false);
-        expect(wrapper.find("[data-test=error-start-date]").exists()).toBe(false);
-    });
-
-    it("When there are only an error on calculation, Then it is displayed", async () => {
-        component_options.propsData = {
-            has_error_duration: false,
-            has_error_start_date: false,
-            is_under_calculation: true,
-            message_error_duration,
-            message_error_start_date,
-            message_error_under_calculation,
-        };
-        const wrapper = await getPersonalWidgetInstance();
-
-        expect(wrapper.find("[data-test=error-duration]").exists()).toBe(false);
-        expect(wrapper.find("[data-test=error-calculation]").exists()).toBe(true);
-        expect(wrapper.find("[data-test=error-start-date]").exists()).toBe(false);
-    });
-
-    it("When there are only an error on duration, Then it is displayed", async () => {
-        component_options.propsData = {
-            has_error_duration: true,
-            has_error_start_date: false,
-            is_under_calculation: false,
-            message_error_duration,
-            message_error_start_date,
-            message_error_under_calculation,
-        };
-        const wrapper = await getPersonalWidgetInstance();
-
-        expect(wrapper.find("[data-test=error-duration]").exists()).toBe(true);
-        expect(wrapper.find("[data-test=error-calculation]").exists()).toBe(false);
-        expect(wrapper.find("[data-test=error-start-date]").exists()).toBe(false);
-    });
-
-    it("When there are only an error on start date, Then it is displayed", async () => {
-        component_options.propsData = {
-            has_error_duration: false,
-            has_error_start_date: true,
-            is_under_calculation: false,
-            message_error_duration,
-            message_error_start_date,
-            message_error_under_calculation,
-        };
-        const wrapper = await getPersonalWidgetInstance();
-
-        expect(wrapper.find("[data-test=error-duration]").exists()).toBe(false);
-        expect(wrapper.find("[data-test=error-calculation]").exists()).toBe(false);
-        expect(wrapper.find("[data-test=error-start-date]").exists()).toBe(true);
-    });
+            expect(wrapper.find("[data-test=error-duration]").exists()).toBe(
+                display_error_duration,
+            );
+            expect(wrapper.find("[data-test=error-calculation]").exists()).toBe(
+                display_calculation_error,
+            );
+            expect(wrapper.find("[data-test=error-start-date]").exists()).toBe(
+                display_start_date_error,
+            );
+        },
+    );
 });
