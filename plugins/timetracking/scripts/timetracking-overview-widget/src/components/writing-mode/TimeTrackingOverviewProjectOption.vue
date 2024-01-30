@@ -25,7 +25,7 @@
         v-on:change="getTrackers()"
         data-test="overview-project-list"
     >
-        <option selected v-bind:value="null" v-translate>Please choose...</option>
+        <option selected v-bind:value="null">{{ $gettext("Please choose...") }}</option>
         <option v-for="project in projects" v-bind:key="project.id" v-bind:value="project.id">
             {{ project.label }}
         </option>

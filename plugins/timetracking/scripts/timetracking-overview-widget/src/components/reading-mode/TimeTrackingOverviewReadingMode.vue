@@ -35,10 +35,9 @@
         <div class="reading-mode-actions" v-if="!is_report_saved" data-test="reading-mode-actions">
             <button
                 class="tlp-button-primary tlp-button-outline reading-mode-actions-cancel"
-                v-translate
                 v-on:click="discardReport()"
             >
-                Cancel
+                {{ $gettext("Cancel") }}
             </button>
             <button
                 class="tlp-button-primary"
@@ -50,7 +49,7 @@
                     class="tlp-button-icon fa fa-spinner fa-spin"
                     data-test="icon-spinner"
                 ></i>
-                <translate>Save report</translate>
+                {{ $gettext("Save report") }}
             </button>
         </div>
     </div>

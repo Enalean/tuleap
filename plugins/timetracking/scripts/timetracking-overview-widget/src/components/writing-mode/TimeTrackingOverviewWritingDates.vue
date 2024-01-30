@@ -20,7 +20,7 @@
     <div class="timetracking-overview-writing-mode-selected-dates">
         <div class="tlp-form-element timetracking-overview-writing-mode-selected-date">
             <label for="timetracking-start-date" class="tlp-label">
-                <translate>From</translate>
+                {{ $gettext("From") }}
                 <i class="fa fa-asterisk"></i>
             </label>
             <div class="tlp-form-element tlp-form-element-prepend">
@@ -39,7 +39,7 @@
         </div>
         <div class="tlp-form-element timetracking-overview-writing-mode-selected-date">
             <label for="timetracking-end-date" class="tlp-label">
-                <translate>To</translate>
+                {{ $gettext("To") }}
                 <i class="fa fa-asterisk"></i>
             </label>
             <div class="tlp-form-element tlp-form-element-prepend">
