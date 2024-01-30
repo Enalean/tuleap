@@ -22,59 +22,45 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference\ByNature\Wiki;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
+use ProjectManager;
 use Tuleap\PHPWiki\WikiPage;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class CrossReferenceWikiOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CrossReferenceWikiOrganizerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|WikiPageFromReferenceValueRetriever
-     */
-    private $wiki_page_retriever;
-    /**
-     * @var CrossReferenceWikiOrganizer
-     */
-    private $wiki_organizer;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CrossReferenceByNatureOrganizer
-     */
-    private $by_nature_organizer;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
+    private WikiPageFromReferenceValueRetriever&MockObject $wiki_page_retriever;
+    private CrossReferenceWikiOrganizer $wiki_organizer;
+    private CrossReferenceByNatureOrganizer&MockObject $by_nature_organizer;
+    private Project $project;
+    private PFUser $user;
 
     protected function setUp(): void
     {
-        $this->project   = Mockery::mock(Project::class);
-        $project_manager = Mockery::mock(\ProjectManager::class);
-        $project_manager->shouldReceive(['getProject' => $this->project]);
+        $this->project   = ProjectTestBuilder::aProject()->build();
+        $project_manager = $this->createMock(ProjectManager::class);
+        $project_manager->method('getProject')->willReturn($this->project);
 
-        $this->wiki_page_retriever = Mockery::mock(WikiPageFromReferenceValueRetriever::class);
+        $this->wiki_page_retriever = $this->createMock(WikiPageFromReferenceValueRetriever::class);
 
         $this->wiki_organizer = new CrossReferenceWikiOrganizer(
             $project_manager,
             $this->wiki_page_retriever,
         );
 
-        $this->user = Mockery::mock(PFUser::class);
+        $this->user = UserTestBuilder::buildWithDefaults();
 
-        $this->by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class);
-        $this->by_nature_organizer->shouldReceive(['getCurrentUser' => $this->user]);
+        $this->by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
+        $this->by_nature_organizer->method('getCurrentUser')->willReturn($this->user);
     }
 
-    public function testItRemovesReferenceIfWikiPageIsNotAccessible()
+    public function testItRemovesReferenceIfWikiPageIsNotAccessible(): void
     {
         $wiki_ref = CrossReferencePresenterBuilder::get(1)
             ->withType('wiki_page')
@@ -82,15 +68,15 @@ class CrossReferenceWikiOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
 
         $this->wiki_page_retriever
-            ->shouldReceive('getWikiPageUserCanView')
+            ->expects(self::once())
+            ->method('getWikiPageUserCanView')
             ->with($this->project, $this->user, 'MyWikiPage')
-            ->once()
-            ->andReturnNull();
+            ->willReturn(null);
 
         $this->by_nature_organizer
-            ->shouldReceive('removeUnreadableCrossReference')
-            ->with($wiki_ref)
-            ->once();
+            ->expects(self::once())
+            ->method('removeUnreadableCrossReference')
+            ->with($wiki_ref);
 
         $this->wiki_organizer->organizeWikiReference($wiki_ref, $this->by_nature_organizer);
     }
@@ -103,15 +89,15 @@ class CrossReferenceWikiOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
 
         $this->wiki_page_retriever
-            ->shouldReceive('getWikiPageUserCanView')
+            ->expects(self::once())
+            ->method('getWikiPageUserCanView')
             ->with($this->project, $this->user, 'MyWikiPage')
-            ->once()
-            ->andReturn(Mockery::mock(WikiPage::class));
+            ->willReturn($this->createMock(WikiPage::class));
 
         $this->by_nature_organizer
-            ->shouldReceive('moveCrossReferenceToSection')
-            ->with($wiki_ref, '')
-            ->once();
+            ->expects(self::once())
+            ->method('moveCrossReferenceToSection')
+            ->with($wiki_ref, '');
 
         $this->wiki_organizer->organizeWikiReference($wiki_ref, $this->by_nature_organizer);
     }
