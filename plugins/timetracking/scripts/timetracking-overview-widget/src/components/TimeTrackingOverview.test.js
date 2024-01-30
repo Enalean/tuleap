@@ -18,7 +18,7 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import TimeTrackingOverview from "../../components/TimeTrackingOverview.vue";
+import TimeTrackingOverview from "./TimeTrackingOverview.vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 const reportId = 8;

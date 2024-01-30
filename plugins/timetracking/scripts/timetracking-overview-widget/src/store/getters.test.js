@@ -21,9 +21,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import initial_state from "../../store/state.js";
-import * as getters from "../../store/getters.js";
-import mutations from "../../store/mutations.js";
+import initial_state from "./state.js";
+import * as getters from "./getters.js";
+import mutations from "./mutations.js";
 
 describe("Getters Timetracking Overview", () => {
     let state;
