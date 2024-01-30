@@ -36,8 +36,8 @@ import type { SearchInput } from "../SearchInput";
 import { TemplatingCallbackStub } from "../../tests/stubs/TemplatingCallbackStub";
 import { SelectionBadgeCallbackStub } from "../../tests/stubs/SelectionBadgeCallbackStub";
 
-const noopOnSelection = (item: LazyboxItem | null): void => {
-    if (item !== null) {
+const noopOnSelection = (items: unknown[]): void => {
+    if (items !== null) {
         //Do nothing
     }
 };
@@ -215,7 +215,7 @@ describe("SelectionElement", () => {
 
                 buildSelectItem(host)(new_selection);
 
-                expect(onSelection).toHaveBeenCalledWith(new_selection.value);
+                expect(onSelection).toHaveBeenCalledWith([new_selection.value]);
                 expect(host.selected_items).toHaveLength(1);
             });
 
@@ -253,7 +253,7 @@ describe("SelectionElement", () => {
 
         describe("clearSelection()", () => {
             it(`when multiple selection is disabled,
-                it should clear the selection and call the onSelection callback with a null value`, () => {
+                it should clear the selection and call the onSelection callback with an empty array`, () => {
                 multiple = false;
                 const host = getHost(LazyboxItemStub.withDefaults());
                 const onSelection = vi.spyOn(host, "onSelection");
@@ -261,7 +261,7 @@ describe("SelectionElement", () => {
                 buildClear(host)();
 
                 expect(host.selected_items).toHaveLength(0);
-                expect(onSelection).toHaveBeenCalledWith(null);
+                expect(onSelection).toHaveBeenCalledWith([]);
             });
 
             it(`when multiple selection is allowed,

@@ -62,7 +62,7 @@ describe("ClearSelectionTemplate", () => {
 
     it(`When I click on the button, it will dispatch a "clear-selection" event
         and an "open-dropdown" event
-        and will call onSelection() with a null parameter`, () => {
+        and will call onSelection() with an empty array parameter`, () => {
         const host = getHost();
         const dispatch = vi.spyOn(host, "dispatchEvent");
         const onSelection = vi.spyOn(host, "onSelection");
@@ -73,6 +73,6 @@ describe("ClearSelectionTemplate", () => {
         expect(dispatch.mock.calls[0][0].type).toBe("clear-selection");
         expect(dispatch.mock.calls[1][0].type).toBe("open-dropdown");
         expect(host.selected_items).toHaveLength(0);
-        expect(onSelection).toHaveBeenCalledWith(null);
+        expect(onSelection).toHaveBeenCalledWith([]);
     });
 });

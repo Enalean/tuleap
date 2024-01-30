@@ -27,10 +27,10 @@
             </ul>
         </li>
         <li>
-            <code class="code-inline">selection_callback: (selected_value: unknown | null | unknown[]) => void</code>: A callback function to be executed each time the user selects a value or clears the selection.
+            <code class="code-inline">selection_callback: (selected_value: unknown[]) => void</code>: A callback function to be executed each time the user selects a value or clears the selection.
             <br>
             It takes one parameter: <code class="code-inline">selected_value</code>.
-            When <code class="code-inline">is_multiple = false</code>, it is either the value of the selected item or <code class="code-inline">null</code>.
+            When <code class="code-inline">is_multiple = false</code>, it is an array containing the value of the selected item or an empty array <code class="code-inline">[]</code>.
             When <code class="code-inline">is_multiple = true</code>, it is an array of the values of the selected items or an empty array <code class="code-inline">[]</code>.
         </li>
         <li>

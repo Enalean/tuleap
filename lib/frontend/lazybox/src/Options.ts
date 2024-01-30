@@ -24,7 +24,7 @@ import type { SelectionBadge } from "./selection/SelectionBadge";
 
 export type LazyboxSearchInputCallback = (query: string) => void;
 
-export type LazyboxSelectionCallback = (selected_value: unknown | null) => void;
+export type LazyboxSelectionCallback = (selected_value: unknown[]) => void;
 
 export type HTMLTemplateResult = UpdateFunction<HTMLElement>;
 export type LazyboxTemplatingCallback = (
@@ -64,7 +64,7 @@ export type LazyboxOptions = (LazyboxWithSingleSelection | LazyboxWithMultipleSe
         readonly search_input_callback: LazyboxSearchInputCallback;
     };
 
-type LazyAutocompleterSelectionCallback = (item: unknown) => void;
+export type LazyAutocompleterSelectionCallback = (item: unknown) => void;
 
 export type LazyAutocompleterOptions = {
     readonly placeholder: string;

@@ -24,12 +24,12 @@ describe(`LinkableArtifactTemplate`, () => {
     describe(`getLinkableArtifact`, () => {
         it(`will return nothing when a given item does not look like a Linkable Artifact`, () => {
             const item = { not_a_linkable_artifact: true };
-            expect(getLinkableArtifact(item).isNothing()).toBe(true);
+            expect(getLinkableArtifact([item]).isNothing()).toBe(true);
         });
 
         it(`will return an Option holding the item when it looks like a Linkable Artifact`, () => {
             const item = LinkableArtifactStub.withDefaults();
-            expect(getLinkableArtifact(item).unwrapOr(null)).toBe(item);
+            expect(getLinkableArtifact([item]).unwrapOr(null)).toBe(item);
         });
     });
 
