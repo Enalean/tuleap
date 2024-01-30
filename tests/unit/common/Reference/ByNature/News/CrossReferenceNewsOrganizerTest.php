@@ -21,8 +21,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference\ByNature\News;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\News\Exceptions\NewsNotFoundException;
 use Tuleap\News\Exceptions\RestrictedNewsAccessException;
 use Tuleap\News\NewsItem;
@@ -31,22 +30,14 @@ use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\CrossReferencePresenter;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 
-class CrossReferenceNewsOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CrossReferenceNewsOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var CrossReferenceNewsOrganizer
-     */
-    private $organizer;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|NewsRetriever
-     */
-    private $news_retriever;
+    private CrossReferenceNewsOrganizer $organizer;
+    private NewsRetriever&MockObject $news_retriever;
 
     protected function setUp(): void
     {
-        $this->news_retriever = Mockery::mock(NewsRetriever::class);
+        $this->news_retriever = $this->createMock(NewsRetriever::class);
         $this->organizer      = new CrossReferenceNewsOrganizer(
             $this->news_retriever
         );
@@ -55,16 +46,16 @@ class CrossReferenceNewsOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRemovesTheReferenceWhenForumIsNotFound(): void
     {
         $a_ref               = $this->buildReference();
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
 
-        $this->news_retriever->shouldReceive('getNewsUserCanView')
+        $this->news_retriever->method('getNewsUserCanView')
             ->with(28)
-            ->andThrow(new NewsNotFoundException());
+            ->willThrowException(new NewsNotFoundException());
 
         $by_nature_organizer
-            ->shouldReceive('removeUnreadableCrossReference')
-            ->with($a_ref)
-            ->once();
+            ->expects(self::once())
+            ->method('removeUnreadableCrossReference')
+            ->with($a_ref);
 
         $this->organizer->organizeNewsReference(
             $a_ref,
@@ -75,16 +66,16 @@ class CrossReferenceNewsOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRemovesTheReferenceWhenUserHasNotThePermissionToAccessTheForum(): void
     {
         $a_ref               = $this->buildReference();
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
 
-        $this->news_retriever->shouldReceive('getNewsUserCanView')
+        $this->news_retriever->method('getNewsUserCanView')
             ->with(28)
-            ->andThrow(new RestrictedNewsAccessException());
+            ->willThrowException(new RestrictedNewsAccessException());
 
         $by_nature_organizer
-            ->shouldReceive('removeUnreadableCrossReference')
-            ->with($a_ref)
-            ->once();
+            ->expects(self::once())
+            ->method('removeUnreadableCrossReference')
+            ->with($a_ref);
 
         $this->organizer->organizeNewsReference(
             $a_ref,
@@ -95,30 +86,26 @@ class CrossReferenceNewsOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItMovesTheCrossReferenceToUnlabelledSection(): void
     {
         $a_ref               = $this->buildReference();
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
 
-        $this->news_retriever->shouldReceive('getNewsUserCanView')
+        $this->news_retriever->method('getNewsUserCanView')
             ->with(28)
-            ->andReturn(new NewsItem(
-                [
-                    'id' => 10,
-                    'is_approved' => 1,
-                    'summary' => 'Secret news',
-                ]
-            ));
+            ->willReturn(new NewsItem([
+                'id'          => 10,
+                'is_approved' => 1,
+                'summary'     => 'Secret news',
+            ]));
 
         $by_nature_organizer
-            ->shouldReceive('moveCrossReferenceToSection')
+            ->expects(self::once())
+            ->method('moveCrossReferenceToSection')
             ->with(
-                Mockery::on(
-                    function (CrossReferencePresenter $presenter): bool {
-                        return $presenter->id === 5
-                            && $presenter->title === 'Secret news';
-                    }
-                ),
+                self::callback(function (CrossReferencePresenter $presenter): bool {
+                    return $presenter->id === 5
+                           && $presenter->title === 'Secret news';
+                }),
                 ''
-            )
-            ->once();
+            );
 
         $this->organizer->organizeNewsReference(
             $a_ref,
