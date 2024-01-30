@@ -70,6 +70,5 @@ class ArtifactsDeletionManager
             $user,
             DeletionContext::moveContext((int) $artifact->getTracker()->getGroupId(), (int) $destination_tracker->getGroupId())
         );
-        $this->dao->recordDeletionForUser($user->getId(), time());
     }
 }
