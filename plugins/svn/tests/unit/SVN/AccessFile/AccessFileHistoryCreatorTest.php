@@ -26,6 +26,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use ProjectHistoryDao;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\SVN\Repository\DefaultPermissionsStub;
 use Tuleap\SVN\Repository\SvnRepository;
 use Tuleap\SVN\Repository\ProjectHistoryFormatter;
 use Tuleap\SVNCore\Repository;
@@ -55,6 +56,7 @@ final class AccessFileHistoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var AccessFileHistoryFactory&MockObject
      */
     private $access_file_factory;
+    private DefaultPermissionsStub $default_permissions;
 
     public function setUp(): void
     {
@@ -68,6 +70,7 @@ final class AccessFileHistoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 return new SVNAccessFileDefaultBlock('');
             }
         };
+        $this->default_permissions       = new DefaultPermissionsStub();
 
         $this->creator = new AccessFileHistoryCreator(
             $this->access_file_dao,
@@ -75,6 +78,7 @@ final class AccessFileHistoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->project_history_dao,
             $this->project_history_formatter,
             $default_block_generator,
+            $this->default_permissions,
         );
 
         $project          = ProjectTestBuilder::aProject()->withId(101)->build();
@@ -111,6 +115,7 @@ final class AccessFileHistoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->creator->create($this->repository, $new_access_file, time());
 
         self::assertStringContainsString($new_access_file, file_get_contents($this->repository->getSystemPath() . '/.SVNAccessFile'));
+        self::assertTrue($this->default_permissions->isEnabledForRepository($this->repository));
     }
 
     public function testItThrowsAnExceptionWhenAccessFileSaveFailed(): void

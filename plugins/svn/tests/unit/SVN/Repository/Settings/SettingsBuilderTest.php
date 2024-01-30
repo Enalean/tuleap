@@ -438,8 +438,9 @@ final class SettingsBuilderTest extends TestCase
                     new ImmutableTag($repository, '/path01', ''),
                 );
 
-                $this->access_file         = "Access file content";
-                $this->email_notifications = $email_notifications;
+                $this->access_file             = "Access file content";
+                $this->email_notifications     = $email_notifications;
+                $this->has_default_permissions = true;
             }
         };
     }

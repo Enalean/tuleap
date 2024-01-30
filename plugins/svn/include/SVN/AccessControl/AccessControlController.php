@@ -31,23 +31,11 @@ use Tuleap\SVNCore\SVNAccessFileDefaultBlockGenerator;
 
 class AccessControlController
 {
-    /** @var AccessFileHistoryCreator */
-    private $access_file_creator;
-
-    /** @var RepositoryManager */
-    private $repository_manager;
-
-    /** @var AccessFileHistoryFactory */
-    private $access_file_factory;
-
     public function __construct(
-        RepositoryManager $repository_manager,
-        AccessFileHistoryFactory $access_file_factory,
-        AccessFileHistoryCreator $access_file_creator,
+        private readonly RepositoryManager $repository_manager,
+        private readonly AccessFileHistoryFactory $access_file_factory,
+        private readonly AccessFileHistoryCreator $access_file_creator,
     ) {
-        $this->repository_manager  = $repository_manager;
-        $this->access_file_factory = $access_file_factory;
-        $this->access_file_creator = $access_file_creator;
     }
 
     private function getToken(Repository $repository)
@@ -109,7 +97,7 @@ class AccessControlController
                 $svn_access_file_content,
                 $versions,
                 $current_version_number,
-                $last_version_number
+                $last_version_number,
             ),
             '',
             $repository,
@@ -132,9 +120,13 @@ class AccessControlController
         $this->getToken($repository)->check();
 
         try {
-            if ($request->exist('submit_other_version')) {
-                $this->access_file_creator->useAVersionWithHistory($repository, $request->get('version_selected'));
-            } else {
+            if ($request->get('has_default_permissions') === '1') {
+                $repository->setDefaultPermissions(true);
+            } elseif ($repository->hasDefaultPermissions()) {
+                $repository->setDefaultPermissions(false);
+            }
+
+            if ($request->exist('submit_new_version')) {
                 $faults = $this->access_file_creator->create(
                     $repository,
                     $request->get('form_accessfile'),

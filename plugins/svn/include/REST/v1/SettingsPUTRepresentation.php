@@ -44,4 +44,9 @@ class SettingsPUTRepresentation
      * @var string access file content {@required false}
      */
     public $access_file;
+
+    /**
+     * @var bool If true, Tuleap generates default permissions for [/] {@required false}
+     */
+    public $has_default_permissions;
 }

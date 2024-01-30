@@ -178,14 +178,16 @@ class RepositoryManager
         return $this->instantiateFromRowWithoutProject($row);
     }
 
+    /**
+     * @throws CannotFindRepositoryException
+     */
     public function getCoreRepository(\Project $project): Repository
     {
-        $repository_id = $this->dao->getCoreRepositoryId($project);
-        if ($repository_id === null) {
+        $row = $this->dao->getCoreRepository($project);
+        if (! $row) {
             throw new CannotFindRepositoryException();
         }
-
-        return CoreRepository::buildActiveRepository($project, $repository_id);
+        return CoreRepository::buildActiveRepository($row, $project);
     }
 
     public function queueRepositoryRestore(Repository $repository, SystemEventManager $system_event_manager): ?SystemEvent
@@ -238,11 +240,7 @@ class RepositoryManager
         if (! $project instanceof Project || $project->getID() === null || $project->isError() || ! $project->isActive()) {
             throw new CannotFindRepositoryException(dgettext('tuleap-svn', 'Repository not found'));
         }
-        $core_repository_id = $this->dao->getCoreRepositoryId($project);
-        if ($core_repository_id === null) {
-            throw new CannotFindRepositoryException(dgettext('tuleap-svn', 'Core repository cannot be managed by plugin'));
-        }
-        return CoreRepository::buildActiveRepository($project, $core_repository_id);
+        return $this->getCoreRepository($project);
     }
 
     /**
@@ -256,11 +254,7 @@ class RepositoryManager
 
         $matches = [];
         if (preg_match('/^' . preg_quote($project_name, '/') . '$/', $path, $matches)) {
-            $repository_id = $this->dao->getCoreRepositoryId($project);
-            if ($repository_id === null) {
-                throw new CannotFindRepositoryException();
-            }
-            return CoreRepository::buildActiveRepository($project, $repository_id);
+            return $this->getCoreRepository($project);
         }
 
         $matches = [];
@@ -333,7 +327,7 @@ class RepositoryManager
     private function instantiateFromRow(array $row, Project $project): Repository
     {
         if ((int) $row['is_core'] === 1) {
-            return CoreRepository::buildActiveRepository($project, (int) $row['id']);
+            return CoreRepository::buildActiveRepository($row, $project);
         }
         return SvnRepository::buildFromDatabase($row, $project);
     }

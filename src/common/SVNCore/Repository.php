@@ -61,4 +61,6 @@ interface Repository
     public function isDeleted(): bool;
 
     public function hasDefaultPermissions(): bool;
+
+    public function setDefaultPermissions(bool $use_it): void;
 }

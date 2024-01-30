@@ -48,6 +48,11 @@ class SettingsGETRepresentation
     public $email_notifications;
 
     /**
+     * @var bool If true, Tuleap generates default permissions for [/] according to project visibility {@required false}
+     */
+    public $has_default_permissions;
+
+    /**
      * @param NotificationGETRepresentation[] $email_notifications
      */
     private function __construct(
@@ -55,11 +60,13 @@ class SettingsGETRepresentation
         ImmutableTagRepresentation $immutable_tags,
         string $access_file,
         array $email_notifications,
+        bool $has_default_permissions,
     ) {
-        $this->commit_rules        = $commit_rules;
-        $this->immutable_tags      = $immutable_tags;
-        $this->access_file         = $access_file;
-        $this->email_notifications = $email_notifications;
+        $this->commit_rules            = $commit_rules;
+        $this->immutable_tags          = $immutable_tags;
+        $this->access_file             = $access_file;
+        $this->email_notifications     = $email_notifications;
+        $this->has_default_permissions = $has_default_permissions;
     }
 
     public static function build(
@@ -67,12 +74,14 @@ class SettingsGETRepresentation
         ImmutableTagRepresentation $immutable_tag_representation,
         AccessFileHistory $access_file_history,
         array $email_representation,
+        bool $has_default_permissions,
     ): self {
         return new self(
             $commit_hook_representation,
             $immutable_tag_representation,
             $access_file_history->getContent(),
-            $email_representation
+            $email_representation,
+            $has_default_permissions,
         );
     }
 }

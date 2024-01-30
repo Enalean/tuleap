@@ -38,7 +38,7 @@ class FullRepositoryRepresentation extends RepositoryRepresentation
      */
     public $settings;
 
-    protected function __construct(Project $project, int $id, string $name, string $svn_url, SettingsGETRepresentation $settings)
+    private function __construct(Project $project, int $id, string $name, string $svn_url, SettingsGETRepresentation $settings)
     {
         parent::__construct($project, $id, $name, $svn_url);
         $this->settings = $settings;
@@ -62,7 +62,8 @@ class FullRepositoryRepresentation extends RepositoryRepresentation
             $commit_rules_representation,
             $immutable_tag_representation,
             $access_file_history,
-            $notifications
+            $notifications,
+            $repository->hasDefaultPermissions(),
         );
 
         return new self(
@@ -70,7 +71,7 @@ class FullRepositoryRepresentation extends RepositoryRepresentation
             JsonCast::toInt($repository->getId()),
             $repository->getName(),
             $repository->getSvnUrl(),
-            $settings_representation
+            $settings_representation,
         );
     }
 }

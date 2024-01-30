@@ -9,7 +9,13 @@
             <input type="hidden" name="repo_id" value="{{ repository_id }}">
 
             <p>{{ default_text }}</p>
-            <p class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i> {{ permissions_warning }}</p>
+
+            <div>
+                <label class="checkbox">
+                    <input type="checkbox" name="has_default_permissions" value="1" {{# has_default_permissions }}checked{{/ has_default_permissions }}> {{# dgettext }}tuleap-svn | Use default permissions{{/ dgettext }}
+                </label>
+                <p class="text-info"><i class="fa-regular fa-life-ring" aria-hidden="true"></i> {{# dgettext }}tuleap-svn | Default permissions means that Tuleap will generate [/] permissions for members according to project visibility.{{/ dgettext }}</p>
+            </div>
 
             <div id="access-file-container">
                 <div id="current-access-file-container">
@@ -33,7 +39,6 @@
                     <span id="old-access-file-form">
                         <pre>{{ default_content }}</pre>
                         <pre class="empty-version" id="other-version-content"></pre>
-                        <button type="submit" name="submit_other_version" class="btn"><i class="far fa-save"></i> {{ use_version }}</button>
                     </span>
                 </div>
             </div>

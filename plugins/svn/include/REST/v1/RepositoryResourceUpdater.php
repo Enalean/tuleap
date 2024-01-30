@@ -96,7 +96,11 @@ class RepositoryResourceUpdater
         }
 
         $current_version = $this->access_file_history_factory->getCurrentVersion($repository);
-        if ($current_version->getContent() !== $settings->getAccessFileContent()) {
+        if (
+            ($settings->has_default_permissions !== $repository->hasDefaultPermissions()) ||
+            ($current_version->getContent() !== $settings->getAccessFileContent())
+        ) {
+            $repository->setDefaultPermissions($settings->has_default_permissions);
             $this->access_file_history_creator->create(
                 $repository,
                 $settings->getAccessFileContent(),

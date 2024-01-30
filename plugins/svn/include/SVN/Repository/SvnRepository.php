@@ -34,7 +34,7 @@ final class SvnRepository implements Repository
         private readonly ?string $backup_path,
         private ?int $deletion_date,
         private readonly Project $project,
-        private readonly bool $has_default_permissions,
+        private bool $has_default_permissions,
     ) {
     }
 
@@ -48,15 +48,18 @@ final class SvnRepository implements Repository
         return new self($id, $name, null, null, $project, true);
     }
 
+    /**
+     * @psalm-param array{id: string, name: string, project_id?: string, is_core?: string, has_default_permissions: string, accessfile_id?: string, repository_deletion_date: string|null, backup_path: string|null} $row
+     */
     public static function buildFromDatabase(array $row, Project $project): self
     {
         return new self(
             (int) $row['id'],
-            (string) $row['name'],
+            $row['name'],
             $row['backup_path'],
             $row['repository_deletion_date'] !== null ? (int) $row['repository_deletion_date'] : null,
             $project,
-            true,
+            $row['has_default_permissions'] === '1',
         );
     }
 
@@ -177,5 +180,10 @@ final class SvnRepository implements Repository
     public function hasDefaultPermissions(): bool
     {
         return $this->has_default_permissions;
+    }
+
+    public function setDefaultPermissions(bool $use_it): void
+    {
+        $this->has_default_permissions = $use_it;
     }
 }

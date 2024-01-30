@@ -59,7 +59,24 @@ final class ExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         $value   = '1';
 
         $this->project->method('usesService')->with('plugin_svn')->willReturn(true);
-        $this->repository_manager->method('getCoreRepository')->with($this->project)->willReturn(CoreRepository::buildActiveRepository($this->project, 93));
+        $this->repository_manager
+            ->method('getCoreRepository')
+            ->with($this->project)
+            ->willReturn(
+                CoreRepository::buildActiveRepository(
+                    [
+                        'id' => '93',
+                        'name' => 'foo',
+                        'project_id' => '101',
+                        'is_core' => '1',
+                        'has_default_permissions' => '1',
+                        'accessfile_id' => '1001',
+                        'repository_deletion_date' => null,
+                        'backup_path' => null,
+                    ],
+                    $this->project
+                )
+            );
 
         $reference = $this->extractor->getReference($this->project, $keyword, $value);
         self::assertInstanceOf(Reference::class, $reference);

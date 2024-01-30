@@ -192,6 +192,7 @@ class RepositoryResource extends AuthenticatedResource
             $project_history_dao,
             $project_history_formatter,
             \Tuleap\SVNCore\SVNAccessFileDefaultBlockGenerator::instance(),
+            new \Tuleap\SVN\Repository\DefaultPermissionsDao(),
         );
 
         $this->ugroup_manager = new UGroupManager();
@@ -318,7 +319,8 @@ class RepositoryResource extends AuthenticatedResource
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"bar@example.com"<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;}<br>
-     *   &nbsp;&nbsp;}<br>
+     *   &nbsp;&nbsp;},<br>
+     *   &nbsp;"has_default_permissions": true<br>
      *  }<br>
      * </pre>
      *
@@ -403,8 +405,9 @@ class RepositoryResource extends AuthenticatedResource
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"105"<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
-     *   &nbsp;&nbsp;&nbsp;]<br>
-     *   &nbsp;}<br>
+     *   &nbsp;&nbsp;&nbsp;]<br>,
+     *   &nbsp;&nbsp;&nbsp;"has_default_permissions": true,
+     *   &nbsp;},<br>
      *  }<br>
      * </pre>
      *
@@ -583,6 +586,7 @@ class RepositoryResource extends AuthenticatedResource
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/trunk",<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/tags"<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp; ],<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;"has_default_permissions": true,<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;"access_file": "[/] * = rw \r\n@members = rw\r\n[/tags] @admins = rw",<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;"email_notifications": [<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>

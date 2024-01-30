@@ -52,10 +52,11 @@ class SettingsBuilder
         Repository $repository,
         SettingsPOSTRepresentation | SettingsPUTRepresentation | null $settings,
     ): Ok|Err {
-        $commit_rules      = [];
-        $immutable_tag     = $this->immutable_tag_factory->getEmpty($repository);
-        $access_file       = "";
-        $mail_notification = [];
+        $commit_rules            = [];
+        $immutable_tag           = $this->immutable_tag_factory->getEmpty($repository);
+        $access_file             = "";
+        $mail_notification       = [];
+        $has_default_permissions = true;
 
         if ($settings === null) {
             return Result::ok(
@@ -67,6 +68,7 @@ class SettingsBuilder
                     [],
                     1,
                     false,
+                    true,
                 )
             );
         }
@@ -86,6 +88,10 @@ class SettingsBuilder
             if (! isset($settings->access_file)) {
                 return Result::err(MissingAccessFileFault::build());
             }
+        }
+
+        if (isset($settings->has_default_permissions)) {
+            $has_default_permissions = $settings->has_default_permissions;
         }
 
         if ($settings->access_file) {
@@ -160,6 +166,7 @@ class SettingsBuilder
                 [],
                 1,
                 false,
+                $has_default_permissions,
             )
         );
     }

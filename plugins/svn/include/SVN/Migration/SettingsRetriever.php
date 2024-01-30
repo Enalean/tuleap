@@ -72,7 +72,8 @@ class SettingsRetriever
             $mail_notification,
             $access_file_history,
             $used_version,
-            true
+            true,
+            $repository->hasDefaultPermissions(),
         );
     }
 

@@ -20,6 +20,7 @@
 
 namespace Tuleap\SVN\AccessControl;
 
+use Tuleap\SVN\Repository\DefaultPermissions;
 use Tuleap\SVNCore\SVNAccessFileContent;
 use Tuleap\SVNCore\SVNAccessFileWriteFault;
 use Tuleap\SVNCore\SVNAccessFileWriter;
@@ -38,6 +39,7 @@ class AccessFileHistoryCreator
         private readonly \ProjectHistoryDao $project_history_dao,
         private readonly ProjectHistoryFormatter $project_history_formatter,
         private readonly SVNAccessFileDefaultBlockGeneratorInterface $default_block_generator,
+        private readonly DefaultPermissions $default_permissions,
     ) {
     }
 
@@ -46,6 +48,7 @@ class AccessFileHistoryCreator
      */
     public function create(Repository $repository, $content, $timestamp): CollectionOfSVNAccessFileFaults
     {
+        $this->toggleDefaultPermissions($repository);
         [$file_history, $faults] = $this->storeInDB($repository, $content, $timestamp);
         $this->logHistory($repository, $content);
 
@@ -54,15 +57,18 @@ class AccessFileHistoryCreator
         return $faults;
     }
 
+    private function toggleDefaultPermissions(Repository $repository): void
+    {
+        if ($repository->hasDefaultPermissions()) {
+            $this->default_permissions->enableUseDefaultPermissions($repository);
+        } else {
+            $this->default_permissions->disableUseDefaultPermissions($repository);
+        }
+    }
+
     public function useAVersion(Repository $repository, $version_id)
     {
         $this->useVersion($repository, $version_id, false);
-    }
-
-    public function useAVersionWithHistory(Repository $repository, $version_id)
-    {
-        $version = $this->access_file_factory->getById($version_id, $repository);
-        $this->useVersion($repository, $version->getId(), true);
     }
 
     public function useAVersionWithHistoryWithoutUpdateSVNAccessFile(Repository $repository, $version_id)
@@ -159,9 +165,15 @@ class AccessFileHistoryCreator
     private function logHistory(Repository $repository, $content)
     {
         $access_file = $this->project_history_formatter->getAccessFileHistory($content);
+
+        $default_permission_label = $repository->hasDefaultPermissions() ? 'true' : 'false';
         $this->project_history_dao->groupAddHistory(
             'svn_multi_repository_access_file_update',
-            "Repository: " . $repository->getName() . PHP_EOL . $access_file,
+            <<<EOT
+                Repository: {$repository->getName()}
+                Use default permissions: {$default_permission_label}
+                $access_file
+            EOT,
             $repository->getProject()->getID()
         );
     }
