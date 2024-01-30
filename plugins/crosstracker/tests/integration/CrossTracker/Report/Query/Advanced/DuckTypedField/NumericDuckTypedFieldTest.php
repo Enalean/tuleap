@@ -390,6 +390,39 @@ final class NumericDuckTypedFieldTest extends TestIntegrationTestCase
         );
     }
 
+    public function testBetween(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                'initial_effort BETWEEN(2, 4)',
+                [$this->release_tracker, $this->sprint_tracker]
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(2, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_with_3_id, $this->sprint_with_3_id], $artifacts);
+    }
+
+    public function testMultipleBetween(): void
+    {
+        $artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                'initial_effort BETWEEN(2, 4) OR initial_effort BETWEEN(5, 8)',
+                [$this->release_tracker, $this->sprint_tracker]
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(4, $artifacts);
+        self::assertEqualsCanonicalizing(
+            [$this->release_with_3_id, $this->sprint_with_3_id, $this->release_with_5_id, $this->sprint_with_5_id],
+            $artifacts
+        );
+    }
+
     public function testInvalidFieldComparison(): void
     {
         $this->expectException(SearchablesAreInvalidException::class);
