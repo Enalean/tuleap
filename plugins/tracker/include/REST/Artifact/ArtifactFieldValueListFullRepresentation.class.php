@@ -25,19 +25,9 @@ use Tuleap\REST\JsonCast;
 class ArtifactFieldValueListFullRepresentation extends ArtifactFieldValueRepresentationData
 {
     /**
-     * @var int ID of the field
-     */
-    public $field_id;
-
-    /**
      * @var string Type of the field
      */
     public $type;
-
-    /**
-     * @var string Label of the field
-     */
-    public $label;
 
     /**
      * @var array
