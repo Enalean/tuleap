@@ -40,7 +40,6 @@ use Tuleap\TrackerFunctions\WASM\WASMFunctionCaller;
 use Tuleap\TrackerFunctions\WASM\WASMFunctionPathHelper;
 use Tuleap\TrackerFunctions\WASM\WASMResponseExecutor;
 use Tuleap\TrackerFunctions\WASM\WASMResponseRepresentation;
-use Tuleap\User\TuleapFunctionsUser;
 use function Psl\Json\encode as psl_json_encode;
 
 final class CustomCodeExecutionTask implements PostCreationTask
@@ -61,8 +60,8 @@ final class CustomCodeExecutionTask implements PostCreationTask
     {
         $this->logger->debug("CustomCodeExecutionTask called on artifact #{$changeset->getArtifact()->getId()} for changeset #{$changeset->getId()}");
 
-        if ((int) $changeset->getSubmittedBy() === TuleapFunctionsUser::ID) {
-            $this->logger->debug('Changeset submitted by forge__function -> skip');
+        if ($changeset->getSubmitter()->isATechnicalUser()) {
+            $this->logger->debug("Changeset submitted by technical user ({$changeset->getSubmitter()->getUserName()}) -> skip");
             return;
         }
 
