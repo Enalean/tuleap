@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Field;
 
-use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeIsNotSupportedFault;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldNotFoundInAnyTrackerFault;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypesAreIncompatibleFault;
 use Tuleap\CrossTracker\Tests\Builders\InvalidSearchableCollectorParametersBuilder;
 use Tuleap\NeverThrow\Err;
@@ -126,6 +126,26 @@ final class FieldUsageCheckerTest extends TestCase
 
         $result = $this->check();
         self::assertTrue(Result::isErr($result));
-        self::assertInstanceOf(FieldTypeIsNotSupportedFault::class, $result->error);
+        self::assertInstanceOf(Fault::class, $result->error);
+    }
+
+    public function testCheckFailsWhenUserCannotReadFieldInAnyTracker(): void
+    {
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
+            TrackerFormElementIntFieldBuilder::anIntField(841)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->first_tracker)
+                ->withReadPermission($this->user, false)
+                ->build(),
+            TrackerFormElementFloatFieldBuilder::aFloatField(805)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->second_tracker)
+                ->withReadPermission($this->user, false)
+                ->build()
+        );
+
+        $result = $this->check();
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(FieldNotFoundInAnyTrackerFault::class, $result->error);
     }
 }

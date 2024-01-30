@@ -84,9 +84,18 @@ use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ArtifactLink\ArtifactLinkTypeChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\BetweenComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringAllowed;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringForbidden;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EqualComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\GreaterThanComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\GreaterThanOrEqualComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\LesserThanComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\LesserThanOrEqualComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotEqualComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotInComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeValueRounder;
@@ -198,6 +207,15 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                     new ArtifactLinksUsageDao(),
                 ),
             ),
+            new InComparisonVisitor(),
+            new EqualComparisonVisitor(),
+            new LesserThanOrEqualComparisonVisitor(),
+            new LesserThanComparisonVisitor(),
+            new NotInComparisonVisitor(),
+            new GreaterThanComparisonVisitor(),
+            new BetweenComparisonVisitor(),
+            new GreaterThanOrEqualComparisonVisitor(),
+            new NotEqualComparisonVisitor(),
         );
 
         $submitted_on_alias_field     = 'tracker_artifact.submitted_on';

@@ -458,4 +458,55 @@ final class NumericDuckTypedFieldTest extends TestIntegrationTestCase
         self::assertCount(1, $artifact_user_can_read);
         self::assertEqualsCanonicalizing([$this->release_empty_id], $artifact_user_can_read);
     }
+
+    public function testIntegerFieldComparisonIsNotValid(): void
+    {
+        $epic_empty_id = $this->database_builder->buildArtifact($this->epic_tracker->getId());
+        $this->database_builder->buildLastChangeset($epic_empty_id);
+
+        $this->expectException(SearchablesAreInvalidException::class);
+        $this->expectExceptionMessage("cannot be compared to the float value");
+        $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "initial_effort=12.8",
+                [$this->epic_tracker, $this->release_tracker]
+            ),
+            $this->project_member
+        );
+    }
+
+    public function testIntegerFieldComparisonToEmptyIsNotValid(): void
+    {
+        $epic_empty_id = $this->database_builder->buildArtifact($this->epic_tracker->getId());
+        $this->database_builder->buildLastChangeset($epic_empty_id);
+
+        $this->expectException(SearchablesAreInvalidException::class);
+        $this->expectExceptionMessage("cannot be compared to the empty string with > operator");
+        $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "initial_effort > ''",
+                [$this->epic_tracker, $this->release_tracker]
+            ),
+            $this->project_member
+        );
+    }
+
+    public function testIntegerFieldComparisonToMyselfIsNotValid(): void
+    {
+        $epic_empty_id = $this->database_builder->buildArtifact($this->epic_tracker->getId());
+        $this->database_builder->buildLastChangeset($epic_empty_id);
+
+        $this->expectException(SearchablesAreInvalidException::class);
+        $this->expectExceptionMessage("cannot be compared to MYSELF()");
+        $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                1,
+                "initial_effort=MYSELF()",
+                [$this->epic_tracker, $this->release_tracker]
+            ),
+            $this->project_member
+        );
+    }
 }

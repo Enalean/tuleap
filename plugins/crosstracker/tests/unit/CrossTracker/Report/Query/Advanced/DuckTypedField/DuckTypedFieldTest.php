@@ -26,14 +26,12 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
-use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerExternalFormElementBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementFloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
-use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 
 final class DuckTypedFieldTest extends TestCase
 {
@@ -42,30 +40,26 @@ final class DuckTypedFieldTest extends TestCase
     private const SECOND_TRACKER_ID = 74;
     private const INT_FIELD_ID      = 459;
     private const FLOAT_FIELD_ID    = 643;
-    private RetrieveUsedFieldsStub $retrieve_used_fields;
-    private \PFUser $user;
     private \Tracker $first_tracker;
     private \Tracker $second_tracker;
+    /** @var list<\Tracker_FormElement_Field> */
+    private array $fields;
 
     protected function setUp(): void
     {
-        $this->user = UserTestBuilder::buildWithId(156);
-
         $this->first_tracker  = TrackerTestBuilder::aTracker()->withId(self::FIRST_TRACKER_ID)->build();
         $this->second_tracker = TrackerTestBuilder::aTracker()->withId(self::SECOND_TRACKER_ID)->build();
 
-        $this->retrieve_used_fields = RetrieveUsedFieldsStub::withFields(
+        $this->fields = [
             TrackerFormElementIntFieldBuilder::anIntField(self::INT_FIELD_ID)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
-                ->withReadPermission($this->user, true)
                 ->build(),
             TrackerFormElementFloatFieldBuilder::aFloatField(self::FLOAT_FIELD_ID)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->second_tracker)
-                ->withReadPermission($this->user, true)
                 ->build(),
-        );
+        ];
     }
 
     /**
@@ -74,11 +68,10 @@ final class DuckTypedFieldTest extends TestCase
     private function build(): Ok|Err
     {
         return DuckTypedField::build(
-            $this->retrieve_used_fields,
             RetrieveFieldTypeStub::withDetectionOfType(),
             self::FIELD_NAME,
+            $this->fields,
             [self::FIRST_TRACKER_ID, self::SECOND_TRACKER_ID],
-            $this->user
         );
     }
 
@@ -96,28 +89,7 @@ final class DuckTypedFieldTest extends TestCase
 
     public function testItReturnsErrWhenFieldIsNotFoundInAnyTracker(): void
     {
-        $this->retrieve_used_fields = RetrieveUsedFieldsStub::withNoFields();
-
-        $result = $this->build();
-
-        self::assertTrue(Result::isErr($result));
-        self::assertInstanceOf(FieldNotFoundInAnyTrackerFault::class, $result->error);
-    }
-
-    public function testItReturnsErrWhenUserCannotReadFieldInAllTrackers(): void
-    {
-        $this->retrieve_used_fields = RetrieveUsedFieldsStub::withFields(
-            TrackerFormElementIntFieldBuilder::anIntField(self::INT_FIELD_ID)
-                ->withName(self::FIELD_NAME)
-                ->inTracker($this->first_tracker)
-                ->withReadPermission($this->user, false)
-                ->build(),
-            TrackerFormElementFloatFieldBuilder::aFloatField(self::FLOAT_FIELD_ID)
-                ->withName(self::FIELD_NAME)
-                ->inTracker($this->second_tracker)
-                ->withReadPermission($this->user, false)
-                ->build()
-        );
+        $this->fields = [];
 
         $result = $this->build();
 
@@ -127,18 +99,16 @@ final class DuckTypedFieldTest extends TestCase
 
     public function testItReturnsErrWhenFirstTypeIsNotSupported(): void
     {
-        $this->retrieve_used_fields = RetrieveUsedFieldsStub::withFields(
+        $this->fields = [
             TrackerExternalFormElementBuilder::anExternalField(91)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
-                ->withReadPermission($this->user, true)
                 ->build(),
             TrackerFormElementFloatFieldBuilder::aFloatField(self::FLOAT_FIELD_ID)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->second_tracker)
-                ->withReadPermission($this->user, true)
                 ->build(),
-        );
+        ];
 
         $result = $this->build();
 
@@ -148,18 +118,16 @@ final class DuckTypedFieldTest extends TestCase
 
     public function testItReturnsErrWhenFieldHasAnIncompatibleTypeInSecondTracker(): void
     {
-        $this->retrieve_used_fields = RetrieveUsedFieldsStub::withFields(
+        $this->fields = [
             TrackerFormElementIntFieldBuilder::anIntField(self::INT_FIELD_ID)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
-                ->withReadPermission($this->user, true)
                 ->build(),
             TrackerExternalFormElementBuilder::anExternalField(91)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->second_tracker)
-                ->withReadPermission($this->user, true)
                 ->build(),
-        );
+        ];
 
         $result = $this->build();
 

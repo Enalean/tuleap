@@ -87,6 +87,7 @@ final class TrackerExternalFormElementBuilder
         ) extends Tracker_FormElement_Field implements TrackerFormElementExternalField {
             public function accept(Tracker_FormElement_FieldVisitor $visitor)
             {
+                $visitor->visitExternalField($this);
             }
 
             public static function getFactoryLabel()
