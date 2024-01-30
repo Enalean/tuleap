@@ -345,9 +345,25 @@ final class NumericDuckTypedFieldTest extends TestIntegrationTestCase
         self::assertNotContains($sprint_empty_id, $lesser_than_artifacts);
         self::assertEqualsCanonicalizing([$release_with_3_id, $sprint_with_3_id], $lesser_than_artifacts);
 
-        $or_artifacts = $this->getMatchingArtifactIds(
+        $lesser_than_or_equals_artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 2,
+                'initial_effort <= 5',
+                [$this->release_tracker, $this->sprint_tracker]
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(3, $lesser_than_or_equals_artifacts);
+        self::assertNotContains($sprint_empty_id, $lesser_than_or_equals_artifacts);
+        self::assertEqualsCanonicalizing(
+            [$release_with_5_id, $release_with_3_id, $sprint_with_3_id],
+            $lesser_than_or_equals_artifacts
+        );
+
+        $or_artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                3,
                 'initial_effort < 5 OR initial_effort < 8',
                 [$this->release_tracker, $this->sprint_tracker]
             ),
@@ -357,6 +373,19 @@ final class NumericDuckTypedFieldTest extends TestIntegrationTestCase
         self::assertCount(3, $or_artifacts);
         self::assertNotContains($sprint_empty_id, $or_artifacts);
         self::assertEqualsCanonicalizing([$release_with_5_id, $release_with_3_id, $sprint_with_3_id], $or_artifacts);
+
+        $or_equals_artifacts = $this->getMatchingArtifactIds(
+            new CrossTrackerReport(
+                4,
+                'initial_effort <= 5 OR initial_effort <= 8',
+                [$this->release_tracker, $this->sprint_tracker]
+            ),
+            $this->project_member
+        );
+
+        self::assertCount(3, $or_equals_artifacts);
+        self::assertNotContains($sprint_empty_id, $or_equals_artifacts);
+        self::assertEqualsCanonicalizing([$release_with_5_id, $release_with_3_id, $sprint_with_3_id], $or_equals_artifacts);
     }
 
     public function testGreaterThanComparison(): void
