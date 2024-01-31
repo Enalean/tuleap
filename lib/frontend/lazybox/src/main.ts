@@ -27,6 +27,7 @@ export type {
     LazyboxTemplatingCallback,
     HTMLTemplateResult,
     LazyboxOptions,
+    LazyAutocompleterSelectionCallback,
 } from "./Options";
 export type { GroupCollection, GroupOfItems, LazyboxItem } from "./GroupCollection";
 export { TAG as LAZYBOX_TAG } from "./LazyboxElement";

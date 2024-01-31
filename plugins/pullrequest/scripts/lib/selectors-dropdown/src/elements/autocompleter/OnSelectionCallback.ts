@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LazyAutocompleter, LazyboxSelectionCallback } from "@tuleap/lazybox";
+import type { LazyAutocompleter, LazyAutocompleterSelectionCallback } from "@tuleap/lazybox";
 import { Option } from "@tuleap/option";
 import type { InternalSelectorsDropdown, SelectorEntry } from "../SelectorsDropdown";
 import type { BuildContentGroup } from "./ContentGroupBuilder";
@@ -35,7 +35,7 @@ export const OnSelectionCallback =
         lazy_autocompleter: LazyAutocompleter,
         group_builder: BuildContentGroup,
         selector: SelectorEntry,
-    ): LazyboxSelectionCallback =>
+    ): LazyAutocompleterSelectionCallback =>
     (item_value: unknown): void => {
         selector.config.onItemSelection(item_value);
         if (!selector.isDisabled()) {

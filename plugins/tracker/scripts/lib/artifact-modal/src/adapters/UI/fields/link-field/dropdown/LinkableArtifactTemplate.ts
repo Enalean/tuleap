@@ -28,11 +28,13 @@ import { Option } from "@tuleap/option";
 const isLinkableArtifact = (item: unknown): item is LinkableArtifact =>
     typeof item === "object" && item !== null && "id" in item;
 
-export const getLinkableArtifact = (item: unknown): Option<LinkableArtifact> => {
-    if (!isLinkableArtifact(item)) {
+export const getLinkableArtifact = (item: unknown[]): Option<LinkableArtifact> => {
+    const artifact = item[0];
+
+    if (!isLinkableArtifact(artifact)) {
         return Option.nothing();
     }
-    return Option.fromValue(item);
+    return Option.fromValue(artifact);
 };
 
 export const getStatusClasses = (status: Status): string[] => {
@@ -46,7 +48,7 @@ export const getLinkableArtifactTemplate = (
     html: typeof HTMLTemplateStringProcessor,
     item: LazyboxItem,
 ): HTMLTemplateResult =>
-    getLinkableArtifact(item.value).mapOr(
+    getLinkableArtifact([item.value]).mapOr(
         (artifact) => {
             const item_classes = [
                 `tlp-swatch-${artifact.xref.color}`,

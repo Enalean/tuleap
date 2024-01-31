@@ -19,7 +19,11 @@
 
 import { describe, beforeEach, it, expect, vi } from "vitest";
 import { Option } from "@tuleap/option";
-import type { LazyAutocompleter, GroupCollection, LazyboxSelectionCallback } from "@tuleap/lazybox";
+import type {
+    LazyAutocompleter,
+    GroupCollection,
+    LazyAutocompleterSelectionCallback,
+} from "@tuleap/lazybox";
 import { SelectorEntryStub } from "../../../tests/SelectorEntryStub";
 import type { InternalSelectorsDropdown, SelectorEntry } from "../SelectorsDropdown";
 import { OnSelectionCallback } from "./OnSelectionCallback";
@@ -35,7 +39,7 @@ describe("OnSelectionCallback", () => {
         is_disabled_after_selection = false;
     });
 
-    const getCallback = (): LazyboxSelectionCallback => {
+    const getCallback = (): LazyAutocompleterSelectionCallback => {
         selector = SelectorEntryStub.withEntryName("test");
         lazy_autocompleter = {
             replaceContent: (groups) => {

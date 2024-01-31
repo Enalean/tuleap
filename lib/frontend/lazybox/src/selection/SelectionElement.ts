@@ -66,7 +66,7 @@ const getSingleSelectionContent = (
 
 const callOnSelection = (host: InternalSelectionElement): void => {
     const values = host.selected_items.map((item) => item.value);
-    const callback_parameter = host.multiple ? values : values[0];
+    const callback_parameter = host.multiple ? values : [values[0]];
     host.onSelection(callback_parameter);
 };
 
@@ -97,8 +97,7 @@ const getMultipleSelectionContent = (host: HostElement): UpdateFunction<Selectio
 
 export const buildClear = (host: InternalSelectionElement) => (): void => {
     host.selected_items = [];
-    const callback_parameter = host.multiple ? [] : null;
-    host.onSelection(callback_parameter);
+    host.onSelection([]);
 };
 
 export const buildSelectItem =
