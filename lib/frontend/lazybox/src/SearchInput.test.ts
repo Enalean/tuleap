@@ -19,7 +19,7 @@
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { HostElement } from "./SearchInput";
-import { buildClear, onInput, onKeyUp } from "./SearchInput";
+import { buildClear, onInput, onKeyDown, onKeyUp } from "./SearchInput";
 
 describe(`SearchInput`, () => {
     let inner_input: HTMLInputElement, doc: Document;
@@ -139,6 +139,17 @@ describe(`SearchInput`, () => {
             onKeyUp(host, inner_event);
 
             expect(host.query).toBe("a");
+        });
+
+        it(`on keyDown, it stops propagation to avoid triggering global keyboard shortcuts
+            that don't know the target is an input inside shadowDOM`, () => {
+            const host = getHost();
+            const inner_event = new KeyboardEvent("keyup", { key: "b" });
+            inner_input.dispatchEvent(inner_event);
+            const stopPropagation = vi.spyOn(inner_event, "stopPropagation");
+            onKeyDown(host, inner_event);
+
+            expect(stopPropagation).toHaveBeenCalled();
         });
     });
 
