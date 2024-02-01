@@ -73,6 +73,10 @@ export const onKeyUp = (host: HostElement, event: KeyboardEvent): void => {
     host.query = event.target.value;
 };
 
+export const onKeyDown = (_host: unknown, event: Event): void => {
+    event.stopPropagation();
+};
+
 export const buildClear = (host: HostElement) => (): void => {
     host.query = "";
     dispatch(host, "search-input");
@@ -106,6 +110,7 @@ export const SearchInput = define<InternalSearchInput>({
                 value="${host.query}"
                 oninput="${onInput}"
                 onkeyup="${onKeyUp}"
+                onkeydown="${onKeyDown}"
             />`.style(input_style),
         { delegatesFocus: true },
     ),
