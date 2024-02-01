@@ -247,11 +247,11 @@ psalm-baseline-create-from-scratch: ## Recreate the Psalm baseline from scratch,
 
 phpcs: ## Execute PHPCS with the "strict" ruleset. Use FILES parameter to execute on specific file or directory.
 	$(eval FILES ?= .)
-	@$(PHP) -d memory_limit=1024M ./src/vendor/bin/phpcs --extensions=php,phpstub --encoding=utf-8 --standard=tests/phpcs/tuleap-ruleset-minimal.xml --runtime-set php_version 80100 -s -p $(FILES)
+	@$(PHP) -d memory_limit=1024M ./src/vendor/bin/phpcs --extensions=php,phpstub --encoding=utf-8 --standard=tests/phpcs/tuleap-ruleset-minimal.xml --runtime-set php_version 80200 -s -p $(FILES)
 
 phpcbf: ## Execute PHPCBF with the "strict" ruleset enforced on all the codebase. Use FILES parameter to execute on specific file or directory.
 	$(eval FILES ?= .)
-	@$(PHP) -d memory_limit=1024M ./src/vendor/bin/phpcbf --extensions=php,phpstub --encoding=utf-8 --standard=tests/phpcs/tuleap-ruleset-minimal.xml --runtime-set php_version 80100 -p $(FILES)
+	@$(PHP) -d memory_limit=1024M ./src/vendor/bin/phpcbf --extensions=php,phpstub --encoding=utf-8 --standard=tests/phpcs/tuleap-ruleset-minimal.xml --runtime-set php_version 80200 -p $(FILES)
 
 deptrac: ## Execute deptrac. Use SEARCH_PATH to look for deptrac config files under a specific path.
 	@PHP=$(PHP) ./tests/deptrac/run.sh
@@ -277,9 +277,7 @@ bash-web: ## Give a bash on web container
 
 .PHONY:pull-docker-images
 pull-docker-images: ## Pull all docker images used for development
-	@$(MAKE) --no-print-directory docker-pull-verify IMAGE_NAME=ghcr.io/enalean/tuleap-test-phpunit:c7-php81 KEY_PATH=tools/utils/signing-keys/tuleap-additional-tools.pub
 	@$(MAKE) --no-print-directory docker-pull-verify IMAGE_NAME=ghcr.io/enalean/tuleap-test-phpunit:c7-php82 KEY_PATH=tools/utils/signing-keys/tuleap-additional-tools.pub
-	@$(MAKE) --no-print-directory docker-pull-verify IMAGE_NAME=ghcr.io/enalean/tuleap-test-rest:c7-php81 KEY_PATH=tools/utils/signing-keys/tuleap-additional-tools.pub
 	@$(MAKE) --no-print-directory docker-pull-verify IMAGE_NAME=ghcr.io/enalean/tuleap-test-rest:c7-php82 KEY_PATH=tools/utils/signing-keys/tuleap-additional-tools.pub
 	@$(MAKE) --no-print-directory docker-pull-verify IMAGE_NAME=tuleap/tuleap-community-edition:latest KEY_PATH=tools/utils/signing-keys/tuleap-community.pub
 	$(DOCKER_COMPOSE) pull web db redis mailhog ldap

@@ -3,7 +3,7 @@ Description=The PHP FastCGI Process Manager for MediaWiki Tuleap
 Documentation=https://docs.tuleap.org
 After=tuleap.service
 PartOf=tuleap.service
-Conflicts=php81-php-fpm.service php82-php-fpm.service
+Conflicts=php82-php-fpm.service
 
 [Service]
 Type=notify

@@ -93,10 +93,7 @@ final class ProjectCreatorCallToGerritTest extends \Tuleap\Test\PHPUnit\TestCase
 
     /** @var Git_Driver_Gerrit_Template_TemplateProcessor */
     protected $template_processor;
-    /**
-     * @var true
-     */
-    private bool $migrate_access_rights;
+    private true $migrate_access_rights;
     private $repository;
     private $repository_in_a_private_project;
     private $repository_without_registered;

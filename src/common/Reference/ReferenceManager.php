@@ -805,7 +805,7 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
         int|string $source_gid,
         int|string $user_id = 0,
         ?string $source_key = null,
-    ): bool {
+    ): true {
         $this->setProjectIdForProjectReferences($source_gid);
 
         $dao = $this->_getReferenceDao();

@@ -106,8 +106,8 @@ def runPHPCodingStandards(String phpcsPath, String rulesetPath, String filesToAn
         return;
     }
     sh """
-    docker run --rm -v $WORKSPACE/sources:/sources:ro -w /sources --network none \${DOCKER_REGISTRY:-ghcr.io}/enalean/tuleap-test-phpunit:c7-php81 \
-        scl enable php81 "php -d memory_limit=1024M ${phpcsPath} --extensions=php,phpstub --encoding=utf-8 --standard="${rulesetPath}" -p ${filesToAnalyze}"
+    docker run --rm -v $WORKSPACE/sources:/sources:ro -w /sources --network none \${DOCKER_REGISTRY:-ghcr.io}/enalean/tuleap-test-phpunit:c7-php82 \
+        scl enable php82 "php -d memory_limit=1024M ${phpcsPath} --extensions=php,phpstub --encoding=utf-8 --standard="${rulesetPath}" -p ${filesToAnalyze}"
     """
 }
 

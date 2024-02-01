@@ -11,9 +11,6 @@ export BASEDIR
 pushd "$BASEDIR"
 
 case "${1:-}" in
-    "81")
-    export PHP_VERSION="php81"
-    ;;
     "82")
     export PHP_VERSION="php82"
     ;;
