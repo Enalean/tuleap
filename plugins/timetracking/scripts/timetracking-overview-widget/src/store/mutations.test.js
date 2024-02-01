@@ -21,8 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import mutations from "../../store/mutations.js";
-import initial_state from "../../store/state.js";
+import mutations from "./mutations.js";
+import initial_state from "./state.js";
 
 describe("Store mutations", () => {
     let state;

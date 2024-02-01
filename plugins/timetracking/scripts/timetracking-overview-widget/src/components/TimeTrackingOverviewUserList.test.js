@@ -18,9 +18,9 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import TimeTrackingOverviewUserList from "../../components/TimeTrackingOverviewUserList.vue";
+import TimeTrackingOverviewUserList from "./TimeTrackingOverviewUserList.vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import { createLocalVueForTests } from "../helpers/local-vue.js";
+import { createLocalVueForTests } from "../../tests/helpers/local-vue.js";
 
 describe("Given a timetracking overview widget", () => {
     let store_options, wrapper, input, store;

@@ -18,9 +18,9 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import TimeTrackingOverviewTable from "../../components/TimeTrackingOverviewTable.vue";
+import TimeTrackingOverviewTable from "./TimeTrackingOverviewTable.vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import { createLocalVueForTests } from "../helpers/local-vue.js";
+import { createLocalVueForTests } from "../../tests/helpers/local-vue.js";
 
 async function getTimeTrackingOverviewTableInstance(store_options) {
     const store = createStoreMock(store_options);

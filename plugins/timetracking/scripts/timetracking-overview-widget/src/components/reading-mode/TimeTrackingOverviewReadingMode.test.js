@@ -18,8 +18,8 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createLocalVueForTests } from "../../helpers/local-vue.js";
-import TimeTrackingOverviewReadingMode from "../../../components/reading-mode/TimeTrackingOverviewReadingMode.vue";
+import { createLocalVueForTests } from "../../../tests/helpers/local-vue.js";
+import TimeTrackingOverviewReadingMode from "./TimeTrackingOverviewReadingMode.vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("Given a timetracking overview widget on reading mode", () => {
