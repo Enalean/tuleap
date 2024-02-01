@@ -1,4 +1,4 @@
-<h1 class="tlp-framed-horizontally project-administration-title">
+<h1 class="tlp-framed-horizontally project-administration-title" data-test="title">
     {{# dgettext }}tuleap-mediawiki_standalone | MediaWiki administration{{/ dgettext }}
 </h1>
 <div class="tlp-framed">
@@ -17,7 +17,7 @@
                             User groups who can read
                         {{/ dgettext }}
                     </label>
-                    <select class="tlp-select tlp-select-adjusted" id="readers" name="readers[]" size="7" multiple>
+                    <select class="tlp-select tlp-select-adjusted" id="readers" data-test="readers" name="readers[]" size="7" multiple>
                         {{# readers }}
                             <option value="{{ id }}" {{# is_selected }}selected="selected"{{/is_selected}}>
                                 {{ name }}
@@ -33,7 +33,7 @@
                             User groups who can write
                         {{/ dgettext }}
                     </label>
-                    <select class="tlp-select tlp-select-adjusted" id="writers" name="writers[]" size="7" multiple>
+                    <select class="tlp-select tlp-select-adjusted" id="writers" data-test="writers" name="writers[]" size="7" multiple>
                         {{# writers }}
                             <option value="{{ id }}" {{# is_selected }}selected="selected"{{/is_selected}}>
                                 {{ name }}
@@ -49,7 +49,7 @@
                             User groups who can administrate
                         {{/ dgettext }}
                     </label>
-                    <select class="tlp-select tlp-select-adjusted" id="admins" name="admins[]" size="7" multiple>
+                    <select class="tlp-select tlp-select-adjusted" id="admins" data-test="admins" name="admins[]" size="7" multiple>
                         {{# admins }}
                             <option value="{{ id }}" {{# is_selected }}selected="selected"{{/is_selected}}>
                                 {{ name }}
@@ -69,7 +69,7 @@
                     {{# csrf_token }}
                         {{> csrf_token_input }}
                     {{/csrf_token}}
-                    <button type="submit" class="tlp-button-primary">
+                    <button type="submit" class="tlp-button-primary" data-test="submit">
                         <i class="fa-regular fa-floppy-disk tlp-button-icon" aria-hidden="true"></i>
                         {{# dgettext }}tuleap-mediawiki_standalone | Save configuration{{/ dgettext }}
                     </button>
