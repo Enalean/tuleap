@@ -24,53 +24,51 @@
     </div>
 </template>
 
-<script lang="ts">
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
 import type { BurnupData, MilestoneData } from "../../../../../type";
-import Vue from "vue";
+import { onMounted } from "vue";
 import { createBurnupChart } from "../../../../../chart_builder/burnup_chart_builder/burnup-chart-drawer";
 import type { ChartPropsWithoutTooltip } from "@tuleap/chart-builder";
 import { transformToGenericBurnupData } from "@tuleap/plugin-agiledashboard-burnup-data-transformer";
 import { useStore } from "../../../../../stores/root";
 
-@Component
-export default class Burnup extends Vue {
-    @Prop()
-    readonly release_data!: MilestoneData;
-    @Prop()
-    readonly burnup_data!: BurnupData;
-    public root_store = useStore();
-    getChartProps(container_width: number, container_height: number): ChartPropsWithoutTooltip {
-        return {
-            graph_width: container_width,
-            graph_height: container_height,
-            margins: {
-                top: 10,
-                right: 30,
-                bottom: 20,
-                left: 25,
-            },
-        };
-    }
+const props = defineProps<{ release_data: MilestoneData; burnup_data: BurnupData | null }>();
 
-    mounted(): void {
-        if (!this.burnup_data) {
-            return;
-        }
+const root_store = useStore();
 
-        const generic_burnup_data = transformToGenericBurnupData(
-            this.burnup_data,
-            this.root_store.burnup_mode,
-        );
-        const chart_container = document.getElementById("chart-burnup-" + this.release_data.id);
-
-        if (chart_container) {
-            createBurnupChart(
-                chart_container,
-                this.getChartProps(chart_container.clientWidth, chart_container.clientHeight),
-                generic_burnup_data,
-            );
-        }
-    }
+function getChartProps(
+    container_width: number,
+    container_height: number,
+): ChartPropsWithoutTooltip {
+    return {
+        graph_width: container_width,
+        graph_height: container_height,
+        margins: {
+            top: 10,
+            right: 30,
+            bottom: 20,
+            left: 25,
+        },
+    };
 }
+
+onMounted((): void => {
+    if (!props.burnup_data) {
+        return;
+    }
+
+    const generic_burnup_data = transformToGenericBurnupData(
+        props.burnup_data,
+        root_store.burnup_mode,
+    );
+    const chart_container = document.getElementById("chart-burnup-" + props.release_data.id);
+
+    if (chart_container) {
+        createBurnupChart(
+            chart_container,
+            getChartProps(chart_container.clientWidth, chart_container.clientHeight),
+            generic_burnup_data,
+        );
+    }
+});
 </script>
