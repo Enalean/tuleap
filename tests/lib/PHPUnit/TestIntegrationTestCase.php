@@ -22,7 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Test\PHPUnit;
 
+use PermissionsManager;
+use PluginManager;
+use ProjectManager;
+use Tracker_FormElementFactory;
+use Tracker_ReportFactory;
+use TrackerFactory;
 use Tuleap\DB\DBFactory;
+use UserManager;
 
 abstract class TestIntegrationTestCase extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -49,5 +56,15 @@ abstract class TestIntegrationTestCase extends \Tuleap\Test\PHPUnit\TestCase
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
         $db->run("ROLLBACK TO " . $this->savepoint_id);
         $db->rollBack();
+
+        ProjectManager::clearInstance();
+        PermissionsManager::clearInstance();
+        PluginManager::clearInstance();
+        UserManager::clearInstance();
+        Tracker_FormElementFactory::clearInstance();
+        TrackerFactory::clearInstance();
+        Tracker_ReportFactory::clearInstance();
+
+        unset($GLOBALS['_SESSION'], $GLOBALS['Language']);
     }
 }

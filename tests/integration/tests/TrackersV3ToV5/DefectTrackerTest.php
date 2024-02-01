@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\Tests\Integration\TrackersV3ToV5;
 
 use ArtifactType;
-use PermissionsManager;
 use ProjectManager;
 use ProjectUGroup;
 use Tracker;
@@ -113,7 +112,6 @@ class DefectTrackerTest extends TestIntegrationTestCase
 
     protected function setUp(): void
     {
-        PermissionsManager::clearInstance();
         $this->form_element_factory = Tracker_FormElementFactory::instance();
         $this->tracker_factory      = TrackerFactory::instance();
 
@@ -121,11 +119,6 @@ class DefectTrackerTest extends TestIntegrationTestCase
 
         $this->report_factory = Tracker_ReportFactory::instance();
         $this->bugs_report    = $this->getReportByName('Bugs');
-    }
-
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['_SESSION']);
     }
 
     protected function getReportByName($name)
