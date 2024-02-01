@@ -18,29 +18,32 @@
  */
 
 import Vue from "vue";
-import { createStore } from "./store/index.js";
-import TimeTrackingOverview from "./components/TimeTrackingOverview.vue";
+import { createPinia, PiniaVuePlugin } from "pinia";
 import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
+import { useOverviewWidgetStore } from "./store/index.js";
+import TimeTrackingOverview from "./components/TimeTrackingOverview.vue";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const widgets = document.querySelectorAll(".timetracking-overview-widget");
-
     if (widgets.length === 0) {
         return;
     }
-    await initVueGettext(Vue, (locale) => import(`../po/${getPOFileFromLocale(locale)}`));
-    const Widget = Vue.extend(TimeTrackingOverview);
 
+    await initVueGettext(Vue, (locale) => import(`../po/${getPOFileFromLocale(locale)}`));
+
+    Vue.use(PiniaVuePlugin);
+    const Widget = Vue.extend(TimeTrackingOverview);
     const user_id = parseInt(document.body.dataset.userId, 10);
 
     for (const widget_element of widgets) {
-        const report_id = widget_element.dataset.reportId;
+        const report_id = Number.parseInt(widget_element.dataset.reportId, 10);
         const are_void_trackers_hidden = widget_element.dataset.displayPreference === "true";
 
-        const store = createStore();
+        const pinia = createPinia();
+        useOverviewWidgetStore(report_id)(pinia);
 
         new Widget({
-            store,
+            pinia,
             propsData: {
                 reportId: report_id,
                 userId: user_id,

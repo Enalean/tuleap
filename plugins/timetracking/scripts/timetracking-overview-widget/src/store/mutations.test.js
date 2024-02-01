@@ -21,20 +21,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import mutations from "./mutations.js";
-import initial_state from "./state.js";
+import { describe, beforeEach, afterEach, it, expect } from "@jest/globals";
+import { setActivePinia, createPinia } from "pinia";
+import { useOverviewWidgetTestStore } from "../../tests/helpers/pinia-test-store.js";
 
 describe("Store mutations", () => {
-    let state;
+    let store;
+
     beforeEach(() => {
-        state = { ...initial_state };
+        setActivePinia(createPinia());
+        store = useOverviewWidgetTestStore();
     });
+
+    afterEach(() => {
+        store.$reset();
+    });
+
     describe("Given a widget with state initialisation", () => {
         it("When selected trackers are set, state must change too", () => {
-            let trackers = [{ id: 1, label: "timetracking_tracker" }];
+            const trackers = [{ id: 1, label: "timetracking_tracker" }];
 
-            mutations.setSelectedTrackers(state, trackers);
-            expect(state.selected_trackers).toEqual(trackers);
+            store.setSelectedTrackers(trackers);
+            expect(store.selected_trackers).toStrictEqual(trackers);
         });
 
         it("When projects are set, state must change too", () => {
@@ -43,12 +51,12 @@ describe("Store mutations", () => {
                 { id: 239, label: "projectTest" },
             ];
 
-            mutations.setProjects(state, projects);
-            expect(state.projects).toEqual(projects);
+            store.setProjects(projects);
+            expect(store.projects).toStrictEqual(projects);
         });
 
         it("When times are set, times and user must change on state", () => {
-            let times = [
+            const times = [
                 {
                     id: "16",
                     label: "tracker",
@@ -63,76 +71,78 @@ describe("Store mutations", () => {
                     ],
                 },
             ];
-            mutations.setTrackersTimes(state, times);
-            expect(state.trackers_times).toEqual(times);
-            expect(state.users).toEqual([{ user_name: "user", user_id: 102 }]);
+            store.setTrackersTimes(times);
+
+            expect(store.trackers_times).toStrictEqual(times);
+            expect(store.users).toStrictEqual([{ user_name: "user", user_id: 102 }]);
         });
 
         it("When we put new dates, state must change too", () => {
-            mutations.setStartDate(state, "2018-01-01");
-            mutations.setEndDate(state, "2018-02-02");
-            expect(state.start_date).toBe("2018-01-01");
-            expect(state.end_date).toBe("2018-02-02");
+            store.setStartDate("2018-01-01");
+            store.setEndDate("2018-02-02");
+
+            expect(store.start_date).toBe("2018-01-01");
+            expect(store.end_date).toBe("2018-02-02");
         });
 
         it("When we set display void trackers, state must change too", () => {
-            mutations.setDisplayVoidTrackers(state, false);
-            expect(state.are_void_trackers_hidden).toBe(false);
+            store.setDisplayVoidTrackers(false);
+            expect(store.are_void_trackers_hidden).toBe(false);
         });
 
         it("When we init user id, state must change too", () => {
-            mutations.initUserId(state, 102);
-            expect(state.user_id).toBe(102);
+            store.initUserId(102);
+            expect(store.user_id).toBe(102);
         });
 
         it("When we toggle display void trackers, state must change too", () => {
-            mutations.setDisplayVoidTrackers(state, false);
-            mutations.toggleDisplayVoidTrackers(state);
-            expect(state.are_void_trackers_hidden).toBe(true);
+            store.setDisplayVoidTrackers(false);
+            store.toggleDisplayVoidTrackers();
+            expect(store.are_void_trackers_hidden).toBe(true);
         });
 
         it("When we set loading trackers, state must change too", () => {
-            mutations.setLoadingTrackers(state, true);
-            expect(state.is_loading_trackers).toBe(true);
+            store.setLoadingTrackers(true);
+            expect(store.is_loading_trackers).toBe(true);
         });
 
         it("When we set is_loading, state must change too", () => {
-            mutations.setIsLoading(state, true);
-            expect(state.is_loading).toBe(true);
+            store.setIsLoading(true);
+            expect(store.is_loading).toBe(true);
         });
 
         it("When we set error message, state must change too", () => {
-            mutations.setErrorMessage(state, "error");
-            expect(state.error_message).toBe("error");
+            store.setErrorMessage("error");
+            expect(store.error_message).toBe("error");
         });
 
         it("When we set success message, state must change too", () => {
-            mutations.setSuccessMessage(state, "success");
-            expect(state.success_message).toBe("success");
+            store.setSuccessMessage("success");
+            expect(store.success_message).toBe("success");
         });
 
         it("When we reset messages, state must change too", () => {
-            mutations.setSuccessMessage(state, "success");
-            mutations.setErrorMessage(state, "error");
-            mutations.resetMessages(state);
+            store.setSuccessMessage("success");
+            store.setErrorMessage("error");
+            store.resetMessages();
 
-            expect(state.success_message).toBeNull();
+            expect(store.success_message).toBeNull();
         });
 
         it("When we toggle reading_mode, state must change too", () => {
-            mutations.toggleReadingMode(state);
-            expect(state.reading_mode).toBe(false);
+            store.toggleReadingMode();
+            expect(store.reading_mode).toBe(false);
         });
 
         it("When trackers id are set, state must change too", () => {
-            let trackers = [
+            const trackers = [
                 { id: 1, label: "timetracking_tracker" },
                 { id: 2, label: "support_tracker" },
             ];
 
-            mutations.setSelectedTrackers(state, trackers);
-            mutations.setTrackersIds(state);
-            expect(state.trackers_ids).toEqual([1, 2]);
+            store.setSelectedTrackers(trackers);
+            store.setTrackersIds();
+            expect(store.trackers_ids).toStrictEqual([1, 2]);
         });
 
         it("When we set selected user, state must change too", () => {
@@ -142,55 +152,55 @@ describe("Store mutations", () => {
                 minutes: 60,
             };
 
-            mutations.setSelectedUser(state, user);
-            expect(state.selected_user).toEqual(user);
+            store.setSelectedUser(user);
+            expect(store.selected_user).toStrictEqual(user);
         });
 
         it("When we is_report_saved, state must change too", () => {
-            mutations.setIsReportSave(state, true);
-            expect(state.is_report_saved).toBe(true);
+            store.setIsReportSave(true);
+            expect(store.is_report_saved).toBe(true);
         });
 
         it("When we remove a selected tracker, state must change too", () => {
             const selected_tracker = [{ id: 1, label: "timetracking_tracker", disabled: true }];
-            mutations.setSelectedTrackers(state, selected_tracker);
-            mutations.removeSelectedTracker(state, selected_tracker);
-            expect(state.selected_trackers).toEqual([]);
+            store.setSelectedTrackers(selected_tracker);
+            store.removeSelectedTracker(selected_tracker);
+            expect(store.selected_trackers).toStrictEqual([]);
         });
 
         it("When we set report id, state must change too", () => {
-            mutations.setReportId(state, 12);
-            expect(state.report_id).toBe(12);
+            store.setReportId(12);
+            expect(store.report_id).toBe(12);
         });
 
         describe("When trackers are added, state must change too", () => {
             beforeEach(() => {
-                let trackers = [
+                const trackers = [
                     { id: 1, label: "timetracking_tracker" },
                     { id: 2, label: "support_tracker" },
                     { id: 3, label: "task_tracker" },
                 ];
 
-                mutations.setTrackers(state, trackers);
+                store.setTrackers(trackers);
             });
 
             it("When we add already existing selected trackers, nothing should change", () => {
                 const selected_tracker = [{ id: 1, label: "timetracking_tracker", disabled: true }];
                 const tracker_id = 1;
 
-                mutations.addSelectedTrackers(state, tracker_id);
-                expect(state.selected_trackers).toEqual(selected_tracker);
+                store.addSelectedTrackers(tracker_id);
+                expect(store.selected_trackers).toStrictEqual(selected_tracker);
             });
         });
 
         describe("When trackers are set, state must change too", () => {
             beforeEach(() => {
-                let trackers = [];
-                mutations.setSelectedTrackers(state, trackers);
+                const trackers = [];
+                store.setSelectedTrackers(trackers);
             });
 
             it("When no selected_trackers, no tracker are disabled", () => {
-                let trackers = [
+                const trackers = [
                     { id: 1, label: "timetracking_tracker" },
                     { id: 2, label: "support_tracker" },
                     { id: 3, label: "task_tracker" },
@@ -202,13 +212,13 @@ describe("Store mutations", () => {
                     { id: 3, label: "task_tracker", disabled: false },
                 ];
 
-                mutations.setTrackers(state, trackers);
-                expect(state.trackers).toEqual(tracker_temoin);
+                store.setTrackers(trackers);
+                expect(store.trackers).toStrictEqual(tracker_temoin);
             });
 
             it("When selected_trackers, tracker identic is disabled", () => {
-                mutations.setSelectedTrackers(state, [{ id: 1, label: "timetracking_tracker" }]);
-                let trackers = [
+                store.setSelectedTrackers([{ id: 1, label: "timetracking_tracker" }]);
+                const trackers = [
                     { id: 1, label: "timetracking_tracker" },
                     { id: 2, label: "support_tracker" },
                     { id: 3, label: "task_tracker" },
@@ -220,8 +230,8 @@ describe("Store mutations", () => {
                     { id: 3, label: "task_tracker", disabled: false },
                 ];
 
-                mutations.setTrackers(state, trackers);
-                expect(state.trackers).toEqual(tracker_temoin);
+                store.setTrackers(trackers);
+                expect(store.trackers).toStrictEqual(tracker_temoin);
             });
         });
     });

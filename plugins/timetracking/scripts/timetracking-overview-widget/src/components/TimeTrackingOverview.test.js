@@ -17,55 +17,77 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, beforeEach, it, expect } from "@jest/globals";
+import { defineStore } from "pinia";
+import { createTestingPinia } from "@pinia/testing";
 import { shallowMount } from "@vue/test-utils";
+import { createLocalVueForTests } from "../../tests/helpers/local-vue.js";
 import TimeTrackingOverview from "./TimeTrackingOverview.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 const reportId = 8;
-function getTimetrackingOverviewInstance(store_options) {
-    const store = createStoreMock(store_options);
-    const component_options = {
-        reportId,
-        mocks: { $store: store },
-    };
-    return shallowMount(TimeTrackingOverview, component_options);
-}
+const noop = () => {
+    // Do nothing
+};
 
 describe("Given a timetracking overview widget", () => {
-    let store_options;
+    let reading_mode, success_message;
+
     beforeEach(() => {
-        store_options = {
-            state: {
-                reading_mode: true,
-                success_message: null,
-            },
+        reading_mode = true;
+        success_message = null;
+    });
+
+    const getWrapper = async () => {
+        const useStore = defineStore("overview/8", {
+            state: () => ({
+                reading_mode,
+                success_message,
+            }),
             getters: {
-                has_success_message: false,
+                has_success_message: () => success_message !== null,
             },
-        };
-        getTimetrackingOverviewInstance(store_options);
+            actions: {
+                setReportId: noop,
+                initUserId: noop,
+                setDisplayVoidTrackers: noop,
+                initWidgetWithReport: noop,
+                getProjects: noop,
+            },
+        });
+        const pinia = createTestingPinia();
+        useStore(pinia);
+
+        return shallowMount(TimeTrackingOverview, {
+            localVue: await createLocalVueForTests(),
+            propsData: {
+                reportId,
+            },
+        });
+    };
+
+    it("When reading mode is true, then writing should not be displayed", async () => {
+        const wrapper = await getWrapper();
+
+        expect(wrapper.find("[data-test=report-success]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=reading-mode]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=writing-mode]").exists()).toBe(false);
     });
 
-    it("When reading mode is true, then writing should not be displayed", () => {
-        const wrapper = getTimetrackingOverviewInstance(store_options);
-        expect(wrapper.find("[data-test=report-success]").exists()).toBeFalsy();
-        expect(wrapper.find("[data-test=reading-mode]").exists()).toBeTruthy();
-        expect(wrapper.find("[data-test=writing-mode]").exists()).toBeFalsy();
+    it("When success message, then a success message is displayed", async () => {
+        success_message = "Great success!";
+
+        const wrapper = await getWrapper();
+
+        expect(wrapper.find("[data-test=report-success]").exists()).toBe(true);
     });
 
-    it("When success message, then a success message is displayed", () => {
-        store_options.getters.has_success_message = true;
-        const wrapper = getTimetrackingOverviewInstance(store_options);
+    it("When reading mode is false, then writing should be displayed", async () => {
+        reading_mode = false;
 
-        expect(wrapper.find("[data-test=report-success]").exists()).toBeTruthy();
-    });
+        const wrapper = await getWrapper();
 
-    it("When reading mode is false, then writing should be displayed", () => {
-        store_options.state.reading_mode = false;
-        const wrapper = getTimetrackingOverviewInstance(store_options);
-
-        expect(wrapper.find("[data-test=report-success]").exists()).toBeFalsy();
-        expect(wrapper.find("[data-test=reading-mode]").exists()).toBeFalsy();
-        expect(wrapper.find("[data-test=writing-mode]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=report-success]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=reading-mode]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=writing-mode]").exists()).toBe(true);
     });
 });

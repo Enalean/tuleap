@@ -26,7 +26,7 @@
                 {{ $gettext("Project") }}
                 <i class="fa fa-asterisk"></i>
             </label>
-            <time-tracking-overview-project-option v-bind:projects="projects" />
+            <time-tracking-overview-project-option v-bind:projects="overview_store.projects" />
         </div>
         <div
             class="tlp-form-element"
@@ -64,30 +64,38 @@
 </template>
 
 <script>
+import { inject } from "vue";
 import TimeTrackingOverviewProjectOption from "./TimeTrackingOverviewProjectOption.vue";
 import TimeTrackingOverviewTrackersOptions from "./TimeTrackingOverviewTrackersOptions.vue";
-import { mapState } from "vuex";
+import { useOverviewWidgetStore } from "../../store/index.js";
+
 export default {
     name: "TimeTrackingOverviewWritingTrackers",
     components: { TimeTrackingOverviewProjectOption, TimeTrackingOverviewTrackersOptions },
+    setup: () => {
+        const overview_store = useOverviewWidgetStore(inject("report_id"))();
+        return { overview_store };
+    },
     data() {
         return {
             selected_tracker: null,
         };
     },
     computed: {
-        ...mapState(["projects", "trackers", "is_loading_tracker"]),
         is_project_select_disabled() {
-            return this.projects.length === 0;
+            return this.overview_store.projects.length === 0;
         },
         is_tracker_or_project_select_disabled() {
             return (
-                (this.trackers.length === 0 || this.projects.length === 0) &&
-                this.is_loading_tracker
+                (this.overview_store.trackers.length === 0 ||
+                    this.overview_store.projects.length === 0) &&
+                this.overview_store.is_loading_tracker
             );
         },
         is_tracker_available() {
-            return this.trackers.length > 0 && !this.is_loading_tracker;
+            return (
+                this.overview_store.trackers.length > 0 && !this.overview_store.is_loading_tracker
+            );
         },
     },
     methods: {
@@ -95,7 +103,7 @@ export default {
             this.selected_tracker = value;
         },
         addTracker() {
-            this.$store.commit("addSelectedTrackers", this.selected_tracker);
+            this.overview_store.addSelectedTrackers(this.selected_tracker);
         },
     },
 };

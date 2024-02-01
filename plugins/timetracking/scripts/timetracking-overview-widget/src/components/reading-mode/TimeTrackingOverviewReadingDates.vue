@@ -25,21 +25,24 @@
     <div class="timetracking-reading-mode-dates">
         <div class="tlp-property timetracking-reading-date">
             <label class="tlp-label">{{ $gettext("From") }}</label>
-            <span>{{ start_date }}</span>
+            <span>{{ overview_store.start_date }}</span>
         </div>
         <div class="tlp-property timetracking-reading-date">
             <label class="tlp-label">{{ $gettext("To") }}</label>
-            <span>{{ end_date }}</span>
+            <span>{{ overview_store.end_date }}</span>
         </div>
     </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { inject } from "vue";
+import { useOverviewWidgetStore } from "../../store/index.js";
+
 export default {
     name: "TimeTrackingOverviewReadingDates",
-    computed: {
-        ...mapState(["start_date", "end_date"]),
+    setup: () => {
+        const overview_store = useOverviewWidgetStore(inject("report_id"))();
+        return { overview_store };
     },
 };
 </script>

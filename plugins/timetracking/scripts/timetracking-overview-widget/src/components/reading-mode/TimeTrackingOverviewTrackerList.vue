@@ -22,7 +22,7 @@
         <div class="timetracking-overview-reading-mode-trackers">
             <div
                 class="timetracking-overview-reading-mode-tracker"
-                v-for="tracker of selected_trackers"
+                v-for="tracker of overview_store.selected_trackers"
                 v-bind:key="tracker.id"
             >
                 <span>{{ tracker.label }}</span>
@@ -42,14 +42,18 @@
     </div>
 </template>
 <script>
-import { mapState } from "vuex";
+import { inject } from "vue";
+import { useOverviewWidgetStore } from "../../store/index.js";
 
 export default {
     name: "TimeTrackingOverviewTrackerList",
+    setup: () => {
+        const overview_store = useOverviewWidgetStore(inject("report_id"))();
+        return { overview_store };
+    },
     computed: {
-        ...mapState(["selected_trackers"]),
         has_no_trackers_in_report() {
-            return this.selected_trackers.length === 0;
+            return this.overview_store.selected_trackers.length === 0;
         },
     },
 };

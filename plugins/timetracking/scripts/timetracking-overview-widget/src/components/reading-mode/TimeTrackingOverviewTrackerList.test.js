@@ -17,39 +17,47 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, beforeEach, it, expect } from "@jest/globals";
+import { defineStore } from "pinia";
+import { createTestingPinia } from "@pinia/testing";
 import { shallowMount } from "@vue/test-utils";
 import TimeTrackingOverviewTrackerList from "./TimeTrackingOverviewTrackerList.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import { createLocalVueForTests } from "../../../tests/helpers/local-vue.js";
 
 describe("TimeTrackingOverviewTrackerList tests", () => {
     describe("Given a timetracking overview widget on reading mode", () => {
-        let component_options, store_options, store;
-        beforeEach(async () => {
-            store_options = {
-                state: {
-                    selected_trackers: [],
-                },
-            };
-            store = createStoreMock(store_options);
+        let selected_trackers;
 
-            component_options = {
-                localVue: await createLocalVueForTests(),
-                mocks: { $store: store },
-            };
+        beforeEach(() => {
+            selected_trackers = [];
         });
 
-        it("When no selected trackers, then 'no trackers selected' is displayed", () => {
-            const wrapper = shallowMount(TimeTrackingOverviewTrackerList, component_options);
+        const getWrapper = async () => {
+            const useStore = defineStore("overview/1", {
+                state: () => ({
+                    selected_trackers,
+                }),
+            });
+
+            const pinia = createTestingPinia();
+            useStore(pinia);
+
+            return shallowMount(TimeTrackingOverviewTrackerList, {
+                localVue: await createLocalVueForTests(),
+            });
+        };
+
+        it("When no selected trackers, then 'no trackers selected' is displayed", async () => {
+            const wrapper = await getWrapper();
             expect(
                 wrapper
                     .find("[data-test=timetracking-overview-reading-mode-trackers-empty]")
                     .exists(),
-            ).toBeTruthy();
+            ).toBe(true);
         });
 
-        it("When trackers are selected, then empty field is not displayed", () => {
-            store.state.selected_trackers = [
+        it("When trackers are selected, then empty field is not displayed", async () => {
+            selected_trackers = [
                 {
                     artifacts: [
                         {
@@ -77,12 +85,12 @@ describe("TimeTrackingOverviewTrackerList tests", () => {
                 },
             ];
 
-            const wrapper = shallowMount(TimeTrackingOverviewTrackerList, component_options);
+            const wrapper = await getWrapper();
             expect(
                 wrapper
                     .find("[data-test=timetracking-overview-reading-mode-trackers-empty]")
                     .exists(),
-            ).toBeFalsy();
+            ).toBe(false);
         });
     });
 });

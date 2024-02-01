@@ -43,10 +43,11 @@
 </template>
 
 <script>
+import { inject } from "vue";
 import TimeTrackingOverviewWritingDates from "./TimeTrackingOverviewWritingDates.vue";
 import TimeTrackingOverviewWritingTrackers from "./TimeTrackingOverviewWritingTrackers.vue";
 import TimeTrackingOverviewTrackerList from "./TimeTrackingOverviewTrackerList.vue";
-import { mapMutations } from "vuex";
+import { useOverviewWidgetStore } from "../../store/index.js";
 
 export default {
     name: "TimeTrackingOverviewWritingMode",
@@ -55,14 +56,17 @@ export default {
         TimeTrackingOverviewWritingDates,
         TimeTrackingOverviewTrackerList,
     },
+    setup: () => {
+        const overview_store = useOverviewWidgetStore(inject("report_id"))();
+        return { overview_store };
+    },
     methods: {
-        ...mapMutations(["toggleReadingMode"]),
         loadTimes() {
-            this.$store.dispatch("loadTimesWithNewParameters");
+            this.overview_store.loadTimesWithNewParameters();
         },
         async switchToReadingMode() {
-            await this.$store.dispatch("initWidgetWithReport");
-            this.toggleReadingMode();
+            await this.overview_store.initWidgetWithReport();
+            this.overview_store.toggleReadingMode();
         },
     },
 };

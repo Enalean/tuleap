@@ -21,27 +21,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import initial_state from "./state.js";
-import * as getters from "./getters.js";
-import mutations from "./mutations.js";
+import { describe, beforeEach, afterEach, it, expect } from "@jest/globals";
+import { useOverviewWidgetTestStore } from "../../tests/helpers/pinia-test-store.js";
+import { setActivePinia, createPinia } from "pinia";
 
 describe("Getters Timetracking Overview", () => {
-    let state;
+    let store;
+
     beforeEach(() => {
-        state = { ...initial_state };
+        setActivePinia(createPinia());
+        store = useOverviewWidgetTestStore();
+    });
+
+    afterEach(() => {
+        store.$reset();
     });
 
     describe("Call has error", () => {
         it("Given a widget with state initialisation. When there is an error message, Then has_error should be true", () => {
             const error_message = "this is an error";
 
-            mutations.setErrorMessage(state, error_message);
-            expect(getters.has_error(state)).toBe(true);
+            store.setErrorMessage(error_message);
+            expect(store.has_error).toBe(true);
         });
 
         it("Given a widget with state initialisation, Then we reset error has_error should be false", () => {
-            mutations.resetMessages(state);
-            expect(getters.has_error(state)).toBe(false);
+            store.resetMessages();
+            expect(store.has_error).toBe(false);
         });
     });
 
@@ -75,13 +81,13 @@ describe("Getters Timetracking Overview", () => {
                     ],
                 },
             ];
-            mutations.setTrackersTimes(state, trackers);
-            expect(getters.get_formatted_total_sum(state)).toBe("01:20");
+            store.setTrackersTimes(trackers);
+            expect(store.get_formatted_total_sum).toBe("01:20");
         });
 
         it("Given a widget with state initialisation with selected user, Then set trackers, getters should give total times of all trackers' user", () => {
-            state.selected_user = 102;
-            let trackers = [
+            store.selected_user = 102;
+            const trackers = [
                 {
                     id: "16",
                     label: "tracker",
@@ -109,12 +115,12 @@ describe("Getters Timetracking Overview", () => {
                     ],
                 },
             ];
-            mutations.setTrackersTimes(state, trackers);
-            expect(getters.get_formatted_total_sum(state)).toBe("01:00");
+            store.setTrackersTimes(trackers);
+            expect(store.get_formatted_total_sum).toBe("01:00");
         });
 
         it("Given a widget with state initialisation, Then get_formatted_time should format total time", () => {
-            let trackers = {
+            const tracker = {
                 id: "16",
                 label: "tracker",
                 project: {},
@@ -127,12 +133,12 @@ describe("Getters Timetracking Overview", () => {
                     },
                 ],
             };
-            mutations.setTrackersTimes(state, [trackers]);
-            expect(getters.get_formatted_time(state)(trackers)).toBe("02:00");
+            store.setTrackersTimes([tracker]);
+            expect(store.get_formatted_time(tracker)).toBe("02:00");
         });
 
         it("Given a widget with state initialisation, Then is_tracker_total_som_equals_zero should be true if no time", () => {
-            let trackers = {
+            const tracker = {
                 id: "16",
                 label: "tracker",
                 project: {},
@@ -145,14 +151,12 @@ describe("Getters Timetracking Overview", () => {
                     },
                 ],
             };
-            mutations.setTrackersTimes(state, [trackers]);
-            expect(
-                getters.is_tracker_total_sum_equals_zero(state)(trackers.time_per_user),
-            ).toBeTruthy();
+            store.setTrackersTimes([tracker]);
+            expect(store.is_tracker_total_sum_equals_zero(tracker.time_per_user)).toBeTruthy();
         });
 
         it("Given a widget with state initialisation, Then is_tracker_total_som_equals_zero should be false if their is times", () => {
-            let trackers = {
+            const tracker = {
                 id: "16",
                 label: "tracker",
                 project: {},
@@ -165,10 +169,8 @@ describe("Getters Timetracking Overview", () => {
                     },
                 ],
             };
-            mutations.setTrackersTimes(state, [trackers]);
-            expect(
-                getters.is_tracker_total_sum_equals_zero(state)(trackers.time_per_user),
-            ).toBeFalsy();
+            store.setTrackersTimes([tracker]);
+            expect(store.is_tracker_total_sum_equals_zero(tracker.time_per_user)).toBeFalsy();
         });
 
         it("Given a widget with state initialisation, Then is_sum_of_times_equals_zero should return false", () => {
@@ -200,8 +202,8 @@ describe("Getters Timetracking Overview", () => {
                     ],
                 },
             ];
-            mutations.setTrackersTimes(state, trackers);
-            expect(getters.is_sum_of_times_equals_zero(state)).toBe(false);
+            store.setTrackersTimes(trackers);
+            expect(store.is_sum_of_times_equals_zero).toBe(false);
         });
 
         it("Given trackers without times, Then is_sum_of_times_equals_zero should return true", () => {
@@ -233,8 +235,8 @@ describe("Getters Timetracking Overview", () => {
                     ],
                 },
             ];
-            mutations.setTrackersTimes(state, trackers);
-            expect(getters.is_sum_of_times_equals_zero(state)).toBe(true);
+            store.setTrackersTimes(trackers);
+            expect(store.is_sum_of_times_equals_zero).toBe(true);
         });
     });
 });

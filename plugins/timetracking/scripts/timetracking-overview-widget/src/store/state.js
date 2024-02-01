@@ -20,7 +20,7 @@
 const a_month_ago = new Date();
 a_month_ago.setMonth(a_month_ago.getMonth() - 1);
 
-const state = {
+export const default_state = {
     report_id: null,
     user_id: null,
     are_void_trackers_hidden: null,
@@ -41,5 +41,3 @@ const state = {
     is_added_tracker: true,
     selected_user: null,
 };
-
-export default state;

@@ -33,10 +33,17 @@
 </template>
 
 <script>
+import { inject } from "vue";
+import { useOverviewWidgetStore } from "../../store/index.js";
+
 export default {
     name: "TimeTrackingOverviewProjectOption",
     props: {
         projects: Array,
+    },
+    setup: () => {
+        const overview_store = useOverviewWidgetStore(inject("report_id"))();
+        return { overview_store };
     },
     mounted() {
         this.getTrackers();
@@ -45,7 +52,7 @@ export default {
         getTrackers() {
             let opt = this.$refs.select_project.options;
             if (opt[opt.selectedIndex] && opt[opt.selectedIndex].value) {
-                this.$store.dispatch("getTrackers", opt[opt.selectedIndex].value);
+                this.overview_store.getTrackers(opt[opt.selectedIndex].value);
             }
         },
     },

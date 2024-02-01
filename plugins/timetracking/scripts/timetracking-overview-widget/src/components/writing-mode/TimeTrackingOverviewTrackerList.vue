@@ -25,7 +25,7 @@
     <div class="timetracking-overview-form-trackers-selected">
         <span
             class="tlp-badge-primary tlp-badge-outline timetracking-overview-selected-tracker"
-            v-for="tracker of selected_trackers"
+            v-for="tracker of overview_store.selected_trackers"
             v-bind:key="tracker.id"
         >
             <span>
@@ -47,16 +47,18 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { inject } from "vue";
+import { useOverviewWidgetStore } from "../../store/index.js";
 
 export default {
     name: "TimeTrackingOverviewTrackerList",
-    computed: {
-        ...mapState(["selected_trackers"]),
+    setup: () => {
+        const overview_store = useOverviewWidgetStore(inject("report_id"))();
+        return { overview_store };
     },
     methods: {
         removeTracker(tracker) {
-            this.$store.commit("removeSelectedTracker", tracker);
+            this.overview_store.removeSelectedTracker(tracker);
         },
     },
 };
