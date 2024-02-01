@@ -22,24 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference\Presenters;
 
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\GlobalLanguageMock;
 use Tuleap\Reference\CrossReference;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class CrossReferenceLinkPresenterCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CrossReferenceLinkPresenterCollectionBuilderTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
-    /**
-     * @var CrossReferenceLinkPresenterCollectionBuilder
-     */
-    private $builder;
-    /**
-     * @var CrossReference|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $cross_ref_target_1;
-    /**
-     * @var CrossReference|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $cross_ref_target_2;
+    private CrossReferenceLinkPresenterCollectionBuilder $builder;
+    private CrossReference&MockObject $cross_ref_target_1;
+    private CrossReference&MockObject $cross_ref_target_2;
 
     protected function setUp(): void
     {
@@ -67,27 +61,27 @@ class CrossReferenceLinkPresenterCollectionBuilderTest extends \Tuleap\Test\PHPU
 
         $this->builder = new CrossReferenceLinkPresenterCollectionBuilder();
 
-        $GLOBALS['Language'] = \Mockery::mock(\BaseLanguage::class);
-        $GLOBALS['HTML']     = \Mockery::spy(\Layout::class);
+        $GLOBALS['HTML'] = $this->createMock(\Layout::class);
     }
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['Language']);
         unset($GLOBALS['HTML']);
     }
 
     public function testItReturnsEmptyArrayWhenKeyDoesNotExistInArray(): void
     {
         $array_presenter = $this->builder->build([], 'source', true);
-        $this->assertEquals([], $array_presenter);
+        self::assertEquals([], $array_presenter);
     }
 
     public function testItReturnsOneTargetCrossRefAndDontDisplayCommaAndDisplayParams(): void
     {
-        $GLOBALS['Language']->shouldReceive('getText')->with('cross_ref_fact_include', 'confirm_delete')->andReturn("Delete the item?");
-        $GLOBALS['Language']->shouldReceive('getText')->with('cross_ref_fact_include', 'delete');
-        $GLOBALS['HTML']->shouldReceive('getImage');
+        $GLOBALS['Language']->method('getText')->withConsecutive(
+            ['cross_ref_fact_include', 'confirm_delete'],
+            ['cross_ref_fact_include', 'delete'],
+        )->willReturn("Delete the item?");
+        $GLOBALS['HTML']->method('getImage');
 
         $cross_ref_link_1 = new CrossReferenceLinkPresenter(
             "git_commit_1",
@@ -99,14 +93,16 @@ class CrossReferenceLinkPresenterCollectionBuilderTest extends \Tuleap\Test\PHPU
 
         $array_presenter = $this->builder->build([$this->cross_ref_target_1], 'target', true);
 
-        $this->assertEquals([$cross_ref_link_1], $array_presenter);
+        self::assertEquals([$cross_ref_link_1], $array_presenter);
     }
 
     public function testItReturnsTwoTargetsCrossRefsAndDisplayCommaAndDisplayParams(): void
     {
-        $GLOBALS['Language']->shouldReceive('getText')->with('cross_ref_fact_include', 'confirm_delete')->andReturn("Delete the item?");
-        $GLOBALS['Language']->shouldReceive('getText')->with('cross_ref_fact_include', 'delete');
-        $GLOBALS['HTML']->shouldReceive('getImage');
+        $GLOBALS['Language']->method('getText')->withConsecutive(
+            ['cross_ref_fact_include', 'confirm_delete'],
+            ['cross_ref_fact_include', 'delete'],
+        )->willReturn("Delete the item?");
+        $GLOBALS['HTML']->method('getImage');
 
         $cross_ref_link_1 = new CrossReferenceLinkPresenter(
             "git_commit_1",
@@ -126,14 +122,16 @@ class CrossReferenceLinkPresenterCollectionBuilderTest extends \Tuleap\Test\PHPU
 
         $array_presenter = $this->builder->build([$this->cross_ref_target_1, $this->cross_ref_target_2], 'target', true);
 
-        $this->assertEquals([$cross_ref_link_1, $cross_ref_link_2], $array_presenter);
+        self::assertEquals([$cross_ref_link_1, $cross_ref_link_2], $array_presenter);
     }
 
     public function testItReturnsOneSourceCrossRefAndDontDisplayCommaAndDontDisplayParams(): void
     {
-        $GLOBALS['Language']->shouldReceive('getText')->with('cross_ref_fact_include', 'confirm_delete')->andReturn("Delete the item?");
-        $GLOBALS['Language']->shouldReceive('getText')->with('cross_ref_fact_include', 'delete');
-        $GLOBALS['HTML']->shouldReceive('getImage');
+        $GLOBALS['Language']->method('getText')->withConsecutive(
+            ['cross_ref_fact_include', 'confirm_delete'],
+            ['cross_ref_fact_include', 'delete'],
+        )->willReturn("Delete the item?");
+        $GLOBALS['HTML']->method('getImage');
 
         $cross_ref_link_1 = new CrossReferenceLinkPresenter(
             'tracker_789',
@@ -145,7 +143,7 @@ class CrossReferenceLinkPresenterCollectionBuilderTest extends \Tuleap\Test\PHPU
 
         $array_presenter = $this->builder->build([$this->cross_ref_target_1], 'source', false);
 
-        $this->assertEquals([$cross_ref_link_1], $array_presenter);
+        self::assertEquals([$cross_ref_link_1], $array_presenter);
     }
 
     private function mockCrossReference(
@@ -157,18 +155,18 @@ class CrossReferenceLinkPresenterCollectionBuilderTest extends \Tuleap\Test\PHPU
         int $ref_source_id,
         string $ref_source_url,
         string $ref_source_type,
-    ): CrossReference {
-        $cross_ref = \Mockery::mock(CrossReference::class);
-        $cross_ref->shouldReceive('getRefTargetKey')->andReturn($ref_target_key);
-        $cross_ref->shouldReceive('getRefTargetId')->andReturn($ref_target_id);
-        $cross_ref->shouldReceive('getRefTargetGid')->andReturn(101);
-        $cross_ref->shouldReceive('getRefTargetUrl')->andReturn($ref_target_url);
-        $cross_ref->shouldReceive('getRefTargetType')->andReturn($ref_target_type);
-        $cross_ref->shouldReceive('getRefSourceKey')->andReturn($ref_source_key);
-        $cross_ref->shouldReceive('getRefSourceId')->andReturn($ref_source_id);
-        $cross_ref->shouldReceive('getRefSourceGid')->andReturn(101);
-        $cross_ref->shouldReceive('getRefSourceUrl')->andReturn($ref_source_url);
-        $cross_ref->shouldReceive('getRefSourceType')->andReturn($ref_source_type);
+    ): CrossReference&MockObject {
+        $cross_ref = $this->createMock(CrossReference::class);
+        $cross_ref->method('getRefTargetKey')->willReturn($ref_target_key);
+        $cross_ref->method('getRefTargetId')->willReturn($ref_target_id);
+        $cross_ref->method('getRefTargetGid')->willReturn(101);
+        $cross_ref->method('getRefTargetUrl')->willReturn($ref_target_url);
+        $cross_ref->method('getRefTargetType')->willReturn($ref_target_type);
+        $cross_ref->method('getRefSourceKey')->willReturn($ref_source_key);
+        $cross_ref->method('getRefSourceId')->willReturn($ref_source_id);
+        $cross_ref->method('getRefSourceGid')->willReturn(101);
+        $cross_ref->method('getRefSourceUrl')->willReturn($ref_source_url);
+        $cross_ref->method('getRefSourceType')->willReturn($ref_source_type);
 
         return $cross_ref;
     }

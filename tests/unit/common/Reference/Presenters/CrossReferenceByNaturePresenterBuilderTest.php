@@ -22,220 +22,180 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference\Presenters;
 
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\GlobalLanguageMock;
 use Tuleap\Reference\CrossReference;
 use Tuleap\Reference\CrossReferenceCollection;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class CrossReferenceByNaturePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CrossReferenceByNaturePresenterBuilderTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
-    /**
-     * @var CrossReferenceByNaturePresenterBuilder
-     */
-    private $builder;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CrossReferenceLinkListPresenterBuilder
-     */
-    private $cross_ref_link_list_presenter_builder;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CrossReferenceLinkListPresenter
-     */
-    private $cross_reference_link_list;
-    /**
-     * @var CrossReference|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $cross_ref_target_1;
-    /**
-     * @var CrossReference|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $cross_ref_target_2;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CrossReferenceLinkListPresenter
-     */
-    private $cross_reference_link_list_2;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CrossReferenceLinkPresenterCollectionBuilder
-     */
-    private $cross_ref_link_collection_presenter_builder;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CrossReferenceLinkPresenter
-     */
-    private $cross_ref_link_2;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CrossReferenceLinkPresenter
-     */
-    private $cross_ref_link_1;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CrossReferenceCollection
-     */
-    private $cross_ref_collection;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CrossReferenceLinkListPresenter
-     */
-    private $cross_reference_link_list_3;
-    /**
-     * @var CrossReference|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $cross_ref_target_3;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CrossReferenceLinkPresenter
-     */
-    private $cross_ref_link_3;
+    private CrossReferenceByNaturePresenterBuilder $builder;
+    private CrossReferenceLinkListPresenterBuilder&MockObject $cross_ref_link_list_presenter_builder;
+    private CrossReference&MockObject $cross_ref_target_1;
+    private CrossReference&MockObject $cross_ref_target_2;
+    private CrossReference&MockObject $cross_ref_target_3;
+    private CrossReferenceLinkListPresenter&MockObject $cross_reference_link_list;
+    private CrossReferenceLinkListPresenter&MockObject $cross_reference_link_list_2;
+    private CrossReferenceLinkListPresenter&MockObject $cross_reference_link_list_3;
+    private CrossReferenceLinkPresenter&MockObject $cross_ref_link_1;
+    private CrossReferenceLinkPresenter&MockObject $cross_ref_link_2;
+    private CrossReferenceLinkPresenter&MockObject $cross_ref_link_3;
+    private CrossReferenceCollection&MockObject $cross_ref_collection;
+    private CrossReferenceLinkPresenterCollectionBuilder&MockObject $cross_ref_link_collection_presenter_builder;
 
 
     protected function setUp(): void
     {
-        $this->cross_ref_link_list_presenter_builder       = \Mockery::mock(CrossReferenceLinkListPresenterBuilder::class);
-        $this->cross_ref_link_collection_presenter_builder = \Mockery::mock(CrossReferenceLinkPresenterCollectionBuilder::class);
+        $this->cross_ref_link_list_presenter_builder       = $this->createMock(CrossReferenceLinkListPresenterBuilder::class);
+        $this->cross_ref_link_collection_presenter_builder = $this->createMock(CrossReferenceLinkPresenterCollectionBuilder::class);
 
-        $this->cross_reference_link_list   = \Mockery::mock(CrossReferenceLinkListPresenter::class);
-        $this->cross_reference_link_list_2 = \Mockery::mock(CrossReferenceLinkListPresenter::class);
-        $this->cross_reference_link_list_3 = \Mockery::mock(CrossReferenceLinkListPresenter::class);
+        $this->cross_reference_link_list   = $this->createMock(CrossReferenceLinkListPresenter::class);
+        $this->cross_reference_link_list_2 = $this->createMock(CrossReferenceLinkListPresenter::class);
+        $this->cross_reference_link_list_3 = $this->createMock(CrossReferenceLinkListPresenter::class);
 
-        $this->cross_ref_collection = \Mockery::mock(CrossReferenceCollection::class);
+        $this->cross_ref_collection = $this->createMock(CrossReferenceCollection::class);
 
-        $this->cross_ref_target_1 = \Mockery::mock(CrossReference::class);
-        $this->cross_ref_target_2 = \Mockery::mock(CrossReference::class);
-        $this->cross_ref_target_3 = \Mockery::mock(CrossReference::class);
+        $this->cross_ref_target_1 = $this->createMock(CrossReference::class);
+        $this->cross_ref_target_2 = $this->createMock(CrossReference::class);
+        $this->cross_ref_target_3 = $this->createMock(CrossReference::class);
 
-        $this->cross_ref_link_1 = \Mockery::mock(CrossReferenceLinkPresenter::class);
-        $this->cross_ref_link_2 = \Mockery::mock(CrossReferenceLinkPresenter::class);
-        $this->cross_ref_link_3 = \Mockery::mock(CrossReferenceLinkPresenter::class);
+        $this->cross_ref_link_1 = $this->createMock(CrossReferenceLinkPresenter::class);
+        $this->cross_ref_link_2 = $this->createMock(CrossReferenceLinkPresenter::class);
+        $this->cross_ref_link_3 = $this->createMock(CrossReferenceLinkPresenter::class);
 
         $this->builder = new CrossReferenceByNaturePresenterBuilder($this->cross_ref_link_list_presenter_builder, $this->cross_ref_link_collection_presenter_builder);
 
-        $GLOBALS['Language'] = \Mockery::mock(\BaseLanguage::class);
-        $GLOBALS['HTML']     = \Mockery::spy(\Layout::class);
+        $GLOBALS['HTML'] = $this->createMock(\Layout::class);
     }
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['Language']);
         unset($GLOBALS['HTML']);
     }
 
     public function testItReturnsNullIfThereAreNoCrossRefs(): void
     {
-        $this->cross_ref_collection->shouldReceive('getCrossReferencesBoth')->once()->andReturn([]);
-        $this->cross_ref_collection->shouldReceive('getCrossReferencesTarget')->once()->andReturn([]);
-        $this->cross_ref_collection->shouldReceive('getCrossReferencesSource')->once()->andReturn([]);
+        $this->cross_ref_collection->expects(self::once())->method('getCrossReferencesBoth')->willReturn([]);
+        $this->cross_ref_collection->expects(self::once())->method('getCrossReferencesTarget')->willReturn([]);
+        $this->cross_ref_collection->expects(self::once())->method('getCrossReferencesSource')->willReturn([]);
 
         $presenter = $this->builder->build($this->cross_ref_collection, true);
-        $this->assertEquals(null, $presenter);
+        self::assertEquals(null, $presenter);
     }
 
     public function testItReturnsTargetCrossReferenceLinkListWithLinkArray(): void
     {
         $this->cross_ref_link_collection_presenter_builder
-            ->shouldReceive('build')
+            ->method('build')
             ->with([$this->cross_ref_target_1], 'target', true)
-            ->andReturn([$this->cross_ref_link_1]);
+            ->willReturn([$this->cross_ref_link_1]);
 
         $this->cross_ref_link_list_presenter_builder
-            ->shouldReceive('buildForTarget')
+            ->expects(self::once())
+            ->method('buildForTarget')
             ->with([$this->cross_ref_link_1])
-            ->once()
-            ->andReturn($this->cross_reference_link_list);
+            ->willReturn($this->cross_reference_link_list);
 
-        $this->cross_ref_collection->shouldReceive('getCrossReferencesBoth')->twice()->andReturn([]);
-        $this->cross_ref_collection->shouldReceive('getCrossReferencesTarget')->times(3)->andReturn([$this->cross_ref_target_1]);
-        $this->cross_ref_collection->shouldReceive('getCrossReferencesSource')->once()->andReturn([]);
-        $this->cross_ref_collection->shouldReceive('getLabel')->once()->andReturn('Tracker');
+        $this->cross_ref_collection->expects(self::exactly(2))->method('getCrossReferencesBoth')->willReturn([]);
+        $this->cross_ref_collection->expects(self::exactly(3))->method('getCrossReferencesTarget')->willReturn([$this->cross_ref_target_1]);
+        $this->cross_ref_collection->expects(self::once())->method('getCrossReferencesSource')->willReturn([]);
+        $this->cross_ref_collection->expects(self::once())->method('getLabel')->willReturn('Tracker');
 
         $presenter = $this->builder->build($this->cross_ref_collection, true);
 
-        $this->assertEquals("Tracker", $presenter->nature_label);
-        $this->assertEquals([$this->cross_reference_link_list], $presenter->cross_reference_link_list);
+        self::assertEquals("Tracker", $presenter->nature_label);
+        self::assertEquals([$this->cross_reference_link_list], $presenter->cross_reference_link_list);
     }
 
     public function testItCallsSourceCrossReferenceLinkListWithLinkArray(): void
     {
         $this->cross_ref_link_collection_presenter_builder
-            ->shouldReceive('build')
+            ->method('build')
             ->with([$this->cross_ref_target_1], 'source', true)
-            ->andReturn([$this->cross_ref_link_1]);
+            ->willReturn([$this->cross_ref_link_1]);
 
         $this->cross_ref_link_list_presenter_builder
-            ->shouldReceive('buildForSource')
+            ->expects(self::once())
+            ->method('buildForSource')
             ->with([$this->cross_ref_link_1])
-            ->once()
-            ->andReturn($this->cross_reference_link_list);
+            ->willReturn($this->cross_reference_link_list);
 
-        $this->cross_ref_collection->shouldReceive('getCrossReferencesBoth')->twice()->andReturn([]);
-        $this->cross_ref_collection->shouldReceive('getCrossReferencesTarget')->twice()->andReturn([]);
-        $this->cross_ref_collection->shouldReceive('getCrossReferencesSource')->times(3)->andReturn([$this->cross_ref_target_1]);
-        $this->cross_ref_collection->shouldReceive('getLabel')->once()->andReturn('Tracker');
+        $this->cross_ref_collection->expects(self::exactly(2))->method('getCrossReferencesBoth')->willReturn([]);
+        $this->cross_ref_collection->expects(self::exactly(2))->method('getCrossReferencesTarget')->willReturn([]);
+        $this->cross_ref_collection->expects(self::exactly(3))->method('getCrossReferencesSource')->willReturn([$this->cross_ref_target_1]);
+        $this->cross_ref_collection->expects(self::once())->method('getLabel')->willReturn('Tracker');
 
         $presenter = $this->builder->build($this->cross_ref_collection, true);
 
-        $this->assertEquals("Tracker", $presenter->nature_label);
-        $this->assertEquals([$this->cross_reference_link_list], $presenter->cross_reference_link_list);
+        self::assertEquals("Tracker", $presenter->nature_label);
+        self::assertEquals([$this->cross_reference_link_list], $presenter->cross_reference_link_list);
     }
 
     public function testItCallsBothCrossReferenceLinkListWithLinkArrayAndWithinParams(): void
     {
         $this->cross_ref_link_collection_presenter_builder
-            ->shouldReceive('build')
+            ->method('build')
             ->with([$this->cross_ref_target_1], 'both', false)
-            ->andReturn([$this->cross_ref_link_1]);
+            ->willReturn([$this->cross_ref_link_1]);
 
         $this->cross_ref_link_list_presenter_builder
-            ->shouldReceive('buildForBoth')
+            ->expects(self::once())
+            ->method('buildForBoth')
             ->with([$this->cross_ref_link_1])
-            ->once()
-            ->andReturn($this->cross_reference_link_list);
+            ->willReturn($this->cross_reference_link_list);
 
-        $this->cross_ref_collection->shouldReceive('getCrossReferencesBoth')->times(3)->andReturn([$this->cross_ref_target_1]);
-        $this->cross_ref_collection->shouldReceive('getCrossReferencesTarget')->once()->andReturn([]);
-        $this->cross_ref_collection->shouldReceive('getCrossReferencesSource')->once()->andReturn([]);
-        $this->cross_ref_collection->shouldReceive('getLabel')->once()->andReturn('Tracker');
+        $this->cross_ref_collection->expects(self::exactly(3))->method('getCrossReferencesBoth')->willReturn([$this->cross_ref_target_1]);
+        $this->cross_ref_collection->expects(self::once())->method('getCrossReferencesTarget')->willReturn([]);
+        $this->cross_ref_collection->expects(self::once())->method('getCrossReferencesSource')->willReturn([]);
+        $this->cross_ref_collection->expects(self::once())->method('getLabel')->willReturn('Tracker');
 
         $presenter = $this->builder->build($this->cross_ref_collection, false);
 
-        $this->assertEquals("Tracker", $presenter->nature_label);
-        $this->assertEquals([$this->cross_reference_link_list], $presenter->cross_reference_link_list);
+        self::assertEquals("Tracker", $presenter->nature_label);
+        self::assertEquals([$this->cross_reference_link_list], $presenter->cross_reference_link_list);
     }
 
     public function testItCallsSourceAndBothAndTargetCrossReferenceLinkListWithLinkArray(): void
     {
         $this->cross_ref_link_collection_presenter_builder
-            ->shouldReceive('build')
-            ->with([$this->cross_ref_target_1], 'source', true)
-            ->andReturn([$this->cross_ref_link_1]);
-
-        $this->cross_ref_link_collection_presenter_builder
-            ->shouldReceive('build')
-            ->with([$this->cross_ref_target_2], 'target', true)
-            ->andReturn([$this->cross_ref_link_2]);
-
-        $this->cross_ref_link_collection_presenter_builder
-            ->shouldReceive('build')
-            ->with([$this->cross_ref_target_3], 'both', true)
-            ->andReturn([$this->cross_ref_link_3]);
+            ->method('build')
+            ->withConsecutive(
+                [[$this->cross_ref_target_3], 'both', true],
+                [[$this->cross_ref_target_2], 'target', true],
+                [[$this->cross_ref_target_1], 'source', true],
+            )
+            ->willReturnOnConsecutiveCalls(
+                [$this->cross_ref_link_3],
+                [$this->cross_ref_link_2],
+                [$this->cross_ref_link_1],
+            );
 
         $this->cross_ref_link_list_presenter_builder
-            ->shouldReceive('buildForSource')
+            ->method('buildForSource')
             ->with([$this->cross_ref_link_1])
-            ->andReturn($this->cross_reference_link_list);
+            ->willReturn($this->cross_reference_link_list);
 
         $this->cross_ref_link_list_presenter_builder
-            ->shouldReceive('buildForTarget')
+            ->method('buildForTarget')
             ->with([$this->cross_ref_link_2])
-            ->andReturn($this->cross_reference_link_list_2);
+            ->willReturn($this->cross_reference_link_list_2);
 
         $this->cross_ref_link_list_presenter_builder
-            ->shouldReceive('buildForBoth')
+            ->method('buildForBoth')
             ->with([$this->cross_ref_link_3])
-            ->andReturn($this->cross_reference_link_list_3);
+            ->willReturn($this->cross_reference_link_list_3);
 
-        $this->cross_ref_collection->shouldReceive('getCrossReferencesBoth')->times(3)->andReturn([$this->cross_ref_target_3]);
-        $this->cross_ref_collection->shouldReceive('getCrossReferencesTarget')->twice()->andReturn([$this->cross_ref_target_2]);
-        $this->cross_ref_collection->shouldReceive('getCrossReferencesSource')->twice()->andReturn([$this->cross_ref_target_1]);
-        $this->cross_ref_collection->shouldReceive('getLabel')->once()->andReturn('Tracker');
+        $this->cross_ref_collection->expects(self::exactly(3))->method('getCrossReferencesBoth')->willReturn([$this->cross_ref_target_3]);
+        $this->cross_ref_collection->expects(self::exactly(2))->method('getCrossReferencesTarget')->willReturn([$this->cross_ref_target_2]);
+        $this->cross_ref_collection->expects(self::exactly(2))->method('getCrossReferencesSource')->willReturn([$this->cross_ref_target_1]);
+        $this->cross_ref_collection->expects(self::once())->method('getLabel')->willReturn('Tracker');
 
         $presenter = $this->builder->build($this->cross_ref_collection, true);
 
-        $this->assertEquals("Tracker", $presenter->nature_label);
-        $this->assertEquals([$this->cross_reference_link_list, $this->cross_reference_link_list_2, $this->cross_reference_link_list_3], $presenter->cross_reference_link_list);
+        self::assertEquals("Tracker", $presenter->nature_label);
+        self::assertEquals([$this->cross_reference_link_list, $this->cross_reference_link_list_2, $this->cross_reference_link_list_3], $presenter->cross_reference_link_list);
     }
 }
