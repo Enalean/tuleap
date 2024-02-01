@@ -23,7 +23,7 @@
             v-bind:class="{ 'tlp-form-element-disabled': is_project_select_disabled }"
         >
             <label class="tlp-label">
-                <translate>Project</translate>
+                {{ $gettext("Project") }}
                 <i class="fa fa-asterisk"></i>
             </label>
             <time-tracking-overview-project-option v-bind:projects="projects" />
@@ -33,7 +33,7 @@
             v-bind:class="{ 'tlp-form-element-disabled': is_project_select_disabled }"
         >
             <label class="tlp-label">
-                <translate>Tracker</translate>
+                {{ $gettext("Tracker") }}
                 <i class="fa fa-asterisk"></i>
             </label>
             <div class="tlp-form-element tlp-form-element-append">
@@ -56,7 +56,7 @@
                         data-test="icon-plus"
                     ></i>
                     <i v-else class="tlp-button-icon fa fa-ban" data-test="icon-ban"></i>
-                    <translate>Add</translate>
+                    {{ $gettext("Add") }}
                 </button>
             </div>
         </div>

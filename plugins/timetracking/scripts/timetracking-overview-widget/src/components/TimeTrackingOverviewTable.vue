@@ -44,10 +44,10 @@
         <table v-if="can_results_be_displayed" class="tlp-table" data-test="overview-table">
             <thead>
                 <tr>
-                    <th v-translate>Tracker</th>
-                    <th v-translate>Project</th>
+                    <th>{{ $gettext("Tracker") }}</th>
+                    <th>{{ $gettext("Project") }}</th>
                     <th class="tlp-table-cell-numeric">
-                        <translate>Time</translate>
+                        {{ $gettext("Time") }}
                         <span
                             class="tlp-tooltip tlp-tooltip-left timetracking-time-tooltip"
                             v-bind:data-tlp-tooltip="time_format_tooltip"
@@ -60,8 +60,8 @@
             </thead>
             <tbody>
                 <tr v-if="!has_data_to_display">
-                    <td colspan="4" class="tlp-table-cell-empty" v-translate data-test="empty-cell">
-                        No time have been found for this period and these trackers
+                    <td colspan="4" class="tlp-table-cell-empty" data-test="empty-cell">
+                        {{ $gettext("No time have been found for this period and these trackers") }}
                     </td>
                 </tr>
                 <time-tracking-overview-table-row

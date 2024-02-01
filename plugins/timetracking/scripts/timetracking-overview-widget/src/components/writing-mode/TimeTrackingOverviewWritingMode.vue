@@ -28,17 +28,15 @@
                 class="tlp-button-primary tlp-button-outline timetracking-overview-writing-mode-actions-cancel"
                 type="button"
                 v-on:click="switchToReadingMode()"
-                v-translate
             >
-                Cancel
+                {{ $gettext("Cancel") }}
             </button>
             <button
                 class="tlp-button-primary"
                 v-on:click="loadTimes"
-                v-translate
                 data-test="overview-search-times"
             >
-                Search
+                {{ $gettext("Search") }}
             </button>
         </div>
     </div>

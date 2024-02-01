@@ -31,7 +31,7 @@
         v-on:input="setSelected($event)"
         data-test="overview-tracker-selector"
     >
-        <option v-bind:value="null" v-translate>Please choose...</option>
+        <option v-bind:value="null">{{ $gettext("Please choose...") }}</option>
         <option
             v-for="tracker in trackers"
             v-bind:disabled="tracker.disabled"
