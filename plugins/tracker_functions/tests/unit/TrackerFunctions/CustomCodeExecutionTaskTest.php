@@ -23,7 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\TrackerFunctions;
 
 use ColinODell\PsrTestLogger\TestLogger;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Tracker\Webhook\ArtifactPayloadBuilderStub;
 use Tuleap\TrackerFunctions\Logs\FunctionLogLine;
 use Tuleap\TrackerFunctions\Stubs\Administration\CheckFunctionIsActivatedStub;
 use Tuleap\TrackerFunctions\Stubs\Logs\SaveFunctionLogStub;
@@ -32,15 +38,24 @@ use Tuleap\TrackerFunctions\Stubs\WASM\WASMFunctionCallerStub;
 use Tuleap\TrackerFunctions\Stubs\WASM\WASMFunctionPathHelperStub;
 use Tuleap\TrackerFunctions\Stubs\WASM\WASMResponseExecutorStub;
 use Tuleap\TrackerFunctions\WASM\WASMResponseRepresentation;
-use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
-use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use Tuleap\Tracker\Test\Stub\Tracker\Webhook\ArtifactPayloadBuilderStub;
-use Tuleap\User\TuleapFunctionsUser;
+use UserManager;
 
 class CustomCodeExecutionTaskTest extends TestCase
 {
     private const WASM_FILE = __FILE__;
+
+    private UserManager&MockObject $user_manager;
+
+    protected function setUp(): void
+    {
+        $this->user_manager = $this->createMock(UserManager::class);
+        UserManager::setInstance($this->user_manager);
+    }
+
+    protected function tearDown(): void
+    {
+        UserManager::clearInstance();
+    }
 
     public function testItReturnsIfSubmitterIsFunctionUser(): void
     {
@@ -56,12 +71,13 @@ class CustomCodeExecutionTaskTest extends TestCase
             CheckFunctionIsActivatedStub::activated(),
             TrackerAdministratorNotificationSenderStub::build(),
         );
-        $changeset = ChangesetTestBuilder::aChangeset('1')
-            ->submittedBy(TuleapFunctionsUser::ID)
-            ->build();
+        $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::aUser()
+            ->withUserName('forge__something')
+            ->build());
 
         $task->execute($changeset, true);
-        self::assertTrue($logger->hasDebug('Changeset submitted by forge__function -> skip'));
+        self::assertTrue($logger->hasDebug('Changeset submitted by technical user (forge__something) -> skip'));
         self::assertFalse($caller->hasBeenCalled());
     }
 
@@ -80,6 +96,7 @@ class CustomCodeExecutionTaskTest extends TestCase
             TrackerAdministratorNotificationSenderStub::build(),
         );
         $changeset = ChangesetTestBuilder::aChangeset('1')->build();
+        $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::buildWithDefaults());
 
         $task->execute($changeset, true);
         self::assertTrue($logger->hasDebug('Function is deactivated -> skip'));
@@ -105,6 +122,7 @@ class CustomCodeExecutionTaskTest extends TestCase
         $changeset = ChangesetTestBuilder::aChangeset('1')
             ->ofArtifact($artifact)
             ->build();
+        $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::buildWithDefaults());
 
         $task->execute($changeset, true);
         self::assertTrue($logger->hasDebug('Tuleap function for tracker #23 not found or not readable'));
@@ -129,6 +147,7 @@ class CustomCodeExecutionTaskTest extends TestCase
         $changeset = ChangesetTestBuilder::aChangeset('1')
             ->ofArtifact($artifact)
             ->build();
+        $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::buildWithDefaults());
 
         $task->execute($changeset, true);
         self::assertTrue($logger->hasDebug('Caller error'));
@@ -154,6 +173,7 @@ class CustomCodeExecutionTaskTest extends TestCase
         $changeset    = ChangesetTestBuilder::aChangeset('1')
             ->ofArtifact($artifact)
             ->build();
+        $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::buildWithDefaults());
 
         $task->execute($changeset, true);
         self::assertTrue($logger->hasDebug("Executor error"));
@@ -183,6 +203,7 @@ class CustomCodeExecutionTaskTest extends TestCase
         $changeset    = ChangesetTestBuilder::aChangeset('1')
             ->ofArtifact($artifact)
             ->build();
+        $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::buildWithDefaults());
 
         $task->execute($changeset, true);
         self::assertFalse($logger->hasWarningRecords());
