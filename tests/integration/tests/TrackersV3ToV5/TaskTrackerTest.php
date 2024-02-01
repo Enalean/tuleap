@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\Tests\Integration\TrackersV3ToV5;
 
 use ArtifactType;
-use PermissionsManager;
 use ProjectManager;
 use ProjectUGroup;
 use Tracker;
@@ -118,7 +117,6 @@ class TaskTrackerTest extends TestIntegrationTestCase
 
     protected function setUp(): void
     {
-        PermissionsManager::clearInstance();
         $this->form_element_factory = Tracker_FormElementFactory::instance();
         $this->tracker_factory      = TrackerFactory::instance();
 
@@ -126,11 +124,6 @@ class TaskTrackerTest extends TestIntegrationTestCase
 
         $this->report_factory = Tracker_ReportFactory::instance();
         $this->tasks_report   = $this->getReportByName('Tasks');
-    }
-
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['_SESSION']);
     }
 
     protected function getReportByName($name)

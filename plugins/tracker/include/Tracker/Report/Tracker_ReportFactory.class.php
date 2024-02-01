@@ -52,6 +52,14 @@ class Tracker_ReportFactory
     }
 
     /**
+     * Allows clear factory instance for test. DO NOT USE IT IN PRODUCTION!
+     */
+    public static function clearInstance(): void
+    {
+        self::$_instance = null;
+    }
+
+    /**
      * @param int $id the id of the report to retrieve
      * @return Tracker_Report | null
      */

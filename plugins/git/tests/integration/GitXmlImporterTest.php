@@ -265,9 +265,6 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
 
         parent::tearDown();
         ForgeConfig::restore();
-        PermissionsManager::clearInstance();
-        PluginManager::clearInstance();
-        UserManager::clearInstance();
         //revert gitolite driver setAdminPath in its builder
         chdir($this->old_cwd);
     }

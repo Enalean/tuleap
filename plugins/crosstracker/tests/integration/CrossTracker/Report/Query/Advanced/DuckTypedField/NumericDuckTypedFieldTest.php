@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField;
 
-use ProjectManager;
 use Tracker;
 use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\SearchOnDuckTypedFieldsConfig;
@@ -52,8 +51,6 @@ final class NumericDuckTypedFieldTest extends TestIntegrationTestCase
 
     protected function setUp(): void
     {
-        ProjectManager::clearInstance();
-
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
         \ForgeConfig::setFeatureFlag(SearchOnDuckTypedFieldsConfig::FEATURE_FLAG_SEARCH_DUCK_TYPED_FIELDS, '1');
         $this->database_builder = new DatabaseBuilder($db);
