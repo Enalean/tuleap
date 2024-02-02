@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
+import { describe, beforeEach, it, expect, vi } from "vitest";
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import WidgetModalContent from "./WidgetModalContent.vue";
@@ -30,7 +30,7 @@ describe("Given a personal timetracking widget modal", () => {
     let rest_feedback: { message: string; type: string };
     let is_add_mode: boolean;
     let current_artifact: Artifact;
-    const setAddMode = jest.fn();
+    const setAddMode = vi.fn();
 
     async function getWidgetModalContentInstance(): Promise<Wrapper<Vue>> {
         const useStore = defineStore("root", {
@@ -45,7 +45,7 @@ describe("Given a personal timetracking widget modal", () => {
                 setAddMode: setAddMode,
             },
         });
-        const pinia = createTestingPinia({ stubActions: false });
+        const pinia = createTestingPinia({ stubActions: false, createSpy: vi.fn });
         useStore(pinia);
 
         const component_options = {

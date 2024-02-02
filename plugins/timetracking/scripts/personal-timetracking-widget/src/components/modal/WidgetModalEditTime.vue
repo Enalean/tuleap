@@ -153,4 +153,6 @@ const validateNewTime = (): void => {
         }
     }
 };
+
+defineExpose({ date, error_message, is_loading });
 </script>

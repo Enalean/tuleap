@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import { getTrackedTimes, postTime, delTime } from "./rest-querier";
 import type { PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
 import { okAsync } from "neverthrow";
@@ -35,7 +36,7 @@ describe("getTrackedTimes() -", (): void => {
             },
         ] as PersonalTime[];
 
-        jest.spyOn(fetch_result, "head").mockReturnValue(
+        vi.spyOn(fetch_result, "head").mockReturnValue(
             okAsync({
                 ok: true,
                 headers: {
@@ -45,7 +46,7 @@ describe("getTrackedTimes() -", (): void => {
             } as unknown as Response),
         );
 
-        const getJSON = jest.spyOn(fetch_result, "getJSON").mockReturnValue(okAsync(time));
+        const getJSON = vi.spyOn(fetch_result, "getJSON").mockReturnValue(okAsync(time));
 
         const result = await getTrackedTimes(user_id, "2018-03-08", "2018-03-15", limit, offset);
 
@@ -73,7 +74,7 @@ describe("getTrackedTimes() -", (): void => {
             minutes: 20,
         } as PersonalTime;
 
-        const postJSON = jest.spyOn(fetch_result, "postJSON").mockReturnValue(okAsync(time));
+        const postJSON = vi.spyOn(fetch_result, "postJSON").mockReturnValue(okAsync(time));
         const result = await postTime("2018-03-08", 2, "11:11", "oui");
 
         if (!result.isOk()) {
@@ -91,7 +92,7 @@ describe("getTrackedTimes() -", (): void => {
     });
 
     it("the REST API should delete the given time", async (): Promise<void> => {
-        const tlpDel = jest
+        const tlpDel = vi
             .spyOn(fetch_result, "del")
             .mockReturnValue(okAsync({ ok: true } as unknown as Response));
         const time_id = 2;
