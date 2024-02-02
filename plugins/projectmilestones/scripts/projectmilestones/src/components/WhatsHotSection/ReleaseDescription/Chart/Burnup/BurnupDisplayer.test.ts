@@ -18,7 +18,7 @@
  */
 
 import type { BurnupData, MilestoneData, PointsWithDateForBurnup } from "../../../../../type";
-import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createReleaseWidgetLocalVue } from "../../../../../helpers/local-vue-for-test";
 import ChartError from "../ChartError.vue";
@@ -33,7 +33,7 @@ describe("BurnupDisplayer", () => {
         end_date: string | null,
         burnup_data: BurnupData,
         is_timeframe_duration = true,
-    ): Promise<Wrapper<BurnupDisplayer>> {
+    ): Promise<Wrapper<Vue, Element>> {
         const useStore = defineStore("root", {
             state: () => ({
                 label_timeframe: "timeframe_field",
@@ -44,9 +44,6 @@ describe("BurnupDisplayer", () => {
         const pinia = createTestingPinia();
         useStore(pinia);
 
-        const component_options: ShallowMountOptions<BurnupDisplayer> = {};
-        component_options.localVue = await createReleaseWidgetLocalVue();
-
         const release_data = {
             id: 2,
             start_date,
@@ -54,12 +51,14 @@ describe("BurnupDisplayer", () => {
             burnup_data,
         } as MilestoneData;
 
-        component_options.propsData = {
-            release_data,
-            burnup_data,
-        };
-
-        return shallowMount(BurnupDisplayer, component_options);
+        return shallowMount(BurnupDisplayer, {
+            propsData: {
+                release_data,
+                burnup_data,
+            },
+            localVue: await createReleaseWidgetLocalVue(),
+            pinia,
+        });
     }
 
     it("When the burnup is under calculation, Then ChartError component is rendered", async () => {

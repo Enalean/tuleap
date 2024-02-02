@@ -18,39 +18,35 @@
  */
 
 import type { MilestoneData } from "../../../../../type";
-import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createReleaseWidgetLocalVue } from "../../../../../helpers/local-vue-for-test";
 import BurnupChart from "./BurnupChart.vue";
 
-const component_options: ShallowMountOptions<BurnupChart> = {};
-let release_data: MilestoneData;
 import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
 
 describe("BurnupChart", () => {
-    async function getPersonalWidgetInstance(): Promise<Wrapper<BurnupChart>> {
+    async function getPersonalWidgetInstance(): Promise<Wrapper<Vue, Element>> {
         const useStore = defineStore("root", {
             state: () => ({}),
         });
         const pinia = createTestingPinia();
         useStore(pinia);
 
-        component_options.localVue = await createReleaseWidgetLocalVue();
-
-        return shallowMount(BurnupChart, component_options);
+        return shallowMount(BurnupChart, {
+            propsData: {
+                release_data: {
+                    id: 2,
+                } as MilestoneData,
+                burnup_data: null,
+            },
+            localVue: await createReleaseWidgetLocalVue(),
+            pinia,
+        });
     }
 
     beforeEach(() => {
-        release_data = {
-            id: 2,
-        } as MilestoneData;
-
-        component_options.propsData = {
-            release_data,
-            burnup_data: null,
-        };
-
         getPersonalWidgetInstance();
     });
 
