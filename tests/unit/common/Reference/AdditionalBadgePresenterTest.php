@@ -22,12 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class AdditionalBadgePresenterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class AdditionalBadgePresenterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testBuildPrimary(): void
     {
         $badge = AdditionalBadgePresenter::buildPrimary('Le label');

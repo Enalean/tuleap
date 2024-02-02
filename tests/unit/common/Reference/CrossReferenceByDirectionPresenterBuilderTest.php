@@ -22,89 +22,73 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Reference\ByNature\CrossReferenceByNatureInCoreOrganizer;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class CrossReferenceByDirectionPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CrossReferenceByDirectionPresenterBuilderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|EventDispatcherInterface
-     */
-    private $event_dispatcher;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\ReferenceManager
-     */
-    private $reference_manager;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CrossReferencePresenterFactory
-     */
-    private $factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CrossReferenceByNatureInCoreOrganizer
-     */
-    private $core_organizer;
-    /**
-     * @var CrossReferenceByDirectionPresenterBuilder
-     */
-    private $builder;
+    private EventDispatcherInterface&MockObject $event_dispatcher;
+    private \ReferenceManager&MockObject $reference_manager;
+    private CrossReferencePresenterFactory&MockObject $factory;
+    private CrossReferenceByNatureInCoreOrganizer&MockObject $core_organizer;
+    private CrossReferenceByDirectionPresenterBuilder $builder;
 
     protected function setUp(): void
     {
-        $this->event_dispatcher  = Mockery::mock(EventDispatcherInterface::class);
-        $this->reference_manager = Mockery::mock(\ReferenceManager::class);
-        $this->factory           = Mockery::mock(CrossReferencePresenterFactory::class);
-        $this->core_organizer    = Mockery::mock(CrossReferenceByNatureInCoreOrganizer::class);
-        $project_manager         = Mockery::mock(\ProjectManager::class);
+        $this->event_dispatcher  = $this->createMock(EventDispatcherInterface::class);
+        $this->reference_manager = $this->createMock(\ReferenceManager::class);
+        $this->factory           = $this->createMock(CrossReferencePresenterFactory::class);
+        $this->core_organizer    = $this->createMock(CrossReferenceByNatureInCoreOrganizer::class);
+        $project_manager         = $this->createMock(\ProjectManager::class);
 
         $this->builder = new CrossReferenceByDirectionPresenterBuilder(
             $this->event_dispatcher,
             $this->reference_manager,
             $this->factory,
             $project_manager,
-            Mockery::mock(ProjectAccessChecker::class),
+            $this->createMock(ProjectAccessChecker::class),
             $this->core_organizer,
         );
     }
 
-    public function testBuild()
+    public function testBuild(): void
     {
-        $user = Mockery::mock(\PFUser::class);
+        $user = UserTestBuilder::buildWithDefaults();
 
         $this->factory
-            ->shouldReceive('getSourcesOfEntity')
+            ->expects(self::once())
+            ->method('getSourcesOfEntity')
             ->with("PageName", "wiki", 102)
-            ->once()
-            ->andReturn([]);
+            ->willReturn([]);
         $this->factory
-            ->shouldReceive('getTargetsOfEntity')
+            ->expects(self::once())
+            ->method('getTargetsOfEntity')
             ->with("PageName", "wiki", 102)
-            ->once()
-            ->andReturn([]);
+            ->willReturn([]);
 
         $available_natures = new NatureCollection();
         $available_natures->addNature('git', new Nature('git', '', 'Git', true));
         $available_natures->addNature('wiki', new Nature('wiki', '', 'Wiki', true));
 
         $this->reference_manager
-            ->shouldReceive('getAvailableNatures')
-            ->andReturn($available_natures);
+            ->method('getAvailableNatures')
+            ->willReturn($available_natures);
 
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
 
         $this->event_dispatcher
-            ->shouldReceive('dispatch')
-            ->with(Mockery::type(CrossReferenceByNatureOrganizer::class))
-            ->andReturn($by_nature_organizer);
+            ->method('dispatch')
+            ->with(self::isInstanceOf(CrossReferenceByNatureOrganizer::class))
+            ->willReturn($by_nature_organizer);
 
-        $this->core_organizer->shouldReceive('organizeCoreReferences')->twice();
-        $by_nature_organizer->shouldReceive('organizeRemainingCrossReferences')->twice();
+        $this->core_organizer->expects(self::exactly(2))->method('organizeCoreReferences');
+        $by_nature_organizer->expects(self::exactly(2))->method('organizeRemainingCrossReferences');
 
-        $by_nature_organizer->shouldReceive('getNatures')->twice()->andReturn([]);
+        $by_nature_organizer->expects(self::exactly(2))->method('getNatures')->willReturn([]);
 
 
         $presenter = $this->builder->build("PageName", "wiki", 102, $user);
