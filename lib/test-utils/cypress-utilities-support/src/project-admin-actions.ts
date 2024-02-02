@@ -70,3 +70,24 @@ Cypress.Commands.add(
         cy.anonymousSession();
     },
 );
+
+Cypress.Commands.add(
+    "addUserGroupWithUsers",
+    (user_group_name: string, users: Array<string>): void => {
+        cy.log("Add a group with a user to project");
+        cy.get("[data-test=project-admin-ugroups-modal]").click();
+        cy.get("[data-test=ugroup_name]").type(user_group_name);
+        cy.get("[data-test=create-user-group]").click();
+
+        cy.get("[data-test=select-member-to-add-in-ugroup] + .select2-container").click();
+        users.forEach((user) => {
+            // ignore rule for select2
+
+            cy.get(".select2-search__field").type(`${user}{enter}`);
+
+            cy.get(".select2-result-user").click();
+        });
+
+        cy.get('[data-test="project-admin-submit-add-member"]').click();
+    },
+);

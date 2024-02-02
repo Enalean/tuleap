@@ -43,6 +43,7 @@
             v-bind:href="sanitized_quick_link_add_href"
             v-bind:aria-label="quick_link_add.label"
             class="project-sidebar-nav-promoted-item-quick-link"
+            data-test="artifact-quick-link-add"
         >
             <i role="img" class="fa-solid fa-plus"></i>
         </a>

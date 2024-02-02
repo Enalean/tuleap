@@ -96,6 +96,8 @@ declare global {
 
             addProjectMember(project_unix_name: string, user_name: string): void;
 
+            addUserGroupWithUsers(user_group_name: string, users: Array<string>): void;
+
             removeProjectMember(project_unix_name: string, user_name: string): void;
 
             getTrackerIdFromREST(project_id: number, tracker_name: string): Chainable<number>;
