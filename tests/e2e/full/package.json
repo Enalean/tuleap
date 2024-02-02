@@ -6,6 +6,7 @@
   "private": true,
   "devDependencies": {
     "@tuleap/cypress-configurator": "workspace:*",
-    "@tuleap/cypress-utilities-support": "workspace:*"
+    "@tuleap/cypress-utilities-support": "workspace:*",
+    "cypress-plugin-tab": "^1.0.5"
   }
 }
