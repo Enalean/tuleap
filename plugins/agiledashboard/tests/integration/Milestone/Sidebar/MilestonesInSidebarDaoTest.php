@@ -37,13 +37,9 @@ final class MilestonesInSidebarDaoTest extends TestIntegrationTestCase
         $this->dao = new MilestonesInSidebarDao();
     }
 
-    public function tearDown(): void
-    {
-        \ForgeConfig::clearFeatureFlag(MilestonesInSidebarDao::FEATURE_FLAG);
-    }
-
     public function testShouldSidebarDisplayLastMilestonesWhenFeatureFlagIsNotSet(): void
     {
+        \ForgeConfig::setFeatureFlag(MilestonesInSidebarDao::FEATURE_FLAG, null);
         $this->dao->deactivateMilestonesInSidebar(self::ACME_PROJECT_ID);
         $this->dao->activateMilestonesInSidebar(self::DUNDER_MIFFLIN_PROJECT_ID);
 
@@ -104,6 +100,7 @@ final class MilestonesInSidebarDaoTest extends TestIntegrationTestCase
 
     public function testShouldActivateOrDeactivateAnExistingEntry(): void
     {
+        \ForgeConfig::setFeatureFlag(MilestonesInSidebarDao::FEATURE_FLAG, '1');
         $this->dao->activateMilestonesInSidebar(self::ACME_PROJECT_ID);
         $this->dao->deactivateMilestonesInSidebar(self::ACME_PROJECT_ID);
         $this->dao->activateMilestonesInSidebar(self::ACME_PROJECT_ID);

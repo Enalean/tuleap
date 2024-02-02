@@ -65,6 +65,8 @@ abstract class TestIntegrationTestCase extends \Tuleap\Test\PHPUnit\TestCase
         TrackerFactory::clearInstance();
         Tracker_ReportFactory::clearInstance();
 
+        \ForgeConfig::restore();
+
         unset($GLOBALS['_SESSION'], $GLOBALS['Language']);
     }
 }

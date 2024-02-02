@@ -128,17 +128,10 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
      */
     private $logger;
 
-    private $backup_tmp_dir;
-    private $backup_access_config;
-    private $backup_sys_data_dir;
     private \PHPUnit\Framework\MockObject\MockObject|ConfigureAllowArtifactClosure $configure_artifact_closure;
 
     protected function setUp(): void
     {
-        $this->backup_tmp_dir       = ForgeConfig::get('tmp_dir');
-        $this->backup_access_config = ForgeConfig::get(ForgeAccess::CONFIG);
-        $this->backup_sys_data_dir  = ForgeConfig::get('sys_data_dir');
-
         $this->old_cwd        = getcwd();
         $this->system_command = new System_Command();
 
@@ -259,12 +252,6 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
 
     protected function tearDown(): void
     {
-        ForgeConfig::set('tmp_dir', $this->backup_tmp_dir);
-        ForgeConfig::set(ForgeAccess::CONFIG, $this->backup_access_config);
-        ForgeConfig::set('sys_data_dir', $this->backup_sys_data_dir);
-
-        parent::tearDown();
-        ForgeConfig::restore();
         //revert gitolite driver setAdminPath in its builder
         chdir($this->old_cwd);
     }

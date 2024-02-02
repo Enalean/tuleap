@@ -62,13 +62,11 @@ final class GitoliteDriverTest extends GitoliteTestCase
     /** @var ProjectManager */
     private $project_manager;
 
-    private $backup_codendi_cache_dir;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->backup_codendi_cache_dir = \ForgeConfig::get('codendi_cache_dir');
         \ForgeConfig::set('codendi_cache_dir', $this->getTmpDir() . '/cache');
 
         $this->project_manager   = \Mockery::spy(\ProjectManager::class);
@@ -127,13 +125,6 @@ final class GitoliteDriverTest extends GitoliteTestCase
             $this->gitolite_conf_writer,
             $this->project_manager,
         );
-    }
-
-    protected function tearDown(): void
-    {
-        \ForgeConfig::set('codendi_cache_dir', $this->backup_codendi_cache_dir);
-
-        parent::tearDown();
     }
 
     public function testGitoliteConfUpdate(): void

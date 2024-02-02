@@ -32,15 +32,13 @@ final class DocumentServerDaoTest extends TestIntegrationTestCase
 {
     private DocumentServerDao $dao;
     private DocumentServerKeyEncryption $encryption;
-    private mixed $old_sys_custom_dir;
     private int $project_a_id;
     private int $project_b_id;
     private \ParagonIE\EasyDB\EasyDB $db;
 
     protected function setUp(): void
     {
-        $this->old_sys_custom_dir = \ForgeConfig::get('sys_custom_dir');
-        $root                     = vfsStream::setup()->url();
+        $root = vfsStream::setup()->url();
         mkdir($root . '/conf/');
         \ForgeConfig::set('sys_custom_dir', $root);
 
@@ -56,11 +54,6 @@ final class DocumentServerDaoTest extends TestIntegrationTestCase
             'groups',
             ['status' => 'A', 'unix_group_name' => 'project_b', 'group_name' => 'Project B']
         );
-    }
-
-    protected function tearDown(): void
-    {
-        \ForgeConfig::set('sys_custom_dir', $this->old_sys_custom_dir);
     }
 
     public function testDocumentServerStorage(): void
