@@ -26,75 +26,73 @@
     ></div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed, onMounted } from "vue";
 import type { MilestoneData, TestManagementCampaign } from "../../../../type";
-import { is_testplan_activated } from "../../../../helpers/test-management-helper";
 import type { DataPieChart } from "@tuleap/pie-chart";
 import { createPieChart } from "../../../../chart_builder/pie_chart_drawer/pie-chart-drawer";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { is_testplan_activated } from "../../../../helpers/test-management-helper";
 
-@Component({})
-export default class TestManagement extends Vue {
-    @Prop()
-    readonly release_data!: MilestoneData;
-    @Prop()
-    readonly campaign!: TestManagementCampaign;
+const props = defineProps<{
+    release_data: MilestoneData;
+    campaign: TestManagementCampaign | null;
+}>();
 
-    PIE_CHART_HEIGHT_WIDTH = 170;
-    PIE_CHART_RADIUS = 170;
+const { $gettext } = useGettext();
 
-    get getSizes(): { width: number; height: number; radius: number } {
-        return {
-            width: this.PIE_CHART_HEIGHT_WIDTH,
-            height: this.PIE_CHART_HEIGHT_WIDTH,
-            radius: this.PIE_CHART_RADIUS,
-        };
+const PIE_CHART_HEIGHT_WIDTH = 170;
+const PIE_CHART_RADIUS = 170;
+
+const getSizes = computed((): { width: number; height: number; radius: number } => {
+    return {
+        width: PIE_CHART_HEIGHT_WIDTH,
+        height: PIE_CHART_HEIGHT_WIDTH,
+        radius: PIE_CHART_RADIUS,
+    };
+});
+const getDataPieChartCampaign = computed((): DataPieChart[] => {
+    if (!props.campaign) {
+        return [];
     }
 
-    get getDataPieChartCampaign(): DataPieChart[] {
-        if (!this.campaign) {
-            return [];
+    return [
+        {
+            key: "notrun",
+            label: $gettext("Not run"),
+            count: props.campaign.nb_of_notrun,
+        },
+        {
+            key: "passed",
+            label: $gettext("Passed"),
+            count: props.campaign.nb_of_passed,
+        },
+        {
+            key: "failed",
+            label: $gettext("Failed"),
+            count: props.campaign.nb_of_failed,
+        },
+        {
+            key: "blocked",
+            label: $gettext("Blocked"),
+            count: props.campaign.nb_of_blocked,
+        },
+    ];
+});
+
+onMounted((): void => {
+    if (props.campaign) {
+        const chart_container = document.getElementById(
+            "release-widget-pie-chart-ttm-" + props.release_data.id,
+        );
+
+        if (chart_container) {
+            createPieChart(chart_container, getSizes.value, getDataPieChartCampaign.value);
         }
-
-        return [
-            {
-                key: "notrun",
-                label: this.$gettext("Not run"),
-                count: this.campaign.nb_of_notrun,
-            },
-            {
-                key: "passed",
-                label: this.$gettext("Passed"),
-                count: this.campaign.nb_of_passed,
-            },
-            {
-                key: "failed",
-                label: this.$gettext("Failed"),
-                count: this.campaign.nb_of_failed,
-            },
-            {
-                key: "blocked",
-                label: this.$gettext("Blocked"),
-                count: this.campaign.nb_of_blocked,
-            },
-        ];
     }
+});
 
-    mounted(): void {
-        if (this.campaign) {
-            const chart_container = document.getElementById(
-                "release-widget-pie-chart-ttm-" + this.release_data.id,
-            );
-
-            if (chart_container) {
-                createPieChart(chart_container, this.getSizes, this.getDataPieChartCampaign);
-            }
-        }
-    }
-
-    get is_testmanagement_available(): boolean {
-        return is_testplan_activated(this.release_data) && this.campaign !== null;
-    }
-}
+const is_testmanagement_available = computed((): boolean => {
+    return is_testplan_activated(props.release_data) && props.campaign !== null;
+});
 </script>

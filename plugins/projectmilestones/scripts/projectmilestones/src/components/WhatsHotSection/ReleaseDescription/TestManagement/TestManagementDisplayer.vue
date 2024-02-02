@@ -21,7 +21,7 @@
     <div v-if="is_testmanagement_available" class="container-chart-ttm">
         <div v-if="is_loading" class="release-loader" data-test="loading-data"></div>
         <div v-else-if="has_rest_error || are_some_tests_to_display" class="release-ttm-section">
-            <h2 class="tlp-pane-subtitle">{{ $gettext("Tests Results") }}</h2>
+            <h2 class="tlp-pane-subtitle">{{ title_label }}</h2>
             <div v-if="has_rest_error" class="tlp-alert-danger" data-test="error-rest">
                 {{ message_error_rest }}
             </div>
@@ -33,80 +33,73 @@
         </div>
     </div>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import type { Ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import type { MilestoneData, TestManagementCampaign } from "../../../../type";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { is_testplan_activated } from "../../../../helpers/test-management-helper";
 import TestManagement from "./TestManagement.vue";
 import { useStore } from "../../../../stores/root";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-@Component({
-    components: { TestManagement },
-})
-export default class TestManagementDisplayer extends Vue {
-    public root_store = useStore();
-    @Prop()
-    readonly release_data!: MilestoneData;
-
-    is_loading = true;
-    message_error_rest: string | null = null;
-    campaign: TestManagementCampaign | null = null;
-
-    get has_rest_error(): boolean {
-        return this.message_error_rest !== null;
-    }
-
-    async created(): Promise<void> {
-        this.campaign = this.release_data.campaign;
-        if (!this.campaign) {
-            try {
-                this.campaign = await this.root_store.getTestManagementCampaigns(this.release_data);
-            } catch (rest_error) {
-                await this.handle_error(rest_error);
-            } finally {
-                this.is_loading = false;
-            }
-        } else {
-            this.is_loading = false;
-        }
-    }
-
-    async handle_error(rest_error: unknown): Promise<void> {
+const props = defineProps<{ release_data: MilestoneData }>();
+const root_store = useStore();
+const { $gettext } = useGettext();
+let is_loading = ref(true);
+let message_error_rest: Ref<string | null> = ref(null);
+let campaign: Ref<TestManagementCampaign | null> = ref(null);
+const title_label = $gettext("Tests Results");
+const has_rest_error = computed((): boolean => {
+    return message_error_rest.value !== null;
+});
+onMounted(async (): Promise<void> => {
+    campaign.value = props.release_data.campaign;
+    if (!campaign.value) {
         try {
-            if (!(rest_error instanceof FetchWrapperError)) {
-                throw rest_error;
-            }
-            const { error } = await rest_error.response.json();
-            this.message_error_rest = error.code + " " + error.message;
-        } catch (error) {
-            this.message_error_rest = this.$gettext("Oops, an error occurred!");
-            throw error;
+            campaign.value = await root_store.getTestManagementCampaigns(props.release_data);
+        } catch (rest_error) {
+            await handle_error(rest_error);
+        } finally {
+            is_loading.value = false;
         }
+    } else {
+        is_loading.value = false;
     }
+});
 
-    get is_testmanagement_available(): boolean {
-        return is_testplan_activated(this.release_data);
-    }
-
-    get are_some_tests_to_display(): boolean {
-        if (!this.campaign) {
-            return false;
+async function handle_error(rest_error: unknown): Promise<void> {
+    try {
+        if (!(rest_error instanceof FetchWrapperError)) {
+            throw rest_error;
         }
-
-        if (
-            this.campaign.nb_of_notrun > 0 ||
-            this.campaign.nb_of_failed > 0 ||
-            this.campaign.nb_of_passed > 0 ||
-            this.campaign.nb_of_blocked > 0
-        ) {
-            this.$emit("ttm-exists");
-            return true;
-        }
-
-        return false;
+        const { error } = await rest_error.response.json();
+        message_error_rest.value = error.code + " " + error.message;
+    } catch (error) {
+        message_error_rest.value = $gettext("Oops, an error occurred!");
+        throw error;
     }
 }
+
+const is_testmanagement_available = computed((): boolean => {
+    return is_testplan_activated(props.release_data);
+});
+const emit = defineEmits<{
+    (e: "ttm-exists"): void;
+}>();
+const are_some_tests_to_display = computed((): boolean => {
+    if (!campaign.value) {
+        return false;
+    }
+    if (
+        campaign.value.nb_of_notrun > 0 ||
+        campaign.value.nb_of_failed > 0 ||
+        campaign.value.nb_of_passed > 0 ||
+        campaign.value.nb_of_blocked > 0
+    ) {
+        emit("ttm-exists");
+        return true;
+    }
+    return false;
+});
 </script>
