@@ -43,6 +43,7 @@ enable_plugins() {
         crosstracker \
         timetracking \
         oauth2_server \
+        mediawiki_standalone \
         projectmilestones  \
         testmanagement  \
         testplan  \
