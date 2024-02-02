@@ -22,37 +22,32 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use ForgeConfig;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class CrossReferencePresenterFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CrossReferencePresenterFactoryTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CrossReferencesDao
-     */
-    private $dao;
-    /**
-     * @var CrossReferencePresenterFactory
-     */
-    private $factory;
+    private CrossReferencesDao&MockObject $dao;
+    private CrossReferencePresenterFactory $factory;
 
     protected function setUp(): void
     {
-        $this->dao = \Mockery::mock(CrossReferencesDao::class);
+        $this->dao = $this->createMock(CrossReferencesDao::class);
 
-        \ForgeConfig::set('sys_default_domain', 'example.com');
+        ForgeConfig::set('sys_default_domain', 'example.com');
 
         $this->factory = new CrossReferencePresenterFactory($this->dao);
     }
 
-    public function testGetTargetsOfEntity()
+    public function testGetTargetsOfEntity(): void
     {
-        $this->dao->shouldReceive('searchTargetsOfEntity')
+        $this->dao->method('searchTargetsOfEntity')
             ->with("PageName", "wiki", 102)
-            ->andReturn(
+            ->willReturn(
                 [
                     [
                         'id'             => 1,
@@ -98,11 +93,11 @@ class CrossReferencePresenterFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testGetSourcesOfEntity()
+    public function testGetSourcesOfEntity(): void
     {
-        $this->dao->shouldReceive('searchSourcesOfEntity')
+        $this->dao->method('searchSourcesOfEntity')
             ->with("PageName", "wiki", 102)
-            ->andReturn(
+            ->willReturn(
                 [
                     [
                         'id'             => 1,
