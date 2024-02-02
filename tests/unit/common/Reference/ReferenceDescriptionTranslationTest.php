@@ -22,29 +22,29 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Reference;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class ReferenceDescriptionTranslationTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ReferenceDescriptionTranslationTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
     public function testReferenceDescriptionNotLookingLikeAnInternalDescriptionIsNotTranslated(): void
     {
-        $reference            = \Mockery::mock(\Reference::class);
+        $reference            = $this->createMock(Reference::class);
         $expected_description = 'My reference description';
-        $reference->shouldReceive('getDescription')->andReturn($expected_description);
+        $reference->method('getDescription')->willReturn($expected_description);
 
         $reference_description_translation = new ReferenceDescriptionTranslation($reference);
 
-        $this->assertEquals($expected_description, $reference_description_translation->getTranslatedDescription());
+        self::assertEquals($expected_description, $reference_description_translation->getTranslatedDescription());
     }
 
     public function testPluginReferenceDescriptionIsTranslated(): void
     {
-        $reference = \Mockery::mock(\Reference::class);
-        $reference->shouldReceive('getDescription')->andReturn('plugin_aaaaa:myref_build_desc_key');
+        $reference = $this->createMock(Reference::class);
+        $reference->method('getDescription')->willReturn('plugin_aaaaa:myref_build_desc_key');
 
         $reference_description_translation = new ReferenceDescriptionTranslation($reference);
 
@@ -52,13 +52,13 @@ final class ReferenceDescriptionTranslationTest extends \Tuleap\Test\PHPUnit\Tes
         $GLOBALS['Language']->method('hasText')->willReturn(true);
         $GLOBALS['Language']->method('getOverridableText')->with('plugin_aaaaa', 'myref_build_desc_key')->willReturn($expected_translation);
 
-        $this->assertEquals($expected_translation, $reference_description_translation->getTranslatedDescription());
+        self::assertEquals($expected_translation, $reference_description_translation->getTranslatedDescription());
     }
 
     public function testProjectReferenceDescriptionIsTranslated(): void
     {
-        $reference = \Mockery::mock(\Reference::class);
-        $reference->shouldReceive('getDescription')->andReturn('projectref_desc_key');
+        $reference = $this->createMock(Reference::class);
+        $reference->method('getDescription')->willReturn('projectref_desc_key');
 
         $reference_description_translation = new ReferenceDescriptionTranslation($reference);
 
@@ -66,7 +66,7 @@ final class ReferenceDescriptionTranslationTest extends \Tuleap\Test\PHPUnit\Tes
         $GLOBALS['Language']->method('hasText')->willReturn(true);
         $GLOBALS['Language']->method('getOverridableText')->with('project_reference', 'projectref_desc_key')->willReturn($expected_translation);
 
-        $this->assertEquals($expected_translation, $reference_description_translation->getTranslatedDescription());
+        self::assertEquals($expected_translation, $reference_description_translation->getTranslatedDescription());
     }
 
     /**
@@ -75,13 +75,13 @@ final class ReferenceDescriptionTranslationTest extends \Tuleap\Test\PHPUnit\Tes
      */
     public function testDescriptionLookingLikeInternalDescriptionButNotExistingIsNotTranslated(string $raw_description): void
     {
-        $reference = \Mockery::mock(\Reference::class);
-        $reference->shouldReceive('getDescription')->andReturn($raw_description);
+        $reference = $this->createMock(Reference::class);
+        $reference->method('getDescription')->willReturn($raw_description);
 
         $reference_description_translation = new ReferenceDescriptionTranslation($reference);
 
         $GLOBALS['Language']->method('hasText')->willReturn(false);
 
-        $this->assertEquals($raw_description, $reference_description_translation->getTranslatedDescription());
+        self::assertEquals($raw_description, $reference_description_translation->getTranslatedDescription());
     }
 }

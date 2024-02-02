@@ -22,13 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class CrossReferenceSectionPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CrossReferenceSectionPresenterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testWithAdditionalCrossReference(): void
     {
         $a_ref       = CrossReferencePresenterBuilder::get(1)->build();

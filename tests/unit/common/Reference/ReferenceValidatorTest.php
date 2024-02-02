@@ -20,47 +20,46 @@
 
 namespace Tuleap\Reference;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use EventManager;
+use ReferenceDao;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class ReferenceValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ReferenceValidatorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var ReferenceValidator
-     */
-    private $reference_validator;
+    private ReferenceValidator $reference_validator;
 
     protected function setUp(): void
     {
+        $event_manager = $this->createMock(EventManager::class);
+        $event_manager->method('processEvent');
         $this->reference_validator = new ReferenceValidator(
-            \Mockery::spy(\ReferenceDao::class),
-            new ReservedKeywordsRetriever(\Mockery::spy(\EventManager::class))
+            $this->createMock(ReferenceDao::class),
+            new ReservedKeywordsRetriever($event_manager)
         );
     }
 
     public function testItTestKeywordCharacterValidation(): void
     {
-        $this->assertFalse($this->reference_validator->isValidKeyword("UPPER"));
-        $this->assertFalse($this->reference_validator->isValidKeyword("with space"));
-        $this->assertFalse($this->reference_validator->isValidKeyword('with$pecialchar'));
-        $this->assertFalse($this->reference_validator->isValidKeyword("with/special/char"));
-        $this->assertFalse($this->reference_validator->isValidKeyword("with-special"));
-        $this->assertFalse($this->reference_validator->isValidKeyword("-begin"));
-        $this->assertFalse($this->reference_validator->isValidKeyword("end-"));
-        $this->assertFalse($this->reference_validator->isValidKeyword("end "));
+        self::assertFalse($this->reference_validator->isValidKeyword("UPPER"));
+        self::assertFalse($this->reference_validator->isValidKeyword("with space"));
+        self::assertFalse($this->reference_validator->isValidKeyword('with$pecialchar'));
+        self::assertFalse($this->reference_validator->isValidKeyword("with/special/char"));
+        self::assertFalse($this->reference_validator->isValidKeyword("with-special"));
+        self::assertFalse($this->reference_validator->isValidKeyword("-begin"));
+        self::assertFalse($this->reference_validator->isValidKeyword("end-"));
+        self::assertFalse($this->reference_validator->isValidKeyword("end "));
 
-        $this->assertTrue($this->reference_validator->isValidKeyword("valid"));
-        $this->assertTrue($this->reference_validator->isValidKeyword("valid123"));
-        $this->assertTrue($this->reference_validator->isValidKeyword("123"));
-        $this->assertTrue($this->reference_validator->isValidKeyword("with_underscore"));
+        self::assertTrue($this->reference_validator->isValidKeyword("valid"));
+        self::assertTrue($this->reference_validator->isValidKeyword("valid123"));
+        self::assertTrue($this->reference_validator->isValidKeyword("123"));
+        self::assertTrue($this->reference_validator->isValidKeyword("with_underscore"));
     }
 
     public function testItTestIfKeywordIsReserved(): void
     {
-        $this->assertTrue($this->reference_validator->isReservedKeyword("art"));
-        $this->assertTrue($this->reference_validator->isReservedKeyword("cvs"));
-        $this->assertFalse($this->reference_validator->isReservedKeyword("artifacts"));
-        $this->assertFalse($this->reference_validator->isReservedKeyword("john2"));
+        self::assertTrue($this->reference_validator->isReservedKeyword("art"));
+        self::assertTrue($this->reference_validator->isReservedKeyword("cvs"));
+        self::assertFalse($this->reference_validator->isReservedKeyword("artifacts"));
+        self::assertFalse($this->reference_validator->isReservedKeyword("john2"));
     }
 }

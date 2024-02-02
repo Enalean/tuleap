@@ -22,15 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Date\TlpRelativeDatePresenter;
 use Tuleap\Reference\Metadata\CreatedByPresenter;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class CrossReferencePresenterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CrossReferencePresenterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testWithTitle(): void
     {
         $a_ref = CrossReferencePresenterBuilder::get(1)->build();

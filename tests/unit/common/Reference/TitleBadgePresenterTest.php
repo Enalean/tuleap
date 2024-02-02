@@ -22,12 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class TitleBadgePresenterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TitleBadgePresenterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItBuildsABadgeWithALabel(): void
     {
         $presenter = TitleBadgePresenter::buildLabelBadge('Lorem ipsum', 'fiesta-red');
