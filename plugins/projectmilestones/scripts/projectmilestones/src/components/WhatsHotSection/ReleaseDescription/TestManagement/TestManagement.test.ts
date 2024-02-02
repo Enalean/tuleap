@@ -17,21 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import type { MilestoneData } from "../../../../type";
 import { createReleaseWidgetLocalVue } from "../../../../helpers/local-vue-for-test";
-import type { DefaultData } from "vue/types/options";
 import TestManagement from "./TestManagement.vue";
 import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
 
 let release_data: MilestoneData;
-const component_options: ShallowMountOptions<TestManagement> = {};
 const project_id = 100;
 
 describe("TestManagement", () => {
-    async function getPersonalWidgetInstance(): Promise<Wrapper<TestManagement>> {
+    async function getPersonalWidgetInstance(): Promise<Wrapper<Vue, Element>> {
         const useStore = defineStore("root", {
             state: () => ({
                 label_tracker_planning: "Releases",
@@ -41,9 +39,14 @@ describe("TestManagement", () => {
         const pinia = createTestingPinia();
         useStore(pinia);
 
-        component_options.localVue = await createReleaseWidgetLocalVue();
-
-        return shallowMount(TestManagement, component_options);
+        return shallowMount(TestManagement, {
+            localVue: await createReleaseWidgetLocalVue(),
+            propsData: {
+                release_data,
+                campaign: release_data.campaign,
+            },
+            pinia,
+        });
     }
 
     beforeEach(() => {
@@ -69,20 +72,9 @@ describe("TestManagement", () => {
                 nb_of_failed: 2,
             },
         } as MilestoneData;
-
-        component_options.propsData = {
-            release_data,
-        };
     });
 
-    it("When there is not campagin in release data, Then there is not lists", async () => {
-        component_options.data = (): DefaultData<TestManagement> => {
-            return {
-                is_loading: false,
-                error_message: null,
-            };
-        };
-
+    it("When there is not campaign in release data, Then there is not lists", async () => {
         release_data = {
             id: 2,
             planning: {
@@ -100,10 +92,6 @@ describe("TestManagement", () => {
             },
             campaign: null,
         } as MilestoneData;
-
-        component_options.propsData = {
-            release_data,
-        };
 
         const wrapper = await getPersonalWidgetInstance();
         expect(wrapper.find("[data-test=display-ttm]").exists()).toBe(false);
