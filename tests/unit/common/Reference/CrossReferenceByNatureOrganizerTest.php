@@ -22,19 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
-use Project;
 use Project_AccessException;
 use ProjectManager;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class CrossReferenceByNatureOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CrossReferenceByNatureOrganizerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItMovesOneCrossReferenceToASection(): void
     {
         $a_ref       = CrossReferencePresenterBuilder::get(1)->withType('git')->build();
@@ -44,18 +41,18 @@ class CrossReferenceByNatureOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
         $nature_collection->addNature('git', new Nature('git', 'fas fa-tlp-versioning-git', 'Git', true));
         $nature_collection->addNature('other', new Nature('other', '', 'Other', true));
 
-        $project_access_checker = Mockery::mock(ProjectAccessChecker::class)
-            ->shouldReceive('checkUserCanAccessProject')
-            ->getMock();
+        $project_access_checker = $this->createMock(ProjectAccessChecker::class);
+        $project_access_checker->method('checkUserCanAccessProject');
 
-        $project_manager = Mockery::mock(ProjectManager::class, ['getProject' => Mockery::mock(Project::class)]);
+        $project_manager = $this->createMock(ProjectManager::class);
+        $project_manager->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
 
         $organizer = new CrossReferenceByNatureOrganizer(
             $project_manager,
             $project_access_checker,
             [$a_ref, $another_ref],
             $nature_collection,
-            Mockery::mock(PFUser::class),
+            UserTestBuilder::buildWithDefaults(),
         );
 
         $organizer->moveCrossReferenceToSection($a_ref, 'cloudy/stable');
@@ -84,18 +81,18 @@ class CrossReferenceByNatureOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
         $nature_collection->addNature('git', new Nature('git', 'fas fa-tlp-versioning-git', 'Git', true));
         $nature_collection->addNature('other', new Nature('other', '', 'Other', true));
 
-        $project_access_checker = Mockery::mock(ProjectAccessChecker::class)
-            ->shouldReceive('checkUserCanAccessProject')
-            ->getMock();
+        $project_access_checker = $this->createMock(ProjectAccessChecker::class);
+        $project_access_checker->method('checkUserCanAccessProject');
 
-        $project_manager = Mockery::mock(ProjectManager::class, ['getProject' => Mockery::mock(Project::class)]);
+        $project_manager = $this->createMock(ProjectManager::class);
+        $project_manager->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
 
         $organizer = new CrossReferenceByNatureOrganizer(
             $project_manager,
             $project_access_checker,
             [$a_ref, $another_ref],
             $nature_collection,
-            Mockery::mock(PFUser::class),
+            UserTestBuilder::buildWithDefaults(),
         );
 
         $pimped_reference = $a_ref->withTitle("My new title", null);
@@ -128,18 +125,18 @@ class CrossReferenceByNatureOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
         $nature_collection->addNature('git', new Nature('git', 'fas fa-tlp-versioning-git', 'Git', true));
         $nature_collection->addNature('other', new Nature('other', '', 'Other', true));
 
-        $project_access_checker = Mockery::mock(ProjectAccessChecker::class)
-            ->shouldReceive('checkUserCanAccessProject')
-            ->getMock();
+        $project_access_checker = $this->createMock(ProjectAccessChecker::class);
+        $project_access_checker->method('checkUserCanAccessProject');
 
-        $project_manager = Mockery::mock(ProjectManager::class, ['getProject' => Mockery::mock(Project::class)]);
+        $project_manager = $this->createMock(ProjectManager::class);
+        $project_manager->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
 
         $organizer = new CrossReferenceByNatureOrganizer(
             $project_manager,
             $project_access_checker,
             [$a_ref, $another_ref],
             $nature_collection,
-            Mockery::mock(PFUser::class),
+            UserTestBuilder::buildWithDefaults(),
         );
 
         $organizer->moveCrossReferenceToSection($a_ref, 'cloudy/stable');
@@ -169,18 +166,18 @@ class CrossReferenceByNatureOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
         $nature_collection->addNature('git', new Nature('git', 'fas fa-tlp-versioning-git', 'Git', true));
         $nature_collection->addNature('other', new Nature('other', '', 'Other', true));
 
-        $project_access_checker = Mockery::mock(ProjectAccessChecker::class)
-            ->shouldReceive('checkUserCanAccessProject')
-            ->getMock();
+        $project_access_checker = $this->createMock(ProjectAccessChecker::class);
+        $project_access_checker->method('checkUserCanAccessProject');
 
-        $project_manager = Mockery::mock(ProjectManager::class, ['getProject' => Mockery::mock(Project::class)]);
+        $project_manager = $this->createMock(ProjectManager::class);
+        $project_manager->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
 
         $organizer = new CrossReferenceByNatureOrganizer(
             $project_manager,
             $project_access_checker,
             [$a_ref, $another_ref],
             $nature_collection,
-            Mockery::mock(PFUser::class),
+            UserTestBuilder::buildWithDefaults(),
         );
 
         $organizer->moveCrossReferenceToSection($a_ref, 'cloudy/stable');
@@ -212,18 +209,18 @@ class CrossReferenceByNatureOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
         $nature_collection->addNature('tracker', new Nature('tracker', 'fas fa-list-ol', 'Trackers', true));
         $nature_collection->addNature('other', new Nature('other', '', 'Other', true));
 
-        $project_access_checker = Mockery::mock(ProjectAccessChecker::class)
-            ->shouldReceive('checkUserCanAccessProject')
-            ->getMock();
+        $project_access_checker = $this->createMock(ProjectAccessChecker::class);
+        $project_access_checker->method('checkUserCanAccessProject');
 
-        $project_manager = Mockery::mock(ProjectManager::class, ['getProject' => Mockery::mock(Project::class)]);
+        $project_manager = $this->createMock(ProjectManager::class);
+        $project_manager->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
 
         $organizer = new CrossReferenceByNatureOrganizer(
             $project_manager,
             $project_access_checker,
             [$a_ref, $another_ref],
             $nature_collection,
-            Mockery::mock(PFUser::class),
+            UserTestBuilder::buildWithDefaults(),
         );
 
         $organizer->moveCrossReferenceToSection($a_ref, 'cloudy/stable');
@@ -258,18 +255,18 @@ class CrossReferenceByNatureOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
         $nature_collection = new NatureCollection();
         $nature_collection->addNature('other', new Nature('other', '', 'Other', true));
 
-        $project_access_checker = Mockery::mock(ProjectAccessChecker::class)
-            ->shouldReceive('checkUserCanAccessProject')
-            ->getMock();
+        $project_access_checker = $this->createMock(ProjectAccessChecker::class);
+        $project_access_checker->method('checkUserCanAccessProject');
 
-        $project_manager = Mockery::mock(ProjectManager::class, ['getProject' => Mockery::mock(Project::class)]);
+        $project_manager = $this->createMock(ProjectManager::class);
+        $project_manager->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
 
         $organizer = new CrossReferenceByNatureOrganizer(
             $project_manager,
             $project_access_checker,
             [$a_ref],
             $nature_collection,
-            Mockery::mock(PFUser::class),
+            UserTestBuilder::buildWithDefaults(),
         );
 
         $organizer->moveCrossReferenceToSection($a_ref, 'cloudy/stable');
@@ -286,16 +283,16 @@ class CrossReferenceByNatureOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
         $nature_collection->addNature('git', new Nature('git', 'fas fa-tlp-versioning-git', 'Git', true));
         $nature_collection->addNature('other', new Nature('other', '', 'Other', true));
 
-        $current_user = Mockery::mock(PFUser::class);
-        $project      = Mockery::mock(Project::class);
+        $current_user = UserTestBuilder::buildWithDefaults();
+        $project      = ProjectTestBuilder::aProject()->build();
 
-        $project_access_checker = Mockery::mock(ProjectAccessChecker::class)
-            ->shouldReceive('checkUserCanAccessProject')
+        $project_access_checker = $this->createMock(ProjectAccessChecker::class);
+        $project_access_checker->method('checkUserCanAccessProject')
             ->with($current_user, $project)
-            ->andThrow(Mockery::mock(Project_AccessException::class))
-            ->getMock();
+            ->willThrowException($this->createMock(Project_AccessException::class));
 
-        $project_manager = Mockery::mock(ProjectManager::class, ['getProject' => $project]);
+        $project_manager = $this->createMock(ProjectManager::class);
+        $project_manager->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
 
         $organizer = new CrossReferenceByNatureOrganizer(
             $project_manager,
@@ -321,18 +318,18 @@ class CrossReferenceByNatureOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
         $nature_collection->addNature('wiki', new Nature('wiki', 'fas fa-wiki', 'Wiki', true));
         $nature_collection->addNature('other', new Nature('other', '', 'Other', true));
 
-        $project_access_checker = Mockery::mock(ProjectAccessChecker::class)
-            ->shouldReceive('checkUserCanAccessProject')
-            ->getMock();
+        $project_access_checker = $this->createMock(ProjectAccessChecker::class);
+        $project_access_checker->method('checkUserCanAccessProject');
 
-        $project_manager = Mockery::mock(ProjectManager::class, ['getProject' => Mockery::mock(Project::class)]);
+        $project_manager = $this->createMock(ProjectManager::class);
+        $project_manager->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
 
         $organizer = new CrossReferenceByNatureOrganizer(
             $project_manager,
             $project_access_checker,
             [$a_ref, $another_ref],
             $nature_collection,
-            Mockery::mock(PFUser::class),
+            UserTestBuilder::buildWithDefaults(),
         );
 
         $organizer->moveCrossReferenceToSection($a_ref, 'cloudy/stable');
@@ -370,19 +367,19 @@ class CrossReferenceByNatureOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
         $nature_collection->addNature('wiki', new Nature('wiki', 'fas fa-wiki', 'Wiki', true));
         $nature_collection->addNature('other', new Nature('other', '', 'Other', true));
 
-        $project_access_checker = Mockery::mock(ProjectAccessChecker::class)
-            ->shouldReceive('checkUserCanAccessProject')
-            ->andThrow(Mockery::mock(Project_AccessException::class))
-            ->getMock();
+        $project_access_checker = $this->createMock(ProjectAccessChecker::class);
+        $project_access_checker->method('checkUserCanAccessProject')
+            ->willThrowException($this->createMock(Project_AccessException::class));
 
-        $project_manager = Mockery::mock(ProjectManager::class, ['getProject' => Mockery::mock(Project::class)]);
+        $project_manager = $this->createMock(ProjectManager::class);
+        $project_manager->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
 
         $organizer = new CrossReferenceByNatureOrganizer(
             $project_manager,
             $project_access_checker,
             [$a_ref, $another_ref],
             $nature_collection,
-            Mockery::mock(PFUser::class),
+            UserTestBuilder::buildWithDefaults(),
         );
 
         $organizer->moveCrossReferenceToSection($a_ref, 'cloudy/stable');
@@ -397,18 +394,18 @@ class CrossReferenceByNatureOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
         $a_ref       = CrossReferencePresenterBuilder::get(1)->withType('git')->build();
         $another_ref = CrossReferencePresenterBuilder::get(2)->withType('wiki')->build();
 
-        $project_access_checker = Mockery::mock(ProjectAccessChecker::class)
-            ->shouldReceive('checkUserCanAccessProject')
-            ->getMock();
+        $project_access_checker = $this->createMock(ProjectAccessChecker::class);
+        $project_access_checker->method('checkUserCanAccessProject');
 
-        $project_manager = Mockery::mock(ProjectManager::class, ['getProject' => Mockery::mock(Project::class)]);
+        $project_manager = $this->createMock(ProjectManager::class);
+        $project_manager->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
 
         $organizer = new CrossReferenceByNatureOrganizer(
             $project_manager,
             $project_access_checker,
             [$a_ref, $another_ref],
             new NatureCollection(),
-            Mockery::mock(PFUser::class),
+            UserTestBuilder::buildWithDefaults(),
         );
 
         $organizer->removeUnreadableCrossReference($a_ref);
@@ -424,18 +421,18 @@ class CrossReferenceByNatureOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
         $a_ref       = CrossReferencePresenterBuilder::get(1)->withType('git')->build();
         $another_ref = CrossReferencePresenterBuilder::get(2)->withType('wiki')->build();
 
-        $project_access_checker = Mockery::mock(ProjectAccessChecker::class)
-            ->shouldReceive('checkUserCanAccessProject')
-            ->getMock();
+        $project_access_checker = $this->createMock(ProjectAccessChecker::class);
+        $project_access_checker->method('checkUserCanAccessProject');
 
-        $project_manager = Mockery::mock(ProjectManager::class, ['getProject' => Mockery::mock(Project::class)]);
+        $project_manager = $this->createMock(ProjectManager::class);
+        $project_manager->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
 
         $organizer = new CrossReferenceByNatureOrganizer(
             $project_manager,
             $project_access_checker,
             [$a_ref, $another_ref],
             new NatureCollection(),
-            Mockery::mock(PFUser::class),
+            UserTestBuilder::buildWithDefaults(),
         );
 
         $organizer->removeUnreadableCrossReference($a_ref->withTitle("New title", null));
