@@ -172,11 +172,11 @@ class ServiceResource extends AuthenticatedResource
             throw new I18NRestException(400, _('Inactive service cannot be enabled.'));
         }
 
-        if ($body->name && $body->name !== $service->getShortName()) {
+        if (isset($body->name) && $body->name !== $service->getShortName()) {
             throw new I18NRestException(400, _('Update of service name is not supported'));
         }
 
-        if ($body->label && $body->label !== $service->getInternationalizedName()) {
+        if (isset($body->label) && $body->label !== $service->getInternationalizedName()) {
             throw new I18NRestException(400, _('Update of service label is not supported'));
         }
     }

@@ -25,9 +25,9 @@ namespace Tuleap\Project\REST\v1;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Project;
-use Service;
 use ServiceManager;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\ServiceBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 class ServiceRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -55,8 +55,10 @@ class ServiceRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItDoesNotReturnNone(): void
     {
-        $service = $this->createMock(Service::class);
-        $service->method('getId')->willReturn(100);
+        $service = ServiceBuilder::aSystemService(
+            ProjectTestBuilder::aProject()->build()
+        )
+                      ->withId(100)->build();
 
         $this->service_manager->method('getListOfAllowedServicesForProject')->willReturn([$service]);
 
@@ -69,13 +71,10 @@ class ServiceRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItReturnsInactiveServiceOnlyForSiteadmin(): void
     {
-        $service = $this->createMock(Service::class);
-        $service->method('getId')->willReturn(101);
-        $service->method('isActive')->willReturn(false);
-        $service->method('isUsed')->willReturn(true);
-        $service->method('getShortName')->willReturn('plugin_git');
-        $service->method('getInternationalizedName')->willReturn('Git');
-        $service->method('getIconName')->willReturn('fa-tlp-versioning-git');
+        $service = ServiceBuilder::aSystemService(
+            ProjectTestBuilder::aProject()->build()
+        )
+                                 ->withId(101)->isActive(false)->isUsed(true)->withShortName('plugin_git')->withServiceIcon('fa-tlp-versioning-git')->build();
 
         $this->service_manager->method('getListOfAllowedServicesForProject')->willReturn([$service]);
 
@@ -88,13 +87,11 @@ class ServiceRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItReturnsActiveServiceForEveryone(): void
     {
-        $service = $this->createMock(Service::class);
-        $service->method('getId')->willReturn(101);
-        $service->method('isActive')->willReturn(true);
-        $service->method('isUsed')->willReturn(true);
-        $service->method('getShortName')->willReturn('plugin_git');
-        $service->method('getInternationalizedName')->willReturn('Git');
-        $service->method('getIconName')->willReturn('fa-tlp-versioning-git');
+        $service = ServiceBuilder::aSystemService(
+            ProjectTestBuilder::aProject()->build()
+        )
+                                 ->withId(101)->isActive(true)->isUsed(true)->withShortName('plugin_git')->withServiceIcon('fa-tlp-versioning-git')->build();
+
 
         $this->service_manager->method('getListOfAllowedServicesForProject')->willReturn([$service]);
 

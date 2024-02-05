@@ -33,38 +33,47 @@ class ServiceRepresentation
     public const ROUTE = 'project_services';
 
     /**
-     * @var int {@required false}
+     * @var int  {@required false}
      */
-    public $id;
+    public ?int $id;
     /**
-     * @var string {@required false}
+     * @var string  {@required false}
      */
-    public $uri;
+    public ?string $uri;
     /**
-     * @var string {@required false}
+     * @var string  {@required false}
      */
-    public $name;
+    public ?string $url;
     /**
-     * @var string {@required false}
+     * @var string  {@required false}
      */
-    public $label;
+    public ?string $name;
     /**
-     * @var bool {@required true}
+     * @var string  {@required false}
      */
-    public $is_enabled;
+    public ?string $label;
     /**
-     * @var string {@required false}
+     * @var bool  {@required true}
      */
-    public $icon = '';
-
-    private function __construct(int $id, string $name, string $label, bool $is_enabled, string $icon)
+    public bool $is_enabled;
+    /**
+     * @var string  {@required false}
+     */
+    public ?string $icon;
+    /**
+     * @var bool  {@required false}
+     */
+    public ?bool $is_custom;
+    private function __construct(int $id, string $name, string $label, bool $is_enabled, string $url, bool $is_custom, string $icon = '')
     {
         $this->id         = $id;
         $this->uri        = self::ROUTE . '/' . urlencode((string) $id);
+        $this->url        = $url;
         $this->name       = $name;
         $this->label      = $label;
         $this->is_enabled = $is_enabled;
         $this->icon       = $icon;
+        $this->is_custom  = $is_custom;
     }
 
     public static function build(Service $service): self
@@ -74,7 +83,9 @@ class ServiceRepresentation
             $service->getShortName(),
             $service->getInternationalizedName(),
             JsonCast::toBoolean($service->isUsed()),
-            $service->getIconName()
+            $service->getUrl(),
+            $service->getScope() !== Service::SCOPE_SYSTEM,
+            $service->getIconName(),
         );
     }
 }
