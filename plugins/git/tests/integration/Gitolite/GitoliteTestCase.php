@@ -89,7 +89,6 @@ abstract class GitoliteTestCase extends TestIntegrationTestCase
      * @var string
      */
     private $repo_dir;
-    private $backup_sys_data_dir;
 
     protected function setUp(): void
     {
@@ -110,7 +109,6 @@ abstract class GitoliteTestCase extends TestIntegrationTestCase
 
         mkdir($this->repo_dir);
 
-        $this->backup_sys_data_dir = \ForgeConfig::get('sys_data_dir');
         \ForgeConfig::set('sys_data_dir', $this->sys_data_dir);
         $this->git_exec = \Mockery::mock(\Git_Exec::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->git_exec->__construct($this->gitolite_admin_dir);
@@ -154,7 +152,6 @@ abstract class GitoliteTestCase extends TestIntegrationTestCase
     protected function tearDown(): void
     {
         chdir($this->cwd);
-        \ForgeConfig::set('sys_data_dir', $this->backup_sys_data_dir);
     }
 
     public function assertEmptyGitStatus(): void

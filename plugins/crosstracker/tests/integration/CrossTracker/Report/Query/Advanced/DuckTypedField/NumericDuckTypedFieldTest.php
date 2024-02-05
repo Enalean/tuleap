@@ -121,11 +121,6 @@ final class NumericDuckTypedFieldTest extends TestIntegrationTestCase
         $this->database_builder->buildFloatValue($sprint_with_3_changeset_id, $sprint_initial_effort_field_id, 3);
     }
 
-    protected function tearDown(): void
-    {
-        \ForgeConfig::clearFeatureFlag(SearchOnDuckTypedFieldsConfig::FEATURE_FLAG_SEARCH_DUCK_TYPED_FIELDS);
-    }
-
     /**
      * @return list<int>
      * @throws SearchablesDoNotExistException
