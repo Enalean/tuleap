@@ -11,3 +11,29 @@ devDependencies:
   '@tuleap/cypress-utilities-support':
     specifier: workspace:*
     version: link:../../../lib/test-utils/cypress-utilities-support
+  cypress-plugin-tab:
+    specifier: ^1.0.5
+    version: 1.0.5
+
+packages:
+
+  /ally.js@1.4.1:
+    resolution: {integrity: sha512-ZewdfuwP6VewtMN36QY0gmiyvBfMnmEaNwbVu2nTS6zRt069viTgkYgaDiqu6vRJ1VJCriNqV0jGMu44R8zNbA==}
+    dependencies:
+      css.escape: 1.5.1
+      platform: 1.3.3
+    dev: true
+
+  /css.escape@1.5.1:
+    resolution: {integrity: sha512-YUifsXXuknHlUsmlgyY0PKzgPOr7/FjCePfHNt0jxm83wHZi44VDMQ7/fGNkjY3/jV1MC+1CmZbaHzugyeRtpg==}
+    dev: true
+
+  /cypress-plugin-tab@1.0.5:
+    resolution: {integrity: sha512-QtTJcifOVwwbeMP3hsOzQOKf3EqKsLyjtg9ZAGlYDntrCRXrsQhe4ZQGIthRMRLKpnP6/tTk6G0gJ2sZUfRliQ==}
+    dependencies:
+      ally.js: 1.4.1
+    dev: true
+
+  /platform@1.3.3:
+    resolution: {integrity: sha512-VJK1SRmXBpjwsB4YOHYSturx48rLKMzHgCqDH2ZDa6ZbMS/N5huoNqyQdK5Fj/xayu3fqbXckn5SeCS1EbMDZg==}
+    dev: true
