@@ -319,6 +319,56 @@ describe("Tracker notifications", () => {
         cy.assertEmailWithContentReceived("RegularUser@example.com", "Last artifact");
     });
 
+    it("Tracker notifications - can not add invalid users", function () {
+        cy.projectAdministratorSession();
+        now = Date.now();
+        const project_name = `invalid-notif-${now}`;
+        cy.createNewPublicProject(project_name, "issues");
+        cy.visitProjectAdministration(project_name);
+        cy.addProjectMember(project_name, "ProjectMember");
+
+        cy.projectAdministratorSession();
+
+        cy.visitProjectAdministration(project_name);
+        cy.log("Add user group");
+        cy.get("[data-test=admin-nav-groups]").click();
+        cy.addUserGroupWithUsers("empty", []);
+
+        cy.visitProjectService(project_name, "Trackers");
+        cy.get("[data-test=tracker-link-issue]").click();
+
+        cy.log("Project member must be tracker administrator");
+        cy.get("[data-test=link-to-current-tracker-administration]").click({ force: true });
+        cy.get("[data-test=admin-permissions]").click();
+        cy.get("[data-test=tracker-permissions]").click();
+
+        cy.get("[data-test=permissions_3]").select("are admin of the tracker");
+        cy.get("[data-test=tracker-permission-submit]").click();
+
+        cy.projectMemberSession();
+        cy.visitProjectService(project_name, "Trackers");
+        cy.get("[data-test=tracker-link-issue]").click();
+
+        cy.log("Configure tracker notifications");
+        goToNotificationAdministration();
+
+        cy.log("Add an invalid user can not be notified");
+        cy.get("[data-test=add-notification]").click();
+        addToNotifications("NonExistingTuleapUser");
+        cy.get("[data-test=save-notification-button]").click();
+
+        cy.get("[data-test=feedback]").contains(
+            "The entered value 'NonExistingTuleapUser' is invalid.",
+        );
+
+        cy.log("Add an empty user group can not be notified");
+        cy.get("[data-test=add-notification]").click();
+        addToNotifications("empty");
+        cy.get("[data-test=save-notification-button]").click();
+
+        cy.get("[data-test=feedback]").contains("The entered value 'empty' is invalid.");
+    });
+
     function selectLabelInListPickerDropdown(
         label: string,
         position: number,
