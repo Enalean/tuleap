@@ -19,18 +19,23 @@
 
 <template>
     <div class="tlp-framed-vertically">
-        <tuleap-selectors-dropdown
-            v-bind:button_text="$gettext('Add filter')"
-            v-bind:selectors_entries="selectors_entries"
-        />
-        <button
-            class="tlp-button-outline tlp-button-primary pull-request-homepage-remove-all-filters"
-            v-on:click="filters_store.clearAllFilters()"
-            v-bind:disabled="filters_store.getFilters().value.length === 0"
-            data-test="clear-all-list-filters"
-        >
-            {{ $gettext("Clear filters") }}
-        </button>
+        <div class="pull-requests-homepage-filters-buttons">
+            <div>
+                <tuleap-selectors-dropdown
+                    v-bind:button_text="$gettext('Add filter')"
+                    v-bind:selectors_entries="selectors_entries"
+                />
+                <button
+                    class="tlp-button-outline tlp-button-primary pull-request-homepage-remove-all-filters"
+                    v-on:click="filters_store.clearAllFilters()"
+                    v-bind:disabled="filters_store.getFilters().value.length === 0"
+                    data-test="clear-all-list-filters"
+                >
+                    {{ $gettext("Clear filters") }}
+                </button>
+            </div>
+            <closed-pull-requests-filter-switch />
+        </div>
         <div class="pull-requests-homepage-filters">
             <span
                 class="tlp-badge-primary tlp-badge-outline pull-request-homepage-filter-badge"
@@ -60,6 +65,7 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { DISPLAY_TULEAP_API_ERROR, REPOSITORY_ID } from "../../injection-symbols";
 import { AuthorSelectorEntry } from "./Author/AuthorSelectorEntry";
 import type { StoreListFilters } from "./ListFiltersStore";
+import ClosedPullRequestsFilterSwitch from "./Status/ClosedPullRequestsFilterSwitch.vue";
 
 const { $gettext } = useGettext();
 
@@ -76,6 +82,12 @@ const selectors_entries = [
 </script>
 
 <style lang="scss">
+.pull-requests-homepage-filters-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .pull-request-autocompleter-avatar {
     display: flex;
     gap: 5px;

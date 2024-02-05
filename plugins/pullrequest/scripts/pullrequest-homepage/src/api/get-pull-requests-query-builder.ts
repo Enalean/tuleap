@@ -20,8 +20,16 @@
 import type { PullRequestsListFilter } from "../components/Filters/PullRequestsListFilter";
 import { TYPE_FILTER_AUTHOR } from "../components/Filters/Author/AuthorFilter";
 
-export const buildQueryFromFilters = (filters: PullRequestsListFilter[]): string => {
+export const buildQueryFromFilters = (
+    filters: PullRequestsListFilter[],
+    are_closed_pull_requests_shown: boolean,
+): string => {
     const query = {};
+
+    if (!are_closed_pull_requests_shown) {
+        Object.assign(query, { status: "open" });
+    }
+
     filters.forEach((filter) => {
         if (filter.type === TYPE_FILTER_AUTHOR) {
             Object.assign(query, {

@@ -18,9 +18,14 @@
   -->
 
 <template>
-    <section class="tlp-pane">
+    <pull-requests-cards-skeletons v-if="is_loading_pull_requests" />
+    <pull-requests-list-empty-state
+        v-if="!is_loading_pull_requests && pull_requests.length === 0"
+        data-test="empty-state"
+    />
+    <section class="tlp-pane" v-if="!is_loading_pull_requests && pull_requests.length">
         <div class="tlp-pane-container">
-            <section class="tlp-pane-section-for-cards" v-if="!is_loading_pull_requests">
+            <section class="tlp-pane-section-for-cards">
                 <pull-request-card
                     data-test="pull-request-card"
                     v-for="pull_request of pull_requests"
@@ -28,7 +33,6 @@
                     v-bind:pull_request="pull_request"
                 />
             </section>
-            <pull-requests-cards-skeletons v-else />
         </div>
     </section>
 </template>
@@ -39,13 +43,19 @@ import type { Ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { fetchAllPullRequests } from "../../api/tuleap-rest-querier";
-import { DISPLAY_TULEAP_API_ERROR, REPOSITORY_ID } from "../../injection-symbols";
+import {
+    DISPLAY_TULEAP_API_ERROR,
+    REPOSITORY_ID,
+    SHOW_CLOSED_PULL_REQUESTS,
+} from "../../injection-symbols";
+import type { StoreListFilters } from "../Filters/ListFiltersStore";
 import PullRequestCard from "./PullRequest/PullRequestCard.vue";
 import PullRequestsCardsSkeletons from "./PullRequestsCardsSkeletons.vue";
-import type { StoreListFilters } from "../Filters/ListFiltersStore";
+import PullRequestsListEmptyState from "./PullRequestsListEmptyState.vue";
 
 const repository_id = strictInject(REPOSITORY_ID);
 const displayTuleapAPIFault = strictInject(DISPLAY_TULEAP_API_ERROR);
+const are_closed_pull_requests_shown = strictInject(SHOW_CLOSED_PULL_REQUESTS);
 
 const pull_requests: Ref<readonly PullRequest[]> = ref([]);
 const is_loading_pull_requests = ref(true);
@@ -57,17 +67,20 @@ const props = defineProps<{
 const loadPullRequests = (): void => {
     is_loading_pull_requests.value = true;
 
-    fetchAllPullRequests(repository_id, props.filters_store.getFilters().value).match(
-        (all_pull_requests) => {
-            pull_requests.value = all_pull_requests;
+    fetchAllPullRequests(
+        repository_id,
+        props.filters_store.getFilters().value,
+        are_closed_pull_requests_shown.value,
+    ).match((all_pull_requests) => {
+        pull_requests.value = all_pull_requests;
 
-            is_loading_pull_requests.value = false;
-        },
-        displayTuleapAPIFault,
-    );
+        is_loading_pull_requests.value = false;
+    }, displayTuleapAPIFault);
 };
 
-loadPullRequests();
-
-watch(props.filters_store.getFilters().value, loadPullRequests);
+watch(
+    () => [props.filters_store.getFilters().value.length, are_closed_pull_requests_shown.value],
+    loadPullRequests,
+    { immediate: true },
+);
 </script>

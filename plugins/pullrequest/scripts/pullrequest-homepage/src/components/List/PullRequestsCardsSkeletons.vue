@@ -18,22 +18,26 @@
   -->
 
 <template>
-    <section class="tlp-pane-section-for-cards">
-        <div
-            v-for="index in [1, 2, 3]"
-            v-bind:key="index"
-            class="tlp-card pull-request-homepage-card-skeleton"
-        >
-            <div class="pull-request-summary-skeleton">
-                <span class="tlp-skeleton-text pull-request-card-title-skeleton"></span>
-                <span class="tlp-skeleton-text"></span>
-            </div>
-            <div class="pull-request-card-skeleton-container">
-                <div class="pull-request-reviewer-skeleton"></div>
-            </div>
-            <div class="pull-request-card-skeleton-container">
-                <span class="pull-request-label-skeleton"></span>
-            </div>
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <section class="tlp-pane-section-for-cards">
+                <div
+                    v-for="index in [1, 2, 3]"
+                    v-bind:key="index"
+                    class="tlp-card pull-request-homepage-card-skeleton"
+                >
+                    <div class="pull-request-summary-skeleton">
+                        <span class="tlp-skeleton-text pull-request-card-title-skeleton"></span>
+                        <span class="tlp-skeleton-text"></span>
+                    </div>
+                    <div class="pull-request-card-skeleton-container">
+                        <div class="pull-request-reviewer-skeleton"></div>
+                    </div>
+                    <div class="pull-request-card-skeleton-container">
+                        <span class="pull-request-label-skeleton"></span>
+                    </div>
+                </div>
+            </section>
         </div>
     </section>
 </template>

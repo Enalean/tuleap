@@ -51,14 +51,23 @@ msgstr "Nom"
 msgid "No matching user"
 msgstr "Aucun utilisateur"
 
+msgid "No result matched your search"
+msgstr "Aucun résultat ne correspond à votre recherche"
+
 msgid "OK"
 msgstr "OK"
 
 msgid "Oh snap!"
 msgstr "Oh mince !"
 
+msgid "Show closed"
+msgstr "Afficher fermées"
+
 msgid "Show details"
 msgstr "Voir les détails"
 
 msgid "You can only filter on one author"
 msgstr "Vous ne pouvez filtrer que sur un auteur"
+
+msgid "You may have set too many filters. Try to modify them."
+msgstr "Vous avez peut-être défini trop de filtres. Essayez de les modifier."
