@@ -91,10 +91,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends \Tuleap\T
 
     /** @var Git_Driver_Gerrit_Template_TemplateProcessor */
     protected $template_processor;
-    /**
-     * @var true
-     */
-    private bool $migrate_access_rights;
+    private true $migrate_access_rights;
     /**
      * @var GitRepository&\Mockery\MockInterface
      */

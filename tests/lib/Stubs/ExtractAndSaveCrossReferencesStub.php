@@ -37,7 +37,7 @@ final class ExtractAndSaveCrossReferencesStub implements \Tuleap\Reference\Extra
         int|string $source_gid,
         int|string $user_id = 0,
         ?string $source_key = null,
-    ): bool {
+    ): true {
         $this->call_count++;
         return true;
     }

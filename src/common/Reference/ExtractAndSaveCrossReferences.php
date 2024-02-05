@@ -33,8 +33,6 @@ interface ExtractAndSaveCrossReferences
      * @param int|string  $source_gid  Project Id of the project the source item belongs to
      * @param int|string  $user_id     User who owns the text to parse
      * @param string|null $source_key  Keyword to use for the reference (if different from the one associated to the nature)
-     *
-     * @return true
      */
     public function extractCrossRef(
         mixed $html,
@@ -43,5 +41,5 @@ interface ExtractAndSaveCrossReferences
         int|string $source_gid,
         int|string $user_id = 0,
         ?string $source_key = null,
-    ): bool;
+    ): true;
 }

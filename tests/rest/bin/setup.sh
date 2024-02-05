@@ -159,12 +159,6 @@ seed_plugin_data() {
 setup_tuleap
 setup_redis
 setup_database
-case "$PHP_FPM" in
-    '/opt/remi/php81/root/usr/sbin/php-fpm')
-    echo "Deploy PHP FPM 81"
-    /usr/bin/tuleap-cfg site-deploy --php-version=php81
-    ;;
-esac
 tuleap_db_config
 sudo -u codendiadm PHP="$PHP_CLI" /usr/bin/tuleap worker:supervisor --quiet start &
 seed_data

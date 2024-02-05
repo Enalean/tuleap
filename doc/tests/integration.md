@@ -14,7 +14,7 @@ tests manually, do the following instead:
 
 ``` bash
 $> make tests-rest SETUP_ONLY=1
-$root@d4601e92ca3f> /opt/remi/php81/root/usr/bin/php \
+$root@d4601e92ca3f> /opt/remi/php82/root/usr/bin/php \
   /usr/share/tuleap/tests/rest/vendor/bin/phpunit \
   --configuration /usr/share/tuleap/tests/rest/phpunit.xml \
   --do-not-cache-result \
@@ -26,5 +26,5 @@ order to parse logs for example:
 
 ``` bash
 $> docker exec -ti <name-of-the-container> bash
-$root@d4601e92ca3f> tail -f /var/opt/remi/php81/log/php-fpm/error.log
+$root@d4601e92ca3f> tail -f /var/opt/remi/php82/log/php-fpm/error.log
 ```
