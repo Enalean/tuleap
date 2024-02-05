@@ -19,6 +19,18 @@
 
 const now = Date.now();
 
+function createCardInColumn(column_name: string, drag_to_collapsed_column_label: string): void {
+    cy.intercept("POST", "/api/v1/kanban_items").as("createCard");
+    cy.get(`[data-test=${column_name}]`).within(() => {
+        cy.get("[data-test=add-in-place]").invoke("css", "pointer-events", "all");
+
+        cy.get("[data-test=add-in-place-button]").click();
+        cy.get("[data-test=add-in-place-label-input]").clear().type(drag_to_collapsed_column_label);
+        cy.get("[data-test=add-in-place-submit]").first().click();
+        cy.wait("@createCard", { timeout: 1000 });
+    });
+}
+
 describe("Kanban service", () => {
     before(function () {
         cy.projectAdministratorSession();
@@ -121,7 +133,6 @@ describe("Kanban service", () => {
     context("As Project member", function () {
         before(function () {
             cy.getProjectId(`kanban-${now}`).as("project_id");
-            cy.intercept("POST", "/api/v1/kanban_items").as("createCard");
         });
 
         it(`I can use the kanban`, function () {
@@ -194,23 +205,9 @@ describe("Kanban service", () => {
 
             const drag_label = `drag${now}`;
             const drop_label = `drop${now}`;
-            cy.get("[data-test=kanban-column-backlog]").within(() => {
-                cy.get("[data-test=add-in-place]").invoke("css", "pointer-events", "all");
 
-                cy.get("[data-test=add-in-place-button]").click();
-                cy.get("[data-test=add-in-place-label-input]").clear().type(drag_label);
-                cy.get("[data-test=add-in-place-submit]").first().click();
-                cy.wait("@createCard", { timeout: 1000 });
-            });
-
-            cy.get("[data-test=kanban-column-review]").within(() => {
-                cy.get("[data-test=add-in-place]").invoke("css", "pointer-events", "all");
-
-                cy.get("[data-test=add-in-place-button]").click();
-                cy.get("[data-test=add-in-place-label-input]").clear().type(drop_label);
-                cy.get("[data-test=add-in-place-submit]").first().click();
-                cy.wait("@createCard", { timeout: 1000 });
-            });
+            createCardInColumn("kanban-column-backlog", drag_label);
+            createCardInColumn("kanban-column-review", drop_label);
 
             cy.dragAndDrop(
                 `[data-test=kanban-item-content-${drag_label}]`,
@@ -283,22 +280,15 @@ describe("Kanban service", () => {
                 "2",
             );
             const drag_to_collapsed_column_label = `drag_to_collapsed_column${now}`;
+            createCardInColumn("kanban-column-backlog", drag_to_collapsed_column_label);
 
-            cy.get("[data-test=kanban-column-backlog]").within(() => {
-                cy.get("[data-test=add-in-place]").invoke("css", "pointer-events", "all");
-
-                cy.get("[data-test=add-in-place-button]").click();
-                cy.get("[data-test=add-in-place-label-input]")
-                    .clear()
-                    .type(drag_to_collapsed_column_label);
-                cy.get("[data-test=add-in-place-submit]").first().click();
-            });
-
+            cy.intercept("PATCH", "/api/v1/kanban/*/items?column_id=*").as("dropCard");
             cy.dragAndDrop(
                 `[data-test=kanban-item-content-${drag_to_collapsed_column_label}]`,
                 `[data-test=kanban-items-in_progress]`,
                 "center",
             );
+            cy.wait("@dropCard");
             cy.get('[data-test="kanban-column-label-count-at-init-in_progress"]').should(
                 "have.text",
                 "3",
