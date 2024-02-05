@@ -26,7 +26,7 @@ import { defineStore } from "pinia";
 
 const project_id = 102;
 
-async function getPersonalWidgetInstance(): Promise<Wrapper<RoadmapEmptyStateSection>> {
+async function getPersonalWidgetInstance(): Promise<Wrapper<Vue, Element>> {
     const useStore = defineStore("root", {
         state: () => ({
             is_loading: false,
@@ -40,6 +40,7 @@ async function getPersonalWidgetInstance(): Promise<Wrapper<RoadmapEmptyStateSec
 
     const component_options = {
         localVue: await createReleaseWidgetLocalVue(),
+        pinia,
     };
 
     return shallowMount(RoadmapEmptyStateSection, component_options);

@@ -40,30 +40,29 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
 import SVGProjectMilestonesEmptyState from "./SVGProjectMilestonesEmptyState.vue";
 import { useStore } from "../../stores/root";
-@Component({
-    components: { SVGProjectMilestonesEmptyState },
-})
-export default class RoadmapEmptyStateSection extends Vue {
-    public root_store = useStore();
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-    get backlog_link(): string {
-        return (
-            "/plugins/agiledashboard/?action=show-top&group_id=" +
-            encodeURIComponent(this.root_store.project_id) +
-            "&pane=topplanning-v2"
-        );
-    }
+const root_store = useStore();
+const gettext_provider = useGettext();
 
-    get empty_state_label(): string {
-        return this.$gettextInterpolate(
-            this.$gettext("There is no item nor milestone in the %{ name } backlog yet."),
-            { name: this.root_store.project_name },
-        );
-    }
-}
+const backlog_link = computed((): string => {
+    return (
+        "/plugins/agiledashboard/?action=show-top&group_id=" +
+        encodeURIComponent(root_store.project_id) +
+        "&pane=topplanning-v2"
+    );
+});
+
+const empty_state_label = computed((): string => {
+    return gettext_provider.interpolate(
+        gettext_provider.$gettext("There is no item nor milestone in the %{ name } backlog yet."),
+        {
+            name: root_store.project_name,
+        },
+    );
+});
 </script>

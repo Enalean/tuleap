@@ -17,7 +17,7 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
+<template>
     <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -140,3 +140,5 @@
         ></path>
     </svg>
 </template>
+
+<script setup lang="ts"></script>
