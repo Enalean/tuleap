@@ -32,6 +32,7 @@ import type { ConfigurationState } from "./configuration";
 import type { Upload } from "tus-js-client";
 import emitter from "../helpers/emitter";
 import * as flag_item_as_created from "./actions-helpers/flag-item-as-created";
+import { buildFakeItem } from "../helpers/item-builder";
 
 jest.mock("../helpers/emitter");
 
@@ -82,10 +83,11 @@ describe("actions-create", () => {
                 is_expanded: true,
             } as Folder;
             const current_folder = parent;
+            const fake_item = buildFakeItem();
 
             getItem.mockResolvedValue(item);
 
-            await createNewItem(context, [item, parent, current_folder]);
+            await createNewItem(context, [item, parent, current_folder, fake_item]);
 
             expect(addNewEmpty).toHaveBeenCalledWith(correct_item, parent.id);
         });
@@ -102,9 +104,10 @@ describe("actions-create", () => {
                 is_expanded: true,
             } as Folder;
             const current_folder = parent;
+            const fake_item = buildFakeItem();
             getItem.mockResolvedValue(item);
 
-            await createNewItem(context, [item, parent, current_folder]);
+            await createNewItem(context, [item, parent, current_folder, fake_item]);
 
             expect(getItem).toHaveBeenCalledWith(66);
             expect(emitter.emit).toHaveBeenCalledWith("new-item-has-just-been-created", { id: 66 });
@@ -130,8 +133,9 @@ describe("actions-create", () => {
             } as Folder;
             const current_folder = parent;
             const item = { id: 66, title: "", type: "empty" } as Item;
+            const fake_item = buildFakeItem();
 
-            await createNewItem(context, [item, parent, current_folder]);
+            await createNewItem(context, [item, parent, current_folder, fake_item]);
 
             expect(context.commit).not.toHaveBeenCalledWith(
                 "addJustCreatedItemToFolderContent",
@@ -149,8 +153,9 @@ describe("actions-create", () => {
 
             const folder_of_created_item = { id: 10 } as Folder;
             const current_folder = { id: 10 } as Folder;
+            const fake_item = buildFakeItem();
 
-            await createNewItem(context, [item, folder_of_created_item, current_folder]);
+            await createNewItem(context, [item, folder_of_created_item, current_folder, fake_item]);
 
             expect(context.commit).not.toHaveBeenCalledWith("addDocumentToFoldedFolder");
             expect(context.commit).toHaveBeenCalledWith("addJustCreatedItemToFolderContent", item);
@@ -168,8 +173,14 @@ describe("actions-create", () => {
                 parent_id: 30,
                 is_expanded: false,
             } as Folder;
+            const fake_item = buildFakeItem();
 
-            await createNewItem(context, [item, collapsed_folder_of_created_item, current_folder]);
+            await createNewItem(context, [
+                item,
+                collapsed_folder_of_created_item,
+                current_folder,
+                fake_item,
+            ]);
             expect(context.commit).toHaveBeenCalledWith("addDocumentToFoldedFolder", [
                 collapsed_folder_of_created_item,
                 item,
@@ -190,8 +201,14 @@ describe("actions-create", () => {
                 parent_id: 30,
                 is_expanded: true,
             } as Folder;
+            const fake_item = buildFakeItem();
 
-            await createNewItem(context, [item, collapsed_folder_of_created_item, current_folder]);
+            await createNewItem(context, [
+                item,
+                collapsed_folder_of_created_item,
+                current_folder,
+                fake_item,
+            ]);
             expect(context.commit).not.toHaveBeenCalledWith("addDocumentToFoldedFolder");
             expect(context.commit).toHaveBeenCalledWith("addJustCreatedItemToFolderContent", item);
         });
@@ -219,6 +236,7 @@ describe("actions-create", () => {
             const current_folder = { id: 10 } as Folder;
             const uploader = {} as Upload;
             const uploadFile = jest.spyOn(upload_file, "uploadFile").mockReturnValue(uploader);
+            const fake_item = buildFakeItem();
 
             const expected_fake_item_with_uploader: FakeItem = {
                 id: 66,
@@ -237,7 +255,7 @@ describe("actions-create", () => {
                 is_approval_table_enabled: false,
             } as FakeItem;
 
-            await createNewItem(context, [item, folder_of_created_item, current_folder]);
+            await createNewItem(context, [item, folder_of_created_item, current_folder, fake_item]);
 
             expect(uploadFile).toHaveBeenCalled();
             expect(context.commit).toHaveBeenCalledWith(
@@ -277,6 +295,7 @@ describe("actions-create", () => {
             } as Folder;
             const uploader = {} as Upload;
             const uploadFile = jest.spyOn(upload_file, "uploadFile").mockReturnValue(uploader);
+            const fake_item = buildFakeItem();
 
             const expected_fake_item_with_uploader: FakeItem = {
                 id: 66,
@@ -295,7 +314,12 @@ describe("actions-create", () => {
                 is_approval_table_enabled: false,
             } as FakeItem;
 
-            await createNewItem(context, [item, collapsed_folder_of_created_item, current_folder]);
+            await createNewItem(context, [
+                item,
+                collapsed_folder_of_created_item,
+                current_folder,
+                fake_item,
+            ]);
 
             expect(uploadFile).toHaveBeenCalled();
             expect(context.commit).toHaveBeenCalledWith(
@@ -339,6 +363,7 @@ describe("actions-create", () => {
             } as Folder;
             const uploader = {} as Upload;
             const uploadFile = jest.spyOn(upload_file, "uploadFile").mockReturnValue(uploader);
+            const fake_item = buildFakeItem();
 
             const expected_fake_item_with_uploader: FakeItem = {
                 id: 66,
@@ -357,7 +382,12 @@ describe("actions-create", () => {
                 is_approval_table_enabled: false,
             } as FakeItem;
 
-            await createNewItem(context, [item, extended_folder_of_created_item, current_folder]);
+            await createNewItem(context, [
+                item,
+                extended_folder_of_created_item,
+                current_folder,
+                fake_item,
+            ]);
 
             expect(uploadFile).toHaveBeenCalled();
             expect(context.commit).toHaveBeenCalledWith(
@@ -385,6 +415,7 @@ describe("actions-create", () => {
             context.state.folder_content = [{ id: 45 } as Folder];
             const dropped_file = { name: "filename.txt", size: 10, type: "text/plain" } as File;
             const parent = { id: 42 } as Folder;
+            const fake_item = buildFakeItem();
 
             const created_item_reference = { id: 66 } as CreatedItem;
             jest.spyOn(rest_querier, "addNewFile").mockReturnValue(
@@ -393,7 +424,14 @@ describe("actions-create", () => {
             const uploader = {} as Upload;
             jest.spyOn(upload_file, "uploadFile").mockReturnValue(uploader);
 
-            await addNewUploadFile(context, [dropped_file, parent, "filename.txt", "", true]);
+            await addNewUploadFile(context, [
+                dropped_file,
+                parent,
+                "filename.txt",
+                "",
+                true,
+                fake_item,
+            ]);
 
             const expected_fake_item_with_uploader = {
                 id: 66,
@@ -427,8 +465,16 @@ describe("actions-create", () => {
             );
             const uploader = {} as Upload;
             const uploadFile = jest.spyOn(upload_file, "uploadFile").mockReturnValue(uploader);
+            const fake_item = buildFakeItem();
 
-            await addNewUploadFile(context, [dropped_file, parent, "filename.txt", "", true]);
+            await addNewUploadFile(context, [
+                dropped_file,
+                parent,
+                "filename.txt",
+                "",
+                true,
+                fake_item,
+            ]);
 
             const expected_fake_item = {
                 id: 66,
@@ -458,6 +504,7 @@ describe("actions-create", () => {
             context.state.folder_content = [{ id: 45 } as Folder, { id: 66 } as ItemFile];
             const dropped_file = { name: "filename.txt", size: 10, type: "text/plain" } as File;
             const parent = { id: 42 } as Folder;
+            const fake_item = buildFakeItem();
 
             const created_item_reference = { id: 66 } as CreatedItem;
             jest.spyOn(rest_querier, "addNewFile").mockReturnValue(
@@ -465,7 +512,14 @@ describe("actions-create", () => {
             );
             const uploadFile = jest.spyOn(upload_file, "uploadFile").mockImplementation();
 
-            await addNewUploadFile(context, [dropped_file, parent, "filename.txt", "", true]);
+            await addNewUploadFile(context, [
+                dropped_file,
+                parent,
+                "filename.txt",
+                "",
+                true,
+                fake_item,
+            ]);
 
             expect(context.commit).not.toHaveBeenCalled();
             expect(uploadFile).not.toHaveBeenCalled();
@@ -474,6 +528,7 @@ describe("actions-create", () => {
             context.state.folder_content = [{ id: 45 } as Folder];
             const dropped_file = { name: "empty-file.txt", size: 0, type: "text/plain" } as File;
             const parent = { id: 42 } as Folder;
+            const fake_item = buildFakeItem();
 
             const created_item_reference = { id: 66 } as CreatedItem;
             jest.spyOn(rest_querier, "addNewFile").mockReturnValue(
@@ -485,7 +540,14 @@ describe("actions-create", () => {
 
             const uploadFile = jest.spyOn(upload_file, "uploadFile").mockImplementation();
 
-            await addNewUploadFile(context, [dropped_file, parent, "filename.txt", "", true]);
+            await addNewUploadFile(context, [
+                dropped_file,
+                parent,
+                "filename.txt",
+                "",
+                true,
+                fake_item,
+            ]);
 
             expect(context.commit).toHaveBeenCalledWith(
                 "addJustCreatedItemToFolderContent",

@@ -24,6 +24,7 @@ import DragNDropHandler from "./DragNDropHandler.vue";
 import emitter from "../../../helpers/emitter";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 import { nextTick } from "vue";
+import { buildFakeItem } from "../../../helpers/item-builder";
 
 jest.mock("../../../helpers/emitter");
 
@@ -310,6 +311,7 @@ describe("DragNDropHandler", () => {
                 file1.name,
                 "",
                 true,
+                buildFakeItem(),
             ]);
             expect(add_upload_file_mock).toHaveBeenCalledWith(expect.anything(), [
                 file2,
@@ -317,6 +319,7 @@ describe("DragNDropHandler", () => {
                 file2.name,
                 "",
                 true,
+                buildFakeItem(),
             ]);
         });
 
@@ -343,6 +346,7 @@ describe("DragNDropHandler", () => {
                 file1.name,
                 "",
                 true,
+                buildFakeItem(),
             ]);
             expect(add_upload_file_mock).toHaveBeenCalledWith(expect.anything(), [
                 file2,
@@ -350,6 +354,7 @@ describe("DragNDropHandler", () => {
                 file2.name,
                 "",
                 true,
+                buildFakeItem(),
             ]);
         });
     });
@@ -367,6 +372,7 @@ describe("DragNDropHandler", () => {
                 file1.name,
                 "",
                 true,
+                buildFakeItem(),
             ]);
         });
 

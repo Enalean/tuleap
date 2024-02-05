@@ -27,7 +27,7 @@ import {
     getItem,
 } from "../api/rest-querier";
 import type { ActionContext } from "vuex";
-import type { CreatedItem, Folder, Item, RootState, State } from "../type";
+import type { CreatedItem, FakeItem, Folder, Item, RootState, State } from "../type";
 import {
     isEmbedded,
     isEmpty,
@@ -49,7 +49,7 @@ export interface RootActionsCreate {
 
 export const createNewItem = async (
     context: ActionContext<RootState, RootState>,
-    [item, parent, current_folder]: [Item, Folder, Folder],
+    [item, parent, current_folder, fake_item]: [Item, Folder, Folder, FakeItem],
 ): Promise<CreatedItem | undefined> => {
     try {
         let should_display_item = true;
@@ -73,6 +73,7 @@ export const createNewItem = async (
                 item_to_create,
                 parent,
                 should_display_item,
+                fake_item,
             );
             return item_reference;
         }
@@ -107,12 +108,13 @@ export const createNewItem = async (
 
 export const addNewUploadFile = async (
     context: ActionContext<RootState, RootState>,
-    [dropped_file, parent, title, description, should_display_fake_item]: [
+    [dropped_file, parent, title, description, should_display_fake_item, fake_item]: [
         File,
         Folder,
         string,
         string,
         boolean,
+        FakeItem,
     ],
 ): Promise<void> => {
     try {
@@ -121,8 +123,9 @@ export const addNewUploadFile = async (
             description,
             file_properties: { file: dropped_file },
             properties: null,
+            progress: 0,
         };
-        await createNewFile(context, item, parent, should_display_fake_item);
+        await createNewFile(context, item, parent, should_display_fake_item, fake_item);
     } catch (exception) {
         context.commit("toggleCollapsedFolderHasUploadingContent", {
             collapsed_folder: parent,

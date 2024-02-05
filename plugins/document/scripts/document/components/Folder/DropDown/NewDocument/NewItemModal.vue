@@ -109,6 +109,7 @@ import {
 import emitter from "../../../../helpers/emitter";
 import { isFile } from "../../../../helpers/type-check-helper";
 import { getEmptyOfficeFileFromMimeType } from "../../../../helpers/office/get-empty-office-file";
+import { buildFakeItem } from "../../../../helpers/item-builder";
 
 export default {
     name: "NewItemModal",
@@ -134,6 +135,7 @@ export default {
             is_from_alternative: false,
             from_alternative_extension: "",
             alternative_badge_class: "",
+            fake_item: buildFakeItem(),
         };
     },
     computed: {
@@ -288,6 +290,7 @@ export default {
                 this.item,
                 this.parent,
                 this.current_folder,
+                this.fake_item,
             ]);
 
             if (this.is_from_alternative) {

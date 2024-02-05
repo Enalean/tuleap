@@ -42,6 +42,7 @@ import { highlightItem } from "../../../helpers/highlight-items-helper";
 import { isFile, isFolder } from "../../../helpers/type-check-helper";
 import emitter from "../../../helpers/emitter";
 import { sprintf } from "sprintf-js";
+import { buildFakeItem } from "../../../helpers/item-builder";
 
 export default {
     components: { CurrentFolderDropZone },
@@ -62,6 +63,7 @@ export default {
             number_of_dragged_files: 0,
             is_drop_possible: true,
             dragover_error_reason: "",
+            fake_item_list: [],
         };
     },
     computed: {
@@ -282,12 +284,14 @@ export default {
 
             for (const file of files) {
                 try {
+                    this.fake_item_list.push(buildFakeItem());
                     await this.$store.dispatch("addNewUploadFile", [
                         file,
                         dropzone_item,
                         file.name,
                         "",
                         should_display_fake_item,
+                        this.fake_item_list[this.fake_item_list.length - 1],
                     ]);
                 } catch (error) {
                     this.error_modal_shown = this.CREATION_ERROR;

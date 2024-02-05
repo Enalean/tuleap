@@ -215,7 +215,11 @@ export interface Uploadable {
     is_uploading_in_collapsed_folder: boolean;
 }
 
-export interface FakeItem extends MinimalItem, Uploadable {
+export interface FakeItem extends Uploadable {
+    id: number;
+    title: string;
+    parent_id: number | null;
+    type: string; // Should use ItemType
     last_update_date?: Date;
     file_type?: string;
     has_approval_table: boolean;

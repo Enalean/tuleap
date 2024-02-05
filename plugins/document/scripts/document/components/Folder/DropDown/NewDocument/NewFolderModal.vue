@@ -68,6 +68,7 @@ import {
     transformStatusPropertyForItemCreation,
 } from "../../../../helpers/properties-helpers/creation-data-transformatter-helper";
 import emitter from "../../../../helpers/emitter";
+import { buildFakeItem } from "../../../../helpers/item-builder";
 
 export default {
     name: "NewFolderModal",
@@ -172,6 +173,7 @@ export default {
                 this.item,
                 this.parent,
                 this.current_folder,
+                buildFakeItem(),
             ]);
             this.is_loading = false;
             if (this.has_modal_error === false) {
