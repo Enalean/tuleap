@@ -1762,6 +1762,20 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                     $queries[0] .= " ORDER BY " . implode(', ', $order);
                 }
             }
+        } else {
+            /**
+             * When using several queries, we must ensure that changesets are retrieved in the same order
+             * to merge (in exportToCSV()) fields of the same artifact
+             */
+            $ordered_queries = [];
+            foreach ($queries as $query_key => $query) {
+                if (is_array($query)) {
+                    $ordered_queries[$query_key] = $query;
+                } else {
+                    $ordered_queries[$query_key] = $query . ' ORDER BY c.id';
+                }
+            }
+            $queries = $ordered_queries;
         }
 
         if (empty($queries)) {
