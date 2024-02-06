@@ -17,13 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, vi } from "vitest";
+import { ref } from "vue";
+import { describe, beforeEach, it, expect, vi } from "vitest";
 import { okAsync, errAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import type { ProjectLabel } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { ProjectLabelStub } from "../../../../tests/stubs/ProjectLabelStub";
 import * as rest_querier from "../../../api/tuleap-rest-querier";
 import { LabelsLoader } from "./LabelsLoader";
+import { LazyboxItemLabelBuilder } from "./LazyboxItemLabelBuilder";
+import type { BuildLazyboxItemLabel } from "./LazyboxItemLabelBuilder";
+import { GettextStub } from "../../../../tests/stubs/GettextStub";
+import { ListFiltersStore } from "../ListFiltersStore";
+import { LabelFilterBuilder } from "./LabelFilter";
 
 const labels: ProjectLabel[] = [
     ProjectLabelStub.outlinedWithIdAndLabel(1, "Emergency"),
@@ -34,18 +40,30 @@ const labels: ProjectLabel[] = [
 const project_id = 2;
 
 describe("LabelsLoader", () => {
+    let items_builder: BuildLazyboxItemLabel;
+
+    beforeEach(() => {
+        items_builder = LazyboxItemLabelBuilder(
+            ListFiltersStore(ref([LabelFilterBuilder(GettextStub).fromLabel(labels[0])])),
+        );
+    });
+
     it("should load the labels and return a collection of LazyboxItem", async () => {
         vi.spyOn(rest_querier, "fetchProjectLabels").mockReturnValue(okAsync(labels));
 
-        const loadItems = LabelsLoader(() => {
-            // Do nothing
-        }, project_id);
+        const loadItems = LabelsLoader(
+            () => {
+                // Do nothing
+            },
+            items_builder,
+            project_id,
+        );
         const items = await loadItems();
 
         expect(rest_querier.fetchProjectLabels).toHaveBeenCalledWith(project_id);
         expect(items).toHaveLength(labels.length);
         expect(items).toStrictEqual([
-            { value: labels[0], is_disabled: false },
+            { value: labels[0], is_disabled: true },
             { value: labels[1], is_disabled: false },
             { value: labels[2], is_disabled: false },
         ]);
@@ -57,7 +75,7 @@ describe("LabelsLoader", () => {
 
         vi.spyOn(rest_querier, "fetchProjectLabels").mockReturnValue(errAsync(tuleap_api_error));
 
-        const loadItems = LabelsLoader(on_error_callback, project_id);
+        const loadItems = LabelsLoader(on_error_callback, items_builder, project_id);
         const items = await loadItems();
 
         expect(on_error_callback).toHaveBeenCalledWith(tuleap_api_error);

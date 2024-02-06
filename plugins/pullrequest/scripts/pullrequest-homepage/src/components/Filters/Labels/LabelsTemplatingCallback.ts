@@ -17,25 +17,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { HTMLTemplateStringProcessor, HTMLTemplateResult, LazyboxItem } from "@tuleap/lazybox";
+import type {
+    HTMLTemplateStringProcessor,
+    HTMLTemplateResult,
+    LazyboxItem,
+    LazyboxTemplatingCallback,
+} from "@tuleap/lazybox";
 import { isLabel } from "./LabelsSelectorEntry";
 
-export const LabelsTemplatingCallback = (
-    html: typeof HTMLTemplateStringProcessor,
-    item: LazyboxItem,
-): HTMLTemplateResult => {
-    if (!isLabel(item.value)) {
-        return html``;
-    }
+export const LabelsTemplatingCallback =
+    ($gettext: (string: string) => string): LazyboxTemplatingCallback =>
+    (html: typeof HTMLTemplateStringProcessor, item: LazyboxItem): HTMLTemplateResult => {
+        if (!isLabel(item.value)) {
+            return html``;
+        }
 
-    const badge_classes = {
-        [`tlp-badge-${item.value.color}`]: true,
-        "tlp-badge-outline": item.value.is_outline,
+        const badge_classes = {
+            [`tlp-badge-${item.value.color}`]: true,
+            "pull-request-autocompleter-badge-disabled": item.is_disabled,
+            "tlp-badge-outline": item.value.is_outline,
+        };
+
+        const title = item.is_disabled ? $gettext("This label is already selected") : "";
+
+        return html`
+            <span class="${badge_classes}" data-test="pull-request-label" title=${title}
+                ><i class="fa-solid fa-tag tlp-badge-icon"></i>${item.value.label}</span
+            >
+        `;
     };
-
-    return html`
-        <span class="${badge_classes}" data-test="pull-request-label"
-            ><i class="fa-solid fa-tag tlp-badge-icon"></i>${item.value.label}</span
-        >
-    `;
-};

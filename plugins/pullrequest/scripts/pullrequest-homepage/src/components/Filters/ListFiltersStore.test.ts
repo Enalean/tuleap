@@ -24,6 +24,9 @@ import { ListFiltersStore } from "./ListFiltersStore";
 import type { StoreListFilters } from "./ListFiltersStore";
 import { TYPE_FILTER_AUTHOR } from "./Author/AuthorFilter";
 import { UserStub } from "../../../tests/stubs/UserStub";
+import { LabelFilterBuilder, TYPE_FILTER_LABEL } from "./Labels/LabelFilter";
+import { GettextStub } from "../../../tests/stubs/GettextStub";
+import { ProjectLabelStub } from "../../../tests/stubs/ProjectLabelStub";
 
 describe("ListFiltersStore", () => {
     let store: StoreListFilters;
@@ -51,6 +54,38 @@ describe("ListFiltersStore", () => {
 
             expect(store.getFilters().value).toHaveLength(1);
             expect(store.getFilters().value).toStrictEqual([new_filter]);
+        });
+
+        it("When a filter with the same type already exist but the filter allows multiple values, Then it should add it to the store", () => {
+            const label_filter_builder = LabelFilterBuilder(GettextStub);
+            const emergency_label_filter = label_filter_builder.fromLabel(
+                ProjectLabelStub.regulardWithIdAndLabel(1, "Emergency"),
+            );
+            const easy_fix_label_filter = label_filter_builder.fromLabel(
+                ProjectLabelStub.regulardWithIdAndLabel(2, "Easy fix"),
+            );
+
+            store.storeFilter(emergency_label_filter);
+            store.storeFilter(easy_fix_label_filter);
+
+            expect(store.getFilters().value).toHaveLength(2);
+            expect(store.getFilters().value).toStrictEqual([
+                emergency_label_filter,
+                easy_fix_label_filter,
+            ]);
+        });
+
+        it("When a filter with the same id already exist, Then it should not add it one more time to the store", () => {
+            const label_filter_builder = LabelFilterBuilder(GettextStub);
+            const emergency_label_filter = label_filter_builder.fromLabel(
+                ProjectLabelStub.regulardWithIdAndLabel(1, "Emergency"),
+            );
+
+            store.storeFilter(emergency_label_filter);
+            store.storeFilter(emergency_label_filter);
+
+            expect(store.getFilters().value).toHaveLength(1);
+            expect(store.getFilters().value).toStrictEqual([emergency_label_filter]);
         });
     });
 
@@ -89,6 +124,26 @@ describe("ListFiltersStore", () => {
             store.clearAllFilters();
 
             expect(store.hasAFilterWithType(TYPE_FILTER_AUTHOR)).toBe(false);
+        });
+    });
+
+    describe("doesFilterAlreadyExist()", () => {
+        it("should return true when a filter with the same type and id exists in the store", () => {
+            const label_id = 1;
+            const label_filter_builder = LabelFilterBuilder(GettextStub);
+            const emergency_label_filter = label_filter_builder.fromLabel(
+                ProjectLabelStub.regulardWithIdAndLabel(label_id, "Emergency"),
+            );
+
+            store.storeFilter(emergency_label_filter);
+
+            expect(store.doesFilterAlreadyExist(TYPE_FILTER_LABEL, label_id));
+        });
+
+        it("should return false when no filter with a given type and id exists in the store", () => {
+            const label_id = 1;
+
+            expect(store.doesFilterAlreadyExist(TYPE_FILTER_LABEL, label_id));
         });
     });
 });

@@ -28,15 +28,22 @@ import { SelectorEntryStub } from "../../../tests/SelectorEntryStub";
 import type { InternalSelectorsDropdown, SelectorEntry } from "../SelectorsDropdown";
 import { OnSelectionCallback } from "./OnSelectionCallback";
 import { ContentGroupBuilder } from "./ContentGroupBuilder";
+import type { LazyboxItem } from "@tuleap/lazybox/src/GroupCollection";
 
 describe("OnSelectionCallback", () => {
     let replaced_groups: GroupCollection = [],
         selector: SelectorEntry,
         lazy_autocompleter: LazyAutocompleter,
-        is_disabled_after_selection: boolean;
+        is_disabled_after_selection: boolean,
+        items: LazyboxItem[];
 
     beforeEach(() => {
         is_disabled_after_selection = false;
+        items = [
+            { value: "value 1", is_disabled: false },
+            { value: "value 2", is_disabled: false },
+            { value: "value 3", is_disabled: false },
+        ];
     });
 
     const getCallback = (): LazyAutocompleterSelectionCallback => {
@@ -58,6 +65,7 @@ describe("OnSelectionCallback", () => {
             lazy_autocompleter,
             ContentGroupBuilder(selector.config),
             selector,
+            items,
         );
     };
 
@@ -75,16 +83,22 @@ describe("OnSelectionCallback", () => {
         expect(lazy_autocompleter.disabled).toBe(true);
     });
 
-    it("When the selector is NOT disabled after the selection occurred, then the autocompleter should not be disabled", () => {
+    it("When the selector is NOT disabled after the selection occurred, then it should call getDisabledItems and replace the list content", () => {
         is_disabled_after_selection = false;
 
         const callback = getCallback();
         const selected_item = "value 1";
 
+        vi.spyOn(selector.config, "getDisabledItems");
+        vi.spyOn(lazy_autocompleter, "replaceContent");
+
         callback(selected_item);
 
         expect(selector.config.onItemSelection).toHaveBeenCalledOnce();
         expect(selector.config.onItemSelection).toHaveBeenCalledWith(selected_item);
+        expect(selector.config.getDisabledItems).toHaveBeenCalledOnce();
+        expect(selector.config.getDisabledItems).toHaveBeenCalledWith(items);
+        expect(lazy_autocompleter.replaceContent).toHaveBeenCalledOnce();
         expect(lazy_autocompleter.disabled).toBe(false);
     });
 });

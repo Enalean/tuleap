@@ -21,19 +21,17 @@ import type { LazyboxItem } from "@tuleap/lazybox";
 import type { Fault } from "@tuleap/fault";
 import { fetchProjectLabels } from "../../../api/tuleap-rest-querier";
 import type { SelectorsDropdownLoadItemsCallback } from "@tuleap/plugin-pullrequest-selectors-dropdown";
+import type { BuildLazyboxItemLabel } from "./LazyboxItemLabelBuilder";
 
 export const LabelsLoader =
     (
         on_error_callback: (fault: Fault) => void,
+        items_builder: BuildLazyboxItemLabel,
         project_id: number,
     ): SelectorsDropdownLoadItemsCallback =>
     () =>
         fetchProjectLabels(project_id).match(
-            (labels): LazyboxItem[] =>
-                labels.map((label) => ({
-                    value: label,
-                    is_disabled: false,
-                })),
+            (labels): LazyboxItem[] => labels.map(items_builder.fromLabel),
             (fault): LazyboxItem[] => {
                 on_error_callback(fault);
                 return [];

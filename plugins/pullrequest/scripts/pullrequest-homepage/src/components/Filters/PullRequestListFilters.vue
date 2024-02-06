@@ -37,23 +37,12 @@
             <closed-pull-requests-filter-switch />
         </div>
         <div class="pull-requests-homepage-filters">
-            <span
-                class="tlp-badge-primary tlp-badge-outline pull-request-homepage-filter-badge"
+            <filter-badge
                 v-for="filter in filters_store.getFilters().value"
                 v-bind:key="filter.id"
-                data-test="list-filter-badge"
-            >
-                {{ filter.label }}
-                <button
-                    type="button"
-                    class="pull-request-homepage-remove-filter"
-                    v-on:click="filters_store.deleteFilter(filter)"
-                    v-bind:title="$gettext('Delete this filter')"
-                    data-test="list-filter-badge-delete-button"
-                >
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </span>
+                v-bind:filter="filter"
+                v-bind:filters_store="filters_store"
+            />
         </div>
     </div>
 </template>
@@ -64,9 +53,10 @@ import "@tuleap/plugin-pullrequest-selectors-dropdown";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { DISPLAY_TULEAP_API_ERROR, PROJECT_ID, REPOSITORY_ID } from "../../injection-symbols";
 import { AuthorSelectorEntry } from "./Author/AuthorSelectorEntry";
+import { LabelsSelectorEntry } from "./Labels/LabelsSelectorEntry";
 import type { StoreListFilters } from "./ListFiltersStore";
 import ClosedPullRequestsFilterSwitch from "./Status/ClosedPullRequestsFilterSwitch.vue";
-import { LabelsSelectorEntry } from "./Labels/LabelsSelectorEntry";
+import FilterBadge from "./FilterBadge.vue";
 
 const { $gettext } = useGettext();
 
@@ -80,7 +70,7 @@ const props = defineProps<{
 
 const selectors_entries = [
     AuthorSelectorEntry($gettext, displayTuleapAPIFault, props.filters_store, repository_id),
-    LabelsSelectorEntry($gettext, displayTuleapAPIFault, project_id),
+    LabelsSelectorEntry($gettext, displayTuleapAPIFault, props.filters_store, project_id),
 ];
 </script>
 
@@ -129,5 +119,9 @@ const selectors_entries = [
     &:focus {
         box-shadow: var(--tlp-shadow-focus);
     }
+}
+
+.pull-request-autocompleter-badge-disabled {
+    opacity: 0.5;
 }
 </style>

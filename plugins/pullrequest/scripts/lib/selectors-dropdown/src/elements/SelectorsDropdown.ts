@@ -38,6 +38,8 @@ export type SelectorsDropdownFilterItemsCallback = (
     items: LazyboxItem[],
 ) => LazyboxItem[];
 
+export type SelectorsDropdownDisableItemsCallback = (items: LazyboxItem[]) => LazyboxItem[];
+
 export type SelectorsDropdownOnItemSelectionCallback = (item: unknown) => void;
 
 export type AutocompleterConfig = {
@@ -49,6 +51,7 @@ export type AutocompleterConfig = {
     loadItems: SelectorsDropdownLoadItemsCallback;
     filterItems: SelectorsDropdownFilterItemsCallback;
     onItemSelection: SelectorsDropdownOnItemSelectionCallback;
+    getDisabledItems?: SelectorsDropdownDisableItemsCallback;
 };
 
 export type SelectorEntry = {

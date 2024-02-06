@@ -30,6 +30,7 @@ import { ListFiltersStore } from "./ListFiltersStore";
 import type { StoreListFilters } from "./ListFiltersStore";
 import { AuthorFilterStub } from "../../../tests/stubs/AuthorFilterStub";
 import { UserStub } from "../../../tests/stubs/UserStub";
+import FilterBadge from "./FilterBadge.vue";
 
 describe("PullRequestListFilters", () => {
     let tuleap_api_error_callback: DisplayErrorCallback, store_filters: StoreListFilters;
@@ -61,18 +62,7 @@ describe("PullRequestListFilters", () => {
         store_filters.storeFilter(filter);
 
         await wrapper.vm.$nextTick();
-        expect(wrapper.find("[data-test=list-filter-badge]").exists()).toBe(true);
-    });
-
-    it("When the user clicks on the cross button in the filter badge, then it should delete it", async () => {
-        const wrapper = getWrapper();
-        const filter = AuthorFilterStub.fromAuthor(UserStub.withIdAndName(1, "John Doe"));
-
-        store_filters.storeFilter(filter);
-        await wrapper.vm.$nextTick();
-
-        await wrapper.find("[data-test=list-filter-badge-delete-button]").trigger("click");
-        expect(wrapper.find("[data-test=list-filter-badge]").exists()).toBe(false);
+        expect(wrapper.findComponent(FilterBadge).exists()).toBe(true);
     });
 
     it("The [Clear filters] button should be deactivated when there is filter yet", async () => {
@@ -98,9 +88,9 @@ describe("PullRequestListFilters", () => {
         );
 
         await wrapper.vm.$nextTick();
-        expect(wrapper.findAll("[data-test=list-filter-badge]")).toHaveLength(1);
+        expect(wrapper.findAllComponents(FilterBadge)).toHaveLength(1);
 
         await wrapper.find("[data-test=clear-all-list-filters]").trigger("click");
-        expect(wrapper.findAll("[data-test=list-filter-badge]")).toHaveLength(0);
+        expect(wrapper.findAllComponents(FilterBadge)).toHaveLength(0);
     });
 });

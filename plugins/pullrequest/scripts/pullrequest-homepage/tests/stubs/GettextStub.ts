@@ -17,19 +17,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
-import type {
-    BuildAuthorFilter,
-    PullRequestAuthorFilter,
-} from "../../src/components/Filters/Author/AuthorFilter";
-import { TYPE_FILTER_AUTHOR } from "../../src/components/Filters/Author/AuthorFilter";
-
-export const AuthorFilterStub: BuildAuthorFilter = {
-    fromAuthor: (author: User): PullRequestAuthorFilter => ({
-        id: author.id,
-        type: TYPE_FILTER_AUTHOR,
-        label: `Author: ${author.id}`,
-        value: author,
-        is_unique: true,
-    }),
-};
+export const GettextStub = (string: string): string => string;

@@ -32,7 +32,7 @@ export const SelectorsDropdownAutocompleter = (doc: Document): Autocompleter => 
         const group_builder = ContentGroupBuilder(selector.config);
         const lazy_autocompleter = createLazyAutocompleter(doc);
 
-        let items: LazyboxItem[] = [];
+        const items: LazyboxItem[] = [];
 
         lazy_autocompleter.options = {
             placeholder: selector.config.placeholder,
@@ -42,6 +42,7 @@ export const SelectorsDropdownAutocompleter = (doc: Document): Autocompleter => 
                 lazy_autocompleter,
                 group_builder,
                 selector,
+                items,
             ),
             search_input_callback: (query): void => {
                 lazy_autocompleter.replaceContent([
@@ -61,7 +62,7 @@ export const SelectorsDropdownAutocompleter = (doc: Document): Autocompleter => 
 
         lazy_autocompleter.replaceContent([group_builder.buildLoading()]);
 
-        items = await selector.config.loadItems();
+        items.push(...(await selector.config.loadItems()));
         lazy_autocompleter.replaceContent([group_builder.buildWithItems(items)]);
     },
 });

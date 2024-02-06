@@ -18,14 +18,16 @@
  */
 
 import type { AuthorFilter, PullRequestAuthorFilter } from "./Author/AuthorFilter";
+import type { LabelFilter, PullRequestLabelFilter } from "./Labels/LabelFilter";
 
-export type PullRequestsListFilterType = AuthorFilter;
+export type PullRequestsListFilterType = AuthorFilter | LabelFilter;
 
 export type BasePullRequestsListFilter<TypeOfFilterValue> = {
     id: number;
     type: PullRequestsListFilterType;
     label: string;
     value: TypeOfFilterValue;
+    is_unique: boolean;
 };
 
-export type PullRequestsListFilter = PullRequestAuthorFilter;
+export type PullRequestsListFilter = PullRequestAuthorFilter | PullRequestLabelFilter;
