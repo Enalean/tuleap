@@ -26,7 +26,7 @@ import { defineStore } from "pinia";
 
 const project_id = 102;
 
-async function getPersonalWidgetInstance(): Promise<Wrapper<RoadmapSection>> {
+async function getPersonalWidgetInstance(): Promise<Wrapper<Vue, Element>> {
     const useStore = defineStore("root", {
         state: () => ({
             is_loading: false,
@@ -44,6 +44,7 @@ async function getPersonalWidgetInstance(): Promise<Wrapper<RoadmapSection>> {
         propsData: {
             label_tracker_planning: "sprint",
         },
+        pinia,
     };
 
     return shallowMount(RoadmapSection, component_options);

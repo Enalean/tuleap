@@ -50,6 +50,7 @@ async function getPersonalWidgetInstance(): Promise<Wrapper<Vue, Element>> {
             nb_past_releases,
             nb_upcoming_releases,
             error_message,
+            label_tracker_planning: "Release",
         }),
         actions: {
             getMilestones: jest.fn(),
