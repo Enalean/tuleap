@@ -67,7 +67,8 @@ CREATE TABLE IF NOT EXISTS plugin_pullrequest_timeline_event (
 CREATE TABLE IF NOT EXISTS plugin_pullrequest_label (
     pull_request_id INT(11) NOT NULL,
     label_id INT(11) UNSIGNED NOT NULL,
-    PRIMARY KEY (label_id, pull_request_id)
+    PRIMARY KEY (label_id, pull_request_id),
+    INDEX idx_pr_id(pull_request_id)
 );
 
 CREATE TABLE IF NOT EXISTS plugin_pullrequest_merge_setting (

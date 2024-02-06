@@ -192,26 +192,26 @@ class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginated
     ): PullRequestsPage {
         return $this->getDB()->tryFlatTransaction(
             function () use ($repository_id, $criteria, $limit, $offset) {
-                $where_status_statement = $this->getStatusStatements($criteria);
+                $with_status_criteria_statements = $this->getSearchCriteriaStatements($criteria);
 
                 $sql_count_pull_requests = "
                     SELECT COUNT(*)
-                    FROM plugin_pullrequest_review
+                    FROM plugin_pullrequest_review AS review
                     WHERE (repository_id = ? OR repo_dest_id = ?)
-                    AND $where_status_statement
+                    AND $with_status_criteria_statements
                 ";
 
-                $sql_get_pull_requests = "SELECT *
-                    FROM plugin_pullrequest_review
+                $sql_get_pull_requests = "
+                    SELECT review.*
+                    FROM plugin_pullrequest_review AS review
                     WHERE (repository_id = ? OR repo_dest_id = ?)
-                    AND $where_status_statement
+                    AND $with_status_criteria_statements
                     ORDER BY creation_date DESC
                     LIMIT ?
                     OFFSET ?
                 ";
 
-
-                $parameters =  [$repository_id, $repository_id, ...$where_status_statement->values()];
+                $parameters = [$repository_id, $repository_id, ...$with_status_criteria_statements->values()];
 
                 return new PullRequestsPage(
                     $this->getDB()->single($sql_count_pull_requests, $parameters),
@@ -221,10 +221,7 @@ class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginated
         );
     }
 
-    /**
-     * @return EasyStatement
-     */
-    private function getStatusStatements(SearchCriteria $search_criteria)
+    private function getSearchCriteriaStatements(SearchCriteria $search_criteria): EasyStatement
     {
         $statement = EasyStatement::open();
 
@@ -244,6 +241,29 @@ class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginated
         }
         if (count($authors_id) > 0) {
             $statement->andIn('user_id IN (?*)', $authors_id);
+        }
+
+        if (count($search_criteria->labels) > 0) {
+            $labels_ids = [];
+            foreach ($search_criteria->labels as $label) {
+                $labels_ids[] = $label->id;
+            }
+
+            $having_count_statement = EasyStatement::open();
+            $having_count_statement->with("HAVING COUNT(pr_label.label_id) = ?", count($labels_ids));
+
+            $with_labels_ids_statement = EasyStatement::open();
+            $with_labels_ids_statement->in("pr_label.label_id IN (?*)", $labels_ids);
+
+            $statement->andWith("
+                review.id IN (
+                    SELECT pr_label.pull_request_id
+                    FROM plugin_pullrequest_label AS pr_label
+                    WHERE $with_labels_ids_statement
+                    GROUP BY pr_label.pull_request_id
+                    $having_count_statement
+                )
+            ", ...$with_labels_ids_statement->values(), ...$having_count_statement->values());
         }
 
         return $statement;

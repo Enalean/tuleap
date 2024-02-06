@@ -23,8 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest;
 
 use Tuleap\PullRequest\Criterion\AuthorCriterion;
+use Tuleap\PullRequest\Criterion\LabelCriterion;
 use Tuleap\PullRequest\Criterion\SearchCriteria;
 use Tuleap\PullRequest\Criterion\StatusCriterion;
+use Tuleap\PullRequest\Label\PullRequestLabelDao;
 use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
@@ -36,7 +38,11 @@ final class DaoTest extends TestIntegrationTestCase
     private const BOB_USER_ID   = 102;
     private const ALICE_USER_ID = 103;
 
+    private const LABEL_EMERGENCY_ID = 11;
+    private const LABEL_EASY_FIX_ID  = 19;
+
     private Dao $dao;
+    private PullRequestLabelDao $pull_requests_labels_dao;
 
     private int $open_pull_request_id;
     private int $merged_pull_request_id;
@@ -44,11 +50,16 @@ final class DaoTest extends TestIntegrationTestCase
 
     protected function setUp(): void
     {
-        $this->dao = new Dao();
+        $this->dao                      = new Dao();
+        $this->pull_requests_labels_dao = new PullRequestLabelDao();
 
         $this->open_pull_request_id      = $this->insertOpenPullRequest();
         $this->merged_pull_request_id    = $this->insertMergedPullRequest();
         $this->abandoned_pull_request_id = $this->insertAbandonedPullRequest();
+
+        $this->addLabelsToPullRequest($this->open_pull_request_id, self::LABEL_EMERGENCY_ID);
+        $this->addLabelsToPullRequest($this->merged_pull_request_id, self::LABEL_EMERGENCY_ID, self::LABEL_EASY_FIX_ID);
+        $this->addLabelsToPullRequest($this->abandoned_pull_request_id, self::LABEL_EASY_FIX_ID);
     }
 
     public function testItRetrievesOnlyOpenPullRequests(): void
@@ -109,13 +120,33 @@ final class DaoTest extends TestIntegrationTestCase
         self::assertEquals(1, $result->total_size);
     }
 
+    public function testItFiltersOnLabels(): void
+    {
+        $result = $this->dao->getPaginatedPullRequests(
+            self::REPOSITORY_ID,
+            new SearchCriteria(
+                null,
+                [],
+                [new LabelCriterion(self::LABEL_EMERGENCY_ID), new LabelCriterion(self::LABEL_EASY_FIX_ID)]
+            ),
+            self::LIMIT,
+            self::OFFSET,
+        );
+
+        self::assertSame(array_column($result->pull_requests, "id"), [
+            $this->merged_pull_request_id,
+        ]);
+        self::assertEquals(1, $result->total_size);
+    }
+
     public function testItAppliesAllTheFilters(): void
     {
         $result = $this->dao->getPaginatedPullRequests(
             self::REPOSITORY_ID,
             new SearchCriteria(
                 StatusCriterion::CLOSED,
-                [new AuthorCriterion(self::ALICE_USER_ID)]
+                [new AuthorCriterion(self::ALICE_USER_ID)],
+                [new LabelCriterion(self::LABEL_EASY_FIX_ID)],
             ),
             self::LIMIT,
             self::OFFSET,
@@ -180,5 +211,10 @@ final class DaoTest extends TestIntegrationTestCase
             $pull_request->getMergeStatus(),
             $pull_request->getDescriptionFormat(),
         );
+    }
+
+    private function addLabelsToPullRequest(int $pull_request_id, int ...$label_id): void
+    {
+        $this->pull_requests_labels_dao->addLabelsInTransaction($pull_request_id, $label_id);
     }
 }

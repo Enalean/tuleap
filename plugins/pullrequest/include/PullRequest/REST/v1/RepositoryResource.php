@@ -85,6 +85,10 @@ class RepositoryResource extends AuthenticatedResource
      *     <p>
      *         <b>Author</b>: <code>query={"authors": [{"id": int}]}</code> where "id" is the user_id of the author.
      *     </p>
+     *     <p>
+     *         <b>Labels</b>: <code>query={"labels": [{"id": int}]}</code> where "id" is the id of the label.
+     *         The search on labels is additive. It will retrieve only pull-requests having all the specified labels.
+     *     </p>
      * </p>
      *
      * <p>

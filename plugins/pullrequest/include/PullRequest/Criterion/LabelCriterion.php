@@ -22,27 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Criterion;
 
-use Tuleap\Option\Option;
-
-/**
- * @psalm-readonly
- */
-final class SearchCriteria
+final class LabelCriterion
 {
-    /**
-     * @var Option<StatusCriterion>
-     */
-    public readonly Option $status;
-
-    /**
-     * @psalm-param list<AuthorCriterion> $authors
-     * @psalm-param list<LabelCriterion> $labels
-     */
-    public function __construct(
-        ?StatusCriterion $status = null,
-        public readonly array $authors = [],
-        public readonly array $labels = [],
-    ) {
-        $this->status = Option::fromNullable($status);
+    public function __construct(public readonly int $id)
+    {
     }
 }
