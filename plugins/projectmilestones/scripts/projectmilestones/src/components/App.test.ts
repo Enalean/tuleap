@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import App from "./App.vue";
 import type { MilestoneData } from "../type";
@@ -30,7 +30,6 @@ import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
 
 const project_id = 102;
-const component_options: ShallowMountOptions<App> = {};
 
 let is_loading = false;
 let current_milestones: Array<MilestoneData> = [];
@@ -40,8 +39,8 @@ let nb_upcoming_releases = 0;
 let error_message = "";
 let has_rest_error = false;
 
-async function getPersonalWidgetInstance(): Promise<Wrapper<App>> {
-    component_options.localVue = await createReleaseWidgetLocalVue();
+async function getPersonalWidgetInstance(): Promise<Wrapper<Vue, Element>> {
+    await createReleaseWidgetLocalVue();
 
     const useStore = defineStore("root", {
         state: () => ({
@@ -62,16 +61,18 @@ async function getPersonalWidgetInstance(): Promise<Wrapper<App>> {
     const pinia = createTestingPinia();
     useStore(pinia);
 
-    return shallowMount(App, component_options);
+    return shallowMount(App, {
+        localVue: await createReleaseWidgetLocalVue(),
+        propsData: {
+            project_id,
+            is_browser_IE11: false,
+        },
+        pinia,
+    });
 }
 
 describe("Given a release widget", () => {
     beforeEach(() => {
-        component_options.propsData = {
-            project_id,
-            is_browser_IE11: false,
-        };
-
         is_loading = false;
         current_milestones = [];
         nb_backlog_items = 0;

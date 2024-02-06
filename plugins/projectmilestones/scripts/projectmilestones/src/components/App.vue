@@ -50,36 +50,30 @@
     </section>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import WhatsHotSection from "./WhatsHotSection/WhatsHotSection.vue";
 import RoadmapSection from "./RoadmapSection/RoadmapSection.vue";
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { computed } from "vue";
 import PastSection from "./PastSection/PastSection.vue";
 import RoadmapEmptyStateSection from "./ProjectMilestonesEmpty/RoadmapEmptyStateSection.vue";
 import { useStore } from "../stores/root";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-@Component({
-    components: { RoadmapEmptyStateSection, PastSection, WhatsHotSection, RoadmapSection },
-})
-export default class App extends Vue {
-    public root_store = useStore();
+const { $gettext } = useGettext();
+const root_store = useStore();
 
-    created(): void {
-        this.root_store.getMilestones();
-    }
+root_store.getMilestones();
 
-    get error(): string {
-        return this.root_store.error_message || this.$gettext("Oops, an error occurred!");
-    }
+const error = computed((): string => {
+    return root_store.error_message || $gettext("Oops, an error occurred!");
+});
 
-    get display_empty_state(): boolean {
-        return (
-            this.root_store.nb_backlog_items === 0 &&
-            this.root_store.nb_upcoming_releases === 0 &&
-            this.root_store.current_milestones.length === 0 &&
-            this.root_store.nb_past_releases === 0
-        );
-    }
-}
+const display_empty_state = computed((): boolean => {
+    return (
+        root_store.nb_backlog_items === 0 &&
+        root_store.nb_upcoming_releases === 0 &&
+        root_store.current_milestones.length === 0 &&
+        root_store.nb_past_releases === 0
+    );
+});
 </script>
