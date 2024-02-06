@@ -45,15 +45,20 @@ export const SelectorsDropdownController = (
         host.active_selector = Option.nothing();
     },
     openSidePanel: (host, selector): void => {
-        host.active_selector.match(
-            () => {},
-            () => {
-                host.active_selector = Option.fromValue(selector);
+        const startAutocompleter = (): void => {
+            host.active_selector = Option.fromValue(selector);
 
-                setTimeout(() => {
-                    autocompleter.start(selector, host);
-                });
-            },
-        );
+            setTimeout(() => {
+                autocompleter.start(selector, host);
+            });
+        };
+
+        host.active_selector.match((old_selector) => {
+            if (old_selector.entry_name === selector.entry_name) {
+                return;
+            }
+
+            startAutocompleter();
+        }, startAutocompleter);
     },
 });

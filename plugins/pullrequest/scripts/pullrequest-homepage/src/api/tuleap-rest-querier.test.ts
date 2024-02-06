@@ -24,15 +24,19 @@ import * as fetch_result from "@tuleap/fetch-result";
 import { PullRequestStub } from "@tuleap/plugin-pullrequest-stub";
 import {
     fetchAllPullRequests,
+    fetchProjectLabels,
     fetchPullRequestLabels,
     fetchPullRequestsAuthors,
 } from "./tuleap-rest-querier";
 import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { UserStub } from "../../tests/stubs/UserStub";
 import { AuthorFilterStub } from "../../tests/stubs/AuthorFilterStub";
+import { ProjectLabelStub } from "../../tests/stubs/ProjectLabelStub";
 
 const repository_id = 10;
 const pull_request_id = 2;
+const project_id = 102;
+
 const pull_requests_collection = [
     {
         collection: [
@@ -46,9 +50,9 @@ const pull_requests_collection = [
 const labels_collection = [
     {
         labels: [
-            { id: 1, label: "Salade", is_outline: true, color: "neon-green" },
-            { id: 2, label: "Tomates", is_outline: true, color: "fiesta-red" },
-            { id: 3, label: "Oignons", is_outline: false, color: "plum-crazy" },
+            ProjectLabelStub.outlinedWithIdAndLabel(1, "Salade"),
+            ProjectLabelStub.outlinedWithIdAndLabel(2, "Tomates"),
+            ProjectLabelStub.regulardWithIdAndLabel(3, "Oignons"),
         ],
     },
 ];
@@ -136,6 +140,29 @@ describe("tuleap-rest-querier", () => {
             );
 
             expect(result.value).toStrictEqual(users_collection);
+        });
+    });
+
+    describe("fetchProjectLabels", () => {
+        it("should query all the labels in a given project", async () => {
+            vi.spyOn(fetch_result, "getAllJSON").mockReturnValue(okAsync(labels_collection));
+
+            const result = await fetchProjectLabels(project_id);
+            if (!result.isOk()) {
+                throw new Error("Expected an OK");
+            }
+
+            expect(fetch_result.getAllJSON).toHaveBeenCalledWith(
+                uri`/api/v1/projects/${project_id}/labels`,
+                {
+                    params: {
+                        limit: 50,
+                    },
+                    getCollectionCallback: expect.any(Function),
+                },
+            );
+
+            expect(result.value).toStrictEqual(labels_collection);
         });
     });
 });

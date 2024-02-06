@@ -26,6 +26,7 @@ import { buildBaseUrl } from "./urls/base-url-builders";
 import HomePage from "./components/HomePage.vue";
 import {
     BASE_URL,
+    PROJECT_ID,
     REPOSITORY_ID,
     SHOW_CLOSED_PULL_REQUESTS,
     USER_DATE_TIME_FORMAT_KEY,
@@ -40,6 +41,7 @@ export const init = async (mount_point: HTMLElement): Promise<void> => {
 
     createApp(HomePage)
         .provide(REPOSITORY_ID, repository_id)
+        .provide(PROJECT_ID, project_id)
         .provide(BASE_URL, base_url)
         .provide(USER_LOCALE_KEY, getDatasetItemOrThrow(document.body, "userLocale"))
         .provide(USER_DATE_TIME_FORMAT_KEY, getDatasetItemOrThrow(document.body, "dateTimeFormat"))

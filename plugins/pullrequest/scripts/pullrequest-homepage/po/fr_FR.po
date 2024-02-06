@@ -42,14 +42,26 @@ msgstr "Erreur"
 msgid "Error details"
 msgstr "Détails de l'erreur"
 
+msgid "Label name"
+msgstr "Nom du label"
+
+msgid "Labels"
+msgstr "Labels"
+
+msgid "Matching labels"
+msgstr "Labels correspondant"
+
 msgid "Matching users"
 msgstr "Utilisateurs correspondant"
 
 msgid "Name"
 msgstr "Nom"
 
+msgid "No matching labels"
+msgstr "Aucun label correspondant"
+
 msgid "No matching user"
-msgstr "Aucun utilisateur"
+msgstr "Aucun utilisateur correspondant"
 
 msgid "No result matched your search"
 msgstr "Aucun résultat ne correspond à votre recherche"

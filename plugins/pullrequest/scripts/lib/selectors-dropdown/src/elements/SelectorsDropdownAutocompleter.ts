@@ -50,7 +50,7 @@ export const SelectorsDropdownAutocompleter = (doc: Document): Autocompleter => 
             },
         };
 
-        host.auto_completer_element.appendChild(lazy_autocompleter);
+        host.auto_completer_element.replaceChildren(lazy_autocompleter);
 
         if (selector.isDisabled()) {
             lazy_autocompleter.disabled = selector.isDisabled();

@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, vi } from "vitest";
+import { describe, beforeEach, it, expect, vi } from "vitest";
 import { Option } from "@tuleap/option";
 import * as tlp_dropdown from "@tuleap/tlp-dropdown";
-import type { InternalSelectorsDropdown } from "./SelectorsDropdown";
+import type { InternalSelectorsDropdown, SelectorEntry } from "./SelectorsDropdown";
 import { SelectorsDropdownController } from "./SelectorsDropdownController";
 import { AutocompleterStub } from "../../tests/AutocompleterStub";
 import { SelectorEntryStub } from "../../tests/SelectorEntryStub";
@@ -28,6 +28,12 @@ import { SelectorEntryStub } from "../../tests/SelectorEntryStub";
 vi.mock("@tuleap/tlp-dropdown");
 
 describe("SelectorsDropdownController", () => {
+    let active_selector: Option<SelectorEntry>;
+
+    beforeEach(() => {
+        active_selector = Option.nothing();
+    });
+
     const getHost = (): InternalSelectorsDropdown => {
         const doc = document.implementation.createHTMLDocument();
         return {
@@ -35,7 +41,7 @@ describe("SelectorsDropdownController", () => {
             dropdown_content_element: doc.createElement("div"),
             auto_completer_element: doc.createElement("div"),
             is_dropdown_shown: false,
-            active_selector: Option.nothing(),
+            active_selector,
         } as unknown as InternalSelectorsDropdown;
     };
 
@@ -58,23 +64,46 @@ describe("SelectorsDropdownController", () => {
         expect(host.is_dropdown_shown).toBe(true);
     });
 
-    it("openSidePanel() should assign active_selector and start the autocompleter", () => {
-        vi.useFakeTimers();
+    describe("openSidePanel()", () => {
+        it("should assign active_selector and start the autocompleter", () => {
+            vi.useFakeTimers();
 
-        const host = getHost();
-        const selector = SelectorEntryStub.withEntryName("Author");
-        const autocompleter = AutocompleterStub();
-        const controller = SelectorsDropdownController(autocompleter);
+            const host = getHost();
+            const selector = SelectorEntryStub.withEntryName("Author");
+            const autocompleter = AutocompleterStub();
+            const controller = SelectorsDropdownController(autocompleter);
 
-        vi.spyOn(autocompleter, "start");
+            vi.spyOn(autocompleter, "start");
 
-        controller.onDropdownShown(host);
-        controller.openSidePanel(host, selector);
+            controller.onDropdownShown(host);
+            controller.openSidePanel(host, selector);
 
-        vi.advanceTimersToNextTimer();
+            vi.advanceTimersToNextTimer();
 
-        expect(host.active_selector.unwrapOr(null)).toBe(selector);
-        expect(autocompleter.start).toHaveBeenCalledWith(selector, host);
+            expect(host.active_selector.unwrapOr(null)).toBe(selector);
+            expect(autocompleter.start).toHaveBeenCalledWith(selector, host);
+        });
+
+        it("should not restart the autocompleter when the currently active selector have not changed", () => {
+            vi.useFakeTimers();
+
+            const selector = SelectorEntryStub.withEntryName("Author");
+
+            active_selector = Option.fromValue(selector);
+
+            const host = getHost();
+            const autocompleter = AutocompleterStub();
+            const controller = SelectorsDropdownController(autocompleter);
+
+            vi.spyOn(autocompleter, "start");
+
+            controller.onDropdownShown(host);
+            controller.openSidePanel(host, selector);
+
+            vi.advanceTimersToNextTimer();
+
+            expect(autocompleter.start).not.toHaveBeenCalled();
+        });
     });
 
     it("onDropdownHidden() should set is_dropdown_shown to false and clear the currently selected selector", () => {

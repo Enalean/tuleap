@@ -72,3 +72,15 @@ export const fetchPullRequestsAuthors = (
         params: { limit: 50 },
     });
 };
+
+export const fetchProjectLabels = (
+    project_id: number,
+): ResultAsync<readonly ProjectLabel[], Fault> => {
+    return getAllJSON<ProjectLabel, ProjectLabelsCollection>(
+        uri`/api/v1/projects/${project_id}/labels`,
+        {
+            params: { limit: 50 },
+            getCollectionCallback: (payload) => payload.labels,
+        },
+    );
+};
