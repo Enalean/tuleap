@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createApp } from "vue";
+import { createApp, ref } from "vue";
 import { createGettext } from "vue3-gettext";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import { getDatasetItemOrThrow } from "@tuleap/dom";
@@ -27,6 +27,7 @@ import HomePage from "./components/HomePage.vue";
 import {
     BASE_URL,
     REPOSITORY_ID,
+    SHOW_CLOSED_PULL_REQUESTS,
     USER_DATE_TIME_FORMAT_KEY,
     USER_LOCALE_KEY,
     USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
@@ -46,6 +47,7 @@ export const init = async (mount_point: HTMLElement): Promise<void> => {
             USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
             getDatasetItemOrThrow(mount_point, "relativeDateDisplay"),
         )
+        .provide(SHOW_CLOSED_PULL_REQUESTS, ref(false))
         .use(VueDOMPurifyHTML)
         .use(
             await initVueGettext(createGettext, (locale: string) => {

@@ -59,15 +59,19 @@ const users_collection: User[] = [
     UserStub.withIdAndName(5, "Johann Zarco (jz5)"),
 ];
 
+const are_closed_pull_requests_shown = false;
+
 describe("tuleap-rest-querier", () => {
     describe("fetchAllPullRequests", () => {
         it("should query all the pull-requests inside a given repository with given filters and return them", async () => {
             vi.spyOn(fetch_result, "getAllJSON").mockReturnValue(okAsync(pull_requests_collection));
 
             const john_doe = UserStub.withIdAndName(102, "John doe");
-            const result = await fetchAllPullRequests(repository_id, [
-                AuthorFilterStub.fromAuthor(john_doe),
-            ]);
+            const result = await fetchAllPullRequests(
+                repository_id,
+                [AuthorFilterStub.fromAuthor(john_doe)],
+                are_closed_pull_requests_shown,
+            );
             if (!result.isOk()) {
                 throw new Error("Expected an OK");
             }
@@ -78,6 +82,7 @@ describe("tuleap-rest-querier", () => {
                     params: {
                         limit: 50,
                         query: JSON.stringify({
+                            status: "open",
                             authors: [{ id: john_doe.id }],
                         }),
                     },

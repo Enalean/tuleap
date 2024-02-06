@@ -17,10 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { ref } from "vue";
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 import { PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN } from "@tuleap/tlp-relative-date";
 import type { DisplayErrorCallback } from "../src/injection-symbols";
 import {
+    SHOW_CLOSED_PULL_REQUESTS,
     BASE_URL,
     DISPLAY_TULEAP_API_ERROR,
     REPOSITORY_ID,
@@ -29,10 +31,15 @@ import {
     USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
 } from "../src/injection-symbols";
 
+const noop = (): void => {
+    // Do nothing
+};
+
 export const injected_repository_id = 2;
 export const injected_base_url = new URL("https://example.com");
 export const injected_user_locale = "fr_FR";
-export let injected_tuleap_error_api_callback: DisplayErrorCallback = () => {};
+export let injected_show_closed_pull_requests = ref(false);
+export let injected_tuleap_error_api_callback: DisplayErrorCallback = noop;
 
 type StrictInjectImplementation = (key: StrictInjectionKey<unknown>) => unknown;
 
@@ -50,13 +57,19 @@ const injection_symbols: StrictInjectImplementation = (key): unknown => {
             return PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN;
         case DISPLAY_TULEAP_API_ERROR:
             return injected_tuleap_error_api_callback;
+        case SHOW_CLOSED_PULL_REQUESTS:
+            return injected_show_closed_pull_requests;
         default:
             throw new Error("Tried to strictInject a value while it was not mocked");
     }
 };
 
 export const StubInjectionSymbols = {
-    withDefaults: (): StrictInjectImplementation => injection_symbols,
+    withDefaults: (): StrictInjectImplementation => {
+        injected_show_closed_pull_requests = ref(false);
+
+        return injection_symbols;
+    },
     withTuleapApiErrorCallback: (callback: DisplayErrorCallback): StrictInjectImplementation => {
         injected_tuleap_error_api_callback = callback;
 

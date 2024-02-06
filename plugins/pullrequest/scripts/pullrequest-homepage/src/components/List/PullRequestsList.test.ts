@@ -27,9 +27,9 @@ import * as strict_inject from "@tuleap/vue-strict-inject";
 import { PullRequestStub } from "@tuleap/plugin-pullrequest-stub";
 import {
     injected_repository_id,
+    injected_show_closed_pull_requests,
     StubInjectionSymbols,
 } from "../../../tests/injection-symbols-stub";
-import type { DisplayErrorCallback } from "../../injection-symbols";
 import * as tuleap_api from "../../api/tuleap-rest-querier";
 import PullRequestsList from "./PullRequestsList.vue";
 import type { StoreListFilters } from "../Filters/ListFiltersStore";
@@ -38,16 +38,15 @@ import { AuthorFilterStub } from "../../../tests/stubs/AuthorFilterStub";
 import { UserStub } from "../../../tests/stubs/UserStub";
 
 describe("PullRequestsList", () => {
-    let tuleap_api_error_callback: DisplayErrorCallback, filters_store: StoreListFilters;
+    let filters_store: StoreListFilters;
 
     beforeEach(() => {
-        tuleap_api_error_callback = vi.fn();
         filters_store = ListFiltersStore(ref([]));
     });
 
     const getWrapper = (): VueWrapper => {
         vi.spyOn(strict_inject, "strictInject").mockImplementation(
-            StubInjectionSymbols.withTuleapApiErrorCallback(tuleap_api_error_callback),
+            StubInjectionSymbols.withDefaults(),
         );
 
         return shallowMount(PullRequestsList, {
@@ -80,16 +79,22 @@ describe("PullRequestsList", () => {
         await wrapper.vm.$nextTick();
 
         expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledOnce();
-        expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledWith(injected_repository_id, []);
+        expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledWith(
+            injected_repository_id,
+            [],
+            injected_show_closed_pull_requests.value,
+        );
 
         const filter = AuthorFilterStub.fromAuthor(UserStub.withIdAndName(102, "John doe"));
         filters_store.storeFilter(filter);
         await wrapper.vm.$nextTick();
 
         expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledTimes(2);
-        expect(tuleap_api.fetchAllPullRequests).toHaveBeenLastCalledWith(injected_repository_id, [
-            filter,
-        ]);
+        expect(tuleap_api.fetchAllPullRequests).toHaveBeenLastCalledWith(
+            injected_repository_id,
+            [filter],
+            injected_show_closed_pull_requests.value,
+        );
 
         filters_store.deleteFilter(filter);
         await wrapper.vm.$nextTick();
@@ -98,10 +103,50 @@ describe("PullRequestsList", () => {
         expect(tuleap_api.fetchAllPullRequests).toHaveBeenLastCalledWith(
             injected_repository_id,
             [],
+            injected_show_closed_pull_requests.value,
         );
     });
 
+    it("When SHOW_CLOSED_PULL_REQUESTS value changes, then it should reload the list of pull-requests with or without closed pull-requests", async () => {
+        vi.spyOn(tuleap_api, "fetchAllPullRequests").mockReturnValue(okAsync([]));
+
+        const wrapper = getWrapper();
+        await wrapper.vm.$nextTick();
+
+        expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledOnce();
+        expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledWith(
+            injected_repository_id,
+            [],
+            false,
+        );
+
+        injected_show_closed_pull_requests.value = true;
+        await wrapper.vm.$nextTick();
+
+        expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledTimes(2);
+        expect(tuleap_api.fetchAllPullRequests).toHaveBeenLastCalledWith(
+            injected_repository_id,
+            [],
+            true,
+        );
+    });
+
+    it("When no pull-request matches the filters, then it should display an empty state", async () => {
+        vi.spyOn(tuleap_api, "fetchAllPullRequests").mockReturnValue(okAsync([]));
+
+        const wrapper = getWrapper();
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.find("[data-test=empty-state]").exists()).toBe(true);
+    });
+
     it("should call the tuleap_api_error_callback when an error occurres while the pull-requests are being retrieved", async () => {
+        const tuleap_api_error_callback = vi.fn();
+
+        vi.spyOn(strict_inject, "strictInject").mockImplementation(
+            StubInjectionSymbols.withTuleapApiErrorCallback(tuleap_api_error_callback),
+        );
+
         const tuleap_ap_fault = Fault.fromMessage("Nope");
 
         vi.spyOn(tuleap_api, "fetchAllPullRequests").mockReturnValue(errAsync(tuleap_ap_fault));

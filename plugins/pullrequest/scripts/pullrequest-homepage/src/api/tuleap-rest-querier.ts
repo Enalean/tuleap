@@ -36,13 +36,14 @@ type PullRequestCollection = {
 export const fetchAllPullRequests = (
     repository_id: number,
     filters: PullRequestsListFilter[],
+    are_closed_pull_requests_shown: boolean,
 ): ResultAsync<readonly PullRequest[], Fault> =>
     getAllJSON<PullRequest, PullRequestCollection>(
         uri`/api/v1/git/${repository_id}/pull_requests`,
         {
             params: {
                 limit: 50,
-                query: buildQueryFromFilters(filters),
+                query: buildQueryFromFilters(filters, are_closed_pull_requests_shown),
             },
             getCollectionCallback: (payload) => payload.collection,
         },
