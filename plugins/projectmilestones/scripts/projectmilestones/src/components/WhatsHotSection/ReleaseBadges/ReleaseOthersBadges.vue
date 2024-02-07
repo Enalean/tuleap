@@ -50,90 +50,93 @@
     </div>
 </template>
 
-<script lang="ts">
-import { Component, Prop } from "vue-property-decorator";
-import Vue from "vue";
+<script setup lang="ts">
+import { computed } from "vue";
 import type { MilestoneData } from "../../../type";
 import ReleaseButtonsDescription from "../ReleaseDescription/ReleaseButtonsDescription.vue";
 import { useStore } from "../../../stores/root";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-@Component({
-    components: { ReleaseButtonsDescription },
-})
-export default class ReleaseOthersBadges extends Vue {
-    @Prop()
-    readonly release_data!: MilestoneData;
+const props = defineProps<{
+    release_data: MilestoneData;
+}>();
 
-    public root_store = useStore();
+const root_store = useStore();
+const gettext_provider = useGettext();
 
-    get capacity_exists(): boolean {
-        if (!this.release_data.capacity) {
-            return false;
-        }
-        return this.release_data.capacity > 0;
+const capacity_exists = computed((): boolean => {
+    if (!props.release_data.capacity) {
+        return false;
+    }
+    return props.release_data.capacity > 0;
+});
+
+const initial_effort_exists = computed((): boolean => {
+    if (!props.release_data.initial_effort) {
+        return false;
+    }
+    return props.release_data.initial_effort > 0;
+});
+
+const initial_effort_badge_class = computed((): string => {
+    if (
+        props.release_data.capacity &&
+        props.release_data.initial_effort &&
+        props.release_data.capacity < props.release_data.initial_effort
+    ) {
+        return "tlp-badge-warning";
     }
 
-    get initial_effort_exists(): boolean {
-        if (!this.release_data.initial_effort) {
-            return false;
-        }
-        return this.release_data.initial_effort > 0;
+    return "tlp-badge-primary";
+});
+
+const get_planning_link = computed((): string | null => {
+    if (
+        !root_store.user_can_view_sub_milestones_planning ||
+        props.release_data.resources.milestones.accept.trackers.length === 0
+    ) {
+        return null;
     }
 
-    get initial_effort_badge_class(): string {
-        if (
-            this.release_data.capacity &&
-            this.release_data.initial_effort &&
-            this.release_data.capacity < this.release_data.initial_effort
-        ) {
-            return "tlp-badge-warning";
-        }
+    return (
+        "/plugins/agiledashboard/?group_id=" +
+        encodeURIComponent(root_store.project_id) +
+        "&planning_id=" +
+        encodeURIComponent(props.release_data.planning.id) +
+        "&action=show&aid=" +
+        encodeURIComponent(props.release_data.id) +
+        "&pane=planning-v2"
+    );
+});
 
-        return "tlp-badge-primary";
+const release_planning_link_label = computed((): string => {
+    const submilestone_tracker = props.release_data.resources.milestones.accept.trackers[0];
+    let label = submilestone_tracker.label;
+
+    if (!submilestone_tracker) {
+        label = "";
     }
 
-    get get_planning_link(): string | null {
-        if (
-            !this.root_store.user_can_view_sub_milestones_planning ||
-            this.release_data.resources.milestones.accept.trackers.length === 0
-        ) {
-            return null;
-        }
-
-        return (
-            "/plugins/agiledashboard/?group_id=" +
-            encodeURIComponent(this.root_store.project_id) +
-            "&planning_id=" +
-            encodeURIComponent(this.release_data.planning.id) +
-            "&action=show&aid=" +
-            encodeURIComponent(this.release_data.id) +
-            "&pane=planning-v2"
-        );
-    }
-
-    get release_planning_link_label(): string {
-        const submilestone_tracker = this.release_data.resources.milestones.accept.trackers[0];
-        let label = submilestone_tracker.label;
-
-        if (!submilestone_tracker) {
-            label = "";
-        }
-
-        return this.$gettextInterpolate(this.$gettext("%{label_submilestone} Planning"), {
+    return gettext_provider.interpolate(
+        gettext_provider.$gettext("%{label_submilestone} Planning"),
+        {
             label_submilestone: label,
-        });
-    }
+        },
+    );
+});
 
-    get capacity_label(): string {
-        return this.$gettextInterpolate(this.$gettext("Capacity: %{capacity}"), {
-            capacity: this.release_data.capacity,
-        });
-    }
+const capacity_label = computed((): string => {
+    return gettext_provider.interpolate(gettext_provider.$gettext("Capacity: %{capacity}"), {
+        capacity: props.release_data.capacity,
+    });
+});
 
-    get initial_effort_label(): string {
-        return this.$gettextInterpolate(this.$gettext("Initial effort: %{initialEffort}"), {
-            initialEffort: this.release_data.initial_effort,
-        });
-    }
-}
+const initial_effort_label = computed((): string => {
+    return gettext_provider.interpolate(
+        gettext_provider.$gettext("Initial effort: %{initialEffort}"),
+        {
+            initialEffort: props.release_data.initial_effort,
+        },
+    );
+});
 </script>
