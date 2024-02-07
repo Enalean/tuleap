@@ -68,7 +68,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::expectException(InvalidServicePOSTDataException::class);
 
-        $this->service_postdata_builder->buildFromService($service, false);
+        $this->service_postdata_builder->buildFromREST($service, false);
     }
 
     public function testBuildFromServiceThrowsWhenNoLabel(): void
@@ -92,7 +92,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::expectException(InvalidServicePOSTDataException::class);
 
-        $this->service_postdata_builder->buildFromService($service, false);
+        $this->service_postdata_builder->buildFromREST($service, false);
     }
 
     public function testBuildFromServiceThrowsWhenNoRank(): void
@@ -118,7 +118,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::expectException(InvalidServicePOSTDataException::class);
 
-        $this->service_postdata_builder->buildFromService($service, false);
+        $this->service_postdata_builder->buildFromREST($service, false);
     }
 
     public function testBuildFromServiceThrowsWhenRankBelowMinimalRank(): void
@@ -144,7 +144,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::expectException(InvalidServicePOSTDataException::class);
 
-        $this->service_postdata_builder->buildFromService($service, false);
+        $this->service_postdata_builder->buildFromREST($service, false);
     }
 
     public function testBuildFromServiceDoesntCheckIconWhenScopeIsSystem(): void
@@ -168,7 +168,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $post_data = $this->service_postdata_builder->buildFromService($service, false);
+        $post_data = $this->service_postdata_builder->buildFromREST($service, false);
 
         self::assertSame($post_data->getId(), 12);
     }
@@ -196,7 +196,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::expectException(InvalidServicePOSTDataException::class);
 
-        $this->service_postdata_builder->buildFromService($service, false);
+        $this->service_postdata_builder->buildFromREST($service, false);
     }
 
     public function testBuildFromServiceThrowsWhenBothOpenInIframeAndInNewTab(): void
@@ -222,7 +222,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::expectException(InvalidServicePOSTDataException::class);
 
-        $this->service_postdata_builder->buildFromService($service, false);
+        $this->service_postdata_builder->buildFromREST($service, false);
     }
 
     public function testBuildFromServiceSucceeds(): void
@@ -246,7 +246,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $post_data = $this->service_postdata_builder->buildFromService($service, false);
+        $post_data = $this->service_postdata_builder->buildFromREST($service, false);
 
         self::assertSame('fas fa-rss', $post_data->getIconName());
     }

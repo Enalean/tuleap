@@ -27,6 +27,8 @@ use ProjectManager;
 use Service;
 use ServiceDao;
 use ServiceNotAllowedForProjectException;
+use Tuleap\Project\REST\v1\Service\ServicePUTRepresentation;
+use Tuleap\Project\REST\v1\Service\ServiceUpdateChecker;
 use Tuleap\Project\Service\ServiceCannotBeUpdatedException;
 use Tuleap\Project\Service\ServiceLinkDataBuilder;
 use Tuleap\Project\Service\ServiceNotFoundException;
@@ -87,21 +89,21 @@ class ServiceResource extends AuthenticatedResource
      * @access hybrid
      *
      * @param int                   $id   The id of the service
-     * @param ServiceRepresentation $body The service data
+     * @param ServicePUTRepresentation $body The service data
      *
      * @throws RestException 400
      * @throws RestException 401
      * @throws RestException 403
      * @throws RestException 404
      */
-    public function putId(int $id, ServiceRepresentation $body): void
+    public function putId(int $id, ServicePUTRepresentation $body): void
     {
         $this->checkAccess();
         $user    = $this->getUser();
         $service = $this->getService($id, $user);
         $this->sendAllowHeaders();
         try {
-            $this->checkServiceCanBeUpdated($body, $service, $user);
+            (new ServiceUpdateChecker($this->service_manager))->checkServiceCanBeUpdated($body, $service, $user);
             $this->service_updator->updateService(
                 $service->getProject(),
                 $this->getServicePOSTDataFromBody($service, $body),
@@ -153,31 +155,12 @@ class ServiceResource extends AuthenticatedResource
         }
     }
 
-    private function getServicePOSTDataFromBody(Service $service, ServiceRepresentation $body): ServicePOSTData
+    private function getServicePOSTDataFromBody(Service $service, ServicePUTRepresentation $body): ServicePOSTData
     {
         $builder = new ServicePOSTDataBuilder(
             new ServiceLinkDataBuilder()
         );
 
-        return $builder->buildFromService($service, $body->is_enabled);
-    }
-
-    /**
-     * @throws I18NRestException
-     */
-    private function checkServiceCanBeUpdated(ServiceRepresentation $body, Service $service, PFUser $user): void
-    {
-        $this->service_manager->checkServiceCanBeUpdated($service->getProject(), $service->getShortName(), $body->is_enabled, $user);
-        if ($body->is_enabled && ! $service->isActive()) {
-            throw new I18NRestException(400, _('Inactive service cannot be enabled.'));
-        }
-
-        if (isset($body->name) && $body->name !== $service->getShortName()) {
-            throw new I18NRestException(400, _('Update of service name is not supported'));
-        }
-
-        if (isset($body->label) && $body->label !== $service->getInternationalizedName()) {
-            throw new I18NRestException(400, _('Update of service label is not supported'));
-        }
+        return $builder->buildFromREST($service, $body->is_enabled);
     }
 }
