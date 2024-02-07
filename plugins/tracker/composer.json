@@ -11,7 +11,10 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Tuleap\\Tracker\\Test\\": ["./tests/unit/"]
+      "Tuleap\\Tracker\\Test\\": [
+        "./tests/unit/",
+        "./tests/integration"
+      ]
     }
   },
   "require": {

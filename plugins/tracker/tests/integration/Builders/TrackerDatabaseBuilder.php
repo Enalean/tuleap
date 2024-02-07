@@ -20,63 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Tests\Builders;
+namespace Tuleap\Tracker\Test\Builders;
 
 use ParagonIE\EasyDB\EasyDB;
-use Project;
 use Tracker;
-use Tuleap\Project\UserPermissionsDao;
-use UserManager;
 
-final class DatabaseBuilder
+final class TrackerDatabaseBuilder
 {
-    private UserPermissionsDao $user_permissions_dao;
-
     public function __construct(private readonly EasyDB $db)
     {
-        $this->user_permissions_dao = new UserPermissionsDao();
-    }
-
-    public function buildProject(): Project
-    {
-        $row         = [
-            'group_name' => "cross tracker",
-            'access' => "public",
-            'status' => 'A',
-            "unix_group_name" => "cross-tracker-comparison",
-        ];
-        $project_id  = (int) $this->db->insertReturnId(
-            'groups',
-            $row
-        );
-        $dao         = new \ProjectDao();
-        $project_row = $dao->searchById($project_id);
-        return new Project($project_row->getRow());
-    }
-
-    public function buildUser(string $user_name, string $real_name, string $email): \PFUser
-    {
-        $user_id = $this->db->insertReturnId(
-            'user',
-            [
-                'user_name' => $user_name,
-                'email' => $email,
-                'realname' => $real_name,
-            ]
-        );
-
-        $user_manager = UserManager::instance();
-        $user         = $user_manager->getUserById($user_id);
-        if (! $user) {
-            throw new \Exception("USer $user_id not found");
-        }
-
-        return $user;
-    }
-
-    public function addUserToProjectMembers(int $user_id, int $project_id): void
-    {
-        $this->user_permissions_dao->addUserAsProjectMember($project_id, $user_id);
     }
 
     public function buildTracker(int $project_id, string $name): Tracker
@@ -257,6 +209,141 @@ final class DatabaseBuilder
             [
                 'changeset_value_id' => $changeset_value_id,
                 'value' => $value,
+            ]
+        );
+    }
+
+    public function buildListField(int $tracker_id): int
+    {
+        $tracker_field_id = (int) $this->db->insertReturnId(
+            'tracker_field',
+            [
+                'tracker_id' => $tracker_id,
+                'formElement_type' => "sb",
+                'name' => "status",
+                'label' => "status",
+                'use_it' => true,
+                'scope' => "P",
+            ]
+        );
+
+        $this->db->insert(
+            'tracker_field_list',
+            [
+                'field_id' => $tracker_field_id,
+                "bind_type" => "static",
+            ]
+        );
+
+        $this->db->insert(
+            'tracker_field_list_bind_static',
+            [
+                'field_id' => $tracker_field_id,
+                'is_rank_alpha' => 1,
+            ]
+        );
+
+        return $tracker_field_id;
+    }
+
+    /**
+     * @return array{
+     *     open: array<int>,
+     *     closed: array<int>,
+     * }
+     */
+    public function buildOpenAndClosedValuesForField(int $tracker_field_id, int $tracker_id, array $open_values, array $closed_values): array
+    {
+        $open_value_id_list = [];
+        foreach ($open_values as $value) {
+            $open_value_id_list[] = (int) $this->db->insertReturnId(
+                'tracker_field_list_bind_static_value',
+                [
+                    'field_id' => $tracker_field_id,
+                    'label' => $value,
+                ]
+            );
+        }
+
+        $closed_value_id_list = [];
+        foreach ($closed_values as $value) {
+            $closed_value_id_list[] = (int) $this->db->insertReturnId(
+                'tracker_field_list_bind_static_value',
+                [
+                    'field_id' => $tracker_field_id,
+                    'label' => $value,
+                ]
+            );
+        }
+
+        foreach ($open_value_id_list as $open_value_id) {
+            $this->db->insert(
+                'tracker_semantic_status',
+                [
+                    'tracker_id' => $tracker_id,
+                    'field_id' => $tracker_field_id,
+                    'open_value_id' => $open_value_id,
+                ]
+            );
+        }
+
+        return ["open" => $open_value_id_list, "closed" => $closed_value_id_list];
+    }
+
+    public function buildArtifactLinkField(int $tracker_id): int
+    {
+        return (int) $this->db->insertReturnId(
+            'tracker_field',
+            [
+                'tracker_id' => $tracker_id,
+                'formElement_type' => 'art_link',
+                'name' => 'artlink',
+                'label' => 'artlink',
+                'use_it' => true,
+                'scope' => "P",
+            ]
+        );
+    }
+
+    public function buildArtifactLinkValue(int $project_id, int $artifact_id, int $parent_changeset_id, int $artifact_link_field_id, string $type): void
+    {
+        $changeset_value_id = (int) $this->db->insertReturnId(
+            'tracker_changeset_value',
+            [
+                'changeset_id' => $parent_changeset_id,
+                'field_id' => $artifact_link_field_id,
+                'has_changed' => true,
+            ]
+        );
+
+        $this->db->insert(
+            'tracker_changeset_value_artifactlink',
+            [
+                'changeset_value_id' => $changeset_value_id,
+                'nature' => $type,
+                'artifact_id' => $artifact_id,
+                'keyword' => 'release',
+                'group_id' => $project_id,
+            ]
+        );
+    }
+
+    public function addStatusValueForArtifact(int $field_id, int $changeset_id, int $bind_open_value_id): void
+    {
+        $changeset_value_id = (int) $this->db->insertReturnId(
+            'tracker_changeset_value',
+            [
+                'changeset_id' => $changeset_id,
+                'field_id' => $field_id,
+                'has_changed' => true,
+            ]
+        );
+
+        $this->db->insert(
+            'tracker_changeset_value_list',
+            [
+                'changeset_value_id' => $changeset_value_id,
+                'bindvalue_id' => $bind_open_value_id,
             ]
         );
     }
