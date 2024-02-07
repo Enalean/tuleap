@@ -3436,11 +3436,6 @@ msgstr ""
 "l'opérateur BETWEEN()."
 
 #, php-format
-msgid "The integer field '%s' cannot be compared to the float value '%s'."
-msgstr ""
-"Le champ entier '%s' ne peut pas être comparé à la valeur flottante '%s'."
-
-#, php-format
 msgid "The integer field '%s' cannot be compared to the string value '%s'."
 msgstr "Le champ entier '%s' ne peut pas être comparé à la chaîne '%s'."
 

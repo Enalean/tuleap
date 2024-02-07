@@ -459,21 +459,21 @@ final class NumericDuckTypedFieldTest extends TestIntegrationTestCase
         self::assertEqualsCanonicalizing([$this->release_empty_id], $artifact_user_can_read);
     }
 
-    public function testIntegerFieldComparisonIsNotValid(): void
+    public function testIntegerFieldComparisonIsValid(): void
     {
-        $epic_empty_id = $this->database_builder->buildArtifact($this->epic_tracker->getId());
-        $this->database_builder->buildLastChangeset($epic_empty_id);
-
-        $this->expectException(SearchablesAreInvalidException::class);
-        $this->expectExceptionMessage("cannot be compared to the float value");
-        $this->getMatchingArtifactIds(
+        $artifacts = $this->getMatchingArtifactIds(
             new CrossTrackerReport(
                 1,
-                "initial_effort=12.8",
-                [$this->epic_tracker, $this->release_tracker]
+                'initial_effort > 3.00',
+                [$this->release_tracker, $this->sprint_tracker]
             ),
             $this->project_member
         );
+
+        self::assertCount(2, $artifacts);
+        self::assertNotContains($this->release_empty_id, $artifacts);
+        self::assertNotContains($this->sprint_empty_id, $artifacts);
+        self::assertEqualsCanonicalizing([$this->release_with_5_id, $this->sprint_with_5_id], $artifacts);
     }
 
     public function testIntegerFieldComparisonToEmptyIsNotValid(): void
