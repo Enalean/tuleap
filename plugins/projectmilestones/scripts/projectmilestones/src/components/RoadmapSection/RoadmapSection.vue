@@ -33,49 +33,49 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
 import { useStore } from "../../stores/root";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-@Component
-export default class RoadmapSection extends Vue {
-    public root_store = useStore();
+const root_store = useStore();
 
-    @Prop()
-    readonly label_tracker_planning!: string;
+const props = defineProps<{
+    label_tracker_planning: string;
+}>();
 
-    get backlog_link(): string {
-        return (
-            "/plugins/agiledashboard/?action=show-top&group_id=" +
-            encodeURIComponent(this.root_store.project_id) +
-            "&pane=topplanning-v2"
-        );
-    }
+const { $ngettext, interpolate } = useGettext();
 
-    get items_in_backlog_label(): string {
-        const translated = this.$ngettext(
-            "%{nb_backlog_items} item in the backlog.",
-            "%{nb_backlog_items} items in the backlog.",
-            this.root_store.nb_backlog_items,
-        );
+const backlog_link = computed((): string => {
+    return (
+        "/plugins/agiledashboard/?action=show-top&group_id=" +
+        encodeURIComponent(root_store.project_id) +
+        "&pane=topplanning-v2"
+    );
+});
 
-        return this.$gettextInterpolate(translated, {
-            nb_backlog_items: this.root_store.nb_backlog_items,
-        });
-    }
+const items_in_backlog_label = computed((): string => {
+    const translated = $ngettext(
+        "%{nb_backlog_items} item in the backlog.",
+        "%{nb_backlog_items} items in the backlog.",
+        root_store.nb_backlog_items,
+    );
 
-    get upcoming_releases(): string {
-        const translated = this.$ngettext(
-            "%{nb_upcoming_releases} upcoming %{label_tracker}.",
-            "%{nb_upcoming_releases} upcoming %{label_tracker}.",
-            this.root_store.nb_upcoming_releases,
-        );
+    return interpolate(translated, {
+        nb_backlog_items: root_store.nb_backlog_items,
+    });
+});
 
-        return this.$gettextInterpolate(translated, {
-            nb_upcoming_releases: this.root_store.nb_upcoming_releases,
-            label_tracker: this.label_tracker_planning,
-        });
-    }
-}
+const upcoming_releases = computed((): string => {
+    const translated = $ngettext(
+        "%{nb_upcoming_releases} upcoming %{label_tracker}.",
+        "%{nb_upcoming_releases} upcoming %{label_tracker}.",
+        root_store.nb_upcoming_releases,
+    );
+
+    return interpolate(translated, {
+        nb_upcoming_releases: root_store.nb_upcoming_releases,
+        label_tracker: props.label_tracker_planning,
+    });
+});
 </script>
