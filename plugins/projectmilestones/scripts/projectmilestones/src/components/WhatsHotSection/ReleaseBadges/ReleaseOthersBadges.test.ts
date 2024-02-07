@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ReleaseOthersBadges from "./ReleaseOthersBadges.vue";
 import type { MilestoneData, Pane, TrackerProjectLabel } from "../../../type";
@@ -26,16 +26,54 @@ import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
 
 let release_data: MilestoneData & Required<Pick<MilestoneData, "planning">>;
-const total_sprint = 10;
-const initial_effort = 10;
-const component_options: ShallowMountOptions<ReleaseOthersBadges> = {};
-
+const total_sprint: number | null = 10;
+let initial_effort: number | null = 10;
+let capacity: number | null = 10;
 const project_id = 102;
+let resources = {
+    milestones: {
+        accept: {
+            trackers: [
+                {
+                    label: "Sprint1",
+                },
+            ],
+        },
+    },
+    additional_panes: [
+        {
+            icon_name: "fa-tlp-taskboard",
+            title: "Taskboard",
+            uri: "/taskboard/project/6",
+            identifier: "taskboard",
+        },
+        {
+            icon_name: "fa-check",
+            identifier: "testplan",
+            title: "Tests",
+            uri: "testplan/project/6",
+        },
+    ],
+    cardwall: {
+        uri: "/cardwall/",
+    },
+};
 
 describe("ReleaseOthersBadges", () => {
     async function getPersonalWidgetInstance(
         user_can_view_sub_milestones_planning = false,
-    ): Promise<Wrapper<ReleaseOthersBadges>> {
+    ): Promise<Wrapper<Vue, Element>> {
+        release_data = {
+            id: 2,
+            capacity,
+            total_sprint,
+            initial_effort,
+            planning: {
+                id: "100",
+            },
+            resources,
+        } as MilestoneData;
+
         const useStore = defineStore("root", {
             state: () => ({
                 project_id: project_id,
@@ -45,52 +83,16 @@ describe("ReleaseOthersBadges", () => {
         const pinia = createTestingPinia();
         useStore(pinia);
 
-        component_options.localVue = await createReleaseWidgetLocalVue();
+        const component_options = {
+            localVue: await createReleaseWidgetLocalVue(),
+            pinia,
+            propsData: {
+                release_data,
+            },
+        };
 
         return shallowMount(ReleaseOthersBadges, component_options);
     }
-
-    beforeEach(() => {
-        release_data = {
-            id: 2,
-            capacity: 10,
-            total_sprint,
-            initial_effort,
-            planning: {
-                id: "100",
-            },
-            resources: {
-                milestones: {
-                    accept: {
-                        trackers: [
-                            {
-                                label: "Sprint1",
-                            },
-                        ],
-                    },
-                },
-                additional_panes: [
-                    {
-                        icon_name: "fa-tlp-taskboard",
-                        title: "Taskboard",
-                        uri: "/taskboard/project/6",
-                        identifier: "taskboard",
-                    },
-                    {
-                        icon_name: "fa-check",
-                        identifier: "testplan",
-                        title: "Tests",
-                        uri: "testplan/project/6",
-                    },
-                ],
-                cardwall: {
-                    uri: "/cardwall/",
-                },
-            },
-        } as MilestoneData;
-
-        component_options.propsData = { release_data };
-    });
 
     describe("Display points of initial effort", () => {
         it("When there is an initial effort, Then the points of initial effort are displayed", async () => {
@@ -101,14 +103,7 @@ describe("ReleaseOthersBadges", () => {
         });
 
         it("When there is initial effort but null, Then the points of initial effort are 'N/A'", async () => {
-            release_data = {
-                id: 2,
-                capacity: 10,
-                total_sprint,
-                initial_effort: null,
-            } as MilestoneData;
-
-            component_options.propsData = { release_data };
+            initial_effort = null;
             const wrapper = await getPersonalWidgetInstance();
 
             expect(wrapper.find("[data-test=initial-effort-not-empty]").exists()).toBe(false);
@@ -125,17 +120,7 @@ describe("ReleaseOthersBadges", () => {
         });
 
         it("When there are points of capacity but null, Then the points of capacity are 'N/A'", async () => {
-            release_data = {
-                id: 2,
-                capacity: null,
-                total_sprint,
-                initial_effort,
-            } as MilestoneData;
-
-            component_options.propsData = {
-                release_data,
-            };
-
+            capacity = null;
             const wrapper = await getPersonalWidgetInstance();
 
             expect(wrapper.find("[data-test=capacity-not-empty]").exists()).toBe(false);
@@ -143,16 +128,8 @@ describe("ReleaseOthersBadges", () => {
         });
 
         it("Given initial effort is bigger than capacity, Then the initial effort badge has a warning style", async () => {
-            release_data = {
-                id: 2,
-                capacity: 50,
-                total_sprint,
-                initial_effort: 100,
-            } as MilestoneData;
-
-            component_options.propsData = {
-                release_data,
-            };
+            initial_effort = 100;
+            capacity = 50;
 
             const wrapper = await getPersonalWidgetInstance();
 
@@ -162,16 +139,8 @@ describe("ReleaseOthersBadges", () => {
         });
 
         it("Given initial effort is smaller than capacity, Then the initial effort badge has primary style", async () => {
-            release_data = {
-                id: 2,
-                capacity: 100,
-                total_sprint,
-                initial_effort: 50,
-            } as MilestoneData;
-
-            component_options.propsData = {
-                release_data,
-            };
+            capacity = 100;
+            initial_effort = 50;
 
             const wrapper = await getPersonalWidgetInstance();
 
@@ -200,23 +169,16 @@ describe("ReleaseOthersBadges", () => {
     });
 
     it("When there isn't sub-planning, Then there isn't any link to sub-planning", async () => {
-        release_data = {
-            id: 2,
-            planning: {
-                id: "100",
-            },
-            resources: {
-                milestones: {
-                    accept: {
-                        trackers: [] as TrackerProjectLabel[],
-                    },
+        resources = {
+            milestones: {
+                accept: {
+                    trackers: [] as TrackerProjectLabel[],
                 },
-                additional_panes: [] as Pane[],
             },
-        } as MilestoneData;
-
-        component_options.propsData = {
-            release_data,
+            additional_panes: [] as Pane[],
+            cardwall: {
+                uri: "/cardwall/",
+            },
         };
 
         const wrapper = await getPersonalWidgetInstance();
