@@ -125,12 +125,34 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
         self::assertEquals(102, $criteria->authors[0]->id);
     }
 
+    public function testItWillOnlyFilterOnLabels(): void
+    {
+        $result = $this->converter->convert(json_encode(['labels' => [['id' => 1], ['id' => 2]]], JSON_THROW_ON_ERROR));
+
+        self::assertTrue(Result::isOk($result));
+
+        $criteria = $result->unwrapOr(null);
+
+        self::assertEquals(1, $criteria->labels[0]->id);
+        self::assertEquals(2, $criteria->labels[1]->id);
+    }
+
+    public function testItReturnsAnErrorWhenTheLabelsIdsAreNotIntegers(): void
+    {
+        $result = $this->converter->convert(json_encode(['labels' => [['id' => "1"]]], JSON_THROW_ON_ERROR));
+
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(MalformedQueryFault::class, $result->error);
+        self::assertStringContainsString("labels", (string) $result->error);
+    }
+
     public function testItWillApplyAllFilters(): void
     {
         $result = $this->converter->convert(
             json_encode([
                 'status' => 'open',
                 'authors' => [['id' => 102]],
+                'labels' => [['id' => 1], ['id' => 2]],
             ], JSON_THROW_ON_ERROR)
         );
 
@@ -140,6 +162,8 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
         $status_criterion = $criteria->status->unwrapOr(null);
 
         self::assertEquals(102, $criteria->authors[0]->id);
+        self::assertEquals(1, $criteria->labels[0]->id);
+        self::assertEquals(2, $criteria->labels[1]->id);
 
         self::assertTrue($status_criterion->shouldOnlyRetrieveOpenPullRequests());
         self::assertFalse($status_criterion->shouldOnlyRetrieveClosedPullRequests());

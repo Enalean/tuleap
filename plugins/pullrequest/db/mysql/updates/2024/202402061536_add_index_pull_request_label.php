@@ -20,29 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\PullRequest\Criterion;
-
-use Tuleap\Option\Option;
-
-/**
- * @psalm-readonly
- */
-final class SearchCriteria
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+final class b202402061536_add_index_pull_request_label extends \Tuleap\ForgeUpgrade\Bucket
 {
-    /**
-     * @var Option<StatusCriterion>
-     */
-    public readonly Option $status;
+    public function description()
+    {
+        return "Add an index to the plugin_pullrequest_label table.";
+    }
 
-    /**
-     * @psalm-param list<AuthorCriterion> $authors
-     * @psalm-param list<LabelCriterion> $labels
-     */
-    public function __construct(
-        ?StatusCriterion $status = null,
-        public readonly array $authors = [],
-        public readonly array $labels = [],
-    ) {
-        $this->status = Option::fromNullable($status);
+    public function up()
+    {
+        $this->api->addIndex(
+            'plugin_pullrequest_label',
+            'idx_pr_id',
+            'ALTER TABLE plugin_pullrequest_label ADD INDEX idx_pr_id(pull_request_id);',
+        );
     }
 }
