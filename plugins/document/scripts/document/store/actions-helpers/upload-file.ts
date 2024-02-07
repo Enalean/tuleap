@@ -37,7 +37,7 @@ import { isFile } from "../../helpers/type-check-helper";
 import { getParentFolder } from "./item-retriever";
 import emitter from "../../helpers/emitter";
 
-function updateParentProgress(
+function updateItemProgress(
     bytes_total: number,
     item_being_uploaded: Uploadable,
     bytes_uploaded: number,
@@ -66,7 +66,7 @@ export function uploadFile(
             filetype: dropped_file.type,
         },
         onProgress: (bytes_uploaded, bytes_total): void => {
-            updateParentProgress(bytes_total, fake_item, bytes_uploaded, context, parent);
+            updateItemProgress(bytes_total, fake_item, bytes_uploaded, context, parent);
         },
         onSuccess: async (): Promise<void> => {
             try {
@@ -124,7 +124,7 @@ export function uploadVersion(
             filetype: dropped_file.type,
         },
         onProgress: (bytes_uploaded, bytes_total): void => {
-            updateParentProgress(bytes_total, updated_file, bytes_uploaded, context, parent_folder);
+            updateItemProgress(bytes_total, updated_file, bytes_uploaded, context, parent_folder);
         },
         onSuccess: async (): Promise<void> => {
             updated_file.progress = null;
@@ -171,13 +171,7 @@ export function uploadVersionFromEmpty(
             filetype: dropped_file.type,
         },
         onProgress: (bytes_uploaded, bytes_total): void => {
-            updateParentProgress(
-                bytes_total,
-                updated_empty,
-                bytes_uploaded,
-                context,
-                parent_folder,
-            );
+            updateItemProgress(bytes_total, updated_empty, bytes_uploaded, context, parent_folder);
         },
         onSuccess: async (): Promise<void> => {
             updated_empty.progress = null;

@@ -19,7 +19,6 @@
 
 import { addNewFile, getItem } from "../../api/rest-querier";
 import { flagItemAsCreated } from "./flag-item-as-created";
-import { TYPE_FILE } from "../../constants";
 import { uploadFile } from "./upload-file";
 import type { ActionContext } from "vuex";
 import type { FakeItem, Folder, Property, RootState, CreatedItem } from "../../type";
@@ -37,9 +36,11 @@ export async function createNewFile(
         readonly status?: string | null;
         readonly obsolescence_date?: string | null;
         readonly permissions_for_groups?: Permissions | null;
+        readonly progress: number;
     },
     parent: Folder,
     should_display_fake_item: boolean,
+    fake_item: FakeItem,
 ): Promise<CreatedItem> {
     const dropped_file = item_to_create.file_properties.file;
     const new_file = await addNewFile(
@@ -64,21 +65,10 @@ export async function createNewFile(
     if (context.state.folder_content.find(({ id }) => id === new_file.id)) {
         return new_file;
     }
-    const fake_item: FakeItem = {
-        id: new_file.id,
-        title: item_to_create.title,
-        parent_id: parent.id,
-        type: TYPE_FILE,
-        file_type: dropped_file.type,
-        is_uploading: true,
-        progress: 0,
-        upload_error: null,
-        is_uploading_in_collapsed_folder: false,
-        is_uploading_new_version: false,
-        is_approval_table_enabled: false,
-        has_approval_table: false,
-        approval_table: null,
-    };
+    fake_item.id = new_file.id;
+    fake_item.title = item_to_create.title;
+    fake_item.parent_id = parent.id;
+    fake_item.file_type = dropped_file.type;
 
     fake_item.uploader = uploadFile(context, dropped_file, fake_item, new_file, parent);
 
