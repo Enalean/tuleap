@@ -22,6 +22,7 @@ namespace Tuleap\PullRequest\Reference;
 
 use GitRepoNotFoundException;
 use GitRepository;
+use Tuleap\PullRequest\FrontendApps\FeatureFlagSetOldHomepageViewByDefault;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\ServerHostname;
 
@@ -64,10 +65,20 @@ class HTMLURLBuilder
         return ServerHostname::HTTPSUrl() . $this->getPullRequestOverviewUrl($pull_request);
     }
 
-    public function getPullRequestDashboardUrl(GitRepository $repository)
+    public function getPullRequestDashboardUrl(GitRepository $repository): string
     {
         $project_id = $repository->getProject()->getID();
-        return '/plugins/git/?action=pull-requests&repo_id=' .
-            urlencode($repository->getId()) . '&group_id=' . urlencode($project_id);
+
+        $query_params = [
+            "action" => "pull-requests",
+            "repo_id" => $repository->getId(),
+            "group_id" => $project_id,
+        ];
+
+        if (! FeatureFlagSetOldHomepageViewByDefault::isActive()) {
+            $query_params["tab"] = "homepage";
+        }
+
+        return '/plugins/git/?' . http_build_query($query_params);
     }
 }
