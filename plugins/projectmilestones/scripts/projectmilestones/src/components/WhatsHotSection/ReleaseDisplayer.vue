@@ -49,85 +49,76 @@
     </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import ReleaseBadgesDisplayer from "./ReleaseBadges/ReleaseBadgesDisplayer.vue";
 import ReleaseDescription from "./ReleaseDescription/ReleaseDescription.vue";
 import ReleaseHeader from "./ReleaseHeader/ReleaseHeader.vue";
-import Vue from "vue";
+import type { Ref } from "vue";
+import { computed, ref, onMounted } from "vue";
 import type { MilestoneData } from "../../type";
-import { Component, Prop } from "vue-property-decorator";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { is_testplan_activated } from "../../helpers/test-management-helper";
 import { useStore } from "../../stores/root";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-@Component({
-    components: {
-        ReleaseHeader,
-        ReleaseDescription,
-        ReleaseBadgesDisplayer,
-    },
-})
-export default class ReleaseDisplayer extends Vue {
-    public root_store = useStore();
+const root_store = useStore();
 
-    @Prop()
-    readonly release_data!: MilestoneData;
-    @Prop()
-    readonly isOpen!: boolean;
-    @Prop()
-    isPastRelease!: boolean;
+const gettext_provider = useGettext();
 
-    is_open = false;
-    is_loading = true;
-    error_message: string | null = null;
-    release_data_enhanced: MilestoneData | null = null;
+const props = defineProps<{
+    release_data: MilestoneData;
+    isPastRelease: boolean;
+    isOpen: boolean;
+}>();
 
-    get has_error(): boolean {
-        return this.error_message !== null;
-    }
+let is_open = ref(false);
+let is_loading = ref(true);
+let error_message: Ref<string | null> = ref(null);
+let release_data_enhanced: Ref<MilestoneData | null> = ref(null);
 
-    get displayed_release(): MilestoneData {
-        return this.release_data_enhanced ? this.release_data_enhanced : this.release_data;
-    }
+const has_error = computed((): boolean => {
+    return error_message.value !== null;
+});
+const displayed_release = computed((): MilestoneData => {
+    return release_data_enhanced.value ? release_data_enhanced.value : props.release_data;
+});
 
-    async created(): Promise<void> {
-        try {
-            this.release_data_enhanced = await this.root_store.getEnhancedMilestones(
-                this.release_data,
+onMounted(async () => {
+    try {
+        release_data_enhanced.value = await root_store.getEnhancedMilestones(props.release_data);
+        is_open.value = props.isOpen;
+        if (
+            props.isPastRelease &&
+            is_testplan_activated(props.release_data) &&
+            release_data_enhanced.value !== null
+        ) {
+            release_data_enhanced.value.campaign = await root_store.getTestManagementCampaigns(
+                release_data_enhanced.value,
             );
-            this.is_open = this.isOpen;
-            if (this.isPastRelease && this.is_testplan_activated) {
-                this.release_data_enhanced.campaign =
-                    await this.root_store.getTestManagementCampaigns(this.release_data_enhanced);
-            }
-        } catch (rest_error) {
-            await this.handle_error(rest_error);
-        } finally {
-            this.is_loading = false;
         }
+    } catch (rest_error) {
+        await handle_error(rest_error);
+    } finally {
+        is_loading.value = false;
     }
+});
 
-    async handle_error(rest_error: unknown): Promise<void> {
-        if (!(rest_error instanceof FetchWrapperError) || rest_error.response === undefined) {
-            this.error_message = this.$gettext("Oops, an error occurred!");
-            throw rest_error;
-        }
-        try {
-            const { error } = await rest_error.response.json();
-            this.error_message = error.code + " " + error.message;
-        } catch (error) {
-            this.error_message = this.$gettext("Oops, an error occurred!");
-        }
+async function handle_error(rest_error: unknown): Promise<void> {
+    if (!(rest_error instanceof FetchWrapperError) || rest_error.response === undefined) {
+        error_message.value = gettext_provider.$gettext("Oops, an error occurred!");
+        throw rest_error;
     }
-
-    toggleReleaseDetails(): void {
-        if (!this.is_loading || this.is_open) {
-            this.is_open = !this.is_open;
-        }
+    try {
+        const { error } = await rest_error.response.json();
+        error_message.value = error.code + " " + error.message;
+    } catch (error) {
+        error_message.value = gettext_provider.$gettext("Oops, an error occurred!");
     }
+}
 
-    get is_testplan_activated(): boolean {
-        return is_testplan_activated(this.release_data);
+function toggleReleaseDetails(): void {
+    if (!is_loading.value || is_open.value) {
+        is_open.value = !is_open.value;
     }
 }
 </script>

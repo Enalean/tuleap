@@ -31,16 +31,9 @@
     </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import ReleaseDisplayer from "./ReleaseDisplayer.vue";
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
 import { useStore } from "../../stores/root";
 
-@Component({
-    components: { ReleaseDisplayer },
-})
-export default class WhatsHotSection extends Vue {
-    public root_store = useStore();
-}
+const root_store = useStore();
 </script>
