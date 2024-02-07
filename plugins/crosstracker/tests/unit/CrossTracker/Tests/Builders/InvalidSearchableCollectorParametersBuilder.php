@@ -36,6 +36,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringAllowed;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringForbidden;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -97,7 +98,8 @@ final class InvalidSearchableCollectorParametersBuilder
         return new InvalidSearchableCollectorParameters(
             $comparison_parameters,
             $comparison_checker,
-            $this->comparison
+            $this->comparison,
+            new EqualComparisonVisitor()
         );
     }
 }

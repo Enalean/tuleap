@@ -114,7 +114,7 @@ final class InvalidSearchableCollectorVisitorTest extends TestCase
             $this->parameters
                 ->getInvalidSearchablesCollectorParameters()
                 ->getInvalidSearchablesCollection()
-                ->getNonexistentSearchables()
+                ->getInvalidSearchableErrors()
         );
     }
 

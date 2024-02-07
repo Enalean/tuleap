@@ -26,7 +26,6 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
-use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\FormElement\RetrieveFieldType;
 
 /**
@@ -45,30 +44,28 @@ final class DuckTypedField
     }
 
     /**
+     * @param \Tracker_FormElement_Field[] $fields
      * @param int[] $tracker_ids
      * @return Ok<self>|Err<Fault>
      */
     public static function build(
-        RetrieveUsedFields $retrieve_used_fields,
         RetrieveFieldType $retrieve_field_type,
         string $field_name,
+        array $fields,
         array $tracker_ids,
-        \PFUser $user,
     ): Ok|Err {
-        $fields_user_can_read = [];
-        foreach ($tracker_ids as $tracker_id) {
-            $used_field = $retrieve_used_fields->getUsedFieldByName($tracker_id, $field_name);
-            if ($used_field && $used_field->userCanRead($user)) {
-                $fields_user_can_read[] = DuckTypedFieldType::fromString($retrieve_field_type->getType($used_field))
-                    ->map(static fn(DuckTypedFieldType $type) => new FieldIdentifierProperties($used_field->getId(), $type));
-            }
-        }
-        if (count($fields_user_can_read) === 0) {
+        if (count($fields) === 0) {
             return Result::err(FieldNotFoundInAnyTrackerFault::build());
         }
-        $other_results = array_slice($fields_user_can_read, 1);
+        $field_identifiers = [];
+        foreach ($fields as $field) {
+            $field_identifiers[] = DuckTypedFieldType::fromString($retrieve_field_type->getType($field))
+                ->map(static fn(DuckTypedFieldType $type) => new FieldIdentifierProperties($field->getId(), $type));
+        }
 
-        return $fields_user_can_read[0]->andThen(
+        $other_results = array_slice($field_identifiers, 1);
+
+        return $field_identifiers[0]->andThen(
             static function (FieldIdentifierProperties $first_field) use ($field_name, $tracker_ids, $other_results) {
                 $field_ids = [$first_field->id];
                 foreach ($other_results as $other_result) {

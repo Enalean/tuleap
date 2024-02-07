@@ -50,14 +50,21 @@ final class FieldFromWhereBuilder
         \PFUser $user,
         array $trackers,
     ): IProvideParametrizedFromAndWhereSQLFragments {
-        $field_name  = $field->getName();
-        $tracker_ids = array_map(static fn(\Tracker $tracker) => $tracker->getId(), $trackers);
+        $tracker_ids          = [];
+        $fields_user_can_read = [];
+        foreach ($trackers as $tracker) {
+            $tracker_id    = $tracker->getId();
+            $tracker_ids[] = $tracker_id;
+            $used_field    = $this->retrieve_used_fields->getUsedFieldByName($tracker_id, $field->getName());
+            if ($used_field && $used_field->userCanRead($user)) {
+                $fields_user_can_read[] = $used_field;
+            }
+        }
         return DuckTypedField::build(
-            $this->retrieve_used_fields,
             $this->retrieve_field_type,
-            $field_name,
+            $field->getName(),
+            $fields_user_can_read,
             $tracker_ids,
-            $user
         )->match(
             fn(DuckTypedField $duck_typed_field) => $this->matchTypeToBuilder($duck_typed_field, $comparison),
             static fn() => new ParametrizedFromWhere('', '', [], [])
