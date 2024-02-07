@@ -718,8 +718,14 @@ class TrackerXmlImport
                 (bool) $attributes['is_displayed_in_new_dropdown'] : false;
             $is_private_comment_used      = isset($attributes['use_private_comments']) ?
                 PHPCast::toBoolean($attributes['use_private_comments']) : true;
+            $is_move_artifacts_enabled    = (isset($attributes['enable_move_artifacts']) && $attributes['enable_move_artifacts'] !== null) ?
+                PHPCast::toBoolean($attributes['enable_move_artifacts']) : true;
 
-            $settings = new TrackerCreationSettings($is_displayed_in_new_dropdown, $is_private_comment_used);
+            $settings = new TrackerCreationSettings(
+                $is_displayed_in_new_dropdown,
+                $is_private_comment_used,
+                $is_move_artifacts_enabled,
+            );
 
             $this->notifications_settings_from_xml_builder
                 ->getCreationNotificationsSettings($attributes, $tracker)

@@ -25,23 +25,13 @@ namespace Tuleap\Tracker\Creation;
 /**
  * @psalm-immutable
  */
-class TrackerCreationSettings
+final class TrackerCreationSettings
 {
-    /**
-     * @var bool
-     */
-    private $is_displayed_in_new_dropdown;
-    /**
-     * @var bool
-     */
-    private $is_private_comment_used;
-
     public function __construct(
-        bool $is_displayed_in_new_dropdown,
-        bool $is_private_comment_used,
+        private bool $is_displayed_in_new_dropdown,
+        private bool $is_private_comment_used,
+        private bool $enable_move_artifacts,
     ) {
-        $this->is_displayed_in_new_dropdown = $is_displayed_in_new_dropdown;
-        $this->is_private_comment_used      = $is_private_comment_used;
     }
 
     public function isDisplayedInNewDropdown(): bool
@@ -52,5 +42,10 @@ class TrackerCreationSettings
     public function isPrivateCommentUsed(): bool
     {
         return $this->is_private_comment_used;
+    }
+
+    public function isMoveArtifactsEnabled(): bool
+    {
+        return $this->enable_move_artifacts;
     }
 }

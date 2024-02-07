@@ -22,17 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker;
+use Tuleap\Tracker\Admin\MoveArtifacts\MoveActionAllowedDAO;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\PromotedTrackerDao;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class TrackerCreationSettingsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PromotedTrackerDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&PromotedTrackerDao
      */
     private $in_new_dropdown_dao;
     /**
@@ -40,32 +39,37 @@ final class TrackerCreationSettingsBuilderTest extends \Tuleap\Test\PHPUnit\Test
      */
     private $builder;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TrackerPrivateCommentUGroupEnabledDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&TrackerPrivateCommentUGroupEnabledDao
      */
     private $private_comment_dao;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker
-     */
-    private $tracker;
+    private Tracker $tracker;
+    private MoveActionAllowedDAO&\PHPUnit\Framework\MockObject\MockObject $move_action_allowed_dao;
 
     protected function setUp(): void
     {
-        $this->in_new_dropdown_dao = \Mockery::mock(PromotedTrackerDao::class);
-        $this->private_comment_dao = \Mockery::mock(TrackerPrivateCommentUGroupEnabledDao::class);
-        $this->tracker             = \Mockery::mock(Tracker::class, ['getId' => 10]);
+        $this->in_new_dropdown_dao     = $this->createMock(PromotedTrackerDao::class);
+        $this->private_comment_dao     = $this->createMock(TrackerPrivateCommentUGroupEnabledDao::class);
+        $this->move_action_allowed_dao = $this->createMock(MoveActionAllowedDAO::class);
+        $this->tracker                 = TrackerTestBuilder::aTracker()->withId(10)->build();
 
-        $this->builder = new TrackerCreationSettingsBuilder($this->in_new_dropdown_dao, $this->private_comment_dao);
+        $this->builder = new TrackerCreationSettingsBuilder(
+            $this->in_new_dropdown_dao,
+            $this->private_comment_dao,
+            $this->move_action_allowed_dao,
+        );
     }
 
     public function testItBuildTrackerCreationSettings(): void
     {
-        $this->in_new_dropdown_dao->shouldReceive('isContaining')->with(10)->andReturnTrue();
-        $this->private_comment_dao->shouldReceive('isTrackerEnabledPrivateComment')->with(10)->andReturnTrue();
+        $this->in_new_dropdown_dao->method('isContaining')->with(10)->willReturn(true);
+        $this->private_comment_dao->method('isTrackerEnabledPrivateComment')->with(10)->willReturn(true);
+        $this->move_action_allowed_dao->method('isMoveActionAllowedInTracker')->with(10)->willReturn(true);
 
-        $expected = new TrackerCreationSettings(true, true);
+        $expected = new TrackerCreationSettings(true, true, true);
         $result   = $this->builder->build($this->tracker);
 
-        $this->assertEquals($expected->isDisplayedInNewDropdown(), $result->isDisplayedInNewDropdown());
-        $this->assertEquals($expected->isPrivateCommentUsed(), $result->isPrivateCommentUsed());
+        self::assertEquals($expected->isDisplayedInNewDropdown(), $result->isDisplayedInNewDropdown());
+        self::assertEquals($expected->isPrivateCommentUsed(), $result->isPrivateCommentUsed());
+        self::assertEquals($expected->isMoveArtifactsEnabled(), $result->isMoveArtifactsEnabled());
     }
 }

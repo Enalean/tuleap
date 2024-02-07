@@ -23,32 +23,18 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation;
 
 use Tracker_Reference;
+use Tuleap\Tracker\Admin\MoveArtifacts\MoveActionAllowedDAO;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\PromotedTrackerDao;
 
 class PostCreationProcessor
 {
-    /**
-     * @var \ReferenceManager
-     */
-    private $reference_manager;
-    /**
-     * @var PromotedTrackerDao
-     */
-    private $in_new_dropdown_dao;
-    /**
-     * @var TrackerPrivateCommentUGroupEnabledDao
-     */
-    private $private_comment_dao;
-
     public function __construct(
-        \ReferenceManager $reference_manager,
-        PromotedTrackerDao $in_new_dropdown_dao,
-        TrackerPrivateCommentUGroupEnabledDao $private_comment_dao,
+        private readonly \ReferenceManager $reference_manager,
+        private readonly PromotedTrackerDao $in_new_dropdown_dao,
+        private readonly TrackerPrivateCommentUGroupEnabledDao $private_comment_dao,
+        private readonly MoveActionAllowedDAO $move_action_allowed_dao,
     ) {
-        $this->reference_manager   = $reference_manager;
-        $this->in_new_dropdown_dao = $in_new_dropdown_dao;
-        $this->private_comment_dao = $private_comment_dao;
     }
 
     public static function build(): self
@@ -56,7 +42,8 @@ class PostCreationProcessor
         return new self(
             \ReferenceManager::instance(),
             new PromotedTrackerDao(),
-            new TrackerPrivateCommentUGroupEnabledDao()
+            new TrackerPrivateCommentUGroupEnabledDao(),
+            new MoveActionAllowedDAO(),
         );
     }
 
@@ -65,6 +52,7 @@ class PostCreationProcessor
         $this->forceReferenceCreation($tracker);
         $this->addTrackerInNewDropDown($tracker, $settings);
         $this->addTrackerDoestNotUsePrivateComment($tracker, $settings);
+        $this->addTrackerDoestNotAllowArtifactCopy($tracker, $settings);
     }
 
     private function forceReferenceCreation(\Tracker $tracker): void
@@ -90,6 +78,13 @@ class PostCreationProcessor
     {
         if ($settings->isPrivateCommentUsed() === false) {
             $this->private_comment_dao->disabledPrivateCommentOnTracker($tracker->getId());
+        }
+    }
+
+    private function addTrackerDoestNotAllowArtifactCopy(\Tracker $tracker, TrackerCreationSettings $settings): void
+    {
+        if ($settings->isMoveArtifactsEnabled() === false) {
+            $this->move_action_allowed_dao->forbidMoveArtifactInTracker($tracker->getId());
         }
     }
 }

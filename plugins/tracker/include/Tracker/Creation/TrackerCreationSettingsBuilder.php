@@ -22,26 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation;
 
+use Tuleap\Tracker\Admin\MoveArtifacts\MoveActionAllowedDAO;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\PromotedTrackerDao;
 
 class TrackerCreationSettingsBuilder
 {
-    /**
-     * @var PromotedTrackerDao
-     */
-    private $in_new_dropdown_dao;
-    /**
-     * @var TrackerPrivateCommentUGroupEnabledDao
-     */
-    private $private_comment_dao;
-
     public function __construct(
-        PromotedTrackerDao $in_new_dropdown_dao,
-        TrackerPrivateCommentUGroupEnabledDao $private_comment_dao,
+        private readonly PromotedTrackerDao $in_new_dropdown_dao,
+        private readonly TrackerPrivateCommentUGroupEnabledDao $private_comment_dao,
+        private readonly MoveActionAllowedDAO $move_action_allowed_dao,
     ) {
-        $this->in_new_dropdown_dao = $in_new_dropdown_dao;
-        $this->private_comment_dao = $private_comment_dao;
     }
 
     public function build(\Tracker $tracker): TrackerCreationSettings
@@ -50,8 +41,9 @@ class TrackerCreationSettingsBuilder
         if ($this->in_new_dropdown_dao->isContaining($tracker->getId())) {
             $is_displayed_in_new_dropdown = true;
         }
-        $is_used_private_comment = $this->private_comment_dao->isTrackerEnabledPrivateComment($tracker->getId());
+        $is_used_private_comment   = $this->private_comment_dao->isTrackerEnabledPrivateComment($tracker->getId());
+        $is_move_artifacts_allowed = $this->move_action_allowed_dao->isMoveActionAllowedInTracker($tracker->getId());
 
-        return new TrackerCreationSettings($is_displayed_in_new_dropdown, $is_used_private_comment);
+        return new TrackerCreationSettings($is_displayed_in_new_dropdown, $is_used_private_comment, $is_move_artifacts_allowed);
     }
 }

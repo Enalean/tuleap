@@ -51,7 +51,7 @@ final class BeforeMoveChecker implements CheckBeforeMove
         $this->move_action_allowed_checker->checkMoveActionIsAllowedInTracker($source_tracker)
             ->orElse(
                 function (Fault $move_action_forbidden_fault): void {
-                    throw new RestException(404, (string) $move_action_forbidden_fault);
+                    throw new RestException(400, (string) $move_action_forbidden_fault);
                 }
             );
 

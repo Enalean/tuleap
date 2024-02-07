@@ -20,6 +20,7 @@
 
 namespace Tuleap\REST\ReadOnlyAdministrator;
 
+use Psr\Http\Message\ResponseInterface;
 use REST_TestDataBuilder;
 use Tuleap\REST\ProjectBase;
 
@@ -28,7 +29,7 @@ use Tuleap\REST\ProjectBase;
  */
 class ProjectTest extends ProjectBase
 {
-    protected function getResponse($request, $user_name = REST_TestDataBuilder::TEST_BOT_USER_NAME)
+    protected function getResponse($request, $user_name = REST_TestDataBuilder::TEST_BOT_USER_NAME): ResponseInterface
     {
         return parent::getResponse($request, $user_name);
     }

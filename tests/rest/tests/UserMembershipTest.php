@@ -19,12 +19,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Psr\Http\Message\ResponseInterface;
+
 /**
  * @group UserMembershipTests
  */
 final class UserMembershipTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    protected function getResponse($request, $user_name = REST_TestDataBuilder::TEST_USER_1_NAME)
+    protected function getResponse($request, $user_name = REST_TestDataBuilder::TEST_USER_1_NAME): ResponseInterface
     {
         return parent::getResponse($request, $user_name);
     }
@@ -49,7 +51,7 @@ final class UserMembershipTest extends RestBase //phpcs:ignore PSR1.Classes.Clas
         $this->assertGET($response);
     }
 
-    private function assertGET(\Psr\Http\Message\ResponseInterface $response): void
+    private function assertGET(ResponseInterface $response): void
     {
         $user2_groups = [
             "site_active",
@@ -84,7 +86,7 @@ final class UserMembershipTest extends RestBase //phpcs:ignore PSR1.Classes.Clas
         $this->assertOPTIONS($response);
     }
 
-    private function assertOPTIONS(\Psr\Http\Message\ResponseInterface $response): void
+    private function assertOPTIONS(ResponseInterface $response): void
     {
         $this->assertEquals(200, $response->getStatusCode());
         self::assertEqualsCanonicalizing(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));

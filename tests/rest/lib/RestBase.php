@@ -21,6 +21,7 @@
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Test\Rest\Cache;
 use Test\Rest\RequestWrapper;
@@ -147,7 +148,7 @@ class RestBase extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classe
         $this->getTrackerIdsForProjectPrivateMember();
     }
 
-    protected function getResponse($request, $user_name = REST_TestDataBuilder::TEST_USER_1_NAME)
+    protected function getResponse($request, $user_name = REST_TestDataBuilder::TEST_USER_1_NAME): ResponseInterface
     {
         return $this->getResponseByName(
             $user_name,
@@ -168,7 +169,7 @@ class RestBase extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classe
         return $this->rest_request->getResponseWithoutAuth($request);
     }
 
-    protected function getResponseByName($name, RequestInterface $request)
+    protected function getResponseByName($name, RequestInterface $request): ResponseInterface
     {
         return $this->rest_request->getResponseByName($name, $request);
     }

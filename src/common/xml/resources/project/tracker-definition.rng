@@ -131,6 +131,15 @@
       </attribute>
     </optional>
     <optional>
+      <attribute name="enable_move_artifacts">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
+      </attribute>
+    </optional>
+    <optional>
+      <!-- default is true -->
       <!-- these elements are not used, they are provided by the user during the import -->
       <element name="name">
         <ref name="non_empty_string"/>

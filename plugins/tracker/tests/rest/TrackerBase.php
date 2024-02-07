@@ -30,6 +30,7 @@ use Tuleap\Tracker\REST\DataBuilder;
 class TrackerBase extends RestBase
 {
     public const MOVE_PROJECT_NAME                           = 'move-artifact';
+    public const MOVE_FORBIDDEN_PROJECT_NAME                 = 'tracker-move-forbidden';
     public const DELETE_PROJECT_NAME                         = 'test-delete-artifacts';
     public const TRACKER_FIELDS_PROJECT_NAME                 = 'test-tracker-fields';
     public const TRACKER_ADMINISTRATOR_PROJECT_NAME          = 'test-tracker-project-filter';
@@ -46,6 +47,8 @@ class TrackerBase extends RestBase
     private const OPEN_LIST_PROJECT_NAME                     = 'openlistxml';
 
     public const MOVE_TRACKER_SHORTNAME                           = 'tracker_destination';
+    public const MOVE_TRACKER_FORBIDDEN_SHORTNAME                 = 'move_tracker_forbidden';
+    public const MOVE_DESTINATION_TRACKER_SHORTNAME               = 'destination_tracker';
     public const BASE_TRACKER_SHORTNAME                           = 'tracker_source';
     public const DELETE_TRACKER_SHORTNAME                         = 'diasabled_delete_artifacts_testing_2';
     public const TRACKER_FIELDS_TRACKER_SHORTNAME                 = 'tracker_fields_tracker';
@@ -73,6 +76,8 @@ class TrackerBase extends RestBase
 
     protected $delete_tracker_id;
     protected $move_tracker_id;
+    protected $move_tracker_forbidden_id;
+    protected $move_destination_tracker_id;
     protected $base_tracker_id;
     protected $tracker_fields_tracker_id;
     protected $tracker_workflows_tracker_id;
@@ -90,6 +95,7 @@ class TrackerBase extends RestBase
     protected int $open_list_tracker_id;
 
     protected $base_artifact_ids                        = [];
+    protected array $move_forbidden_artifact_ids        = [];
     protected $delete_artifact_ids                      = [];
     private $private_comment_artifact_ids               = [];
     private $tracker_all_field_artifact_ids             = [];
@@ -127,6 +133,7 @@ class TrackerBase extends RestBase
         parent::setUp();
 
         $move_project_id                          = $this->getProjectId(self::MOVE_PROJECT_NAME);
+        $move_forbidden_project_id                = $this->getProjectId(self::MOVE_FORBIDDEN_PROJECT_NAME);
         $delete_project_id                        = $this->getProjectId(self::DELETE_PROJECT_NAME);
         $tracker_fields_project_id                = $this->getProjectId(self::TRACKER_FIELDS_PROJECT_NAME);
         $this->tracker_administrator_project_id   = $this->getProjectId(self::TRACKER_ADMINISTRATOR_PROJECT_NAME);
@@ -143,6 +150,8 @@ class TrackerBase extends RestBase
         $open_list_project_id                     = $this->getProjectId(self::OPEN_LIST_PROJECT_NAME);
 
         $this->move_tracker_id                           = $this->tracker_ids[$move_project_id][self::MOVE_TRACKER_SHORTNAME];
+        $this->move_tracker_forbidden_id                 = $this->tracker_ids[$move_forbidden_project_id][self::MOVE_TRACKER_FORBIDDEN_SHORTNAME];
+        $this->move_destination_tracker_id               = $this->tracker_ids[$move_forbidden_project_id][self::MOVE_DESTINATION_TRACKER_SHORTNAME];
         $this->base_tracker_id                           = $this->tracker_ids[$move_project_id][self::BASE_TRACKER_SHORTNAME];
         $this->delete_tracker_id                         = $this->tracker_ids[$delete_project_id][self::DELETE_TRACKER_SHORTNAME];
         $this->tracker_fields_tracker_id                 = $this->tracker_ids[$tracker_fields_project_id][self::TRACKER_FIELDS_TRACKER_SHORTNAME];
@@ -163,6 +172,7 @@ class TrackerBase extends RestBase
         $this->open_list_tracker_id                      = $this->tracker_ids[$open_list_project_id][self::OPEN_LIST_TRACKER_SHORTNAME];
 
         $this->getBaseArtifactIds();
+        $this->getMoveForbiddenArtifactIds();
         $this->getDeleteArtifactIds();
         $this->getPrivateCommentArtifactIds();
         $this->getTrackerAllFieldsArtifactIds();
@@ -190,6 +200,14 @@ class TrackerBase extends RestBase
         $this->getArtifactIds(
             $this->base_tracker_id,
             $this->base_artifact_ids
+        );
+    }
+
+    private function getMoveForbiddenArtifactIds(): void
+    {
+        $this->getArtifactIds(
+            $this->move_tracker_forbidden_id,
+            $this->move_forbidden_artifact_ids,
         );
     }
 

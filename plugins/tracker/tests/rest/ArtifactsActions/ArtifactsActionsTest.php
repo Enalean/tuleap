@@ -24,12 +24,13 @@
 
 namespace Tuleap\Tracker\Tests\REST\ArtifactsActions;
 
+use Psr\Http\Message\ResponseInterface;
 use REST_TestDataBuilder;
 use Tuleap\Tracker\Tests\REST\TrackerBase;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-class ArtifactsActionsTest extends TrackerBase
+final class ArtifactsActionsTest extends TrackerBase
 {
     public function testMoveArtifactDryRun(): void
     {
@@ -47,7 +48,7 @@ class ArtifactsActionsTest extends TrackerBase
             $this->request_factory->createRequest('PATCH', "artifacts/$artifact_id")->withBody($this->stream_factory->createStream($body))
         );
 
-        $this->assertMoveDryRun($response);
+        self::assertMoveDryRun($response);
     }
 
     public function testMoveArtifactDryRunWithUserRESTReadOnlyAdminNotInProject()
@@ -142,13 +143,13 @@ class ArtifactsActionsTest extends TrackerBase
             $this->request_factory->createRequest('PATCH', "artifacts/$artifact_id")->withBody($this->stream_factory->createStream($body))
         );
 
-        $this->assertMoveArtifact($response, $artifact_id);
+        self::assertMoveArtifact($response, $artifact_id);
 
         $changeset_response = $this->getResponse(
             $this->request_factory->createRequest('GET', "artifacts/$artifact_id/changesets?fields=comments&limit=10")
         );
 
-        $this->assertMoveChangeset($changeset_response);
+        self::assertMoveChangeset($changeset_response);
     }
 
     private function assertMoveArtifact(\Psr\Http\Message\ResponseInterface $response, $artifact_id): void
@@ -191,8 +192,6 @@ class ArtifactsActionsTest extends TrackerBase
     {
         $response = $this->performArtifactDeletion($this->delete_artifact_ids[1]);
 
-        self::assertEquals($response->getStatusCode(), 200);
-
         self::assertEquals(
             "1",
             $response->getHeader('x-ratelimit-limit')[0],
@@ -202,6 +201,8 @@ class ArtifactsActionsTest extends TrackerBase
             "0",
             $response->getHeader('x-ratelimit-remaining')[0],
         );
+
+        self::assertEquals(200, $response->getStatusCode());
     }
 
     /**
@@ -214,7 +215,7 @@ class ArtifactsActionsTest extends TrackerBase
         self::assertEquals(429, $response->getStatusCode());
     }
 
-    private function performArtifactDeletion($artifact_id, $user_name = REST_TestDataBuilder::TEST_USER_1_NAME)
+    private function performArtifactDeletion($artifact_id, $user_name = REST_TestDataBuilder::TEST_USER_1_NAME): ResponseInterface
     {
         $url = "artifacts/$artifact_id";
 
@@ -222,5 +223,24 @@ class ArtifactsActionsTest extends TrackerBase
             $this->request_factory->createRequest('DELETE', $url),
             $user_name
         );
+    }
+
+    public function testMoveArtifactForbidden(): void
+    {
+        $artifact_id = end($this->move_forbidden_artifact_ids);
+        $body        = json_encode(
+            [
+                "move" => [
+                    "tracker_id" => $this->move_destination_tracker_id,
+                    "dry_run" => true,
+                ],
+            ]
+        );
+
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('PATCH', "artifacts/$artifact_id")->withBody($this->stream_factory->createStream($body))
+        );
+
+        self::assertEquals(400, $response->getStatusCode());
     }
 }
