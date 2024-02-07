@@ -31,6 +31,12 @@ final class ServiceBuilder
     private bool $is_defined_by_project;
     private string $short_name = 'custom_service';
     private string $label      = 'Custom Service';
+    private ?string $url       = null;
+    private int $id            = 102;
+    private int $is_active     = 1;
+
+    private string $icon_name = 'fa-solid fa-play';
+    private int $is_used      = 1;
 
     private function __construct(private readonly Project $project, bool $is_defined_by_project)
     {
@@ -79,24 +85,54 @@ final class ServiceBuilder
         return $this;
     }
 
+    public function withUrl(string $url): self
+    {
+        $this->url = $url;
+        return $this;
+    }
+
+    public function withId(int $id): self
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    public function isActive(bool $is_active): self
+    {
+        $this->is_active = (int) $is_active;
+        return $this;
+    }
+
+    public function isUsed(bool $is_used): self
+    {
+        $this->is_used = (int) $is_used;
+            return $this;
+    }
+
+    public function withServiceIcon(string $icon_name): self
+    {
+        $this->icon_name = $icon_name;
+        return $this;
+    }
+
     /**
      * @throws \ServiceNotAllowedForProjectException
      */
     public function build(): Service
     {
         $parameters = [
-            'service_id'    => 102,
+            'service_id'    => $this->id,
             'group_id'      => (int) $this->project->getID(),
             'label'         => $this->label,
             'description'   => 'mudding homework',
             'short_name'    => $this->short_name,
-            'link'          => null,
-            'is_active'     => 1,
-            'is_used'       => 1,
+            'link'          => $this->url,
+            'is_active'     => $this->is_active,
+            'is_used'       => $this->is_used,
             'rank'          => 140,
             'is_in_iframe'  => 0,
             'is_in_new_tab' => false,
-            'icon'          => '',
+            'icon'          => $this->icon_name,
         ];
         if ($this->is_defined_by_project) {
             $parameters['scope'] = Service::SCOPE_PROJECT;
@@ -106,7 +142,7 @@ final class ServiceBuilder
         return new class ($this->project, $parameters) extends Service {
             public function getIconName(): string
             {
-                return 'fa-solid fa-play';
+                return $this->data['icon'];
             }
         };
     }
