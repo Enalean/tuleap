@@ -41,42 +41,36 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
 import ReleaseDisplayer from "../WhatsHotSection/ReleaseDisplayer.vue";
 import { useStore } from "../../stores/root";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-@Component({
-    components: {
-        ReleaseDisplayer,
-    },
-})
-export default class PastSection extends Vue {
-    public root_store = useStore();
+const root_store = useStore();
 
-    @Prop()
-    readonly label_tracker_planning!: string;
+const props = defineProps<{ label_tracker_planning: string }>();
 
-    get past_release_link(): string {
-        return (
-            "/plugins/agiledashboard/?action=show-top&group_id=" +
-            encodeURIComponent(this.root_store.project_id) +
-            "&pane=topplanning-v2&load-all=1"
-        );
-    }
+const { $ngettext, interpolate } = useGettext();
 
-    get past_releases(): string {
-        const translated = this.$ngettext(
-            "%{nb_past} past %{label_tracker}",
-            "%{nb_past} past %{label_tracker}",
-            this.root_store.nb_past_releases,
-        );
+const past_release_link = computed((): string => {
+    return (
+        "/plugins/agiledashboard/?action=show-top&group_id=" +
+        encodeURIComponent(root_store.project_id) +
+        "&pane=topplanning-v2&load-all=1"
+    );
+});
 
-        return this.$gettextInterpolate(translated, {
-            nb_past: this.root_store.nb_past_releases,
-            label_tracker: this.label_tracker_planning,
-        });
-    }
-}
+const past_releases = computed((): string => {
+    const translated = $ngettext(
+        "%{nb_past} past %{label_tracker}",
+        "%{nb_past} past %{label_tracker}",
+        root_store.nb_past_releases,
+    );
+
+    return interpolate(translated, {
+        nb_past: root_store.nb_past_releases,
+        label_tracker: props.label_tracker_planning,
+    });
+});
 </script>
