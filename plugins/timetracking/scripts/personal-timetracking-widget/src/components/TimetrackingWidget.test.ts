@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import TimetrackingWidget from "./TimetrackingWidget.vue";
 import WidgetReadingMode from "./WidgetReadingMode.vue";
@@ -25,13 +26,15 @@ import WidgetArtifactTable from "./WidgetArtifactTable.vue";
 import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
 import { createLocalVueForTests } from "../helpers/local-vue";
+import type Vue from "vue";
 
 const userId = 102;
+const userLocale = "fr_FR";
 
 describe("Given a personal timetracking widget", () => {
-    let reading_mode;
+    let reading_mode: boolean;
 
-    async function getPersonalWidgetInstance() {
+    async function getPersonalWidgetInstance(): Promise<Wrapper<Vue>> {
         const useStore = defineStore("root", {
             state: () => ({
                 reading_mode: reading_mode,
@@ -47,6 +50,7 @@ describe("Given a personal timetracking widget", () => {
         const component_options = {
             propsData: {
                 userId,
+                userLocale,
             },
             localVue: await createLocalVueForTests(),
             pinia,

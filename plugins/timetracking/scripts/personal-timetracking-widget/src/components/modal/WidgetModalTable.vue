@@ -33,6 +33,7 @@
                 v-on:validate-time="addNewTime"
                 data-test="edit-time-with-row"
                 v-bind:artifact="artifact"
+                v-bind:time-data="undefined"
             />
             <widget-modal-row
                 v-for="time in personal_store.current_times"
@@ -47,6 +48,7 @@
                 v-on:validate-time="addNewTime"
                 data-test="edit-time-without-row"
                 v-bind:artifact="artifact"
+                v-bind:time-data="undefined"
             />
             <tr>
                 <td colspan="4" class="tlp-table-cell-empty">
@@ -67,43 +69,27 @@
     </table>
 </template>
 
-<script>
+<script setup lang="ts">
 import WidgetModalRow from "./WidgetModalRow.vue";
 import WidgetModalEditTime from "./WidgetModalEditTime.vue";
 import { usePersonalTimetrackingWidgetStore } from "../../store/root";
-import { mapState } from "pinia";
+import { computed } from "vue";
+import type { Artifact, PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
 
-export default {
-    name: "WidgetModalTable",
-    components: {
-        WidgetModalRow,
-        WidgetModalEditTime,
-    },
-    props: {
-        artifact: Object,
-    },
-    setup() {
-        const personal_store = usePersonalTimetrackingWidgetStore();
+defineProps<{
+    artifact: Artifact;
+    timeData: PersonalTime;
+}>();
 
-        return { personal_store };
-    },
-    computed: {
-        ...mapState(usePersonalTimetrackingWidgetStore, [
-            "is_add_mode",
-            "get_formatted_aggregated_time",
-            "current_times",
-        ]),
-        has_times_on_artifact() {
-            return this.personal_store.current_times.length > 0;
-        },
-    },
-    methods: {
-        setAddMode() {
-            this.personal_store.setAddMode(false);
-        },
-        addNewTime(date, artifact_id, time, step) {
-            this.personal_store.addTime(date, artifact_id, time, step);
-        },
-    },
+const personal_store = usePersonalTimetrackingWidgetStore();
+
+const has_times_on_artifact = computed((): boolean => {
+    return personal_store.current_times.length > 0;
+});
+const setAddMode = (): void => {
+    personal_store.setAddMode(false);
+};
+const addNewTime = (date: string, artifact_id: number, time: string, step: string): void => {
+    personal_store.addTime(date, artifact_id, time, step);
 };
 </script>

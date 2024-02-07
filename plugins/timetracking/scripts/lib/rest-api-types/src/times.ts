@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ProjectReference } from "@tuleap/core-rest-api-types";
+import type { ProjectResponse } from "@tuleap/core-rest-api-types";
 import type { ArtifactResponseNoInstance } from "@tuleap/plugin-tracker-rest-api-types";
 import type { ColorName } from "@tuleap/core-constants";
 
 export type PersonalTime = {
     readonly artifact: Artifact;
-    readonly project: ProjectReference;
+    readonly project: ProjectResponse;
     readonly id: number;
     readonly date: string;
     readonly minutes: number;

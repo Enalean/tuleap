@@ -21,7 +21,7 @@
     <a
         v-bind:href="artifact.html_url"
         class="timetracking-widget-artifact-title"
-        v-bind:title="artifact.title"
+        v-bind:title="artifact_title"
     >
         <span
             class="cross-ref-badge timetracking-badge-direct-link-to-artifact"
@@ -29,19 +29,20 @@
         >
             {{ artifact.xref }}
         </span>
-        {{ artifact.title }}
+        {{ artifact_title }}
     </a>
 </template>
-<script>
-export default {
-    name: "WidgetLinkToArtifact",
-    props: {
-        artifact: Object,
-    },
-    computed: {
-        badge_color() {
-            return "tlp-swatch-" + this.artifact.badge_color;
-        },
-    },
-};
+<script setup lang="ts">
+import type { Artifact } from "@tuleap/plugin-timetracking-rest-api-types";
+import { computed } from "vue";
+
+const props = defineProps<{
+    artifact: Artifact;
+}>();
+
+const badge_color = computed((): string => {
+    return "tlp-swatch-" + props.artifact.badge_color;
+});
+
+const artifact_title = props.artifact.title !== null ? props.artifact.title : "";
 </script>

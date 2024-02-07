@@ -25,35 +25,18 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "pinia";
+<script setup lang="ts">
 import { usePersonalTimetrackingWidgetStore } from "../store/root";
 import WidgetArtifactTable from "./WidgetArtifactTable.vue";
 import WidgetReadingMode from "./WidgetReadingMode.vue";
 import WidgetWritingMode from "./WidgetWritingMode.vue";
 
-export default {
-    name: "TimetrackingWidget",
-    components: {
-        WidgetReadingMode,
-        WidgetWritingMode,
-        WidgetArtifactTable,
-    },
-    props: {
-        userId: Number,
-        userLocale: String,
-    },
-    setup() {
-        const personal_store = usePersonalTimetrackingWidgetStore();
+const props = defineProps<{
+    userId: number;
+    userLocale: string;
+}>();
 
-        return { personal_store };
-    },
-    computed: {
-        ...mapState(usePersonalTimetrackingWidgetStore, ["reading_mode"]),
-    },
-    created() {
-        this.personal_store.initUserId(this.userId);
-        this.personal_store.initUserLocale(this.userLocale);
-    },
-};
+const personal_store = usePersonalTimetrackingWidgetStore();
+personal_store.initUserId(props.userId);
+personal_store.initUserLocale(props.userLocale);
 </script>

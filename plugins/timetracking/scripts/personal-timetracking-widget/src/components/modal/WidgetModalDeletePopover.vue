@@ -18,53 +18,74 @@
   -->
 
 <template>
-    <section class="tlp-popover tlp-popover-danger">
-        <div class="tlp-popover-arrow"></div>
-        <div class="tlp-popover-header">
-            <h1 class="tlp-popover-title">{{ $gettext("Wait a minute...") }}</h1>
-        </div>
-        <div class="tlp-popover-body">
-            <p>{{ $gettext("You're about to remove the time. Please confirm your action.") }}</p>
-        </div>
-        <div class="tlp-popover-footer">
-            <button
-                type="button"
-                class="tlp-button-danger tlp-button-outline"
-                data-dismiss="popover"
-            >
-                {{ $gettext("Cancel") }}
-            </button>
-            <button
-                type="button"
-                class="tlp-button-danger"
-                v-on:click="removeTime"
-                data-dismiss="popover"
-                data-test="timetracking-confirm-time-deletion"
-            >
-                {{ $gettext("Confirm deletion") }}
-            </button>
-        </div>
-    </section>
+    <div>
+        <button
+            class="tlp-button-outline tlp-button-small tlp-button-danger"
+            ref="popover_button"
+            data-placement="left"
+            data-trigger="click"
+            data-test="timetracking-delete-time"
+        >
+            <i class="fas fa-trash-alt"></i>
+        </button>
+        <section class="tlp-popover tlp-popover-danger" ref="delete_popover">
+            <div class="tlp-popover-arrow"></div>
+            <div class="tlp-popover-header">
+                <h1 class="tlp-popover-title">{{ $gettext("Wait a minute...") }}</h1>
+            </div>
+            <div class="tlp-popover-body">
+                <p>
+                    {{ $gettext("You're about to remove the time. Please confirm your action.") }}
+                </p>
+            </div>
+            <div class="tlp-popover-footer">
+                <button
+                    type="button"
+                    class="tlp-button-danger tlp-button-outline"
+                    data-dismiss="popover"
+                >
+                    {{ $gettext("Cancel") }}
+                </button>
+                <button
+                    type="button"
+                    class="tlp-button-danger"
+                    v-on:click="removeTime"
+                    data-dismiss="popover"
+                    data-test="timetracking-confirm-time-deletion"
+                >
+                    {{ $gettext("Confirm deletion") }}
+                </button>
+            </div>
+        </section>
+    </div>
 </template>
-<script>
+<script setup lang="ts">
+import { onMounted, ref } from "vue";
+import type { Ref } from "vue";
+import { createPopover } from "@tuleap/tlp-popovers";
 import { usePersonalTimetrackingWidgetStore } from "../../store/root";
-export default {
-    name: "WidgetModalDeletePopover",
-    props: {
-        timeId: Number,
-    },
-    setup() {
-        const personal_store = usePersonalTimetrackingWidgetStore();
 
-        return { personal_store };
-    },
-    mounted() {
-        this.$emit("create-delete-popover");
-    },
-    methods: {
-        removeTime() {
-            this.personal_store.deleteTime(this.timeId);
-        },
-    },
+const props = defineProps<{
+    timeId: number;
+}>();
+
+const popover_button: Ref<HTMLElement | undefined> = ref();
+const delete_popover: Ref<HTMLElement | undefined> = ref();
+
+const personal_store = usePersonalTimetrackingWidgetStore();
+
+onMounted(() => {
+    if (
+        !(popover_button.value instanceof HTMLElement) ||
+        !(delete_popover.value instanceof HTMLElement)
+    ) {
+        return;
+    }
+
+    createPopover(popover_button.value, delete_popover.value);
+});
+
+const removeTime = (): void => {
+    personal_store.deleteTime(props.timeId);
 };
 </script>

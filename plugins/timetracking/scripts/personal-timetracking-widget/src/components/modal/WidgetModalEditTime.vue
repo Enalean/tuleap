@@ -79,73 +79,78 @@
         </td>
     </tr>
 </template>
-<script>
+<script setup lang="ts">
 import {
     formatMinutes,
     formatDatetimeToYearMonthDay,
 } from "@tuleap/plugin-timetracking-time-formatters";
 import { TIME_REGEX } from "@tuleap/plugin-timetracking-constants";
 import { datePicker } from "tlp";
+import type { Artifact, PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
+import { computed, onMounted, ref } from "vue";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-export default {
-    name: "WidgetModalEditTime",
-    props: {
-        timeData: {
-            type: Object,
-            default: () => {
-                return {};
-            },
-        },
-        artifact: Object,
-    },
-    data() {
-        const data = this.timeData || {};
-        const { date = formatDatetimeToYearMonthDay(new Date().toISOString()), step = "" } = data;
-        return {
-            date,
-            step,
-            time:
-                this.timeData && this.timeData.minutes ? formatMinutes(this.timeData.minutes) : "",
-            error_message: null,
-            is_loading: false,
-        };
-    },
-    computed: {
-        getButtonIconClass() {
-            if (this.is_loading) {
-                return "fa fa-spinner";
-            }
-            return "fa fa-check";
-        },
-    },
-    mounted() {
-        datePicker(this.$refs.date_field, {
-            static: true,
-            onValueUpdate: (date, string_value) => {
-                this.date = string_value;
-            },
-        });
-    },
-    methods: {
-        swapMode() {
-            this.$emit("swap-mode");
-        },
-        validateNewTime() {
-            if (TIME_REGEX.test(this.time)) {
-                if (this.is_loading) {
-                    return;
-                }
-                this.is_loading = true;
+const gettext_provider = useGettext();
+const props = defineProps<{
+    timeData: PersonalTime | undefined;
+    artifact: Artifact;
+}>();
 
-                const id = this.timeData && this.timeData.id ? this.timeData.id : this.artifact.id;
-                this.$emit("validate-time", this.date, id, this.time, this.step);
-            } else {
-                this.error_message = this.$gettext("Please check time's format (hh:mm)");
-                if (!this.time) {
-                    this.error_message = this.$gettext("Time is required");
-                }
-            }
+const date = ref(
+    props.timeData
+        ? formatDatetimeToYearMonthDay(props.timeData.date)
+        : formatDatetimeToYearMonthDay(new Date().toISOString()),
+);
+const step = ref(props.timeData && props.timeData.step ? props.timeData.step : "");
+const time = ref(
+    props.timeData && props.timeData.minutes ? formatMinutes(props.timeData.minutes) : "",
+);
+const error_message = ref<string>("");
+const is_loading = ref(false);
+const date_field = ref<HTMLInputElement>();
+
+const getButtonIconClass = computed((): string => {
+    if (is_loading.value) {
+        return "fa fa-spinner";
+    }
+    return "fa fa-check";
+});
+
+onMounted((): void => {
+    if (!(date_field.value instanceof HTMLInputElement)) {
+        return;
+    }
+    datePicker(date_field.value, {
+        static: true,
+        onValueUpdate: (la_date, string_value) => {
+            date.value = string_value;
         },
-    },
+    });
+});
+
+const emit = defineEmits<{
+    (e: "swap-mode"): void;
+    (e: "validate-time", date: string, id: number, time: string, step: string): void;
+}>();
+
+const swapMode = (): void => {
+    emit("swap-mode");
+};
+
+const validateNewTime = (): void => {
+    if (TIME_REGEX.test(time.value)) {
+        if (is_loading.value) {
+            return;
+        }
+        is_loading.value = true;
+
+        const id = props.timeData && props.timeData.id ? props.timeData.id : props.artifact.id;
+        emit("validate-time", date.value, id, time.value, step.value);
+    } else {
+        error_message.value = gettext_provider.$gettext("Please check time's format (hh:mm)");
+        if (!time.value) {
+            error_message.value = gettext_provider.$gettext("Time is required");
+        }
+    }
 };
 </script>

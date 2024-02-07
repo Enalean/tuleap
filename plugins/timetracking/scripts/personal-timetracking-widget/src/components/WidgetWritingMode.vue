@@ -31,7 +31,7 @@
                         type="text"
                         class="tlp-input tlp-input-date"
                         id="timetracking-start-date"
-                        ref="start_date"
+                        ref="start_date_picker"
                         v-model="personal_store.start_date"
                         size="11"
                         data-test="timetracking-start-date"
@@ -50,7 +50,7 @@
                         type="text"
                         class="tlp-input tlp-input-date"
                         id="timetracking-end-date"
-                        ref="end_date"
+                        ref="end_date_picker"
                         v-model="personal_store.end_date"
                         size="11"
                         data-test="timetracking-end-date"
@@ -77,30 +77,39 @@
         </div>
     </form>
 </template>
-<script>
+<script setup lang="ts">
 import { datePicker } from "tlp";
 import { usePersonalTimetrackingWidgetStore } from "../store/root";
-import { mapState } from "pinia";
-export default {
-    name: "WidgetWritingMode",
-    setup() {
-        const personal_store = usePersonalTimetrackingWidgetStore();
+import { onMounted, ref } from "vue";
+import type { Ref } from "vue";
 
-        return { personal_store };
-    },
-    computed: {
-        ...mapState(usePersonalTimetrackingWidgetStore, ["start_date", "end_date"]),
-    },
-    mounted() {
-        [this.$refs.start_date, this.$refs.end_date].forEach((element) => datePicker(element));
-    },
-    methods: {
-        changeDates() {
-            this.personal_store.setDatesAndReload(
-                this.$refs.start_date.value,
-                this.$refs.end_date.value,
-            );
-        },
-    },
+const personal_store = usePersonalTimetrackingWidgetStore();
+
+let start_date_picker: Ref<HTMLInputElement | undefined> = ref();
+let end_date_picker: Ref<HTMLInputElement | undefined> = ref();
+
+const isHTMLInputElement = (element: HTMLElement | undefined): element is HTMLInputElement => {
+    return element instanceof HTMLInputElement;
+};
+
+onMounted((): void => {
+    [start_date_picker.value, end_date_picker.value].forEach((element) => {
+        if (!isHTMLInputElement(element)) {
+            return;
+        }
+
+        datePicker(element);
+    });
+});
+
+const changeDates = (): void => {
+    const start_date_input = start_date_picker.value;
+    const end_date_input = end_date_picker.value;
+
+    if (!isHTMLInputElement(start_date_input) || !isHTMLInputElement(end_date_input)) {
+        return;
+    }
+
+    personal_store.setDatesAndReload(String(start_date_input.value), String(end_date_input.value));
 };
 </script>

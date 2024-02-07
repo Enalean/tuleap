@@ -44,7 +44,7 @@ interface State {
     pagination_offset: number;
     pagination_limit: number;
     is_loaded: boolean;
-    times: PersonalTime[];
+    times: PersonalTime[][];
     error_message: string;
     current_times: PersonalTime[];
     is_add_mode: boolean;

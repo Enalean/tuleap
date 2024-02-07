@@ -19,14 +19,17 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
 import WidgetModalEditTime from "./WidgetModalEditTime.vue";
 import { createLocalVueForTests } from "../../helpers/local-vue.js";
+import type { Artifact, PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
 
 describe("Given a personal timetracking widget modal", () => {
-    let current_artifact = { artifact: "artifact", id: 10 };
-    let times = {};
+    const current_artifact = { id: 10 } as Artifact;
 
-    async function getWrapperInstance(time_data = {}) {
+    async function getWrapperInstance(
+        time_data?: PersonalTime,
+    ): Promise<Wrapper<WidgetModalEditTime>> {
         const component_options = {
             localVue: await createLocalVueForTests(),
             propsData: {
@@ -39,16 +42,13 @@ describe("Given a personal timetracking widget modal", () => {
 
     describe("Initialisation", () => {
         it("When no date is given, then it should be initialized", async () => {
-            times.date = undefined;
             const wrapper = await getWrapperInstance();
             expect(wrapper.vm.date).toBeDefined();
         });
 
         it("When a date is given, then it should use it", async () => {
             const date = "2023-10-30";
-            const wrapper = await getWrapperInstance({
-                date,
-            });
+            const wrapper = await getWrapperInstance({ date } as PersonalTime);
 
             expect(wrapper.vm.date).toBe(date);
         });
@@ -75,21 +75,15 @@ describe("Given a personal timetracking widget modal", () => {
         it("Given a new time is submitted, then the submit button is disabled and a new event is sent", async () => {
             const wrapper = await getWrapperInstance();
 
-            jest.spyOn(wrapper.vm, "$emit").mockImplementation(() => {});
-
             wrapper.setData({
                 date: "2020-04-03",
                 time: "00:10",
             });
             wrapper.find("[data-test=timetracking-submit-time]").trigger("click");
 
-            expect(wrapper.vm.$emit).toHaveBeenCalledWith(
-                "validate-time",
-                "2020-04-03",
-                10,
-                "00:10",
-                "",
-            );
+            expect(wrapper.emitted("validate-time")).toStrictEqual([
+                ["2020-04-03", 10, "00:10", ""],
+            ]);
             expect(wrapper.vm.is_loading).toBe(true);
         });
     });
