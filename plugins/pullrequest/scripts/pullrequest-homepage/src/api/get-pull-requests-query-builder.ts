@@ -19,12 +19,14 @@
 
 import type { PullRequestsListFilter } from "../components/Filters/PullRequestsListFilter";
 import { TYPE_FILTER_AUTHOR } from "../components/Filters/Author/AuthorFilter";
+import { TYPE_FILTER_LABEL } from "../components/Filters/Labels/LabelFilter";
 
 export const buildQueryFromFilters = (
     filters: PullRequestsListFilter[],
     are_closed_pull_requests_shown: boolean,
 ): string => {
     const query = {};
+    const labels_ids: number[] = [];
 
     if (!are_closed_pull_requests_shown) {
         Object.assign(query, { status: "open" });
@@ -36,7 +38,17 @@ export const buildQueryFromFilters = (
                 authors: [{ id: filter.value.id }],
             });
         }
+
+        if (filter.type === TYPE_FILTER_LABEL) {
+            labels_ids.push(filter.value.id);
+        }
     });
+
+    if (labels_ids.length) {
+        Object.assign(query, {
+            labels: labels_ids.map((id) => ({ id })),
+        });
+    }
 
     return JSON.stringify(query);
 };

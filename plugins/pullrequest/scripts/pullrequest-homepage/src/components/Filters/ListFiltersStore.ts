@@ -26,6 +26,7 @@ export type StoreListFilters = {
     clearAllFilters(): void;
     getFilters(): Ref<PullRequestsListFilter[]>;
     hasAFilterWithType(type: PullRequestsListFilterType): boolean;
+    doesFilterAlreadyExist(type: PullRequestsListFilterType, id: number): boolean;
 };
 
 type FindFilter = (filter: PullRequestsListFilter) => boolean;
@@ -34,14 +35,24 @@ const withSameType =
     (new_filter: PullRequestsListFilter): FindFilter =>
     (filter: PullRequestsListFilter) =>
         filter.type === new_filter.type;
-const withSameId =
-    (filter_to_delete: PullRequestsListFilter): FindFilter =>
+
+const withSameIdAndType =
+    (current_filter: PullRequestsListFilter): FindFilter =>
     (filter: PullRequestsListFilter) =>
-        filter.id === filter_to_delete.id;
+        current_filter.type === filter.type && current_filter.id === filter.id;
 
 export const ListFiltersStore = (filters: Ref<PullRequestsListFilter[]>): StoreListFilters => ({
     getFilters: () => filters,
     storeFilter: (filter: PullRequestsListFilter): void => {
+        if (filters.value.some(withSameIdAndType(filter))) {
+            return;
+        }
+
+        if (!filter.is_unique) {
+            filters.value.push(filter);
+            return;
+        }
+
         const index = filters.value.findIndex(withSameType(filter));
         if (index !== -1) {
             filters.value.splice(index, 1, filter);
@@ -51,7 +62,7 @@ export const ListFiltersStore = (filters: Ref<PullRequestsListFilter[]>): StoreL
         filters.value.push(filter);
     },
     deleteFilter: (filter: PullRequestsListFilter): void => {
-        const index = filters.value.findIndex(withSameId(filter));
+        const index = filters.value.findIndex(withSameIdAndType(filter));
         if (index === -1) {
             return;
         }
@@ -63,5 +74,8 @@ export const ListFiltersStore = (filters: Ref<PullRequestsListFilter[]>): StoreL
     },
     hasAFilterWithType: (type: PullRequestsListFilterType): boolean => {
         return filters.value.some((filter) => filter.type === type);
+    },
+    doesFilterAlreadyExist: (type: PullRequestsListFilterType, id: number): boolean => {
+        return filters.value.some((filter) => filter.type === type && filter.id === id);
     },
 });

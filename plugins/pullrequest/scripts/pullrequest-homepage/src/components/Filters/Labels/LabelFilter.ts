@@ -17,27 +17,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
+import type { ProjectLabel } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { BasePullRequestsListFilter } from "../PullRequestsListFilter";
 
-export type AuthorFilter = "author";
-export const TYPE_FILTER_AUTHOR: AuthorFilter = "author";
+export type LabelFilter = "label";
+export const TYPE_FILTER_LABEL: LabelFilter = "label";
 
-export type PullRequestAuthorFilter = BasePullRequestsListFilter<User> & {
-    type: AuthorFilter;
-    is_unique: true;
+export type PullRequestLabelFilter = BasePullRequestsListFilter<ProjectLabel> & {
+    type: LabelFilter;
+    is_unique: false;
 };
 
-export type BuildAuthorFilter = {
-    fromAuthor(author: User): PullRequestAuthorFilter;
+export type BuildLabelFilter = {
+    fromLabel(label: ProjectLabel): PullRequestLabelFilter;
 };
 
-export const AuthorFilterBuilder = ($gettext: (string: string) => string): BuildAuthorFilter => ({
-    fromAuthor: (author): PullRequestAuthorFilter => ({
-        id: author.id,
-        type: TYPE_FILTER_AUTHOR,
-        label: `${$gettext("Author")}: ${author.display_name}`,
-        value: author,
-        is_unique: true,
+export const LabelFilterBuilder = ($gettext: (string: string) => string): BuildLabelFilter => ({
+    fromLabel: (label: ProjectLabel): PullRequestLabelFilter => ({
+        id: label.id,
+        type: TYPE_FILTER_LABEL,
+        label: `${$gettext("Label")}: ${label.label}`,
+        value: label,
+        is_unique: false,
     }),
 });

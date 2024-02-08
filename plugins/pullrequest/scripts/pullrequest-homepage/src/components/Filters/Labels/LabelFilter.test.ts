@@ -18,23 +18,19 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { AuthorFilterBuilder } from "./AuthorFilter";
-import { UserStub } from "../../../../tests/stubs/UserStub";
+import { LabelFilterBuilder, TYPE_FILTER_LABEL } from "./LabelFilter";
 import { GettextStub } from "../../../../tests/stubs/GettextStub";
+import { ProjectLabelStub } from "../../../../tests/stubs/ProjectLabelStub";
 
-const user_id = 102;
-const user_display_name = "John Doe (jdoe)";
+describe("LabelFilter", () => {
+    it("Given a ProjectLabel, then it should return a LabelFilter", () => {
+        const label = ProjectLabelStub.regulardWithIdAndLabel(1, "Emergency");
+        const filter = LabelFilterBuilder(GettextStub).fromLabel(label);
 
-describe("AuthorFilter", () => {
-    it("Given an user, then it should return an AuthorFilter", () => {
-        const builder = AuthorFilterBuilder(GettextStub);
-        const author = UserStub.withIdAndName(user_id, user_display_name);
-        const filter = builder.fromAuthor(author);
-
-        expect(filter.id).toBe(user_id);
-        expect(filter.type).toBe("author");
-        expect(filter.label).toBe(`Author: ${user_display_name}`);
-        expect(filter.value).toBe(author);
-        expect(filter.is_unique).toBe(true);
+        expect(filter.id).toBe(label.id);
+        expect(filter.type).toBe(TYPE_FILTER_LABEL);
+        expect(filter.label).toBe(`Label: ${label.label}`);
+        expect(filter.value).toBe(label);
+        expect(filter.is_unique).toBe(false);
     });
 });

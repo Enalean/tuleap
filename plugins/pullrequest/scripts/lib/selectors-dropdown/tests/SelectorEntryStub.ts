@@ -42,6 +42,9 @@ export const SelectorEntryStub = {
                     // Do nothing
                 }
             },
+            getDisabledItems(items: LazyboxItem[]): LazyboxItem[] {
+                return items;
+            },
         },
     }),
 };

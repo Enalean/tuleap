@@ -18,18 +18,26 @@
  */
 
 import type { Fault } from "@tuleap/fault";
+import type { LazyboxItem } from "@tuleap/lazybox";
 import type { ProjectLabel } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { SelectorEntry } from "@tuleap/plugin-pullrequest-selectors-dropdown";
+import type { StoreListFilters } from "../ListFiltersStore";
 import { LabelsTemplatingCallback } from "./LabelsTemplatingCallback";
 import { LabelsLoader } from "./LabelsLoader";
 import { LabelsFilteringCallback } from "./LabelsFilteringCallback";
+import { LabelFilterBuilder } from "./LabelFilter";
+import { LazyboxItemLabelBuilder } from "./LazyboxItemLabelBuilder";
 
 export const isLabel = (item_value: unknown): item_value is ProjectLabel =>
-    typeof item_value === "object" && item_value !== null && "id" in item_value;
+    typeof item_value === "object" &&
+    item_value !== null &&
+    "id" in item_value &&
+    "label" in item_value;
 
 export const LabelsSelectorEntry = (
     $gettext: (string: string) => string,
     on_error_callback: (fault: Fault) => void,
+    filters_store: StoreListFilters,
     project_id: number,
 ): SelectorEntry => ({
     entry_name: $gettext("Labels"),
@@ -39,11 +47,21 @@ export const LabelsSelectorEntry = (
         label: $gettext("Matching labels"),
         empty_message: $gettext("No matching labels"),
         disabled_message: "",
-        templating_callback: LabelsTemplatingCallback,
-        loadItems: LabelsLoader(on_error_callback, project_id),
+        templating_callback: LabelsTemplatingCallback($gettext),
+        loadItems: LabelsLoader(
+            on_error_callback,
+            LazyboxItemLabelBuilder(filters_store),
+            project_id,
+        ),
         filterItems: LabelsFilteringCallback,
-        onItemSelection(): void {
-            // Do nothing for the moment
+        onItemSelection(item: unknown): void {
+            if (!isLabel(item)) {
+                return;
+            }
+
+            filters_store.storeFilter(LabelFilterBuilder($gettext).fromLabel(item));
         },
+        getDisabledItems: (items: LazyboxItem[]): LazyboxItem[] =>
+            items.map(LazyboxItemLabelBuilder(filters_store).fromLazyboxItem),
     },
 });

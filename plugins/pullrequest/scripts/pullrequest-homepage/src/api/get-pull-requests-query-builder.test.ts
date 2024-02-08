@@ -21,8 +21,9 @@ import { describe, beforeEach, it, expect } from "vitest";
 import { buildQueryFromFilters } from "./get-pull-requests-query-builder";
 import { AuthorFilterBuilder } from "../components/Filters/Author/AuthorFilter";
 import { UserStub } from "../../tests/stubs/UserStub";
-
-const $gettext = (string: string): string => string;
+import { LabelFilterBuilder } from "../components/Filters/Labels/LabelFilter";
+import { ProjectLabelStub } from "../../tests/stubs/ProjectLabelStub";
+import { GettextStub } from "../../tests/stubs/GettextStub";
 
 describe("get-pull-requests-query-builder", () => {
     let are_closed_pull_requests_shown: boolean;
@@ -36,7 +37,7 @@ describe("get-pull-requests-query-builder", () => {
             const user_id = 102;
             const query = buildQueryFromFilters(
                 [
-                    AuthorFilterBuilder($gettext).fromAuthor(
+                    AuthorFilterBuilder(GettextStub).fromAuthor(
                         UserStub.withIdAndName(user_id, "John Doe (jdoe)"),
                     ),
                 ],
@@ -60,6 +61,24 @@ describe("get-pull-requests-query-builder", () => {
             const query = buildQueryFromFilters([], are_closed_pull_requests_shown);
 
             expect(query).toContain(JSON.stringify({ status: "open" }));
+        });
+    });
+
+    describe("Labels Filters", () => {
+        it("Given filters on labels, then it should return a proper query string", () => {
+            const builder = LabelFilterBuilder(GettextStub);
+            const emergency_label = ProjectLabelStub.regulardWithIdAndLabel(1, "Emergency");
+            const easy_fix_label = ProjectLabelStub.outlinedWithIdAndLabel(2, "Easy fix");
+            const query = buildQueryFromFilters(
+                [builder.fromLabel(emergency_label), builder.fromLabel(easy_fix_label)],
+                are_closed_pull_requests_shown,
+            );
+
+            expect(query).toContain(
+                JSON.stringify({
+                    labels: [{ id: emergency_label.id }, { id: easy_fix_label.id }],
+                }),
+            );
         });
     });
 });

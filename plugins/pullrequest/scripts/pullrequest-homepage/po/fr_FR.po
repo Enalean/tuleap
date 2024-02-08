@@ -42,6 +42,9 @@ msgstr "Erreur"
 msgid "Error details"
 msgstr "Détails de l'erreur"
 
+msgid "Label"
+msgstr "Label"
+
 msgid "Label name"
 msgstr "Nom du label"
 
@@ -77,6 +80,9 @@ msgstr "Afficher fermées"
 
 msgid "Show details"
 msgstr "Voir les détails"
+
+msgid "This label is already selected"
+msgstr "Ce label est déjà sélectionné"
 
 msgid "You can only filter on one author"
 msgstr "Vous ne pouvez filtrer que sur un auteur"

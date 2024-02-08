@@ -22,12 +22,13 @@ import { describe, it, expect } from "vitest";
 import { selectOrThrow } from "@tuleap/dom";
 import type { LazyboxItem } from "@tuleap/lazybox";
 import { ProjectLabelStub } from "../../../../tests/stubs/ProjectLabelStub";
+import { GettextStub } from "../../../../tests/stubs/GettextStub";
 import { LabelsTemplatingCallback } from "./LabelsTemplatingCallback";
 
 const renderTemplate = (item: LazyboxItem): HTMLElement => {
     const doc = document.implementation.createHTMLDocument();
     const target = doc.createElement("span");
-    const template = LabelsTemplatingCallback(html, item);
+    const template = LabelsTemplatingCallback(GettextStub)(html, item);
 
     template(target, target);
 
@@ -60,6 +61,23 @@ describe("LabelsTemplatingCallback", () => {
 
         expect(displayed_label.textContent?.trim()).toBe(label.label);
         expect(displayed_label.classList.contains("tlp-badge-outline")).toBe(false);
+        expect(displayed_label.classList.contains(`tlp-badge-${label.color}`)).toBe(true);
+    });
+
+    it("Given a disabled Lazybox item, then it should display it disabled", () => {
+        const label = ProjectLabelStub.regulardWithIdAndLabel(1, "Emergency");
+        const rendered_template = renderTemplate({
+            is_disabled: true,
+            value: label,
+        });
+
+        const displayed_label = selectOrThrow(rendered_template, "[data-test=pull-request-label]");
+
+        expect(displayed_label.textContent?.trim()).toBe(label.label);
+        expect(displayed_label.classList.contains("tlp-badge-outline")).toBe(false);
+        expect(
+            displayed_label.classList.contains("pull-request-autocompleter-badge-disabled"),
+        ).toBe(true);
         expect(displayed_label.classList.contains(`tlp-badge-${label.color}`)).toBe(true);
     });
 

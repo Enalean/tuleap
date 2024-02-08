@@ -21,6 +21,7 @@ import type { LazyAutocompleter, LazyAutocompleterSelectionCallback } from "@tul
 import { Option } from "@tuleap/option";
 import type { InternalSelectorsDropdown, SelectorEntry } from "../SelectorsDropdown";
 import type { BuildContentGroup } from "./ContentGroupBuilder";
+import type { LazyboxItem } from "@tuleap/lazybox/src/GroupCollection";
 
 const forceHostToUpdateTemplate = (
     host: InternalSelectorsDropdown,
@@ -35,10 +36,15 @@ export const OnSelectionCallback =
         lazy_autocompleter: LazyAutocompleter,
         group_builder: BuildContentGroup,
         selector: SelectorEntry,
+        items: LazyboxItem[],
     ): LazyAutocompleterSelectionCallback =>
     (item_value: unknown): void => {
         selector.config.onItemSelection(item_value);
-        if (!selector.isDisabled()) {
+        if (!selector.isDisabled() && selector.config.getDisabledItems) {
+            const disabled = selector.config.getDisabledItems(items);
+
+            lazy_autocompleter.replaceContent([group_builder.buildWithItems(disabled)]);
+
             return;
         }
 
