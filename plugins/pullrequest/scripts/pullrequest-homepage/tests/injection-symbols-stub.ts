@@ -22,6 +22,7 @@ import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 import { PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN } from "@tuleap/tlp-relative-date";
 import type { DisplayErrorCallback } from "../src/injection-symbols";
 import {
+    PROJECT_ID,
     SHOW_CLOSED_PULL_REQUESTS,
     BASE_URL,
     DISPLAY_TULEAP_API_ERROR,
@@ -36,6 +37,7 @@ const noop = (): void => {
 };
 
 export const injected_repository_id = 2;
+const injected_project_id = 102;
 export const injected_base_url = new URL("https://example.com");
 export const injected_user_locale = "fr_FR";
 export let injected_show_closed_pull_requests = ref(false);
@@ -47,6 +49,8 @@ const injection_symbols: StrictInjectImplementation = (key): unknown => {
     switch (key) {
         case REPOSITORY_ID:
             return injected_repository_id;
+        case PROJECT_ID:
+            return injected_project_id;
         case BASE_URL:
             return injected_base_url;
         case USER_LOCALE_KEY:

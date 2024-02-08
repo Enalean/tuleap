@@ -62,14 +62,16 @@
 import { useGettext } from "vue3-gettext";
 import "@tuleap/plugin-pullrequest-selectors-dropdown";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { DISPLAY_TULEAP_API_ERROR, REPOSITORY_ID } from "../../injection-symbols";
+import { DISPLAY_TULEAP_API_ERROR, PROJECT_ID, REPOSITORY_ID } from "../../injection-symbols";
 import { AuthorSelectorEntry } from "./Author/AuthorSelectorEntry";
 import type { StoreListFilters } from "./ListFiltersStore";
 import ClosedPullRequestsFilterSwitch from "./Status/ClosedPullRequestsFilterSwitch.vue";
+import { LabelsSelectorEntry } from "./Labels/LabelsSelectorEntry";
 
 const { $gettext } = useGettext();
 
 const repository_id = strictInject(REPOSITORY_ID);
+const project_id = strictInject(PROJECT_ID);
 const displayTuleapAPIFault = strictInject(DISPLAY_TULEAP_API_ERROR);
 
 const props = defineProps<{
@@ -78,6 +80,7 @@ const props = defineProps<{
 
 const selectors_entries = [
     AuthorSelectorEntry($gettext, displayTuleapAPIFault, props.filters_store, repository_id),
+    LabelsSelectorEntry($gettext, displayTuleapAPIFault, project_id),
 ];
 </script>
 

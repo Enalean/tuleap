@@ -25,6 +25,7 @@ import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 export type DisplayErrorCallback = (fault: Fault) => void;
 
 export const REPOSITORY_ID: StrictInjectionKey<number> = Symbol("repository_id");
+export const PROJECT_ID: StrictInjectionKey<number> = Symbol("project_id");
 export const BASE_URL: StrictInjectionKey<URL> = Symbol("base_url");
 export const USER_LOCALE_KEY: StrictInjectionKey<string> = Symbol("user_locale");
 export const USER_DATE_TIME_FORMAT_KEY: StrictInjectionKey<string> =

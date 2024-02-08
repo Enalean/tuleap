@@ -48,8 +48,14 @@
     }
 }
 
-.selectors-dropdown-menu-items-with-side-panel > .selectors-dropdown-menu-item:first-child {
-    border-radius: var(--tlp-large-radius) 0 0 0;
+.selectors-dropdown-menu-items-with-side-panel > .selectors-dropdown-menu-item {
+    &:first-child {
+        border-radius: var(--tlp-large-radius) 0 0 0;
+    }
+
+    &:last-child {
+        border-radius: 0;
+    }
 }
 
 .selectors-dropdown-side-panel {
