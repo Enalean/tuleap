@@ -345,12 +345,14 @@ class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginated
                     SELECT COUNT(DISTINCT user_id)
                     FROM plugin_pullrequest_review
                     WHERE (repository_id = ? OR repo_dest_id = ?)
+                    AND user_id != 0
                 ";
 
                 $sql = "
                     SELECT DISTINCT user_id
                     FROM plugin_pullrequest_review
                     WHERE (repository_id = ? OR repo_dest_id = ?)
+                    AND user_id != 0
                     LIMIT ?
                     OFFSET ?
                 ";
