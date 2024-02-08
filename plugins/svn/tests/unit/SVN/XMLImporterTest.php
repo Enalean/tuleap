@@ -29,7 +29,6 @@ use SimpleXMLElement;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\SVN\AccessControl\AccessFileHistoryCreator;
 use Tuleap\SVN\Admin\MailNotificationManager;
-use Tuleap\SVN\Migration\RepositoryCopier;
 use Tuleap\SVN\Notifications\NotificationsEmailsBuilder;
 use Tuleap\SVN\Repository\RepositoryCreator;
 use Tuleap\SVN\Repository\RepositoryManager;
@@ -63,10 +62,6 @@ final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject&RepositoryCreator
      */
     private $repository_creator;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&RepositoryCopier
-     */
-    private $repository_copier;
     private NotificationsEmailsBuilder $notification_emails_builder;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&BackendSVN
@@ -102,7 +97,6 @@ final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->repository_manager          = $this->createMock(\Tuleap\SVN\Repository\RepositoryManager::class);
         $this->backend_svn                 = $this->createMock(\BackendSVN::class);
         $this->notification_emails_builder = new NotificationsEmailsBuilder();
-        $this->repository_copier           = $this->createMock(\Tuleap\SVN\Migration\RepositoryCopier::class);
         $this->repository_creator          = $this->createMock(RepositoryCreator::class);
         $this->mail_notification_manager   = $this->createMock(MailNotificationManager::class);
         $this->access_file_manager         = $this->createMock(AccessFileHistoryCreator::class);
@@ -124,7 +118,6 @@ final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->repository_manager,
             $this->user_manager,
             $this->notification_emails_builder,
-            $this->repository_copier,
             $this->xml_user_checker
         );
 
@@ -152,7 +145,6 @@ final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->repository_manager,
             $this->user_manager,
             $this->notification_emails_builder,
-            $this->repository_copier,
             $this->xml_user_checker
         );
 

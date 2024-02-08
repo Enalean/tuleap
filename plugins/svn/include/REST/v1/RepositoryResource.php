@@ -663,13 +663,11 @@ class RepositoryResource extends AuthenticatedResource
             $has_initial_layout        = $settings !== null && $settings->layout !== null;
             $initial_repository_layout = $has_initial_layout ? $settings->layout : [];
 
-            $copy_from_core = false;
             $this->repository_creator->createWithSettings(
                 $repository_to_create,
                 $user,
                 $repository_settings,
                 $initial_repository_layout,
-                $copy_from_core
             );
         } catch (ImmutableTagListTooBigException $exception) {
             throw new RestException(400, $exception->getMessage(), [], $exception);

@@ -30,7 +30,6 @@ use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\SVN\AccessControl\AccessFileHistoryCreator;
 use Tuleap\SVN\Admin\MailNotification;
 use Tuleap\SVN\Admin\MailNotificationManager;
-use Tuleap\SVN\Migration\RepositoryCopier;
 use Tuleap\SVN\Notifications\NotificationsEmailsBuilder;
 use Tuleap\SVN\Repository\Exception\CannotCreateRepositoryException;
 use Tuleap\SVN\Repository\Exception\RepositoryNameIsInvalidException;
@@ -82,10 +81,6 @@ class XMLRepositoryImporter
      * @var NotificationsEmailsBuilder
      */
     private $notifications_emails_builder;
-    /**
-     * @var RepositoryCopier
-     */
-    private $repository_copier;
 
     /**
      * @var XMLUserChecker
@@ -101,7 +96,6 @@ class XMLRepositoryImporter
         RepositoryManager $repository_manager,
         \UserManager $user_manager,
         NotificationsEmailsBuilder $notifications_emails_builder,
-        RepositoryCopier $repository_copier,
         XMLUserChecker $xml_user_checker,
     ) {
         $attrs      = $xml_repo->attributes();
@@ -128,7 +122,6 @@ class XMLRepositoryImporter
         $this->repository_manager           = $repository_manager;
         $this->user_manager                 = $user_manager;
         $this->notifications_emails_builder = $notifications_emails_builder;
-        $this->repository_copier            = $repository_copier;
         $this->xml_user_checker             = $xml_user_checker;
     }
 
@@ -148,11 +141,9 @@ class XMLRepositoryImporter
         $repo = SvnRepository::buildToBeCreatedRepository($this->name, $project);
 
         try {
-            $copy_from_core = false;
-            $sysevent       = $this->repository_creator->createWithoutUserAdminCheck(
+            $sysevent = $this->repository_creator->createWithoutUserAdminCheck(
                 $repo,
                 $committer,
-                $copy_from_core
             );
         } catch (CannotCreateRepositoryException $e) {
             throw new XMLImporterException("Unable to create the repository");
@@ -170,7 +161,6 @@ class XMLRepositoryImporter
             $this->repository_manager,
             $this->user_manager,
             $this->backend_svn,
-            $this->repository_copier
         );
         $sysevent->process();
         if ($sysevent->getStatus() != \SystemEvent::STATUS_DONE) {

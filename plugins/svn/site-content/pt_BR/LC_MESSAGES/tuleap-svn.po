@@ -34,9 +34,6 @@ msgstr ""
 msgid "Admin Groups"
 msgstr ""
 
-msgid "Administrators"
-msgstr "Administradores"
-
 msgid "Allow commit message changes (svn propset --revprop -r X svn:log)"
 msgstr ""
 
@@ -170,9 +167,6 @@ msgid ""
 "folders to get more information."
 msgstr ""
 
-msgid "However you will notice that:"
-msgstr ""
-
 msgid ""
 "If a file is already bigger than the limit it can no longer be modified. It "
 "can be deleted and re-created (keep in mind the big file will stay in the "
@@ -207,9 +201,6 @@ msgid "Max file size"
 msgstr ""
 
 msgid "Maximum individual file size (in Megabytes)"
-msgstr ""
-
-msgid "Migrate from core"
 msgstr ""
 
 msgid "Monitored path"
@@ -248,13 +239,6 @@ msgstr ""
 msgid "Notifications"
 msgstr "Notificações"
 
-msgid ""
-"Once you switch the repository is immediately visible in the plugin "
-"interface with a <span class=\"tlp-badge-secondary tlp-badge-outline\">Core</"
-"span> label. The hooks are replaced by a background job so the email format "
-"as well as new settings might take a few minutes to be applied."
-msgstr ""
-
 msgid "Path"
 msgstr ""
 
@@ -290,22 +274,11 @@ msgstr ""
 msgid "Repository '%1$s' will be removed in a few seconds"
 msgstr ""
 
-msgid "Repository already migrated"
-msgstr ""
-
 msgid "Repository list"
-msgstr ""
-
-msgid ""
-"Repository migrated, please wait a few minutes so the hooks are rewritten"
 msgstr ""
 
 msgid "Repository name"
 msgstr "Nome do Repositório"
-
-#, php-format
-msgid "Repository name `%s` is already used in this project"
-msgstr ""
 
 msgid "Repository name is already used in this project."
 msgstr ""
@@ -467,21 +440,10 @@ msgid "This deletion can't be undone. Please confirm the repository deletion."
 msgstr ""
 
 msgid ""
-"This form allows to transfer the management of subversion repository from "
-"the `Subversion` service to this plugin."
-msgstr ""
-
-msgid ""
 "This is the historical repository provided by legacy 'Subversion' service."
 msgstr ""
 
 msgid "This limit will apply on all files on all svn plugin repositories."
-msgstr ""
-
-msgid ""
-"This migration is done in place. All settings are transferred and, more "
-"important <strong>the subversion url</strong> ({{ svn_url }}) <strong>will "
-"not change</strong>."
 msgstr ""
 
 msgid "Top project"
@@ -625,9 +587,6 @@ msgid ""
 "(Subversion 1.10 & upper)."
 msgstr ""
 
-msgid "`SVN Query`, `My SVN commits` as well as SVN widgets are gone."
-msgstr ""
-
 msgid "my-new-repository"
 msgstr ""
 
@@ -638,9 +597,6 @@ msgid "saved on"
 msgstr ""
 
 msgid "some/path"
-msgstr ""
-
-msgid "the commit email format is different."
 msgstr ""
 
 msgid "{{ user_group_name }} has no global permission"

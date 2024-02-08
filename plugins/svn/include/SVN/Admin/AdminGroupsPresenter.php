@@ -26,7 +26,7 @@ use CSRFSynchronizerToken;
 /**
  * @psalm-immutable
  */
-class AdminGroupsPresenter extends BaseGlobalAdminPresenter
+final class AdminGroupsPresenter extends BaseGlobalAdminPresenter
 {
     /**
      * @var bool
@@ -48,9 +48,9 @@ class AdminGroupsPresenter extends BaseGlobalAdminPresenter
     /**
      * @psalm-param $ugroups list<array{id: int, name: string, selected: bool}>
      */
-    public function __construct(Project $project, CSRFSynchronizerToken $token, array $ugroups, bool $has_migrate_from_core)
+    public function __construct(Project $project, CSRFSynchronizerToken $token, array $ugroups)
     {
-        parent::__construct($project, $token, $has_migrate_from_core);
+        parent::__construct($project, $token);
 
         $this->admin_groups_active      = true;
         $this->admin_groups_description = dgettext('tuleap-svn', 'Select the groups which are allowed to access the SVN administration in addition to the project administrators.');

@@ -88,7 +88,6 @@ class GlobalAdministratorsController implements DispatchableWithRequest, Dispatc
                 $project,
                 $token,
                 $this->getOptions($project),
-                $project->usesSVN(),
             )
         );
     }

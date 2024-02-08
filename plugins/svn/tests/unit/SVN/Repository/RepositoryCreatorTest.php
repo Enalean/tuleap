@@ -166,7 +166,6 @@ final class RepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->user,
             $settings,
             $initial_layout,
-            false
         );
     }
 
@@ -208,7 +207,6 @@ final class RepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->user,
             $settings,
             $initial_layout,
-            false
         );
     }
 
@@ -247,7 +245,7 @@ final class RepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $initial_layout     = [];
 
-        $this->repository_creator->createWithSettings($this->repository, $this->user, $settings, $initial_layout, false);
+        $this->repository_creator->createWithSettings($this->repository, $this->user, $settings, $initial_layout);
     }
 
     public function testItCreatesRepositoryWithNoCustomSettings(): void
@@ -277,6 +275,6 @@ final class RepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $initial_layout     = [];
 
-        $this->repository_creator->createWithSettings($this->repository, $this->user, $settings, $initial_layout, false);
+        $this->repository_creator->createWithSettings($this->repository, $this->user, $settings, $initial_layout);
     }
 }
