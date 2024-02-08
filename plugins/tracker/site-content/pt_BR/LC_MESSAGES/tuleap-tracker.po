@@ -3049,10 +3049,6 @@ msgid ""
 msgstr ""
 
 #, php-format
-msgid "The integer field '%s' cannot be compared to the float value '%s'."
-msgstr ""
-
-#, php-format
 msgid "The integer field '%s' cannot be compared to the string value '%s'."
 msgstr ""
 

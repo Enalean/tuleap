@@ -30,22 +30,10 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\StatusOpenIsNotSupportedE
 
 final class IntegerFieldChecker implements InvalidFieldChecker
 {
-    /**
-     * @var EmptyStringChecker
-     */
-    private $empty_string_checker;
-
-    /**
-     * @var CollectionOfAlphaNumericValuesExtractor
-     */
-    private $values_extractor;
-
     public function __construct(
-        EmptyStringChecker $empty_string_checker,
-        CollectionOfAlphaNumericValuesExtractor $values_extractor,
+        private readonly EmptyStringChecker $empty_string_checker,
+        private readonly CollectionOfAlphaNumericValuesExtractor $values_extractor,
     ) {
-        $this->empty_string_checker = $empty_string_checker;
-        $this->values_extractor     = $values_extractor;
     }
 
     public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field): void
@@ -63,10 +51,6 @@ final class IntegerFieldChecker implements InvalidFieldChecker
         foreach ($values as $value) {
             if ($this->empty_string_checker->isEmptyStringAProblem((string) $value)) {
                 throw new IntegerToEmptyStringTermException($comparison, $field);
-            }
-
-            if (preg_match("/^\\d+\\.\\d+$/", (string) $value) === 1) {
-                throw new IntegerToFloatComparisonException($field, $value);
             }
 
             if (! is_numeric($value) && $value !== "") {
