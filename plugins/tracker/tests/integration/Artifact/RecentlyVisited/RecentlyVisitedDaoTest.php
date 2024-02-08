@@ -19,10 +19,9 @@
  */
 
 
-namespace integration\Tracker\Artifact\RecentlyVisited;
+namespace Tuleap\Tracker\Artifact\RecentlyVisited;
 
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
-use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 
 final class RecentlyVisitedDaoTest extends TestIntegrationTestCase
 {

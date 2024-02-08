@@ -20,10 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Notifications\Settings;
+namespace Tuleap\Tracker\Notifications\Settings;
 
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
-use Tuleap\Tracker\Notifications\Settings\CalendarEventConfigDao;
 
 final class CalendarEventConfigDaoTest extends TestIntegrationTestCase
 {
