@@ -157,6 +157,29 @@ final class DaoTest extends TestIntegrationTestCase
         ]);
     }
 
+    public function testItRetrievesAllPullRequestsAuthorsWhichAreNotAnonymous(): void
+    {
+        $han_onymous_user_id = 0;
+
+        $this->insertPullRequest(
+            PullRequestTestBuilder::aPullRequestInReview()
+                ->createdBy($han_onymous_user_id)
+                ->withRepositoryId(self::REPOSITORY_ID)
+                ->build(),
+        );
+
+        $result = $this->dao->getPaginatedPullRequestsAuthorsIds(
+            self::REPOSITORY_ID,
+            self::LIMIT,
+            self::OFFSET
+        );
+
+        self::assertSame(
+            $result->authors_ids,
+            [self::BOB_USER_ID, self::ALICE_USER_ID]
+        );
+    }
+
     private function insertOpenPullRequest(): int
     {
         return $this->insertPullRequest(
