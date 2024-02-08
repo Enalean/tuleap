@@ -29,9 +29,6 @@ use Tracker_FormElement_Field_OpenList;
 use Tuleap\Test\Stubs\UGroupRetrieverStub;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUgroupsValueDao;
 
-/**
- * @property
- */
 final class TrackerFormElementOpenListBuilder
 {
     /**

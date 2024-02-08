@@ -26,8 +26,10 @@ use Tracker_FormElement_Field_Date;
 
 final class TrackerFormElementDateFieldBuilder
 {
-    private string $name         = "date";
-    private array $user_can_read = [];
+    private string $name = "date";
+    /** @var list<\PFUser> */
+    private array $user_can_read    = [];
+    private bool $is_time_displayed = false;
 
     private function __construct(private readonly int $id)
     {
@@ -51,6 +53,12 @@ final class TrackerFormElementDateFieldBuilder
         return $this;
     }
 
+    public function withTime(): self
+    {
+        $this->is_time_displayed = true;
+        return $this;
+    }
+
     public function build(): Tracker_FormElement_Field_Date
     {
         $tracker_element = new Tracker_FormElement_Field_Date(
@@ -58,7 +66,7 @@ final class TrackerFormElementDateFieldBuilder
             10,
             15,
             $this->name,
-            $this->name,
+            'label',
             "",
             true,
             "",
@@ -67,6 +75,10 @@ final class TrackerFormElementDateFieldBuilder
             10,
             null
         );
+        if ($this->is_time_displayed) {
+            $properties = ['display_time' => ['value' => 1]];
+            $tracker_element->setCacheSpecificProperties($properties);
+        }
 
         foreach ($this->user_can_read as $item) {
             $tracker_element->setUserCanRead($item, true);

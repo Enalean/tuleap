@@ -2,6 +2,8 @@
 /**
  * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
+ * This file is a part of Tuleap.
+ *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -13,18 +15,15 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
-use Tracker_FormElement_Field_Date;
-use Tracker_FormElement_Field_Integer;
-use Tracker_FormElement_Field_Text;
-use Tracker_FormElementFactory;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
@@ -63,110 +62,43 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\LesserThanComparisonChe
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\LesserThanOrEqualComparisonChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\NotEqualComparisonChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\NotInComparisonChecker;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementDateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementIntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementOpenListBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementStringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerFormElementTextFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Tracker_FormElement_Field_String
-     */
-    private $string_field;
-
-    /**
-     * @var \Tracker_FormElement_Field_OpenList
-     */
-    private $open_list_field;
-    /**
-     * @var \Tracker_FormElement_Field_Text
-     */
-    private $field_text;
-    /**
-     * @var \Tracker_FormElement_Field_Integer
-     */
-    private $int_field;
-    /**
-     * @var Tracker_FormElementFactory
-     */
-    private $formelement_factory;
-    /** @var InvalidTermCollectorVisitor */
-    private $collector;
-    /**
-     * @var PFUser
-     */
-    private $user;
-    /**
-     * @var InvalidComparisonCollectorParameters
-     */
-    private $parameters;
-    /** @var InvalidSearchablesCollection */
-    private $invalid_searchables_collection;
+    private const UNSUPPORTED_FIELD_NAME = 'openlist';
+    private const STRING_FIELD_NAME      = 'string';
+    private \Tracker_FormElement_Field_String $string_field;
+    private \Tracker_FormElement_Field_List $open_list_field;
+    private \Tracker_FormElement_Field_Text $field_text;
+    private \Tracker_FormElement_Field_Integer $int_field;
+    private \Tracker_FormElementFactory & MockObject $formelement_factory;
+    private InvalidTermCollectorVisitor $collector;
+    private \PFUser $user;
+    private InvalidComparisonCollectorParameters $parameters;
+    private InvalidSearchablesCollection $invalid_searchables_collection;
 
     protected function setUp(): void
     {
-        $tracker = \Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(101);
-        $this->field_text = new Tracker_FormElement_Field_Text(
-            101,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-        );
-        $this->int_field  = new Tracker_FormElement_Field_Integer(
-            102,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-        );
+        $tracker               = TrackerTestBuilder::aTracker()->withId(101)->build();
+        $this->field_text      = TrackerFormElementTextFieldBuilder::aTextField(101)->build();
+        $this->int_field       = TrackerFormElementIntFieldBuilder::anIntField(102)->build();
+        $this->open_list_field = TrackerFormElementOpenListBuilder::aBind()
+            ->withId(102)
+            ->withName(self::UNSUPPORTED_FIELD_NAME)
+            ->buildStaticBind()
+            ->getField();
+        $this->string_field    = TrackerFormElementStringFieldBuilder::aStringField(103)
+            ->withName(self::STRING_FIELD_NAME)
+            ->build();
 
-        $this->open_list_field = new \Tracker_FormElement_Field_OpenList(
-            102,
-            null,
-            null,
-            'openlist',
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-        );
-
-        $this->string_field = new \Tracker_FormElement_Field_String(
-            102,
-            null,
-            null,
-            'string',
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-        );
-
-        $this->formelement_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
-        $this->user                = new PFUser(['language_id' => 'en']);
+        $this->formelement_factory = $this->createMock(\Tracker_FormElementFactory::class);
+        $this->user                = UserTestBuilder::buildWithDefaults();
 
         $this->invalid_searchables_collection = new InvalidSearchablesCollection();
         $this->parameters                     = new InvalidComparisonCollectorParameters(
@@ -203,101 +135,108 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
 
     public function testItDoesNotCollectInvalidFieldsIfFieldIsUsedForEqualComparison(): void
     {
-        $this->formelement_factory->shouldReceive('getUsedFormElementFieldByNameForUser')
-            ->with(101, "field", $this->user)->andReturns($this->field_text);
+        $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
+            ->with(101, "field", $this->user)
+            ->willReturn($this->field_text);
 
         $expr = new EqualComparison(new Field('field'), new SimpleValueWrapper('value'));
 
-        $this->collector->visitEqualComparison($expr, $this->parameters);
+        $expr->acceptTermVisitor($this->collector, $this->parameters);
 
-        $this->assertEquals([], $this->invalid_searchables_collection->getNonexistentSearchables());
-        $this->assertEquals([], $this->invalid_searchables_collection->getInvalidSearchableErrors());
+        self::assertEmpty($this->invalid_searchables_collection->getNonexistentSearchables());
+        self::assertEmpty($this->invalid_searchables_collection->getInvalidSearchableErrors());
     }
 
     public function testItDoesNotCollectInvalidFieldsIfDateFieldIsUsedForEqualComparison(): void
     {
-        $date_field = \Mockery::mock(Tracker_FormElement_Field_Date::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $date_field->shouldReceive('isTimeDisplayed')->andReturn(true);
-        $this->formelement_factory->shouldReceive('getUsedFormElementFieldByNameForUser')
-            ->with(101, "field", $this->user)->andReturns($date_field);
+        $date_field = TrackerFormElementDateFieldBuilder::aDateField(104)->withTime()->build();
+        $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
+            ->with(101, "field", $this->user)
+            ->willReturn($date_field);
 
         $expr = new EqualComparison(new Field('field'), new SimpleValueWrapper('2017-01-17'));
 
-        $this->collector->visitEqualComparison($expr, $this->parameters);
+        $expr->acceptTermVisitor($this->collector, $this->parameters);
 
-        $this->assertEquals([], $this->invalid_searchables_collection->getNonexistentSearchables());
-        $this->assertEquals([], $this->invalid_searchables_collection->getInvalidSearchableErrors());
+        self::assertEmpty($this->invalid_searchables_collection->getNonexistentSearchables());
+        self::assertEmpty($this->invalid_searchables_collection->getInvalidSearchableErrors());
     }
 
     public function testItDoesNotCollectInvalidFieldsIfFieldIsUsedForNotEqualComparison(): void
     {
-        $this->formelement_factory->shouldReceive('getUsedFormElementFieldByNameForUser')
-            ->with(101, "field", $this->user)->andReturns($this->field_text);
+        $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
+            ->with(101, "field", $this->user)
+            ->willReturn($this->field_text);
 
         $expr = new NotEqualComparison(new Field('field'), new SimpleValueWrapper('value'));
 
-        $this->collector->visitNotEqualComparison($expr, $this->parameters);
+        $expr->acceptTermVisitor($this->collector, $this->parameters);
 
-        $this->assertEquals([], $this->invalid_searchables_collection->getNonexistentSearchables());
-        $this->assertEquals([], $this->invalid_searchables_collection->getInvalidSearchableErrors());
+        self::assertEmpty($this->invalid_searchables_collection->getNonexistentSearchables());
+        self::assertEmpty($this->invalid_searchables_collection->getInvalidSearchableErrors());
     }
 
     public function testItDoesNotCollectInvalidFieldsIfFieldIsUsedForLesserThanComparison(): void
     {
-        $this->formelement_factory->shouldReceive('getUsedFormElementFieldByNameForUser')
-            ->with(101, "int", $this->user)->andReturns($this->int_field);
+        $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
+            ->with(101, "int", $this->user)
+            ->willReturn($this->int_field);
 
         $expr = new LesserThanComparison(new Field('int'), new SimpleValueWrapper(20));
 
-        $this->collector->visitLesserThanComparison($expr, $this->parameters);
+        $expr->acceptTermVisitor($this->collector, $this->parameters);
 
-        $this->assertEquals([], $this->invalid_searchables_collection->getNonexistentSearchables());
-        $this->assertEquals([], $this->invalid_searchables_collection->getInvalidSearchableErrors());
+        self::assertEmpty($this->invalid_searchables_collection->getNonexistentSearchables());
+        self::assertEmpty($this->invalid_searchables_collection->getInvalidSearchableErrors());
     }
 
     public function testItDoesNotCollectInvalidFieldsIfFieldIsUsedForGreaterThanComparison(): void
     {
-        $this->formelement_factory->shouldReceive('getUsedFormElementFieldByNameForUser')
-            ->with(101, "int", $this->user)->andReturns($this->int_field);
+        $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
+            ->with(101, "int", $this->user)
+            ->willReturn($this->int_field);
 
         $expr = new GreaterThanComparison(new Field('int'), new SimpleValueWrapper(20));
 
-        $this->collector->visitGreaterThanComparison($expr, $this->parameters);
+        $expr->acceptTermVisitor($this->collector, $this->parameters);
 
-        $this->assertEquals([], $this->invalid_searchables_collection->getNonexistentSearchables());
-        $this->assertEquals([], $this->invalid_searchables_collection->getInvalidSearchableErrors());
+        self::assertEmpty($this->invalid_searchables_collection->getNonexistentSearchables());
+        self::assertEmpty($this->invalid_searchables_collection->getInvalidSearchableErrors());
     }
 
     public function testItDoesNotCollectInvalidFieldsIfFieldIsUsedForLesserThanOrEqualComparison(): void
     {
-        $this->formelement_factory->shouldReceive('getUsedFormElementFieldByNameForUser')
-            ->with(101, "int", $this->user)->andReturns($this->int_field);
+        $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
+            ->with(101, "int", $this->user)
+            ->willReturn($this->int_field);
 
         $expr = new LesserThanOrEqualComparison(new Field('int'), new SimpleValueWrapper(20));
 
-        $this->collector->visitLesserThanOrEqualComparison($expr, $this->parameters);
+        $expr->acceptTermVisitor($this->collector, $this->parameters);
 
-        $this->assertEquals([], $this->invalid_searchables_collection->getNonexistentSearchables());
-        $this->assertEquals([], $this->invalid_searchables_collection->getInvalidSearchableErrors());
+        self::assertEmpty($this->invalid_searchables_collection->getNonexistentSearchables());
+        self::assertEmpty($this->invalid_searchables_collection->getInvalidSearchableErrors());
     }
 
     public function testItDoesNotCollectInvalidFieldsIfFieldIsUsedForGreaterThanOrEqualComparison(): void
     {
-        $this->formelement_factory->shouldReceive('getUsedFormElementFieldByNameForUser')
-            ->with(101, "int", $this->user)->andReturns($this->int_field);
+        $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
+            ->with(101, "int", $this->user)
+            ->willReturn($this->int_field);
 
         $expr = new GreaterThanOrEqualComparison(new Field('int'), new SimpleValueWrapper(20));
 
-        $this->collector->visitGreaterThanOrEqualComparison($expr, $this->parameters);
+        $expr->acceptTermVisitor($this->collector, $this->parameters);
 
-        $this->assertEquals([], $this->invalid_searchables_collection->getNonexistentSearchables());
-        $this->assertEquals([], $this->invalid_searchables_collection->getInvalidSearchableErrors());
+        self::assertEmpty($this->invalid_searchables_collection->getNonexistentSearchables());
+        self::assertEmpty($this->invalid_searchables_collection->getInvalidSearchableErrors());
     }
 
     public function testItDoesNotCollectInvalidFieldsIfFieldIsUsedForBetweenComparison(): void
     {
-        $this->formelement_factory->shouldReceive('getUsedFormElementFieldByNameForUser')
-            ->with(101, "int", $this->user)->andReturns($this->int_field);
+        $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
+            ->with(101, "int", $this->user)
+            ->willReturn($this->int_field);
 
         $expr = new BetweenComparison(
             new Field('int'),
@@ -307,23 +246,24 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
             )
         );
 
-        $this->collector->visitBetweenComparison($expr, $this->parameters);
+        $expr->acceptTermVisitor($this->collector, $this->parameters);
 
-        $this->assertEquals([], $this->invalid_searchables_collection->getNonexistentSearchables());
-        $this->assertEquals([], $this->invalid_searchables_collection->getInvalidSearchableErrors());
+        self::assertEmpty($this->invalid_searchables_collection->getNonexistentSearchables());
+        self::assertEmpty($this->invalid_searchables_collection->getInvalidSearchableErrors());
     }
 
     public function testItCollectsNonExistentFieldsIfFieldIsUnknown(): void
     {
-        $this->formelement_factory->shouldReceive('getUsedFormElementFieldByNameForUser')
-            ->with(101, "field", $this->user)->andReturns(null);
+        $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
+            ->with(101, "field", $this->user)
+            ->willReturn(null);
 
         $expr = new AndExpression(new EqualComparison(new Field('field'), new SimpleValueWrapper('value')));
 
         $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
-        $this->assertEquals(['field'], $this->invalid_searchables_collection->getNonexistentSearchables());
-        $this->assertEquals([], $this->invalid_searchables_collection->getInvalidSearchableErrors());
+        self::assertEquals(['field'], $this->invalid_searchables_collection->getNonexistentSearchables());
+        self::assertEmpty($this->invalid_searchables_collection->getInvalidSearchableErrors());
     }
 
     public function testItCollectsNonExistentFieldsIfFieldIsAMetadataButUnknown(): void
@@ -332,138 +272,183 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
 
         $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
-        $this->assertEquals(['@summary'], $this->invalid_searchables_collection->getNonexistentSearchables());
-        $this->assertEquals([], $this->invalid_searchables_collection->getInvalidSearchableErrors());
+        self::assertEquals(['@summary'], $this->invalid_searchables_collection->getNonexistentSearchables());
+        self::assertEmpty($this->invalid_searchables_collection->getInvalidSearchableErrors());
     }
 
     public function testItCollectsUnsupportedFieldsIfFieldIsNotText(): void
     {
-        $this->formelement_factory->shouldReceive('getUsedFormElementFieldByNameForUser')
-            ->with(101, "field", $this->user)->andReturns($this->open_list_field);
+        $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
+            ->with(101, self::UNSUPPORTED_FIELD_NAME, $this->user)
+            ->willReturn($this->open_list_field);
 
-        $expr = new AndExpression(new EqualComparison(new Field('field'), new SimpleValueWrapper('value')));
+        $expr = new AndExpression(
+            new EqualComparison(new Field(self::UNSUPPORTED_FIELD_NAME), new SimpleValueWrapper('value'))
+        );
 
         $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
-        $this->assertEquals([], $this->invalid_searchables_collection->getNonexistentSearchables());
+        self::assertEmpty($this->invalid_searchables_collection->getNonexistentSearchables());
 
         $errors = $this->invalid_searchables_collection->getInvalidSearchableErrors();
-        $this->assertStringContainsString("The field 'openlist' is not supported.", implode("\n", $errors));
+        self::assertStringContainsString(
+            sprintf("The field '%s' is not supported.", self::UNSUPPORTED_FIELD_NAME),
+            implode("\n", $errors)
+        );
     }
 
     public function testItCollectsUnsupportedFieldsIfFieldIsNotNumeric(): void
     {
-        $this->formelement_factory->shouldReceive('getUsedFormElementFieldByNameForUser')
-            ->with(101, "field", $this->user)->andReturns($this->open_list_field);
+        $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
+            ->with(101, self::UNSUPPORTED_FIELD_NAME, $this->user)
+            ->willReturn($this->open_list_field);
 
-        $expr = new AndExpression(new EqualComparison(new Field('field'), new SimpleValueWrapper(20)));
+        $expr = new AndExpression(
+            new EqualComparison(new Field(self::UNSUPPORTED_FIELD_NAME), new SimpleValueWrapper(20))
+        );
 
         $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
-        $this->assertEquals([], $this->invalid_searchables_collection->getNonexistentSearchables());
+        self::assertEmpty($this->invalid_searchables_collection->getNonexistentSearchables());
 
         $errors = $this->invalid_searchables_collection->getInvalidSearchableErrors();
-        $this->assertStringContainsString("The field 'openlist' is not supported.", implode("\n", $errors));
+        self::assertStringContainsString(
+            sprintf("The field '%s' is not supported.", self::UNSUPPORTED_FIELD_NAME),
+            implode("\n", $errors)
+        );
     }
 
     public function testItCollectsUnsupportedFieldsIfFieldIsNotDate(): void
     {
-        $this->formelement_factory->shouldReceive('getUsedFormElementFieldByNameForUser')
-            ->with(101, "field", $this->user)->andReturns($this->open_list_field);
+        $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
+            ->with(101, self::UNSUPPORTED_FIELD_NAME, $this->user)
+            ->willReturn($this->open_list_field);
 
-        $expr = new AndExpression(new EqualComparison(new Field('field'), new SimpleValueWrapper('2017-01-17')));
+        $expr = new AndExpression(
+            new EqualComparison(new Field(self::UNSUPPORTED_FIELD_NAME), new SimpleValueWrapper('2017-01-17'))
+        );
 
         $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
-        $this->assertEquals([], $this->invalid_searchables_collection->getNonexistentSearchables());
+        self::assertEmpty($this->invalid_searchables_collection->getNonexistentSearchables());
 
         $errors = $this->invalid_searchables_collection->getInvalidSearchableErrors();
-        $this->assertStringContainsString("The field 'openlist' is not supported.", implode("\n", $errors));
+        self::assertStringContainsString(
+            sprintf("The field '%s' is not supported.", self::UNSUPPORTED_FIELD_NAME),
+            implode("\n", $errors)
+        );
     }
 
     public function testItCollectsUnsupportedFieldsIfFieldIsNotClosedList(): void
     {
-        $this->formelement_factory->shouldReceive('getUsedFormElementFieldByNameForUser')
-            ->with(101, "field", $this->user)->andReturns($this->open_list_field);
+        $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
+            ->with(101, self::UNSUPPORTED_FIELD_NAME, $this->user)
+            ->willReturn($this->open_list_field);
 
-        $expr = new AndExpression(new EqualComparison(new Field('field'), new SimpleValueWrapper('planned')));
+        $expr = new AndExpression(
+            new EqualComparison(new Field(self::UNSUPPORTED_FIELD_NAME), new SimpleValueWrapper('planned'))
+        );
 
         $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
-        $this->assertEquals([], $this->invalid_searchables_collection->getNonexistentSearchables());
+        self::assertEmpty($this->invalid_searchables_collection->getNonexistentSearchables());
 
         $errors = $this->invalid_searchables_collection->getInvalidSearchableErrors();
-        $this->assertStringContainsString("The field 'openlist' is not supported.", implode("\n", $errors));
+        self::assertStringContainsString(
+            sprintf("The field '%s' is not supported.", self::UNSUPPORTED_FIELD_NAME),
+            implode("\n", $errors)
+        );
     }
 
     public function testItCollectsUnsupportedFieldsIfFieldIsNotNumericForLesserThanComparison(): void
     {
-        $this->formelement_factory->shouldReceive('getUsedFormElementFieldByNameForUser')
-            ->with(101, "field", $this->user)->andReturns($this->string_field);
+        $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
+            ->with(101, self::STRING_FIELD_NAME, $this->user)
+            ->willReturn($this->string_field);
 
-        $expr = new AndExpression(new LesserThanComparison(new Field('field'), new SimpleValueWrapper('value')));
+        $expr = new AndExpression(
+            new LesserThanComparison(new Field(self::STRING_FIELD_NAME), new SimpleValueWrapper('value'))
+        );
 
         $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
-        $this->assertEquals([], $this->invalid_searchables_collection->getNonexistentSearchables());
+        self::assertEmpty($this->invalid_searchables_collection->getNonexistentSearchables());
 
         $errors = $this->invalid_searchables_collection->getInvalidSearchableErrors();
-        $this->assertStringContainsString("The field 'string' is not supported for the operator <.", implode("\n", $errors));
+        self::assertStringContainsString(
+            sprintf("The field '%s' is not supported for the operator <.", self::STRING_FIELD_NAME),
+            implode("\n", $errors)
+        );
     }
 
     public function testItCollectsUnsupportedFieldsIfFieldIsNotNumericForGreaterThanComparison(): void
     {
-        $this->formelement_factory->shouldReceive('getUsedFormElementFieldByNameForUser')
-            ->with(101, "field", $this->user)->andReturns($this->string_field);
+        $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
+            ->with(101, self::STRING_FIELD_NAME, $this->user)
+            ->willReturn($this->string_field);
 
-        $expr = new AndExpression(new GreaterThanComparison(new Field('field'), new SimpleValueWrapper('value')));
+        $expr = new AndExpression(new GreaterThanComparison(new Field(self::STRING_FIELD_NAME), new SimpleValueWrapper('value')));
 
         $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
-        $this->assertEquals([], $this->invalid_searchables_collection->getNonexistentSearchables());
+        self::assertEmpty($this->invalid_searchables_collection->getNonexistentSearchables());
 
         $errors = $this->invalid_searchables_collection->getInvalidSearchableErrors();
-        $this->assertStringContainsString("The field 'string' is not supported for the operator >.", implode("\n", $errors));
+        self::assertStringContainsString(
+            sprintf("The field '%s' is not supported for the operator >.", self::STRING_FIELD_NAME),
+            implode("\n", $errors)
+        );
     }
 
     public function testItCollectsUnsupportedFieldsIfFieldIsNotNumericForLesserThanOrEqualComparison(): void
     {
-        $this->formelement_factory->shouldReceive('getUsedFormElementFieldByNameForUser')
-            ->with(101, "field", $this->user)->andReturns($this->string_field);
+        $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
+            ->with(101, self::STRING_FIELD_NAME, $this->user)
+            ->willReturn($this->string_field);
 
-        $expr = new AndExpression(new LesserThanOrEqualComparison(new Field('field'), new SimpleValueWrapper('value')));
+        $expr = new AndExpression(new LesserThanOrEqualComparison(new Field(self::STRING_FIELD_NAME), new SimpleValueWrapper('value')));
 
         $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
-        $this->assertEquals([], $this->invalid_searchables_collection->getNonexistentSearchables());
+        self::assertEmpty($this->invalid_searchables_collection->getNonexistentSearchables());
 
         $errors = $this->invalid_searchables_collection->getInvalidSearchableErrors();
-        $this->assertStringContainsString("The field 'string' is not supported for the operator <=.", implode("\n", $errors));
+        self::assertStringContainsString(
+            sprintf("The field '%s' is not supported for the operator <=.", self::STRING_FIELD_NAME),
+            implode("\n", $errors)
+        );
     }
 
     public function testItCollectsUnsupportedFieldsIfFieldIsNotNumericForGreaterThanOrEqualComparison(): void
     {
-        $this->formelement_factory->shouldReceive('getUsedFormElementFieldByNameForUser')
-            ->with(101, "field", $this->user)->andReturns($this->string_field);
+        $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
+            ->with(101, self::STRING_FIELD_NAME, $this->user)
+            ->willReturn($this->string_field);
 
-        $expr = new AndExpression(new GreaterThanOrEqualComparison(new Field('field'), new SimpleValueWrapper('value')));
+        $expr = new AndExpression(
+            new GreaterThanOrEqualComparison(new Field(self::STRING_FIELD_NAME), new SimpleValueWrapper('value'))
+        );
 
         $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
-        $this->assertEquals([], $this->invalid_searchables_collection->getNonexistentSearchables());
+        self::assertEmpty($this->invalid_searchables_collection->getNonexistentSearchables());
 
         $errors = $this->invalid_searchables_collection->getInvalidSearchableErrors();
-        $this->assertStringContainsString("The field 'string' is not supported for the operator >=.", implode("\n", $errors));
+        self::assertStringContainsString(
+            sprintf("The field '%s' is not supported for the operator >=.", self::STRING_FIELD_NAME),
+            implode("\n", $errors)
+        );
     }
 
     public function testItCollectsUnsupportedFieldsIfFieldIsNotNumericForBetweenComparison(): void
     {
-        $this->formelement_factory->shouldReceive('getUsedFormElementFieldByNameForUser')
-            ->with(101, "field", $this->user)->andReturns($this->string_field);
+        $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
+            ->with(101, self::STRING_FIELD_NAME, $this->user)
+            ->willReturn($this->string_field);
 
         $expr = new AndExpression(
             new BetweenComparison(
-                new Field('field'),
+                new Field(self::STRING_FIELD_NAME),
                 new BetweenValueWrapper(
                     new SimpleValueWrapper('value1'),
                     new SimpleValueWrapper('value2')
@@ -473,23 +458,24 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
 
         $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
-        $this->assertEquals([], $this->invalid_searchables_collection->getNonexistentSearchables());
+        self::assertEmpty($this->invalid_searchables_collection->getNonexistentSearchables());
 
         $errors = $this->invalid_searchables_collection->getInvalidSearchableErrors();
-        $this->assertStringContainsString(
-            "The field 'string' is not supported for the operator between().",
+        self::assertStringContainsString(
+            sprintf("The field '%s' is not supported for the operator between().", self::STRING_FIELD_NAME),
             implode("\n", $errors)
         );
     }
 
     public function testItCollectsUnsupportedFieldsIfFieldIsNotListForInComparison(): void
     {
-        $this->formelement_factory->shouldReceive('getUsedFormElementFieldByNameForUser')
-            ->with(101, "field", $this->user)->andReturns($this->string_field);
+        $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
+            ->with(101, self::STRING_FIELD_NAME, $this->user)
+            ->willReturn($this->string_field);
 
         $expr = new AndExpression(
             new InComparison(
-                new Field('field'),
+                new Field(self::STRING_FIELD_NAME),
                 new InValueWrapper(
                     [
                         new SimpleValueWrapper('value1'),
@@ -501,20 +487,24 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
 
         $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
-        $this->assertEquals([], $this->invalid_searchables_collection->getNonexistentSearchables());
+        self::assertEmpty($this->invalid_searchables_collection->getNonexistentSearchables());
 
         $errors = $this->invalid_searchables_collection->getInvalidSearchableErrors();
-        $this->assertStringContainsString("The field 'string' is not supported for the operator in().", implode("\n", $errors));
+        self::assertStringContainsString(
+            sprintf("The field '%s' is not supported for the operator in().", self::STRING_FIELD_NAME),
+            implode("\n", $errors)
+        );
     }
 
     public function testItCollectsUnsupportedFieldsIfFieldIsNotListForNotInComparison(): void
     {
-        $this->formelement_factory->shouldReceive('getUsedFormElementFieldByNameForUser')
-            ->with(101, "field", $this->user)->andReturns($this->string_field);
+        $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
+            ->with(101, self::STRING_FIELD_NAME, $this->user)
+            ->willReturn($this->string_field);
 
         $expr = new AndExpression(
             new NotInComparison(
-                new Field('field'),
+                new Field(self::STRING_FIELD_NAME),
                 new InValueWrapper(
                     [
                         new SimpleValueWrapper('value3'),
@@ -526,100 +516,109 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
 
         $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
-        $this->assertEquals([], $this->invalid_searchables_collection->getNonexistentSearchables());
+        self::assertEmpty($this->invalid_searchables_collection->getNonexistentSearchables());
 
         $errors = $this->invalid_searchables_collection->getInvalidSearchableErrors();
-        $this->assertStringContainsString("The field 'string' is not supported for the operator not in().", implode("\n", $errors));
+        self::assertStringContainsString(
+            sprintf("The field '%s' is not supported for the operator not in().", self::STRING_FIELD_NAME),
+            implode("\n", $errors)
+        );
     }
 
     public function testItDelegatesValidationToSubExpressionAndTailInAndExpression(): void
     {
-        $subexpression = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison::class);
-        $tail          = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand::class);
+        $subexpression = $this->createMock(EqualComparison::class);
+        $tail          = $this->createMock(AndOperand::class);
         $expression    = new AndExpression($subexpression, $tail);
 
-        $subexpression->shouldReceive('acceptTermVisitor')->with($this->collector, $this->parameters)->once();
-        $tail->shouldReceive('acceptLogicalVisitor')->with($this->collector, $this->parameters)->once();
+        $subexpression->expects(self::once())->method('acceptTermVisitor')->with($this->collector, $this->parameters);
+        $tail->expects(self::once())->method('acceptLogicalVisitor')->with($this->collector, $this->parameters);
 
-        $this->collector->visitAndExpression($expression, $this->parameters);
+        $expression->acceptLogicalVisitor($this->collector, $this->parameters);
     }
 
     public function testItDelegatesValidationToSubExpressionAndTailInOrExpression(): void
     {
-        $subexpression = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression::class);
-        $tail          = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand::class);
+        $subexpression = $this->createMock(AndExpression::class);
+        $tail          = $this->createMock(OrOperand::class);
         $expression    = new OrExpression($subexpression, $tail);
 
-        $subexpression->shouldReceive('acceptLogicalVisitor')->with($this->collector, $this->parameters)->once();
-        $tail->shouldReceive('acceptLogicalVisitor')->with($this->collector, $this->parameters)->once();
+        $subexpression->expects(self::once())->method('acceptLogicalVisitor')->with(
+            $this->collector,
+            $this->parameters
+        );
+        $tail->expects(self::once())->method('acceptLogicalVisitor')->with($this->collector, $this->parameters);
 
-        $this->collector->visitOrExpression($expression, $this->parameters);
+        $expression->acceptLogicalVisitor($this->collector, $this->parameters);
     }
 
     public function testItDelegatesValidationToOperandAndTailInOrOperand(): void
     {
-        $operand    = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression::class);
-        $tail       = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand::class);
+        $operand    = $this->createMock(AndExpression::class);
+        $tail       = $this->createMock(OrOperand::class);
         $expression = new OrOperand($operand, $tail);
 
-        $operand->shouldReceive('acceptLogicalVisitor')->with($this->collector, $this->parameters)->once();
-        $tail->shouldReceive('acceptLogicalVisitor')->with($this->collector, $this->parameters)->once();
+        $operand->expects(self::once())->method('acceptLogicalVisitor')->with($this->collector, $this->parameters);
+        $tail->expects(self::once())->method('acceptLogicalVisitor')->with($this->collector, $this->parameters);
 
-        $this->collector->visitOrOperand($expression, $this->parameters);
+        $expression->acceptLogicalVisitor($this->collector, $this->parameters);
     }
 
     public function testItDelegatesValidationToOperandAndTailInAndOperand(): void
     {
-        $operand    = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison::class);
-        $tail       = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand::class);
+        $operand    = $this->createMock(EqualComparison::class);
+        $tail       = $this->createMock(AndOperand::class);
         $expression = new AndOperand($operand, $tail);
 
-        $operand->shouldReceive('acceptTermVisitor')->with($this->collector, $this->parameters)->once();
-        $tail->shouldReceive('acceptLogicalVisitor')->with($this->collector, $this->parameters)->once();
+        $operand->expects(self::once())->method('acceptTermVisitor')->with($this->collector, $this->parameters);
+        $tail->expects(self::once())->method('acceptLogicalVisitor')->with($this->collector, $this->parameters);
 
         $this->collector->visitAndOperand($expression, $this->parameters);
     }
 
     public function testItDelegatesValidationToSubExpressionInAndExpression(): void
     {
-        $subexpression = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison::class);
+        $subexpression = $this->createMock(EqualComparison::class);
         $tail          = null;
         $expression    = new AndExpression($subexpression, $tail);
 
-        $subexpression->shouldReceive('acceptTermVisitor')->with($this->collector, $this->parameters)->once();
+        $subexpression->expects(self::once())->method('acceptTermVisitor')->with($this->collector, $this->parameters);
 
-        $this->collector->visitAndExpression($expression, $this->parameters);
+        $expression->acceptLogicalVisitor($this->collector, $this->parameters);
     }
 
     public function testItDelegatesValidationToSubExpressionInOrExpression(): void
     {
-        $subexpression = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression::class);
+        $subexpression = $this->createMock(AndExpression::class);
         $tail          = null;
         $expression    = new OrExpression($subexpression, $tail);
 
-        $subexpression->shouldReceive('acceptLogicalVisitor')->with($this->collector, $this->parameters)->once();
+        $subexpression->expects(self::once())->method('acceptLogicalVisitor')->with(
+            $this->collector,
+            $this->parameters
+        );
 
-        $this->collector->visitOrExpression($expression, $this->parameters);
+        $expression->acceptLogicalVisitor($this->collector, $this->parameters);
     }
 
     public function testItDelegatesValidationToOperandInOrOperand(): void
     {
-        $operand    = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression::class);
+        $operand    = $this->createMock(AndExpression::class);
         $tail       = null;
         $expression = new OrOperand($operand, $tail);
 
-        $operand->shouldReceive('acceptLogicalVisitor')->with($this->collector, $this->parameters)->once();
+        $operand->expects(self::once())->method('acceptLogicalVisitor')->with($this->collector, $this->parameters);
 
         $this->collector->visitOrOperand($expression, $this->parameters);
     }
 
     public function testItDelegatesValidationToOperandInAndOperand(): void
     {
-        $operand    = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison::class);
+        $operand    = $this->createMock(EqualComparison::class);
         $tail       = null;
         $expression = new AndOperand($operand, $tail);
 
-        $operand->shouldReceive('acceptTermVisitor')->with($this->collector, $this->parameters)->once();
+        $operand->expects(self::once())->method('acceptTermVisitor')->with($this->collector, $this->parameters);
 
         $this->collector->visitAndOperand($expression, $this->parameters);
     }
