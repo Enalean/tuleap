@@ -3989,12 +3989,6 @@ msgstr "Atualizar rótulo"
 msgid "Update notifications settings"
 msgstr "Atualizar configuração de notificações"
 
-msgid "Update of service label is not supported"
-msgstr "A atualização do rótulo do serviço não é suportada"
-
-msgid "Update of service name is not supported"
-msgstr "A atualização do nome do serviço não é suportada"
-
 msgid "Update password"
 msgstr "Atualizar senha"
 

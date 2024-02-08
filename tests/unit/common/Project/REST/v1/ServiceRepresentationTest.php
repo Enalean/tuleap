@@ -42,7 +42,7 @@ final class ServiceRepresentationTest extends TestCase
         );
         self::assertSame(102, $representation->id);
         self::assertSame(ServiceRepresentation::ROUTE . "/102", $representation->uri);
-        self::assertSame($service_url, $representation->url);
+        self::assertSame($service_url, $representation->service_url);
         self::assertTrue($representation->is_custom);
     }
 
@@ -60,7 +60,7 @@ final class ServiceRepresentationTest extends TestCase
         );
         self::assertSame(102, $representation->id);
         self::assertSame(ServiceRepresentation::ROUTE . "/102", $representation->uri);
-        self::assertSame($service_url, $representation->url);
+        self::assertSame($service_url, $representation->service_url);
         self::assertFalse($representation->is_custom);
     }
 }

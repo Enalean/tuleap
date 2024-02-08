@@ -28,52 +28,28 @@ use Tuleap\REST\JsonCast;
 /**
  * @psalm-immutable
  */
-class ServiceRepresentation
+final class ServiceRepresentation
 {
     public const ROUTE = 'project_services';
 
-    /**
-     * @var int  {@required false}
-     */
-    public ?int $id;
-    /**
-     * @var string  {@required false}
-     */
-    public ?string $uri;
-    /**
-     * @var string  {@required false}
-     */
-    public ?string $url;
-    /**
-     * @var string  {@required false}
-     */
-    public ?string $name;
-    /**
-     * @var string  {@required false}
-     */
-    public ?string $label;
-    /**
-     * @var bool  {@required true}
-     */
-    public bool $is_enabled;
-    /**
-     * @var string  {@required false}
-     */
-    public ?string $icon;
-    /**
-     * @var bool  {@required false}
-     */
-    public ?bool $is_custom;
-    private function __construct(int $id, string $name, string $label, bool $is_enabled, string $url, bool $is_custom, string $icon = '')
+    public readonly int $id;
+    public readonly string $uri;
+    public readonly string $service_url;
+    public readonly string $name;
+    public readonly string $label;
+    public readonly bool $is_enabled;
+    public readonly string $icon;
+    public readonly bool $is_custom;
+    private function __construct(int $id, string $name, string $label, bool $is_enabled, string $service_url, bool $is_custom, string $icon = '')
     {
-        $this->id         = $id;
-        $this->uri        = self::ROUTE . '/' . urlencode((string) $id);
-        $this->url        = $url;
-        $this->name       = $name;
-        $this->label      = $label;
-        $this->is_enabled = $is_enabled;
-        $this->icon       = $icon;
-        $this->is_custom  = $is_custom;
+        $this->id          = $id;
+        $this->uri         = self::ROUTE . '/' . urlencode((string) $id);
+        $this->service_url = $service_url;
+        $this->name        = $name;
+        $this->label       = $label;
+        $this->is_enabled  = $is_enabled;
+        $this->icon        = $icon;
+        $this->is_custom   = $is_custom;
     }
 
     public static function build(Service $service): self

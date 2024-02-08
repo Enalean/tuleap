@@ -4059,12 +4059,6 @@ msgstr "Mettre à jour le label"
 msgid "Update notifications settings"
 msgstr "Mettre à jour les paramètres de notification"
 
-msgid "Update of service label is not supported"
-msgstr "La mise à jour du label du service n'est pas supportée"
-
-msgid "Update of service name is not supported"
-msgstr "La mise à jour du nom du service n'est pas supportée"
-
 msgid "Update password"
 msgstr "Mettre à jour le mot de passe"
 

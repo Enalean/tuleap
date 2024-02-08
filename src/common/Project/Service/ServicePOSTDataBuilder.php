@@ -93,7 +93,7 @@ class ServicePOSTDataBuilder
     /**
      * @throws InvalidServicePOSTDataException
      */
-    public function buildFromService(Service $service, bool $submitted_is_used): ServicePOSTData
+    public function buildFromREST(Service $service, bool $submitted_is_used): ServicePOSTData
     {
         if (! $service->isActive() && $submitted_is_used) {
             $submitted_is_used = false;
