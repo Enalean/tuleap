@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import PastSection from "./PastSection.vue";
 import type { MilestoneData } from "../../type";
@@ -27,11 +27,10 @@ import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
 
 const project_id = 102;
-const component_options: ShallowMountOptions<PastSection> = {};
 
 async function getPersonalWidgetInstance(
     last_release: MilestoneData | null = null,
-): Promise<Wrapper<PastSection>> {
+): Promise<Wrapper<Vue, Element>> {
     const useStore = defineStore("root", {
         state: () => ({
             project_id: project_id,
@@ -42,11 +41,13 @@ async function getPersonalWidgetInstance(
     const pinia = createTestingPinia();
     useStore(pinia);
 
-    component_options.propsData = {
-        label_tracker_planning: "sprint",
+    const component_options = {
+        propsData: {
+            label_tracker_planning: "sprint",
+        },
+        localVue: await createReleaseWidgetLocalVue(),
+        pinia,
     };
-
-    component_options.localVue = await createReleaseWidgetLocalVue();
 
     return shallowMount(PastSection, component_options);
 }
