@@ -25,16 +25,6 @@ use Tuleap\REST\JsonCast;
 class ArtifactFieldValuePermissionsOnArtifactRepresentation extends ArtifactFieldValueRepresentationData
 {
     /**
-     * @var int ID of the field
-     */
-    public $field_id;
-
-    /**
-     * @var string Label of the field
-     */
-    public $label;
-
-    /**
      * @var string[]
      */
     public $granted_groups = [];
